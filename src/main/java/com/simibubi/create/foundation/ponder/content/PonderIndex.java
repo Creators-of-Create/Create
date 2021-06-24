@@ -242,7 +242,7 @@ public class PonderIndex {
 		// Fluids
 		
 		// ProgressTM
-		// [##### ####. ..... .....]
+		// [##### ##### ##### .....]
 
 		PonderRegistry.forComponents(AllBlocks.FLUID_PIPE)
 			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, PonderTag.FLUIDS)
@@ -264,9 +264,9 @@ public class PonderIndex {
 			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
 			.addStoryBoard("fluid_tank/sizes_creative", FluidTankScenes::sizes);
 		PonderRegistry.forComponents(AllBlocks.HOSE_PULLEY)
-			.addStoryBoard("debug/scene_1", HosePulleyScenes::intro, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
-			.addStoryBoard("debug/scene_1", HosePulleyScenes::level)
-			.addStoryBoard("debug/scene_1", HosePulleyScenes::infinite);
+			.addStoryBoard("hose_pulley/intro", HosePulleyScenes::intro, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
+			.addStoryBoard("hose_pulley/level", HosePulleyScenes::level)
+			.addStoryBoard("hose_pulley/infinite", HosePulleyScenes::infinite);
 		PonderRegistry.forComponents(AllBlocks.SPOUT)
 			.addStoryBoard("debug/scene_1", SpoutScenes::filling, PonderTag.FLUIDS)
 			.addStoryBoard("debug/scene_1", SpoutScenes::access);

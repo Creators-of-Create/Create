@@ -5,6 +5,9 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.foundation.fluid.FluidHelper;
@@ -20,6 +23,7 @@ import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstructi
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
@@ -214,39 +218,209 @@ public class FluidTankScenes {
 
 	public static void sizes(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("fluid_tank_sizes", "Dimensions of a Fluid tank");
-		scene.configureBasePlate(0, 0, 5);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.configureBasePlate(0, 0, 6);
+		scene.showBasePlate();
 		scene.idle(5);
-		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
 
-		/*
-		 * Fluid Tanks can be combined to increase the total capacity
-		 * 
-		 * The base shape can be a square up to 3 blocks wide...
-		 * 
-		 * ...and grow in height by more than 30 additional layers
-		 * 
-		 * Using a Wrench, the tanks' window can be toggled
-		 */
+		Selection single = util.select.position(0, 3, 0);
+		Selection single2 = util.select.fromTo(1, 2, 1, 0, 2, 0);
+		Selection single3 = util.select.fromTo(2, 1, 0, 0, 1, 2);
 
+		ElementLink<WorldSectionElement> s1 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s1, util.vector.of(2, -2, 2), 0);
+		scene.idle(10);
+
+		scene.overlay.showText(60)
+			.text("Fluid Tanks can be combined to increase the total capacity")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(2, 1, 2));
+		scene.idle(40);
+
+		ElementLink<WorldSectionElement> s2 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s2, util.vector.of(2, -2, 3), 0);
+		scene.idle(5);
+		ElementLink<WorldSectionElement> s3 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s3, util.vector.of(3, -2, 3), 0);
+		scene.idle(5);
+		ElementLink<WorldSectionElement> s4 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s4, util.vector.of(3, -2, 2), 0);
+		scene.idle(10);
+
+		scene.world.moveSection(s1, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s2, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s3, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s4, util.vector.of(0, -100, 0), 0);
+
+		ElementLink<WorldSectionElement> d = scene.world.showIndependentSectionImmediately(single2);
+		scene.world.moveSection(d, util.vector.of(2, -1, 2), 0);
+		scene.effects.indicateSuccess(util.grid.at(2, 1, 2));
+		scene.effects.indicateSuccess(util.grid.at(3, 1, 2));
+		scene.effects.indicateSuccess(util.grid.at(2, 1, 3));
+		scene.effects.indicateSuccess(util.grid.at(3, 1, 3));
+		scene.world.hideIndependentSection(s1, Direction.DOWN);
+		scene.world.hideIndependentSection(s2, Direction.DOWN);
+		scene.world.hideIndependentSection(s3, Direction.DOWN);
+		scene.world.hideIndependentSection(s4, Direction.DOWN);
+		scene.idle(25);
+
+		scene.overlay.showText(60)
+			.text("Their base square can be up to 3 blocks wide...")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.topOf(2, 1, 2));
+		scene.idle(40);
+
+		s1 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s1, util.vector.of(2, -2, 4), 0);
+		scene.idle(3);
+		s2 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s2, util.vector.of(3, -2, 4), 0);
+		scene.idle(3);
+		s3 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s3, util.vector.of(4, -2, 4), 0);
+		scene.idle(3);
+		s4 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s4, util.vector.of(4, -2, 3), 0);
+		scene.idle(3);
+		ElementLink<WorldSectionElement> s5 = scene.world.showIndependentSection(single, Direction.DOWN);
+		scene.world.moveSection(s5, util.vector.of(4, -2, 2), 0);
+		scene.idle(10);
+
+		scene.world.moveSection(d, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s1, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s2, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s3, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s4, util.vector.of(0, -100, 0), 0);
+		scene.world.moveSection(s5, util.vector.of(0, -100, 0), 0);
+
+		ElementLink<WorldSectionElement> t = scene.world.showIndependentSectionImmediately(single3);
+		scene.world.moveSection(t, util.vector.of(2, 0, 2), 0);
+
+		for (int i = 2; i < 5; i++)
+			for (int j = 2; j < 5; j++)
+				scene.effects.indicateSuccess(util.grid.at(i, 1, j));
+
+		scene.world.hideIndependentSection(d, Direction.DOWN);
+		scene.world.hideIndependentSection(s1, Direction.DOWN);
+		scene.world.hideIndependentSection(s2, Direction.DOWN);
+		scene.world.hideIndependentSection(s3, Direction.DOWN);
+		scene.world.hideIndependentSection(s4, Direction.DOWN);
+		scene.world.hideIndependentSection(s5, Direction.DOWN);
+		scene.idle(25);
+
+		scene.world.hideIndependentSection(t, Direction.DOWN);
+		scene.idle(10);
+
+		Selection full1 = util.select.fromTo(5, 1, 0, 5, 6, 0);
+		Selection full2 = util.select.fromTo(4, 1, 1, 3, 6, 2);
+		Selection full3 = util.select.fromTo(0, 6, 5, 2, 1, 3);
+
+		scene.world.showSection(full1, Direction.DOWN);
+		scene.idle(5);
+		scene.world.showSection(full2, Direction.DOWN);
+		scene.idle(5);
+		scene.world.showSection(full3, Direction.DOWN);
+		scene.idle(10);
+
+		Vector3d blockSurface = util.vector.blockSurface(util.grid.at(3, 3, 1), Direction.WEST);
+		scene.overlay.showText(60)
+			.text("...and grow in height by more than 30 additional layers")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(blockSurface);
+		scene.idle(70);
+
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.blockSurface(util.grid.at(3, 3, 1), Direction.NORTH), Pointing.RIGHT)
+				.rightClick()
+				.withWrench(),
+			60);
+		scene.idle(7);
+		scene.world.modifyBlocks(full2, s -> s.with(FluidTankBlock.SHAPE, FluidTankBlock.Shape.PLAIN), false);
+		scene.idle(30);
+
+		scene.overlay.showText(60)
+			.text("Using a Wrench, a tanks' window can be toggled")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(blockSurface);
+		scene.idle(50);
 	}
 
 	public static void creative(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("creative_fluid_tank", "Creative Fluid Tanks");
 		scene.configureBasePlate(0, 0, 5);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.showBasePlate();
 		scene.idle(5);
-		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
 
-		/*
-		 * Creative Fluid Tanks can be used to provide a bottomless supply of fluid
-		 * 
-		 * Right-Click with a fluid containing item to configure it
-		 * 
-		 * Pipe Networks can now endlessly draw the assigned fluid from this tank
-		 * 
-		 * Any Fluids pipes push into a Creative Fluid Tank will be voided
-		 */
+		Selection largeCog = util.select.position(5, 0, 2);
+		Selection cTank = util.select.fromTo(3, 1, 1, 3, 2, 1);
+		Selection tank = util.select.fromTo(1, 1, 3, 1, 3, 3);
+		Selection pipes = util.select.fromTo(3, 1, 2, 2, 1, 3);
+		Selection cog = util.select.position(4, 1, 2);
+		BlockPos cTankPos = util.grid.at(3, 1, 1);
+		BlockPos pumpPos = util.grid.at(3, 1, 2);
+
+		ElementLink<WorldSectionElement> cTankLink = scene.world.showIndependentSection(cTank, Direction.DOWN);
+		scene.world.moveSection(cTankLink, util.vector.of(-1, 0, 1), 0);
+
+		scene.overlay.showText(70)
+			.text("Creative Fluid Tanks can be used to provide a bottomless supply of fluid")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST));
+		scene.idle(80);
+
+		ItemStack bucket = new ItemStack(Items.LAVA_BUCKET);
+		scene.overlay.showControls(
+			new InputWindowElement(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.NORTH), Pointing.RIGHT)
+				.rightClick()
+				.withItem(bucket),
+			40);
+		scene.idle(7);
+		scene.world.modifyTileEntity(cTankPos, CreativeFluidTankTileEntity.class,
+			te -> ((CreativeSmartFluidTank) te.getTankInventory())
+				.setContainedFluid(new FluidStack(Fluids.FLOWING_LAVA, 1000)));
+		scene.idle(5);
+
+		scene.overlay.showText(50)
+			.text("Right-Click with a fluid containing item to configure it")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST));
+		scene.idle(60);
+		scene.world.moveSection(cTankLink, util.vector.of(1, 0, -1), 6);
+		scene.idle(7);
+		scene.world.showSection(tank, Direction.DOWN);
+		scene.idle(5);
+
+		scene.world.showSection(largeCog, Direction.UP);
+		scene.world.showSection(cog, Direction.NORTH);
+		scene.world.showSection(pipes, Direction.NORTH);
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.propagatePipeChange(pumpPos);
+		scene.effects.rotationDirectionIndicator(pumpPos);
+		scene.idle(40);
+
+		scene.overlay.showText(70)
+			.text("Pipe Networks can now endlessly draw the assigned fluid from the tank")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 2), Direction.WEST));
+		scene.idle(120);
+
+		scene.world.multiplyKineticSpeed(util.select.everywhere(), -1);
+		scene.world.propagatePipeChange(pumpPos);
+		scene.effects.rotationDirectionIndicator(pumpPos);
+		scene.idle(40);
+
+		scene.overlay.showText(70)
+			.text("Any Fluids pushed back into a Creative Fluid Tank will be voided")
+			.attachKeyFrame()
+			.placeNearTarget()
+			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 2), Direction.WEST));
+		scene.idle(40);
 
 	}
 
