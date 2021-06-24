@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
+import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
@@ -134,7 +135,7 @@ public class FluidHelper {
 		emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
 		tank.fill(fluidStack, FluidAction.EXECUTE);
 
-		if (!player.isCreative()) {
+		if (!player.isCreative() && !(te instanceof CreativeFluidTankTileEntity)) {
 			if (copyOfHeld.isEmpty())
 				player.setHeldItem(handIn, emptyingResult.getSecond());
 			else {
@@ -169,7 +170,7 @@ public class FluidHelper {
 			if (world.isRemote)
 				return true;
 
-			if (player.isCreative())
+			if (player.isCreative() || te instanceof CreativeFluidTankTileEntity)
 				heldItem = heldItem.copy();
 			ItemStack out = GenericItemFilling.fillItem(world, requiredAmountForItem, heldItem, fluid.copy());
 

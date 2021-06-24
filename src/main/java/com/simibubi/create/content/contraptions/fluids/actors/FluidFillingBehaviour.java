@@ -176,13 +176,16 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 					BlockState blockState = world.getBlockState(currentPos);
 					if (blockState.contains(BlockStateProperties.WATERLOGGED) && fluid.isEquivalentTo(Fluids.WATER)) {
-						world.setBlockState(currentPos,
-							updatePostWaterlogging(blockState.with(BlockStateProperties.WATERLOGGED, true)), 2 | 16);
+						if (!tileEntity.isVirtual())
+							world.setBlockState(currentPos,
+								updatePostWaterlogging(blockState.with(BlockStateProperties.WATERLOGGED, true)),
+								2 | 16);
 					} else {
 						replaceBlock(world, currentPos, blockState);
-						world.setBlockState(currentPos, FluidHelper.convertToStill(fluid)
-							.getDefaultState()
-							.getBlockState(), 2 | 16);
+						if (!tileEntity.isVirtual())
+							world.setBlockState(currentPos, FluidHelper.convertToStill(fluid)
+								.getDefaultState()
+								.getBlockState(), 2 | 16);
 					}
 
 					ITickList<Fluid> pendingFluidTicks = world.getPendingFluidTicks();

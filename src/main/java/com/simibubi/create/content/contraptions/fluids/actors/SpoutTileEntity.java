@@ -248,6 +248,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
+		if (isVirtual())
+			return;
 		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 8 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
@@ -257,6 +259,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected static int SPLASH_PARTICLE_COUNT = 20;
 
 	protected void spawnSplash(FluidStack fluid) {
+		if (isVirtual())
+			return;
 		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
