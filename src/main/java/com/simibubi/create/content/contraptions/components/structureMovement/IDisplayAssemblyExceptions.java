@@ -26,7 +26,7 @@ public interface IDisplayAssemblyExceptions {
 
 		tooltip.add(IHaveGoggleInformation.componentSpacing.copy().append(Lang.translate("gui.assembly.exception").formatted(TextFormatting.GOLD)));
 
-		String text = TooltipHelper.getUnformattedDeepText(e.component);
+		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))
 				.forEach(l -> TooltipHelper.cutStringTextComponent(l, GRAY, WHITE)
 						.forEach(c -> tooltip.add(IHaveGoggleInformation.componentSpacing.copy().append(c))));
@@ -35,4 +35,5 @@ public interface IDisplayAssemblyExceptions {
 	}
 
 	AssemblyException getLastAssemblyException();
+
 }
