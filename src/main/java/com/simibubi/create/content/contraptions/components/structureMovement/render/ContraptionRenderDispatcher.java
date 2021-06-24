@@ -13,6 +13,8 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import java.util.List;
 import java.util.Random;
 
+import com.jozufozu.flywheel.event.GatherContextEvent;
+
 import net.minecraftforge.api.distmarker.Dist;
 
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -143,6 +145,10 @@ public class ContraptionRenderDispatcher {
 
 	@SubscribeEvent
 	public static void onRendererReload(ReloadRenderersEvent event) {
+		invalidateAll();
+	}
+
+	public static void invalidateOnGatherContext(GatherContextEvent e) {
 		invalidateAll();
 	}
 

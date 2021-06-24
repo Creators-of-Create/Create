@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.core.AtlasStitcher;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
@@ -79,6 +77,7 @@ public class CreateClient {
 		modEventBus.addListener(ClientEvents::loadCompleted);
 		modEventBus.addListener(CreateContexts::flwInit);
 		modEventBus.addListener(AllMaterialSpecs::flwInit);
+		modEventBus.addListener(ContraptionRenderDispatcher::invalidateOnGatherContext);
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
