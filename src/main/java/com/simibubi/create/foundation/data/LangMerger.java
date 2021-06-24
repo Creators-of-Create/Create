@@ -60,6 +60,7 @@ public class LangMerger implements IDataProvider {
 	private void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
+		langIgnore.add("create.gui.chromatic_projector"); 
 	}
 
 	private boolean shouldIgnore(String key) {

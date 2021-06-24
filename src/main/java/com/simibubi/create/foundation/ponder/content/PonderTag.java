@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -19,58 +22,59 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PonderTag implements IScreenRenderable {
 
-	//
-
+	public static final List<PonderTag> LISTED_TAGS = new ArrayList<>();
+	
 	public static final PonderTag
 
 	KINETIC_RELAYS = new PonderTag("kinetic_relays").item(AllBlocks.COGWHEEL.get(), true, false)
-		.defaultLang("Kinetic Blocks", "Components which help relaying Rotational Force elsewhere"),
+		.defaultLang("Kinetic Blocks", "Components which help relaying Rotational Force elsewhere")
+		.addToIndex(),
 
 		KINETIC_SOURCES = new PonderTag("kinetic_sources").item(AllBlocks.WATER_WHEEL.get(), true, false)
-			.defaultLang("Kinetic Sources", "Components which generate Rotational Force"),
+			.defaultLang("Kinetic Sources", "Components which generate Rotational Force")
+			.addToIndex(),
 
 		KINETIC_APPLIANCES = new PonderTag("kinetic_appliances").item(AllBlocks.MECHANICAL_PRESS.get(), true, false)
-			.defaultLang("Kinetic Appliances", "Components which make use of Rotational Force"),
+			.defaultLang("Kinetic Appliances", "Components which make use of Rotational Force")
+			.addToIndex(),
 
 		FLUIDS = new PonderTag("fluids").item(AllBlocks.FLUID_PIPE.get(), true, false)
-			.defaultLang("Fluid Manipulators", "Components which help relaying and making use of Fluids"),
+			.defaultLang("Fluid Manipulators", "Components which help relaying and making use of Fluids")
+			.addToIndex(),
 
 		LOGISTICS = new PonderTag("logistics").item(Blocks.CHEST, true, false)
-			.defaultLang("Item Transportation", "Components which help moving items around"),
+			.defaultLang("Item Transportation", "Components which help moving items around")
+			.addToIndex(),
 
 		REDSTONE = new PonderTag("redstone").item(Items.REDSTONE, true, false)
-			.defaultLang("Logic Components", "Components which help with redstone engineering"),
+			.defaultLang("Logic Components", "Components which help with redstone engineering")
+			.addToIndex(),
 
 		DECORATION = new PonderTag("decoration").item(Items.ROSE_BUSH, true, false)
 			.defaultLang("Aesthetics", "Components used mostly for decorative purposes"),
 
 		CREATIVE = new PonderTag("creative").item(AllBlocks.CREATIVE_CRATE.get(), true, false)
-			.defaultLang("Creative Mode", "Components not usually available for Survival Mode"),
+			.defaultLang("Creative Mode", "Components not usually available for Survival Mode")
+			.addToIndex(),
 
 		MOVEMENT_ANCHOR = new PonderTag("movement_anchor").item(AllBlocks.MECHANICAL_PISTON.get(), true, false)
 			.defaultLang("Movement Anchors",
-				"Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways"),
+				"Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways")
+			.addToIndex(),
 
 		CONTRAPTION_ACTOR = new PonderTag("contraption_actor").item(AllBlocks.MECHANICAL_HARVESTER.get(), true, false)
 			.defaultLang("Contraption Actors",
-				"Components which expose special behaviour when attached to a moving contraption"),
+				"Components which expose special behaviour when attached to a moving contraption")
+			.addToIndex(),
 
 		CONTRAPTION_ASSEMBLY = new PonderTag("contraption_assembly").item(AllItems.SUPER_GLUE.get(), true, false)
 			.defaultLang("Block Attachment Utility",
-				"Tools and Components used to assemble structures moved as an animated Contraption"),
+				"Tools and Components used to assemble structures moved as an animated Contraption")
+			.addToIndex(),
 
 		SAILS = new PonderTag("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
 			.defaultLang("Sails for Windmill Bearings",
 				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
-
-//		FLUID_TRANSFER = new PonderTag("fluid_transfer").idAsIcon(),
-//
-//		OPEN_INVENTORY = new PonderTag("open_inventory").item(AllBlocks.BASIN.get()
-//			.asItem()),
-//			
-//		REDSTONE_CONTROL = new PonderTag("redstone_control").item(Items.REDSTONE, true, false),
-//
-//		ITEM_TRANSFER = new PonderTag("item_transfer").idAsIcon(),
 
 		ARM_TARGETS = new PonderTag("arm_targets").item(AllBlocks.MECHANICAL_ARM.get())
 			.defaultLang("Targets for Mechanical Arms",
@@ -79,8 +83,6 @@ public class PonderTag implements IScreenRenderable {
 	public static class Highlight {
 		public static final PonderTag ALL = new PonderTag("_all");
 	}
-
-	//
 
 	private final String id;
 	private ResourceLocation icon;
@@ -118,6 +120,11 @@ public class PonderTag implements IScreenRenderable {
 		return icon(id);
 	}
 
+	public PonderTag addToIndex() {
+		LISTED_TAGS.add(this);
+		return this;
+	}
+
 	public PonderTag icon(String location) {
 		this.icon = new ResourceLocation(com.simibubi.create.Create.ID, "textures/ponder/tag/" + location + ".png");
 		return this;
@@ -145,7 +152,8 @@ public class PonderTag implements IScreenRenderable {
 				.getTextureManager()
 				.bindTexture(icon);
 			ms.scale(0.25f, 0.25f, 1);
-			// x and y offset, blit z offset, tex x and y, tex width and height, entire tex sheet width and height
+			// x and y offset, blit z offset, tex x and y, tex width and height, entire tex
+			// sheet width and height
 			AbstractGui.drawTexture(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
 			ms.translate(-4, -4, 0);

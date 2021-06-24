@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1676",
+	"_": "Missing Localizations: 1682",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -677,7 +677,8 @@
 
 	"create.menu.return": "UNLOCALIZED: Return to Menu",
 	"create.menu.configure": "UNLOCALIZED: Configure...",
-	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.ponder_index": "UNLOCALIZED: Ponder Index",
+	"create.menu.only_ingame": "UNLOCALIZED: Available in the Pause Menu",
 	"create.menu.project_page": "UNLOCALIZED: Project Page",
 	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
 	"create.menu.support": "UNLOCALIZED: Support Us",
@@ -1415,6 +1416,11 @@
 	"create.ponder.replay": "UNLOCALIZED: Replay",
 	"create.ponder.think_back": "UNLOCALIZED: Think Back",
 	"create.ponder.slow_text": "UNLOCALIZED: Comfy Reading",
+	"create.ponder.exit": "UNLOCALIZED: Exit",
+	"create.ponder.welcome": "UNLOCALIZED: Welcome to Ponder",
+	"create.ponder.categories": "UNLOCALIZED: Available Categories in Create",
+	"create.ponder.index_description": "UNLOCALIZED: Click one of the icons to learn about its associated Items and Blocks",
+	"create.ponder.index_title": "UNLOCALIZED: Ponder Index",
 	"create.ponder.shared.movement_anchors": "UNLOCALIZED: With the help of Chassis or Super Glue, larger structures can be moved.",
 	"create.ponder.shared.rpm32": "UNLOCALIZED: 32 RPM",
 	"create.ponder.shared.sneak_and": "UNLOCALIZED: Sneak +",

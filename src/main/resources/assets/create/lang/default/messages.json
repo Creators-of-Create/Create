@@ -14,7 +14,8 @@
 
 	"create.menu.return": "Return to Menu",
 	"create.menu.configure": "Configure...",
-	"create.menu.getting_started": "Getting Started",
+	"create.menu.ponder_index": "Ponder Index",
+	"create.menu.only_ingame": "Available in the Pause Menu",
 	"create.menu.project_page": "Project Page",
 	"create.menu.report_bugs": "Report Issues",
 	"create.menu.support": "Support Us",

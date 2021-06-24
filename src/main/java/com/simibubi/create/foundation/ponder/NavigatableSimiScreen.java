@@ -10,11 +10,13 @@ import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Lang;
@@ -25,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -73,14 +76,15 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		IScreenRenderable icon = null;
 		ItemStack altIcon = null;
 
+		if (screen instanceof PonderTagIndexScreen)
+			altIcon = AllItems.WRENCH.asStack();
 		if (screen instanceof PonderUI)
 			altIcon = ((PonderUI) screen).stack;
 		if (screen instanceof PonderTagScreen)
 			icon = ((PonderTagScreen) screen).getTag();
 
-		widgets.add(backTrack = new PonderButton(31, height - 31 - 20)
-				.enableFade(0, 5)
-				.withCallback(() -> ScreenOpener.openPreviousScreen(this, Optional.empty())));
+		widgets.add(backTrack = new PonderButton(31, height - 31 - 20).enableFade(0, 5)
+			.withCallback(() -> ScreenOpener.openPreviousScreen(this, Optional.empty())));
 		backTrack.fade(1);
 
 		if (icon != null)
@@ -99,13 +103,19 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.push();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
-			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, Theme.i(Theme.Key.TEXT_DARKER));
+			TranslationTextComponent translate = Lang.translate(backTrackingLangKey());
+			textRenderer.draw(ms, translate, 41 - textRenderer.getWidth(translate) / 2, height - 16,
+				Theme.i(Theme.Key.TEXT_DARKER));
 			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
 				arrowAnimation.setValue(1);// called twice to also set the previous value to 1
 			}
 		}
 		ms.pop();
+	}
+
+	protected String backTrackingLangKey() {
+		return THINK_BACK;
 	}
 
 	@Override
@@ -115,7 +125,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			int maxX = backTrack.x + backTrack.getWidth();
 
 			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5,
+					Theme.p(Theme.Key.PONDER_BACK_ARROW));
 
 			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
 			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));

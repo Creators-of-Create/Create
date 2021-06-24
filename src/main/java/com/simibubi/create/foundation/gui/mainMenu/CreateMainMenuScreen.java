@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -42,6 +44,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	private RenderSkybox vanillaPanorama = new RenderSkybox(MainMenuScreen.PANORAMA_RESOURCES);
 	private RenderSkybox panorama = new RenderSkybox(PANORAMA_RESOURCES);
 	private long firstRenderTime;
+	private Button gettingStarted;
 
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
@@ -62,7 +65,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		float f = (float) (Util.milliTime() - this.firstRenderTime) / 1000.0F;
 		float alpha = MathHelper.clamp(f, 0.0F, 1.0F);
-		
+
 		if (parent instanceof MainMenuScreen) {
 			if (alpha < 1)
 				vanillaPanorama.render(partialTicks, 1);
@@ -111,7 +114,8 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		ms.push();
 		ms.translate(0, 0, 200);
 		drawCenteredText(ms, textRenderer, new StringTextComponent(Create.NAME).formatted(TextFormatting.BOLD)
-			.append(new StringTextComponent(" v" + Create.VERSION).formatted(TextFormatting.BOLD, TextFormatting.WHITE)),
+			.append(
+				new StringTextComponent(" v" + Create.VERSION).formatted(TextFormatting.BOLD, TextFormatting.WHITE)),
 			width / 2, 89, 0xff_E4BB67);
 		ms.pop();
 
@@ -133,15 +137,14 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
-		addButton(new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"),
-			$ -> onClose()));
+		addButton(
+			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"), $ -> onClose()));
 		addButton(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
-		Button gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
-			Lang.translate("menu.getting_started"), $ -> {
-			});
-		gettingStarted.active = false;
+		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
+			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
+		gettingStarted.active = !(parent instanceof MainMenuScreen);
 		addButton(gettingStarted);
 
 		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
@@ -160,6 +163,15 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	protected void renderWindowForeground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
 		buttons.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+
+		if (parent instanceof MainMenuScreen) {
+			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)
+				return;
+			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
+				return;
+			renderTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), TextFormatting.GRAY,
+				TextFormatting.GRAY), mouseX, mouseY);
+		}
 	}
 
 	public void tick() {
@@ -180,7 +192,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 			this.client.displayGuiScreen(this);
 		}, url, true));
 	}
-	
+
 	@Override
 	public boolean isPauseScreen() {
 		return true;
