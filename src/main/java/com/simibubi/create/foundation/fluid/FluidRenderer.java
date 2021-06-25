@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -39,6 +40,9 @@ public class FluidRenderer {
 
 		int color = fluidAttributes.getColor(fluidStack);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		if (buffer instanceof SuperRenderTypeBuffer)
+			builder = ((SuperRenderTypeBuffer) buffer).getLateBuffer(RenderType.getTranslucent());
+		
 		MatrixStacker msr = MatrixStacker.of(ms);
 		int blockLightIn = (light >> 4) & 0xf;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
@@ -87,6 +91,8 @@ public class FluidRenderer {
 
 		int color = fluidAttributes.getColor(fluidStack);
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		if (buffer instanceof SuperRenderTypeBuffer)
+			builder = ((SuperRenderTypeBuffer) buffer).getLateBuffer(RenderType.getTranslucent());
 		MatrixStacker msr = MatrixStacker.of(ms);
 		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 

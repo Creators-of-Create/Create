@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
+import com.simibubi.create.Create;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
@@ -14,23 +16,27 @@ import net.minecraftforge.fml.common.thread.EffectiveSide;
 public class Debug {
 
 	@Deprecated
-	public static void debugChat(ITextComponent message) {
+	public static void debugChat(String message) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.sendStatusMessage(message, false);
+			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(message), false);
 	}
 
 	@Deprecated
-	public static void debugChatAndShowStack(ITextComponent message, int depth) {
+	public static void debugChatAndShowStack(String message, int depth) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.sendStatusMessage(message.copy()
-				.append("@")
+			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(message).append("@")
 				.append(debugStack(depth)), false);
 	}
 
 	@Deprecated
-	public static void debugMessage(ITextComponent message) {
+	public static void debugMessage(String message) {
 		if (Minecraft.getInstance().player != null)
-			Minecraft.getInstance().player.sendStatusMessage(message, true);
+			Minecraft.getInstance().player.sendStatusMessage(new StringTextComponent(message), true);
+	}
+	
+	@Deprecated
+	public static void log(String message) {
+		Create.LOGGER.info(message);
 	}
 
 	@Deprecated

@@ -105,6 +105,10 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (fluidLevel != null)
 			fluidLevel.tick();
 	}
+	
+	public BlockPos getLastKnownPos() {
+		return lastKnownPos;
+	}
 
 	public boolean isController() {
 		return controller == null
@@ -156,6 +160,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (!world.isRemote) {
 			markDirty();
 			sendData();
+		}
+		
+		if (isVirtual()) {
+			if (fluidLevel == null)
+				fluidLevel = new InterpolatedChasingValue().start(getFillState());
+			fluidLevel.target(getFillState());
 		}
 	}
 
@@ -268,7 +278,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	public void setController(BlockPos controller) {
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 		if (controller.equals(this.controller))
 			return;
