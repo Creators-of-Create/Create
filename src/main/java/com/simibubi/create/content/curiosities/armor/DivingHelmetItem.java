@@ -6,7 +6,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.tags.FluidTags;
@@ -28,7 +27,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 		World world = entity.world;
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAir() == 0;
-		
+
 		if (world.isRemote)
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
@@ -41,20 +40,10 @@ public class DivingHelmetItem extends CopperArmorItem {
 		if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
 			return;
 
-		ItemStack backtank = ItemStack.EMPTY;
-		for (ItemStack itemStack : entity.getArmorInventoryList()) {
-			if (AllItems.COPPER_BACKTANK.isIn(itemStack)) {
-				backtank = itemStack;
-				break;
-			}
-		}
-
+		ItemStack backtank = BackTankUtil.get(entity);
 		if (backtank.isEmpty())
 			return;
-
-		CompoundNBT tag = backtank.getOrCreateTag();
-		int airRemaining = tag.getInt("Air");
-		if (airRemaining == 0)
+		if (!BackTankUtil.hasAirRemaining(backtank))
 			return;
 
 		if (drowning)
@@ -62,15 +51,14 @@ public class DivingHelmetItem extends CopperArmorItem {
 
 		if (world.isRemote)
 			entity.getPersistentData()
-				.putInt("VisualBacktankAir", airRemaining);
+				.putInt("VisualBacktankAir", (int) BackTankUtil.getAir(backtank));
 
 		if (!second)
 			return;
 
 		entity.setAir(Math.min(entity.getMaxAir(), entity.getAir() + 10));
 		entity.addPotionEffect(new EffectInstance(Effects.WATER_BREATHING, 30, 0, true, false, true));
-		tag.putInt("Air", airRemaining - 1);
-		backtank.setTag(tag);
+		BackTankUtil.consumeAir(backtank, 1);
 	}
 
 }

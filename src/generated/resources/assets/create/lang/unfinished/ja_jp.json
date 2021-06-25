@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 191",
+	"_": "Missing Localizations: 205",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 	"entity.create.contraption": "からくり",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "ガントリーからくり",
+	"entity.create.potato_projectile": "UNLOCALIZED: Potato Projectile",
 	"entity.create.seat": "シート",
 	"entity.create.stationary_contraption": "付設からくり",
 	"entity.create.super_glue": "超粘着剤",
@@ -481,6 +482,7 @@
 	"item.create.minecart_contraption": "からくり付きトロッコ",
 	"item.create.minecart_coupling": "トロッコ連結器",
 	"item.create.polished_rose_quartz": "磨かれたローズクォーツ",
+	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "黒曜石の粉",
 	"item.create.propeller": "プロペラ",
 	"item.create.red_sand_paper": "赤い紙やすり",
@@ -670,6 +672,8 @@
 	"death.attack.create.fan_lava": "%1$s は溶岩ファンによって焼死した",
 	"death.attack.create.mechanical_drill": "%1$s はメカニカルドリルに突き刺さった",
 	"death.attack.create.mechanical_saw": "%1$s はメカニカルソーで半分にカットされた",
+	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s は改ざんされた鳩時計に爆破された",
 
 	"create.block.deployer.damage_source_name": "悪いデプロイヤー",
@@ -1166,6 +1170,7 @@
 	"create.subtitle.contraption_disassemble": "からくりが止まる",
 	"create.subtitle.mixing": "混ぜる音",
 	"create.subtitle.mechanical_press_activation_belt": "メカニカルプレスがボンと鳴る",
+	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
 	"create.subtitle.depot_slide": "アイテムが滑る",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1180,6 +1185,7 @@
 	"create.subtitle.cogs": "歯車がゴロゴロと鳴る",
 	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
 	"create.subtitle.wrench_rotate": "レンチを使う",
+	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
@@ -1247,6 +1253,15 @@
 	"item.create.extendo_grip.tooltip.summary": "ビヨヨーン！着用者の_射程_を大幅に_伸ばし_ます。",
 	"item.create.extendo_grip.tooltip.condition1": "オフハンドに装備したとき",
 	"item.create.extendo_grip.tooltip.behaviour1": "_メインハンド_で使うアイテムの_射程_を_伸ばし_ます。",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "フィルター",
 	"item.create.filter.tooltip.summary": "物流系の装置の_搬入_と_搬出_をより_正確_に_制御_し、_アイテムのセット_またはいくつかの_入れ子になったフィルター_と照合します。",

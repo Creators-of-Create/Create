@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1299",
+	"_": "Missing Localizations: 1313",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 	"entity.create.contraption": "Engin",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
+	"entity.create.potato_projectile": "UNLOCALIZED: Potato Projectile",
 	"entity.create.seat": "Siège",
 	"entity.create.stationary_contraption": "Engin stationnaire",
 	"entity.create.super_glue": "Colle extra-forte",
@@ -481,6 +482,7 @@
 	"item.create.minecart_contraption": "Engin de wagonnet",
 	"item.create.minecart_coupling": "Lien pour wagonnet",
 	"item.create.polished_rose_quartz": "Quartz rose poli",
+	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "Obsidienne concassée",
 	"item.create.propeller": "Hélice",
 	"item.create.red_sand_paper": "Papier de verre rouge",
@@ -670,6 +672,8 @@
 	"death.attack.create.fan_lava": "%1$s a été brûlé à mort par un ventilateur de lave",
 	"death.attack.create.mechanical_drill": "%1$s a été empalé par une perceuse mécanique",
 	"death.attack.create.mechanical_saw": "%1$s a été coupé en deux par une scie mécanique",
+	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s a été explosé par un coucou trafiquée",
 
 	"create.block.deployer.damage_source_name": "un déployeur voyou",
@@ -1166,6 +1170,7 @@
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
+	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1180,6 +1185,7 @@
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Bruit de slime",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
+	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
@@ -1244,9 +1250,18 @@
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Fait pousser des rotors _indépendamment_ de leurs _conditions_ _d'emplacement_",
 
 	"item.create.extendo_grip.tooltip": "UNLOCALIZED: EXTENDO GRIP",
-	"item.create.extendo_grip.tooltip.summary": "UNLOCALIZED: Boioioing! Greatly _increases reach distance_ of the wielder.",
+	"item.create.extendo_grip.tooltip.summary": "UNLOCALIZED: Boioioing! Greatly _increases reach distance_ of the wielder. Can be powered with Air Pressure from a _Copper_ _Backtank_",
 	"item.create.extendo_grip.tooltip.condition1": "UNLOCALIZED: When in Off-Hand",
 	"item.create.extendo_grip.tooltip.behaviour1": "UNLOCALIZED: Increases _reach distance_ of items used in the _Main-Hand_.",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTRE",
 	"item.create.filter.tooltip.summary": "_Contrôle_ les _sorties_ et _entrées_ de dispositifs logistiques avec plus de _précision_, en les comparant à un _ensemble_ _d'objets_ ou à plusieurs _filtres_ _imbriqués_.",

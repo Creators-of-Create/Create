@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 878",
+	"_": "Missing Localizations: 892",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 	"entity.create.contraption": "장치",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
+	"entity.create.potato_projectile": "UNLOCALIZED: Potato Projectile",
 	"entity.create.seat": "좌석",
 	"entity.create.stationary_contraption": "고정된 장치",
 	"entity.create.super_glue": "강력 접착제",
@@ -481,6 +482,7 @@
 	"item.create.minecart_contraption": "광산 수레 장치",
 	"item.create.minecart_coupling": "광산 수레 커플링",
 	"item.create.polished_rose_quartz": "윤나는 장밋빛 석영",
+	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "흑요석 가루",
 	"item.create.propeller": "프로펠러",
 	"item.create.red_sand_paper": "붉은 사포",
@@ -670,6 +672,8 @@
 	"death.attack.create.fan_lava": "%1$s이(가) 용암 바람으로 구워졌습니다",
 	"death.attack.create.mechanical_drill": "%1$s이(가) 드릴에 관통당했습니다",
 	"death.attack.create.mechanical_saw": "%1$s이(가) 톱날에 반으로 갈라져 죽었습니다",
+	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s이(가) 조작된 뻐꾸기 시계에 의해 폭파당했습니다",
 
 	"create.block.deployer.damage_source_name": "배포기",
@@ -1166,6 +1170,7 @@
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
+	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1180,6 +1185,7 @@
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "슬라임이 철퍽거림",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
+	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
@@ -1247,6 +1253,15 @@
 	"item.create.extendo_grip.tooltip.summary": "띠요오옹! 사용자의 _사거리_를 늘려줍니다.",
 	"item.create.extendo_grip.tooltip.condition1": "다른 손에 있을 때",
 	"item.create.extendo_grip.tooltip.behaviour1": "_기존_ _손_에있는 아이템의 사거리를 늘립니다.",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTER",
 	"item.create.filter.tooltip.summary": "장치의 _입력_과 _출력_을 필터 _아이템_ 목록에 따라 _조정_합니다.",

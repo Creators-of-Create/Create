@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 208",
+	"_": "Missing Localizations: 222",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 	"entity.create.contraption": "装置",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "起重机装置",
+	"entity.create.potato_projectile": "UNLOCALIZED: Potato Projectile",
 	"entity.create.seat": "坐垫",
 	"entity.create.stationary_contraption": "固定装置",
 	"entity.create.super_glue": "强力胶",
@@ -481,6 +482,7 @@
 	"item.create.minecart_contraption": "装配过的矿车",
 	"item.create.minecart_coupling": "矿车连轴器",
 	"item.create.polished_rose_quartz": "磨制玫瑰石英",
+	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "黑曜石粉末",
 	"item.create.propeller": "扇叶",
 	"item.create.red_sand_paper": "红沙砂纸",
@@ -670,6 +672,8 @@
 	"death.attack.create.fan_lava": "%1$s在接受热风的洗礼中浴火焚身",
 	"death.attack.create.mechanical_drill": "%1$s被钻头钻的坏掉了",
 	"death.attack.create.mechanical_saw": "%1$s被圆锯切成了两截",
+	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s被布谷鸟钟炸得粉身碎骨",
 
 	"create.block.deployer.damage_source_name": "二五仔机械手",
@@ -1166,6 +1170,7 @@
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
+	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1180,6 +1185,7 @@
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "粘液：挤碎声",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
+	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
@@ -1247,6 +1253,15 @@
 	"item.create.extendo_grip.tooltip.summary": "biubiubiu! 大幅度_增加了_使用者的_触碰距离_。",
 	"item.create.extendo_grip.tooltip.condition1": "放置于副手栏时",
 	"item.create.extendo_grip.tooltip.behaviour1": "增加_主手_所使用物品的_接触距离_。",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "过滤器",
 	"item.create.filter.tooltip.summary": "可用于_精确_控制物流设备的_输出_以及_输入_，使得通过的物品流与_一组_物品或者数个_相嵌套的过滤器_相匹配。",

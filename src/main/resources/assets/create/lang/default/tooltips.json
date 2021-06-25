@@ -49,9 +49,18 @@
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Grows Trees _regardless_ of their _spacing conditions_",
 
 	"item.create.extendo_grip.tooltip": "EXTENDO GRIP",
-	"item.create.extendo_grip.tooltip.summary": "Boioioing! Greatly _increases reach distance_ of the wielder.",
+	"item.create.extendo_grip.tooltip.summary": "Boioioing! Greatly _increases reach distance_ of the wielder. Can be powered with Air Pressure from a _Copper_ _Backtank_",
 	"item.create.extendo_grip.tooltip.condition1": "When in Off-Hand",
 	"item.create.extendo_grip.tooltip.behaviour1": "Increases _reach distance_ of items used in the _Main-Hand_.",
+	"item.create.extendo_grip.tooltip.condition2": "While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "_Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "_No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTER",
 	"item.create.filter.tooltip.summary": "_Controls outputs_ and _inputs_ of logistical devices with more _precision_, matching them against a _set of items_ or several _nested filters_.",

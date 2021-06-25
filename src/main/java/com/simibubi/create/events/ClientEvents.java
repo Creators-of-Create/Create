@@ -28,6 +28,7 @@ import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHa
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
@@ -111,6 +112,7 @@ public class ClientEvents {
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
 		ScrollValueHandler.tick();
+		PotatoCannonItem.clientTick();
 
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();

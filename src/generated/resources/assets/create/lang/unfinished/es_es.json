@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 808",
+	"_": "Missing Localizations: 822",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 	"entity.create.contraption": "Artilugio",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "Artilugio de grúa",
+	"entity.create.potato_projectile": "UNLOCALIZED: Potato Projectile",
 	"entity.create.seat": "Asiento",
 	"entity.create.stationary_contraption": "Artilugio estacionario",
 	"entity.create.super_glue": "Super Pegamento",
@@ -481,6 +482,7 @@
 	"item.create.minecart_contraption": "Artilugio de vagoneta",
 	"item.create.minecart_coupling": "Acoplamiento de vagoneta",
 	"item.create.polished_rose_quartz": "Cuarzo rosado pulido",
+	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "Obsidiana en polvo",
 	"item.create.propeller": "Hélice",
 	"item.create.red_sand_paper": "Papel de lija rojo",
@@ -670,6 +672,8 @@
 	"death.attack.create.fan_lava": "%1$s murió quemado por un abanico de lava",
 	"death.attack.create.mechanical_drill": "%1$s fue empalado por un taladro mecánico",
 	"death.attack.create.mechanical_saw": "%1$s fue cortado por la mitad por una sierra mecánica",
+	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s fue volado por los aires por un reloj cucú manipulado",
 
 	"create.block.deployer.damage_source_name": "un Desplegador rebelde",
@@ -1166,6 +1170,7 @@
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
+	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1180,6 +1185,7 @@
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime aplastado",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
+	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
@@ -1247,6 +1253,15 @@
 	"item.create.extendo_grip.tooltip.summary": "¡Boioioing! Aumenta enormemente la _distancia de alcance_ del portador",
 	"item.create.extendo_grip.tooltip.condition1": "Cuando está fuera de la mano",
 	"item.create.extendo_grip.tooltip.behaviour1": "Aumenta la _distancia de alcance_ de los objetos usados en la _mano principal_",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTRO",
 	"item.create.filter.tooltip.summary": "Controla las salidas_ y _entradas_ de los dispositivos logísticos con más _precisión_, comparándolas con un _conjunto de elementos_ o varios _filtros anidados_",

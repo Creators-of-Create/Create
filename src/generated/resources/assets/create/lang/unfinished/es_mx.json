@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1414",
+	"_": "Missing Localizations: 1428",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -416,6 +416,7 @@
 	"entity.create.contraption": "Artefacto",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "UNLOCALIZED: Gantry Contraption",
+	"entity.create.potato_projectile": "UNLOCALIZED: Potato Projectile",
 	"entity.create.seat": "Asiento",
 	"entity.create.stationary_contraption": "Artefacto Estacionario",
 	"entity.create.super_glue": "Super Pegamento",
@@ -481,6 +482,7 @@
 	"item.create.minecart_contraption": "Artefacto de Vagón",
 	"item.create.minecart_coupling": "Acoplamiento de Vagonetas",
 	"item.create.polished_rose_quartz": "Cuarzo Rosa Pulido",
+	"item.create.potato_cannon": "UNLOCALIZED: Potato Cannon",
 	"item.create.powdered_obsidian": "Polvo de Obsidiana",
 	"item.create.propeller": "Hélice",
 	"item.create.red_sand_paper": "Papel de Arena Roja",
@@ -670,6 +672,8 @@
 	"death.attack.create.fan_lava": "UNLOCALIZED: %1$s was burned to death by lava fan",
 	"death.attack.create.mechanical_drill": "UNLOCALIZED: %1$s was impaled by a Mechanical Drill",
 	"death.attack.create.mechanical_saw": "UNLOCALIZED: %1$s got cut in half by a Mechanical Saw",
+	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
 
 	"create.block.deployer.damage_source_name": "UNLOCALIZED: a rogue Deployer",
@@ -1166,6 +1170,7 @@
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
+	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1180,6 +1185,7 @@
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "UNLOCALIZED: Slime squishes",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
+	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
@@ -1247,6 +1253,15 @@
 	"item.create.extendo_grip.tooltip.summary": "Boioioing! En gran medida, _aumenta_ _la_ _distancia_ _de_ _alcance_ del portador.",
 	"item.create.extendo_grip.tooltip.condition1": "Cuando está en la mano secundaria",
 	"item.create.extendo_grip.tooltip.behaviour1": "Aumenta el rango de alcance de los objetos usados en la _mano_ _principal._",
+	"item.create.extendo_grip.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.extendo_grip.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
+
+	"item.create.potato_cannon.tooltip": "UNLOCALIZED: POTATO CANNON",
+	"item.create.potato_cannon.tooltip.summary": "UNLOCALIZED: Fwoomp! Launch your home-grown vegetables at your Enemies. Can be powered with Air Pressure from a _Copper_ _Backtank_",
+	"item.create.potato_cannon.tooltip.condition1": "UNLOCALIZED: When R-Clicked",
+	"item.create.potato_cannon.tooltip.behaviour1": "UNLOCALIZED: _Shoots_ a suitable item from your _Inventory_.",
+	"item.create.potato_cannon.tooltip.condition2": "UNLOCALIZED: While wearing Copper Backtank",
+	"item.create.potato_cannon.tooltip.behaviour2": "UNLOCALIZED: _No_ _Durability_ will be used. Instead, _Air_ _pressure_ is drained from the Tank",
 
 	"item.create.filter.tooltip": "FILTER",
 	"item.create.filter.tooltip.summary": "_Controla_ las _salidas_ y _entradas_ de los dispositivos logísticos con más _precisión,_ comparándolas con un _conjunto_ _de_ _objetos_ o varios _filtros_ _anidados._",

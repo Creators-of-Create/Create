@@ -1,10 +1,10 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
-import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
@@ -40,6 +40,8 @@ import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripModel;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonModel;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperModel;
 import com.simibubi.create.content.logistics.item.LinkedControllerItem;
@@ -65,7 +67,7 @@ import net.minecraft.util.ResourceLocation;
 public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
 	// Schematics
 
@@ -126,10 +128,10 @@ public class AllItems {
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
-			REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
-					.properties(p -> p.rarity(Rarity.UNCOMMON))
-					.model(AssetLookup.existingItemModel())
-					.color(() -> ChromaticCompoundColor::new)
+		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.model(AssetLookup.existingItemModel())
+			.color(() -> ChromaticCompoundColor::new)
 			.register();
 
 	public static final ItemEntry<ShadowSteelItem> SHADOW_STEEL = REGISTRATE.item("shadow_steel", ShadowSteelItem::new)
@@ -187,29 +189,29 @@ public class AllItems {
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
 		.properties(p -> p.maxStackSize(1))
-			.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
-			.lang("Engineer's Goggles")
-			.register();
+		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
+		.lang("Engineer's Goggles")
+		.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
-			.register();
+		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
-			REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
-					.register();
+		REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
+			.register();
 
 	public static final ItemEntry<BlueprintItem> CRAFTING_BLUEPRINT =
-			REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
-					.register();
+		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
+			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
-			.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
-			.register();
+		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+		.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
-			.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
-			.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
-			.register();
+		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.maxStackSize(1))
@@ -225,6 +227,12 @@ public class AllItems {
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
+			.model(AssetLookup.itemModelWithPartials())
+			.register();
+
+	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
+		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
+			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 

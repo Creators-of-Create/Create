@@ -115,6 +115,16 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		FWOOMP = create("fwoomp").subtitle("Potato Launcher fwoomps")
+			.category(SoundCategory.PLAYERS)
+			.build(),
+
+		POTATO_HIT = create("potato_hit").subtitle("Vegetable impacts")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_BREAK, .75f, .75f)
+			.playExisting(SoundEvents.BLOCK_WEEPING_VINES_BREAK, .75f, 1.25f)
+			.category(SoundCategory.PLAYERS)
+			.build(),
+
 		CONTRAPTION_ASSEMBLE = create("contraption_assemble").subtitle("Contraption moves")
 			.playExisting(SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN, .5f, .5f)
 			.playExisting(SoundEvents.BLOCK_CHEST_OPEN, .045f, .74f)
@@ -177,7 +187,7 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.BLOCK_SAND_PLACE, .075f, .75f)
 			.category(SoundCategory.BLOCKS)
 			.build(),
-			
+
 		SAW_IDLE = create("saw_idle").subtitle("Mechanical Saw turns")
 			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND)
 			.category(SoundCategory.BLOCKS)

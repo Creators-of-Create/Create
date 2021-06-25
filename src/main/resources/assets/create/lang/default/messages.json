@@ -8,6 +8,8 @@
 	"death.attack.create.fan_lava": "%1$s was burned to death by lava fan",
 	"death.attack.create.mechanical_drill": "%1$s was impaled by a Mechanical Drill",
 	"death.attack.create.mechanical_saw": "%1$s got cut in half by a Mechanical Saw",
+	"death.attack.create.potato_cannon": "%1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "%1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",

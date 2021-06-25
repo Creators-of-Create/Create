@@ -25,6 +25,7 @@ import com.simibubi.create.content.curiosities.projector.ConfigureProjectorPacke
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonPacket;
 import com.simibubi.create.content.curiosities.zapper.ZapperBeamPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorElytraPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorPlacementPacket;
@@ -112,6 +113,7 @@ public enum AllPackets {
 	BLOCK_HIGHLIGHT(HighlightPacket.class, HighlightPacket::new, PLAY_TO_CLIENT),
 	TUNNEL_FLAP(TunnelFlapPacket.class, TunnelFlapPacket::new, PLAY_TO_CLIENT),
 	FUNNEL_FLAP(FunnelFlapPacket.class, FunnelFlapPacket::new, PLAY_TO_CLIENT),
+	POTATO_CANNON(PotatoCannonPacket.class, PotatoCannonPacket::new, PLAY_TO_CLIENT),
 	PERSISTENT_DATA(ISyncPersistentData.Packet.class, ISyncPersistentData.Packet::new, PLAY_TO_CLIENT),
 
 	;
