@@ -116,7 +116,8 @@ public class AllTags {
 	}
 
 	public static enum AllFluidTags {
-		NO_INFINITE_DRAINING
+		NO_INFINITE_DRAINING,
+		HONEY(FORGE)
 
 		;
 
