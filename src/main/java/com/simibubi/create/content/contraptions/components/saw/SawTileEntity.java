@@ -410,6 +410,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return true;
 		if (block instanceof ChorusPlantBlock)
 			return true;
+		if (TreeCutter.canDynamicTreeCutFrom(block))
+			return true;
 		return false;
 	}
 
