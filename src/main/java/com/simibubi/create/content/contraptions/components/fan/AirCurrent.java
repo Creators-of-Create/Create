@@ -8,8 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.particle.AirFlowParticleData;
-import com.simibubi.create.content.logistics.InWorldProcessing;
-import com.simibubi.create.content.logistics.InWorldProcessing.Type;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing.Type;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -89,8 +89,7 @@ public class AirCurrent {
 	protected void tickAffectedEntities(World world, Direction facing) {
 		for (Iterator<Entity> iterator = caughtEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			if (!entity.isAlive() || !entity.getBoundingBox()
-				.intersects(bounds)) {
+			if (!entity.isAlive() || !entity.getBoundingBox().intersects(bounds) || isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -387,6 +386,14 @@ public class AirCurrent {
 			else
 				flyingSound.fadeOut();
 		isClientPlayerInAirCurrent = false;
+	}
+
+	public static boolean isPlayerCreativeFlying(Entity entity) {
+		if (entity instanceof PlayerEntity) {
+			PlayerEntity player = (PlayerEntity) entity;
+			return player.isCreative() && player.abilities.isFlying;
+		}
+		return false;
 	}
 
 }

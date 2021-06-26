@@ -60,6 +60,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public static final Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new Compartment<>();
 
 	List<TileEntity> renderedTileEntities;
+	List<TileEntity> tickableTileEntities;
 	Selection section;
 	boolean redraw;
 
@@ -256,27 +257,33 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		loadTEsIfMissing(scene.getWorld());
 		renderedTileEntities.removeIf(te -> scene.getWorld()
 			.getTileEntity(te.getPos()) != te);
-		renderedTileEntities.forEach(te -> {
+		tickableTileEntities.removeIf(te -> scene.getWorld()
+			.getTileEntity(te.getPos()) != te);
+		tickableTileEntities.forEach(te -> {
 			if (te instanceof ITickableTileEntity)
 				((ITickableTileEntity) te).tick();
 		});
 	}
-	
+
 	@Override
 	public void whileSkipping(PonderScene scene) {
-		if (redraw)
+		if (redraw) {
 			renderedTileEntities = null;
+			tickableTileEntities = null;
+		}
 		redraw = false;
 	}
 
 	protected void loadTEsIfMissing(PonderWorld world) {
 		if (renderedTileEntities != null)
 			return;
+		tickableTileEntities = new ArrayList<>();
 		renderedTileEntities = new ArrayList<>();
 		section.forEach(pos -> {
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (tileEntity == null)
 				return;
+			tickableTileEntities.add(tileEntity);
 			renderedTileEntities.add(tileEntity);
 			tileEntity.updateContainingBlockInfo();
 		});
@@ -294,8 +301,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		int light = -1;
 		if (fade != 1)
 			light = (int) (MathHelper.lerp(fade, 5, 14));
-		if (redraw)
+		if (redraw) {
 			renderedTileEntities = null;
+			tickableTileEntities = null;
+		}
 		transformMS(ms, pt);
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer, pt);
@@ -329,15 +338,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	protected void renderStructure(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, RenderType type,
 		float fade) {
-		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 		int code = hashCode() ^ world.hashCode();
 
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.getBlockLayers()
-			.indexOf(type));
+				.indexOf(type));
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
-			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
+				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
 		if (contraptionBuffer.isEmpty())
 			return;
 
@@ -352,7 +361,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (selectedBlock == null)
 			return;
 		BlockState blockState = world.getBlockState(selectedBlock);
-		if (blockState.isAir(world, selectedBlock))
+		if (blockState.isAir())
 			return;
 		VoxelShape shape =
 			blockState.getShape(world, selectedBlock, ISelectionContext.forEntity(Minecraft.getInstance().player));
@@ -369,7 +378,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private void renderTileEntities(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float pt) {
 		loadTEsIfMissing(world);
-		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, new MatrixStack(), buffer, pt);
+		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, buffer, pt);
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {

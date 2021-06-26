@@ -3,25 +3,24 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -42,10 +41,10 @@ public class DeployerActorInstance extends ActorInstance {
     ModelData hand;
     RotatingData shaft;
 
-    public DeployerActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
-        super(modelManager, context);
+    public DeployerActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+        super(materialManager, simulationWorld, context);
 
-        RenderMaterial<ContraptionProgram, InstancedModel<ModelData>> mat = modelManager.getTransformMaterial();
+		InstanceMaterial<ModelData> mat = materialManager.getTransformMaterial();
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
@@ -63,9 +62,9 @@ public class DeployerActorInstance extends ActorInstance {
         hand = mat.getModel(handPose, state).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-        shaft = modelManager.getMaterial(KineticRenderMaterials.ROTATING)
-                            .getModel(KineticTileInstance.shaft(axis))
-                            .createInstance();
+		shaft = materialManager.getMaterial(AllMaterialSpecs.ROTATING)
+				.getModel(KineticTileInstance.shaft(axis))
+				.createInstance();
 
         int blockLight = localBlockLight();
 

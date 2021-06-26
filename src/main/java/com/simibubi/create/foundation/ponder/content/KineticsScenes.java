@@ -26,6 +26,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
@@ -230,6 +231,7 @@ public class KineticsScenes {
 		scene.overlay.showText(60)
 			.text("Shifting from large to small cogs, the conveyed speed will be doubled")
 			.colored(PonderPalette.GREEN)
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 3), Direction.NORTH));
 		scene.idle(10);
@@ -268,6 +270,7 @@ public class KineticsScenes {
 		scene.overlay.showText(80)
 			.text("Shifting the opposite way, the conveyed speed will be halved")
 			.colored(PonderPalette.RED)
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 3), Direction.NORTH));
 		scene.idle(10);
@@ -338,6 +341,7 @@ public class KineticsScenes {
 			.colored(PonderPalette.GREEN)
 			.pointAt(util.vector.topOf(3, 2, 3))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("A gearbox is the more compact equivalent of this setup");
 
 		scene.idle(90);
@@ -410,6 +414,7 @@ public class KineticsScenes {
 		scene.overlay.showText(50)
 			.colored(PonderPalette.RED)
 			.text("When powered by Redstone, it breaks the connection")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(clutch));
 
@@ -455,6 +460,7 @@ public class KineticsScenes {
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.text("When powered by Redstone, it reverses the transmission")
+			.attachKeyFrame()
 			.pointAt(util.vector.topOf(gearshift));
 
 		for (int i = 0; i < 3; i++) {
@@ -502,6 +508,7 @@ public class KineticsScenes {
 
 		scene.overlay.showText(50)
 			.text("Scrolling on the back panel changes the RPM of the motors' rotational output")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(blockSurface);
 		scene.idle(10);
@@ -573,6 +580,7 @@ public class KineticsScenes {
 		scene.rotateCameraY(-30);
 		scene.overlay.showText(70)
 			.text("The Wheels' blades should be oriented against the flow")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(wheel));
 		scene.idle(80);
@@ -598,6 +606,7 @@ public class KineticsScenes {
 		scene.overlay.showText(70)
 			.colored(PonderPalette.RED)
 			.text("Facing the opposite way, they will not be as effective")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(wheel));
 		scene.idle(80);
@@ -629,15 +638,15 @@ public class KineticsScenes {
 		scene.idle(20);
 		Vector3d centerOf = util.vector.centerOf(2, 2, 2);
 		scene.overlay.showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick()
-			.withItem(new ItemStack(Items.BLUE_DYE)), 40);
+				.withItem(new ItemStack(Items.BLUE_DYE)), 40);
 		scene.idle(7);
-		scene.world.modifyBlock(util.grid.at(2, 2, 2), s -> AllBlocks.DYED_VALVE_HANDLES.get(11).getDefaultState()
-			.with(ValveHandleBlock.FACING, Direction.UP), true);
+		scene.world.modifyBlock(util.grid.at(2, 2, 2), s -> AllBlocks.DYED_VALVE_HANDLES.get(DyeColor.BLUE).getDefaultState()
+				.with(ValveHandleBlock.FACING, Direction.UP), true);
 		scene.idle(10);
 		scene.overlay.showText(70)
-			.text("Valve handles can be dyed for aesthetic purposes")
-			.placeNearTarget()
-			.pointAt(centerOf);
+				.text("Valve handles can be dyed for aesthetic purposes")
+				.placeNearTarget()
+				.pointAt(centerOf);
 	}
 
 	private static void manualSource(SceneBuilder scene, SceneBuildingUtil util, boolean handCrank) {
@@ -673,6 +682,7 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("Hold Right-Click to rotate it Counter-Clockwise")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(centerOf);
 		scene.idle(70);
@@ -696,6 +706,7 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.overlay.showText(90)
 			.text("Sneak and Hold Right-Click to rotate it Clockwise")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(centerOf);
 		scene.idle(90);

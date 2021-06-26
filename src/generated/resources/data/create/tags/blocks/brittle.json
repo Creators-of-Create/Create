@@ -25,6 +25,7 @@
     "create:furnace_engine",
     "create:redstone_link",
     "#minecraft:doors",
+    "#minecraft:beds",
     "minecraft:flower_pot",
     "minecraft:bell",
     "minecraft:cocoa"

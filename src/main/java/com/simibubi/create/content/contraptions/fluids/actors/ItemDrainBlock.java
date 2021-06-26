@@ -36,8 +36,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		BlockRayTraceResult hit) {
 		ItemStack heldItem = player.getHeldItem(handIn);
 
-		try {
-			ItemDrainTileEntity te = getTileEntity(worldIn, pos);
+		return onTileEntityUse(worldIn, pos, te -> {
 			if (!heldItem.isEmpty()) {
 				te.internalTank.allowInsertion();
 				ActionResultType tryExchange = tryExchange(worldIn, player, handIn, heldItem, te);
@@ -45,7 +44,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 				if (tryExchange.isAccepted())
 					return tryExchange;
 			}
-			
+
 			ItemStack heldItemStack = te.getHeldItemStack();
 			if (!worldIn.isRemote && !heldItemStack.isEmpty()) {
 				player.inventory.placeItemBackInInventory(worldIn, heldItemStack);
@@ -53,10 +52,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 				te.notifyUpdate();
 			}
 			return ActionResultType.SUCCESS;
-		} catch (TileEntityException e) {
-		}
-
-		return ActionResultType.PASS;
+		});
 	}
 
 	protected ActionResultType tryExchange(World worldIn, PlayerEntity player, Hand handIn, ItemStack heldItem,
@@ -110,7 +106,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
 		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;

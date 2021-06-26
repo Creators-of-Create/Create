@@ -31,7 +31,7 @@ import net.minecraftforge.fml.ModList;
 
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.baseCreativeTab);
+			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String tagName) {
@@ -146,7 +146,6 @@ public class AllTags {
 		WINDMILL_SAILS,
 		FAN_HEATERS,
 		WINDOWABLE,
-		NON_MOVABLE,
 		BRITTLE,
 		SEATS,
 		SAILS,
@@ -179,6 +178,7 @@ public class AllTags {
 			}
 		}
 
+
 		public boolean matches(BlockState block) {
 			return tag.contains(block.getBlock());
 		}
@@ -209,6 +209,7 @@ public class AllTags {
 		AllBlockTags.WINDMILL_SAILS.includeAll(BlockTags.WOOL);
 
 		AllBlockTags.BRITTLE.includeAll(BlockTags.DOORS);
+		AllBlockTags.BRITTLE.includeAll(BlockTags.BEDS);
 		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL, Blocks.COCOA);
 
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);

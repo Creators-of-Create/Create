@@ -170,6 +170,20 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
+	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+
+		if (!worldIn.isRemote() && oldState.getBlock().is(AllBlocks.GANTRY_SHAFT.get())) {
+			Part oldPart = oldState.get(PART), part = state.get(PART);
+			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
+				TileEntity te = worldIn.getTileEntity(pos);
+				if (te instanceof GantryShaftTileEntity)
+					((GantryShaftTileEntity) te).checkAttachedCarriageBlocks();
+			}
+		}
+	}
+
+	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
 		if (worldIn.isRemote)
@@ -260,7 +274,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		return super.areStatesKineticallyEquivalent(oldState, newState)
 			&& oldState.get(POWERED) == newState.get(POWERED);
 	}
-	
+
 	@Override
 	public float getParticleTargetRadius() {
 		return .35f;
@@ -270,7 +284,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	public float getParticleInitialRadius() {
 		return .25f;
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;

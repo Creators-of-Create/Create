@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -23,7 +23,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
     private final ModelData head;
 
-    public StickerInstance(InstancedTileRenderer<?> modelManager, StickerTileEntity tile) {
+    public StickerInstance(MaterialManager<?> modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
 
         head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();

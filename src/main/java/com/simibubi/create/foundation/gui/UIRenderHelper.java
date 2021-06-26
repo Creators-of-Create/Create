@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.Color;
+import java.awt.*;
 
 import javax.annotation.Nonnull;
 
@@ -10,6 +10,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -24,21 +25,31 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class UIRenderHelper {
 
-	public static void enableStencil() {
-		RenderSystem.recordRenderCall(() -> Minecraft.getInstance().getFramebuffer().enableStencil());
-	}
-
+	/**
+	 * An FBO that has a stencil buffer for use wherever stencil are necessary. Forcing the main FBO to have a stencil
+	 * buffer will cause GL error spam when using fabulous graphics.
+	 */
 	public static Framebuffer framebuffer;
+
+	public static void updateWindowSize(MainWindow mainWindow) {
+		if (framebuffer != null)
+			framebuffer.func_216491_a(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), Minecraft.IS_RUNNING_ON_MAC);
+	}
 
 	public static void init() {
 		RenderSystem.recordRenderCall(() -> {
 			MainWindow mainWindow = Minecraft.getInstance()
 					.getWindow();
-			framebuffer = new Framebuffer(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), true,
-					Minecraft.IS_RUNNING_ON_MAC);
-			framebuffer.setFramebufferColor(0, 0, 0, 0);
-			framebuffer.enableStencil();
+			framebuffer = createFramebuffer(mainWindow);
 		});
+	}
+
+	private static Framebuffer createFramebuffer(MainWindow mainWindow) {
+		Framebuffer framebuffer = new Framebuffer(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), true,
+				Minecraft.IS_RUNNING_ON_MAC);
+		framebuffer.setFramebufferColor(0, 0, 0, 0);
+		framebuffer.enableStencil();
+		return framebuffer;
 	}
 
 	public static void drawFramebuffer(float alpha) {
@@ -69,10 +80,10 @@ public class UIRenderHelper {
 	}
 
 	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length) {streak(ms, angle, x, y, breadth, length, Theme.i(Theme.Key.STREAK));}
-
 	// angle in degrees; 0° -> fading to the right
 	// x and y specify the middle point of the starting edge
 	// breadth is the total width of the streak
+
 	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length, int color) {
 		int a1 = 0xa0 << 24;
 		int a2 = 0x80 << 24;
@@ -257,4 +268,14 @@ public class UIRenderHelper {
 		RenderSystem.enableAlphaTest();
 		WorldVertexBufferUploader.draw(bufferbuilder);
 	}
+
+	public static void setupSimpleCustomLighting(float xRot, float yRot) {
+		Matrix4f lightingMatrix = new Matrix4f();
+		lightingMatrix.loadIdentity();
+		lightingMatrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(yRot));
+		lightingMatrix.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(xRot));
+		lightingMatrix.multiply(Matrix4f.translate(0, 0, 1));
+		RenderSystem.setupLevelDiffuseLighting(VecHelper.ZERO_3F, VecHelper.ZERO_3F, lightingMatrix);
+	}
+
 }

@@ -41,7 +41,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		super(type);
 		animationType = Animation.NONE;
 	}
-	
+
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
@@ -51,7 +51,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 			animationProgress.value = 0;
 		}
 	}
-	
+
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		if (clientPacket && sendAnimationUpdate)
@@ -66,9 +66,23 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		if (getSpeed() == 0)
 			return;
 
-		int dayTime = (int) (world.getDayTime() % 24000);
+
+		boolean isNatural = world.getDimension().isNatural();
+		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int minutes = (dayTime % 1000) * 60 / 1000;
+
+		if (!isNatural) {
+			if (world.isRemote) {
+				moveHands(hours, minutes);
+
+				if (AnimationTickHolder.getTicks() % 6 == 0)
+					playSound(SoundEvents.BLOCK_NOTE_BLOCK_HAT, 1 / 16f, 2f);
+				else if (AnimationTickHolder.getTicks() % 3 == 0)
+					playSound(SoundEvents.BLOCK_NOTE_BLOCK_HAT, 1 / 16f, 1.5f);
+			}
+			return;
+		}
 
 		if (!world.isRemote) {
 			if (animationType == Animation.NONE) {
@@ -150,10 +164,10 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		animationProgress.lastValue = 0;
 		animationProgress.value = 0;
 		sendAnimationUpdate = true;
-		
+
 		if (animation == Animation.CREEPER)
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.CUCKOO, world, pos, 10);
-		
+
 		sendData();
 	}
 
@@ -174,7 +188,7 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

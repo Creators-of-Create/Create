@@ -2,14 +2,14 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.ArrayList;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -24,7 +24,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
     protected MatrixStack ms;
 
-    protected GaugeInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+    protected GaugeInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         faces = new ArrayList<>(2);
@@ -32,8 +32,8 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
         GaugeBlock gaugeBlock = (GaugeBlock) blockState.getBlock();
 
-        InstancedModel<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
-        InstancedModel<ModelData> headModel = getHeadModel();
+        Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
+        Instancer<ModelData> headModel = getHeadModel();
 
         ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);
@@ -53,7 +53,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         }
     }
 
-    private DialFace makeFace(Direction face, InstancedModel<ModelData> dialModel, InstancedModel<ModelData> headModel) {
+    private DialFace makeFace(Direction face, Instancer<ModelData> dialModel, Instancer<ModelData> headModel) {
         return new DialFace(face, dialModel.createInstance(), headModel.createInstance());
     }
 
@@ -88,7 +88,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         faces.forEach(DialFace::delete);
     }
 
-    protected abstract InstancedModel<ModelData> getHeadModel();
+    protected abstract Instancer<ModelData> getHeadModel();
 
     private class DialFace extends Couple<ModelData> {
 
@@ -144,23 +144,23 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     }
 
     public static class Speed extends GaugeInstance {
-        public Speed(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+        public Speed(MaterialManager<?> dispatcher, KineticTileEntity tile) {
             super(dispatcher, tile);
         }
 
         @Override
-        protected InstancedModel<ModelData> getHeadModel() {
+        protected Instancer<ModelData> getHeadModel() {
             return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_SPEED, blockState);
         }
     }
 
     public static class Stress extends GaugeInstance {
-        public Stress(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+        public Stress(MaterialManager<?> dispatcher, KineticTileEntity tile) {
             super(dispatcher, tile);
         }
 
         @Override
-        protected InstancedModel<ModelData> getHeadModel() {
+        protected Instancer<ModelData> getHeadModel() {
             return getTransformMaterial().getModel(AllBlockPartials.GAUGE_HEAD_STRESS, blockState);
         }
     }

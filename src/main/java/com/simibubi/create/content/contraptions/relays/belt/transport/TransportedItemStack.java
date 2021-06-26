@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import java.util.Random;
 
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
-import com.simibubi.create.content.logistics.InWorldProcessing;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

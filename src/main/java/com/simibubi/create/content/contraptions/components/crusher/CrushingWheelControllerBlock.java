@@ -91,28 +91,28 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 		});
 	}
 
-	public void checkEntityForProcessing(World worldIn, BlockPos pos, Entity entityIn){
-		try {
-			CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
-			if (te.crushingspeed == 0)
+	public void checkEntityForProcessing(World worldIn, BlockPos pos, Entity entityIn) {
+		CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
+		if (te == null)
+			return;
+		if (te.crushingspeed == 0)
+			return;
+		if (entityIn instanceof ItemEntity)
+			((ItemEntity) entityIn).setPickupDelay(10);
+		CompoundNBT data = entityIn.getPersistentData();
+		if (data.contains("BypassCrushingWheel")) {
+			if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				return;
-			if (entityIn instanceof ItemEntity)
-				((ItemEntity) entityIn).setPickupDelay(10);
-			CompoundNBT data = entityIn.getPersistentData();
-			if (data.contains("BypassCrushingWheel")) {
-				if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
-					return;
-			}
-			if (te.isOccupied())
-				return;
-			boolean isPlayer = entityIn instanceof PlayerEntity;
-			if (isPlayer && ((PlayerEntity) entityIn).isCreative())
-				return;
-			if (isPlayer && entityIn.world.getDifficulty() == Difficulty.PEACEFUL)
-				return;
+		}
+		if (te.isOccupied())
+			return;
+		boolean isPlayer = entityIn instanceof PlayerEntity;
+		if (isPlayer && ((PlayerEntity) entityIn).isCreative())
+			return;
+		if (isPlayer && entityIn.world.getDifficulty() == Difficulty.PEACEFUL)
+			return;
 
-			te.startCrushing(entityIn);
-		} catch (TileEntityException e) {}
+		te.startCrushing(entityIn);
 	}
 
 	@Override
@@ -167,26 +167,26 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 										ISelectionContext context) {
+		VoxelShape standardShape = AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
+
 		if (!state.get(VALID))
-			return AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
+			return standardShape;
 
 		Entity entity = context.getEntity();
-		if (entity != null) {
+		if (entity == null)
+			return standardShape;
 
-			CompoundNBT data = entity.getPersistentData();
-			if (data.contains("BypassCrushingWheel")) {
-				if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
-					if (state.get(FACING) != Direction.UP) //Allow output items to land on top of the block rather than falling back through.
-						return VoxelShapes.empty();
-			}
-
-			try {
-				CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
-				if (te.processingEntity == entity)
+		CompoundNBT data = entity.getPersistentData();
+		if (data.contains("BypassCrushingWheel"))
+			if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
+				if (state.get(FACING) != Direction.UP) // Allow output items to land on top of the block rather than falling back through.
 					return VoxelShapes.empty();
-			} catch (TileEntityException e) {}
-		}
-		return AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
+
+		CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
+		if (te != null && te.processingEntity == entity)
+			return VoxelShapes.empty();
+
+		return standardShape;
 	}
 
 	@Override
@@ -202,7 +202,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	public Class<CrushingWheelControllerTileEntity> getTileEntityClass() {
 		return CrushingWheelControllerTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;

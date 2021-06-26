@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -102,11 +104,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
-		try {
-			return getTileEntity(world, pos).hasPulley();
-		} catch (TileEntityException e) {
-		}
-		return false;
+		return getTileEntityOptional(world, pos).map(BeltTileEntity::hasPulley)
+				.orElse(false);
 	}
 
 	@Override
@@ -126,7 +125,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 	/*
 	 * FIXME
-	 * 
+	 *
 	 * @Override
 	 * public Material getMaterial(BlockState state) {
 	 * return state.get(CASING) ? Material.WOOD : Material.WOOL;
@@ -201,6 +200,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 			if (!entityIn.isAlive())
 				return;
+			if (BeltTunnelInteractionHandler.getTunnelOnPosition(worldIn, pos) != null)
+				return;
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
 				IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -274,7 +275,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				});
 			if (success.isTrue())
 				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
-					1f + Create.random.nextFloat());
+						1f + Create.RANDOM.nextFloat());
 		}
 
 		if (isShaft) {
@@ -367,22 +368,18 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return VoxelShapes.empty();
 
 		VoxelShape shape = getShape(state, worldIn, pos, context);
-		try {
+		return getTileEntityOptional(worldIn, pos).map(te -> {
 			if (context.getEntity() == null)
 				return shape;
 
-			BeltTileEntity belt = getTileEntity(worldIn, pos);
-			BeltTileEntity controller = belt.getControllerTE();
-
+			BeltTileEntity controller = te.getControllerTE();
 			if (controller == null)
 				return shape;
-			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity())) {
+			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity()))
 				return BeltShapes.getCollisionShape(state);
-			}
+			return shape;
 
-		} catch (TileEntityException e) {
-		}
-		return shape;
+		}).orElse(shape);
 	}
 
 	@Override
@@ -478,6 +475,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos currentPos = nextSegmentPosition(state, pos, forward);
 			if (currentPos == null)
 				continue;
+			world.sendBlockBreakProgress(currentPos.hashCode(), currentPos, -1);
 			BlockState currentState = world.getBlockState(currentPos);
 			if (!AllBlocks.BELT.has(currentState))
 				continue;
@@ -587,7 +585,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state) {
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
 		List<ItemStack> required = new ArrayList<>();
 		if (state.get(PART) != BeltPart.MIDDLE)
 			required.add(AllBlocks.SHAFT.asStack());

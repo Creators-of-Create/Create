@@ -59,7 +59,7 @@ public class ClientSchematicLoader {
 		Path path = Paths.get("schematics", schematic);
 
 		if (!Files.exists(path)) {
-			Create.logger.fatal("Missing Schematic file: " + path.toString());
+			Create.LOGGER.fatal("Missing Schematic file: " + path.toString());
 			return;
 		}
 

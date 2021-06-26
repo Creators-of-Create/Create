@@ -1,9 +1,9 @@
 package com.simibubi.create.content.curiosities.zapper;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRenderer;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FourWayBlock;

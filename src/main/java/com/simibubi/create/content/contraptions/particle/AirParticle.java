@@ -39,9 +39,9 @@ public class AirParticle extends SimpleAnimatedParticle {
 		targetZ = (float) (z + dz);
 		drag = data.drag;
 
-		twirlRadius = Create.random.nextFloat() / 6;
-		twirlAngleOffset = Create.random.nextFloat() * 360;
-		twirlAxis = Create.random.nextBoolean() ? Axis.X : Axis.Z;
+		twirlRadius = Create.RANDOM.nextFloat() / 6;
+		twirlAngleOffset = Create.RANDOM.nextFloat() * 360;
+		twirlAxis = Create.RANDOM.nextBoolean() ? Axis.X : Axis.Z;
 
 		// speed in m/ticks
 		maxAge = Math.min((int) (new Vector3d(dx, dy, dz).length() / data.speed), 60);

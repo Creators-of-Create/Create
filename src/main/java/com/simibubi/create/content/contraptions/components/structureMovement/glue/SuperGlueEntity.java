@@ -4,12 +4,13 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
@@ -64,7 +65,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
+public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -181,25 +182,27 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean onValidSurface() {
 		BlockPos pos = hangingPosition;
 		BlockPos pos2 = hangingPosition.offset(getFacingDirection().getOpposite());
+		if (pos2.getY() >= 256)
+			return false;
 		if (!world.isAreaLoaded(pos, 0) || !world.isAreaLoaded(pos2, 0))
 			return true;
 		if (!isValidFace(world, pos2, getFacingDirection())
-			&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
+				&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
 			return false;
 		if (isSideSticky(world, pos2, getFacingDirection())
-			|| isSideSticky(world, pos, getFacingDirection().getOpposite()))
+				|| isSideSticky(world, pos, getFacingDirection().getOpposite()))
 			return false;
 		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
-			.isEmpty();
+				.isEmpty();
 	}
 
 	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
-		if (BlockMovementTraits.isBlockAttachedTowards(world, pos, state, direction))
+		if (BlockMovementChecks.isBlockAttachedTowards(state, world, pos, direction))
 			return true;
-		if (!BlockMovementTraits.movementNecessary(state, world, pos))
+		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
 			return false;
-		if (BlockMovementTraits.notSupportive(state, direction))
+		if (BlockMovementChecks.isNotSupportive(state, direction))
 			return false;
 		return true;
 	}
@@ -479,5 +482,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public boolean doesEntityNotTriggerPressurePlate() {
 		return true;
+	}
+
+	@Override
+	public World getWorld() {
+		return world;
 	}
 }

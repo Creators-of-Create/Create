@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics.block;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -9,7 +10,6 @@ import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
@@ -46,7 +46,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(tileEntityIn.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(tileEntityIn.getWorld())) return;
 
 		BlockPos pos = tileEntityIn.getPos();
 
@@ -84,13 +84,14 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		double yaw = 0;
 		double pitch = 40;
 
-		if (tile.target != null) {
+		BlockPos target = tile.printer.getCurrentTarget();
+		if (target != null) {
 
 			// Calculate Angle of Cannon
-			Vector3d diff = Vector3d.of(tile.target.subtract(pos));
+			Vector3d diff = Vector3d.of(target.subtract(pos));
 			if (tile.previousTarget != null) {
 				diff = (Vector3d.of(tile.previousTarget)
-						.add(Vector3d.of(tile.target.subtract(tile.previousTarget)).scale(partialTicks)))
+						.add(Vector3d.of(target.subtract(tile.previousTarget)).scale(partialTicks)))
 						.subtract(Vector3d.of(pos));
 			}
 

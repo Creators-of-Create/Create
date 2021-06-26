@@ -1,23 +1,24 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
+        maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
-        maven { url='https://repo.spongepowered.org/repository/maven-public/' }
+        jcenter()
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradle_version}", changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: "${mixingradle_version}"
     }
 }
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.github.johnrengelman.shadow' version "${shadow_version}"
+    id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
 
@@ -32,15 +33,16 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 
 minecraft {
     mappings channel: 'snapshot', version: '20200920-mixed-1.16.3'
-	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
-		client {
+        client {
             workingDirectory project.file('run')
             arg '-mixin.config=create.mixins.json'
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
+            property 'mixin.env.disableRefMap', 'true'
             mods {
                 create {
                     source sourceSets.main
@@ -82,30 +84,37 @@ sourceSets.main.resources {
     srcDir 'src/generated/resources'
 }
 
+mixin {
+    add sourceSets.main, "create.refmap.json"
+}
+
 repositories {
     maven {
         // location of the maven that hosts JEI files (And TiC)
-        name "Progwml6 maven"
-        url "https://dvs1.progwml6.com/files/maven/"
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
     }
     /*
     maven {
         // location of a maven mirror for JEI files, as a fallback
-        name "ModMaven"
-        url "https://modmaven.k-4u.nl"
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
     }*/
     maven {
         //location of the maven for vazkii's mods
-        name "blamejared"
-        url "http://maven.blamejared.com/"
+        name = "blamejared"
+        url = "http://maven.blamejared.com/"
     }
     maven {
         //location of the maven for mixed mappings and registrate
-        name = "tterrag maven"
-        url = "https://maven.tterrag.com/"
+        name "tterrag maven"
+        url "https://maven.tterrag.com/"
     }
     maven {
-        url = "https://www.cursemaven.com"
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
     maven {
         //location of the maven for dynamic trees
@@ -120,14 +129,20 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    def registrate = "com.tterrag.registrate:Registrate:MC1.16.2-${registrate_version}"
+    def registrate = "com.tterrag.registrate:Registrate:MC1.16.5-${registrate_version}"
     implementation fg.deobf(registrate)
     shade registrate
 
     // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}:api")
+    compileOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}:api")
     // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
+
+    if (findProject(':Flywheel') != null) {
+        compile project(':Flywheel') // jozu: I use a gradle workspace with both projects
+    } else {
+        compile fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.0.2.8")
+    }
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta12.1")
@@ -136,10 +151,10 @@ dependencies {
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
-    // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.3-1.6.40")
-    // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.3-3.0.1.24")
+    //runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.103")
+    //runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.0.3.168")
 
-    annotationProcessor 'org.spongepowered:mixin:0.8:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
 }
 
 jar {
@@ -218,13 +233,7 @@ curseforge {
             displayName = "Create - ${version}"
         }
         relations {
-        	optionalDependency 'jei'
+            optionalDependency 'jei'
         }
     }
-}
-
-apply plugin: 'org.spongepowered.mixin'
-
-mixin {
-    add sourceSets.main, "create.refmap.json"
 }

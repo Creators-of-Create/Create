@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.AtlasStitcher;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
@@ -20,18 +21,11 @@ import com.simibubi.create.foundation.block.render.CustomBlockModels;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.item.CustomItemModels;
-import com.simibubi.create.foundation.item.CustomRenderedItems;
+import com.simibubi.create.foundation.item.render.CustomItemModels;
+import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
-import com.simibubi.create.foundation.render.KineticRenderer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.OptifineHandler;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -53,7 +47,6 @@ import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -63,66 +56,47 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CreateClient {
 
-	public static ClientSchematicLoader schematicSender;
-	public static SchematicHandler schematicHandler;
-	public static SchematicAndQuillHandler schematicAndQuillHandler;
-	public static SuperByteBufferCache bufferCache;
-	public static WorldAttached<KineticRenderer> kineticRenderer;
-	public static final Outliner outliner = new Outliner();
-	public static GhostBlocks ghostBlocks;
+	public static final ClientSchematicLoader SCHEMATIC_SENDER = new ClientSchematicLoader();
+	public static final SchematicHandler SCHEMATIC_HANDLER = new SchematicHandler();
+	public static final SchematicAndQuillHandler SCHEMATIC_AND_QUILL_HANDLER = new SchematicAndQuillHandler();
+	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
+	public static final Outliner OUTLINER = new Outliner();
+	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
 
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
 	private static CustomRenderedItems customRenderedItems;
-	private static AllColorHandlers colorHandlers;
 	private static CasingConnectivity casingConnectivity;
 
 	public static void addClientListeners(IEventBus modEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.addListener(CreateClient::onModelBake);
-		modEventBus.addListener(CreateClient::onModelRegistry);
 		modEventBus.addListener(CreateClient::onTextureStitch);
+		modEventBus.addListener(CreateClient::onModelRegistry);
+		modEventBus.addListener(CreateClient::onModelBake);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(ClientEvents::loadCompleted);
-
-		Backend.init();
-		OptifineHandler.init();
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
-		AllProgramSpecs.init();
-		kineticRenderer = new WorldAttached<>(KineticRenderer::new);
-
-		schematicSender = new ClientSchematicLoader();
-		schematicHandler = new SchematicHandler();
-		schematicAndQuillHandler = new SchematicAndQuillHandler();
-
-		bufferCache = new SuperByteBufferCache();
-		bufferCache.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
-		bufferCache.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
-		bufferCache.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
-
-		ghostBlocks = new GhostBlocks();
+		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
+		BUFFER_CACHE.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
+		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
 
 		AllKeys.register();
-		AllContainerTypes.registerScreenFactories();
-		// AllTileEntities.registerRenderers();
-		AllEntityTypes.registerRenderers();
-		getColorHandler().init();
-		AllFluids.assignRenderLayers();
+		// AllFluids.assignRenderLayers();
+		AllBlockPartials.clientInit();
+		AllStitchedTextures.init();
+
 		PonderIndex.register();
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
-		UIRenderHelper.enableStencil();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
-			.getResourceManager();
+				.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 
-		AllBlockPartials.clientInit();
-		
 		event.enqueueWork(() -> {
 			CopperBacktankArmorLayer.register();
 		});
@@ -130,11 +104,19 @@ public class CreateClient {
 
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
 		if (!event.getMap()
-			.getId()
-			.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
+				.getId()
+				.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
 			return;
 		SpriteShifter.getAllTargetSprites()
-			.forEach(event::addSprite);
+				.forEach(event::addSprite);
+	}
+
+	public static void onModelRegistry(ModelRegistryEvent event) {
+		PartialModel.onModelRegistry(event);
+
+		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
+				.getModelLocations()
+				.forEach(ModelLoader::addSpecialModel));
 	}
 
 	public static void onModelBake(ModelBakeEvent event) {
@@ -142,21 +124,13 @@ public class CreateClient {
 		PartialModel.onModelBake(event);
 
 		getCustomBlockModels()
-			.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
+				.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		getCustomItemModels()
-			.foreach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
+				.foreach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
 		getCustomRenderedItems().foreach((item, modelFunc) -> {
 			swapModels(modelRegistry, getItemModelLocation(item), m -> modelFunc.apply(m)
 				.loadPartials(event));
 		});
-	}
-
-	public static void onModelRegistry(ModelRegistryEvent event) {
-		PartialModel.onModelRegistry(event);
-
-		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
-			.getModelLocations()
-			.forEach(ModelLoader::addSpecialModel));
 	}
 
 	protected static ModelResourceLocation getItemModelLocation(Item item) {
@@ -207,12 +181,6 @@ public class CreateClient {
 		return customBlockModels;
 	}
 
-	public static AllColorHandlers getColorHandler() {
-		if (colorHandlers == null)
-			colorHandlers = new AllColorHandlers();
-		return colorHandlers;
-	}
-
 	public static CasingConnectivity getCasingConnectivity() {
 		if (casingConnectivity == null)
 			casingConnectivity = new CasingConnectivity();
@@ -220,18 +188,7 @@ public class CreateClient {
 	}
 
 	public static void invalidateRenderers() {
-		invalidateRenderers(null);
-	}
-
-	public static void invalidateRenderers(@Nullable IWorld world) {
-		bufferCache.invalidate();
-
-		if (world != null) {
-			kineticRenderer.get(world)
-				.invalidate();
-		} else {
-			kineticRenderer.forEach(InstancedTileRenderer::invalidate);
-		}
+		BUFFER_CACHE.invalidate();
 
 		ContraptionRenderDispatcher.invalidateAll();
 	}

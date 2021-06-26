@@ -9,7 +9,8 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public enum AllKeys {
 
-	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT), ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
+	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),
+	ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
 
 	;
 

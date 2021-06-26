@@ -7,6 +7,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -63,7 +64,9 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 			BlockState newState = AllBlocks.ENCASED_FLUID_PIPE.getDefaultState();
 			for (Direction d : Iterate.directionsInAxis(getAxis(state)))
 				newState = newState.with(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
+			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockState(pos, newState);
+			FluidTransportBehaviour.loadFlows(world, pos);
 		}
 		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
 		return ActionResultType.SUCCESS;

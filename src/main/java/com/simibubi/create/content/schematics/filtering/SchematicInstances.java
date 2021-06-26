@@ -1,6 +1,5 @@
 package com.simibubi.create.content.schematics.filtering;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;

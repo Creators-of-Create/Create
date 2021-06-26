@@ -53,7 +53,7 @@ public class MountedContraption extends Contraption {
 	protected ContraptionType getType() {
 		return ContraptionType.MOUNTED;
 	}
-	
+
 	@Override
 	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		BlockState state = world.getBlockState(pos);
@@ -61,17 +61,17 @@ public class MountedContraption extends Contraption {
 			return false;
 		if (!searchMovedStructure(world, pos, null))
 			return false;
-		
+
 		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
 		addBlock(pos, Pair.of(new BlockInfo(pos, AllBlocks.MINECART_ANCHOR.getDefaultState()
 			.with(BlockStateProperties.HORIZONTAL_AXIS, axis), null), null));
-		
+
 		if (blocks.size() == 1)
 			return false;
-		
+
 		return true;
 	}
-	
+
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) {
 		frontier.clear();
@@ -149,18 +149,18 @@ public class MountedContraption extends Contraption {
 	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
 		return AllBlocks.MINECART_ANCHOR.has(state);
 	}
-	
+
 	@Override
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
 		return true;
 	}
-	
+
 	@Override
 	public void addExtraInventories(Entity cart) {
 		if (!(cart instanceof IInventory))
 			return;
-		IItemHandlerModifiable handlerFromInv = new InvWrapper((IInventory) cart);
-		inventory = new CombinedInvWrapper(handlerFromInv, inventory);
+		IItemHandlerModifiable handlerFromInv = new ContraptionInvWrapper(true, new InvWrapper((IInventory) cart));
+		inventory = new ContraptionInvWrapper(handlerFromInv, inventory);
 	}
 
 	@Override

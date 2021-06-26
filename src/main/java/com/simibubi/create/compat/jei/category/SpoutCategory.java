@@ -12,6 +12,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -71,6 +72,8 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 						ItemStack copy = stack.copy();
 						copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
 							.ifPresent(fhi -> {
+								if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
+									return;
 								FluidStack fluidCopy = fluidStack.copy();
 								fluidCopy.setAmount(1000);
 								fhi.fill(fluidCopy, FluidAction.EXECUTE);

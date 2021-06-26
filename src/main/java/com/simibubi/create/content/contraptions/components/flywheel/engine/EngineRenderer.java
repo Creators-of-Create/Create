@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.render.PartialBufferer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
@@ -24,10 +24,10 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 	protected void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 		int overlay) {
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		Block block = te.getBlockState()
-			.getBlock();
+				.getBlock();
 		if (block instanceof EngineBlock) {
 			EngineBlock engineBlock = (EngineBlock) block;
 			PartialModel frame = engineBlock.getFrameModel();

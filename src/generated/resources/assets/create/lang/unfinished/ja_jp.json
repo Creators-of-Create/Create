@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 24",
+	"_": "Missing Localizations: 121",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -414,6 +414,7 @@
 	"block.create.zinc_ore": "亜鉛鉱石",
 
 	"entity.create.contraption": "からくり",
+	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "ガントリーからくり",
 	"entity.create.seat": "シート",
 	"entity.create.stationary_contraption": "付設からくり",
@@ -444,6 +445,7 @@
 	"item.create.copper_nugget": "銅塊",
 	"item.create.copper_sheet": "銅板",
 	"item.create.crafter_slot_cover": "クラフタースロットカバー",
+	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.crushed_aluminum_ore": "砕いたアルミニウム鉱石",
 	"item.create.crushed_brass": "砕いた真鍮",
 	"item.create.crushed_copper_ore": "砕いた銅鉱石",
@@ -475,6 +477,7 @@
 	"item.create.integrated_circuit": "集積回路",
 	"item.create.iron_sheet": "鉄板",
 	"item.create.lapis_sheet": "ラピスラズリ板",
+	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "からくり付きトロッコ",
 	"item.create.minecart_coupling": "トロッコ連結器",
 	"item.create.polished_rose_quartz": "磨かれたローズクォーツ",
@@ -671,6 +674,13 @@
 
 	"create.block.deployer.damage_source_name": "悪いデプロイヤー",
 	"create.block.cart_assembler.invalid": "トロッコアセンブラはレールの上にのみ設置できます",
+
+	"create.menu.return": "UNLOCALIZED: Return to Menu",
+	"create.menu.configure": "UNLOCALIZED: Configure...",
+	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.project_page": "UNLOCALIZED: Project Page",
+	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
+	"create.menu.support": "UNLOCALIZED: Support Us",
 
 	"create.recipe.crushing": "粉砕",
 	"create.recipe.milling": "製粉",
@@ -1105,6 +1115,20 @@
 	"create.tooltip.chute.fans_pull_down": "ファンが下から吸い込んでいます",
 	"create.tooltip.chute.contains": "内容物: %1$s x%2$s",
 
+	"create.linked_controller.bind_mode": "UNLOCALIZED: Bind mode active",
+	"create.linked_controller.press_keybind": "UNLOCALIZED: Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "UNLOCALIZED: Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "UNLOCALIZED: Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "UNLOCALIZED: Keybind: %1$s, Freq. #2",
+
+	"create.crafting_blueprint.crafting_slot": "UNLOCALIZED: Ingredient Slot",
+	"create.crafting_blueprint.filter_items_viable": "UNLOCALIZED: Advanced filter items are viable",
+	"create.crafting_blueprint.display_slot": "UNLOCALIZED: Display Slot",
+	"create.crafting_blueprint.inferred": "UNLOCALIZED: Inferred from recipe",
+	"create.crafting_blueprint.manually_assigned": "UNLOCALIZED: Manually assigned",
+	"create.crafting_blueprint.secondary_display_slot": "UNLOCALIZED: Secondary Display Slot",
+	"create.crafting_blueprint.optional": "UNLOCALIZED: Optional",
+
 	"create.hint.hose_pulley.title": "底なし搬出",
 	"create.hint.hose_pulley": "対象となる液体は無限とみなされています。",
 	"create.hint.mechanical_arm_no_targets.title": "ターゲットが見つかりません",
@@ -1132,32 +1156,38 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "このからくりトロッコは大きすぎて拾えません。",
+	"create.contraption.minecart_contraption_illegal_pickup": "UNLOCALIZED: A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.cogs": "歯車がゴロゴロと鳴る",
-	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
+	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "からくりが止まる",
-	"create.subtitle.wrench_rotate": "レンチを使う",
 	"create.subtitle.mixing": "混ぜる音",
 	"create.subtitle.mechanical_press_activation_belt": "メカニカルプレスがボンと鳴る",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
-	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.depot_slide": "アイテムが滑る",
-	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
+	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.blaze_munch": "ブレイズの咀嚼音",
-	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",
 	"create.subtitle.funnel_flap": "ファンネルがはためく",
-	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "概略図砲が作業を終える",
 	"create.subtitle.scroll_value": "スクロールのカチカチ音",
+	"create.subtitle.crafter_craft": "メカニカルクラフターがクラフトする",
+	"create.subtitle.saw_process": "UNLOCALIZED: Mechanical Saw processes",
+	"create.subtitle.cranking": "ハンドクランクが回る",
+	"create.subtitle.wrench_remove": "機械を壊す",
+	"create.subtitle.cogs": "歯車がゴロゴロと鳴る",
+	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
+	"create.subtitle.wrench_rotate": "レンチを使う",
+	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
+	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
+	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
+	"create.subtitle.controller_click": "UNLOCALIZED: Controller clicks",
+	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",
+	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.mechanical_press_activation": "メカニカルプレスがガーンと鳴る",
 	"create.subtitle.contraption_assemble": "からくりが動く",
-	"create.subtitle.crafter_craft": "メカニカルクラフターがクラフトする",
-	"create.subtitle.cranking": "ハンドクランクが回る",
 	"create.subtitle.crafter_click": "メカニカルクラフターのカチカチ音",
-	"create.subtitle.wrench_remove": "機械を壊す",
 	"create.subtitle.depot_plop": "デプロイヤーにアイテムが入れられる",
 	"create.subtitle.confirm": "UNLOCALIZED: Affirmative ding",
 
@@ -1398,26 +1428,51 @@
 
 	"item.create.refined_radiance.tooltip": "高貴な光輝",
 	"item.create.refined_radiance.tooltip.summary": "_吸収した光輝_から鍛造した色彩素材。",
+	"item.create.refined_radiance.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
 
 	"item.create.shadow_steel.tooltip": "シャドウスチール",
 	"item.create.shadow_steel.tooltip.summary": "_奈落の虚無_から鍛造した色彩素材。",
+	"item.create.shadow_steel.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "UNLOCALIZED: LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "UNLOCALIZED: Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "UNLOCALIZED: R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "UNLOCALIZED: _Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "UNLOCALIZED: R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "UNLOCALIZED: Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "UNLOCALIZED: R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "UNLOCALIZED: COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "UNLOCALIZED: R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "UNLOCALIZED: Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "UNLOCALIZED: R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "UNLOCALIZED: _Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
 	"item.create.minecart_coupling.tooltip": "トロッコ連結器",
 	"item.create.minecart_coupling.tooltip.summary": "壮大な列車を作るために_トロッコ_や_からくり車両_を_連結_しよう。",
 	"item.create.minecart_coupling.tooltip.condition1": "トロッコに使ったとき",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_2台_のトロッコを連結します。それらは移動中に_一定_の_距離_を保とうします。",
-
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "作業中です！",
-	"create.tooltip.randomWipDescription0": "お子様の手の届かないところに保管してください。",
-	"create.tooltip.randomWipDescription1": "赤ちゃんパンダは、このアイテムを使うたびに死にます。そう、いつでもね。",
-	"create.tooltip.randomWipDescription2": "自己責任。",
-	"create.tooltip.randomWipDescription3": "これはあなたが探しているアイテムではありません。*人差し指を振って*ちっちっちっ、解散！",
-	"create.tooltip.randomWipDescription4": "このアイテムは10秒で自爆します。10、9、8 ...",
-	"create.tooltip.randomWipDescription5": "私を信じて、それは無駄だ。",
-	"create.tooltip.randomWipDescription6": "このアイテムを使うことにより、お客様は免責事項に同意し、その条件を承諾するものとします。",
-	"create.tooltip.randomWipDescription7": "これは君に向いていないかもしれない。あれはどう？？",
-	"create.tooltip.randomWipDescription8": "それを使ったことをすぐ後悔するだろう。",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1634,6 +1689,8 @@
 	"create.ponder.cogwheel.text_1": "歯車は隣接する歯車へ回転力を伝達します",
 	"create.ponder.cogwheel.text_2": "このように連結された隣のシャフトは、逆方向に回転します",
 
+	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
+
 	"create.ponder.creative_motor.header": "クリエイティブモーターによる回転力の生成",
 	"create.ponder.creative_motor.text_1": "クリエイティブモーターは、コンパクトで調整できる原動機です",
 	"create.ponder.creative_motor.text_2": "背面パネルを見てスクロールすると、モーターの回転速度を変更できます",
@@ -1670,6 +1727,12 @@
 	"create.ponder.deployer_modes.text_1": "デフォルトでは、デプロイヤーは右クリックの動作を模倣します",
 	"create.ponder.deployer_modes.text_2": "レンチを使えば、左クリックの動作を模倣するように設定できます",
 
+	"create.ponder.deployer_processing.header": "UNLOCALIZED: Processing Items using Deployers",
+	"create.ponder.deployer_processing.text_1": "UNLOCALIZED: With a fitting held item, Deployers can process items provided beneath them",
+	"create.ponder.deployer_processing.text_2": "UNLOCALIZED: The Input items can be dropped or placed on a Depot under the Deployer",
+	"create.ponder.deployer_processing.text_3": "UNLOCALIZED: When items are provided on a belt...",
+	"create.ponder.deployer_processing.text_4": "UNLOCALIZED: The Deployer will hold and process them automatically",
+
 	"create.ponder.deployer_redstone.header": "レッドストーン信号によるデプロイヤーの制御",
 	"create.ponder.deployer_redstone.text_1": "レッドストーン信号を受けている間、デプロイヤーは稼働しません",
 	"create.ponder.deployer_redstone.text_2": "デプロイヤーは停止する前に、開始したサイクルは終了させます",
@@ -1688,6 +1751,11 @@
 	"create.ponder.empty_blaze_burner.text_4": "空のブレイズバーナーは火打石と打ち金を使って火を付ければ装飾にも使えます",
 	"create.ponder.empty_blaze_burner.text_5": "しかし、これは加工用の熱源には適していません",
 
+	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_1": "UNLOCALIZED: Copper Casing can be used to decorate Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_2": "UNLOCALIZED: Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_3": "UNLOCALIZED: It will no longer react to any neighbouring blocks being added or removed",
+
 	"create.ponder.fan_direction.header": "ケース入りファンの気流",
 	"create.ponder.fan_direction.text_1": "ケース入りファンは、回転力を利用して気流を生み出します",
 	"create.ponder.fan_direction.text_2": "気流の強さと方向は、供給される回転力に依存します",
@@ -1705,6 +1773,26 @@
 	"create.ponder.fan_source.header": "ケース入りファンによる回転力の生成",
 	"create.ponder.fan_source.text_1": "ファンを熱源に向けて設置すると、回転力を生成できます",
 	"create.ponder.fan_source.text_2": "レッドストーン信号を受けると、回転力が生成されます",
+
+	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: Fluid Pipes can connect two or more fluid sources and targets",
+	"create.ponder.fluid_pipe_flow.text_2": "UNLOCALIZED: Using a wrench, a straight pipe segment can be given a window",
+	"create.ponder.fluid_pipe_flow.text_3": "UNLOCALIZED: Windowed pipes will not connect to any other adjacent pipe segments",
+	"create.ponder.fluid_pipe_flow.text_4": "UNLOCALIZED: Powered by Mechanical Pumps, the Pipes can transport Fluids",
+	"create.ponder.fluid_pipe_flow.text_5": "UNLOCALIZED: No fluid is being extracted at first",
+	"create.ponder.fluid_pipe_flow.text_6": "UNLOCALIZED: Once the flow connects them, the endpoints gradually transfer their contents",
+	"create.ponder.fluid_pipe_flow.text_7": "UNLOCALIZED: Thus, the Pipe blocks themselves never 'physically' contain any fluid",
+
+	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
+	"create.ponder.fluid_pipe_interaction.text_1": "UNLOCALIZED: Endpoints of a pipe network can interact with a variety of blocks",
+	"create.ponder.fluid_pipe_interaction.text_2": "UNLOCALIZED: Any block with fluid storage capabilities can be filled or drained",
+	"create.ponder.fluid_pipe_interaction.text_3": "UNLOCALIZED: Source blocks right in front of an open end can be picked up...",
+	"create.ponder.fluid_pipe_interaction.text_4": "UNLOCALIZED: ...while spilling into empty spaces can create fluid sources",
+	"create.ponder.fluid_pipe_interaction.text_5": "UNLOCALIZED: Pipes can also extract fluids from a handful of other blocks directly",
+
+	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
+
+	"create.ponder.fluid_tank_storage.header": "UNLOCALIZED: Storing Fluids in Fluid Tanks",
 
 	"create.ponder.flywheel.header": "勢車による回転力の生成",
 	"create.ponder.flywheel.text_1": "かまどエンジンで回転力を生成するには、勢車が必要です",
@@ -1778,6 +1866,14 @@
 	"create.ponder.hand_crank.text_2": "右クリックし続けると、反時計回りに回転します",
 	"create.ponder.hand_crank.text_3": "回転速度は比較的速めです",
 	"create.ponder.hand_crank.text_4": "スニークしながら右クリックし続けると、時計回りに回転します",
+
+	"create.ponder.hose_pulley.header": "UNLOCALIZED: Source Filling and Draining using Hose Pulleys",
+
+	"create.ponder.hose_pulley_infinite.header": "UNLOCALIZED: Passively Filling and Draining large bodies of Fluid",
+
+	"create.ponder.hose_pulley_level.header": "UNLOCALIZED: Fill and Drain level of Hose Pulleys",
+
+	"create.ponder.item_drain.header": "UNLOCALIZED: Emptying Fluid Containers using Item Drains",
 
 	"create.ponder.large_cogwheel.header": "大きな歯車による回転力の伝達",
 	"create.ponder.large_cogwheel.text_1": "大きな歯車は、直角に接続できます",
@@ -1901,6 +1997,10 @@
 	"create.ponder.mechanical_press_compacting.text_3": "これらのレシピの中には、ブレイズバーナーの熱を必要とするものがあります",
 	"create.ponder.mechanical_press_compacting.text_4": "フィルタースロットは、2つのレシピが競合する場合に使えます",
 
+	"create.ponder.mechanical_pump_flow.header": "UNLOCALIZED: Fluid Transportation using Mechanical Pumps",
+
+	"create.ponder.mechanical_pump_speed.header": "UNLOCALIZED: Throughput of Mechanical Pumps",
+
 	"create.ponder.mechanical_saw_breaker.header": "メカニカルソーによる伐採",
 	"create.ponder.mechanical_saw_breaker.text_1": "メカニカルソーは回転力を供給すると、目の前の木を伐採できます",
 	"create.ponder.mechanical_saw_breaker.text_2": "木を完全に伐採するには、木と地面を繋ぐ最後の根本を伐採しなければなりません",
@@ -1930,6 +2030,10 @@
 	"create.ponder.piston_pole.header": "ピストン延長ポール",
 	"create.ponder.piston_pole.text_1": "ポールが無いとメカニカルピストンは動きません",
 	"create.ponder.piston_pole.text_2": "後ろに付けたポールの長さによって、伸び縮みする長さが決まります",
+
+	"create.ponder.portable_fluid_interface.header": "UNLOCALIZED: Contraption Fluid Exchange",
+
+	"create.ponder.portable_fluid_interface_redstone.header": "UNLOCALIZED: Redstone Control",
 
 	"create.ponder.portable_storage_interface.header": "稼働中のからくりとの搬出入",
 	"create.ponder.portable_storage_interface.text_1": "稼働中のからくりに組み込まれた収納ブロックは、プレイヤーが開くことはできません",
@@ -2028,10 +2132,16 @@
 	"create.ponder.smart_chute.text_3": "マウスホイールで搬出するスタック量を指定できます",
 	"create.ponder.smart_chute.text_4": "レッドストーン信号で、スマートシュートを停止させることもできます",
 
+	"create.ponder.smart_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Smart Pipes",
+
 	"create.ponder.speedometer.header": "速度メーターによる動力情報の監視",
 	"create.ponder.speedometer.text_1": "速度メーターは、接続された機械の現在の回転速度を表示します",
 	"create.ponder.speedometer.text_2": "エンジニアのゴーグルを装着していると、より詳細な情報を得られます",
 	"create.ponder.speedometer.text_3": "コンパレータは、速度メーターの測定値に応じたレッドストーン信号を出力します",
+
+	"create.ponder.spout_access.header": "UNLOCALIZED: Moving fluids into Spouts",
+
+	"create.ponder.spout_filling.header": "UNLOCALIZED: Filling Items using a Spout",
 
 	"create.ponder.stabilized_bearings.header": "からくりの角度の固定",
 	"create.ponder.stabilized_bearings.text_1": "メカニカルベアリングが動いている構造物に組み込まれているとき　...",
@@ -2063,6 +2173,8 @@
 	"create.ponder.valve_handle.text_3": "回転速度はゆっくりですが、正確です",
 	"create.ponder.valve_handle.text_4": "スニーク状態で右クリックし続けると、時計回りに回転します",
 	"create.ponder.valve_handle.text_5": "バルブハンドルは、染色できます",
+
+	"create.ponder.valve_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Valves",
 
 	"create.ponder.water_wheel.header": "水車による回転力の生成",
 	"create.ponder.water_wheel.text_1": "水車は隣接する水流から回転力を生み出します",

@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
@@ -18,9 +20,8 @@ import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.sound.SoundScapes;
+import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
@@ -257,7 +258,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			FastRenderDispatcher.enqueueUpdate(this);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -329,7 +330,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public KineticNetwork getOrCreateNetwork() {
-		return Create.torquePropagator.getOrCreateNetworkFor(this);
+		return Create.TORQUE_PROPAGATOR.getOrCreateNetworkFor(this);
 	}
 
 	public boolean hasNetwork() {
@@ -476,6 +477,14 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return d.getAxisDirection() == AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;
 	}
 
+	public static float convertToLinear(float speed) {
+		return speed / 512f;
+	}
+
+	public static float convertToAngular(float speed) {
+		return speed * 3 / 10f;
+	}
+
 	public boolean isOverStressed() {
 		return overStressed;
 	}
@@ -551,9 +560,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
-		if (!this.removed) {
-			FastRenderDispatcher.enqueueUpdate(this);
-		}
+		if (!this.removed)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;
@@ -575,14 +583,14 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		float componentSpeed = Math.abs(getSpeed());
 		if (componentSpeed == 0)
 			return;
-		float pitch = MathHelper.clamp((componentSpeed / 256f) + .45f, .5f, 1.25f);
+		float pitch = MathHelper.clamp((componentSpeed / 256f) + .45f, .85f, 1f);
 
 		if (isNoisy())
-			SoundScapes.playGeneralKineticAmbience(pos, pitch);
+			SoundScapes.play(AmbienceGroup.KINETIC, pos, pitch);
 
 		Block block = getBlockState().getBlock();
 		if (ICogWheel.isSmallCog(block) || ICogWheel.isLargeCog(block) || block instanceof GearboxBlock)
-			SoundScapes.playCogwheelAmbience(pos, pitch);
+			SoundScapes.play(AmbienceGroup.COG, pos, pitch);
 	}
 
 	protected boolean isNoisy() {

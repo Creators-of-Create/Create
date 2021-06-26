@@ -53,7 +53,7 @@ public class SharedDepotBlockMethods {
 			player.inventory.placeItemBackInInventory(world, mainItemStack);
 			behaviour.removeHeldItem();
 			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
-				1f + Create.random.nextFloat());
+					1f + Create.RANDOM.nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)

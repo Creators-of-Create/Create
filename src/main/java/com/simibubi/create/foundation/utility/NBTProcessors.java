@@ -11,10 +11,13 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.util.Constants;
 
 public final class NBTProcessors {
 
@@ -32,10 +35,26 @@ public final class NBTProcessors {
 	static {
 		addProcessor(TileEntityType.SIGN, data -> {
 			for (int i = 0; i < 4; ++i) {
-				String s = data.getString("Text" + (i + 1));
-				ITextComponent textcomponent = ITextComponent.Serializer.fromJson(s.isEmpty() ? "\"\"" : s);
-				if (textcomponent != null && textcomponent.getStyle() != null && textcomponent.getStyle()
-					.getClickEvent() != null)
+				if (textComponentHasClickEvent(data.getString("Text" + (i + 1))))
+					return null;
+			}
+			return data;
+		});
+		addProcessor(TileEntityType.LECTERN, data -> {
+			if (!data.contains("Book", Constants.NBT.TAG_COMPOUND))
+				return data;
+			CompoundNBT book = data.getCompound("Book");
+
+			if (!book.contains("tag", Constants.NBT.TAG_COMPOUND))
+				return data;
+			CompoundNBT tag = book.getCompound("tag");
+
+			if (!tag.contains("pages", Constants.NBT.TAG_LIST))
+				return data;
+			ListNBT pages = tag.getList("pages", Constants.NBT.TAG_STRING);
+
+			for (INBT inbt : pages) {
+				if (textComponentHasClickEvent(inbt.getString()))
 					return null;
 			}
 			return data;
@@ -50,7 +69,13 @@ public final class NBTProcessors {
 		});
 	}
 
-	private NBTProcessors() {}
+	public static boolean textComponentHasClickEvent(String json) {
+		ITextComponent component = ITextComponent.Serializer.fromJson(json.isEmpty() ? "\"\"" : json);
+		return component != null && component.getStyle() != null && component.getStyle().getClickEvent() != null;
+	}
+
+	private NBTProcessors() {
+	}
 
 	@Nullable
 	public static CompoundNBT process(TileEntity tileEntity, CompoundNBT compound, boolean survival) {

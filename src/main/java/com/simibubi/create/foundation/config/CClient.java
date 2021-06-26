@@ -19,6 +19,20 @@ public class CClient extends ConfigBase {
 	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY",
 		"Offset the overlay from goggle- and hover- information by this many pixels on the Y axis; Use /create overlay");
 
+	public ConfigInt mainMenuConfigButtonRow = i(2, 0, 4, "mainMenuConfigButtonRow",
+		"Choose the menu row that the Create config button appears on in the main menu",
+		"Set to 0 to disable the button altogether");
+	public ConfigInt mainMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "mainMenuConfigButtonOffsetX",
+		"Offset the Create config button in the main menu by this many pixels on the X axis",
+		"The sign (+/-) of this value determines what side of the row the button appears on (right/left)");
+
+	public ConfigInt ingameMenuConfigButtonRow = i(3, 0, 5, "ingameMenuConfigButtonRow",
+		"Choose the menu row that the Create config button appears on in the in-game menu",
+		"Set to 0 to disable the button altogether");
+	public ConfigInt ingameMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "ingameMenuConfigButtonOffsetX",
+		"Offset the Create config button in the in-game menu by this many pixels on the X axis",
+		"The sign (+/-) of this value determines what side of the row the button appears on (right/left)");
+
 	public ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 		"Setting this to true will prevent Create from sending you a warning when playing with Fabulous graphics enabled");
 

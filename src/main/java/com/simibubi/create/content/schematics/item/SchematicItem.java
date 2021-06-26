@@ -100,11 +100,16 @@ public class SchematicItem extends Item {
 	}
 
 	public static PlacementSettings getSettings(ItemStack blueprint) {
+		return getSettings(blueprint, true);
+	}
+
+	public static PlacementSettings getSettings(ItemStack blueprint, boolean processNBT) {
 		CompoundNBT tag = blueprint.getTag();
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
-		settings.addProcessor(SchematicProcessor.INSTANCE);
+		if (processNBT)
+			settings.addProcessor(SchematicProcessor.INSTANCE);
 		return settings;
 	}
 

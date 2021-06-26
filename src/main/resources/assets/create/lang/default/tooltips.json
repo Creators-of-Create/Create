@@ -8,36 +8,36 @@
 	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
 	"item.create.example_item.tooltip.control1": "When Ctrl pressed",
 	"item.create.example_item.tooltip.action1": "These controls are displayed.",
-	
+
 	"block.create.wooden_bracket.tooltip": "WOODEN BRACKET",
 	"block.create.wooden_bracket.tooltip.summary": "_Decorate_ your _Shafts, Cogwheels_ and _Pipes_ with a cozy and wooden bit of reinforcement.",
-	
+
 	"block.create.metal_bracket.tooltip": "METAL BRACKET",
 	"block.create.metal_bracket.tooltip.summary": "_Decorate_ your _Shafts, Cogwheels_ and _Pipes_ with an industrial and sturdy bit of reinforcement.",
-	
+
 	"block.create.copper_casing.tooltip": "COPPER CASING",
 	"block.create.copper_casing.tooltip.summary": "Robust machine casing with a variety of uses. Safe for decoration.",
 	"block.create.copper_casing.tooltip.condition1": "When used on Fluid Pipe",
 	"block.create.copper_casing.tooltip.behaviour1": "_Encases_ the _Fluid Pipe_ with the _Copper Casing_. Encased Fluid pipes will _lock their connections_ in place, no longer reacting to changes to neighbouring pipes.",
-	
+
 	"block.create.encased_fluid_pipe.tooltip": "ENCASED FLUID PIPE",
 	"block.create.encased_fluid_pipe.tooltip.summary": "A _Fluid Pipe_ encased with the _Copper Casing_.",
-	
+
 	"block.create.seat.tooltip": "SEAT",
 	"block.create.seat.tooltip.summary": "Sit yourself down and enjoy the ride! Will anchor a player onto a moving _contraption_. Great for static furniture too! Comes in a variety of colours.",
 	"block.create.seat.tooltip.condition1": "Right click on Seat",
 	"block.create.seat.tooltip.behaviour1": "Sits the player on the _Seat_. Press L-shift to leave the _Seat_.",
-	
+
 	"item.create.blaze_cake.tooltip": "BLAZE CAKE",
 	"item.create.blaze_cake.tooltip.summary": "A Delicious treat for your hard-working _Blaze Burners_. Gets them all fired up!",
-	
+
 	"block.create.fluid_pipe.tooltip": "FLUID PIPE",
 	"block.create.fluid_pipe.tooltip.summary": "Used for moving _fluids_ around. Needs a _Mechanical Pump_ to get the _fluid_ moving.",
 	"block.create.fluid_pipe.tooltip.condition1": "Fluid Transfer",
 	"block.create.fluid_pipe.tooltip.behaviour1": "Can connect to _fluid containers_ such as _Tanks_ or _Basins_. Exposed _pipe_ ends can also drain or place fluid blocks. Be careful of leaks!",
 	"block.create.fluid_pipe.tooltip.condition2": "Right-clicked with Wrench",
 	"block.create.fluid_pipe.tooltip.behaviour2": "Places a window on the pipe if available",
-	
+
 	"block.create.hose_pulley.tooltip": "HOSE PULLEY",
 	"block.create.hose_pulley.tooltip.summary": "Used for _placing_ or _draining_ large _fluid bodies_ in the world.",
 	"block.create.hose_pulley.tooltip.condition1": "When Powered by Kinetics",
@@ -46,50 +46,50 @@
 	"block.create.hose_pulley.tooltip.behaviour2": "Starts _taking fluid_ blocks from the body the hose end was lowered into. Very _large bodies_ of fluids will be _considered infinite_.",
 	"block.create.hose_pulley.tooltip.condition3": "When Fluids pushed to Pulley",
 	"block.create.hose_pulley.tooltip.behaviour3": "Starts _filling fluid_ into the world _up to_ the _hose_ ends' _height_.",
-	
+
 	"block.create.fluid_tank.tooltip": "FLUID TANK",
 	"block.create.fluid_tank.tooltip.summary": "_Stores_ all your favourite _fluids_. Scales in width and height.",
 	"block.create.fluid_tank.tooltip.condition1": "Right-clicked with Wrench",
 	"block.create.fluid_tank.tooltip.behaviour1": "Changes the optional window",
-		
+
 	"block.create.creative_fluid_tank.tooltip": "CREATIVE FLUID TANK",
 	"block.create.creative_fluid_tank.tooltip.summary": "This _Fluid Tank_ allows infinite replication of any Fluid. Scales in width and height.",
 	"block.create.creative_fluid_tank.tooltip.condition1": "When Fluid in Tank",
 	"block.create.creative_fluid_tank.tooltip.behaviour1": "Anything _extracting_ from this tank will provide an _endless supply_ of the fluid specified. Fluids _inserted_ into this tank will be _voided._",
 	"block.create.creative_fluid_tank.tooltip.condition2": "Right-clicked with Wrench",
 	"block.create.creative_fluid_tank.tooltip.behaviour2": "Changes the optional window",
-	
+
 	"block.create.fluid_valve.tooltip": "FLUID VALVE",
 	"block.create.fluid_valve.tooltip.summary": "Halts the flow of fluid down a pipe.",
 	"block.create.fluid_valve.tooltip.condition1": "Controllable flow",
 	"block.create.fluid_valve.tooltip.behaviour1": "Applied _rotational force_ will force the _valve_ to close, ceasing the flow of _fluids_. Reverse the direction of the _rotational force_ to re-open the valve.",
-	
+
 	"block.create.mechanical_pump.tooltip": "MECHANICAL PUMP",
 	"block.create.mechanical_pump.tooltip.summary": "Takes _rotational force_ and uses it to move _fluid_ along a _pipe_. Has a maximum range of effect in both directions. (16 blocks by default)",
 	"block.create.mechanical_pump.tooltip.condition1": "Fluid Flow",
 	"block.create.mechanical_pump.tooltip.behaviour1": "Applied _rotational force_ creates pressure that forces _fluid_ through the _pipe_ network. Reverse the direction of the _rotational force_ to switch the direction that the _fluid_ flows.",
 	"block.create.mechanical_pump.tooltip.control1": "Right-clicked with Wrench",
-	"block.create.mechanical_pump.tooltip.action1": "Reverses the direction of the _pump_, switching the default direction of the flow",	
-	
+	"block.create.mechanical_pump.tooltip.action1": "Reverses the direction of the _pump_, switching the default direction of the flow",
+
 	"block.create.smart_fluid_pipe.tooltip": "SMART FLUID PIPE",
 	"block.create.smart_fluid_pipe.tooltip.summary": "A _fluid pipe_ with a filter. Can specify which _fluids_ pass through.",
 	"block.create.smart_fluid_pipe.tooltip.condition1": "When Fluids are pushed into it",
 	"block.create.smart_fluid_pipe.tooltip.behaviour1": "Smart pipes receiving fluid that does not match its filter will block the flow.",
 	"block.create.smart_fluid_pipe.tooltip.condition2": "When adjacent to fluid container",
 	"block.create.smart_fluid_pipe.tooltip.behaviour2": "Smart pipes _starting_ a _flow_ from any container will only extract fluids that _match_ its _filter._",
-	
+
 	"block.create.spout.tooltip": "SPOUT",
 	"block.create.spout.tooltip.summary": "An injector for refilling your _fluid items._",
 	"block.create.spout.tooltip.condition1": "Fluid Transfer",
 	"block.create.spout.tooltip.behaviour1": "When a _fluid container item_ such as a _bucket_ or _bottle_ is placed underneath, the spout will attempt to refill it with it's own stored _fluid_.",
 	"block.create.spout.tooltip.condition2": "Fluid Automation",
-	"block.create.spout.tooltip.behaviour2": "The spout placed above a _belt_ or _depot_ will react automatically with a _fluid container item_ that passes beneath it.",	
-	
+	"block.create.spout.tooltip.behaviour2": "The spout placed above a _belt_ or _depot_ will react automatically with a _fluid container item_ that passes beneath it.",
+
 	"block.create.item_drain.tooltip": "ITEM DRAIN",
 	"block.create.item_drain.tooltip.summary": "A grated depot for emptying your _fluid items._",
 	"block.create.item_drain.tooltip.condition1": "Fluid Transfer",
-	"block.create.item_drain.tooltip.behaviour1": "When a _fluid container item_ such as a _bucket_ or _bottle_ is inserted from the side, the drain will attempt to empty it into its own _fluid container_. The item will then be ejected on the opposite side.",	
-	
+	"block.create.item_drain.tooltip.behaviour1": "When a _fluid container item_ such as a _bucket_ or _bottle_ is inserted from the side, the drain will attempt to empty it into its own _fluid container_. The item will then be ejected on the opposite side.",
+
 	"item.create.wand_of_symmetry.tooltip": "SYMMETRY WAND",
 	"item.create.wand_of_symmetry.tooltip.summary": "Perfectly mirrors Block placement across configured planes.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "When in Hotbar",
@@ -100,7 +100,7 @@
 	"item.create.wand_of_symmetry.tooltip.action2": "_Removes_ the active Mirror",
 	"item.create.wand_of_symmetry.tooltip.control3": "R-Click while Sneaking",
 	"item.create.wand_of_symmetry.tooltip.action3": "Opens the _Configuration Interface_",
-	
+
 	"item.create.handheld_worldshaper.tooltip": "HANDHELD WORLDSHAPER",
 	"item.create.handheld_worldshaper.tooltip.summary": "Handy tool for creating _landscapes_ and _terrain features_.",
 	"item.create.handheld_worldshaper.tooltip.control1": "L-Click at Block",
@@ -126,7 +126,7 @@
 	"item.create.filter.tooltip.behaviour1": "_Controls_ item flow according to its _configuration_.",
 	"item.create.filter.tooltip.condition2": "When R-Clicked",
 	"item.create.filter.tooltip.behaviour2": "Opens the _configuration interface_.",
-	
+
 	"item.create.attribute_filter.tooltip": "ATTRIBUTE FILTER",
 	"item.create.attribute_filter.tooltip.summary": "_Controls outputs_ and _inputs_ of logistical devices with more _precision_, matching them against a _set of_ item _attributes_ and _categories_.",
 	"item.create.attribute_filter.tooltip.condition1": "When in filter slot",
@@ -175,17 +175,17 @@
 	"item.create.goggles.tooltip.behaviour2": "Shows detailed information about _Speed_ or _Stress_ of the network to which the gauge is connected.",
 	"item.create.goggles.tooltip.condition3": "When looking at fluid containers",
 	"item.create.goggles.tooltip.behaviour3": "Shows detailed information about the _Capacity_ of the block and any _Fluids_ stored within.",
-	
+
 	"item.create.wrench.tooltip": "WRENCH",
 	"item.create.wrench.tooltip.summary": "A useful tool for working on kinetic contraptions. Can be used to _Rotate_, _Dismantle_ and to _Configure_ components.",
 	"item.create.wrench.tooltip.control1": "Right-Click a kinetic block",
 	"item.create.wrench.tooltip.action1": "_Rotates components_ toward or away from the face with which you interacted.",
 	"item.create.wrench.tooltip.control2": "R-Click while Sneaking",
 	"item.create.wrench.tooltip.action2": "_Disassembles Kinetic components_ and places them back in _your inventory_.",
-	
+
 	"block.create.nozzle.tooltip": "NOZZLE",
 	"block.create.nozzle.tooltip.summary": "Attach to the front of an _Encased Fan_ to distribute its effect on Entities in _all directions_.",
-	
+
 	"block.create.cuckoo_clock.tooltip": "CUCKOO CLOCK",
 	"block.create.cuckoo_clock.tooltip.summary": "Fine craftsmanship for _decorating_ a space and _keeping track of time_.",
 	"block.create.cuckoo_clock.tooltip.condition1": "When Powered by Kinetics",
@@ -193,19 +193,19 @@
 
 	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Turns _Rotational Force_ into refined Motion Sickness.",
-	
+
 	"block.create.portable_fluid_interface.tooltip": "PORTABLE FLUID INTERFACE",
 	"block.create.portable_fluid_interface.tooltip.summary": "A portable interchange point for _moving fluids_ to and from a _structure_ moved by a piston, bearing, minecart, or pulley. Two meeting interfaces have to _face each other_ and be spaced _1-2 blocks apart_.",
 	"block.create.portable_fluid_interface.tooltip.condition1": "While Moving",
 	"block.create.portable_fluid_interface.tooltip.behaviour1": "Interacts with stationary _portable storage interfaces_ to transfer fluids to or from the contraption. Pipes inserting into or extracting from the _Stationary Interface_ will interact with the tanks on the contraption _directly._ The structure will briefly stall as Fluids are exchanged.",
 	"block.create.portable_fluid_interface.tooltip.condition2": "When Powered by Redstone",
 	"block.create.portable_fluid_interface.tooltip.behaviour2": "_Disengages_ any active connection immediately.",
-	
+
 	"block.create.stockpile_switch.tooltip": "STOCKPILE SWITCH",
 	"block.create.stockpile_switch.tooltip.summary": "Toggles a Redstone signal based on the amount of _Stored Items_ in the attached Container. Comes with a handy filter. As opposed to a _Comparator,_ the _Stockpile Switch_ allows configuration of _thresholds,_ at which signals are inverted.",
 	"block.create.stockpile_switch.tooltip.condition1": "When R-Clicked",
 	"block.create.stockpile_switch.tooltip.behaviour1": "Opens the _Configuration Interface_.",
-	
+
 	"block.create.content_observer.tooltip": "CONTENT OBSERVER",
 	"block.create.content_observer.tooltip.summary": "_Detects Items_ inside _containers_ and _conveyors_ matching a configured _filter_. While the observed _inventory_, _belt_ or _chute contains_ a matching item, this component will emit a _Redstone Signal_. When an observed _funnel transfers_ a matching item, this component will emit a _Redstone Pulse_.",
 
@@ -213,7 +213,7 @@
 	"block.create.adjustable_crate.tooltip.summary": "This _Item Container_ allows Manual control over its capacity. It can hold up to _16 Stacks_ of any Item. Supports _Redstone Comparators_.",
 	"block.create.adjustable_crate.tooltip.condition1": "When R-Clicked",
 	"block.create.adjustable_crate.tooltip.behaviour1": "Opens the _Interface_.",
-	
+
 	"block.create.creative_crate.tooltip": "THE ENDLESS CRATE",
 	"block.create.creative_crate.tooltip.summary": "This _Storage Container_ allows infinite replication of any item. Place next to a _Schematicannon_ to remove any material requirements.",
 	"block.create.creative_crate.tooltip.condition1": "When Item in Filter Slot",
@@ -223,37 +223,92 @@
 	"block.create.controller_rail.tooltip.summary": "A _uni-directional powered rail_ capable of _fine control_ over a minecarts' _movement speed_.",
 	"block.create.controller_rail.tooltip.condition1": "When Powered by Redstone",
 	"block.create.controller_rail.tooltip.behaviour1": "_Accelerates_ or _Decelerates_ passing _minecarts_ corresponding to the _signal strength_. Propagates redstone power to adjacent controller rails. Powering two controller rails with different strengths will cause tracks between them to interpolate their signal.",
-	
+
 	"item.create.sand_paper.tooltip": "SAND PAPER",
 	"item.create.sand_paper.tooltip.summary": "A rough paper that can be used to _polish materials_. Can be automatically applied using the Deployer.",
 	"item.create.sand_paper.tooltip.condition1": "When Used",
 	"item.create.sand_paper.tooltip.behaviour1": "Applies polish to items held in the _offhand_ or lying on the _floor_ when _looking at them_",
-	
+
 	"item.create.builders_tea.tooltip": "BUILDERS TEA",
 	"item.create.builders_tea.tooltip.summary": "The perfect drink to get the day started- _Motivating_ and _Saturating._",
-	
+
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed light_.",
-	
+	"item.create.refined_radiance.tooltip.condition1": "Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "Usages for this material will be available in a future release.",
+
 	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in the void_.",
-	
+	"item.create.shadow_steel.tooltip.condition1": "Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "_Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
+
 	"item.create.minecart_coupling.tooltip": "MINECART COUPLING",
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
 	"item.create.minecart_coupling.tooltip.condition1": "When Used on Minecart",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
-	
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "Work in progress!",
-	
-	"create.tooltip.randomWipDescription0": "Please keep this item away from children.",
-	"create.tooltip.randomWipDescription1": "A baby panda dies every time you use this item. Every. Time.",
-	"create.tooltip.randomWipDescription2": "Use at your own risk.",
-	"create.tooltip.randomWipDescription3": "This is not the item you are looking for, *finger-wiggles* please disperse.",
-	"create.tooltip.randomWipDescription4": "This item will self-destruct in 10 seconds. 10, 9, 8...",
-	"create.tooltip.randomWipDescription5": "Believe me, it's useless.",
-	"create.tooltip.randomWipDescription6": "By using this item, you hereby consent to our disclaimer and agree to its terms.",
-	"create.tooltip.randomWipDescription7": "This one maybe isn't for you. What about that one?",
-	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately."
-	
+
+  "create.tooltip.wip": "WIP",
+  "create.tooltip.workInProgress": "Work in progress!",
+  "create.tooltip.randomWipDescription0": "Please keep this item away from children.",
+  "create.tooltip.randomWipDescription1": "A baby panda dies every time you use this item. Every. Time.",
+  "create.tooltip.randomWipDescription2": "Use at your own risk.",
+  "create.tooltip.randomWipDescription3": "This is not the item you are looking for, *finger-wiggles* please disperse.",
+  "create.tooltip.randomWipDescription4": "This item will self-destruct in 10 seconds. 10, 9, 8...",
+  "create.tooltip.randomWipDescription5": "Believe me, it's useless.",
+  "create.tooltip.randomWipDescription6": "By using this item, you hereby consent to our disclaimer and agree to its terms.",
+  "create.tooltip.randomWipDescription7": "This one maybe isn't for you. What about that one?",
+  "create.tooltip.randomWipDescription8": "Use it and regret your decision immediately.",
+  "create.gui.chromatic_projector.title": "Chromatic Projector",
+  "create.gui.chromatic_projector.filter.invert": "Invert",
+  "create.gui.chromatic_projector.filter.sepia": "Sepia",
+  "create.gui.chromatic_projector.filter.grayscale": "Grayscale",
+  "create.gui.chromatic_projector.filter.saturate": "Saturate",
+  "create.gui.chromatic_projector.filter.hue_shift": "Hue shift",
+  "create.gui.chromatic_projector.filter.darken": "Darken",
+  "create.gui.chromatic_projector.filter.contrast": "Contrast",
+  "create.gui.chromatic_projector.filter.end": "End",
+  "create.gui.chromatic_projector.filter": "Filter",
+  "create.gui.chromatic_projector.surface": "Surface",
+  "create.gui.chromatic_projector.field": "Field",
+  "create.gui.chromatic_projector.strength": "Strength",
+  "create.gui.chromatic_projector.radius": "Radius",
+  "create.gui.chromatic_projector.feather": "Feather",
+  "create.gui.chromatic_projector.density": "Density",
+  "create.gui.chromatic_projector.fade": "Fade",
+  "create.gui.chromatic_projector.blend": "Blend",
+	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving."
+
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
+import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
 import net.minecraft.profiler.IProfiler;
@@ -15,6 +16,7 @@ public class ResourceReloadHandler implements ISimpleReloadListener {
 		SpriteShifter.reloadUVs();
 		CreateClient.invalidateRenderers();
 		IHaveGoggleInformation.numberFormat.update();
+		SoundScapes.invalidateAll();
 	}
 
 }

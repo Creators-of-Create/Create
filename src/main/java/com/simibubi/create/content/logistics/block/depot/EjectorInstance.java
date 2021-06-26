@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -19,7 +19,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 	private float lastProgress = Float.NaN;
 
-	public EjectorInstance(InstancedTileRenderer<?> dispatcher, EjectorTileEntity tile) {
+	public EjectorInstance(MaterialManager<?> dispatcher, EjectorTileEntity tile) {
 		super(dispatcher, tile);
 		this.tile = tile;
 

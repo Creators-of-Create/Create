@@ -1,6 +1,6 @@
 package com.simibubi.create.content.palettes;
 
-import com.simibubi.create.foundation.block.IBlockVertexColor;
+import com.simibubi.create.foundation.block.render.IBlockVertexColor;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
 public class ScoriaVertexColor implements IBlockVertexColor {

@@ -1,8 +1,8 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import mezz.jei.api.gui.drawable.IDrawable;

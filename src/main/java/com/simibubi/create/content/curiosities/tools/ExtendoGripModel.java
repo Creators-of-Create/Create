@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;

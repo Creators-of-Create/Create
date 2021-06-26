@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.ui;
 
-import java.awt.Color;
+import java.awt.*;
 
 import javax.annotation.Nonnull;
 
@@ -8,6 +8,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.gui.Theme;
+import com.simibubi.create.foundation.gui.Theme.Key;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.gui.widgets.ElementWidget;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -74,12 +75,12 @@ public class PonderButton extends BoxWidget {
 
 		float flashValue = flash.getValue(partialTicks);
 		if (flashValue > .1f) {
-			float sin = 0.5f + 0.5f * MathHelper.sin((AnimationTickHolder.getTicks(true) + partialTicks) / 6f);
+			float sin = 0.5f + 0.5f * MathHelper.sin((AnimationTickHolder.getTicks(true) + partialTicks) / 5f);
 			sin *= flashValue;
 			Color c1 = gradientColor1;
 			Color c2 = gradientColor2;
-			Color nc1 = new Color(c1.getRed(), c1.getGreen(), c1.getBlue(), MathHelper.clamp(c1.getAlpha() + 50, 0, 255));
-			Color nc2 = new Color(c2.getRed(), c2.getGreen(), c2.getBlue(), MathHelper.clamp(c2.getAlpha() + 50, 0, 255));
+			Color nc1 = new Color(255, 255, 255, MathHelper.clamp(c1.getAlpha() + 150, 0, 255));
+			Color nc2 = new Color(155, 155, 155, MathHelper.clamp(c2.getAlpha() + 150, 0, 255));
 			gradientColor1 = ColorHelper.mixColors(c1, nc1, sin);
 			gradientColor2 = ColorHelper.mixColors(c2, nc2, sin);
 		}
@@ -94,7 +95,7 @@ public class PonderButton extends BoxWidget {
 			return;
 
 		if (shortcut != null) {
-			ms.translate(0, 0, z+50);
+			ms.translate(0, 0, z + 50);
 			drawCenteredText(ms, Minecraft.getInstance().fontRenderer, shortcut.getBoundKeyLocalizedText(), x + width / 2 + 8, y + height - 6, ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT_DARKER), fadeValue));
 		}
 	}
@@ -102,4 +103,25 @@ public class PonderButton extends BoxWidget {
 	public ItemStack getItem() {
 		return item;
 	}
+
+	@Override
+	public Key getDisabledTheme() {
+		return Theme.Key.PONDER_BUTTON_DISABLE;
+	}
+
+	@Override
+	public Key getIdleTheme() {
+		return Theme.Key.PONDER_BUTTON_IDLE;
+	}
+
+	@Override
+	public Key getHoverTheme() {
+		return Theme.Key.PONDER_BUTTON_HOVER;
+	}
+
+	@Override
+	public Key getClickTheme() {
+		return Theme.Key.PONDER_BUTTON_CLICK;
+	}
+
 }

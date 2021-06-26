@@ -51,6 +51,7 @@
 	"block.create.chiseled_scoria": "Chiseled Scoria",
 	"block.create.chiseled_weathered_limestone": "Chiseled Weathered Limestone",
 	"block.create.chocolate": "Chocolate",
+	"block.create.chromatic_projector": "Chromatic Projector",
 	"block.create.chute": "Chute",
 	"block.create.clockwork_bearing": "Clockwork Bearing",
 	"block.create.clutch": "Clutch",
@@ -413,6 +414,7 @@
 	"block.create.zinc_ore": "Zinc Ore",
 
 	"entity.create.contraption": "Contraption",
+	"entity.create.crafting_blueprint": "Crafting Blueprint",
 	"entity.create.gantry_contraption": "Gantry Contraption",
 	"entity.create.seat": "Seat",
 	"entity.create.stationary_contraption": "Stationary Contraption",
@@ -443,6 +445,7 @@
 	"item.create.copper_nugget": "Copper Nugget",
 	"item.create.copper_sheet": "Copper Sheet",
 	"item.create.crafter_slot_cover": "Crafter Slot Cover",
+	"item.create.crafting_blueprint": "Crafting Blueprint",
 	"item.create.crushed_aluminum_ore": "Crushed Aluminum Ore",
 	"item.create.crushed_brass": "Crushed Brass",
 	"item.create.crushed_copper_ore": "Crushed Copper Ore",
@@ -474,6 +477,7 @@
 	"item.create.integrated_circuit": "Integrated Circuit",
 	"item.create.iron_sheet": "Iron Sheet",
 	"item.create.lapis_sheet": "Lapis Sheet",
+	"item.create.linked_controller": "Linked Controller",
 	"item.create.minecart_contraption": "Minecart Contraption",
 	"item.create.minecart_coupling": "Minecart Coupling",
 	"item.create.polished_rose_quartz": "Polished Rose Quartz",
@@ -670,6 +674,13 @@
 
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",
+
+	"create.menu.return": "Return to Menu",
+	"create.menu.configure": "Configure...",
+	"create.menu.getting_started": "Getting Started",
+	"create.menu.project_page": "Project Page",
+	"create.menu.report_bugs": "Report Issues",
+	"create.menu.support": "Support Us",
 
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.milling": "Milling",
@@ -1104,6 +1115,20 @@
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
 	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
 
+	"create.linked_controller.bind_mode": "Bind mode active",
+	"create.linked_controller.press_keybind": "Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "Keybind: %1$s, Freq. #2",
+
+	"create.crafting_blueprint.crafting_slot": "Ingredient Slot",
+	"create.crafting_blueprint.filter_items_viable": "Advanced filter items are viable",
+	"create.crafting_blueprint.display_slot": "Display Slot",
+	"create.crafting_blueprint.inferred": "Inferred from recipe",
+	"create.crafting_blueprint.manually_assigned": "Manually assigned",
+	"create.crafting_blueprint.secondary_display_slot": "Secondary Display Slot",
+	"create.crafting_blueprint.optional": "Optional",
+
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "No Targets",
@@ -1131,32 +1156,38 @@
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
 	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
+	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.cogs": "Cogwheels rumble",
-	"create.subtitle.slime_added": "Slime squishes",
+	"create.subtitle.saw_idle": "Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "Contraption stops",
-	"create.subtitle.wrench_rotate": "Wrench used",
 	"create.subtitle.mixing": "Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "Mechanical Press bonks",
 	"create.subtitle.worldshaper_place": "Worldshaper zaps",
-	"create.subtitle.deployer_polish": "Deployer applies polish",
 	"create.subtitle.depot_slide": "Item slides",
-	"create.subtitle.deny": "Declining boop",
+	"create.subtitle.saw_activate_stone": "Mechanical Saw activates",
 	"create.subtitle.blaze_munch": "Blaze Burner munches",
-	"create.subtitle.schematicannon_launch_block": "Schematicannon fires",
 	"create.subtitle.funnel_flap": "Funnel Flaps",
-	"create.subtitle.copper_armor_equip": "Diving equipment clinks",
 	"create.subtitle.schematicannon_finish": "Schematicannon dings",
 	"create.subtitle.scroll_value": "Scroll-input clicks",
+	"create.subtitle.crafter_craft": "Crafter crafts",
+	"create.subtitle.saw_process": "Mechanical Saw processes",
+	"create.subtitle.cranking": "Hand Crank turns",
+	"create.subtitle.wrench_remove": "Component breaks",
+	"create.subtitle.cogs": "Cogwheels rumble",
+	"create.subtitle.slime_added": "Slime squishes",
+	"create.subtitle.wrench_rotate": "Wrench used",
+	"create.subtitle.saw_activate_wood": "Mechanical Saw activates",
+	"create.subtitle.deployer_polish": "Deployer applies polish",
+	"create.subtitle.deny": "Declining boop",
+	"create.subtitle.controller_click": "Controller clicks",
+	"create.subtitle.schematicannon_launch_block": "Schematicannon fires",
+	"create.subtitle.copper_armor_equip": "Diving equipment clinks",
 	"create.subtitle.mechanical_press_activation": "Mechanical Press clangs",
 	"create.subtitle.contraption_assemble": "Contraption moves",
-	"create.subtitle.crafter_craft": "Crafter crafts",
-	"create.subtitle.cranking": "Hand Crank turns",
 	"create.subtitle.crafter_click": "Crafter clicks",
-	"create.subtitle.wrench_remove": "Component breaks",
 	"create.subtitle.depot_plop": "Item lands",
 	"create.subtitle.confirm": "Affirmative ding",
 
@@ -1397,9 +1428,46 @@
 
 	"item.create.refined_radiance.tooltip": "REFINED RADIANCE",
 	"item.create.refined_radiance.tooltip.summary": "A Chromatic material forged from _absorbed light_.",
+	"item.create.refined_radiance.tooltip.condition1": "Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "Usages for this material will be available in a future release.",
 
 	"item.create.shadow_steel.tooltip": "SHADOW STEEL",
 	"item.create.shadow_steel.tooltip.summary": "A Chromatic material forged _in the void_.",
+	"item.create.shadow_steel.tooltip.condition1": "Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "_Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "_Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
 	"item.create.minecart_coupling.tooltip": "MINECART COUPLING",
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
@@ -1417,6 +1485,25 @@
 	"create.tooltip.randomWipDescription6": "By using this item, you hereby consent to our disclaimer and agree to its terms.",
 	"create.tooltip.randomWipDescription7": "This one maybe isn't for you. What about that one?",
 	"create.tooltip.randomWipDescription8": "Use it and regret your decision immediately.",
+
+	"create.gui.chromatic_projector.title": "Chromatic Projector",
+	"create.gui.chromatic_projector.filter.invert": "Invert",
+	"create.gui.chromatic_projector.filter.sepia": "Sepia",
+	"create.gui.chromatic_projector.filter.grayscale": "Grayscale",
+	"create.gui.chromatic_projector.filter.saturate": "Saturate",
+	"create.gui.chromatic_projector.filter.hue_shift": "Hue shift",
+	"create.gui.chromatic_projector.filter.darken": "Darken",
+	"create.gui.chromatic_projector.filter.contrast": "Contrast",
+	"create.gui.chromatic_projector.filter.end": "End",
+	"create.gui.chromatic_projector.filter": "Filter",
+	"create.gui.chromatic_projector.surface": "Surface",
+	"create.gui.chromatic_projector.field": "Field",
+	"create.gui.chromatic_projector.strength": "Strength",
+	"create.gui.chromatic_projector.radius": "Radius",
+	"create.gui.chromatic_projector.feather": "Feather",
+	"create.gui.chromatic_projector.density": "Density",
+	"create.gui.chromatic_projector.fade": "Fade",
+	"create.gui.chromatic_projector.blend": "Blend",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1593,7 +1680,7 @@
 	"create.ponder.chain_drive.text_3": "Any part of the row can be rotated by 90 degrees",
 
 	"create.ponder.chain_gearshift.header": "Controlling rotational speed with Chain Gearshifts",
-	"create.ponder.chain_gearshift.text_1": "Unpowered Chain Gearshifts behave exacly like Chain Drives",
+	"create.ponder.chain_gearshift.text_1": "Unpowered Chain Gearshifts behave exactly like Chain Drives",
 	"create.ponder.chain_gearshift.text_2": "When Powered, the speed transmitted to other Chain Drives in the row is doubled",
 	"create.ponder.chain_gearshift.text_3": "Whenever the Powered Gearshift is not at the source, its speed will be halved instead",
 	"create.ponder.chain_gearshift.text_4": "In both cases, Chain Drives in the row always run at 2x the speed of the Powered Gearshift",
@@ -1633,6 +1720,8 @@
 	"create.ponder.cogwheel.text_1": "Cogwheels will relay rotation to other adjacent cogwheels",
 	"create.ponder.cogwheel.text_2": "Neighbouring shafts connected like this will rotate in opposite directions",
 
+	"create.ponder.creative_fluid_tank.header": "Creative Fluid Tanks",
+
 	"create.ponder.creative_motor.header": "Generating Rotational Force using Creative Motors",
 	"create.ponder.creative_motor.text_1": "Creative motors are a compact and configurable source of Rotational Force",
 	"create.ponder.creative_motor.text_2": "Scrolling on the back panel changes the RPM of the motors' rotational output",
@@ -1669,6 +1758,12 @@
 	"create.ponder.deployer_modes.text_1": "By default, a Deployer imitates a Right-click interaction",
 	"create.ponder.deployer_modes.text_2": "Using a Wrench, it can be set to imitate a Left-click instead",
 
+	"create.ponder.deployer_processing.header": "Processing Items using Deployers",
+	"create.ponder.deployer_processing.text_1": "With a fitting held item, Deployers can process items provided beneath them",
+	"create.ponder.deployer_processing.text_2": "The Input items can be dropped or placed on a Depot under the Deployer",
+	"create.ponder.deployer_processing.text_3": "When items are provided on a belt...",
+	"create.ponder.deployer_processing.text_4": "The Deployer will hold and process them automatically",
+
 	"create.ponder.deployer_redstone.header": "Controlling Deployers with Redstone",
 	"create.ponder.deployer_redstone.text_1": "When powered by Redstone, Deployers will not activate",
 	"create.ponder.deployer_redstone.text_2": "Before stopping, the Deployer will finish any started cycles",
@@ -1687,6 +1782,11 @@
 	"create.ponder.empty_blaze_burner.text_4": "For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel",
 	"create.ponder.empty_blaze_burner.text_5": "However, these are not suitable for industrial heating",
 
+	"create.ponder.encased_fluid_pipe.header": "Encasing Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_1": "Copper Casing can be used to decorate Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_2": "Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_3": "It will no longer react to any neighbouring blocks being added or removed",
+
 	"create.ponder.fan_direction.header": "Air flow of Encased Fans",
 	"create.ponder.fan_direction.text_1": "Encased Fans use Rotational Force to create an Air Current",
 	"create.ponder.fan_direction.text_2": "Strength and Direction of Flow depends on the Rotational Input",
@@ -1704,6 +1804,26 @@
 	"create.ponder.fan_source.header": "Generating Rotational Force using Encased Fans",
 	"create.ponder.fan_source.text_1": "Fans facing down into a source of heat can provide Rotational Force",
 	"create.ponder.fan_source.text_2": "When given a Redstone Signal, the Fans will start providing power",
+
+	"create.ponder.fluid_pipe_flow.header": "Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "Fluid Pipes can connect two or more fluid sources and targets",
+	"create.ponder.fluid_pipe_flow.text_2": "Using a wrench, a straight pipe segment can be given a window",
+	"create.ponder.fluid_pipe_flow.text_3": "Windowed pipes will not connect to any other adjacent pipe segments",
+	"create.ponder.fluid_pipe_flow.text_4": "Powered by Mechanical Pumps, the Pipes can transport Fluids",
+	"create.ponder.fluid_pipe_flow.text_5": "No fluid is being extracted at first",
+	"create.ponder.fluid_pipe_flow.text_6": "Once the flow connects them, the endpoints gradually transfer their contents",
+	"create.ponder.fluid_pipe_flow.text_7": "Thus, the Pipe blocks themselves never 'physically' contain any fluid",
+
+	"create.ponder.fluid_pipe_interaction.header": "Draining and Filling fluid containers",
+	"create.ponder.fluid_pipe_interaction.text_1": "Endpoints of a pipe network can interact with a variety of blocks",
+	"create.ponder.fluid_pipe_interaction.text_2": "Any block with fluid storage capabilities can be filled or drained",
+	"create.ponder.fluid_pipe_interaction.text_3": "Source blocks right in front of an open end can be picked up...",
+	"create.ponder.fluid_pipe_interaction.text_4": "...while spilling into empty spaces can create fluid sources",
+	"create.ponder.fluid_pipe_interaction.text_5": "Pipes can also extract fluids from a handful of other blocks directly",
+
+	"create.ponder.fluid_tank_sizes.header": "Dimensions of a Fluid tank",
+
+	"create.ponder.fluid_tank_storage.header": "Storing Fluids in Fluid Tanks",
 
 	"create.ponder.flywheel.header": "Generating Rotational Force using the Flywheel",
 	"create.ponder.flywheel.text_1": "Flywheels are required for generating rotational force with the Furnace Engine",
@@ -1777,6 +1897,14 @@
 	"create.ponder.hand_crank.text_2": "Hold Right-Click to rotate it Counter-Clockwise",
 	"create.ponder.hand_crank.text_3": "Its conveyed speed is relatively high",
 	"create.ponder.hand_crank.text_4": "Sneak and Hold Right-Click to rotate it Clockwise",
+
+	"create.ponder.hose_pulley.header": "Source Filling and Draining using Hose Pulleys",
+
+	"create.ponder.hose_pulley_infinite.header": "Passively Filling and Draining large bodies of Fluid",
+
+	"create.ponder.hose_pulley_level.header": "Fill and Drain level of Hose Pulleys",
+
+	"create.ponder.item_drain.header": "Emptying Fluid Containers using Item Drains",
 
 	"create.ponder.large_cogwheel.header": "Relaying rotational force using Large Cogwheels",
 	"create.ponder.large_cogwheel.text_1": "Large cogwheels can connect to each other at right angles",
@@ -1900,6 +2028,10 @@
 	"create.ponder.mechanical_press_compacting.text_3": "Some of those recipes may require the heat of a Blaze Burner",
 	"create.ponder.mechanical_press_compacting.text_4": "The filter slot can be used in case two recipes are conflicting.",
 
+	"create.ponder.mechanical_pump_flow.header": "Fluid Transportation using Mechanical Pumps",
+
+	"create.ponder.mechanical_pump_speed.header": "Throughput of Mechanical Pumps",
+
 	"create.ponder.mechanical_saw_breaker.header": "Cutting Trees with the Mechanical Saw",
 	"create.ponder.mechanical_saw_breaker.text_1": "When given Rotational Force, a Mechanical Saw will cut trees directly in front of it",
 	"create.ponder.mechanical_saw_breaker.text_2": "In order to cut the tree fully, the Saw has to break the last block connecting it to the ground",
@@ -1929,6 +2061,10 @@
 	"create.ponder.piston_pole.header": "Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "Without attached Poles, a Mechanical Piston cannot move",
 	"create.ponder.piston_pole.text_2": "The Length of pole added at its back determines the Extension Range",
+
+	"create.ponder.portable_fluid_interface.header": "Contraption Fluid Exchange",
+
+	"create.ponder.portable_fluid_interface_redstone.header": "Redstone Control",
 
 	"create.ponder.portable_storage_interface.header": "Contraption Storage Exchange",
 	"create.ponder.portable_storage_interface.text_1": "Inventories on moving contraptions cannot be accessed by players.",
@@ -2027,10 +2163,16 @@
 	"create.ponder.smart_chute.text_3": "Use the Mouse Wheel to specify the extracted stack size",
 	"create.ponder.smart_chute.text_4": "Redstone power will prevent Smart Chutes from acting.",
 
+	"create.ponder.smart_pipe.header": "Controlling Fluid flow using Smart Pipes",
+
 	"create.ponder.speedometer.header": "Monitoring Kinetic information using the Speedometer",
 	"create.ponder.speedometer.text_1": "The Speedometer displays the current Speed of the attached components",
 	"create.ponder.speedometer.text_2": "When wearing Engineers' Goggles, the player can get more detailed information from the Gauge",
 	"create.ponder.speedometer.text_3": "Comparators can emit analog Restone Signals relative to the Speedometer's measurements",
+
+	"create.ponder.spout_access.header": "Moving fluids into Spouts",
+
+	"create.ponder.spout_filling.header": "Filling Items using a Spout",
 
 	"create.ponder.stabilized_bearings.header": "Stabilized Contraptions",
 	"create.ponder.stabilized_bearings.text_1": "Whenever Mechanical Bearings are themselves part of a moving Structure..",
@@ -2062,6 +2204,8 @@
 	"create.ponder.valve_handle.text_3": "Its conveyed speed is slow and precise",
 	"create.ponder.valve_handle.text_4": "Sneak and Hold Right-Click to rotate it Clockwise",
 	"create.ponder.valve_handle.text_5": "Valve handles can be dyed for aesthetic purposes",
+
+	"create.ponder.valve_pipe.header": "Controlling Fluid flow using Valves",
 
 	"create.ponder.water_wheel.header": "Generating Rotational Force using Water Wheels",
 	"create.ponder.water_wheel.text_1": "Water Wheels draw force from adjacent Water Currents",

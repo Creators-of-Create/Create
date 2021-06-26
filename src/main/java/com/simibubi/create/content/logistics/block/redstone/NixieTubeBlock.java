@@ -42,52 +42,50 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 	@Override
 	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
-		try {
 
-			ItemStack heldItem = player.getHeldItem(hand);
-			NixieTubeTileEntity nixie = getTileEntity(world, pos);
+		ItemStack heldItem = player.getHeldItem(hand);
+		NixieTubeTileEntity nixie = getTileEntity(world, pos);
 
-			if (player.isSneaking())
+		if (nixie == null)
+			return ActionResultType.PASS;
+		if (player.isSneaking())
+			return ActionResultType.PASS;
+
+		if (heldItem.isEmpty()) {
+			if (nixie.reactsToRedstone())
 				return ActionResultType.PASS;
+			nixie.clearCustomText();
+			updateDisplayedRedstoneValue(state, world, pos);
+			return ActionResultType.SUCCESS;
+		}
 
-			if (heldItem.isEmpty()) {
-				if (nixie.reactsToRedstone())
-					return ActionResultType.PASS;
-				nixie.clearCustomText();
-				updateDisplayedRedstoneValue(state, world, pos);
-				return ActionResultType.SUCCESS;
-			}
-
-			if (heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
-				Direction left = state.get(HORIZONTAL_FACING)
+		if (heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
+			Direction left = state.get(HORIZONTAL_FACING)
 					.rotateY();
-				Direction right = left.getOpposite();
+			Direction right = left.getOpposite();
 
-				if (world.isRemote)
-					return ActionResultType.SUCCESS;
+			if (world.isRemote)
+				return ActionResultType.SUCCESS;
 
-				BlockPos currentPos = pos;
-				while (true) {
-					BlockPos nextPos = currentPos.offset(left);
-					if (world.getBlockState(nextPos) != state)
-						break;
-					currentPos = nextPos;
-				}
-
-				int index = 0;
-
-				while (true) {
-					final int rowPosition = index;
-					withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
-					BlockPos nextPos = currentPos.offset(right);
-					if (world.getBlockState(nextPos) != state)
-						break;
-					currentPos = nextPos;
-					index++;
-				}
+			BlockPos currentPos = pos;
+			while (true) {
+				BlockPos nextPos = currentPos.offset(left);
+				if (world.getBlockState(nextPos) != state)
+					break;
+				currentPos = nextPos;
 			}
 
-		} catch (TileEntityException e) {
+			int index = 0;
+
+			while (true) {
+				final int rowPosition = index;
+				withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
+				BlockPos nextPos = currentPos.offset(right);
+				if (world.getBlockState(nextPos) != state)
+					break;
+				currentPos = nextPos;
+				index++;
+			}
 		}
 
 		return ActionResultType.PASS;

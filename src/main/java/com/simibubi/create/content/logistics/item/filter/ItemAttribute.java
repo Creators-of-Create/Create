@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.logistics.item.filter.attribute.BookAuthorAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.BookCopyAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ColorAttribute;
@@ -222,7 +222,7 @@ public interface ItemAttribute {
 
 	public static class InTag implements ItemAttribute {
 
-		ResourceLocation tagName;
+		public ResourceLocation tagName;
 
 		public InTag(ResourceLocation tagName) {
 			this.tagName = tagName;

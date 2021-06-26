@@ -2,18 +2,18 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -33,16 +33,16 @@ public class HarvesterActorInstance extends ActorInstance {
     private double rotation;
     private double previousRotation;
 
-    public HarvesterActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
-        super(modelManager, context);
+    public HarvesterActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+        super(materialManager, simulationWorld, context);
 
-        RenderMaterial<?, InstancedModel<ModelData>> renderMaterial = modelManager.getTransformMaterial();
+		InstanceMaterial<ModelData> instanceMaterial = materialManager.getTransformMaterial();
 
         BlockState state = context.state;
 
         facing = state.get(HORIZONTAL_FACING);
 
-        harvester = renderMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
+        harvester = instanceMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
         horizontalAngle = facing.getHorizontalAngle() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 

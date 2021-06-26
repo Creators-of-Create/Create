@@ -2,15 +2,15 @@ package com.simibubi.create.content.logistics.block.funnel;
 
 import java.util.ArrayList;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
@@ -20,17 +20,17 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
     private final ArrayList<FlapData> flaps;
 
-    public FunnelInstance(InstancedTileRenderer<?> modelManager, FunnelTileEntity tile) {
+    public FunnelInstance(MaterialManager<?> modelManager, FunnelTileEntity tile) {
         super(modelManager, tile);
 
         flaps = new ArrayList<>(4);
 
         if (!tile.hasFlap()) return;
 
-        PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
-                : AllBlockPartials.BELT_FUNNEL_FLAP);
-        InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(flapPartial, blockState);
+		PartialModel flapPartial = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
+				: AllBlockPartials.BELT_FUNNEL_FLAP);
+		Instancer<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
+				.getModel(flapPartial, blockState);
 
         int blockLight = world.getLightLevel(LightType.BLOCK, pos);
         int skyLight = world.getLightLevel(LightType.SKY, pos);

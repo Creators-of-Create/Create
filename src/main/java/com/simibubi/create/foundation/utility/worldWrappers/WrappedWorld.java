@@ -35,7 +35,7 @@ import net.minecraft.world.storage.MapData;
 public class WrappedWorld extends World {
 
 	protected World world;
-	private AbstractChunkProvider provider;
+	protected AbstractChunkProvider provider;
 
 	public WrappedWorld(World world, AbstractChunkProvider provider) {
 		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), world::getProfiler,
@@ -51,12 +51,12 @@ public class WrappedWorld extends World {
 	public World getWorld() {
 		return world;
 	}
-	
+
 	@Override
 	public WorldLightManager getLightingProvider() {
 		return world.getLightingProvider();
 	}
-	
+
 	@Override
 	public BlockState getBlockState(@Nullable BlockPos pos) {
 		return world.getBlockState(pos);

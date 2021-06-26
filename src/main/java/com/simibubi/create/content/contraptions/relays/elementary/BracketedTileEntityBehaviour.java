@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -38,7 +39,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		this.pred = pred;
 		bracket = Optional.empty();
 	}
-	
+
 	public BracketedTileEntityBehaviour withTrigger(Function<BlockState, ITriggerable> trigger) {
 		this.trigger = trigger;
 		return this;
@@ -54,7 +55,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		reRender = true;
 		tileEntity.notifyUpdate();
 	}
-	
+
 	public void triggerAdvancements(World world, PlayerEntity player, BlockState state) {
 		if (trigger == null)
 			return;
@@ -73,12 +74,22 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 			tileEntity.notifyUpdate();
 	}
 
-	public boolean isBacketPresent() {
+	public boolean isBracketPresent() {
 		return getBracket() != Blocks.AIR.getDefaultState();
 	}
 
 	public BlockState getBracket() {
 		return bracket.orElse(Blocks.AIR.getDefaultState());
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		return ItemRequirement.of(getBracket(), null);
+	}
+
+	@Override
+	public boolean isSafeNBT() {
+		return true;
 	}
 
 	@Override

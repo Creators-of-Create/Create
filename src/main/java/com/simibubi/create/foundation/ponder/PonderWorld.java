@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
@@ -104,15 +105,26 @@ public class PonderWorld extends SchematicWorld {
 		originalEntities.forEach(e -> EntityType.loadEntityUnchecked(e.serializeNBT(), this)
 			.ifPresent(entities::add));
 		particles.clearEffects();
-		fixBeltTileEntities();
+		fixControllerTileEntities();
 	}
 
 	public void restoreBlocks(Selection selection) {
 		selection.forEach(p -> {
 			if (originalBlocks.containsKey(p))
 				blocks.put(p, originalBlocks.get(p));
+			if (originalTileEntities.containsKey(p)) {
+				TileEntity te = TileEntity.createFromTag(originalBlocks.get(p), originalTileEntities.get(p)
+					.write(new CompoundNBT()));
+				onTEadded(te, te.getPos());
+				tileEntities.put(p, te);
+			}
 		});
-		scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+		redraw();
+	}
+
+	private void redraw() {
+		if (scene != null)
+			scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 	}
 
 	public void pushFakeLight(int light) {
@@ -226,6 +238,11 @@ public class PonderWorld extends SchematicWorld {
 			: iparticlefactory.makeParticle(data, asClientWorld.getValue(), x, y, z, mx, my, mz);
 	}
 
+	@Override
+	public boolean setBlockState(BlockPos pos, BlockState arg1, int arg2) {
+		return super.setBlockState(pos, arg1, arg2);
+	}
+
 	public void addParticle(Particle p) {
 		if (p != null)
 			particles.addParticle(p);
@@ -240,20 +257,34 @@ public class PonderWorld extends SchematicWorld {
 		smartTileEntity.markVirtual();
 	}
 
-	public void fixBeltTileEntities() {
+	public void fixControllerTileEntities() {
 		for (TileEntity tileEntity : tileEntities.values()) {
-			if (!(tileEntity instanceof BeltTileEntity))
-				continue;
-			BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
-			if (!beltTileEntity.isController())
-				continue;
-			BlockPos controllerPos = tileEntity.getPos();
-			for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
-				TileEntity tileEntity2 = getTileEntity(blockPos);
-				if (!(tileEntity2 instanceof BeltTileEntity))
+			if (tileEntity instanceof BeltTileEntity) {
+				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+				if (!beltTileEntity.isController())
 					continue;
-				BeltTileEntity belt2 = (BeltTileEntity) tileEntity2;
-				belt2.setController(controllerPos);
+				BlockPos controllerPos = tileEntity.getPos();
+				for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
+					TileEntity tileEntity2 = getTileEntity(blockPos);
+					if (!(tileEntity2 instanceof BeltTileEntity))
+						continue;
+					BeltTileEntity belt2 = (BeltTileEntity) tileEntity2;
+					belt2.setController(controllerPos);
+				}
+			}
+			if (tileEntity instanceof FluidTankTileEntity) {
+				FluidTankTileEntity fluidTankTileEntity = (FluidTankTileEntity) tileEntity;
+				BlockPos lastKnown = fluidTankTileEntity.getLastKnownPos();
+				BlockPos current = fluidTankTileEntity.getPos();
+				if (lastKnown == null || current == null)
+					continue;
+				if (fluidTankTileEntity.isController())
+					continue;
+				if (!lastKnown.equals(current)) {
+					BlockPos newControllerPos = fluidTankTileEntity.getController()
+						.add(current.subtract(lastKnown));
+					fluidTankTileEntity.setController(newControllerPos);
+				}
 			}
 		}
 	}
@@ -301,6 +332,11 @@ public class PonderWorld extends SchematicWorld {
 	@Override
 	protected BlockState processBlockStateForPrinting(BlockState state) {
 		return state;
+	}
+
+	@Override
+	public boolean isBlockLoaded(BlockPos pos) {
+		return true; // fix particle lighting
 	}
 
 	@Override

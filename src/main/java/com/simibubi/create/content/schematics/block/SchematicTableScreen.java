@@ -1,12 +1,12 @@
 package com.simibubi.create.content.schematics.block;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE;
 import static com.simibubi.create.foundation.gui.AllGuiTextures.SCHEMATIC_TABLE_PROGRESS;
 
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -22,7 +22,6 @@ import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.gui.IHasContainer;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -31,17 +30,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer>
-	implements IHasContainer<SchematicTableContainer> {
+public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicTableContainer> {
+
+	protected AllGuiTextures background;
+	private List<Rectangle2d> extraAreas = Collections.emptyList();
 
 	private ScrollInput schematicsArea;
 	private IconButton confirmButton;
 	private IconButton folderButton;
 	private IconButton refreshButton;
 	private Label schematicsLabel;
-	private List<Rectangle2d> extraAreas;
 
-	private final ITextComponent title = Lang.translate("gui.schematicTable.title");
 	private final ITextComponent uploading = Lang.translate("gui.schematicTable.uploading");
 	private final ITextComponent finished = Lang.translate("gui.schematicTable.finished");
 	private final ITextComponent refresh = Lang.translate("gui.schematicTable.refresh");
@@ -57,74 +56,74 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	public SchematicTableScreen(SchematicTableContainer container, PlayerInventory playerInventory,
 		ITextComponent title) {
 		super(container, playerInventory, title);
+		background = AllGuiTextures.SCHEMATIC_TABLE;
 	}
 
 	@Override
 	protected void init() {
-		setWindowSize(SCHEMATIC_TABLE.width, SCHEMATIC_TABLE.height + 50);
+		setWindowSize(background.width, background.height + 4 + AllGuiTextures.PLAYER_INVENTORY.height);
+		setWindowOffset(-11, 8);
 		super.init();
 		widgets.clear();
 
-		int mainLeft = guiLeft - 56;
-		int mainTop = guiTop - 16;
+		CreateClient.SCHEMATIC_SENDER.refresh();
+		List<ITextComponent> availableSchematics = CreateClient.SCHEMATIC_SENDER.getAvailableSchematics();
 
-		CreateClient.schematicSender.refresh();
-		List<ITextComponent> availableSchematics = CreateClient.schematicSender.getAvailableSchematics();
-
-		schematicsLabel = new Label(mainLeft + 49, mainTop + 26, StringTextComponent.EMPTY).withShadow();
+		schematicsLabel = new Label(guiLeft + 49, guiTop + 26, StringTextComponent.EMPTY).withShadow();
 		schematicsLabel.text = StringTextComponent.EMPTY;
 		if (!availableSchematics.isEmpty()) {
 			schematicsArea =
-				new SelectionScrollInput(mainLeft + 45, mainTop + 21, 139, 18).forOptions(availableSchematics)
+				new SelectionScrollInput(guiLeft + 45, guiTop + 21, 139, 18).forOptions(availableSchematics)
 					.titled(availableSchematicsTitle.copy())
 					.writingTo(schematicsLabel);
 			widgets.add(schematicsArea);
 			widgets.add(schematicsLabel);
 		}
 
-		confirmButton = new IconButton(mainLeft + 44, mainTop + 56, AllIcons.I_CONFIRM);
+		confirmButton = new IconButton(guiLeft + 44, guiTop + 56, AllIcons.I_CONFIRM);
 
-		folderButton = new IconButton(mainLeft + 21, mainTop + 21, AllIcons.I_OPEN_FOLDER);
+		folderButton = new IconButton(guiLeft + 21, guiTop + 21, AllIcons.I_OPEN_FOLDER);
 		folderButton.setToolTip(folder);
-		refreshButton = new IconButton(mainLeft + 207, mainTop + 21, AllIcons.I_REFRESH);
+		refreshButton = new IconButton(guiLeft + 207, guiTop + 21, AllIcons.I_REFRESH);
 		refreshButton.setToolTip(refresh);
 
 		widgets.add(confirmButton);
 		widgets.add(folderButton);
 		widgets.add(refreshButton);
 
-		extraAreas = new ArrayList<>();
-		extraAreas.add(new Rectangle2d(mainLeft, mainTop, SCHEMATIC_TABLE.width, SCHEMATIC_TABLE.height));
+		extraAreas = ImmutableList.of(
+			new Rectangle2d(guiLeft + background.width, guiTop + background.height - 40, 48, 48),
+			new Rectangle2d(refreshButton.x, refreshButton.y, 16, 16)
+		);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		int invLeft = guiLeft - windowXOffset + (xSize - AllGuiTextures.PLAYER_INVENTORY.width) / 2;
+		int invTop = guiTop + background.height + 4;
 
-		int x = guiLeft + 20;
-		int y = guiTop;
+		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
+		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
 
-		int mainLeft = guiLeft - 56;
-		int mainTop = guiTop - 16;
+		background.draw(ms, this, guiLeft, guiTop);
 
-		AllGuiTextures.PLAYER_INVENTORY.draw(matrixStack, this, x - 16, y + 70 + 14);
-		textRenderer.draw(matrixStack, playerInventory.getDisplayName(), x - 15 + 7, y + 64 + 26, 0x666666);
-
-		SCHEMATIC_TABLE.draw(matrixStack, this, mainLeft, mainTop);
-
+		ITextComponent titleText;
 		if (container.getTileEntity().isUploading)
-			textRenderer.drawWithShadow(matrixStack, uploading, mainLeft + 11, mainTop + 3, 0xffffff);
+			titleText = uploading;
 		else if (container.getSlot(1)
 			.getHasStack())
-			textRenderer.drawWithShadow(matrixStack, finished, mainLeft + 11, mainTop + 3, 0xffffff);
+			titleText = finished;
 		else
-			textRenderer.drawWithShadow(matrixStack, title, mainLeft + 11, mainTop + 3, 0xffffff);
+			titleText = title;
+		drawCenteredText(ms, textRenderer, titleText, guiLeft + (background.width - 8) / 2, guiTop + 3, 0xFFFFFF);
+
 		if (schematicsArea == null)
-			textRenderer.drawWithShadow(matrixStack, noSchematics, mainLeft + 54, mainTop + 26, 0xd3d3d3);
+			textRenderer.drawWithShadow(ms, noSchematics, guiLeft + 54, guiTop + 26, 0xD3D3D3);
 
 		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(mainLeft + 217, mainTop + 50, -150)
+			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + background.width, guiTop + background.height - 40, -200)
 			.scale(3)
-			.render(matrixStack);
+			.render(ms);
 
 		client.getTextureManager()
 			.bindTexture(SCHEMATIC_TABLE_PROGRESS.location);
@@ -132,7 +131,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 			* MathHelper.lerp(partialTicks, lastChasingProgress, chasingProgress));
 		int height = SCHEMATIC_TABLE_PROGRESS.height;
 		RenderSystem.disableLighting();
-		drawTexture(matrixStack, mainLeft + 70, mainTop + 57, SCHEMATIC_TABLE_PROGRESS.startX,
+		drawTexture(ms, guiLeft + 70, guiTop + 57, SCHEMATIC_TABLE_PROGRESS.startX,
 			SCHEMATIC_TABLE_PROGRESS.startY, width, height);
 	}
 
@@ -176,7 +175,7 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 
 	@Override
 	public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-		ClientSchematicLoader schematicSender = CreateClient.schematicSender;
+		ClientSchematicLoader schematicSender = CreateClient.SCHEMATIC_SENDER;
 
 		if (confirmButton.active && confirmButton.isHovered() && ((SchematicTableContainer) container).canWrite()
 			&& schematicsArea != null) {
@@ -218,4 +217,5 @@ public class SchematicTableScreen extends AbstractSimiContainerScreen<SchematicT
 	public List<Rectangle2d> getExtraAreas() {
 		return extraAreas;
 	}
+
 }

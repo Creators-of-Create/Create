@@ -25,9 +25,12 @@ public class SoundScapes {
 	static final int UPDATE_INTERVAL = 5;
 	static final int SOUND_VOLUME_ARG_MAX = 15;
 
-	enum AmbienceGroup {
+	public enum AmbienceGroup {
 
-		KINETIC(SoundScapes::kinetic), COG(SoundScapes::cogwheel)
+		KINETIC(SoundScapes::kinetic),
+		COG(SoundScapes::cogwheel),
+	
+		SAW((p, g) -> new SoundScape(p, g).repeating(AllSoundEvents.SAW_IDLE.getMainEvent(), 1f, .95f, 1))
 
 		;
 
@@ -48,7 +51,7 @@ public class SoundScapes {
 	}
 
 	private static SoundScape cogwheel(float pitch, AmbienceGroup group) {
-		return new SoundScape(pitch, group).continuous(AllSoundEvents.COGS.getMainEvent(), 3, 1);
+		return new SoundScape(pitch, group).continuous(AllSoundEvents.COGS.getMainEvent(), 1.5f, 1);
 	}
 
 	enum PitchGroup {
@@ -58,14 +61,9 @@ public class SoundScapes {
 	private static Map<AmbienceGroup, Map<PitchGroup, Set<BlockPos>>> counter = new IdentityHashMap<>();
 	private static Map<Pair<AmbienceGroup, PitchGroup>, SoundScape> activeSounds = new HashMap<>();
 
-	public static void playGeneralKineticAmbience(BlockPos pos, float pitch) {
+	public static void play(AmbienceGroup group, BlockPos pos, float pitch) {
 		if (!outOfRange(pos))
-			addSound(AmbienceGroup.KINETIC, pos, pitch);
-	}
-
-	public static void playCogwheelAmbience(BlockPos pos, float pitch) {
-		if (!outOfRange(pos))
-			addSound(AmbienceGroup.COG, pos, pitch);
+			addSound(group, pos, pitch);
 	}
 
 	public static void tick() {
@@ -93,7 +91,7 @@ public class SoundScapes {
 				.forEach(Set::clear));
 	}
 
-	public static void addSound(AmbienceGroup group, BlockPos pos, float pitch) {
+	private static void addSound(AmbienceGroup group, BlockPos pos, float pitch) {
 		PitchGroup groupFromPitch = getGroupFromPitch(pitch);
 		Set<BlockPos> set = counter.computeIfAbsent(group, ag -> new IdentityHashMap<>())
 			.computeIfAbsent(groupFromPitch, pg -> new HashSet<>());
@@ -107,11 +105,10 @@ public class SoundScapes {
 		});
 	}
 
-	public static void clean() {
-		BlockPos playerLocation = getCameraPos();
-		for (Map<PitchGroup, Set<BlockPos>> map : counter.values())
-			for (Set<BlockPos> set : map.values())
-				set.removeIf(p -> !playerLocation.withinDistance(p, MAX_AMBIENT_SOURCE_DISTANCE));
+	public static void invalidateAll() {
+		counter.clear();
+		activeSounds.forEach(($, sound) -> sound.remove());
+		activeSounds.clear();
 	}
 
 	protected static boolean outOfRange(BlockPos pos) {

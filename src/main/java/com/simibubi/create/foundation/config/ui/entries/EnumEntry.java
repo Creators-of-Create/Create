@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
+import java.util.Locale;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.BoxElement;
@@ -78,9 +80,9 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		cycleLeft.y = y + 10;
 		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
 
-		valueText.at(cycleLeft.x + cycleWidth - 8, y + 11, 200)
-			.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
-			.render(ms);
+		valueText.at(cycleLeft.x + cycleWidth - 8, y + 10, 200)
+				.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
+				.render(ms);
 
 		cycleRight.x = x + width - cycleWidth * 2 - resetWidth + 10;
 		cycleRight.y = y + 10;
@@ -97,6 +99,10 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	@Override
 	public void onValueChange(Enum<?> newValue) {
 		super.onValueChange(newValue);
-		valueText.withText(newValue.name());
+		valueText.withText(newValue.name()
+				.substring(0, 1)
+				+ newValue.name()
+				.substring(1)
+				.toLowerCase(Locale.ROOT));
 	}
 }

@@ -2,15 +2,18 @@ package com.simibubi.create.foundation.fluid;
 
 import java.util.function.Function;
 
+import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,10 +26,38 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber
 public class FluidRenderer {
+
+	// If we draw to BufferBuilder that minecraft provides for RenderType.getTranslucent(), minecraft draws the contents
+	// to the wrong framebuffer. If we tried to inject a custom RenderType into RenderTypeBuffers, we'd have the same
+	// issue. This is because minecraft calls IRenderTypeBuffer.Impl::draw just before clearing the transparency
+	// framebuffer, so anything we put into the normal RenderTypeBuffers will never be seen. By using our own
+	// BufferBuilder, we can avoid getting our contents wiped. Then, using Flywheel's renderLayer hook, we can draw our
+	// buffer at the same time the transparent world layer is drawn.
+	private static final BufferBuilder _builder = new BufferBuilder(RenderType.getTranslucent().getExpectedBufferSize());
+
+	private static BufferBuilder getBuilder() {
+		if (!_builder.isBuilding()) {
+			RenderType type = RenderType.getTranslucent();
+
+			_builder.begin(type.getDrawMode(), type.getVertexFormat());
+		}
+
+		return _builder;
+	}
+
+	@SubscribeEvent
+	public static void renderLayer(RenderLayerEvent event) {
+		if (event.type == RenderType.getTranslucent()) {
+			event.type.draw(_builder, 0, 0, 0);
+		}
+	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, IRenderTypeBuffer buffer, MatrixStack ms, int light) {
@@ -38,7 +69,10 @@ public class FluidRenderer {
 		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		IVertexBuilder builder = getBuilder();
+		if (buffer instanceof SuperRenderTypeBuffer)
+			builder = ((SuperRenderTypeBuffer) buffer).getLateBuffer(RenderType.getTranslucent());
+
 		MatrixStacker msr = MatrixStacker.of(ms);
 		int blockLightIn = (light >> 4) & 0xf;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
@@ -86,7 +120,9 @@ public class FluidRenderer {
 			.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		IVertexBuilder builder = getBuilder();
+		if (buffer instanceof SuperRenderTypeBuffer)
+			builder = ((SuperRenderTypeBuffer) buffer).getLateBuffer(RenderType.getTranslucent());
 		MatrixStacker msr = MatrixStacker.of(ms);
 		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 

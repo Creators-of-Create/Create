@@ -116,9 +116,9 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 		hasBracket = ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
 			&& stateAbove.get(CogWheelBlock.AXIS).isHorizontal();
 	}
-	
+
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

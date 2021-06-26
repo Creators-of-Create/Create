@@ -29,7 +29,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	@Override
 	protected void registerRecipes(Consumer<IFinishedRecipe> p_200404_1_) {
 		all.forEach(c -> c.register(p_200404_1_));
-		Create.logger.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
+		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
 	}
 
 	@FunctionalInterface

@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.TickPriority;
 import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchTileEntity extends SmartTileEntity {
@@ -23,6 +24,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	public float currentLevel;
 	private boolean state;
 	private boolean inverted;
+	private boolean poweredAfterDelay;
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour observedInventory;
@@ -34,6 +36,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		currentLevel = -1;
 		state = false;
 		inverted = false;
+		poweredAfterDelay = false;
 		setLazyTickRate(10);
 	}
 
@@ -44,6 +47,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		currentLevel = compound.getFloat("Current");
 		state = compound.getBoolean("Powered");
 		inverted = compound.getBoolean("Inverted");
+		poweredAfterDelay = compound.getBoolean("PoweredAfterDelay");
 		super.fromTag(blockState, compound, clientPacket);
 	}
 
@@ -54,6 +58,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		compound.putFloat("Current", currentLevel);
 		compound.putBoolean("Powered", state);
 		compound.putBoolean("Inverted", inverted);
+		compound.putBoolean("PoweredAfterDelay", poweredAfterDelay);
 		super.write(compound, clientPacket);
 	}
 
@@ -110,8 +115,10 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (currentLevel > 0)
 			displayLevel = (int) (currentLevel * 6);
 		world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
-		if (update)
-			world.updateNeighbors(pos, getBlockState().getBlock());
+
+		if (update && !world.getPendingBlockTicks().isTickPending(pos, getBlockState().getBlock()))
+			world.getPendingBlockTicks().scheduleTick(pos, getBlockState().getBlock(), 2, TickPriority.NORMAL);
+
 		if (changed || update)
 			sendData();
 	}
@@ -137,19 +144,28 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	public float getLevelForDisplay() {
 		return currentLevel == -1 ? 0 : currentLevel;
 	}
-	
+
 	public boolean getState() {
 		return state;
 	}
-	
-	public boolean isPowered() {
+
+	public boolean shouldBePowered() {
 		return inverted != state;
 	}
-	
+
+	public void updatePowerAfterDelay() {
+		poweredAfterDelay = shouldBePowered();
+		world.updateNeighbors(pos, getBlockState().getBlock());
+	}
+
+	public boolean isPowered() {
+		return poweredAfterDelay;
+	}
+
 	public boolean isInverted() {
 		return inverted;
 	}
-	
+
 	public void setInverted(boolean inverted) {
 		if (inverted == this.inverted)
 			return;

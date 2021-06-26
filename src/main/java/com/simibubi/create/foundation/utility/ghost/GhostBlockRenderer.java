@@ -10,10 +10,10 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.system.MemoryStack;
 
+import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 
 import net.minecraft.block.BlockState;

@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.outliner.Outliner.OutlineEntry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -33,24 +34,15 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
 public class GoggleOverlayRenderer {
 
-	private static final Map<Object, OutlineEntry> outlines = CreateClient.outliner.getOutlines();
+	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
 
-	@SubscribeEvent
-	public static void lookingAtBlocksThroughGogglesShowsTooltip(RenderGameOverlayEvent.Post event) {
-		MatrixStack ms = event.getMatrixStack();
-		if (event.getType() != ElementType.HOTBAR)
-			return;
-
+	public static void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
+		float partialTicks) {
 		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
+
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return;
 
@@ -58,9 +50,8 @@ public class GoggleOverlayRenderer {
 			if (!entry.isAlive())
 				continue;
 			Outline outline = entry.getOutline();
-			if (outline instanceof ValueBox && !((ValueBox) outline).isPassive) {
+			if (outline instanceof ValueBox && !((ValueBox) outline).isPassive) 
 				return;
-			}
 		}
 
 		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
@@ -172,8 +163,8 @@ public class GoggleOverlayRenderer {
 		ms.pop();
 	}
 
-	private static final class TooltipScreen extends Screen {
-		private TooltipScreen(ITextComponent p_i51108_1_) {
+	public static final class TooltipScreen extends Screen {
+		public TooltipScreen(ITextComponent p_i51108_1_) {
 			super(p_i51108_1_);
 		}
 

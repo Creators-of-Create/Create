@@ -7,6 +7,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.curiosities.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
@@ -225,12 +227,21 @@ public class SymmetryWandItem extends Item {
 
 				BlockState toReplace = world.getBlockState(position);
 				if (!toReplace.getMaterial()
-					.isReplaceable())
+						.isReplaceable())
 					continue;
 				if (toReplace.getBlockHardness(world, position) == -1)
 					continue;
-				if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
-					continue;
+
+				if (AllBlocks.CART_ASSEMBLER.has(blockState)) {
+					BlockState railBlock = CartAssemblerBlock.getRailBlock(blockState);
+					if (BlockHelper.findAndRemoveInInventory(railBlock, player, 1) == 0)
+						continue;
+					if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+						blockState = railBlock;
+				} else {
+					if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+						continue;
+				}
 
 				BlockSnapshot blocksnapshot = BlockSnapshot.create(world.getRegistryKey(), world, position);
 				FluidState ifluidstate = world.getFluidState(position);

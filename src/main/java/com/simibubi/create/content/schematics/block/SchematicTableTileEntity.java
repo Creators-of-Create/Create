@@ -1,6 +1,7 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +14,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SchematicTableTileEntity extends SyncedTileEntity implements ITickableTileEntity, INamedContainerProvider {
@@ -110,13 +110,13 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
-		return new SchematicTableContainer(p_createMenu_1_, p_createMenu_2_, this);
+	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+		return SchematicTableContainer.create(id, inv, this);
 	}
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(getType().getRegistryName().toString());
+		return Lang.translate("gui.schematicTable.title");
 	}
 
 }

@@ -47,5 +47,6 @@ public abstract class StencilElement extends RenderElement {
 
 	protected void cleanUp(MatrixStack ms) {
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
+
 	}
 }

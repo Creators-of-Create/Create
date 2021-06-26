@@ -1,20 +1,24 @@
-modLoader="javafml" 
-loaderVersion="[34,)" 
-#issueTrackerURL=""
+modLoader="javafml"
+loaderVersion="[34,)"
+issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
 license="MIT"
 
-[[mods]] 
+[[mods]]
 modId="create"
 version="${file.jarVersion}"
-displayName="Create" 
+displayName="Create"
 #updateJSONURL=""
-authors="simibubi" 
+displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
+logoFile="logo.png"
+#credits=""
+authors="simibubi"
 description='''
-Technology that empowers the player.'''
+Technology that empowers the player.
+'''
 
-[[dependencies.create]] 
+[[dependencies.create]]
     modId="forge"
-    mandatory=true 
+    mandatory=true
     versionRange="[35.1.16,)"
     ordering="NONE"
     side="BOTH"
@@ -25,3 +29,10 @@ Technology that empowers the player.'''
     versionRange="[1.16.4,1.17)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.create]]
+    modId="flywheel"
+    mandatory=true
+    versionRange="[1.16,1.17)"
+    ordering="AFTER"
+    side="CLIENT"

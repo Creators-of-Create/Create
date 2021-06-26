@@ -10,12 +10,15 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import com.google.common.base.Predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.item.TooltipHelper;
 
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -51,7 +54,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		listeners.add(resetButton);
 
 		List<String> path = value.getPath();
-		labelTooltip.add(new StringTextComponent(path.get(path.size()-1)).formatted(TextFormatting.GRAY));
+		labelTooltip.add(new StringTextComponent(label).formatted(TextFormatting.WHITE));
 		String comment = spec.getComment();
 		if (comment == null || comment.isEmpty())
 			return;
@@ -75,8 +78,14 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 				u = "in SU";
 			unit = u;
 		}
-		//add comment to tooltip
-		labelTooltip.addAll(Arrays.stream(commentLines).map(StringTextComponent::new).collect(Collectors.toList()));
+		// add comment to tooltip
+		labelTooltip.addAll(Arrays.stream(commentLines)
+				.filter(Predicates.not(s -> s.startsWith("Range")))
+				.map(StringTextComponent::new)
+				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, TextFormatting.GRAY, TextFormatting.GRAY)
+						.stream())
+				.collect(Collectors.toList()));
+		labelTooltip.add(new StringTextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).formatted(TextFormatting.DARK_GRAY));
 	}
 
 	@Override
@@ -115,20 +124,13 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	}
 
 	public void setValue(@Nonnull T value) {
-		if (value.equals(this.value.get())) {
-			ConfigScreen.changes.remove(path);
-			onValueChange(value);
-			return;
-		}
-
-		ConfigScreen.changes.put(path, value);
+		ConfigHelper.setValue(path, this.value, value);
 		onValueChange(value);
 	}
 
 	@Nonnull
 	public T getValue() {
-		//noinspection unchecked
-		return (T) ConfigScreen.changes.getOrDefault(path, this.value.get());
+		return ConfigHelper.getValue(path, this.value);
 	}
 
 	protected boolean isCurrentValueChanged() {

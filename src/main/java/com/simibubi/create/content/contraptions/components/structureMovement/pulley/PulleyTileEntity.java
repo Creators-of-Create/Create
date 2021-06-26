@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.LinearActuatorTileEntity;
@@ -42,7 +42,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	public double getMaxRenderDistanceSquared() {
 		return super.getMaxRenderDistanceSquared() + offset * offset;
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -186,9 +186,9 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 
 		BlockPos posBelow = pos.down((int) (offset + getMovementSpeed()) + 1);
 		BlockState state = world.getBlockState(posBelow);
-		if (!BlockMovementTraits.movementNecessary(state, world, posBelow))
+		if (!BlockMovementChecks.isMovementNecessary(state, world, posBelow))
 			return;
-		if (BlockMovementTraits.isBrittle(state))
+		if (BlockMovementChecks.isBrittle(state))
 			return;
 
 		disassemble();
@@ -200,7 +200,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		initialOffset = compound.getInt("InitialOffset");
 		super.fromTag(state, compound, clientPacket);
 	}
-	
+
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
@@ -234,13 +234,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		boolean moving = running && (movedContraption == null || !movedContraption.isStalled());
 		return super.getInterpolatedOffset(moving ? partialTicks : 0.5f);
 	}
-	
+
 	public void animateOffset(float forcedOffset) {
 		offset = forcedOffset;
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return false;
 	}
 }

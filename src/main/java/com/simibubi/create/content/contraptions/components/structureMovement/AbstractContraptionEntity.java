@@ -15,6 +15,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -57,7 +58,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final DataParameter<Boolean> STALLED =
-		EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
+			EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -391,8 +392,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			byte[] byteArray = dataOutput.toByteArray();
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
-				Create.logger.warn("Could not send Contraption Spawn Data (Packet too big): "
-					+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
+				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
+						+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
 				buffer.writeCompoundTag(new CompoundNBT());
 				return;
 			}
@@ -431,7 +432,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
 		if (compound.isEmpty())
 			return;
-		
+
 		initialized = compound.getBoolean("Initialized");
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"), spawnData);
 		contraption.entity = this;
@@ -467,6 +468,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		removePassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
+		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(world, getBlockPos());
 	}
 
 	private void moveCollidedEntitiesOnDisassembly(StructureTransform transform) {

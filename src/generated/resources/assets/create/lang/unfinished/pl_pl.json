@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 38",
+	"_": "Missing Localizations: 97",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -58,7 +58,7 @@
 	"block.create.cogwheel": "Koło zębate",
 	"block.create.content_observer": "Detektor zawartości",
 	"block.create.controller_rail": "Tory sterujące",
-	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"block.create.copper_backtank": "Miedziany zbiornik w plecaku",
 	"block.create.copper_block": "Blok miedzi",
 	"block.create.copper_casing": "Miedziana Obudowa",
 	"block.create.copper_ore": "Ruda miedzi",
@@ -414,6 +414,7 @@
 	"block.create.zinc_ore": "Ruda cynku",
 
 	"entity.create.contraption": "Maszyna",
+	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"entity.create.gantry_contraption": "Maszyna suwnicowa",
 	"entity.create.seat": "Siedzenie",
 	"entity.create.stationary_contraption": "Maszyna stacjonarna",
@@ -439,11 +440,12 @@
 	"item.create.chocolate_glazed_berries": "Jagody w czekoladzie",
 	"item.create.chromatic_compound": "Związek chromatyczny",
 	"item.create.cinder_flour": "Rozżarzona mąka",
-	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
+	"item.create.copper_backtank": "Miedziany zbiornik w plecaku",
 	"item.create.copper_ingot": "Sztabka miedzi",
 	"item.create.copper_nugget": "Bryłka miedzi",
 	"item.create.copper_sheet": "Arkusz miedzi",
 	"item.create.crafter_slot_cover": "Przykrywka na slot stołu rzemieślniczego",
+	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
 	"item.create.crushed_aluminum_ore": "Rozkruszona ruda żelaza",
 	"item.create.crushed_brass": "Rozkruszony mosiądz",
 	"item.create.crushed_copper_ore": "Rozkruszona ruda miedzi",
@@ -458,8 +460,8 @@
 	"item.create.crushed_tin_ore": "Rozkruszona ruda cyny",
 	"item.create.crushed_uranium_ore": "Rozkruszona ruda uranu",
 	"item.create.crushed_zinc_ore": "Rozkruszona ruda cynku",
-	"item.create.diving_boots": "UNLOCALIZED: Diving Boots",
-	"item.create.diving_helmet": "UNLOCALIZED: Diving Helmet",
+	"item.create.diving_boots": "Buty do nurkowania",
+	"item.create.diving_helmet": "Hełm do nurkowania",
 	"item.create.dough": "Ciasto",
 	"item.create.electron_tube": "Lampa elektronowa",
 	"item.create.empty_blaze_burner": "Pusty płomienny palnik",
@@ -475,6 +477,7 @@
 	"item.create.integrated_circuit": "Układ scalony",
 	"item.create.iron_sheet": "Arkusz żelaza",
 	"item.create.lapis_sheet": "Arkusz lazurytu",
+	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Maszyna w wagoniku",
 	"item.create.minecart_coupling": "Łącznik wagoników",
 	"item.create.polished_rose_quartz": "Wypolerowany kwarc różowy",
@@ -672,6 +675,13 @@
 	"create.block.deployer.damage_source_name": "zbuntowany aplikator",
 	"create.block.cart_assembler.invalid": "Postaw monter wagoników na torze",
 
+	"create.menu.return": "UNLOCALIZED: Return to Menu",
+	"create.menu.configure": "UNLOCALIZED: Configure...",
+	"create.menu.getting_started": "UNLOCALIZED: Getting Started",
+	"create.menu.project_page": "UNLOCALIZED: Project Page",
+	"create.menu.report_bugs": "UNLOCALIZED: Report Issues",
+	"create.menu.support": "UNLOCALIZED: Support Us",
+
 	"create.recipe.crushing": "Kruszenie",
 	"create.recipe.milling": "Mielenie",
 	"create.recipe.fan_washing": "Hurtowe płukanie",
@@ -682,7 +692,7 @@
 	"create.recipe.fan_blasting.fan": "Wiatrak za lawą",
 	"create.recipe.pressing": "Tłoczenie",
 	"create.recipe.mixing": "Mieszanie",
-	"create.recipe.deploying": "UNLOCALIZED: Deploying",
+	"create.recipe.deploying": "Aplikowanie",
 	"create.recipe.automatic_shapeless": "Zautomatyzowanie nieokreślone konstruowanie",
 	"create.recipe.automatic_brewing": "Zautomatyzowane warzenie",
 	"create.recipe.packing": "Prasowanie",
@@ -749,15 +759,15 @@
 	"create.orientation.alongX": "Wzdłuż X",
 
 	"create.gui.terrainzapper.title": "Ręczny kształter",
-	"create.gui.terrainzapper.searchDiagonal": "UNLOCALIZED: Follow Diagonals",
-	"create.gui.terrainzapper.searchFuzzy": "UNLOCALIZED: Ignore Material Borders",
-	"create.gui.terrainzapper.patternSection": "UNLOCALIZED: Pattern",
-	"create.gui.terrainzapper.pattern.solid": "UNLOCALIZED: Solid",
-	"create.gui.terrainzapper.pattern.checkered": "UNLOCALIZED: Checkerboard",
-	"create.gui.terrainzapper.pattern.inversecheckered": "UNLOCALIZED: Inverted Checkerboard",
-	"create.gui.terrainzapper.pattern.chance25": "UNLOCALIZED: 25% Roll",
-	"create.gui.terrainzapper.pattern.chance50": "UNLOCALIZED: 50% Roll",
-	"create.gui.terrainzapper.pattern.chance75": "UNLOCALIZED: 75% Roll",
+	"create.gui.terrainzapper.searchDiagonal": "Wzdłuż linii ukośnych",
+	"create.gui.terrainzapper.searchFuzzy": "Ignoruj krawędzie materiałów",
+	"create.gui.terrainzapper.patternSection": "Wzór",
+	"create.gui.terrainzapper.pattern.solid": "Ciągły",
+	"create.gui.terrainzapper.pattern.checkered": "Szachownica",
+	"create.gui.terrainzapper.pattern.inversecheckered": "Odrócona szachownica",
+	"create.gui.terrainzapper.pattern.chance25": "Obrót o 25%",
+	"create.gui.terrainzapper.pattern.chance50": "Obrót o 50%",
+	"create.gui.terrainzapper.pattern.chance75": "Obrót o 75%",
 	"create.gui.terrainzapper.placement": "Położenie",
 	"create.gui.terrainzapper.placement.merged": "Połączony",
 	"create.gui.terrainzapper.placement.attached": "Przyłączony",
@@ -766,8 +776,8 @@
 	"create.gui.terrainzapper.brush.cuboid": "Prostopadłościan",
 	"create.gui.terrainzapper.brush.sphere": "Kula",
 	"create.gui.terrainzapper.brush.cylinder": "Walec",
-	"create.gui.terrainzapper.brush.surface": "UNLOCALIZED: Surface",
-	"create.gui.terrainzapper.brush.cluster": "UNLOCALIZED: Cluster",
+	"create.gui.terrainzapper.brush.surface": "Powierzchnia",
+	"create.gui.terrainzapper.brush.cluster": "Grupa",
 	"create.gui.terrainzapper.tool": "Narzędzie",
 	"create.gui.terrainzapper.tool.fill": "Wypełnianie",
 	"create.gui.terrainzapper.tool.place": "Stawianie",
@@ -777,8 +787,8 @@
 	"create.gui.terrainzapper.tool.flatten": "Wypłaszczanie",
 
 	"create.terrainzapper.shiftRightClickToSet": "Shift+Prawe kliknięcie, aby wybrać kształt",
-	"create.terrainzapper.usingBlock": "UNLOCALIZED: Using: %1$s",
-	"create.terrainzapper.leftClickToSet": "UNLOCALIZED: Left-Click a Block to set Material",
+	"create.terrainzapper.usingBlock": "Używając: %1$s",
+	"create.terrainzapper.leftClickToSet": "Kliknij LPM na blok aby ustawić materiał",
 
 	"create.minecart_coupling.two_couplings_max": "Wagoniki nie mogą mieć więcej niż dwa łączniki każdy",
 	"create.minecart_coupling.unloaded": "Część twojego pociągu wydaje się być w niezaładowanych Chunkach.",
@@ -1105,6 +1115,20 @@
 	"create.tooltip.chute.fans_pull_down": "Wiatraki ciągną od dołu",
 	"create.tooltip.chute.contains": "Zawiera: %1$s x%2$s",
 
+	"create.linked_controller.bind_mode": "UNLOCALIZED: Bind mode active",
+	"create.linked_controller.press_keybind": "UNLOCALIZED: Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "UNLOCALIZED: Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "UNLOCALIZED: Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "UNLOCALIZED: Keybind: %1$s, Freq. #2",
+
+	"create.crafting_blueprint.crafting_slot": "UNLOCALIZED: Ingredient Slot",
+	"create.crafting_blueprint.filter_items_viable": "UNLOCALIZED: Advanced filter items are viable",
+	"create.crafting_blueprint.display_slot": "UNLOCALIZED: Display Slot",
+	"create.crafting_blueprint.inferred": "UNLOCALIZED: Inferred from recipe",
+	"create.crafting_blueprint.manually_assigned": "UNLOCALIZED: Manually assigned",
+	"create.crafting_blueprint.secondary_display_slot": "UNLOCALIZED: Secondary Display Slot",
+	"create.crafting_blueprint.optional": "UNLOCALIZED: Optional",
+
 	"create.hint.hose_pulley.title": "Niewyczerpany zapas",
 	"create.hint.hose_pulley": "Wybrane zbiornik cieczy jest uznany za nieskończony",
 	"create.hint.mechanical_arm_no_targets.title": "Brak celi",
@@ -1131,35 +1155,41 @@
 	"create.command.killTPSCommand.status.usage.1": "[Create]: Użyj \"/killtps start\", aby sztucznie spowolnić serwer\n",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
 
-	"create.contraption.minecart_contraption_too_big": "UNLOCALIZED: This Cart Contraption seems too big to pick up",
+	"create.contraption.minecart_contraption_too_big": "Ta maszyna w wagoniku jest zbyt duża, aby ją podnieść",
+	"create.contraption.minecart_contraption_illegal_pickup": "UNLOCALIZED: A mystical force is binding this Cart Contraption to the world",
 
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
-	"create.subtitle.slime_added": "Szlam plaska",
-	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
-	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
-	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
-	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
-	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
-	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
-	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
-	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
+	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
+	"create.subtitle.contraption_disassemble": "Maszyna staje",
+	"create.subtitle.mixing": "Dźwięki mieszania",
+	"create.subtitle.mechanical_press_activation_belt": "Mechaniczna prasa stuka",
+	"create.subtitle.worldshaper_place": "Kształter strzela",
+	"create.subtitle.depot_slide": "Przedmiot ślizga się",
+	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.blaze_munch": "Płomyk szczęśliwie przeżuwa",
-	"create.subtitle.schematicannon_launch_block": "Schematoarmata strzela",
-	"create.subtitle.funnel_flap": "UNLOCALIZED: Funnel Flaps",
-	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
+	"create.subtitle.funnel_flap": "Lejek trzepocze",
 	"create.subtitle.schematicannon_finish": "Schematoarmata skończyła",
-	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
+	"create.subtitle.scroll_value": "Kliknięcie",
+	"create.subtitle.crafter_craft": "Mechaniczny stół rzemieślniczy konstruuje",
+	"create.subtitle.saw_process": "UNLOCALIZED: Mechanical Saw processes",
+	"create.subtitle.cranking": "Ręczna korba obraca się",
+	"create.subtitle.wrench_remove": "Komponent niszczy się",
+	"create.subtitle.cogs": "Koła zębate terkoczą",
+	"create.subtitle.slime_added": "Szlam plaska",
+	"create.subtitle.wrench_rotate": "Klucz skrzypi",
+	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
+	"create.subtitle.deployer_polish": "Aplikator poleruje",
+	"create.subtitle.deny": "Dźwięk odmowy",
+	"create.subtitle.controller_click": "UNLOCALIZED: Controller clicks",
+	"create.subtitle.schematicannon_launch_block": "Schematoarmata strzela",
+	"create.subtitle.copper_armor_equip": "Sprzęt do nurkowania pobrzękuje",
 	"create.subtitle.mechanical_press_activation": "Mechaniczna prasa się uruchamia",
-	"create.subtitle.contraption_assemble": "UNLOCALIZED: Contraption moves",
-	"create.subtitle.crafter_craft": "UNLOCALIZED: Crafter crafts",
-	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
-	"create.subtitle.crafter_click": "UNLOCALIZED: Crafter clicks",
-	"create.subtitle.wrench_remove": "UNLOCALIZED: Component breaks",
-	"create.subtitle.depot_plop": "UNLOCALIZED: Item lands",
-	"create.subtitle.confirm": "UNLOCALIZED: Affirmative ding",
+	"create.subtitle.contraption_assemble": "Maszyna przesuwa się",
+	"create.subtitle.crafter_click": "Mechaniczny stół rzemieślniczy stuka",
+	"create.subtitle.depot_plop": "Przedmiot ląduje",
+	"create.subtitle.confirm": "Dźwięk potwierdzenia",
 
 
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",
@@ -1398,26 +1428,51 @@
 
 	"item.create.refined_radiance.tooltip": "ŚWIETLISTY MATERIAŁ",
 	"item.create.refined_radiance.tooltip.summary": "Chromatyczny materiał powstały z _absorbcji światła_.",
+	"item.create.refined_radiance.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.refined_radiance.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
 
 	"item.create.shadow_steel.tooltip": "MROCZNA STAL",
 	"item.create.shadow_steel.tooltip.summary": "Chromatyczny materiał powstały w _otchłani_.",
+	"item.create.shadow_steel.tooltip.condition1": "UNLOCALIZED: Work In Progress",
+	"item.create.shadow_steel.tooltip.behaviour1": "UNLOCALIZED: Usages for this material will be available in a future release.",
+
+	"item.create.linked_controller.tooltip": "UNLOCALIZED: LINKED CONTROLLER",
+	"item.create.linked_controller.tooltip.summary": "UNLOCALIZED: Grants _handheld_ _control_ over _Redstone Link_ frequencies assigned to its _six_ _buttons_.",
+	"item.create.linked_controller.tooltip.condition1": "UNLOCALIZED: R-Click",
+	"item.create.linked_controller.tooltip.behaviour1": "UNLOCALIZED: _Toggles_ the controller. _Movement_ _controls_ are taken over while its active.",
+	"item.create.linked_controller.tooltip.condition2": "UNLOCALIZED: R-Click while Sneaking",
+	"item.create.linked_controller.tooltip.behaviour2": "UNLOCALIZED: Opens the manual _Configuration Interface_.",
+	"item.create.linked_controller.tooltip.condition3": "UNLOCALIZED: R-Click on Redstone Link Receiver",
+	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+
+	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
+
+	"item.create.copper_backtank.tooltip": "UNLOCALIZED: COPPER BACKTANK",
+	"item.create.copper_backtank.tooltip.summary": "UNLOCALIZED: A _Wearable_ _Tank_ for carrying Pressurized Air.",
+	"item.create.copper_backtank.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.copper_backtank.tooltip.behaviour1": "UNLOCALIZED: Provides _Pressurized_ _Air_ to Equipment that requires it.",
+	"item.create.copper_backtank.tooltip.condition2": "UNLOCALIZED: When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "UNLOCALIZED: _Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+
+	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
+	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
+	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+
+	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
+	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
+	"item.create.crafting_blueprint.condition1": "UNLOCALIZED: R-Click empty Slot",
+	"item.create.crafting_blueprint.behaviour1": "UNLOCALIZED: Opens a _Crafting_ _menu_ allowing you to _configure_ a _recipe_ and items to display.",
+	"item.create.crafting_blueprint.condition2": "UNLOCALIZED: R-Click configured Slot",
+	"item.create.crafting_blueprint.behaviour2": "UNLOCALIZED: _Applies_ the _configured_ _recipe_ with matching Ingredients found in your _Inventory_. _Sneak_ to craft up to a _Stack_ of items.",
 
 	"item.create.minecart_coupling.tooltip": "ŁĄCZNIK WAGONIKÓW",
 	"item.create.minecart_coupling.tooltip.summary": "_Łączy_ wszystkie Twoje _wagoniki_ lub _maszyny torowe_, tworząc majestatyczny pociąg.",
 	"item.create.minecart_coupling.tooltip.condition1": "Kiedy użyto na wagoniku",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Łączy_ dwa wagoniki, próbując utrzymać je w stałej odległości od siebie.",
-
-	"create.tooltip.wip": "WIP",
-	"create.tooltip.workInProgress": "Praca w toku!",
-	"create.tooltip.randomWipDescription0": "Trzymać z dala od dzieci.",
-	"create.tooltip.randomWipDescription1": "Mała panda ginie za każdym razem, kiedy patrzysz na ten przedmiot. Za. Każdym. Razem.",
-	"create.tooltip.randomWipDescription2": "Używaj na własną odpowiedzialność.",
-	"create.tooltip.randomWipDescription3": "To nie ten przedmiot, którego szukasz, proszę się rozejść.",
-	"create.tooltip.randomWipDescription4": "Ten przedmiot ulegnie autodestrukcji za 10 sekund. 10, 9, 8...",
-	"create.tooltip.randomWipDescription5": "Uwierz mi, jest bezużyteczny.",
-	"create.tooltip.randomWipDescription6": "Używając tego przedmiotu, zgadzasz się na warunki umowy.",
-	"create.tooltip.randomWipDescription7": "Ten przedmiot chyba nie jest dla Ciebie. A może ten?",
-	"create.tooltip.randomWipDescription8": "Użyj tego i natychmiast będziesz tego żałował.",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1538,11 +1593,11 @@
 	"create.ponder.blaze_burner.text_3": "Z użyciem płomiennego ciasta, palnik może uzyskać szczególnie wysoką temperaturę",
 	"create.ponder.blaze_burner.text_4": "Dostarczanie płomykowi przedmiotów może zostać zautomatyzowane z użyciem aplikatorów lub mechanicznych ramion",
 
-	"create.ponder.brass_funnel.header": "Mosiężny lejek",
-	"create.ponder.brass_funnel.text_1": "Andezytowe lejki mogą pobierać jedynie pojedyncze przedmioty",
-	"create.ponder.brass_funnel.text_2": "Mosiężne lejki mogą pobierać nawet pełne stosy",
+	"create.ponder.brass_funnel.header": "Mosiężny lej",
+	"create.ponder.brass_funnel.text_1": "Andezytowe leje mogą pobierać jedynie pojedyncze przedmioty",
+	"create.ponder.brass_funnel.text_2": "Mosiężne leje mogą pobierać nawet pełne stosy",
 	"create.ponder.brass_funnel.text_3": "Przewijanie na slocie filtrującym pozwala na precyzyjną kontrolę nad maksymalną wielkością stosu",
-	"create.ponder.brass_funnel.text_4": "Użycie przedmiotów patrząc na slot filtrujący spowoduje, że lejek będzie przesyłał tylko pasujące przedmioty",
+	"create.ponder.brass_funnel.text_4": "Użycie przedmiotu patrząc na slot filtrujący spowoduje, że lej będzie przesyłał tylko pasujące przedmioty",
 
 	"create.ponder.brass_tunnel.header": "Używanie mosiężnych tuneli",
 	"create.ponder.brass_tunnel.text_1": "Mosiężne tunele mogą być użyte do przykrycia Twoich taśmociągów",
@@ -1634,6 +1689,8 @@
 	"create.ponder.cogwheel.text_1": "Koła zębate przekazują obrót do sąsiadujących kół",
 	"create.ponder.cogwheel.text_2": "Koła połączone w ten sposób będą obracać się w przeciwnych kierunkach",
 
+	"create.ponder.creative_fluid_tank.header": "UNLOCALIZED: Creative Fluid Tanks",
+
 	"create.ponder.creative_motor.header": "Generowanie siły obrotowej z użyciem kreatywnego silnika",
 	"create.ponder.creative_motor.text_1": "Kreatywny silnik to kompaktowe i regulowane źródło siły obrotowej",
 	"create.ponder.creative_motor.text_2": "Przewijanie patrząc na tylny panel zmienia prędkość obrotu",
@@ -1670,6 +1727,12 @@
 	"create.ponder.deployer_modes.text_1": "Domyślnie, aplikator imituje prawe kliknięcie",
 	"create.ponder.deployer_modes.text_2": "Może być przestawiony na lewe kliknięcie używając klucza",
 
+	"create.ponder.deployer_processing.header": "UNLOCALIZED: Processing Items using Deployers",
+	"create.ponder.deployer_processing.text_1": "UNLOCALIZED: With a fitting held item, Deployers can process items provided beneath them",
+	"create.ponder.deployer_processing.text_2": "UNLOCALIZED: The Input items can be dropped or placed on a Depot under the Deployer",
+	"create.ponder.deployer_processing.text_3": "UNLOCALIZED: When items are provided on a belt...",
+	"create.ponder.deployer_processing.text_4": "UNLOCALIZED: The Deployer will hold and process them automatically",
+
 	"create.ponder.deployer_redstone.header": "Kontrolowanie aplikatorów z użyciem Redstone'a",
 	"create.ponder.deployer_redstone.text_1": "Zasilone przez Redstone, aplikatory nie aktywują się",
 	"create.ponder.deployer_redstone.text_2": "Przed zatrzymaniem, aplikatory dokończą już zaczętą czynność",
@@ -1688,6 +1751,11 @@
 	"create.ponder.empty_blaze_burner.text_4": "Dla celów dekoracyjnych, puste palniki można też zapalić krzesiwem",
 	"create.ponder.empty_blaze_burner.text_5": "Nie będzie on dawał jednak ciepła",
 
+	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_1": "UNLOCALIZED: Copper Casing can be used to decorate Fluid Pipes",
+	"create.ponder.encased_fluid_pipe.text_2": "UNLOCALIZED: Aside from being conceiled, Encased Pipes are locked into their connectivity state",
+	"create.ponder.encased_fluid_pipe.text_3": "UNLOCALIZED: It will no longer react to any neighbouring blocks being added or removed",
+
 	"create.ponder.fan_direction.header": "Przepływ powietrza przez izolowane wiatraki",
 	"create.ponder.fan_direction.text_1": "Izolowane wiatraki używają siły obrotowej, aby wytworzyć przepływ powietrza",
 	"create.ponder.fan_direction.text_2": "Siła i kierunek przepływu zależy od właściwości siły obrotu",
@@ -1705,6 +1773,26 @@
 	"create.ponder.fan_source.header": "Generowanie siły obrotowej z użyciem izolowanych wiatraków",
 	"create.ponder.fan_source.text_1": "Wiatraki skierowane w stronę źródła ciepła generują siłę obrotową",
 	"create.ponder.fan_source.text_2": "Po zasileniu, wiatraki zaczną przesyłać siłę do przylegających komponentów",
+
+	"create.ponder.fluid_pipe_flow.header": "UNLOCALIZED: Moving Fluids using Copper Pipes",
+	"create.ponder.fluid_pipe_flow.text_1": "UNLOCALIZED: Fluid Pipes can connect two or more fluid sources and targets",
+	"create.ponder.fluid_pipe_flow.text_2": "UNLOCALIZED: Using a wrench, a straight pipe segment can be given a window",
+	"create.ponder.fluid_pipe_flow.text_3": "UNLOCALIZED: Windowed pipes will not connect to any other adjacent pipe segments",
+	"create.ponder.fluid_pipe_flow.text_4": "UNLOCALIZED: Powered by Mechanical Pumps, the Pipes can transport Fluids",
+	"create.ponder.fluid_pipe_flow.text_5": "UNLOCALIZED: No fluid is being extracted at first",
+	"create.ponder.fluid_pipe_flow.text_6": "UNLOCALIZED: Once the flow connects them, the endpoints gradually transfer their contents",
+	"create.ponder.fluid_pipe_flow.text_7": "UNLOCALIZED: Thus, the Pipe blocks themselves never 'physically' contain any fluid",
+
+	"create.ponder.fluid_pipe_interaction.header": "UNLOCALIZED: Draining and Filling fluid containers",
+	"create.ponder.fluid_pipe_interaction.text_1": "UNLOCALIZED: Endpoints of a pipe network can interact with a variety of blocks",
+	"create.ponder.fluid_pipe_interaction.text_2": "UNLOCALIZED: Any block with fluid storage capabilities can be filled or drained",
+	"create.ponder.fluid_pipe_interaction.text_3": "UNLOCALIZED: Source blocks right in front of an open end can be picked up...",
+	"create.ponder.fluid_pipe_interaction.text_4": "UNLOCALIZED: ...while spilling into empty spaces can create fluid sources",
+	"create.ponder.fluid_pipe_interaction.text_5": "UNLOCALIZED: Pipes can also extract fluids from a handful of other blocks directly",
+
+	"create.ponder.fluid_tank_sizes.header": "UNLOCALIZED: Dimensions of a Fluid tank",
+
+	"create.ponder.fluid_tank_storage.header": "UNLOCALIZED: Storing Fluids in Fluid Tanks",
 
 	"create.ponder.flywheel.header": "Generowanie siły obrotowej z użyciem koła zamachowego",
 	"create.ponder.flywheel.text_1": "Koła zamachowe są wymagane, aby generować siłę obrotową przy pomocy silnika spalinowego",
@@ -1778,6 +1866,14 @@
 	"create.ponder.hand_crank.text_2": "Trzymaj PPM, aby obrócić ją odwrotnie niż wskazówki zegara",
 	"create.ponder.hand_crank.text_3": "Wytwarzana prędkość jest dosyć duża!",
 	"create.ponder.hand_crank.text_4": "Trzymaj PPM skradając się, aby obrócić ją zgodnie ze wskazówkami zegara",
+
+	"create.ponder.hose_pulley.header": "UNLOCALIZED: Source Filling and Draining using Hose Pulleys",
+
+	"create.ponder.hose_pulley_infinite.header": "UNLOCALIZED: Passively Filling and Draining large bodies of Fluid",
+
+	"create.ponder.hose_pulley_level.header": "UNLOCALIZED: Fill and Drain level of Hose Pulleys",
+
+	"create.ponder.item_drain.header": "UNLOCALIZED: Emptying Fluid Containers using Item Drains",
 
 	"create.ponder.large_cogwheel.header": "Przekazywanie siły obrotowej z użyciem dużych kół zębatych",
 	"create.ponder.large_cogwheel.text_1": "Duże koła zębate mogą się łączyć ze sobą pod kątem prostym",
@@ -1901,6 +1997,10 @@
 	"create.ponder.mechanical_press_compacting.text_3": "Niektóre z nich mogą wymagać użycia płomiennego palnika",
 	"create.ponder.mechanical_press_compacting.text_4": "Slot filtrujący może być użyty w przypadku dwóch konfliktujących receptur",
 
+	"create.ponder.mechanical_pump_flow.header": "UNLOCALIZED: Fluid Transportation using Mechanical Pumps",
+
+	"create.ponder.mechanical_pump_speed.header": "UNLOCALIZED: Throughput of Mechanical Pumps",
+
 	"create.ponder.mechanical_saw_breaker.header": "Ścinanie drzew z użyciem mechanicznej piły",
 	"create.ponder.mechanical_saw_breaker.text_1": "Po otrzymaniu siły obrotowej, mechaniczna piła zetnie każde znajdujące się przed nią drzewo",
 	"create.ponder.mechanical_saw_breaker.text_2": "Aby całkowicie ściąć drzewo, piła musi zniszczyć każdy blok łączący je z ziemią",
@@ -1930,6 +2030,10 @@
 	"create.ponder.piston_pole.header": "Przedłużenia tłoka",
 	"create.ponder.piston_pole.text_1": "Bez przyłączonych przedłużeń, mechaniczny tłok nie może się wysunąć",
 	"create.ponder.piston_pole.text_2": "Długość przedłużenia z tyłu ustala maksymalny zasięg tłoka",
+
+	"create.ponder.portable_fluid_interface.header": "UNLOCALIZED: Contraption Fluid Exchange",
+
+	"create.ponder.portable_fluid_interface_redstone.header": "UNLOCALIZED: Redstone Control",
 
 	"create.ponder.portable_storage_interface.header": "Używanie przenośnych interfejsów magazynu",
 	"create.ponder.portable_storage_interface.text_1": "Pojemniki na ruchomych maszynach nie mogą być otwarte przez gracza",
@@ -2028,10 +2132,16 @@
 	"create.ponder.smart_chute.text_3": "Użyj rolki w myszce, aby sprecyzować maksymalną wielkość stosu",
 	"create.ponder.smart_chute.text_4": "Sygnał Redstone zatrzyma działanie inteligentnych zsypów",
 
+	"create.ponder.smart_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Smart Pipes",
+
 	"create.ponder.speedometer.header": "Monitorowanie prędkości obrotu z użyciem prędkościomierza",
 	"create.ponder.speedometer.text_1": "Prędkościomierz wyświetla obecną prędkość przyłączonych komponentów",
 	"create.ponder.speedometer.text_2": "Mając na sobie gogle inżyniera, gracz może pozyskać dodatkowe informacje z miernika",
 	"create.ponder.speedometer.text_3": "Komparatory mogą emitować sygnał Redstone bazując na pomiarach prędkościomierza",
+
+	"create.ponder.spout_access.header": "UNLOCALIZED: Moving fluids into Spouts",
+
+	"create.ponder.spout_filling.header": "UNLOCALIZED: Filling Items using a Spout",
 
 	"create.ponder.stabilized_bearings.header": "Stabilizowanie maszyn",
 	"create.ponder.stabilized_bearings.text_1": "Kiedy łożyska mechaniczne są częścią ruchomej maszyny...",
@@ -2063,6 +2173,8 @@
 	"create.ponder.valve_handle.text_3": "Wytwarzana prędkość jest niewielka, ale pozwala na dokładny obrót",
 	"create.ponder.valve_handle.text_4": "Trzymaj PPM skradając się, aby obrócić ją zgodnie ze wskazówkami zegara",
 	"create.ponder.valve_handle.text_5": "Pokrętła mogą być zabarwione dla celów dekoracyjnych",
+
+	"create.ponder.valve_pipe.header": "UNLOCALIZED: Controlling Fluid flow using Valves",
 
 	"create.ponder.water_wheel.header": "Generowanie siły obrotowej z użyciem kół wodnych",
 	"create.ponder.water_wheel.text_1": "Koła wodne pobierają energię z prądów wodnych",

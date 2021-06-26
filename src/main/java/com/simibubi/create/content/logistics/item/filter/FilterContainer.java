@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.item.filter;
 import com.simibubi.create.AllContainerTypes;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -14,32 +15,40 @@ public class FilterContainer extends AbstractFilterContainer {
 	boolean respectNBT;
 	boolean blacklist;
 
-	public FilterContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainerTypes.FILTER.type, id, inv, extraData);
+	public FilterContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+		super(type, id, inv, extraData);
 	}
 
-	public FilterContainer(int id, PlayerInventory inv, ItemStack stack) {
-		super(AllContainerTypes.FILTER.type, id, inv, stack);
+	public FilterContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack stack) {
+		super(type, id, inv, stack);
+	}
+
+	public static FilterContainer create(int id, PlayerInventory inv, ItemStack stack) {
+		return new FilterContainer(AllContainerTypes.FILTER.get(), id, inv, stack);
+	}
+
+	@Override
+	protected int getPlayerInventoryXOffset() {
+		return 38;
+	}
+
+	@Override
+	protected int getPlayerInventoryYOffset() {
+		return 119;
 	}
 
 	@Override
 	protected void addFilterSlots() {
-		int x = -27;
+		int x = 23;
 		int y = 20;
-
 		for (int row = 0; row < 2; ++row)
 			for (int col = 0; col < 9; ++col)
-				this.addSlot(new SlotItemHandler(filterInventory, col + row * 9, x + col * 18, y + row * 18));
+				this.addSlot(new SlotItemHandler(ghostInventory, col + row * 9, x + col * 18, y + row * 18));
 	}
 	
 	@Override
-	protected ItemStackHandler createFilterInventory() {
-		return FilterItem.getFilterItems(filterItem);
-	}
-
-	@Override
-	protected int getInventoryOffset() {
-		return 97;
+	protected ItemStackHandler createGhostInventory() {
+		return FilterItem.getFilterItems(contentHolder);
 	}
 	
 	@Override
@@ -51,6 +60,7 @@ public class FilterContainer extends AbstractFilterContainer {
 	
 	@Override
 	protected void saveData(ItemStack filterItem) {
+		super.saveData(filterItem);
 		CompoundNBT tag = filterItem.getOrCreateTag();
 		tag.putBoolean("RespectNBT", respectNBT);
 		tag.putBoolean("Blacklist", blacklist);

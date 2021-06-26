@@ -1,10 +1,10 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
+import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
@@ -35,12 +35,15 @@ import com.simibubi.create.content.curiosities.armor.DivingBootsItem;
 import com.simibubi.create.content.curiosities.armor.DivingHelmetItem;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.symmetry.client.SymmetryWandModel;
+import com.simibubi.create.content.curiosities.tools.BlueprintItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripModel;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperModel;
+import com.simibubi.create.content.logistics.item.LinkedControllerItem;
+import com.simibubi.create.content.logistics.item.LinkedControllerModel;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.item.SchematicItem;
@@ -56,12 +59,13 @@ import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.Rarity;
 import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 
 public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.baseCreativeTab);
+			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
 	// Schematics
 
@@ -122,10 +126,10 @@ public class AllItems {
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
-		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
-			.properties(p -> p.rarity(Rarity.UNCOMMON))
-			.model(AssetLookup.existingItemModel())
-			.onRegister(CreateRegistrate.itemColors(() -> ChromaticCompoundColor::new))
+			REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
+					.properties(p -> p.rarity(Rarity.UNCOMMON))
+					.model(AssetLookup.existingItemModel())
+					.color(() -> ChromaticCompoundColor::new)
 			.register();
 
 	public static final ItemEntry<ShadowSteelItem> SHADOW_STEEL = REGISTRATE.item("shadow_steel", ShadowSteelItem::new)
@@ -145,11 +149,11 @@ public class AllItems {
 		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), PLATES.tag),
 		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),
 		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
-		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag),
+		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag, ItemTags.PIGLIN_LOVED),
 		LAPIS_SHEET = taggedIngredient("lapis_sheet", forgeItemTag("plates/lapis_lazuli"), PLATES.tag),
 
 		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
-		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag),
+		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag, ItemTags.PIGLIN_LOVED),
 		CRUSHED_COPPER = taggedIngredient("crushed_copper_ore", CRUSHED_ORES.tag),
 		CRUSHED_ZINC = taggedIngredient("crushed_zinc_ore", CRUSHED_ORES.tag),
 		CRUSHED_BRASS = taggedIngredient("crushed_brass", CRUSHED_ORES.tag);
@@ -183,25 +187,29 @@ public class AllItems {
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
 		.properties(p -> p.maxStackSize(1))
-		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
-		.lang("Engineer's Goggles")
-		.register();
-
-	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
-		.register();
-
-	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
-		REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
+			.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
+			.lang("Engineer's Goggles")
 			.register();
 
+	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
+			.register();
+
+	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
+			REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
+					.register();
+
+	public static final ItemEntry<BlueprintItem> CRAFTING_BLUEPRINT =
+			REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
+					.register();
+
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
-		.register();
+			.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+			.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
-		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
-		.register();
+			.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+			.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+			.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.maxStackSize(1))
@@ -213,6 +221,12 @@ public class AllItems {
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
+
+	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
+		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
+			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
+			.model(AssetLookup.itemModelWithPartials())
+			.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)

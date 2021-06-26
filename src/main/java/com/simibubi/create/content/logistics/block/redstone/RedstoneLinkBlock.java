@@ -114,12 +114,8 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	public int getWeakPower(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		if (!state.get(RECEIVER))
 			return 0;
-		try {
-			RedstoneLinkTileEntity tileEntity = getTileEntity(blockAccess, pos);
-			return tileEntity.getReceivedSignal();
-		} catch (TileEntityException e) {
-		}
-		return 0;
+		return getTileEntityOptional(blockAccess, pos).map(RedstoneLinkTileEntity::getReceivedSignal)
+				.orElse(0);
 	}
 
 	@Override
@@ -149,17 +145,15 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	public ActionResultType toggleMode(BlockState state, World worldIn, BlockPos pos) {
 		if (worldIn.isRemote)
 			return ActionResultType.SUCCESS;
-		try {
-			RedstoneLinkTileEntity te = getTileEntity(worldIn, pos);
+
+		return onTileEntityUse(worldIn, pos, te -> {
 			Boolean wasReceiver = state.get(RECEIVER);
 			boolean blockPowered = worldIn.isBlockPowered(pos);
 			worldIn.setBlockState(pos, state.cycle(RECEIVER)
-				.with(POWERED, blockPowered), 3);
+					.with(POWERED, blockPowered), 3);
 			te.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
 			return ActionResultType.SUCCESS;
-		} catch (TileEntityException e) {
-		}
-		return ActionResultType.PASS;
+		});
 	}
 
 	@Override

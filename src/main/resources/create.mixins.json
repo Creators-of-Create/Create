@@ -7,17 +7,11 @@
   "mixins": [
   ],
   "client": [
-    "CancelTileEntityRenderMixin",
+    "BreakProgressMixin",
     "EntityContraptionInteractionMixin",
-    "FogColorTrackerMixin",
+    "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
-    "LightUpdateMixin",
-    "NetworkLightUpdateMixin",
-    "RenderHooksMixin",
-    "ShaderCloseMixin",
-    "StoreProjectionMatrixMixin",
-    "TileRemoveMixin",
-    "TileWorldHookMixin",
+    "ModelDataRefreshMixin",
     "WindowResizeMixin"
   ],
   "injectors": {

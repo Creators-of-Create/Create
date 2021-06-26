@@ -1,8 +1,8 @@
 package com.simibubi.create.compat.jei;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -39,7 +39,9 @@ import com.simibubi.create.content.contraptions.components.press.MechanicalPress
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
+import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
 import com.simibubi.create.content.logistics.item.filter.FilterScreen;
@@ -51,10 +53,12 @@ import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -81,19 +85,19 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public IIngredientManager ingredientManager;
-	final List<CreateRecipeCategory<?>> ALL = new ArrayList<>();
-	final CreateRecipeCategory<?>
+	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
+	private final CreateRecipeCategory<?>
 
-	milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
-		.catalyst(AllBlocks.MILLSTONE::get)
-		.build(),
+			milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
+			.catalyst(AllBlocks.MILLSTONE::get)
+			.build(),
 
-		crushing = register("crushing", CrushingCategory::new).recipes(AllRecipeTypes.CRUSHING)
+	crushing = register("crushing", CrushingCategory::new).recipes(AllRecipeTypes.CRUSHING)
 			.recipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
 			.catalyst(AllBlocks.CRUSHING_WHEEL::get)
 			.build(),
 
-		pressing = register("pressing", PressingCategory::new).recipes(AllRecipeTypes.PRESSING)
+	pressing = register("pressing", PressingCategory::new).recipes(AllRecipeTypes.PRESSING)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.build(),
 
@@ -106,7 +110,9 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		blasting = register("fan_blasting", FanBlastingCategory::new)
-			.recipesExcluding(() -> IRecipeType.SMELTING, () -> IRecipeType.SMOKING)
+			.recipesExcluding(() -> IRecipeType.SMELTING, () -> IRecipeType.BLASTING)
+			.recipes(() -> IRecipeType.BLASTING)
+			.removeRecipes(() -> IRecipeType.SMOKING)
 			.catalystStack(ProcessingViaFanCategory.getFan("fan_blasting"))
 			.build(),
 
@@ -165,9 +171,10 @@ public class CreateJEI implements IModPlugin {
 			.catalyst(AllItems.SAND_PAPER::get)
 			.catalyst(AllItems.RED_SAND_PAPER::get)
 			.build(),
-			
+
 		deploying = register("deploying", DeployingCategory::new)
-			.recipeList(() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
+				.recipeList(
+						() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
 			.recipes(AllRecipeTypes.DEPLOYING)
 			.catalyst(AllBlocks.DEPLOYER::get)
 			.catalyst(AllBlocks.DEPOT::get)
@@ -201,136 +208,152 @@ public class CreateJEI implements IModPlugin {
 
 		mechanicalCrafting =
 			register("mechanical_crafting", MechanicalCraftingCategory::new).recipes(AllRecipeTypes.MECHANICAL_CRAFTING)
-				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-				.build()
-
-	;
+					.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
+					.build();
 
 	private <T extends IRecipe<?>> CategoryBuilder<T> register(String name,
-		Supplier<CreateRecipeCategory<T>> supplier) {
+															   Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<T>(name, supplier);
 	}
 
 	@Override
+	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+		registration.addRecipeTransferHandler(new BlueprintTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
+	}
+
+	@Override
 	public void registerCategories(IRecipeCategoryRegistration registration) {
-		ALL.forEach(registration::addRecipeCategories);
+		allCategories.forEach(registration::addRecipeCategories);
 	}
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
 		ingredientManager = registration.getIngredientManager();
-		ALL.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
+		allCategories.forEach(c -> c.recipes.forEach(s -> registration.addRecipes(s.get(), c.getUid())));
 	}
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		ALL.forEach(c -> c.recipeCatalysts.forEach(s -> registration.addRecipeCatalyst(s.get(), c.getUid())));
+		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registration.addRecipeCatalyst(s.get(), c.getUid())));
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		SlotMover slotMover = new SlotMover();
-		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
-		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
 		registration.addGuiContainerHandler(SchematicTableScreen.class, slotMover);
+		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
+		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
 		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
 		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
-		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new FilterGhostIngredientHandler());
+		registration.addGuiContainerHandler(BlueprintScreen.class, slotMover);
+		registration.addGuiContainerHandler(LinkedControllerScreen.class, slotMover);
+
+		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
+		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
 	}
 
 	private class CategoryBuilder<T extends IRecipe<?>> {
-		CreateRecipeCategory<T> category;
+		private CreateRecipeCategory<T> category;
+		private List<Consumer<List<IRecipe<?>>>> recipeListConsumers = new ArrayList<>();
 		private Predicate<CRecipes> pred;
 
-		CategoryBuilder(String name, Supplier<CreateRecipeCategory<T>> category) {
+		public CategoryBuilder(String name, Supplier<CreateRecipeCategory<T>> category) {
 			this.category = category.get();
 			this.category.setCategoryId(name);
-			this.pred = Predicates.alwaysTrue();
+			pred = Predicates.alwaysTrue();
 		}
 
-		CategoryBuilder<T> catalyst(Supplier<IItemProvider> supplier) {
-			return catalystStack(() -> new ItemStack(supplier.get()
-				.asItem()));
-		}
-
-		CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
-			category.recipeCatalysts.add(supplier);
-			return this;
-		}
-
-		CategoryBuilder<T> recipes(AllRecipeTypes recipeTypeEntry) {
+		public CategoryBuilder<T> recipes(AllRecipeTypes recipeTypeEntry) {
 			return recipes(recipeTypeEntry::getType);
 		}
 
-		CategoryBuilder<T> recipes(Supplier<IRecipeType<T>> recipeType) {
+		public CategoryBuilder<T> recipes(Supplier<IRecipeType<? extends T>> recipeType) {
 			return recipes(r -> r.getType() == recipeType.get());
 		}
 
-		CategoryBuilder<T> recipes(ResourceLocation serializer) {
+		public CategoryBuilder<T> recipes(ResourceLocation serializer) {
 			return recipes(r -> r.getSerializer()
 				.getRegistryName()
 				.equals(serializer));
 		}
 
-		CategoryBuilder<T> recipes(Predicate<IRecipe<?>> pred) {
+		public CategoryBuilder<T> recipes(Predicate<IRecipe<?>> pred) {
 			return recipeList(() -> findRecipes(pred));
 		}
 
-		CategoryBuilder<T> recipes(Predicate<IRecipe<?>> pred, Function<IRecipe<?>, T> converter) {
+		public CategoryBuilder<T> recipes(Predicate<IRecipe<?>> pred, Function<IRecipe<?>, T> converter) {
 			return recipeList(() -> findRecipes(pred), converter);
 		}
 
-		CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list) {
+		public CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list) {
 			return recipeList(list, null);
 		}
 
-		CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list, Function<IRecipe<?>, T> converter) {
-			category.recipes.add(() -> {
-				if (!this.pred.test(AllConfigs.SERVER.recipes))
-					return Collections.emptyList();
+		public CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list,
+											 Function<IRecipe<?>, T> converter) {
+			recipeListConsumers.add(recipes -> {
+				List<? extends IRecipe<?>> toAdd = list.get();
 				if (converter != null)
-					return list.get()
-						.stream()
-						.map(converter)
-						.collect(Collectors.toList());
-				return list.get();
+					toAdd = toAdd.stream()
+							.map(converter)
+							.collect(Collectors.toList());
+				recipes.addAll(toAdd);
 			});
 			return this;
 		}
 
-		CategoryBuilder<T> recipesExcluding(Supplier<IRecipeType<? extends T>> recipeType,
+		public CategoryBuilder<T> recipesExcluding(Supplier<IRecipeType<? extends T>> recipeType,
 			Supplier<IRecipeType<? extends T>> excluded) {
-			category.recipes.add(() -> {
-				if (!this.pred.test(AllConfigs.SERVER.recipes))
-					return Collections.emptyList();
-				return findRecipesByTypeExcluding(recipeType.get(), excluded.get());
+			recipeListConsumers.add(recipes -> {
+				recipes.addAll(findRecipesByTypeExcluding(recipeType.get(), excluded.get()));
 			});
 			return this;
 		}
 
-		CategoryBuilder<T> enableWhen(Function<CRecipes, ConfigBool> configValue) {
-			this.pred = c -> configValue.apply(c)
+		public CategoryBuilder<T> removeRecipes(Supplier<IRecipeType<? extends T>> recipeType) {
+			recipeListConsumers.add(recipes -> {
+				removeRecipesByType(recipes, recipeType.get());
+			});
+			return this;
+		}
+
+		public CategoryBuilder<T> catalyst(Supplier<IItemProvider> supplier) {
+			return catalystStack(() -> new ItemStack(supplier.get()
+				.asItem()));
+		}
+
+		public CategoryBuilder<T> catalystStack(Supplier<ItemStack> supplier) {
+			category.recipeCatalysts.add(supplier);
+			return this;
+		}
+
+		public CategoryBuilder<T> enableWhen(Function<CRecipes, ConfigBool> configValue) {
+			pred = c -> configValue.apply(c)
 				.get();
 			return this;
 		}
 
-		CategoryBuilder<T> enableWhenBool(Function<CRecipes, Boolean> configValue) {
-			this.pred = configValue::apply;
+		public CategoryBuilder<T> enableWhenBool(Function<CRecipes, Boolean> configValue) {
+			pred = configValue::apply;
 			return this;
 		}
 
-		CreateRecipeCategory<T> build() {
-			ALL.add(category);
+		public CreateRecipeCategory<T> build() {
+			if (pred.test(AllConfigs.SERVER.recipes))
+				category.recipes.add(() -> {
+					List<IRecipe<?>> recipes = new ArrayList<>();
+					for (Consumer<List<IRecipe<?>>> consumer : recipeListConsumers)
+						consumer.accept(recipes);
+					return recipes;
+				});
+			allCategories.add(category);
 			return category;
 		}
 
 	}
 
-	static List<IRecipe<?>> findRecipesByType(IRecipeType<?> type) {
-		return findRecipes(r -> r.getType() == type);
-	}
-
-	static List<IRecipe<?>> findRecipes(Predicate<IRecipe<?>> predicate) {
+	public static List<IRecipe<?>> findRecipes(Predicate<IRecipe<?>> predicate) {
 		return Minecraft.getInstance().world.getRecipeManager()
 			.getRecipes()
 			.stream()
@@ -338,24 +361,44 @@ public class CreateJEI implements IModPlugin {
 			.collect(Collectors.toList());
 	}
 
-	static List<IRecipe<?>> findRecipesByTypeExcluding(IRecipeType<?> type, IRecipeType<?> excludingType) {
-		List<IRecipe<?>> byType = findRecipes(r -> r.getType() == type);
-		List<IRecipe<?>> byExcludingType = findRecipes(r -> r.getType() == excludingType);
-		byType.removeIf(recipe -> {
-			for (IRecipe<?> r : byExcludingType) {
-				ItemStack[] matchingStacks = recipe.getIngredients()
-					.get(0)
-					.getMatchingStacks();
-				if (matchingStacks.length == 0)
+	public static List<IRecipe<?>> findRecipesByType(IRecipeType<?> type) {
+		return findRecipes(recipe -> recipe.getType() == type);
+	}
+
+	public static List<IRecipe<?>> findRecipesByTypeExcluding(IRecipeType<?> type, IRecipeType<?> excludingType) {
+		List<IRecipe<?>> byType = findRecipesByType(type);
+		removeRecipesByType(byType, excludingType);
+		return byType;
+	}
+
+	public static List<IRecipe<?>> findRecipesByTypeExcluding(IRecipeType<?> type, IRecipeType<?>... excludingTypes) {
+		List<IRecipe<?>> byType = findRecipesByType(type);
+		for (IRecipeType<?> excludingType : excludingTypes)
+			removeRecipesByType(byType, excludingType);
+		return byType;
+	}
+
+	public static void removeRecipesByType(List<IRecipe<?>> recipes, IRecipeType<?> type) {
+		List<IRecipe<?>> byType = findRecipesByType(type);
+		recipes.removeIf(recipe -> {
+			for (IRecipe<?> r : byType)
+				if (doInputsMatch(recipe, r))
 					return true;
-				if (r.getIngredients()
-					.get(0)
-					.test(matchingStacks[0]))
-					return true;
-			}
 			return false;
 		});
-		return byType;
+	}
+
+	public static boolean doInputsMatch(IRecipe<?> recipe1, IRecipe<?> recipe2) {
+		ItemStack[] matchingStacks = recipe1.getIngredients()
+			.get(0)
+			.getMatchingStacks();
+		if (matchingStacks.length == 0)
+			return true;
+		if (recipe2.getIngredients()
+			.get(0)
+			.test(matchingStacks[0]))
+			return true;
+		return false;
 	}
 
 }

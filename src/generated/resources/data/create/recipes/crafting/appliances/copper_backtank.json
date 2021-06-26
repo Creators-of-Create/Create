@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "AGA",
-    "PPP",
+    "PBP",
     " P "
   ],
   "key": {
@@ -11,6 +11,9 @@
     },
     "A": {
       "item": "create:andesite_alloy"
+    },
+    "B": {
+      "tag": "forge:storage_blocks/copper"
     },
     "P": {
       "tag": "forge:ingots/copper"

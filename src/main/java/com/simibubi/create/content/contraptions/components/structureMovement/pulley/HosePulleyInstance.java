@@ -1,37 +1,37 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEntity;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class HosePulleyInstance extends AbstractPulleyInstance {
 	final HosePulleyTileEntity tile = (HosePulleyTileEntity) super.tile;
 
-	public HosePulleyInstance(InstancedTileRenderer<?> dispatcher, HosePulleyTileEntity tile) {
+	public HosePulleyInstance(MaterialManager<?> dispatcher, HosePulleyTileEntity tile) {
 		super(dispatcher, tile);
 		beginFrame();
 	}
 
-	protected InstancedModel<OrientedData> getRopeModel() {
+	protected Instancer<OrientedData> getRopeModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.HOSE, blockState);
 	}
 
-	protected InstancedModel<OrientedData> getMagnetModel() {
+	protected Instancer<OrientedData> getMagnetModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_MAGNET, blockState);
 	}
 
-	protected InstancedModel<OrientedData> getHalfMagnetModel() {
+	protected Instancer<OrientedData> getHalfMagnetModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_HALF_MAGNET, blockState);
 	}
 
-	protected InstancedModel<OrientedData> getCoilModel() {
+	protected Instancer<OrientedData> getCoilModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_COIL, blockState, rotatingAbout);
 	}
 
-	protected InstancedModel<OrientedData> getHalfRopeModel() {
+	protected Instancer<OrientedData> getHalfRopeModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.HOSE_HALF, blockState);
 	}
 

@@ -5,6 +5,7 @@ import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FAC
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
@@ -12,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -39,8 +41,8 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		BlockState blockState = context.state;
 		Direction facing = blockState.get(HORIZONTAL_FACING);
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
@@ -50,11 +52,13 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		if (context.contraption.stalled)
 			speed = 0;
 
+		superBuffer.transform(matrices.contraptionStack);
 		transform(context.world, facing, superBuffer, speed);
 
-		superBuffer.light(msLocal.peek()
-				.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
-			.renderInto(ms, buffers.getBuffer(RenderType.getCutoutMipped()));
+		superBuffer
+			.light(matrices.entityMatrix,
+					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, buffers.getBuffer(RenderType.getCutoutMipped()));
 	}
 
 	public static void transform(World world, Direction facing, SuperByteBuffer superBuffer, float speed) {

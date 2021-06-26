@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
@@ -80,7 +81,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			super.fromTag(state, compound, clientPacket);
 			return;
 		}
-		
+
 		float angleBefore = angle;
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
@@ -108,7 +109,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	public void onSpeedChanged(float prevSpeed) {
 		super.onSpeedChanged(prevSpeed);
 		assembleNextTick = true;
-		
+
 		if (movedContraption != null && Math.signum(prevSpeed) != Math.signum(getSpeed()) && prevSpeed != 0) {
 			movedContraption.getContraption()
 				.stop(world);
@@ -116,7 +117,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	public float getAngularSpeed() {
-		float speed = (isWindmill() ? getGeneratedSpeed() : getSpeed()) * 3 / 10f;
+		float speed = convertToAngular(isWindmill() ? getGeneratedSpeed() : getSpeed());
 		if (getSpeed() == 0)
 			speed = 0;
 		if (world.isRemote) {
@@ -169,7 +170,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
 		movedContraption.setRotationAxis(direction.getAxis());
 		world.addEntity(movedContraption);
-		
+
 		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 
 		running = true;
@@ -216,14 +217,13 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 						movedContraption.getContraption()
 							.stop(world);
 					disassemble();
+					return;
 				}
-				return;
 			} else {
 				if (speed == 0 && !isWindmill())
 					return;
 				assemble();
 			}
-			return;
 		}
 
 		if (!running)
@@ -323,7 +323,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

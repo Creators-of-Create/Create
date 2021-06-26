@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.data;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.render.backend.instancing.IRendererFactory;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderRegistry;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
+import com.jozufozu.flywheel.backend.instancing.tile.ITileInstanceFactory;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.TileEntityBuilder;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class CreateTileEntityBuilder<T extends TileEntity, P> extends TileEntityBuilder<T, P> {
 
 	@Nullable
-	private NonNullSupplier<IRendererFactory<? super T>> instanceFactory;
+	private NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory;
 
 	public static <T extends TileEntity, P> TileEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
 		String name, BuilderCallback callback, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
@@ -32,7 +32,7 @@ public class CreateTileEntityBuilder<T extends TileEntity, P> extends TileEntity
 		super(owner, parent, name, callback, factory);
 	}
 
-	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<IRendererFactory<? super T>> instanceFactory) {
+	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory) {
 		if (this.instanceFactory == null) {
 			DistExecutor.runWhenOn(Dist.CLIENT, () -> this::registerInstance);
 		}
@@ -43,10 +43,10 @@ public class CreateTileEntityBuilder<T extends TileEntity, P> extends TileEntity
 	}
 
 	protected void registerInstance() {
-		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, ($) -> {
-			NonNullSupplier<IRendererFactory<? super T>> instanceFactory = this.instanceFactory;
+		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
+			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
-				InstancedTileRenderRegistry.instance.register(getEntry(), instanceFactory.get());
+				InstancedRenderRegistry.getInstance().register(getEntry(), instanceFactory.get());
 			}
 
 		});

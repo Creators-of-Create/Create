@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
@@ -9,6 +9,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
+import com.simibubi.create.foundation.gui.Theme.Key;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Couple;
@@ -24,9 +25,11 @@ public class BoxWidget extends ElementWidget {
 	protected Color customBorderBot;
 	protected boolean animateColors = true;
 	protected LerpedFloat colorAnimation = LerpedFloat.linear();
+
 	protected Color gradientColor1, gradientColor2;
-	private Color colorTarget1 = Theme.c(Theme.Key.BUTTON_IDLE, true), colorTarget2 = Theme.c(Theme.Key.BUTTON_IDLE, false);
 	private Color previousColor1, previousColor2;
+	private Color colorTarget1 = Theme.c(getIdleTheme(), true);
+	private Color colorTarget2 = Theme.c(getIdleTheme(), false);
 
 	public BoxWidget() {
 		this(0, 0);
@@ -84,8 +87,8 @@ public class BoxWidget extends ElementWidget {
 	public void onClick(double x, double y) {
 		super.onClick(x, y);
 
-		gradientColor1 = Theme.c(Theme.Key.BUTTON_CLICK, true);
-		gradientColor2 = Theme.c(Theme.Key.BUTTON_CLICK, true);
+		gradientColor1 = Theme.c(getClickTheme(), true);
+		gradientColor2 = Theme.c(getClickTheme(), false);
 		startGradientAnimation(getColorForState(true), getColorForState(false), true, 0.15);
 	}
 
@@ -175,23 +178,40 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	private void startGradientAnimation(Color c1, Color c2, boolean positive) {
-		startGradientAnimation(c1, c2, positive, 0.3);
+		startGradientAnimation(c1, c2, positive, 0.6);
 	}
 
 	private Color getColorForState(boolean first) {
 		if (!active)
-			return Theme.p(Theme.Key.BUTTON_DISABLE).get(first);
+			return Theme.p(getDisabledTheme()).get(first);
 
 		if (hovered) {
 			if (first)
-				return customBorderTop != null ? customBorderTop.darker() : Theme.c(Theme.Key.BUTTON_HOVER, true);
+				return customBorderTop != null ? customBorderTop.darker() : Theme.c(getHoverTheme(), true);
 			else
-				return customBorderBot != null ? customBorderBot.darker() : Theme.c(Theme.Key.BUTTON_HOVER, false);
+				return customBorderBot != null ? customBorderBot.darker() : Theme.c(getHoverTheme(), false);
 		}
 
 		if (first)
-			return customBorderTop != null ? customBorderTop : Theme.c(Theme.Key.BUTTON_IDLE, true);
+			return customBorderTop != null ? customBorderTop : Theme.c(getIdleTheme(), true);
 		else
-			return customBorderBot != null ? customBorderBot : Theme.c(Theme.Key.BUTTON_IDLE, false);
+			return customBorderBot != null ? customBorderBot : Theme.c(getIdleTheme(), false);
 	}
+
+	public Key getDisabledTheme() {
+		return Theme.Key.BUTTON_DISABLE;
+	}
+
+	public Key getIdleTheme() {
+		return Theme.Key.BUTTON_IDLE;
+	}
+
+	public Key getHoverTheme() {
+		return Theme.Key.BUTTON_HOVER;
+	}
+
+	public Key getClickTheme() {
+		return Theme.Key.BUTTON_CLICK;
+	}
+
 }

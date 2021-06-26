@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import java.util.Random;
 import java.util.function.Supplier;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -15,8 +17,6 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -57,7 +57,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(te.getWorld())) {
 
 			BlockState blockState = te.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;
@@ -143,7 +143,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					return stack;
 				};
 
-				SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
+				SuperByteBuffer superBuffer = CreateClient.BUFFER_CACHE.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 			}
 		}

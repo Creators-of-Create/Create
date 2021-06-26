@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 
@@ -59,8 +60,10 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 		BlockState newState;
 		World world = context.getWorld();
 		BlockPos pos = context.getPos();
+		FluidTransportBehaviour.cacheFlows(world, pos);
 		newState = toRegularPipe(world, pos, state).with(BlockStateProperties.WATERLOGGED, state.get(BlockStateProperties.WATERLOGGED));
 		world.setBlockState(pos, newState, 3);
+		FluidTransportBehaviour.loadFlows(world, pos);
 		return ActionResultType.SUCCESS;
 	}
 
@@ -78,15 +81,15 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
 			: Fluids.EMPTY.getDefaultState();
 	}
-	
+
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state) {
-		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState());
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), te);
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
-	
+
 }

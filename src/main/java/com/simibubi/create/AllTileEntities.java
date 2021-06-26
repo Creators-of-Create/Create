@@ -119,6 +119,8 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEnti
 import com.simibubi.create.content.curiosities.armor.CopperBacktankInstance;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankRenderer;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
+import com.simibubi.create.content.curiosities.projector.ChromaticProjectorInstance;
+import com.simibubi.create.content.curiosities.projector.ChromaticProjectorTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
@@ -157,7 +159,6 @@ import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
 
 public class AllTileEntities {
@@ -246,10 +247,10 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
-		.tileEntity("hand_crank", HandCrankTileEntity::new)
-		.instance(() -> HandCrankInstance::new)
-		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray(new BlockEntry<?>[AllBlocks.DYED_VALVE_HANDLES.size()]))
+			.tileEntity("hand_crank", HandCrankTileEntity::new)
+			.instance(() -> HandCrankInstance::new)
+			.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
+			.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
@@ -657,7 +658,6 @@ public class AllTileEntities {
 			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();
-	
 	public static final TileEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
 		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
 		.instance(() -> CopperBacktankInstance::new)

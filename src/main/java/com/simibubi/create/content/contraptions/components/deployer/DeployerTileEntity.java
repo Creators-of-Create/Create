@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
@@ -15,7 +16,6 @@ import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe.SandPaperInv;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -327,12 +327,13 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putBoolean("Powered", redstoneLocked);
 
 		if (player != null) {
-			compound.put("HeldItem", player.getHeldItemMainhand()
-				.serializeNBT());
 			ListNBT invNBT = new ListNBT();
 			player.inventory.write(invNBT);
 			compound.put("Inventory", invNBT);
+			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
+		} else if (deferredInventoryList != null) {
+			compound.put("Inventory", deferredInventoryList);
 		}
 
 		super.write(compound, clientPacket);
@@ -407,7 +408,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

@@ -233,8 +233,9 @@ public class PonderScene {
 
 		for (RenderType type : RenderType.getBlockLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
+		
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
-		info.set(transform.xRotation.getValue(pt), transform.yRotation.getValue(pt));
+		info.set(transform.xRotation.getValue(pt) + 90, transform.yRotation.getValue(pt) + 180);
 		world.renderEntities(ms, buffer, info, pt);
 		world.renderParticles(ms, buffer, info, pt);
 		outliner.renderOutlines(ms, buffer, pt);

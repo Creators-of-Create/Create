@@ -70,7 +70,8 @@ public class PumpTileEntity extends KineticTileEntity {
 				return;
 			arrowDirection.chase(speed >= 0 ? 1 : -1, .5f, Chaser.EXP);
 			arrowDirection.tickChaser();
-			return;
+			if (!isVirtual())
+				return;
 		}
 
 		sidesToUpdate.forEachWithContext((update, isFront) -> {
@@ -96,14 +97,14 @@ public class PumpTileEntity extends KineticTileEntity {
 			return;
 		if (speed != 0)
 			reversed = speed < 0;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		BlockPos frontPos = pos.offset(getFront());
 		BlockPos backPos = pos.offset(getFront().getOpposite());
 		FluidPropagator.propagateChangedPipe(world, frontPos, world.getBlockState(frontPos));
 		FluidPropagator.propagateChangedPipe(world, backPos, world.getBlockState(backPos));
-		
+
 		FluidTransportBehaviour behaviour = getBehaviour(FluidTransportBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.wipePressure();
@@ -380,7 +381,7 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

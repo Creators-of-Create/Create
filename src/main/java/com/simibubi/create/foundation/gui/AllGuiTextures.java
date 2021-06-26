@@ -20,6 +20,8 @@ public enum AllGuiTextures implements IScreenRenderable {
 	TERRAINZAPPER("curiosities.png", 234, 103),
 	TERRAINZAPPER_INACTIVE_PARAM("curiosities.png", 238, 0, 18, 18),
 
+	LOGO("logo.png", 256, 256),
+
 	SCHEMATIC("schematics.png", 192, 121),
 	SCHEMATIC_SLOT("widgets.png", 54, 0, 16, 16),
 	SCHEMATIC_PROMPT("schematics_2.png", 213, 77),
@@ -58,6 +60,15 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
+	LINKED_CONTROLLER("curiosities2.png", 179, 109),
+	BLUEPRINT("curiosities2.png", 0, 109, 179, 109),
+
+	PROJECTOR("projector.png", 235, 185),
+	PROJECTOR_FILTER_STRENGTH("projector.png", 0, 14, 162, 22),
+	PROJECTOR_FILTER("projector.png", 0, 36, 162, 22),
+	PROJECTOR_END("projector.png", 0, 58, 162, 22),
+	PROJECTOR_EMPTY("projector.png", 0, 80, 162, 22),
+
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
 	JEI_CHANCE_SLOT("jei/widgets.png", 20, 156, 18, 18),
@@ -81,6 +92,11 @@ public enum AllGuiTextures implements IScreenRenderable {
 	INDICATOR_GREEN("widgets.png", 36, 18, 18, 6),
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
+
+	HOTSLOT_ARROW("widgets.png", 24, 51, 20, 12),
+	HOTSLOT("widgets.png", 0, 68, 22, 22),
+	HOTSLOT_ACTIVE("widgets.png", 0, 46, 22, 22),
+	HOTSLOT_SUPER_ACTIVE("widgets.png", 27, 67, 24, 24),
 
 	SPEECH_TOOLTIP_BACKGROUND("widgets.png", 0, 24, 8, 8),
 	SPEECH_TOOLTIP_COLOR("widgets.png", 8, 24, 8, 8),

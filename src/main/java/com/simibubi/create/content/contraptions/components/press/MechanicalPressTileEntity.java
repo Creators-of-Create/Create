@@ -10,7 +10,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -187,7 +187,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION_ON_BELT.playOnServer(world, pos);
 			else
 				AllSoundEvents.MECHANICAL_PRESS_ACTIVATION.playOnServer(world, pos, .5f, .75f + (Math.abs(getSpeed()) / 1024f));
-			
+
 			if (!world.isRemote)
 				sendData();
 		}
@@ -258,9 +258,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 				for (ItemStack result : InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(item, 1),
 					recipe.get())) {
 					ItemEntity created =
-						new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
+							new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result);
 					created.setDefaultPickupDelay();
-					created.setMotion(VecHelper.offsetRandomly(Vector3d.ZERO, Create.random, .05f));
+					created.setMotion(VecHelper.offsetRandomly(Vector3d.ZERO, Create.RANDOM, .05f));
 					world.addEntity(created);
 				}
 				item.shrink(1);

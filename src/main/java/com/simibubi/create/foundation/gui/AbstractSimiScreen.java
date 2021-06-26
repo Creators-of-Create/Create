@@ -43,10 +43,12 @@ public abstract class AbstractSimiScreen extends Screen {
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = partialTicks == 10 ? 0
-			: Minecraft.getInstance()
+				: Minecraft.getInstance()
 				.getRenderPartialTicks();
 
 		ms.push();
+
+		prepareFrame();
 
 		renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 		renderWindow(ms, mouseX, mouseY, partialTicks);
@@ -54,7 +56,15 @@ public abstract class AbstractSimiScreen extends Screen {
 			widget.render(ms, mouseX, mouseY, partialTicks);
 		renderWindowForeground(ms, mouseX, mouseY, partialTicks);
 
+		endFrame();
+
 		ms.pop();
+	}
+
+	protected void prepareFrame() {
+	}
+
+	protected void endFrame() {
 	}
 
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {

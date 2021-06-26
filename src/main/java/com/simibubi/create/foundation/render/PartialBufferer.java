@@ -4,9 +4,9 @@ import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 import java.util.function.Supplier;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -16,7 +16,7 @@ import net.minecraft.util.Direction;
 public class PartialBufferer {
 
 	public static SuperByteBuffer get(PartialModel partial, BlockState referenceState) {
-		return CreateClient.bufferCache.renderPartial(partial, referenceState);
+		return CreateClient.BUFFER_CACHE.renderPartial(partial, referenceState);
 	}
 
 	public static SuperByteBuffer getFacing(PartialModel partial, BlockState referenceState) {
@@ -25,7 +25,7 @@ public class PartialBufferer {
 	}
 
 	public static SuperByteBuffer getFacing(PartialModel partial, BlockState referenceState, Direction facing) {
-		return CreateClient.bufferCache.renderDirectionalPartial(partial, referenceState, facing, rotateToFace(facing));
+		return CreateClient.BUFFER_CACHE.renderDirectionalPartial(partial, referenceState, facing, rotateToFace(facing));
 	}
 
 	public static Supplier<MatrixStack> rotateToFace(Direction facing) {

@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.DyeHelper;
 
 import net.minecraft.block.BlockState;
@@ -43,14 +43,14 @@ public class ValveHandleBlock extends HandCrankBlock {
 		ItemStack heldItem = player.getHeldItem(handIn);
 		for (DyeColor color : DyeColor.values()) {
 			if (!heldItem.getItem()
-				.isIn(DyeHelper.getTagOfDye(color)))
+					.isIn(DyeHelper.getTagOfDye(color)))
 				continue;
 			if (worldIn.isRemote)
 				return ActionResultType.SUCCESS;
 
-			BlockState newState = AllBlocks.DYED_VALVE_HANDLES.get(color.ordinal())
-				.getDefaultState()
-				.with(FACING, state.get(FACING));
+			BlockState newState = AllBlocks.DYED_VALVE_HANDLES.get(color)
+					.getDefaultState()
+					.with(FACING, state.get(FACING));
 			if (newState != state)
 				worldIn.setBlockState(pos, newState);
 			return ActionResultType.SUCCESS;

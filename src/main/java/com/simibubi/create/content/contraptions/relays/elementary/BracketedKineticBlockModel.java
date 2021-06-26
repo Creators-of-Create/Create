@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import net.minecraftforge.client.model.data.ModelProperty;
 
 public class BracketedKineticBlockModel extends BakedModelWrapper<IBakedModel> {
 
-	private static ModelProperty<BracketedModelData> BRACKET_PROPERTY = new ModelProperty<>();
+	private static final ModelProperty<BracketedModelData> BRACKET_PROPERTY = new ModelProperty<>();
 
 	public BracketedKineticBlockModel(IBakedModel template) {
 		super(template);

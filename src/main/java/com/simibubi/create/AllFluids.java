@@ -7,7 +7,7 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.PotionFluidAttributes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.RenderType;
@@ -25,47 +25,47 @@ public class AllFluids {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
-	public static RegistryEntry<PotionFluid> POTION =
-		REGISTRATE.virtualFluid("potion", PotionFluidAttributes::new, PotionFluid::new)
-			.lang(f -> "fluid.create.potion", "Potion")
+	public static FluidEntry<PotionFluid> POTION =
+			REGISTRATE.virtualFluid("potion", PotionFluidAttributes::new, PotionFluid::new)
+					.lang(f -> "fluid.create.potion", "Potion")
+					.register();
+
+	public static FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
+			.lang(f -> "fluid.create.tea", "Builder's Tea")
+			.tag(AllTags.forgeFluidTag("tea"))
 			.register();
 
-	public static RegistryEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
-		.lang(f -> "fluid.create.tea", "Builder's Tea")
-		.tag(AllTags.forgeFluidTag("tea"))
-		.register();
-
-	public static RegistryEntry<VirtualFluid> MILK = REGISTRATE.virtualFluid("milk")
-		.lang(f -> "fluid.create.milk", "Milk")
-		.tag(AllTags.forgeFluidTag("milk"))
-		.register();
-
-	public static RegistryEntry<ForgeFlowingFluid.Flowing> HONEY =
-		REGISTRATE.standardFluid("honey", NoColorFluidAttributes::new)
-			.lang(f -> "fluid.create.honey", "Honey")
-			.attributes(b -> b.viscosity(500)
-				.density(1400))
-			.properties(p -> p.levelDecreasePerBlock(2)
-				.tickRate(25)
-				.slopeFindDistance(3)
-				.explosionResistance(100f))
-			.tag(AllTags.forgeFluidTag("honey"))
-			.bucket()
-			.properties(p -> p.maxStackSize(1))
-			.build()
+	public static FluidEntry<VirtualFluid> MILK = REGISTRATE.virtualFluid("milk")
+			.lang(f -> "fluid.create.milk", "Milk")
+			.tag(AllTags.forgeFluidTag("milk"))
 			.register();
 
-	public static RegistryEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
-		REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
-			.lang(f -> "fluid.create.chocolate", "Chocolate")
-			.tag(AllTags.forgeFluidTag("chocolate"))
-			.attributes(b -> b.viscosity(500)
-				.density(1400))
-			.properties(p -> p.levelDecreasePerBlock(2)
-				.tickRate(25)
-				.slopeFindDistance(3)
-				.explosionResistance(100f))
-			.bucket()
+	public static FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
+			REGISTRATE.standardFluid("honey", NoColorFluidAttributes::new)
+					.lang(f -> "fluid.create.honey", "Honey")
+					.attributes(b -> b.viscosity(500)
+							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.slopeFindDistance(3)
+							.explosionResistance(100f))
+					.tag(AllTags.forgeFluidTag("honey"))
+					.bucket()
+					.properties(p -> p.maxStackSize(1))
+					.build()
+					.register();
+
+	public static FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
+			REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
+					.lang(f -> "fluid.create.chocolate", "Chocolate")
+					.tag(AllTags.forgeFluidTag("chocolate"))
+					.attributes(b -> b.viscosity(500)
+							.density(1400))
+					.properties(p -> p.levelDecreasePerBlock(2)
+							.tickRate(25)
+							.slopeFindDistance(3)
+							.explosionResistance(100f))
+					.bucket()
 			.properties(p -> p.maxStackSize(1))
 			.build()
 			.register();
@@ -78,7 +78,7 @@ public class AllFluids {
 	public static void assignRenderLayers() {}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void makeTranslucent(RegistryEntry<? extends ForgeFlowingFluid> entry) {
+	private static void makeTranslucent(FluidEntry<?> entry) {
 		ForgeFlowingFluid fluid = entry.get();
 		RenderTypeLookup.setRenderLayer(fluid, RenderType.getTranslucent());
 		RenderTypeLookup.setRenderLayer(fluid.getStillFluid(), RenderType.getTranslucent());

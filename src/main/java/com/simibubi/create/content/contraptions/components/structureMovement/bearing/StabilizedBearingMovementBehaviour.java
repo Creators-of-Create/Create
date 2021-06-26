@@ -2,7 +2,9 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
@@ -10,13 +12,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.OrientedContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -31,9 +32,9 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
-		if (FastRenderDispatcher.available()) return;
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		if (Backend.getInstance().canUseInstancing()) return;
 
 		Direction facing = context.state.get(BlockStateProperties.FACING);
 		PartialModel top = AllBlockPartials.BEARING_TOP;
@@ -52,12 +53,14 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 		orientation = rotation;
 
+		superBuffer.transform(matrices.contraptionStack);
 		superBuffer.rotateCentered(orientation);
 
 		// render
-		superBuffer.light(msLocal.peek()
-			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context));
-		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		superBuffer
+			.light(matrices.entityMatrix,
+				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getSolid()));
 	}
 
 	@Override
@@ -67,8 +70,8 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
-		return new StabilizedBearingInstance(kr, context);
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+		return new StabilizedBearingInstance(materialManager, simulationWorld, context);
 	}
 
 	static float getCounterRotationAngle(MovementContext context, Direction facing, float renderPartialTicks) {

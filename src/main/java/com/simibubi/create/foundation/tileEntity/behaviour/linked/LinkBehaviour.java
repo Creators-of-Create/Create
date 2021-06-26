@@ -7,6 +7,7 @@ import java.util.function.IntSupplier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;
+import com.simibubi.create.content.logistics.IRedstoneLinkable;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -17,9 +18,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
-public class LinkBehaviour extends TileEntityBehaviour {
+public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinkable {
 
 	public static BehaviourType<LinkBehaviour> TYPE = new BehaviourType<>();
 
@@ -76,33 +78,37 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		frequencyLast = behaviour.frequencyLast;
 	}
 
+	@Override
 	public boolean isListening() {
 		return mode == Mode.RECEIVE;
 	}
 
+	@Override
 	public int getTransmittedStrength() {
 		return mode == Mode.TRANSMIT ? transmission.getAsInt() : 0;
 	}
 
-	public void updateReceiver(int networkPower) {
+	@Override
+	public void setReceivedStrength(int networkPower) {
 		if (!newPosition)
 			return;
 		signalCallback.accept(networkPower);
 	}
 
 	public void notifySignalChange() {
-		Create.redstoneLinkNetworkHandler.updateNetworkOf(this);
+		Create.REDSTONE_LINK_NETWORK_HANDLER.updateNetworkOf(getWorld(), this);
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (tileEntity.getWorld().isRemote)
+		if (getWorld().isRemote)
 			return;
-		getHandler().addToNetwork(this);
+		getHandler().addToNetwork(getWorld(), this);
 		newPosition = true;
 	}
 
+	@Override
 	public Pair<Frequency, Frequency> getNetworkKey() {
 		return Pair.of(frequencyFirst, frequencyLast);
 	}
@@ -110,9 +116,14 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	@Override
 	public void remove() {
 		super.remove();
-		if (tileEntity.getWorld().isRemote)
+		if (getWorld().isRemote)
 			return;
-		getHandler().removeFromNetwork(this);
+		getHandler().removeFromNetwork(getWorld(), this);
+	}
+
+	@Override
+	public boolean isSafeNBT() {
+		return true;
 	}
 
 	@Override
@@ -146,7 +157,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 			!ItemStack.areItemsEqual(stack, toCompare) || !ItemStack.areItemStackTagsEqual(stack, toCompare);
 
 		if (changed)
-			getHandler().removeFromNetwork(this);
+			getHandler().removeFromNetwork(getWorld(), this);
 
 		if (first)
 			frequencyFirst = Frequency.of(stack);
@@ -157,7 +168,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 			return;
 
 		tileEntity.sendData();
-		getHandler().addToNetwork(this);
+		getHandler().addToNetwork(getWorld(), this);
 	}
 
 	@Override
@@ -166,7 +177,7 @@ public class LinkBehaviour extends TileEntityBehaviour {
 	}
 
 	private RedstoneLinkNetworkHandler getHandler() {
-		return Create.redstoneLinkNetworkHandler;
+		return Create.REDSTONE_LINK_NETWORK_HANDLER;
 	}
 
 	public static class SlotPositioning {
@@ -192,6 +203,16 @@ public class LinkBehaviour extends TileEntityBehaviour {
 		BlockState state = tileEntity.getBlockState();
 		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
 		return (first ? firstSlot : secondSlot).testHit(state, localHit);
+	}
+
+	@Override
+	public boolean isAlive() {
+		return !tileEntity.isRemoved() && getWorld().getTileEntity(getPos()) == tileEntity;
+	}
+
+	@Override
+	public BlockPos getLocation() {
+		return getPos();
 	}
 
 }

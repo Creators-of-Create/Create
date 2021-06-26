@@ -6,7 +6,7 @@
     ]
   },
   "criteria": {
-    "has_ingredient": {
+    "has_andesite": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "has_ingredient",
+      "has_andesite",
       "has_the_recipe"
     ]
   ]

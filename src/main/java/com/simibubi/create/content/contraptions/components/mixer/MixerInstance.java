@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
@@ -16,7 +16,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 	private final OrientedData mixerPole;
 	private final MechanicalMixerTileEntity mixer;
 
-	public MixerInstance(InstancedTileRenderer<?> dispatcher, MechanicalMixerTileEntity tile) {
+	public MixerInstance(MaterialManager<?> dispatcher, MechanicalMixerTileEntity tile) {
 		super(dispatcher, tile);
 		this.mixer = tile;
 

@@ -9,10 +9,10 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.State;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
-import com.simibubi.create.content.logistics.InWorldProcessing;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -89,7 +89,7 @@ public class BeltDeployerCallbacks {
 					boolean centered = BeltHelper.isItemUpright(stack);
 					copy.stack = stack;
 					copy.locked = true;
-					copy.angle = centered ? 180 : Create.random.nextInt(360);
+					copy.angle = centered ? 180 : Create.RANDOM.nextInt(360);
 					return copy;
 				})
 				.collect(Collectors.toList());

@@ -16,7 +16,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Advancement.Builder;

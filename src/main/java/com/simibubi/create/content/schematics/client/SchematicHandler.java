@@ -191,12 +191,11 @@ public class SchematicHandler {
 			return;
 		if (activeSchematicItem != null)
 			this.overlay.renderOn(ms, activeHotbarSlot);
-
 		currentTool.getTool()
 			.renderOverlay(ms, buffer);
 		selectionScreen.renderPassive(ms, partialTicks);
 	}
-
+	
 	public void onMouseInput(int button, boolean pressed) {
 		if (!active)
 			return;

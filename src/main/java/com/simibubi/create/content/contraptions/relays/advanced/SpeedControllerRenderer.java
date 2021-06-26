@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -7,7 +8,6 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 
 import net.minecraft.block.BlockState;
@@ -32,7 +32,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		if (!FastRenderDispatcher.available(tileEntityIn.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(tileEntityIn.getWorld())) {
 			KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
 		}
 
@@ -53,8 +53,8 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 	}
 
 	private SuperByteBuffer getRotatedModel(SpeedControllerTileEntity te) {
-		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
-			KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
+		return CreateClient.BUFFER_CACHE.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
+				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
 	}
 
 }
