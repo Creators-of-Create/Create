@@ -9,6 +9,8 @@ import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.particle.HeaterParticleData;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
+import com.simibubi.create.content.curiosities.bell.SoulBaseParticle;
+import com.simibubi.create.content.curiosities.bell.SoulParticle;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -31,8 +33,9 @@ public enum AllParticleTypes {
 	CUBE(CubeParticleData::new),
 	FLUID_PARTICLE(FluidParticleData::new),
 	BASIN_FLUID(FluidParticleData::new),
-	FLUID_DRIP(FluidParticleData::new)
-
+	FLUID_DRIP(FluidParticleData::new),
+	SOUL(SoulParticle.Data::new),
+	SOUL_BASE(SoulBaseParticle.Data::new)
 	;
 
 	private ParticleEntry<?> entry;

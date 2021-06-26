@@ -114,7 +114,8 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
-import com.simibubi.create.content.curiosities.projector.ChromaticProjectorBlock;
+import com.simibubi.create.content.curiosities.bell.CursedBellBlock;
+import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
@@ -1299,6 +1300,22 @@ public class AllBlocks {
 						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
 							.func_216056_a("Air", "Air")))));
 			})
+			.register();
+
+	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
+		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
+			.initialProperties(SharedProperties::softMetal)
+			.tag(AllBlockTags.BRITTLE.tag)
+			.item()
+			.build()
+			.register();
+
+	public static final BlockEntry<CursedBellBlock> CURSED_BELL =
+		REGISTRATE.block("cursed_bell", CursedBellBlock::new)
+			.initialProperties(() -> PECULIAR_BELL.get())
+			.tag(AllBlockTags.BRITTLE.tag)
+			.item()
+			.build()
 			.register();
 
 	// Materials
