@@ -13,8 +13,16 @@ import net.minecraft.util.math.vector.Vector3f;
 
 public class CustomRotationParticle extends SimpleAnimatedParticle {
 
+	protected boolean mirror;
+	protected int loopTicks;
+
 	public CustomRotationParticle(ClientWorld worldIn, double x, double y, double z, IAnimatedSprite spriteSet, float yAccel) {
 		super(worldIn, x, y, z, spriteSet, yAccel);
+	}
+
+	public void selectSpriteLoopingWithAge(IAnimatedSprite sprite) {
+		int loopFrame = age % loopTicks;
+		this.setSprite(sprite.get(loopFrame, loopTicks));
 	}
 
 	public Quaternion getCustomRotation(ActiveRenderInfo camera, float partialTicks) {
@@ -44,8 +52,8 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 			vertex.add(originX, originY, originZ);
 		}
 
-		float minU = this.getMinU();
-		float maxU = this.getMaxU();
+		float minU = mirror ? this.getMaxU() : this.getMinU();
+		float maxU = mirror ? this.getMinU() : this.getMaxU();
 		float minV = this.getMinV();
 		float maxV = this.getMaxV();
 		int brightness = this.getBrightnessForRender(partialTicks);
