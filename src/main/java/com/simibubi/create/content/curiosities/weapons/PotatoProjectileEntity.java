@@ -167,7 +167,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		AllSoundEvents.POTATO_HIT.playOnServer(world, new BlockPos(location));
 	}
 
-	public static void playLaunchSound(World world, BlockPos location, float pitch) {
+	public static void playLaunchSound(World world, Vector3d location, float pitch) {
 		AllSoundEvents.FWOOMP.playAt(world, location, 1, pitch, true);
 	}
 

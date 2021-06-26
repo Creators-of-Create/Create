@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -45,13 +44,13 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 	protected abstract void readAdditional(PacketBuffer buffer);
 
 	protected abstract void writeAdditional(PacketBuffer buffer);
-	
+
 	@OnlyIn(Dist.CLIENT)
 	protected abstract void handleAdditional();
 
 	@OnlyIn(Dist.CLIENT)
 	protected abstract ShootableGadgetRenderHandler getHandler();
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public final void handle(Supplier<Context> context) {
@@ -64,13 +63,13 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 				if (renderViewEntity.getPositionVec()
 					.distanceTo(location) > 100)
 					return;
-				
+
 				ShootableGadgetRenderHandler handler = getHandler();
 				handleAdditional();
 				if (self)
-					handler.shoot(hand);
+					handler.shoot(hand, location);
 				else
-					handler.playSound(hand, new BlockPos(location));
+					handler.playSound(hand, location);
 			});
 		context.get()
 			.setPacketHandled(true);

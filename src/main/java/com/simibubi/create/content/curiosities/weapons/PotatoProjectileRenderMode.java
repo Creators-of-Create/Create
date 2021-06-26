@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,8 +42,8 @@ public abstract class PotatoProjectileRenderMode {
 		public void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt) {
 			super.transform(ms, entity, pt);
 			MatrixStacker.of(ms)
-				.rotateZ((entity.ticksExisted + pt) * 2 * (entity.getEntityId() % 16))
-				.rotateX((entity.ticksExisted + pt) * (entity.getEntityId() % 32));
+				.rotateZ((entity.ticksExisted + pt) * 2 * entityRandom(entity, 16))
+				.rotateX((entity.ticksExisted + pt) * entityRandom(entity, 32));
 		}
 	}
 
@@ -65,10 +66,14 @@ public abstract class PotatoProjectileRenderMode {
 				.rotateX(270
 					+ AngleHelper.deg(MathHelper.atan2(diff.y, -MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z))));
 			MatrixStacker.of(ms)
-				.rotateY((entity.ticksExisted + pt) * 20 * spin)
+				.rotateY((entity.ticksExisted + pt) * 20 * spin + entityRandom(entity, 360))
 				.rotateZ(-spriteAngleOffset);
 		}
 
+	}
+
+	public static int entityRandom(Entity entity, int maxValue) {
+		return (System.identityHashCode(entity) * 31) % maxValue;
 	}
 
 }

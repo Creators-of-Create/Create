@@ -25,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -231,7 +232,7 @@ public class AllSoundEvents {
 //			return;
 //		if (soundLocation.getPath().contains("_compounded_")
 //			event.setResultSound();
-//		
+//
 //	}
 
 	private static class SoundEntryProvider implements IDataProvider {
@@ -377,10 +378,18 @@ public class AllSoundEvents {
 			play(world, entity, pos.getX(), pos.getY(), pos.getZ(), volume, pitch);
 		}
 
-		abstract void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch);
+		public void play(World world, PlayerEntity entity, Vector3d pos, float volume, float pitch) {
+			play(world, entity, pos.getX(), pos.getY(), pos.getZ(), volume, pitch);
+		}
+
+		public abstract void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch);
 
 		public void playAt(World world, BlockPos pos, float volume, float pitch, boolean fade) {
-			playAt(world, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, volume, pitch, fade);
+			playAt(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, volume, pitch, fade);
+		}
+
+		public void playAt(World world, Vector3d pos, float volume, float pitch, boolean fade) {
+			playAt(world, pos.getX(), pos.getY(), pos.getZ(), volume, pitch, fade);
 		}
 
 		public abstract void playAt(World world, double x, double y, double z, float volume, float pitch, boolean fade);
@@ -445,7 +454,7 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
+		public void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
 			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) {
 				Couple<Float> volPitch = pair.getSecond();
 				world.playSound(entity, x, y, z, pair.getFirst(), category, volPitch.getFirst() * volume,
@@ -498,7 +507,7 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
+		public void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
 			world.playSound(entity, x, y, z, event, category, volume, pitch);
 		}
 

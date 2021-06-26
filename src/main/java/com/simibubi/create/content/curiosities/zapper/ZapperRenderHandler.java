@@ -14,7 +14,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -58,7 +57,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	protected void transformHand(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {}
 
 	@Override
-	protected void playSound(Hand hand, BlockPos position) {
+	protected void playSound(Hand hand, Vector3d position) {
 		float pitch = hand == Hand.MAIN_HAND ? 0.1f : 0.9f;
 		Minecraft mc = Minecraft.getInstance();
 		AllSoundEvents.WORLDSHAPER_PLACE.play(mc.world, mc.player, position, 0.1f, pitch);

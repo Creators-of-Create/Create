@@ -22,7 +22,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 	private float nextPitch;
 
 	@Override
-	protected void playSound(Hand hand, BlockPos position) {
+	protected void playSound(Hand hand, Vector3d position) {
 		PotatoProjectileEntity.playLaunchSound(Minecraft.getInstance().world, position, nextPitch);
 	}
 
