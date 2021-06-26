@@ -1,10 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.mounted;
 
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
@@ -20,27 +18,21 @@ public enum CartAssembleRailType implements IStringSerializable {
 	POWERED_RAIL(Blocks.POWERED_RAIL),
 	DETECTOR_RAIL(Blocks.DETECTOR_RAIL),
 	ACTIVATOR_RAIL(Blocks.ACTIVATOR_RAIL),
-	CONTROLLER_RAIL(AllBlocks.CONTROLLER_RAIL, blockState -> AllBlocks.CONTROLLER_RAIL.has(blockState)
-		&& blockState.contains(ControllerRailBlock.BACKWARDS) && !blockState.get(ControllerRailBlock.BACKWARDS)),
-	CONTROLLER_RAIL_BACKWARDS(AllBlocks.CONTROLLER_RAIL, blockState -> AllBlocks.CONTROLLER_RAIL.has(blockState)
-		&& blockState.contains(ControllerRailBlock.BACKWARDS) && blockState.get(ControllerRailBlock.BACKWARDS))
+	CONTROLLER_RAIL(AllBlocks.CONTROLLER_RAIL)
 	
 	;
 
 	private final Supplier<Block> railBlockSupplier;
 	private final Supplier<Item> railItemSupplier;
-	public final Predicate<BlockState> matches;
 
 	CartAssembleRailType(Block block) {
 		this.railBlockSupplier = () -> block;
 		this.railItemSupplier = block::asItem;
-		this.matches = blockState -> blockState.getBlock() == getBlock();
 	}
 
-	CartAssembleRailType(BlockEntry<?> block, Predicate<BlockState> matches) {
+	CartAssembleRailType(BlockEntry<?> block) {
 		this.railBlockSupplier = block::get;
 		this.railItemSupplier = () -> block.get().asItem();
-		this.matches = matches;
 	}
 
 	public Block getBlock() {
@@ -49,6 +41,10 @@ public enum CartAssembleRailType implements IStringSerializable {
 
 	public Item getItem() {
 		return railItemSupplier.get();
+	}
+	
+	public boolean matches(BlockState rail) {
+		return rail.getBlock() == railBlockSupplier.get();
 	}
 	
 	@Override

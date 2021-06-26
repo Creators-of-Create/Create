@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1061",
+	"_": "Missing Localizations: 1064",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "Mahlwerkrad",
 	"block.create.crushing_wheel_controller": "Mahlwerkrad Steurung",
 	"block.create.cuckoo_clock": "Kuckucksuhr",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "Türkises Segel",
 	"block.create.cyan_seat": "Türkiser Sitz",
 	"block.create.cyan_valve_handle": "Türkiser Ventilgriff",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "Gepflasterte Verwitterte Kalksteinstufe",
 	"block.create.paved_weathered_limestone_stairs": "Gepflasterte Verwitterte Kalksteintreppe",
 	"block.create.paved_weathered_limestone_wall": "Gepflasterte Verwitterte Kalksteinmauer",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "Rosa Segel",
 	"block.create.pink_seat": "Rosa Sitz",
 	"block.create.pink_valve_handle": "Rosa Ventilgriff",
@@ -1582,7 +1584,8 @@
 
 	"create.ponder.cart_assembler_modes.header": "UNLOCALIZED: Orientation Settings for Minecart Contraptions",
 	"create.ponder.cart_assembler_modes.text_1": "UNLOCALIZED: Cart Contraptions will rotate to face towards their carts' motion",
-	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
+	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: This Arrow indicates which side of the Structure will be considered the front",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "UNLOCALIZED: Other types of Minecarts and Rails",
 	"create.ponder.cart_assembler_rails.text_1": "UNLOCALIZED: Cart Assemblers on Regular Tracks will not affect the passing carts' motion",

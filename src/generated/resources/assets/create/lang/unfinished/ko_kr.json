@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 892",
+	"_": "Missing Localizations: 895",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "분쇄 휠",
 	"block.create.crushing_wheel_controller": "분쇄 휠 컨트롤러",
 	"block.create.cuckoo_clock": "뻐꾸기 시계",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "청록색 날개",
 	"block.create.cyan_seat": "청록색 좌석",
 	"block.create.cyan_valve_handle": "청록색 밸브 손잡이",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "포장된 풍화된 석회암 반 블록",
 	"block.create.paved_weathered_limestone_stairs": "포장된 풍화된 석회암 계단",
 	"block.create.paved_weathered_limestone_wall": "포장된 풍화된 석회암 담장",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "분홍색 날개",
 	"block.create.pink_seat": "분홍색 좌석",
 	"block.create.pink_valve_handle": "분홍색 밸브 손잡이",
@@ -1582,7 +1584,8 @@
 
 	"create.ponder.cart_assembler_modes.header": "UNLOCALIZED: Orientation Settings for Minecart Contraptions",
 	"create.ponder.cart_assembler_modes.text_1": "UNLOCALIZED: Cart Contraptions will rotate to face towards their carts' motion",
-	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
+	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: This Arrow indicates which side of the Structure will be considered the front",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "UNLOCALIZED: Other types of Minecarts and Rails",
 	"create.ponder.cart_assembler_rails.text_1": "UNLOCALIZED: Cart Assemblers on Regular Tracks will not affect the passing carts' motion",

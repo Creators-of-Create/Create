@@ -2,11 +2,11 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"4": "create:block/bearing_top",
 		"5": "create:block/mechanical_bearing_side",
-		"clutch_off": "create:block/clutch_off",
+		"6": "create:block/cart_assembler_side_off",
+		"particle": "create:block/cart_assembler_side",
 		"translation_chassis_side": "create:block/cart_assembler_side",
-		"particle": "create:block/cart_assembler_side"
+		"1_4": "create:block/cart_assembler_top"
 	},
 	"elements": [
 		{
@@ -14,12 +14,12 @@
 			"from": [13.875, 0.062, 1.125],
 			"to": [17.875, 13.937, 14.875],
 			"faces": {
-				"north": {"uv": [1, 4, 15, 0], "rotation": 90, "texture": "#translation_chassis_side"},
-				"east": {"uv": [1, 1, 15, 15], "rotation": 90, "texture": "#translation_chassis_side"},
-				"south": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#translation_chassis_side"},
+				"north": {"uv": [1, 14.875, 5, 1], "texture": "#6"},
+				"east": {"uv": [1, 15, 15, 1], "rotation": 180, "texture": "#6"},
+				"south": {"uv": [11, 14.875, 15, 1], "texture": "#6"},
 				"west": {"uv": [1, 1, 15, 15], "rotation": 90, "texture": "#translation_chassis_side"},
-				"up": {"uv": [5, 1, 9, 15], "texture": "#translation_chassis_side"},
-				"down": {"uv": [2, 1, 6, 15], "texture": "#translation_chassis_side"}
+				"up": {"uv": [1, 5, 14.75, 1], "rotation": 270, "texture": "#6"},
+				"down": {"uv": [1, 15, 14.75, 11], "rotation": 90, "texture": "#6"}
 			}
 		},
 		{
@@ -27,12 +27,12 @@
 			"from": [-1.875, 0.062, 1.125],
 			"to": [2.125, 13.937, 14.875],
 			"faces": {
-				"north": {"uv": [1, 0, 15, 4], "rotation": 90, "texture": "#translation_chassis_side"},
+				"north": {"uv": [11, 14.875, 15, 1], "texture": "#6"},
 				"east": {"uv": [1, 15, 15, 1], "rotation": 90, "texture": "#translation_chassis_side"},
-				"south": {"uv": [1, 4, 15, 0], "rotation": 90, "texture": "#translation_chassis_side"},
-				"west": {"uv": [1, 15, 15, 1], "rotation": 90, "texture": "#translation_chassis_side"},
-				"up": {"uv": [9, 1, 5, 15], "texture": "#translation_chassis_side"},
-				"down": {"uv": [6, 1, 2, 15], "texture": "#translation_chassis_side"}
+				"south": {"uv": [1, 14.875, 5, 1], "texture": "#6"},
+				"west": {"uv": [1, 15, 15, 1], "rotation": 180, "texture": "#6"},
+				"up": {"uv": [1, 5, 14.75, 1], "rotation": 90, "texture": "#6"},
+				"down": {"uv": [1, 15, 14.75, 11], "rotation": 270, "texture": "#6"}
 			}
 		},
 		{
@@ -40,22 +40,12 @@
 			"to": [16, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 23, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#5"},
+				"north": {"uv": [0, 0, 16, 4], "texture": "#translation_chassis_side"},
 				"east": {"uv": [0, 0, 16, 4], "texture": "#5"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#5"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#translation_chassis_side"},
 				"west": {"uv": [0, 0, 16, 4], "texture": "#5"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#4"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1_4"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#translation_chassis_side"}
-			}
-		},
-		{
-			"from": [2, 10, 1],
-			"to": [14, 12, 15],
-			"rotation": {"angle": 0, "axis": "y", "origin": [18, 22, 10]},
-			"faces": {
-				"north": {"uv": [2, 7, 14, 9], "texture": "#clutch_off"},
-				"south": {"uv": [2, 7, 14, 9], "texture": "#clutch_off"},
-				"down": {"uv": [2, 1, 14, 15], "texture": "#translation_chassis_side"}
 			}
 		}
 	],
@@ -89,5 +79,12 @@
 		"fixed": {
 			"scale": [0.5, 0.5, 0.5]
 		}
-	}
+	},
+	"groups": [
+		{
+			"name": "block",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2]
+		}
+	]
 }

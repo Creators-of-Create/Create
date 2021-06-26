@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 217",
+	"_": "Missing Localizations: 220",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "粉碎輪",
 	"block.create.crushing_wheel_controller": "粉碎輪控制器",
 	"block.create.cuckoo_clock": "布穀鳥鐘",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "藍綠色風帆",
 	"block.create.cyan_seat": "藍綠色坐墊",
 	"block.create.cyan_valve_handle": "藍綠色閥門開關",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "風化石灰岩鋪路石半磚",
 	"block.create.paved_weathered_limestone_stairs": "風化石灰岩鋪路石樓梯",
 	"block.create.paved_weathered_limestone_wall": "風化石灰岩鋪路石牆",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "粉紅色風帆",
 	"block.create.pink_seat": "粉紅色坐墊",
 	"block.create.pink_valve_handle": "粉紅色閥門開關",
@@ -1583,6 +1585,7 @@
 	"create.ponder.cart_assembler_modes.header": "礦車結構的方向設定",
 	"create.ponder.cart_assembler_modes.text_1": "礦車結構會隨著礦車方向改變",
 	"create.ponder.cart_assembler_modes.text_2": "如果在裝修站鎖定其方向，則結構方向不會隨礦車方向改變",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "其他種類的礦車和鐵軌",
 	"create.ponder.cart_assembler_rails.text_1": "放在普通鐵軌上的礦車裝修站不會影響礦車的動作",

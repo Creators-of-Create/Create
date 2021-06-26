@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.AbstractRailBlock;
@@ -13,6 +14,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +31,8 @@ public class CartAssemblerBlockItem extends BlockItem {
 	@Nonnull
 	public ActionResultType onItemUse(ItemUseContext context) {
 		if (tryPlaceAssembler(context)) {
-			context.getWorld().playSound(null, context.getPos(), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1, 1);
+			context.getWorld()
+				.playSound(null, context.getPos(), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1, 1);
 			return ActionResultType.SUCCESS;
 		}
 		return super.onItemUse(context);
@@ -56,7 +60,7 @@ public class CartAssemblerBlockItem extends BlockItem {
 			.with(CartAssemblerBlock.RAIL_SHAPE, shape);
 		CartAssembleRailType newType = null;
 		for (CartAssembleRailType type : CartAssembleRailType.values())
-			if (type.matches.test(state))
+			if (type.matches(state))
 				newType = type;
 		if (newType == null)
 			return false;
@@ -64,9 +68,18 @@ public class CartAssemblerBlockItem extends BlockItem {
 			return true;
 
 		newState = newState.with(CartAssemblerBlock.RAIL_TYPE, newType);
+		if (state.contains(ControllerRailBlock.BACKWARDS))
+			newState = newState.with(CartAssemblerBlock.BACKWARDS, state.get(ControllerRailBlock.BACKWARDS));
+		else {
+			Direction direction = player.getAdjustedHorizontalFacing();
+			newState =
+				newState.with(CartAssemblerBlock.BACKWARDS, direction.getAxisDirection() == AxisDirection.POSITIVE);
+		}
+
 		world.setBlockState(pos, newState);
 		if (!player.isCreative())
-			context.getItem().shrink(1);
+			context.getItem()
+				.shrink(1);
 		return true;
 	}
 }

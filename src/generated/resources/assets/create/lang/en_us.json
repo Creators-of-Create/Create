@@ -72,6 +72,7 @@
 	"block.create.crushing_wheel": "Crushing Wheel",
 	"block.create.crushing_wheel_controller": "Crushing Wheel Controller",
 	"block.create.cuckoo_clock": "Cuckoo Clock",
+	"block.create.cursed_bell": "Cursed Bell",
 	"block.create.cyan_sail": "Cyan Sail",
 	"block.create.cyan_seat": "Cyan Seat",
 	"block.create.cyan_valve_handle": "Cyan Valve Handle",
@@ -307,6 +308,7 @@
 	"block.create.paved_weathered_limestone_slab": "Paved Weathered Limestone Slab",
 	"block.create.paved_weathered_limestone_stairs": "Paved Weathered Limestone Stairs",
 	"block.create.paved_weathered_limestone_wall": "Paved Weathered Limestone Wall",
+	"block.create.peculiar_bell": "Peculiar Bell",
 	"block.create.pink_sail": "Pink Sail",
 	"block.create.pink_seat": "Pink Seat",
 	"block.create.pink_valve_handle": "Pink Valve Handle",
@@ -1581,7 +1583,8 @@
 
 	"create.ponder.cart_assembler_modes.header": "Orientation Settings for Minecart Contraptions",
 	"create.ponder.cart_assembler_modes.text_1": "Cart Contraptions will rotate to face towards their carts' motion",
-	"create.ponder.cart_assembler_modes.text_2": "If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
+	"create.ponder.cart_assembler_modes.text_2": "This Arrow indicates which side of the Structure will be considered the front",
+	"create.ponder.cart_assembler_modes.text_3": "If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "Other types of Minecarts and Rails",
 	"create.ponder.cart_assembler_rails.text_1": "Cart Assemblers on Regular Tracks will not affect the passing carts' motion",

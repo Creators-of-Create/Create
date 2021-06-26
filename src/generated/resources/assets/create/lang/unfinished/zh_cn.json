@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 222",
+	"_": "Missing Localizations: 225",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "粉碎轮",
 	"block.create.crushing_wheel_controller": "粉碎轮控制器",
 	"block.create.cuckoo_clock": "布谷鸟闹钟",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "青色风帆",
 	"block.create.cyan_seat": "青色坐垫",
 	"block.create.cyan_valve_handle": "青色阀门手轮",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "风化石灰岩铺路石台阶",
 	"block.create.paved_weathered_limestone_stairs": "风化石灰岩铺路石楼梯",
 	"block.create.paved_weathered_limestone_wall": "风化石灰岩铺路石墙",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "粉红色风帆",
 	"block.create.pink_seat": "粉红色坐垫",
 	"block.create.pink_valve_handle": "粉红色阀门手轮",
@@ -1583,6 +1585,7 @@
 	"create.ponder.cart_assembler_modes.header": "矿车装置的方向设定",
 	"create.ponder.cart_assembler_modes.text_1": "矿车装置会随着矿车的运动而发生转向",
 	"create.ponder.cart_assembler_modes.text_2": "如果装配结构的方向锁定了，那么结构的方向将不再改变",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "另外几种矿车以及铁轨",
 	"create.ponder.cart_assembler_rails.text_1": "放置在普通轨道上的矿车装配站并不会影响路过矿车装置的运动",

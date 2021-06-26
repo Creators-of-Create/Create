@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 181",
+	"_": "Missing Localizations: 184",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "Koło kruszące",
 	"block.create.crushing_wheel_controller": "Sterownik koła kruszącego",
 	"block.create.cuckoo_clock": "Zegar z kukułką",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "Błękitny żagiel",
 	"block.create.cyan_seat": "Błękitne siedzenie",
 	"block.create.cyan_valve_handle": "Błękitne pokrętło",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "Wygładzona zwietrzała wapienna płyta",
 	"block.create.paved_weathered_limestone_stairs": "Wygładzone zwietrzałe wapienne schody",
 	"block.create.paved_weathered_limestone_wall": "Wygładzony zwietrzały wapienny murek",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "Różowy żagiel",
 	"block.create.pink_seat": "Różowe siedzenie",
 	"block.create.pink_valve_handle": "Różowe pokrętło",
@@ -1583,6 +1585,7 @@
 	"create.ponder.cart_assembler_modes.header": "Dostosowywanie orientacji maszyn w wagoniku",
 	"create.ponder.cart_assembler_modes.text_1": "Maszyny w wagoniku obracają się wraz z wagonikiem",
 	"create.ponder.cart_assembler_modes.text_2": "Jeśli monter jest ustawiony na tryb 'Zablokuj obrót', maszyna nigdy nie zmieni swojej orientacji",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "Inne typy wagoników i torów",
 	"create.ponder.cart_assembler_rails.text_1": "Montery wagoników stojące na zwykłych torach nie zmienią prędkości przejeżdżającego wagonika",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 205",
+	"_": "Missing Localizations: 208",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "破砕ホイール",
 	"block.create.crushing_wheel_controller": "破砕ホイールコントローラー",
 	"block.create.cuckoo_clock": "鳩時計",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "水色の帆",
 	"block.create.cyan_seat": "水色のシート",
 	"block.create.cyan_valve_handle": "水色のバルブハンドル",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "舗装された風化した石灰岩のハーフブロック",
 	"block.create.paved_weathered_limestone_stairs": "舗装された風化した石灰岩の階段",
 	"block.create.paved_weathered_limestone_wall": "舗装された風化した石灰岩の壁",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "桃色の帆",
 	"block.create.pink_seat": "桃色のシート",
 	"block.create.pink_valve_handle": "桃色のバルブハンドル",
@@ -1583,6 +1585,7 @@
 	"create.ponder.cart_assembler_modes.header": "からくり付きトロッコの方向設定",
 	"create.ponder.cart_assembler_modes.text_1": "トロッコの構造物は、トロッコの動きに合わせて回転します",
 	"create.ponder.cart_assembler_modes.text_2": "アセンブラーが「常に向きを固定する」に設定されている場合、構造物の向きは変わりません",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "その他のトロッコとレールの種類",
 	"create.ponder.cart_assembler_rails.text_1": "通常のレールに設置されたトロッコアセンブラは、通過するカートの動きに影響を与えません",

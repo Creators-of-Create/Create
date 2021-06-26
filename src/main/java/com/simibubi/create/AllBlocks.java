@@ -1305,8 +1305,10 @@ public class AllBlocks {
 	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
 		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
 			.initialProperties(SharedProperties::softMetal)
+			.blockstate((c, p) -> {})
 			.tag(AllBlockTags.BRITTLE.tag)
 			.item()
+			.model((c, p) -> {})
 			.build()
 			.register();
 
@@ -1314,7 +1316,9 @@ public class AllBlocks {
 		REGISTRATE.block("cursed_bell", CursedBellBlock::new)
 			.initialProperties(() -> PECULIAR_BELL.get())
 			.tag(AllBlockTags.BRITTLE.tag)
+			.blockstate((c, p) -> {})
 			.item()
+			.model((c, p) -> {})
 			.build()
 			.register();
 
