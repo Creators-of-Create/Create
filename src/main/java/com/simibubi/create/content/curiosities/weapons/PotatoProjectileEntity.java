@@ -69,8 +69,9 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	}
 
 	public void tick() {
-		setMotion(getMotion().add(0, -.05, 0)
-			.scale(.99f));
+		PotatoCannonProjectileTypes projectileType = getProjectileType();
+		setMotion(getMotion().add(0, -.05 * projectileType.getGravityMultiplier(), 0)
+			.scale(projectileType.getDrag()));
 		super.tick();
 	}
 
@@ -104,6 +105,8 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 			return;
 		if (owner instanceof LivingEntity)
 			((LivingEntity) owner).setLastAttackedEntity(target);
+		if (target instanceof PotatoProjectileEntity && ticksExisted < 10 && target.ticksExisted < 10)
+			return;
 
 		pop(hit);
 
@@ -164,15 +167,15 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		AllSoundEvents.POTATO_HIT.playOnServer(world, new BlockPos(location));
 	}
 
-	public static void playLaunchSound(World world, Vector3d location, float pitch) {
-		AllSoundEvents.FWOOMP.playOnServer(world, new BlockPos(location), 1, pitch);
+	public static void playLaunchSound(World world, BlockPos location, float pitch) {
+		AllSoundEvents.FWOOMP.playAt(world, location, 1, pitch, true);
 	}
 
 	@Override
 	protected void onBlockHit(BlockRayTraceResult ray) {
 		Vector3d hit = ray.getHitVec();
 		pop(hit);
-		getProjectileType().onBlockHit(ray);
+		getProjectileType().onBlockHit(world, ray);
 		super.onBlockHit(ray);
 		remove();
 	}

@@ -10,6 +10,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
+import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
@@ -63,12 +65,15 @@ public class CreateClient {
 	public static final Outliner OUTLINER = new Outliner();
 	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
 
+	public static final ZapperRenderHandler ZAPPER_RENDER_HANDLER = new ZapperRenderHandler();
+	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();
+
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
 	private static CustomRenderedItems customRenderedItems;
 	private static CasingConnectivity casingConnectivity;
 
-	public static void addClientListeners(IEventBus modEventBus) {
+	public static void addClientListeners(IEventBus forgeEventBus, IEventBus modEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(CreateClient::onModelRegistry);
@@ -78,6 +83,9 @@ public class CreateClient {
 		modEventBus.addListener(CreateContexts::flwInit);
 		modEventBus.addListener(AllMaterialSpecs::flwInit);
 		modEventBus.addListener(ContraptionRenderDispatcher::invalidateOnGatherContext);
+		
+		ZAPPER_RENDER_HANDLER.register(forgeEventBus);
+		POTATO_CANNON_RENDER_HANDLER.register(forgeEventBus);
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
@@ -96,7 +104,7 @@ public class CreateClient {
 		UIRenderHelper.init();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
-				.getResourceManager();
+			.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
 
@@ -107,19 +115,19 @@ public class CreateClient {
 
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
 		if (!event.getMap()
-				.getId()
-				.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
+			.getId()
+			.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
 			return;
 		SpriteShifter.getAllTargetSprites()
-				.forEach(event::addSprite);
+			.forEach(event::addSprite);
 	}
 
 	public static void onModelRegistry(ModelRegistryEvent event) {
 		PartialModel.onModelRegistry(event);
 
 		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
-				.getModelLocations()
-				.forEach(ModelLoader::addSpecialModel));
+			.getModelLocations()
+			.forEach(ModelLoader::addSpecialModel));
 	}
 
 	public static void onModelBake(ModelBakeEvent event) {
@@ -127,9 +135,9 @@ public class CreateClient {
 		PartialModel.onModelBake(event);
 
 		getCustomBlockModels()
-				.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
+			.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		getCustomItemModels()
-				.foreach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
+			.foreach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
 		getCustomRenderedItems().foreach((item, modelFunc) -> {
 			swapModels(modelRegistry, getItemModelLocation(item), m -> modelFunc.apply(m)
 				.loadPartials(event));

@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.weapons;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -13,6 +14,8 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<PotatoCannonModel> {
@@ -26,16 +29,18 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		boolean mainHand = player.getHeldItemMainhand() == stack;
 		boolean offHand = player.getHeldItemOffhand() == stack;
+		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
 
-		float speed = PotatoCannonItem.PREV_SHOT == 0 ? 0
-			: (PotatoCannonItem.PREV_SHOT - AnimationTickHolder.getPartialTicks()) / 5f;
+		float offset = .5f / 16;
 		float worldTime = AnimationTickHolder.getRenderTime() / 10;
 		float angle = worldTime * -25;
-		if (mainHand || offHand)
-			angle += 30 * speed * speed;
+		float speed = CreateClient.POTATO_CANNON_RENDER_HANDLER.getAnimation(mainHand ^ leftHanded,
+			AnimationTickHolder.getPartialTicks());
 
+		if (mainHand || offHand)
+			angle += 360 * MathHelper.clamp(speed * 5, 0, 1);
 		angle %= 360;
-		float offset = .5f / 16;
+
 		ms.push();
 		ms.translate(0, offset, 0);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));

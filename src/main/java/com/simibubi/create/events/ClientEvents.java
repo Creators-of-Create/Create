@@ -3,7 +3,6 @@ package com.simibubi.create.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -30,7 +29,6 @@ import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
-import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
@@ -117,6 +115,8 @@ public class ClientEvents {
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
 		CreateClient.SCHEMATIC_HANDLER.tick();
+		CreateClient.ZAPPER_RENDER_HANDLER.tick();
+		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -135,7 +135,6 @@ public class ClientEvents {
 		CouplingHandlerClient.tick();
 		CouplingRenderer.tickDebugModeRenders();
 		KineticDebugger.tick();
-		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
 		// CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();

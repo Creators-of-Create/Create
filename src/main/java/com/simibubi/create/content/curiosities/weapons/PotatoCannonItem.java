@@ -5,9 +5,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllEntityTypes;
+import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
+import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -15,16 +17,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.ShootableItem;
+import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
@@ -34,14 +35,13 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 public class PotatoCannonItem extends ShootableItem {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
-	public static int PREV_SHOT = 0;
+	public static int PREV_SHOT = 0;// remove this
 
 	public PotatoCannonItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
@@ -56,6 +56,11 @@ public class PotatoCannonItem extends ShootableItem {
 	@Override
 	public ActionResultType onItemUse(ItemUseContext context) {
 		return onItemRightClick(context.getWorld(), context.getPlayer(), context.getHand()).getType();
+	}
+
+	@Override
+	public int getItemStackLimit(ItemStack stack) {
+		return 1;
 	}
 
 	@Override
@@ -82,6 +87,10 @@ public class PotatoCannonItem extends ShootableItem {
 		return true;
 	}
 
+	public boolean isCannon(ItemStack stack) {
+		return stack.getItem() instanceof PotatoCannonItem;
+	}
+
 	@Override
 	public int getMaxDamage(ItemStack stack) {
 		return MAX_DAMAGE;
@@ -90,32 +99,41 @@ public class PotatoCannonItem extends ShootableItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (world.isRemote)
-			return ActionResult.pass(stack);
+		return findAmmoInInventory(world, player, stack).map(itemStack -> {
 
-		findAmmoInInventory(world, player, stack).ifPresent(itemStack -> {
-			PotatoProjectileEntity projectile = AllEntityTypes.POTATO_PROJECTILE.create(world);
-			Vector3d offset = VecHelper.rotate(player.getLookVec()
-				.scale(1.25f), (hand == Hand.MAIN_HAND) == (player.getPrimaryHand() == HandSide.RIGHT) ? -25 : 25,
-				Axis.Y);
-			Vector3d vec = player.getBoundingBox()
-				.getCenter()
-				.add(0, player.getBoundingBox()
-					.getYSize() / 5f, 0)
-				.add(offset);
+			if (ShootableGadgetItemMethods.shouldSwap(player, stack, hand, this::isCannon))
+				return ActionResult.fail(stack);
 
-			projectile.setPosition(vec.x, vec.y, vec.z);
-			projectile.setMotion(player.getLookVec()
-				.scale(1.75f));
-			projectile.setItem(itemStack);
-			projectile.setShooter(player);
-			world.addEntity(projectile);
-			PotatoProjectileEntity.playLaunchSound(world, player.getPositionVec(), projectile.getProjectileType()
-				.getSoundPitch());
+			if (world.isRemote) {
+				CreateClient.POTATO_CANNON_RENDER_HANDLER.dontAnimateItem(hand);
+				return ActionResult.success(stack);
+			}
+
+			Vector3d barrelPos = ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND,
+				new Vector3d(.75f, -0.3f, 1.5f));
+			Vector3d correction =
+				ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND, new Vector3d(-.05f, 0, 0))
+					.subtract(player.getPositionVec()
+						.add(0, player.getEyeHeight(), 0));
 			
-			if (player instanceof ServerPlayerEntity)
-				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
-					new PotatoCannonPacket());
+			Vector3d lookVec = player.getLookVec();
+
+			PotatoCannonProjectileTypes projectileType = PotatoCannonProjectileTypes.getProjectileTypeOf(itemStack)
+				.orElse(PotatoCannonProjectileTypes.FALLBACK);
+			float soundPitch = projectileType.getSoundPitch() + (Create.RANDOM.nextFloat() - .5f) / 4f;
+			boolean spray = projectileType.getSplit() > 1;
+			for (int i = 0; i < projectileType.getSplit(); i++) {
+				PotatoProjectileEntity projectile = AllEntityTypes.POTATO_PROJECTILE.create(world);
+				projectile.setItem(itemStack);
+				Vector3d motion = lookVec.scale(projectileType.getVelocityMultiplier())
+					.add(correction);
+				if (spray)
+					motion = VecHelper.offsetRandomly(motion, Create.RANDOM, 0.25f);
+				projectile.setPosition(barrelPos.x, barrelPos.y, barrelPos.z);
+				projectile.setMotion(motion);
+				projectile.setShooter(player);
+				world.addEntity(projectile);
+			}
 
 			if (!player.isCreative()) {
 				itemStack.shrink(1);
@@ -130,11 +148,13 @@ public class PotatoCannonItem extends ShootableItem {
 				findAmmoInInventory(world, player, stack).flatMap(PotatoCannonProjectileTypes::getProjectileTypeOf)
 					.map(PotatoCannonProjectileTypes::getReloadTicks)
 					.orElse(10);
-			player.getCooldownTracker()
-				.setCooldown(this, cooldown);
-		});
 
-		return ActionResult.pass(stack);
+			ShootableGadgetItemMethods.applyCooldown(player, stack, hand, this::isCannon, cooldown);
+			ShootableGadgetItemMethods.sendPackets(player,
+				b -> new PotatoCannonPacket(barrelPos, lookVec.normalize(), itemStack, hand, soundPitch, b));
+			return ActionResult.success(stack);
+		})
+			.orElse(ActionResult.pass(stack));
 	}
 
 	@Override
@@ -190,6 +210,21 @@ public class PotatoCannonItem extends ShootableItem {
 	public Predicate<ItemStack> getInventoryAmmoPredicate() {
 		return stack -> PotatoCannonProjectileTypes.getProjectileTypeOf(stack)
 			.isPresent();
+	}
+
+	@Override
+	public int getItemEnchantability() {
+		return 1;
+	}
+
+	@Override
+	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+		return true;
+	}
+
+	@Override
+	public UseAction getUseAction(ItemStack stack) {
+		return UseAction.NONE;
 	}
 
 	@Override

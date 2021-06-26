@@ -60,8 +60,8 @@ public class Create {
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-			.disableHtmlEscaping()
-			.create();
+		.disableHtmlEscaping()
+		.create();
 
 	public static final ItemGroup BASE_CREATIVE_TAB = new CreateItemGroup();
 	public static final ItemGroup PALETTES_CREATIVE_TAB = new PalettesItemGroup();
@@ -90,7 +90,7 @@ public class Create {
 		AllConfigs.register();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-				.getModEventBus();
+			.getModEventBus();
 		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		modEventBus.addListener(Create::init);
@@ -104,7 +104,8 @@ public class Create {
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
