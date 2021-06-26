@@ -20,8 +20,8 @@ public class SoulBaseParticle extends CustomRotationParticle {
 		this.animatedSprite = spriteSet;
 		this.particleScale = 0.5f;
 		this.setSize(this.particleScale,this.particleScale);
-		this.loopTicks = 16 + (int) (this.rand.nextFloat() * 2f - 1f);
-		this.maxAge = (int)(64.0F / (this.rand.nextFloat() * 0.36F + 0.64F));
+		this.loopLength = 16 + (int) (this.rand.nextFloat() * 2f - 1f);
+		this.maxAge = (int)(90.0F / (this.rand.nextFloat() * 0.36F + 0.64F));
 		this.selectSpriteLoopingWithAge(animatedSprite);
 		this.field_21507 = true; // disable movement
 	}
