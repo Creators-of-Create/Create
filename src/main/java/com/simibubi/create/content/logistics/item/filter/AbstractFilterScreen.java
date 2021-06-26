@@ -61,11 +61,9 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		int invLeft = guiLeft - windowXOffset + (xSize - PLAYER_INVENTORY.width) / 2;
-		int invTop = guiTop + background.height + 4;
-
-		PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
-		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
+		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
+		int invY = guiTop + background.height + 4;
+		renderPlayerInventory(ms, invX, invY);
 
 		int x = guiLeft;
 		int y = guiTop;

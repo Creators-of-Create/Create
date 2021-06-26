@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -18,7 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity, IPartialSafeNBT {
+public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity, IPartialSafeNBT, IInteractionChecker {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 	// Internally maintained to be identical to behaviorMap.values() in order to improve iteration performance.
@@ -199,6 +201,14 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	public boolean isVirtual() {
 		return virtualMode;
+	}
+
+	@Override
+	public boolean canPlayerUse(PlayerEntity player) {
+		if (world == null || world.getTileEntity(pos) != this) {
+			return false;
+		}
+		return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 }

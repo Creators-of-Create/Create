@@ -87,8 +87,8 @@ public class AdjustableCrateContainer extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return true;
+	public boolean canInteractWith(PlayerEntity player) {
+		return te != null && te.canPlayerUse(player);
 	}
 
 }

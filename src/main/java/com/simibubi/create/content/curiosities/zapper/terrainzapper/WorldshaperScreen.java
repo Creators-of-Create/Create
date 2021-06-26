@@ -43,8 +43,6 @@ public class WorldshaperScreen extends ZapperScreen {
 	protected Indicator followDiagonalsIndicator;
 	protected Indicator acrossMaterialsIndicator;
 
-	private int i;
-	private int j;
 	private CompoundNBT nbt;
 
 	public WorldshaperScreen(ItemStack zapper, boolean offhand) {
@@ -58,24 +56,24 @@ public class WorldshaperScreen extends ZapperScreen {
 	protected void init() {
 		super.init();
 
-		i = guiLeft - 10;
-		j = guiTop + 2;
+		int x = guiLeft;
+		int y = guiTop;
 
-		brushLabel = new Label(i + 61, j + 23, StringTextComponent.EMPTY).withShadow();
-		brushInput = new SelectionScrollInput(i + 56, j + 18, 77, 18).forOptions(brushOptions)
+		brushLabel = new Label(x + 61, y + 25, StringTextComponent.EMPTY).withShadow();
+		brushInput = new SelectionScrollInput(x + 56, y + 20, 77, 18).forOptions(brushOptions)
 			.titled(Lang.translate("gui.terrainzapper.brush"))
 			.writingTo(brushLabel)
-			.calling(this::brushChanged);
+			.calling(brushIndex -> initBrushParams(x, y));
 		if (nbt.contains("Brush"))
 			brushInput.setState(NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class)
 				.ordinal());
 
 		widgets.add(brushLabel);
 		widgets.add(brushInput);
-		initBrushParams();
+		initBrushParams(x, y);
 	}
 
-	public void initBrushParams() {
+	public void initBrushParams(int x, int y) {
 		if (brushParams != null) {
 			nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParams.get(0)
 				.getState(),
@@ -95,16 +93,16 @@ public class WorldshaperScreen extends ZapperScreen {
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
 		for (int index = 0; index < 3; index++) {
 
-			Label label = new Label(i + 65 + 20 * index, j + 43, StringTextComponent.EMPTY).withShadow();
+			Label label = new Label(x + 65 + 20 * index, y + 45, StringTextComponent.EMPTY).withShadow();
 			brushParamLabels.add(label);
 			int indexFinal = index;
-			ScrollInput input = new ScrollInput(i + 56 + 20 * index, j + 38, 18, 18)
+			ScrollInput input = new ScrollInput(x + 56 + 20 * index, y + 40, 18, 18)
 				.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1)
 				.writingTo(label)
 				.titled(currentBrush.getParamLabel(index)
 					.copy())
 				.calling(state -> {
-					label.x = i + 65 + 20 * indexFinal - textRenderer.getWidth(label.text) / 2;
+					label.x = x + 65 + 20 * indexFinal - textRenderer.getWidth(label.text) / 2;
 				});
 			input.setState(params[index]);
 			input.onChanged();
@@ -132,13 +130,13 @@ public class WorldshaperScreen extends ZapperScreen {
 		}
 
 		if (currentBrush.hasConnectivityOptions()) {
-			int x = i + 7 + 4 * 18;
-			int y = j + 77;
-			followDiagonalsIndicator = new Indicator(x, y - 6, StringTextComponent.EMPTY);
-			followDiagonals = new IconButton(x, y, AllIcons.I_FOLLOW_DIAGONAL);
-			x += 18;
-			acrossMaterialsIndicator = new Indicator(x, y - 6, StringTextComponent.EMPTY);
-			acrossMaterials = new IconButton(x, y, AllIcons.I_FOLLOW_MATERIAL);
+			int x1 = x + 7 + 4 * 18;
+			int y1 = y + 79;
+			followDiagonalsIndicator = new Indicator(x1, y1 - 6, StringTextComponent.EMPTY);
+			followDiagonals = new IconButton(x1, y1, AllIcons.I_FOLLOW_DIAGONAL);
+			x1 += 18;
+			acrossMaterialsIndicator = new Indicator(x1, y1 - 6, StringTextComponent.EMPTY);
+			acrossMaterials = new IconButton(x1, y1, AllIcons.I_FOLLOW_MATERIAL);
 
 			followDiagonals.setToolTip(Lang.translate("gui.terrainzapper.searchDiagonal"));
 			acrossMaterials.setToolTip(Lang.translate("gui.terrainzapper.searchFuzzy"));
@@ -161,7 +159,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		toolButtons = new Vector<>(toolValues.length);
 		for (int id = 0; id < toolValues.length; id++) {
 			TerrainTools tool = toolValues[id];
-			toolButtons.add(new IconButton(i + 7 + id * 18, j + 77, tool.icon));
+			toolButtons.add(new IconButton(x + 7 + id * 18, y + 79, tool.icon));
 			toolButtons.get(id)
 				.setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
 		}
@@ -190,7 +188,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		placementButtons = new Vector<>(placementValues.length);
 		for (int id = 0; id < placementValues.length; id++) {
 			PlacementOptions option = placementValues[id];
-			placementButtons.add(new IconButton(i + 136 + id * 18, j + 77, option.icon));
+			placementButtons.add(new IconButton(x + 136 + id * 18, y + 79, option.icon));
 			placementButtons.get(id)
 				.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
 		}
@@ -205,11 +203,6 @@ public class WorldshaperScreen extends ZapperScreen {
 		}
 		placementButtons.get(optionIndex).active = false;
 		widgets.addAll(placementButtons);
-
-	}
-
-	private void brushChanged(int brushIndex) {
-		initBrushParams();
 	}
 
 	@Override
@@ -251,16 +244,16 @@ public class WorldshaperScreen extends ZapperScreen {
 	}
 
 	@Override
-	protected void drawOnBackground(MatrixStack matrixStack, int i, int j) {
-		super.drawOnBackground(matrixStack, i, j);
+	protected void drawOnBackground(MatrixStack matrixStack, int x, int y) {
+		super.drawOnBackground(matrixStack, x, y);
 
 		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
 		for (int index = 2; index >= currentBrush.amtParams; index--)
-			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, i + 56 + 20 * index, j + 40);
+			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, x + 56 + 20 * index, y + 40);
 
-		textRenderer.draw(matrixStack, toolSection, i + 7, j + 69, fontColor);
+		textRenderer.draw(matrixStack, toolSection, x + 7, y + 69, fontColor);
 		if (currentBrush.hasPlacementOptions())
-			textRenderer.draw(matrixStack, placementSection, i + 136, j + 69, fontColor);
+			textRenderer.draw(matrixStack, placementSection, x + 136, y + 69, fontColor);
 	}
 
 	@Override

@@ -28,6 +28,8 @@ import net.minecraft.world.gen.feature.template.PlacementSettings;
 
 public class SchematicEditScreen extends AbstractSimiScreen {
 
+	private AllGuiTextures background;
+
 	private TextFieldWidget xInput;
 	private TextFieldWidget yInput;
 	private TextFieldWidget zInput;
@@ -44,13 +46,21 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	private ScrollInput mirrorArea;
 	private SchematicHandler handler;
 
+	public SchematicEditScreen() {
+		super();
+		background = AllGuiTextures.SCHEMATIC;
+		handler = CreateClient.SCHEMATIC_HANDLER;
+	}
+
 	@Override
 	protected void init() {
-		AllGuiTextures background = AllGuiTextures.SCHEMATIC;
-		setWindowSize(background.width + 50, background.height);
+		setWindowSize(background.width, background.height);
+		setWindowOffset(-6, 0);
+		super.init();
+		widgets.clear();
+
 		int x = guiLeft;
 		int y = guiTop;
-		handler = CreateClient.SCHEMATIC_HANDLER;
 
 		xInput = new TextFieldWidget(textRenderer, x + 50, y + 26, 34, 10, StringTextComponent.EMPTY);
 		yInput = new TextFieldWidget(textRenderer, x + 90, y + 26, 34, 10, StringTextComponent.EMPTY);
@@ -107,15 +117,12 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		Collections.addAll(widgets, labelR, labelM, rotationArea, mirrorArea);
 
 		confirmButton =
-			new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
-
-		super.init();
 	}
 
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-
 		if (isPaste(code)) {
 			String coords = client.keyboardListener.getClipboardString();
 			if (coords != null && !coords.isEmpty()) {
@@ -144,17 +151,18 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
-		AllGuiTextures.SCHEMATIC.draw(matrixStack, this, x, y);
-		textRenderer.drawWithShadow(matrixStack, handler.getCurrentSchematicName(),
-			x + 93 - textRenderer.getStringWidth(handler.getCurrentSchematicName()) / 2, y + 3, 0xffffff);
+
+		background.draw(ms, this, x, y);
+		String title = handler.getCurrentSchematicName();
+		drawCenteredString(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
-				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + 200, guiTop + 82, 0)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 40, -200)
 				.scale(3)
-				.render(matrixStack);
+				.render(ms);
 	}
 
 	@Override

@@ -12,14 +12,14 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 public class SchematicPromptScreen extends AbstractSimiScreen {
 
-	private final ITextComponent title = Lang.translate("schematicAndQuill.title");
+	private AllGuiTextures background;
+
 	private final ITextComponent convertLabel = Lang.translate("schematicAndQuill.convert");
 	private final ITextComponent abortLabel = Lang.translate("action.discard");
 	private final ITextComponent confirmLabel = Lang.translate("action.saveToFile");
@@ -29,28 +29,36 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	private IconButton abort;
 	private IconButton convert;
 
+	public SchematicPromptScreen() {
+		super(Lang.translate("schematicAndQuill.title"));
+		background = AllGuiTextures.SCHEMATIC_PROMPT;
+	}
+
 	@Override
 	public void init() {
+		setWindowSize(background.width, background.height);
 		super.init();
-		AllGuiTextures background = AllGuiTextures.SCHEMATIC_PROMPT;
-		setWindowSize(background.width, background.height + 30);
+		widgets.clear();
 
-		nameField = new TextFieldWidget(textRenderer, guiLeft + 49, guiTop + 26, 131, 10, StringTextComponent.EMPTY);
+		int x = guiLeft;
+		int y = guiTop;
+
+		nameField = new TextFieldWidget(textRenderer, x + 49, y + 26, 131, 10, StringTextComponent.EMPTY);
 		nameField.setTextColor(-1);
 		nameField.setDisabledTextColour(-1);
 		nameField.setEnableBackgroundDrawing(false);
 		nameField.setMaxStringLength(35);
 		nameField.changeFocus(true);
 
-		abort = new IconButton(guiLeft + 7, guiTop + 53, AllIcons.I_TRASH);
+		abort = new IconButton(x + 7, y + 53, AllIcons.I_TRASH);
 		abort.setToolTip(abortLabel);
 		widgets.add(abort);
 
-		confirm = new IconButton(guiLeft + 158, guiTop + 53, AllIcons.I_CONFIRM);
+		confirm = new IconButton(x + 158, y + 53, AllIcons.I_CONFIRM);
 		confirm.setToolTip(confirmLabel);
 		widgets.add(confirm);
 
-		convert = new IconButton(guiLeft + 180, guiTop + 53, AllIcons.I_SCHEMATIC);
+		convert = new IconButton(x + 180, y + 53, AllIcons.I_SCHEMATIC);
 		convert.setToolTip(convertLabel);
 		widgets.add(convert);
 
@@ -62,11 +70,18 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		AllGuiTextures.SCHEMATIC_PROMPT.draw(ms, this, guiLeft, guiTop);
-		textRenderer.drawWithShadow(ms, title, guiLeft + (sWidth / 2) - (textRenderer.getWidth(title) / 2), guiTop + 3,
-			0xffffff);
+		int x = guiLeft;
+		int y = guiTop;
+
+		background.draw(ms, this, x, y);
+		drawCenteredText(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
-				.at(guiLeft + 22, guiTop + 23, 0)
+				.at(x + 22, y + 23, 0)
+				.render(ms);
+
+		GuiGameElement.of(AllItems.SCHEMATIC_AND_QUILL.asStack())
+				.scale(3)
+				.at(x + background.width + 6, y + background.height - 40, -200)
 				.render(ms);
 	}
 
@@ -91,7 +106,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		}
 		if (abort.isHovered()) {
 			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.discard();
-			Minecraft.getInstance().player.closeScreen();
+			client.player.closeScreen();
 			return true;
 		}
 		if (convert.isHovered()) {
@@ -103,7 +118,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 
 	private void confirm(boolean convertImmediately) {
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getText(), convertImmediately);
-		Minecraft.getInstance().player.closeScreen();
+		client.player.closeScreen();
 	}
 
 }

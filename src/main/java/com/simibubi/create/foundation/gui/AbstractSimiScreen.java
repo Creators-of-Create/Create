@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,20 +18,37 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractSimiScreen extends Screen {
 
-	protected int sWidth, sHeight;
+	protected int windowWidth, windowHeight;
+	protected int windowXOffset, windowYOffset;
 	protected int guiLeft, guiTop;
 	protected List<Widget> widgets;
 
-	protected AbstractSimiScreen() {
-		super(new StringTextComponent(""));
+	protected AbstractSimiScreen(ITextComponent title) {
+		super(title);
 		widgets = new ArrayList<>();
 	}
 
+	protected AbstractSimiScreen() {
+		this(new StringTextComponent(""));
+	}
+
 	protected void setWindowSize(int width, int height) {
-		sWidth = width;
-		sHeight = height;
-		guiLeft = (this.width - sWidth) / 2;
-		guiTop = (this.height - sHeight) / 2;
+		windowWidth = width;
+		windowHeight = height;
+	}
+
+	protected void setWindowOffset(int xOffset, int yOffset) {
+		windowXOffset = xOffset;
+		windowYOffset = yOffset;
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		guiLeft = (width - windowWidth) / 2;
+		guiTop = (height - windowHeight) / 2;
+		guiLeft += windowXOffset;
+		guiTop += windowYOffset;
 	}
 
 	@Override
@@ -154,6 +172,11 @@ public abstract class AbstractSimiScreen extends Screen {
 				widget.renderToolTip(ms, mouseX, mouseY);
 			}
 		}
+	}
+
+	@Deprecated
+	protected void debugWindowArea(MatrixStack matrixStack) {
+		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
 	}
 
 }

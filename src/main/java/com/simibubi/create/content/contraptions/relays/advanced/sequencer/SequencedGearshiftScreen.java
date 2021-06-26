@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +26,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
 	private IconButton confirmButton;
 
-	private final ITextComponent title = Lang.translate("gui.sequenced_gearshift.title");
 	private ListNBT compareTag;
 	private Vector<Instruction> instructions;
 	private BlockPos pos;
@@ -35,6 +33,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private Vector<Vector<ScrollInput>> inputs;
 
 	public SequencedGearshiftScreen(SequencedGearshiftTileEntity te) {
+		super(Lang.translate("gui.sequenced_gearshift.title"));
 		this.instructions = te.instructions;
 		this.pos = te.getPos();
 		compareTag = Instruction.serializeAll(instructions);
@@ -42,21 +41,29 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		setWindowSize(background.width + 50, background.height);
+		setWindowSize(background.width, background.height);
+		setWindowOffset(-20, 0);
 		super.init();
 		widgets.clear();
+
+		int x = guiLeft;
+		int y = guiTop;
 
 		inputs = new Vector<>(5);
 		for (int row = 0; row < inputs.capacity(); row++)
 			inputs.add(new Vector<>(3));
 
 		for (int row = 0; row < instructions.size(); row++)
-			initInputsOfRow(row);
+			initInputsOfRow(row, x, y);
+
+		confirmButton =
+			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		widgets.add(confirmButton);
 	}
 
-	public void initInputsOfRow(int row) {
-		int x = guiLeft + 30;
-		int y = guiTop + 18;
+	public void initInputsOfRow(int row, int backgroundX, int backgroundY) {
+		int x = backgroundX + 30;
+		int y = backgroundY + 18;
 		int rowHeight = 22;
 
 		Vector<ScrollInput> rowInputs = inputs.get(row);
@@ -83,10 +90,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 		widgets.addAll(rowInputs);
 		updateParamsOfRow(row);
-
-		confirmButton =
-			new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
-		widgets.add(confirmButton);
 	}
 
 	public void updateParamsOfRow(int row) {
@@ -123,43 +126,44 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		int hFontColor = 0xD3CBBE;
-		background.draw(matrixStack, this, guiLeft, guiTop);
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		int x = guiLeft;
+		int y = guiTop;
+
+		background.draw(ms, this, x, y);
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.height * row;
 			if (row >= instructions.size()) {
-				toDraw.draw(matrixStack, guiLeft, guiTop + 14 + yOffset);
+				toDraw.draw(ms, x, y + 14 + yOffset);
 				continue;
 			}
 
 			Instruction instruction = instructions.get(row);
 			SequencerInstructions def = instruction.instruction;
-			def.background.draw(matrixStack, guiLeft, guiTop + 14 + yOffset);
+			def.background.draw(ms, x, y + 14 + yOffset);
 
-			label(matrixStack, 36, yOffset - 3, Lang.translate(def.translationKey));
+			label(ms, 36, yOffset - 3, Lang.translate(def.translationKey));
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = textRenderer.getStringWidth(text);
-				label(matrixStack, 90 + (12 - stringWidth / 2), yOffset - 3, new StringTextComponent(text));
+				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, new StringTextComponent(text));
 			}
 			if (def.hasSpeedParameter)
-				label(matrixStack, 127, yOffset - 3, instruction.speedModifier.label);
+				label(ms, 127, yOffset - 3, instruction.speedModifier.label);
 		}
 
-		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (background.width - textRenderer.getWidth(title)) / 2, guiTop + 3,
-			0xffffff);
+		drawCenteredText(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(guiLeft + background.width + 10, guiTop + 100, -150)
+			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)
 			.scale(5)
-			.render(matrixStack);
+			.render(ms);
 	}
 
-	private void label(MatrixStack matrixStack, int x, int y, ITextComponent text) {
-		textRenderer.drawWithShadow(matrixStack, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
+	private void label(MatrixStack ms, int x, int y, ITextComponent text) {
+		textRenderer.drawWithShadow(ms, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 
 	public void sendPacket() {
@@ -189,7 +193,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		} else {
 			if (index + 1 < instructions.capacity() && index + 1 == instructions.size()) {
 				instructions.add(new Instruction(SequencerInstructions.END));
-				initInputsOfRow(index + 1);
+				initInputsOfRow(index + 1, guiLeft, guiTop);
 			}
 		}
 	}
@@ -197,7 +201,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		if (confirmButton.isHovered()) {
-			Minecraft.getInstance().player.closeScreen();
+			client.player.closeScreen();
 			return true;
 		}
 

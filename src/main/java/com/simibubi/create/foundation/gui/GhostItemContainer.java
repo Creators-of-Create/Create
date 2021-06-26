@@ -80,11 +80,6 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return true;
-	}
-
-	@Override
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
 		ItemStack held = playerInventory.getItemStack();
 		if (slotId < 36)

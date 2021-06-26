@@ -256,14 +256,14 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		new BoxElement()
 				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
 				.gradientBorder(Theme.p(Theme.Key.PONDER_IDLE))
-				.at((sWidth - stringWidth) / 2f - 5, itemArea.getY() - 21, 100)
+				.at((windowWidth - stringWidth) / 2f - 5, itemArea.getY() - 21, 100)
 				.withBounds(stringWidth + 10, 10)
 				.render(ms);
 
 		ms.translate(0, 0, 200);
 
 //		UIRenderHelper.streak(0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 180, 0x101010);
-		drawCenteredString(ms, textRenderer, relatedTitle, sWidth / 2, itemArea.getY() - 20, Theme.i(Theme.Key.TEXT));
+		drawCenteredString(ms, textRenderer, relatedTitle, windowWidth / 2, itemArea.getY() - 20, Theme.i(Theme.Key.TEXT));
 
 		ms.translate(0,0, -200);
 
