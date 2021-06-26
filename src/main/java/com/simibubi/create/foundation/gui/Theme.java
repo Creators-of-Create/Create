@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,11 +17,11 @@ public class Theme {
 	public static void setTheme(@Nullable Theme theme) {
 		custom = theme;
 	}
-	
+
 	public static void reload() {
-		 base.init();
-		 if (custom != null)
-			 custom.init();
+		base.init();
+		if (custom != null)
+			custom.init();
 	}
 
 	private static ColorHolder resolve(String key) {
@@ -139,7 +139,7 @@ public class Theme {
 		public static Key PONDER_PROGRESSBAR = new Key();
 		public static Key PONDER_MISSING_CREATE = new Key();
 		public static Key PONDER_MISSING_VANILLA = new Key();
-		
+
 		public static Key PONDER_BUTTON_IDLE = new Key();
 		public static Key PONDER_BUTTON_HOVER = new Key();
 		public static Key PONDER_BUTTON_CLICK = new Key();

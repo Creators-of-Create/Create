@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -23,7 +24,6 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CSchematics;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
@@ -617,7 +617,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		// Block doesnt need to be placed twice (Doors, beds, double plants)
 		if (state.contains(BlockStateProperties.DOUBLE_BLOCK_HALF)
-			&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
+				&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
 		if (state.contains(BlockStateProperties.BED_PART) && state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
 			return true;
@@ -824,7 +824,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

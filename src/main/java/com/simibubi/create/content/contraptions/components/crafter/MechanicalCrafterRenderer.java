@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.components.crafter;
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -11,8 +13,6 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -156,7 +156,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(te.getWorld())) {
 			SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, te, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING).getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));

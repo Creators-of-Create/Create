@@ -227,7 +227,7 @@ public class SymmetryWandItem extends Item {
 
 				BlockState toReplace = world.getBlockState(position);
 				if (!toReplace.getMaterial()
-					.isReplaceable())
+						.isReplaceable())
 					continue;
 				if (toReplace.getBlockHardness(world, position) == -1)
 					continue;

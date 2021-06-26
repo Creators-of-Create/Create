@@ -115,7 +115,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 		if (!state.get(RECEIVER))
 			return 0;
 		return getTileEntityOptional(blockAccess, pos).map(RedstoneLinkTileEntity::getReceivedSignal)
-			.orElse(0);
+				.orElse(0);
 	}
 
 	@Override
@@ -145,12 +145,12 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	public ActionResultType toggleMode(BlockState state, World worldIn, BlockPos pos) {
 		if (worldIn.isRemote)
 			return ActionResultType.SUCCESS;
-		
+
 		return onTileEntityUse(worldIn, pos, te -> {
 			Boolean wasReceiver = state.get(RECEIVER);
 			boolean blockPowered = worldIn.isBlockPowered(pos);
 			worldIn.setBlockState(pos, state.cycle(RECEIVER)
-				.with(POWERED, blockPowered), 3);
+					.with(POWERED, blockPowered), 3);
 			te.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
 			return ActionResultType.SUCCESS;
 		});

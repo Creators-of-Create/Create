@@ -1,7 +1,5 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.STOCKSWITCH;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
@@ -16,7 +14,6 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -28,34 +25,39 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	private IconButton confirmButton;
 	private IconButton flipSignals;
 
-	private final ITextComponent title = Lang.translate("gui.stockpile_switch.title");
 	private final ITextComponent invertSignal = Lang.translate("gui.stockpile_switch.invert_signal");
 	private final ItemStack renderedItem = new ItemStack(AllBlocks.STOCKPILE_SWITCH.get());
 
-	private int lastModification;
+	private AllGuiTextures background;
 	private StockpileSwitchTileEntity te;
+	private int lastModification;
 
 	private LerpedFloat cursor;
 	private LerpedFloat cursorLane;
 
 	public StockpileSwitchScreen(StockpileSwitchTileEntity te) {
+		super(Lang.translate("gui.stockpile_switch.title"));
+		background = AllGuiTextures.STOCKSWITCH;
 		this.te = te;
 		lastModification = -1;
 	}
 
 	@Override
 	protected void init() {
-		AllGuiTextures background = STOCKSWITCH;
-		setWindowSize(background.width + 50, background.height);
+		setWindowSize(background.width, background.height);
+		setWindowOffset(-20, 0);
 		super.init();
 		widgets.clear();
+
+		int x = guiLeft;
+		int y = guiTop;
 
 		cursor = LerpedFloat.linear()
 			.startWithValue(te.getLevelForDisplay());
 		cursorLane = LerpedFloat.linear()
 			.startWithValue(te.getState() ? 1 : 0);
 
-		offBelow = new ScrollInput(guiLeft + 36, guiTop + 40, 102, 18).withRange(0, 100)
+		offBelow = new ScrollInput(x + 36, y + 40, 102, 18).withRange(0, 100)
 			.titled(StringTextComponent.EMPTY.copy())
 			.calling(state -> {
 				lastModification = 0;
@@ -67,7 +69,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 			})
 			.setState((int) (te.offWhenBelow * 100));
 
-		onAbove = new ScrollInput(guiLeft + 36, guiTop + 18, 102, 18).withRange(1, 101)
+		onAbove = new ScrollInput(x + 36, y + 18, 102, 18).withRange(1, 101)
 			.titled(StringTextComponent.EMPTY.copy())
 			.calling(state -> {
 				lastModification = 0;
@@ -86,50 +88,50 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		widgets.add(offBelow);
 
 		confirmButton =
-			new IconButton(guiLeft + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
 
-		flipSignals = new IconButton(guiLeft + 14, guiTop + 40, AllIcons.I_FLIP);
+		flipSignals = new IconButton(x + 14, y + 40, AllIcons.I_FLIP);
 		flipSignals.setToolTip(invertSignal);
 		widgets.add(flipSignals);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		STOCKSWITCH.draw(matrixStack, this, guiLeft, guiTop);
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		int x = guiLeft;
+		int y = guiTop;
 
-		AllGuiTextures.STOCKSWITCH_POWERED_LANE.draw(matrixStack, this, guiLeft + 36, guiTop + (te.isInverted() ? 18 : 40));
-		AllGuiTextures.STOCKSWITCH_UNPOWERED_LANE.draw(matrixStack, this, guiLeft + 36, guiTop + (te.isInverted() ? 40 : 18));
-		textRenderer.drawWithShadow(matrixStack, title, guiLeft - 3 + (STOCKSWITCH.width - textRenderer.getWidth(title)) / 2, guiTop + 3,
-			0xffffff);
+		background.draw(ms, this, x, y);
+
+		AllGuiTextures.STOCKSWITCH_POWERED_LANE.draw(ms, this, x + 36, y + (te.isInverted() ? 18 : 40));
+		AllGuiTextures.STOCKSWITCH_UNPOWERED_LANE.draw(ms, this, x + 36, y + (te.isInverted() ? 40 : 18));
+		drawCenteredText(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		AllGuiTextures sprite = AllGuiTextures.STOCKSWITCH_INTERVAL;
 		float lowerBound = offBelow.getState();
 		float upperBound = onAbove.getState();
 
 		sprite.bind();
-		drawTexture(matrixStack, (int) (guiLeft + upperBound) + 37, guiTop + 18, (int) (sprite.startX + upperBound), sprite.startY,
+		drawTexture(ms, (int) (x + upperBound) + 37, y + 18, (int) (sprite.startX + upperBound), sprite.startY,
 			(int) (sprite.width - upperBound), sprite.height);
-		drawTexture(matrixStack, guiLeft + 37, guiTop + 40, sprite.startX, sprite.startY, (int) (lowerBound), sprite.height);
+		drawTexture(ms, x + 37, y + 40, sprite.startX, sprite.startY, (int) (lowerBound), sprite.height);
 
-		AllGuiTextures.STOCKSWITCH_ARROW_UP.draw(matrixStack, this, (int) (guiLeft + lowerBound + 36) - 2, guiTop + 35);
-		AllGuiTextures.STOCKSWITCH_ARROW_DOWN.draw(matrixStack, this, (int) (guiLeft + upperBound + 36) - 3, guiTop + 17);
+		AllGuiTextures.STOCKSWITCH_ARROW_UP.draw(ms, this, (int) (x + lowerBound + 36) - 2, y + 35);
+		AllGuiTextures.STOCKSWITCH_ARROW_DOWN.draw(ms, this, (int) (x + upperBound + 36) - 3, y + 17);
 
 		if (te.currentLevel != -1) {
 			AllGuiTextures cursor = AllGuiTextures.STOCKSWITCH_CURSOR;
-			matrixStack.push();
-			matrixStack.translate(Math.min(99, this.cursor.getValue(partialTicks) * sprite.width),
+			ms.push();
+			ms.translate(Math.min(99, this.cursor.getValue(partialTicks) * sprite.width),
 				cursorLane.getValue(partialTicks) * 22, 0);
-			cursor.draw(matrixStack, this, guiLeft + 34, guiTop + 19);
-			matrixStack.pop();
+			cursor.draw(ms, this, x + 34, y + 19);
+			ms.pop();
 		}
 
-		matrixStack.push();
 		GuiGameElement.of(renderedItem)
-				.<GuiGameElement.GuiRenderBuilder>at(guiLeft + STOCKSWITCH.width + 15, guiTop + 40, -250)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 56, -200)
 				.scale(5)
-				.render(matrixStack);
-		matrixStack.pop();
+				.render(ms);
 	}
 
 	@Override
@@ -165,7 +167,7 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		if (flipSignals.isHovered()) 
 			send(!te.isInverted());
 		if (confirmButton.isHovered()) {
-			Minecraft.getInstance().player.closeScreen();
+			client.player.closeScreen();
 			return true;
 		}
 		return super.mouseClicked(x, y, button);

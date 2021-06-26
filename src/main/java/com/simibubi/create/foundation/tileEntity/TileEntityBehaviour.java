@@ -43,9 +43,13 @@ public abstract class TileEntityBehaviour {
 
 	}
 
-	public boolean isSafeNBT() { return false; }
+	public boolean isSafeNBT() {
+		return false;
+	}
 
-	public ItemRequirement getRequiredItems() { return ItemRequirement.NONE; }
+	public ItemRequirement getRequiredItems() {
+		return ItemRequirement.NONE;
+	}
 
 	public void onBlockChanged(BlockState oldState) {
 

@@ -149,34 +149,34 @@ public class BaseConfigScreen extends ConfigScreen {
 			serverText.withElementRenderer(DISABLED_RENDERER);
 			serverConfigWidget.active = true;
 			serverConfigWidget.getToolTip()
-				.add(new StringTextComponent("Stored individually per World"));
+					.add(new StringTextComponent("Stored individually per World"));
 			serverConfigWidget.getToolTip()
-				.addAll(TooltipHelper.cutTextComponent(
-					new StringTextComponent(
-						"Gameplay settings can only be accessed from the in-game menu after joining a World or Server."),
-					TextFormatting.GRAY, TextFormatting.GRAY));
+					.addAll(TooltipHelper.cutTextComponent(
+							new StringTextComponent(
+									"Gameplay settings can only be accessed from the in-game menu after joining a World or Server."),
+							TextFormatting.GRAY, TextFormatting.GRAY));
 		}
 
 		ConfigScreen.modID = this.modID;
 
 		goBack = new BoxWidget(width / 2 - 134, height / 2, 20, 20).withPadding(2, 2)
-			.withCallback(this::onClose);
+				.withCallback(this::onClose);
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil()
-			.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
+				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
-			.add(new StringTextComponent("Go Back"));
+				.add(new StringTextComponent("Go Back"));
 		widgets.add(goBack);
 	}
-	
+
 	private void linkTo(Screen screen) {
 		returnOnClose = false;
 		ScreenOpener.open(screen);
 	}
-	
+
 	@Override
 	public void onClose() {
 		super.onClose();
 		ScreenOpener.open(parent);
 	}
-	
+
 }

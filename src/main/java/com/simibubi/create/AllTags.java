@@ -31,7 +31,7 @@ import net.minecraftforge.fml.ModList;
 
 public class AllTags {
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String tagName) {
@@ -116,7 +116,8 @@ public class AllTags {
 	}
 
 	public static enum AllFluidTags {
-		NO_INFINITE_DRAINING
+		NO_INFINITE_DRAINING,
+		HONEY(FORGE)
 
 		;
 

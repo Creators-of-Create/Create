@@ -91,6 +91,13 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return ActionResultType.SUCCESS;
 	}
 
+	public BlockState getAxisState(Axis axis) {
+		BlockState defaultState = getDefaultState();
+		for (Direction d : Iterate.directions)
+			defaultState = defaultState.with(FACING_TO_PROPERTY_MAP.get(d), d.getAxis() == axis);
+		return defaultState;
+	}
+	
 	@Nullable
 	private Axis getAxis(IBlockReader world, BlockPos pos, BlockState state) {
 		return FluidPropagator.getStraightPipeAxis(state);
@@ -157,7 +164,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, neighbourPos, BracketedTileEntityBehaviour.TYPE);
 		if (isPipe(neighbour))
 			return bracket == null || !bracket.isBracketPresent()
-				|| FluidPropagator.getStraightPipeAxis(neighbour) == direction.getAxis();
+					|| FluidPropagator.getStraightPipeAxis(neighbour) == direction.getAxis();
 		if (transport == null)
 			return false;
 		return transport.canHaveFlowToward(neighbour, direction.getOpposite());
@@ -241,9 +248,9 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 		BlockState prevState = state;
 		int prevStateSides = (int) Arrays.stream(Iterate.directions)
-			.map(FACING_TO_PROPERTY_MAP::get)
-			.filter(prevState::get)
-			.count();
+				.map(FACING_TO_PROPERTY_MAP::get)
+				.filter(prevState::get)
+				.count();
 
 		// Update sides that are not ignored
 		for (Direction d : Iterate.directions)
@@ -272,7 +279,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 		// Use preferred
 		return state.with(FACING_TO_PROPERTY_MAP.get(preferredDirection), true)
-			.with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
+				.with(FACING_TO_PROPERTY_MAP.get(preferredDirection.getOpposite()), true);
 	}
 
 	@Override

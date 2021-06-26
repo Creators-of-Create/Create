@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.annotation.Nullable;
-
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
+import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
@@ -24,14 +25,9 @@ import com.simibubi.create.foundation.item.render.CustomItemModels;
 import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.render.AllProgramSpecs;
-import com.simibubi.create.foundation.render.KineticRenderer;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
+import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
-import com.simibubi.create.foundation.render.backend.Backend;
-import com.simibubi.create.foundation.render.backend.OptifineHandler;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
@@ -53,7 +49,6 @@ import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraft.world.IWorld;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -67,30 +62,33 @@ public class CreateClient {
 	public static final SchematicHandler SCHEMATIC_HANDLER = new SchematicHandler();
 	public static final SchematicAndQuillHandler SCHEMATIC_AND_QUILL_HANDLER = new SchematicAndQuillHandler();
 	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
-	public static final WorldAttached<KineticRenderer> KINETIC_RENDERER = new WorldAttached<>(KineticRenderer::new);
 	public static final Outliner OUTLINER = new Outliner();
 	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
+
+	public static final ZapperRenderHandler ZAPPER_RENDER_HANDLER = new ZapperRenderHandler();
+	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();
 
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
 	private static CustomRenderedItems customRenderedItems;
 	private static CasingConnectivity casingConnectivity;
 
-	public static void addClientListeners(IEventBus modEventBus) {
+	public static void addClientListeners(IEventBus forgeEventBus, IEventBus modEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
 		modEventBus.addListener(CreateClient::onTextureStitch);
 		modEventBus.addListener(CreateClient::onModelRegistry);
 		modEventBus.addListener(CreateClient::onModelBake);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(ClientEvents::loadCompleted);
-
-		Backend.init();
-		OptifineHandler.init();
+		modEventBus.addListener(CreateContexts::flwInit);
+		modEventBus.addListener(AllMaterialSpecs::flwInit);
+		modEventBus.addListener(ContraptionRenderDispatcher::invalidateOnGatherContext);
+		
+		ZAPPER_RENDER_HANDLER.register(forgeEventBus);
+		POTATO_CANNON_RENDER_HANDLER.register(forgeEventBus);
 	}
 
 	public static void clientInit(FMLClientSetupEvent event) {
-		AllProgramSpecs.init();
-
 		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		BUFFER_CACHE.registerCompartment(ContraptionRenderDispatcher.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
@@ -98,12 +96,12 @@ public class CreateClient {
 		AllKeys.register();
 		// AllFluids.assignRenderLayers();
 		AllBlockPartials.clientInit();
+		AllStitchedTextures.init();
 
 		PonderIndex.register();
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
-		UIRenderHelper.enableStencil();
 
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
@@ -201,18 +199,7 @@ public class CreateClient {
 	}
 
 	public static void invalidateRenderers() {
-		invalidateRenderers(null);
-	}
-
-	public static void invalidateRenderers(@Nullable IWorld world) {
 		BUFFER_CACHE.invalidate();
-
-		if (world != null) {
-			KINETIC_RENDERER.get(world)
-				.invalidate();
-		} else {
-			KINETIC_RENDERER.forEach(InstancedTileRenderer::invalidate);
-		}
 
 		ContraptionRenderDispatcher.invalidateAll();
 	}

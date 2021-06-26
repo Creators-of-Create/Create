@@ -204,7 +204,7 @@ public class RemapHelper {
 					mapping.remap(ForgeRegistries.BLOCKS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
 					Create.LOGGER.warn("Remapping block '{}' to '{}' failed: {}", mapping.key,
-						reMap.get(mapping.key.getPath()), t);
+							reMap.get(mapping.key.getPath()), t);
 				}
 			}
 		}
@@ -227,7 +227,7 @@ public class RemapHelper {
 					mapping.remap(ForgeRegistries.ITEMS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
 					Create.LOGGER.warn("Remapping item '{}' to '{}' failed: {}", mapping.key,
-						reMap.get(mapping.key.getPath()), t);
+							reMap.get(mapping.key.getPath()), t);
 				}
 			}
 		}

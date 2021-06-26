@@ -285,7 +285,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				Pointing pointing = getBlockState().get(MechanicalCrafterBlock.POINTING);
 				groupedItems.mergeOnto(targetingCrafter.groupedItems, pointing);
 				groupedItems = new GroupedItems();
-				
+
 				float pitch = targetingCrafter.groupedItems.grid.size() * 1/16f + .5f;
 				AllSoundEvents.CRAFTER_CLICK.playOnServer(world, pos, 1, pitch);
 
@@ -335,12 +335,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 			int prev = countDown;
 			countDown -= getCountDownSpeed();
-			
+
 			if (countDown < 1000 && prev >= 1000) {
 				AllSoundEvents.CRAFTER_CLICK.playOnServer(world, pos, 1, 2);
 				AllSoundEvents.CRAFTER_CRAFT.playOnServer(world, pos);
 			}
-			
+
 			if (countDown < 0) {
 				countDown = 0;
 				if (!runLogic)
@@ -513,7 +513,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

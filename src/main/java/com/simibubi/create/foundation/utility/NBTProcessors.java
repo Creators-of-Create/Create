@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
 import net.minecraft.tileentity.MobSpawnerTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -75,7 +74,8 @@ public final class NBTProcessors {
 		return component != null && component.getStyle() != null && component.getStyle().getClickEvent() != null;
 	}
 
-	private NBTProcessors() {}
+	private NBTProcessors() {
+	}
 
 	@Nullable
 	public static CompoundNBT process(TileEntity tileEntity, CompoundNBT compound, boolean survival) {

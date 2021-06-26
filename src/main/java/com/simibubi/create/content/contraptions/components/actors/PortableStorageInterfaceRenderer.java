@@ -2,19 +2,20 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import java.util.function.Consumer;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -37,12 +38,12 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		render(blockState, progress, te.isConnected(), sbb -> sbb.light(light)
-			.renderInto(ms, vb), ms);
+		render(blockState, te.isConnected(), progress, null, sbb -> sbb.light(light)
+			.renderInto(ms, vb));
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		BlockState blockState = context.state;
 		PortableStorageInterfaceTileEntity te = getTargetPSI(context);
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
@@ -55,44 +56,36 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			lit = te.isConnected();
 		}
 
-		render(blockState, progress, lit, sbb -> sbb.light(msLocal.peek()
-			.getModel(), ContraptionRenderDispatcher.getLightOnContraption(context))
-			.renderInto(ms, vb), ms, msLocal);
+		render(blockState, lit, progress, matrices.contraptionStack, sbb -> sbb.light(matrices.entityMatrix,
+				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, vb));
 	}
 
-	private static void render(BlockState blockState, float progress, boolean lit,
-		Consumer<SuperByteBuffer> drawCallback, MatrixStack... matrixStacks) {
-		for (MatrixStack ms : matrixStacks)
-			ms.push();
-
+	private static void render(BlockState blockState, boolean lit, float progress,
+		MatrixStack local, Consumer<SuperByteBuffer> drawCallback) {
 		SuperByteBuffer middle = PartialBufferer.get(getMiddleForState(blockState, lit), blockState);
 		SuperByteBuffer top = PartialBufferer.get(getTopForState(blockState), blockState);
 
-		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
-		for (MatrixStack ms : matrixStacks)
-			MatrixStacker.of(ms)
-					.centre()
-					.rotateY(AngleHelper.horizontalAngle(facing))
-					.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-					.unCentre();
-
-		for (MatrixStack ms : matrixStacks) {
-			ms.translate(0, progress / 2f, 0);
-			ms.push();
-			ms.translate(0, 6 / 16f, 0);
+		if (local != null) {
+			middle.transform(local);
+			top.transform(local);
 		}
+		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
+		rotateToFacing(middle, facing);
+		rotateToFacing(top, facing);
+		middle.translate(0, progress * 0.5f + 0.375f, 0);
+		top.translate(0, progress, 0);
 
 		drawCallback.accept(middle);
-
-		for (MatrixStack ms : matrixStacks) {
-			ms.pop();
-			ms.translate(0, progress / 2f, 0);
-		}
-
 		drawCallback.accept(top);
+	}
 
-		for (MatrixStack ms : matrixStacks)
-			ms.pop();
+	private static void rotateToFacing(SuperByteBuffer buffer, Direction facing) {
+		buffer.matrixStacker()
+			.centre()
+			.rotateY(AngleHelper.horizontalAngle(facing))
+			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+			.unCentre();
 	}
 
 	protected static PortableStorageInterfaceTileEntity getTargetPSI(MovementContext context) {

@@ -29,3 +29,10 @@ Technology that empowers the player.
     versionRange="[1.16.4,1.17)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.create]]
+    modId="flywheel"
+    mandatory=true
+    versionRange="[1.16,1.17)"
+    ordering="AFTER"
+    side="CLIENT"

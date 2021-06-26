@@ -7,8 +7,6 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.Item;
-
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -244,7 +242,7 @@ public class ItemHelper {
 	}
 
 	public static boolean canItemStackAmountsStack(ItemStack a, ItemStack b) {
-		return ItemHandlerHelper.canItemStacksStack(a,b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
+		return ItemHandlerHelper.canItemStacksStack(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
 	}
 
 	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {

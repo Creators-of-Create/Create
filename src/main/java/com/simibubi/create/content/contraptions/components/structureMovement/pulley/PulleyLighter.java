@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

@@ -149,7 +149,7 @@ public class BlockMovementChecks {
 	 * Attached blocks will move if blocks they are attached to are moved
 	 */
 	public static boolean isBlockAttachedTowards(BlockState state, World world, BlockPos pos,
-		Direction direction) {
+												 Direction direction) {
 		for (AttachedCheck check : ATTACHED_CHECKS) {
 			CheckResult result = check.isBlockAttachedTowards(state, world, pos, direction);
 			if (result != CheckResult.PASS) {
@@ -181,10 +181,10 @@ public class BlockMovementChecks {
 		if (state.getBlock() instanceof FenceGateBlock)
 			return true;
 		if (state.getMaterial()
-			.isReplaceable())
+				.isReplaceable())
 			return false;
 		if (state.getCollisionShape(world, pos)
-			.isEmpty())
+				.isEmpty())
 			return false;
 		return true;
 	}
@@ -261,7 +261,7 @@ public class BlockMovementChecks {
 	}
 
 	private static boolean isBlockAttachedTowardsFallback(BlockState state, World world, BlockPos pos,
-		Direction direction) {
+														  Direction direction) {
 		Block block = state.getBlock();
 		if (block instanceof LadderBlock)
 			return state.get(LadderBlock.FACING) == direction.getOpposite();
@@ -333,12 +333,12 @@ public class BlockMovementChecks {
 		}
 		if (state.getBlock() instanceof SailBlock)
 			return direction.getAxis() != state.get(SailBlock.FACING)
-				.getAxis();
+					.getAxis();
 		if (state.getBlock() instanceof FluidTankBlock)
 			return FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(direction));
 		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
 			return direction == state.get(StickerBlock.FACING)
-				&& !isNotSupportive(world.getBlockState(pos.offset(direction)), direction.getOpposite());
+					&& !isNotSupportive(world.getBlockState(pos.offset(direction)), direction.getOpposite());
 		}
 		return false;
 	}
@@ -365,10 +365,10 @@ public class BlockMovementChecks {
 				.getAxis();
 		if (AllBlocks.PISTON_EXTENSION_POLE.has(state))
 			return facing.getAxis() != state.get(BlockStateProperties.FACING)
-				.getAxis();
+					.getAxis();
 		if (AllBlocks.MECHANICAL_PISTON_HEAD.has(state))
 			return facing.getAxis() != state.get(BlockStateProperties.FACING)
-				.getAxis();
+					.getAxis();
 		if (AllBlocks.STICKER.has(state) && !state.get(StickerBlock.EXTENDED))
 			return facing == state.get(StickerBlock.FACING);
 		return isBrittle(state);

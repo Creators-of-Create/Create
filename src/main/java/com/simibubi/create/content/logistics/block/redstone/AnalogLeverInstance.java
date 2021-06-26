@@ -1,13 +1,12 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -24,10 +23,10 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     final float rX;
     final float rY;
 
-    public AnalogLeverInstance(InstancedTileRenderer<?> modelManager, AnalogLeverTileEntity tile) {
+    public AnalogLeverInstance(MaterialManager<?> modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+        InstanceMaterial<ModelData> mat = getTransformMaterial();
 
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();

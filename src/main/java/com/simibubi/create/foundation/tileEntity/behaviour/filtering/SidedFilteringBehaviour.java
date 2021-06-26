@@ -110,13 +110,13 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 		if (!sidedFilters.containsKey(side))
 			return true;
 		return sidedFilters.get(side)
-			.test(stack);
+				.test(stack);
 	}
 
 	@Override
 	public void destroy() {
 		sidedFilters.values()
-			.forEach(FilteringBehaviour::destroy);
+				.forEach(FilteringBehaviour::destroy);
 		super.destroy();
 	}
 
@@ -124,8 +124,8 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	public ItemRequirement getRequiredItems() {
 		return sidedFilters.values().stream().reduce(
 				ItemRequirement.NONE,
-				(a,b) -> a.with(b.getRequiredItems()),
-				(a,b) -> a.with(b)
+				(a, b) -> a.with(b.getRequiredItems()),
+				(a, b) -> a.with(b)
 		);
 	}
 
@@ -133,7 +133,7 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 		if (!sidedFilters.containsKey(side))
 			return;
 		sidedFilters.remove(side)
-			.destroy();
+				.destroy();
 	}
 
 	public boolean testHit(Direction direction, Vector3d hit) {

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
@@ -25,7 +25,7 @@ public class BoxWidget extends ElementWidget {
 	protected Color customBorderBot;
 	protected boolean animateColors = true;
 	protected LerpedFloat colorAnimation = LerpedFloat.linear();
-	
+
 	protected Color gradientColor1, gradientColor2;
 	private Color previousColor1, previousColor2;
 	private Color colorTarget1 = Theme.c(getIdleTheme(), true);
@@ -209,9 +209,9 @@ public class BoxWidget extends ElementWidget {
 	public Key getHoverTheme() {
 		return Theme.Key.BUTTON_HOVER;
 	}
-	
+
 	public Key getClickTheme() {
 		return Theme.Key.BUTTON_CLICK;
 	}
-	
+
 }

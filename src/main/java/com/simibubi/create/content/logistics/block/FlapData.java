@@ -1,13 +1,13 @@
 package com.simibubi.create.content.logistics.block;
 
-import java.nio.ByteBuffer;
-
-import com.simibubi.create.foundation.render.backend.core.IFlatLight;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.core.materials.IFlatLight;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
 
 public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 
@@ -31,7 +31,7 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 
 	private float flapness;
 
-	public FlapData(InstancedModel<?> owner) {
+	public FlapData(Instancer<?> owner) {
 		super(owner);
 	}
 
@@ -44,7 +44,7 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 	}
 
 	public FlapData setPosition(int x, int y, int z) {
-		BlockPos origin = owner.renderer.getOriginCoordinate();
+		Vector3i origin = owner.originCoordinate.get();
 
 		return setPosition((float) (x - origin.getX()),
 				(float) (y - origin.getY()),
@@ -114,17 +114,17 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 	}
 
 	@Override
-	public void write(ByteBuffer buf) {
-		putVec3(buf, x, y, z);
-		putVec2(buf, blockLight, skyLight);
+	public void write(MappedBuffer buf) {
+		buf.putVec3(x, y, z);
+		buf.putVec2(blockLight, skyLight);
 
-		putVec3(buf, segmentOffsetX, segmentOffsetY, segmentOffsetZ);
-		putVec3(buf, pivotX, pivotY, pivotZ);
+		buf.putVec3(segmentOffsetX, segmentOffsetY, segmentOffsetZ);
+		buf.putVec3(pivotX, pivotY, pivotZ);
 
-		put(buf, horizontalAngle);
-		put(buf, intensity);
-		put(buf, flapScale);
+		buf.putFloat(horizontalAngle);
+		buf.putFloat(intensity);
+		buf.putFloat(flapScale);
 
-		put(buf, flapness);
+		buf.putFloat(flapness);
 	}
 }

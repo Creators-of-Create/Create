@@ -264,7 +264,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				((ITickableTileEntity) te).tick();
 		});
 	}
-	
+
 	@Override
 	public void whileSkipping(PonderScene scene) {
 		if (redraw) {
@@ -342,11 +342,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		int code = hashCode() ^ world.hashCode();
 
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.getBlockLayers()
-			.indexOf(type));
+				.indexOf(type));
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
-			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
+				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
 		if (contraptionBuffer.isEmpty())
 			return;
 
@@ -378,7 +378,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	private void renderTileEntities(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float pt) {
 		loadTEsIfMissing(world);
-		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, new MatrixStack(), buffer, pt);
+		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, buffer, pt);
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {

@@ -105,7 +105,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (face.getAxis() != getRotationAxis(state))
 			return false;
 		return getTileEntityOptional(world, pos).map(BeltTileEntity::hasPulley)
-			.orElse(false);
+				.orElse(false);
 	}
 
 	@Override
@@ -275,7 +275,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				});
 			if (success.isTrue())
 				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
-					1f + Create.RANDOM.nextFloat());
+						1f + Create.RANDOM.nextFloat());
 		}
 
 		if (isShaft) {
@@ -475,6 +475,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos currentPos = nextSegmentPosition(state, pos, forward);
 			if (currentPos == null)
 				continue;
+			world.sendBlockBreakProgress(currentPos.hashCode(), currentPos, -1);
 			BlockState currentState = world.getBlockState(currentPos);
 			if (!AllBlocks.BELT.has(currentState))
 				continue;

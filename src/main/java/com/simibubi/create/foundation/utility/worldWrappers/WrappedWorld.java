@@ -35,7 +35,7 @@ import net.minecraft.world.storage.MapData;
 public class WrappedWorld extends World {
 
 	protected World world;
-	private AbstractChunkProvider provider;
+	protected AbstractChunkProvider provider;
 
 	public WrappedWorld(World world, AbstractChunkProvider provider) {
 		super((ISpawnWorldInfo) world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), world::getProfiler,

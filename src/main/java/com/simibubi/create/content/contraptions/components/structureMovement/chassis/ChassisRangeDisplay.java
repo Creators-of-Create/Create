@@ -36,10 +36,10 @@ public class ChassisRangeDisplay {
 			this.te = te;
 			timer = DISPLAY_TIME;
 			CreateClient.OUTLINER.showCluster(getOutlineKey(), createSelection(te))
-				.colored(0xFFFFFF)
-				.disableNormals()
-				.lineWidth(1 / 16f)
-				.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
+					.colored(0xFFFFFF)
+					.disableNormals()
+					.lineWidth(1 / 16f)
+					.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
 		}
 
 		protected Object getOutlineKey() {

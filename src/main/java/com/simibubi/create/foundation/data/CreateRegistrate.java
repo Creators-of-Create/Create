@@ -35,6 +35,9 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -122,6 +125,17 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		});
 	}
 
+	@Override
+	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+		return this.entity(self(), name, factory, classification);
+	}
+
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
+			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
+		});
+	}
+
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> baseBlock(String name,
@@ -170,7 +184,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
-		BiConsumer<T, CasingConnectivity> consumer) {
+			BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
 	}
 
@@ -179,12 +193,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
 	public static <T extends Item> NonNullConsumer<? super T> itemModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
@@ -203,26 +217,26 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@OnlyIn(Dist.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, model -> new CTModel(model, behavior));
+				.register(entry.delegate, model -> new CTModel(model, behavior));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static <T extends Block> void registerCasingConnectivity(T entry,
-		BiConsumer<T, CasingConnectivity> consumer) {
+																	 BiConsumer<T, CasingConnectivity> consumer) {
 		consumer.accept(entry, CreateClient.getCasingConnectivity());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
+				.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockModel(Block entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+										   Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, func.get());
+				.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)

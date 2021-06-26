@@ -16,16 +16,16 @@ public class KillTPSCommand {
 			.executes(ctx -> {
 				// killtps no arguments
 				ctx.getSource()
-					.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.0",
-						Create.LAGGER.isLagging() ? Create.LAGGER.getTickTime() : 0), true);
+						.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.0",
+								Create.LAGGER.isLagging() ? Create.LAGGER.getTickTime() : 0), true);
 				if (Create.LAGGER.isLagging())
 					ctx.getSource()
-						.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
-							true);
+							.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
+									true);
 				else
 					ctx.getSource()
-						.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.1"),
-							true);
+							.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.1"),
+									true);
 
 				return 1;
 			})
@@ -36,12 +36,12 @@ public class KillTPSCommand {
 					if (tickTime > 0) {
 						Create.LAGGER.setLagging(true);
 						ctx.getSource()
-							.sendFeedback((Lang
-								.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.1", tickTime)),
-								true);
+								.sendFeedback((Lang
+												.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.1", tickTime)),
+										true);
 						ctx.getSource()
-							.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
-								true);
+								.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
+										true);
 					} else {
 						ctx.getSource()
 							.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.1"),
@@ -55,17 +55,17 @@ public class KillTPSCommand {
 					.executes(ctx -> {
 						// killtps start tickTime
 						int tickTime = IntegerArgumentType.getInteger(ctx,
-							Lang.translate("command.killTPSCommand.argument.tickTime")
-								.getUnformattedComponentText());
+								Lang.translate("command.killTPSCommand.argument.tickTime")
+										.getUnformattedComponentText());
 						Create.LAGGER.setTickTime(tickTime);
 						Create.LAGGER.setLagging(true);
 						ctx.getSource()
-							.sendFeedback((Lang
-								.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.1", tickTime)),
-								true);
+								.sendFeedback((Lang
+												.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.1", tickTime)),
+										true);
 						ctx.getSource()
-							.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
-								true);
+								.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.usage.0"),
+										true);
 
 						return 1;
 					})))
@@ -74,8 +74,8 @@ public class KillTPSCommand {
 					// killtps stop
 					Create.LAGGER.setLagging(false);
 					ctx.getSource()
-						.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.2"),
-							false);
+							.sendFeedback(Lang.createTranslationTextComponent("command.killTPSCommand.status.slowed_by.2"),
+									false);
 
 					return 1;
 				}));

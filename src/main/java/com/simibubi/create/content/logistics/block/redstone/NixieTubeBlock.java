@@ -61,7 +61,7 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 
 		if (heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName()) {
 			Direction left = state.get(HORIZONTAL_FACING)
-				.rotateY();
+					.rotateY();
 			Direction right = left.getOpposite();
 
 			if (world.isRemote)
@@ -87,7 +87,7 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 				index++;
 			}
 		}
-		
+
 		return ActionResultType.PASS;
 	}
 
@@ -154,7 +154,7 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.reactsToRedstone())
-				te.displayRedstoneStrength(getPower(worldIn, pos));
+				te.updateRedstoneStrength(getPower(worldIn, pos));
 		});
 	}
 

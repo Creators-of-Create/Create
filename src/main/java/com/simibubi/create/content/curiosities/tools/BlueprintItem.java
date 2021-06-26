@@ -44,14 +44,14 @@ public class BlueprintItem extends Item {
 		PlayerEntity player = ctx.getPlayer();
 		ItemStack stack = ctx.getItem();
 		BlockPos pos = ctx.getPos()
-			.offset(face);
+				.offset(face);
 
 		if (player != null && !player.canPlayerEdit(pos, face, stack))
 			return ActionResultType.FAIL;
 
 		World world = ctx.getWorld();
 		HangingEntity hangingentity = new BlueprintEntity(world, pos, face, face.getAxis()
-			.isHorizontal() ? Direction.DOWN : ctx.getPlacementHorizontalFacing());
+				.isHorizontal() ? Direction.DOWN : ctx.getPlacementHorizontalFacing());
 		CompoundNBT compoundnbt = stack.getTag();
 
 		if (compoundnbt != null)
@@ -68,7 +68,7 @@ public class BlueprintItem extends Item {
 	}
 
 	protected boolean canPlace(PlayerEntity p_200127_1_, Direction p_200127_2_, ItemStack p_200127_3_,
-		BlockPos p_200127_4_) {
+							   BlockPos p_200127_4_) {
 		return p_200127_1_.canPlayerEdit(p_200127_4_, p_200127_2_, p_200127_3_);
 	}
 
@@ -84,7 +84,7 @@ public class BlueprintItem extends Item {
 			for (int row = 0; row < shapedRecipe.getHeight(); row++)
 				for (int col = 0; col < shapedRecipe.getWidth(); col++)
 					inv.setStackInSlot(row * 3 + col,
-						convertIngredientToFilter(ingredients.get(row * shapedRecipe.getWidth() + col)));
+							convertIngredientToFilter(ingredients.get(row * shapedRecipe.getWidth() + col)));
 		} else {
 			for (int i = 0; i < ingredients.size(); i++)
 				inv.setStackInSlot(i, convertIngredientToFilter(ingredients.get(i)));
@@ -93,7 +93,7 @@ public class BlueprintItem extends Item {
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
 		Ingredient.IItemList[] acceptedItems =
-			ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "field_199807_b");
+				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "field_199807_b");
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)
@@ -106,7 +106,7 @@ public class BlueprintItem extends Item {
 		for (int i = 0; i < acceptedItems.length; i++)
 			filterItems.setStackInSlot(i, convertIItemListToFilter(acceptedItems[i]));
 		result.getOrCreateTag()
-			.put("Items", filterItems.serializeNBT());
+				.put("Items", filterItems.serializeNBT());
 		return result;
 	}
 
@@ -121,7 +121,7 @@ public class BlueprintItem extends Item {
 			ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(itemList.serialize(), "tag"));
 			ItemStack filterItem = AllItems.ATTRIBUTE_FILTER.asStack();
 			filterItem.getOrCreateTag()
-				.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());
+					.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());
 			ListNBT attributes = new ListNBT();
 			ItemAttribute at = new ItemAttribute.InTag(resourcelocation);
 			CompoundNBT compoundNBT = new CompoundNBT();
@@ -129,7 +129,7 @@ public class BlueprintItem extends Item {
 			compoundNBT.putBoolean("Inverted", false);
 			attributes.add(compoundNBT);
 			filterItem.getOrCreateTag()
-				.put("MatchedAttributes", attributes);
+					.put("MatchedAttributes", attributes);
 			return filterItem;
 		}
 

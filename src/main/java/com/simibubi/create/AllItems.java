@@ -40,6 +40,8 @@ import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripModel;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonModel;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperModel;
 import com.simibubi.create.content.logistics.item.LinkedControllerItem;
@@ -225,6 +227,13 @@ public class AllItems {
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
+			.model(AssetLookup.itemModelWithPartials())
+			.register();
+
+	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
+		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
+			.properties(p -> p.maxStackSize(1))
+			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 

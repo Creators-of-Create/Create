@@ -12,7 +12,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.text.ITextProperties;
@@ -21,7 +20,8 @@ import net.minecraft.util.text.Style;
 public class ConfirmationScreen extends AbstractSimiScreen {
 
 	private Screen source;
-	private Consumer<Response> action = _success -> {};
+	private Consumer<Response> action = _success -> {
+	};
 	private List<ITextProperties> text = new ArrayList<>();
 	private boolean centered = false;
 	private int x;
@@ -34,14 +34,14 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	private BoxWidget confirmDontSave;
 	private BoxWidget cancel;
 	private BoxElement textBackground;
-	
+
 	public enum Response {
 		Confirm, ConfirmDontSave, Cancel
 	}
 
 	/*
-	* Removes text lines from the back of the list
-	* */
+	 * Removes text lines from the back of the list
+	 * */
 	public ConfirmationScreen removeTextLines(int amount) {
 		if (amount > text.size())
 			return clearText();
@@ -80,7 +80,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		this.action = r -> action.accept(r == Response.Confirm);
 		return this;
 	}
-	
+
 	public ConfirmationScreen withThreeActions(Consumer<Response> action) {
 		this.action = action;
 		this.tristate = true;
@@ -129,29 +129,29 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		}
 
 		int buttonX = x + textWidth / 2 - 6 - (int) (70 * (tristate ? 1.5f : 1));
-		
+
 		TextStencilElement confirmText =
-			new TextStencilElement(client.fontRenderer, tristate ? "Save" : "Confirm").centered(true, true);
+				new TextStencilElement(client.fontRenderer, tristate ? "Save" : "Confirm").centered(true, true);
 		confirm = new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.Confirm));
 		confirm.showingElement(confirmText.withElementRenderer(BoxWidget.gradientFactory.apply(confirm)));
 		widgets.add(confirm);
-		
+
 		buttonX += 12 + 70;
 
 		if (tristate) {
 			TextStencilElement confirmDontSaveText =
-				new TextStencilElement(client.fontRenderer, "Don't Save").centered(true, true);
+					new TextStencilElement(client.fontRenderer, "Don't Save").centered(true, true);
 			confirmDontSave =
-				new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.ConfirmDontSave));
+					new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.ConfirmDontSave));
 			confirmDontSave.showingElement(
-				confirmDontSaveText.withElementRenderer(BoxWidget.gradientFactory.apply(confirmDontSave)));
+					confirmDontSaveText.withElementRenderer(BoxWidget.gradientFactory.apply(confirmDontSave)));
 			widgets.add(confirmDontSave);
 			buttonX += 12 + 70;
 		}
 
 		TextStencilElement cancelText = new TextStencilElement(client.fontRenderer, "Cancel").centered(true, true);
 		cancel = new BoxWidget(buttonX, y + textHeight + 6, 70, 16)
-			.withCallback(() -> accept(Response.Cancel));
+				.withCallback(() -> accept(Response.Cancel));
 		cancel.showingElement(cancelText.withElementRenderer(BoxWidget.gradientFactory.apply(cancel)));
 		widgets.add(cancel);
 
@@ -211,7 +211,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		//fixme replace with glVersioned-backend calls once they are merged from jozu's branch
 		GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, UIRenderHelper.framebuffer.framebufferObject);
 		GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
-		GL30.glBlitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0,  mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_LINEAR);
+		GL30.glBlitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL30.GL_LINEAR);
 		mainBuffer.bindFramebuffer(true);
 
 		this.fillGradient(ms, 0, 0, this.width, this.height, 0x70101010, 0x80101010);

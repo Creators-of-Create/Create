@@ -352,7 +352,7 @@ public class ArmTileEntity extends KineticTileEntity {
 
 				if (!prevHeld.isItemEqual(heldItem))
 					world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f,
-						.5f + Create.RANDOM.nextFloat() * .25f);
+							.5f + Create.RANDOM.nextFloat() * .25f);
 				return;
 			}
 
@@ -504,7 +504,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

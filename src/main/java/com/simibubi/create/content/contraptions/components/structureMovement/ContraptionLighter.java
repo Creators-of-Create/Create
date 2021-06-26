@@ -1,15 +1,15 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.LightVolume;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
-import com.simibubi.create.foundation.render.backend.light.LightVolume;
 
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-public abstract class ContraptionLighter<C extends Contraption> implements LightUpdateListener {
+public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
     public final LightVolume lightVolume;
 

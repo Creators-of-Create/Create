@@ -43,20 +43,20 @@ public interface ISyncPersistentData {
 		@Override
 		public void handle(Supplier<Context> context) {
 			context.get()
-				.enqueueWork(() -> {
-					Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityId);
-					if (!(entityByID instanceof ISyncPersistentData))
-						return;
-					CompoundNBT data = entityByID.getPersistentData();
-					for (Iterator<String> iterator = data.keySet()
-						.iterator(); iterator.hasNext();) {
-						data.remove(iterator.next());
-					}
-					data.merge(readData);
-					((ISyncPersistentData) entityByID).onPersistentDataUpdated();
-				});
+					.enqueueWork(() -> {
+						Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityId);
+						if (!(entityByID instanceof ISyncPersistentData))
+							return;
+						CompoundNBT data = entityByID.getPersistentData();
+						for (Iterator<String> iterator = data.keySet()
+								.iterator(); iterator.hasNext(); ) {
+							data.remove(iterator.next());
+						}
+						data.merge(readData);
+						((ISyncPersistentData) entityByID).onPersistentDataUpdated();
+					});
 			context.get()
-				.setPacketHandled(true);
+					.setPacketHandled(true);
 		}
 
 	}

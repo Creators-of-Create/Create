@@ -200,7 +200,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public ActionResultType onUse(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult p_225533_6_) {
 		if (!player.getHeldItem(hand)
-			.isEmpty())
+				.isEmpty())
 			return ActionResultType.PASS;
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;

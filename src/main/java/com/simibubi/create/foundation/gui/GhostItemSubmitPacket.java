@@ -33,21 +33,21 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
-					.getSender();
-				if (player == null)
-					return;
+				.enqueueWork(() -> {
+					ServerPlayerEntity player = context.get()
+							.getSender();
+					if (player == null)
+						return;
 
-				if (player.openContainer instanceof GhostItemContainer) {
-					GhostItemContainer<?> c = (GhostItemContainer<?>) player.openContainer;
-					c.ghostInventory.setStackInSlot(slot, item);
-					c.getSlot(36 + slot).onSlotChanged();
-				}
+					if (player.openContainer instanceof GhostItemContainer) {
+						GhostItemContainer<?> c = (GhostItemContainer<?>) player.openContainer;
+						c.ghostInventory.setStackInSlot(slot, item);
+						c.getSlot(36 + slot).onSlotChanged();
+					}
 
-			});
+				});
 		context.get()
-			.setPacketHandled(true);
+				.setPacketHandled(true);
 	}
 
 }

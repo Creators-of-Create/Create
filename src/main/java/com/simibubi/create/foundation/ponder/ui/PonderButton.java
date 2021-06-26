@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.ui;
 
-import java.awt.Color;
+import java.awt.*;
 
 import javax.annotation.Nonnull;
 
@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.Theme.Key;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.gui.widgets.ElementWidget;
+import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.MathHelper;
 public class PonderButton extends BoxWidget {
 
 	protected ItemStack item;
+	protected PonderTag tag;
 	protected KeyBinding shortcut;
 	protected LerpedFloat flash = LerpedFloat.linear().startWithValue(0).chase(0, 0.1f, LerpedFloat.Chaser.EXP);
 
@@ -43,6 +45,10 @@ public class PonderButton extends BoxWidget {
 		return (T) this;
 	}
 
+	public <T extends PonderButton> T showingTag(PonderTag tag) {
+		return showing(this.tag = tag);
+	}
+	
 	public <T extends PonderButton> T showing(ItemStack item) {
 		this.item = item;
 		return super.showingElement(GuiGameElement.of(item)
@@ -95,7 +101,7 @@ public class PonderButton extends BoxWidget {
 			return;
 
 		if (shortcut != null) {
-			ms.translate(0, 0, z+50);
+			ms.translate(0, 0, z + 50);
 			drawCenteredText(ms, Minecraft.getInstance().fontRenderer, shortcut.getBoundKeyLocalizedText(), x + width / 2 + 8, y + height - 6, ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT_DARKER), fadeValue));
 		}
 	}
@@ -104,6 +110,10 @@ public class PonderButton extends BoxWidget {
 		return item;
 	}
 	
+	public PonderTag getTag() {
+		return tag;
+	}
+
 	@Override
 	public Key getDisabledTheme() {
 		return Theme.Key.PONDER_BUTTON_DISABLE;
@@ -118,10 +128,10 @@ public class PonderButton extends BoxWidget {
 	public Key getHoverTheme() {
 		return Theme.Key.PONDER_BUTTON_HOVER;
 	}
-	
+
 	@Override
 	public Key getClickTheme() {
 		return Theme.Key.PONDER_BUTTON_CLICK;
 	}
-	
+
 }

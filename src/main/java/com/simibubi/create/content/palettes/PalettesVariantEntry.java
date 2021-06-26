@@ -53,7 +53,7 @@ public class PalettesVariantEntry {
 
 			if (pattern.hasFoliage())
 				builder.item()
-					.color(() -> ColorHandlers::getGrassyItem)
+						.color(() -> ColorHandlers::getGrassyItem)
 					.build();
 			else
 				builder.simpleItem();

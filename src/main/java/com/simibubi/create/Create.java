@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
@@ -103,7 +104,8 @@ public class Create {
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -115,6 +117,7 @@ public class Create {
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
+		PotatoCannonProjectileTypes.register();
 
 		event.enqueueWork(() -> {
 			SchematicProcessor.register();

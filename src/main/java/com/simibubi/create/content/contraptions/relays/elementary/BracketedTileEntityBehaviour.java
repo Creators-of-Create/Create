@@ -88,7 +88,9 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
-	public boolean isSafeNBT() { return true; }
+	public boolean isSafeNBT() {
+		return true;
+	}
 
 	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {

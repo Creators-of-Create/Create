@@ -25,6 +25,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.jozufozu.flywheel.backend.IFlywheelWorld;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -48,6 +50,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.EmptyLighter;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
@@ -56,9 +59,6 @@ import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTile
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
-import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.ICoordinate;
@@ -314,7 +314,7 @@ public abstract class Contraption {
 		if (!movementAllowed(state, world, pos))
 			throw AssemblyException.unmovableBlock(pos, state);
 		if (state.getBlock() instanceof AbstractChassisBlock
-			&& !moveChassis(world, pos, forcedDirection, frontier, visited))
+				&& !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
 
 		if (AllBlocks.ADJUSTABLE_CRATE.has(state))
@@ -333,7 +333,7 @@ public abstract class Contraption {
 			Direction offset = state.get(StickerBlock.FACING);
 			BlockPos attached = pos.offset(offset);
 			if (!visited.contains(attached)
-				&& !BlockMovementChecks.isNotSupportive(world.getBlockState(attached), offset.getOpposite()))
+					&& !BlockMovementChecks.isNotSupportive(world.getBlockState(attached), offset.getOpposite()))
 				frontier.add(attached);
 		}
 
@@ -385,12 +385,12 @@ public abstract class Contraption {
 			boolean wasVisited = visited.contains(offsetPos);
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
-				BlockMovementChecks.isBlockAttachedTowards(blockState, world, offsetPos, offset.getOpposite());
+					BlockMovementChecks.isBlockAttachedTowards(blockState, world, offsetPos, offset.getOpposite());
 			boolean brittle = BlockMovementChecks.isBrittle(blockState);
 			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
 			if (canStick) {
 				if (state.getPushReaction() == PushReaction.PUSH_ONLY
-					|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
+						|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
 					canStick = false;
 				}
 				if (BlockMovementChecks.isNotSupportive(state, offset)) {
@@ -402,7 +402,7 @@ public abstract class Contraption {
 			}
 
 			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue
-				|| (offset == forcedDirection && !BlockMovementChecks.isNotSupportive(state, forcedDirection))))
+					|| (offset == forcedDirection && !BlockMovementChecks.isNotSupportive(state, forcedDirection))))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -938,7 +938,7 @@ public abstract class Contraption {
 					continue;
 
 				BlockPos add = block.pos.add(anchor)
-					.add(offset);
+						.add(offset);
 				if (customBlockRemoval(world, add, block.state))
 					continue;
 				BlockState oldState = world.getBlockState(add);
@@ -1215,10 +1215,10 @@ public abstract class Contraption {
 		switch (axis) {
 		case X:
 			return getMaxDistSqr(blocks, BlockPos::getY, BlockPos::getZ);
-		case Y:
-			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
-		case Z:
-			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
+			case Y:
+				return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
+			case Z:
+				return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
 		}
 
 		throw new IllegalStateException("Impossible axis");

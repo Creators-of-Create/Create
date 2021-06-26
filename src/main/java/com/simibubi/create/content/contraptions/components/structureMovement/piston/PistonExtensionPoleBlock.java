@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -115,10 +114,10 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
 
 			final BlockPos basePos = pistonBase;
 			BlockPos.getAllInBox(pistonBase, pistonHead)
-				.filter(p -> !p.equals(pos) && !p.equals(basePos))
-				.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
+					.filter(p -> !p.equals(pos) && !p.equals(basePos))
+					.forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
 			worldIn.setBlockState(basePos, worldIn.getBlockState(basePos)
-				.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
+					.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
 
 			TileEntity te = worldIn.getTileEntity(basePos);
 			if (te instanceof MechanicalPistonTileEntity) {
@@ -178,7 +177,7 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
         return state;
     }
 
-    @Override
+	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}

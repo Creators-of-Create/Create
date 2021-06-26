@@ -163,6 +163,12 @@
       }
     ]
   },
+  "fwoomp": {
+    "sounds": [
+      "create:fwoomp"
+    ],
+    "subtitle": "create.subtitle.fwoomp"
+  },
   "mechanical_press_activation": {
     "sounds": [
       {
@@ -210,6 +216,23 @@
     "sounds": [
       {
         "name": "minecraft:block.netherrack.break",
+        "type": "event"
+      }
+    ]
+  },
+  "potato_hit": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.potato_hit"
+  },
+  "potato_hit_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.weeping_vines.break",
         "type": "event"
       }
     ]

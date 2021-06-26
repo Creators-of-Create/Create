@@ -52,7 +52,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
 		stack.setDisplayName(
-			new StringTextComponent("Selected Tags").formatted(TextFormatting.RESET, TextFormatting.BLUE));
+				new StringTextComponent("Selected Tags").formatted(TextFormatting.RESET, TextFormatting.BLUE));
 		ghostInventory.setStackInSlot(1, stack);
 	}
 
@@ -142,14 +142,14 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	protected void saveData(ItemStack filterItem) {
 		super.saveData(filterItem);
 		filterItem.getOrCreateTag()
-			.putInt("WhitelistMode", whitelistMode.ordinal());
+				.putInt("WhitelistMode", whitelistMode.ordinal());
 		ListNBT attributes = new ListNBT();
 		selectedAttributes.forEach(at -> {
 			if (at == null)
 				return;
 			CompoundNBT compoundNBT = new CompoundNBT();
 			at.getFirst()
-				.serializeNBT(compoundNBT);
+					.serializeNBT(compoundNBT);
 			compoundNBT.putBoolean("Inverted", at.getSecond());
 			attributes.add(compoundNBT);
 		});

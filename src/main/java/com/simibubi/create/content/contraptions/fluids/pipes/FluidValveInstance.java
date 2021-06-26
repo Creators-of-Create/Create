@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -23,7 +23,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
     protected final double yRot;
     protected final int pointerRotationOffset;
 
-    public FluidValveInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+    public FluidValveInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         Direction facing = blockState.get(FluidValveBlock.FACING);
@@ -37,7 +37,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
         boolean twist = pipeAxis.isHorizontal() && shaftAxis == Direction.Axis.Z || pipeAxis.isVertical();
         pointerRotationOffset = twist ? 90 : 0;
 
-        pointer = renderer.getTransformMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
+        pointer = materialManager.getTransformMaterial().getModel(AllBlockPartials.FLUID_VALVE_POINTER, blockState).createInstance();
 
         transformPointer((FluidValveTileEntity) tile);
     }

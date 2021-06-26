@@ -32,10 +32,10 @@ public class WorldshaperRenderHandler {
 			return;
 
 		CreateClient.OUTLINER.showCluster("terrainZapper", renderedPositions.get())
-			.colored(0xbfbfbf)
-			.disableNormals()
-			.lineWidth(1 / 32f)
-			.withFaceTexture(AllSpecialTextures.CHECKERED);
+				.colored(0xbfbfbf)
+				.disableNormals()
+				.lineWidth(1 / 32f)
+				.withFaceTexture(AllSpecialTextures.CHECKERED);
 	}
 
 	protected static void gatherSelectedBlocks() {

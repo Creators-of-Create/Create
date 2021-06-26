@@ -2,18 +2,18 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import java.util.Arrays;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
+import com.jozufozu.flywheel.core.instancing.GroupInstance;
+import com.jozufozu.flywheel.core.instancing.SelectInstance;
+import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.util.ConditionalInstance;
-import com.simibubi.create.foundation.render.backend.instancing.util.InstanceGroup;
-import com.simibubi.create.foundation.render.backend.instancing.util.SelectInstance;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -22,11 +22,11 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
-	final InstanceGroup<OrientedData> rope;
+	final GroupInstance<OrientedData> rope;
 	final ConditionalInstance<OrientedData> halfRope;
 
 	protected float offset;
@@ -37,7 +37,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	private byte[] sLight = new byte[1];
 	private GridAlignedBB volume;
 
-	public AbstractPulleyInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
@@ -51,8 +51,9 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		magnet.addModel(getMagnetModel())
 				.addModel(getHalfMagnetModel());
 
-		rope = new InstanceGroup<>(getRopeModel());
-		halfRope = new ConditionalInstance<>(getHalfRopeModel(), this::shouldRenderHalfRope);
+		rope = new GroupInstance<>(getRopeModel());
+		halfRope = new ConditionalInstance<>(getHalfRopeModel())
+				.withCondition(this::shouldRenderHalfRope);
 	}
 
 	@Override
@@ -115,15 +116,15 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		halfRope.delete();
 	}
 
-	protected abstract InstancedModel<OrientedData> getRopeModel();
+	protected abstract Instancer<OrientedData> getRopeModel();
 
-	protected abstract InstancedModel<OrientedData> getMagnetModel();
+	protected abstract Instancer<OrientedData> getMagnetModel();
 
-	protected abstract InstancedModel<OrientedData> getHalfMagnetModel();
+	protected abstract Instancer<OrientedData> getHalfMagnetModel();
 
-	protected abstract InstancedModel<OrientedData> getCoilModel();
+	protected abstract Instancer<OrientedData> getCoilModel();
 
-	protected abstract InstancedModel<OrientedData> getHalfRopeModel();
+	protected abstract Instancer<OrientedData> getHalfRopeModel();
 
 	protected abstract float getOffset();
 

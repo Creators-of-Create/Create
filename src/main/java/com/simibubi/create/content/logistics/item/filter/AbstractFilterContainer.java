@@ -54,7 +54,12 @@ public abstract class AbstractFilterContainer extends GhostItemContainer<ItemSta
 	@Override
 	protected void saveData(ItemStack contentHolder) {
 		contentHolder.getOrCreateTag()
-			.put("Items", ghostInventory.serializeNBT());
+				.put("Items", ghostInventory.serializeNBT());
+	}
+
+	@Override
+	public boolean canInteractWith(PlayerEntity player) {
+		return playerInventory.getCurrentItem() == contentHolder;
 	}
 
 }

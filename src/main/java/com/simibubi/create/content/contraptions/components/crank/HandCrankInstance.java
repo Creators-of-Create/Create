@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -20,7 +20,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
     private ModelData crank;
     private Direction facing;
 
-    public HandCrankInstance(InstancedTileRenderer<?> modelManager, HandCrankTileEntity tile) {
+    public HandCrankInstance(MaterialManager<?> modelManager, HandCrankTileEntity tile) {
         super(modelManager, tile);
 		this.tile = tile;
 
@@ -33,7 +33,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
 
 		facing = blockState.get(BlockStateProperties.FACING);
 		Direction opposite = facing.getOpposite();
-		InstancedModel<ModelData> model = getTransformMaterial().getModel(renderedHandle, blockState, opposite);
+		Instancer<ModelData> model = getTransformMaterial().getModel(renderedHandle, blockState, opposite);
 		crank = model.createInstance();
 
 		rotateCrank();

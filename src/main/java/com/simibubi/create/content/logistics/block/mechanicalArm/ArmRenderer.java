@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -8,7 +9,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.Phase;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -44,7 +44,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		ArmTileEntity arm = (ArmTileEntity) te;
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
-		boolean usingFlywheel = FastRenderDispatcher.available(te.getWorld());
+		boolean usingFlywheel = Backend.getInstance().canUseInstancing(te.getWorld());
 
 		if (usingFlywheel && !hasItem) return;
 

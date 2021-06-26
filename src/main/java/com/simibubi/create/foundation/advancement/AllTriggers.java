@@ -44,7 +44,7 @@ public class AllTriggers {
 		CHAINED_ITEM_DRAIN = simple("chained_item_drain"), SPOUT = simple("spout"),
 		SPOUT_POTION = simple("spout_potion"), GLASS_PIPE = simple("glass_pipe"),
 		PIPE_COLLISION = simple("pipe_collision"), PIPE_SPILL = simple("pipe_spill"),
-		HOSE_PULLEY = simple("hose_pulley"), MIXER_MIX = simple("mixer");
+		POTATO_KILL = simple("potato_kill"), HOSE_PULLEY = simple("hose_pulley"), MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {
 		return add(new SimpleTrigger(id));

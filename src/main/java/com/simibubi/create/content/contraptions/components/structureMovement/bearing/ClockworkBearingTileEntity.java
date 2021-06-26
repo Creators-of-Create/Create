@@ -181,8 +181,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int offset = getBlockState().get(ClockworkBearingBlock.FACING)
-			.getAxisDirection()
-			.getOffset();
+				.getAxisDirection()
+				.getOffset();
 		float hourTarget = (float) (offset * -360 / (cycle24 ? 24f : 12f) * (hours % (cycle24 ? 24 : 12)));
 		return hourTarget;
 	}
@@ -192,8 +192,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int minutes = (dayTime % 1000) * 60 / 1000;
 		int offset = getBlockState().get(ClockworkBearingBlock.FACING)
-			.getAxisDirection()
-			.getOffset();
+				.getAxisDirection()
+				.getOffset();
 		float minuteTarget = (float) (offset * -360 / 60f * (minutes));
 		return minuteTarget;
 	}
@@ -419,7 +419,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

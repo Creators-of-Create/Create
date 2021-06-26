@@ -96,7 +96,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 					fluid = flowingFluid.getFluid();
 				else {
 					affectedArea.expandTo(new MutableBoundingBox(currentPos, currentPos));
-					world.setBlockState(currentPos, emptied, 2 | 16);
+					if (!tileEntity.isVirtual())
+						world.setBlockState(currentPos, emptied, 2 | 16);
 					queue.dequeue();
 					if (queue.isEmpty()) {
 						isValid = checkValid(world, rootPos);
@@ -136,7 +137,8 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				return true;
 			}
 
-			world.setBlockState(currentPos, emptied, 2 | 16);
+			if (!tileEntity.isVirtual())
+				world.setBlockState(currentPos, emptied, 2 | 16);
 			affectedArea.expandTo(new MutableBoundingBox(currentPos, currentPos));
 
 			queue.dequeue();

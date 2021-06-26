@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.config.ui;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -14,8 +14,6 @@ import org.lwjgl.glfw.GLFW;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
-import com.electronwill.nightconfig.core.UnmodifiableConfig.Entry;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList.LabeledEntry;
@@ -26,11 +24,11 @@ import com.simibubi.create.foundation.config.ui.entries.SubMenuEntry;
 import com.simibubi.create.foundation.config.ui.entries.ValueEntry;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ConfirmationScreen;
+import com.simibubi.create.foundation.gui.ConfirmationScreen.Response;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.ConfirmationScreen.Response;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -240,10 +238,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			if (obj instanceof AbstractConfig) {
 				SubMenuEntry entry = new SubMenuEntry(this, humanKey, spec, (UnmodifiableConfig) obj);
 				list.children().add(entry);
-					if (configGroup.valueMap()
+				if (configGroup.valueMap()
 						.size() == 1)
-							ScreenOpener.open(
-								new SubMenuConfigScreen(parent, humanKey, type, spec, (UnmodifiableConfig) obj));
+					ScreenOpener.open(
+							new SubMenuConfigScreen(parent, humanKey, type, spec, (UnmodifiableConfig) obj));
 
 			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
 				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
@@ -268,17 +266,17 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				}
 			}
 		});
-		
+
 		Collections.sort(list.children(),
-			(e, e2) -> {
-				int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
+				(e, e2) -> {
+					int group = (e2 instanceof SubMenuEntry ? 1 : 0) - (e instanceof SubMenuEntry ? 1 : 0);
 					if (group == 0 && e instanceof LabeledEntry && e2 instanceof LabeledEntry) {
 						LabeledEntry le = (LabeledEntry) e;
 						LabeledEntry le2 = (LabeledEntry) e2;
 						return le.label.getComponent()
-							.getString()
-							.compareTo(le2.label.getComponent()
-								.getString());
+								.getString()
+								.compareTo(le2.label.getComponent()
+										.getString());
 					}
 					return group;
 				});
@@ -286,7 +284,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		//extras for server configs
 		if (type != ModConfig.Type.SERVER)
 			return;
-		if (client.isSingleplayer()) 
+		if (client.isSingleplayer())
 			return;
 
 		list.isForServer = true;
@@ -301,7 +299,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				.withPadding(2, 2)
 				.showingElement(stencil);
 
-			
+
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
@@ -325,7 +323,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindow(ms, mouseX, mouseY, partialTicks);
 
-		int x = width/2;
+		int x = width / 2;
 		drawCenteredString(ms, client.fontRenderer, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
 
 		list.render(ms, mouseX, mouseY, partialTicks);
@@ -369,7 +367,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			ScreenOpener.open(parent);
 			return;
 		}
-		
+
 		Consumer<ConfirmationScreen.Response> action = success -> {
 			if (success == Response.Cancel)
 				return;
@@ -378,10 +376,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			changes.clear();
 			ScreenOpener.open(parent);
 		};
-		
+
 		showLeavingPrompt(action);
 	}
-	
+
 	@Override
 	public void onClose() {
 		if (changes.isEmpty()) {
@@ -398,16 +396,16 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			changes.clear();
 			super.onClose();
 		};
-		
+
 		showLeavingPrompt(action);
 	}
 
 	public void showLeavingPrompt(Consumer<ConfirmationScreen.Response> action) {
 		new ConfirmationScreen().centered()
-			.addText(ITextProperties.plain("Leaving with " + changes.size() + " unsaved change"
-				+ (changes.size() != 1 ? "s" : "") + " for this config"))
-			.withThreeActions(action)
-			.open(this);
+				.addText(ITextProperties.plain("Leaving with " + changes.size() + " unsaved change"
+						+ (changes.size() != 1 ? "s" : "") + " for this config"))
+				.withThreeActions(action)
+				.open(this);
 	}
 
 }

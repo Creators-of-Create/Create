@@ -326,7 +326,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		 * RecipeConditions.isOfType(IRecipeType.STONECUTTING,
 		 * AllRecipeTypes.CUTTING.getType()) :
 		 * RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
-		 * 
+		 *
 		 */
 
 		Predicate<IRecipe<?>> types = RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType(),
@@ -456,7 +456,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

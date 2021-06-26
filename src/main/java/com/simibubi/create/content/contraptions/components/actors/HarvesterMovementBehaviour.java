@@ -4,19 +4,19 @@ import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CocoaBlock;
@@ -49,15 +49,15 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
-		return new HarvesterActorInstance(kr, context);
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
-		if (!FastRenderDispatcher.available())
-			HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
+		if (!Backend.getInstance().canUseInstancing())
+			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
 	@Override
@@ -162,18 +162,18 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		}
 		if (block == Blocks.SUGAR_CANE || block == Blocks.KELP) {
 			if (state.getFluidState()
-				.isEmpty())
+					.isEmpty())
 				return Blocks.AIR.getDefaultState();
 			return state.getFluidState()
-				.getBlockState();
+					.getBlockState();
 		}
 		if (state.getCollisionShape(world, pos)
-			.isEmpty() || block instanceof CocoaBlock) {
+				.isEmpty() || block instanceof CocoaBlock) {
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
-					.equals(BlockStateProperties.AGE_0_1.getName()))
+						.equals(BlockStateProperties.AGE_0_1.getName()))
 					continue;
 				return state.with((IntegerProperty) property, Integer.valueOf(0));
 			}

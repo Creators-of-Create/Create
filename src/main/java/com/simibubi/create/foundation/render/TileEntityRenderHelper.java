@@ -2,15 +2,17 @@ package com.simibubi.create.foundation.render;
 
 import java.util.Iterator;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -23,28 +25,26 @@ import net.minecraft.world.World;
 public class TileEntityRenderHelper {
 
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
-		MatrixStack localTransform, IRenderTypeBuffer buffer) {
-		renderTileEntities(world, null, customRenderTEs, ms, localTransform, buffer);
+			IRenderTypeBuffer buffer) {
+		renderTileEntities(world, null, customRenderTEs, ms, null, buffer);
 	}
 
 	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
-		MatrixStack localTransform, IRenderTypeBuffer buffer, float pt) {
-		renderTileEntities(world, null, customRenderTEs, ms, localTransform, buffer, pt);
+			IRenderTypeBuffer buffer, float pt) {
+		renderTileEntities(world, null, customRenderTEs, ms, null, buffer, pt);
 	}
 
-	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld,
-		Iterable<TileEntity> customRenderTEs, MatrixStack ms, MatrixStack localTransform, IRenderTypeBuffer buffer) {
-		renderTileEntities(world, renderWorld, customRenderTEs, ms, localTransform, buffer,
+	public static void renderTileEntities(World world, @Nullable PlacementSimulationWorld renderWorld,
+			Iterable<TileEntity> customRenderTEs, MatrixStack ms, @Nullable Matrix4f lightTransform, IRenderTypeBuffer buffer) {
+		renderTileEntities(world, renderWorld, customRenderTEs, ms, lightTransform, buffer,
 			AnimationTickHolder.getPartialTicks());
 	}
 
-	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld,
-		Iterable<TileEntity> customRenderTEs, MatrixStack ms, MatrixStack localTransform, IRenderTypeBuffer buffer,
-		float pt) {
-		Matrix4f matrix = localTransform.peek()
-			.getModel();
-
-		for (Iterator<TileEntity> iterator = customRenderTEs.iterator(); iterator.hasNext();) {
+	public static void renderTileEntities(World world, @Nullable PlacementSimulationWorld renderWorld,
+			Iterable<TileEntity> customRenderTEs, MatrixStack ms, @Nullable Matrix4f lightTransform, IRenderTypeBuffer buffer,
+			float pt) {
+		Iterator<TileEntity> iterator = customRenderTEs.iterator();
+		while (iterator.hasNext()) {
 			TileEntity tileEntity = iterator.next();
 			// if (tileEntity instanceof IInstanceRendered) continue; // TODO: some things still need to render
 
@@ -60,10 +60,15 @@ public class TileEntityRenderHelper {
 				.translate(pos);
 
 			try {
-				Vector4f vec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
-				vec.transform(matrix);
-				BlockPos lightPos = new BlockPos(vec.getX(), vec.getY(), vec.getZ());
-				int worldLight = ContraptionRenderDispatcher.getLightOnContraption(world, renderWorld, pos, lightPos);
+				BlockPos lightPos;
+				if (lightTransform != null) {
+					Vector4f lightVec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
+					lightVec.transform(lightTransform);
+					lightPos = new BlockPos(lightVec.getX(), lightVec.getY(), lightVec.getZ());
+				} else {
+					lightPos = pos;
+				}
+				int worldLight = getCombinedLight(world, lightPos, renderWorld, pos);
 				renderer.render(tileEntity, pt, ms, buffer, worldLight, OverlayTexture.DEFAULT_UV);
 
 			} catch (Exception e) {
@@ -80,6 +85,18 @@ public class TileEntityRenderHelper {
 
 			ms.pop();
 		}
+	}
+
+	public static int getCombinedLight(World world, BlockPos worldPos, @Nullable PlacementSimulationWorld renderWorld,
+			BlockPos renderWorldPos) {
+		int worldLight = WorldRenderer.getLightmapCoordinates(world, worldPos);
+
+		if (renderWorld != null) {
+			int renderWorldLight = WorldRenderer.getLightmapCoordinates(renderWorld, renderWorldPos);
+			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
+		}
+
+		return worldLight;
 	}
 
 }

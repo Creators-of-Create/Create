@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
@@ -18,8 +20,6 @@ import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -258,7 +258,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			FastRenderDispatcher.enqueueUpdate(this);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -561,7 +561,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.removed)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;

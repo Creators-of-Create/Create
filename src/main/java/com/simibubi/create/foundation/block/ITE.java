@@ -21,9 +21,9 @@ public interface ITE<T extends TileEntity> {
 
 	default ActionResultType onTileEntityUse(IBlockReader world, BlockPos pos, Function<T, ActionResultType> action) {
 		return getTileEntityOptional(world, pos).map(action)
-			.orElse(ActionResultType.PASS);
+				.orElse(ActionResultType.PASS);
 	}
-	
+
 	default Optional<T> getTileEntityOptional(IBlockReader world, BlockPos pos) {
 		return Optional.ofNullable(getTileEntity(world, pos));
 	}

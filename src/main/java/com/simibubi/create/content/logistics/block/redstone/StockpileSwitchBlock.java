@@ -86,8 +86,8 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 		if (side == blockState.get(HORIZONTAL_FACING).getOpposite())
 			return 0;
 		return getTileEntityOptional(blockAccess, pos).filter(StockpileSwitchTileEntity::isPowered)
-			.map($ -> 15)
-			.orElse(0);
+				.map($ -> 15)
+				.orElse(0);
 	}
 
 	@Override

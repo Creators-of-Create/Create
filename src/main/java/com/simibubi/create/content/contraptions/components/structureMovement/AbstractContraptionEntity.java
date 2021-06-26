@@ -58,7 +58,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final DataParameter<Boolean> STALLED =
-		EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
+			EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -393,7 +393,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
 				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
-					+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
+						+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
 				buffer.writeCompoundTag(new CompoundNBT());
 				return;
 			}
@@ -432,7 +432,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
 		if (compound.isEmpty())
 			return;
-		
+
 		initialized = compound.getBoolean("Initialized");
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"), spawnData);
 		contraption.entity = this;

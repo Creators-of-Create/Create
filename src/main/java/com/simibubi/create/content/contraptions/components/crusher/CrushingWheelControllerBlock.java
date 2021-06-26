@@ -166,18 +166,18 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-		ISelectionContext context) {
+										ISelectionContext context) {
 		VoxelShape standardShape = AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
-		
+
 		if (!state.get(VALID))
 			return standardShape;
 
 		Entity entity = context.getEntity();
-		if (entity == null) 
+		if (entity == null)
 			return standardShape;
 
 		CompoundNBT data = entity.getPersistentData();
-		if (data.contains("BypassCrushingWheel")) 
+		if (data.contains("BypassCrushingWheel"))
 			if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				if (state.get(FACING) != Direction.UP) // Allow output items to land on top of the block rather than falling back through.
 					return VoxelShapes.empty();
@@ -185,7 +185,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 		CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
 		if (te != null && te.processingEntity == entity)
 			return VoxelShapes.empty();
-		
+
 		return standardShape;
 	}
 
@@ -202,7 +202,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	public Class<CrushingWheelControllerTileEntity> getTileEntityClass() {
 		return CrushingWheelControllerTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;

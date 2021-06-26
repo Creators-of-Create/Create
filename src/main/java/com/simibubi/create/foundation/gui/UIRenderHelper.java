@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.Color;
+import java.awt.*;
 
 import javax.annotation.Nonnull;
 
@@ -25,21 +25,31 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class UIRenderHelper {
 
-	public static void enableStencil() {
-		RenderSystem.recordRenderCall(() -> Minecraft.getInstance().getFramebuffer().enableStencil());
-	}
-
+	/**
+	 * An FBO that has a stencil buffer for use wherever stencil are necessary. Forcing the main FBO to have a stencil
+	 * buffer will cause GL error spam when using fabulous graphics.
+	 */
 	public static Framebuffer framebuffer;
+
+	public static void updateWindowSize(MainWindow mainWindow) {
+		if (framebuffer != null)
+			framebuffer.func_216491_a(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), Minecraft.IS_RUNNING_ON_MAC);
+	}
 
 	public static void init() {
 		RenderSystem.recordRenderCall(() -> {
 			MainWindow mainWindow = Minecraft.getInstance()
 					.getWindow();
-			framebuffer = new Framebuffer(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), true,
-					Minecraft.IS_RUNNING_ON_MAC);
-			framebuffer.setFramebufferColor(0, 0, 0, 0);
-			framebuffer.enableStencil();
+			framebuffer = createFramebuffer(mainWindow);
 		});
+	}
+
+	private static Framebuffer createFramebuffer(MainWindow mainWindow) {
+		Framebuffer framebuffer = new Framebuffer(mainWindow.getFramebufferWidth(), mainWindow.getFramebufferHeight(), true,
+				Minecraft.IS_RUNNING_ON_MAC);
+		framebuffer.setFramebufferColor(0, 0, 0, 0);
+		framebuffer.enableStencil();
+		return framebuffer;
 	}
 
 	public static void drawFramebuffer(float alpha) {
@@ -70,10 +80,10 @@ public class UIRenderHelper {
 	}
 
 	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length) {streak(ms, angle, x, y, breadth, length, Theme.i(Theme.Key.STREAK));}
-
 	// angle in degrees; 0° -> fading to the right
 	// x and y specify the middle point of the starting edge
 	// breadth is the total width of the streak
+
 	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length, int color) {
 		int a1 = 0xa0 << 24;
 		int a2 = 0x80 << 24;

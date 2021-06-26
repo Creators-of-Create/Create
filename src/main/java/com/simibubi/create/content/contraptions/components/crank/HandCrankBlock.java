@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;

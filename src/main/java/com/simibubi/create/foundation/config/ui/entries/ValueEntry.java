@@ -2,7 +2,6 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -81,12 +80,12 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 		}
 		// add comment to tooltip
 		labelTooltip.addAll(Arrays.stream(commentLines)
-			.filter(Predicates.not(s -> s.startsWith("Range")))
-			.map(StringTextComponent::new)
-			.flatMap(stc -> TooltipHelper.cutTextComponent(stc, TextFormatting.GRAY, TextFormatting.GRAY)
-				.stream())
-			.collect(Collectors.toList()));
-		labelTooltip.add(new StringTextComponent(ConfigScreen.modID + ":" + path.get(path.size()-1)).formatted(TextFormatting.DARK_GRAY));
+				.filter(Predicates.not(s -> s.startsWith("Range")))
+				.map(StringTextComponent::new)
+				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, TextFormatting.GRAY, TextFormatting.GRAY)
+						.stream())
+				.collect(Collectors.toList()));
+		labelTooltip.add(new StringTextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).formatted(TextFormatting.DARK_GRAY));
 	}
 
 	@Override

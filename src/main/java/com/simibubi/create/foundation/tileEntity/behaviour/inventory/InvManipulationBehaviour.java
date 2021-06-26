@@ -116,7 +116,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	private static ItemStack extractAmountOrThresh(IItemHandler inventory, Predicate<ItemStack> test, int amount,
-	   Function<ItemStack, Integer> amountThreshold, boolean shouldSimulate) {
+												   Function<ItemStack, Integer> amountThreshold, boolean shouldSimulate) {
 		if (amount == -1)
 			return ItemHelper.extract(inventory, test, amountThreshold, shouldSimulate);
 		return ItemHelper.extract(inventory, test, amount, shouldSimulate);

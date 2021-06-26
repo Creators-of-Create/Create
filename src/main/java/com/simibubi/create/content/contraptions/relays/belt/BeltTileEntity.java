@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -22,10 +26,6 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnel
 import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
@@ -60,7 +60,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BeltTileEntity extends KineticTileEntity implements LightUpdateListener {
+public class BeltTileEntity extends KineticTileEntity implements ILightUpdateListener {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -267,7 +267,7 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 			belt.color = Optional.ofNullable(colorIn);
 			belt.markDirty();
 			belt.sendData();
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(belt));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(belt));
 		}
 	}
 
@@ -518,7 +518,7 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		if (world == null)
 			return isController();
 		BlockState state = getBlockState();

@@ -7,7 +7,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllBlockTags;
@@ -16,17 +17,17 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -104,7 +105,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (schematicWorld == null)
 			return;
 		if (!schematicWorld.getBounds()
-			.isVecInside(pos.subtract(schematicWorld.anchor)))
+				.isVecInside(pos.subtract(schematicWorld.anchor)))
 			return;
 		BlockState blockState = schematicWorld.getBlockState(pos);
 		ItemRequirement requirement = ItemRequirement.of(blockState, schematicWorld.getTileEntity(pos));
@@ -120,15 +121,15 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 			IItemHandler iItemHandler = context.contraption.inventory;
 			for (ItemRequirement.StackRequirement required : requiredItems) {
 				int amountFound = ItemHelper
-					.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
-						required.item.getCount(), true)
-					.getCount();
+						.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
+								required.item.getCount(), true)
+						.getCount();
 				if (amountFound < required.item.getCount())
 					return;
 			}
 			for (ItemRequirement.StackRequirement required : requiredItems)
 				ItemHelper.extract(iItemHandler, s -> ItemRequirement.validate(required.item, s), ExtractionCountMode.UPTO,
-					required.item.getCount(), false);
+						required.item.getCount(), false);
 		}
 
 		CompoundNBT data = null;
@@ -254,10 +255,10 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
-		if (!FastRenderDispatcher.available())
-			DeployerRenderer.renderInContraption(context, ms, msLocal, buffers);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
+		if (!Backend.getInstance().canUseInstancing())
+			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
 	@Override
@@ -267,7 +268,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
-		return new DeployerActorInstance(kr, context);
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+		return new DeployerActorInstance(materialManager, simulationWorld, context);
 	}
 }

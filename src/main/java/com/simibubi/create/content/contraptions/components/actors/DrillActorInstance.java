@@ -1,13 +1,14 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -16,12 +17,12 @@ import net.minecraft.util.math.vector.Quaternion;
 public class DrillActorInstance extends ActorInstance {
 
     ActorData drillHead;
-    private Direction facing;
+    private final Direction facing;
 
-    public DrillActorInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
-        super(modelManager, context);
+    public DrillActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld contraption, MovementContext context) {
+        super(materialManager, contraption, context);
 
-        RenderMaterial<?, InstancedModel<ActorData>> renderMaterial = modelManager.getActorMaterial();
+        InstanceMaterial<ActorData> instanceMaterial = materialManager.getMaterial(AllMaterialSpecs.ACTORS);
 
         BlockState state = context.state;
 
@@ -36,7 +37,7 @@ public class DrillActorInstance extends ActorInstance {
         else
             eulerY = facing.getHorizontalAngle() + ((axis == Direction.Axis.X) ? 180 : 0);
 
-        drillHead = renderMaterial.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
+        drillHead = instanceMaterial.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
 
         drillHead.setPosition(context.localPos)
                  .setBlockLight(localBlockLight())

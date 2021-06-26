@@ -47,7 +47,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 
 	@Override
 	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-		BlockRayTraceResult hit) {
+								  BlockRayTraceResult hit) {
 		if (worldIn.isRemote) {
 			addParticles(state, worldIn, pos, 1.0F);
 			return ActionResultType.SUCCESS;
@@ -65,7 +65,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return getTileEntityOptional(blockAccess, pos).map(al -> al.state)
-			.orElse(0);
+				.orElse(0);
 	}
 
 	@Override
@@ -100,14 +100,14 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 
 	private static void addParticles(BlockState state, IWorld worldIn, BlockPos pos, float alpha) {
 		Direction direction = state.get(HORIZONTAL_FACING)
-			.getOpposite();
+				.getOpposite();
 		Direction direction1 = getFacing(state).getOpposite();
 		double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getXOffset()
-			+ 0.2D * (double) direction1.getXOffset();
+				+ 0.2D * (double) direction1.getXOffset();
 		double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset()
-			+ 0.2D * (double) direction1.getYOffset();
+				+ 0.2D * (double) direction1.getYOffset();
 		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset()
-			+ 0.2D * (double) direction1.getZOffset();
+				+ 0.2D * (double) direction1.getZOffset();
 		worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	}
 

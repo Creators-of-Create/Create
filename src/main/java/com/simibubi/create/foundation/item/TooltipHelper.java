@@ -124,7 +124,7 @@ public class TooltipHelper {
 
 	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor,
 		TextFormatting highlightColor, int indent) {
-		String s = getUnformattedDeepText(c);
+		String s = c.getString();
 
 		// Apply markup
 		String markedUp = s;// .replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
@@ -329,13 +329,5 @@ public class TooltipHelper {
 //		});
 //		return l.get();
 //	}
-
-	public static String getUnformattedDeepText(ITextComponent component) {
-		StringBuilder b = new StringBuilder();
-		b.append(component.getString());
-		component.getSiblings()
-			.forEach(c -> b.append(getUnformattedDeepText(c)));
-		return b.toString();
-	}
 
 }

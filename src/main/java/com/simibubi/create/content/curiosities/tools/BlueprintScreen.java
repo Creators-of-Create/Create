@@ -41,6 +41,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	@Override
 	protected void init() {
 		setWindowSize(background.width, background.height + 4 + PLAYER_INVENTORY.height);
+		setWindowOffset(2 + (width % 2 == 0 ? 0 : -1), 0);
 		super.init();
 		widgets.clear();
 
@@ -54,17 +55,15 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		widgets.add(confirmButton);
 
 		extraAreas = ImmutableList.of(
-			new Rectangle2d(x + background.width, guiTop + background.height - 36, 56, 44)
+			new Rectangle2d(x + background.width, y + background.height - 36, 56, 44)
 		);
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		int invLeft = guiLeft - windowXOffset + (xSize - PLAYER_INVENTORY.width) / 2;
-		int invTop = guiTop + background.height + 4;
-
-		PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
-		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
+		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
+		int invY = guiTop + background.height + 4;
+		renderPlayerInventory(ms, invX, invY);
 
 		int x = guiLeft;
 		int y = guiTop;
@@ -73,7 +72,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		textRenderer.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
 		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1)
-			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 20, guiTop + background.height - 32, 0)
+			.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 20, y + background.height - 32, 0)
 			.rotate(45, -45, 22.5f)
 			.scale(40)
 			.render(ms);

@@ -1,11 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -56,14 +56,14 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		int bl = light >> 4 & 0xf;
 		int sl = light >> 20 & 0xf;
 		boolean vertical = entity.rotationPitch != 0;
-		if (entity.rotationPitch == -90) 
+		if (entity.rotationPitch == -90)
 			fakeNormalXRotation = -45;
 		else if (entity.rotationPitch == 90 || yaw % 180 != 0) {
 			bl /= 1.35;
 			sl /= 1.35;
 		}
 		int itemLight = MathHelper.floor(sl + .5) << 20 | (MathHelper.floor(bl + .5) & 0xf) << 4;
-		
+
 		MatrixStacker.of(ms)
 			.rotateY(vertical ? 0 : -yaw)
 			.rotateX(fakeNormalXRotation);

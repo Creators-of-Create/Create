@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
+import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
@@ -85,6 +86,13 @@ public class PonderLocalization {
 		addGeneral(object, PonderUI.REPLAY, "Replay");
 		addGeneral(object, PonderUI.THINK_BACK, "Think Back");
 		addGeneral(object, PonderUI.SLOW_TEXT, "Comfy Reading");
+
+		addGeneral(object, PonderTagIndexScreen.EXIT, "Exit");
+		addGeneral(object, PonderTagIndexScreen.WELCOME, "Welcome to Ponder");
+		addGeneral(object, PonderTagIndexScreen.CATEGORIES, "Available Categories in Create");
+		addGeneral(object, PonderTagIndexScreen.DESCRIPTION,
+			"Click one of the icons to learn about its associated Items and Blocks");
+		addGeneral(object, PonderTagIndexScreen.TITLE, "Ponder Index");
 
 		shared.forEach((k, v) -> object.addProperty(Create.ID + "." + langKeyForShared(k), v));
 		tag.forEach((k, v) -> {

@@ -246,7 +246,7 @@ public class BlueprintOverlayRenderer {
 		if (itemStack.getItem() instanceof FilterItem) {
 			int step = AnimationTickHolder.getTicks(mc.world) / 10;
 			ItemStack[] itemsMatchingFilter = getItemsMatchingFilter(itemStack);
-			if (itemsMatchingFilter.length > 0) 
+			if (itemsMatchingFilter.length > 0)
 				itemStack = itemsMatchingFilter[step % itemsMatchingFilter.length];
 		}
 

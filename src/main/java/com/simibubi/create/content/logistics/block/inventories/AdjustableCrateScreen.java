@@ -60,12 +60,12 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		textureXShift = container.doubleCrate ? 0 : (xSize - (background.width - 8)) / 2;
 		itemYShift = container.doubleCrate ? 0 : -16;
 
-		int crateLeft = guiLeft + textureXShift;
-		int crateTop = guiTop;
+		int x = guiLeft + textureXShift;
+		int y = guiTop;
 
-		allowedItemsLabel = new Label(crateLeft + itemLabelOffset + 4, crateTop + 108, StringTextComponent.EMPTY).colored(0xFFFFFF)
+		allowedItemsLabel = new Label(x + itemLabelOffset + 4, y + 108, StringTextComponent.EMPTY).colored(0xFFFFFF)
 			.withShadow();
-		allowedItems = new ScrollInput(crateLeft + itemLabelOffset, crateTop + 104, 41, 16).titled(storageSpace.copy())
+		allowedItems = new ScrollInput(x + itemLabelOffset, y + 104, 41, 16).titled(storageSpace.copy())
 			.withRange(1, (container.doubleCrate ? 2049 : 1025))
 			.writingTo(allowedItemsLabel)
 			.withShiftStep(64)
@@ -76,38 +76,36 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		widgets.add(allowedItems);
 
 		extraAreas = ImmutableList.of(
-			new Rectangle2d(crateLeft + background.width, crateTop + background.height - 56 + itemYShift, 80, 80)
+			new Rectangle2d(x + background.width, y + background.height - 56 + itemYShift, 80, 80)
 		);
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		int invLeft = guiLeft - windowXOffset + (xSize - AllGuiTextures.PLAYER_INVENTORY.width) / 2;
-		int invTop = guiTop + background.height + 4;
+		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
+		int invY = guiTop + background.height + 4;
+		renderPlayerInventory(ms, invX, invY);
 
-		PLAYER_INVENTORY.draw(ms, this, invLeft, invTop);
-		textRenderer.draw(ms, playerInventory.getDisplayName(), invLeft + 8, invTop + 6, 0x404040);
+		int x = guiLeft + textureXShift;
+		int y = guiTop;
 
-		int crateLeft = guiLeft + textureXShift;
-		int crateTop = guiTop;
-
-		background.draw(ms, this, crateLeft, crateTop);
-		drawCenteredText(ms, textRenderer, title, crateLeft + (background.width - 8) / 2, crateTop + 3, 0xFFFFFF);
+		background.draw(ms, this, x, y);
+		drawCenteredText(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		String itemCount = String.valueOf(te.itemCount);
-		textRenderer.draw(ms, itemCount, crateLeft + itemLabelOffset - 13 - textRenderer.getStringWidth(itemCount), crateTop + 108, 0x4B3A22);
+		textRenderer.draw(ms, itemCount, x + itemLabelOffset - 13 - textRenderer.getStringWidth(itemCount), y + 108, 0x4B3A22);
 
 		for (int slot = 0; slot < (container.doubleCrate ? 32 : 16); slot++) {
 			if (allowedItems.getState() > slot * 64)
 				continue;
 			int slotsPerRow = (container.doubleCrate ? 8 : 4);
-			int x = crateLeft + 22 + (slot % slotsPerRow) * 18;
-			int y = crateTop + 19 + (slot / slotsPerRow) * 18;
-			AllGuiTextures.ADJUSTABLE_CRATE_LOCKED_SLOT.draw(ms, this, x, y);
+			int slotX = x + 22 + (slot % slotsPerRow) * 18;
+			int slotY = y + 19 + (slot / slotsPerRow) * 18;
+			AllGuiTextures.ADJUSTABLE_CRATE_LOCKED_SLOT.draw(ms, this, slotX, slotY);
 		}
 
 		GuiGameElement.of(renderedItem)
-				.<GuiGameElement.GuiRenderBuilder>at(crateLeft + background.width, crateTop + background.height - 56 + itemYShift, -200)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, y + background.height - 56 + itemYShift, -200)
 				.scale(5)
 				.render(ms);
 	}

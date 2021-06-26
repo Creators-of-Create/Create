@@ -29,21 +29,21 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
-					.getSender();
-				if (player == null)
-					return;
-				if (player.openContainer instanceof BlueprintContainer) {
-					BlueprintContainer c = (BlueprintContainer) player.openContainer;
-					player.getServerWorld()
-						.getRecipeManager()
-						.getRecipe(recipeID)
-						.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));
-				}
-			});
+				.enqueueWork(() -> {
+					ServerPlayerEntity player = context.get()
+							.getSender();
+					if (player == null)
+						return;
+					if (player.openContainer instanceof BlueprintContainer) {
+						BlueprintContainer c = (BlueprintContainer) player.openContainer;
+						player.getServerWorld()
+								.getRecipeManager()
+								.getRecipe(recipeID)
+								.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));
+					}
+				});
 		context.get()
-			.setPacketHandled(true);
+				.setPacketHandled(true);
 	}
 
 }

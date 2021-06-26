@@ -34,8 +34,8 @@ public class InputEvents {
 		double delta = event.getScrollDelta();
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
-			|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
-			|| ScrollValueHandler.onScroll(delta);
+				|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
+				|| ScrollValueHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 

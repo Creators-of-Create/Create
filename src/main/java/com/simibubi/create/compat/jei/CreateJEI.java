@@ -88,16 +88,16 @@ public class CreateJEI implements IModPlugin {
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
 	private final CreateRecipeCategory<?>
 
-	milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
-		.catalyst(AllBlocks.MILLSTONE::get)
-		.build(),
+			milling = register("milling", MillingCategory::new).recipes(AllRecipeTypes.MILLING)
+			.catalyst(AllBlocks.MILLSTONE::get)
+			.build(),
 
-		crushing = register("crushing", CrushingCategory::new).recipes(AllRecipeTypes.CRUSHING)
+	crushing = register("crushing", CrushingCategory::new).recipes(AllRecipeTypes.CRUSHING)
 			.recipesExcluding(AllRecipeTypes.MILLING::getType, AllRecipeTypes.CRUSHING::getType)
 			.catalyst(AllBlocks.CRUSHING_WHEEL::get)
 			.build(),
 
-		pressing = register("pressing", PressingCategory::new).recipes(AllRecipeTypes.PRESSING)
+	pressing = register("pressing", PressingCategory::new).recipes(AllRecipeTypes.PRESSING)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.build(),
 
@@ -173,8 +173,8 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		deploying = register("deploying", DeployingCategory::new)
-			.recipeList(
-				() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
+				.recipeList(
+						() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
 			.recipes(AllRecipeTypes.DEPLOYING)
 			.catalyst(AllBlocks.DEPLOYER::get)
 			.catalyst(AllBlocks.DEPOT::get)
@@ -208,13 +208,11 @@ public class CreateJEI implements IModPlugin {
 
 		mechanicalCrafting =
 			register("mechanical_crafting", MechanicalCraftingCategory::new).recipes(AllRecipeTypes.MECHANICAL_CRAFTING)
-				.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
-				.build()
-
-	;
+					.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
+					.build();
 
 	private <T extends IRecipe<?>> CategoryBuilder<T> register(String name,
-		Supplier<CreateRecipeCategory<T>> supplier) {
+															   Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<T>(name, supplier);
 	}
 
@@ -293,13 +291,13 @@ public class CreateJEI implements IModPlugin {
 		}
 
 		public CategoryBuilder<T> recipeList(Supplier<List<? extends IRecipe<?>>> list,
-			Function<IRecipe<?>, T> converter) {
+											 Function<IRecipe<?>, T> converter) {
 			recipeListConsumers.add(recipes -> {
 				List<? extends IRecipe<?>> toAdd = list.get();
 				if (converter != null)
 					toAdd = toAdd.stream()
-						.map(converter)
-						.collect(Collectors.toList());
+							.map(converter)
+							.collect(Collectors.toList());
 				recipes.addAll(toAdd);
 			});
 			return this;

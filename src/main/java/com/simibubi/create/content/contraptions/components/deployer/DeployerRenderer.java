@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -10,17 +12,17 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -35,7 +37,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
@@ -52,7 +53,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
@@ -111,7 +112,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(te.getWorld())) {
 			KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
 		}
 
@@ -154,9 +155,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		return buffer;
 	}
 
-	public static void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
-		MatrixStack[] matrixStacks = new MatrixStack[]{ms, msLocal};
+	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
 		BlockState blockState = context.state;
 		BlockPos pos = BlockPos.ZERO;
@@ -166,8 +166,6 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = PartialBufferer.get(handPose, blockState);
-		pole = transform(world, pole, blockState, pos, true);
-		hand = transform(world, hand, blockState, pos, false);
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
@@ -183,14 +181,21 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		Vector3d offset = Vector3d.of(blockState.get(FACING)
 			.getDirectionVec()).scale(factor);
 
-		Matrix4f lighting = msLocal.peek()
-			.getModel();
-		for (MatrixStack m : matrixStacks)
-			m.translate(offset.x, offset.y, offset.z);
-		pole.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
-			.renderInto(ms, builder);
-		hand.light(lighting, ContraptionRenderDispatcher.getLightOnContraption(context))
-			.renderInto(ms, builder);
+		MatrixStack m = matrices.contraptionStack;
+		m.push();
+		m.translate(offset.x, offset.y, offset.z);
+
+		pole.transform(m);
+		hand.transform(m);
+		pole = transform(world, pole, blockState, pos, true);
+		hand = transform(world, hand, blockState, pos, false);
+
+		pole.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, builder);
+		hand.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.entityStack, builder);
+
+		m.pop();
 	}
 
 	static PartialModel getHandPose(DeployerTileEntity.Mode mode) {

@@ -42,7 +42,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	public double getMaxRenderDistanceSquared() {
 		return super.getMaxRenderDistanceSquared() + offset * offset;
 	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -200,7 +200,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		initialOffset = compound.getInt("InitialOffset");
 		super.fromTag(state, compound, clientPacket);
 	}
-	
+
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		compound.putInt("InitialOffset", initialOffset);
@@ -234,13 +234,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		boolean moving = running && (movedContraption == null || !movedContraption.isStalled());
 		return super.getInterpolatedOffset(moving ? partialTicks : 0.5f);
 	}
-	
+
 	public void animateOffset(float forcedOffset) {
 		offset = forcedOffset;
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return false;
 	}
 }

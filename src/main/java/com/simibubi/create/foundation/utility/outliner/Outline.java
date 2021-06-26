@@ -51,7 +51,7 @@ public abstract class Outline {
 		float lineWidth = params.getLineWidth();
 		if (lineWidth == 0)
 			return;
-		
+
 		IVertexBuilder builder = buffer.getBuffer(RenderTypes.getOutlineSolid());
 
 		Vector3d diff = end.subtract(start);

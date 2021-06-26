@@ -114,7 +114,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 		if (heldItem.isEmpty())
 			return ActionResultType.PASS;
-		if (!player.isCreative())
+		if (!player.isCreative() && !creative)
 			return ActionResultType.PASS;
 
 		FluidExchange exchange = null;
