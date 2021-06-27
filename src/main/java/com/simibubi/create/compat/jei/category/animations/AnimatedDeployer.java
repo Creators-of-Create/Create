@@ -4,12 +4,10 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
 public class AnimatedDeployer extends AnimatedKinetics {
@@ -22,12 +20,12 @@ public class AnimatedDeployer extends AnimatedKinetics {
 		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
 		int scale = 20;
 
-		GuiGameElement.of(shaft(Axis.Z))
+		defaultBlockElement(shaft(Axis.Z))
 			.rotateBlock(0, 0, getCurrentAngle())
 			.scale(scale)
 			.render(matrixStack);
 
-		GuiGameElement.of(AllBlocks.DEPLOYER.getDefaultState()
+		defaultBlockElement(AllBlocks.DEPLOYER.getDefaultState()
 			.with(DeployerBlock.FACING, Direction.DOWN)
 			.with(DeployerBlock.AXIS_ALONG_FIRST_COORDINATE, false))
 			.scale(scale)
@@ -39,18 +37,18 @@ public class AnimatedDeployer extends AnimatedKinetics {
 		matrixStack.push();
 
 		matrixStack.translate(0, offset * 17, 0);
-		GuiGameElement.of(AllBlockPartials.DEPLOYER_POLE)
+		defaultBlockElement(AllBlockPartials.DEPLOYER_POLE)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
-		GuiGameElement.of(AllBlockPartials.DEPLOYER_HAND_HOLDING)
+		defaultBlockElement(AllBlockPartials.DEPLOYER_HAND_HOLDING)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
 
 		matrixStack.pop();
 
-		GuiGameElement.of(AllBlocks.DEPOT.getDefaultState())
+		defaultBlockElement(AllBlocks.DEPOT.getDefaultState())
 			.atLocal(0, 2, 0)
 			.scale(scale)
 			.render(matrixStack);

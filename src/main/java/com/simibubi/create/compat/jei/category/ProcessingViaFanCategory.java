@@ -68,6 +68,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 		if (matrixStack == null)
 			return;
 		renderWidgets(matrixStack, recipe, mouseX, mouseY);
+
 		matrixStack.push();
 		translateFan(matrixStack);
 		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-12.5f));
@@ -77,12 +78,14 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 		GuiGameElement.of(AllBlockPartials.ENCASED_FAN_INNER)
 			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
 			.scale(scale)
+			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
 		GuiGameElement.of(AllBlocks.ENCASED_FAN.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.atLocal(0, 0, 0)
 			.scale(scale)
+			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
 		renderAttachedBlock(matrixStack);
