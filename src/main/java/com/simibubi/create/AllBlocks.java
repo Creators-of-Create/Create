@@ -194,7 +194,6 @@ import net.minecraft.loot.conditions.ILootCondition.IBuilder;
 import net.minecraft.loot.conditions.SurvivesExplosion;
 import net.minecraft.loot.functions.CopyName;
 import net.minecraft.loot.functions.CopyNbt;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;

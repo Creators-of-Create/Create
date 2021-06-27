@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;

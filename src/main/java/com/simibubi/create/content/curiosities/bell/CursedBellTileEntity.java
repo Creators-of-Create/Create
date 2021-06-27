@@ -2,10 +2,7 @@ package com.simibubi.create.content.curiosities.bell;
 
 import java.util.List;
 
-import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-
-import com.sun.org.apache.regexp.internal.RE;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;

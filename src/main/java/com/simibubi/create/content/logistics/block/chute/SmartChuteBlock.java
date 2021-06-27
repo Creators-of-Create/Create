@@ -3,8 +3,6 @@ package com.simibubi.create.content.logistics.block.chute;
 import java.util.Random;
 
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
