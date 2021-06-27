@@ -5,12 +5,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import mezz.jei.api.gui.drawable.IDrawable;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class AnimatedBlazeBurner implements IDrawable {
+public class AnimatedBlazeBurner extends AnimatedKinetics {
 
 	private HeatLevel heatLevel;
 
@@ -26,14 +26,15 @@ public class AnimatedBlazeBurner implements IDrawable {
 		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
 		int scale = 23;
 
-		GuiGameElement.of(AllBlocks.BLAZE_BURNER.getDefaultState())
+		defaultBlockElement(AllBlocks.BLAZE_BURNER.getDefaultState())
 			.atLocal(0, 1.65, 0)
 			.scale(scale)
 			.render(matrixStack);
 
+		float offset = (MathHelper.sin(AnimationTickHolder.getRenderTime() / 16f) + 0.5f) / 16f;
 		PartialModel blaze = AllBlockPartials.BLAZES.get(heatLevel);
-		GuiGameElement.of(blaze)
-			.atLocal(1, 1.65, 1)
+		defaultBlockElement(blaze)
+			.atLocal(1, 1.65 + offset, 1)
 			.rotate(0, 180, 0)
 			.scale(scale)
 			.render(matrixStack);
@@ -41,13 +42,4 @@ public class AnimatedBlazeBurner implements IDrawable {
 		matrixStack.pop();
 	}
 
-	@Override
-	public int getWidth() {
-		return 50;
-	}
-
-	@Override
-	public int getHeight() {
-		return 50;
-	}
 }
