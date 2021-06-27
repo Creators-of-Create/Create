@@ -119,10 +119,9 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEnti
 import com.simibubi.create.content.curiosities.armor.CopperBacktankInstance;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankRenderer;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
+import com.simibubi.create.content.curiosities.bell.AbstractBellRenderer;
 import com.simibubi.create.content.curiosities.bell.CursedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
-import com.simibubi.create.content.curiosities.projector.ChromaticProjectorInstance;
-import com.simibubi.create.content.curiosities.projector.ChromaticProjectorTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
@@ -676,6 +675,7 @@ public class AllTileEntities {
 	public static final TileEntityEntry<CursedBellTileEntity> CURSED_BELL = Create.registrate()
 		.tileEntity("cursed_bell", CursedBellTileEntity::new)
 		.validBlocks(AllBlocks.CURSED_BELL)
+		.renderer(() -> AbstractBellRenderer::new)
 		.register();
 
 	public static void register() {}

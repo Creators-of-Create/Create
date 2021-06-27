@@ -39,10 +39,10 @@ public class SoulParticle extends CustomRotationParticle {
 		this.particleScale = 0.5f;
 		this.setSize(this.particleScale, this.particleScale);
 
-		this.loopLength = loopFrames + (int) (this.rand.nextFloat() * 4f - 2f);
-		this.startTicks = startFrames + (int) (this.rand.nextFloat() * 4f - 2f);
-		this.endTicks = endFrames + (int) (this.rand.nextFloat() * 4f - 2f);
-		this.numLoops = (int)(3.0F / (this.rand.nextFloat() * 0.36F + 0.64F));
+		this.loopLength = loopFrames + (int) (this.rand.nextFloat() * 5f - 4f);
+		this.startTicks = startFrames + (int) (this.rand.nextFloat() * 5f - 4f);
+		this.endTicks = endFrames + (int) (this.rand.nextFloat() * 5f - 4f);
+		this.numLoops = (int)(1f + this.rand.nextFloat() * 2f);
 
 		this.setFrame(0);
 		this.field_21507 = true; // disable movement

@@ -11,9 +11,4 @@ public class PeculiarBellTileEntity extends AbstractBellTileEntity {
 		super(type);
 	}
 
-	@Override
-	public boolean ring(World world, BlockPos pos, Direction direction) {
-		return true;
-	}
-
 }

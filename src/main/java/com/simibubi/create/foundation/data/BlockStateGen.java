@@ -9,6 +9,10 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import com.simibubi.create.content.curiosities.bell.CursedBellBlock;
+
+import net.minecraft.block.BellBlock;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -220,9 +224,9 @@ public class BlockStateGen {
 				Boolean powered = state.get(CartAssemblerBlock.POWERED);
 				Boolean backwards = state.get(CartAssemblerBlock.BACKWARDS);
 				RailShape shape = state.get(CartAssemblerBlock.RAIL_SHAPE);
-				
+
 				int yRotation = shape == RailShape.EAST_WEST ? 270 : 0;
-				if (backwards) 
+				if (backwards)
 					yRotation += 180;
 
 				return ConfiguredModel.builder()
@@ -460,6 +464,12 @@ public class BlockStateGen {
 				putPart(coreModels, builder, axis, NONE, false, false, false, false);
 			}
 		};
+	}
+
+	public static <B extends BellBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> bell() {
+		return (c, p) -> p.horizontalBlock(c.getEntry(), state ->
+			AssetLookup.partialBaseModel(c, p, state.get(BlockStateProperties.BELL_ATTACHMENT).getString())
+		);
 	}
 
 	private static void putPart(Map<Pair<String, Axis>, ModelFile> coreModels, MultiPartBlockStateBuilder builder,

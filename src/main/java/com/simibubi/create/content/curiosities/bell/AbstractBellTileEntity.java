@@ -13,6 +13,12 @@ import java.util.List;
 
 public abstract class AbstractBellTileEntity extends SmartTileEntity {
 
+	public static final int RING_DURATION = 50;
+
+	public boolean isRinging;
+	public int ringingTicks;
+	public Direction ringDirection;
+
 	public AbstractBellTileEntity(TileEntityType<?> type) {
 		super(type);
 	}
@@ -20,6 +26,25 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) { }
 
-	public abstract boolean ring(World world, BlockPos pos, Direction direction);
+	public boolean ring(World world, BlockPos pos, Direction direction) {
+		isRinging = true;
+		ringingTicks = 0;
+		ringDirection = direction;
+		return true;
+	};
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		if (isRinging) {
+			++ringingTicks;
+		}
+
+		if (ringingTicks >= RING_DURATION) {
+			isRinging = false;
+			ringingTicks = 0;
+		}
+	}
 
 }

@@ -13,6 +13,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
@@ -115,6 +116,7 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.CursedBellBlock;
+import com.simibubi.create.content.curiosities.bell.CursedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -192,6 +194,7 @@ import net.minecraft.loot.conditions.ILootCondition.IBuilder;
 import net.minecraft.loot.conditions.SurvivesExplosion;
 import net.minecraft.loot.functions.CopyName;
 import net.minecraft.loot.functions.CopyNbt;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -1305,8 +1308,11 @@ public class AllBlocks {
 	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
 		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.blockstate((c, p) -> {})
+			.properties(Block.Properties::nonOpaque)
+			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.BRITTLE.tag)
+			.onRegister(addMovementBehaviour(new BellMovementBehaviour(PeculiarBellBlock::playSound)))
+			.blockstate((c, p) -> {})
 			.item()
 			.model((c, p) -> {})
 			.build()
@@ -1315,11 +1321,12 @@ public class AllBlocks {
 	public static final BlockEntry<CursedBellBlock> CURSED_BELL =
 		REGISTRATE.block("cursed_bell", CursedBellBlock::new)
 			.initialProperties(() -> PECULIAR_BELL.get())
+			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate((c, p) -> {})
+			.onRegister(addMovementBehaviour(new CursedBellMovementBehaviour()))
+			.blockstate(BlockStateGen.bell())
 			.item()
-			.model((c, p) -> {})
-			.build()
+			.transform(customItemModel())
 			.register();
 
 	// Materials

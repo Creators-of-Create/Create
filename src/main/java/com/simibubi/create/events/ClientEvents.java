@@ -25,6 +25,7 @@ import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
@@ -114,6 +115,7 @@ public class ClientEvents {
 		CreateClient.SCHEMATIC_HANDLER.tick();
 		CreateClient.ZAPPER_RENDER_HANDLER.tick();
 		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
+		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -166,9 +168,9 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld()
-			.isRemote()) {
+		if (event.getWorld().isRemote()) {
 			CreateClient.invalidateRenderers();
+			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 			AnimationTickHolder.reset();
 		}
 	}

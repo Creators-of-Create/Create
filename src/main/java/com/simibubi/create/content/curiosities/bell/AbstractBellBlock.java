@@ -55,11 +55,11 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		if (world.isRemote)
 			return false;
 
-		playSound(world, pos, direction);
+		playSound(world, pos);
 		return true;
 	}
 
-	public static void playSound(World world, BlockPos pos, Direction direction) {
+	public static void playSound(World world, BlockPos pos) {
 		world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0F, 1.0F);
 	}
 
