@@ -41,9 +41,13 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+		BlockState newState = super.getStateForPlacement(ctx);
+		if (newState == null)
+			return null;
+
 		World world = ctx.getWorld();
 		BlockPos pos = ctx.getPos();
-		return tryConvert(world, pos, super.getStateForPlacement(ctx), world.getBlockState(pos.offset(Direction.DOWN)));
+		return tryConvert(world, pos, newState, world.getBlockState(pos.offset(Direction.DOWN)));
 	}
 
 	@Override
