@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.event.GatherContextEvent;

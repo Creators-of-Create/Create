@@ -1,28 +1,23 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE_3D;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL13.glDisable;
-import static org.lwjgl.opengl.GL13.glEnable;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.util.List;
 import java.util.Random;
 
-import com.jozufozu.flywheel.event.GatherContextEvent;
-
-import net.minecraftforge.api.distmarker.Dist;
-
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
+import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -61,13 +56,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import org.lwjgl.opengl.GL20;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(Dist.CLIENT)

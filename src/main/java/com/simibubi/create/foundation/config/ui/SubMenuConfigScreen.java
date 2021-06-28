@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.config.ui;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;

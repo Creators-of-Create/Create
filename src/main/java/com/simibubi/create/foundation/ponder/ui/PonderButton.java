@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.ui;
 
-import java.awt.*;
+import java.awt.Color;
 
 import javax.annotation.Nonnull;
 

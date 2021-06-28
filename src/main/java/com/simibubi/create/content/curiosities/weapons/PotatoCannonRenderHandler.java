@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {

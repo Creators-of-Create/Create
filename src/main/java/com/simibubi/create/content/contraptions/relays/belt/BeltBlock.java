@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -17,6 +15,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;

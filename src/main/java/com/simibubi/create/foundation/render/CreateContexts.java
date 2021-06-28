@@ -14,8 +14,6 @@ import com.simibubi.create.foundation.render.effects.EffectsContext;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
 public class CreateContexts {

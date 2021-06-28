@@ -9,10 +9,6 @@ import java.util.Vector;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import com.simibubi.create.content.curiosities.bell.CursedBellBlock;
-
-import net.minecraft.block.BellBlock;
-
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -36,6 +32,7 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;

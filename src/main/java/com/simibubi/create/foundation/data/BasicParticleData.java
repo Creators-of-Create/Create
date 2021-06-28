@@ -8,7 +8,6 @@ import com.simibubi.create.content.contraptions.particle.ICustomParticleDataWith
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.world.ClientWorld;
@@ -18,8 +17,6 @@ import net.minecraft.particles.ParticleType;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import java.util.Map;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
