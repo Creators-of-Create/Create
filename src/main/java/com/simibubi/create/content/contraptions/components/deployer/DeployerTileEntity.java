@@ -4,6 +4,7 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -12,6 +13,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe.SandPaperInv;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -448,8 +450,14 @@ public class DeployerTileEntity extends KineticTileEntity {
 			return AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, world)
 				.orElse(null);
 		}
-		recipeInv.setInventorySlotContents(0, heldItemMainhand);
-		recipeInv.setInventorySlotContents(1, stack);
+		recipeInv.setInventorySlotContents(0, stack);
+		recipeInv.setInventorySlotContents(1, heldItemMainhand);
+
+		Optional<DeployerApplicationRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(world, recipeInv,
+			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class);
+		if (assemblyRecipe.isPresent())
+			return assemblyRecipe.get();
+
 		return AllRecipeTypes.DEPLOYING.find(recipeInv, world)
 			.orElse(null);
 	}

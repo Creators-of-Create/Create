@@ -197,6 +197,19 @@ public class AllSoundEvents {
 		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
 			.playExisting(SoundEvents.ENTITY_GENERIC_EAT, .5f, 1f)
 			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		PECULIAR_BELL_USE = create("peculiar_bell_use").subtitle("Peculiar Bell tolls")
+			.playExisting(SoundEvents.BLOCK_BELL_USE)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		CURSED_BELL_CONVERT = create("cursed_bell_convert").subtitle("Cursed Bell awakens")
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		CURSED_BELL_USE = create("cursed_bell_use").subtitle("Cursed Bell tolls")
+			.category(SoundCategory.BLOCKS)
 			.build();
 
 	public static SoundEntryBuilder create(String id) {

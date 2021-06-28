@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesModel;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyItem;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
@@ -79,8 +80,13 @@ public class AllItems {
 		CINDER_FLOUR = ingredient("cinder_flour"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
 		ROSE_QUARTZ = ingredient("rose_quartz"), POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"),
 		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
-		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube"),
-		INTEGRATED_CIRCUIT = ingredient("integrated_circuit");
+		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_CLOCKWORK_COMPONENT =
+		REGISTRATE.item("incomplete_clockwork_component", SequencedAssemblyItem::new)
+			.register();
+
+	public static final ItemEntry<Item> CLOCKWORK_COMPONENT = ingredient("clockwork_component");
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -152,7 +158,6 @@ public class AllItems {
 		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),
 		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag, ItemTags.PIGLIN_LOVED),
-		LAPIS_SHEET = taggedIngredient("lapis_sheet", forgeItemTag("plates/lapis_lazuli"), PLATES.tag),
 
 		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
 		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag, ItemTags.PIGLIN_LOVED),
@@ -219,6 +224,24 @@ public class AllItems {
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
+	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
+		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)
+			.register();
+
+	public static final ItemEntry<MinecartContraptionItem> FURNACE_MINECART_CONTRAPTION =
+		REGISTRATE.item("furnace_minecart_contraption", MinecartContraptionItem::furnace)
+			.register();
+
+	public static final ItemEntry<MinecartContraptionItem> CHEST_MINECART_CONTRAPTION =
+		REGISTRATE.item("chest_minecart_contraption", MinecartContraptionItem::chest)
+			.register();
+
+	// Curiosities
+
+	static {
+		REGISTRATE.startSection(CURIOSITIES);
+	}
+
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
 		.model(AssetLookup.itemModelWithPartials())
@@ -251,39 +274,6 @@ public class AllItems {
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
-	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
-		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)
-			.register();
-
-	public static final ItemEntry<MinecartContraptionItem> FURNACE_MINECART_CONTRAPTION =
-		REGISTRATE.item("furnace_minecart_contraption", MinecartContraptionItem::furnace)
-			.register();
-
-	public static final ItemEntry<MinecartContraptionItem> CHEST_MINECART_CONTRAPTION =
-		REGISTRATE.item("chest_minecart_contraption", MinecartContraptionItem::chest)
-			.register();
-
-	// Logistics
-
-	static {
-		REGISTRATE.startSection(LOGISTICS);
-	}
-
-	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
-		.model(AssetLookup.existingItemModel())
-		.register();
-
-	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
-		REGISTRATE.item("attribute_filter", FilterItem::attribute)
-			.model(AssetLookup.existingItemModel())
-			.register();
-
-	// Curiosities
-
-	static {
-		REGISTRATE.startSection(CURIOSITIES);
-	}
-
 	public static final ItemEntry<? extends CopperArmorItem>
 
 	COPPER_BACKTANK =
@@ -300,6 +290,21 @@ public class AllItems {
 
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
+			.register();
+
+	// Logistics
+
+	static {
+		REGISTRATE.startSection(LOGISTICS);
+	}
+
+	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
+		.model(AssetLookup.existingItemModel())
+		.register();
+
+	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
+		REGISTRATE.item("attribute_filter", FilterItem::attribute)
+			.model(AssetLookup.existingItemModel())
 			.register();
 
 	// Schematics
@@ -328,7 +333,6 @@ public class AllItems {
 			.register();
 	}
 
-	@SuppressWarnings("unused")
 	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
 		return REGISTRATE.item(name, HiddenIngredientItem::new)
 			.register();

@@ -1,5 +1,10 @@
 package com.simibubi.create.foundation.utility.worldWrappers.chunk;
 
+import java.util.List;
+import java.util.function.Predicate;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -11,11 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraft.world.server.ChunkHolder;
-
-import javax.annotation.Nullable;
-
-import java.util.List;
-import java.util.function.Predicate;
 
 public class EmptierChunk extends Chunk {
 

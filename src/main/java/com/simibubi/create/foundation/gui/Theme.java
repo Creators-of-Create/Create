@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 

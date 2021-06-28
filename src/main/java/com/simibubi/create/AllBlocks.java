@@ -13,6 +13,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
@@ -115,6 +116,7 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.CursedBellBlock;
+import com.simibubi.create.content.curiosities.bell.CursedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -1304,18 +1306,14 @@ public class AllBlocks {
 
 	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
 		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.tag(AllBlockTags.BRITTLE.tag)
-			.item()
-			.build()
+			.transform(BuilderTransformers.bell())
+			.onRegister(addMovementBehaviour(new BellMovementBehaviour()))
 			.register();
 
 	public static final BlockEntry<CursedBellBlock> CURSED_BELL =
 		REGISTRATE.block("cursed_bell", CursedBellBlock::new)
-			.initialProperties(() -> PECULIAR_BELL.get())
-			.tag(AllBlockTags.BRITTLE.tag)
-			.item()
-			.build()
+			.transform(BuilderTransformers.bell())
+			.onRegister(addMovementBehaviour(new CursedBellMovementBehaviour()))
 			.register();
 
 	// Materials

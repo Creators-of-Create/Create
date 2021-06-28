@@ -49,7 +49,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 			int xOffset = (outputIndex % 3) * 19;
 			int yOffset = (outputIndex / 3) * -19;
 
-			itemStacks.init(outputIndex + 1, false, single ? 126 : 121 + xOffset, 47 + yOffset + (excessive ? 8 : 0));
+			itemStacks.init(outputIndex + 1, false, single ? 126 : 126 + xOffset, 47 + yOffset + (excessive ? 8 : 0));
 			itemStacks.set(outputIndex + 1, results.get(outputIndex)
 					.getStack());
 		}
@@ -63,8 +63,8 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 				.size();
 
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 12, 47);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 39, 29);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 54, 39);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 47 + 4, 29);
+		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 66 + 4, 39);
 		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 42, 51);
 
 		if (size == 1) {
@@ -75,13 +75,13 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 3) * 19;
 			int yOffset = (i / 3) * -19 + (size > 9 ? 8 : 0);
-			getRenderedSlot(recipe, i).draw(matrixStack, 121 + xOffset, 47 + yOffset);
+			getRenderedSlot(recipe, i).draw(matrixStack, 126 + xOffset, 47 + yOffset);
 		}
 	}
 	
 	@Override
 	protected void translateFan(MatrixStack ms) {
-		ms.translate(43, 33, 0);
+		ms.translate(56 + 4, 33, 0);
 	}
 
 	@Override

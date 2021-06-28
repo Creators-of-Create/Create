@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
@@ -325,6 +326,11 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	private static final RecipeWrapper pressingInv = new RecipeWrapper(new ItemStackHandler(1));
 
 	public Optional<PressingRecipe> getRecipe(ItemStack item) {
+		Optional<PressingRecipe> assemblyRecipe =
+			SequencedAssemblyRecipe.getRecipe(world, item, AllRecipeTypes.PRESSING.getType(), PressingRecipe.class);
+		if (assemblyRecipe.isPresent())
+			return assemblyRecipe;
+
 		pressingInv.setInventorySlotContents(0, item);
 		return AllRecipeTypes.PRESSING.find(pressingInv, world);
 	}

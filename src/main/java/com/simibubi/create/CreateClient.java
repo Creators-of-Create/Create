@@ -10,6 +10,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
@@ -67,6 +68,7 @@ public class CreateClient {
 
 	public static final ZapperRenderHandler ZAPPER_RENDER_HANDLER = new ZapperRenderHandler();
 	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();
+	public static final SoulPulseEffectHandler SOUL_PULSE_EFFECT_HANDLER = new SoulPulseEffectHandler();
 
 	private static CustomBlockModels customBlockModels;
 	private static CustomItemModels customItemModels;
@@ -83,7 +85,7 @@ public class CreateClient {
 		modEventBus.addListener(CreateContexts::flwInit);
 		modEventBus.addListener(AllMaterialSpecs::flwInit);
 		modEventBus.addListener(ContraptionRenderDispatcher::invalidateOnGatherContext);
-		
+
 		ZAPPER_RENDER_HANDLER.register(forgeEventBus);
 		POTATO_CANNON_RENDER_HANDLER.register(forgeEventBus);
 	}

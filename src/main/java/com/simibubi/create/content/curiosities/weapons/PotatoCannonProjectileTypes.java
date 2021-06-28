@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,11 +23,18 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.living.EntityTeleportEvent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileTypes {
@@ -86,7 +94,15 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.25f)
 			.renderTumbling()
 			.onEntityHit(potion(Effects.POISON, 4))
-			.registerAndAssign(Items.POISONOUS_POTATO)
+			.registerAndAssign(Items.POISONOUS_POTATO),
+
+		CHORUS_FRUIT = create("chorus_fruit").damage(2)
+			.reloadTicks(15)
+			.velocity(1.20f)
+			.knockback(0.05f)
+			.renderTumbling()
+			.onEntityHit(chorusTeleport(20))
+			.registerAndAssign(Items.CHORUS_FRUIT)
 
 	;
 
@@ -172,7 +188,7 @@ public class PotatoCannonProjectileTypes {
 		return ray -> {
 			Entity entity = ray.getEntity();
 			if (entity instanceof LivingEntity)
-				((LivingEntity) entity).addPotionEffect(new EffectInstance(Effects.POISON, 80));
+				((LivingEntity) entity).addPotionEffect(new EffectInstance(effect, seconds));
 		};
 	}
 
@@ -195,10 +211,46 @@ public class PotatoCannonProjectileTypes {
 		};
 	}
 
+	private static Consumer<EntityRayTraceResult> chorusTeleport(double teleportDiameter) {
+		return ray -> {
+			Entity entity = ray.getEntity();
+			World world = entity.getEntityWorld();
+			if (world.isRemote)
+				return;
+			if (!(entity instanceof LivingEntity))
+				return;
+			LivingEntity livingEntity = (LivingEntity) entity;
+
+			double entityX = livingEntity.getX();
+			double entityY = livingEntity.getY();
+			double entityZ = livingEntity.getZ();
+
+			for (int teleportTry = 0; teleportTry < 16; ++teleportTry) {
+				double teleportX = entityX + (livingEntity.getRNG().nextDouble() - 0.5D) * teleportDiameter;
+				double teleportY = MathHelper.clamp(entityY + (livingEntity.getRNG().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getDimensionHeight() - 1);
+				double teleportZ = entityZ + (livingEntity.getRNG().nextDouble() - 0.5D) * teleportDiameter;
+
+				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
+				if (event.isCanceled())
+					return;
+
+				if (livingEntity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
+					if (livingEntity.isPassenger())
+						livingEntity.stopRiding();
+
+					SoundEvent soundevent = livingEntity instanceof FoxEntity ? SoundEvents.ENTITY_FOX_TELEPORT : SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
+					world.playSound(null, entityX, entityY, entityZ, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
+					livingEntity.playSound(soundevent, 1.0F, 1.0F);
+					break;
+				}
+			}
+		};
+	}
+
 	public static class Builder {
 
-		ResourceLocation loc;
-		PotatoCannonProjectileTypes result;
+		protected ResourceLocation loc;
+		protected PotatoCannonProjectileTypes result;
 
 		public Builder(ResourceLocation loc) {
 			this.result = new PotatoCannonProjectileTypes();

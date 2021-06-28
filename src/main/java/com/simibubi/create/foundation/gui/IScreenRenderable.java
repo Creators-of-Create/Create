@@ -10,12 +10,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface IScreenRenderable {
 
+	Screen EMPTY_SCREEN = new Screen(new StringTextComponent("")) {};
+
 	@OnlyIn(Dist.CLIENT)
 	void draw(MatrixStack ms, AbstractGui screen, int x, int y);
 
 	@OnlyIn(Dist.CLIENT)
 	default void draw(MatrixStack ms, int x, int y) {
-		draw(ms, new Screen(new StringTextComponent("")) {
-		}, x, y);
+		draw(ms, EMPTY_SCREEN, x, y);
 	}
+
 }

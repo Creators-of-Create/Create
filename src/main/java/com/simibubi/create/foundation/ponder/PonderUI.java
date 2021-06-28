@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder;
 
 import static com.simibubi.create.foundation.ponder.PonderLocalization.LANG_PREFIX;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

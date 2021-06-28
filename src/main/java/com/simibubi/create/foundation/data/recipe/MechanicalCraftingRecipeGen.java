@@ -29,15 +29,6 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			.patternLine("AAPAA")
 			.patternLine(" AAA ")),
 
-		INTEGRATED_CIRCUIT = create(AllItems.INTEGRATED_CIRCUIT::get).returns(1)
-			.recipe(b -> b.key('L', AllItems.LAPIS_SHEET.get())
-				.key('R', Ingredient.fromTag(I.redstone()))
-				.key('Q', AllItems.POLISHED_ROSE_QUARTZ.get())
-				.key('C', Ingredient.fromTag(Tags.Items.NUGGETS_GOLD))
-				.patternLine("  L  ")
-				.patternLine("RRQRR")
-				.patternLine(" CCC ")),
-
 		EXTENDO_GRIP = create(AllItems.EXTENDO_GRIP::get).returns(1)
 			.recipe(b -> b.key('L', Ingredient.fromTag(I.brass()))
 				.key('R', I.cog())

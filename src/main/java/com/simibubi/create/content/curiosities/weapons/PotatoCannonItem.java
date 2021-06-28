@@ -41,8 +41,6 @@ public class PotatoCannonItem extends ShootableItem {
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
-	public static int PREV_SHOT = 0;// remove this
-
 	public PotatoCannonItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
 	}
@@ -230,12 +228,6 @@ public class PotatoCannonItem extends ShootableItem {
 	@Override
 	public int getRange() {
 		return 15;
-	}
-
-	// FIXME Temporary; use zappers way of animating
-	public static void clientTick() {
-		if (PREV_SHOT > 0)
-			PREV_SHOT--;
 	}
 
 }

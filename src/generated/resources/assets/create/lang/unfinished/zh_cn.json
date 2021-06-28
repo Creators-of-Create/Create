@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 222",
+	"_": "Missing Localizations: 246",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "粉碎轮",
 	"block.create.crushing_wheel_controller": "粉碎轮控制器",
 	"block.create.cuckoo_clock": "布谷鸟闹钟",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "青色风帆",
 	"block.create.cyan_seat": "青色坐垫",
 	"block.create.cyan_valve_handle": "青色阀门手轮",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "风化石灰岩铺路石台阶",
 	"block.create.paved_weathered_limestone_stairs": "风化石灰岩铺路石楼梯",
 	"block.create.paved_weathered_limestone_wall": "风化石灰岩铺路石墙",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "粉红色风帆",
 	"block.create.pink_seat": "粉红色坐垫",
 	"block.create.pink_valve_handle": "粉红色阀门手轮",
@@ -441,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "巧克力包层浆果",
 	"item.create.chromatic_compound": "异彩化合物",
 	"item.create.cinder_flour": "下界面粉",
+	"item.create.clockwork_component": "UNLOCALIZED: Clockwork Component",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "铜锭",
 	"item.create.copper_nugget": "铜粒",
@@ -475,9 +478,8 @@
 	"item.create.handheld_worldshaper": "手持式环境塑形器",
 	"item.create.honey_bucket": "蜂蜜桶",
 	"item.create.honeyed_apple": "蜜渍苹果",
-	"item.create.integrated_circuit": "集成电路板",
+	"item.create.incomplete_clockwork_component": "UNLOCALIZED: Incomplete Clockwork Component",
 	"item.create.iron_sheet": "铁板",
-	"item.create.lapis_sheet": "青金石板",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "装配过的矿车",
 	"item.create.minecart_coupling": "矿车连轴器",
@@ -711,6 +713,16 @@
 	"create.recipe.mystery_conversion": "神秘转化",
 	"create.recipe.spout_filling": "注液",
 	"create.recipe.draining": "分液",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.step": "UNLOCALIZED: Step %1$s:",
+	"create.recipe.assembly.progress": "UNLOCALIZED: Progress: %1$s/%2$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
+	"create.recipe.assembly.repeat": "UNLOCALIZED: Repeat Sequence %1$s Times",
+	"create.recipe.assembly.junk": "UNLOCALIZED: Random junk",
 	"create.recipe.processing.chance": "%1$s%%概率",
 	"create.recipe.heat_requirement.none": "无需加热",
 	"create.recipe.heat_requirement.heated": "加热",
@@ -1168,6 +1180,7 @@
 
 	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
+	"create.subtitle.peculiar_bell_use": "UNLOCALIZED: Peculiar Bell tolls",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
@@ -1192,6 +1205,8 @@
 	"create.subtitle.controller_click": "UNLOCALIZED: Controller clicks",
 	"create.subtitle.schematicannon_launch_block": "蓝图加农炮：发射",
 	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
+	"create.subtitle.cursed_bell_use": "UNLOCALIZED: Cursed Bell tolls",
+	"create.subtitle.cursed_bell_convert": "UNLOCALIZED: Cursed Bell awakens",
 	"create.subtitle.mechanical_press_activation": "辊压机：工作中",
 	"create.subtitle.contraption_assemble": "UNLOCALIZED: Contraption moves",
 	"create.subtitle.crafter_click": "UNLOCALIZED: Crafter clicks",
@@ -1388,7 +1403,7 @@
 	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
 
 	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
-	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
 	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 
@@ -1402,7 +1417,7 @@
 	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
 	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
 	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
-	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Wielder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
 	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
 	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
@@ -1415,6 +1430,14 @@
 	"item.create.minecart_coupling.tooltip.summary": "将多个_矿车_或运输结构链接在一起，构成雄伟的火车。",
 	"item.create.minecart_coupling.tooltip.condition1": "作用与矿车时",
 	"item.create.minecart_coupling.tooltip.behaviour1": "将两个矿车耦合在一起，在移动时将它们保持_恒定的距离_。",
+
+	"block.create.peculiar_bell.tooltip": "UNLOCALIZED: PECULIAR BELL",
+	"block.create.peculiar_bell.tooltip.summary": "UNLOCALIZED: A decorative brass bell. Placing it above a _Soul Fire_ or _Soul Campfire_ may cause a spooky transformation to occur...",
+
+	"block.create.cursed_bell.tooltip": "UNLOCALIZED: CURSED BELL",
+	"block.create.cursed_bell.tooltip.summary": "UNLOCALIZED: A spooky brass bell haunted by lost souls of the Nether.",
+	"block.create.cursed_bell.tooltip.condition1": "UNLOCALIZED: When Held or Rang",
+	"block.create.cursed_bell.tooltip.behaviour1": "UNLOCALIZED: Highlights nearby dark spots on which Hostile Mobs could spawn.",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1583,6 +1606,7 @@
 	"create.ponder.cart_assembler_modes.header": "矿车装置的方向设定",
 	"create.ponder.cart_assembler_modes.text_1": "矿车装置会随着矿车的运动而发生转向",
 	"create.ponder.cart_assembler_modes.text_2": "如果装配结构的方向锁定了，那么结构的方向将不再改变",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "另外几种矿车以及铁轨",
 	"create.ponder.cart_assembler_rails.text_1": "放置在普通轨道上的矿车装配站并不会影响路过矿车装置的运动",

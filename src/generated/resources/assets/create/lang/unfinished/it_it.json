@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 839",
+	"_": "Missing Localizations: 863",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -73,6 +73,7 @@
 	"block.create.crushing_wheel": "Ruota di frantumazione",
 	"block.create.crushing_wheel_controller": "Telecomando per ruota di frantumazione",
 	"block.create.cuckoo_clock": "Orologio a cucù",
+	"block.create.cursed_bell": "UNLOCALIZED: Cursed Bell",
 	"block.create.cyan_sail": "Vela ciano",
 	"block.create.cyan_seat": "Sedile ciano",
 	"block.create.cyan_valve_handle": "Maniglia per valvola ciano",
@@ -308,6 +309,7 @@
 	"block.create.paved_weathered_limestone_slab": "Lastra di calcare consumato lastricato",
 	"block.create.paved_weathered_limestone_stairs": "Scalini di calcare consumato lastricato",
 	"block.create.paved_weathered_limestone_wall": "Muretto di calcare consumato lastricato",
+	"block.create.peculiar_bell": "UNLOCALIZED: Peculiar Bell",
 	"block.create.pink_sail": "Vela rosa",
 	"block.create.pink_seat": "Sedile rosa",
 	"block.create.pink_valve_handle": "Maniglia per valvola rosa",
@@ -441,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Composto cromatico",
 	"item.create.cinder_flour": "Cenere farinosa",
+	"item.create.clockwork_component": "UNLOCALIZED: Clockwork Component",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Lingotto di rame",
 	"item.create.copper_nugget": "Pepita di rame",
@@ -475,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Plasmatore del mondo portatile",
 	"item.create.honey_bucket": "Secchio di miele",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
-	"item.create.integrated_circuit": "Circuito integrato",
+	"item.create.incomplete_clockwork_component": "UNLOCALIZED: Incomplete Clockwork Component",
 	"item.create.iron_sheet": "Lamiera di ferro",
-	"item.create.lapis_sheet": "Lamiera di lapislazzuli",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Contrazione per carrello da miniera",
 	"item.create.minecart_coupling": "Aggancio per carrelli da miniera",
@@ -711,6 +713,16 @@
 	"create.recipe.mystery_conversion": "Metamorfosi cromatica",
 	"create.recipe.spout_filling": "Riempimento da spruzzo",
 	"create.recipe.draining": "Drenaggio di oggetti",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.step": "UNLOCALIZED: Step %1$s:",
+	"create.recipe.assembly.progress": "UNLOCALIZED: Progress: %1$s/%2$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
+	"create.recipe.assembly.repeat": "UNLOCALIZED: Repeat Sequence %1$s Times",
+	"create.recipe.assembly.junk": "UNLOCALIZED: Random junk",
 	"create.recipe.processing.chance": "%1$s%% di probabilità",
 	"create.recipe.heat_requirement.none": "Nessun riscaldamento",
 	"create.recipe.heat_requirement.heated": "Riscaldamento",
@@ -1168,6 +1180,7 @@
 
 	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
+	"create.subtitle.peculiar_bell_use": "UNLOCALIZED: Peculiar Bell tolls",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
@@ -1192,6 +1205,8 @@
 	"create.subtitle.controller_click": "UNLOCALIZED: Controller clicks",
 	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",
 	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
+	"create.subtitle.cursed_bell_use": "UNLOCALIZED: Cursed Bell tolls",
+	"create.subtitle.cursed_bell_convert": "UNLOCALIZED: Cursed Bell awakens",
 	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",
 	"create.subtitle.contraption_assemble": "UNLOCALIZED: Contraption moves",
 	"create.subtitle.crafter_click": "UNLOCALIZED: Crafter clicks",
@@ -1388,7 +1403,7 @@
 	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
 
 	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
-	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
 	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 
@@ -1402,7 +1417,7 @@
 	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
 	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
 	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
-	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Wielder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
 	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
 	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
@@ -1415,6 +1430,14 @@
 	"item.create.minecart_coupling.tooltip.summary": "_Concatena_ i _carrelli da miniera_ le _macchine su carrello_ insieme per formare un treno maestoso.",
 	"item.create.minecart_coupling.tooltip.condition1": "Quando usato su un carrello da miniera",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Concatena_ due carrelli insieme, provando a tenerli uniti a una _distanza costante_ mentre si muovono.",
+
+	"block.create.peculiar_bell.tooltip": "UNLOCALIZED: PECULIAR BELL",
+	"block.create.peculiar_bell.tooltip.summary": "UNLOCALIZED: A decorative brass bell. Placing it above a _Soul Fire_ or _Soul Campfire_ may cause a spooky transformation to occur...",
+
+	"block.create.cursed_bell.tooltip": "UNLOCALIZED: CURSED BELL",
+	"block.create.cursed_bell.tooltip.summary": "UNLOCALIZED: A spooky brass bell haunted by lost souls of the Nether.",
+	"block.create.cursed_bell.tooltip.condition1": "UNLOCALIZED: When Held or Rang",
+	"block.create.cursed_bell.tooltip.behaviour1": "UNLOCALIZED: Highlights nearby dark spots on which Hostile Mobs could spawn.",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",
@@ -1582,7 +1605,8 @@
 
 	"create.ponder.cart_assembler_modes.header": "UNLOCALIZED: Orientation Settings for Minecart Contraptions",
 	"create.ponder.cart_assembler_modes.text_1": "UNLOCALIZED: Cart Contraptions will rotate to face towards their carts' motion",
-	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
+	"create.ponder.cart_assembler_modes.text_2": "UNLOCALIZED: This Arrow indicates which side of the Structure will be considered the front",
+	"create.ponder.cart_assembler_modes.text_3": "UNLOCALIZED: If the Assembler is set to Lock Rotation, the contraptions' orientation will never change",
 
 	"create.ponder.cart_assembler_rails.header": "UNLOCALIZED: Other types of Minecarts and Rails",
 	"create.ponder.cart_assembler_rails.text_1": "UNLOCALIZED: Cart Assemblers on Regular Tracks will not affect the passing carts' motion",

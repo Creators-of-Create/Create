@@ -1,9 +1,9 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import com.jozufozu.flywheel.core.PartialModel;
+import com.simibubi.create.AllBlockPartials;
+
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 public class PeculiarBellTileEntity extends AbstractBellTileEntity {
 
@@ -12,8 +12,8 @@ public class PeculiarBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	public boolean ring(World world, BlockPos pos, Direction direction) {
-		return true;
+	public PartialModel getBellModel() {
+		return AllBlockPartials.PECULIAR_BELL;
 	}
 
 }

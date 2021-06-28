@@ -110,6 +110,18 @@
       }
     ]
   },
+  "cursed_bell_convert": {
+    "sounds": [
+      "create:cursed_bell_convert"
+    ],
+    "subtitle": "create.subtitle.cursed_bell_convert"
+  },
+  "cursed_bell_use": {
+    "sounds": [
+      "create:cursed_bell_use"
+    ],
+    "subtitle": "create.subtitle.cursed_bell_use"
+  },
   "deny": {
     "sounds": [
       {
@@ -219,6 +231,15 @@
         "type": "event"
       }
     ]
+  },
+  "peculiar_bell_use": {
+    "sounds": [
+      {
+        "name": "minecraft:block.bell.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.peculiar_bell_use"
   },
   "potato_hit": {
     "sounds": [

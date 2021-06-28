@@ -29,9 +29,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-
 import com.simibubi.create.foundation.config.AllConfigs;
-
 import com.simibubi.create.foundation.config.CKinetics;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
