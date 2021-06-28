@@ -38,7 +38,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 		Block block = context.state.getBlock();
 
 		if (block instanceof AbstractBellBlock) {
-			((AbstractBellBlock) block).playSound(world, pos);
+			((AbstractBellBlock<?>) block).playSound(world, pos);
 		} else {
 			// Vanilla bell sound
 			world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE,

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.data;
+package com.simibubi.create.content.curiosities.bell;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract  class BasicParticleData<T extends Particle> implements IParticleData, ICustomParticleDataWithSprite<BasicParticleData<T>> {
+public abstract class BasicParticleData<T extends Particle> implements IParticleData, ICustomParticleDataWithSprite<BasicParticleData<T>> {
 
 	public BasicParticleData() { }
 
@@ -32,6 +32,7 @@ public abstract  class BasicParticleData<T extends Particle> implements IParticl
 			public BasicParticleData<T> deserialize(ParticleType<BasicParticleData<T>> arg0, StringReader reader) {
 				return data;
 			}
+
 			@Override
 			public BasicParticleData<T> read(ParticleType<BasicParticleData<T>> type, PacketBuffer buffer) {
 				return data;

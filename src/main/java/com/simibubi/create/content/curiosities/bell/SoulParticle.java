@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.simibubi.create.AllParticleTypes;
-import com.simibubi.create.foundation.data.BasicParticleData;
 
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.renderer.ActiveRenderInfo;

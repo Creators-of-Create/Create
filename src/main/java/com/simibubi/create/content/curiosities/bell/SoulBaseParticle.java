@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.simibubi.create.AllParticleTypes;
-import com.simibubi.create.foundation.data.BasicParticleData;
 
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -19,9 +18,9 @@ public class SoulBaseParticle extends CustomRotationParticle {
 		super(worldIn, x, y, z, spriteSet, 0);
 		this.animatedSprite = spriteSet;
 		this.particleScale = 0.5f;
-		this.setSize(this.particleScale,this.particleScale);
+		this.setSize(this.particleScale, this.particleScale);
 		this.loopLength = 16 + (int) (this.rand.nextFloat() * 2f - 1f);
-		this.maxAge = (int)(90.0F / (this.rand.nextFloat() * 0.36F + 0.64F));
+		this.maxAge = (int) (90.0F / (this.rand.nextFloat() * 0.36F + 0.64F));
 		this.selectSpriteLoopingWithAge(animatedSprite);
 		this.field_21507 = true; // disable movement
 	}
@@ -45,6 +44,7 @@ public class SoulBaseParticle extends CustomRotationParticle {
 		public IBasicParticleFactory<SoulBaseParticle> getBasicFactory() {
 			return SoulBaseParticle::new;
 		}
+
 		@Override
 		public ParticleType<?> getType() {
 			return AllParticleTypes.SOUL_BASE.get();

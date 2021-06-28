@@ -33,7 +33,7 @@ public class CursedBellTileEntity extends AbstractBellTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) { }
 
 	@Override
-	public PartialModel getBellPartial() {
+	public PartialModel getBellModel() {
 		return AllBlockPartials.CURSED_BELL;
 	}
 
@@ -46,7 +46,7 @@ public class CursedBellTileEntity extends AbstractBellTileEntity {
 			return false;
 
 		if (!world.isRemote)
-			SoulPulseEffectHandler.sendPulsePacket(world, pos, DISTANCE, true);
+			CursedBellPulser.sendPulse(world, pos, DISTANCE, true);
 
 		startEffect();
 
@@ -82,17 +82,24 @@ public class CursedBellTileEntity extends AbstractBellTileEntity {
 			return;
 
 		Random rand = world.getRandom();
-		if (rand.nextFloat() > 1/4f)
+		if (rand.nextFloat() > 0.25f)
 			return;
 
+		spawnParticle(rand);
+		playSound(rand);
+	}
+
+	protected void spawnParticle(Random rand) {
 		double x = pos.getX() + rand.nextDouble();
 		double y = pos.getY() + 0.5;
 		double z = pos.getZ() + rand.nextDouble();
-		double vx = rand.nextDouble()*0.04 - 0.02;
+		double vx = rand.nextDouble() * 0.04 - 0.02;
 		double vy = 0.1;
-		double vz = rand.nextDouble()*0.04 - 0.02;
-		this.world.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
+		double vz = rand.nextDouble() * 0.04 - 0.02;
+		world.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
+	}
 
+	protected void playSound(Random rand) {
 		float vol = rand.nextFloat() * 0.4F + rand.nextFloat() > 0.9F ? 0.6F : 0.0F;
 		float pitch = 0.6F + rand.nextFloat() * 0.4F;
 		world.playSound(null, pos, SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.BLOCKS, vol, pitch);

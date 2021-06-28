@@ -3,7 +3,7 @@
 	"textures": {
 		"1": "create:block/bell_frame_side",
 		"2": "create:block/bell_frame",
-    "particle": "create:block/bell"
+		"particle": "create:block/bell"
 	},
 	"elements": [
 		{

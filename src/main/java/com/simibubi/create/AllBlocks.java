@@ -1306,26 +1306,14 @@ public class AllBlocks {
 
 	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
 		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
-			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.nonOpaque()
-				.sound(SoundType.ANVIL))
-			.addLayer(() -> RenderType::getCutoutMipped)
-			.tag(AllBlockTags.BRITTLE.tag)
+			.transform(BuilderTransformers.bell())
 			.onRegister(addMovementBehaviour(new BellMovementBehaviour()))
-			.blockstate(BlockStateGen.bell())
-			.item()
-			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<CursedBellBlock> CURSED_BELL =
 		REGISTRATE.block("cursed_bell", CursedBellBlock::new)
-			.initialProperties(() -> PECULIAR_BELL.get())
-			.addLayer(() -> RenderType::getCutoutMipped)
-			.tag(AllBlockTags.BRITTLE.tag)
+			.transform(BuilderTransformers.bell())
 			.onRegister(addMovementBehaviour(new CursedBellMovementBehaviour()))
-			.blockstate(BlockStateGen.bell())
-			.item()
-			.transform(customItemModel())
 			.register();
 
 	// Materials

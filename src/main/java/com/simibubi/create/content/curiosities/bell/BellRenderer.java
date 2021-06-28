@@ -29,7 +29,7 @@ public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEnt
 		Direction facing = state.get(BellBlock.field_220133_a);
 		BellAttachment attachment = state.get(BellBlock.field_220134_b);
 
-		SuperByteBuffer bell = PartialBufferer.get(te.getBellPartial(), state);
+		SuperByteBuffer bell = PartialBufferer.get(te.getBellModel(), state);
 
 		if (te.isRinging)
 			bell.rotateCentered(te.ringDirection.rotateYCCW(), getSwingAngle(te.ringingTicks + partialTicks));
@@ -37,7 +37,7 @@ public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEnt
 		float rY = AngleHelper.horizontalAngle(facing);
 		if (attachment == BellAttachment.SINGLE_WALL || attachment == BellAttachment.DOUBLE_WALL)
 			rY += 90;
-		bell.rotateCentered(Direction.UP, (float) (rY / 180 * Math.PI));
+		bell.rotateCentered(Direction.UP, AngleHelper.rad(rY));
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutout());
 		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), state, te.getPos());
@@ -46,7 +46,7 @@ public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEnt
 
 	public static float getSwingAngle(float time) {
 		float t = time / 1.5f;
-		return 1.2f * MathHelper.sin(t / (float)Math.PI) / (2.5f + t / 3.0f);
+		return 1.2f * MathHelper.sin(t / (float) Math.PI) / (2.5f + t / 3.0f);
 	}
 
 }

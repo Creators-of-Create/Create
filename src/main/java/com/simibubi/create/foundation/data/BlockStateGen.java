@@ -32,7 +32,6 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.BooleanProperty;
@@ -461,12 +460,6 @@ public class BlockStateGen {
 				putPart(coreModels, builder, axis, NONE, false, false, false, false);
 			}
 		};
-	}
-
-	public static <B extends BellBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> bell() {
-		return (c, p) -> p.horizontalBlock(c.getEntry(), state ->
-			AssetLookup.partialBaseModel(c, p, state.get(BlockStateProperties.BELL_ATTACHMENT).getString())
-		);
 	}
 
 	private static void putPart(Map<Pair<String, Axis>, ModelFile> coreModels, MultiPartBlockStateBuilder builder,

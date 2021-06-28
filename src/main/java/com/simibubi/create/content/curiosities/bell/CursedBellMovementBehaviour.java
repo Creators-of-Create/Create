@@ -1,12 +1,11 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
 import net.minecraft.util.math.BlockPos;
 
-public class CursedBellMovementBehaviour extends MovementBehaviour {
+public class CursedBellMovementBehaviour extends BellMovementBehaviour {
 
 	public static final int DISTANCE = 3;
 
@@ -20,9 +19,9 @@ public class CursedBellMovementBehaviour extends MovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		if (!context.world.isRemote && getRecharge(context) == 0) {
-			SoulPulseEffectHandler.sendPulsePacket(context.world, pos, DISTANCE, true);
+			CursedBellPulser.sendPulse(context.world, pos, DISTANCE, true);
 			setRecharge(context, CursedBellTileEntity.RECHARGE_TICKS);
-			BellMovementBehaviour.playSound(context);
+			playSound(context);
 		}
 	}
 

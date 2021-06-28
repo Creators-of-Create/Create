@@ -47,6 +47,6 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 		}
 	}
 
-	public abstract PartialModel getBellPartial();
+	public abstract PartialModel getBellModel();
 
 }

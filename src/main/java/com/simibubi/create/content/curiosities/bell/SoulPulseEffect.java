@@ -38,7 +38,9 @@ public class SoulPulseEffect {
 		return ticks <= -WAITING_TICKS;
 	}
 
-	public boolean canOverlap() { return added == null; }
+	public boolean canOverlap() {
+		return added == null;
+	}
 
 	public List<BlockPos> tick(World world) {
 		if (finished())
@@ -69,7 +71,7 @@ public class SoulPulseEffect {
 				.collect(Collectors.toList());
 	}
 
-	public static boolean canSpawnSoulAt(World world, BlockPos at) {
+	public boolean canSpawnSoulAt(World world, BlockPos at) {
 		EntityType<?> dummy = EntityType.ZOMBIE;
 		double dummyWidth = 0.2, dummyHeight = 0.75;
 		double w2 = dummyWidth / 2;
@@ -84,7 +86,7 @@ public class SoulPulseEffect {
 			), (a,b) -> true).allMatch(VoxelShape::isEmpty);
 	}
 
-	public static void spawnParticles(World world, BlockPos at) {
+	public void spawnParticles(World world, BlockPos at) {
 		if (world == null || !world.isRemote)
 			return;
 
@@ -101,10 +103,9 @@ public class SoulPulseEffect {
 		for (int x = 0; x < MAX_DISTANCE; x++) {
 			for (int y = 0; y < MAX_DISTANCE; y++) {
 				for (int z = 0; z < MAX_DISTANCE; z++) {
-					BlockPos candidate = new BlockPos(x,y,z);
+					BlockPos candidate = new BlockPos(x, y, z);
 
-					int dist = (int) Math.round(Math.sqrt(
-							candidate.distanceSq(0,0,0,false)));
+					int dist = (int) Math.round(Math.sqrt(candidate.distanceSq(0, 0, 0, false)));
 					if (dist > MAX_DISTANCE)
 						continue;
 					if (dist <= 0)

@@ -27,8 +27,8 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 
 	public Quaternion getCustomRotation(ActiveRenderInfo camera, float partialTicks) {
 		Quaternion quaternion = new Quaternion(camera.getRotation());
-		if (this.particleAngle != 0.0F) {
-			float angle = MathHelper.lerp(partialTicks, this.prevParticleAngle, this.particleAngle);
+		if (particleAngle != 0.0F) {
+			float angle = MathHelper.lerp(partialTicks, prevParticleAngle, particleAngle);
 			quaternion.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(angle));
 		}
 		return quaternion;
@@ -37,12 +37,17 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 	@Override
 	public void buildGeometry(IVertexBuilder builder, ActiveRenderInfo camera, float partialTicks) {
 		Vector3d cameraPos = camera.getProjectedView();
-		float originX = (float)(MathHelper.lerp(partialTicks, this.prevPosX, this.posX) - cameraPos.getX());
-		float originY = (float)(MathHelper.lerp(partialTicks, this.prevPosY, this.posY) - cameraPos.getY());
-		float originZ = (float)(MathHelper.lerp(partialTicks, this.prevPosZ, this.posZ) - cameraPos.getZ());
+		float originX = (float) (MathHelper.lerp(partialTicks, prevPosX, posX) - cameraPos.getX());
+		float originY = (float) (MathHelper.lerp(partialTicks, prevPosY, posY) - cameraPos.getY());
+		float originZ = (float) (MathHelper.lerp(partialTicks, prevPosZ, posZ) - cameraPos.getZ());
 
-		Vector3f[] vertices = new Vector3f[]{new Vector3f(-1.0F, -1.0F, 0.0F), new Vector3f(-1.0F, 1.0F, 0.0F), new Vector3f(1.0F, 1.0F, 0.0F), new Vector3f(1.0F, -1.0F, 0.0F)};
-		float scale = this.getScale(partialTicks);
+		Vector3f[] vertices = new Vector3f[] {
+				new Vector3f(-1.0F, -1.0F, 0.0F),
+				new Vector3f(-1.0F, 1.0F, 0.0F),
+				new Vector3f(1.0F, 1.0F, 0.0F),
+				new Vector3f(1.0F, -1.0F, 0.0F)
+		};
+		float scale = getScale(partialTicks);
 
 		Quaternion rotation = getCustomRotation(camera, partialTicks);
 		for(int i = 0; i < 4; ++i) {
@@ -52,14 +57,14 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 			vertex.add(originX, originY, originZ);
 		}
 
-		float minU = mirror ? this.getMaxU() : this.getMinU();
-		float maxU = mirror ? this.getMinU() : this.getMaxU();
-		float minV = this.getMinV();
-		float maxV = this.getMaxV();
-		int brightness = this.getBrightnessForRender(partialTicks);
-		builder.vertex(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ()).texture(maxU, maxV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).light(brightness).endVertex();
-		builder.vertex(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ()).texture(maxU, minV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).light(brightness).endVertex();
-		builder.vertex(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ()).texture(minU, minV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).light(brightness).endVertex();
-		builder.vertex(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ()).texture(minU, maxV).color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha).light(brightness).endVertex();
+		float minU = mirror ? getMaxU() : getMinU();
+		float maxU = mirror ? getMinU() : getMaxU();
+		float minV = getMinV();
+		float maxV = getMaxV();
+		int brightness = getBrightnessForRender(partialTicks);
+		builder.vertex(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ()).texture(maxU, maxV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
+		builder.vertex(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ()).texture(maxU, minV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
+		builder.vertex(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ()).texture(minU, minV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
+		builder.vertex(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ()).texture(minU, maxV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
 	}
 }

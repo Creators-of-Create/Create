@@ -12,7 +12,7 @@ public class PeculiarBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	public PartialModel getBellPartial() {
+	public PartialModel getBellModel() {
 		return AllBlockPartials.PECULIAR_BELL;
 	}
 

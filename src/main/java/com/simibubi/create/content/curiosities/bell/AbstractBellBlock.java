@@ -52,7 +52,7 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		if (direction == null)
 			direction = world.getBlockState(pos).get(field_220133_a);
 
-		if (!this.canRingFrom(state, direction, hit.getHitVec().y - (double)pos.getY()))
+		if (!this.canRingFrom(state, direction, hit.getHitVec().y - pos.getY()))
 			return false;
 
 		TE te = getTileEntity(world, pos);
@@ -64,6 +64,7 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 			if (player != null)
 				player.addStat(Stats.BELL_RING);
 		}
+
 		return true;
 	}
 
@@ -74,8 +75,8 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 			return false;
 
 		Direction direction = state.get(field_220133_a);
-		BellAttachment bellattachment = state.get(field_220134_b);
-		switch(bellattachment) {
+		BellAttachment bellAttachment = state.get(field_220134_b);
+		switch(bellAttachment) {
 			case FLOOR:
 			case CEILING:
 				return direction.getAxis() == hitDir.getAxis();

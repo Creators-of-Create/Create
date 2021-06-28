@@ -6,7 +6,6 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 
-import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -32,7 +31,9 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 	}
 
 	@Override
-	public Class<PeculiarBellTileEntity> getTileEntityClass() { return PeculiarBellTileEntity.class; }
+	public Class<PeculiarBellTileEntity> getTileEntityClass() {
+		return PeculiarBellTileEntity.class;
+	}
 
 	@Override
 	public void playSound(World world, BlockPos pos) {
@@ -72,18 +73,18 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 		}
 
 		return AllBlocks.CURSED_BELL.getDefaultState()
-				.with(BellBlock.field_220133_a, state.get(BellBlock.field_220133_a))
-				.with(BellBlock.field_220134_b, state.get(BellBlock.field_220134_b))
-				.with(BellBlock.POWERED, state.get(BellBlock.POWERED));
+				.with(CursedBellBlock.field_220133_a, state.get(field_220133_a))
+				.with(CursedBellBlock.field_220134_b, state.get(field_220134_b))
+				.with(CursedBellBlock.POWERED, state.get(POWERED));
 	}
 
 	public void spawnConversionParticles(IWorld world, BlockPos blockPos) {
 		Random random = world.getRandom();
 		int num = random.nextInt(10) + 15;
 		for (int i = 0; i < num; i++) {
-			float pitch = random.nextFloat()*120 - 90;
-			float yaw = random.nextFloat()*360;
-			Vector3d vel = Vector3d.fromPitchYaw(pitch, yaw).scale(random.nextDouble()*0.1 + 0.1);
+			float pitch = random.nextFloat() * 120 - 90;
+			float yaw = random.nextFloat() * 360;
+			Vector3d vel = Vector3d.fromPitchYaw(pitch, yaw).scale(random.nextDouble() * 0.1 + 0.1);
 			Vector3d pos = Vector3d.ofCenter(blockPos);
 			world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
 		}
