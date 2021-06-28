@@ -3,17 +3,12 @@ package com.simibubi.create.content.curiosities.bell;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.BlockPos;
@@ -34,29 +29,31 @@ public class SoulPulseEffectHandler {
 
 	public void tick(World world) {
 		for (SoulPulseEffect pulse : pulses) {
-			List<BlockPos> added = pulse.tick(world);
-			if (added == null)
+			List<BlockPos> spawns = pulse.tick(world);
+			if (spawns == null)
 				continue;
 
-			if (pulse.overlaps()) {
-				for (BlockPos pos : added) {
+			if (pulse.canOverlap()) {
+				for (BlockPos pos : spawns) {
 					SoulPulseEffect.spawnParticles(world, pos);
 				}
 			} else {
-				for (BlockPos pos : added) {
+				for (BlockPos pos : spawns) {
 					if (occupied.contains(pos))
 						continue;
+
 					SoulPulseEffect.spawnParticles(world, pos);
+					pulse.added.add(pos);
 					occupied.add(pos);
 				}
 			}
 		}
 
-		Map<Boolean, List<SoulPulseEffect>> split = pulses.stream()
-				.collect(Collectors.partitioningBy(SoulPulseEffect::finished));
-		for (SoulPulseEffect finished : split.get(true))
-			finished.removeAdded(occupied);
-		pulses = split.get(false);
+		for (SoulPulseEffect pulse : pulses) {
+			if (pulse.finished() && !pulse.canOverlap())
+				occupied.removeAll(pulse.added);
+		}
+		pulses.removeIf(SoulPulseEffect::finished);
 	}
 
 	public void refresh() {
@@ -64,9 +61,9 @@ public class SoulPulseEffectHandler {
 		occupied.clear();
 	}
 
-	public static void sendPulsePacket(World world, BlockPos at, int distance, boolean overlaps) {
+	public static void sendPulsePacket(World world, BlockPos at, int distance, boolean canOverlap) {
 		Chunk chunk = world.getChunkAt(at);
-		AllPackets.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new Packet(at, distance, overlaps));
+		AllPackets.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new Packet(at, distance, canOverlap));
 	}
 
 	private void handlePulse(BlockPos pos, int distance, boolean overlaps) {

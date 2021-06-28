@@ -1,9 +1,8 @@
 {
 	"credit": "Made with Blockbench",
-  "parent": "block/block",
 	"textures": {
-		"0": "create:block/bell_anim",
-		"particle": "create:block/bell"
+		"0": "create:block/bell",
+    "particle": "create:block/bell"
 	},
 	"elements": [
 		{

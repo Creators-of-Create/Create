@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 220",
+	"_": "Missing Localizations: 229",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1170,6 +1170,7 @@
 
 	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "UNLOCALIZED: Contraption stops",
+	"create.subtitle.peculiar_bell_use": "UNLOCALIZED: Peculiar Bell tolls",
 	"create.subtitle.mixing": "UNLOCALIZED: Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "液壓機工作",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
@@ -1194,6 +1195,8 @@
 	"create.subtitle.controller_click": "UNLOCALIZED: Controller clicks",
 	"create.subtitle.schematicannon_launch_block": "藍圖大炮發射",
 	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
+	"create.subtitle.cursed_bell_use": "UNLOCALIZED: Cursed Bell tolls",
+	"create.subtitle.cursed_bell_convert": "UNLOCALIZED: Cursed Bell awakens",
 	"create.subtitle.mechanical_press_activation": "液壓機工作",
 	"create.subtitle.contraption_assemble": "UNLOCALIZED: Contraption moves",
 	"create.subtitle.crafter_click": "UNLOCALIZED: Crafter clicks",
@@ -1390,7 +1393,7 @@
 	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
 
 	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
-	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.diving_helmet.tooltip.condition1": "UNLOCALIZED: When Worn",
 	"item.create.diving_helmet.tooltip.behaviour1": "UNLOCALIZED: Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 
@@ -1404,7 +1407,7 @@
 	"item.create.diving_boots.tooltip": "UNLOCALIZED: DIVING BOOTS",
 	"item.create.diving_boots.tooltip.summary": "UNLOCALIZED: A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
 	"item.create.diving_boots.tooltip.condition1": "UNLOCALIZED: When Worn",
-	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+	"item.create.diving_boots.tooltip.behaviour1": "UNLOCALIZED: Wielder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
 	"item.create.crafting_blueprint.tooltip": "UNLOCALIZED: CRAFTING BLUEPRINT",
 	"item.create.crafting_blueprint.tooltip.summary": "UNLOCALIZED: _Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
@@ -1417,6 +1420,14 @@
 	"item.create.minecart_coupling.tooltip.summary": "將多個_礦車_或運輸結構鏈接在一起，構成雄偉的火車。",
 	"item.create.minecart_coupling.tooltip.condition1": "作用與礦車時",
 	"item.create.minecart_coupling.tooltip.behaviour1": "將兩個礦車耦合在一起，在移動時將它們保持_恒定的距離_。",
+
+	"block.create.peculiar_bell.tooltip": "UNLOCALIZED: PECULIAR BELL",
+	"block.create.peculiar_bell.tooltip.summary": "UNLOCALIZED: A decorative brass bell. Placing it above a _Soul Fire_ or _Soul Campfire_ may cause a spooky transformation to occur...",
+
+	"block.create.cursed_bell.tooltip": "UNLOCALIZED: CURSED BELL",
+	"block.create.cursed_bell.tooltip.summary": "UNLOCALIZED: A spooky brass bell haunted by lost souls of the Nether.",
+	"block.create.cursed_bell.tooltip.condition1": "UNLOCALIZED: When Held or Rang",
+	"block.create.cursed_bell.tooltip.behaviour1": "UNLOCALIZED: Highlights nearby dark spots on which Hostile Mobs could spawn.",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",

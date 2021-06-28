@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
@@ -21,7 +22,7 @@ public class CursedBellMovementBehaviour extends MovementBehaviour {
 		if (!context.world.isRemote && getRecharge(context) == 0) {
 			SoulPulseEffectHandler.sendPulsePacket(context.world, pos, DISTANCE, true);
 			setRecharge(context, CursedBellTileEntity.RECHARGE_TICKS);
-			CursedBellBlock.playSound(context.world, pos);
+			BellMovementBehaviour.playSound(context);
 		}
 	}
 

@@ -6,11 +6,13 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.state.properties.BellAttachment;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
@@ -44,27 +46,47 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 	}
 
 	@Override
-	public boolean ring(World world, BlockPos pos, @Nullable Direction direction) {
-		if (direction == null) {
+	public boolean ring(World world, BlockState state, BlockRayTraceResult hit, @Nullable PlayerEntity player, boolean flag) {
+		BlockPos pos = hit.getPos();
+		Direction direction = hit.getFace();
+		if (direction == null)
 			direction = world.getBlockState(pos).get(field_220133_a);
+
+		if (!this.canRingFrom(state, direction, hit.getHitVec().y - (double)pos.getY()))
+			return false;
+
+		TE te = getTileEntity(world, pos);
+		if (te == null || !te.ring(world, pos, direction))
+			return false;
+
+		if (!world.isRemote) {
+			playSound(world, pos);
+			if (player != null)
+				player.addStat(Stats.BELL_RING);
 		}
-
-		if (!ringInner(world, pos, direction))
-			return false;
-
-		if (world.isRemote)
-			return false;
-
-		playSound(world, pos);
 		return true;
 	}
 
-	public static void playSound(World world, BlockPos pos) {
-		world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE, SoundCategory.BLOCKS, 2.0F, 1.0F);
+	public boolean canRingFrom(BlockState state, Direction hitDir, double heightChange) {
+		if (hitDir.getAxis() == Direction.Axis.Y)
+			return false;
+		if (heightChange > 0.8124)
+			return false;
+
+		Direction direction = state.get(field_220133_a);
+		BellAttachment bellattachment = state.get(field_220134_b);
+		switch(bellattachment) {
+			case FLOOR:
+			case CEILING:
+				return direction.getAxis() == hitDir.getAxis();
+			case SINGLE_WALL:
+			case DOUBLE_WALL:
+				return direction.getAxis() != hitDir.getAxis();
+			default:
+				return false;
+		}
 	}
 
-	protected boolean ringInner(World world, BlockPos pos, Direction direction) {
-		TE te = getTileEntity(world, pos);
-		return te != null && te.ring(world, pos, direction);
-	}
+	public abstract void playSound(World world, BlockPos pos);
+
 }

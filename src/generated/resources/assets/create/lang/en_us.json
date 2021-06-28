@@ -1169,6 +1169,7 @@
 
 	"create.subtitle.saw_idle": "Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "Contraption stops",
+	"create.subtitle.peculiar_bell_use": "Peculiar Bell tolls",
 	"create.subtitle.mixing": "Mixing Noises",
 	"create.subtitle.mechanical_press_activation_belt": "Mechanical Press bonks",
 	"create.subtitle.fwoomp": "Potato Launcher fwoomps",
@@ -1193,6 +1194,8 @@
 	"create.subtitle.controller_click": "Controller clicks",
 	"create.subtitle.schematicannon_launch_block": "Schematicannon fires",
 	"create.subtitle.copper_armor_equip": "Diving equipment clinks",
+	"create.subtitle.cursed_bell_use": "Cursed Bell tolls",
+	"create.subtitle.cursed_bell_convert": "Cursed Bell awakens",
 	"create.subtitle.mechanical_press_activation": "Mechanical Press clangs",
 	"create.subtitle.contraption_assemble": "Contraption moves",
 	"create.subtitle.crafter_click": "Crafter clicks",
@@ -1389,7 +1392,7 @@
 	"item.create.linked_controller.tooltip.behaviour3": "Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
 
 	"item.create.diving_helmet.tooltip": "DIVING HELMET",
-	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the weilder to _breathe_ _underwater_ for an extended amount of time.",
+	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",
 	"item.create.diving_helmet.tooltip.condition1": "When Worn",
 	"item.create.diving_helmet.tooltip.behaviour1": "Provides the _Water Breathing_ effect, slowly draining _Air Pressure_ from the Backtank.",
 
@@ -1403,7 +1406,7 @@
 	"item.create.diving_boots.tooltip": "DIVING BOOTS",
 	"item.create.diving_boots.tooltip.summary": "A pair of _heavy_ _boots_, allowing for better traversal of the Ocean floor.",
 	"item.create.diving_boots.tooltip.condition1": "When Worn",
-	"item.create.diving_boots.tooltip.behaviour1": "Weilder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Weilder also is no longer affected by _Mechanical_ _Belts_.",
+	"item.create.diving_boots.tooltip.behaviour1": "Wielder _sinks_ _faster_ and _cannot_ _swim_. Grants the ability to _walk_ and _jump_ underwater. Wielder also is no longer affected by _Mechanical_ _Belts_.",
 
 	"item.create.crafting_blueprint.tooltip": "CRAFTING BLUEPRINT",
 	"item.create.crafting_blueprint.tooltip.summary": "_Placed_ on a wall, it can be used to _specify_ _ingredient_ _arrangements_ for easier manual crafting. Each slot represents a Recipe.",
@@ -1416,6 +1419,14 @@
 	"item.create.minecart_coupling.tooltip.summary": "_Chains_ all your _Minecarts_ or _Carriage Contraptions_ together to form a majestic Train.",
 	"item.create.minecart_coupling.tooltip.condition1": "When Used on Minecart",
 	"item.create.minecart_coupling.tooltip.behaviour1": "_Couples_ two Minecarts together, attempting to keep them at a _constant distance_ while moving.",
+
+	"block.create.peculiar_bell.tooltip": "PECULIAR BELL",
+	"block.create.peculiar_bell.tooltip.summary": "A decorative brass bell. Placing it above a _Soul Fire_ or _Soul Campfire_ may cause a spooky transformation to occur...",
+
+	"block.create.cursed_bell.tooltip": "CURSED BELL",
+	"block.create.cursed_bell.tooltip.summary": "A spooky brass bell haunted by lost souls of the Nether.",
+	"block.create.cursed_bell.tooltip.condition1": "When Held or Rang",
+	"block.create.cursed_bell.tooltip.behaviour1": "Highlights nearby dark spots on which Hostile Mobs could spawn.",
 
 
 	"_": "->------------------------]  Ponder Content  [------------------------<-",

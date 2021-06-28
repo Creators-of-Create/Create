@@ -1,14 +1,15 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
@@ -19,30 +20,25 @@ public class SoulPulseEffect {
 	public static final int MAX_DISTANCE = 5;
 	private static final List<List<BlockPos>> LAYERS = genLayers();
 
-	private static final int WAITING_TICKS = 120;
-	public static final int TICKS_PER_LAYER = 4;
+	private static final int WAITING_TICKS = 100;
+	public static final int TICKS_PER_LAYER = 6;
 	private int ticks;
 	public final BlockPos pos;
 	public final int distance;
-	private List<BlockPos> added;
+	public final List<BlockPos> added;
 
-	public SoulPulseEffect(BlockPos pos, int distance, boolean overlaps) {
+	public SoulPulseEffect(BlockPos pos, int distance, boolean canOverlap) {
 		this.ticks = TICKS_PER_LAYER * distance;
 		this.pos = pos;
 		this.distance = distance;
-		this.added = overlaps ? null : new ArrayList<>();
+		this.added = canOverlap ? null : new ArrayList<>();
 	}
 
 	public boolean finished() {
 		return ticks <= -WAITING_TICKS;
 	}
 
-	public boolean overlaps() { return added == null; }
-
-	public void removeAdded(Collection<BlockPos> positions) {
-		if (!overlaps())
-			positions.removeAll(added);
-	}
+	public boolean canOverlap() { return added == null; }
 
 	public List<BlockPos> tick(World world) {
 		if (finished())
@@ -57,10 +53,6 @@ public class SoulPulseEffect {
 			ticks -= TICKS_PER_LAYER;
 			spawns.addAll(getSoulSpawns(world));
 		}
-
-		if (!overlaps())
-			added.addAll(spawns);
-
 		return spawns;
 	}
 
@@ -78,11 +70,18 @@ public class SoulPulseEffect {
 	}
 
 	public static boolean canSpawnSoulAt(World world, BlockPos at) {
+		EntityType<?> dummy = EntityType.ZOMBIE;
+		double dummyWidth = 0.2, dummyHeight = 0.75;
+		double w2 = dummyWidth / 2;
+
 		return world != null
-				&& WorldEntitySpawner.canCreatureTypeSpawnAtLocation(
-					EntitySpawnPlacementRegistry.PlacementType.ON_GROUND,
-					world, at, EntityType.ZOMBIE)
-				&& world.getLightLevel(LightType.BLOCK, at) < 8;
+			&& WorldEntitySpawner.canCreatureTypeSpawnAtLocation(
+				EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, world, at, dummy)
+			&& world.getLightLevel(LightType.BLOCK, at) < 8
+			&& world.getBlockCollisions(null, new AxisAlignedBB(
+				at.getX() + 0.5 - w2, at.getY(), at.getZ() + 0.5 - w2,
+				at.getX() + 0.5 + w2, at.getY() + dummyHeight, at.getZ() + 0.5 + w2
+			), (a,b) -> true).allMatch(VoxelShape::isEmpty);
 	}
 
 	public static void spawnParticles(World world, BlockPos at) {
@@ -90,7 +89,7 @@ public class SoulPulseEffect {
 			return;
 
 		Vector3d p = Vector3d.of(at);
-		world.addParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
+		world.addOptionalParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
 		world.addParticle(new SoulBaseParticle.Data(), p.x + 0.5, p.y + 0.01, p.z + 0.5, 0, 0, 0);
 	}
 

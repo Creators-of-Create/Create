@@ -56,7 +56,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	/*
 	 * Recipes are added through fields, so one can navigate to the right one easily
-	 * 
+	 *
 	 * (Ctrl-o) in Eclipse
 	 */
 
@@ -172,7 +172,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('O', I.ironSheet())
 				.patternLine("  E")
 				.patternLine(" O ")
-				.patternLine("E  "))
+				.patternLine("E  ")),
+
+		PECULIAR_BELL = create(AllBlocks.PECULIAR_BELL).unlockedByTag(I::brass)
+			.viaShaped(b -> b.key('I', I.brass())
+				.key('S', I.brassSheet())
+				.key('G', Items.GHAST_TEAR)
+				.patternLine(" I ")
+				.patternLine("IGI")
+				.patternLine("S S"))
 
 	;
 
@@ -969,14 +977,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P P")
 				.patternLine("P P")
 				.patternLine("G G")),
-			
+
 		LINKED_CONTROLLER = create(AllItems.LINKED_CONTROLLER).unlockedBy(AllBlocks.REDSTONE_LINK::get)
 			.viaShaped(b -> b.key('S', ItemTags.WOODEN_BUTTONS)
 				.key('P', AllBlocks.REDSTONE_LINK.get())
 				.patternLine("SSS")
 				.patternLine(" P ")
 				.patternLine("SSS")),
-			
+
 		CRAFTING_BLUEPRINT = create(AllItems.CRAFTING_BLUEPRINT).unlockedBy(() -> Items.CRAFTING_TABLE)
 			.viaShapeless(b -> b.addIngredient(Items.PAINTING)
 				.addIngredient(Items.CRAFTING_TABLE)),

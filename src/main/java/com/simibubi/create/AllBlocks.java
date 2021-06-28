@@ -194,7 +194,6 @@ import net.minecraft.loot.conditions.ILootCondition.IBuilder;
 import net.minecraft.loot.conditions.SurvivesExplosion;
 import net.minecraft.loot.functions.CopyName;
 import net.minecraft.loot.functions.CopyNbt;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -1308,14 +1307,14 @@ public class AllBlocks {
 	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
 		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(Block.Properties::nonOpaque)
+			.properties(p -> p.nonOpaque()
+				.sound(SoundType.ANVIL))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.BRITTLE.tag)
-			.onRegister(addMovementBehaviour(new BellMovementBehaviour(PeculiarBellBlock::playSound)))
-			.blockstate((c, p) -> {})
+			.onRegister(addMovementBehaviour(new BellMovementBehaviour()))
+			.blockstate(BlockStateGen.bell())
 			.item()
-			.model((c, p) -> {})
-			.build()
+			.transform(customItemModel())
 			.register();
 
 	public static final BlockEntry<CursedBellBlock> CURSED_BELL =

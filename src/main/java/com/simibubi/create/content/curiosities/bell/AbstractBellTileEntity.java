@@ -1,7 +1,9 @@
 package com.simibubi.create.content.curiosities.bell;
 
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import java.util.List;
 
+import com.jozufozu.flywheel.core.PartialModel;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.tileentity.TileEntityType;
@@ -9,11 +11,9 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.List;
-
 public abstract class AbstractBellTileEntity extends SmartTileEntity {
 
-	public static final int RING_DURATION = 50;
+	public static final int RING_DURATION = 74;
 
 	public boolean isRinging;
 	public int ringingTicks;
@@ -46,5 +46,7 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 			ringingTicks = 0;
 		}
 	}
+
+	public abstract PartialModel getBellPartial();
 
 }
