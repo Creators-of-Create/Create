@@ -47,6 +47,13 @@
 	"create.recipe.spout_filling": "Filling by Spout",
 	"create.recipe.draining": "Item Draining",
 
+	"create.recipe.sequenced_assembly": "Sequenced Assembly",
+	"create.recipe.assembly.next": "Next: %1$s",
+	"create.recipe.assembly.pressing": "Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "Spout %1$s",
+	"create.recipe.assembly.deploying_item": "Deploy %1$s",
+	"create.recipe.assembly.cutting": "Cut with Saw",
+
 	"create.recipe.processing.chance": "%1$s%% Chance",
 	"create.recipe.heat_requirement.none": "No Heating Required",
 	"create.recipe.heat_requirement.heated": "Heated",

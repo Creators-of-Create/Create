@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1325",
+	"_": "Missing Localizations: 1333",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Composé chromatique",
 	"item.create.cinder_flour": "Farine de braise",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Lingot de cuivre",
 	"item.create.copper_nugget": "Pépite de cuivre",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Térraformeur portable",
 	"item.create.honey_bucket": "Seau de miel",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
-	"item.create.integrated_circuit": "Circuit intégré",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "Plaque de Fer",
-	"item.create.lapis_sheet": "Feuille de lapis",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Engin de wagonnet",
 	"item.create.minecart_coupling": "Lien pour wagonnet",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "Métamorphose chromatique",
 	"create.recipe.spout_filling": "Remplissage par un bec verseur",
 	"create.recipe.draining": "UNLOCALIZED: Item Draining",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% de chance",
 	"create.recipe.heat_requirement.none": "Pas de chauffage requis",
 	"create.recipe.heat_requirement.heated": "Chauffé",

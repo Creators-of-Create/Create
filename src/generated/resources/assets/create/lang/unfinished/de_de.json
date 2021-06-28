@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1073",
+	"_": "Missing Localizations: 1081",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "Schokoladenglasierte Beeren",
 	"item.create.chromatic_compound": "Chromatische Verbindung",
 	"item.create.cinder_flour": "Aschenmehl",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Kupferbarren",
 	"item.create.copper_nugget": "Kupferklumpen",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Geländeformer",
 	"item.create.honey_bucket": "Honigeimer",
 	"item.create.honeyed_apple": "Honigapfel",
-	"item.create.integrated_circuit": "Integrierter Schaltkreis",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "Eisenblech",
-	"item.create.lapis_sheet": "Lapislazuliblech",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Loren Vorrichtung",
 	"item.create.minecart_coupling": "Lorenkupplung",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "Mysteriöse Konvertierung",
 	"create.recipe.spout_filling": "Befüllung per Ausguss",
 	"create.recipe.draining": "Gegenstandsablassung",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "Chance: %1$s%%",
 	"create.recipe.heat_requirement.none": "Keine Hitze benötigt",
 	"create.recipe.heat_requirement.heated": "Wenig Hitze benötigt",

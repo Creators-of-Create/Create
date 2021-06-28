@@ -23,6 +23,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -264,6 +265,7 @@ public class ClientEvents {
 		}
 
 		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
+		SequencedAssemblyRecipe.addToTooltip(event.getToolTip(), stack);
 	}
 
 	@SubscribeEvent

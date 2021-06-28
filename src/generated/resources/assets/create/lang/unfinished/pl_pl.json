@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 193",
+	"_": "Missing Localizations: 201",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "Jagody w czekoladzie",
 	"item.create.chromatic_compound": "Związek chromatyczny",
 	"item.create.cinder_flour": "Rozżarzona mąka",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "Miedziany zbiornik w plecaku",
 	"item.create.copper_ingot": "Sztabka miedzi",
 	"item.create.copper_nugget": "Bryłka miedzi",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Ręczny kształter",
 	"item.create.honey_bucket": "Wiadro miodu",
 	"item.create.honeyed_apple": "Jabłko w miodzie",
-	"item.create.integrated_circuit": "Układ scalony",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "Arkusz żelaza",
-	"item.create.lapis_sheet": "Arkusz lazurytu",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Maszyna w wagoniku",
 	"item.create.minecart_coupling": "Łącznik wagoników",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "Tajemnicza przemiana",
 	"create.recipe.spout_filling": "Wypełnianie",
 	"create.recipe.draining": "Osuszanie",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% szans",
 	"create.recipe.heat_requirement.none": "Nie wymaga podgrzewania",
 	"create.recipe.heat_requirement.heated": "Podrzewane",

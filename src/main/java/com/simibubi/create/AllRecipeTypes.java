@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.mixer.MixingRecipe;
 import com.simibubi.create.content.contraptions.components.press.PressingRecipe;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeSerializer;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -48,6 +49,7 @@ public enum AllRecipeTypes {
 	DEPLOYING(processingSerializer(DeployerApplicationRecipe::new)),
 	FILLING(processingSerializer(FillingRecipe::new)),
 	EMPTYING(processingSerializer(EmptyingRecipe::new)),
+	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
 
 	;
 

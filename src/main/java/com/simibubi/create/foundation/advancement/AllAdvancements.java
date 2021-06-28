@@ -335,11 +335,11 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":overstress_flywheel");
 
 		Advancement integrated_circuit =
-			itemAdvancement("integrated_circuit", AllItems.INTEGRATED_CIRCUIT, TaskType.NORMAL).withParent(crafter)
+			itemAdvancement("integrated_circuit", AllItems.CLOCKWORK_ELEMENT, TaskType.NORMAL).withParent(crafter)
 				.register(t, id + ":integrated_circuit");
 
 		Advancement integrated_circuit_eob = deadEnd().withParent(integrated_circuit)
-			.withCriterion("0", itemGathered(AllItems.INTEGRATED_CIRCUIT.get()))
+			.withCriterion("0", itemGathered(AllItems.CLOCKWORK_ELEMENT.get()))
 			.register(t, id + ":integrated_circuit_eob");
 
 		Advancement speed_controller =

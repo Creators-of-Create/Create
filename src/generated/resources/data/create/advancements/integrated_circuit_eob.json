@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:integrated_circuit"
+            "item": "create:clockwork_element"
           }
         ]
       }
