@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesModel;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyItem;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
@@ -81,10 +82,11 @@ public class AllItems {
 		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
 
-	public static final ItemEntry<HiddenIngredientItem> INCOMPLETE_CLOCKWORK_ELEMENT =
-		hiddenIngredient("incomplete_clockwork_element");
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_CLOCKWORK_COMPONENT =
+		REGISTRATE.item("incomplete_clockwork_component", SequencedAssemblyItem::new)
+			.register();
 
-	public static final ItemEntry<Item> CLOCKWORK_ELEMENT = ingredient("clockwork_element");
+	public static final ItemEntry<Item> CLOCKWORK_COMPONENT = ingredient("clockwork_component");
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -239,7 +241,7 @@ public class AllItems {
 	static {
 		REGISTRATE.startSection(CURIOSITIES);
 	}
-	
+
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
 		.model(AssetLookup.itemModelWithPartials())
@@ -304,7 +306,7 @@ public class AllItems {
 		REGISTRATE.item("attribute_filter", FilterItem::attribute)
 			.model(AssetLookup.existingItemModel())
 			.register();
-	
+
 	// Schematics
 
 	static {

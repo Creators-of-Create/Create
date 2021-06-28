@@ -27,10 +27,6 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 
 @MethodsReturnNonnullByDefault
@@ -231,13 +227,4 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		return enumType;
 	}
 	
-	public boolean supportsAssembly() {
-		return false;
-	}
-	
-	@OnlyIn(Dist.CLIENT)
-	public ITextComponent getDescriptionForAssembly() {
-		return new StringTextComponent("");
-	}
-
 }

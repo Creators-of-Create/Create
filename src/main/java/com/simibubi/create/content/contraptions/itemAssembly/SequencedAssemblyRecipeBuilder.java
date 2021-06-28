@@ -41,11 +41,12 @@ public class SequencedAssemblyRecipeBuilder {
 		UnaryOperator<ProcessingRecipeBuilder<T>> builder) {
 		ProcessingRecipeBuilder<T> recipeBuilder =
 			new ProcessingRecipeBuilder<>(factory, new ResourceLocation("dummy"));
-		Item placeHolder = recipe.transitionalItem.getStack()
+		Item placeHolder = recipe.getTransitionalItem()
 			.getItem();
-		recipe.sequence.add(new SequencedRecipe<>(builder.apply(recipeBuilder.require(placeHolder)
-			.output(placeHolder))
-			.build()));
+		recipe.getSequence()
+			.add(new SequencedRecipe<>(builder.apply(recipeBuilder.require(placeHolder)
+				.output(placeHolder))
+				.build()));
 		return this;
 	}
 
@@ -67,13 +68,8 @@ public class SequencedAssemblyRecipeBuilder {
 		return this;
 	}
 
-	public SequencedAssemblyRecipeBuilder expectedSteps(int average) {
-		return expectedStepsAndMax(average, (int) (average * 1.5));
-	}
-
-	public SequencedAssemblyRecipeBuilder expectedStepsAndMax(int average, int max) {
-		recipe.averageSteps = average;
-		recipe.maxSteps = max;
+	public SequencedAssemblyRecipeBuilder loops(int loops) {
+		recipe.loops = loops;
 		return this;
 	}
 

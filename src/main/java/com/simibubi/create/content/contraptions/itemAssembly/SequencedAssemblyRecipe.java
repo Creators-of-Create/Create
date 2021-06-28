@@ -8,6 +8,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
@@ -35,8 +36,7 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 
 	Ingredient ingredient;
 	List<SequencedRecipe<?>> sequence;
-	int averageSteps;
-	int maxSteps;
+	int loops;
 	ProcessingOutput transitionalItem;
 	List<ProcessingOutput> resultPool;
 
@@ -45,8 +45,7 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		this.serializer = serializer;
 		sequence = new ArrayList<>();
 		resultPool = new ArrayList<>();
-		averageSteps = 16;
-		maxSteps = 32;
+		loops = 5;
 	}
 
 	public static <C extends IInventory, R extends ProcessingRecipe<C>> Optional<R> getRecipe(World world, C inv,
@@ -62,30 +61,43 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 			if (!sequencedAssemblyRecipe.appliesTo(item))
 				continue;
 			SequencedRecipe<?> nextRecipe = sequencedAssemblyRecipe.getNextRecipe(item);
-			if (nextRecipe.wrapped.getType() != type || !recipeClass.isInstance(nextRecipe.wrapped))
+			ProcessingRecipe<?> recipe = nextRecipe.getRecipe();
+			if (recipe.getType() != type || !recipeClass.isInstance(recipe))
 				continue;
-			nextRecipe.wrapped.enforceNextResult(() -> sequencedAssemblyRecipe.advance(item));
-			return Optional.of(recipeClass.cast(nextRecipe.wrapped));
+			recipe.enforceNextResult(() -> sequencedAssemblyRecipe.advance(item));
+			return Optional.of(recipeClass.cast(recipe));
 		}
 		return Optional.empty();
 	}
 
 	private ItemStack advance(ItemStack input) {
 		int step = getStep(input);
-		if (step >= sequence.size()) {
-			float chance = 1f / (averageSteps - sequence.size());
-			if (step >= maxSteps || Create.RANDOM.nextFloat() < chance)
-				return rollResult();
-		}
+		if ((step + 1) / sequence.size() >= loops)
+			return rollResult();
 
-		ItemStack advancedItem = ItemHandlerHelper.copyStackWithSize(transitionalItem.getStack(), 1);
+		ItemStack advancedItem = ItemHandlerHelper.copyStackWithSize(getTransitionalItem(), 1);
 		CompoundNBT itemTag = advancedItem.getOrCreateTag();
 		CompoundNBT tag = new CompoundNBT();
 		tag.putString("id", id.toString());
 		tag.putInt("Step", step + 1);
+		tag.putFloat("Progress", (step + 1f) / (sequence.size() * loops));
 		itemTag.put("SequencedAssembly", tag);
 		advancedItem.setTag(itemTag);
 		return advancedItem;
+	}
+
+	public int getLoops() {
+		return loops;
+	}
+
+	public void addAdditionalIngredients(List<Ingredient> list) {
+		sequence.forEach(sr -> sr.getAsAssemblyRecipe()
+			.addAssemblyIngredients(list));
+	}
+
+	public void addAdditionalFluidIngredients(List<FluidIngredient> list) {
+		sequence.forEach(sr -> sr.getAsAssemblyRecipe()
+			.addAssemblyFluidIngredients(list));
 	}
 
 	private ItemStack rollResult() {
@@ -105,10 +117,8 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	private boolean appliesTo(ItemStack input) {
 		if (ingredient.test(input))
 			return true;
-		return input.hasTag() && transitionalItem.getStack()
-			.getItem() == input.getItem() && input.getTag()
-				.contains("SequencedAssembly")
-			&& input.getTag()
+		return input.hasTag() && getTransitionalItem().getItem() == input.getItem() && input.getTag()
+			.contains("SequencedAssembly") && input.getTag()
 				.getCompound("SequencedAssembly")
 				.getString("id")
 				.equals(id.toString());
@@ -150,6 +160,14 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 			.getStack();
 	}
 
+	public float getOutputChance() {
+		float totalWeight = 0;
+		for (ProcessingOutput entry : resultPool)
+			totalWeight += entry.getChance();
+		return resultPool.get(0)
+			.getChance() / totalWeight;
+	}
+
 	@Override
 	public ResourceLocation getId() {
 		return id;
@@ -182,15 +200,22 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 			return;
 
 		SequencedAssemblyRecipe sequencedAssemblyRecipe = (SequencedAssemblyRecipe) iRecipe;
+		int length = sequencedAssemblyRecipe.sequence.size();
+		int step = sequencedAssemblyRecipe.getStep(stack);
+		int total = length * sequencedAssemblyRecipe.loops;
 		toolTip.add(new StringTextComponent(""));
 		toolTip.add(Lang.translate("recipe.sequenced_assembly")
 			.formatted(TextFormatting.GRAY));
-		int step = sequencedAssemblyRecipe.getStep(stack);
+		toolTip.add(Lang.translate("recipe.assembly.progress", step, total)
+			.formatted(TextFormatting.DARK_GRAY));
 
-		for (int i = 0; i < sequencedAssemblyRecipe.sequence.size(); i++) {
-			SequencedRecipe<?> sequencedRecipe =
-				sequencedAssemblyRecipe.sequence.get((i + step) % sequencedAssemblyRecipe.sequence.size());
-			ITextComponent textComponent = sequencedRecipe.wrapped.getDescriptionForAssembly();
+		int remaining = total - step;
+		for (int i = 0; i < length; i++) {
+			if (i >= remaining)
+				break;
+			SequencedRecipe<?> sequencedRecipe = sequencedAssemblyRecipe.sequence.get((i + step) % length);
+			ITextComponent textComponent = sequencedRecipe.getAsAssemblyRecipe()
+				.getDescriptionForAssembly();
 			if (i == 0)
 				toolTip.add(Lang.translate("recipe.assembly.next", textComponent)
 					.formatted(TextFormatting.AQUA));
@@ -199,6 +224,18 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 					.formatted(TextFormatting.DARK_AQUA));
 		}
 
+	}
+
+	public Ingredient getIngredient() {
+		return ingredient;
+	}
+
+	public List<SequencedRecipe<?>> getSequence() {
+		return sequence;
+	}
+
+	public ItemStack getTransitionalItem() {
+		return transitionalItem.getStack();
 	}
 
 }

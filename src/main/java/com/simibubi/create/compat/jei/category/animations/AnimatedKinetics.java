@@ -14,6 +14,8 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction.Axis;
 
 public abstract class AnimatedKinetics implements IDrawable {
+	
+	public int offset = 0;
 
 	public static final ILightingSettings DEFAULT_LIGHTING = CustomLightingSettings.builder()
 			.firstLightRotation(12.5f, 45.0f)

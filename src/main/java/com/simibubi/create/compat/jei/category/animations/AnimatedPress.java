@@ -48,7 +48,7 @@ public class AnimatedPress extends AnimatedKinetics {
 	}
 
 	private float getAnimatedHeadOffset() {
-		float cycle = (AnimationTickHolder.getRenderTime()) % 30;
+		float cycle = (AnimationTickHolder.getRenderTime() - offset * 8) % 30;
 		if (cycle < 10) {
 			float progress = cycle / 10;
 			return -(progress * progress * progress);

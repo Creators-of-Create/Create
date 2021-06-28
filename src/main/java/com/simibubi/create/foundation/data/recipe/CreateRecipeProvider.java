@@ -98,6 +98,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ITag.INamedTag<Item> iron() {
 			return Tags.Items.INGOTS_IRON;
 		}
+		
+		static ITag.INamedTag<Item> ironNugget() {
+			return AllTags.forgeItemTag("nuggets/iron");
+		}
 
 		static ITag.INamedTag<Item> zinc() {
 			return AllTags.forgeItemTag("ingots/zinc");
@@ -116,7 +120,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static IItemProvider circuit() {
-			return AllItems.CLOCKWORK_ELEMENT.get();
+			return AllItems.CLOCKWORK_COMPONENT.get();
 		}
 
 		static ITag.INamedTag<Item> copperBlock() {

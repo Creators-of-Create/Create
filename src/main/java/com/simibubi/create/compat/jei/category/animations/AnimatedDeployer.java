@@ -31,7 +31,7 @@ public class AnimatedDeployer extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		float cycle = AnimationTickHolder.getRenderTime() % 30;
+		float cycle = (AnimationTickHolder.getRenderTime() - offset * 8) % 30;
 		float offset = cycle < 10 ? cycle / 10f : cycle < 20 ? (20 - cycle) / 10f : 0;
 
 		matrixStack.push();

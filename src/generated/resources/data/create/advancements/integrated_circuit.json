@@ -2,7 +2,7 @@
   "parent": "create:crafter",
   "display": {
     "icon": {
-      "item": "create:clockwork_element"
+      "item": "create:clockwork_component"
     },
     "title": {
       "translate": "advancement.create.integrated_circuit"
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:clockwork_element"
+            "item": "create:clockwork_component"
           }
         ]
       }

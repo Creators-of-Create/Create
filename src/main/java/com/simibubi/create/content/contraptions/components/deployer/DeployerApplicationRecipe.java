@@ -1,11 +1,14 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
+import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
@@ -22,7 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
+public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
 	public DeployerApplicationRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.DEPLOYING, params);
@@ -70,10 +73,10 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public boolean supportsAssembly() {
-		return true;
+	public void addAssemblyIngredients(List<Ingredient> list) {
+		list.add(ingredients.get(1));
 	}
-
+	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ITextComponent getDescriptionForAssembly() {
@@ -83,6 +86,11 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 			return new StringTextComponent("Invalid");
 		return Lang.translate("recipe.assembly.deploying_item",
 			new TranslationTextComponent(matchingStacks[0].getTranslationKey()).getString());
+	}
+	
+	@Override
+	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
+		return () -> SequencedAssemblySubCategory.AssemblyDeploying::new;
 	}
 
 }

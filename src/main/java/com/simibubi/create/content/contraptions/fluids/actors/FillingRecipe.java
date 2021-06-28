@@ -1,13 +1,17 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
+import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -17,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> {
+public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
 	public FillingRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.FILLING, params);
@@ -51,8 +55,11 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public boolean supportsAssembly() {
-		return true;
+	public void addAssemblyIngredients(List<Ingredient> list) {}
+	
+	@Override
+	public void addAssemblyFluidIngredients(List<FluidIngredient> list) {
+		list.add(getRequiredFluid());
 	}
 
 	@Override
@@ -65,6 +72,11 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> {
 		return Lang.translate("recipe.assembly.spout_filling_fluid",
 			new TranslationTextComponent(matchingFluidStacks.get(0)
 				.getTranslationKey()).getString());
+	}
+	
+	@Override
+	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
+		return () -> SequencedAssemblySubCategory.AssemblySpouting::new;
 	}
 
 }

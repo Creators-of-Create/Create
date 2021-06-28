@@ -16,10 +16,18 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 
-	T wrapped;
+	private T wrapped;
 
 	public SequencedRecipe(T wrapped) {
 		this.wrapped = wrapped;
+	}
+
+	public IAssemblyRecipe getAsAssemblyRecipe() {
+		return (IAssemblyRecipe) wrapped;
+	}
+
+	public ProcessingRecipe<?> getRecipe() {
+		return wrapped;
 	}
 
 	public JsonObject toJson() {
@@ -36,12 +44,13 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 		ResourceLocation parentId = parent.getId();
 		IRecipe<?> recipe = RecipeManager.deserializeRecipe(
 			new ResourceLocation(parentId.getNamespace(), parentId.getPath() + "_step_" + index), json);
-		if (recipe instanceof ProcessingRecipe<?>) {
+		if (recipe instanceof ProcessingRecipe<?> && recipe instanceof IAssemblyRecipe) {
 			ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe;
-			if (processingRecipe.supportsAssembly()) {
-				Ingredient transit = Ingredient.fromStacks(parent.transitionalItem.getStack());
+			IAssemblyRecipe assemblyRecipe = (IAssemblyRecipe) recipe;
+			if (assemblyRecipe.supportsAssembly()) {
+				Ingredient transit = Ingredient.fromStacks(parent.getTransitionalItem());
 				processingRecipe.getIngredients()
-				.set(0, index == 0 ? Ingredient.merge(ImmutableList.of(transit, parent.ingredient)) : transit);
+					.set(0, index == 0 ? Ingredient.merge(ImmutableList.of(transit, parent.getIngredient())) : transit);
 				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
 				return sequencedRecipe;
 			}
