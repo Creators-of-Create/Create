@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create:item/lapis_sheet"
+    "layer0": "create:item/incomplete_clockwork_element"
   }
 }

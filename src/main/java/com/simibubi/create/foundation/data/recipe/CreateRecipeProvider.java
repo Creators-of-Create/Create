@@ -78,6 +78,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static IItemProvider cog() {
 			return AllBlocks.COGWHEEL.get();
 		}
+		
+		static IItemProvider largeCog() {
+			return AllBlocks.LARGE_COGWHEEL.get();
+		}
 
 		static IItemProvider andesiteCasing() {
 			return AllBlocks.ANDESITE_CASING.get();
@@ -112,7 +116,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		}
 
 		static IItemProvider circuit() {
-			return AllItems.INTEGRATED_CIRCUIT.get();
+			return AllItems.CLOCKWORK_ELEMENT.get();
 		}
 
 		static ITag.INamedTag<Item> copperBlock() {

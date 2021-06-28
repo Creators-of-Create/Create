@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 834",
+	"_": "Missing Localizations: 842",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Compuesto cromático",
 	"item.create.cinder_flour": "Harina de ceniza",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Lingote de cobre",
 	"item.create.copper_nugget": "Pepita de cobre",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Worldshaper",
 	"item.create.honey_bucket": "Cubo de miel",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
-	"item.create.integrated_circuit": "Chip de circuito integrado",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "Lámina de hierro",
-	"item.create.lapis_sheet": "Lámina de lapislázuli",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Artilugio de vagoneta",
 	"item.create.minecart_coupling": "Acoplamiento de vagoneta",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "Conversión misteriosa",
 	"create.recipe.spout_filling": "Llenar por el pico",
 	"create.recipe.draining": "Drenador de elementos",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% Chance",
 	"create.recipe.heat_requirement.none": "No es necesario calentar",
 	"create.recipe.heat_requirement.heated": "Calentado",

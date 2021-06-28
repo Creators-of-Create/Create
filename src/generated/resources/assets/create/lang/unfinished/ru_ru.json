@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 750",
+	"_": "Missing Localizations: 758",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "Ягоды в шоколадной глазури",
 	"item.create.chromatic_compound": "Хроматический компаунд",
 	"item.create.cinder_flour": "Незераковая пыль",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Медный слиток",
 	"item.create.copper_nugget": "Кусочек меди",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Ручной редактор мира",
 	"item.create.honey_bucket": "Ведро мёда",
 	"item.create.honeyed_apple": "Яблоко в меду",
-	"item.create.integrated_circuit": "Интегральная схема",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "Железный лист",
-	"item.create.lapis_sheet": "Лазуритовый лист",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Вагонеточная штуковина",
 	"item.create.minecart_coupling": "Связыватель вагонеток",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "Хроматический метаморфоз",
 	"create.recipe.spout_filling": "Заполнение дозатором",
 	"create.recipe.draining": "Осушение предметов",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% шанса",
 	"create.recipe.heat_requirement.none": "Не требует нагрева",
 	"create.recipe.heat_requirement.heated": "Нагрето",

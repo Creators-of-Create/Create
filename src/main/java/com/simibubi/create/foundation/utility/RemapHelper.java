@@ -29,7 +29,6 @@ import static com.simibubi.create.AllItems.CRUSHED_GOLD;
 import static com.simibubi.create.AllItems.CRUSHED_IRON;
 import static com.simibubi.create.AllItems.CRUSHED_ZINC;
 import static com.simibubi.create.AllItems.GOLDEN_SHEET;
-import static com.simibubi.create.AllItems.LAPIS_SHEET;
 import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
 import static com.simibubi.create.AllItems.SCHEMATIC;
 import static com.simibubi.create.AllItems.SCHEMATIC_AND_QUILL;
@@ -158,7 +157,6 @@ public class RemapHelper {
 		reMap.put("piston_pole", PISTON_EXTENSION_POLE.getId());
 
 //		reMap.put("shadow_steel_sword", );
-		reMap.put("lapis_plate", LAPIS_SHEET.getId());
 		reMap.put("crushed_copper", CRUSHED_COPPER.getId());
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 //		reMap.put("shadow_steel_mattock", );

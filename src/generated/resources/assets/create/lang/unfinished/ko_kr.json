@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 904",
+	"_": "Missing Localizations: 912",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "색채 혼합물",
 	"item.create.cinder_flour": "잿가루",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "구리 주괴",
 	"item.create.copper_nugget": "구리 조각",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "휴대용 세계편집기",
 	"item.create.honey_bucket": "꿀 양동이",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
-	"item.create.integrated_circuit": "집적 회로",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "철 판",
-	"item.create.lapis_sheet": "청금석 판",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "광산 수레 장치",
 	"item.create.minecart_coupling": "광산 수레 커플링",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "?",
 	"create.recipe.spout_filling": "채우기",
 	"create.recipe.draining": "배수",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% 확률",
 	"create.recipe.heat_requirement.none": "열이 필요하지 않음",
 	"create.recipe.heat_requirement.heated": "고온으로 가열됨",

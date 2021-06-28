@@ -1,0 +1,123 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "tag": "forge:plates/gold"
+  },
+  "transitionalItem": {
+    "item": "create:incomplete_clockwork_element"
+  },
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        },
+        {
+          "item": "create:cogwheel"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ]
+    },
+    {
+      "type": "create:pressing",
+      "ingredients": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        },
+        {
+          "item": "create:large_cogwheel"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ]
+    },
+    {
+      "type": "create:filling",
+      "ingredients": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        },
+        {
+          "fluid": "minecraft:water",
+          "nbt": {},
+          "amount": 100
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        },
+        {
+          "item": "create:shaft"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ]
+    },
+    {
+      "type": "create:cutting",
+      "ingredients": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_clockwork_element"
+        }
+      ],
+      "processingTime": 100
+    }
+  ],
+  "results": [
+    {
+      "item": "create:clockwork_element",
+      "chance": 10.0
+    },
+    {
+      "item": "create:golden_sheet",
+      "chance": 5.0
+    },
+    {
+      "item": "create:andesite_alloy",
+      "chance": 2.0
+    },
+    {
+      "item": "create:cogwheel"
+    }
+  ],
+  "averageSteps": 20,
+  "maxSteps": 30
+}

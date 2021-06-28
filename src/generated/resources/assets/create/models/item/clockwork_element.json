@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create:item/integrated_circuit"
+    "layer0": "create:item/clockwork_element"
   }
 }

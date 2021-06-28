@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1708",
+	"_": "Missing Localizations: 1714",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Koperstaaf",
 	"item.create.copper_nugget": "Koper klompje",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "UNLOCALIZED: Creative Worldshaper",
 	"item.create.honey_bucket": "UNLOCALIZED: Honey Bucket",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
-	"item.create.integrated_circuit": "UNLOCALIZED: Integrated Circuit",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "IJzeren Platen",
-	"item.create.lapis_sheet": "UNLOCALIZED: Lapis Sheet",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "UNLOCALIZED: Minecart Contraption",
 	"item.create.minecart_coupling": "UNLOCALIZED: Minecart Coupling",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "UNLOCALIZED: Mysterious Conversion",
 	"create.recipe.spout_filling": "UNLOCALIZED: Filling by Spout",
 	"create.recipe.draining": "UNLOCALIZED: Item Draining",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% Kans",
 	"create.recipe.heat_requirement.none": "UNLOCALIZED: No Heating Required",
 	"create.recipe.heat_requirement.heated": "UNLOCALIZED: Heated",

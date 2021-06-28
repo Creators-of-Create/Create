@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 851",
+	"_": "Missing Localizations: 859",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -443,6 +443,7 @@
 	"item.create.chocolate_glazed_berries": "UNLOCALIZED: Chocolate Glazed Berries",
 	"item.create.chromatic_compound": "Composto cromatico",
 	"item.create.cinder_flour": "Cenere farinosa",
+	"item.create.clockwork_element": "UNLOCALIZED: Clockwork Element",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
 	"item.create.copper_ingot": "Lingotto di rame",
 	"item.create.copper_nugget": "Pepita di rame",
@@ -477,9 +478,8 @@
 	"item.create.handheld_worldshaper": "Plasmatore del mondo portatile",
 	"item.create.honey_bucket": "Secchio di miele",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
-	"item.create.integrated_circuit": "Circuito integrato",
+	"item.create.incomplete_clockwork_element": "UNLOCALIZED: Incomplete Clockwork Element",
 	"item.create.iron_sheet": "Lamiera di ferro",
-	"item.create.lapis_sheet": "Lamiera di lapislazzuli",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Contrazione per carrello da miniera",
 	"item.create.minecart_coupling": "Aggancio per carrelli da miniera",
@@ -713,6 +713,12 @@
 	"create.recipe.mystery_conversion": "Metamorfosi cromatica",
 	"create.recipe.spout_filling": "Riempimento da spruzzo",
 	"create.recipe.draining": "Drenaggio di oggetti",
+	"create.recipe.sequenced_assembly": "UNLOCALIZED: Sequenced Assembly",
+	"create.recipe.assembly.next": "UNLOCALIZED: Next: %1$s",
+	"create.recipe.assembly.pressing": "UNLOCALIZED: Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "UNLOCALIZED: Spout %1$s",
+	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
+	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.processing.chance": "%1$s%% di probabilità",
 	"create.recipe.heat_requirement.none": "Nessun riscaldamento",
 	"create.recipe.heat_requirement.heated": "Riscaldamento",

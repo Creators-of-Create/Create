@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -25,6 +27,10 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 
 @MethodsReturnNonnullByDefault
@@ -42,9 +48,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	private IRecipeType<?> type;
 	private IRecipeSerializer<?> serializer;
 	private AllRecipeTypes enumType;
+	private Optional<Supplier<ItemStack>> forcedResult;
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ProcessingRecipeParams params) {
 
+		this.forcedResult = Optional.empty();
 		this.enumType = recipeType;
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
@@ -91,11 +99,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 		if (ingredientCount > getMaxInputCount())
 			logger.warn(messageHeader + " has more item inputs (" + ingredientCount + ") than supported ("
-					+ getMaxInputCount() + ").");
+				+ getMaxInputCount() + ").");
 
 		if (outputCount > getMaxOutputCount())
 			logger.warn(messageHeader + " has more item outputs (" + outputCount + ") than supported ("
-					+ getMaxOutputCount() + ").");
+				+ getMaxOutputCount() + ").");
 
 		if (processingDuration > 0 && !canSpecifyDuration())
 			logger.warn(messageHeader + " specified a duration. Durations have no impact on this type of recipe.");
@@ -139,10 +147,17 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 			.collect(Collectors.toList());
 	}
 
+	public void enforceNextResult(Supplier<ItemStack> stack) {
+		forcedResult = Optional.of(stack);
+	}
+
 	public List<ItemStack> rollResults() {
 		List<ItemStack> results = new ArrayList<>();
-		for (ProcessingOutput output : getRollableResults()) {
-			ItemStack stack = output.rollOutput();
+		NonNullList<ProcessingOutput> rollableResults = getRollableResults();
+		for (int i = 0; i < rollableResults.size(); i++) {
+			ProcessingOutput output = rollableResults.get(i);
+			ItemStack stack = i == 0 && forcedResult.isPresent() ? forcedResult.get()
+				.get() : output.rollOutput();
 			if (!stack.isEmpty())
 				results.add(stack);
 		}
@@ -214,6 +229,15 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	public AllRecipeTypes getEnumType() {
 		return enumType;
+	}
+	
+	public boolean supportsAssembly() {
+		return false;
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public ITextComponent getDescriptionForAssembly() {
+		return new StringTextComponent("");
 	}
 
 }

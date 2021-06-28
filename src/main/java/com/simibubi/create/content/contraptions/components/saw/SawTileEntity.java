@@ -3,16 +3,19 @@ package com.simibubi.create.content.contraptions.components.saw;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.actors.BlockBreakingKineticTileEntity;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -208,6 +211,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			boolean changed = false;
 			if (!behaviour.canInsertFromSide(itemMovementFacing))
 				return;
+			if (world.isRemote && !isVirtual())
+				return;
 			for (int slot = 0; slot < inventory.getSlots(); slot++) {
 				ItemStack stack = inventory.getStackInSlot(slot);
 				if (stack.isEmpty())
@@ -320,14 +325,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	private List<? extends IRecipe<?>> getRecipes() {
-		/*
-		 * Predicate<IRecipe<?>> types =
-		 * AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get() ?
-		 * RecipeConditions.isOfType(IRecipeType.STONECUTTING,
-		 * AllRecipeTypes.CUTTING.getType()) :
-		 * RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType());
-		 *
-		 */
+		Optional<CuttingRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(world, inventory.getStackInSlot(0),
+			AllRecipeTypes.CUTTING.getType(), CuttingRecipe.class);
+		if (assemblyRecipe.isPresent() && filtering.test(assemblyRecipe.get()
+			.getRecipeOutput()))
+			return ImmutableList.of(assemblyRecipe.get());
 
 		Predicate<IRecipe<?>> types = RecipeConditions.isOfType(AllRecipeTypes.CUTTING.getType(),
 			AllConfigs.SERVER.recipes.allowStonecuttingOnSaw.get() ? IRecipeType.STONECUTTING : null,
