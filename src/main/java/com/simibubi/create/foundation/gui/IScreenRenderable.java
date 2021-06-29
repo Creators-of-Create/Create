@@ -10,6 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public interface IScreenRenderable {
 
+	@OnlyIn(Dist.CLIENT)
 	Screen EMPTY_SCREEN = new Screen(new StringTextComponent("")) {};
 
 	@OnlyIn(Dist.CLIENT)
