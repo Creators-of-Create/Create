@@ -34,6 +34,7 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
@@ -65,6 +66,7 @@ public class CreateClient {
 	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
 	public static final Outliner OUTLINER = new Outliner();
 	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
+	public static final Screen EMPTY_SCREEN = new Screen(new StringTextComponent("")) {};
 
 	public static final ZapperRenderHandler ZAPPER_RENDER_HANDLER = new ZapperRenderHandler();
 	public static final PotatoCannonRenderHandler POTATO_CANNON_RENDER_HANDLER = new PotatoCannonRenderHandler();
