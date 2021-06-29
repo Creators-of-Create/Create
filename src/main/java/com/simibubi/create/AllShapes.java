@@ -232,7 +232,7 @@ public class AllShapes {
 		return Block.makeCuboidShape(x1, y1, z1, x2, y2, z2);
 	}
 
-	private static class Builder {
+	public static class Builder {
 		VoxelShape shape;
 
 		public Builder(VoxelShape shape) {
