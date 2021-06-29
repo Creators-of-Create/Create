@@ -150,11 +150,6 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		return true;
 	}
 
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
 	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
