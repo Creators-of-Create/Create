@@ -19,12 +19,9 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRe
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
@@ -81,15 +78,16 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	private int recipeIndex;
 	private final LazyOptional<IItemHandler> invProvider;
 	private FilteringBehaviour filtering;
-	private boolean processingStarted;
+
+	private ItemStack playEvent;
 
 	public SawTileEntity(TileEntityType<? extends SawTileEntity> type) {
 		super(type);
-		inventory = new ProcessingInventory(this::start);
+		inventory = new ProcessingInventory(this::start).withSlotLimit(!AllConfigs.SERVER.recipes.bulkCutting.get());
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
 		invProvider = LazyOptional.of(() -> inventory);
-		processingStarted = false;
+		playEvent = ItemStack.EMPTY;
 	}
 
 	@Override
@@ -106,10 +104,10 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		compound.putInt("RecipeIndex", recipeIndex);
 		super.write(compound, clientPacket);
 
-		if (!clientPacket || !processingStarted)
+		if (!clientPacket || playEvent.isEmpty())
 			return;
-		processingStarted = false;
-		NBTHelper.putMarker(compound, "ProcessingStarted");
+		compound.put("PlayEvent", playEvent.serializeNBT());
+		playEvent = ItemStack.EMPTY;
 	}
 
 	@Override
@@ -117,8 +115,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.fromTag(state, compound, clientPacket);
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		recipeIndex = compound.getInt("RecipeIndex");
-		if (compound.contains("ProcessingStarted"))
-			processingStarted = true;
+		if (compound.contains("PlayEvent"))
+			playEvent = ItemStack.read(compound.getCompound("PlayEvent"));
 	}
 
 	@Override
@@ -128,29 +126,21 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (getSpeed() == 0)
 			return;
 
-		SoundScapes.play(AmbienceGroup.SAW, pos, 1);
-
-		ItemStack stackInSlot = inventory.getStackInSlot(0);
-		if (stackInSlot.isEmpty())
-			return;
-
-		boolean isWood = false;
-		Item item = stackInSlot.getItem();
-		if (item instanceof BlockItem) {
-			Block block = ((BlockItem) item).getBlock();
-			isWood = block.getSoundType(block.getDefaultState(), world, pos, null) == SoundType.WOOD;
-		}
-
-		if (processingStarted) {
-			processingStarted = false;
+		if (!playEvent.isEmpty()) {
+			boolean isWood = false;
+			Item item = playEvent.getItem();
+			if (item instanceof BlockItem) {
+				Block block = ((BlockItem) item).getBlock();
+				isWood = block.getSoundType(block.getDefaultState(), world, pos, null) == SoundType.WOOD;
+			}
+			spawnEventParticles(playEvent);
+			playEvent = ItemStack.EMPTY;
 			if (!isWood)
-				AllSoundEvents.SAW_ACTIVATE_STONE.playAt(world, pos, 1, 1, true);
+				AllSoundEvents.SAW_ACTIVATE_STONE.playAt(world, pos, 3, 1, true);
 			else
-				AllSoundEvents.SAW_ACTIVATE_WOOD.playAt(world, pos, 1, 1, true);
+				AllSoundEvents.SAW_ACTIVATE_WOOD.playAt(world, pos, 3, 1, true);
 			return;
 		}
-
-//		AllSoundEvents.SAW_PROCESS.playAt(world, pos, 1, 1, true); TODO
 	}
 
 	@Override
@@ -169,15 +159,20 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 		}
 
-		float processingSpeed = MathHelper.clamp(Math.abs(getSpeed()) / 32, 1, 128);
+		float processingSpeed = MathHelper.clamp(Math.abs(getSpeed()) / 24, 1, 128);
 		inventory.remainingTime -= processingSpeed;
 
 		if (inventory.remainingTime > 0)
 			spawnParticles(inventory.getStackInSlot(0));
 
-		if (inventory.remainingTime < 20 && !inventory.appliedRecipe) {
+		if (inventory.remainingTime < 5 && !inventory.appliedRecipe) {
+			if (world.isRemote && !isVirtual())
+				return;
+			playEvent = inventory.getStackInSlot(0);
 			applyRecipe();
 			inventory.appliedRecipe = true;
+			inventory.recipeDuration = 20;
+			inventory.remainingTime = 20;
 			sendData();
 			return;
 		}
@@ -263,6 +258,26 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		return super.getCapability(cap, side);
 	}
 
+	protected void spawnEventParticles(ItemStack stack) {
+		if (stack == null || stack.isEmpty())
+			return;
+
+		IParticleData particleData = null;
+		if (stack.getItem() instanceof BlockItem)
+			particleData = new BlockParticleData(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
+				.getDefaultState());
+		else
+			particleData = new ItemParticleData(ParticleTypes.ITEM, stack);
+
+		Random r = world.rand;
+		Vector3d v = VecHelper.getCenterOf(this.pos)
+			.add(0, 5 / 16f, 0);
+		for (int i = 0; i < 10; i++) {
+			Vector3d m = VecHelper.offsetRandomly(new Vector3d(0, 0.25f, 0), r, .125f);
+			world.addParticle(particleData, v.x, v.y, v.z, m.x, m.y, m.y);
+		}
+	}
+
 	protected void spawnParticles(ItemStack stack) {
 		if (stack == null || stack.isEmpty())
 			return;
@@ -281,7 +296,9 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		Vector3d vec = getItemMovementVec();
 		Vector3d pos = VecHelper.getCenterOf(this.pos);
 		float offset = inventory.recipeDuration != 0 ? (float) (inventory.remainingTime) / inventory.recipeDuration : 0;
-		offset -= .5f;
+		offset /= 2;
+		if (inventory.appliedRecipe)
+			offset -= .5f;
 		world.addParticle(particleData, pos.getX() + -vec.x * offset, pos.getY() + .45f, pos.getZ() + -vec.z * offset,
 			-vec.x * speed, r.nextFloat() * speed, -vec.z * speed);
 	}
@@ -319,8 +336,9 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 				ItemHelper.addToList(stack, list);
 			}
 		}
-		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++)
+		for (int slot = 0; slot < list.size() && slot + 1 < inventory.getSlots(); slot++) {
 			inventory.setStackInSlot(slot + 1, list.get(slot));
+		}
 
 	}
 
@@ -353,9 +371,12 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			return;
 
 		inventory.clear();
-		inventory.insertItem(0, entity.getItem()
+		ItemStack remainder = inventory.insertItem(0, entity.getItem()
 			.copy(), false);
-		entity.remove();
+		if (remainder.isEmpty())
+			entity.remove();
+		else
+			entity.setItem(remainder);
 	}
 
 	public void start(ItemStack inserted) {
@@ -368,7 +389,6 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 		List<? extends IRecipe<?>> recipes = getRecipes();
 		boolean valid = !recipes.isEmpty();
-		processingStarted = true;
 		int time = 50;
 
 		if (recipes.isEmpty()) {

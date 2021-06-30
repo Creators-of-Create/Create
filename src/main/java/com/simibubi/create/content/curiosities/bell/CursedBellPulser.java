@@ -15,7 +15,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @EventBusSubscriber
 public class CursedBellPulser {
 
-	public static final int DISTANCE = 2;
+	public static final int DISTANCE = 3;
 	public static final int RECHARGE_TICKS = 8;
 
 	@SubscribeEvent

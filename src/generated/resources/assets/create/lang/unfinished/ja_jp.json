@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 234",
+	"_": "Missing Localizations: 232",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1179,7 +1179,6 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "からくりが止まる",
 	"create.subtitle.peculiar_bell_use": "UNLOCALIZED: Peculiar Bell tolls",
 	"create.subtitle.mixing": "混ぜる音",
@@ -1194,7 +1193,6 @@
 	"create.subtitle.scroll_value": "スクロールのカチカチ音",
 	"create.subtitle.crafter_craft": "メカニカルクラフターがクラフトする",
 	"create.subtitle.controller_put": "UNLOCALIZED: Controller thumps",
-	"create.subtitle.saw_process": "UNLOCALIZED: Mechanical Saw processes",
 	"create.subtitle.cranking": "ハンドクランクが回る",
 	"create.subtitle.wrench_remove": "機械を壊す",
 	"create.subtitle.cogs": "歯車がゴロゴロと鳴る",

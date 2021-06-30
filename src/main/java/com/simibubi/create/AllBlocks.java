@@ -1123,7 +1123,7 @@ public class AllBlocks {
 				.modelFile(AssetLookup.partialBaseModel(c, p))
 				.rotationX(s.get(ArmBlock.CEILING) ? 180 : 0)
 				.build()))
-		.transform(StressConfigDefaults.setImpact(8.0))
+		.transform(StressConfigDefaults.setImpact(2.0))
 		.item(ArmItem::new)
 		.transform(customItemModel())
 		.register();

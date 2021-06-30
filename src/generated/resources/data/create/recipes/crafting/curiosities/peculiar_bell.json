@@ -1,19 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " I ",
-    "IGI",
-    "S S"
+    "I",
+    "P"
   ],
   "key": {
     "I": {
-      "tag": "forge:ingots/brass"
+      "tag": "forge:storage_blocks/brass"
     },
-    "S": {
+    "P": {
       "tag": "forge:plates/brass"
-    },
-    "G": {
-      "item": "minecraft:ghast_tear"
     }
   },
   "result": {

@@ -30,8 +30,6 @@ public class SoundScapes {
 		KINETIC(SoundScapes::kinetic),
 		COG(SoundScapes::cogwheel),
 	
-		SAW((p, g) -> new SoundScape(p, g).repeating(AllSoundEvents.SAW_IDLE.getMainEvent(), 1f, .95f, 1))
-
 		;
 
 		private BiFunction<Float, AmbienceGroup, SoundScape> factory;

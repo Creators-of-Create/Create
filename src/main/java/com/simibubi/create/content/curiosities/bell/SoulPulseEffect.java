@@ -17,7 +17,7 @@ import net.minecraft.world.spawner.WorldEntitySpawner;
 
 public class SoulPulseEffect {
 
-	public static final int MAX_DISTANCE = 5;
+	public static final int MAX_DISTANCE = 10;
 	private static final List<List<BlockPos>> LAYERS = genLayers();
 
 	private static final int WAITING_TICKS = 100;

@@ -49,7 +49,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance()
+			.canUseInstancing(te.getWorld()))
+			return;
 
 		renderShaft(te, ms, buffer, light, overlay);
 	}
@@ -85,10 +87,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		if (rotate) {
 			superBuffer.rotateCentered(Direction.UP, AngleHelper.rad(90));
 		}
-		superBuffer
-				.color(0xFFFFFF)
-				.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
+		superBuffer.color(0xFFFFFF)
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
 	}
 
 	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
@@ -108,8 +109,13 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			boolean moving = te.inventory.recipeDuration != 0;
 			float offset = moving ? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration : 0;
 			float processingSpeed = MathHelper.clamp(Math.abs(te.getSpeed()) / 32, 1, 128);
-			if (moving)
-				offset = MathHelper.clamp(offset + ((-partialTicks + .5f) * processingSpeed) / te.inventory.recipeDuration, 0, 1);
+			if (moving) {
+				offset = MathHelper
+					.clamp(offset + ((-partialTicks + .5f) * processingSpeed) / te.inventory.recipeDuration, 0.125f, 1f);
+				if (!te.inventory.appliedRecipe)
+					offset += 1;
+				offset /= 2;
+			}
 
 			if (te.getSpeed() == 0)
 				offset = .5f;
@@ -142,10 +148,13 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
-		if (state.get(FACING).getAxis().isHorizontal())
-			return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
+		if (state.get(FACING)
+			.getAxis()
+			.isHorizontal())
+			return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF,
+				state.rotate(te.getWorld(), te.getPos(), Rotation.CLOCKWISE_180));
 		return CreateClient.BUFFER_CACHE.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
-				getRenderedBlockState(te));
+			getRenderedBlockState(te));
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
@@ -195,10 +204,8 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		MatrixStacker.of(m)
 			.unCentre();
 
-		superBuffer
-			.transform(m)
-			.light(matrices.entityMatrix,
-				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+		superBuffer.transform(m)
+			.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
 			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getCutoutMipped()));
 
 		m.pop();

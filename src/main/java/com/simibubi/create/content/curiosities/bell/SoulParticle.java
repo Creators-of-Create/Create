@@ -6,7 +6,9 @@ import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.world.LightType;
 
 public class SoulParticle extends CustomRotationParticle {
 
@@ -59,7 +61,8 @@ public class SoulParticle extends CustomRotationParticle {
 
 		if (animationStage == null)
 			this.setExpired();
-
+		if (world.getLightLevel(LightType.BLOCK, new BlockPos(posX, posY, posZ)) > 7)
+			this.setExpired();
 	}
 
 	public void setFrame(int frame) {

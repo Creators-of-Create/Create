@@ -194,16 +194,6 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		SAW_PROCESS = create("saw_process").subtitle("Mechanical Saw processes")
-			.playExisting(SoundEvents.BLOCK_SAND_PLACE, .075f, .75f)
-			.category(SoundCategory.BLOCKS)
-			.build(),
-
-		SAW_IDLE = create("saw_idle").subtitle("Mechanical Saw turns")
-			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND)
-			.category(SoundCategory.BLOCKS)
-			.build(),
-
 		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
 			.playExisting(SoundEvents.ENTITY_GENERIC_EAT, .5f, 1f)
 			.category(SoundCategory.BLOCKS)

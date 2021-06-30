@@ -359,7 +359,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			ItemStack remainder = ItemHandlerHelper.insertItemStacked(capBelow.orElse(null), item, simulate);
 			ItemStack held = getItem();
 			if (!simulate)
-				setItem(remainder);
+				setItem(remainder, itemPosition.get(0));
 			if (remainder.getCount() != held.getCount())
 				return true;
 			if (direction == Direction.DOWN)

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 210",
+	"_": "Missing Localizations: 208",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1179,7 +1179,6 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.saw_idle": "UNLOCALIZED: Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "Maszyna staje",
 	"create.subtitle.peculiar_bell_use": "UNLOCALIZED: Peculiar Bell tolls",
 	"create.subtitle.mixing": "Dźwięki mieszania",
@@ -1194,7 +1193,6 @@
 	"create.subtitle.scroll_value": "Kliknięcie",
 	"create.subtitle.crafter_craft": "Mechaniczny stół rzemieślniczy konstruuje",
 	"create.subtitle.controller_put": "UNLOCALIZED: Controller thumps",
-	"create.subtitle.saw_process": "UNLOCALIZED: Mechanical Saw processes",
 	"create.subtitle.cranking": "Ręczna korba obraca się",
 	"create.subtitle.wrench_remove": "Komponent niszczy się",
 	"create.subtitle.cogs": "Koła zębate terkoczą",

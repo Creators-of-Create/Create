@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 
 public class CursedBellTileEntity extends AbstractBellTileEntity {
 
-	public static final int DISTANCE = 5;
+	public static final int DISTANCE = 10;
 	public static final int RECHARGE_TICKS = 65;
 	public static final int EFFECT_TICKS = 20;
 

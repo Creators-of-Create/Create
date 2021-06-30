@@ -2,18 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "LLA",
-    "LR ",
-    "ICI"
+    "L  ",
+    "IC "
   ],
   "key": {
     "L": {
       "tag": "forge:plates/brass"
     },
-    "R": {
-      "item": "create:cogwheel"
-    },
     "I": {
-      "item": "create:electron_tube"
+      "item": "create:clockwork_component"
     },
     "A": {
       "item": "create:andesite_alloy"

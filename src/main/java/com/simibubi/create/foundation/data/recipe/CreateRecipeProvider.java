@@ -119,7 +119,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllItems.ELECTRON_TUBE.get();
 		}
 
-		static IItemProvider circuit() {
+		static IItemProvider clockwork() {
 			return AllItems.CLOCKWORK_COMPONENT.get();
 		}
 

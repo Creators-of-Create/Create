@@ -1178,7 +1178,6 @@
 
 	"_": "->------------------------]  Subtitles  [------------------------<-",
 
-	"create.subtitle.saw_idle": "Mechanical Saw turns",
 	"create.subtitle.contraption_disassemble": "Contraption stops",
 	"create.subtitle.peculiar_bell_use": "Peculiar Bell tolls",
 	"create.subtitle.mixing": "Mixing Noises",
@@ -1193,7 +1192,6 @@
 	"create.subtitle.scroll_value": "Scroll-input clicks",
 	"create.subtitle.crafter_craft": "Crafter crafts",
 	"create.subtitle.controller_put": "Controller thumps",
-	"create.subtitle.saw_process": "Mechanical Saw processes",
 	"create.subtitle.cranking": "Hand Crank turns",
 	"create.subtitle.wrench_remove": "Component breaks",
 	"create.subtitle.cogs": "Cogwheels rumble",
