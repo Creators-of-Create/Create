@@ -1,11 +1,13 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseScrollEvent;
@@ -49,6 +51,15 @@ public class InputEvents {
 
 		CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed);
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed);
+	}
+
+	@SubscribeEvent
+	public static void onClickInput(ClickInputEvent event) {
+		if (Minecraft.getInstance().currentScreen != null)
+			return;
+
+		if (event.isUseItem())
+			LinkedControllerClientHandler.deactivateInLectern();
 	}
 
 }

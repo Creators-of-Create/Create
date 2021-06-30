@@ -34,6 +34,7 @@ import com.simibubi.create.content.logistics.block.depot.EjectorTriggerPacket;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmPlacementPacket;
 import com.simibubi.create.content.logistics.item.LinkedControllerBindPacket;
 import com.simibubi.create.content.logistics.item.LinkedControllerInputPacket;
+import com.simibubi.create.content.logistics.item.LinkedControllerStopLecternPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
@@ -93,6 +94,7 @@ public enum AllPackets {
 	EJECTOR_ELYTRA(EjectorElytraPacket.class, EjectorElytraPacket::new, PLAY_TO_SERVER),
 	LINKED_CONTROLLER_INPUT(LinkedControllerInputPacket.class, LinkedControllerInputPacket::new, PLAY_TO_SERVER),
 	LINKED_CONTROLLER_BIND(LinkedControllerBindPacket.class, LinkedControllerBindPacket::new, PLAY_TO_SERVER),
+	LINKED_CONTROLLER_USE_LECTERN(LinkedControllerStopLecternPacket.class, LinkedControllerStopLecternPacket::new, PLAY_TO_SERVER),
 	C_CONFIGURE_CONFIG(CConfigureConfigPacket.class, CConfigureConfigPacket::new, PLAY_TO_SERVER),
 	SUBMIT_GHOST_ITEM(GhostItemSubmitPacket.class, GhostItemSubmitPacket::new, PLAY_TO_SERVER),
 	BLUEPRINT_COMPLETE_RECIPE(BlueprintAssignCompleteRecipePacket.class, BlueprintAssignCompleteRecipePacket::new, PLAY_TO_SERVER),
@@ -126,7 +128,7 @@ public enum AllPackets {
 
 	private LoadedPacket<?> packet;
 
-	private <T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory,
+	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory,
 		NetworkDirection direction) {
 		packet = new LoadedPacket<>(type, factory, direction);
 	}

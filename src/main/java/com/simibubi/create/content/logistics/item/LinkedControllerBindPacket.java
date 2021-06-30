@@ -18,23 +18,26 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 	private BlockPos linkLocation;
 
 	public LinkedControllerBindPacket(int button, BlockPos linkLocation) {
+		super((BlockPos) null);
 		this.button = button;
 		this.linkLocation = linkLocation;
 	}
 
 	public LinkedControllerBindPacket(PacketBuffer buffer) {
+		super(buffer);
 		this.button = buffer.readVarInt();
 		this.linkLocation = buffer.readBlockPos();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
+		super.write(buffer);
 		buffer.writeVarInt(button);
 		buffer.writeBlockPos(linkLocation);
 	}
 
 	@Override
-	protected void handle(ServerPlayerEntity player, ItemStack heldItem) {
+	protected void handleItem(ServerPlayerEntity player, ItemStack heldItem) {
 		if (player.isSpectator())
 			return;
 
@@ -42,7 +45,7 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 		LinkBehaviour linkBehaviour = TileEntityBehaviour.get(player.world, linkLocation, LinkBehaviour.TYPE);
 		if (linkBehaviour == null)
 			return;
-		
+
 		Pair<Frequency, Frequency> pair = linkBehaviour.getNetworkKey();
 		frequencyItems.setStackInSlot(button * 2, pair.getKey()
 			.getStack()
@@ -51,8 +54,10 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 			.getStack()
 			.copy());
 
-		heldItem.getTag()
-			.put("Items", frequencyItems.serializeNBT());
+		heldItem.getTag().put("Items", frequencyItems.serializeNBT());
 	}
+
+	@Override
+	protected void handleLectern(ServerPlayerEntity player, LecternControllerTileEntity lectern) { }
 
 }

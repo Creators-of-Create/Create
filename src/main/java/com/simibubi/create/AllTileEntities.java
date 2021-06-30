@@ -155,6 +155,8 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
+import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
+import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
@@ -660,6 +662,14 @@ public class AllTileEntities {
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();
 
+	public static final TileEntityEntry<LecternControllerTileEntity> LECTERN_CONTROLLER =
+		Create.registrate()
+			.tileEntity("lectern_controller", LecternControllerTileEntity::new)
+			.validBlocks(AllBlocks.LECTERN_CONTROLLER)
+			.renderer(() -> LecternControllerRenderer::new)
+			.register();
+
+	// Curiosities
 	public static final TileEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
 		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
 		.instance(() -> CopperBacktankInstance::new)

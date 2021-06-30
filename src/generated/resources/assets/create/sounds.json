@@ -58,6 +58,24 @@
     ],
     "subtitle": "create.subtitle.controller_click"
   },
+  "controller_put": {
+    "sounds": [
+      {
+        "name": "minecraft:item.book.put",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_put"
+  },
+  "controller_take": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.remove_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_take"
+  },
   "copper_armor_equip": {
     "sounds": [
       {

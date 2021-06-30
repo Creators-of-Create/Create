@@ -174,6 +174,16 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		CONTROLLER_PUT = create("controller_put").subtitle("Controller thumps")
+			.playExisting(SoundEvents.ITEM_BOOK_PUT, 1f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		CONTROLLER_TAKE = create("controller_take").subtitle("Lectern empties")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, 1f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
 		SAW_ACTIVATE_WOOD = create("saw_activate_wood").subtitle("Mechanical Saw activates")
 			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND, .75f, 1.5f)
 			.category(SoundCategory.BLOCKS)

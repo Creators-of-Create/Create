@@ -41,6 +41,7 @@ public class LinkedControllerClientHandler {
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
 	public static Collection<Integer> currentlyPressed = new HashSet<>();
+	private static BlockPos lecternPos;
 	private static BlockPos selectedLocation = BlockPos.ZERO;
 	private static Vector<KeyBinding> controls;
 
@@ -71,18 +72,41 @@ public class LinkedControllerClientHandler {
 	}
 
 	public static void toggle() {
-		if (MODE == Mode.IDLE)
+		if (MODE == Mode.IDLE) {
 			MODE = Mode.ACTIVE;
-		else {
+			lecternPos = null;
+		}  else {
 			MODE = Mode.IDLE;
 			onReset();
 		}
+	}
+
+	public static void activateInLectern(BlockPos lecternAt) {
+		if (MODE == Mode.IDLE) {
+			MODE = Mode.ACTIVE;
+			lecternPos = lecternAt;
+		}
+	}
+
+	public static void deactivateInLectern() {
+		if (MODE == Mode.ACTIVE && inLectern()) {
+			MODE = Mode.IDLE;
+			onReset();
+		}
+	}
+
+	public static boolean inLectern() {
+		return lecternPos != null;
 	}
 
 	protected static void onReset() {
 		getControls().forEach(kb -> kb.setPressed(isActuallyPressed(kb)));
 		packetCooldown = 0;
 		selectedLocation = BlockPos.ZERO;
+
+		if (inLectern())
+			AllPackets.channel.sendToServer(new LinkedControllerStopLecternPacket(lecternPos));
+		lecternPos = null;
 
 		if (!currentlyPressed.isEmpty())
 			AllPackets.channel.sendToServer(new LinkedControllerInputPacket(currentlyPressed, false));
@@ -114,7 +138,7 @@ public class LinkedControllerClientHandler {
 			return;
 		}
 
-		if (!AllItems.LINKED_CONTROLLER.isIn(heldItem)) {
+		if (!inLectern() && !AllItems.LINKED_CONTROLLER.isIn(heldItem)) {
 			heldItem = player.getHeldItemOffhand();
 			if (!AllItems.LINKED_CONTROLLER.isIn(heldItem)) {
 				MODE = Mode.IDLE;
@@ -150,13 +174,13 @@ public class LinkedControllerClientHandler {
 		if (MODE == Mode.ACTIVE) {
 			// Released Keys
 			if (!releasedKeys.isEmpty()) {
-				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(releasedKeys, false));
+				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(releasedKeys, false, lecternPos));
 				AllSoundEvents.CONTROLLER_CLICK.playAt(player.world, player.getBlockPos(), 1f, .5f, true);
 			}
 
 			// Newly Pressed Keys
 			if (!newKeys.isEmpty()) {
-				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(newKeys, true));
+				AllPackets.channel.sendToServer(new LinkedControllerInputPacket(newKeys, true, lecternPos));
 				packetCooldown = PACKET_RATE;
 				AllSoundEvents.CONTROLLER_CLICK.playAt(player.world, player.getBlockPos(), 1f, .75f, true);
 			}

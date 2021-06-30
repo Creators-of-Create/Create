@@ -157,6 +157,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.DyedBlockList;
@@ -1278,6 +1279,15 @@ public class AllBlocks {
 			.item()
 			.transform(customItemModel("diodes", "latch_off"))
 			.register();
+
+	public static final BlockEntry<LecternControllerBlock> LECTERN_CONTROLLER =
+		REGISTRATE.block("lectern_controller", LecternControllerBlock::new)
+			.initialProperties(() -> Blocks.LECTERN)
+			.blockstate((c,p) -> p.horizontalBlock(c.get(), p.models()
+				.getExistingFile(p.mcLoc("block/lectern"))))
+			.loot((lt, block) -> lt.registerDropping(block, Blocks.LECTERN))
+			.register();
+
 
 	// Curiosities
 

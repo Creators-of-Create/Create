@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 863",
+	"_": "Missing Localizations: 868",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -204,6 +204,7 @@
 	"block.create.layered_limestone": "Calcare stratificato",
 	"block.create.layered_scoria": "Scoria stratificata",
 	"block.create.layered_weathered_limestone": "Calcare consumato stratificato",
+	"block.create.lectern_controller": "UNLOCALIZED: Lectern Controller",
 	"block.create.light_blue_sail": "Vela azzurra",
 	"block.create.light_blue_seat": "Sedile azzurro",
 	"block.create.light_blue_valve_handle": "Maniglia per valvola azzurra",
@@ -1192,6 +1193,7 @@
 	"create.subtitle.schematicannon_finish": "Finiture cannoneschematico",
 	"create.subtitle.scroll_value": "UNLOCALIZED: Scroll-input clicks",
 	"create.subtitle.crafter_craft": "UNLOCALIZED: Crafter crafts",
+	"create.subtitle.controller_put": "UNLOCALIZED: Controller thumps",
 	"create.subtitle.saw_process": "UNLOCALIZED: Mechanical Saw processes",
 	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
 	"create.subtitle.wrench_remove": "UNLOCALIZED: Component breaks",
@@ -1207,6 +1209,7 @@
 	"create.subtitle.copper_armor_equip": "UNLOCALIZED: Diving equipment clinks",
 	"create.subtitle.cursed_bell_use": "UNLOCALIZED: Cursed Bell tolls",
 	"create.subtitle.cursed_bell_convert": "UNLOCALIZED: Cursed Bell awakens",
+	"create.subtitle.controller_take": "UNLOCALIZED: Lectern empties",
 	"create.subtitle.mechanical_press_activation": "Pressa meccanica attiva",
 	"create.subtitle.contraption_assemble": "UNLOCALIZED: Contraption moves",
 	"create.subtitle.crafter_click": "UNLOCALIZED: Crafter clicks",
@@ -1401,6 +1404,8 @@
 	"item.create.linked_controller.tooltip.behaviour2": "UNLOCALIZED: Opens the manual _Configuration Interface_.",
 	"item.create.linked_controller.tooltip.condition3": "UNLOCALIZED: R-Click on Redstone Link Receiver",
 	"item.create.linked_controller.tooltip.behaviour3": "UNLOCALIZED: Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+	"item.create.linked_controller.tooltip.condition4": "UNLOCALIZED: R-Click on Lectern",
+	"item.create.linked_controller.tooltip.behaviour4": "UNLOCALIZED: Places the Controller into the Lectern for easy activation. (R-Click while Sneaking to retrieve it)",
 
 	"item.create.diving_helmet.tooltip": "UNLOCALIZED: DIVING HELMET",
 	"item.create.diving_helmet.tooltip.summary": "UNLOCALIZED: Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",

@@ -185,6 +185,8 @@
 	"item.create.linked_controller.tooltip.behaviour2": "Opens the manual _Configuration Interface_.",
 	"item.create.linked_controller.tooltip.condition3": "R-Click on Redstone Link Receiver",
 	"item.create.linked_controller.tooltip.behaviour3": "Enables _Bind Mode_, press one of the _six controls_ to bind it to the _Links' Frequency_.",
+  "item.create.linked_controller.tooltip.condition4": "R-Click on Lectern",
+  "item.create.linked_controller.tooltip.behaviour4": "Places the Controller into the Lectern for easy activation. (R-Click while Sneaking to retrieve it)",
 
 	"item.create.diving_helmet.tooltip": "DIVING HELMET",
 	"item.create.diving_helmet.tooltip.summary": "Together with a _Copper_ _Backtank_, allows the wielder to _breathe_ _underwater_ for an extended amount of time.",

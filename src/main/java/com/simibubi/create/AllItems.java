@@ -1,10 +1,10 @@
 package com.simibubi.create;
 
-import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
+import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
@@ -249,6 +249,7 @@ public class AllItems {
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
+			.properties(p -> p.maxStackSize(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
