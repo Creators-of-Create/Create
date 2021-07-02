@@ -1,9 +1,11 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -17,6 +19,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -86,6 +89,11 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 			return new StringTextComponent("Invalid");
 		return Lang.translate("recipe.assembly.deploying_item",
 			new TranslationTextComponent(matchingStacks[0].getTranslationKey()).getString());
+	}
+
+	@Override
+	public void addRequiredMachines(Set<IItemProvider> list) {
+		list.add(AllBlocks.DEPLOYER.get());
 	}
 	
 	@Override

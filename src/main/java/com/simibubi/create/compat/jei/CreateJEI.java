@@ -124,10 +124,6 @@ public class CreateJEI implements IModPlugin {
 
 		seqAssembly = register("sequenced_assembly", SequencedAssemblyCategory::new)
 			.recipes(AllRecipeTypes.SEQUENCED_ASSEMBLY::getType)
-			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
-			.catalyst(AllBlocks.MECHANICAL_SAW::get)
-			.catalyst(AllBlocks.DEPLOYER::get)
-			.catalyst(AllBlocks.SPOUT::get)
 			.build(),
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)

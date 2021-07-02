@@ -17,9 +17,9 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-		TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
-			.output(Fluids.LAVA, 50)
-			.requiresHeat(HeatCondition.SUPERHEATED)),
+	TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
+		.output(Fluids.LAVA, 50)
+		.requiresHeat(HeatCondition.SUPERHEATED)),
 
 		TEA = create("tea", b -> b.require(Fluids.WATER, 250)
 			.require(Tags.Fluids.MILK, 250)
@@ -40,6 +40,10 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 		HONEY = create("honey", b -> b.require(Items.HONEY_BLOCK)
 			.output(AllFluids.HONEY.get(), 1000)
 			.requiresHeat(HeatCondition.HEATED)),
+
+		DOUGH = create("dough_by_mixing", b -> b.require(AllItems.WHEAT_FLOUR.get())
+			.require(Fluids.WATER, 1000)
+			.output(AllItems.DOUGH.get(), 1)),
 
 		BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())
 			.require(I.zinc())

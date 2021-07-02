@@ -89,6 +89,17 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, fluidStacks, x, fluidIndex);
 			x += subCategory.getWidth() + margin;
 		}
+		
+		// In case machines should be displayed as ingredients
+		
+//		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
+//		int catalystX = -2;
+//		int catalystY = 14;
+//		for (; index < inputs.size(); index++) {
+//			itemStacks.init(index, true, catalystX, catalystY);
+//			itemStacks.set(index, inputs.get(index));
+//			catalystY += 19;
+//		}
 
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (slotIndex != 1)
@@ -234,7 +245,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		List<Ingredient> assemblyIngredients = new ArrayList<>();
 		assemblyIngredients.add(recipe.getIngredient());
 		assemblyIngredients.add(Ingredient.fromStacks(recipe.getTransitionalItem()));
-		recipe.addAdditionalIngredients(assemblyIngredients);
+		recipe.addAdditionalIngredientsAndMachines(assemblyIngredients);
 		return assemblyIngredients;
 	}
 

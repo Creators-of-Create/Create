@@ -3391,6 +3391,7 @@ ab602a53a5d8d057aad910dd1c5529cde2d587ab data/create/recipes/mixing/chocolate.js
 d3bf74bb3826cf2dccaf7377b8b3e0fdaa38f1aa data/create/recipes/mixing/chocolate_melting.json
 0e29b4ce13750aab5a60ae54cbec8776569b35e0 data/create/recipes/mixing/chromatic_compound.json
 d9a3dff1288d675ab812eef1eb73cb27dcc71bd2 data/create/recipes/mixing/crushed_brass.json
+ec331b1de31bbe2795aec729e931726ec4f4534f data/create/recipes/mixing/dough_by_mixing.json
 ffba306dbb52e4d7afeaec183b92821dbc402a7c data/create/recipes/mixing/honey.json
 cd9a78454bce20cf3557f5c44febae77ebd43e54 data/create/recipes/mixing/lava_from_cobble.json
 0f89b3f2d81585591513619b8d1e8694eb874316 data/create/recipes/mixing/tea.json

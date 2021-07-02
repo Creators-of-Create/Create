@@ -1,8 +1,10 @@
 package com.simibubi.create.content.contraptions.itemAssembly;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -19,6 +21,7 @@ import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -90,9 +93,15 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		return loops;
 	}
 
-	public void addAdditionalIngredients(List<Ingredient> list) {
+	public void addAdditionalIngredientsAndMachines(List<Ingredient> list) {
 		sequence.forEach(sr -> sr.getAsAssemblyRecipe()
 			.addAssemblyIngredients(list));
+		Set<IItemProvider> machines = new HashSet<>();
+		sequence.forEach(sr -> sr.getAsAssemblyRecipe()
+			.addRequiredMachines(machines));
+		machines.stream()
+			.map(Ingredient::fromItems)
+			.forEach(list::add);
 	}
 
 	public void addAdditionalFluidIngredients(List<FluidIngredient> list) {
