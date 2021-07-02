@@ -169,14 +169,14 @@ public class BaseConfigScreen extends ConfigScreen {
 					UIRenderHelper.angledGradient(ms, 0, w / 2, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_B));
 				});
 		int boxWidth = width + 10;
-		int boxHeight = 32;
+		int boxHeight = 39;
 		int boxPadding = 4;
 		title = new BoxWidget(-5, height / 2 - 110, boxWidth, boxHeight)
 				//.withCustomBackground(new Color(0x20_000000, true))
 				.withBorderColors(Theme.p(Theme.Key.BUTTON_IDLE))
 				.withPadding(0, boxPadding)
 				.rescaleElement(boxWidth / 2f, (boxHeight - 2 * boxPadding) / 2f)//double the text size by telling it the element is only half as big as the available space
-				.showingElement(titleText.at(0, 5));
+				.showingElement(titleText.at(0, 7));
 		title.active = false;
 
 		widgets.add(title);
@@ -195,7 +195,7 @@ public class BaseConfigScreen extends ConfigScreen {
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		drawCenteredString(ms, client.fontRenderer, "Access Configs for Mod:", width / 2, height / 2 - 110, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
+		drawCenteredString(ms, client.fontRenderer, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
 	}
 
 	private void linkTo(Screen screen) {
