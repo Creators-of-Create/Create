@@ -90,6 +90,8 @@ public class Theme {
 		put(Key.PONDER_PROGRESSBAR, new Color(0x80ffeedd, true), new Color(0x50ffeedd, true));
 		put(Key.PONDER_MISSING_CREATE, new Color(0x70_984500, true), new Color(0x70_692400, true));
 		put(Key.PONDER_MISSING_VANILLA, new Color(0x50_5000ff, true), new Color(0x50_300077, true));
+		put(Key.CONFIG_TITLE_A, new Color(0xffc69fbc, true), new Color(0xfff6b8bb, true));
+		put(Key.CONFIG_TITLE_B, new Color(0xfff6b8bb, true), new Color(0xfffbf994, true));
 		//put(Key., new Color(0x, true), new Color(0x, true));
 	}
 
@@ -144,6 +146,9 @@ public class Theme {
 		public static Key PONDER_BUTTON_HOVER = new Key();
 		public static Key PONDER_BUTTON_CLICK = new Key();
 		public static Key PONDER_BUTTON_DISABLE = new Key();
+
+		public static Key CONFIG_TITLE_A = new Key();
+		public static Key CONFIG_TITLE_B = new Key();
 
 		private static int index = 0;
 

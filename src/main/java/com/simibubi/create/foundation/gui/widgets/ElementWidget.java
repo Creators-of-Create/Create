@@ -33,7 +33,7 @@ public class ElementWidget extends AbstractSimiWidget {
 	public ElementWidget(int x, int y, int width, int height) {
 		super(x, y, width, height);
 	}
-	
+
 	public <T extends ElementWidget> T showingElement(RenderElement element) {
 		this.element = element;
 		//noinspection unchecked
@@ -91,6 +91,12 @@ public class ElementWidget extends AbstractSimiWidget {
 		return (T) this;
 	}
 
+	/**
+	 * Rescaling and its effects aren't properly tested with most elements.
+	 * Thought it should work fine when using a TextStencilElement.
+	 * Check BaseConfigScreen's title for such an example.
+	 */
+	@Deprecated
 	public <T extends ElementWidget> T rescaleElement(float rescaleSizeX, float rescaleSizeY) {
 		this.rescaleElement = true;
 		this.rescaleSizeX = rescaleSizeX;
@@ -128,14 +134,20 @@ public class ElementWidget extends AbstractSimiWidget {
 		ms.translate(x + paddingX, y + paddingY, z);
 		float innerWidth = width - 2 * paddingX;
 		float innerHeight = height - 2 * paddingY;
+		float eX = element.getX(), eY = element.getY();
 		if (rescaleElement) {
 			float xScale = innerWidth / rescaleSizeX;
 			float yScale = innerHeight / rescaleSizeY;
 			ms.scale(xScale, yScale, 1);
-			element.at(element.getX() / xScale, element.getY() / yScale);
+			element.at(eX / xScale, eY / yScale);
+			innerWidth /= xScale;
+			innerHeight /= yScale;
 		}
 		element.withBounds((int) innerWidth, (int) innerHeight).render(ms);
 		ms.pop();
+		if (rescaleElement) {
+			element.at(eX, eY);
+		}
 	}
 
 	public RenderElement getRenderElement() {

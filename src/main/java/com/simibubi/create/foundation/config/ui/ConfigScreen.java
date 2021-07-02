@@ -132,6 +132,11 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		return super.mouseScrolled(mouseX, mouseY, delta);
 	}
 
+	@Override
+	public boolean isPauseScreen() {
+		return true;
+	}
+
 	public static String toHumanReadable(String key) {
 		String s = key.replaceAll("_", " ");
 		s = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(s)).map(StringUtils::capitalize).collect(Collectors.joining(" "));
