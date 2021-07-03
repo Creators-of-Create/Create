@@ -1193,6 +1193,7 @@
 	"create.subtitle.schematicannon_finish": "",
 	"create.subtitle.scroll_value": "",
 	"create.subtitle.crafter_craft": "",
+  "create.subtitle.controller_put": "",
 	"create.subtitle.cranking": "",
 	"create.subtitle.wrench_remove": "",
 	"create.subtitle.cogs": "",
@@ -1207,6 +1208,7 @@
 	"create.subtitle.copper_armor_equip": "",
 	"create.subtitle.cursed_bell_use": "",
 	"create.subtitle.cursed_bell_convert": "",
+  "create.subtitle.controller_take": "Lectern empties",
 	"create.subtitle.mechanical_press_activation": "",
 	"create.subtitle.contraption_assemble": "",
 	"create.subtitle.crafter_click": "",
@@ -1406,8 +1408,10 @@
 	"item.create.diving_helmet.tooltip.summary": "Junto con un _depósito trasero de cobre_, permite que el usuario pueda respirar bajo el agua durante un tiempo prolongado.",
 	"item.create.diving_helmet.tooltip.condition1": "Cuando se lleva puesto",
 	"item.create.diving_helmet.tooltip.behaviour1": "Proporciona el efecto de _respiración acuática_, drenando lentamente la presión de aire del _depósito trasero_.",
-
-	"item.create.copper_backtank.tooltip": "DEPÓSITO TRASERO DE COBRE",
+  "item.create.copper_backtank.tooltip.condition2": "When placed, Powered by Kinetics",
+	"item.create.copper_backtank.tooltip.behaviour2": "_Collects_ _Pressurized_ _Air_ at a rate depending on the Rotational Speed.",
+	
+  "item.create.copper_backtank.tooltip": "DEPÓSITO TRASERO DE COBRE",
 	"item.create.copper_backtank.tooltip.summary": "Un tanque portátil para transportar _aire presurizado_.",
 	"item.create.copper_backtank.tooltip.condition1": "Cuando se lleva puesto",
 	"item.create.copper_backtank.tooltip.behaviour1": "Proporciona _aire presurizado_ a los equipos que lo requieran.",
