@@ -70,7 +70,7 @@ public class PartialItemModelRenderer {
 
 		if (!model.isBuiltInRenderer())
 			renderBakedItemModel(model, light, ms,
-				ItemRenderer.getArmorVertexConsumer(buffer, type, true, stack.hasEffect()));
+				ItemRenderer.getDirectGlintVertexConsumer(buffer, type, true, stack.hasEffect()));
 		else
 			stack.getItem()
 				.getItemStackTileEntityRenderer()

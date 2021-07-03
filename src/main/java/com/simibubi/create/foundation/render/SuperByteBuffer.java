@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
@@ -32,19 +33,33 @@ public class SuperByteBuffer {
 	// Vertex Position
 	private MatrixStack transforms;
 
-	// Vertex Texture Coords
-	private SpriteShiftFunc spriteShiftFunc;
-	private boolean isEntityModel;
-
 	// Vertex Coloring
 	private boolean shouldColor;
 	private int r, g, b, a;
+	private boolean disableDiffuseDiv;
+	private boolean disableDiffuseMult;
+
+	// Vertex Texture Coords
+	private SpriteShiftFunc spriteShiftFunc;
+
+	// Vertex Overlay Color
+	private boolean hasOverlay;
+	private int overlay = OverlayTexture.DEFAULT_UV;;
 
 	// Vertex Lighting
 	private boolean useWorldLight;
 	private boolean hybridLight;
 	private int packedLightCoords;
 	private Matrix4f lightTransform;
+
+	// Vertex Normals
+	private boolean fullNormalTransform;
+
+	// Temporary
+	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
+	private final Vector4f pos = new Vector4f();
+	private final Vector3f normal = new Vector3f();
+	private final Vector4f lightPos = new Vector4f();
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		template = new BufferBuilderReader(buf);
@@ -61,26 +76,25 @@ public class SuperByteBuffer {
 		return (v - sprite.getMinV()) / f * 16.0F;
 	}
 
-	private static final Long2IntMap WORLD_LIGHT_CACHE = new Long2IntOpenHashMap();
-	Vector4f pos = new Vector4f();
-	Vector3f normal = new Vector3f();
-	Vector4f lightPos = new Vector4f();
-
 	public void renderInto(MatrixStack input, IVertexBuilder builder) {
 		if (isEmpty())
 			return;
 
-		Matrix3f normalMat = transforms.peek()
-			.getNormal()
-			.copy();
-
 		Matrix4f modelMat = input.peek()
 				.getModel()
 				.copy();
-
 		Matrix4f localTransforms = transforms.peek()
 				.getModel();
 		modelMat.multiply(localTransforms);
+
+		Matrix3f normalMat;
+		if (fullNormalTransform) {
+			normalMat = input.peek().getNormal().copy();
+			Matrix3f localNormalTransforms = transforms.peek().getNormal();
+			normalMat.multiply(localNormalTransforms);
+		} else {
+			normalMat = transforms.peek().getNormal().copy();
+		}
 
 		if (useWorldLight) {
 			WORLD_LIGHT_CACHE.clear();
@@ -101,43 +115,58 @@ public class SuperByteBuffer {
 			float normalY = template.getNY(i) / 127f;
 			float normalZ = template.getNZ(i) / 127f;
 
-			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
 			normal.set(normalX, normalY, normalZ);
 			normal.transform(normalMat);
 			float nx = normal.getX();
 			float ny = normal.getY();
 			float nz = normal.getZ();
+
+			float staticDiffuse = LightUtil.diffuseLight(normalX, normalY, normalZ);
 			float instanceDiffuse = LightUtil.diffuseLight(nx, ny, nz);
 
 			pos.set(x, y, z, 1F);
 			pos.transform(modelMat);
 			builder.vertex(pos.getX(), pos.getY(), pos.getZ());
 
-			if (isEntityModel) {
-				builder.color(255, 255, 255, 255);
-			} else if (shouldColor) {
-				int colorR = Math.min(255, (int) (((float) this.r) * instanceDiffuse));
-				int colorG = Math.min(255, (int) (((float) this.g) * instanceDiffuse));
-				int colorB = Math.min(255, (int) (((float) this.b) * instanceDiffuse));
-				builder.color(colorR, colorG, colorB, this.a);
+			if (shouldColor) {
+				if (disableDiffuseMult) {
+					builder.color(this.r, this.g, this.b, this.a);
+				} else {
+					int colorR = transformColor(this.r, instanceDiffuse);
+					int colorG = transformColor(this.g, instanceDiffuse);
+					int colorB = transformColor(this.b, instanceDiffuse);
+					builder.color(colorR, colorG, colorB, this.a);
+				}
 			} else {
-				float diffuseMult = instanceDiffuse / staticDiffuse;
-				int colorR = Math.min(255, (int) (((float) Byte.toUnsignedInt(r)) * diffuseMult));
-				int colorG = Math.min(255, (int) (((float) Byte.toUnsignedInt(g)) * diffuseMult));
-				int colorB = Math.min(255, (int) (((float) Byte.toUnsignedInt(b)) * diffuseMult));
-				builder.color(colorR, colorG, colorB, a);
+				if (disableDiffuseDiv && disableDiffuseMult) {
+					builder.color(r, g, b, a);
+				} else {
+					float diffuseMult;
+					if (disableDiffuseDiv) {
+						diffuseMult = instanceDiffuse;
+					} else if (disableDiffuseMult) {
+						diffuseMult = 1 / staticDiffuse;
+					} else {
+						diffuseMult = instanceDiffuse / staticDiffuse;
+					}
+					int colorR = transformColor(r, diffuseMult);
+					int colorG = transformColor(g, diffuseMult);
+					int colorB = transformColor(b, diffuseMult);
+					builder.color(colorR, colorG, colorB, a);
+				}
 			}
 
 			float u = template.getU(i);
 			float v = template.getV(i);
-
 			if (spriteShiftFunc != null) {
 				spriteShiftFunc.shift(builder, u, v);
-			} else
+			} else {
 				builder.texture(u, v);
+			}
 
-			if (isEntityModel)
-				builder.overlay(OverlayTexture.DEFAULT_UV);
+			if (hasOverlay) {
+				builder.overlay(overlay);
+			}
 
 			int light;
 			if (useWorldLight) {
@@ -163,10 +192,8 @@ public class SuperByteBuffer {
 				builder.light(light);
 			}
 
-			if (isEntityModel)
-				builder.normal(input.peek().getNormal(), nx, ny, nz);
-			else
-				builder.normal(nx, ny, nz);
+			builder.normal(nx, ny, nz);
+
 			builder.endVertex();
 		}
 
@@ -175,17 +202,21 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer reset() {
 		transforms = new MatrixStack();
-		spriteShiftFunc = null;
 		shouldColor = false;
-		isEntityModel = false;
 		r = 0;
 		g = 0;
 		b = 0;
 		a = 0;
+		disableDiffuseDiv = false;
+		disableDiffuseMult = false;
+		spriteShiftFunc = null;
+		hasOverlay = false;
+		overlay = OverlayTexture.DEFAULT_UV;
 		useWorldLight = false;
 		hybridLight = false;
 		packedLightCoords = 0;
 		lightTransform = null;
+		fullNormalTransform = false;
 		return this;
 	}
 
@@ -241,12 +272,40 @@ public class SuperByteBuffer {
 			.translate(-.5f, -.5f, -.5f);
 	}
 
+	public SuperByteBuffer color(int r, int g, int b, int a) {
+		shouldColor = true;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.a = a;
+		return this;
+	}
+
 	public SuperByteBuffer color(int color) {
 		shouldColor = true;
 		r = ((color >> 16) & 0xFF);
 		g = ((color >> 8) & 0xFF);
 		b = (color & 0xFF);
 		a = 255;
+		return this;
+	}
+
+	/**
+	 * Prevents vertex colors from being divided by the diffuse value calculated from the raw untransformed normal vector.
+	 * Useful when passed vertex colors do not have diffuse baked in.
+	 * Disabled when custom color is used.
+	 */
+	public SuperByteBuffer disableDiffuseDiv() {
+		disableDiffuseDiv = true;
+		return this;
+	}
+
+	/**
+	 * Prevents vertex colors from being multiplied by the diffuse value calculated from the final transformed normal vector.
+	 * Useful for entity rendering, when diffuse is applied automatically later.
+	 */
+	public SuperByteBuffer disableDiffuseMult() {
+		disableDiffuseMult = true;
 		return this;
 	}
 
@@ -286,6 +345,17 @@ public class SuperByteBuffer {
 		return this;
 	}
 
+	public SuperByteBuffer overlay() {
+		hasOverlay = true;
+		return this;
+	}
+
+	public SuperByteBuffer overlay(int overlay) {
+		hasOverlay = true;
+		this.overlay = overlay;
+		return this;
+	}
+
 	public SuperByteBuffer light() {
 		useWorldLight = true;
 		return this;
@@ -309,14 +379,36 @@ public class SuperByteBuffer {
 		return this;
 	}
 
+	/**
+	 * Uses max light from calculated light (world light or custom light) and vertex light for the final light value.
+	 * Ineffective if any other light method was not called.
+	 */
 	public SuperByteBuffer hybridLight() {
 		hybridLight = true;
 		return this;
 	}
 
-	public SuperByteBuffer asEntityModel() {
-		isEntityModel = true;
+	/**
+	 * Transforms normals not only by the local matrix stack, but also by the passed matrix stack.
+	 */
+	public SuperByteBuffer fullNormalTransform() {
+		fullNormalTransform = true;
 		return this;
+	}
+
+	public SuperByteBuffer forEntityRender() {
+		disableDiffuseMult();
+		overlay();
+		fullNormalTransform();
+		return this;
+	}
+
+	public static int transformColor(byte component, float scale) {
+		return MathHelper.clamp((int) (Byte.toUnsignedInt(component) * scale), 0, 255);
+	}
+
+	public static int transformColor(int component, float scale) {
+		return MathHelper.clamp((int) (component * scale), 0, 255);
 	}
 
 	public static int maxLight(int packedLight1, int packedLight2) {

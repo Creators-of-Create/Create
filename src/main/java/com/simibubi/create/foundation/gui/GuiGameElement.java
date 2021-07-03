@@ -158,12 +158,12 @@ public class GuiGameElement {
 
 	private static class GuiBlockModelRenderBuilder extends GuiRenderBuilder {
 
-		protected IBakedModel blockmodel;
+		protected IBakedModel blockModel;
 		protected BlockState blockState;
 
 		public GuiBlockModelRenderBuilder(IBakedModel blockmodel, @Nullable BlockState blockState) {
 			this.blockState = blockState == null ? Blocks.AIR.getDefaultState() : blockState;
-			this.blockmodel = blockmodel;
+			this.blockModel = blockmodel;
 		}
 
 		@Override
@@ -194,7 +194,7 @@ public class GuiGameElement {
 				.getColor(blockState, null, null, 0);
 			Vector3d rgb = ColorHelper.getRGB(color == -1 ? this.color : color);
 			blockRenderer.getBlockModelRenderer()
-				.renderModel(ms.peek(), vb, blockState, blockmodel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
+				.renderModel(ms.peek(), vb, blockState, blockModel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
 					0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 			buffer.draw();
 		}
@@ -227,13 +227,9 @@ public class GuiGameElement {
 				.isEmpty())
 				return;
 
-			ms.push();
-			RenderHelper.disableStandardItemLighting();
 			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
-				.getFluid(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, 0xF000F0, true);
-			buffer.draw(RenderType.getTranslucent());
-			RenderHelper.enable();
-			ms.pop();
+				.getFluid(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, 0xF000F0, false);
+			buffer.draw();
 		}
 	}
 

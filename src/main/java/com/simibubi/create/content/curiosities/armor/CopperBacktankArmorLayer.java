@@ -15,6 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
 import net.minecraft.client.renderer.RenderType;
@@ -60,7 +61,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		BipedModel<?> model = (BipedModel<?>) entityModel;
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
 				.with(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
-		RenderType renderType = RenderType.getCutout();
+		RenderType renderType = Atlases.getEntityCutout();
 
 		SuperByteBuffer backtank = CreateClient.BUFFER_CACHE.renderBlock(renderedState);
 		SuperByteBuffer cogs =
@@ -69,8 +70,9 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		model.bipedBody.rotate(ms);
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
-		backtank.light(light)
-				.renderInto(ms, buffer.getBuffer(renderType));
+		backtank.forEntityRender()
+			.light(light)
+			.renderInto(ms, buffer.getBuffer(renderType));
 
 		cogs.matrixStacker()
 			.centre()
@@ -80,13 +82,11 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.world) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 
-		cogs.light(light)
+		cogs.forEntityRender()
+			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
 
-		if (buffer instanceof Impl)
-			((Impl) buffer).draw(renderType);
 		ms.pop();
-
 	}
 
 	public static void register() {
