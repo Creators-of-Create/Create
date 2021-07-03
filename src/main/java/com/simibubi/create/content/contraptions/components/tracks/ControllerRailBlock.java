@@ -222,16 +222,9 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 			BlockState testState = rotate(state, testRotation);
 			if (isStableWith(testState, world, pos)) {
 				placeAndNotify(testState, pos, world);
-				break;
+				return ActionResultType.SUCCESS;
 			}
 		}
-		return ActionResultType.SUCCESS;
-	}
-
-	@Override
-	public ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
 		BlockState testState = state.with(BACKWARDS, !state.get(BACKWARDS));
 		if (isStableWith(testState, world, pos))
 			placeAndNotify(testState, pos, world);
