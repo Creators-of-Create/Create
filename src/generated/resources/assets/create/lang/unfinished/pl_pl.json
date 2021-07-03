@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 208",
+	"_": "Missing Localizations: 212",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -631,8 +631,8 @@
 	"advancement.create.flywheel.desc": "Skutecznie podłącz silnik do koła zamachowego.",
 	"advancement.create.overstress_flywheel": "Wysoki poziom obciążenia",
 	"advancement.create.overstress_flywheel.desc": "Przeładuj silnik spalinowy.",
-	"advancement.create.integrated_circuit": "Skomplikowane obliczenia",
-	"advancement.create.integrated_circuit.desc": "Złóż układ scalony.",
+	"advancement.create.clockwork_component": "UNLOCALIZED: Complex Curiosities",
+	"advancement.create.clockwork_component.desc": "UNLOCALIZED: Assemble a Clockwork Component.",
 	"advancement.create.mechanical_arm": "Ręce pełne roboty",
 	"advancement.create.mechanical_arm.desc": "Wytwórz ramię mechaniczne, wybierz miejsca wejścia i wyjścia, postaw je i wpraw w ruch. Patrz jak robi wszystko za Ciebie.",
 	"advancement.create.musical_arm": "Zagraj coś dla mnie!",
@@ -659,6 +659,8 @@
 	"advancement.create.wand_of_symmetry.desc": "Zdobądź różdżkę symetrii.",
 	"advancement.create.extendo_grip": "Dalej dalej ręce Gadżeta!",
 	"advancement.create.extendo_grip.desc": "Złap w ręce Wydłużony Chwytak.",
+	"advancement.create.potato_cannon": "UNLOCALIZED: Fwoomp!",
+	"advancement.create.potato_cannon.desc": "UNLOCALIZED: Defeat an enemy with your Potato Cannon.",
 	"advancement.create.dual_extendo_grip": "Bioniczne modyfikacje",
 	"advancement.create.dual_extendo_grip.desc": "Użyj dwóch Wydłużonych Chwytaków, aby posiąść nadludzki zasięg.",
 	"advancement.create.eob": "Koniec Bety",

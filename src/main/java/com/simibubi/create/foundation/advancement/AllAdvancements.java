@@ -334,34 +334,11 @@ public class AllAdvancements implements IDataProvider {
 				.withCriterion("0", AllTriggers.OVERSTRESS_FLYWHEEL.instance())
 				.register(t, id + ":overstress_flywheel");
 
-		Advancement integrated_circuit =
-			itemAdvancement("integrated_circuit", AllItems.CLOCKWORK_COMPONENT, TaskType.NORMAL).withParent(crafter)
-				.register(t, id + ":integrated_circuit");
-
-		Advancement integrated_circuit_eob = deadEnd().withParent(integrated_circuit)
-			.withCriterion("0", itemGathered(AllItems.CLOCKWORK_COMPONENT.get()))
-			.register(t, id + ":integrated_circuit_eob");
-
-		Advancement speed_controller =
-			kinecticAdvancement("speed_controller", AllBlocks.ROTATION_SPEED_CONTROLLER.get(), TaskType.NORMAL)
-				.withParent(integrated_circuit)
-				.register(t, id + ":speed_controller");
-
 		Advancement clockwork_bearing =
 			advancement("clockwork_bearing", AllBlocks.CLOCKWORK_BEARING.get(), TaskType.NORMAL)
 				.withParent(brass_casing)
 				.withCriterion("0", AllTriggers.CLOCKWORK_BEARING.instance())
 				.register(t, id + ":clockwork_bearing");
-
-		Advancement extendo_grip =
-			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(crafter)
-				.withCriterion("0", AllTriggers.EXTENDO.instance())
-				.register(t, id + ":extendo_grip");
-
-		Advancement dual_extendo_grip =
-			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).withParent(extendo_grip)
-				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
-				.register(t, id + ":dual_extendo_grip");
 
 		Advancement mechanical_arm = advancement("mechanical_arm", AllBlocks.MECHANICAL_ARM.get(), TaskType.MILESTONE)
 			.withCriterion("0", AllTriggers.MECHANICAL_ARM.instance())
@@ -386,6 +363,34 @@ public class AllAdvancements implements IDataProvider {
 		Advancement deployer =
 			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.MILESTONE).withParent(brass_casing)
 				.register(t, id + ":deployer");
+		
+		Advancement clockwork_component =
+			itemAdvancement("clockwork_component", AllItems.CLOCKWORK_COMPONENT, TaskType.NORMAL).withParent(deployer)
+				.register(t, id + ":clockwork_component");
+
+		Advancement clockwork_component_eob = deadEnd().withParent(clockwork_component)
+			.withCriterion("0", itemGathered(AllItems.CLOCKWORK_COMPONENT.get()))
+			.register(t, id + ":clockwork_component_eob");
+		
+		Advancement extendo_grip =
+			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(clockwork_component)
+				.withCriterion("0", AllTriggers.EXTENDO.instance())
+				.register(t, id + ":extendo_grip");
+
+		Advancement potato_cannon =
+			advancement("potato_cannon", AllItems.POTATO_CANNON.get(), TaskType.GOAL).withParent(clockwork_component)
+				.withCriterion("0", AllTriggers.POTATO_KILL.instance())
+				.register(t, id + ":potato_cannon");
+
+		Advancement dual_extendo_grip =
+			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).withParent(extendo_grip)
+				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
+				.register(t, id + ":dual_extendo_grip");
+
+		Advancement speed_controller =
+			kinecticAdvancement("speed_controller", AllBlocks.ROTATION_SPEED_CONTROLLER.get(), TaskType.NORMAL)
+				.withParent(clockwork_component)
+				.register(t, id + ":speed_controller");
 
 		Advancement fist_bump = advancement("fist_bump", AllBlocks.DEPLOYER.get(), TaskType.SECRET).withParent(deployer)
 			.withCriterion("0", AllTriggers.DEPLOYER_BOOP.instance())

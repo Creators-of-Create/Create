@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -156,7 +157,9 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 
 		if (onServer && owner instanceof ServerPlayerEntity) {
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) owner;
-			if (!target.isAlive())
+			if (!target.isAlive() && target.getType()
+				.getClassification() == EntityClassification.MONSTER
+				|| (target instanceof PlayerEntity && target != owner))
 				AllTriggers.POTATO_KILL.trigger(serverplayerentity);
 		}
 

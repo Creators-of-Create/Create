@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 919",
+	"_": "Missing Localizations: 923",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -631,8 +631,8 @@
 	"advancement.create.flywheel.desc": "화로엔진에 플라이휠을 연결하세요.",
 	"advancement.create.overstress_flywheel": "정말 높은 피로",
 	"advancement.create.overstress_flywheel.desc": "화로 엔진을 과부하하세요.",
-	"advancement.create.integrated_circuit": "복잡한 계산",
-	"advancement.create.integrated_circuit.desc": "집적 회로를 제작하세요.",
+	"advancement.create.clockwork_component": "UNLOCALIZED: Complex Curiosities",
+	"advancement.create.clockwork_component.desc": "UNLOCALIZED: Assemble a Clockwork Component.",
 	"advancement.create.mechanical_arm": "할일이 많아!",
 	"advancement.create.mechanical_arm.desc": "기계 팔을 조합하고, 입력부와 출력부를 정하고, 설치한 다음 돌리세요. 그리고 그것이 작동하는 것을 보세요.",
 	"advancement.create.musical_arm": "볼륨 최대로!",
@@ -659,6 +659,8 @@
 	"advancement.create.wand_of_symmetry.desc": "대칭의 지팡이를 만드세요.",
 	"advancement.create.extendo_grip": "띠요오옹!",
 	"advancement.create.extendo_grip.desc": "외장형 연장 팔을 드세요.",
+	"advancement.create.potato_cannon": "UNLOCALIZED: Fwoomp!",
+	"advancement.create.potato_cannon.desc": "UNLOCALIZED: Defeat an enemy with your Potato Cannon.",
 	"advancement.create.dual_extendo_grip": "궁극의 띠용!",
 	"advancement.create.dual_extendo_grip.desc": "쌍으로 외장형 연장 팔을 들어 인간을 뛰어넘은 사거리를 가지세요.",
 	"advancement.create.eob": "End of Beta",

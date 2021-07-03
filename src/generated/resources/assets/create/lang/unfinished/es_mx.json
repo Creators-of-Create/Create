@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1455",
+	"_": "Missing Localizations: 1457",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -631,8 +631,8 @@
 	"advancement.create.flywheel.desc": "UNLOCALIZED: Successfully connect an engine to the Flywheel.",
 	"advancement.create.overstress_flywheel": "UNLOCALIZED: High levels of Stress",
 	"advancement.create.overstress_flywheel.desc": "UNLOCALIZED: Overstress a Furnace Engine.",
-	"advancement.create.integrated_circuit": "UNLOCALIZED: Complex Calculation",
-	"advancement.create.integrated_circuit.desc": "UNLOCALIZED: Assemble an Integrated Circuit.",
+	"advancement.create.clockwork_component": "UNLOCALIZED: Complex Curiosities",
+	"advancement.create.clockwork_component.desc": "UNLOCALIZED: Assemble a Clockwork Component.",
 	"advancement.create.mechanical_arm": "UNLOCALIZED: Busy Hands!",
 	"advancement.create.mechanical_arm.desc": "UNLOCALIZED: Craft a Mechanical Arm, select in- and outputs, place it down and give it power; then watch as it does all the work for you.",
 	"advancement.create.musical_arm": "UNLOCALIZED: Play Me My Theme Tune!",
@@ -647,7 +647,7 @@
 	"advancement.create.crushing_wheel.desc": "UNLOCALIZED: Create some Crushing Wheels to break down more materials more effectively.",
 	"advancement.create.blaze_cake": "UNLOCALIZED: Sugar Rush",
 	"advancement.create.blaze_cake.desc": "UNLOCALIZED: Bake your blaze burner a special cake.",
-	"advancement.create.chromatic_compound": "UNLOCALIZED: Bipolar Minerals",
+	"advancement.create.chromatic_compound": "UNLOCALIZED: Mysterious Minerals",
 	"advancement.create.chromatic_compound.desc": "UNLOCALIZED: Create a Bar of Chromatic Compound.",
 	"advancement.create.shadow_steel": "UNLOCALIZED: Void Returner",
 	"advancement.create.shadow_steel.desc": "UNLOCALIZED: Create Shadow Steel, a metal bar of nothingness.",
@@ -659,6 +659,8 @@
 	"advancement.create.wand_of_symmetry.desc": "UNLOCALIZED: Craft a Staff of Symmetry.",
 	"advancement.create.extendo_grip": "UNLOCALIZED: Boioioing!",
 	"advancement.create.extendo_grip.desc": "UNLOCALIZED: Get hold of an Extendo Grip.",
+	"advancement.create.potato_cannon": "UNLOCALIZED: Fwoomp!",
+	"advancement.create.potato_cannon.desc": "UNLOCALIZED: Defeat an enemy with your Potato Cannon.",
 	"advancement.create.dual_extendo_grip": "UNLOCALIZED: Ultimate Boing-age",
 	"advancement.create.dual_extendo_grip.desc": "UNLOCALIZED: Dual wield Extendo Grips for super-human reach.",
 	"advancement.create.eob": "UNLOCALIZED: End of Beta",

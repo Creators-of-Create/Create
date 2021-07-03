@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.press.MechanicalPress
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -83,6 +84,7 @@ public class BeltPressingCallbacks {
 				handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 		}
 
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, pressTe.getWorld(), pressTe.getPos(), 4);
 		pressTe.sendData();
 		return HOLD;
 	}

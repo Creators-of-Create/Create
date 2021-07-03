@@ -127,8 +127,8 @@
 	"advancement.create.flywheel.desc": "Successfully connect an engine to the Flywheel.",
 	"advancement.create.overstress_flywheel": "High levels of Stress",
 	"advancement.create.overstress_flywheel.desc": "Overstress a Furnace Engine.",
-	"advancement.create.integrated_circuit": "Complex Calculation",
-	"advancement.create.integrated_circuit.desc": "Assemble an Integrated Circuit.",
+	"advancement.create.clockwork_component": "Complex Curiosities",
+	"advancement.create.clockwork_component.desc": "Assemble a Clockwork Component.",
 	"advancement.create.mechanical_arm": "Busy Hands!",
 	"advancement.create.mechanical_arm.desc": "Craft a Mechanical Arm, select in- and outputs, place it down and give it power; then watch as it does all the work for you.",
 	"advancement.create.musical_arm": "Play Me My Theme Tune!",
@@ -144,7 +144,7 @@
 	"advancement.create.blaze_cake": "Sugar Rush",
 	"advancement.create.blaze_cake.desc": "Bake your blaze burner a special cake.",
 	
-	"advancement.create.chromatic_compound": "Bipolar Minerals",
+	"advancement.create.chromatic_compound": "Mysterious Minerals",
 	"advancement.create.chromatic_compound.desc": "Create a Bar of Chromatic Compound.",
 	"advancement.create.shadow_steel": "Void Returner",
 	"advancement.create.shadow_steel.desc": "Create Shadow Steel, a metal bar of nothingness.",
@@ -157,6 +157,8 @@
 	"advancement.create.wand_of_symmetry.desc": "Craft a Staff of Symmetry.",
 	"advancement.create.extendo_grip": "Boioioing!",
 	"advancement.create.extendo_grip.desc": "Get hold of an Extendo Grip.",
+	"advancement.create.potato_cannon": "Fwoomp!",
+	"advancement.create.potato_cannon.desc": "Defeat an enemy with your Potato Cannon.",
 	"advancement.create.dual_extendo_grip": "Ultimate Boing-age",
 	"advancement.create.dual_extendo_grip.desc": "Dual wield Extendo Grips for super-human reach.",
 	

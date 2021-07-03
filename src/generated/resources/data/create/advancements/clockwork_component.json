@@ -1,14 +1,14 @@
 {
-  "parent": "create:crafter",
+  "parent": "create:deployer",
   "display": {
     "icon": {
       "item": "create:clockwork_component"
     },
     "title": {
-      "translate": "advancement.create.integrated_circuit"
+      "translate": "advancement.create.clockwork_component"
     },
     "description": {
-      "translate": "advancement.create.integrated_circuit.desc"
+      "translate": "advancement.create.clockwork_component.desc"
     },
     "frame": "task",
     "show_toast": true,

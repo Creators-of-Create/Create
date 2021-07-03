@@ -1,5 +1,5 @@
 {
-  "parent": "create:integrated_circuit",
+  "parent": "create:clockwork_component",
   "display": {
     "icon": {
       "item": "minecraft:oak_sapling"

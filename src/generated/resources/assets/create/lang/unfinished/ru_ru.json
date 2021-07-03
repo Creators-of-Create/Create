@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 765",
+	"_": "Missing Localizations: 769",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -631,8 +631,8 @@
 	"advancement.create.flywheel.desc": "Успешно соедините двигатель с маховиком.",
 	"advancement.create.overstress_flywheel": "Перенапряжение",
 	"advancement.create.overstress_flywheel.desc": "Подайте слишком большую нагрузку на печной двигатель.",
-	"advancement.create.integrated_circuit": "Сложные вычисления",
-	"advancement.create.integrated_circuit.desc": "Создайте Интегральную схему.",
+	"advancement.create.clockwork_component": "UNLOCALIZED: Complex Curiosities",
+	"advancement.create.clockwork_component.desc": "UNLOCALIZED: Assemble a Clockwork Component.",
 	"advancement.create.mechanical_arm": "Золотые руки!",
 	"advancement.create.mechanical_arm.desc": "Создайте Механическую руку, выбирете входы и выходы, установите в мире и запитайте. Затем смотрите как она делает за вас всю работу.",
 	"advancement.create.musical_arm": "Сбацай что-нибудь!",
@@ -659,6 +659,8 @@
 	"advancement.create.wand_of_symmetry.desc": "Создайте жезл симметрии.",
 	"advancement.create.extendo_grip": "Кипение!",
 	"advancement.create.extendo_grip.desc": "Возьмите в руки удлинённую руку",
+	"advancement.create.potato_cannon": "UNLOCALIZED: Fwoomp!",
+	"advancement.create.potato_cannon.desc": "UNLOCALIZED: Defeat an enemy with your Potato Cannon.",
 	"advancement.create.dual_extendo_grip": "Окончательное выкипание",
 	"advancement.create.dual_extendo_grip.desc": "Две удлинённых руки для сверхчеловеческого охвата.",
 	"advancement.create.eob": "Конец бета-версии",
