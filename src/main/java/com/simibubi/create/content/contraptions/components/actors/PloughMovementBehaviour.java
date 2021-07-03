@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
@@ -72,10 +73,15 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
+		if (world.getBlockState(breakingPos.down())
+			.getBlock() instanceof FarmlandBlock)
+			return false;
+		if (state.getBlock() instanceof FlowingFluidBlock)
+			return false;
+		if (state.getBlock() instanceof BubbleColumnBlock)
+			return false;
 		return state.getCollisionShape(world, breakingPos)
-			.isEmpty() && !(state.getBlock() instanceof FlowingFluidBlock)
-			&& !(world.getBlockState(breakingPos.down())
-				.getBlock() instanceof FarmlandBlock);
+			.isEmpty();
 	}
 
 	@Override
