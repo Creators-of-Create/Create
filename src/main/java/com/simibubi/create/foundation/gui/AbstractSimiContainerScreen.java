@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.gui;
 
-import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -145,16 +143,10 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		return result | super.mouseReleased(x, y, button);
 	}
 
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return true;
-	}
-
 	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
 	protected void drawBackground(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
-
 	}
 
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -201,7 +193,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	public void renderPlayerInventory(MatrixStack ms, int x, int y) {
-		PLAYER_INVENTORY.draw(ms, this, x, y);
+		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, x, y);
 		textRenderer.draw(ms, playerInventory.getDisplayName(), x + 8, y + 6, 0x404040);
 	}
 
