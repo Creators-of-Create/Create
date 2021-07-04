@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.BlockFace;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -74,7 +76,7 @@ public class OpenEndedPipe extends FlowSource {
 		BlockState state = world.getBlockState(outputPos);
 		FluidState fluidState = state.getFluidState();
 		boolean waterlog = state.contains(WATERLOGGED);
-		
+
 		if (state.contains(HONEY_LEVEL) && state.get(HONEY_LEVEL) >= 5) {
 			if (!simulate)
 				world.setBlockState(outputPos, state.with(HONEY_LEVEL, 0), 3);
@@ -139,8 +141,10 @@ public class OpenEndedPipe extends FlowSource {
 		if (simulate)
 			return true;
 
-		if (world.getDimension().isUltrawarm() && fluid.getFluid()
-			.isIn(FluidTags.WATER)) {
+		if (world.getDimension()
+			.isUltrawarm()
+			&& fluid.getFluid()
+				.isIn(FluidTags.WATER)) {
 			int i = outputPos.getX();
 			int j = outputPos.getY();
 			int k = outputPos.getZ();
@@ -163,13 +167,33 @@ public class OpenEndedPipe extends FlowSource {
 		return true;
 	}
 
-	private void applyEffects(World world, FluidStack fluid) {
-		if (!fluid.getFluid()
-			.isEquivalentTo(AllFluids.POTION.get())) {
-			// other fx
-			return;
-		}
+	private boolean canApplyEffects(World world, FluidStack fluid) {
+		Fluid fluidType = fluid.getFluid();
+		if (fluidType.isEquivalentTo(AllFluids.POTION.get()))
+			return true;
+		if (Tags.Fluids.MILK.contains(fluidType))
+			return true;
+		return false;
+	}
 
+	private void applyEffects(World world, FluidStack fluid) {
+		Fluid fluidType = fluid.getFluid();
+
+		if (fluidType.isEquivalentTo(AllFluids.POTION.get()))
+			applyPotionEffects(world, fluid);
+
+		if (Tags.Fluids.MILK.contains(fluidType)) {
+			if (world.getGameTime() % 5 != 0)
+				return;
+			List<LivingEntity> list =
+				world.getEntitiesWithinAABB(LivingEntity.class, aoe, LivingEntity::canBeHitWithPotion);
+			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
+			for (LivingEntity livingentity : list)
+				livingentity.curePotionEffects(curativeItem);
+		}
+	}
+
+	private void applyPotionEffects(World world, FluidStack fluid) {
 		if (cachedFluid == null || cachedEffects == null || !fluid.isFluidEqual(cachedFluid)) {
 			FluidStack copy = fluid.copy();
 			copy.setAmount(250);
@@ -181,7 +205,7 @@ public class OpenEndedPipe extends FlowSource {
 			return;
 
 		List<LivingEntity> list =
-			this.world.getEntitiesWithinAABB(LivingEntity.class, aoe, LivingEntity::canBeHitWithPotion);
+			world.getEntitiesWithinAABB(LivingEntity.class, aoe, LivingEntity::canBeHitWithPotion);
 		for (LivingEntity livingentity : list) {
 			for (EffectInstance effectinstance : cachedEffects) {
 				Effect effect = effectinstance.getPotion();
@@ -192,7 +216,6 @@ public class OpenEndedPipe extends FlowSource {
 				livingentity.addPotionEffect(new EffectInstance(effectinstance));
 			}
 		}
-
 	}
 
 	@Override
@@ -234,15 +257,20 @@ public class OpenEndedPipe extends FlowSource {
 			if (!provideFluidToSpace(resource, true))
 				return 0;
 
-			if (!getFluid().isEmpty() && !getFluid().isFluidEqual(resource))
+			FluidStack containedFluidStack = getFluid();
+			if (!containedFluidStack.isEmpty() && !containedFluidStack.isFluidEqual(resource))
 				setFluid(FluidStack.EMPTY);
 			if (wasPulling)
 				wasPulling = false;
+			if (canApplyEffects(world, resource))
+				resource = FluidHelper.copyStackWithAmount(resource, 1);
 
 			int fill = super.fill(resource, action);
-			if (action.execute() && (getFluidAmount() == 1000 || !FluidHelper.hasBlockState(getFluid().getFluid()))
-				&& provideFluidToSpace(getFluid(), false))
-				setFluid(FluidStack.EMPTY);
+			if (action.simulate())
+				return fill;
+			if (getFluidAmount() == 1000 || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
+				if (provideFluidToSpace(containedFluidStack, false))
+					setFluid(FluidStack.EMPTY);
 			return fill;
 		}
 

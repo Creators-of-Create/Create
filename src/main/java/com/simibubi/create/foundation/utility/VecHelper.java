@@ -62,8 +62,7 @@ public class VecHelper {
 
 	public static boolean isVecPointingTowards(Vector3d vec, Direction direction) {
 		return Vector3d.of(direction.getDirectionVec())
-			.dotProduct(vec.normalize()) > 0;
-		// return new Vector3d(direction.getDirectionVec()).distanceTo(vec.normalize()) < .75;
+			.dotProduct(vec.normalize()) > 0.125; // slight tolerance to activate perpendicular movement actors
 	}
 
 	public static Vector3d getCenterOf(Vector3i pos) {
