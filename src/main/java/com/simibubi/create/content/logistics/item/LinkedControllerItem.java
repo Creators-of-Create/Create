@@ -93,7 +93,6 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::toggleActive);
 			player.getCooldownTracker()
 				.setCooldown(this, 2);
-			return ActionResult.success(heldItem);
 		}
 
 		return ActionResult.pass(heldItem);
