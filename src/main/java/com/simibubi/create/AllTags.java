@@ -153,7 +153,8 @@ public class AllTags {
 		VALVE_HANDLES,
 		FAN_TRANSPARENT,
 		SAFE_NBT,
-		SLIMY_LOGS(TIC)
+		SLIMY_LOGS(TIC),
+		WRENCH_PICKUP,
 
 		;
 
@@ -219,6 +220,13 @@ public class AllTags {
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
 			Blocks.SOUL_CAMPFIRE);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
+
+		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.RAILS);
+		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.BUTTONS);
+		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.PRESSURE_PLATES);
+		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
+				Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
+				Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
 
 		AllFluidTags.loadClass();
 	}

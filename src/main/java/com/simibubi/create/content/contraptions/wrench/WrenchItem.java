@@ -4,9 +4,9 @@ import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 
-import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -52,7 +52,7 @@ public class WrenchItem extends Item {
 	}
 
 	private boolean canWrenchPickup(BlockState state) {
-		return state.getBlock() instanceof AbstractRailBlock;
+		return AllTags.AllBlockTags.WRENCH_PICKUP.matches(state);
 	}
 
 	private ActionResultType onItemUseOnOther(ItemUseContext context) {

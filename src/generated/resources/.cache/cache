@@ -3694,6 +3694,7 @@ c9ac7e3e5ec18554e7184168d65e9b8e44ef5610 data/create/tags/blocks/sails.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/blocks/valve_handles.json
 eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.json
 74700d556ca80c7a1db5fd4efb09c3ddb26cad66 data/create/tags/blocks/windowable.json
+893a01e6004d6d8272bd1658e98da88bb572ee57 data/create/tags/blocks/wrench_pickup.json
 081f5aa35602fc27af2ca01ea9f2fd5e7eb284dc data/create/tags/items/create_ingots.json
 94c62bf22678ef55b2b8a5398a7960e5b00682dc data/create/tags/items/crushed_ores.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/items/seats.json
