@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "create:cursed_bell"
+          "name": "create:haunted_bell"
         }
       ],
       "conditions": [

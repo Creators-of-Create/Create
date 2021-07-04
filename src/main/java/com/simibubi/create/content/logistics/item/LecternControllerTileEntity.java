@@ -49,6 +49,12 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
+	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+		super.writeSafe(compound, clientPacket);
+		compound.put("Controller", controller.write(new CompoundNBT()));
+	}
+
+	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		controller = ItemStack.read(compound.getCompound("Controller"));

@@ -6,6 +6,7 @@ import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.ParticleType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 
@@ -27,11 +28,11 @@ public class SoulBaseParticle extends CustomRotationParticle {
 
 	@Override
 	public void tick() {
-		if (this.age++ >= this.maxAge) {
-			this.setExpired();
-		} else {
-			this.selectSpriteLoopingWithAge(animatedSprite);
-		}
+		selectSpriteLoopingWithAge(animatedSprite);
+
+		BlockPos pos = new BlockPos(posX, posY, posZ);
+		if (age++ >= maxAge || !SoulPulseEffect.canSpawnSoulAt(world, pos))
+			setExpired();
 	}
 
 	@Override

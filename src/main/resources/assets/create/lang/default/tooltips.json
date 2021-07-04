@@ -220,10 +220,10 @@
   "block.create.peculiar_bell.tooltip": "PECULIAR BELL",
   "block.create.peculiar_bell.tooltip.summary": "A decorative brass bell. Placing it above a _Soul Fire_ or _Soul Campfire_ may cause a spooky transformation to occur...",
 
-  "block.create.cursed_bell.tooltip": "CURSED BELL",
-  "block.create.cursed_bell.tooltip.summary": "A spooky brass bell haunted by lost souls of the Nether.",
-  "block.create.cursed_bell.tooltip.condition1": "When Held or Rang",
-  "block.create.cursed_bell.tooltip.behaviour1": "Highlights nearby dark spots on which Hostile Mobs could spawn.",
+  "block.create.haunted_bell.tooltip": "HAUNTED BELL",
+  "block.create.haunted_bell.tooltip.summary": "A spooky brass bell haunted by lost souls of the Nether.",
+  "block.create.haunted_bell.tooltip.condition1": "When Held or Rang",
+  "block.create.haunted_bell.tooltip.behaviour1": "Highlights nearby _dark spots_ on which _Hostile Mobs_ could spawn.",
 
   "create.gui.chromatic_projector.title": "Chromatic Projector",
   "create.gui.chromatic_projector.filter.invert": "Invert",

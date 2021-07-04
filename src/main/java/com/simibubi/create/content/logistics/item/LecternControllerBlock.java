@@ -1,9 +1,14 @@
 package com.simibubi.create.content.logistics.item;
 
+import java.util.ArrayList;
+
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BlockState;
@@ -16,10 +21,11 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class LecternControllerBlock extends LecternBlock implements ITE<LecternControllerTileEntity> {
+public class LecternControllerBlock extends LecternBlock implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement {
 
 	public LecternControllerBlock(Properties properties) {
 		super(properties);
@@ -89,4 +95,16 @@ public class LecternControllerBlock extends LecternBlock implements ITE<LecternC
 			.with(POWERED, state.get(POWERED)));
 	}
 
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+		return Blocks.LECTERN.getPickBlock(state, target, world, pos, player);
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+		ArrayList<ItemStack> requiredItems = new ArrayList<>();
+		requiredItems.add(new ItemStack(Blocks.LECTERN));
+		requiredItems.add(new ItemStack(AllItems.LINKED_CONTROLLER.get()));
+		return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, requiredItems);
+	}
 }

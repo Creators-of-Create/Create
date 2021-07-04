@@ -22,7 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
@@ -119,7 +118,8 @@ public class SchematicPrinter {
 	}
 
 	public boolean isWorldEmpty() {
-		return blockReader.getBounds().getLength().equals(new Vector3i(0,0,0));
+		return blockReader.getAllPositions().isEmpty();
+		//return blockReader.getBounds().getLength().equals(new Vector3i(0,0,0));
 	}
 
 	@FunctionalInterface

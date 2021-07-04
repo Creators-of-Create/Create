@@ -8,7 +8,6 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.world.LightType;
 
 public class SoulParticle extends CustomRotationParticle {
 
@@ -54,20 +53,18 @@ public class SoulParticle extends CustomRotationParticle {
 
 	@Override
 	public void tick() {
+		animationStage.tick();
 
-		this.animationStage.tick();
+		animationStage = animationStage.getNext();
 
-		this.animationStage = animationStage.getNext();
-
-		if (animationStage == null)
-			this.setExpired();
-		if (world.getLightLevel(LightType.BLOCK, new BlockPos(posX, posY, posZ)) > 7)
-			this.setExpired();
+		BlockPos pos = new BlockPos(posX, posY, posZ);
+		if (animationStage == null || !SoulPulseEffect.canSpawnSoulAt(world, pos))
+			setExpired();
 	}
 
 	public void setFrame(int frame) {
 		if (frame >= 0 && frame < totalFrames)
-			this.setSprite(animatedSprite.get(frame, totalFrames));
+			setSprite(animatedSprite.get(frame, totalFrames));
 	}
 
 	@Override

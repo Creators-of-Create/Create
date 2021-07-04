@@ -71,7 +71,7 @@ public class SoulPulseEffect {
 				.collect(Collectors.toList());
 	}
 
-	public boolean canSpawnSoulAt(World world, BlockPos at) {
+	public static boolean canSpawnSoulAt(World world, BlockPos at) {
 		EntityType<?> dummy = EntityType.ZOMBIE;
 		double dummyWidth = 0.2, dummyHeight = 0.75;
 		double w2 = dummyWidth / 2;

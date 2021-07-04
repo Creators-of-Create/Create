@@ -60,6 +60,20 @@ public class VecHelper {
 		return vec;
 	}
 
+	public static Vector3d lookAt(Vector3d vec, Vector3d fwd) {
+		fwd = fwd.normalize();
+		Vector3d up = new Vector3d(0,1,0);
+		double dot = fwd.dotProduct(up);
+		if (Math.abs(dot) > 1 - 1.0E-3)
+			up = new Vector3d(0, 0, dot > 0 ? 1 : -1);
+		Vector3d right = fwd.crossProduct(up).normalize();
+		up = right.crossProduct(fwd).normalize();
+		double x = vec.x * right.x + vec.y * up.x + vec.z * fwd.x;
+		double y = vec.x * right.y + vec.y * up.y + vec.z * fwd.y;
+		double z = vec.x * right.z + vec.y * up.z + vec.z * fwd.z;
+		return new Vector3d(x, y, z);
+	}
+
 	public static boolean isVecPointingTowards(Vector3d vec, Direction direction) {
 		return Vector3d.of(direction.getDirectionVec())
 			.dotProduct(vec.normalize()) > 0.125; // slight tolerance to activate perpendicular movement actors

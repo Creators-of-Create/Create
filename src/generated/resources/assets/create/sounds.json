@@ -128,18 +128,6 @@
       }
     ]
   },
-  "cursed_bell_convert": {
-    "sounds": [
-      "create:cursed_bell_convert"
-    ],
-    "subtitle": "create.subtitle.cursed_bell_convert"
-  },
-  "cursed_bell_use": {
-    "sounds": [
-      "create:cursed_bell_use"
-    ],
-    "subtitle": "create.subtitle.cursed_bell_use"
-  },
   "deny": {
     "sounds": [
       {
@@ -198,6 +186,18 @@
       "create:fwoomp"
     ],
     "subtitle": "create.subtitle.fwoomp"
+  },
+  "haunted_bell_convert": {
+    "sounds": [
+      "create:haunted_bell_convert"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_convert"
+  },
+  "haunted_bell_use": {
+    "sounds": [
+      "create:haunted_bell_use"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_use"
   },
   "mechanical_press_activation": {
     "sounds": [

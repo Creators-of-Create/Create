@@ -204,11 +204,11 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		CURSED_BELL_CONVERT = create("cursed_bell_convert").subtitle("Cursed Bell awakens")
+		HAUNTED_BELL_CONVERT = create("haunted_bell_convert").subtitle("Haunted Bell awakens")
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		CURSED_BELL_USE = create("cursed_bell_use").subtitle("Cursed Bell tolls")
+		HAUNTED_BELL_USE = create("haunted_bell_use").subtitle("Haunted Bell tolls")
 			.category(SoundCategory.BLOCKS)
 			.build();
 

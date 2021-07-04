@@ -115,8 +115,8 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
-import com.simibubi.create.content.curiosities.bell.CursedBellBlock;
-import com.simibubi.create.content.curiosities.bell.CursedBellMovementBehaviour;
+import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
+import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
@@ -1320,10 +1320,10 @@ public class AllBlocks {
 			.onRegister(addMovementBehaviour(new BellMovementBehaviour()))
 			.register();
 
-	public static final BlockEntry<CursedBellBlock> CURSED_BELL =
-		REGISTRATE.block("cursed_bell", CursedBellBlock::new)
+	public static final BlockEntry<HauntedBellBlock> HAUNTED_BELL =
+		REGISTRATE.block("haunted_bell", HauntedBellBlock::new)
 			.transform(BuilderTransformers.bell())
-			.onRegister(addMovementBehaviour(new CursedBellMovementBehaviour()))
+			.onRegister(addMovementBehaviour(new HauntedBellMovementBehaviour()))
 			.register();
 
 	// Materials
