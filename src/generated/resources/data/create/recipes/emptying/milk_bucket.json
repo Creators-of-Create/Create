@@ -10,7 +10,7 @@
       "item": "minecraft:bucket"
     },
     {
-      "fluid": "create:milk",
+      "fluid": "minecraft:milk",
       "amount": 1000
     }
   ]
