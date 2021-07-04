@@ -2,19 +2,19 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "atmospheric"
+      "modid": "traverse"
     }
   ],
   "type": "create:cutting",
   "ingredients": [
     {
-      "item": "atmospheric:stripped_rosewood_log"
+      "item": "traverse:fir_wood"
     }
   ],
   "results": [
     {
-      "item": "atmospheric:rosewood_planks",
-      "count": 6
+      "item": "traverse:stripped_fir_wood",
+      "count": 1
     }
   ],
   "processingTime": 50
