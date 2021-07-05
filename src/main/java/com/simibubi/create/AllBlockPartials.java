@@ -94,7 +94,7 @@ public class AllBlockPartials {
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
 		PECULIAR_BELL = get("peculiar_bell/bell"),
-		CURSED_BELL = get("cursed_bell/bell"),
+		HAUNTED_BELL = get("haunted_bell/bell"),
 
 	SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
 

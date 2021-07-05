@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.sound;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.sound.SoundScapes.PitchGroup;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -89,8 +90,9 @@ class SoundScape {
 			distanceMultiplier = (float) MathHelper.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
 		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
+		float max = AllConfigs.CLIENT.ambientVolumeCap.getF();
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
-		return MathHelper.clamp(soundCount / (argMax * 10f), 0.025f, .15f) * distanceMultiplier;
+		return MathHelper.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
 	}
 
 }

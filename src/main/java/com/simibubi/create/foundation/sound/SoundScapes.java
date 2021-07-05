@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 
 import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -60,6 +61,8 @@ public class SoundScapes {
 	private static Map<Pair<AmbienceGroup, PitchGroup>, SoundScape> activeSounds = new HashMap<>();
 
 	public static void play(AmbienceGroup group, BlockPos pos, float pitch) {
+		if (!AllConfigs.CLIENT.enableAmbientSounds.get())
+			return;
 		if (!outOfRange(pos))
 			addSound(group, pos, pitch);
 	}
@@ -71,6 +74,7 @@ public class SoundScapes {
 		if (AnimationTickHolder.getTicks() % UPDATE_INTERVAL != 0)
 			return;
 
+		boolean disable = !AllConfigs.CLIENT.enableAmbientSounds.get();
 		for (Iterator<Entry<Pair<AmbienceGroup, PitchGroup>, SoundScape>> iterator = activeSounds.entrySet()
 			.iterator(); iterator.hasNext();) {
 
@@ -78,7 +82,7 @@ public class SoundScapes {
 			Pair<AmbienceGroup, PitchGroup> key = entry.getKey();
 			SoundScape value = entry.getValue();
 
-			if (getSoundCount(key.getFirst(), key.getSecond()) == 0) {
+			if (disable || getSoundCount(key.getFirst(), key.getSecond()) == 0) {
 				value.remove();
 				iterator.remove();
 			}

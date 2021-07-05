@@ -134,6 +134,10 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		}
 
 		LivingEntity livingentity = (LivingEntity) target;
+
+		if (type.getReloadTicks() < 10)
+			livingentity.hurtResistantTime = type.getReloadTicks() + 10;
+
 		if (knockback > 0) {
 			Vector3d appliedMotion = this.getMotion()
 				.mul(1.0D, 0.0D, 1.0D)
@@ -184,8 +188,10 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-		if (this.isInvulnerableTo(p_70097_1_))
+	public boolean attackEntityFrom(DamageSource source, float amt) {
+		if (source == DamageSource.IN_FIRE || source == DamageSource.ON_FIRE)
+			return false;
+		if (this.isInvulnerableTo(source))
 			return false;
 		pop(getPositionVec());
 		remove();

@@ -13,13 +13,13 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 @EventBusSubscriber
-public class CursedBellPulser {
+public class HauntedBellPulser {
 
 	public static final int DISTANCE = 3;
 	public static final int RECHARGE_TICKS = 8;
 
 	@SubscribeEvent
-	public static void cursedBellCreatesPulse(TickEvent.PlayerTickEvent event) {
+	public static void hauntedBellCreatesPulse(TickEvent.PlayerTickEvent event) {
 		if (event.phase != TickEvent.Phase.END)
 			return;
 		if (event.side != LogicalSide.SERVER)
@@ -30,7 +30,7 @@ public class CursedBellPulser {
 		if (event.player.world.getGameTime() % RECHARGE_TICKS != 0)
 			return;
 
-		if (event.player.isHolding(AllBlocks.CURSED_BELL::is))
+		if (event.player.isHolding(AllBlocks.HAUNTED_BELL::is))
 			sendPulse(event.player.world, event.player.getBlockPos(), DISTANCE, false);
 	}
 

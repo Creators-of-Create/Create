@@ -8,6 +8,7 @@ import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
+import com.simibubi.create.content.curiosities.armor.IBackTankRechargeable;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -25,6 +26,7 @@ import net.minecraft.item.ShootableItem;
 import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -36,7 +38,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class PotatoCannonItem extends ShootableItem {
+public class PotatoCannonItem extends ShootableItem implements IBackTankRechargeable {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
@@ -76,7 +78,8 @@ public class PotatoCannonItem extends ShootableItem {
 		return BackTankUtil.showDurabilityBar(stack, maxUses());
 	}
 
-	private int maxUses() {
+	@Override
+	public int maxUses() {
 		return AllConfigs.SERVER.curiosities.maxPotatoCannonShots.get();
 	}
 
@@ -97,6 +100,9 @@ public class PotatoCannonItem extends ShootableItem {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
+		if (stack.getDamage() == getMaxDamage(stack) - 1)
+			return ActionResult.pass(stack);
+
 		return findAmmoInInventory(world, player, stack).map(itemStack -> {
 
 			if (ShootableGadgetItemMethods.shouldSwap(player, stack, hand, this::isCannon))
@@ -113,22 +119,32 @@ public class PotatoCannonItem extends ShootableItem {
 				ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND, new Vector3d(-.05f, 0, 0))
 					.subtract(player.getPositionVec()
 						.add(0, player.getEyeHeight(), 0));
-			
-			Vector3d lookVec = player.getLookVec();
 
 			PotatoCannonProjectileTypes projectileType = PotatoCannonProjectileTypes.getProjectileTypeOf(itemStack)
 				.orElse(PotatoCannonProjectileTypes.FALLBACK);
+			Vector3d lookVec = player.getLookVec();
+			Vector3d motion = lookVec.add(correction).normalize().scale(projectileType.getVelocityMultiplier());
+
 			float soundPitch = projectileType.getSoundPitch() + (Create.RANDOM.nextFloat() - .5f) / 4f;
+
 			boolean spray = projectileType.getSplit() > 1;
+			Vector3d sprayBase = VecHelper.rotate(new Vector3d(0,0.1,0),
+					360*Create.RANDOM.nextFloat(), Axis.Z);
+			float sprayChange = 360f / projectileType.getSplit();
+
 			for (int i = 0; i < projectileType.getSplit(); i++) {
 				PotatoProjectileEntity projectile = AllEntityTypes.POTATO_PROJECTILE.create(world);
 				projectile.setItem(itemStack);
-				Vector3d motion = lookVec.scale(projectileType.getVelocityMultiplier())
-					.add(correction);
-				if (spray)
-					motion = VecHelper.offsetRandomly(motion, Create.RANDOM, 0.25f);
+
+				Vector3d splitMotion = motion;
+				if (spray) {
+					float imperfection = 40*(Create.RANDOM.nextFloat() - 0.5f);
+					Vector3d sprayOffset = VecHelper.rotate(sprayBase, i * sprayChange + imperfection, Axis.Z);
+					splitMotion = splitMotion.add(VecHelper.lookAt(sprayOffset, motion));
+				}
+
 				projectile.setPosition(barrelPos.x, barrelPos.y, barrelPos.z);
-				projectile.setMotion(motion);
+				projectile.setMotion(splitMotion);
 				projectile.setShooter(player);
 				world.addEntity(projectile);
 			}
@@ -139,8 +155,7 @@ public class PotatoCannonItem extends ShootableItem {
 					player.inventory.deleteStack(itemStack);
 			}
 
-			if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
-				stack.damageItem(1, player, p -> p.sendBreakAnimation(hand));
+			stack.damageItem(1, player, p -> {});
 
 			Integer cooldown =
 				findAmmoInInventory(world, player, stack).flatMap(PotatoCannonProjectileTypes::getProjectileTypeOf)

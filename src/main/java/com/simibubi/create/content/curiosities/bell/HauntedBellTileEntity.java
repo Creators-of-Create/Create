@@ -17,7 +17,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class CursedBellTileEntity extends AbstractBellTileEntity {
+public class HauntedBellTileEntity extends AbstractBellTileEntity {
 
 	public static final int DISTANCE = 10;
 	public static final int RECHARGE_TICKS = 65;
@@ -25,7 +25,7 @@ public class CursedBellTileEntity extends AbstractBellTileEntity {
 
 	public int effectTicks = 0;
 
-	public CursedBellTileEntity(TileEntityType<?> type) {
+	public HauntedBellTileEntity(TileEntityType<?> type) {
 		super(type);
 	}
 
@@ -34,7 +34,7 @@ public class CursedBellTileEntity extends AbstractBellTileEntity {
 
 	@Override
 	public PartialModel getBellModel() {
-		return AllBlockPartials.CURSED_BELL;
+		return AllBlockPartials.HAUNTED_BELL;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class CursedBellTileEntity extends AbstractBellTileEntity {
 			return false;
 
 		if (!world.isRemote)
-			CursedBellPulser.sendPulse(world, pos, DISTANCE, true);
+			HauntedBellPulser.sendPulse(world, pos, DISTANCE, true);
 
 		startEffect();
 

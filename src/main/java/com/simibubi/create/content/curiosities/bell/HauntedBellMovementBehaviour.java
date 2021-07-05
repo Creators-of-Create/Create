@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 
 import net.minecraft.util.math.BlockPos;
 
-public class CursedBellMovementBehaviour extends BellMovementBehaviour {
+public class HauntedBellMovementBehaviour extends BellMovementBehaviour {
 
 	public static final int DISTANCE = 3;
 
@@ -19,8 +19,8 @@ public class CursedBellMovementBehaviour extends BellMovementBehaviour {
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		if (!context.world.isRemote && getRecharge(context) == 0) {
-			CursedBellPulser.sendPulse(context.world, pos, DISTANCE, true);
-			setRecharge(context, CursedBellTileEntity.RECHARGE_TICKS);
+			HauntedBellPulser.sendPulse(context.world, pos, DISTANCE, true);
+			setRecharge(context, HauntedBellTileEntity.RECHARGE_TICKS);
 			playSound(context);
 		}
 	}

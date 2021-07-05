@@ -9,31 +9,31 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class CursedBellBlock extends AbstractBellBlock<CursedBellTileEntity> {
+public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 
-	public CursedBellBlock(Properties properties) {
+	public HauntedBellBlock(Properties properties) {
 		super(properties);
 	}
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return AllTileEntities.CURSED_BELL.create();
+		return AllTileEntities.HAUNTED_BELL.create();
 	}
 
 	@Override
-	public Class<CursedBellTileEntity> getTileEntityClass() {
-		return CursedBellTileEntity.class;
+	public Class<HauntedBellTileEntity> getTileEntityClass() {
+		return HauntedBellTileEntity.class;
 	}
 
 	@Override
 	public void playSound(World world, BlockPos pos) {
-		AllSoundEvents.CURSED_BELL_USE.playOnServer(world, pos, 4f, 1f);
+		AllSoundEvents.HAUNTED_BELL_USE.playOnServer(world, pos, 4f, 1f);
 	}
 
 	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (oldState.getBlock() != this)
-			withTileEntityDo(world, pos, CursedBellTileEntity::startEffect);
+			withTileEntityDo(world, pos, HauntedBellTileEntity::startEffect);
 	}
 
 }

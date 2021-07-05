@@ -69,13 +69,13 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 		if (world.isRemote()) {
 			spawnConversionParticles(world, pos);
 		} else if (world instanceof World) {
-			AllSoundEvents.CURSED_BELL_CONVERT.playOnServer((World) world, pos);
+			AllSoundEvents.HAUNTED_BELL_CONVERT.playOnServer((World) world, pos);
 		}
 
-		return AllBlocks.CURSED_BELL.getDefaultState()
-				.with(CursedBellBlock.field_220133_a, state.get(field_220133_a))
-				.with(CursedBellBlock.field_220134_b, state.get(field_220134_b))
-				.with(CursedBellBlock.POWERED, state.get(POWERED));
+		return AllBlocks.HAUNTED_BELL.getDefaultState()
+				.with(HauntedBellBlock.field_220133_a, state.get(field_220133_a))
+				.with(HauntedBellBlock.field_220134_b, state.get(field_220134_b))
+				.with(HauntedBellBlock.POWERED, state.get(POWERED));
 	}
 
 	public void spawnConversionParticles(IWorld world, BlockPos blockPos) {

@@ -3,33 +3,63 @@
 	"textures": {
 		"1": "create:block/bell_frame_side",
 		"2": "create:block/bell_frame",
-    "particle": "create:block/bell"
+		"particle": "create:block/bell"
 	},
 	"elements": [
 		{
-			"from": [0.1, 0, 0],
-			"to": [15.9, 16, 16],
+			"from": [15, 4, 4],
+			"to": [16, 12, 12],
 			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 15.8, 16], "texture": "#2"}
+				"north": {"uv": [16, 0, 15, 8], "texture": "#2"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#2"},
+				"south": {"uv": [1, 0, 0, 8], "texture": "#2"},
+				"west": {"uv": [16, 0, 8, 8], "texture": "#2"},
+				"up": {"uv": [12, 4, 4, 5], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [12, 11, 4, 12], "rotation": 270, "texture": "#1"}
 			}
 		},
 		{
-			"from": [15.9, 0, 0],
-			"to": [0.1, 16, 16],
+			"from": [0, 4, 4],
+			"to": [1, 12, 12],
 			"faces": {
-				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#2"}
+				"north": {"uv": [16, 0, 15, 8], "texture": "#2"},
+				"east": {"uv": [8, 0, 16, 8], "texture": "#2"},
+				"south": {"uv": [1, 0, 0, 8], "texture": "#2"},
+				"west": {"uv": [8, 0, 0, 8], "texture": "#2"},
+				"up": {"uv": [12, 4, 4, 5], "rotation": 90, "texture": "#1"},
+				"down": {"uv": [12, 11, 4, 12], "rotation": 270, "texture": "#1"}
+			}
+		},
+		{
+			"from": [0, 0, 2],
+			"to": [2, 4, 14],
+			"faces": {
+				"north": {"uv": [14, 12, 16, 16], "texture": "#2"},
+				"east": {"uv": [0, 12, 12, 16], "texture": "#2"},
+				"south": {"uv": [14, 12, 12, 16], "texture": "#2"},
+				"west": {"uv": [12, 8, 0, 12], "texture": "#2"},
+				"up": {"uv": [0, 14, 12, 16], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [0, 14, 11, 12], "rotation": 90, "texture": "#1"}
+			}
+		},
+		{
+			"from": [14, 0, 2],
+			"to": [16, 4, 14],
+			"faces": {
+				"north": {"uv": [16, 12, 14, 16], "texture": "#2"},
+				"east": {"uv": [0, 8, 12, 12], "texture": "#2"},
+				"south": {"uv": [12, 12, 14, 16], "texture": "#2"},
+				"west": {"uv": [12, 12, 0, 16], "texture": "#2"},
+				"up": {"uv": [0, 16, 12, 14], "rotation": 270, "texture": "#1"},
+				"down": {"uv": [0, 12, 11, 14], "rotation": 90, "texture": "#1"}
 			}
 		}
 	],
 	"groups": [
 		{
-			"name": "Frame",
+			"name": "block_double_wall",
 			"origin": [8, 8, 8],
+			"color": 0,
 			"children": [0, 1]
-		}
-	]
+		}, 2, 3]
 }
