@@ -15,6 +15,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Foods;
@@ -316,17 +317,30 @@ public class PotatoCannonProjectileTypes {
 
 	private static BiConsumer<IWorld, BlockRayTraceResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
 		return (world, ray) -> {
-			if (ray.getFace() != Direction.UP)
-				return;
 			BlockPos hitPos = ray.getPos();
 			if (!world.isAreaLoaded(hitPos, 1))
 				return;
-			BlockPos placePos = hitPos.up();
+			Direction face = ray.getFace();
+			BlockPos placePos = hitPos.offset(face);
 			if (!world.getBlockState(placePos)
-					.getMaterial()
-					.isReplaceable())
+				.getMaterial()
+				.isReplaceable())
 				return;
-			world.setBlockState(placePos, block.get().getDefaultState(), 3);
+
+			if (face == Direction.UP) {
+				world.setBlockState(placePos, block.get().getDefaultState(), 3);
+			} else if (world instanceof World) {
+				double y = ray.getHitVec().y - 0.5;
+				if (!world.isAirBlock(placePos.up()))
+					y = Math.min(y, placePos.getY());
+				if (!world.isAirBlock(placePos.down()))
+					y = Math.max(y, placePos.getY());
+
+				FallingBlockEntity falling = new FallingBlockEntity((World) world, placePos.getX() + 0.5, y,
+					placePos.getZ() + 0.5, block.get().getDefaultState());
+				falling.fallTime = 1;
+				world.addEntity(falling);
+			}
 		};
 	}
 
