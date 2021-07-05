@@ -1,14 +1,7 @@
 package com.simibubi.create.content.curiosities.armor;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.google.common.collect.Streams;
 import com.simibubi.create.foundation.config.AllConfigs;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
@@ -18,16 +11,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class CopperBacktankItem extends CopperArmorItem {
 
 	public static final int DURABILITY_BAR = 0xefefef;
-	public static final int RECHARGES_PER_TICK = 4;
 	private BlockItem blockItem;
 
 	public CopperBacktankItem(Properties p_i48534_3_, BlockItem blockItem) {
@@ -54,7 +41,7 @@ public class CopperBacktankItem extends CopperArmorItem {
 	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 		if (!isInGroup(p_150895_1_))
 			return;
-
+		
 		ItemStack stack = new ItemStack(this);
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("Air", AllConfigs.SERVER.curiosities.maxAirInBacktank.get());
@@ -78,39 +65,4 @@ public class CopperBacktankItem extends CopperArmorItem {
 		return orCreateTag.getInt("Air");
 	}
 
-	@SubscribeEvent
-	public static void rechargePneumaticTools(TickEvent.PlayerTickEvent event) {
-		PlayerEntity player = event.player;
-		if (event.phase != TickEvent.Phase.START)
-			return;
-		if (event.side != LogicalSide.SERVER)
-			return;
-		if (player.isSpectator())
-			return;
-		ItemStack tankStack = BackTankUtil.get(player);
-		if (tankStack.isEmpty())
-			return;
-
-		PlayerInventory inv = player.inventory;
-
-		List<ItemStack> toCharge = Streams.concat(Stream.of(player.getHeldItemMainhand()), inv.offHandInventory.stream(),
-			inv.armorInventory.stream(), inv.mainInventory.stream())
-			.filter(s -> s.getItem() instanceof IBackTankRechargeable && s.isDamaged())
-			.collect(Collectors.toList());
-
-		int charges = RECHARGES_PER_TICK;
-		for (ItemStack stack : toCharge) {
-			while (stack.isDamaged()) {
-				if (BackTankUtil.canAbsorbDamage(event.player, ((IBackTankRechargeable) stack.getItem()).maxUses())) {
-					stack.setDamage(stack.getDamage() - 1);
-					charges--;
-					if (charges <= 0)
-						return;
-				} else {
-					return;
-				}
-			}
-		}
-
-	}
 }
