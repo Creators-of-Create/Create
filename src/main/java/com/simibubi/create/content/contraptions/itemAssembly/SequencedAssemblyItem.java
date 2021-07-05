@@ -12,7 +12,7 @@ import net.minecraft.util.math.MathHelper;
 public class SequencedAssemblyItem extends Item {
 
 	public SequencedAssemblyItem(Properties p_i48487_1_) {
-		super(p_i48487_1_);
+		super(p_i48487_1_.maxStackSize(1));
 	}
 
 	@Override

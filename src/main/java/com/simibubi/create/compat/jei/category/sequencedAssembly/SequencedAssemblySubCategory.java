@@ -121,12 +121,12 @@ public abstract class SequencedAssemblySubCategory {
 		@Override
 		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
 			deployer.offset = index;
-			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
 			ms.push();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
 			deployer.draw(ms, getWidth() / 2, 0);
 			ms.pop();
+			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
 		}
 
 	}

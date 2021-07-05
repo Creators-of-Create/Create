@@ -14,7 +14,23 @@
           "item": "create:incomplete_large_cogwheel"
         },
         {
-          "tag": "minecraft:wooden_slabs"
+          "tag": "minecraft:planks"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_large_cogwheel"
+        }
+      ]
+    },
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create:incomplete_large_cogwheel"
+        },
+        {
+          "tag": "minecraft:wooden_buttons"
         }
       ],
       "results": [
@@ -41,9 +57,25 @@
   "results": [
     {
       "item": "create:large_cogwheel",
-      "count": 3,
-      "chance": 12.0
+      "count": 6,
+      "chance": 22.0
+    },
+    {
+      "item": "create:andesite_alloy",
+      "chance": 2.0
+    },
+    {
+      "item": "minecraft:andesite"
+    },
+    {
+      "item": "create:cogwheel"
+    },
+    {
+      "item": "minecraft:stick"
+    },
+    {
+      "item": "minecraft:iron_nugget"
     }
   ],
-  "loops": 8
+  "loops": 3
 }

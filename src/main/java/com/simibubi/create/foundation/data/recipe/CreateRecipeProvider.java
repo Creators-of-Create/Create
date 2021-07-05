@@ -123,8 +123,8 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllItems.ELECTRON_TUBE.get();
 		}
 
-		static IItemProvider clockwork() {
-			return AllItems.CLOCKWORK_COMPONENT.get();
+		static IItemProvider precisionMechanism() {
+			return AllItems.PRECISION_MECHANISM.get();
 		}
 
 		static ITag.INamedTag<Item> copperBlock() {

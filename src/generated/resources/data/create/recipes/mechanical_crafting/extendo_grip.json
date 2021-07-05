@@ -12,7 +12,7 @@
       "tag": "forge:ingots/brass"
     },
     "R": {
-      "item": "create:clockwork_component"
+      "item": "create:precision_mechanism"
     },
     "H": {
       "item": "create:brass_hand"

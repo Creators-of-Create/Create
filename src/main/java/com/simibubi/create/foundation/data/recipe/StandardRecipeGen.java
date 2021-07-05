@@ -600,7 +600,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).unlockedBy(I::brassCasing)
 			.returns(1)
 			.viaShaped(b -> b.key('L', I.brassSheet())
-				.key('I', I.clockwork())
+				.key('I', I.precisionMechanism())
 				.key('A', I.andesite())
 				.key('C', I.brassCasing())
 				.patternLine("LLA")
@@ -719,7 +719,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		GAUGE_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.SPEEDOMETER, AllBlocks.STRESSOMETER)),
 
 		ROTATION_SPEED_CONTROLLER = create(AllBlocks.ROTATION_SPEED_CONTROLLER).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.clockwork())
+			.viaShaped(b -> b.key('B', I.precisionMechanism())
 				.key('C', I.brassCasing())
 				.key('S', I.shaft())
 				.patternLine(" B ")

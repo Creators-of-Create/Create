@@ -31,7 +31,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 
 		EXTENDO_GRIP = create(AllItems.EXTENDO_GRIP::get).returns(1)
 			.recipe(b -> b.key('L', Ingredient.fromTag(I.brass()))
-				.key('R', I.clockwork())
+				.key('R', I.precisionMechanism())
 				.key('H', AllItems.BRASS_HAND.get())
 				.key('S', Ingredient.fromTag(Tags.Items.RODS_WOODEN))
 				.patternLine(" L ")
@@ -42,7 +42,7 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			
 		POTATO_CANNON = create(AllItems.POTATO_CANNON::get).returns(1)
 			.recipe(b -> b.key('L', I.andesite())
-				.key('R', I.clockwork())
+				.key('R', I.precisionMechanism())
 				.key('S', Ingredient.fromTag(I.copper()))
 				.patternLine("L")
 				.patternLine("R")

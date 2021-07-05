@@ -82,11 +82,11 @@ public class AllItems {
 		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_CLOCKWORK_COMPONENT =
-		REGISTRATE.item("incomplete_clockwork_component", SequencedAssemblyItem::new)
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_PRECISION_MECHANISM =
+		REGISTRATE.item("incomplete_precision_mechanism", SequencedAssemblyItem::new)
 			.register();
 
-	public static final ItemEntry<Item> CLOCKWORK_COMPONENT = ingredient("clockwork_component");
+	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
 			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
@@ -344,10 +344,10 @@ public class AllItems {
 			.register();
 	}
 
-	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
-		return REGISTRATE.item(name, HiddenIngredientItem::new)
-			.register();
-	}
+//	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+//		return REGISTRATE.item(name, HiddenIngredientItem::new)
+//			.register();
+//	}
 
 	@SafeVarargs
 	private static ItemEntry<Item> taggedIngredient(String name, ITag.INamedTag<Item>... tags) {
