@@ -8,7 +8,6 @@ import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
-import com.simibubi.create.content.curiosities.armor.IBackTankRechargeable;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -38,7 +37,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class PotatoCannonItem extends ShootableItem implements IBackTankRechargeable {
+public class PotatoCannonItem extends ShootableItem {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
@@ -78,8 +77,7 @@ public class PotatoCannonItem extends ShootableItem implements IBackTankRecharge
 		return BackTankUtil.showDurabilityBar(stack, maxUses());
 	}
 
-	@Override
-	public int maxUses() {
+	private int maxUses() {
 		return AllConfigs.SERVER.curiosities.maxPotatoCannonShots.get();
 	}
 
@@ -100,9 +98,6 @@ public class PotatoCannonItem extends ShootableItem implements IBackTankRecharge
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		if (stack.getDamage() == getMaxDamage(stack) - 1)
-			return ActionResult.pass(stack);
-
 		return findAmmoInInventory(world, player, stack).map(itemStack -> {
 
 			if (ShootableGadgetItemMethods.shouldSwap(player, stack, hand, this::isCannon))
@@ -155,7 +150,8 @@ public class PotatoCannonItem extends ShootableItem implements IBackTankRecharge
 					player.inventory.deleteStack(itemStack);
 			}
 
-			stack.damageItem(1, player, p -> {});
+			if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
+				stack.damageItem(1, player, p -> p.sendBreakAnimation(hand));
 
 			Integer cooldown =
 				findAmmoInInventory(world, player, stack).flatMap(PotatoCannonProjectileTypes::getProjectileTypeOf)

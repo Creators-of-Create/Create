@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
-import com.simibubi.create.content.curiosities.armor.IBackTankRechargeable;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -27,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -50,7 +50,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
-public class ExtendoGripItem extends Item implements IBackTankRechargeable {
+public class ExtendoGripItem extends Item {
 	private static DamageSource lastActiveDamageSource;
 
 	public static final int MAX_DAMAGE = 200;
@@ -86,8 +86,8 @@ public class ExtendoGripItem extends Item implements IBackTankRechargeable {
 		PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 
 		CompoundNBT persistentData = player.getPersistentData();
-		boolean inOff = isActiveExtendoGrip(player.getHeldItemOffhand());
-		boolean inMain = isActiveExtendoGrip(player.getHeldItemMainhand());
+		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand());
+		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemMainhand());
 		boolean holdingDualExtendo = inOff && inMain;
 		boolean holdingExtendo = inOff ^ inMain;
 		holdingExtendo &= !holdingDualExtendo;
@@ -198,14 +198,17 @@ public class ExtendoGripItem extends Item implements IBackTankRechargeable {
 			return;
 		if (player.world.isRemote)
 			return;
-		ItemStack main = player.getHeldItemMainhand();
-		ItemStack off = player.getHeldItemOffhand();
-		for (ItemStack stack : new ItemStack[]{main, off}) {
-			if (isActiveExtendoGrip(stack)) {
-				if (!BackTankUtil.canAbsorbDamage(player, ((IBackTankRechargeable) stack.getItem()).maxUses()))
-					stack.damageItem(1, player, p -> {});
-			}
+		Hand hand = Hand.MAIN_HAND;
+		ItemStack extendo = player.getHeldItemMainhand();
+		if (!AllItems.EXTENDO_GRIP.isIn(extendo)) {
+			extendo = player.getHeldItemOffhand();
+			hand = Hand.OFF_HAND;
 		}
+		if (!AllItems.EXTENDO_GRIP.isIn(extendo))
+			return;
+		final Hand h = hand;
+		if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
+			extendo.damageItem(1, player, p -> p.sendBreakAnimation(h));
 	}
 
 	@Override
@@ -223,8 +226,7 @@ public class ExtendoGripItem extends Item implements IBackTankRechargeable {
 		return BackTankUtil.showDurabilityBar(stack, maxUses());
 	}
 
-	@Override
-	public int maxUses() {
+	private static int maxUses() {
 		return AllConfigs.SERVER.curiosities.maxExtendoGripActions.get();
 	}
 
@@ -242,7 +244,7 @@ public class ExtendoGripItem extends Item implements IBackTankRechargeable {
 	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
 		// Workaround for removed patch to get the attacking entity.
 		lastActiveDamageSource = event.getSource();
-
+		
 		DamageSource source = event.getSource();
 		if (source == null)
 			return;
@@ -312,13 +314,9 @@ public class ExtendoGripItem extends Item implements IBackTankRechargeable {
 				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
 	}
 
-	public static boolean isActiveExtendoGrip(ItemStack stack) {
-		return AllItems.EXTENDO_GRIP.isIn(stack) && stack.getDamage() != stack.getMaxDamage() - 1;
-	}
-
 	public static boolean isHoldingExtendoGrip(PlayerEntity player) {
-		boolean inOff = isActiveExtendoGrip(player.getHeldItemOffhand());
-		boolean inMain = isActiveExtendoGrip(player.getHeldItemMainhand());
+		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand());
+		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemMainhand());
 		boolean holdingGrip = inOff || inMain;
 		return holdingGrip;
 	}
