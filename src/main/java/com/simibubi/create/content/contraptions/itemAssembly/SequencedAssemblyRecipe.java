@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -12,6 +13,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
@@ -53,7 +55,9 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 
 	public static <C extends IInventory, R extends ProcessingRecipe<C>> Optional<R> getRecipe(World world, C inv,
 		IRecipeType<R> type, Class<R> recipeClass) {
-		return getRecipe(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world));
+		//return getRecipe(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world));
+		return getRecipes(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world))
+				.findFirst();
 	}
 
 	public static <R extends ProcessingRecipe<?>> Optional<R> getRecipe(World world, ItemStack item,
@@ -71,6 +75,24 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 			return Optional.of(recipeClass.cast(recipe));
 		}
 		return Optional.empty();
+	}
+
+	public static <R extends ProcessingRecipe<?>> Stream<R> getRecipes(World world, ItemStack item,
+		IRecipeType<R> type, Class<R> recipeClass) {
+		List<SequencedAssemblyRecipe> all = world.getRecipeManager()
+			.<RecipeWrapper, SequencedAssemblyRecipe>listAllOfType(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+
+		return all.stream()
+				.filter(it -> it.appliesTo(item))
+				.map(it -> Pair.of(it, it.getNextRecipe(item).getRecipe()))
+				.filter(it -> it.getSecond()
+						.getType() == type && recipeClass.isInstance(it.getSecond()))
+				.map(it -> {
+					it.getSecond()
+							.enforceNextResult(() -> it.getFirst().advance(item));
+					return it.getSecond();
+				})
+				.map(recipeClass::cast);
 	}
 
 	private ItemStack advance(ItemStack input) {

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1457",
+	"_": "Missing Localizations: 1459",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -480,6 +480,8 @@
 	"item.create.honey_bucket": "Cubeta de Miel",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.incomplete_clockwork_component": "UNLOCALIZED: Incomplete Clockwork Component",
+	"item.create.incomplete_cogwheel": "UNLOCALIZED: Incomplete Cogwheel",
+	"item.create.incomplete_large_cogwheel": "UNLOCALIZED: Incomplete Large Cogwheel",
 	"item.create.iron_sheet": "Lámina de Hierro",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Artefacto de Vagón",

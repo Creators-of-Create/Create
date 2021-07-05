@@ -479,6 +479,8 @@
 	"item.create.honey_bucket": "Honey Bucket",
 	"item.create.honeyed_apple": "Honeyed Apple",
 	"item.create.incomplete_clockwork_component": "Incomplete Clockwork Component",
+	"item.create.incomplete_cogwheel": "Incomplete Cogwheel",
+	"item.create.incomplete_large_cogwheel": "Incomplete Large Cogwheel",
 	"item.create.iron_sheet": "Iron Sheet",
 	"item.create.linked_controller": "Linked Controller",
 	"item.create.minecart_contraption": "Minecart Contraption",

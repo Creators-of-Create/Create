@@ -50,9 +50,13 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ITag.INamedTag<Item> redstone() {
 			return Tags.Items.DUSTS_REDSTONE;
 		}
-		
+
 		static ITag.INamedTag<Item> planks() {
 			return ItemTags.PLANKS;
+		}
+
+		static ITag.INamedTag<Item> woodSlab() {
+			return ItemTags.WOODEN_SLABS;
 		}
 
 		static ITag.INamedTag<Item> gold() {
@@ -78,7 +82,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static IItemProvider cog() {
 			return AllBlocks.COGWHEEL.get();
 		}
-		
+
 		static IItemProvider largeCog() {
 			return AllBlocks.LARGE_COGWHEEL.get();
 		}
@@ -98,7 +102,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ITag.INamedTag<Item> iron() {
 			return Tags.Items.INGOTS_IRON;
 		}
-		
+
 		static ITag.INamedTag<Item> ironNugget() {
 			return AllTags.forgeItemTag("nuggets/iron");
 		}
@@ -142,7 +146,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ITag.INamedTag<Item> copperSheet() {
 			return AllTags.forgeItemTag("plates/copper");
 		}
-		
+
 		static ITag.INamedTag<Item> copperNugget() {
 			return AllTags.forgeItemTag("nuggets/copper");
 		}

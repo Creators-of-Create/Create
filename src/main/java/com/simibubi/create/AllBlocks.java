@@ -40,7 +40,7 @@ import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBloc
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
-import com.simibubi.create.content.contraptions.components.mixer.BasinOperatorBlockItem;
+import com.simibubi.create.content.contraptions.components.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGenerator;
@@ -457,7 +457,7 @@ public class AllBlocks {
 			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(8.0))
-			.item(BasinOperatorBlockItem::new)
+			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
 			.register();
 
@@ -468,7 +468,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
-			.item(BasinOperatorBlockItem::new)
+			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
 			.register();
 
@@ -693,7 +693,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.item(BasinOperatorBlockItem::new)
+		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
 
@@ -923,7 +923,7 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.onRegister(addMovementBehaviour(new DeployerMovementBehaviour()))
-		.item()
+		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
 

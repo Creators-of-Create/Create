@@ -44,11 +44,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	private IRecipeType<?> type;
 	private IRecipeSerializer<?> serializer;
 	private AllRecipeTypes enumType;
-	private Optional<Supplier<ItemStack>> forcedResult;
+	private Supplier<ItemStack> forcedResult;
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ProcessingRecipeParams params) {
 
-		this.forcedResult = Optional.empty();
+		this.forcedResult = null;
 		this.enumType = recipeType;
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
@@ -144,7 +144,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	public void enforceNextResult(Supplier<ItemStack> stack) {
-		forcedResult = Optional.of(stack);
+		forcedResult = stack;
 	}
 
 	public List<ItemStack> rollResults() {
@@ -152,8 +152,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		NonNullList<ProcessingOutput> rollableResults = getRollableResults();
 		for (int i = 0; i < rollableResults.size(); i++) {
 			ProcessingOutput output = rollableResults.get(i);
-			ItemStack stack = i == 0 && forcedResult.isPresent() ? forcedResult.get()
-				.get() : output.rollOutput();
+			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput();
 			if (!stack.isEmpty())
 				results.add(stack);
 		}
@@ -226,5 +225,5 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public AllRecipeTypes getEnumType() {
 		return enumType;
 	}
-	
+
 }

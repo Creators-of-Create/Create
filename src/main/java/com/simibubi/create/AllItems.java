@@ -88,6 +88,16 @@ public class AllItems {
 
 	public static final ItemEntry<Item> CLOCKWORK_COMPONENT = ingredient("clockwork_component");
 
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
+			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
+			REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
+
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
 			.tag(AllItemTags.UPRIGHT_ON_BELT.tag)

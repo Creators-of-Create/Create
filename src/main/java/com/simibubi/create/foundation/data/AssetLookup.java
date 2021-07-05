@@ -66,7 +66,7 @@ public class AssetLookup {
 			p.withExistingParent(c.getName(), p.modLoc(path));
 		};
 	}
-	
+
 	public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customGenericItemModel(
 		String... folders) {
 		return (c, p) -> {
@@ -108,6 +108,10 @@ public class AssetLookup {
 
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> existingItemModel() {
 		return (c, p) -> p.getExistingFile(p.modLoc("item/" + c.getName()));
+	}
+
+	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModel(String name) {
+		return (c, p) -> p.getExistingFile(p.modLoc("item/" + name));
 	}
 
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModelWithPartials() {

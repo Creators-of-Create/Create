@@ -6,6 +6,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
+import com.simibubi.create.content.contraptions.components.AssemblyOperatorUseContext;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -15,11 +16,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -109,22 +112,27 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	public Class<DeployerTileEntity> getTileEntityClass() {
 		return DeployerTileEntity.class;
 	}
-	
+
 	@Override
 	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onBlockAdded(state, world, pos, oldState, isMoving);
 		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
 	}
-	
+
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_,
 		BlockPos p_220069_5_, boolean p_220069_6_) {
 		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
+	@Override
+	protected Direction getFacingForPlacement(BlockItemUseContext context) {
+		if (context instanceof AssemblyOperatorUseContext) return Direction.DOWN;
+		else return super.getFacingForPlacement(context);
+	}
 }

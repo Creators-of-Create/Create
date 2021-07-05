@@ -1,0 +1,63 @@
+{
+  "type": "create:sequenced_assembly",
+  "ingredient": {
+    "item": "create:shaft"
+  },
+  "transitionalItem": {
+    "item": "create:incomplete_cogwheel"
+  },
+  "sequence": [
+    {
+      "type": "create:deploying",
+      "ingredients": [
+        {
+          "item": "create:incomplete_cogwheel"
+        },
+        {
+          "tag": "minecraft:planks"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_cogwheel"
+        }
+      ]
+    },
+    {
+      "type": "create:cutting",
+      "ingredients": [
+        {
+          "item": "create:incomplete_cogwheel"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_cogwheel"
+        }
+      ],
+      "processingTime": 20
+    },
+    {
+      "type": "create:cutting",
+      "ingredients": [
+        {
+          "item": "create:incomplete_cogwheel"
+        }
+      ],
+      "results": [
+        {
+          "item": "create:incomplete_cogwheel"
+        }
+      ],
+      "processingTime": 40
+    }
+  ],
+  "results": [
+    {
+      "item": "create:cogwheel",
+      "count": 12,
+      "chance": 12.0
+    }
+  ],
+  "loops": 4
+}

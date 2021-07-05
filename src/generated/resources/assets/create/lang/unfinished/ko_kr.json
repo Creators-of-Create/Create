@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 923",
+	"_": "Missing Localizations: 925",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -480,6 +480,8 @@
 	"item.create.honey_bucket": "꿀 양동이",
 	"item.create.honeyed_apple": "UNLOCALIZED: Honeyed Apple",
 	"item.create.incomplete_clockwork_component": "UNLOCALIZED: Incomplete Clockwork Component",
+	"item.create.incomplete_cogwheel": "UNLOCALIZED: Incomplete Cogwheel",
+	"item.create.incomplete_large_cogwheel": "UNLOCALIZED: Incomplete Large Cogwheel",
 	"item.create.iron_sheet": "철 판",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "광산 수레 장치",

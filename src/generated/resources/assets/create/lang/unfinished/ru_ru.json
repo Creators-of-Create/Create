@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 769",
+	"_": "Missing Localizations: 771",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -480,6 +480,8 @@
 	"item.create.honey_bucket": "Ведро мёда",
 	"item.create.honeyed_apple": "Яблоко в меду",
 	"item.create.incomplete_clockwork_component": "UNLOCALIZED: Incomplete Clockwork Component",
+	"item.create.incomplete_cogwheel": "UNLOCALIZED: Incomplete Cogwheel",
+	"item.create.incomplete_large_cogwheel": "UNLOCALIZED: Incomplete Large Cogwheel",
 	"item.create.iron_sheet": "Железный лист",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "Вагонеточная штуковина",

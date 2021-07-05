@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 248",
+	"_": "Missing Localizations: 250",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -480,6 +480,8 @@
 	"item.create.honey_bucket": "蜂蜜桶",
 	"item.create.honeyed_apple": "蜂蜜蘋果",
 	"item.create.incomplete_clockwork_component": "UNLOCALIZED: Incomplete Clockwork Component",
+	"item.create.incomplete_cogwheel": "UNLOCALIZED: Incomplete Cogwheel",
+	"item.create.incomplete_large_cogwheel": "UNLOCALIZED: Incomplete Large Cogwheel",
 	"item.create.iron_sheet": "鐵板",
 	"item.create.linked_controller": "UNLOCALIZED: Linked Controller",
 	"item.create.minecart_contraption": "裝修過的礦車",
