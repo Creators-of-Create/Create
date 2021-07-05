@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.bell;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BellBlock;
@@ -31,26 +32,31 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		return null;
 	}
 
-	protected VoxelShape getShape(BlockState state) {
-		return VoxelShapes.fullCube();
-	}
-
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selection) {
-		return this.getShape(state);
-	}
-
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selection) {
-		return this.getShape(state);
+		Direction facing = state.get(field_220133_a);
+		switch (state.get(field_220134_b)) {
+		case CEILING:
+			return AllShapes.BELL_CEILING.get(facing);
+		case DOUBLE_WALL:
+			return AllShapes.BELL_DOUBLE_WALL.get(facing);
+		case FLOOR:
+			return AllShapes.BELL_FLOOR.get(facing);
+		case SINGLE_WALL:
+			return AllShapes.BELL_WALL.get(facing);
+		default:
+			return VoxelShapes.fullCube();
+		}
 	}
 
 	@Override
-	public boolean ring(World world, BlockState state, BlockRayTraceResult hit, @Nullable PlayerEntity player, boolean flag) {
+	public boolean ring(World world, BlockState state, BlockRayTraceResult hit, @Nullable PlayerEntity player,
+		boolean flag) {
 		BlockPos pos = hit.getPos();
 		Direction direction = hit.getFace();
 		if (direction == null)
-			direction = world.getBlockState(pos).get(field_220133_a);
+			direction = world.getBlockState(pos)
+				.get(field_220133_a);
 
 		if (!this.canRingFrom(state, direction, hit.getHitVec().y - pos.getY()))
 			return false;
@@ -76,15 +82,15 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 
 		Direction direction = state.get(field_220133_a);
 		BellAttachment bellAttachment = state.get(field_220134_b);
-		switch(bellAttachment) {
-			case FLOOR:
-			case CEILING:
-				return direction.getAxis() == hitDir.getAxis();
-			case SINGLE_WALL:
-			case DOUBLE_WALL:
-				return direction.getAxis() != hitDir.getAxis();
-			default:
-				return false;
+		switch (bellAttachment) {
+		case FLOOR:
+		case CEILING:
+			return direction.getAxis() == hitDir.getAxis();
+		case SINGLE_WALL:
+		case DOUBLE_WALL:
+			return direction.getAxis() != hitDir.getAxis();
+		default:
+			return false;
 		}
 	}
 

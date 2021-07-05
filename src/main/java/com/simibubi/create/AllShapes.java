@@ -108,7 +108,15 @@ public class AllShapes {
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
 			.forDirectional(Direction.UP),
-		CRUSHING_WHEEL_CONTROLLER_COLLISION = shape(0, 0, 0, 16, 13, 16).forDirectional(Direction.DOWN)
+		CRUSHING_WHEEL_CONTROLLER_COLLISION = shape(0, 0, 0, 16, 13, 16).forDirectional(Direction.DOWN),
+
+		BELL_FLOOR = shape(0, 0, 2, 16, 12, 14).forHorizontal(SOUTH),
+		BELL_WALL = shape(4, 4, 8, 12, 12, 16).add(3, 1, 3, 13, 13, 13)
+			.forHorizontal(SOUTH),
+		BELL_DOUBLE_WALL = shape(4, 4, 0, 12, 12, 16).add(3, 1, 3, 13, 13, 13)
+			.forHorizontal(SOUTH),
+		BELL_CEILING = shape(0, 4, 2, 16, 16, 14).add(3, 1, 3, 13, 13, 13)
+			.forHorizontal(SOUTH)
 
 	;
 
