@@ -1,5 +1,12 @@
 {
   "variants": {
+    "facing=down": {
+      "model": "create:block/water_wheel",
+      "x": 180
+    },
+    "facing=up": {
+      "model": "create:block/water_wheel"
+    },
     "facing=north": {
       "model": "create:block/water_wheel",
       "x": 90
