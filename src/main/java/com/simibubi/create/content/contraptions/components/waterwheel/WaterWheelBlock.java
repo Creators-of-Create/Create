@@ -18,6 +18,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BubbleColumnBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.tileentity.TileEntity;
@@ -88,7 +89,6 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 		updateWheelSpeed(worldIn, pos);
 	}
 
-
 	private void updateFlowAt(BlockState state, IWorld world, BlockPos pos, Direction side) {
 		if (side.getAxis() == state.get(FACING)
 			.getAxis())
@@ -129,7 +129,6 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 					flowStrength = flow.y > 0 ^ !clockwise ? -flow.y * clockwiseMultiplier : -flow.y;
 			}
 
-
 			if (wf.getAxis() == Axis.Y) {
 				if (side.getAxis() == Axis.Z)
 					flowStrength = flow.x < 0 ^ !clockwise ? flow.x * clockwiseMultiplier : flow.x;
@@ -141,7 +140,8 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.WATER_WHEEL, world, pos, 5);
 				if (FluidHelper.isLava(fluid.getFluid()))
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.LAVA_WHEEL, world, pos, 5);
-				if (fluid.getFluid().isEquivalentTo(AllFluids.CHOCOLATE.get()))
+				if (fluid.getFluid()
+					.isEquivalentTo(AllFluids.CHOCOLATE.get()))
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.CHOCOLATE_WHEEL, world, pos, 5);
 			}
 
@@ -156,17 +156,37 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getFace();
-		BlockState placedOn = context.getWorld()
-			.getBlockState(context.getPos()
-				.offset(facing.getOpposite()));
+		Direction face = context.getFace();
+		Direction horizontalFacing = context.getPlacementHorizontalFacing();
+		BlockPos pos = context.getPos();
+		World world = context.getWorld();
+		PlayerEntity player = context.getPlayer();
+
+		BlockState placedOn = world.getBlockState(pos.offset(face.getOpposite()));
 		if (AllBlocks.WATER_WHEEL.has(placedOn))
 			return getDefaultState().with(FACING, placedOn.get(FACING));
-		if (facing.getAxis()
-			.isHorizontal())
-			return getDefaultState().with(FACING, context.getPlayer() != null && context.getPlayer()
-				.isSneaking() ? facing.getOpposite() : facing);
-		return super.getStateForPlacement(context);
+
+		Direction facing = face;
+		boolean sneaking = player != null && player.isSneaking();
+		if (player != null) {
+
+			Vector3d lookVec = player.getLookVec();
+			double tolerance = 0.985;
+
+			if (!isValidPosition(getDefaultState().with(FACING, Direction.UP), world, pos))
+				facing = horizontalFacing;
+			else if (Vector3d.of(Direction.DOWN.getDirectionVec())
+				.dotProduct(lookVec.normalize()) > tolerance)
+				facing = Direction.DOWN;
+			else if (Vector3d.of(Direction.UP.getDirectionVec())
+				.dotProduct(lookVec.normalize()) > tolerance)
+				facing = Direction.UP;
+			else
+				facing = horizontalFacing;
+			
+		}
+
+		return getDefaultState().with(FACING, sneaking ? facing.getOpposite() : facing);
 	}
 
 	@Override
