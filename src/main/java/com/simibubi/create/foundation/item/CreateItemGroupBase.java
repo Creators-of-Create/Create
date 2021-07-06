@@ -58,10 +58,7 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 				continue;
 			ItemStack stack = new ItemStack(item);
 			IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, world, null);
-			if (AllSections.of(stack) != AllSections.KINETICS) {
-				if (specialItems)
-					continue;
-			} else if (model.isGui3d() != specialItems)
+			if (model.isGui3d() != specialItems)
 				continue;
 			item.fillItemGroup(this, items);
 		}

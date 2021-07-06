@@ -54,6 +54,14 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	protected void render(ItemStack stack, LinkedControllerModel model, PartialItemModelRenderer renderer,
 		ItemCameraTransforms.TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 		int overlay) {
+
+		renderLinkedController(stack, model, renderer, transformType, ms, light, null, null);
+	}
+
+	public static void renderLinkedController(ItemStack stack, LinkedControllerModel model,
+	  	PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType, MatrixStack ms,
+  		int light, Boolean active, Boolean usedByMe) {
+
 		float pt = AnimationTickHolder.getPartialTicks();
 		MatrixStacker msr = MatrixStacker.of(ms);
 
@@ -62,33 +70,37 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		Minecraft mc = Minecraft.getInstance();
 		boolean rightHanded = mc.gameSettings.mainHand == HandSide.RIGHT;
 		TransformType mainHand =
-			rightHanded ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
+				rightHanded ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 		TransformType offHand =
-			rightHanded ? TransformType.FIRST_PERSON_LEFT_HAND : TransformType.FIRST_PERSON_RIGHT_HAND;
+				rightHanded ? TransformType.FIRST_PERSON_LEFT_HAND : TransformType.FIRST_PERSON_RIGHT_HAND;
 
-		boolean active = false;
-		boolean noControllerInMain = !AllItems.LINKED_CONTROLLER.isIn(mc.player.getHeldItemMainhand());
+		if (active == null) {
+			active = false;
 
-		if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
-			float equip = equipProgress.getValue(pt);
-			int handModifier = transformType == TransformType.FIRST_PERSON_LEFT_HAND ? -1 : 1;
-			msr.translate(0, equip / 4, equip / 4 * handModifier);
-			msr.rotateY(equip * -30 * handModifier);
-			msr.rotateZ(equip * -30);
-			active = true;
+			boolean noControllerInMain = !AllItems.LINKED_CONTROLLER.isIn(mc.player.getHeldItemMainhand());
+			if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
+				float equip = equipProgress.getValue(pt);
+				int handModifier = transformType == TransformType.FIRST_PERSON_LEFT_HAND ? -1 : 1;
+				msr.translate(0, equip / 4, equip / 4 * handModifier);
+				msr.rotateY(equip * -30 * handModifier);
+				msr.rotateZ(equip * -30);
+				active = true;
+			}
+
+			if (transformType == TransformType.GUI) {
+				if (stack == mc.player.getHeldItemMainhand())
+					active = true;
+				if (stack == mc.player.getHeldItemOffhand() && noControllerInMain)
+					active = true;
+			}
+
+			active &= LinkedControllerClientHandler.MODE != Mode.IDLE;
+			usedByMe = active;
 		}
 
-		if (transformType == TransformType.GUI) {
-			if (stack == mc.player.getHeldItemMainhand())
-				active = true;
-			if (stack == mc.player.getHeldItemOffhand() && noControllerInMain)
-				active = true;
-		}
-
-		active &= LinkedControllerClientHandler.MODE != Mode.IDLE;
 		renderer.render(active ? model.getPartial("powered") : model.getOriginalModel(), light);
 
-		if (!active) {
+		if (!usedByMe) {
 			ms.pop();
 			return;
 		}
@@ -122,7 +134,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		ms.pop();
 	}
 
-	protected void button(PartialItemModelRenderer renderer, MatrixStack ms, int light, float pt, IBakedModel button,
+	protected static void button(PartialItemModelRenderer renderer, MatrixStack ms, int light, float pt, IBakedModel button,
 		float b, int index) {
 		ms.push();
 		ms.translate(0, b * buttons.get(index)

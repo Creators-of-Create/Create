@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.zapper;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
@@ -50,12 +51,8 @@ public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> exte
 	}
 
 	protected float getAnimationProgress(float pt, boolean leftHanded, boolean mainHand) {
-		float last = mainHand ^ leftHanded ? ZapperRenderHandler.lastRightHandAnimation
-			: ZapperRenderHandler.lastLeftHandAnimation;
-		float current =
-			mainHand ^ leftHanded ? ZapperRenderHandler.rightHandAnimation : ZapperRenderHandler.leftHandAnimation;
-		float animation = MathHelper.clamp(MathHelper.lerp(pt, last, current) * 5, 0, 1);
-		return animation;
+		float animation = CreateClient.ZAPPER_RENDER_HANDLER.getAnimation(mainHand ^ leftHanded, pt);
+		return MathHelper.clamp(animation * 5, 0, 1);
 	}
 
 }

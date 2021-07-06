@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.mou
 import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartCouplingItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.content.contraptions.goggles.GogglesModel;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyItem;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.gearbox.VerticalGearboxItem;
@@ -40,6 +41,8 @@ import com.simibubi.create.content.curiosities.tools.ExtendoGripItem;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripModel;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItemRenderer.SandPaperModel;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonItem;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonModel;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperItem;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperModel;
 import com.simibubi.create.content.logistics.item.LinkedControllerItem;
@@ -65,7 +68,7 @@ import net.minecraft.util.ResourceLocation;
 public class AllItems {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
 	// Schematics
 
@@ -77,8 +80,23 @@ public class AllItems {
 		CINDER_FLOUR = ingredient("cinder_flour"), POWDERED_OBSIDIAN = ingredient("powdered_obsidian"),
 		ROSE_QUARTZ = ingredient("rose_quartz"), POLISHED_ROSE_QUARTZ = ingredient("polished_rose_quartz"),
 		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
-		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube"),
-		INTEGRATED_CIRCUIT = ingredient("integrated_circuit");
+		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_PRECISION_MECHANISM =
+		REGISTRATE.item("incomplete_precision_mechanism", SequencedAssemblyItem::new)
+			.register();
+
+	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
+			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
+			REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -126,10 +144,10 @@ public class AllItems {
 		BRASS_INGOT = taggedIngredient("brass_ingot", forgeItemTag("ingots/brass"), CREATE_INGOTS.tag);
 
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
-			REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
-					.properties(p -> p.rarity(Rarity.UNCOMMON))
-					.model(AssetLookup.existingItemModel())
-					.color(() -> ChromaticCompoundColor::new)
+		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
+			.properties(p -> p.rarity(Rarity.UNCOMMON))
+			.model(AssetLookup.existingItemModel())
+			.color(() -> ChromaticCompoundColor::new)
 			.register();
 
 	public static final ItemEntry<ShadowSteelItem> SHADOW_STEEL = REGISTRATE.item("shadow_steel", ShadowSteelItem::new)
@@ -150,7 +168,6 @@ public class AllItems {
 		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),
 		IRON_SHEET = taggedIngredient("iron_sheet", forgeItemTag("plates/iron"), PLATES.tag),
 		GOLDEN_SHEET = taggedIngredient("golden_sheet", forgeItemTag("plates/gold"), PLATES.tag, ItemTags.PIGLIN_LOVED),
-		LAPIS_SHEET = taggedIngredient("lapis_sheet", forgeItemTag("plates/lapis_lazuli"), PLATES.tag),
 
 		CRUSHED_IRON = taggedIngredient("crushed_iron_ore", CRUSHED_ORES.tag),
 		CRUSHED_GOLD = taggedIngredient("crushed_gold_ore", CRUSHED_ORES.tag, ItemTags.PIGLIN_LOVED),
@@ -187,35 +204,53 @@ public class AllItems {
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
 		.properties(p -> p.maxStackSize(1))
-			.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
-			.lang("Engineer's Goggles")
-			.register();
+		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
+		.lang("Engineer's Goggles")
+		.register();
 
 	public static final ItemEntry<SuperGlueItem> SUPER_GLUE = REGISTRATE.item("super_glue", SuperGlueItem::new)
-			.register();
+		.register();
 
 	public static final ItemEntry<MinecartCouplingItem> MINECART_COUPLING =
-			REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
-					.register();
+		REGISTRATE.item("minecart_coupling", MinecartCouplingItem::new)
+			.register();
 
 	public static final ItemEntry<BlueprintItem> CRAFTING_BLUEPRINT =
-			REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
-					.register();
+		REGISTRATE.item("crafting_blueprint", BlueprintItem::new)
+			.register();
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
-			.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
-			.register();
+		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+		.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
-			.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
-			.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
-			.register();
+		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
 		.properties(p -> p.maxStackSize(1))
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchModel::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
+
+	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
+		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)
+			.register();
+
+	public static final ItemEntry<MinecartContraptionItem> FURNACE_MINECART_CONTRAPTION =
+		REGISTRATE.item("furnace_minecart_contraption", MinecartContraptionItem::furnace)
+			.register();
+
+	public static final ItemEntry<MinecartContraptionItem> CHEST_MINECART_CONTRAPTION =
+		REGISTRATE.item("chest_minecart_contraption", MinecartContraptionItem::chest)
+			.register();
+
+	// Curiosities
+
+	static {
+		REGISTRATE.startSection(CURIOSITIES);
+	}
 
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
@@ -224,7 +259,15 @@ public class AllItems {
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
+			.properties(p -> p.maxStackSize(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
+			.model(AssetLookup.itemModelWithPartials())
+			.register();
+
+	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
+		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
+			.properties(p -> p.maxStackSize(1))
+			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
@@ -242,39 +285,6 @@ public class AllItems {
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
-	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
-		REGISTRATE.item("minecart_contraption", MinecartContraptionItem::rideable)
-			.register();
-
-	public static final ItemEntry<MinecartContraptionItem> FURNACE_MINECART_CONTRAPTION =
-		REGISTRATE.item("furnace_minecart_contraption", MinecartContraptionItem::furnace)
-			.register();
-
-	public static final ItemEntry<MinecartContraptionItem> CHEST_MINECART_CONTRAPTION =
-		REGISTRATE.item("chest_minecart_contraption", MinecartContraptionItem::chest)
-			.register();
-
-	// Logistics
-
-	static {
-		REGISTRATE.startSection(LOGISTICS);
-	}
-
-	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
-		.model(AssetLookup.existingItemModel())
-		.register();
-
-	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
-		REGISTRATE.item("attribute_filter", FilterItem::attribute)
-			.model(AssetLookup.existingItemModel())
-			.register();
-
-	// Curiosities
-
-	static {
-		REGISTRATE.startSection(CURIOSITIES);
-	}
-
 	public static final ItemEntry<? extends CopperArmorItem>
 
 	COPPER_BACKTANK =
@@ -291,6 +301,21 @@ public class AllItems {
 
 	public static final ItemEntry<TreeFertilizerItem> TREE_FERTILIZER =
 		REGISTRATE.item("tree_fertilizer", TreeFertilizerItem::new)
+			.register();
+
+	// Logistics
+
+	static {
+		REGISTRATE.startSection(LOGISTICS);
+	}
+
+	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
+		.model(AssetLookup.existingItemModel())
+		.register();
+
+	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
+		REGISTRATE.item("attribute_filter", FilterItem::attribute)
+			.model(AssetLookup.existingItemModel())
 			.register();
 
 	// Schematics
@@ -319,11 +344,10 @@ public class AllItems {
 			.register();
 	}
 
-	@SuppressWarnings("unused")
-	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
-		return REGISTRATE.item(name, HiddenIngredientItem::new)
-			.register();
-	}
+//	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+//		return REGISTRATE.item(name, HiddenIngredientItem::new)
+//			.register();
+//	}
 
 	@SafeVarargs
 	private static ItemEntry<Item> taggedIngredient(String name, ITag.INamedTag<Item>... tags) {

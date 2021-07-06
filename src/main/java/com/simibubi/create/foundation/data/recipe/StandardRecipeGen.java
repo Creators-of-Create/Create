@@ -56,7 +56,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	/*
 	 * Recipes are added through fields, so one can navigate to the right one easily
-	 * 
+	 *
 	 * (Ctrl-o) in Eclipse
 	 */
 
@@ -172,7 +172,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.key('O', I.ironSheet())
 				.patternLine("  E")
 				.patternLine(" O ")
-				.patternLine("E  "))
+				.patternLine("E  ")),
+
+		PECULIAR_BELL = create(AllBlocks.PECULIAR_BELL).unlockedByTag(I::brass)
+			.viaShaped(b -> b.key('I', I.brassBlock())
+				.key('P', I.brassSheet())
+				.patternLine("I")
+				.patternLine("P"))
 
 	;
 
@@ -594,13 +600,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).unlockedBy(I::brassCasing)
 			.returns(1)
 			.viaShaped(b -> b.key('L', I.brassSheet())
-				.key('R', I.cog())
-				.key('I', I.electronTube())
+				.key('I', I.precisionMechanism())
 				.key('A', I.andesite())
 				.key('C', I.brassCasing())
 				.patternLine("LLA")
-				.patternLine("LR ")
-				.patternLine("ICI")),
+				.patternLine("L  ")
+				.patternLine("IC ")),
 
 		MECHANICAL_MIXER = create(AllBlocks.MECHANICAL_MIXER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('S', I.cog())
@@ -714,7 +719,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		GAUGE_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.SPEEDOMETER, AllBlocks.STRESSOMETER)),
 
 		ROTATION_SPEED_CONTROLLER = create(AllBlocks.ROTATION_SPEED_CONTROLLER).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.circuit())
+			.viaShaped(b -> b.key('B', I.precisionMechanism())
 				.key('C', I.brassCasing())
 				.key('S', I.shaft())
 				.patternLine(" B ")
@@ -969,14 +974,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine("P P")
 				.patternLine("P P")
 				.patternLine("G G")),
-			
+
 		LINKED_CONTROLLER = create(AllItems.LINKED_CONTROLLER).unlockedBy(AllBlocks.REDSTONE_LINK::get)
 			.viaShaped(b -> b.key('S', ItemTags.WOODEN_BUTTONS)
 				.key('P', AllBlocks.REDSTONE_LINK.get())
 				.patternLine("SSS")
 				.patternLine(" P ")
 				.patternLine("SSS")),
-			
+
 		CRAFTING_BLUEPRINT = create(AllItems.CRAFTING_BLUEPRINT).unlockedBy(() -> Items.CRAFTING_TABLE)
 			.viaShapeless(b -> b.addIngredient(Items.PAINTING)
 				.addIngredient(Items.CRAFTING_TABLE)),

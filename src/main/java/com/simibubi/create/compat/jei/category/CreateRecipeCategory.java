@@ -104,30 +104,39 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			ProcessingOutput output = results.get(slotIndex - 1);
 			float chance = output.getChance();
 			if (chance != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100)).formatted(TextFormatting.GOLD));
+				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+					.formatted(TextFormatting.GOLD));
 		});
 	}
 
-	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
+	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
 		return stacks.stream()
-			.map(this::withImprovedVisibility)
+			.map(CreateRecipeCategory::withImprovedVisibility)
 			.collect(Collectors.toList());
 	}
 
-	public FluidStack withImprovedVisibility(FluidStack stack) {
+	public static FluidStack withImprovedVisibility(FluidStack stack) {
 		FluidStack display = stack.copy();
 		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
 		display.setAmount(displayedAmount);
 		return display;
 	}
 
-	protected static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
+	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
 		List<FluidStack> outputs) {
+		addFluidTooltip(fluidStacks, inputs, outputs, -1);
+	}
+
+	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
+		List<FluidStack> outputs, int index) {
 		List<Integer> amounts = new ArrayList<>();
 		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
 		outputs.forEach(f -> amounts.add(f.getAmount()));
 
 		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
+			if (index != -1 && slotIndex != index)
+				return;
+			
 			if (fluid.getFluid()
 				.isEquivalentTo(AllFluids.POTION.get())) {
 				ITextComponent name = fluid.getDisplayName();
@@ -142,12 +151,13 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 					.collect(Collectors.toList()));
 			}
 
-			int amount = amounts.get(slotIndex);
+			int amount = amounts.get(index != -1 ? 0 : slotIndex);
 			ITextComponent text = (Lang.translate("generic.unit.millibuckets", amount)).formatted(TextFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {
-				List<ITextComponent> siblings = tooltip.get(0).getSiblings();
+				List<ITextComponent> siblings = tooltip.get(0)
+					.getSiblings();
 				siblings.add(new StringTextComponent(" "));
 				siblings.add(text);
 			}

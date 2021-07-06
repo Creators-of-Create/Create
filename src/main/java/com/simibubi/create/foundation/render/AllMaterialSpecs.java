@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.render;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.MaterialSpec;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.event.GatherContextEvent;
@@ -12,10 +10,10 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltData;
 import com.simibubi.create.content.logistics.block.FlapData;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@OnlyIn(Dist.CLIENT)
 public class AllMaterialSpecs {
 	public static void init() {
 		// noop, make sure the static field are loaded.
@@ -26,16 +24,11 @@ public class AllMaterialSpecs {
 	public static final MaterialSpec<ActorData> ACTORS = new MaterialSpec<>(Locations.ACTORS, AllProgramSpecs.ACTOR, Formats.UNLIT_MODEL, AllInstanceFormats.ACTOR, ActorData::new);
 	public static final MaterialSpec<FlapData> FLAPS = new MaterialSpec<>(Locations.FLAPS, AllProgramSpecs.FLAPS, Formats.UNLIT_MODEL, AllInstanceFormats.FLAP, FlapData::new);
 
-	public static <D extends InstanceData> MaterialSpec<D> register(MaterialSpec<D> spec) {
-		return Backend.getInstance().register(spec);
-	}
-
-	@SubscribeEvent
 	public static void flwInit(GatherContextEvent event) {
-		register(ROTATING);
-		register(BELTS);
-		register(ACTORS);
-		register(FLAPS);
+		event.getBackend().register(ROTATING);
+		event.getBackend().register(BELTS);
+		event.getBackend().register(ACTORS);
+		event.getBackend().register(FLAPS);
 	}
 
 	public static class Locations {

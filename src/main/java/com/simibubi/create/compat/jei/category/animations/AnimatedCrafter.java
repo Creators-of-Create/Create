@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
 public class AnimatedCrafter extends AnimatedKinetics {
@@ -20,12 +19,12 @@ public class AnimatedCrafter extends AnimatedKinetics {
 			.rotateY(-22.5f);
 		int scale = 22;
 
-		GuiGameElement.of(cogwheel())
+		defaultBlockElement(cogwheel())
 			.rotateBlock(90, 0, getCurrentAngle())
 			.scale(scale)
 			.render(matrixStack);
 
-		GuiGameElement.of(AllBlocks.MECHANICAL_CRAFTER.getDefaultState())
+		defaultBlockElement(AllBlocks.MECHANICAL_CRAFTER.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.scale(scale)
 			.render(matrixStack);

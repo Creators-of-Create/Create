@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
@@ -141,21 +143,10 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		return result | super.mouseReleased(x, y, button);
 	}
 
-	@Override
-	public boolean shouldCloseOnEsc() {
-		return true;
-	}
-
-	@Override
-	public boolean isPauseScreen() {
-		return false;
-	}
-
 	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
 	protected void drawBackground(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
-
 	}
 
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -174,6 +165,51 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		}
 	}
 
+	public double getItemCountTextScale() {
+		int guiScaleFactor = (int) client.getWindow()
+			.getGuiScaleFactor();
+		double scale = 1;
+		switch (guiScaleFactor) {
+		case 1:
+			scale = 2060 / 2048d;
+			break;
+		case 2:
+			scale = .5;
+			break;
+		case 3:
+			scale = .675;
+			break;
+		case 4:
+			scale = .75;
+			break;
+		default:
+			scale = ((float) guiScaleFactor - 1) / guiScaleFactor;
+		}
+		return scale;
+	}
+
+	public int getLeftOfCentered(int textureWidth) {
+		return (width - textureWidth) / 2;
+	}
+
+	public void renderPlayerInventory(MatrixStack ms, int x, int y) {
+		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, x, y);
+		textRenderer.draw(ms, playerInventory.getDisplayName(), x + 8, y + 6, 0x404040);
+	}
+
+	/**
+	 * Used for moving JEI out of the way of extra things like Flexcrate renders.
+	 *
+	 * <p>This screen class must be bound to a SlotMover instance for this method to work.
+	 *
+	 * @return the space that the gui takes up besides the normal rectangle defined by {@link ContainerScreen}.
+	 */
+	public List<Rectangle2d> getExtraAreas() {
+		return Collections.emptyList();
+	}
+
+	// Not up to date with ItemRenderer
+	@Deprecated
 	protected void renderItemOverlayIntoGUI(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition,
 		int yPosition, @Nullable String text, int textColor) {
 		if (!stack.isEmpty()) {
@@ -227,32 +263,10 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		}
 	}
 
-	public double getItemCountTextScale() {
-		int guiScaleFactor = (int) client.getWindow()
-			.getGuiScaleFactor();
-		double scale = 1;
-		switch (guiScaleFactor) {
-		case 1:
-			scale = 2060 / 2048d;
-			break;
-		case 2:
-			scale = .5;
-			break;
-		case 3:
-			scale = .675;
-			break;
-		case 4:
-			scale = .75;
-			break;
-		default:
-			scale = ((float) guiScaleFactor - 1) / guiScaleFactor;
-		}
-		return scale;
-	}
-
+	@Deprecated
 	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
 		int alpha) {
-		renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D)
 			.color(red, green, blue, alpha)
 			.endVertex();
@@ -269,18 +283,9 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			.draw();
 	}
 
-	/**
-	 * Used for moving JEI out of the way of extra things like Flexcrate renders
-	 *
-	 * @return the space that the gui takes up besides the normal rectangle defined by {@link ContainerScreen}.
-	 */
-	public List<Rectangle2d> getExtraAreas() {
-		return Collections.emptyList();
-	}
-
 	@Deprecated
 	protected void debugWindowArea(MatrixStack matrixStack) {
-		fill(matrixStack, guiLeft + xSize, guiTop + ySize, guiLeft, guiTop, 0xd3d3d3d3);
+		fill(matrixStack, guiLeft + xSize, guiTop + ySize, guiLeft, guiTop, 0xD3D3D3D3);
 	}
 
 	@Deprecated
@@ -289,4 +294,5 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 			fill(matrixStack, area.getX() + area.getWidth(), area.getY() + area.getHeight(), area.getX(), area.getY(), 0xd3d3d3d3);
 		}
 	}
+
 }

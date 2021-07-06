@@ -25,6 +25,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -115,6 +116,16 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		FWOOMP = create("fwoomp").subtitle("Potato Launcher fwoomps")
+			.category(SoundCategory.PLAYERS)
+			.build(),
+
+		POTATO_HIT = create("potato_hit").subtitle("Vegetable impacts")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_BREAK, .75f, .75f)
+			.playExisting(SoundEvents.BLOCK_WEEPING_VINES_BREAK, .75f, 1.25f)
+			.category(SoundCategory.PLAYERS)
+			.build(),
+
 		CONTRAPTION_ASSEMBLE = create("contraption_assemble").subtitle("Contraption moves")
 			.playExisting(SoundEvents.BLOCK_WOODEN_TRAPDOOR_OPEN, .5f, .5f)
 			.playExisting(SoundEvents.BLOCK_CHEST_OPEN, .045f, .74f)
@@ -163,6 +174,16 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		CONTROLLER_PUT = create("controller_put").subtitle("Controller thumps")
+			.playExisting(SoundEvents.ITEM_BOOK_PUT, 1f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		CONTROLLER_TAKE = create("controller_take").subtitle("Lectern empties")
+			.playExisting(SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, 1f, 1f)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
 		SAW_ACTIVATE_WOOD = create("saw_activate_wood").subtitle("Mechanical Saw activates")
 			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND, .75f, 1.5f)
 			.category(SoundCategory.BLOCKS)
@@ -173,18 +194,21 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		SAW_PROCESS = create("saw_process").subtitle("Mechanical Saw processes")
-			.playExisting(SoundEvents.BLOCK_SAND_PLACE, .075f, .75f)
-			.category(SoundCategory.BLOCKS)
-			.build(),
-			
-		SAW_IDLE = create("saw_idle").subtitle("Mechanical Saw turns")
-			.playExisting(SoundEvents.ENTITY_BOAT_PADDLE_LAND)
+		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
+			.playExisting(SoundEvents.ENTITY_GENERIC_EAT, .5f, 1f)
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		BLAZE_MUNCH = create("blaze_munch").subtitle("Blaze Burner munches")
-			.playExisting(SoundEvents.ENTITY_GENERIC_EAT, .5f, 1f)
+		PECULIAR_BELL_USE = create("peculiar_bell_use").subtitle("Peculiar Bell tolls")
+			.playExisting(SoundEvents.BLOCK_BELL_USE)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		HAUNTED_BELL_CONVERT = create("haunted_bell_convert").subtitle("Haunted Bell awakens")
+			.category(SoundCategory.BLOCKS)
+			.build(),
+
+		HAUNTED_BELL_USE = create("haunted_bell_use").subtitle("Haunted Bell tolls")
 			.category(SoundCategory.BLOCKS)
 			.build();
 
@@ -221,7 +245,7 @@ public class AllSoundEvents {
 //			return;
 //		if (soundLocation.getPath().contains("_compounded_")
 //			event.setResultSound();
-//		
+//
 //	}
 
 	private static class SoundEntryProvider implements IDataProvider {
@@ -367,10 +391,18 @@ public class AllSoundEvents {
 			play(world, entity, pos.getX(), pos.getY(), pos.getZ(), volume, pitch);
 		}
 
-		abstract void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch);
+		public void play(World world, PlayerEntity entity, Vector3d pos, float volume, float pitch) {
+			play(world, entity, pos.getX(), pos.getY(), pos.getZ(), volume, pitch);
+		}
+
+		public abstract void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch);
 
 		public void playAt(World world, BlockPos pos, float volume, float pitch, boolean fade) {
-			playAt(world, pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, volume, pitch, fade);
+			playAt(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, volume, pitch, fade);
+		}
+
+		public void playAt(World world, Vector3d pos, float volume, float pitch, boolean fade) {
+			playAt(world, pos.getX(), pos.getY(), pos.getZ(), volume, pitch, fade);
 		}
 
 		public abstract void playAt(World world, double x, double y, double z, float volume, float pitch, boolean fade);
@@ -435,7 +467,7 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
+		public void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
 			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents) {
 				Couple<Float> volPitch = pair.getSecond();
 				world.playSound(entity, x, y, z, pair.getFirst(), category, volPitch.getFirst() * volume,
@@ -488,7 +520,7 @@ public class AllSoundEvents {
 		}
 
 		@Override
-		void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
+		public void play(World world, PlayerEntity entity, double x, double y, double z, float volume, float pitch) {
 			world.playSound(entity, x, y, z, event, category, volume, pitch);
 		}
 

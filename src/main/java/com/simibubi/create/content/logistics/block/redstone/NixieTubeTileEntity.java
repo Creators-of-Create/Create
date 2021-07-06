@@ -1,23 +1,20 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nullable;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.ICommandSource;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -28,19 +25,23 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.Constants.NBT;
 
 public class NixieTubeTileEntity extends SmartTileEntity {
 
-	Optional<Pair<ITextComponent, Integer>> customText;
-	JsonElement rawCustomText;
-	Couple<String> renderText;
+	private static final Couple<String> EMPTY = Couple.create("", "");
 
-	int redstoneStrength;
+	private boolean hasCustomText;
+	private int redstoneStrength;
+	private JsonElement rawCustomText;
+	private int customTextIndex;
+	private ITextComponent parsedCustomText;
+	private Couple<String> displayedStrings;
 
 	public NixieTubeTileEntity(TileEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
+		hasCustomText = false;
 		redstoneStrength = 0;
-		customText = Optional.empty();
 	}
 
 	@Override
@@ -48,115 +49,154 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 		super.tick();
 
 		// Dynamic text components have to be ticked manually and re-sent to the client
-		if (customText.isPresent() && world instanceof ServerWorld) {
-			Pair<ITextComponent, Integer> textSection = customText.get();
-			textSection.setFirst(updateDynamicTextComponents(ITextComponent.Serializer.fromJson(rawCustomText)));
-
-			Couple<String> currentText = getVisibleText();
-			if (renderText != null && renderText.equals(currentText))
-				return;
-
-			renderText = currentText;
-			sendData();
+		if (world instanceof ServerWorld && hasCustomText) {
+			Couple<String> currentStrings = displayedStrings;
+			parsedCustomText = parseCustomText();
+			updateDisplayedStrings();
+			if (currentStrings == null || !currentStrings.equals(displayedStrings))
+				sendData();
 		}
+	}
+
+	@Override
+	public void initialize() {
+		if (world.isRemote)
+			updateDisplayedStrings();
 	}
 
 	//
 
-	public void clearCustomText() {
-		if (!customText.isPresent())
-			return;
-		displayRedstoneStrength(0);
+	public boolean reactsToRedstone() {
+		return !hasCustomText;
 	}
 
-	public void displayCustomNameOf(ItemStack stack, int nixiePositionInRow) {
-		CompoundNBT compoundnbt = stack.getChildTag("display");
-		if (compoundnbt != null && compoundnbt.contains("Name", 8)) {
-			JsonElement fromJson = getJsonFromString(compoundnbt.getString("Name"));
-			ITextComponent displayed = ITextComponent.Serializer.fromJson(fromJson);
-			if (this.world instanceof ServerWorld)
-				displayed = updateDynamicTextComponents(displayed);
-			this.customText = Optional.of(Pair.of(displayed, nixiePositionInRow));
-			this.rawCustomText = fromJson;
-			notifyUpdate();
-		}
+	public Couple<String> getDisplayedStrings() {
+		if (displayedStrings == null)
+			return EMPTY;
+		return displayedStrings;
 	}
 
-	public void displayRedstoneStrength(int signalStrength) {
-		customText = Optional.empty();
+	public void updateRedstoneStrength(int signalStrength) {
+		clearCustomText();
 		redstoneStrength = signalStrength;
 		notifyUpdate();
 	}
 
-	public boolean reactsToRedstone() {
-		return !customText.isPresent();
+	public void displayCustomNameOf(ItemStack stack, int nixiePositionInRow) {
+		CompoundNBT compoundnbt = stack.getChildTag("display");
+		if (compoundnbt != null && compoundnbt.contains("Name", NBT.TAG_STRING)) {
+			hasCustomText = true;
+			rawCustomText = getJsonFromString(compoundnbt.getString("Name"));
+			customTextIndex = nixiePositionInRow;
+			parsedCustomText = parseCustomText();
+			notifyUpdate();
+		}
 	}
 
-	public Couple<String> getVisibleText() {
-		if (!customText.isPresent())
-			return Couple.create(redstoneStrength < 10 ? "0" : "1", redstoneStrength % 10 + "");
-		String fullText = TooltipHelper.getUnformattedDeepText(customText.get()
-			.getFirst());
-		int index = customText.get()
-			.getSecond() * 2;
-		return Couple.create(charOrEmpty(fullText, index), charOrEmpty(fullText, index + 1));
+	public void updateDisplayedStrings() {
+		if (!hasCustomText) {
+			displayedStrings = Couple.create(redstoneStrength < 10 ? "0" : "1", String.valueOf(redstoneStrength % 10));
+		} else {
+			String fullText = parsedCustomText.getString();
+			int index = customTextIndex * 2;
+			displayedStrings = Couple.create(charOrEmpty(fullText, index), charOrEmpty(fullText, index + 1));
+		}
+	}
+
+	public void clearCustomText() {
+		hasCustomText = false;
+		rawCustomText = null;
+		customTextIndex = 0;
+		parsedCustomText = null;
 	}
 
 	//
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT nbt, boolean clientPacket) {
-		customText = Optional.empty();
-		redstoneStrength = nbt.getInt("RedstoneStrength");
-		if (nbt.contains("CustomText")) {
-			ITextComponent displayed = ITextComponent.Serializer.fromJson(nbt.getString("CustomText"));
-			rawCustomText = getJsonFromString(nbt.getString("RawCustomText"));
-			customText = Optional.of(Pair.of(displayed, nbt.getInt("CustomTextIndex")));
-		}
 		super.fromTag(state, nbt, clientPacket);
+
+		if (nbt.contains("RawCustomText", NBT.TAG_STRING)) {
+			rawCustomText = getJsonFromString(nbt.getString("RawCustomText"));
+			// Check if string forms valid JSON
+			if (rawCustomText != null && !rawCustomText.isJsonNull()) {
+				ITextComponent deserializedComponent = parseCustomText();
+				// Check if JSON forms valid component
+				if (deserializedComponent != null) {
+					try {
+						// Try to deserialize previously parsed component
+						parsedCustomText = ITextComponent.Serializer.fromJson(nbt.getString("CustomText"));
+					} catch (JsonParseException e) {
+						//
+					}
+					if (parsedCustomText == null) {
+						// Use test component to ensure field isn't null
+						parsedCustomText = deserializedComponent;
+					}
+					hasCustomText = true;
+					customTextIndex = nbt.getInt("CustomTextIndex");
+				}
+			}
+		}
+
+		if (!hasCustomText) {
+			clearCustomText();
+			redstoneStrength = nbt.getInt("RedstoneStrength");
+		}
+
+		if (clientPacket)
+			updateDisplayedStrings();
 	}
 
+	@Override
 	protected void write(CompoundNBT nbt, boolean clientPacket) {
 		super.write(nbt, clientPacket);
-		nbt.putInt("RedstoneStrength", redstoneStrength);
 
-		if (customText.isPresent()) {
+		if (hasCustomText) {
 			nbt.putString("RawCustomText", rawCustomText.toString());
-			nbt.putString("CustomText", ITextComponent.Serializer.toJson(customText.get()
-				.getFirst()));
-			nbt.putInt("CustomTextIndex", customText.get()
-				.getSecond());
+			nbt.putInt("CustomTextIndex", customTextIndex);
+			nbt.putString("CustomText", ITextComponent.Serializer.toJson(parsedCustomText));
+		} else {
+			nbt.putInt("RedstoneStrength", redstoneStrength);
 		}
 	}
 
 	private JsonElement getJsonFromString(String string) {
-		return new JsonParser().parse(string);
+		try {
+			return new JsonParser().parse(string);
+		} catch (JsonParseException e) {
+			return null;
+		}
 	}
 
-	protected ITextComponent updateDynamicTextComponents(ITextComponent customText) {
+	private String charOrEmpty(String string, int index) {
+		return string.length() <= index ? " " : string.substring(index, index + 1);
+	}
+
+	protected ITextComponent parseCustomText() {
 		try {
-			return TextComponentUtils.parse(this.getCommandSource(null), customText,
-				(Entity) null, 0);
-		} catch (CommandSyntaxException e) {
+			return parseDynamicComponent(ITextComponent.Serializer.fromJson(rawCustomText));
+		} catch (JsonParseException e) {
+			return null;
+		}
+	}
+
+	protected ITextComponent parseDynamicComponent(ITextComponent customText) {
+		if (world instanceof ServerWorld) {
+			try {
+				return TextComponentUtils.parse(getCommandSource(null), customText, null, 0);
+			} catch (CommandSyntaxException e) {
+				//
+			}
 		}
 		return customText;
 	}
 
 	// From SignTileEntity
-	protected CommandSource getCommandSource(@Nullable ServerPlayerEntity p_195539_1_) {
-		String s = p_195539_1_ == null ? "Sign"
-			: p_195539_1_.getName()
-				.getString();
-		ITextComponent itextcomponent =
-			(ITextComponent) (p_195539_1_ == null ? new StringTextComponent("Sign") : p_195539_1_.getDisplayName());
-		return new CommandSource(ICommandSource.field_213139_a_,
-			new Vector3d((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D,
-				(double) this.pos.getZ() + 0.5D),
-			Vector2f.ZERO, (ServerWorld) this.world, 2, s, itextcomponent, this.world.getServer(), p_195539_1_);
-	}
-
-	private String charOrEmpty(String string, int index) {
-		return string.length() <= index ? " " : string.substring(index, index + 1);
+	public CommandSource getCommandSource(@Nullable ServerPlayerEntity p_195539_1_) {
+		String s = p_195539_1_ == null ? "Nixie Tube" : p_195539_1_.getName().getString();
+		ITextComponent itextcomponent = (ITextComponent)(p_195539_1_ == null ? new StringTextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
+		return new CommandSource(ICommandSource.field_213139_a_, Vector3d.ofCenter(this.pos), Vector2f.ZERO, (ServerWorld)this.world, 2, s, itextcomponent, this.world.getServer(), p_195539_1_);
 	}
 
 	@Override

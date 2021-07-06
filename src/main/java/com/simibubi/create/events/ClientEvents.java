@@ -3,7 +3,6 @@ package com.simibubi.create.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
@@ -24,12 +23,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
-import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.terrainzapper.WorldshaperRenderHandler;
 import com.simibubi.create.content.logistics.block.depot.EjectorTargetHandler;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPointHandler;
@@ -107,7 +106,6 @@ public class ClientEvents {
 			return;
 		}
 
-
 		SoundScapes.tick();
 		AnimationTickHolder.tick();
 		ScrollValueHandler.tick();
@@ -115,6 +113,9 @@ public class ClientEvents {
 		CreateClient.SCHEMATIC_SENDER.tick();
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.tick();
 		CreateClient.SCHEMATIC_HANDLER.tick();
+		CreateClient.ZAPPER_RENDER_HANDLER.tick();
+		CreateClient.POTATO_CANNON_RENDER_HANDLER.tick();
+		CreateClient.SOUL_PULSE_EFFECT_HANDLER.tick(world);
 
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
@@ -133,7 +134,6 @@ public class ClientEvents {
 		CouplingHandlerClient.tick();
 		CouplingRenderer.tickDebugModeRenders();
 		KineticDebugger.tick();
-		ZapperRenderHandler.tick();
 		ExtendoGripRenderHandler.tick();
 		// CollisionDebugger.tick();
 		ArmInteractionPointHandler.tick();
@@ -168,9 +168,9 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld()
-			.isRemote()) {
+		if (event.getWorld().isRemote()) {
 			CreateClient.invalidateRenderers();
+			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 			AnimationTickHolder.reset();
 		}
 	}
@@ -265,6 +265,7 @@ public class ClientEvents {
 		}
 
 		PonderTooltipHandler.addToTooltip(event.getToolTip(), stack);
+		SequencedAssemblyRecipe.addToTooltip(event.getToolTip(), stack);
 	}
 
 	@SubscribeEvent

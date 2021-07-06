@@ -46,7 +46,7 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 	}
 
 	protected void addPlayerSlots() {
-		int x = 9;
+		int x = 8;
 		int y = 131;
 
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
@@ -88,7 +88,7 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
-		return true;
+		return playerInventory.getCurrentItem() == mainItem;
 	}
 
 	@Override

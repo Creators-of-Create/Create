@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -23,8 +22,6 @@ public class PressingRecipeGen extends ProcessingRecipeGen {
 			.output(AllItems.GOLDEN_SHEET.get())),
 		COPPER = create("copper_ingot", b -> b.require(I.copper())
 			.output(AllItems.COPPER_SHEET.get())),
-		LAPIS = create("lapis_block", b -> b.require(Blocks.LAPIS_BLOCK)
-			.output(AllItems.LAPIS_SHEET.get())),
 		BRASS = create("brass_ingot", b -> b.require(I.brass())
 			.output(AllItems.BRASS_SHEET.get()))
 

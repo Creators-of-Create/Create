@@ -45,11 +45,11 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, DeployerApplicationRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 50, 4);
-		itemStacks.set(0, Arrays.asList(recipe.getRequiredHeldItem()
+		itemStacks.init(0, true, 26, 50);
+		itemStacks.set(0, Arrays.asList(recipe.getProcessedItem()
 			.getMatchingStacks()));
-		itemStacks.init(1, true, 26, 50);
-		itemStacks.set(1, Arrays.asList(recipe.getProcessedItem()
+		itemStacks.init(1, true, 50, 4);
+		itemStacks.set(1, Arrays.asList(recipe.getRequiredHeldItem()
 			.getMatchingStacks()));
 		itemStacks.init(2, false, 131, 50);
 		itemStacks.set(2, recipe.getRecipeOutput());

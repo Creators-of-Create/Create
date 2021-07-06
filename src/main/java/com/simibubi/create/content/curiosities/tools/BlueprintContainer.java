@@ -5,10 +5,10 @@ import java.util.Optional;
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.gui.GhostItemContainer;
-import com.simibubi.create.foundation.gui.IClearableContainer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -25,7 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class BlueprintContainer extends GhostItemContainer<BlueprintSection> implements IClearableContainer {
+public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 
 	public BlueprintContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
 		super(type, id, inv, extraData);
@@ -46,7 +46,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> imp
 
 	@Override
 	protected void addSlots() {
-		addPlayerSlots(9, 131);
+		addPlayerSlots(8, 131);
 
 		int x = 29;
 		int y = 21;
@@ -131,6 +131,11 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> imp
 		BlueprintEntity blueprintEntity = (BlueprintEntity) entityByID;
 		BlueprintSection blueprintSection = blueprintEntity.getSection(section);
 		return blueprintSection;
+	}
+
+	@Override
+	public boolean canInteractWith(PlayerEntity player) {
+		return contentHolder != null && contentHolder.canPlayerUse(player);
 	}
 
 	static class BlueprintCraftingInventory extends CraftingInventory {

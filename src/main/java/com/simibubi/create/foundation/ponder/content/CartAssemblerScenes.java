@@ -235,6 +235,13 @@ public class CartAssemblerScenes {
 			.placeNearTarget();
 		scene.idle(90);
 
+		scene.overlay.showText(80)
+			.attachKeyFrame()
+			.text("This Arrow indicates which side of the Structure will be considered the front")
+			.pointAt(util.vector.topOf(assemblerPos))
+			.placeNearTarget();
+		scene.idle(90);
+
 		scene.world.hideIndependentSection(contraption, Direction.UP);
 		scene.world.hideIndependentSection(anchor, Direction.UP);
 		scene.special.hideElement(cart, Direction.UP);

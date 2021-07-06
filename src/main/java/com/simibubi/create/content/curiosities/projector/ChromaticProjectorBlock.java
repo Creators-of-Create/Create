@@ -3,7 +3,6 @@ package com.simibubi.create.content.curiosities.projector;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllItems;
-import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 

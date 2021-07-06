@@ -4,7 +4,6 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 
 public class AnimatedMillstone extends AnimatedKinetics {
 
@@ -16,12 +15,12 @@ public class AnimatedMillstone extends AnimatedKinetics {
 		matrixStack.translate(-2, 18, 0);
 		int scale = 22;
 
-		GuiGameElement.of(AllBlockPartials.MILLSTONE_COG)
+		defaultBlockElement(AllBlockPartials.MILLSTONE_COG)
 			.rotateBlock(22.5, getCurrentAngle() * 2, 0)
 			.scale(scale)
 			.render(matrixStack);
 
-		GuiGameElement.of(AllBlocks.MILLSTONE.getDefaultState())
+		defaultBlockElement(AllBlocks.MILLSTONE.getDefaultState())
 			.rotateBlock(22.5, 22.5, 0)
 			.scale(scale)
 			.render(matrixStack);

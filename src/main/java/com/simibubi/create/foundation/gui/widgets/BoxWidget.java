@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
@@ -23,6 +23,7 @@ public class BoxWidget extends ElementWidget {
 
 	protected Color customBorderTop;
 	protected Color customBorderBot;
+	protected Color customBackground;
 	protected boolean animateColors = true;
 	protected LerpedFloat colorAnimation = LerpedFloat.linear();
 
@@ -67,6 +68,12 @@ public class BoxWidget extends ElementWidget {
 		this.customBorderTop = top;
 		this.customBorderBot = bot;
 		updateColorsFromState();
+		//noinspection unchecked
+		return (T) this;
+	}
+
+	public <T extends BoxWidget> T withCustomBackground(Color color) {
+		this.customBackground = color;
 		//noinspection unchecked
 		return (T) this;
 	}
@@ -122,7 +129,7 @@ public class BoxWidget extends ElementWidget {
 			return;
 
 		box.withAlpha(fadeValue);
-		box.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_TRANSPARENT))
+		box.withBackground(customBackground != null ? customBackground : Theme.c(Theme.Key.PONDER_BACKGROUND_TRANSPARENT))
 				.gradientBorder(gradientColor1, gradientColor2)
 				.at(x, y, z)
 				.withBounds(width, height)

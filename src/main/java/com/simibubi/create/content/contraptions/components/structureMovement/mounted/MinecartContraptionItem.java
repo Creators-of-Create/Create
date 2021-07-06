@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +41,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -208,6 +206,8 @@ public class MinecartContraptionItem extends Item {
 		if (entity instanceof AbstractContraptionEntity)
 			entity = entity.getRidingEntity();
 		if (!(entity instanceof AbstractMinecartEntity))
+			return;
+		if (!entity.isAlive())
 			return;
 		AbstractMinecartEntity cart = (AbstractMinecartEntity) entity;
 		Type type = cart.getMinecartType();

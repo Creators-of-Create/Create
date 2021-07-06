@@ -52,19 +52,22 @@ public class SchematicannonContainer extends Container {
 		addSlot(new SlotItemHandler(te.inventory, 3, x + 174, y + 19));
 		addSlot(new SlotItemHandler(te.inventory, 4, x + 15, y + 19));
 
+		int invX = 37;
+		int invY = 161;
+
 		// player Slots
 		for (int row = 0; row < 3; ++row) 
 			for (int col = 0; col < 9; ++col) 
-				addSlot(new Slot(player.inventory, col + row * 9 + 9, 37 + col * 18, 161 + row * 18));
+				addSlot(new Slot(player.inventory, col + row * 9 + 9, invX + col * 18, invY + row * 18));
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
-			addSlot(new Slot(player.inventory, hotbarSlot, 37 + hotbarSlot * 18, 219));
+			addSlot(new Slot(player.inventory, hotbarSlot, invX + hotbarSlot * 18, invY + 58));
 
 		detectAndSendChanges();
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return true;
+	public boolean canInteractWith(PlayerEntity player) {
+		return te != null && te.canPlayerUse(player);
 	}
 
 	@Override

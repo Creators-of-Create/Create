@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
@@ -25,6 +26,7 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
@@ -59,8 +61,8 @@ public class Create {
 	public static final Logger LOGGER = LogManager.getLogger();
 
 	public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
-			.disableHtmlEscaping()
-			.create();
+		.disableHtmlEscaping()
+		.create();
 
 	public static final ItemGroup BASE_CREATIVE_TAB = new CreateItemGroup();
 	public static final ItemGroup PALETTES_CREATIVE_TAB = new PalettesItemGroup();
@@ -89,7 +91,7 @@ public class Create {
 		AllConfigs.register();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-				.getModEventBus();
+			.getModEventBus();
 		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		modEventBus.addListener(Create::init);
@@ -103,7 +105,8 @@ public class Create {
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -115,6 +118,7 @@ public class Create {
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
+		PotatoCannonProjectileTypes.register();
 
 		event.enqueueWork(() -> {
 			SchematicProcessor.register();
@@ -129,6 +133,7 @@ public class Create {
 		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new StandardRecipeGen(gen));
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
 	}
 

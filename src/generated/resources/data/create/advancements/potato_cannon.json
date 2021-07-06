@@ -1,0 +1,30 @@
+{
+  "parent": "create:precision_mechanism",
+  "display": {
+    "icon": {
+      "item": "create:potato_cannon",
+      "nbt": "{Damage:0}"
+    },
+    "title": {
+      "translate": "advancement.create.potato_cannon"
+    },
+    "description": {
+      "translate": "advancement.create.potato_cannon.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "create:potato_kill",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

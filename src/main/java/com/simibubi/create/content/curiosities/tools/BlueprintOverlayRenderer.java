@@ -219,8 +219,7 @@ public class BlueprintOverlayRenderer {
 			RenderSystem.enableBlend();
 			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).draw(ms, x, y);
 			ItemStack itemStack = pair.getFirst();
-			String count = pair.getSecond() || itemStack.getCount() == 1 ? null
-				: TextFormatting.GOLD.toString() + itemStack.getCount();
+			String count = pair.getSecond() ? null : TextFormatting.GOLD.toString() + itemStack.getCount();
 			drawItemStack(ms, mc, x, y, itemStack, count);
 			x += 21;
 		}

@@ -13,6 +13,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterBlock;
@@ -39,7 +40,7 @@ import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBloc
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
-import com.simibubi.create.content.contraptions.components.mixer.BasinOperatorBlockItem;
+import com.simibubi.create.content.contraptions.components.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGenerator;
@@ -114,7 +115,9 @@ import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
-import com.simibubi.create.content.curiosities.projector.ChromaticProjectorBlock;
+import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
+import com.simibubi.create.content.curiosities.bell.HauntedBellMovementBehaviour;
+import com.simibubi.create.content.curiosities.bell.PeculiarBellBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
@@ -154,6 +157,7 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
 import com.simibubi.create.foundation.block.DyedBlockList;
@@ -453,7 +457,7 @@ public class AllBlocks {
 			.properties(AbstractBlock.Properties::nonOpaque)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(8.0))
-			.item(BasinOperatorBlockItem::new)
+			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
 			.register();
 
@@ -464,7 +468,7 @@ public class AllBlocks {
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
-			.item(BasinOperatorBlockItem::new)
+			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
 			.register();
 
@@ -689,7 +693,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 		.addLayer(() -> RenderType::getCutoutMipped)
-		.item(BasinOperatorBlockItem::new)
+		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
 
@@ -919,7 +923,7 @@ public class AllBlocks {
 		.blockstate(BlockStateGen.directionalAxisBlockProvider())
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.onRegister(addMovementBehaviour(new DeployerMovementBehaviour()))
-		.item()
+		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
 
@@ -1119,7 +1123,7 @@ public class AllBlocks {
 				.modelFile(AssetLookup.partialBaseModel(c, p))
 				.rotationX(s.get(ArmBlock.CEILING) ? 180 : 0)
 				.build()))
-		.transform(StressConfigDefaults.setImpact(8.0))
+		.transform(StressConfigDefaults.setImpact(2.0))
 		.item(ArmItem::new)
 		.transform(customItemModel())
 		.register();
@@ -1276,6 +1280,15 @@ public class AllBlocks {
 			.transform(customItemModel("diodes", "latch_off"))
 			.register();
 
+	public static final BlockEntry<LecternControllerBlock> LECTERN_CONTROLLER =
+		REGISTRATE.block("lectern_controller", LecternControllerBlock::new)
+			.initialProperties(() -> Blocks.LECTERN)
+			.blockstate((c,p) -> p.horizontalBlock(c.get(), p.models()
+				.getExistingFile(p.mcLoc("block/lectern"))))
+			.loot((lt, block) -> lt.registerDropping(block, Blocks.LECTERN))
+			.register();
+
+
 	// Curiosities
 
 	static {
@@ -1299,6 +1312,18 @@ public class AllBlocks {
 						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
 							.func_216056_a("Air", "Air")))));
 			})
+			.register();
+
+	public static final BlockEntry<PeculiarBellBlock> PECULIAR_BELL =
+		REGISTRATE.block("peculiar_bell", PeculiarBellBlock::new)
+			.transform(BuilderTransformers.bell())
+			.onRegister(addMovementBehaviour(new BellMovementBehaviour()))
+			.register();
+
+	public static final BlockEntry<HauntedBellBlock> HAUNTED_BELL =
+		REGISTRATE.block("haunted_bell", HauntedBellBlock::new)
+			.transform(BuilderTransformers.bell())
+			.onRegister(addMovementBehaviour(new HauntedBellMovementBehaviour()))
 			.register();
 
 	// Materials

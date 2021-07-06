@@ -212,10 +212,8 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdDesc = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdForDescription", "$"))
-				.split("\\$");
-			String[] holdCtrl = TooltipHelper.getUnformattedDeepText(Lang.translate("tooltip.holdForControls", "$"))
-				.split("\\$");
+			String[] holdDesc = Lang.translate("tooltip.holdForDescription", "$").getString().split("\\$");
+			String[] holdCtrl = Lang.translate("tooltip.holdForControls", "$").getString().split("\\$");
 			IFormattableTextComponent keyShift = Lang.translate("tooltip.keyShift");
 			IFormattableTextComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
 			for (List<ITextComponent> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {

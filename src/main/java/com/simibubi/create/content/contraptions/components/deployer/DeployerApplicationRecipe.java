@@ -1,21 +1,34 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
+import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
+import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
+import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.IItemProvider;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
+public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
 	public DeployerApplicationRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.DEPLOYING, params);
@@ -42,25 +55,50 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> {
 	public Ingredient getRequiredHeldItem() {
 		if (ingredients.isEmpty())
 			throw new IllegalStateException("Deploying Recipe: " + id.toString() + " has no tool!");
-		return ingredients.get(0);
+		return ingredients.get(1);
 	}
 
 	public Ingredient getProcessedItem() {
 		if (ingredients.size() < 2)
 			throw new IllegalStateException("Deploying Recipe: " + id.toString() + " has no ingredient!");
-		return ingredients.get(1);
+		return ingredients.get(0);
 	}
 
 	public static List<DeployerApplicationRecipe> convert(List<IRecipe<?>> sandpaperRecipes) {
 		return sandpaperRecipes.stream()
 			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, Create.asResource(r.getId()
-				.getPath() + "_using_deployer"))
+				.getPath() + "_using_deployer")).require(r.getIngredients()
+					.get(0))
 					.require(Ingredient.fromItems(AllItems.SAND_PAPER.get(), AllItems.RED_SAND_PAPER.get()))
-					.require(r.getIngredients()
-						.get(0))
 					.output(r.getRecipeOutput())
 					.build())
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public void addAssemblyIngredients(List<Ingredient> list) {
+		list.add(ingredients.get(1));
+	}
+	
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public ITextComponent getDescriptionForAssembly() {
+		ItemStack[] matchingStacks = ingredients.get(1)
+			.getMatchingStacks();
+		if (matchingStacks.length == 0)
+			return new StringTextComponent("Invalid");
+		return Lang.translate("recipe.assembly.deploying_item",
+			new TranslationTextComponent(matchingStacks[0].getTranslationKey()).getString());
+	}
+
+	@Override
+	public void addRequiredMachines(Set<IItemProvider> list) {
+		list.add(AllBlocks.DEPLOYER.get());
+	}
+	
+	@Override
+	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
+		return () -> SequencedAssemblySubCategory.AssemblyDeploying::new;
 	}
 
 }

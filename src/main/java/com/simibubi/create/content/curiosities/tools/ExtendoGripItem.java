@@ -5,7 +5,9 @@ import java.util.UUID;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -20,9 +22,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -39,6 +43,9 @@ import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent.BreakEvent;
+import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -46,24 +53,26 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 public class ExtendoGripItem extends Item {
 	private static DamageSource lastActiveDamageSource;
 
-	public static final AttributeModifier singleRangeAttributeModifier = new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3, AttributeModifier.Operation.ADDITION);
-	public static final AttributeModifier doubleRangeAttributeModifier = new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5, AttributeModifier.Operation.ADDITION);
+	public static final int MAX_DAMAGE = 200;
 
-	static LazyValue<Multimap<Attribute, AttributeModifier>> rangeModifier =
-			new LazyValue<>(() ->
-					// Holding an ExtendoGrip
-					ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier)
-			);
+	public static final AttributeModifier singleRangeAttributeModifier =
+		new AttributeModifier(UUID.fromString("7f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 3,
+			AttributeModifier.Operation.ADDITION);
+	public static final AttributeModifier doubleRangeAttributeModifier =
+		new AttributeModifier(UUID.fromString("8f7dbdb2-0d0d-458a-aa40-ac7633691f66"), "Range modifier", 5,
+			AttributeModifier.Operation.ADDITION);
 
-	static LazyValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier =
-			new LazyValue<>(() ->
-					// Holding two ExtendoGrips o.O
-					ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier)
-			);
+	static LazyValue<Multimap<Attribute, AttributeModifier>> rangeModifier = new LazyValue<>(() ->
+	// Holding an ExtendoGrip
+	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier));
+
+	static LazyValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = new LazyValue<>(() ->
+	// Holding two ExtendoGrips o.O
+	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier));
 
 	public ExtendoGripItem(Properties properties) {
 		super(properties.maxStackSize(1)
-				.rarity(Rarity.UNCOMMON));
+			.rarity(Rarity.UNCOMMON));
 	}
 
 	public static final String EXTENDO_MARKER = "createExtendo";
@@ -87,13 +96,14 @@ public class ExtendoGripItem extends Item {
 
 		if (holdingExtendo != wasHoldingExtendo) {
 			if (!holdingExtendo) {
-				player.getAttributes().removeModifiers(rangeModifier.getValue());
+				player.getAttributes()
+					.removeModifiers(rangeModifier.getValue());
 				persistentData.remove(EXTENDO_MARKER);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-						.addTemporaryModifiers(rangeModifier.getValue());
+					.addTemporaryModifiers(rangeModifier.getValue());
 				persistentData.putBoolean(EXTENDO_MARKER, true);
 			}
 		}
@@ -101,13 +111,13 @@ public class ExtendoGripItem extends Item {
 		if (holdingDualExtendo != wasHoldingDualExtendo) {
 			if (!holdingDualExtendo) {
 				player.getAttributes()
-						.removeModifiers(doubleRangeModifier.getValue());
+					.removeModifiers(doubleRangeModifier.getValue());
 				persistentData.remove(DUAL_EXTENDO_MARKER);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.GIGA_EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-						.addTemporaryModifiers(doubleRangeModifier.getValue());
+					.addTemporaryModifiers(doubleRangeModifier.getValue());
 				persistentData.putBoolean(DUAL_EXTENDO_MARKER, true);
 			}
 		}
@@ -120,9 +130,11 @@ public class ExtendoGripItem extends Item {
 		CompoundNBT persistentData = player.getPersistentData();
 
 		if (persistentData.contains(DUAL_EXTENDO_MARKER))
-			player.getAttributes().addTemporaryModifiers(doubleRangeModifier.getValue());
+			player.getAttributes()
+				.addTemporaryModifiers(doubleRangeModifier.getValue());
 		else if (persistentData.contains(EXTENDO_MARKER))
-			player.getAttributes().addTemporaryModifiers(rangeModifier.getValue());
+			player.getAttributes()
+				.addTemporaryModifiers(rangeModifier.getValue());
 	}
 
 	@SubscribeEvent
@@ -164,10 +176,81 @@ public class ExtendoGripItem extends Item {
 		}
 	}
 
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void consumeDurabilityOnBlockBreak(BreakEvent event) {
+		findAndDamageExtendoGrip(event.getPlayer());
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void consumeDurabilityOnPlace(EntityPlaceEvent event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof PlayerEntity)
+			findAndDamageExtendoGrip((PlayerEntity) entity);
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void consumeDurabilityOnPlace(PlayerInteractEvent event) {
+//		findAndDamageExtendoGrip(event.getPlayer());
+	}
+
+	private static void findAndDamageExtendoGrip(PlayerEntity player) {
+		if (player == null)
+			return;
+		if (player.world.isRemote)
+			return;
+		Hand hand = Hand.MAIN_HAND;
+		ItemStack extendo = player.getHeldItemMainhand();
+		if (!AllItems.EXTENDO_GRIP.isIn(extendo)) {
+			extendo = player.getHeldItemOffhand();
+			hand = Hand.OFF_HAND;
+		}
+		if (!AllItems.EXTENDO_GRIP.isIn(extendo))
+			return;
+		final Hand h = hand;
+		if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
+			extendo.damageItem(1, player, p -> p.sendBreakAnimation(h));
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack) {
+		return BackTankUtil.getRGBDurabilityForDisplay(stack, maxUses());
+	}
+
+	@Override
+	public double getDurabilityForDisplay(ItemStack stack) {
+		return BackTankUtil.getDurabilityForDisplay(stack, maxUses());
+	}
+
+	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return BackTankUtil.showDurabilityBar(stack, maxUses());
+	}
+
+	private static int maxUses() {
+		return AllConfigs.SERVER.curiosities.maxExtendoGripActions.get();
+	}
+
+	@Override
+	public boolean isDamageable() {
+		return true;
+	}
+
+	@Override
+	public int getMaxDamage(ItemStack stack) {
+		return MAX_DAMAGE;
+	}
+
 	@SubscribeEvent
 	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
-		// Workaround for removed patch to get the attacking entity. Tbf this is a hack and a half, but it should work.
+		// Workaround for removed patch to get the attacking entity.
 		lastActiveDamageSource = event.getSource();
+		
+		DamageSource source = event.getSource();
+		if (source == null)
+			return;
+		Entity trueSource = source.getTrueSource();
+		if (trueSource instanceof PlayerEntity)
+			findAndDamageExtendoGrip((PlayerEntity) trueSource);
 	}
 
 	@SubscribeEvent

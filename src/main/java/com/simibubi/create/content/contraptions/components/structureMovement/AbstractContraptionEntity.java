@@ -678,20 +678,21 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	}
 
-	// @Override //TODO find 1.16 replacement
-	// public void updateAquatics() {
-	/*
-	 * Override this with an empty method to reduce enormous calculation time when contraptions are in water
-	 * WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
-	 * - Fluids will not try to change contraption movement direction
-	 * - this.inWater and this.isInWater() will return unreliable data
-	 * - entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
-	 * - fall distance is not reset when the contraption is in water
-	 * - this.eyesInWater and this.canSwim() will always be false
-	 * - swimming state will never be updated
-	 */
-	// extinguish();
-	// }
+
+	@Override
+	protected boolean updateWaterState() {
+		/*
+		 * Override this with an empty method to reduce enormous calculation time when contraptions are in water
+		 * WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
+		 * - Fluids will not try to change contraption movement direction
+		 * - this.inWater and this.isInWater() will return unreliable data
+		 * - entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
+		 * - fall distance is not reset when the contraption is in water
+		 * - this.eyesInWater and this.canSwim() will always be false
+		 * - swimming state will never be updated
+		 */
+		return false;
+	}
 
 	@Override
 	public void setFire(int p_70015_1_) {

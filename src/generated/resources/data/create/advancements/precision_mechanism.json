@@ -1,0 +1,35 @@
+{
+  "parent": "create:deployer",
+  "display": {
+    "icon": {
+      "item": "create:precision_mechanism"
+    },
+    "title": {
+      "translate": "advancement.create.precision_mechanism"
+    },
+    "description": {
+      "translate": "advancement.create.precision_mechanism.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:precision_mechanism"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "0"
+    ]
+  ]
+}

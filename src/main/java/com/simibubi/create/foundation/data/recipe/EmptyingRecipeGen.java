@@ -12,23 +12,23 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 	/*
 	 * potion/water bottles are handled internally
 	 */
-	
+
 	GeneratedRecipe
 
-	HONEY_BOTTLE = create("honey_bottle", b -> b
-		.require(Items.HONEY_BOTTLE)
-		.output(AllFluids.HONEY.get(), 250)
-		.output(Items.GLASS_BOTTLE)),
+		HONEY_BOTTLE = create("honey_bottle", b -> b
+			.require(Items.HONEY_BOTTLE)
+			.output(AllFluids.HONEY.get(), 250)
+			.output(Items.GLASS_BOTTLE)),
+
+		BUILDERS_TEA = create("builders_tea", b -> b
+			.require(AllItems.BUILDERS_TEA.get())
+			.output(AllFluids.TEA.get(), 250)
+			.output(Items.GLASS_BOTTLE)),
 	
-	BUILDERS_TEA = create("builders_tea", b -> b
-		.require(AllItems.BUILDERS_TEA.get())
-		.output(AllFluids.TEA.get(), 250)
-		.output(Items.GLASS_BOTTLE)),
-	
-	MILK_BUCKET = create("milk_bucket", b -> b
-		.require(Items.MILK_BUCKET)
-		.output(AllFluids.MILK.get(), 1000)
-		.output(Items.BUCKET))
+		MILK_BUCKET = create("milk_bucket", b -> b
+			.require(Items.MILK_BUCKET)
+			.output(AllFluids.MILK.get(), 1000)
+			.output(Items.BUCKET))
 
 	;
 

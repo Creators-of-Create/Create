@@ -230,8 +230,8 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 			if (!(recipeType.serializer instanceof ProcessingRecipeSerializer))
 				throw new IllegalStateException("Cannot datagen ProcessingRecipe of type: " + typeName);
 
-			this.id = Create.asResource(typeName + "/" + recipe.getId()
-				.getPath());
+			this.id = new ResourceLocation(recipe.getId().getNamespace(),
+					typeName + "/" + recipe.getId().getPath());
 			this.serializer = (ProcessingRecipeSerializer<S>) recipe.getSerializer();
 		}
 

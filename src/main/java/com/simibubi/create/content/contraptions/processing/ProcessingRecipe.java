@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -42,9 +44,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	private IRecipeType<?> type;
 	private IRecipeSerializer<?> serializer;
 	private AllRecipeTypes enumType;
+	private Supplier<ItemStack> forcedResult;
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ProcessingRecipeParams params) {
 
+		this.forcedResult = null;
 		this.enumType = recipeType;
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
@@ -91,11 +95,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 		if (ingredientCount > getMaxInputCount())
 			logger.warn(messageHeader + " has more item inputs (" + ingredientCount + ") than supported ("
-					+ getMaxInputCount() + ").");
+				+ getMaxInputCount() + ").");
 
 		if (outputCount > getMaxOutputCount())
 			logger.warn(messageHeader + " has more item outputs (" + outputCount + ") than supported ("
-					+ getMaxOutputCount() + ").");
+				+ getMaxOutputCount() + ").");
 
 		if (processingDuration > 0 && !canSpecifyDuration())
 			logger.warn(messageHeader + " specified a duration. Durations have no impact on this type of recipe.");
@@ -139,10 +143,16 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 			.collect(Collectors.toList());
 	}
 
+	public void enforceNextResult(Supplier<ItemStack> stack) {
+		forcedResult = stack;
+	}
+
 	public List<ItemStack> rollResults() {
 		List<ItemStack> results = new ArrayList<>();
-		for (ProcessingOutput output : getRollableResults()) {
-			ItemStack stack = output.rollOutput();
+		NonNullList<ProcessingOutput> rollableResults = getRollableResults();
+		for (int i = 0; i < rollableResults.size(); i++) {
+			ProcessingOutput output = rollableResults.get(i);
+			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput();
 			if (!stack.isEmpty())
 				results.add(stack);
 		}

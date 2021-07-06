@@ -6,6 +6,9 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.utility.Couple;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.LecternBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -35,19 +38,39 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext ctx) {
+	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext ctx) {
 		PlayerEntity player = ctx.getPlayer();
 		if (player == null)
 			return ActionResultType.PASS;
 		World world = ctx.getWorld();
+		BlockPos pos = ctx.getPos();
+		BlockState hitState = world.getBlockState(pos);
 
-		if (!player.isSneaking() && player.isAllowEdit()
-			&& AllBlocks.REDSTONE_LINK.has(world.getBlockState(ctx.getPos()))) {
-			if (world.isRemote)
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.toggleBindMode(ctx.getPos()));
-			player.getCooldownTracker()
-				.setCooldown(this, 2);
-			return ActionResultType.SUCCESS;
+		if (player.isAllowEdit()) {
+			if (player.isSneaking()) {
+				if (AllBlocks.LECTERN_CONTROLLER.has(hitState)) {
+					if (!world.isRemote)
+						AllBlocks.LECTERN_CONTROLLER.get().withTileEntityDo(world, pos, te ->
+								te.swapControllers(stack, player, ctx.getHand(), hitState));
+					return ActionResultType.SUCCESS;
+				}
+			} else {
+				if (AllBlocks.REDSTONE_LINK.has(hitState)) {
+					if (world.isRemote)
+						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.toggleBindMode(ctx.getPos()));
+					player.getCooldownTracker()
+							.setCooldown(this, 2);
+					return ActionResultType.SUCCESS;
+				}
+
+				if (hitState.isIn(Blocks.LECTERN) && !hitState.get(LecternBlock.HAS_BOOK)) {
+					if (!world.isRemote) {
+						ItemStack lecternStack = player.isCreative() ? stack.copy() : stack.split(1);
+						AllBlocks.LECTERN_CONTROLLER.get().replaceLectern(hitState, world, pos, lecternStack);
+					}
+					return ActionResultType.SUCCESS;
+				}
+			}
 		}
 
 		return onItemRightClick(world, player, ctx.getHand()).getType();

@@ -33,7 +33,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	}
 
 	@FunctionalInterface
-	interface GeneratedRecipe {
+	public interface GeneratedRecipe {
 		void register(Consumer<IFinishedRecipe> consumer);
 	}
 
@@ -50,9 +50,13 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ITag.INamedTag<Item> redstone() {
 			return Tags.Items.DUSTS_REDSTONE;
 		}
-		
+
 		static ITag.INamedTag<Item> planks() {
 			return ItemTags.PLANKS;
+		}
+
+		static ITag.INamedTag<Item> woodSlab() {
+			return ItemTags.WOODEN_SLABS;
 		}
 
 		static ITag.INamedTag<Item> gold() {
@@ -79,6 +83,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllBlocks.COGWHEEL.get();
 		}
 
+		static IItemProvider largeCog() {
+			return AllBlocks.LARGE_COGWHEEL.get();
+		}
+
 		static IItemProvider andesiteCasing() {
 			return AllBlocks.ANDESITE_CASING.get();
 		}
@@ -93,6 +101,10 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 
 		static ITag.INamedTag<Item> iron() {
 			return Tags.Items.INGOTS_IRON;
+		}
+
+		static ITag.INamedTag<Item> ironNugget() {
+			return AllTags.forgeItemTag("nuggets/iron");
 		}
 
 		static ITag.INamedTag<Item> zinc() {
@@ -111,8 +123,8 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllItems.ELECTRON_TUBE.get();
 		}
 
-		static IItemProvider circuit() {
-			return AllItems.INTEGRATED_CIRCUIT.get();
+		static IItemProvider precisionMechanism() {
+			return AllItems.PRECISION_MECHANISM.get();
 		}
 
 		static ITag.INamedTag<Item> copperBlock() {
@@ -134,7 +146,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		static ITag.INamedTag<Item> copperSheet() {
 			return AllTags.forgeItemTag("plates/copper");
 		}
-		
+
 		static ITag.INamedTag<Item> copperNugget() {
 			return AllTags.forgeItemTag("nuggets/copper");
 		}

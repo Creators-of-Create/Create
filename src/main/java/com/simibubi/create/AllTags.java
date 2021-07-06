@@ -116,7 +116,8 @@ public class AllTags {
 	}
 
 	public static enum AllFluidTags {
-		NO_INFINITE_DRAINING
+		NO_INFINITE_DRAINING,
+		HONEY(FORGE)
 
 		;
 
@@ -152,7 +153,8 @@ public class AllTags {
 		VALVE_HANDLES,
 		FAN_TRANSPARENT,
 		SAFE_NBT,
-		SLIMY_LOGS(TIC)
+		SLIMY_LOGS(TIC),
+		WRENCH_PICKUP,
 
 		;
 
@@ -213,11 +215,18 @@ public class AllTags {
 		AllBlockTags.BRITTLE.add(Blocks.FLOWER_POT, Blocks.BELL, Blocks.COCOA);
 
 		AllBlockTags.FAN_TRANSPARENT.includeAll(BlockTags.FENCES);
-		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS);
+		AllBlockTags.FAN_TRANSPARENT.add(Blocks.IRON_BARS, Blocks.CAMPFIRE, Blocks.SOUL_CAMPFIRE);
 
 		AllBlockTags.FAN_HEATERS.add(Blocks.MAGMA_BLOCK, Blocks.CAMPFIRE, Blocks.LAVA, Blocks.FIRE, Blocks.SOUL_FIRE,
 			Blocks.SOUL_CAMPFIRE);
 		AllBlockTags.SAFE_NBT.includeAll(BlockTags.SIGNS);
+
+		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.RAILS);
+		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.BUTTONS);
+		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.PRESSURE_PLATES);
+		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
+				Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
+				Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
 
 		AllFluidTags.loadClass();
 	}

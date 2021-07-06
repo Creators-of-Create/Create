@@ -90,28 +90,27 @@ mixin {
 
 repositories {
     maven {
-        // location of the maven that hosts JEI files (And TiC)
+        // Location of the maven that hosts JEI files (and TiC)
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
-    /*
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
+    /*maven {
+        // Location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }*/
     maven {
-        //location of the maven for vazkii's mods
+        // Location of the maven for vazkii's mods
         name = "blamejared"
         url = "http://maven.blamejared.com/"
     }
     maven {
-        //location of the maven for mixed mappings and registrate
-        name "tterrag maven"
-        url "https://maven.tterrag.com/"
+        // Location of the maven for mixed mappings, Registrate, and Flywheel
+        name = "tterrag maven"
+        url = "https://maven.tterrag.com/"
     }
     maven {
-        url "https://www.cursemaven.com"
+        url = "https://www.cursemaven.com"
         content {
             includeGroup "curse.maven"
         }
@@ -133,16 +132,16 @@ dependencies {
     implementation fg.deobf(registrate)
     shade registrate
 
-    // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}:api")
-    // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
-
     if (findProject(':Flywheel') != null) {
-        compile project(':Flywheel') // jozu: I use a gradle workspace with both projects
+        implementation project(':Flywheel') // jozu: I use a gradle workspace with both projects
     } else {
-        compile fg.deobf("com.jozufozu.flywheel:Flywheel:1.16-0.0.2.8")
+        implementation fg.deobf("com.jozufozu.flywheel:Flywheel:${flywheel_version}")
     }
+
+    // Compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}:api")
+    // At runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
     implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta12.1")

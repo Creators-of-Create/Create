@@ -58,6 +58,24 @@
     ],
     "subtitle": "create.subtitle.controller_click"
   },
+  "controller_put": {
+    "sounds": [
+      {
+        "name": "minecraft:item.book.put",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_put"
+  },
+  "controller_take": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.remove_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_take"
+  },
   "copper_armor_equip": {
     "sounds": [
       {
@@ -163,6 +181,24 @@
       }
     ]
   },
+  "fwoomp": {
+    "sounds": [
+      "create:fwoomp"
+    ],
+    "subtitle": "create.subtitle.fwoomp"
+  },
+  "haunted_bell_convert": {
+    "sounds": [
+      "create:haunted_bell_convert"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_convert"
+  },
+  "haunted_bell_use": {
+    "sounds": [
+      "create:haunted_bell_use"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_use"
+  },
   "mechanical_press_activation": {
     "sounds": [
       {
@@ -214,6 +250,32 @@
       }
     ]
   },
+  "peculiar_bell_use": {
+    "sounds": [
+      {
+        "name": "minecraft:block.bell.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.peculiar_bell_use"
+  },
+  "potato_hit": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.potato_hit"
+  },
+  "potato_hit_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.weeping_vines.break",
+        "type": "event"
+      }
+    ]
+  },
   "saw_activate_stone": {
     "sounds": [
       {
@@ -231,24 +293,6 @@
       }
     ],
     "subtitle": "create.subtitle.saw_activate_wood"
-  },
-  "saw_idle": {
-    "sounds": [
-      {
-        "name": "minecraft:entity.boat.paddle_land",
-        "type": "event"
-      }
-    ],
-    "subtitle": "create.subtitle.saw_idle"
-  },
-  "saw_process": {
-    "sounds": [
-      {
-        "name": "minecraft:block.sand.place",
-        "type": "event"
-      }
-    ],
-    "subtitle": "create.subtitle.saw_process"
   },
   "schematicannon_finish": {
     "sounds": [

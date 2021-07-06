@@ -60,8 +60,8 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
-	LINKED_CONTROLLER("curiosities2.png", 179, 109),
-	BLUEPRINT("curiosities2.png", 0, 109, 179, 109),
+	LINKED_CONTROLLER("curiosities_2.png", 179, 109),
+	BLUEPRINT("curiosities_2.png", 0, 109, 179, 109),
 
 	PROJECTOR("projector.png", 235, 185),
 	PROJECTOR_FILTER_STRENGTH("projector.png", 0, 14, 162, 22),
@@ -146,4 +146,5 @@ public enum AllGuiTextures implements IScreenRenderable {
 		bind();
 		UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
 	}
+
 }

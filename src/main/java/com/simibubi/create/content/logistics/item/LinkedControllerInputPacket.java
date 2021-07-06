@@ -17,11 +17,17 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 	private boolean press;
 
 	public LinkedControllerInputPacket(Collection<Integer> activatedButtons, boolean press) {
+		this(activatedButtons, press, null);
+	}
+
+	public LinkedControllerInputPacket(Collection<Integer> activatedButtons, boolean press, BlockPos lecternPos) {
+		super(lecternPos);
 		this.activatedButtons = activatedButtons;
 		this.press = press;
 	}
 
 	public LinkedControllerInputPacket(PacketBuffer buffer) {
+		super(buffer);
 		activatedButtons = new ArrayList<>();
 		press = buffer.readBoolean();
 		int size = buffer.readVarInt();
@@ -31,13 +37,20 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 
 	@Override
 	public void write(PacketBuffer buffer) {
+		super.write(buffer);
 		buffer.writeBoolean(press);
 		buffer.writeVarInt(activatedButtons.size());
 		activatedButtons.forEach(buffer::writeVarInt);
 	}
 
 	@Override
-	protected void handle(ServerPlayerEntity player, ItemStack heldItem) {
+	protected void handleLectern(ServerPlayerEntity player, LecternControllerTileEntity lectern) {
+		if (lectern.isUsedBy(player))
+			handleItem(player, lectern.getController());
+	}
+
+	@Override
+	protected void handleItem(ServerPlayerEntity player, ItemStack heldItem) {
 		World world = player.getEntityWorld();
 		UUID uniqueID = player.getUniqueID();
 		BlockPos pos = player.getBlockPos();
