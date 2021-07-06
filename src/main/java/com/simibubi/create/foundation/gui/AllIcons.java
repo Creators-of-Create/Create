@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -21,24 +22,24 @@ public class AllIcons implements IScreenRenderable {
 	private int iconX;
 	private int iconY;
 
-	public static final AllIcons 
-		I_ADD = newRow(), 
-		I_TRASH = next(), 
-		I_3x3 = next(), 
+	public static final AllIcons
+		I_ADD = newRow(),
+		I_TRASH = next(),
+		I_3x3 = next(),
 		I_TARGET = next(),
-		I_PRIORITY_VERY_LOW = next(), 
-		I_PRIORITY_LOW = next(), 
-		I_PRIORITY_HIGH = next(), 
+		I_PRIORITY_VERY_LOW = next(),
+		I_PRIORITY_LOW = next(),
+		I_PRIORITY_HIGH = next(),
 		I_PRIORITY_VERY_HIGH = next(),
-		I_BLACKLIST = next(), 
-		I_WHITELIST = next(), 
-		I_WHITELIST_OR = next(), 
+		I_BLACKLIST = next(),
+		I_WHITELIST = next(),
+		I_WHITELIST_OR = next(),
 		I_WHITELIST_AND = next(),
-		I_WHITELIST_NOT = next(), 
-		I_RESPECT_NBT = next(), 
+		I_WHITELIST_NOT = next(),
+		I_RESPECT_NBT = next(),
 		I_IGNORE_NBT = next();
 
-	public static final AllIcons 
+	public static final AllIcons
 		I_CONFIRM = newRow(),
 		I_NONE = next(),
 		I_OPEN_FOLDER = next(),
@@ -54,8 +55,8 @@ public class AllIcons implements IScreenRenderable {
 		I_CART_ROTATE = next(),
 		I_CART_ROTATE_PAUSED = next(),
 		I_CART_ROTATE_LOCKED = next();
-	
-	public static final AllIcons 
+
+	public static final AllIcons
 		I_DONT_REPLACE = newRow(),
 		I_REPLACE_SOLID = next(),
 		I_REPLACE_ANY = next(),
@@ -72,8 +73,8 @@ public class AllIcons implements IScreenRenderable {
 		I_LMB = next(),
 		I_SCROLL = next(),
 		I_RMB = next();
-	
-	public static final AllIcons 
+
+	public static final AllIcons
 		I_TOOL_DEPLOY = newRow(),
 		I_SKIP_MISSING = next(),
 		I_SKIP_TILES = next(),
@@ -85,7 +86,7 @@ public class AllIcons implements IScreenRenderable {
 		I_TUNNEL_PREFER_NEAREST = next(),
 		I_TUNNEL_RANDOMIZE = next(),
 		I_TUNNEL_SYNCHRONIZE = next(),
-	
+
 		I_TOOL_MOVE_XZ = newRow(),
 		I_TOOL_MOVE_Y = next(),
 		I_TOOL_ROTATE = next(),
@@ -93,10 +94,10 @@ public class AllIcons implements IScreenRenderable {
 		I_ARM_ROUND_ROBIN = next(),
 		I_ARM_FORCED_ROUND_ROBIN = next(),
 		I_ARM_PREFER_FIRST = next(),
-		
+
 		I_ADD_INVERTED_ATTRIBUTE = next(),
 		I_FLIP = next(),
-	
+
 		I_PLAY = newRow(),
 		I_PAUSE = next(),
 		I_STOP = next(),
@@ -105,17 +106,17 @@ public class AllIcons implements IScreenRenderable {
 		I_HOUR_HAND_FIRST = next(),
 		I_MINUTE_HAND_FIRST = next(),
 		I_HOUR_HAND_FIRST_24 = next(),
-	
+
 		I_PATTERN_SOLID = newRow(),
 		I_PATTERN_CHECKERED = next(),
 		I_PATTERN_CHECKERED_INVERSED = next(),
 		I_PATTERN_CHANCE_25 = next(),
-	
+
 		I_PATTERN_CHANCE_50 = newRow(),
 		I_PATTERN_CHANCE_75 = next(),
 		I_FOLLOW_DIAGONAL = next(),
 		I_FOLLOW_MATERIAL = next(),
-		
+
 		I_SCHEMATIC = newRow(),
 
 		I_MTD_LEFT = newRow(),
@@ -124,8 +125,27 @@ public class AllIcons implements IScreenRenderable {
 		I_MTD_SCAN = next(),
 		I_MTD_REPLAY = next(),
 		I_MTD_USER_MODE = next(),
-		I_MTD_SLOW_MODE = next();
-	
+		I_MTD_SLOW_MODE = next(),
+
+		I_CONFIG_UNLOCKED = newRow(),
+		I_CONFIG_LOCKED = next(),
+		I_CONFIG_DISCARD = next(),
+		I_CONFIG_SAVE = next(),
+		I_CONFIG_RESET = next(),
+		I_CONFIG_BACK = next(),
+		I_CONFIG_PREV = next(),
+		I_CONFIG_NEXT = next(),
+		I_DISABLE = next(),
+		I_CONFIG_OPEN = next(),
+
+		I_FX_SURFACE_OFF = newRow(),
+		I_FX_SURFACE_ON = next(),
+		I_FX_FIELD_OFF = next(),
+		I_FX_FIELD_ON = next(),
+		I_FX_BLEND = next(),
+		I_FX_BLEND_OFF = next();
+	;
+
 	public AllIcons(int x, int y) {
 		iconX = x * 16;
 		iconY = y * 16;
@@ -177,6 +197,11 @@ public class AllIcons implements IScreenRenderable {
 		vertex(peek, builder, j, k, rgb, vec2, u2, v1);
 		vertex(peek, builder, j, k, rgb, vec3, u2, v2);
 		vertex(peek, builder, j, k, rgb, vec4, u1, v2);
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public DelegatedStencilElement asStencil() {
+		return new DelegatedStencilElement().withStencilRenderer((ms, w, h, alpha) -> this.draw(ms, 0, 0)).withBounds(16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,8 +1,12 @@
 package com.simibubi.create.content.contraptions.fluids.potion;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
 import net.minecraft.fluid.Fluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
@@ -15,9 +19,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.Collection;
-import java.util.List;
 
 public class PotionFluid extends VirtualFluid {
 

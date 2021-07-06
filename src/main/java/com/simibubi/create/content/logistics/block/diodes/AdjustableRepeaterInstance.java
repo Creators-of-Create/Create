@@ -1,9 +1,11 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
+import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.core.materials.ModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 
@@ -13,7 +15,7 @@ public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRep
 
     protected int previousState;
 
-    public AdjustableRepeaterInstance(InstancedTileRenderer<?> modelManager, AdjustableRepeaterTileEntity tile) {
+    public AdjustableRepeaterInstance(MaterialManager<?> modelManager, AdjustableRepeaterTileEntity tile) {
         super(modelManager, tile);
 
         indicator = modelManager.getTransformMaterial().getModel(AllBlockPartials.FLEXPEATER_INDICATOR, blockState).createInstance();

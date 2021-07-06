@@ -1,11 +1,13 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseScrollEvent;
@@ -14,7 +16,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class InputEvents {
-	
+
 	@SubscribeEvent
 	public static void onKeyInput(KeyInputEvent event) {
 		int key = event.getKey();
@@ -23,7 +25,7 @@ public class InputEvents {
 		if (Minecraft.getInstance().currentScreen != null)
 			return;
 
-		CreateClient.schematicHandler.onKeyInput(key, pressed);
+		CreateClient.SCHEMATIC_HANDLER.onKeyInput(key, pressed);
 	}
 
 	@SubscribeEvent
@@ -33,9 +35,9 @@ public class InputEvents {
 
 		double delta = event.getScrollDelta();
 //		CollisionDebugger.onScroll(delta);
-		boolean cancelled = CreateClient.schematicHandler.mouseScrolled(delta)
-			|| CreateClient.schematicAndQuillHandler.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
-			|| ScrollValueHandler.onScroll(delta);
+		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
+				|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
+				|| ScrollValueHandler.onScroll(delta);
 		event.setCanceled(cancelled);
 	}
 
@@ -47,8 +49,17 @@ public class InputEvents {
 		int button = event.getButton();
 		boolean pressed = !(event.getAction() == 0);
 
-		CreateClient.schematicHandler.onMouseInput(button, pressed);
-		CreateClient.schematicAndQuillHandler.onMouseInput(button, pressed);
+		CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed);
+		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed);
+	}
+
+	@SubscribeEvent
+	public static void onClickInput(ClickInputEvent event) {
+		if (Minecraft.getInstance().currentScreen != null)
+			return;
+
+		if (event.isUseItem())
+			LinkedControllerClientHandler.deactivateInLectern();
 	}
 
 }

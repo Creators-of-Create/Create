@@ -22,10 +22,11 @@ import net.minecraft.world.IWorldReader;
  */
 public class ShadowRenderHelper {
 
-	private static final RenderType SHADOW_LAYER = RenderType.getEntityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
+	private static final RenderType SHADOW_LAYER =
+		RenderType.getEntityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
 
 	public static void renderShadow(MatrixStack p_229096_0_, IRenderTypeBuffer p_229096_1_, Vector3d pos,
-			float p_229096_3_, float p_229096_6_) {
+		float p_229096_3_, float p_229096_6_) {
 		float f = p_229096_6_;
 
 		double d2 = pos.getX();
@@ -41,14 +42,15 @@ public class ShadowRenderHelper {
 		IVertexBuilder ivertexbuilder = p_229096_1_.getBuffer(SHADOW_LAYER);
 
 		for (BlockPos blockpos : BlockPos.getAllInBoxMutable(new BlockPos(i, k, i1), new BlockPos(j, l, j1))) {
-			renderShadowPart(matrixstack$entry, ivertexbuilder, Minecraft.getInstance().world, blockpos, d2, d0, d1, f, p_229096_3_);
+			renderShadowPart(matrixstack$entry, ivertexbuilder, Minecraft.getInstance().world, blockpos, d2, d0, d1, f,
+				p_229096_3_);
 		}
 
 	}
 
 	private static void renderShadowPart(MatrixStack.Entry p_229092_0_, IVertexBuilder p_229092_1_,
-			IWorldReader p_229092_2_, BlockPos p_229092_3_, double p_229092_4_, double p_229092_6_, double p_229092_8_,
-			float p_229092_10_, float p_229092_11_) {
+		IWorldReader p_229092_2_, BlockPos p_229092_3_, double p_229092_4_, double p_229092_6_, double p_229092_8_,
+		float p_229092_10_, float p_229092_11_) {
 		BlockPos blockpos = p_229092_3_.down();
 		BlockState blockstate = p_229092_2_.getBlockState(blockpos);
 		if (blockstate.getRenderType() != BlockRenderType.INVISIBLE && p_229092_2_.getLight(p_229092_3_) > 3) {
@@ -57,7 +59,7 @@ public class ShadowRenderHelper {
 				if (!voxelshape.isEmpty()) {
 					@SuppressWarnings("deprecation")
 					float f = (float) (((double) p_229092_11_ - (p_229092_6_ - (double) p_229092_3_.getY()) / 2.0D)
-							* 0.5D * (double) p_229092_2_.getBrightness(p_229092_3_));
+						* 0.5D * (double) p_229092_2_.getBrightness(p_229092_3_));
 					if (f >= 0.0F) {
 						if (f > 1.0F) {
 							f = 1.0F;
@@ -90,10 +92,13 @@ public class ShadowRenderHelper {
 	}
 
 	private static void shadowVertex(MatrixStack.Entry p_229091_0_, IVertexBuilder p_229091_1_, float p_229091_2_,
-			float p_229091_3_, float p_229091_4_, float p_229091_5_, float p_229091_6_, float p_229091_7_) {
+		float p_229091_3_, float p_229091_4_, float p_229091_5_, float p_229091_6_, float p_229091_7_) {
 		p_229091_1_.vertex(p_229091_0_.getModel(), p_229091_3_, p_229091_4_, p_229091_5_)
-				.color(1.0F, 1.0F, 1.0F, p_229091_2_).texture(p_229091_6_, p_229091_7_)
-				.overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(p_229091_0_.getNormal(), 0.0F, 1.0F, 0.0F)
-				.endVertex();
+			.color(1.0F, 1.0F, 1.0F, p_229091_2_)
+			.texture(p_229091_6_, p_229091_7_)
+			.overlay(OverlayTexture.DEFAULT_UV)
+			.light(15728880)
+			.normal(p_229091_0_.getNormal(), 0.0F, 1.0F, 0.0F)
+			.endVertex();
 	}
 }

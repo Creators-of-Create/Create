@@ -1,5 +1,14 @@
 package com.simibubi.create.content.curiosities.symmetry;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
 import com.simibubi.create.content.curiosities.symmetry.mirror.CrossPlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
@@ -9,12 +18,18 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
@@ -32,12 +47,6 @@ import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SymmetryWandItem extends Item {
 
@@ -166,8 +175,8 @@ public class SymmetryWandItem extends Item {
 
 	public static boolean isEnabled(ItemStack stack) {
 		checkNBT(stack);
-		return stack.getTag()
-			.getBoolean(ENABLE);
+		CompoundNBT tag = stack.getTag();
+		return tag.getBoolean(ENABLE) && !tag.getBoolean("Simulate");
 	}
 
 	public static SymmetryMirror getMirror(ItemStack stack) {
@@ -218,22 +227,36 @@ public class SymmetryWandItem extends Item {
 
 				BlockState toReplace = world.getBlockState(position);
 				if (!toReplace.getMaterial()
-					.isReplaceable())
+						.isReplaceable())
 					continue;
 				if (toReplace.getBlockHardness(world, position) == -1)
 					continue;
-				if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
-					continue;
+
+				if (AllBlocks.CART_ASSEMBLER.has(blockState)) {
+					BlockState railBlock = CartAssemblerBlock.getRailBlock(blockState);
+					if (BlockHelper.findAndRemoveInInventory(railBlock, player, 1) == 0)
+						continue;
+					if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+						blockState = railBlock;
+				} else {
+					if (BlockHelper.findAndRemoveInInventory(blockState, player, 1) == 0)
+						continue;
+				}
 
 				BlockSnapshot blocksnapshot = BlockSnapshot.create(world.getRegistryKey(), world, position);
 				FluidState ifluidstate = world.getFluidState(position);
 				world.setBlockState(position, ifluidstate.getBlockState(), BlockFlags.UPDATE_NEIGHBORS);
 				world.setBlockState(position, blockState);
-				if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP)) {
+
+				CompoundNBT wandNbt = wand.getOrCreateTag();
+				wandNbt.putBoolean("Simulate", true);
+				boolean placeInterrupted = ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP);
+				wandNbt.putBoolean("Simulate", false);
+
+				if (placeInterrupted) {
 					blocksnapshot.restore(true, false);
 					continue;
 				}
-				
 				targets.add(position);
 			}
 		}
@@ -280,7 +303,7 @@ public class SymmetryWandItem extends Item {
 				continue;
 
 			BlockState blockstate = world.getBlockState(position);
-			if (!blockstate.isAir(world, position)) {
+			if (blockstate.getMaterial() != Material.AIR) {
 				targets.add(position);
 				world.playEvent(2001, position, Block.getStateId(blockstate));
 				world.setBlockState(position, air, 3);

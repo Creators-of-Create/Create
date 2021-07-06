@@ -1,23 +1,32 @@
 package com.simibubi.create.content.contraptions.components.press;
 
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
+import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltPressingCallbacks {
 
 	static ProcessingResult onItemReceived(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler, MechanicalPressTileEntity press) {
-		if (press.getSpeed() == 0 || press.running)
+		if (press.getSpeed() == 0)
 			return PASS;
+		if (press.running)
+			return HOLD;
 		if (!press.getRecipe(transported.stack)
 			.isPresent())
 			return PASS;
@@ -43,25 +52,39 @@ public class BeltPressingCallbacks {
 		if (!recipe.isPresent())
 			return PASS;
 
-		List<TransportedItemStack> collect = InWorldProcessing.applyRecipeOn(transported.stack, recipe.get())
-				.stream()
-				.map(stack -> {
-					TransportedItemStack copy = transported.copy();
-					copy.stack = stack;
-					return copy;
-				}).collect(Collectors.toList());
+		boolean bulk = MechanicalPressTileEntity.canProcessInBulk() || transported.stack.getCount() == 1;
 
-		if (collect.isEmpty())
-			handler.handleProcessingOnItem(transported, TransportedItemStackHandlerBehaviour.TransportedResult.removeItem());
-		else
-			handler.handleProcessingOnItem(transported, TransportedItemStackHandlerBehaviour.TransportedResult.convertTo(collect));
-		/*ItemStack out = recipe.get()
-			.getRecipeOutput()
-			.copy();
-		List<ItemStack> multipliedOutput = ItemHelper.multipliedOutput(transported.stack, out);
-		if (multipliedOutput.isEmpty())
-			transported.stack = ItemStack.EMPTY;
-		transported.stack = multipliedOutput.get(0);*/
+		List<TransportedItemStack> collect = InWorldProcessing
+			.applyRecipeOn(bulk ? transported.stack : ItemHandlerHelper.copyStackWithSize(transported.stack, 1),
+				recipe.get())
+			.stream()
+			.map(stack -> {
+				TransportedItemStack copy = transported.copy();
+				boolean centered = BeltHelper.isItemUpright(stack);
+				copy.stack = stack;
+				copy.locked = true;
+				copy.angle = centered ? 180 : Create.RANDOM.nextInt(360);
+				return copy;
+			})
+			.collect(Collectors.toList());
+
+		if (bulk) {
+			if (collect.isEmpty())
+				handler.handleProcessingOnItem(transported, TransportedResult.removeItem());
+			else
+				handler.handleProcessingOnItem(transported, TransportedResult.convertTo(collect));
+
+		} else {
+			TransportedItemStack left = transported.copy();
+			left.stack.shrink(1);
+
+			if (collect.isEmpty())
+				handler.handleProcessingOnItem(transported, TransportedResult.convertTo(left));
+			else
+				handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
+		}
+
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, pressTe.getWorld(), pressTe.getPos(), 4);
 		pressTe.sendData();
 		return HOLD;
 	}

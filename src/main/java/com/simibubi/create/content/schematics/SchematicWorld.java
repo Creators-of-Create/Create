@@ -1,9 +1,17 @@
 package com.simibubi.create.content.schematics;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
-import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.Block;
@@ -20,14 +28,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.*;
+import net.minecraft.world.EmptyTickList;
+import net.minecraft.world.IServerWorld;
+import net.minecraft.world.ITickList;
+import net.minecraft.world.LightType;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.server.ServerWorld;
-
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 public class SchematicWorld extends WrappedWorld implements IServerWorld {
 
@@ -45,7 +53,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	public SchematicWorld(BlockPos anchor, World original) {
-		super(original, new WrappedChunkProvider(WrappedChunk::new));
+		super(original, new WrappedChunkProvider());
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
 		this.bounds = new MutableBoundingBox();
@@ -96,12 +104,12 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 				}
 				return tileEntity;
 			} catch (Exception e) {
-				Create.logger.debug("Could not create TE of block " + blockState + ": " + e);
+				Create.LOGGER.debug("Could not create TE of block " + blockState + ": " + e);
 			}
 		}
 		return null;
 	}
-	
+
 	protected void onTEadded(TileEntity tileEntity, BlockPos pos) {
 		tileEntity.setLocation(this, pos);
 	}
@@ -195,6 +203,9 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
+	public void notifyBlockUpdate(BlockPos pos, BlockState oldState, BlockState newState, int flags) { }
+
+	@Override
 	public ITickList<Block> getPendingBlockTicks() {
 		return EmptyTickList.get();
 	}
@@ -225,4 +236,5 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 		}
 		throw new IllegalStateException("Cannot use IServerWorld#getWorld in a client environment");
 	}
+
 }

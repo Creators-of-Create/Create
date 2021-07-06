@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.core.BasicData;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.core.materials.BasicData;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
-
-import java.nio.ByteBuffer;
 
 public class KineticData extends BasicData {
     private float x;
@@ -15,7 +15,7 @@ public class KineticData extends BasicData {
     private float rotationalSpeed;
     private float rotationOffset;
 
-    protected KineticData(InstancedModel<?> owner) {
+    protected KineticData(Instancer<?> owner) {
         super(owner);
     }
 
@@ -72,28 +72,25 @@ public class KineticData extends BasicData {
     }
 
     public KineticData setRotationalSpeed(float rotationalSpeed) {
-        this.rotationalSpeed = rotationalSpeed;
-        return this;
-    }
+		this.rotationalSpeed = rotationalSpeed;
+		return this;
+	}
 
-    public KineticData setRotationOffset(float rotationOffset) {
-        this.rotationOffset = rotationOffset;
-        return this;
-    }
+	public KineticData setRotationOffset(float rotationOffset) {
+		this.rotationOffset = rotationOffset;
+		return this;
+	}
 
+	@Override
+	public void write(MappedBuffer buf) {
+		super.write(buf);
 
-    @Override
-    public void write(ByteBuffer buf) {
-        super.write(buf);
-
-        buf.asFloatBuffer().put(new float[] {
-                x,
-                y,
-                z,
-                rotationalSpeed,
-                rotationOffset
-        });
-
-        buf.position(buf.position() + 5 * 4);
-    }
+		buf.putFloatArray(new float[]{
+				x,
+				y,
+				z,
+				rotationalSpeed,
+				rotationOffset
+		});
+	}
 }

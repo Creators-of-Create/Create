@@ -3,16 +3,16 @@ package com.simibubi.create.foundation.advancement;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.gson.JsonObject;
 
-import net.minecraft.advancements.criterion.EntityPredicate;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -27,10 +27,10 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 		return new Instance(getId());
 	}
 
-	public void trigger(ServerPlayerEntity player){
+	public void trigger(ServerPlayerEntity player) {
 		super.trigger(player, null);
 	}
-	
+
 	public Instance instance() {
 		return new Instance(getId());
 	}

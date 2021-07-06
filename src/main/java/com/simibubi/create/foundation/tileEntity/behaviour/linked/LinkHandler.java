@@ -2,10 +2,12 @@ package com.simibubi.create.foundation.tileEntity.behaviour.linked;
 
 import java.util.Arrays;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
@@ -35,14 +37,19 @@ public class LinkHandler {
 		if (behaviour == null)
 			return;
 
+		ItemStack heldItem = player.getHeldItem(hand);
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
+			return;
+		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
+			return;
+		if (AllItems.WRENCH.isIn(heldItem))
 			return;
 
 		for (boolean first : Arrays.asList(false, true)) {
 			if (behaviour.testHit(first, ray.getHitVec())) {
-				if (event.getSide() != LogicalSide.CLIENT)
-					behaviour.setFrequency(first, player.getHeldItem(hand));
+				if (event.getSide() != LogicalSide.CLIENT) 
+					behaviour.setFrequency(first, heldItem);
 				event.setCanceled(true);
 				event.setCancellationResult(ActionResultType.SUCCESS);
 				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);

@@ -270,7 +270,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	}
 
 	public float getMovementSpeed() {
-		float movementSpeed = MathHelper.clamp(getSpeed() / 512f, -.49f, .49f) + clientOffsetDiff / 2f;
+		float movementSpeed = MathHelper.clamp(convertToLinear(getSpeed()), -.49f, .49f) + clientOffsetDiff / 2f;
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		return movementSpeed;
@@ -286,6 +286,11 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 			forceMove = true;
 			sendData();
 		}
+	}
+
+	public void onLengthBroken() {
+		offset = 0;
+		sendData();
 	}
 
 	@Override

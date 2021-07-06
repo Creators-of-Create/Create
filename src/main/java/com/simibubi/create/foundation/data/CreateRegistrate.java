@@ -1,41 +1,5 @@
 package com.simibubi.create.foundation.data;
 
-import com.simibubi.create.Create;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.content.AllSections;
-import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
-import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.foundation.block.IBlockVertexColor;
-import com.simibubi.create.foundation.block.connected.CTModel;
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
-import com.tterrag.registrate.AbstractRegistrate;
-import com.tterrag.registrate.builders.BlockBuilder;
-import com.tterrag.registrate.builders.Builder;
-import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.builders.ItemBuilder;
-import com.tterrag.registrate.util.NonNullLazyValue;
-import com.tterrag.registrate.util.entry.RegistryEntry;
-import com.tterrag.registrate.util.nullness.*;
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.IItemProvider;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.IForgeRegistryEntry;
-
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -44,6 +8,48 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.simibubi.create.Create;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.AllSections;
+import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
+import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
+import com.simibubi.create.foundation.block.connected.CTModel;
+import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
+import com.simibubi.create.foundation.block.render.ColoredVertexModel;
+import com.simibubi.create.foundation.block.render.IBlockVertexColor;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.tterrag.registrate.AbstractRegistrate;
+import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.builders.Builder;
+import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.util.NonNullLazyValue;
+import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiFunction;
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
+
+import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
@@ -106,14 +112,27 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.collect(Collectors.toList());
 	}
 
-	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
-		return this.tileEntity(this.self(), name, (NonNullFunction)factory);
+	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
+		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+		return this.tileEntity(this.self(), name, factory);
 	}
 
 	@Override
-	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
+		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
 		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
+		});
+	}
+
+	@Override
+	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+		return this.entity(self(), name, factory, classification);
+	}
+
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
+			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});
 	}
 
@@ -165,30 +184,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
-		BiConsumer<T, CasingConnectivity> consumer) {
+			BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
-	}
-
-	public static <T extends Block> NonNullConsumer<? super T> blockModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
-		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
-	}
-
-	public static <T extends Block> NonNullConsumer<? super T> blockColors(Supplier<Supplier<IBlockColor>> colorFunc) {
-		return entry -> onClient(() -> () -> registerBlockColor(entry, colorFunc));
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockVertexColors(IBlockVertexColor colorFunc) {
 		return entry -> onClient(() -> () -> registerBlockVertexColor(entry, colorFunc));
 	}
 
-	public static <T extends Item> NonNullConsumer<? super T> itemModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
-		return entry -> onClient(() -> () -> registerItemModel(entry, func));
+	public static <T extends Block> NonNullConsumer<? super T> blockModel(
+			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
-	public static <T extends Item> NonNullConsumer<? super T> itemColors(Supplier<Supplier<IItemColor>> colorFunc) {
-		return entry -> onClient(() -> () -> registerItemColor(entry, colorFunc));
+	public static <T extends Item> NonNullConsumer<? super T> itemModel(
+			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
@@ -206,20 +217,26 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@OnlyIn(Dist.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, model -> new CTModel(model, behavior));
+				.register(entry.delegate, model -> new CTModel(model, behavior));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static <T extends Block> void registerCasingConnectivity(T entry,
-		BiConsumer<T, CasingConnectivity> consumer) {
+																	 BiConsumer<T, CasingConnectivity> consumer) {
 		consumer.accept(entry, CreateClient.getCasingConnectivity());
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockModel(Block entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
 		CreateClient.getCustomBlockModels()
-			.register(entry.delegate, func.get());
+				.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	private static void registerBlockModel(Block entry,
+										   Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		CreateClient.getCustomBlockModels()
+				.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -234,26 +251,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
 		CreateClient.getCustomRenderedItems()
 			.register(entry.delegate, func.get());
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockColor(Block entry, Supplier<Supplier<IBlockColor>> colorFunc) {
-		CreateClient.getColorHandler()
-			.register(entry, colorFunc.get()
-				.get());
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
-		CreateClient.getColorHandler()
-			.register(entry, colorFunc);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerItemColor(IItemProvider entry, Supplier<Supplier<IItemColor>> colorFunc) {
-		CreateClient.getColorHandler()
-			.register(entry, colorFunc.get()
-				.get());
 	}
 
 }

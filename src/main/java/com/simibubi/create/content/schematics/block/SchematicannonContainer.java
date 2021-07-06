@@ -7,6 +7,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -18,8 +19,8 @@ public class SchematicannonContainer extends Container {
 	private SchematicannonTileEntity te;
 	private PlayerEntity player;
 
-	public SchematicannonContainer(int id, PlayerInventory inv, PacketBuffer buffer) {
-		super(AllContainerTypes.SCHEMATICANNON.type, id);
+	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer buffer) {
+		super(type, id);
 		player = inv.player;
 		ClientWorld world = Minecraft.getInstance().world;
 		TileEntity tileEntity = world.getTileEntity(buffer.readBlockPos());
@@ -30,15 +31,19 @@ public class SchematicannonContainer extends Container {
 		}
 	}
 
-	public SchematicannonContainer(int id, PlayerInventory inv, SchematicannonTileEntity te) {
-		super(AllContainerTypes.SCHEMATICANNON.type, id);
+	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, SchematicannonTileEntity te) {
+		super(type, id);
 		player = inv.player;
 		this.te = te;
 		init();
 	}
 
+	public static SchematicannonContainer create(int id, PlayerInventory inv, SchematicannonTileEntity te) {
+		return new SchematicannonContainer(AllContainerTypes.SCHEMATICANNON.get(), id, inv, te);
+	}
+
 	protected void init() {
-		int x = 20;
+		int x = 0;
 		int y = 0;
 
 		addSlot(new SlotItemHandler(te.inventory, 0, x + 15, y + 65));
@@ -47,19 +52,22 @@ public class SchematicannonContainer extends Container {
 		addSlot(new SlotItemHandler(te.inventory, 3, x + 174, y + 19));
 		addSlot(new SlotItemHandler(te.inventory, 4, x + 15, y + 19));
 
+		int invX = 37;
+		int invY = 161;
+
 		// player Slots
 		for (int row = 0; row < 3; ++row) 
 			for (int col = 0; col < 9; ++col) 
-				addSlot(new Slot(player.inventory, col + row * 9 + 9, -2 + col * 18, 163 + row * 18));
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) 
-			addSlot(new Slot(player.inventory, hotbarSlot, -2 + hotbarSlot * 18, 221));
+				addSlot(new Slot(player.inventory, col + row * 9 + 9, invX + col * 18, invY + row * 18));
+		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
+			addSlot(new Slot(player.inventory, hotbarSlot, invX + hotbarSlot * 18, invY + 58));
 
 		detectAndSendChanges();
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return true;
+	public boolean canInteractWith(PlayerEntity player) {
+		return te != null && te.canPlayerUse(player);
 	}
 
 	@Override

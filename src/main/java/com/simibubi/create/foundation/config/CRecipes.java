@@ -2,10 +2,14 @@ package com.simibubi.create.foundation.config;
 
 public class CRecipes extends ConfigBase {
 
+	public ConfigBool bulkPressing = b(false, "bulkPressing", Comments.bulkPressing);
+	public ConfigBool bulkCutting = b(false, "bulkCutting", Comments.bulkCutting);
 	public ConfigBool allowShapelessInMixer = b(true, "allowShapelessInMixer", Comments.allowShapelessInMixer);
 	public ConfigBool allowShapedSquareInPress = b(true, "allowShapedSquareInPress", Comments.allowShapedSquareInPress);
 	public ConfigBool allowRegularCraftingInCrafter =
 		b(true, "allowRegularCraftingInCrafter", Comments.allowRegularCraftingInCrafter);
+	public ConfigBool allowBiggerFireworksInCrafter =
+		b(false, "allowBiggerFireworksInCrafter", Comments.allowBiggerFireworksInCrafter);
 	public ConfigBool allowStonecuttingOnSaw = b(true, "allowStonecuttingOnSaw", Comments.allowStonecuttingOnSaw);
 	public ConfigBool allowWoodcuttingOnSaw = b(true, "allowWoodcuttingOnSaw", Comments.allowWoodcuttingOnSaw);
 	public ConfigInt lightSourceCountForRefinedRadiance =
@@ -20,12 +24,16 @@ public class CRecipes extends ConfigBase {
 	}
 
 	private static class Comments {
+		static String bulkPressing = "When true, allows the Mechanical Press to process entire stacks at a time.";
+		static String bulkCutting = "When true, allows the Mechanical Saw to process entire stacks at a time.";
 		static String allowShapelessInMixer =
 			"When true, allows any shapeless crafting recipes to be processed by a Mechanical Mixer + Basin.";
 		static String allowShapedSquareInPress =
 			"When true, allows any single-ingredient 2x2 or 3x3 crafting recipes to be processed by a Mechanical Press + Basin.";
 		static String allowRegularCraftingInCrafter =
 			"When true, allows any standard crafting recipes to be processed by Mechanical Crafters.";
+		static String allowBiggerFireworksInCrafter =
+			"When true, allows Firework Rockets with more than 9 ingredients to be crafted using Mechanical Crafters.";
 		static String allowStonecuttingOnSaw =
 			"When true, allows any stonecutting recipes to be processed by a Mechanical Saw.";
 		static String allowWoodcuttingOnSaw =

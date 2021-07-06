@@ -22,7 +22,7 @@ public class NbtPacket extends SimplePacketBase {
 		this(stack, -1);
 		this.hand = hand;
 	}
-	
+
 	public NbtPacket(ItemStack stack, int slot) {
 		this.stack = stack;
 		this.slot = slot;
@@ -34,7 +34,7 @@ public class NbtPacket extends SimplePacketBase {
 		slot = buffer.readInt();
 		hand = Hand.values()[buffer.readInt()];
 	}
-	
+
 	public void write(PacketBuffer buffer) {
 		buffer.writeItemStack(stack);
 		buffer.writeInt(slot);
@@ -42,29 +42,32 @@ public class NbtPacket extends SimplePacketBase {
 	}
 
 	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
-			if (player == null)
-				return;
-			if (!(stack.getItem() instanceof SymmetryWandItem || stack.getItem() instanceof ZapperItem)) {
-				return;
-			}
-			stack.removeChildTag("AttributeModifiers");
-			if (slot == -1) {
-				ItemStack heldItem = player.getHeldItem(hand);
-				if (heldItem.getItem() == stack.getItem()) {
-					heldItem.setTag(stack.getTag());
+		context.get()
+			.enqueueWork(() -> {
+				ServerPlayerEntity player = context.get()
+					.getSender();
+				if (player == null)
+					return;
+				if (!(stack.getItem() instanceof SymmetryWandItem || stack.getItem() instanceof ZapperItem)) {
+					return;
 				}
-				return;
-			}
-			
-			ItemStack heldInSlot = player.inventory.getStackInSlot(slot);
-			if (heldInSlot.getItem() == stack.getItem()) {
-				heldInSlot.setTag(stack.getTag());
-			}
-			
-		});
-		context.get().setPacketHandled(true);
+				stack.removeChildTag("AttributeModifiers");
+				if (slot == -1) {
+					ItemStack heldItem = player.getHeldItem(hand);
+					if (heldItem.getItem() == stack.getItem()) {
+						heldItem.setTag(stack.getTag());
+					}
+					return;
+				}
+
+				ItemStack heldInSlot = player.inventory.getStackInSlot(slot);
+				if (heldInSlot.getItem() == stack.getItem()) {
+					heldInSlot.setTag(stack.getTag());
+				}
+
+			});
+		context.get()
+			.setPacketHandled(true);
 	}
 
 }

@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
@@ -14,6 +15,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -22,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -29,6 +32,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -36,7 +41,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -88,8 +92,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		BlockRayTraceResult hit) {
 		ItemStack heldItem = player.getHeldItem(handIn);
 
-		try {
-			BasinTileEntity te = getTileEntity(worldIn, pos);
+		return onTileEntityUse(worldIn, pos, te -> {
 			if (!heldItem.isEmpty()) {
 				if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
 					return ActionResultType.SUCCESS;
@@ -97,26 +100,35 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					return ActionResultType.SUCCESS;
 
 				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
-					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
+						|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return ActionResultType.SUCCESS;
-				if (heldItem.getItem().equals(Items.SPONGE) &&
-						!te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(iFluidHandler ->
-								iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE)).orElse(FluidStack.EMPTY).isEmpty()) {
+				if (heldItem.getItem()
+					.equals(Items.SPONGE)
+					&& !te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
+						.orElse(FluidStack.EMPTY)
+						.isEmpty()) {
 					return ActionResultType.SUCCESS;
 				}
 				return ActionResultType.PASS;
 			}
 
 			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
+			boolean success = false;
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				if (stackInSlot.isEmpty())
+					continue;
+				player.inventory.placeItemBackInInventory(worldIn, stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
+				success = true;
 			}
+			if (success)
+				worldIn.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
+						1f + Create.RANDOM.nextFloat());
 			te.onEmptied();
-		} catch (TileEntityException e) {
-		}
-
-		return ActionResultType.SUCCESS;
+			return ActionResultType.SUCCESS;
+		});
 	}
 
 	@Override
@@ -130,8 +142,13 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			return;
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		withTileEntityDo(worldIn, entityIn.getBlockPos(), te -> {
+
+			// Tossed items bypass the quarter-stack limit
+			te.inputInventory.withMaxStackSize(64);
 			ItemStack insertItem = ItemHandlerHelper.insertItem(te.inputInventory, itemEntity.getItem()
 				.copy(), false);
+			te.inputInventory.withMaxStackSize(16);
+
 			if (insertItem.isEmpty()) {
 				itemEntity.remove();
 				if (!itemEntity.world.isRemote)
@@ -214,6 +231,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			TileEntityBehaviour.get(world, output, DirectBeltInputBehaviour.TYPE);
 		if (directBeltInputBehaviour != null)
 			return directBeltInputBehaviour.canInsertFromSide(direction);
+		return false;
+	}
+
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

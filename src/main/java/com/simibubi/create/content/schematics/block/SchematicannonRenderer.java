@@ -1,13 +1,17 @@
 package com.simibubi.create.content.schematics.block;
 
+import java.util.Random;
+
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForBlockState;
 import com.simibubi.create.content.schematics.block.LaunchedItem.ForEntity;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -23,14 +27,12 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-import java.util.Random;
-
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
 	public SchematicannonRenderer(TileEntityRendererDispatcher dispatcher) {
 		super(dispatcher);
 	}
-	
+
 	@Override
 	public boolean isGlobalRenderer(SchematicannonTileEntity p_188185_1_) {
 		return true;
@@ -44,7 +46,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(tileEntityIn.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(tileEntityIn.getWorld())) return;
 
 		BlockPos pos = tileEntityIn.getPos();
 
@@ -61,13 +63,13 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		SuperByteBuffer connector = AllBlockPartials.SCHEMATICANNON_CONNECTOR.renderOn(state);
+		SuperByteBuffer connector = PartialBufferer.get(AllBlockPartials.SCHEMATICANNON_CONNECTOR, state);
 		connector.translate(.5f, 0, .5f);
 		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(-.5f, 0, -.5f);
 		connector.light(lightCoords).renderInto(ms, vb);
 
-		SuperByteBuffer pipe = AllBlockPartials.SCHEMATICANNON_PIPE.renderOn(state);
+		SuperByteBuffer pipe = PartialBufferer.get(AllBlockPartials.SCHEMATICANNON_PIPE, state);
 		pipe.translate(.5f, 15 / 16f, .5f);
 		pipe.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
@@ -82,13 +84,14 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		double yaw = 0;
 		double pitch = 40;
 
-		if (tile.target != null) {
+		BlockPos target = tile.printer.getCurrentTarget();
+		if (target != null) {
 
 			// Calculate Angle of Cannon
-			Vector3d diff = Vector3d.of(tile.target.subtract(pos));
+			Vector3d diff = Vector3d.of(target.subtract(pos));
 			if (tile.previousTarget != null) {
 				diff = (Vector3d.of(tile.previousTarget)
-						.add(Vector3d.of(tile.target.subtract(tile.previousTarget)).scale(partialTicks)))
+						.add(Vector3d.of(target.subtract(tile.previousTarget)).scale(partialTicks)))
 						.subtract(Vector3d.of(pos));
 			}
 

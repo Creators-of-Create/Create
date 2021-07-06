@@ -23,7 +23,7 @@ public class FilesHelper {
 		try {
 			Files.createDirectories(Paths.get(name));
 		} catch (IOException e) {
-			Create.logger.warn("Could not create Folder: {}", name);
+			Create.LOGGER.warn("Could not create Folder: {}", name);
 		}
 	}
 
@@ -40,7 +40,8 @@ public class FilesHelper {
 	}
 
 	public static String slug(String name) {
-		return Lang.asId(name).replaceAll("\\W+", "_");
+		return Lang.asId(name)
+			.replaceAll("\\W+", "_");
 	}
 
 	public static boolean saveTagCompoundAsJson(CompoundNBT compound, String path) {

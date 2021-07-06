@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.google.common.collect.ImmutableMap;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -100,7 +101,7 @@ public abstract class ArmInteractionPoint {
 	@OnlyIn(Dist.CLIENT)
 	void transformFlag(MatrixStack stack) {}
 
-	AllBlockPartials getFlagType() {
+	PartialModel getFlagType() {
 		return mode == Mode.TAKE ? AllBlockPartials.FLAG_LONG_OUT : AllBlockPartials.FLAG_LONG_IN;
 	}
 

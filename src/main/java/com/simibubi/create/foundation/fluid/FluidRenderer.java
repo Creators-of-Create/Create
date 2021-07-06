@@ -5,6 +5,7 @@ import java.util.function.Function;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -12,7 +13,7 @@ import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
@@ -23,13 +24,25 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
+@OnlyIn(Dist.CLIENT)
 public class FluidRenderer {
+
+	public static IVertexBuilder getFluidBuilder(IRenderTypeBuffer buffer) {
+		return buffer.getBuffer(RenderTypes.getFluid());
+	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
 		boolean inbound, IRenderTypeBuffer buffer, MatrixStack ms, int light) {
+		renderFluidStream(fluidStack, direction, radius, progress, inbound, getFluidBuilder(buffer), ms, light);
+	}
+
+	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
+		boolean inbound, IVertexBuilder builder, MatrixStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes fluidAttributes = fluid.getAttributes();
 		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
@@ -38,15 +51,14 @@ public class FluidRenderer {
 		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
-		MatrixStacker msr = MatrixStacker.of(ms);
-		int blockLightIn = (light >> 4) & 0xf;
+		int blockLightIn = (light >> 4) & 0xF;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
-		light = (light & 0xf00000) | luminosity << 4;
+		light = (light & 0xF00000) | luminosity << 4;
 
 		if (inbound)
 			direction = direction.getOpposite();
 
+		MatrixStacker msr = MatrixStacker.of(ms);
 		ms.push();
 		msr.centre()
 			.rotateY(AngleHelper.horizontalAngle(direction))
@@ -74,11 +86,15 @@ public class FluidRenderer {
 				stillTexture);
 
 		ms.pop();
-
 	}
 
 	public static void renderTiledFluidBB(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
 		float yMax, float zMax, IRenderTypeBuffer buffer, MatrixStack ms, int light, boolean renderBottom) {
+		renderTiledFluidBB(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light, renderBottom);
+	}
+
+	public static void renderTiledFluidBB(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
+		float yMax, float zMax, IVertexBuilder builder, MatrixStack ms, int light, boolean renderBottom) {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes fluidAttributes = fluid.getAttributes();
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
@@ -86,14 +102,12 @@ public class FluidRenderer {
 			.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
-		MatrixStacker msr = MatrixStacker.of(ms);
-		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
-
-		int blockLightIn = (light >> 4) & 0xf;
+		int blockLightIn = (light >> 4) & 0xF;
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
-		light = (light & 0xf00000) | luminosity << 4;
+		light = (light & 0xF00000) | luminosity << 4;
 
+		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
+		MatrixStacker msr = MatrixStacker.of(ms);
 		ms.push();
 		if (fluidStack.getFluid()
 			.getAttributes()
@@ -206,6 +220,7 @@ public class FluidRenderer {
 		builder.vertex(peek.getModel(), x, y, z)
 			.color(r, g, b, a)
 			.texture(u, v)
+			.overlay(OverlayTexture.DEFAULT_UV)
 			.light(light)
 			.normal(n.getX(), n.getY(), n.getZ())
 			.endVertex();

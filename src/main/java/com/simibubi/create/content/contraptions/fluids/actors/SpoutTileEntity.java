@@ -1,5 +1,13 @@
 package com.simibubi.create.content.contraptions.fluids.actors;
 
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
+import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -12,6 +20,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
@@ -33,13 +42,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.HOLD;
-import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult.PASS;
 
 public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 	private static final boolean IS_TIC_LOADED = ModList.get().isLoaded("tconstruct");
@@ -246,6 +248,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
+		if (isVirtual())
+			return;
 		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 8 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
@@ -255,6 +259,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected static int SPLASH_PARTICLE_COUNT = 20;
 
 	protected void spawnSplash(FluidStack fluid) {
+		if (isVirtual())
+			return;
 		Vector3d vec = VecHelper.getCenterOf(pos);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);

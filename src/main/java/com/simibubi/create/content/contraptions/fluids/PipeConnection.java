@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import java.util.Optional;
+import java.util.Random;
+import java.util.function.Predicate;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -8,6 +12,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,10 +29,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.DistExecutor;
-
-import java.util.Optional;
-import java.util.Random;
-import java.util.function.Predicate;
 
 public class PipeConnection {
 
@@ -238,7 +239,7 @@ public class PipeConnection {
 		return source.orElse(null) instanceof OpenEndedPipe;
 	}
 
-	public void deserializeNBT(CompoundNBT tag, boolean clientPacket) {
+	public void deserializeNBT(CompoundNBT tag, BlockPos tilePos, boolean clientPacket) {
 		CompoundNBT connectionData = tag.getCompound(side.getName2());
 
 		if (connectionData.contains("Pressure")) {
@@ -249,7 +250,7 @@ public class PipeConnection {
 
 		source = Optional.empty();
 		if (connectionData.contains("OpenEnd"))
-			source = Optional.of(OpenEndedPipe.fromNBT(connectionData.getCompound("OpenEnd")));
+			source = Optional.of(OpenEndedPipe.fromNBT(connectionData.getCompound("OpenEnd"), tilePos));
 
 		if (connectionData.contains("Flow")) {
 			CompoundNBT flowData = connectionData.getCompound("Flow");
@@ -366,8 +367,9 @@ public class PipeConnection {
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnParticlesInner(World world, BlockPos pos, FluidStack fluid) {
-		if (!isRenderEntityWithinDistance(pos))
-			return;
+		if (world == Minecraft.getInstance().world)
+			if (!isRenderEntityWithinDistance(pos))
+				return;
 		if (hasOpenEnd())
 			spawnPouringLiquid(world, pos, fluid, 1);
 		else if (r.nextFloat() < IDLE_PARTICLE_SPAWN_CHANCE)
@@ -376,8 +378,9 @@ public class PipeConnection {
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnSplashOnRimInner(World world, BlockPos pos, FluidStack fluid) {
-		if (!isRenderEntityWithinDistance(pos))
-			return;
+		if (world == Minecraft.getInstance().world)
+			if (!isRenderEntityWithinDistance(pos))
+				return;
 		spawnRimParticles(world, pos, fluid, SPLASH_PARTICLE_AMOUNT);
 	}
 

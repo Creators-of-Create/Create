@@ -12,6 +12,7 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -90,6 +91,11 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 	@Override
 	public Class<SchematicTableTileEntity> getTileEntityClass() {
 		return SchematicTableTileEntity.class;
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

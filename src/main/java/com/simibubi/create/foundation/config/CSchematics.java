@@ -11,7 +11,8 @@ public class CSchematics extends ConfigBase {
 	public ConfigGroup schematicannon = group(0, "schematicannon", "Schematicannon");
 	public ConfigInt schematicannonDelay = i(10, 1, "schematicannonDelay", Comments.delay);
 	public ConfigInt schematicannonSkips = i(10, 1, "schematicannonSkips", Comments.skips);
-	public ConfigFloat schematicannonGunpowderWorth = f(20, 0, 100, "schematicannonGunpowderWorth", Comments.gunpowderWorth);
+	public ConfigFloat schematicannonGunpowderWorth =
+		f(20, 0, 100, "schematicannonGunpowderWorth", Comments.gunpowderWorth);
 	public ConfigFloat schematicannonFuelUsage = f(0.05f, 0, 100, "schematicannonFuelUsage", Comments.fuelUsage);
 
 	@Override

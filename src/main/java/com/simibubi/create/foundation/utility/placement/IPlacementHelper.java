@@ -1,9 +1,17 @@
 package com.simibubi.create.foundation.utility.placement;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -16,13 +24,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 public interface IPlacementHelper {
@@ -90,20 +91,20 @@ public interface IPlacementHelper {
 		Vector3d direction = target.subtract(center).normalize();
 		Vector3d facing = Vector3d.of(arrowPlane.getDirectionVec());
 		Vector3d start = center.add(direction);
-		Vector3d offset = direction.scale(distanceFromCenter-1);
+		Vector3d offset = direction.scale(distanceFromCenter - 1);
 		Vector3d offsetA = direction.crossProduct(facing).normalize().scale(.25);
 		Vector3d offsetB = facing.crossProduct(direction).normalize().scale(.25);
 		Vector3d endA = center.add(direction.scale(.75)).add(offsetA);
 		Vector3d endB = center.add(direction.scale(.75)).add(offsetB);
-		CreateClient.outliner.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1/16f);
-		CreateClient.outliner.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1/16f);
+		CreateClient.OUTLINER.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1 / 16f);
+		CreateClient.OUTLINER.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1 / 16f);
 	}
 
 	default void displayGhost(PlacementOffset offset) {
 		if (!offset.hasGhostState())
 			return;
 
-		CreateClient.ghostBlocks.showGhostState(this, offset.getTransform().apply(offset.getGhostState()))
+		CreateClient.GHOST_BLOCKS.showGhostState(this, offset.getTransform().apply(offset.getGhostState()))
 				.at(offset.getBlockPos())
 				.breathingAlpha();
 	}

@@ -1,5 +1,11 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
@@ -16,6 +22,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.JukeboxBlock;
 import net.minecraft.item.ItemStack;
@@ -24,6 +31,8 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -31,10 +40,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ArmTileEntity extends KineticTileEntity {
 
@@ -117,14 +122,14 @@ public class ArmTileEntity extends KineticTileEntity {
 		}
 		if (world.isRemote)
 			return;
-		
+
 		if (phase == Phase.MOVE_TO_INPUT)
 			collectItem();
 		else if (phase == Phase.MOVE_TO_OUTPUT)
 			depositItem();
 		else if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING)
 			searchForItem();
-		
+
 		if (targetReached)
 			lazyTick();
 	}
@@ -137,7 +142,7 @@ public class ArmTileEntity extends KineticTileEntity {
 			return;
 		if (chasedPointProgress < .5f)
 			return;
-		if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING) 
+		if (phase == Phase.SEARCH_INPUTS || phase == Phase.DANCING)
 			checkForMusic();
 		if (phase == Phase.SEARCH_OUTPUTS)
 			searchForDestination();
@@ -170,7 +175,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	private boolean tickMovementProgress() {
-		boolean targetReachedPreviously = chasedPointProgress >= 1; 
+		boolean targetReachedPreviously = chasedPointProgress >= 1;
 		chasedPointProgress += Math.min(256, Math.abs(getSpeed())) / 1024f;
 		if (chasedPointProgress > 1)
 			chasedPointProgress = 1;
@@ -337,12 +342,17 @@ public class ArmTileEntity extends KineticTileEntity {
 				if (amountExtracted == 0)
 					continue;
 
+				ItemStack prevHeld = heldItem;
 				heldItem = armInteractionPoint.extract(world, i, amountExtracted, false);
 				phase = Phase.SEARCH_OUTPUTS;
 				chasedPointProgress = 0;
 				chasedPointIndex = -1;
 				sendData();
 				markDirty();
+
+				if (!prevHeld.isItemEqual(heldItem))
+					world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .125f,
+							.5f + Create.RANDOM.nextFloat() * .25f);
 				return;
 			}
 
@@ -406,29 +416,39 @@ public class ArmTileEntity extends KineticTileEntity {
 		markDirty();
 	}
 
+	public void writeInteractionPoints(CompoundNBT compound) {
+		if (updateInteractionPoints) {
+			compound.put("InteractionPoints", interactionPointTag);
+		} else {
+			ListNBT pointsNBT = new ListNBT();
+			inputs.stream()
+					.map(aip -> aip.serialize(pos))
+					.forEach(pointsNBT::add);
+			outputs.stream()
+					.map(aip -> aip.serialize(pos))
+					.forEach(pointsNBT::add);
+			compound.put("InteractionPoints", pointsNBT);
+		}
+	}
+
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 
-		if (updateInteractionPoints) {
-			compound.put("InteractionPoints", interactionPointTag);
-
-		} else {
-			ListNBT pointsNBT = new ListNBT();
-			inputs.stream()
-				.map(aip -> aip.serialize(pos))
-				.forEach(pointsNBT::add);
-			outputs.stream()
-				.map(aip -> aip.serialize(pos))
-				.forEach(pointsNBT::add);
-			compound.put("InteractionPoints", pointsNBT);
-		}
+		writeInteractionPoints(compound);
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
 		compound.putBoolean("Powered", redstoneLocked);
 		compound.put("HeldItem", heldItem.serializeNBT());
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
+	}
+
+	@Override
+	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+		super.writeSafe(compound, clientPacket);
+
+		writeInteractionPoints(compound);
 	}
 
 	@Override
@@ -484,7 +504,7 @@ public class ArmTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

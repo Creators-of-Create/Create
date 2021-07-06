@@ -63,7 +63,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 			.filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(self))
 			.collect(Collectors.toSet());
 
-		contraptions.addAll(self.world.getEntitiesWithinAABB(AbstractContraptionEntity.class, self.getBoundingBox().grow(1f)));
+		contraptions.addAll(self.world.getEntitiesWithinAABB(AbstractContraptionEntity.class, self.getBoundingBox()
+			.grow(1f)));
 		return contraptions;
 	}
 
@@ -75,7 +76,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			BlockPos blockPos = new BlockPos(localPos);
 			Contraption contraption = cEntity.getContraption();
-			Template.BlockInfo info = contraption.getBlocks().get(blockPos);
+			Template.BlockInfo info = contraption.getBlocks()
+				.get(blockPos);
 
 			if (info != null) {
 				BlockState blockstate = info.state;
@@ -84,15 +86,11 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		});
 	}
 
-	@Inject(at = @At(
-		value = "JUMP",
-		opcode = 154, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
-		ordinal = 4
-	),
-		method = "move"
-	)
+	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
+		ordinal = 4), method = "move")
 	private void movementMixin(MoverType mover, Vector3d movement, CallbackInfo ci) {
-		Vector3d worldPos = self.getPositionVec().add(0, -0.2, 0);
+		Vector3d worldPos = self.getPositionVec()
+			.add(0, -0.2, 0);
 		AtomicBoolean stepped = new AtomicBoolean(false);
 
 		forCollision(worldPos, (contraption, blockstate, blockPos) -> {
@@ -106,18 +104,20 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 			this.nextStepDistance = this.determineNextStepDistance();
 	}
 
-	@Inject(method = {"spawnSprintingParticles"}, at = @At(value = "TAIL"))
+	@Inject(method = { "spawnSprintingParticles" }, at = @At(value = "TAIL"))
 	private void createRunningParticlesMixin(CallbackInfo ci) {
-		Vector3d worldPos = self.getPositionVec().add(0, -0.2, 0);
+		Vector3d worldPos = self.getPositionVec()
+			.add(0, -0.2, 0);
 		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
-			if (!blockstate.addRunningEffects(self.world, blockpos, self) && blockstate.getRenderType() != BlockRenderType.INVISIBLE) {
+			if (!blockstate.addRunningEffects(self.world, blockpos, self)
+				&& blockstate.getRenderType() != BlockRenderType.INVISIBLE) {
 				Vector3d vec3d = self.getMotion();
 				self.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
-					self.getX() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(),
-					self.getY() + 0.1D, self.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(),
-					vec3d.x * -4.0D, 1.5D, vec3d.z * -4.0D);
+					self.getX() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(), self.getY() + 0.1D,
+					self.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(), vec3d.x * -4.0D, 1.5D,
+					vec3d.z * -4.0D);
 			}
 		});
 	}
@@ -132,7 +132,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			worldPos = worldPos.add(x, y, z);
 
-			self.world.playSound(null, worldPos.x + x, worldPos.y + y, worldPos.z + z, event, self.getSoundCategory(), pitch, volume);
+			self.world.playSound(null, worldPos.x + x, worldPos.y + y, worldPos.z + z, event, self.getSoundCategory(),
+				pitch, volume);
 
 			ci.cancel();
 		}
@@ -150,4 +151,3 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		this.contraption = null;
 	}
 }
-

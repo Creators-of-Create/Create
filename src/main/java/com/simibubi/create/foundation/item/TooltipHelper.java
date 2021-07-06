@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 import com.google.common.base.Strings;
@@ -33,9 +32,7 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TextProcessing;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 public class TooltipHelper {
@@ -47,19 +44,23 @@ public class TooltipHelper {
 	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
 	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
-		TextFormatting colorFormat = highlighted ? color.hColor : color.color;
-		return Lang.translate("tooltip.holdKey", Lang.translate("tooltip.keyShift")
-			.formatted(colorFormat)).formatted(TextFormatting.DARK_GRAY);
+		return Lang.translate("tooltip.holdForDescription", Lang.translate("tooltip.keyShift")
+			.formatted(TextFormatting.GRAY))
+			.formatted(TextFormatting.DARK_GRAY);
 	}
 
 	public static void addHint(List<ITextComponent> tooltip, String hintKey, Object... messageParams) {
 		ITextComponent spacing = IHaveGoggleInformation.componentSpacing;
-		tooltip.add(spacing.copy().append(Lang.translate(hintKey + ".title")).formatted(GOLD));
+		tooltip.add(spacing.copy()
+			.append(Lang.translate(hintKey + ".title"))
+			.formatted(GOLD));
 		ITextComponent hint = Lang.translate(hintKey);
 		List<ITextComponent> cutComponent = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
-		for (ITextComponent component : cutComponent) tooltip.add(spacing.copy().append(component));
+		for (ITextComponent component : cutComponent)
+			tooltip.add(spacing.copy()
+				.append(component));
 	}
-	
+
 	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
 		tooltipReferrals.put(item.asItem(), () -> itemWithTooltip.get()
 			.asItem()
@@ -123,10 +124,10 @@ public class TooltipHelper {
 
 	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor,
 		TextFormatting highlightColor, int indent) {
-		String s = getUnformattedDeepText(c);
+		String s = c.getString();
 
 		// Apply markup
-		String markedUp = s;//.replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
+		String markedUp = s;// .replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
 
 		// Split words
 		List<String> words = new LinkedList<>();
@@ -181,7 +182,6 @@ public class TooltipHelper {
 			formattedLines.add(currentComponent);
 			currentlyHighlighted = !currentlyHighlighted;
 		}
-
 
 		return formattedLines;
 	}
@@ -274,10 +274,6 @@ public class TooltipHelper {
 
 	private static ItemDescription buildToolTip(String translationKey, ItemStack stack) {
 		AllSections module = AllSections.of(stack);
-		if (I18n.format(translationKey)
-			.equals("WIP"))
-			return new WipScription(module.getTooltipPalette());
-
 		ItemDescription tooltip = new ItemDescription(module.getTooltipPalette());
 		String summaryKey = translationKey + ".summary";
 
@@ -300,7 +296,8 @@ public class TooltipHelper {
 			if (!I18n.hasKey(conditionKey))
 				break;
 			if (i == 1)
-				tooltip.getLinesOnShift().add(new StringTextComponent(""));
+				tooltip.getLinesOnShift()
+					.add(new StringTextComponent(""));
 			tooltip.withBehaviour(I18n.format(conditionKey), I18n.format(behaviourKey));
 		}
 
@@ -319,25 +316,18 @@ public class TooltipHelper {
 	public static String getTooltipTranslationKey(ItemStack stack) {
 		Item item = stack.getItem();
 		if (tooltipReferrals.containsKey(item))
-			return tooltipReferrals.get(item).get() + ".tooltip";
+			return tooltipReferrals.get(item)
+				.get() + ".tooltip";
 		return item.getTranslationKey(stack) + ".tooltip";
 	}
 
-	private static int getComponentLength(ITextComponent component) {
-		AtomicInteger l = new AtomicInteger();
-		TextProcessing.visitFormatted(component, Style.EMPTY, (s, style, charConsumer) -> {
-			l.getAndIncrement();
-			return true;
-		});
-		return l.get();
-	}
-
-	public static String getUnformattedDeepText(ITextComponent component) {
-		StringBuilder b = new StringBuilder();
-		b.append(component.getString());
-		component.getSiblings()
-			.forEach(c -> b.append(getUnformattedDeepText(c)));
-		return b.toString();
-	}
+//	private static int getComponentLength(ITextComponent component) {
+//		AtomicInteger l = new AtomicInteger();
+//		TextProcessing.visitFormatted(component, Style.EMPTY, (s, style, charConsumer) -> {
+//			l.getAndIncrement();
+//			return true;
+//		});
+//		return l.get();
+//	}
 
 }

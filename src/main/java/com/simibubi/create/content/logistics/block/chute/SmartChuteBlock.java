@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import java.util.Random;
+
 import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.block.Block;
@@ -13,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class SmartChuteBlock extends AbstractChuteBlock {
 
@@ -29,6 +32,14 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		if (worldIn.isRemote)
 			return;
+		if (!worldIn.getPendingBlockTicks()
+			.isTickPending(pos, this))
+			worldIn.getPendingBlockTicks()
+				.scheduleTick(pos, this, 0);
+	}
+
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
 		boolean previouslyPowered = state.get(POWERED);
 		if (previouslyPowered != worldIn.isBlockPowered(pos))
 			worldIn.setBlockState(pos, state.cycle(POWERED), 2);

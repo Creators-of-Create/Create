@@ -1,13 +1,15 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -31,7 +33,7 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		BlockState blockState = te.getBlockState();
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) te;
@@ -39,7 +41,7 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
+		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
 		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
@@ -48,16 +50,16 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 		float time = AnimationTickHolder.getRenderTime(te.getWorld());
 		float angle = ((time * speed * 6 / 10f) % 360) / 180 * (float) Math.PI;
 
-		SuperByteBuffer poleRender = AllBlockPartials.MECHANICAL_MIXER_POLE.renderOn(blockState);
+		SuperByteBuffer poleRender = PartialBufferer.get(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState);
 		poleRender.translate(0, -renderedHeadOffset, 0)
-			.light(packedLightmapCoords)
-			.renderInto(ms, vb);
+				.light(packedLightmapCoords)
+				.renderInto(ms, vb);
 
-		SuperByteBuffer headRender = AllBlockPartials.MECHANICAL_MIXER_HEAD.renderOn(blockState);
+		SuperByteBuffer headRender = PartialBufferer.get(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState);
 		headRender.rotateCentered(Direction.UP, angle)
-			.translate(0, -renderedHeadOffset, 0)
-			.light(packedLightmapCoords)
-			.renderInto(ms, vb);
+				.translate(0, -renderedHeadOffset, 0)
+				.light(packedLightmapCoords)
+				.renderInto(ms, vb);
 	}
 
 }

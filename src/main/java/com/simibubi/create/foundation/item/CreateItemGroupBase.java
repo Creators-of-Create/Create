@@ -45,20 +45,20 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 				def.fillItemGroup(this, items);
 		}
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
 		Minecraft mc = Minecraft.getInstance();
 		ItemRenderer itemRenderer = mc.getItemRenderer();
 		ClientWorld world = mc.world;
-		
+
 		for (RegistryEntry<? extends Item> entry : getItems()) {
 			Item item = entry.get();
 			if (item instanceof BlockItem)
 				continue;
 			ItemStack stack = new ItemStack(item);
 			IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, world, null);
-			if ((model.isGui3d() && AllSections.of(stack) != AllSections.CURIOSITIES) != specialItems)
+			if (model.isGui3d() != specialItems)
 				continue;
 			item.fillItemGroup(this, items);
 		}

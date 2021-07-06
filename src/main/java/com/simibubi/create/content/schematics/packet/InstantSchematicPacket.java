@@ -40,10 +40,10 @@ public class InstantSchematicPacket extends SimplePacketBase {
 		context.get()
 			.enqueueWork(() -> {
 				ServerPlayerEntity player = context.get()
-					.getSender();
+						.getSender();
 				if (player == null)
 					return;
-				Create.schematicReceiver.handleInstantSchematic(player, name, player.world, origin, bounds);
+				Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.world, origin, bounds);
 			});
 		context.get()
 			.setPacketHandled(true);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -43,7 +44,7 @@ public class TriplePlaneMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public AllBlockPartials getModel() {
+	public PartialModel getModel() {
 		return AllBlockPartials.SYMMETRY_TRIPLEPLANE;
 	}
 
@@ -54,12 +55,12 @@ public class TriplePlaneMirror extends SymmetryMirror {
 	@Override
 	public void setOrientation(int index) {
 	}
-	
+
 	@Override
 	public IStringSerializable getOrientation() {
 		return CrossPlaneMirror.Align.Y;
 	}
-	
+
 	@Override
 	public List<ITextComponent> getAlignToolTips() {
 		return ImmutableList.of(Lang.translate("orientation.horizontal"));

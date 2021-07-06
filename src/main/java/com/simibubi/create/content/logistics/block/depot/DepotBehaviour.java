@@ -7,9 +7,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.AbstractFunnelBlock;
+import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -85,7 +87,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			if (heldItem == null) {
 				heldItem = ts;
 			} else {
-				if (!ItemHandlerHelper.canItemStacksStack(heldItem.stack, ts.stack)) {
+				if (!ItemHelper.canItemStackAmountsStack(heldItem.stack, ts.stack)) {
 					Vector3d vec = VecHelper.getCenterOf(tileEntity.getPos());
 					InventoryHelper.spawnItemStack(tileEntity.getWorld(), vec.x, vec.y + .5f, vec.z, ts.stack);
 				} else {
@@ -249,7 +251,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			ItemStack inserted = heldItem.stack;
 			if (remainingSpace <= 0)
 				return inserted;
-			if (this.heldItem != null && !ItemHandlerHelper.canItemStacksStack(this.heldItem.stack, inserted))
+			if (this.heldItem != null && !ItemHelper.canItemStackAmountsStack(this.heldItem.stack, inserted))
 				return inserted;
 
 			ItemStack returned = ItemStack.EMPTY;
@@ -274,8 +276,16 @@ public class DepotBehaviour extends TileEntityBehaviour {
 			return returned;
 		}
 
-		if (!simulate)
+		if (!simulate) {
+			if (this.isEmpty()) {
+				if (heldItem.insertedFrom.getAxis()
+					.isHorizontal())
+					AllSoundEvents.DEPOT_SLIDE.playOnServer(getWorld(), getPos());
+				else
+					AllSoundEvents.DEPOT_PLOP.playOnServer(getWorld(), getPos());
+			}
 			this.heldItem = heldItem;
+		}
 		return ItemStack.EMPTY;
 	}
 

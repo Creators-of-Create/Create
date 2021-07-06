@@ -65,7 +65,7 @@ public class ScreenOpener {
 		if (screenHistory.isEmpty())
 			return false;
 		Screen previouslyRenderedScreen = screenHistory.get(0);
-		if (!(previouslyRenderedScreen instanceof AbstractSimiScreen))
+		if (!(previouslyRenderedScreen instanceof NavigatableSimiScreen))
 			return false;
 		if (!screen.isEquivalentTo((NavigatableSimiScreen) previouslyRenderedScreen))
 			return false;

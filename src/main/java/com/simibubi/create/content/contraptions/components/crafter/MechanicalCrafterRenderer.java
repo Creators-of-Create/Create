@@ -3,14 +3,16 @@ package com.simibubi.create.content.contraptions.components.crafter;
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.standardKineticRotationTransform;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -154,8 +156,8 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		BlockState blockState = te.getBlockState();
 		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
-			SuperByteBuffer superBuffer = AllBlockPartials.SHAFTLESS_COGWHEEL.renderOn(blockState);
+		if (!Backend.getInstance().canUseInstancing(te.getWorld())) {
+			SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 			standardKineticRotationTransform(superBuffer, te, light);
 			superBuffer.rotateCentered(Direction.UP, (float) (blockState.get(HORIZONTAL_FACING).getAxis() != Direction.Axis.X ? 0 : Math.PI / 2));
 			superBuffer.rotateCentered(Direction.EAST, (float) (Math.PI / 2));
@@ -180,7 +182,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 			if (te.phase == Phase.EXPORTING) {
 				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.getTicks()));
 				beltBuffer.shiftUVtoSheet(AllSpriteShifts.CRAFTER_THINGIES, (textureIndex % 4) / 4f, 0, 1);
-			} 
+			}
 
 			beltBuffer.renderInto(ms, vb);
 			beltFrameBuffer.renderInto(ms, vb);
@@ -193,11 +195,11 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 
 	}
 
-	private SuperByteBuffer renderAndTransform(MechanicalCrafterTileEntity te, AllBlockPartials renderBlock,
+	private SuperByteBuffer renderAndTransform(MechanicalCrafterTileEntity te, PartialModel renderBlock,
 		BlockState crafterState, BlockPos pos) {
-		SuperByteBuffer buffer = renderBlock.renderOn(crafterState);
+		SuperByteBuffer buffer = PartialBufferer.get(renderBlock, crafterState);
 		float xRot = crafterState.get(MechanicalCrafterBlock.POINTING)
-			.getXRotation();
+				.getXRotation();
 		float yRot = AngleHelper.horizontalAngle(crafterState.get(HORIZONTAL_FACING));
 		buffer.rotateCentered(Direction.UP, (float) ((yRot + 90) / 180 * Math.PI));
 		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));

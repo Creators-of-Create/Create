@@ -1,16 +1,15 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import net.minecraft.block.BlockState;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 
-import static com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer.KINETIC_TILE;
+import net.minecraft.block.BlockState;
 
 public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntity> {
 
     protected final RotatingData rotatingModel;
 
-    public SingleRotatingInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public SingleRotatingInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
 
         rotatingModel = setup(getModel().createInstance());
@@ -35,7 +34,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
         return blockState;
     }
 
-    protected InstancedModel<RotatingData> getModel() {
+    protected Instancer<RotatingData> getModel() {
         return getRotatingMaterial().getModel(getRenderedBlockState());
     }
 }

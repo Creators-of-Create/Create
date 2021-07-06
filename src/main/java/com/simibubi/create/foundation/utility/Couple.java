@@ -53,7 +53,7 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 	public <S> Couple<S> mapWithContext(BiFunction<T, Boolean, S> function) {
 		return Couple.create(function.apply(first, true), function.apply(second, false));
 	}
-	
+
 	public <S, R> Couple<S> mapWithParams(BiFunction<T, R, S> function, Couple<R> values) {
 		return Couple.create(function.apply(first, values.first), function.apply(second, values.second));
 	}

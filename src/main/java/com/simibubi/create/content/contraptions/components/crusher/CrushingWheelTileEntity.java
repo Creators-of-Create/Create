@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.crusher;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;

@@ -1,14 +1,28 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity.CartMovementMode;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.train.MinecartSim2020;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+
+import net.minecraft.block.AbstractRailBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -22,6 +36,7 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.state.properties.RailShape;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -32,12 +47,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
-
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
-
-import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
 /**
  * Ex: Minecarts, Couplings <br>
@@ -78,18 +87,17 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		initialYawOffset = -1;
 	}
 
-	public static OrientedContraptionEntity create(World world, Contraption contraption,
-		Optional<Direction> initialOrientation) {
+	public static OrientedContraptionEntity create(World world, Contraption contraption, Direction initialOrientation) {
 		OrientedContraptionEntity entity =
 			new OrientedContraptionEntity(AllEntityTypes.ORIENTED_CONTRAPTION.get(), world);
 		entity.setContraption(contraption);
-		initialOrientation.ifPresent(entity::setInitialOrientation);
+		entity.setInitialOrientation(initialOrientation);
 		entity.startAtInitialYaw();
 		return entity;
 	}
 
 	public static OrientedContraptionEntity createAtYaw(World world, Contraption contraption,
-		Optional<Direction> initialOrientation, float initialYaw) {
+		Direction initialOrientation, float initialYaw) {
 		OrientedContraptionEntity entity = create(world, contraption, initialOrientation);
 		entity.startAtYaw(initialYaw);
 		entity.manuallyPlaced = true;
@@ -367,19 +375,19 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			movementVector = locationDiff;
 		Vector3d motion = movementVector.normalize();
 
-		if (!isInitialOrientationPresent() && !world.isRemote) {
-			if (locationDiff.length() > 0) {
-				Direction facingFromVector =
-					Direction.getFacingFromVector(locationDiff.x, locationDiff.y, locationDiff.z);
-				if (initialYawOffset != -1)
-					facingFromVector = Direction.fromAngle(facingFromVector.getHorizontalAngle() - initialYawOffset);
-				if (facingFromVector.getAxis()
-					.isHorizontal())
-					setInitialOrientation(facingFromVector);
-			}
-		}
-
 		if (!rotationLock) {
+			if (riding instanceof AbstractMinecartEntity) {
+				AbstractMinecartEntity minecartEntity = (AbstractMinecartEntity) riding;
+				BlockPos railPosition = minecartEntity.getCurrentRailPosition();
+				BlockState blockState = world.getBlockState(railPosition);
+				if (blockState.getBlock() instanceof AbstractRailBlock) {
+					AbstractRailBlock abstractRailBlock = (AbstractRailBlock) blockState.getBlock();
+					RailShape railDirection =
+						abstractRailBlock.getRailDirection(blockState, world, railPosition, minecartEntity);
+					motion = VecHelper.project(motion, MinecartSim2020.getRailVec(railDirection));
+				}
+			}
+
 			if (motion.length() > 0) {
 				targetYaw = yawFromVector(motion);
 				if (targetYaw < 0)
@@ -389,7 +397,10 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			}
 
 			prevYaw = yaw;
-			yaw = angleLerp(0.4f, yaw, targetYaw);
+			float maxApproachSpeed = (float) (motion.length() * 12f / (Math.max(1, getBoundingBox().getXSize() / 6f)));
+			float approach = AngleHelper.getShortestAngleDiff(yaw, targetYaw);
+			approach = MathHelper.clamp(approach, -maxApproachSpeed, maxApproachSpeed);
+			yaw += approach;
 			if (Math.abs(AngleHelper.getShortestAngleDiff(yaw, targetYaw)) < 1f)
 				yaw = targetYaw;
 			else
@@ -547,7 +558,8 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	private void repositionOnCart(float partialTicks, MatrixStack[] matrixStacks, Entity ridingEntity) {
 		Vector3d cartPos = getCartOffset(partialTicks, ridingEntity);
 
-		if (cartPos == Vector3d.ZERO) return;
+		if (cartPos == Vector3d.ZERO)
+			return;
 
 		for (MatrixStack stack : matrixStacks)
 			stack.translate(cartPos.x, cartPos.y, cartPos.z);

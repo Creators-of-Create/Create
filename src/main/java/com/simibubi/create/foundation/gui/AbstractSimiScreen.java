@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,39 +18,71 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractSimiScreen extends Screen {
 
-	protected int sWidth, sHeight;
+	protected int windowWidth, windowHeight;
+	protected int windowXOffset, windowYOffset;
 	protected int guiLeft, guiTop;
 	protected List<Widget> widgets;
 
-	protected AbstractSimiScreen() {
-		super(new StringTextComponent(""));
+	protected AbstractSimiScreen(ITextComponent title) {
+		super(title);
 		widgets = new ArrayList<>();
 	}
 
+	protected AbstractSimiScreen() {
+		this(new StringTextComponent(""));
+	}
+
 	protected void setWindowSize(int width, int height) {
-		sWidth = width;
-		sHeight = height;
-		guiLeft = (this.width - sWidth) / 2;
-		guiTop = (this.height - sHeight) / 2;
+		windowWidth = width;
+		windowHeight = height;
+	}
+
+	protected void setWindowOffset(int xOffset, int yOffset) {
+		windowXOffset = xOffset;
+		windowYOffset = yOffset;
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		guiLeft = (width - windowWidth) / 2;
+		guiTop = (height - windowHeight) / 2;
+		guiLeft += windowXOffset;
+		guiTop += windowYOffset;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		widgets.stream().filter(w -> w instanceof AbstractSimiWidget).forEach(w -> ((AbstractSimiWidget) w).tick());
 	}
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = partialTicks == 10 ? 0
-			: Minecraft.getInstance()
+				: Minecraft.getInstance()
 				.getRenderPartialTicks();
 
 		ms.push();
+
+		prepareFrame();
 
 		renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 		renderWindow(ms, mouseX, mouseY, partialTicks);
 		for (Widget widget : widgets)
 			widget.render(ms, mouseX, mouseY, partialTicks);
 		renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		for (Widget widget : widgets)
-			widget.renderToolTip(ms, mouseX, mouseY);
+
+		endFrame();
 
 		ms.pop();
+	}
+
+	protected void prepareFrame() {
+	}
+
+	protected void endFrame() {
 	}
 
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
@@ -62,6 +95,10 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			if (widget.mouseClicked(x, y, button))
 				result = true;
+
+		if (!result) {
+			result = super.mouseClicked(x, y, button);
+		}
 		return result;
 	}
 
@@ -70,7 +107,7 @@ public abstract class AbstractSimiScreen extends Screen {
 		for (Widget widget : widgets)
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
-		
+
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
@@ -127,10 +164,19 @@ public abstract class AbstractSimiScreen extends Screen {
 			if (!widget.isHovered())
 				continue;
 
-			if (widget instanceof AbstractSimiWidget && !((AbstractSimiWidget) widget).getToolTip().isEmpty()) {
-				renderTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+			if (widget instanceof AbstractSimiWidget) {
+				if (!((AbstractSimiWidget) widget).getToolTip().isEmpty())
+					renderTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+
+			} else {
+				widget.renderToolTip(ms, mouseX, mouseY);
 			}
 		}
+	}
+
+	@Deprecated
+	protected void debugWindowArea(MatrixStack matrixStack) {
+		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
 	}
 
 }

@@ -13,8 +13,8 @@ import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class CouplingPhysics {
@@ -93,7 +93,10 @@ public class CouplingPhysics {
 	public static void softCollisionStep(World world, Couple<AbstractMinecartEntity> carts, double couplingLength) {
 		Couple<Float> maxSpeed = carts.map(AbstractMinecartEntity::getMaxCartSpeedOnRail);
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
+		
+		// Assuming Minecarts will never move faster than 1 block/tick
 		Couple<Vector3d> motions = carts.map(Entity::getMotion);
+		motions.replaceWithParams(VecHelper::clamp, Couple.create(1f, 1f));
 		Couple<Vector3d> nextPositions = carts.map(MinecartSim2020::predictNextPositionOf);
 
 		Couple<RailShape> shapes = carts.mapWithContext((cart, current) -> {

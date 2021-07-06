@@ -13,11 +13,14 @@ import net.minecraftforge.fml.DistExecutor;
 public class ClearBufferCacheCommand {
 
 	static ArgumentBuilder<CommandSource, ?> register() {
-		return Commands.literal("clearRenderBuffers").requires(cs -> cs.hasPermissionLevel(0)).executes(ctx -> {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
-			ctx.getSource().sendFeedback(new StringTextComponent("Cleared rendering buffers."), true);
-			return 1;
-		});
+		return Commands.literal("clearRenderBuffers")
+			.requires(cs -> cs.hasPermissionLevel(0))
+			.executes(ctx -> {
+				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
+				ctx.getSource()
+					.sendFeedback(new StringTextComponent("Cleared rendering buffers."), true);
+				return 1;
+			});
 	}
 
 	@OnlyIn(Dist.CLIENT)

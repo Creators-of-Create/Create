@@ -1,10 +1,11 @@
 package com.simibubi.create.foundation.ponder;
 
-import com.simibubi.create.foundation.ponder.content.PonderTag;
-import net.minecraft.util.ResourceLocation;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.simibubi.create.foundation.ponder.content.PonderTag;
+
+import net.minecraft.util.ResourceLocation;
 
 public class PonderStoryBoardEntry {
 
@@ -23,11 +24,11 @@ public class PonderStoryBoardEntry {
 	public interface PonderStoryBoard {
 		void program(SceneBuilder scene, SceneBuildingUtil util);
 	}
-	
+
 	public String getSchematicName() {
 		return schematicName;
 	}
-	
+
 	public PonderStoryBoard getBoard() {
 		return board;
 	}

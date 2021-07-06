@@ -13,13 +13,13 @@ public abstract class PonderInstruction {
 	public abstract boolean isComplete();
 
 	public void onScheduled(PonderScene scene) {}
-	
+
 	public abstract void tick(PonderScene scene);
 
 	public static PonderInstruction simple(Consumer<PonderScene> callback) {
 		return new Simple(callback);
 	}
-	
+
 	private static class Simple extends PonderInstruction {
 
 		private Consumer<PonderScene> callback;
@@ -27,7 +27,7 @@ public abstract class PonderInstruction {
 		public Simple(Consumer<PonderScene> callback) {
 			this.callback = callback;
 		}
-		
+
 		@Override
 		public boolean isComplete() {
 			return true;
@@ -37,7 +37,7 @@ public abstract class PonderInstruction {
 		public void tick(PonderScene scene) {
 			callback.accept(scene);
 		}
-		
+
 	}
-	
+
 }

@@ -5,11 +5,10 @@ import static java.lang.Math.signum;
 
 import net.minecraft.util.math.vector.Vector3d;
 
-
 public class ContinuousOBBCollider extends OBBCollider {
 
-	public static ContinuousSeparationManifold separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB, Matrix3d m,
-														   Vector3d motion) {
+	public static ContinuousSeparationManifold separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB,
+		Matrix3d m, Vector3d motion) {
 		ContinuousSeparationManifold mf = new ContinuousSeparationManifold();
 
 		Vector3d diff = cB.subtract(cA);
@@ -116,7 +115,8 @@ public class ContinuousOBBCollider extends OBBCollider {
 		if (isBestSeperation) {
 			mf.axis = normalizedAxis;
 			mf.separation = seperation;
-			mf.collisionPosition = normalizedAxis.scale(signum(TL) * (axisOfObjA ? -rB : -rB) - signum(seperation) * .125f);
+			mf.collisionPosition =
+				normalizedAxis.scale(signum(TL) * (axisOfObjA ? -rB : -rB) - signum(seperation) * .125f);
 		}
 
 		return false;
@@ -151,7 +151,7 @@ public class ContinuousOBBCollider extends OBBCollider {
 		public Vector3d getCollisionNormal() {
 			return normalAxis == null ? null : createSeparationVec(normalSeparation, normalAxis);
 		}
-		
+
 		public Vector3d getCollisionPosition() {
 			return collisionPosition;
 		}

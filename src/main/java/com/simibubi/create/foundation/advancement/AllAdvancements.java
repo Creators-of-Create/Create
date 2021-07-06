@@ -6,10 +6,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.logistics.InWorldProcessing;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,9 +16,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.ComponentTier;
-import com.simibubi.create.content.curiosities.zapper.blockzapper.BlockzapperItem.Components;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Advancement.Builder;
@@ -34,6 +28,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.fluid.FlowingFluid;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.IItemProvider;
@@ -63,12 +60,13 @@ public class AllAdvancements implements IDataProvider {
 
 		kineticsBranch(t, andesite_alloy);
 
-		Advancement aesthetics =
-			advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL).withParent(andesite_alloy)
-				.withCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
-				.withCriterion("1", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
-				.withCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
-				.register(t, id + ":aesthetics");
+		Advancement aesthetics = advancement("aesthetics", AllBlocks.WOODEN_BRACKET.get(), TaskType.NORMAL)
+			.withParent(andesite_alloy)
+			.withCriterion("0", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.SHAFT.get()))
+			.withCriterion("1",
+				AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.COGWHEEL.get(), AllBlocks.LARGE_COGWHEEL.get()))
+			.withCriterion("2", AllTriggers.BRACKET_APPLY_TRIGGER.forEntries(AllBlocks.FLUID_PIPE.get()))
+			.register(t, id + ":aesthetics");
 
 		Advancement reinforced =
 			advancement("reinforced", AllBlocks.ANDESITE_ENCASED_SHAFT.get(), TaskType.NORMAL).withParent(aesthetics)
@@ -319,8 +317,8 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":brass_casing");
 
 		Advancement nixie_tube =
-			advancement("nixie_tube", AllBlocks.NIXIE_TUBE.get(), TaskType.NORMAL).withParent(brass_casing)
-				.withCriterion("0", placeBlock(AllBlocks.NIXIE_TUBE.get()))
+			advancement("nixie_tube", AllBlocks.ORANGE_NIXIE_TUBE.get(), TaskType.NORMAL).withParent(brass_casing)
+				.withCriterion("0", placeBlock(AllBlocks.ORANGE_NIXIE_TUBE.get()))
 				.register(t, id + ":nixie_tube");
 
 		Advancement crafter = kinecticAdvancement("crafter", AllBlocks.MECHANICAL_CRAFTER.get(), TaskType.MILESTONE)
@@ -336,34 +334,11 @@ public class AllAdvancements implements IDataProvider {
 				.withCriterion("0", AllTriggers.OVERSTRESS_FLYWHEEL.instance())
 				.register(t, id + ":overstress_flywheel");
 
-		Advancement integrated_circuit =
-			itemAdvancement("integrated_circuit", AllItems.INTEGRATED_CIRCUIT, TaskType.NORMAL).withParent(crafter)
-				.register(t, id + ":integrated_circuit");
-
-		Advancement integrated_circuit_eob = deadEnd().withParent(integrated_circuit)
-			.withCriterion("0", itemGathered(AllItems.INTEGRATED_CIRCUIT.get()))
-			.register(t, id + ":integrated_circuit_eob");
-
-		Advancement speed_controller =
-			kinecticAdvancement("speed_controller", AllBlocks.ROTATION_SPEED_CONTROLLER.get(), TaskType.NORMAL)
-				.withParent(integrated_circuit)
-				.register(t, id + ":speed_controller");
-
 		Advancement clockwork_bearing =
 			advancement("clockwork_bearing", AllBlocks.CLOCKWORK_BEARING.get(), TaskType.NORMAL)
 				.withParent(brass_casing)
 				.withCriterion("0", AllTriggers.CLOCKWORK_BEARING.instance())
 				.register(t, id + ":clockwork_bearing");
-
-		Advancement extendo_grip =
-			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(crafter)
-				.withCriterion("0", AllTriggers.EXTENDO.instance())
-				.register(t, id + ":extendo_grip");
-
-		Advancement dual_extendo_grip =
-			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).withParent(extendo_grip)
-				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
-				.register(t, id + ":dual_extendo_grip");
 
 		Advancement mechanical_arm = advancement("mechanical_arm", AllBlocks.MECHANICAL_ARM.get(), TaskType.MILESTONE)
 			.withCriterion("0", AllTriggers.MECHANICAL_ARM.instance())
@@ -388,6 +363,34 @@ public class AllAdvancements implements IDataProvider {
 		Advancement deployer =
 			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.MILESTONE).withParent(brass_casing)
 				.register(t, id + ":deployer");
+		
+		Advancement clockwork_component =
+			itemAdvancement("precision_mechanism", AllItems.PRECISION_MECHANISM, TaskType.NORMAL).withParent(deployer)
+				.register(t, id + ":precision_mechanism");
+
+		Advancement clockwork_component_eob = deadEnd().withParent(clockwork_component)
+			.withCriterion("0", itemGathered(AllItems.PRECISION_MECHANISM.get()))
+			.register(t, id + ":clockwork_component_eob");
+		
+		Advancement extendo_grip =
+			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).withParent(clockwork_component)
+				.withCriterion("0", AllTriggers.EXTENDO.instance())
+				.register(t, id + ":extendo_grip");
+
+		Advancement potato_cannon =
+			advancement("potato_cannon", AllItems.POTATO_CANNON.get(), TaskType.GOAL).withParent(clockwork_component)
+				.withCriterion("0", AllTriggers.POTATO_KILL.instance())
+				.register(t, id + ":potato_cannon");
+
+		Advancement dual_extendo_grip =
+			advancement("dual_extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.SECRET).withParent(extendo_grip)
+				.withCriterion("0", AllTriggers.GIGA_EXTENDO.instance())
+				.register(t, id + ":dual_extendo_grip");
+
+		Advancement speed_controller =
+			kinecticAdvancement("speed_controller", AllBlocks.ROTATION_SPEED_CONTROLLER.get(), TaskType.NORMAL)
+				.withParent(clockwork_component)
+				.register(t, id + ":speed_controller");
 
 		Advancement fist_bump = advancement("fist_bump", AllBlocks.DEPLOYER.get(), TaskType.SECRET).withParent(deployer)
 			.withCriterion("0", AllTriggers.DEPLOYER_BOOP.instance())
@@ -424,22 +427,6 @@ public class AllAdvancements implements IDataProvider {
 			.withCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
 			.withCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
 			.register(t, id + ":chromatic_eob");
-
-		Advancement deforester =
-			itemAdvancement("deforester", AllItems.DEFORESTER, TaskType.NORMAL).withParent(refined_radiance)
-				.register(t, id + ":deforester");
-
-		Advancement zapper =
-			itemAdvancement("zapper", AllItems.BLOCKZAPPER, TaskType.NORMAL).withParent(refined_radiance)
-				.register(t, id + ":zapper");
-
-		ItemStack gunWithPurpurStuff = AllItems.BLOCKZAPPER.asStack();
-		for (Components c : Components.values())
-			BlockzapperItem.setTier(c, ComponentTier.Chromatic, gunWithPurpurStuff);
-		Advancement upgraded_zapper = advancement("upgraded_zapper", gunWithPurpurStuff, TaskType.CHALLENGE)
-			.withCriterion("0", AllTriggers.UPGRADED_ZAPPER.instance())
-			.withParent(zapper)
-			.register(t, id + ":upgraded_zapper");
 
 		Advancement symmetry_wand =
 			itemAdvancement("wand_of_symmetry", AllItems.WAND_OF_SYMMETRY, TaskType.NORMAL).withParent(refined_radiance)

@@ -1,32 +1,32 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import net.minecraft.client.renderer.Vector3f;
+import java.util.Arrays;
+
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
+import com.jozufozu.flywheel.core.instancing.GroupInstance;
+import com.jozufozu.flywheel.core.instancing.SelectInstance;
+import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ILightReader;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-import java.util.Arrays;
-import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.*;
-import com.simibubi.create.foundation.render.backend.instancing.util.ConditionalInstance;
-import com.simibubi.create.foundation.render.backend.instancing.util.InstanceGroup;
-import com.simibubi.create.foundation.render.backend.instancing.util.SelectInstance;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
-
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, LightUpdateListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
-	final InstanceGroup<OrientedData> rope;
+	final GroupInstance<OrientedData> rope;
 	final ConditionalInstance<OrientedData> halfRope;
 
 	protected float offset;
@@ -37,7 +37,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	private byte[] sLight = new byte[1];
 	private GridAlignedBB volume;
 
-	public AbstractPulleyInstance(InstancedTileRenderer<?> dispatcher, KineticTileEntity tile) {
+	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
@@ -51,8 +51,9 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		magnet.addModel(getMagnetModel())
 				.addModel(getHalfMagnetModel());
 
-		rope = new InstanceGroup<>(getRopeModel());
-		halfRope = new ConditionalInstance<>(getHalfRopeModel(), this::shouldRenderHalfRope);
+		rope = new GroupInstance<>(getRopeModel());
+		halfRope = new ConditionalInstance<>(getHalfRopeModel())
+				.withCondition(this::shouldRenderHalfRope);
 	}
 
 	@Override
@@ -115,15 +116,15 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		halfRope.delete();
 	}
 
-	protected abstract InstancedModel<OrientedData> getRopeModel();
+	protected abstract Instancer<OrientedData> getRopeModel();
 
-	protected abstract InstancedModel<OrientedData> getMagnetModel();
+	protected abstract Instancer<OrientedData> getMagnetModel();
 
-	protected abstract InstancedModel<OrientedData> getHalfMagnetModel();
+	protected abstract Instancer<OrientedData> getHalfMagnetModel();
 
-	protected abstract InstancedModel<OrientedData> getCoilModel();
+	protected abstract Instancer<OrientedData> getCoilModel();
 
-	protected abstract InstancedModel<OrientedData> getHalfRopeModel();
+	protected abstract Instancer<OrientedData> getHalfRopeModel();
 
 	protected abstract float getOffset();
 
@@ -175,7 +176,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	@Override
-	public boolean onLightUpdate(ILightReader world, LightType type, GridAlignedBB changed) {
+	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
 		changed.intersectAssign(volume);
 
 		initLight(world, changed);
@@ -183,7 +184,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		return false;
 	}
 
-	private void initLight(ILightReader world, GridAlignedBB changed) {
+	private void initLight(IBlockDisplayReader world, GridAlignedBB changed) {
 		int top = this.pos.getY();
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 		changed.forEachContained((x, y, z) -> {

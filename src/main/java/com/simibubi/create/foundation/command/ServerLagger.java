@@ -5,10 +5,9 @@ public class ServerLagger {
 	private int tickTime;
 	private boolean isLagging = false;
 
-	public void tick(){
+	public void tick() {
 		if (!isLagging || tickTime <= 0)
 			return;
-
 
 		try {
 			Thread.sleep(tickTime);
@@ -17,11 +16,11 @@ public class ServerLagger {
 		}
 	}
 
-	public void setTickTime(int tickTime){
+	public void setTickTime(int tickTime) {
 		this.tickTime = Math.max(tickTime, 0);
 	}
 
-	public void setLagging(boolean lagging){
+	public void setLagging(boolean lagging) {
 		this.isLagging = lagging;
 	}
 

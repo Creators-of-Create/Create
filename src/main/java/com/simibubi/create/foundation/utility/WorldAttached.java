@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
@@ -22,11 +21,11 @@ public class WorldAttached<T> {
 		attached = new HashMap<>();
 		allMaps.add(attached);
 	}
-	
+
 	public static void invalidateWorld(IWorld world) {
 		allMaps.forEach(m -> m.remove(world));
 	}
-	
+
 	@Nullable
 	public T get(IWorld world) {
 		T t = attached.get(world);
@@ -36,13 +35,9 @@ public class WorldAttached<T> {
 		put(world, entry);
 		return entry;
 	}
-	
+
 	public void put(IWorld world, T entry) {
 		attached.put(world, entry);
 	}
 
-	public void forEach(Consumer<T> consumer) {
-		attached.values().forEach(consumer);
-	}
-	
 }

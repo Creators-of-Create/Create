@@ -218,17 +218,17 @@ public class BlockStateGen {
 			.forAllStates(state -> {
 				CartAssembleRailType type = state.get(CartAssemblerBlock.RAIL_TYPE);
 				Boolean powered = state.get(CartAssemblerBlock.POWERED);
+				Boolean backwards = state.get(CartAssemblerBlock.BACKWARDS);
 				RailShape shape = state.get(CartAssemblerBlock.RAIL_SHAPE);
+
 				int yRotation = shape == RailShape.EAST_WEST ? 270 : 0;
-				if (type == CartAssembleRailType.CONTROLLER_RAIL_BACKWARDS) {
+				if (backwards)
 					yRotation += 180;
-					type = CartAssembleRailType.CONTROLLER_RAIL;
-				}
 
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
-						.getExistingFile(p
-							.modLoc("block/" + c.getName() + "/block_" + type.getString() + (powered ? "_powered" : ""))))
+						.getExistingFile(p.modLoc(
+							"block/" + c.getName() + "/block_" + type.getString() + (powered ? "_powered" : ""))))
 					.rotationY(yRotation % 360)
 					.build();
 			});

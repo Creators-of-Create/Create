@@ -1,26 +1,33 @@
 package com.simibubi.create.foundation.ponder;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.lwjgl.glfw.GLFW;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
 import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
+
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -31,8 +38,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		.startWithValue(0)
 		.chase(0, .1f, LerpedFloat.Chaser.LINEAR);
 	protected final LerpedFloat arrowAnimation = LerpedFloat.linear()
-			.startWithValue(0)
-			.chase(0, 0.075f, LerpedFloat.Chaser.LINEAR);
+		.startWithValue(0)
+		.chase(0, 0.075f, LerpedFloat.Chaser.LINEAR);
 	protected PonderButton backTrack;
 
 	public NavigatableSimiScreen() {
@@ -69,14 +76,15 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		IScreenRenderable icon = null;
 		ItemStack altIcon = null;
 
+		if (screen instanceof PonderTagIndexScreen)
+			altIcon = AllItems.WRENCH.asStack();
 		if (screen instanceof PonderUI)
 			altIcon = ((PonderUI) screen).stack;
 		if (screen instanceof PonderTagScreen)
 			icon = ((PonderTagScreen) screen).getTag();
 
-		widgets.add(backTrack = new PonderButton(31, height - 31 - PonderButton.SIZE, () -> {
-			ScreenOpener.openPreviousScreen(this, Optional.empty());
-		}).fade(0, -1));
+		widgets.add(backTrack = new PonderButton(31, height - 31 - 20).enableFade(0, 5)
+			.withCallback(() -> ScreenOpener.openPreviousScreen(this, Optional.empty())));
 		backTrack.fade(1);
 
 		if (icon != null)
@@ -95,18 +103,36 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.push();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
-			textRenderer.draw(ms, Lang.translate(THINK_BACK), 15, height - 16, 0xffa3a3a3);
+			TranslationTextComponent translate = Lang.translate(backTrackingLangKey());
+			textRenderer.draw(ms, translate, 41 - textRenderer.getWidth(translate) / 2, height - 16,
+				Theme.i(Theme.Key.TEXT_DARKER));
 			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
-				arrowAnimation.setValue(1);//called twice to also set the previous value to 1
+				arrowAnimation.setValue(1);// called twice to also set the previous value to 1
 			}
 		}
 		ms.pop();
 	}
 
+	protected String backTrackingLangKey() {
+		return THINK_BACK;
+	}
+
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		if (transition.getChaseTarget() == 0) {
+		if (backTrack != null) {
+			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
+			int maxX = backTrack.x + backTrack.getWidth();
+
+			if (x + 30 < backTrack.x)
+				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5,
+					Theme.p(Theme.Key.PONDER_BACK_ARROW));
+
+			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
+			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, Theme.p(Theme.Key.PONDER_BACK_ARROW));
+		}
+
+		if (transition.getChaseTarget() == 0 || transition.settled()) {
 			renderBackground(ms);
 			return;
 		}
@@ -119,14 +145,14 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		// draw last screen into buffer
 		if (lastScreen != null && lastScreen != this && !transition.settled()) {
-			ms.push();// 1
+			ms.push();
 			UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
-			UIRenderHelper.prepFramebufferSize();
-			ms.push();// 2
 			ms.translate(0, 0, -1000);
 			UIRenderHelper.framebuffer.bindFramebuffer(true);
-			lastScreen.render(ms, mouseX, mouseY, 10);
-			ms.pop();// 2
+			lastScreen.render(ms, mouseX, mouseY, partialTicks);
+
+			ms.pop();
+			ms.push();
 
 			// use the buffer texture
 			Minecraft.getInstance()
@@ -142,31 +168,23 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 				dpy = ((NavigatableSimiScreen) lastScreen).depthPointY;
 			}
 
-			// transitionV is 1/-1 when the older screen is hidden
-			// transitionV is 0 when the older screen is still fully visible
 			ms.translate(dpx, dpy, 0);
-			ms.scale((float) scale, (float) scale, 1);
+			ms.scale(scale, scale, 1);
 			ms.translate(-dpx, -dpy, 0);
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
+			RenderSystem.disableAlphaTest();
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
-			ms.pop();// 1
+			RenderSystem.disableBlend();
+			RenderSystem.enableAlphaTest();
+			ms.pop();
 		}
 
 		// modify current screen as well
 		scale = transitionValue > 0 ? 1 - 0.5f * (1 - transitionValue) : 1 + .5f * (1 + transitionValue);
 		ms.translate(depthPointX, depthPointY, 0);
-		ms.scale((float) scale, (float) scale, 1);
+		ms.scale(scale, scale, 1);
 		ms.translate(-depthPointX, -depthPointY, 0);
-
-		if (backTrack != null) {
-			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
-			int maxX = backTrack.x + backTrack.getWidth();
-
-			if (x + 30 < backTrack.x)
-				UIRenderHelper.breadcrumbArrow(ms, x + 30, height - 51, 0, maxX - (x + 30), 20, 5, 0x40aa9999, 0x10aa9999);
-
-			UIRenderHelper.breadcrumbArrow(ms, x, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-			UIRenderHelper.breadcrumbArrow(ms, x - 30, height - 51, 0, 30, 20, 5, 0x40aa9999, 0x10aa9999);
-		}
 	}
 
 	@Override
@@ -223,8 +241,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.translate(0, 0, 600);
 		names.forEach(s -> {
 			int sWidth = textRenderer.getStringWidth(s);
-			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), 0, sWidth + spacing, 14, spacing / 2, 0xdd101010,
-				0x44101010);
+			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), 0, sWidth + spacing, 14, spacing / 2,
+				0xdd101010, 0x44101010);
 			textRenderer.draw(ms, s, x.getValue() + 5, y.getValue() + 3, first.getValue() ? 0xffeeffee : 0xffddeeff);
 			first.setFalse();
 

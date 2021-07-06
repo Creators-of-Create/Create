@@ -67,7 +67,7 @@ public class MechanicalSawScenes {
 
 		scene.world.modifyEntity(logItem, Entity::remove);
 		scene.world.createItemOnBeltLike(sawPos, Direction.WEST, log);
-		scene.idle(30);
+		scene.idle(50);
 
 		logItem = scene.world.createItemEntity(util.vector.topOf(sawPos)
 			.add(0.5, -.1, 0), util.vector.of(0.05, 0.18, 0), strippedLog);
@@ -90,7 +90,7 @@ public class MechanicalSawScenes {
 
 		scene.world.modifyEntity(logItem, Entity::remove);
 		scene.world.createItemOnBeltLike(sawPos, Direction.EAST, strippedLog);
-		scene.idle(40);
+		scene.idle(25);
 
 		logItem = scene.world.createItemEntity(util.vector.topOf(sawPos)
 			.add(-0.5, -.1, 0), util.vector.of(-0.05, 0.18, 0), planks);

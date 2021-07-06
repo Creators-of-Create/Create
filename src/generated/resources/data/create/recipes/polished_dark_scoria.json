@@ -1,11 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "XX",
-    "XX"
+    "##",
+    "##"
   ],
   "key": {
-    "X": {
+    "#": {
       "item": "create:dark_scoria"
     }
   },

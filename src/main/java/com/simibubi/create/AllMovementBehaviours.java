@@ -17,12 +17,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 
 public class AllMovementBehaviours {
-	private static final HashMap<ResourceLocation, MovementBehaviour> movementBehaviours = new HashMap<>();
+	private static final HashMap<ResourceLocation, MovementBehaviour> MOVEMENT_BEHAVIOURS = new HashMap<>();
 
 	public static void addMovementBehaviour(ResourceLocation resourceLocation, MovementBehaviour movementBehaviour) {
-		if (movementBehaviours.containsKey(resourceLocation))
-			Create.logger.warn("Movement behaviour for " + resourceLocation.toString() + " was overridden");
-		movementBehaviours.put(resourceLocation, movementBehaviour);
+		if (MOVEMENT_BEHAVIOURS.containsKey(resourceLocation))
+			Create.LOGGER.warn("Movement behaviour for " + resourceLocation.toString() + " was overridden");
+		MOVEMENT_BEHAVIOURS.put(resourceLocation, movementBehaviour);
 	}
 
 	public static void addMovementBehaviour(Block block, MovementBehaviour movementBehaviour) {
@@ -31,21 +31,21 @@ public class AllMovementBehaviours {
 
 	@Nullable
 	public static MovementBehaviour of(ResourceLocation resourceLocation) {
-		return movementBehaviours.getOrDefault(resourceLocation, null);
+		return MOVEMENT_BEHAVIOURS.getOrDefault(resourceLocation, null);
 	}
 
 	@Nullable
 	public static MovementBehaviour of(Block block) {
 		return of(block.getRegistryName());
 	}
-	
+
 	@Nullable
 	public static MovementBehaviour of(BlockState state) {
 		return of(state.getBlock());
 	}
 
 	public static boolean contains(Block block) {
-		return movementBehaviours.containsKey(block.getRegistryName());
+		return MOVEMENT_BEHAVIOURS.containsKey(block.getRegistryName());
 	}
 
 	public static <B extends Block> NonNullConsumer<? super B> addMovementBehaviour(

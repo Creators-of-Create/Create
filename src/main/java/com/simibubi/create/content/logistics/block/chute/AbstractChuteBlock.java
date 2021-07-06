@@ -1,11 +1,15 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import javax.annotation.Nullable;
+
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleManager;
@@ -28,8 +32,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nullable;
-
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
 
 	public AbstractChuteBlock(Properties p_i48440_1_) {
@@ -48,7 +50,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public static boolean isOpenChute(BlockState state) {
 		return isChute(state) && ((AbstractChuteBlock) state.getBlock()).isOpen(state);
 	}
-	
+
 	public static boolean isTransparentChute(BlockState state) {
 		return isChute(state) && ((AbstractChuteBlock) state.getBlock()).isTransparent(state);
 	}
@@ -65,7 +67,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public boolean isOpen(BlockState state) {
 		return true;
 	}
-	
+
 	public boolean isTransparent(BlockState state) {
 		return false;
 	}
@@ -127,6 +129,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
 		boolean differentBlock = state.getBlock() != p_196243_4_.getBlock();
 		if (state.hasTileEntity() && (differentBlock || !p_196243_4_.hasTileEntity())) {
+			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
 			withTileEntityDo(world, pos, c -> c.onRemoved(state));
 			world.removeTileEntity(pos);
 		}
@@ -139,7 +142,10 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 			BlockPos toUpdate = pos.up()
 				.offset(direction);
 			BlockState stateToUpdate = world.getBlockState(toUpdate);
-			BlockState updated = updateChuteState(stateToUpdate, world.getBlockState(toUpdate.up()), world, toUpdate);
+			if (!isChute(stateToUpdate))
+				continue;
+			BlockState updated = ((AbstractChuteBlock) stateToUpdate.getBlock()).updateChuteState(stateToUpdate,
+				world.getBlockState(toUpdate.up()), world, toUpdate);
 			if (stateToUpdate != updated && !world.isRemote)
 				world.setBlockState(toUpdate, updated);
 		}
@@ -156,9 +162,11 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
 		BlockPos neighbourPos, boolean p_220069_6_) {
-		if (pos.down().equals(neighbourPos))
+		if (pos.down()
+			.equals(neighbourPos))
 			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
-		else if (pos.up().equals(neighbourPos))
+		else if (pos.up()
+			.equals(neighbourPos))
 			withTileEntityDo(world, pos, chute -> chute.capAbove = LazyOptional.empty());
 	}
 
@@ -170,13 +178,13 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
 		return true;
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
 		return ChuteShapes.getShape(p_220053_1_);
 	}
-	
+
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
 		ISelectionContext p_220071_4_) {
@@ -192,24 +200,18 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public ActionResultType onUse(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult p_225533_6_) {
 		if (!player.getHeldItem(hand)
-			.isEmpty())
+				.isEmpty())
 			return ActionResultType.PASS;
 		if (world.isRemote)
 			return ActionResultType.SUCCESS;
-		try {
-			ChuteTileEntity te = getTileEntity(world, pos);
-			if (te == null)
-				return ActionResultType.PASS;
+
+		return onTileEntityUse(world, pos, te -> {
 			if (te.item.isEmpty())
 				return ActionResultType.PASS;
 			player.inventory.placeItemBackInInventory(world, te.item);
 			te.setItem(ItemStack.EMPTY);
 			return ActionResultType.SUCCESS;
-
-		} catch (TileEntityException e) {
-			e.printStackTrace();
-		}
-		return ActionResultType.PASS;
+		});
 	}
 
 }

@@ -15,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -45,11 +46,11 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	public static GaugeBlock speed(Properties properties) {
 		return new GaugeBlock(properties, Type.SPEED);
 	}
-	
+
 	public static GaugeBlock stress(Properties properties) {
 		return new GaugeBlock(properties, Type.STRESS);
 	}
-	
+
 	protected GaugeBlock(Properties properties, Type type) {
 		super(properties);
 		this.type = type;
@@ -67,18 +68,24 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		}
 	}
 
-	/* FIXME: Is there a new way of doing this in 1.16? Or cn we just delete it?
-	@SuppressWarnings("deprecation")
-	@Override
-	public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return Blocks.SPRUCE_PLANKS.getMaterialColor(state, worldIn, pos);
-	} */
+	/*
+	 * FIXME: Is there a new way of doing this in 1.16? Or cn we just delete it?
+	 * 
+	 * @SuppressWarnings("deprecation")
+	 * 
+	 * @Override
+	 * public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	 * return Blocks.SPRUCE_PLANKS.getMaterialColor(state, worldIn, pos);
+	 * }
+	 */
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		World world = context.getWorld();
 		Direction face = context.getFace();
-		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
+		BlockPos placedOnPos = context.getPos()
+			.offset(context.getFace()
+				.getOpposite());
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 		Block block = placedOnState.getBlock();
 
@@ -88,17 +95,14 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			Direction nearestLookingDirection = context.getNearestLookingDirection();
 			boolean lookPositive = nearestLookingDirection.getAxisDirection() == AxisDirection.POSITIVE;
 			if (face.getAxis() == Axis.X) {
-				toPlace = toPlace
-						.with(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
-						.with(AXIS_ALONG_FIRST_COORDINATE, true);
+				toPlace = toPlace.with(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
+					.with(AXIS_ALONG_FIRST_COORDINATE, true);
 			} else if (face.getAxis() == Axis.Y) {
-				toPlace = toPlace
-						.with(FACING, horizontalFacing.getOpposite())
-						.with(AXIS_ALONG_FIRST_COORDINATE, horizontalFacing.getAxis() == Axis.X);
+				toPlace = toPlace.with(FACING, horizontalFacing.getOpposite())
+					.with(AXIS_ALONG_FIRST_COORDINATE, horizontalFacing.getAxis() == Axis.X);
 			} else {
-				toPlace = toPlace
-						.with(FACING, lookPositive ? Direction.WEST : Direction.EAST)
-						.with(AXIS_ALONG_FIRST_COORDINATE, false);
+				toPlace = toPlace.with(FACING, lookPositive ? Direction.WEST : Direction.EAST)
+					.with(AXIS_ALONG_FIRST_COORDINATE, false);
 			}
 
 			return toPlace;
@@ -114,20 +118,22 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
-		return context.getPlacementHorizontalFacing().getAxis() != Axis.X;
+		return context.getPlacementHorizontalFacing()
+			.getAxis() != Axis.X;
 	}
 
 	public boolean shouldRenderHeadOnFace(World world, BlockPos pos, BlockState state, Direction face) {
-		if (face.getAxis().isVertical())
+		if (face.getAxis()
+			.isVertical())
 			return false;
-		if (face == state.get(FACING).getOpposite())
+		if (face == state.get(FACING)
+			.getOpposite())
 			return false;
 		if (face.getAxis() == getRotationAxis(state))
 			return false;
 		if (getRotationAxis(state) == Axis.Y && face != state.get(FACING))
 			return false;
-		if (!Block.shouldSideBeRendered(state, world, pos, face)
-				&& !(world instanceof WrappedWorld))
+		if (!Block.shouldSideBeRendered(state, world, pos, face) && !(world instanceof WrappedWorld))
 			return false;
 		return true;
 	}
@@ -156,15 +162,15 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 				continue;
 
 			for (int i = 0; i < particleCount; i++) {
-				Vector3d mul = VecHelper
-						.offsetRandomly(Vector3d.ZERO, rand, .25f)
-						.mul(new Vector3d(1, 1, 1).subtract(positiveFaceVec))
-						.normalize()
-						.scale(.3f);
-				Vector3d offset = VecHelper.getCenterOf(pos).add(faceVec.scale(.55)).add(mul);
-				worldIn
-						.addParticle(new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
-								offset.y, offset.z, mul.x, mul.y, mul.z);
+				Vector3d mul = VecHelper.offsetRandomly(Vector3d.ZERO, rand, .25f)
+					.mul(new Vector3d(1, 1, 1).subtract(positiveFaceVec))
+					.normalize()
+					.scale(.3f);
+				Vector3d offset = VecHelper.getCenterOf(pos)
+					.add(faceVec.scale(.55))
+					.add(mul);
+				worldIn.addParticle(new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
+					offset.y, offset.z, mul.x, mul.y, mul.z);
 			}
 
 		}
@@ -191,4 +197,8 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		return 0;
 	}
 
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
+	}
 }

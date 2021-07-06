@@ -5,12 +5,20 @@ import static net.minecraftforge.eventbus.api.Event.Result.DENY;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Multimap;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerTileEntity.Mode;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlockItem;
 import com.simibubi.create.content.curiosities.tools.SandPaperItem;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
@@ -19,12 +27,14 @@ import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -39,6 +49,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.server.management.PlayerInteractionManager;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -93,7 +104,7 @@ public class DeployerHandler {
 		}
 	}
 
-	static boolean shouldActivate(ItemStack held, World world, BlockPos targetPos) {
+	static boolean shouldActivate(ItemStack held, World world, BlockPos targetPos, @Nullable Direction facing) {
 		if (held.getItem() instanceof BlockItem)
 			if (world.getBlockState(targetPos)
 				.getBlock() == ((BlockItem) held.getItem()).getBlock())
@@ -107,10 +118,15 @@ public class DeployerHandler {
 				return false;
 		}
 
+		if (!held.isEmpty() && facing == Direction.DOWN
+			&& TileEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
+			return false;
+
 		return true;
 	}
 
-	static void activate(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector, Mode mode) {
+	static void activate(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector,
+		Mode mode) {
 		Multimap<Attribute, AttributeModifier> attributeModifiers = player.getHeldItemMainhand()
 			.getAttributeModifiers(EquipmentSlotType.MAINHAND);
 		player.getAttributes()
@@ -120,8 +136,8 @@ public class DeployerHandler {
 			.addTemporaryModifiers(attributeModifiers);
 	}
 
-	private static void activateInner(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos, Vector3d extensionVector,
-		Mode mode) {
+	private static void activateInner(DeployerFakePlayer player, Vector3d vec, BlockPos clickedPos,
+		Vector3d extensionVector, Mode mode) {
 
 		Vector3d rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
 		Vector3d rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
@@ -132,7 +148,9 @@ public class DeployerHandler {
 
 		// Check for entities
 		final ServerWorld world = player.getServerWorld();
-		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(clickedPos));
+		List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(clickedPos)).stream()
+			.filter(e -> !(e instanceof AbstractContraptionEntity))
+			.collect(Collectors.toList());
 		Hand hand = Hand.MAIN_HAND;
 		if (!entities.isEmpty()) {
 			Entity entity = entities.get(world.rand.nextInt(entities.size()));
@@ -148,10 +166,17 @@ public class DeployerHandler {
 					return;
 				}
 				if (cancelResult == null) {
-					if (entity.processInitialInteract(player, hand).isAccepted())
+					if (entity.processInitialInteract(player, hand)
+						.isAccepted()){
+						if (entity instanceof AbstractVillagerEntity) {
+							AbstractVillagerEntity villager = ((AbstractVillagerEntity) entity);
+							if (villager.getCustomer() instanceof DeployerFakePlayer)
+								villager.setCustomer(null);
+						}
 						success = true;
-					else if (entity instanceof LivingEntity
-						&& stack.useOnEntity(player, (LivingEntity) entity, hand).isAccepted())
+					}
+					else if (entity instanceof LivingEntity && stack.useOnEntity(player, (LivingEntity) entity, hand)
+						.isAccepted())
 						success = true;
 				}
 				if (!success && stack.isFood() && entity instanceof PlayerEntity) {
@@ -215,6 +240,8 @@ public class DeployerHandler {
 			if (blockBreakingProgress != null)
 				before = blockBreakingProgress.getValue();
 			progress += before;
+			world.playSound(null, clickedPos, clickedState.getSoundType()
+				.getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
 
 			if (progress >= 1) {
 				tryHarvestBlock(player.interactionManager, clickedPos);
@@ -258,13 +285,15 @@ public class DeployerHandler {
 
 		// Use on block
 		if (useBlock != DENY && flag1
-			&& safeOnUse(clickedState, world, clickedPos, player, hand, result) == ActionResultType.SUCCESS)
+			&& safeOnUse(clickedState, world, clickedPos, player, hand, result).isAccepted())
 			return;
 		if (stack.isEmpty())
 			return;
 		if (useItem == DENY)
 			return;
-		if (item instanceof BlockItem && !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
+		if (item instanceof BlockItem
+			&& !(item instanceof CartAssemblerBlockItem)
+			&& !clickedState.isReplaceable(new BlockItemUseContext(itemusecontext)))
 			return;
 
 		// Reposition fire placement for convenience
@@ -281,7 +310,7 @@ public class DeployerHandler {
 
 		// 'Inert' item use behaviour & block placement
 		ActionResultType onItemUse = stack.onItemUse(itemusecontext);
-		if (onItemUse == ActionResultType.SUCCESS)
+		if (onItemUse.isAccepted())
 			return;
 		if (item == Items.ENDER_PEARL)
 			return;
@@ -299,8 +328,10 @@ public class DeployerHandler {
 		}
 
 		CompoundNBT tag = stack.getTag();
-		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing"))
+		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing")) {
 			player.spawnedItemEffects = ItemStack.read(tag.getCompound("Polishing"));
+			AllSoundEvents.AUTO_POLISH.playOnServer(world, pos, .25f, 1f);
+		}
 
 		if (!player.getActiveItemStack()
 			.isEmpty())
@@ -334,8 +365,22 @@ public class DeployerHandler {
 		prevHeldItem.onBlockDestroyed(world, blockstate, pos, player);
 		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
 			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, Hand.MAIN_HAND);
-		if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
-			return true;
+
+
+		BlockPos posUp = pos.up();
+		BlockState stateUp = world.getBlockState(posUp);
+		if (blockstate.getBlock() instanceof DoublePlantBlock
+			&& blockstate.get(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER
+			&& stateUp.getBlock() == blockstate.getBlock()
+			&& stateUp.get(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER
+		) {
+			// hack to prevent DoublePlantBlock from dropping a duplicate item
+			world.setBlockState(pos, Blocks.AIR.getDefaultState(), 35);
+			world.setBlockState(posUp, Blocks.AIR.getDefaultState(), 35);
+		} else {
+			if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
+				return true;
+		}
 
 		blockstate.getBlock()
 			.onPlayerDestroy(world, pos, blockstate);
@@ -358,7 +403,7 @@ public class DeployerHandler {
 	protected static ActionResultType safeOnBeehiveUse(BlockState state, World world, BlockPos pos, PlayerEntity player,
 		Hand hand) {
 		// <> BeehiveBlock#onUse
-		
+
 		BeehiveBlock block = (BeehiveBlock) state.getBlock();
 		ItemStack prevHeldItem = player.getHeldItem(hand);
 		int honeyLevel = state.get(BeehiveBlock.HONEY_LEVEL);

@@ -1,20 +1,31 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.function.Consumer;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.function.Consumer;
 
 public class ProcessingInventory extends ItemStackHandler {
 	public float remainingTime;
 	public float recipeDuration;
 	public boolean appliedRecipe;
 	public Consumer<ItemStack> callback;
+	private boolean limit;
 
 	public ProcessingInventory(Consumer<ItemStack> callback) {
 		super(10);
 		this.callback = callback;
+	}
+	
+	public ProcessingInventory withSlotLimit(boolean limit) {
+		this.limit = limit;
+		return this;
+	}
+	
+	@Override
+	public int getSlotLimit(int slot) {
+		return !limit ? super.getSlotLimit(slot) : 1;
 	}
 
 	public void clear() {
@@ -36,7 +47,7 @@ public class ProcessingInventory extends ItemStackHandler {
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		ItemStack insertItem = super.insertItem(slot, stack, simulate);
 		if (slot == 0 && !insertItem.equals(stack, true))
-			callback.accept(insertItem.copy());
+			callback.accept(getStackInSlot(slot));
 		return insertItem;
 	}
 

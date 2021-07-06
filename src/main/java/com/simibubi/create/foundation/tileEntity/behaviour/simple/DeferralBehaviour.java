@@ -21,6 +21,9 @@ public class DeferralBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
+	public boolean isSafeNBT() { return true; }
+
+	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.putBoolean("NeedsUpdate", needsUpdate);
 		super.write(nbt, clientPacket);
@@ -38,7 +41,7 @@ public class DeferralBehaviour extends TileEntityBehaviour {
 		if (needsUpdate && callback.get())
 			needsUpdate = false;
 	}
-	
+
 	public void scheduleUpdate() {
 		needsUpdate = true;
 	}

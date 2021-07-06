@@ -1,5 +1,10 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
+import java.util.Random;
+import java.util.function.Supplier;
+
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -9,15 +14,16 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.ShadowRenderHelper;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -36,8 +42,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector3i;
 
-import java.util.Random;
-
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
@@ -53,7 +57,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(te.getWorld())) {
 
 			BlockState blockState = te.getBlockState();
 			if (!AllBlocks.BELT.has(blockState)) return;
@@ -92,10 +96,10 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 			for (boolean bottom : Iterate.trueAndFalse) {
 
-				AllBlockPartials beltPartial = getBeltPartial(diagonal, start, end, bottom);
+				PartialModel beltPartial = getBeltPartial(diagonal, start, end, bottom);
 
-				SuperByteBuffer beltBuffer = beltPartial.renderOn(blockState)
-													.light(light);
+				SuperByteBuffer beltBuffer = PartialBufferer.get(beltPartial, blockState)
+						.light(light);
 
 				SpriteShiftEntry spriteShift = getSpriteShiftEntry(color, diagonal, bottom);
 
@@ -126,18 +130,20 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			}
 
 			if (te.hasPulley()) {
-				// TODO 1.15 find a way to cache this model matrix computation
-				MatrixStack modelTransform = new MatrixStack();
-				Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
-				if (sideways) dir = Direction.UP;
-				msr = MatrixStacker.of(modelTransform);
-				msr.centre();
-				if (dir.getAxis() == Axis.X) msr.rotateY(90);
-				if (dir.getAxis() == Axis.Y) msr.rotateX(90);
-				msr.rotateX(90);
-				msr.unCentre();
+				Direction dir = sideways ? Direction.UP : blockState.get(BeltBlock.HORIZONTAL_FACING).rotateY();
 
-				SuperByteBuffer superBuffer = CreateClient.bufferCache.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, modelTransform);
+				Supplier<MatrixStack> matrixStackSupplier = () -> {
+					MatrixStack stack = new MatrixStack();
+					MatrixStacker stacker = MatrixStacker.of(stack);
+					stacker.centre();
+					if (dir.getAxis() == Axis.X) stacker.rotateY(90);
+					if (dir.getAxis() == Axis.Y) stacker.rotateX(90);
+					stacker.rotateX(90);
+					stacker.unCentre();
+					return stack;
+				};
+
+				SuperByteBuffer superBuffer = CreateClient.BUFFER_CACHE.renderDirectionalPartial(AllBlockPartials.BELT_PULLEY, blockState, dir, matrixStackSupplier);
 				KineticTileEntityRenderer.standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 			}
 		}
@@ -154,7 +160,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 					: bottom ? AllSpriteShifts.BELT_OFFSET : AllSpriteShifts.BELT;
 	}
 
-	public static AllBlockPartials getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
+	public static PartialModel getBeltPartial(boolean diagonal, boolean start, boolean end, boolean bottom) {
 		if (diagonal) {
 			if (start) return AllBlockPartials.BELT_DIAGONAL_START;
 			if (end) return AllBlockPartials.BELT_DIAGONAL_END;

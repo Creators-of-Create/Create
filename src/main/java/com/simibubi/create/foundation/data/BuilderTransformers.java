@@ -29,8 +29,11 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.item.DyeColor;
+import net.minecraft.item.Rarity;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -62,7 +65,7 @@ public class BuilderTransformers {
 			.transform(StressConfigDefaults.setNoImpact())
 			.loot((p, b) -> p.registerDropping(b, AllBlocks.SHAFT.get()))
 			.item()
-			.model(AssetLookup.customItemModel("encased_shaft", "item_" + casing))
+			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
 	}
 
@@ -211,7 +214,25 @@ public class BuilderTransformers {
 					});
 			})
 			.item()
+			.properties(p -> type.equals("creative") ? p.rarity(Rarity.EPIC) : p)
 			.transform(ModelGen.customItemModel("crate", type, "single"));
+	}
+
+	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> bell() {
+		return b -> b.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.nonOpaque()
+				.sound(SoundType.ANVIL))
+			.addLayer(() -> RenderType::getCutoutMipped)
+			.tag(AllBlockTags.BRITTLE.tag)
+			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), state -> {
+				String variant = state.get(BlockStateProperties.BELL_ATTACHMENT)
+					.getString();
+				return p.models()
+					.withExistingParent(c.getName() + "_" + variant, p.modLoc("block/bell_base/block_" + variant));
+			}))
+			.item()
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
+			.build();
 	}
 
 }

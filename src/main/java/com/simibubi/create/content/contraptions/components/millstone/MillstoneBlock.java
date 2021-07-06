@@ -13,6 +13,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -98,13 +99,10 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			return;
 
 		MillstoneTileEntity millstone = null;
-		for (BlockPos pos : Iterate.hereAndBelow(entityIn.getBlockPos())) {
-			try {
+		for (BlockPos pos : Iterate.hereAndBelow(entityIn.getBlockPos()))
+			if (millstone == null)
 				millstone = getTileEntity(worldIn, pos);
-			} catch (TileEntityException e) {
-				continue;
-			}
-		}
+
 		if (millstone == null)
 			return;
 
@@ -140,6 +138,11 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	@Override
 	public Class<MillstoneTileEntity> getTileEntityClass() {
 		return MillstoneTileEntity.class;
+	}
+
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

@@ -1,5 +1,11 @@
 package com.simibubi.create.foundation.utility.placement;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.lwjgl.opengl.GL11;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -9,6 +15,7 @@ import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -29,19 +36,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.lwjgl.opengl.GL11;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CClient;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
 
 @Mod.EventBusSubscriber
 public class PlacementHelpers {
@@ -163,10 +157,14 @@ public class PlacementHelpers {
 
 			float screenY = res.getScaledHeight() / 2f;
 			float screenX = res.getScaledWidth() / 2f;
-			float progress = Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
+			float progress = getCurrentAlpha();
 
 			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
 		}
+	}
+
+	public static float getCurrentAlpha() {
+		return Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
 	}
 
 	@OnlyIn(Dist.CLIENT)

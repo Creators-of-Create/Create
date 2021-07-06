@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
@@ -41,7 +42,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	}
 
 	@Override
-	public AllBlockPartials getFrameModel() {
+	public PartialModel getFrameModel() {
 		return AllBlockPartials.FURNACE_GENERATOR_FRAME;
 	}
 

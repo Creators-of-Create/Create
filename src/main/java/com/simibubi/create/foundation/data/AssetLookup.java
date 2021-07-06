@@ -57,7 +57,17 @@ public class AssetLookup {
 	 * models/block/folders[0]/folders[1]/.../item.json "_" will be replaced by the
 	 * item name
 	 */
-	public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customItemModel(
+	public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customBlockItemModel(
+		String... folders) {
+		return (c, p) -> {
+			String path = "block";
+			for (String string : folders)
+				path += "/" + ("_".equals(string) ? c.getName() : string);
+			p.withExistingParent(c.getName(), p.modLoc(path));
+		};
+	}
+
+	public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customGenericItemModel(
 		String... folders) {
 		return (c, p) -> {
 			String path = "block";
@@ -98,6 +108,10 @@ public class AssetLookup {
 
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> existingItemModel() {
 		return (c, p) -> p.getExistingFile(p.modLoc("item/" + c.getName()));
+	}
+
+	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModel(String name) {
+		return (c, p) -> p.getExistingFile(p.modLoc("item/" + name));
 	}
 
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModelWithPartials() {

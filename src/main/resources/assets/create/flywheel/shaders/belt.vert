@@ -1,87 +1,51 @@
-#version 110
 #define PI 3.1415926538
 
-#flwinclude <"create:core/quaternion.glsl">
-#flwinclude <"create:core/matutils.glsl">
-#flwinclude <"create:core/diffuse.glsl">
+#flwbuiltins
+#flwinclude <"flywheel:core/quaternion.glsl">
+#flwinclude <"flywheel:core/matutils.glsl">
+#flwinclude <"flywheel:core/diffuse.glsl">
 
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Belt {
+    vec2 light;
+    vec4 color;
+    vec3 pos;
+    float speed;
+    float offset;
+    vec4 rotation;
+    vec2 sourceTexture;
+    vec4 scrollTexture;
+    float scrollMult;
+};
 
-attribute vec2 aLight;
-attribute vec4 aColor;
-attribute vec3 aInstancePos;
-attribute float aSpeed;
-attribute float aOffset;
-attribute vec4 aInstanceRot;
-attribute vec2 aSourceTexture;
-attribute vec4 aScrollTexture;
-attribute float aScrollMult;
+#flwinclude <"flywheel:data/modelvertex.glsl">
+#flwinclude <"flywheel:data/blockfragment.glsl">
 
-varying vec2 TexCoords;
-varying vec4 Color;
-varying float Diffuse;
-varying vec2 Light;
-
-#if defined(CONTRAPTION)
-varying vec3 BoxCoord;
-
-uniform vec3 uLightBoxSize;
-uniform vec3 uLightBoxMin;
-uniform mat4 uModel;
-#endif
-
-uniform float uTime;
-uniform mat4 uViewProjection;
-uniform int uDebug;
-
-uniform vec3 uCameraPos;
-
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
-
-void main() {
-    vec3 rotated = rotateVertexByQuat(aPos - .5, aInstanceRot) + aInstancePos + .5;
+BlockFrag FLWMain(Vertex v, Belt instance) {
+    vec3 rotated = rotateVertexByQuat(v.pos - .5, instance.rotation) + instance.pos + .5;
 
     vec4 worldPos = vec4(rotated, 1.);
 
-    vec3 norm = rotateVertexByQuat(aNormal, aInstanceRot);
+    vec3 norm = rotateVertexByQuat(v.normal, instance.rotation);
 
-#ifdef CONTRAPTION
-    worldPos = uModel * worldPos;
-    norm = normalize(modelToNormal(uModel) * norm);
+    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeNormal(norm);
 
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
-    #if defined(USE_FOG)
-    FragDistance = length(worldPos.xyz);
-    #endif
-#elif defined(USE_FOG)
-    FragDistance = length(worldPos.xyz - uCameraPos);
-#endif
+    float scrollSize = instance.scrollTexture.w - instance.scrollTexture.y;
+    float scroll = fract(instance.speed * uTime / (31.5 * 16.) + instance.offset) * scrollSize * instance.scrollMult;
 
-    float scrollSize = aScrollTexture.w - aScrollTexture.y;
-    float scroll = fract(aSpeed * uTime / (31.5 * 16.) + aOffset) * scrollSize * aScrollMult;
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords - instance.sourceTexture + instance.scrollTexture.xy + vec2(0, scroll);
+    b.light = instance.light;
 
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords - aSourceTexture + aScrollTexture.xy + vec2(0, scroll);
-    Light = aLight;
-    gl_Position = uViewProjection * worldPos;
-
-    #ifdef CONTRAPTION
-    if (uDebug == 2) {
-        Color = vec4(norm, 1.);
-    } else {
-        Color = vec4(1.);
-    }
+    #if defined(DEBUG_RAINBOW)
+    b.color = instance.color;
+    #elif defined(DEBUG_NORMAL)
+    b.color = vec4(norm, 1.);
     #else
-    if (uDebug == 1) {
-        Color = aColor;
-    } else if (uDebug == 2) {
-        Color = vec4(norm, 1.);
-    } else {
-        Color = vec4(1.);
-    }
+    b.color = vec4(1.);
     #endif
+
+    return b;
 }

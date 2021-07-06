@@ -50,6 +50,7 @@ public class ChainDriveScenes {
 		scene.idle(20);
 		scene.overlay.showText(60)
 			.text("Chain Drives relay rotation to each other in a row")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(3, 1, 4), Direction.WEST));
 		scene.idle(60);
@@ -65,12 +66,14 @@ public class ChainDriveScenes {
 		scene.idle(20);
 		scene.overlay.showText(60)
 			.text("All shafts connected like this will rotate in the same direction")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(util.grid.at(2, 1, 1), Direction.WEST));
 		scene.idle(50);
 		scene.world.hideSection(shafts, Direction.WEST);
 		scene.idle(25);
 
+		scene.addKeyframe();
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(rotatedECD), Pointing.DOWN).rightClick()
 			.withWrench(), 30);
 		scene.idle(7);
@@ -116,7 +119,8 @@ public class ChainDriveScenes {
 		scene.idle(10);
 
 		scene.overlay.showText(60)
-			.text("Unpowered Chain Gearshifts behave exacly like Chain Drives")
+			.text("Unpowered Chain Gearshifts behave exactly like Chain Drives")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(eastDrive, Direction.NORTH));
 		scene.idle(60);
@@ -153,6 +157,7 @@ public class ChainDriveScenes {
 
 		scene.overlay.showText(80)
 			.text("When Powered, the speed transmitted to other Chain Drives in the row is doubled")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.colored(PonderPalette.FAST)
 			.pointAt(util.vector.blockSurface(eastDrive.west(2), Direction.WEST));
@@ -197,6 +202,7 @@ public class ChainDriveScenes {
 
 		scene.overlay.showText(80)
 			.text("Whenever the Powered Gearshift is not at the source, its speed will be halved instead")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.colored(PonderPalette.SLOW)
 			.pointAt(util.vector.blockSurface(eastDrive.west(2), Direction.WEST));
@@ -215,6 +221,7 @@ public class ChainDriveScenes {
 
 		scene.overlay.showText(100)
 			.text("In both cases, Chain Drives in the row always run at 2x the speed of the Powered Gearshift")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(eastDrive.west(2), Direction.WEST));
 		scene.idle(100);
@@ -240,6 +247,7 @@ public class ChainDriveScenes {
 
 		scene.overlay.showText(100)
 			.text("Using analog signals, the ratio can be adjusted more precisely between 1 and 2")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(util.vector.blockSurface(eastDrive.west(2), Direction.WEST));
 		scene.idle(40);

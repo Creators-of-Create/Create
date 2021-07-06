@@ -1,6 +1,12 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
@@ -10,8 +16,6 @@ import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
@@ -19,6 +23,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -30,9 +35,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-
-import java.lang.ref.WeakReference;
-import java.util.List;
 
 public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, IInstanceRendered {
 
@@ -60,7 +62,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		BlockState state = getBlockState();
 		if (!FunnelBlock.isFunnel(state))
 			return Mode.INVALID;
-		if (state.method_28500(BlockStateProperties.POWERED).orElse(false))
+		if (state.method_28500(BlockStateProperties.POWERED)
+			.orElse(false))
 			return Mode.PAUSED;
 		if (state.getBlock() instanceof BeltFunnelBlock) {
 			Shape shape = state.get(BeltFunnelBlock.SHAPE);
@@ -155,7 +158,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			.isVertical();
 		boolean up = facing == Direction.UP;
 
-		outputPos = outputPos.add(Vector3d.of(facing.getDirectionVec()).scale(vertical ? up ? .15f : .5f : .25f));
+		outputPos = outputPos.add(Vector3d.of(facing.getDirectionVec())
+			.scale(vertical ? up ? .15f : .5f : .25f));
 		if (!vertical)
 			outputPos = outputPos.subtract(0, .45f, 0);
 
@@ -282,6 +286,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.set(inward ? 1 : -1);
+			AllSoundEvents.FUNNEL_FLAP.playAt(world, pos, 1, 1, true);
 		}
 	}
 
@@ -322,7 +327,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	@Override
@@ -336,7 +341,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

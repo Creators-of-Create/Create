@@ -1,8 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import javax.annotation.Nullable;
+
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -11,8 +15,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import javax.annotation.Nullable;
 
 public abstract class MovementBehaviour {
 
@@ -59,12 +61,12 @@ public abstract class MovementBehaviour {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {}
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		return null;
 	}
 

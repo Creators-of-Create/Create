@@ -1,5 +1,18 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -9,6 +22,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -20,11 +34,6 @@ import net.minecraft.world.IWorld;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
-import javax.annotation.Nullable;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class PumpTileEntity extends KineticTileEntity {
 
@@ -61,7 +70,8 @@ public class PumpTileEntity extends KineticTileEntity {
 				return;
 			arrowDirection.chase(speed >= 0 ? 1 : -1, .5f, Chaser.EXP);
 			arrowDirection.tickChaser();
-			return;
+			if (!isVirtual())
+				return;
 		}
 
 		sidesToUpdate.forEachWithContext((update, isFront) -> {
@@ -87,13 +97,18 @@ public class PumpTileEntity extends KineticTileEntity {
 			return;
 		if (speed != 0)
 			reversed = speed < 0;
-		if (world.isRemote)
+		if (world.isRemote && !isVirtual())
 			return;
 
 		BlockPos frontPos = pos.offset(getFront());
 		BlockPos backPos = pos.offset(getFront().getOpposite());
 		FluidPropagator.propagateChangedPipe(world, frontPos, world.getBlockState(frontPos));
 		FluidPropagator.propagateChangedPipe(world, backPos, world.getBlockState(backPos));
+
+		FluidTransportBehaviour behaviour = getBehaviour(FluidTransportBehaviour.TYPE);
+		if (behaviour != null)
+			behaviour.wipePressure();
+		sidesToUpdate.forEach(MutableBoolean::setTrue);
 	}
 
 	protected void distributePressureTo(Direction side) {
@@ -366,7 +381,7 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

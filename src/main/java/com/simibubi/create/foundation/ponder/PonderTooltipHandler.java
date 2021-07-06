@@ -35,7 +35,7 @@ public class PonderTooltipHandler {
 	public static void tick() {
 		deferTick = true;
 	}
-	
+
 	public static void deferredTick() {
 		deferTick = false;
 		if (hoveredStack.isEmpty() || trackingStack.isEmpty()) {
@@ -69,8 +69,8 @@ public class PonderTooltipHandler {
 
 	public static void addToTooltip(List<ITextComponent> toolTip, ItemStack stack) {
 		updateHovered(stack);
-		
-		if (deferTick) 
+
+		if (deferTick)
 			deferredTick();
 
 		if (trackingStack != stack)
@@ -78,7 +78,8 @@ public class PonderTooltipHandler {
 
 		float renderPartialTicks = Minecraft.getInstance()
 			.getRenderPartialTicks();
-		ITextComponent component = subject ? Lang.createTranslationTextComponent(SUBJECT).formatted(TextFormatting.GREEN)
+		ITextComponent component = subject ? Lang.createTranslationTextComponent(SUBJECT)
+			.formatted(TextFormatting.GREEN)
 			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
 		if (toolTip.size() < 2)
 			toolTip.add(component);
@@ -137,10 +138,10 @@ public class PonderTooltipHandler {
 	}
 
 	private static ITextComponent makeProgressBar(float progress) {
-		IFormattableTextComponent holdW = Lang.translate(
-				HOLD_TO_PONDER,
-				((IFormattableTextComponent) ponderKeybind().getBoundKeyLocalizedText()).formatted(TextFormatting.GRAY)
-		).formatted(TextFormatting.DARK_GRAY);
+		IFormattableTextComponent holdW = Lang
+			.translate(HOLD_TO_PONDER,
+				((IFormattableTextComponent) ponderKeybind().getBoundKeyLocalizedText()).formatted(TextFormatting.GRAY))
+			.formatted(TextFormatting.DARK_GRAY);
 
 		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
 		float charWidth = fontRenderer.getStringWidth("|");

@@ -37,8 +37,8 @@ public class CuttingRecipeGen extends ProcessingRecipeGen {
 	GeneratedRecipe stripAndMakePlanks(Block wood, Block stripped, Block planks) {
 		create(() -> wood, b -> b.duration(50)
 			.output(stripped));
-		return create(() -> stripped, b -> b.duration(100)
-			.output(planks, 5));
+		return create(() -> stripped, b -> b.duration(50)
+			.output(planks, 6));
 	}
 
 	public CuttingRecipeGen(DataGenerator p_i48262_1_) {

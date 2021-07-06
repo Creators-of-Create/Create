@@ -23,14 +23,12 @@ import static com.simibubi.create.AllBlocks.SPEEDOMETER;
 import static com.simibubi.create.AllBlocks.STOCKPILE_SWITCH;
 import static com.simibubi.create.AllBlocks.STRESSOMETER;
 import static com.simibubi.create.AllItems.ATTRIBUTE_FILTER;
-import static com.simibubi.create.AllItems.BLOCKZAPPER;
 import static com.simibubi.create.AllItems.CRAFTER_SLOT_COVER;
 import static com.simibubi.create.AllItems.CRUSHED_COPPER;
 import static com.simibubi.create.AllItems.CRUSHED_GOLD;
 import static com.simibubi.create.AllItems.CRUSHED_IRON;
 import static com.simibubi.create.AllItems.CRUSHED_ZINC;
 import static com.simibubi.create.AllItems.GOLDEN_SHEET;
-import static com.simibubi.create.AllItems.LAPIS_SHEET;
 import static com.simibubi.create.AllItems.POWDERED_OBSIDIAN;
 import static com.simibubi.create.AllItems.SCHEMATIC;
 import static com.simibubi.create.AllItems.SCHEMATIC_AND_QUILL;
@@ -159,7 +157,6 @@ public class RemapHelper {
 		reMap.put("piston_pole", PISTON_EXTENSION_POLE.getId());
 
 //		reMap.put("shadow_steel_sword", );
-		reMap.put("lapis_plate", LAPIS_SHEET.getId());
 		reMap.put("crushed_copper", CRUSHED_COPPER.getId());
 		reMap.put("empty_blueprint", SCHEMATIC.getId());
 //		reMap.put("shadow_steel_mattock", );
@@ -178,7 +175,6 @@ public class RemapHelper {
 //		reMap.put("zinc_handle", HAND_CRANK.getId());
 //		reMap.put("rose_quartz_axe", );
 //		reMap.put("shadow_steel_pickaxe", );
-		reMap.put("placement_handgun", BLOCKZAPPER.getId());
 		reMap.put("crushed_zinc", CRUSHED_ZINC.getId());
 //		reMap.put("rose_quartz_pickaxe", );
 //		reMap.put("blazing_pickaxe", );
@@ -191,7 +187,9 @@ public class RemapHelper {
 
 	@SubscribeEvent
 	public static void onRemapBlocks(RegistryEvent.MissingMappings<Block> event) {
-		ModContainer mod = ModList.get().getModContainerById(Create.ID).orElse(null);
+		ModContainer mod = ModList.get()
+			.getModContainerById(Create.ID)
+			.orElse(null);
 		if (mod == null)
 			return;
 		event.setModContainer(mod);
@@ -200,10 +198,11 @@ public class RemapHelper {
 		for (RegistryEvent.MissingMappings.Mapping<Block> mapping : mappings) {
 			if (reMap.containsKey(mapping.key.getPath())) {
 				try {
-					Create.logger.warn("Remapping block '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
+					Create.LOGGER.warn("Remapping block '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
 					mapping.remap(ForgeRegistries.BLOCKS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
-					Create.logger.warn("Remapping block '{}' to '{}' failed: {}", mapping.key, reMap.get(mapping.key.getPath()), t);
+					Create.LOGGER.warn("Remapping block '{}' to '{}' failed: {}", mapping.key,
+							reMap.get(mapping.key.getPath()), t);
 				}
 			}
 		}
@@ -211,7 +210,9 @@ public class RemapHelper {
 
 	@SubscribeEvent
 	public static void onRemapItems(RegistryEvent.MissingMappings<Item> event) {
-		ModContainer mod = ModList.get().getModContainerById(Create.ID).orElse(null);
+		ModContainer mod = ModList.get()
+			.getModContainerById(Create.ID)
+			.orElse(null);
 		if (mod == null)
 			return;
 		event.setModContainer(mod);
@@ -220,10 +221,11 @@ public class RemapHelper {
 		for (RegistryEvent.MissingMappings.Mapping<Item> mapping : mappings) {
 			if (reMap.containsKey(mapping.key.getPath())) {
 				try {
-					Create.logger.warn("Remapping item '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
+					Create.LOGGER.warn("Remapping item '{}' to '{}'", mapping.key, reMap.get(mapping.key.getPath()));
 					mapping.remap(ForgeRegistries.ITEMS.getValue(reMap.get(mapping.key.getPath())));
 				} catch (Throwable t) {
-					Create.logger.warn("Remapping item '{}' to '{}' failed: {}", mapping.key, reMap.get(mapping.key.getPath()), t);
+					Create.LOGGER.warn("Remapping item '{}' to '{}' failed: {}", mapping.key,
+							reMap.get(mapping.key.getPath()), t);
 				}
 			}
 		}

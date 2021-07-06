@@ -1,12 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -14,8 +18,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
-
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class GantryCarriageTileEntity extends KineticTileEntity implements IDisplayAssemblyExceptions {
 
@@ -35,7 +37,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		if (shouldAssemble())
 			queueAssembly();
 	}
-	
+
 	@Override
 	public void initialize() {
 		super.initialize();
@@ -106,6 +108,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 			GantryContraptionEntity.create(world, contraption, shaftOrientation);
 		BlockPos anchor = pos;
 		movedContraption.setPosition(anchor.getX(), anchor.getY(), anchor.getZ());
+		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 		world.addEntity(movedContraption);
 	}
 
@@ -172,7 +175,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

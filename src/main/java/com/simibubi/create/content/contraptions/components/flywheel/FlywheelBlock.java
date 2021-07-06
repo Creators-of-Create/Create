@@ -1,5 +1,12 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
+import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineTileEntity;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
@@ -15,13 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-
-import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineTileEntity;
-import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.utility.Lang;
 
 public class FlywheelBlock extends HorizontalKineticBlock {
 

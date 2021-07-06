@@ -28,55 +28,53 @@ public class HighlightCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("highlight")
-				.requires(cs -> cs.hasPermissionLevel(0))
-				.then(Commands.argument("pos", BlockPosArgument.blockPos())
-						.then(Commands.argument("players", EntityArgument.players())
-								.executes(ctx -> {
-									Collection<ServerPlayerEntity> players = EntityArgument.getPlayers(ctx, "players");
-									BlockPos pos = BlockPosArgument.getBlockPos(ctx, "pos");
+			.requires(cs -> cs.hasPermissionLevel(0))
+			.then(Commands.argument("pos", BlockPosArgument.blockPos())
+				.then(Commands.argument("players", EntityArgument.players())
+					.executes(ctx -> {
+						Collection<ServerPlayerEntity> players = EntityArgument.getPlayers(ctx, "players");
+						BlockPos pos = BlockPosArgument.getBlockPos(ctx, "pos");
 
-									for (ServerPlayerEntity p : players) {
-										AllPackets.channel.send(
-												PacketDistributor.PLAYER.with(() -> p),
-												new HighlightPacket(pos)
-										);
-									}
+						for (ServerPlayerEntity p : players) {
+							AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> p), new HighlightPacket(pos));
+						}
 
-									return players.size();
-								})
-						)
-						//.requires(AllCommands.sourceIsPlayer)
-						.executes(ctx -> {
-							BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
-
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
-									new HighlightPacket(pos)
-							);
-
-							return Command.SINGLE_SUCCESS;
-						})
-				)
-				//.requires(AllCommands.sourceIsPlayer)
+						return players.size();
+					}))
+				// .requires(AllCommands.sourceIsPlayer)
 				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource().asPlayer();
-					return highlightAssemblyExceptionFor(player, ctx.getSource());
-				});
+					BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
+
+					AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource()
+						.getEntity()), new HighlightPacket(pos));
+
+					return Command.SINGLE_SUCCESS;
+				}))
+			// .requires(AllCommands.sourceIsPlayer)
+			.executes(ctx -> {
+				ServerPlayerEntity player = ctx.getSource()
+					.asPlayer();
+				return highlightAssemblyExceptionFor(player, ctx.getSource());
+			});
 
 	}
 
 	private static void sendMissMessage(CommandSource source) {
-		source.sendFeedback(new StringTextComponent("Try looking at a Block that has failed to assemble a Contraption and try again."), true);
+		source.sendFeedback(
+			new StringTextComponent("Try looking at a Block that has failed to assemble a Contraption and try again."),
+			true);
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayerEntity player, CommandSource source) {
-		double distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
+		double distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+			.getValue();
 		Vector3d start = player.getEyePosition(1);
 		Vector3d look = player.getLook(1);
 		Vector3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
 		World world = player.world;
 
-		BlockRayTraceResult ray = world.rayTraceBlocks(new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
+		BlockRayTraceResult ray = world.rayTraceBlocks(
+			new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
 		if (ray.getType() == RayTraceResult.Type.MISS) {
 			sendMissMessage(source);
 			return 0;
@@ -103,6 +101,7 @@ public class HighlightCommand {
 
 		BlockPos p = exception.getPosition();
 		String command = "/create highlight " + p.getX() + " " + p.getY() + " " + p.getZ();
-		return player.server.getCommandManager().handleCommand(source, command);
+		return player.server.getCommandManager()
+			.handleCommand(source, command);
 	}
 }

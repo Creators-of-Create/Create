@@ -35,6 +35,6 @@ public class EmptyNamedTag<T> implements Tags.IOptionalNamedTag<T> {
 
 	@Override
 	public List<T> values() {
-		return Collections.emptyList()	;
+		return Collections.emptyList();
 	}
 }

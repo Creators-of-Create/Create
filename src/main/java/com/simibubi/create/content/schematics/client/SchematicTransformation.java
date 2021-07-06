@@ -213,7 +213,7 @@ public class SchematicTransformation {
 		z.start(pos.getZ());
 		moveTo(pos);
 	}
-	
+
 	public void moveTo(BlockPos pos) {
 		moveTo(pos.getX(), pos.getY(), pos.getZ());
 	}

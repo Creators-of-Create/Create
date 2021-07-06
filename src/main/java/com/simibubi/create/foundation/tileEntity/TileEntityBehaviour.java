@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.block.BlockState;
@@ -42,6 +43,14 @@ public abstract class TileEntityBehaviour {
 
 	}
 
+	public boolean isSafeNBT() {
+		return false;
+	}
+
+	public ItemRequirement getRequiredItems() {
+		return ItemRequirement.NONE;
+	}
+
 	public void onBlockChanged(BlockState oldState) {
 
 	}
@@ -75,13 +84,12 @@ public abstract class TileEntityBehaviour {
 		return tileEntity.getWorld();
 	}
 
-	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos,
-			BehaviourType<T> type) {
+	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos, BehaviourType<T> type) {
 		return get(reader.getTileEntity(pos), type);
 	}
-	
+
 	public static <T extends TileEntityBehaviour> void destroy(IBlockReader reader, BlockPos pos,
-			BehaviourType<T> type) {
+		BehaviourType<T> type) {
 		T behaviour = get(reader.getTileEntity(pos), type);
 		if (behaviour != null)
 			behaviour.destroy();
@@ -95,5 +103,4 @@ public abstract class TileEntityBehaviour {
 		SmartTileEntity ste = (SmartTileEntity) te;
 		return ste.getBehaviour(type);
 	}
-
 }

@@ -1,6 +1,15 @@
 package com.simibubi.create.content.logistics.item.filter.attribute;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
+
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.FireworkRocketItem;
 import net.minecraft.item.FireworkStarItem;
@@ -8,9 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.text.TranslationTextComponent;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class ColorAttribute implements ItemAttribute {
 	public static final ColorAttribute EMPTY = new ColorAttribute(DyeColor.PURPLE);

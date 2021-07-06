@@ -93,10 +93,12 @@ public class AllWorldFeatures {
 	public static void register() {}
 
 	public static void registerOreFeatures(RegistryEvent.Register<Feature<?>> event) {
-		event.getRegistry().register(ConfigDrivenOreFeature.INSTANCE);
+		event.getRegistry()
+			.register(ConfigDrivenOreFeature.INSTANCE);
 	}
 
 	public static void registerDecoratorFeatures(RegistryEvent.Register<Placement<?>> event) {
-		event.getRegistry().register(ConfigDrivenDecorator.INSTANCE);
+		event.getRegistry()
+			.register(ConfigDrivenDecorator.INSTANCE);
 	}
 }

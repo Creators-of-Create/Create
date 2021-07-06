@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
@@ -109,21 +110,30 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 		if (!sidedFilters.containsKey(side))
 			return true;
 		return sidedFilters.get(side)
-			.test(stack);
+				.test(stack);
 	}
 
 	@Override
 	public void destroy() {
 		sidedFilters.values()
-			.forEach(FilteringBehaviour::destroy);
+				.forEach(FilteringBehaviour::destroy);
 		super.destroy();
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		return sidedFilters.values().stream().reduce(
+				ItemRequirement.NONE,
+				(a, b) -> a.with(b.getRequiredItems()),
+				(a, b) -> a.with(b)
+		);
 	}
 
 	public void removeFilter(Direction side) {
 		if (!sidedFilters.containsKey(side))
 			return;
 		sidedFilters.remove(side)
-			.destroy();
+				.destroy();
 	}
 
 	public boolean testHit(Direction direction, Vector3d hit) {

@@ -10,7 +10,7 @@ public enum HeatCondition {
 	NONE(0xffffff), HEATED(0xE88300), SUPERHEATED(0x5C93E8),
 
 	;
-	
+
 	private int color;
 
 	private HeatCondition(int color) {
@@ -36,7 +36,7 @@ public enum HeatCondition {
 	public String serialize() {
 		return Lang.asId(name());
 	}
-	
+
 	public String getTranslationKey() {
 		return "recipe.heat_requirement." + serialize();
 	}
@@ -44,9 +44,9 @@ public enum HeatCondition {
 	public static HeatCondition deserialize(String name) {
 		for (HeatCondition heatCondition : values())
 			if (heatCondition.serialize()
-				.equals(name))
+					.equals(name))
 				return heatCondition;
-		Create.logger.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
+		Create.LOGGER.warn("Tried to deserialize invalid heat condition: \"" + name + "\"");
 		return NONE;
 	}
 

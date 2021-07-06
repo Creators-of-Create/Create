@@ -1,7 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
+import java.awt.Color;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
@@ -12,10 +15,12 @@ public enum AllGuiTextures implements IScreenRenderable {
 
 	// Inventories
 	PLAYER_INVENTORY("player_inventory.png", 176, 108),
-	WAND_OF_SYMMETRY("curiosities.png", 188, 99),
+	WAND_OF_SYMMETRY("curiosities.png", 0, 131, 188, 101),
 	BLOCKZAPPER("curiosities.png", 0, 99, 214, 97),
-	TERRAINZAPPER("curiosities_2.png", 0, 0, 234, 101),
-	TERRAINZAPPER_INACTIVE_PARAM("curiosities_2.png", 238, 0, 18, 18),
+	TERRAINZAPPER("curiosities.png", 234, 103),
+	TERRAINZAPPER_INACTIVE_PARAM("curiosities.png", 238, 0, 18, 18),
+
+	LOGO("logo.png", 256, 256),
 
 	SCHEMATIC("schematics.png", 192, 121),
 	SCHEMATIC_SLOT("widgets.png", 54, 0, 16, 16),
@@ -55,6 +60,15 @@ public enum AllGuiTextures implements IScreenRenderable {
 	SEQUENCER_EMPTY("sequencer.png", 0, 102, 162, 22),
 	SEQUENCER_AWAIT("sequencer.png", 0, 160, 162, 22),
 
+	LINKED_CONTROLLER("curiosities_2.png", 179, 109),
+	BLUEPRINT("curiosities_2.png", 0, 109, 179, 109),
+
+	PROJECTOR("projector.png", 235, 185),
+	PROJECTOR_FILTER_STRENGTH("projector.png", 0, 14, 162, 22),
+	PROJECTOR_FILTER("projector.png", 0, 36, 162, 22),
+	PROJECTOR_END("projector.png", 0, 58, 162, 22),
+	PROJECTOR_EMPTY("projector.png", 0, 80, 162, 22),
+
 	// JEI
 	JEI_SLOT("jei/widgets.png", 18, 18),
 	JEI_CHANCE_SLOT("jei/widgets.png", 20, 156, 18, 18),
@@ -79,8 +93,13 @@ public enum AllGuiTextures implements IScreenRenderable {
 	INDICATOR_YELLOW("widgets.png", 54, 18, 18, 6),
 	INDICATOR_RED("widgets.png", 72, 18, 18, 6),
 
-	SPEECH_TOOLTIP("widgets.png", 0, 24, 8, 8),
-	SPEECH_TOOLTIP_HIGHLIGHT("widgets.png", 8, 24, 8, 8),
+	HOTSLOT_ARROW("widgets.png", 24, 51, 20, 12),
+	HOTSLOT("widgets.png", 0, 68, 22, 22),
+	HOTSLOT_ACTIVE("widgets.png", 0, 46, 22, 22),
+	HOTSLOT_SUPER_ACTIVE("widgets.png", 27, 67, 24, 24),
+
+	SPEECH_TOOLTIP_BACKGROUND("widgets.png", 0, 24, 8, 8),
+	SPEECH_TOOLTIP_COLOR("widgets.png", 8, 24, 8, 8),
 
 	// PlacementIndicator
 	PLACEMENT_INDICATOR_SHEET("placement_indicator.png", 0, 0, 16, 256);
@@ -122,4 +141,10 @@ public enum AllGuiTextures implements IScreenRenderable {
 		bind();
 		screen.drawTexture(ms, x, y, startX, startY, width, height);
 	}
+
+	public void draw(MatrixStack ms, int x, int y, Color c) {
+		bind();
+		UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
+	}
+
 }

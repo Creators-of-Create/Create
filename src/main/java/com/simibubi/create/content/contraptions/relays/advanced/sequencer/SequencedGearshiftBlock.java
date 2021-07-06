@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
+import java.util.Random;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
@@ -29,6 +31,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -62,7 +65,14 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 		boolean isMoving) {
 		if (worldIn.isRemote)
 			return;
+		if (!worldIn.getPendingBlockTicks()
+			.isTickPending(pos, this))
+			worldIn.getPendingBlockTicks()
+				.scheduleTick(pos, this, 0);
+	}
 
+	@Override
+	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
 		boolean previouslyPowered = state.get(STATE) != 0;
 		boolean isPowered = worldIn.isBlockPowered(pos);
 		withTileEntityDo(worldIn, pos, sgte -> sgte.onRedstoneUpdate(isPowered, previouslyPowered));

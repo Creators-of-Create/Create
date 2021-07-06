@@ -13,13 +13,13 @@ public class SmartFluidTank extends FluidTank {
 		super(capacity);
 		this.updateCallback = updateCallback;
 	}
-	
+
 	@Override
 	protected void onContentsChanged() {
 		super.onContentsChanged();
 		updateCallback.accept(getFluid());
 	}
-	
+
 	@Override
 	public void setFluid(FluidStack stack) {
 		super.setFluid(stack);

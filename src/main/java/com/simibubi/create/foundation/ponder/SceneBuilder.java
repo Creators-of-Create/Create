@@ -14,6 +14,7 @@ import com.simibubi.create.content.contraptions.components.crafter.ConnectedInpu
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
+import com.simibubi.create.content.contraptions.fluids.PumpTileEntity;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.gauge.SpeedGaugeTileEntity;
@@ -407,7 +408,8 @@ public class SceneBuilder {
 
 		public void rotateParrot(ElementLink<ParrotElement> link, double xRotation, double yRotation, double zRotation,
 			int duration) {
-			addInstruction(AnimateParrotInstruction.rotate(link, new Vector3d(xRotation, yRotation, zRotation), duration));
+			addInstruction(
+				AnimateParrotInstruction.rotate(link, new Vector3d(xRotation, yRotation, zRotation), duration));
 		}
 
 		public void moveParrot(ElementLink<ParrotElement> link, Vector3d offset, int duration) {
@@ -736,6 +738,10 @@ public class SceneBuilder {
 			modifyTileNBT(selection, KineticTileEntity.class, nbt -> {
 				nbt.putFloat("Speed", speedFunc.apply(nbt.getFloat("Speed")));
 			});
+		}
+
+		public void propagatePipeChange(BlockPos pos) {
+			modifyTileEntity(pos, PumpTileEntity.class, te -> te.onSpeedChanged(0));
 		}
 
 		public void setFilterData(Selection selection, Class<? extends TileEntity> teType, ItemStack filter) {

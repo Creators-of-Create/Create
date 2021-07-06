@@ -1,11 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.Validate;
+
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
@@ -15,13 +20,18 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MoverType;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,24 +40,32 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.BooleanProperty;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.*;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.apache.commons.lang3.Validate;
 
-import javax.annotation.Nullable;
-
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement {
+public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -80,12 +98,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (onValidSurface()) {
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 				new GlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false));
-			playSound(AllSoundEvents.SLIME_ADDED.get(), 0.5F, 0.5F);
+			AllSoundEvents.SLIME_ADDED.playFrom(this, 0.5F, 0.5F);
 		}
 	}
 
 	public void playPlaceSound() {
-		playSound(AllSoundEvents.SLIME_ADDED.get(), 0.5F, 0.75F);
+		AllSoundEvents.SLIME_ADDED.playFrom(this, 0.5F, 0.75F);
 	}
 
 	protected void updateFacingWithBoundingBox() {
@@ -154,7 +172,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			return false;
 		if (world instanceof WrappedWorld)
 			return true;
-		
+
 		BlockPos pos = hangingPosition;
 		BlockPos pos2 = pos.offset(getFacingDirection().getOpposite());
 		return isValidFace(world, pos2, getFacingDirection()) != isValidFace(world, pos,
@@ -164,24 +182,27 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean onValidSurface() {
 		BlockPos pos = hangingPosition;
 		BlockPos pos2 = hangingPosition.offset(getFacingDirection().getOpposite());
+		if (pos2.getY() >= 256)
+			return false;
 		if (!world.isAreaLoaded(pos, 0) || !world.isAreaLoaded(pos2, 0))
 			return true;
 		if (!isValidFace(world, pos2, getFacingDirection())
-			&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
+				&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
 			return false;
-		if (isSideSticky(world, pos2, getFacingDirection()) || isSideSticky(world, pos, getFacingDirection().getOpposite()))
+		if (isSideSticky(world, pos2, getFacingDirection())
+				|| isSideSticky(world, pos, getFacingDirection().getOpposite()))
 			return false;
 		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
-			.isEmpty();
+				.isEmpty();
 	}
 
 	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
-		if (BlockMovementTraits.isBlockAttachedTowards(world, pos, state, direction))
+		if (BlockMovementChecks.isBlockAttachedTowards(state, world, pos, direction))
 			return true;
-		if (!BlockMovementTraits.movementNecessary(state, world, pos))
+		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
 			return false;
-		if (BlockMovementTraits.notSupportive(state, direction))
+		if (BlockMovementChecks.isNotSupportive(state, direction))
 			return false;
 		return true;
 	}
@@ -193,12 +214,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 		if (AllBlocks.STICKER.has(state))
 			return state.get(DirectionalBlock.FACING) == direction;
-		
+
 		if (state.getBlock() == Blocks.SLIME_BLOCK)
 			return true;
 		if (state.getBlock() == Blocks.HONEY_BLOCK)
 			return true;
-		
+
 		if (AllBlocks.CART_ASSEMBLER.has(state))
 			return Direction.UP == direction;
 
@@ -211,7 +232,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 		if (state.getBlock() instanceof AbstractChassisBlock) {
 			BooleanProperty glueableSide = ((AbstractChassisBlock) state.getBlock()).getGlueableSide(state, direction);
-			if (glueableSide == null) return false;
+			if (glueableSide == null)
+				return false;
 			return state.get(glueableSide);
 		}
 
@@ -239,7 +261,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source))
 			return false;
-		if (isAlive() && !world.isRemote && isVisible()) {
+		Entity immediateSource = source.getImmediateSource();
+		if (!isVisible() && immediateSource instanceof PlayerEntity) {
+			if (!AllItems.SUPER_GLUE.isIn(((PlayerEntity) immediateSource).getHeldItemMainhand()))
+				return true;
+		}
+
+		if (isAlive() && !world.isRemote) {
 			remove();
 			markVelocityChanged();
 			onBroken(source.getTrueSource());
@@ -281,6 +309,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
+		if (player instanceof FakePlayer)
+			return ActionResultType.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
@@ -452,5 +482,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public boolean doesEntityNotTriggerPressurePlate() {
 		return true;
+	}
+
+	@Override
+	public World getWorld() {
+		return world;
 	}
 }

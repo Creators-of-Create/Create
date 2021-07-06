@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;

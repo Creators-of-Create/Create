@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,10 @@ public class PonderRegistry {
 	public static MultiSceneBuilder forComponents(ItemProviderEntry<?>... components) {
 		return new MultiSceneBuilder(Arrays.asList(components));
 	}
+	
+	public static MultiSceneBuilder forComponents(Iterable<? extends ItemProviderEntry<?>> components) {
+		return new MultiSceneBuilder(components);
+	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
 		return compile(all.get(id));
@@ -110,7 +113,7 @@ public class PonderRegistry {
 		InputStream resourceAsStream = Create.class.getClassLoader()
 			.getResourceAsStream(filepath);
 		if (resourceAsStream == null) {
-			Create.logger.error("Ponder schematic missing: " + path);
+			Create.LOGGER.error("Ponder schematic missing: " + path);
 			return t;
 		}
 		try (DataInputStream stream =
@@ -118,7 +121,7 @@ public class PonderRegistry {
 			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
 			t.read(nbt);
 		} catch (IOException e) {
-			Create.logger.warn("Failed to read ponder schematic", e);
+			Create.LOGGER.warn("Failed to read ponder schematic", e);
 		}
 		return t;
 	}
@@ -136,9 +139,9 @@ public class PonderRegistry {
 
 	public static class MultiSceneBuilder {
 
-		private final Collection<ItemProviderEntry<?>> components;
+		private final Iterable<? extends ItemProviderEntry<?>> components;
 
-		MultiSceneBuilder(Collection<ItemProviderEntry<?>> components) {
+		MultiSceneBuilder(Iterable<? extends ItemProviderEntry<?>> components) {
 			this.components = components;
 		}
 

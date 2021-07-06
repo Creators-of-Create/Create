@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.worldWrappers.chunk.EmptierChunk;
 import com.simibubi.create.foundation.utility.worldWrappers.chunk.WrappedChunk;
 
 import net.minecraft.util.math.BlockPos;
@@ -20,12 +21,6 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
     private PlacementSimulationWorld world;
 
     public HashMap<Long, WrappedChunk> chunks;
-
-    protected final ChunkFactory chunkFactory;
-
-    public WrappedChunkProvider(ChunkFactory chunkFactory) {
-        this.chunkFactory = chunkFactory;
-    }
 
     public WrappedChunkProvider setWorld(PlacementSimulationWorld world) {
         this.world = world;
@@ -58,14 +53,13 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
         return getChunk(x, z);
     }
 
-    public WrappedChunk getChunk(int x, int z) {
+    public IChunk getChunk(int x, int z) {
         long pos = ChunkPos.asLong(x, z);
-        
+
         if (chunks == null)
-        	return null;
+        	return new EmptierChunk();
 
-
-        return chunks.computeIfAbsent(pos, $ -> chunkFactory.create(world, x, z));
+        return chunks.computeIfAbsent(pos, $ -> new WrappedChunk(world, x, z));
     }
 
     @Override
@@ -76,9 +70,5 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
     @Override
     public WorldLightManager getLightManager() {
         return world.getLightingProvider();
-    }
-
-    public interface ChunkFactory {
-        WrappedChunk create(PlacementSimulationWorld world, int x, int z);
     }
 }

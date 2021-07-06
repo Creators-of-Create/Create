@@ -49,7 +49,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 		compound.putFloat("Range", range);
 		compound.putBoolean("Pushing", pushing);
 	}
-	
+
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
@@ -89,14 +89,13 @@ public class NozzleTileEntity extends SmartTileEntity {
 		for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
 			Vector3d diff = entity.getPositionVec()
-				.subtract(center);
+					.subtract(center);
 
 			if (!(entity instanceof PlayerEntity) && world.isRemote)
 				continue;
 
 			double distance = diff.length();
-			if (distance > range || entity.isSneaking()
-				|| (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())) {
+			if (distance > range || entity.isSneaking() || AirCurrent.isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -106,7 +105,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 
 			float factor = (entity instanceof ItemEntity) ? 1 / 128f : 1 / 32f;
 			Vector3d pushVec = diff.normalize()
-				.scale((range - distance) * (pushing ? 1 : -1));
+					.scale((range - distance) * (pushing ? 1 : -1));
 			entity.setMotion(entity.getMotion()
 				.add(pushVec.scale(factor)));
 			entity.fallDistance = 0;
@@ -150,13 +149,11 @@ public class NozzleTileEntity extends SmartTileEntity {
 
 		for (Entity entity : world.getEntitiesWithinAABB(Entity.class, bb)) {
 			Vector3d diff = entity.getPositionVec()
-				.subtract(center);
+					.subtract(center);
 
 			double distance = diff.length();
-			if (distance > range || entity.isSneaking()
-				|| (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())) {
+			if (distance > range || entity.isSneaking() || AirCurrent.isPlayerCreativeFlying(entity))
 				continue;
-			}
 
 			boolean canSee = canSee(entity);
 			if (!canSee) {

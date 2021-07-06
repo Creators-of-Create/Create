@@ -24,7 +24,7 @@ public class BlockFace extends Pair<BlockPos, Direction> {
 	public Direction getFace() {
 		return getSecond();
 	}
-	
+
 	public Direction getOppositeFace() {
 		return getSecond().getOpposite();
 	}

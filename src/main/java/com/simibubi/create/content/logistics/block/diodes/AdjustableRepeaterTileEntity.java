@@ -5,7 +5,7 @@ import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -36,10 +36,10 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 		maxState.withFormatter(this::format);
 		maxState.withUnit(this::getUnit);
 		maxState.withCallback(this::onMaxDelayChanged);
-		
+
 		behaviours.add(maxState);
 	}
-	
+
 	private void onMaxDelayChanged(int newMax) {
 		state = MathHelper.clamp(state, 0, newMax);
 		sendData();

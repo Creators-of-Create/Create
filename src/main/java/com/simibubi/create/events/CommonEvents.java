@@ -10,13 +10,14 @@ import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipe
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
-import com.simibubi.create.content.schematics.ServerSchematicLoader;
+import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -53,10 +54,8 @@ public class CommonEvents {
 	public static void onServerTick(ServerTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
-		if (Create.schematicReceiver == null)
-			Create.schematicReceiver = new ServerSchematicLoader();
-		Create.schematicReceiver.tick();
-		Create.lagger.tick();
+		Create.SCHEMATIC_RECEIVER.tick();
+		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick();
 	}
 
@@ -95,6 +94,7 @@ public class CommonEvents {
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
+		LinkedControllerServerHandler.tick(world);
 	}
 
 	@SubscribeEvent
@@ -132,21 +132,21 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public static void serverStopped(FMLServerStoppingEvent event) {
-		Create.schematicReceiver.shutdown();
+		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
-		Create.redstoneLinkNetworkHandler.onLoadWorld(world);
-		Create.torquePropagator.onLoadWorld(world);
+		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
+		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		IWorld world = event.getWorld();
-		Create.redstoneLinkNetworkHandler.onUnloadWorld(world);
-		Create.torquePropagator.onUnloadWorld(world);
+		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
+		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
 	}
 

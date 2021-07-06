@@ -1,15 +1,16 @@
 package com.simibubi.create.foundation.command;
 
+import java.util.Collections;
+import java.util.function.Predicate;
+
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.PlayerEntity;
-
-import java.util.Collections;
-import java.util.function.Predicate;
 
 public class AllCommands {
 
@@ -21,18 +22,19 @@ public class AllCommands {
 
 		LiteralCommandNode<CommandSource> createRoot = dispatcher.register(Commands.literal("create")
 				.requires(cs -> cs.hasPermissionLevel(0))
-				//general purpose
-				.then(new ToggleExperimentalRenderingCommand().register())
+				// general purpose
 				.then(new ToggleDebugCommand().register())
 				.then(FabulousWarningCommand.register())
 				.then(OverlayConfigCommand.register())
 				.then(FixLightingCommand.register())
 				.then(HighlightCommand.register())
 				.then(CouplingCommand.register())
-				.then(CloneCommand.register())
+				.then(ConfigCommand.register())
 				.then(PonderCommand.register())
+				.then(CloneCommand.register())
+				.then(GlueCommand.register())
 
-				//utility
+				// utility
 				.then(util)
 		);
 
@@ -42,10 +44,10 @@ public class AllCommands {
 		if (c != null)
 			return;
 
-		dispatcher.getRoot().addChild(buildRedirect("c", createRoot));
+		dispatcher.getRoot()
+			.addChild(buildRedirect("c", createRoot));
 
 	}
-
 
 	private static LiteralCommandNode<CommandSource> buildUtilityCommands() {
 
@@ -79,8 +81,7 @@ public class AllCommands {
 		LiteralArgumentBuilder<CommandSource> builder = LiteralArgumentBuilder
 				.<CommandSource>literal(alias)
 				.requires(destination.getRequirement())
-				.forward(
-						destination.getRedirect(), destination.getRedirectModifier(), destination.isFork())
+				.forward(destination.getRedirect(), destination.getRedirectModifier(), destination.isFork())
 				.executes(destination.getCommand());
 		for (CommandNode<CommandSource> child : destination.getChildren()) {
 			builder.then(child);

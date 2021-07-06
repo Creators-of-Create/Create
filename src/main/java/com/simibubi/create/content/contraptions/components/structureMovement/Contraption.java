@@ -25,6 +25,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.jozufozu.flywheel.backend.IFlywheelWorld;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -33,6 +35,7 @@ import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.AbstractChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
@@ -47,6 +50,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.EmptyLighter;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
@@ -55,12 +59,9 @@ import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTile
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
-import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Coordinate;
+import com.simibubi.create.foundation.utility.ICoordinate;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
@@ -72,7 +73,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.material.PushReaction;
@@ -86,7 +86,6 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.ChestType;
-import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -120,7 +119,7 @@ public abstract class Contraption {
 
 	public Optional<List<AxisAlignedBB>> simplifiedEntityColliders;
 	public AbstractContraptionEntity entity;
-	public CombinedInvWrapper inventory;
+	public ContraptionInvWrapper inventory;
 	public CombinedTankWrapper fluidInventory;
 	public AxisAlignedBB bounds;
 	public BlockPos anchor;
@@ -211,7 +210,7 @@ public abstract class Contraption {
 		if (bounds == null)
 			bounds = new AxisAlignedBB(BlockPos.ZERO);
 
-		if (!BlockMovementTraits.isBrittle(world.getBlockState(pos)))
+		if (!BlockMovementChecks.isBrittle(world.getBlockState(pos)))
 			frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, forcedDirection, frontier))
 			return false;
@@ -240,8 +239,7 @@ public abstract class Contraption {
 				continue;
 			}
 			subContraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-			OrientedContraptionEntity movedContraption =
-				OrientedContraptionEntity.create(world, subContraption, Optional.of(face));
+			OrientedContraptionEntity movedContraption = OrientedContraptionEntity.create(world, subContraption, face);
 			BlockPos anchor = blockFace.getConnectedPos();
 			movedContraption.setPosition(anchor.getX() + .5f, anchor.getY(), anchor.getZ() + .5f);
 			world.addEntity(movedContraption);
@@ -253,7 +251,7 @@ public abstract class Contraption {
 			.stream()
 			.map(MountedStorage::getItemHandler)
 			.collect(Collectors.toList());
-		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+		inventory = new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 
 		List<IFluidHandler> fluidHandlers = fluidStorage.values()
 			.stream()
@@ -311,12 +309,12 @@ public abstract class Contraption {
 		if (isAnchoringBlockAt(pos))
 			return true;
 		BlockState state = world.getBlockState(pos);
-		if (!BlockMovementTraits.movementNecessary(state, world, pos))
+		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
 			return true;
 		if (!movementAllowed(state, world, pos))
 			throw AssemblyException.unmovableBlock(pos, state);
 		if (state.getBlock() instanceof AbstractChassisBlock
-			&& !moveChassis(world, pos, forcedDirection, frontier, visited))
+				&& !moveChassis(world, pos, forcedDirection, frontier, visited))
 			return false;
 
 		if (AllBlocks.ADJUSTABLE_CRATE.has(state))
@@ -335,13 +333,17 @@ public abstract class Contraption {
 			Direction offset = state.get(StickerBlock.FACING);
 			BlockPos attached = pos.offset(offset);
 			if (!visited.contains(attached)
-				&& !BlockMovementTraits.notSupportive(world.getBlockState(attached), offset.getOpposite()))
+					&& !BlockMovementChecks.isNotSupportive(world.getBlockState(attached), offset.getOpposite()))
 				frontier.add(attached);
 		}
 
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			moveBearing(pos, frontier, visited, state);
+
+		// WM Bearings attach their structure when moved
+		if (AllBlocks.WINDMILL_BEARING.has(state))
+			moveWindmillBearing(pos, frontier, visited, state);
 
 		// Seats transfer their passenger to the contraption
 		if (state.getBlock() instanceof SeatBlock)
@@ -359,13 +361,6 @@ public abstract class Contraption {
 			movePistonPole(world, pos, frontier, visited, state);
 		if (isPistonHead(state))
 			movePistonHead(world, pos, frontier, visited, state);
-
-		// Doors try to stay whole
-		if (state.getBlock() instanceof DoorBlock) {
-			BlockPos otherPartPos = pos.up(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 1 : -1);
-			if (!visited.contains(otherPartPos))
-				frontier.add(otherPartPos);
-		}
 
 		// Cart assemblers attach themselves
 		BlockPos posDown = pos.down();
@@ -390,24 +385,24 @@ public abstract class Contraption {
 			boolean wasVisited = visited.contains(offsetPos);
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
-				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
-			boolean brittle = BlockMovementTraits.isBrittle(blockState);
+					BlockMovementChecks.isBlockAttachedTowards(blockState, world, offsetPos, offset.getOpposite());
+			boolean brittle = BlockMovementChecks.isBrittle(blockState);
 			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
 			if (canStick) {
 				if (state.getPushReaction() == PushReaction.PUSH_ONLY
-					|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
+						|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
 					canStick = false;
 				}
-				if (BlockMovementTraits.notSupportive(state, offset)) {
+				if (BlockMovementChecks.isNotSupportive(state, offset)) {
 					canStick = false;
 				}
-				if (BlockMovementTraits.notSupportive(blockState, offset.getOpposite())) {
+				if (BlockMovementChecks.isNotSupportive(blockState, offset.getOpposite())) {
 					canStick = false;
 				}
 			}
 
 			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue
-				|| (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
+					|| (offset == forcedDirection && !BlockMovementChecks.isNotSupportive(state, forcedDirection))))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -495,6 +490,13 @@ public abstract class Contraption {
 					frontier.add(offset);
 			}
 		}
+	}
+
+	private void moveWindmillBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
+		Direction facing = state.get(WindmillBearingBlock.FACING);
+		BlockPos offset = pos.offset(facing);
+		if (!visited.contains(offset))
+			frontier.add(offset);
 	}
 
 	private void moveBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
@@ -662,7 +664,7 @@ public abstract class Contraption {
 	}
 
 	protected boolean movementAllowed(BlockState state, World world, BlockPos pos) {
-		return BlockMovementTraits.movementAllowed(state, world, pos);
+		return BlockMovementChecks.isMovementAllowed(state, world, pos);
 	}
 
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
@@ -701,8 +703,8 @@ public abstract class Contraption {
 			c -> seatMapping.put(NBTUtil.readUniqueId(NBTHelper.getINBT(c, "Id")), c.getInt("Seat")));
 
 		stabilizedSubContraptions.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND), c -> stabilizedSubContraptions
-			.put(c.getUniqueId("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
+		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND),
+			c -> stabilizedSubContraptions.put(c.getUniqueId("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
 
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
@@ -736,7 +738,7 @@ public abstract class Contraption {
 		for (MountedFluidStorage mountedStorage : fluidStorage.values())
 			fluidHandlers[index++] = mountedStorage.getFluidHandler();
 
-		inventory = new CombinedInvWrapper(handlers);
+		inventory = new ContraptionInvWrapper(handlers);
 		fluidInventory = new CombinedTankWrapper(fluidHandlers);
 
 		if (nbt.contains("BoundsFront"))
@@ -831,7 +833,9 @@ public abstract class Contraption {
 
 	private CompoundNBT writeBlocksCompound() {
 		CompoundNBT compound = new CompoundNBT();
-		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+			throw new IllegalStateException("Palette Map index exceeded maximum");
+		}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
 		ListNBT blockList = new ListNBT();
 
 		for (BlockInfo block : this.blocks.values()) {
@@ -857,7 +861,9 @@ public abstract class Contraption {
 		ListNBT blockList;
 		if (usePalettedDeserialization) {
 			CompoundNBT c = ((CompoundNBT) compound);
-			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {throw new IllegalStateException("Palette Map index exceeded maximum");}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
+			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+				throw new IllegalStateException("Palette Map index exceeded maximum");
+			}, NBTUtil::readBlockState, NBTUtil::writeBlockState);
 			palette.read(c.getList("Palette", 10));
 
 			blockList = c.getList("BlockList", 10);
@@ -906,19 +912,15 @@ public abstract class Contraption {
 	}
 
 	private static BlockInfo readBlockInfo(CompoundNBT blockListEntry, HashMapPalette<BlockState> palette) {
-		return new BlockInfo(
-				BlockPos.fromLong(blockListEntry.getLong("Pos")),
-				Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
-				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
-		);
+		return new BlockInfo(BlockPos.fromLong(blockListEntry.getLong("Pos")),
+			Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
+			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
 	private static BlockInfo legacyReadBlockInfo(CompoundNBT blockListEntry) {
-		return new BlockInfo(
-				NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
-				NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
-				blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null
-		);
+		return new BlockInfo(NBTUtil.readBlockPos(blockListEntry.getCompound("Pos")),
+			NBTUtil.readBlockState(blockListEntry.getCompound("Block")),
+			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
 	public void removeBlocksFromWorld(World world, BlockPos offset) {
@@ -932,11 +934,11 @@ public abstract class Contraption {
 			for (Iterator<BlockInfo> iterator = blocks.values()
 				.iterator(); iterator.hasNext();) {
 				BlockInfo block = iterator.next();
-				if (brittles != BlockMovementTraits.isBrittle(block.state))
+				if (brittles != BlockMovementChecks.isBrittle(block.state))
 					continue;
 
 				BlockPos add = block.pos.add(anchor)
-					.add(offset);
+						.add(offset);
 				if (customBlockRemoval(world, add, block.state))
 					continue;
 				BlockState oldState = world.getBlockState(add);
@@ -962,17 +964,14 @@ public abstract class Contraption {
 //				continue;
 			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
 			world.notifyBlockUpdate(add, block.state, Blocks.AIR.getDefaultState(), flags);
-			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.getDefaultState(), flags, 512);
 			block.state.updateDiagonalNeighbors(world, add, flags & -2);
-//			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(),
-//				BlockFlags.IS_MOVING | BlockFlags.DEFAULT); this method did strange logspamming with POI-related blocks
 		}
 	}
 
 	public void addBlocksToWorld(World world, StructureTransform transform) {
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (BlockInfo block : blocks.values()) {
-				if (nonBrittles == BlockMovementTraits.isBrittle(block.state))
+				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
 					continue;
 
 				BlockPos targetPos = transform.apply(block.pos);
@@ -999,8 +998,7 @@ public abstract class Contraption {
 				}
 				if (state.getBlock() instanceof IWaterLoggable && state.contains(BlockStateProperties.WATERLOGGED)) {
 					FluidState FluidState = world.getFluidState(targetPos);
-					state = state.with(BlockStateProperties.WATERLOGGED,
-						FluidState.getFluid() == Fluids.WATER);
+					state = state.with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER);
 				}
 
 				world.destroyBlock(targetPos, true);
@@ -1054,8 +1052,10 @@ public abstract class Contraption {
 				BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
 		}
 
-		for (int i = 0; i < inventory.getSlots(); i++)
-			inventory.setStackInSlot(i, ItemStack.EMPTY);
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			if (!inventory.isSlotExternal(i))
+				inventory.setStackInSlot(i, ItemStack.EMPTY);
+		}
 		for (int i = 0; i < fluidInventory.getTanks(); i++)
 			fluidInventory.drain(fluidInventory.getFluidInTank(i), FluidAction.EXECUTE);
 
@@ -1215,16 +1215,16 @@ public abstract class Contraption {
 		switch (axis) {
 		case X:
 			return getMaxDistSqr(blocks, BlockPos::getY, BlockPos::getZ);
-		case Y:
-			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
-		case Z:
-			return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
+			case Y:
+				return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getZ);
+			case Z:
+				return getMaxDistSqr(blocks, BlockPos::getX, BlockPos::getY);
 		}
 
 		throw new IllegalStateException("Impossible axis");
 	}
 
-	public static float getMaxDistSqr(Set<BlockPos> blocks, Coordinate one, Coordinate other) {
+	public static float getMaxDistSqr(Set<BlockPos> blocks, ICoordinate one, ICoordinate other) {
 		float maxDistSq = -1;
 		for (BlockPos pos : blocks) {
 			float a = one.get(pos);
@@ -1232,8 +1232,8 @@ public abstract class Contraption {
 
 			float distSq = a * a + b * b;
 
-
-			if (distSq > maxDistSq) maxDistSq = distSq;
+			if (distSq > maxDistSq)
+				maxDistSq = distSq;
 		}
 
 		return maxDistSq;
@@ -1260,6 +1260,26 @@ public abstract class Contraption {
 		@Override
 		public boolean isBlockPresent(BlockPos pos) {
 			return pos.equals(te.getPos());
+		}
+	}
+
+	public static class ContraptionInvWrapper extends CombinedInvWrapper {
+		protected final boolean isExternal;
+
+		public ContraptionInvWrapper(boolean isExternal, IItemHandlerModifiable... itemHandler) {
+			super(itemHandler);
+			this.isExternal = isExternal;
+		}
+
+		public ContraptionInvWrapper(IItemHandlerModifiable... itemHandler) {
+			this(false, itemHandler);
+		}
+
+		public boolean isSlotExternal(int slot) {
+			if (isExternal)
+				return true;
+			IItemHandlerModifiable handler = getHandlerFromIndex(getIndexForSlot(slot));
+			return handler instanceof ContraptionInvWrapper && ((ContraptionInvWrapper) handler).isSlotExternal(slot);
 		}
 	}
 }

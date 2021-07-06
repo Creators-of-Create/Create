@@ -1,15 +1,15 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
+import static net.minecraft.state.properties.BlockStateProperties.FACING;
+
+import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
 public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
@@ -18,18 +18,18 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     final Direction direction;
     private final Direction opposite;
 
-    public FanInstance(InstancedTileRenderer<?> modelManager, EncasedFanTileEntity tile) {
-        super(modelManager, tile);
+    public FanInstance(MaterialManager<?> modelManager, EncasedFanTileEntity tile) {
+		super(modelManager, tile);
 
-        direction = blockState.get(FACING);
+		direction = blockState.get(FACING);
 
-        opposite = direction.getOpposite();
-        shaft = AllBlockPartials.SHAFT_HALF.getModel(getRotatingMaterial(), blockState, opposite).createInstance();
-        fan = AllBlockPartials.ENCASED_FAN_INNER.getModel(getRotatingMaterial(), blockState, opposite).createInstance();
+		opposite = direction.getOpposite();
+		shaft = getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite).createInstance();
+		fan = getRotatingMaterial().getModel(AllBlockPartials.ENCASED_FAN_INNER, blockState, opposite).createInstance();
 
-        setup(shaft);
-        setup(fan, getFanSpeed());
-    }
+		setup(shaft);
+		setup(fan, getFanSpeed());
+	}
 
     private float getFanSpeed() {
         float speed = tile.getSpeed() * 5;
@@ -41,7 +41,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     }
 
     @Override
-    protected void update() {
+    public void update() {
         updateRotation(shaft);
         updateRotation(fan, getFanSpeed());
     }

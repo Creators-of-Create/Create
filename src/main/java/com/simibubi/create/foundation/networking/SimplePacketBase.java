@@ -8,6 +8,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 public abstract class SimplePacketBase {
 
 	public abstract void write(PacketBuffer buffer);
+
 	public abstract void handle(Supplier<Context> context);
-	
+
 }

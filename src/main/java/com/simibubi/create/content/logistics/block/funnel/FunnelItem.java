@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.foundation.advancement.AllTriggers;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;

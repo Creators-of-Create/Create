@@ -49,7 +49,11 @@ import com.simibubi.create.content.contraptions.components.press.PressInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawInstance;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.bearing.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.ClockworkBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.MechanicalBearingTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.bearing.WindmillBearingTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.ChassisTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerRenderer;
@@ -60,7 +64,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.gan
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.pulley.*;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.HosePulleyInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.pulley.RopePulleyInstance;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableTileEntity;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelTileEntity;
 import com.simibubi.create.content.contraptions.fluids.PumpCogInstance;
@@ -109,6 +116,12 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearboxInstance;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxRenderer;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEntity;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankInstance;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankRenderer;
+import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
+import com.simibubi.create.content.curiosities.bell.BellRenderer;
+import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
+import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
@@ -117,7 +130,11 @@ import com.simibubi.create.content.logistics.block.chute.ChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteRenderer;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteTileEntity;
-import com.simibubi.create.content.logistics.block.depot.*;
+import com.simibubi.create.content.logistics.block.depot.DepotRenderer;
+import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
+import com.simibubi.create.content.logistics.block.depot.EjectorInstance;
+import com.simibubi.create.content.logistics.block.depot.EjectorRenderer;
+import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterInstance;
 import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
@@ -138,6 +155,8 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
+import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
+import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
@@ -231,10 +250,10 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
-		.tileEntity("hand_crank", HandCrankTileEntity::new)
-		.instance(() -> HandCrankInstance::new)
-		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-		.validBlocks(AllBlocks.DYED_VALVE_HANDLES)
+			.tileEntity("hand_crank", HandCrankTileEntity::new)
+			.instance(() -> HandCrankInstance::new)
+			.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
+			.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
@@ -244,14 +263,14 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.CUCKOO_CLOCK, AllBlocks.MYSTERIOUS_CUCKOO_CLOCK)
 		.renderer(() -> CuckooClockRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<GantryShaftTileEntity> GANTRY_SHAFT = Create.registrate()
 		.tileEntity("gantry_shaft", GantryShaftTileEntity::new)
 		.instance(() -> SingleRotatingInstance::new)
 		.validBlocks(AllBlocks.GANTRY_SHAFT)
 		.renderer(() -> KineticTileEntityRenderer::new)
 		.register();
-	
+
 	public static final TileEntityEntry<GantryCarriageTileEntity> GANTRY_PINION = Create.registrate()
 		.tileEntity("gantry_pinion", GantryCarriageTileEntity::new)
 		.instance(() -> GantryCarriageInstance::new)
@@ -406,7 +425,7 @@ public class AllTileEntities {
 		.validBlocks(AllBlocks.RADIAL_CHASSIS, AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
 		// .renderer(() -> renderer)
 		.register();
-	
+
 	public static final TileEntityEntry<StickerTileEntity> STICKER = Create.registrate()
 		.tileEntity("sticker", StickerTileEntity::new)
 		.instance(() -> StickerInstance::new)
@@ -579,7 +598,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<NixieTubeTileEntity> NIXIE_TUBE = Create.registrate()
 		.tileEntity("nixie_tube", NixieTubeTileEntity::new)
-		.validBlocks(AllBlocks.NIXIE_TUBE)
+		.validBlocks(AllBlocks.ORANGE_NIXIE_TUBE)
+		.validBlocks(AllBlocks.NIXIE_TUBES.toArray())
 		.renderer(() -> NixieTubeRenderer::new)
 		.register();
 
@@ -642,6 +662,33 @@ public class AllTileEntities {
 			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();
+
+	public static final TileEntityEntry<LecternControllerTileEntity> LECTERN_CONTROLLER =
+		Create.registrate()
+			.tileEntity("lectern_controller", LecternControllerTileEntity::new)
+			.validBlocks(AllBlocks.LECTERN_CONTROLLER)
+			.renderer(() -> LecternControllerRenderer::new)
+			.register();
+
+	// Curiosities
+	public static final TileEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
+		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
+		.instance(() -> CopperBacktankInstance::new)
+		.validBlocks(AllBlocks.COPPER_BACKTANK)
+		.renderer(() -> CopperBacktankRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<PeculiarBellTileEntity> PECULIAR_BELL = Create.registrate()
+		.tileEntity("peculiar_bell", PeculiarBellTileEntity::new)
+		.validBlocks(AllBlocks.PECULIAR_BELL)
+		.renderer(() -> BellRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<HauntedBellTileEntity> HAUNTED_BELL = Create.registrate()
+		.tileEntity("cursed_bell", HauntedBellTileEntity::new)
+		.validBlocks(AllBlocks.HAUNTED_BELL)
+		.renderer(() -> BellRenderer::new)
+		.register();
 
 	public static void register() {}
 }

@@ -13,8 +13,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import net.minecraft.util.math.vector.*;
-import org.antlr.v4.runtime.misc.IntegerList;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -33,6 +31,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -46,7 +46,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MutableBoundingBox;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.math.vector.Vector4f;
 
 public class PonderScene {
 
@@ -57,7 +61,7 @@ public class PonderScene {
 	int textIndex;
 	String sceneId;
 
-	IntegerList keyframeTimes;
+	IntList keyframeTimes;
 
 	List<PonderInstruction> schedule, activeSchedule;
 	Map<UUID, PonderElement> linkedElements;
@@ -107,7 +111,7 @@ public class PonderScene {
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
-		keyframeTimes = new IntegerList(4);
+		keyframeTimes = new IntArrayList(4);
 		scaleFactor = 1;
 		yOffset = 0;
 
@@ -229,8 +233,9 @@ public class PonderScene {
 
 		for (RenderType type : RenderType.getBlockLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
+		
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
-		info.set(transform.xRotation.getValue(pt), transform.yRotation.getValue(pt));
+		info.set(transform.xRotation.getValue(pt) + 90, transform.yRotation.getValue(pt) + 180);
 		world.renderEntities(ms, buffer, info, pt);
 		world.renderParticles(ms, buffer, info, pt);
 		outliner.renderOutlines(ms, buffer, pt);
@@ -344,13 +349,15 @@ public class PonderScene {
 
 	public <T extends Entity> void forEachWorldEntity(Class<T> type, Consumer<T> function) {
 		world.getEntities()
-				.filter(type::isInstance)
-				.map(type::cast)
-				.forEach(function);
-		/*for (Entity element : world.getEntities()) {
-			if (type.isInstance(element))
-				function.accept(type.cast(element));
-		}*/
+			.filter(type::isInstance)
+			.map(type::cast)
+			.forEach(function);
+		/*
+		 * for (Entity element : world.getEntities()) {
+		 * if (type.isInstance(element))
+		 * function.accept(type.cast(element));
+		 * }
+		 */
 	}
 
 	public <T extends PonderElement> void forEach(Class<T> type, Consumer<T> function) {
@@ -444,6 +451,8 @@ public class PonderScene {
 			} else {
 				// For block breaking overlay; Don't ask
 				ms.scale(f, f, f);
+				if (f == 30)
+					ms.translate(0.525, .2975, .9);
 				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -yOffset,
 					(basePlateSize + basePlateOffsetZ) / -2f);
 				float y = (float) (0.5065 * Math.pow(2.2975, Math.log(1 / scaleFactor) / Math.log(2))) / 30;
@@ -452,7 +461,6 @@ public class PonderScene {
 
 			return ms;
 		}
-
 
 		public void updateSceneRVE(float pt) {
 			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);

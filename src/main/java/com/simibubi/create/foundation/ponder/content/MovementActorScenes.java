@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
+import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.LinearChassisBlock;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
@@ -49,6 +50,7 @@ public class MovementActorScenes {
 			.pointAt(util.vector.topOf(bearing.up(2)))
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Inventories on moving contraptions cannot be accessed by players.");
 
 		scene.idle(70);
@@ -61,6 +63,7 @@ public class MovementActorScenes {
 			.pointAt(util.vector.topOf(psi))
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("This component can interact with storage without the need to stop the contraption.");
 		scene.idle(90);
 
@@ -69,6 +72,7 @@ public class MovementActorScenes {
 		scene.overlay.showSelectionWithText(util.select.position(psi.west()), 50)
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Place a second one with a gap of 1 or 2 blocks inbetween");
 		scene.idle(55);
 
@@ -97,6 +101,7 @@ public class MovementActorScenes {
 		scene.overlay.showSelectionWithText(util.select.position(psi2), 70)
 			.placeNearTarget()
 			.colored(PonderPalette.GREEN)
+			.attachKeyFrame()
 			.text("While engaged, the stationary interface will represent ALL inventories on the contraption");
 
 		scene.idle(80);
@@ -106,6 +111,7 @@ public class MovementActorScenes {
 		scene.overlay.showText(70)
 			.placeNearTarget()
 			.pointAt(util.vector.topOf(hopper))
+			.attachKeyFrame()
 			.text("Items can now be inserted...");
 
 		ItemStack itemStack = AllItems.COPPER_INGOT.asStack();
@@ -161,7 +167,7 @@ public class MovementActorScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.setSceneOffsetY(-1);
 
-		Class<PortableItemInterfaceTileEntity> psiClass = PortableItemInterfaceTileEntity.class;
+		Class<PortableStorageInterfaceTileEntity> psiClass = PortableStorageInterfaceTileEntity.class;
 		Selection psis = util.select.fromTo(1, 1, 3, 1, 3, 3);
 		scene.world.modifyTileNBT(psis, psiClass, nbt -> {
 			nbt.putFloat("Distance", 1);

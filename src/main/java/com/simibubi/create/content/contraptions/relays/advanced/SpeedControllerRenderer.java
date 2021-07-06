@@ -1,13 +1,15 @@
 package com.simibubi.create.content.contraptions.relays.advanced;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -30,7 +32,7 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		if (!FastRenderDispatcher.available(tileEntityIn.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(tileEntityIn.getWorld())) {
 			KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
 		}
 
@@ -42,17 +44,17 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		BlockState blockState = tileEntityIn.getBlockState();
 		boolean alongX = blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
-		SuperByteBuffer bracket = AllBlockPartials.SPEED_CONTROLLER_BRACKET.renderOn(blockState);
+		SuperByteBuffer bracket = PartialBufferer.get(AllBlockPartials.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
-			(float) (alongX ? Math.PI : Math.PI / 2));
+				(float) (alongX ? Math.PI : Math.PI / 2));
 		bracket.light(WorldRenderer.getLightmapCoordinates(world, pos.up()));
 		bracket.renderInto(ms, builder);
 	}
 
 	private SuperByteBuffer getRotatedModel(SpeedControllerTileEntity te) {
-		return CreateClient.bufferCache.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
-			KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
+		return CreateClient.BUFFER_CACHE.renderBlockIn(KineticTileEntityRenderer.KINETIC_TILE,
+				KineticTileEntityRenderer.shaft(KineticTileEntityRenderer.getRotationAxisOf(te)));
 	}
 
 }

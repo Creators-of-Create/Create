@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import java.util.List;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -14,6 +18,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -22,9 +27,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.List;
 
 public class ClockworkBearingTileEntity extends KineticTileEntity
 	implements IBearingTileEntity, IDisplayAssemblyExceptions {
@@ -117,11 +119,11 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	protected void applyRotations() {
 		BlockState blockState = getBlockState();
 		Axis axis = Axis.X;
-		
+
 		if (blockState.contains(BlockStateProperties.FACING))
 			axis = blockState.get(BlockStateProperties.FACING)
 				.getAxis();
-		
+
 		if (hourHand != null) {
 			hourHand.setAngle(hourAngle);
 			hourHand.setRotationAxis(axis);
@@ -175,21 +177,23 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	protected float getHourTarget(boolean cycle24) {
-		int dayTime = (int) (world.getDayTime() % 24000);
+		boolean isNatural = world.getDimension().isNatural();
+		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int hours = (dayTime / 1000 + 6) % 24;
 		int offset = getBlockState().get(ClockworkBearingBlock.FACING)
-			.getAxisDirection()
-			.getOffset();
+				.getAxisDirection()
+				.getOffset();
 		float hourTarget = (float) (offset * -360 / (cycle24 ? 24f : 12f) * (hours % (cycle24 ? 24 : 12)));
 		return hourTarget;
 	}
 
 	protected float getMinuteTarget() {
-		int dayTime = (int) (world.getDayTime() % 24000);
+		boolean isNatural = world.getDimension().isNatural();
+		int dayTime = (int) ((world.getDayTime() * (isNatural ? 1 : 24)) % 24000);
 		int minutes = (dayTime % 1000) * 60 / 1000;
 		int offset = getBlockState().get(ClockworkBearingBlock.FACING)
-			.getAxisDirection()
-			.getOffset();
+				.getAxisDirection()
+				.getOffset();
 		float minuteTarget = (float) (offset * -360 / 60f * (minutes));
 		return minuteTarget;
 	}
@@ -415,7 +419,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 

@@ -1,10 +1,12 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
 public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
@@ -16,6 +18,11 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 	@Override
 	protected SmartFluidTank createInventory() {
 		return new CreativeSmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
+	}
+	
+	@Override
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		return false;
 	}
 
 	public static class CreativeSmartFluidTank extends SmartFluidTank {

@@ -81,13 +81,13 @@ public class EdgeInteractionRenderer {
 		}
 
 		box.offsetLabel(textOffset)
-			.withColors(0x7A6A2C, 0xB79D64)
-			.passive(!hit);
+				.withColors(0x7A6A2C, 0xB79D64)
+				.passive(!hit);
 
-		CreateClient.outliner.showValueBox("edge", box)
-			.lineWidth(1 / 64f)
-			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
-			.highlightFace(face);
+		CreateClient.OUTLINER.showValueBox("edge", box)
+				.lineWidth(1 / 64f)
+				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
+				.highlightFace(face);
 
 	}
 

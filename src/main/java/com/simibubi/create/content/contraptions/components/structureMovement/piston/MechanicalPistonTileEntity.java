@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.piston;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
@@ -9,6 +10,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Dir
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -82,6 +84,8 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		applyContraptionPosition();
 		forceMove = true;
 		world.addEntity(movedContraption);
+
+		AllSoundEvents.CONTRAPTION_ASSEMBLE.playOnServer(world, pos);
 	}
 
 	@Override
@@ -94,6 +98,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		if (movedContraption != null) {
 			applyContraptionPosition();
 			movedContraption.disassemble();
+			AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(world, pos);
 		}
 		running = false;
 		movedContraption = null;
@@ -113,7 +118,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public float getMovementSpeed() {
-		float movementSpeed = MathHelper.clamp(getSpeed() / 512f, -.49f, .49f);
+		float movementSpeed = MathHelper.clamp(convertToLinear(getSpeed()), -.49f, .49f);
 		if (world.isRemote)
 			movementSpeed *= ServerSpeedProvider.get();
 		Direction pistonDirection = getBlockState().get(BlockStateProperties.FACING);

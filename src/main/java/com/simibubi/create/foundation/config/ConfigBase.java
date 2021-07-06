@@ -22,7 +22,7 @@ public abstract class ConfigBase {
 	protected List<ConfigBase> children;
 
 	protected void registerAll(final ForgeConfigSpec.Builder builder) {
-		for (CValue<?, ?> cValue : allValues) 
+		for (CValue<?, ?> cValue : allValues)
 			cValue.register(builder);
 	}
 
@@ -40,7 +40,7 @@ public abstract class ConfigBase {
 
 	@FunctionalInterface
 	protected static interface IValueProvider<V, T extends ConfigValue<V>>
-			extends Function<ForgeConfigSpec.Builder, T> {
+		extends Function<ForgeConfigSpec.Builder, T> {
 	}
 
 	protected ConfigBool b(boolean current, String name, String... comment) {
@@ -62,7 +62,7 @@ public abstract class ConfigBase {
 	protected ConfigInt i(int current, int min, String name, String... comment) {
 		return i(current, min, Integer.MAX_VALUE, name, comment);
 	}
-	
+
 	protected <T extends Enum<T>> ConfigEnum<T> e(T defaultValue, String name, String... comment) {
 		return new ConfigEnum<>(name, defaultValue, comment);
 	}
@@ -106,12 +106,11 @@ public abstract class ConfigBase {
 		public void addComments(Builder builder, String... comment) {
 			if (comment.length > 0) {
 				String[] comments = new String[comment.length + 1];
-				comments[0] = "";
-				for (int i = 0; i < comment.length; i++)
-					comments[i + 1] = comment[i];
+				comments[0] = " ";
+				System.arraycopy(comment, 0, comments, 1, comment.length);
 				builder.comment(comments);
 			} else
-				builder.comment("");
+				builder.comment(" ");
 		}
 
 		public void register(ForgeConfigSpec.Builder builder) {
@@ -163,13 +162,13 @@ public abstract class ConfigBase {
 			super(name, builder -> builder.define(name, def), comment);
 		}
 	}
-	
+
 	public class ConfigEnum<T extends Enum<T>> extends CValue<T, EnumValue<T>> {
 
 		public ConfigEnum(String name, T defaultValue, String[] comment) {
 			super(name, builder -> builder.defineEnum(name, defaultValue), comment);
 		}
-		
+
 	}
 
 	public class ConfigFloat extends CValue<Double, DoubleValue> {

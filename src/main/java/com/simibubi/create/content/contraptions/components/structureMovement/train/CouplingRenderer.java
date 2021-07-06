@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
@@ -36,7 +37,7 @@ public class CouplingRenderer {
 			c -> {
 				if (c.getFirst().hasContraptionCoupling(true))
 					return;
-				CouplingRenderer.renderCoupling(ms, buffer, c.map(MinecartController::cart));	
+				CouplingRenderer.renderCoupling(ms, buffer, c.map(MinecartController::cart));
 			});
 	}
 
@@ -47,37 +48,37 @@ public class CouplingRenderer {
 
 	public static void renderCoupling(MatrixStack ms, IRenderTypeBuffer buffer, Couple<AbstractMinecartEntity> carts) {
 		ClientWorld world = Minecraft.getInstance().world;
-		
+
 		if (carts.getFirst() == null || carts.getSecond() == null)
 			return;
-		
+
 		Couple<Integer> lightValues =
 			carts.map(c -> WorldRenderer.getLightmapCoordinates(world, new BlockPos(c.getBoundingBox()
 				.getCenter())));
 
 		Vector3d center = carts.getFirst()
-			.getPositionVec()
-			.add(carts.getSecond()
-				.getPositionVec())
-			.scale(.5f);
+				.getPositionVec()
+				.add(carts.getSecond()
+						.getPositionVec())
+				.scale(.5f);
 
 		Couple<CartEndpoint> transforms = carts.map(c -> getSuitableCartEndpoint(c, center));
 
 		BlockState renderState = Blocks.AIR.getDefaultState();
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		SuperByteBuffer attachment = AllBlockPartials.COUPLING_ATTACHMENT.renderOn(renderState);
-		SuperByteBuffer ring = AllBlockPartials.COUPLING_RING.renderOn(renderState);
-		SuperByteBuffer connector = AllBlockPartials.COUPLING_CONNECTOR.renderOn(renderState);
+		SuperByteBuffer attachment = PartialBufferer.get(AllBlockPartials.COUPLING_ATTACHMENT, renderState);
+		SuperByteBuffer ring = PartialBufferer.get(AllBlockPartials.COUPLING_RING, renderState);
+		SuperByteBuffer connector = PartialBufferer.get(AllBlockPartials.COUPLING_CONNECTOR, renderState);
 
 		Vector3d zero = Vector3d.ZERO;
 		Vector3d firstEndpoint = transforms.getFirst()
-			.apply(zero);
+				.apply(zero);
 		Vector3d secondEndpoint = transforms.getSecond()
-			.apply(zero);
+				.apply(zero);
 		Vector3d endPointDiff = secondEndpoint.subtract(firstEndpoint);
 		double connectorYaw = -Math.atan2(endPointDiff.z, endPointDiff.x) * 180.0D / Math.PI;
 		double connectorPitch = Math.atan2(endPointDiff.y, endPointDiff.mul(1, 0, 1)
-			.length()) * 180 / Math.PI;
+				.length()) * 180 / Math.PI;
 
 		MatrixStacker msr = MatrixStacker.of(ms);
 		carts.forEachWithContext((cart, isFirst) -> {
@@ -218,24 +219,24 @@ public class CouplingRenderer {
 		MinecartController first = c.getFirst();
 		AbstractMinecartEntity mainCart = first.cart();
 		Vector3d mainCenter = mainCart.getPositionVec()
-			.add(0, yOffset, 0);
+				.add(0, yOffset, 0);
 		Vector3d connectedCenter = c.getSecond()
-			.cart()
-			.getPositionVec()
-			.add(0, yOffset, 0);
+				.cart()
+				.getPositionVec()
+				.add(0, yOffset, 0);
 
 		int color = ColorHelper.mixColors(0xabf0e9, 0xee8572, (float) MathHelper
-			.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
+				.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
 
-		CreateClient.outliner.showLine(mainCart.getEntityId() + "", mainCenter, connectedCenter)
-			.colored(color)
-			.lineWidth(1 / 8f);
+		CreateClient.OUTLINER.showLine(mainCart.getEntityId() + "", mainCenter, connectedCenter)
+				.colored(color)
+				.lineWidth(1 / 8f);
 
 		Vector3d point = mainCart.getPositionVec()
-			.add(0, yOffset, 0);
-		CreateClient.outliner.showLine(mainCart.getEntityId() + "_dot", point, point.add(0, 1 / 128f, 0))
-			.colored(0xffffff)
-			.lineWidth(1 / 4f);
+				.add(0, yOffset, 0);
+		CreateClient.OUTLINER.showLine(mainCart.getEntityId() + "_dot", point, point.add(0, 1 / 128f, 0))
+				.colored(0xffffff)
+				.lineWidth(1 / 4f);
 	}
 
 }

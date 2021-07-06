@@ -1,9 +1,10 @@
 package com.simibubi.create.content.curiosities.zapper;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModel;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRenderer;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FourWayBlock;
@@ -18,10 +19,10 @@ import net.minecraft.util.math.MathHelper;
 public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> extends CustomRenderedItemModelRenderer<M> {
 
 	@Override
-	protected void render(ItemStack stack, M model, PartialItemModelRenderer renderer, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void render(ItemStack stack, M model, PartialItemModelRenderer renderer, TransformType transformType,
+		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		// Block indicator
-		if (model.getCurrentPerspective() == TransformType.GUI && stack.hasTag() && stack.getTag()
+		if (transformType == TransformType.GUI && stack.hasTag() && stack.getTag()
 			.contains("BlockUsed"))
 			renderBlockUsed(stack, ms, buffer, light, overlay);
 	}
@@ -50,12 +51,8 @@ public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> exte
 	}
 
 	protected float getAnimationProgress(float pt, boolean leftHanded, boolean mainHand) {
-		float last = mainHand ^ leftHanded ? ZapperRenderHandler.lastRightHandAnimation
-			: ZapperRenderHandler.lastLeftHandAnimation;
-		float current =
-			mainHand ^ leftHanded ? ZapperRenderHandler.rightHandAnimation : ZapperRenderHandler.leftHandAnimation;
-		float animation = MathHelper.clamp(MathHelper.lerp(pt, last, current) * 5, 0, 1);
-		return animation;
+		float animation = CreateClient.ZAPPER_RENDER_HANDLER.getAnimation(mainHand ^ leftHanded, pt);
+		return MathHelper.clamp(animation * 5, 0, 1);
 	}
 
 }

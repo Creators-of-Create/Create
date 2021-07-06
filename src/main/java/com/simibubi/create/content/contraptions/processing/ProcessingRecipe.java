@@ -1,11 +1,22 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
+
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -17,12 +28,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import org.apache.logging.log4j.Logger;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -39,9 +44,11 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	private IRecipeType<?> type;
 	private IRecipeSerializer<?> serializer;
 	private AllRecipeTypes enumType;
+	private Supplier<ItemStack> forcedResult;
 
 	public ProcessingRecipe(AllRecipeTypes recipeType, ProcessingRecipeParams params) {
 
+		this.forcedResult = null;
 		this.enumType = recipeType;
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
@@ -82,7 +89,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	private void validate(String recipeTypeName) {
 		String messageHeader = "Your custom " + recipeTypeName + " recipe (" + id.toString() + ")";
-		Logger logger = Create.logger;
+		Logger logger = Create.LOGGER;
 		int ingredientCount = ingredients.size();
 		int outputCount = results.size();
 
@@ -117,15 +124,15 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public NonNullList<Ingredient> getIngredients() {
 		return ingredients;
 	}
-	
+
 	public NonNullList<FluidIngredient> getFluidIngredients() {
 		return fluidIngredients;
 	}
-	
+
 	public NonNullList<ProcessingOutput> getRollableResults() {
 		return results;
 	}
-	
+
 	public NonNullList<FluidStack> getFluidResults() {
 		return fluidResults;
 	}
@@ -136,10 +143,16 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 			.collect(Collectors.toList());
 	}
 
+	public void enforceNextResult(Supplier<ItemStack> stack) {
+		forcedResult = stack;
+	}
+
 	public List<ItemStack> rollResults() {
 		List<ItemStack> results = new ArrayList<>();
-		for (ProcessingOutput output : getRollableResults()) {
-			ItemStack stack = output.rollOutput();
+		NonNullList<ProcessingOutput> rollableResults = getRollableResults();
+		for (int i = 0; i < rollableResults.size(); i++) {
+			ProcessingOutput output = rollableResults.get(i);
+			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput();
 			if (!stack.isEmpty())
 				results.add(stack);
 		}
@@ -153,9 +166,9 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public HeatCondition getRequiredHeat() {
 		return requiredHeat;
 	}
-	
+
 	// IRecipe<> paperwork
-	
+
 	@Override
 	public ItemStack getCraftingResult(T inv) {
 		return getRecipeOutput();
@@ -177,7 +190,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public ResourceLocation getId() {
 		return id;
 	}
-	
+
 	@Override
 	public boolean isDynamic() {
 		return true;

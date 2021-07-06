@@ -9,7 +9,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public enum AllKeys {
 
-	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT), 
+	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),
 	ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
 
 	;
@@ -46,15 +46,20 @@ public enum AllKeys {
 	}
 
 	public String getBoundKey() {
-		return keybind.getBoundKeyLocalizedText().getString().toUpperCase();
+		return keybind.getBoundKeyLocalizedText()
+			.getString()
+			.toUpperCase();
 	}
 
 	public int getBoundCode() {
-		return keybind.getKey().getKeyCode();
+		return keybind.getKey()
+			.getKeyCode();
 	}
 
 	public static boolean isKeyDown(int key) {
-		return GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getHandle(), key) != 0;
+		return GLFW.glfwGetKey(Minecraft.getInstance()
+			.getWindow()
+			.getHandle(), key) != 0;
 	}
 
 	public static boolean ctrlDown() {

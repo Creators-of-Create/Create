@@ -1,11 +1,18 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
+import static net.minecraft.entity.MoverType.SELF;
+import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
+import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
+
+import java.util.List;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -22,12 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
-
-import java.util.List;
-
-import static net.minecraft.entity.MoverType.SELF;
-import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
 public class BeltMovementHandler {
 
@@ -94,9 +95,8 @@ public class BeltMovementHandler {
 
 		// Lock entities in place
 		boolean isPlayer = entityIn instanceof PlayerEntity;
-		if (entityIn instanceof LivingEntity && !isPlayer) {
+		if (entityIn instanceof LivingEntity && !isPlayer) 
 			((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 10, 1, false, false));
-		}
 
 		final Direction beltFacing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
 		final BeltSlope slope = blockState.get(BeltBlock.SLOPE);
@@ -137,12 +137,14 @@ public class BeltMovementHandler {
 			movement = movement.add(0, -Math.abs(axis.getCoordinate(movement.x, movement.y, movement.z)), 0);
 
 		Vector3d centering = Vector3d.of(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
-		float step = entityIn.stepHeight;
 
-		if (!isPlayer) {
+		if (!(entityIn instanceof LivingEntity)
+			|| ((LivingEntity) entityIn).moveForward == 0 && ((LivingEntity) entityIn).moveStrafing == 0)
 			movement = movement.add(centering);
+		
+		float step = entityIn.stepHeight;
+		if (!isPlayer) 
 			entityIn.stepHeight = 1;
-		}
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
@@ -174,6 +176,8 @@ public class BeltMovementHandler {
 		} else {
 			entityIn.move(SELF, movement);
 		}
+		
+		entityIn.onGround = true;
 
 		if (!isPlayer)
 			entityIn.stepHeight = step;
@@ -188,6 +192,7 @@ public class BeltMovementHandler {
 			entityIn.setMotion(movement);
 			entityIn.velocityChanged = true;
 		}
+		
 	}
 
 	public static boolean shouldIgnoreBlocking(Entity me, Entity other) {

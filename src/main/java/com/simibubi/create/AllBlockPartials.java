@@ -1,43 +1,20 @@
 package com.simibubi.create;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
-import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
-import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
-import com.simibubi.create.content.contraptions.relays.belt.BeltData;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.MaterialType;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.utility.AngleHelper;
+import com.jozufozu.flywheel.core.PartialModel;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
 
 public class AllBlockPartials {
 
-	private static final List<AllBlockPartials> all = new ArrayList<>();
-
-	public static final AllBlockPartials SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
+	public static final PartialModel SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
 		SCHEMATICANNON_PIPE = get("schematicannon/pipe"),
 
 		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), SHAFT_HALF = get("shaft_half"),
@@ -66,10 +43,10 @@ public class AllBlockPartials {
 		HARVESTER_BLADE = get("mechanical_harvester/blade"), DEPLOYER_POLE = get("deployer/pole"),
 		DEPLOYER_HAND_POINTING = get("deployer/hand_pointing"), DEPLOYER_HAND_PUNCHING = get("deployer/hand_punching"),
 		DEPLOYER_HAND_HOLDING = get("deployer/hand_holding"), ANALOG_LEVER_HANDLE = get("analog_lever/handle"),
-		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"), FUNNEL_FLAP = get("funnel/flap"), 
-		BELT_FUNNEL_FLAP = get("belt_funnel/flap"),
-		BELT_TUNNEL_FLAP = get("belt_tunnel/flap"), FLEXPEATER_INDICATOR = get("diodes/indicator"),
-		FLYWHEEL = get("flywheel/wheel"), FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
+		ANALOG_LEVER_INDICATOR = get("analog_lever/indicator"), FUNNEL_FLAP = get("funnel/flap"),
+		BELT_FUNNEL_FLAP = get("belt_funnel/flap"), BELT_TUNNEL_FLAP = get("belt_tunnel/flap"),
+		FLEXPEATER_INDICATOR = get("diodes/indicator"), FLYWHEEL = get("flywheel/wheel"),
+		FLYWHEEL_UPPER_ROTATING = get("flywheel/upper_rotating_connector"),
 
 		FLYWHEEL_LOWER_ROTATING = get("flywheel/lower_rotating_connector"),
 		FLYWHEEL_UPPER_SLIDING = get("flywheel/upper_sliding_connector"),
@@ -77,31 +54,28 @@ public class AllBlockPartials {
 		FURNACE_GENERATOR_FRAME = get("furnace_engine/frame"), CUCKOO_MINUTE_HAND = get("cuckoo_clock/minute_hand"),
 		CUCKOO_HOUR_HAND = get("cuckoo_clock/hour_hand"), CUCKOO_LEFT_DOOR = get("cuckoo_clock/left_door"),
 		CUCKOO_RIGHT_DOOR = get("cuckoo_clock/right_door"), CUCKOO_PIG = get("cuckoo_clock/pig"),
-		CUCKOO_CREEPER = get("cuckoo_clock/creeper"), 
-		
+		CUCKOO_CREEPER = get("cuckoo_clock/creeper"),
+
 		GANTRY_COGS = get("gantry_carriage/wheels"),
-		
-		ROPE_COIL = get("rope_pulley/rope_coil"),
-		ROPE_HALF = get("rope_pulley/rope_half"), 
+
+		ROPE_COIL = get("rope_pulley/rope_coil"), ROPE_HALF = get("rope_pulley/rope_half"),
 		ROPE_HALF_MAGNET = get("rope_pulley/rope_half_magnet"),
-		
-		HOSE_COIL = get("hose_pulley/rope_coil"),
-		HOSE = get("hose_pulley/rope"),
-		HOSE_MAGNET = get("hose_pulley/pulley_magnet"),
-		HOSE_HALF = get("hose_pulley/rope_half"), 
+
+		HOSE_COIL = get("hose_pulley/rope_coil"), HOSE = get("hose_pulley/rope"),
+		HOSE_MAGNET = get("hose_pulley/pulley_magnet"), HOSE_HALF = get("hose_pulley/rope_half"),
 		HOSE_HALF_MAGNET = get("hose_pulley/rope_half_magnet"),
-		
+
 		MILLSTONE_COG = get("millstone/inner"),
 
 		SYMMETRY_PLANE = get("symmetry_effect/plane"), SYMMETRY_CROSSPLANE = get("symmetry_effect/crossplane"),
 		SYMMETRY_TRIPLEPLANE = get("symmetry_effect/tripleplane"),
-		
+
 		STICKER_HEAD = get("sticker/head"),
 
 		PORTABLE_STORAGE_INTERFACE_MIDDLE = get("portable_storage_interface/block_middle"),
 		PORTABLE_STORAGE_INTERFACE_MIDDLE_POWERED = get("portable_storage_interface/block_middle_powered"),
 		PORTABLE_STORAGE_INTERFACE_TOP = get("portable_storage_interface/block_top"),
-		
+
 		PORTABLE_FLUID_INTERFACE_MIDDLE = get("portable_fluid_interface/block_middle"),
 		PORTABLE_FLUID_INTERFACE_MIDDLE_POWERED = get("portable_fluid_interface/block_middle_powered"),
 		PORTABLE_FLUID_INTERFACE_TOP = get("portable_fluid_interface/block_top"),
@@ -119,135 +93,60 @@ public class AllBlockPartials {
 
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
-		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
-		
-		GOGGLES = get("goggles"),
-		
-		EJECTOR_TOP = get("weighted_ejector/top"),
-		
-		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
-		COUPLING_RING = getEntity("minecart_coupling/ring"),
-		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector")
+		PECULIAR_BELL = get("peculiar_bell"),
+		HAUNTED_BELL = get("haunted_bell"),
 
-	;
+	SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
 
-	public static final Map<AttachmentTypes, Map<Direction, AllBlockPartials>> PIPE_ATTACHMENTS = map();
-	public static final Map<HeatLevel, AllBlockPartials> BLAZES = map();
+	GOGGLES = get("goggles"),
+
+	EJECTOR_TOP = get("weighted_ejector/top"),
+
+	COPPER_BACKTANK_SHAFT = get("copper_backtank/block_shaft_input"),
+			COPPER_BACKTANK_COGS = get("copper_backtank/block_cogs"),
+
+	CRAFTING_BLUEPRINT_1x1 = getEntity("crafting_blueprint_small"),
+			CRAFTING_BLUEPRINT_2x2 = getEntity("crafting_blueprint_medium"),
+			CRAFTING_BLUEPRINT_3x3 = getEntity("crafting_blueprint_large"),
+
+	COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
+			COUPLING_RING = getEntity("minecart_coupling/ring"),
+			COUPLING_CONNECTOR = getEntity("minecart_coupling/connector");
+
+	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS = new HashMap<>();
+	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES = new HashMap<>();
 
 	static {
 		populateMaps();
 	}
 
-	;
-
-	private ResourceLocation modelLocation;
-	private IBakedModel bakedModel;
-
-	private AllBlockPartials() {}
-
-	private static void populateMaps() {
-		for (AttachmentTypes type : AttachmentTypes.values()) {
+	static void populateMaps() {
+		for (FluidTransportBehaviour.AttachmentTypes type : FluidTransportBehaviour.AttachmentTypes.values()) {
 			if (!type.hasModel())
 				continue;
-			Map<Direction, AllBlockPartials> map = map();
+			Map<Direction, PartialModel> map = new HashMap<>();
 			for (Direction d : Iterate.directions) {
 				String asId = Lang.asId(type.name());
 				map.put(d, get("fluid_pipe/" + asId + "/" + Lang.asId(d.getString())));
 			}
 			PIPE_ATTACHMENTS.put(type, map);
 		}
-		for (HeatLevel heat : HeatLevel.values()) {
-			if (heat == HeatLevel.NONE)
+		for (BlazeBurnerBlock.HeatLevel heat : BlazeBurnerBlock.HeatLevel.values()) {
+			if (heat == BlazeBurnerBlock.HeatLevel.NONE)
 				continue;
 			BLAZES.put(heat, get("blaze_burner/blaze/" + heat.getString()));
 		}
 	}
 
-	private static <T, U> Map<T, U> map() {
-		return new HashMap<>();
+	private static PartialModel getEntity(String path) {
+		return new PartialModel(new ResourceLocation(Create.ID, "entity/" + path));
 	}
 
-	private static AllBlockPartials getEntity(String path) {
-		AllBlockPartials partials = new AllBlockPartials();
-		partials.modelLocation = new ResourceLocation(Create.ID, "entity/" + path);
-		all.add(partials);
-		return partials;
+	private static PartialModel get(String path) {
+		return new PartialModel(new ResourceLocation(Create.ID, "block/" + path));
 	}
 
-	private static AllBlockPartials get(String path) {
-		AllBlockPartials partials = new AllBlockPartials();
-		partials.modelLocation = new ResourceLocation(Create.ID, "block/" + path);
-		all.add(partials);
-		return partials;
+	public static void clientInit() {
+		// init static fields
 	}
-
-	public static void onModelRegistry(ModelRegistryEvent event) {
-		for (AllBlockPartials partial : all)
-			ModelLoader.addSpecialModel(partial.modelLocation);
-	}
-
-	public static void onModelBake(ModelBakeEvent event) {
-		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
-		for (AllBlockPartials partial : all)
-			partial.bakedModel = modelRegistry.get(partial.modelLocation);
-	}
-
-	public IBakedModel get() {
-		return bakedModel;
-	}
-
-	public SuperByteBuffer renderOn(BlockState referenceState) {
-		return CreateClient.bufferCache.renderPartial(this, referenceState);
-	}
-
-	public SuperByteBuffer renderOnDirectionalSouth(BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
-		return renderOnDirectionalSouth(referenceState, facing);
-	}
-
-	public SuperByteBuffer renderOnDirectional(BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
-		return renderOnDirectional(referenceState, facing);
-	}
-
-	public SuperByteBuffer renderOnHorizontal(BlockState referenceState) {
-		Direction facing = referenceState.get(HORIZONTAL_FACING);
-		return renderOnDirectionalSouth(referenceState, facing);
-	}
-
-	public SuperByteBuffer renderOnDirectionalSouth(BlockState referenceState, Direction facing) {
-		MatrixStack ms = new MatrixStack();
-		// TODO 1.15 find a way to cache this model matrix computation
-		MatrixStacker.of(ms)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(AngleHelper.verticalAngle(facing))
-			.unCentre();
-		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
-	}
-
-	public SuperByteBuffer renderOnDirectional(BlockState referenceState, Direction facing) {
-		MatrixStack ms = new MatrixStack();
-		// TODO 1.15 find a way to cache this model matrix computation
-		MatrixStacker.of(ms)
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.unCentre();
-		return CreateClient.bufferCache.renderDirectionalPartial(this, referenceState, facing, ms);
-	}
-
-	public <M extends InstancedModel<?>> M getModel(RenderMaterial<?, M> mat, BlockState referenceState, Direction facing) {
-		Supplier<MatrixStack> ms = () -> {
-			MatrixStack stack = new MatrixStack();
-			MatrixStacker.of(stack)
-						 .centre()
-						 .rotateY(AngleHelper.horizontalAngle(facing))
-						 .rotateX(AngleHelper.verticalAngle(facing))
-						 .unCentre();
-			return stack;
-		};
-		return mat.getModel(this, referenceState, facing, ms);
-	}
-
 }

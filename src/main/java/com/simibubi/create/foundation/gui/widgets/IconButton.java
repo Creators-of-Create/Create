@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.gui.widgets;
 
+import javax.annotation.Nonnull;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -18,7 +20,7 @@ public class IconButton extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
 			this.hovered =
 				mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -50,4 +52,7 @@ public class IconButton extends AbstractSimiWidget {
 		toolTip.add(text);
 	}
 
+	public void setIcon(AllIcons icon) {
+		this.icon = icon;
+	}
 }

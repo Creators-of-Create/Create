@@ -1,20 +1,37 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
+import static com.simibubi.create.content.contraptions.relays.belt.BeltPart.MIDDLE;
+import static com.simibubi.create.content.contraptions.relays.belt.BeltSlope.HORIZONTAL;
+import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
+import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.relays.belt.transport.*;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltInventory;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler;
 import com.simibubi.create.content.contraptions.relays.belt.transport.BeltMovementHandler.TransportedEntityInfo;
+import com.simibubi.create.content.contraptions.relays.belt.transport.BeltTunnelInteractionHandler;
+import com.simibubi.create.content.contraptions.relays.belt.transport.ItemHandlerBeltSegment;
+import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelTileEntity;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -43,16 +60,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.*;
-import java.util.function.Function;
-
-import static com.simibubi.create.content.contraptions.relays.belt.BeltPart.MIDDLE;
-import static com.simibubi.create.content.contraptions.relays.belt.BeltSlope.HORIZONTAL;
-import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
-
-
-public class BeltTileEntity extends KineticTileEntity implements LightUpdateListener {
+public class BeltTileEntity extends KineticTileEntity implements ILightUpdateListener {
 
 	public Map<Entity, TransportedEntityInfo> passengers;
 	public Optional<DyeColor> color;
@@ -109,7 +117,8 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 
 		if (light == null && world.isRemote) {
 			initializeLight();
-			LightUpdater.getInstance().startListening(getBeltVolume(), this);
+			LightUpdater.getInstance()
+				.startListening(getBeltVolume(), this);
 		}
 
 		getInventory().tick();
@@ -258,7 +267,7 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 			belt.color = Optional.ofNullable(colorIn);
 			belt.markDirty();
 			belt.sendData();
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(belt));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(belt));
 		}
 	}
 
@@ -414,6 +423,10 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 	private boolean canInsertFrom(Direction side) {
 		if (getSpeed() == 0)
 			return false;
+		BlockState state = getBlockState();
+		if (state.contains(BeltBlock.SLOPE)
+			&& (state.get(BeltBlock.SLOPE) == BeltSlope.SIDEWAYS || state.get(BeltBlock.SLOPE) == BeltSlope.VERTICAL))
+			return false;
 		return getMovementFacing() != side.getOpposite();
 	}
 
@@ -482,7 +495,7 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 		return empty;
 	}
 
-	public static ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
+	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
 
 	@Override
 	public IModelData getModelData() {
@@ -505,8 +518,11 @@ public class BeltTileEntity extends KineticTileEntity implements LightUpdateList
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
-		return isController();
+	public boolean shouldRenderNormally() {
+		if (world == null)
+			return isController();
+		BlockState state = getBlockState();
+		return state != null && state.contains(BeltBlock.PART) && state.get(BeltBlock.PART) == BeltPart.START;
 	}
 
 	@Override

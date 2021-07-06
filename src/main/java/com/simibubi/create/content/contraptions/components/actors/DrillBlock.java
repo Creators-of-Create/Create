@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
@@ -87,6 +88,11 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	@Override
 	public Class<DrillTileEntity> getTileEntityClass() {
 		return DrillTileEntity.class;
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 	public static double getDamage(float speed) {

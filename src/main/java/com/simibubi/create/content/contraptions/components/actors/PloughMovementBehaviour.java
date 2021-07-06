@@ -1,10 +1,14 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
+import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
+
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock.PloughFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.BubbleColumnBlock;
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.item.ItemStack;
@@ -22,8 +26,6 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-
-import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
 
 public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -71,10 +73,15 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
+		if (world.getBlockState(breakingPos.down())
+			.getBlock() instanceof FarmlandBlock)
+			return false;
+		if (state.getBlock() instanceof FlowingFluidBlock)
+			return false;
+		if (state.getBlock() instanceof BubbleColumnBlock)
+			return false;
 		return state.getCollisionShape(world, breakingPos)
-			.isEmpty() && !(state.getBlock() instanceof FlowingFluidBlock)
-			&& !(world.getBlockState(breakingPos.down())
-				.getBlock() instanceof FarmlandBlock);
+			.isEmpty();
 	}
 
 	@Override

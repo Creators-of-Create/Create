@@ -1,14 +1,16 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
@@ -30,14 +32,14 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
 
 		BlockState state = te.getBlockState();
 		Direction facing = state.get(GantryCarriageBlock.FACING);
 		Boolean alongFirst = state.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
 		Axis rotationAxis = getRotationAxisOf(te);
 		BlockPos visualPos = facing.getAxisDirection() == AxisDirection.POSITIVE ? te.getPos()
-			: te.getPos()
+				: te.getPos()
 				.offset(facing.getOpposite());
 		float angleForTe = getAngleForTe(te, visualPos, rotationAxis);
 
@@ -53,16 +55,16 @@ public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 			if (facing == Direction.NORTH || facing == Direction.EAST)
 				angleForTe *= -1;
 
-		SuperByteBuffer cogs = AllBlockPartials.GANTRY_COGS.renderOn(state);
+		SuperByteBuffer cogs = PartialBufferer.get(AllBlockPartials.GANTRY_COGS, state);
 		cogs.matrixStacker()
-			.centre()
-			.rotateY(AngleHelper.horizontalAngle(facing))
-			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
-			.rotateY(alongFirst ^ facing.getAxis() == Axis.Z ? 90 : 0)
-			.translate(0, -9 / 16f, 0)
-			.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-angleForTe))
-			.translate(0, 9 / 16f, 0)
-			.unCentre();
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
+				.rotateY(alongFirst ^ facing.getAxis() == Axis.Z ? 90 : 0)
+				.translate(0, -9 / 16f, 0)
+				.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-angleForTe))
+				.translate(0, 9 / 16f, 0)
+				.unCentre();
 
 		cogs.light(light)
 			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));

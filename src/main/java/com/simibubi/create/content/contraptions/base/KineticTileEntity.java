@@ -1,5 +1,14 @@
 package com.simibubi.create.content.contraptions.base;
 
+import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.util.text.TextFormatting.GRAY;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.KineticNetwork;
 import com.simibubi.create.content.contraptions.RotationPropagator;
@@ -8,13 +17,15 @@ import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import com.simibubi.create.foundation.sound.SoundScapes;
+import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
@@ -28,18 +39,14 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import javax.annotation.Nullable;
-import java.util.List;
-
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import net.minecraftforge.fml.DistExecutor;
 
 public abstract class KineticTileEntity extends SmartTileEntity
 	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
@@ -48,7 +55,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public @Nullable BlockPos source;
 	public boolean networkDirty;
 	public boolean updateSpeed;
-	public boolean preventSpeedUpdate;
+	public int preventSpeedUpdate;
 
 	protected KineticEffectHandler effects;
 	protected float speed;
@@ -91,6 +98,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 		if (world.isRemote) {
 			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.tickAudio());
 			return;
 		}
 
@@ -250,7 +258,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			FastRenderDispatcher.enqueueUpdate(this);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -322,7 +330,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public KineticNetwork getOrCreateNetwork() {
-		return Create.torquePropagator.getOrCreateNetworkFor(this);
+		return Create.TORQUE_PROPAGATOR.getOrCreateNetworkFor(this);
 	}
 
 	public boolean hasNetwork() {
@@ -389,21 +397,28 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
-			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.overstressed").formatted(GOLD)));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("gui.stressometer.overstressed")
+					.formatted(GOLD)));
 			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed");
 			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(componentSpacing.copy().append(cutString.get(i)));
+				tooltip.add(componentSpacing.copy()
+					.append(cutString.get(i)));
 			return true;
 		}
 
 		if (notFastEnough) {
-			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.speedRequirement").formatted(GOLD)));
-			ITextComponent hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
-				.getTranslationKey()));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("tooltip.speedRequirement")
+					.formatted(GOLD)));
+			ITextComponent hint =
+				Lang.translate("gui.contraptions.not_fast_enough", I18n.format(getBlockState().getBlock()
+					.getTranslationKey()));
 			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
-				tooltip.add(componentSpacing.copy().append(cutString.get(i)));
+				tooltip.add(componentSpacing.copy()
+					.append(cutString.get(i)));
 			return true;
 		}
 
@@ -416,13 +431,21 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		float stressAtBase = calculateStressApplied();
 
 		if (calculateStressApplied() != 0 && StressImpact.isEnabled()) {
-			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.kinetic_stats")));
-			tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.stressImpact").formatted(TextFormatting.GRAY)));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("gui.goggles.kinetic_stats")));
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("tooltip.stressImpact")
+					.formatted(TextFormatting.GRAY)));
 
 			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
 
-			tooltip.add(componentSpacing.copy().append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
-				.append(Lang.translate("generic.unit.stress")).append(" ").formatted(TextFormatting.AQUA)).append(Lang.translate("gui.goggles.at_current_speed").formatted(TextFormatting.DARK_GRAY)));
+			tooltip.add(componentSpacing.copy()
+				.append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
+					.append(Lang.translate("generic.unit.stress"))
+					.append(" ")
+					.formatted(TextFormatting.AQUA))
+				.append(Lang.translate("gui.goggles.at_current_speed")
+					.formatted(TextFormatting.DARK_GRAY)));
 
 			added = true;
 		}
@@ -452,6 +475,14 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	public static float convertToDirection(float axisSpeed, Direction d) {
 		return d.getAxisDirection() == AxisDirection.POSITIVE ? axisSpeed : -axisSpeed;
+	}
+
+	public static float convertToLinear(float speed) {
+		return speed / 512f;
+	}
+
+	public static float convertToAngular(float speed) {
+		return speed * 3 / 10f;
 	}
 
 	public boolean isOverStressed() {
@@ -529,12 +560,12 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	@Override
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
-		if (!this.removed) {
-			FastRenderDispatcher.enqueueUpdate(this);
-		}
+		if (!this.removed)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	protected AxisAlignedBB cachedBoundingBox;
+
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
@@ -546,4 +577,24 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	protected AxisAlignedBB makeRenderBoundingBox() {
 		return super.getRenderBoundingBox();
 	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void tickAudio() {
+		float componentSpeed = Math.abs(getSpeed());
+		if (componentSpeed == 0)
+			return;
+		float pitch = MathHelper.clamp((componentSpeed / 256f) + .45f, .85f, 1f);
+
+		if (isNoisy())
+			SoundScapes.play(AmbienceGroup.KINETIC, pos, pitch);
+
+		Block block = getBlockState().getBlock();
+		if (ICogWheel.isSmallCog(block) || ICogWheel.isLargeCog(block) || block instanceof GearboxBlock)
+			SoundScapes.play(AmbienceGroup.COG, pos, pitch);
+	}
+
+	protected boolean isNoisy() {
+		return true;
+	}
+
 }

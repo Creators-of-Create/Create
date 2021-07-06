@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
@@ -28,18 +29,16 @@ public class ExtendoGripRenderHandler {
 
 	public static float mainHandAnimation;
 	public static float lastMainHandAnimation;
-	public static AllBlockPartials pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
+	public static PartialModel pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
 
 	public static void tick() {
 		lastMainHandAnimation = mainHandAnimation;
 		mainHandAnimation *= MathHelper.clamp(mainHandAnimation, 0.8f, 0.99f);
 
-		Minecraft mc = Minecraft.getInstance();
-		ClientPlayerEntity player = mc.player;
 		pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
-		if (!AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand()))
+		if (!AllItems.EXTENDO_GRIP.isIn(getRenderedOffHandStack()))
 			return;
-		ItemStack main = player.getHeldItemMainhand();
+		ItemStack main = getRenderedMainHandStack();
 		if (main.isEmpty())
 			return;
 		if (!(main.getItem() instanceof BlockItem))
@@ -59,7 +58,7 @@ public class ExtendoGripRenderHandler {
 		ClientPlayerEntity player = mc.player;
 		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT;
 
-		ItemStack offhandItem = player.getHeldItemOffhand();
+		ItemStack offhandItem = getRenderedOffHandStack();
 		boolean notInOffhand = !AllItems.EXTENDO_GRIP.isIn(offhandItem);
 		if (notInOffhand && !AllItems.EXTENDO_GRIP.isIn(heldItem))
 			return;
@@ -135,6 +134,14 @@ public class ExtendoGripRenderHandler {
 		}
 		ms.pop();
 		event.setCanceled(true);
+	}
+
+	private static ItemStack getRenderedMainHandStack() {
+		return Minecraft.getInstance().getFirstPersonRenderer().itemStackMainHand;
+	}
+
+	private static ItemStack getRenderedOffHandStack() {
+		return Minecraft.getInstance().getFirstPersonRenderer().itemStackOffHand;
 	}
 
 }

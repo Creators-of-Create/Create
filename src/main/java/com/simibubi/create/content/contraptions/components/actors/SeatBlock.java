@@ -21,6 +21,7 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
@@ -95,12 +96,12 @@ public class SeatBlock extends Block {
 		ItemStack heldItem = player.getHeldItem(hand);
 		for (DyeColor color : DyeColor.values()) {
 			if (!heldItem.getItem()
-				.isIn(DyeHelper.getTagOfDye(color)))
+					.isIn(DyeHelper.getTagOfDye(color)))
 				continue;
 			if (world.isRemote)
 				return ActionResultType.SUCCESS;
 
-			BlockState newState = AllBlocks.SEATS[color.ordinal()].getDefaultState();
+			BlockState newState = AllBlocks.SEATS.get(color).getDefaultState();
 			if (newState != state)
 				world.setBlockState(pos, newState);
 			return ActionResultType.SUCCESS;
@@ -141,6 +142,11 @@ public class SeatBlock extends Block {
 		seat.setPos(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
 		world.addEntity(seat);
 		entity.startRiding(seat, true);
+	}
+
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

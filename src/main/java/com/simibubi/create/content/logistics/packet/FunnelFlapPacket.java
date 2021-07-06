@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.packet;
 
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.networking.TileEntityDataPacket;
+
 import net.minecraft.network.PacketBuffer;
 
 public class FunnelFlapPacket extends TileEntityDataPacket<FunnelTileEntity> {

@@ -74,9 +74,9 @@ public class DirectionHelper {
 			return WEST;
 		}
 	}
-	
+
 	public static Direction getPositivePerpendicular(Axis horizontalAxis) {
 		return horizontalAxis == Axis.X ? SOUTH : EAST;
 	}
-	
+
 }

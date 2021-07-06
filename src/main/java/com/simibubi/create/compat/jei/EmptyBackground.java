@@ -13,7 +13,7 @@ public class EmptyBackground implements IDrawable {
 		this.width = width;
 		this.height = height;
 	}
-	
+
 	@Override
 	public int getWidth() {
 		return width;
@@ -25,7 +25,6 @@ public class EmptyBackground implements IDrawable {
 	}
 
 	@Override
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
-	}
+	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {}
 
 }

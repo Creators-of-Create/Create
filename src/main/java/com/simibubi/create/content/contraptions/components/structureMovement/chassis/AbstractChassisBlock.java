@@ -5,6 +5,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,7 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -59,7 +64,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 						return ActionResultType.SUCCESS;
 					}
-					worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
+					AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 					state = state.with(glueableSide, true);
 				}
 			}
@@ -80,7 +85,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return ActionResultType.SUCCESS;
 		}
 
-		worldIn.playSound(null, pos, AllSoundEvents.SLIME_ADDED.get(), SoundCategory.BLOCKS, .5f, 1);
+		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 		worldIn.setBlockState(pos, state.with(affectedSide, isSlimeBall));
 		return ActionResultType.SUCCESS;
 	}

@@ -23,8 +23,10 @@ public enum TerrainTools {
 	Replace(AllIcons.I_REPLACE),
 	Clear(AllIcons.I_CLEAR),
 	Overlay(AllIcons.I_OVERLAY),
-	Flatten(AllIcons.I_FLATTEN);
+	Flatten(AllIcons.I_FLATTEN),
 
+	;
+	
 	public String translationKey;
 	public AllIcons icon;
 

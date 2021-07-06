@@ -44,6 +44,7 @@ public class PulleyScenes {
 		scene.idle(45);
 		scene.overlay.showText(60)
 			.pointAt(util.vector.blockSurface(pulleyPos, Direction.WEST))
+			.attachKeyFrame()
 			.text("Rope Pulleys can move blocks vertically when given Rotational Force")
 			.placeNearTarget();
 		scene.idle(70);
@@ -81,6 +82,7 @@ public class PulleyScenes {
 		scene.overlay.showText(80)
 			.pointAt(util.vector.blockSurface(util.grid.at(1, 2, 2), Direction.NORTH))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.sharedText("movement_anchors");
 		scene.idle(90);
 
@@ -136,6 +138,7 @@ public class PulleyScenes {
 		scene.idle(10);
 		scene.overlay.showSelectionWithText(util.select.position(flowerPos), 70)
 			.text("Whenever Pulleys stop moving, the moved structure reverts to blocks")
+			.attachKeyFrame()
 			.placeNearTarget()
 			.colored(PonderPalette.RED);
 		scene.idle(80);
@@ -157,6 +160,7 @@ public class PulleyScenes {
 		scene.overlay.showText(70)
 			.pointAt(util.vector.topOf(pulleyPos))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.sharedText("behaviour_modify_wrench");
 		scene.idle(80);
 
@@ -202,6 +206,7 @@ public class PulleyScenes {
 		scene.overlay.showText(50)
 			.pointAt(util.vector.blockSurface(pulleyPos, Direction.WEST))
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("Whenever Pulleys are themselves being moved by a Contraption...");
 		scene.idle(60);
 
@@ -215,6 +220,7 @@ public class PulleyScenes {
 		scene.overlay.showSelectionWithText(util.select.fromTo(1, 1, 1, 1, 1, 2), 50)
 			.colored(PonderPalette.GREEN)
 			.placeNearTarget()
+			.attachKeyFrame()
 			.text("...its attached structure will be dragged with it");
 		scene.idle(60);
 		scene.overlay.showText(80)

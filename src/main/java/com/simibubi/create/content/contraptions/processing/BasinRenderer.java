@@ -1,11 +1,18 @@
 package com.simibubi.create.content.contraptions.processing;
 
+import java.util.Random;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.*;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.MatrixStacker;
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -20,8 +27,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.Random;
 
 public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
@@ -81,9 +86,9 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 			for (int i = 0; i <= stack.getCount() / 8; i++) {
 				ms.push();
-				
+
 				Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1 / 16f);
-				
+
 				ms.translate(vec.x, vec.y, vec.z);
 				renderItem(ms, buffer, light, overlay, stack);
 				ms.pop();
@@ -109,13 +114,13 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			.getBlockState(basin.getPos()
 				.offset(direction))
 			.getBlock() instanceof BasinBlock;
-		
+
 		for (IntAttached<ItemStack> intAttached : basin.visualizedOutputItems) {
 			float progress = 1 - (intAttached.getFirst() - partialTicks) / BasinTileEntity.OUTPUT_ANIMATION_TIME;
-			
+
 			if (!outToBasin && progress > .35f)
 				continue;
-			
+
 			ms.push();
 			MatrixStacker.of(ms)
 				.translate(outVec)

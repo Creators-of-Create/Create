@@ -1,7 +1,22 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import java.io.IOException;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+
+import org.apache.commons.lang3.mutable.MutableInt;
+import org.apache.commons.lang3.tuple.MutablePair;
+
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.MountedContraption;
@@ -10,6 +25,7 @@ import com.simibubi.create.foundation.collision.Matrix3d;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -19,6 +35,7 @@ import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.datasync.DataParameter;
@@ -37,16 +54,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.apache.commons.lang3.mutable.MutableInt;
-import org.apache.commons.lang3.tuple.MutablePair;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final DataParameter<Boolean> STALLED =
-		EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
+			EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -69,7 +81,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return;
 		contraption.onEntityCreated(this);
 	}
-	
+
 	public boolean supportsTerrainCollision() {
 		return contraption instanceof TranslatingContraption;
 	}
@@ -133,9 +145,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
-		Vector3d transformedVector =
-			toGlobalVector(Vector3d.of(seat).add(.5, passenger.getYOffset() + ySize - .15f, .5), partialTicks)
-				.add(VecHelper.getCenterOf(BlockPos.ZERO))
+		Vector3d transformedVector = toGlobalVector(Vector3d.of(seat)
+			.add(.5, passenger.getYOffset() + ySize - .15f, .5), partialTicks).add(VecHelper.getCenterOf(BlockPos.ZERO))
 				.subtract(0.5, ySize, 0.5);
 		return transformedVector;
 	}
@@ -374,14 +385,33 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public void writeSpawnData(PacketBuffer buffer) {
 		CompoundNBT compound = new CompoundNBT();
 		writeAdditional(compound, true);
+
+		try {
+			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+			CompressedStreamTools.write(compound, dataOutput);
+			byte[] byteArray = dataOutput.toByteArray();
+			int estimatedPacketSize = byteArray.length;
+			if (estimatedPacketSize > 2_000_000) {
+				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
+						+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
+				buffer.writeCompoundTag(new CompoundNBT());
+				return;
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			buffer.writeCompoundTag(new CompoundNBT());
+			return;
+		}
+
 		buffer.writeCompoundTag(compound);
 	}
-	
+
 	@Override
 	protected final void writeAdditional(CompoundNBT compound) {
 		writeAdditional(compound, false);
 	}
-	
+
 	protected void writeAdditional(CompoundNBT compound, boolean spawnPacket) {
 		if (contraption != null)
 			compound.put("Contraption", contraption.writeNBT(spawnPacket));
@@ -393,13 +423,16 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public void readSpawnData(PacketBuffer additionalData) {
 		readAdditional(additionalData.readCompoundTag(), true);
 	}
-	
+
 	@Override
 	protected final void readAdditional(CompoundNBT compound) {
 		readAdditional(compound, false);
 	}
-	
+
 	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
+		if (compound.isEmpty())
+			return;
+
 		initialized = compound.getBoolean("Initialized");
 		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"), spawnData);
 		contraption.entity = this;
@@ -435,6 +468,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		removePassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
+		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(world, getBlockPos());
 	}
 
 	private void moveCollidedEntitiesOnDisassembly(StructureTransform transform) {
@@ -504,7 +538,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@OnlyIn(Dist.CLIENT)
 	static void handleDisassemblyPacket(ContraptionDisassemblyPacket packet) {
-  		Entity entity = Minecraft.getInstance().world.getEntityByID(packet.entityID);
+		Entity entity = Minecraft.getInstance().world.getEntityByID(packet.entityID);
 		if (!(entity instanceof AbstractContraptionEntity))
 			return;
 		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
@@ -644,25 +678,25 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	}
 
-	//@Override //TODO find 1.16 replacement
-	//public void updateAquatics() {
+
+	@Override
+	protected boolean updateWaterState() {
 		/*
-		Override this with an empty method to reduce enormous calculation time when contraptions are in water
-		WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
-		- Fluids will not try to change contraption movement direction
-		- this.inWater and this.isInWater() will return unreliable data
-		- entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
-		- fall distance is not reset when the contraption is in water
-		- this.eyesInWater and this.canSwim() will always be false
-		- swimming state will never be updated
+		 * Override this with an empty method to reduce enormous calculation time when contraptions are in water
+		 * WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
+		 * - Fluids will not try to change contraption movement direction
+		 * - this.inWater and this.isInWater() will return unreliable data
+		 * - entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
+		 * - fall distance is not reset when the contraption is in water
+		 * - this.eyesInWater and this.canSwim() will always be false
+		 * - swimming state will never be updated
 		 */
-	//	extinguish();
-	//}
+		return false;
+	}
 
 	@Override
 	public void setFire(int p_70015_1_) {
-		 // Contraptions no longer catch fire
+		// Contraptions no longer catch fire
 	}
-
 
 }

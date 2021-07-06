@@ -2,8 +2,6 @@ package com.simibubi.create;
 
 import java.util.Random;
 
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.placement.Placement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.curiosities.weapons.PotatoCannonProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
@@ -27,18 +26,20 @@ import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.LangMerger;
 import com.simibubi.create.foundation.data.recipe.MechanicalCraftingRecipeGen;
 import com.simibubi.create.foundation.data.recipe.ProcessingRecipeGen;
+import com.simibubi.create.foundation.data.recipe.SequencedAssemblyRecipeGen;
 import com.simibubi.create.foundation.data.recipe.StandardRecipeGen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import com.tterrag.registrate.util.NonNullLazyValue;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -55,98 +56,97 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.3.1a";
+	public static final String VERSION = "0.3.2";
 
-	public static Logger logger = LogManager.getLogger();
-	public static ItemGroup baseCreativeTab = new CreateItemGroup();
-	public static ItemGroup palettesCreativeTab = new PalettesItemGroup();
+	public static final Logger LOGGER = LogManager.getLogger();
 
-	public static Gson GSON = new GsonBuilder().setPrettyPrinting()
+	public static final Gson GSON = new GsonBuilder().setPrettyPrinting()
 		.disableHtmlEscaping()
 		.create();
 
-	public static ServerSchematicLoader schematicReceiver;
-	public static RedstoneLinkNetworkHandler redstoneLinkNetworkHandler;
-	public static TorquePropagator torquePropagator;
-	public static ServerLagger lagger;
-	public static ChunkUtil chunkUtil;
-	public static Random random;
+	public static final ItemGroup BASE_CREATIVE_TAB = new CreateItemGroup();
+	public static final ItemGroup PALETTES_CREATIVE_TAB = new PalettesItemGroup();
 
-	private static final NonNullLazyValue<CreateRegistrate> registrate = CreateRegistrate.lazy(ID);
+	public static final ServerSchematicLoader SCHEMATIC_RECEIVER = new ServerSchematicLoader();
+	public static final RedstoneLinkNetworkHandler REDSTONE_LINK_NETWORK_HANDLER = new RedstoneLinkNetworkHandler();
+	public static final TorquePropagator TORQUE_PROPAGATOR = new TorquePropagator();
+	public static final ServerLagger LAGGER = new ServerLagger();
+	public static final ChunkUtil CHUNK_UTIL = new ChunkUtil();
+	public static final Random RANDOM = new Random();
+
+	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
 	public Create() {
-		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-			.getModEventBus();
-
+		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
 		AllFluids.register();
 		AllTags.register();
 		AllPaletteBlocks.register();
+		AllContainerTypes.register();
 		AllEntityTypes.register();
 		AllTileEntities.register();
 		AllMovementBehaviours.register();
 		AllWorldFeatures.register();
+		AllConfigs.register();
+
+		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+			.getModEventBus();
+		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		modEventBus.addListener(Create::init);
-		MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
 		modEventBus.addGenericListener(Placement.class, AllWorldFeatures::registerDecoratorFeatures);
 		modEventBus.addGenericListener(IRecipeSerializer.class, AllRecipeTypes::register);
-		modEventBus.addGenericListener(ContainerType.class, AllContainerTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
+		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 
-		AllConfigs.register();
-		random = new Random();
-
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> CreateClient.addClientListeners(modEventBus));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
 		CapabilityMinecartController.register();
 		SchematicInstances.register();
-		schematicReceiver = new ServerSchematicLoader();
-		redstoneLinkNetworkHandler = new RedstoneLinkNetworkHandler();
-		torquePropagator = new TorquePropagator();
-		lagger = new ServerLagger();
 
-		chunkUtil = new ChunkUtil();
-		chunkUtil.init();
-		MinecraftForge.EVENT_BUS.register(chunkUtil);
+		CHUNK_UTIL.init();
+		MinecraftForge.EVENT_BUS.register(CHUNK_UTIL);
 
 		AllPackets.registerPackets();
 		AllTriggers.register();
-		
+		PotatoCannonProjectileTypes.register();
+
 		event.enqueueWork(() -> {
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
 		});
-	}
-	
-	public static void onBiomeLoad(BiomeLoadingEvent event) {
-		AllWorldFeatures.reload(event);
-	}
-
-	public static CreateRegistrate registrate() {
-		return registrate.get();
-	}
-
-	public static ResourceLocation asResource(String path) {
-		return new ResourceLocation(ID, path);
 	}
 
 	public void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.BLAZE_MUNCH.generator(gen));
+		gen.addProvider(AllSoundEvents.provider(gen));
 		gen.addProvider(new StandardRecipeGen(gen));
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
+	}
+
+	public static void onBiomeLoad(BiomeLoadingEvent event) {
+		AllWorldFeatures.reload(event);
+	}
+
+	public static CreateRegistrate registrate() {
+		return REGISTRATE.get();
+	}
+
+	public static ResourceLocation asResource(String path) {
+		return new ResourceLocation(ID, path);
 	}
 
 }

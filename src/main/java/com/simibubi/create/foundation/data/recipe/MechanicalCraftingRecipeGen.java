@@ -29,18 +29,9 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			.patternLine("AAPAA")
 			.patternLine(" AAA ")),
 
-		INTEGRATED_CIRCUIT = create(AllItems.INTEGRATED_CIRCUIT::get).returns(1)
-			.recipe(b -> b.key('L', AllItems.LAPIS_SHEET.get())
-				.key('R', Ingredient.fromTag(I.redstone()))
-				.key('Q', AllItems.POLISHED_ROSE_QUARTZ.get())
-				.key('C', Ingredient.fromTag(Tags.Items.NUGGETS_GOLD))
-				.patternLine("  L  ")
-				.patternLine("RRQRR")
-				.patternLine(" CCC ")),
-
 		EXTENDO_GRIP = create(AllItems.EXTENDO_GRIP::get).returns(1)
 			.recipe(b -> b.key('L', Ingredient.fromTag(I.brass()))
-				.key('R', I.cog())
+				.key('R', I.precisionMechanism())
 				.key('H', AllItems.BRASS_HAND.get())
 				.key('S', Ingredient.fromTag(Tags.Items.RODS_WOODEN))
 				.patternLine(" L ")
@@ -48,6 +39,16 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.patternLine("SSS")
 				.patternLine("SSS")
 				.patternLine(" H ")),
+			
+		POTATO_CANNON = create(AllItems.POTATO_CANNON::get).returns(1)
+			.recipe(b -> b.key('L', I.andesite())
+				.key('R', I.precisionMechanism())
+				.key('S', Ingredient.fromTag(I.copper()))
+				.patternLine("L")
+				.patternLine("R")
+				.patternLine("S")
+				.patternLine("S")
+				.patternLine("S")),
 
 		FURNACE_ENGINE = create(AllBlocks.FURNACE_ENGINE::get).returns(1)
 			.recipe(b -> b.key('P', Ingredient.fromTag(I.brassSheet()))

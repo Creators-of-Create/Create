@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import com.google.common.collect.Maps;
 import com.simibubi.create.Create;
 
@@ -17,9 +20,6 @@ import net.minecraft.advancements.criterion.CriterionInstance;
 import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -42,9 +42,9 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 	@Override
 	public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
 		Set<Listener<T>> playerListeners = this.listeners.get(playerAdvancementsIn);
-		if (playerListeners != null){
+		if (playerListeners != null) {
 			playerListeners.remove(listener);
-			if (playerListeners.isEmpty()){
+			if (playerListeners.isEmpty()) {
 				this.listeners.remove(playerAdvancementsIn);
 			}
 		}
@@ -60,15 +60,15 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		return ID;
 	}
 
-	protected void trigger(ServerPlayerEntity player, @Nullable List<Supplier<Object>> suppliers){
+	protected void trigger(ServerPlayerEntity player, @Nullable List<Supplier<Object>> suppliers) {
 		PlayerAdvancements playerAdvancements = player.getAdvancements();
 		Set<Listener<T>> playerListeners = this.listeners.get(playerAdvancements);
-		if (playerListeners != null){
+		if (playerListeners != null) {
 			List<Listener<T>> list = new LinkedList<>();
 
-			for (Listener<T> listener :
-					playerListeners) {
-				if (listener.getCriterionInstance().test(suppliers)) {
+			for (Listener<T> listener : playerListeners) {
+				if (listener.getCriterionInstance()
+					.test(suppliers)) {
 					list.add(listener);
 				}
 			}
@@ -86,6 +86,5 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 
 		protected abstract boolean test(@Nullable List<Supplier<Object>> suppliers);
 	}
-
 
 }

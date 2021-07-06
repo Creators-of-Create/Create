@@ -5,10 +5,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
-import com.google.common.base.Predicates;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.simibubi.create.AllTags;
+
+import com.simibubi.create.compat.Mods;
+
+import com.simibubi.create.compat.dynamictrees.DynamicTree;
 
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
@@ -21,31 +30,41 @@ import net.minecraft.block.KelpBlock;
 import net.minecraft.block.KelpTopBlock;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 public class TreeCutter {
+	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
 
-	public static class Tree {
-		public List<BlockPos> logs;
-		public List<BlockPos> leaves;
+	public static boolean canDynamicTreeCutFrom(Block startBlock) {
+		return Mods.DYNAMICTREES.runIfInstalled(() -> () -> DynamicTree.isDynamicBranch(startBlock)).orElse(false);
+	}
 
-		public Tree(List<BlockPos> logs, List<BlockPos> leaves) {
-			this.logs = logs;
-			this.leaves = leaves;
+	@Nonnull
+	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
+		if (canDynamicTreeCutFrom(startBlock)) {
+			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
 		}
+		return Optional.empty();
 	}
 
 	/**
 	 * Finds a tree at the given pos. Block at the position should be air
-	 * 
+	 *
 	 * @param reader
 	 * @param pos
 	 * @return null if not found or not fully cut
 	 */
-	public static Tree cutTree(IBlockReader reader, BlockPos pos) {
+	@Nonnull
+	public static Tree findTree(@Nullable IBlockReader reader, BlockPos pos) {
+		if (reader == null)
+			return NO_TREE;
+
 		List<BlockPos> logs = new ArrayList<>();
 		List<BlockPos> leaves = new ArrayList<>();
 		Set<BlockPos> visited = new HashSet<>();
@@ -87,7 +106,7 @@ public class TreeCutter {
 
 		// Regular Tree
 		if (!validateCut(reader, pos))
-			return null;
+			return NO_TREE;
 
 		visited.add(pos);
 		BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 1, 1))
@@ -112,9 +131,8 @@ public class TreeCutter {
 		frontier.addAll(logs);
 		while (!frontier.isEmpty()) {
 			BlockPos currentPos = frontier.remove(0);
-			if (!logs.contains(currentPos))
-				if (visited.contains(currentPos))
-					continue;
+			if (!logs.contains(currentPos) && visited.contains(currentPos))
+				continue;
 			visited.add(currentPos);
 
 			BlockState blockState = reader.getBlockState(currentPos);
@@ -135,7 +153,8 @@ public class TreeCutter {
 				BlockState state = reader.getBlockState(offset);
 				BlockPos subtract = offset.subtract(pos);
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
-				if (isLeaf(state) && state.get(LeavesBlock.DISTANCE) > distance || isNonDecayingLeaf(state) && horizontalDistance < 4)
+				if (isLeaf(state) && state.get(LeavesBlock.DISTANCE) > distance
+					|| isNonDecayingLeaf(state) && horizontalDistance < 4)
 					frontier.add(offset);
 			}
 
@@ -158,15 +177,13 @@ public class TreeCutter {
 			return true;
 		if (block instanceof KelpBlock)
 			return true;
-		if (block instanceof KelpTopBlock)
-			return true;
-		return false;
+		return block instanceof KelpTopBlock;
 	}
 
 	/**
 	 * Checks whether a tree was fully cut by seeing whether the layer above the cut
 	 * is not supported by any more logs.
-	 * 
+	 *
 	 * @param reader
 	 * @param pos
 	 * @return
@@ -206,7 +223,7 @@ public class TreeCutter {
 
 	private static void addNeighbours(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
 		BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1))
-			.filter(Predicates.not(visited::contains))
+			.filter(((Predicate<BlockPos>) visited::contains).negate())
 			.forEach(p -> frontier.add(new BlockPos(p)));
 	}
 
@@ -222,4 +239,20 @@ public class TreeCutter {
 		return state.contains(LeavesBlock.DISTANCE);
 	}
 
+	public static class Tree extends AbstractBlockBreakQueue {
+		private final List<BlockPos> logs;
+		private final List<BlockPos> leaves;
+
+		public Tree(List<BlockPos> logs, List<BlockPos> leaves) {
+			this.logs = logs;
+			this.leaves = leaves;
+		}
+
+		@Override
+		public void destroyBlocks(World world, ItemStack toDamage, @Nullable PlayerEntity playerEntity,
+			BiConsumer<BlockPos, ItemStack> drop) {
+			logs.forEach(makeCallbackFor(world, 1 / 2f, toDamage, playerEntity, drop));
+			leaves.forEach(makeCallbackFor(world, 1 / 8f, toDamage, playerEntity, drop));
+		}
+	}
 }

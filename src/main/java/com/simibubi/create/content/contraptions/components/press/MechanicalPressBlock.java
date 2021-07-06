@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.ITE;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -64,6 +65,11 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	@Override
 	public Class<MechanicalPressTileEntity> getTileEntityClass() {
 		return MechanicalPressTileEntity.class;
+	}
+	
+	@Override
+	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+		return false;
 	}
 
 }

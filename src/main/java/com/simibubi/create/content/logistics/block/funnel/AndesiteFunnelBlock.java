@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
 import com.simibubi.create.AllBlocks;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;

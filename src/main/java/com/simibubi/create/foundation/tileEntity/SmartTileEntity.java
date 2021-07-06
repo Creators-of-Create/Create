@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -16,7 +20,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity {
+public abstract class SmartTileEntity extends SyncedTileEntity implements ITickableTileEntity, IPartialSafeNBT, IInteractionChecker {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 	// Internally maintained to be identical to behaviorMap.values() in order to improve iteration performance.
@@ -119,6 +123,23 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
+	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+		super.write(compound);
+		behaviourList.forEach(tb -> {
+			if (tb.isSafeNBT())
+				tb.write(compound, clientPacket);
+		});
+	}
+
+	public ItemRequirement getRequiredItems() {
+		return behaviourList.stream().reduce(
+				ItemRequirement.NONE,
+				(a, b) -> a.with(b.getRequiredItems()),
+				(a, b) -> a.with(b)
+		);
+	}
+
+	@Override
 	public void remove() {
 		forEachBehaviour(TileEntityBehaviour::remove);
 		super.remove();
@@ -173,13 +194,21 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	protected boolean isFluidHandlerCap(Capability<?> cap) {
 		return cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 	}
-	
+
 	public void markVirtual() {
 		virtualMode = true;
 	}
-	
+
 	public boolean isVirtual() {
 		return virtualMode;
+	}
+
+	@Override
+	public boolean canPlayerUse(PlayerEntity player) {
+		if (world == null || world.getTileEntity(pos) != this) {
+			return false;
+		}
+		return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 }

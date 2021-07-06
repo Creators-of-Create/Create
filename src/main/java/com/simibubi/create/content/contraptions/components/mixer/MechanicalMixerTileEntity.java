@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinOperatingTileEntity;
@@ -14,6 +15,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
+import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -27,9 +30,13 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -120,6 +127,19 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if ((!world.isRemote || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					processingTicks = MathHelper.clamp((MathHelper.log2((int) (512 / speed))) * 15 + 1, 1, 512);
+
+					Optional<BasinTileEntity> basin = getBasin();
+					if (basin.isPresent()) {
+						Couple<SmartFluidTankBehaviour> tanks = basin.get()
+							.getTanks();
+						if (!tanks.getFirst()
+							.isEmpty()
+							|| !tanks.getSecond()
+								.isEmpty())
+							world.playSound(null, pos, SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
+								SoundCategory.BLOCKS, .75f, speed < 65 ? .75f : 1.5f);
+					}
+
 				} else {
 					processingTicks--;
 					if (processingTicks == 0) {
@@ -249,4 +269,18 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
 		return Optional.of(AllTriggers.MIXER_MIX);
 	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void tickAudio() {
+		super.tickAudio();
+
+		// SoundEvents.BLOCK_STONE_BREAK
+		boolean slow = Math.abs(getSpeed()) < 65;
+		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
+			return;
+		if (runningTicks == 20) 
+			AllSoundEvents.MIXING.playAt(world, pos, .75f, 1, true);
+	}
+
 }

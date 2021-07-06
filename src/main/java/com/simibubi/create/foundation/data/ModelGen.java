@@ -42,7 +42,7 @@ public class ModelGen {
 	}
 
 	public static <I extends BlockItem, P> NonNullFunction<ItemBuilder<I, P>, P> customItemModel(String... path) {
-		return b -> b.model(AssetLookup.customItemModel(path))
+		return b -> b.model(AssetLookup.customBlockItemModel(path))
 			.build();
 	}
 

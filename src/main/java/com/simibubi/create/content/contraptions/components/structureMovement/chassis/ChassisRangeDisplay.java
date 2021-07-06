@@ -35,11 +35,11 @@ public class ChassisRangeDisplay {
 		public Entry(ChassisTileEntity te) {
 			this.te = te;
 			timer = DISPLAY_TIME;
-			CreateClient.outliner.showCluster(getOutlineKey(), createSelection(te))
-				.colored(0xFFFFFF)
-				.disableNormals()
-				.lineWidth(1 / 16f)
-				.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
+			CreateClient.OUTLINER.showCluster(getOutlineKey(), createSelection(te))
+					.colored(0xFFFFFF)
+					.disableNormals()
+					.lineWidth(1 / 16f)
+					.withFaceTexture(AllSpecialTextures.HIGHLIGHT_CHECKERED);
 		}
 
 		protected Object getOutlineKey() {
@@ -97,7 +97,7 @@ public class ChassisRangeDisplay {
 			Entry entry = entries.get(pos);
 			if (tickEntry(entry, hasWrench))
 				iterator.remove();
-			CreateClient.outliner.keep(entry.getOutlineKey());
+			CreateClient.OUTLINER.keep(entry.getOutlineKey());
 		}
 
 		for (Iterator<GroupEntry> iterator = groupEntries.iterator(); iterator.hasNext();) {
@@ -107,7 +107,7 @@ public class ChassisRangeDisplay {
 				if (group == lastHoveredGroup)
 					lastHoveredGroup = null;
 			}
-			CreateClient.outliner.keep(group.getOutlineKey());
+			CreateClient.OUTLINER.keep(group.getOutlineKey());
 		}
 
 		if (!hasWrench)
@@ -173,9 +173,9 @@ public class ChassisRangeDisplay {
 			GroupEntry hoveredGroup = new GroupEntry(chassis);
 
 			for (ChassisTileEntity included : hoveredGroup.includedTEs)
-				CreateClient.outliner.remove(included.getPos());
+				CreateClient.OUTLINER.remove(included.getPos());
 
-			groupEntries.forEach(entry -> CreateClient.outliner.remove(entry.getOutlineKey()));
+			groupEntries.forEach(entry -> CreateClient.OUTLINER.remove(entry.getOutlineKey()));
 			groupEntries.clear();
 			entries.clear();
 			groupEntries.add(hoveredGroup);
@@ -186,7 +186,7 @@ public class ChassisRangeDisplay {
 		BlockPos pos = chassis.getPos();
 		GroupEntry entry = getExistingGroupForPos(pos);
 		if (entry != null)
-			CreateClient.outliner.remove(entry.getOutlineKey());
+			CreateClient.OUTLINER.remove(entry.getOutlineKey());
 
 		groupEntries.clear();
 		entries.clear();

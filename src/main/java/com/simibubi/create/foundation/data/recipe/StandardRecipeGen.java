@@ -1,5 +1,17 @@
 package com.simibubi.create.foundation.data.recipe;
 
+import static com.simibubi.create.foundation.data.recipe.Mods.EID;
+import static com.simibubi.create.foundation.data.recipe.Mods.IE;
+import static com.simibubi.create.foundation.data.recipe.Mods.INF;
+import static com.simibubi.create.foundation.data.recipe.Mods.MEK;
+import static com.simibubi.create.foundation.data.recipe.Mods.MW;
+import static com.simibubi.create.foundation.data.recipe.Mods.SM;
+import static com.simibubi.create.foundation.data.recipe.Mods.TH;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.UnaryOperator;
+
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
@@ -15,10 +27,15 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
+
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.*;
+import net.minecraft.data.CookingRecipeBuilder;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.IFinishedRecipe;
+import net.minecraft.data.ShapedRecipeBuilder;
+import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.CookingRecipeSerializer;
@@ -34,18 +51,12 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.UnaryOperator;
-
-import static com.simibubi.create.foundation.data.recipe.Mods.*;
-
 @SuppressWarnings("unused")
 public class StandardRecipeGen extends CreateRecipeProvider {
 
 	/*
 	 * Recipes are added through fields, so one can navigate to the right one easily
-	 * 
+	 *
 	 * (Ctrl-o) in Eclipse
 	 */
 
@@ -147,22 +158,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	private Marker CURIOSITIES = enterSection(AllSections.CURIOSITIES);
 
-	GeneratedRecipe DEFORESTER = create(AllItems.DEFORESTER).unlockedBy(I::refinedRadiance)
+	GeneratedRecipe WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
 		.viaShaped(b -> b.key('E', I.refinedRadiance())
-			.key('G', I.cog())
+			.key('G', Tags.Items.GLASS_PANES_WHITE)
 			.key('O', Tags.Items.OBSIDIAN)
-			.patternLine("EG")
-			.patternLine("EO")
-			.patternLine(" O")),
-
-		WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
-			.viaShaped(b -> b.key('E', I.refinedRadiance())
-				.key('G', Tags.Items.GLASS_PANES_WHITE)
-				.key('O', Tags.Items.OBSIDIAN)
-				.key('L', I.brass())
-				.patternLine(" GE")
-				.patternLine("LEG")
-				.patternLine("OL ")),
+			.key('L', I.brass())
+			.patternLine(" GE")
+			.patternLine("LEG")
+			.patternLine("OL ")),
 
 		MINECART_COUPLING = create(AllItems.MINECART_COUPLING).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('E', I.andesite())
@@ -171,13 +174,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" O ")
 				.patternLine("E  ")),
 
-		BLOCKZAPPER = create(AllItems.BLOCKZAPPER).unlockedBy(I::refinedRadiance)
-			.viaShaped(b -> b.key('E', I.refinedRadiance())
-				.key('A', I.andesite())
-				.key('O', Tags.Items.OBSIDIAN)
-				.patternLine("  E")
-				.patternLine(" O ")
-				.patternLine("OA "))
+		PECULIAR_BELL = create(AllBlocks.PECULIAR_BELL).unlockedByTag(I::brass)
+			.viaShaped(b -> b.key('I', I.brassBlock())
+				.key('P', I.brassSheet())
+				.patternLine("I")
+				.patternLine("P"))
 
 	;
 
@@ -599,13 +600,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).unlockedBy(I::brassCasing)
 			.returns(1)
 			.viaShaped(b -> b.key('L', I.brassSheet())
-				.key('R', I.cog())
-				.key('I', I.electronTube())
+				.key('I', I.precisionMechanism())
 				.key('A', I.andesite())
 				.key('C', I.brassCasing())
 				.patternLine("LLA")
-				.patternLine("LR ")
-				.patternLine("ICI")),
+				.patternLine("L  ")
+				.patternLine("IC ")),
 
 		MECHANICAL_MIXER = create(AllBlocks.MECHANICAL_MIXER).unlockedBy(I::andesite)
 			.viaShaped(b -> b.key('S', I.cog())
@@ -719,13 +719,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		GAUGE_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.SPEEDOMETER, AllBlocks.STRESSOMETER)),
 
 		ROTATION_SPEED_CONTROLLER = create(AllBlocks.ROTATION_SPEED_CONTROLLER).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.circuit())
+			.viaShaped(b -> b.key('B', I.precisionMechanism())
 				.key('C', I.brassCasing())
 				.key('S', I.shaft())
 				.patternLine(" B ")
 				.patternLine("SCS")),
 
-		NIXIE_TUBE = create(AllBlocks.NIXIE_TUBE).unlockedBy(I::brassCasing)
+		NIXIE_TUBE = create(AllBlocks.ORANGE_NIXIE_TUBE).unlockedBy(I::brassCasing)
 			.viaShaped(b -> b.key('E', I.electronTube())
 				.key('B', I.brassCasing())
 				.patternLine("EBE")),
@@ -952,6 +952,39 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	DOUGH = create(AllItems.DOUGH).unlockedBy(AllItems.WHEAT_FLOUR::get)
 		.viaShapeless(b -> b.addIngredient(AllItems.WHEAT_FLOUR.get())
 			.addIngredient(Items.WATER_BUCKET)),
+
+		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('G', Tags.Items.GLASS)
+				.key('P', I.copper())
+				.patternLine("PPP")
+				.patternLine("PGP")),
+
+		COPPER_BACKTANK = create(AllItems.COPPER_BACKTANK).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('G', I.shaft())
+				.key('A', I.andesite())
+				.key('B', I.copperBlock())
+				.key('P', I.copper())
+				.patternLine("AGA")
+				.patternLine("PBP")
+				.patternLine(" P ")),
+
+		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedByTag(I::copper)
+			.viaShaped(b -> b.key('G', I.andesite())
+				.key('P', I.copper())
+				.patternLine("P P")
+				.patternLine("P P")
+				.patternLine("G G")),
+
+		LINKED_CONTROLLER = create(AllItems.LINKED_CONTROLLER).unlockedBy(AllBlocks.REDSTONE_LINK::get)
+			.viaShaped(b -> b.key('S', ItemTags.WOODEN_BUTTONS)
+				.key('P', AllBlocks.REDSTONE_LINK.get())
+				.patternLine("SSS")
+				.patternLine(" P ")
+				.patternLine("SSS")),
+
+		CRAFTING_BLUEPRINT = create(AllItems.CRAFTING_BLUEPRINT).unlockedBy(() -> Items.CRAFTING_TABLE)
+			.viaShapeless(b -> b.addIngredient(Items.PAINTING)
+				.addIngredient(Items.CRAFTING_TABLE)),
 
 		SLIME_BALL = create(() -> Items.SLIME_BALL).unlockedBy(AllItems.DOUGH::get)
 			.viaShapeless(b -> b.addIngredient(AllItems.DOUGH.get())

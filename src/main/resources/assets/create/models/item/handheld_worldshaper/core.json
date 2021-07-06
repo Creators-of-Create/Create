@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "create:item/handheld_blockzapper/item",
+	"parent": "create:item/handheld_worldshaper/item",
 	"textures": {
 		"2": "block/white_concrete_powder"
 	},

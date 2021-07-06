@@ -44,8 +44,10 @@ public class WindowGen {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	private static Properties glassProperties(Properties p) {
-		return p.allowsSpawning(WindowGen::never).solidBlock(WindowGen::never).suffocates(WindowGen::never)
-				.blockVision(WindowGen::never);
+		return p.allowsSpawning(WindowGen::never)
+			.solidBlock(WindowGen::never)
+			.suffocates(WindowGen::never)
+			.blockVision(WindowGen::never);
 	}
 
 	private static boolean never(BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
@@ -53,7 +55,7 @@ public class WindowGen {
 	}
 
 	private static Boolean never(BlockState p_235427_0_, IBlockReader p_235427_1_, BlockPos p_235427_2_,
-			EntityType<?> p_235427_3_) {
+		EntityType<?> p_235427_3_) {
 		return false;
 	}
 

@@ -8,8 +8,8 @@
   "results": [
     {
       "item": "minecraft:warped_planks",
-      "count": 5
+      "count": 6
     }
   ],
-  "processingTime": 100
+  "processingTime": 50
 }

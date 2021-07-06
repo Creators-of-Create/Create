@@ -197,7 +197,7 @@ public class MinecartController implements INBTSerializable<CompoundNBT> {
 
 			while (true) {
 				if (safetyCount-- <= 0) {
-					Create.logger.warn("Infinite loop in coupling iteration");
+					Create.LOGGER.warn("Infinite loop in coupling iteration");
 					return;
 				}
 				cartsToFlip.add(current);

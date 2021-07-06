@@ -1,14 +1,14 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.TreeCutter;
-import com.simibubi.create.foundation.utility.TreeCutter.Tree;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -23,6 +23,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.Optional;
 
 public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -59,14 +61,14 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {
 		if (brokenState.isIn(BlockTags.LEAVES))
 			return;
-		Tree tree = TreeCutter.cutTree(context.world, pos);
-		if (tree != null) {
-			for (BlockPos log : tree.logs)
-				BlockHelper.destroyBlock(context.world, log, 1 / 2f, stack -> dropItemFromCutTree(context, log, stack));
-			for (BlockPos leaf : tree.leaves)
-				BlockHelper.destroyBlock(context.world, leaf, 1 / 8f,
-						stack -> dropItemFromCutTree(context, leaf, stack));
+
+		Optional<AbstractBlockBreakQueue> dynamicTree = TreeCutter.findDynamicTree(brokenState.getBlock(), pos);
+		if (dynamicTree.isPresent()) {
+			dynamicTree.get().destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
+			return;
 		}
+
+		TreeCutter.findTree(context.world, pos).destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
 	}
 
 	public void dropItemFromCutTree(MovementContext context, BlockPos pos, ItemStack stack) {
@@ -84,9 +86,14 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-									IRenderTypeBuffer buffer) {
-		SawRenderer.renderInContraption(context, ms, msLocal, buffer);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+									ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
+	}
+
+	@Override
+	protected boolean shouldDestroyStartBlock(BlockState stateToBreak) {
+		return !TreeCutter.canDynamicTreeCutFrom(stateToBreak.getBlock());
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 public class FilterScreenPacket extends SimplePacketBase {
 
 	public enum Option {
-		CLEAR, WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG;
+		WHITELIST, WHITELIST2, BLACKLIST, RESPECT_DATA, IGNORE_DATA, UPDATE_FILTER_ITEM, ADD_TAG, ADD_INVERTED_TAG;
 	}
 
 	private final Option option;
@@ -46,14 +46,6 @@ public class FilterScreenPacket extends SimplePacketBase {
 			if (player == null)
 				return;
 
-			if (player.openContainer instanceof AbstractFilterContainer) {
-				AbstractFilterContainer c = (AbstractFilterContainer) player.openContainer;
-				if (option == Option.CLEAR) {
-					c.clearContents();
-					return;
-				}
-			}
-
 			if (player.openContainer instanceof FilterContainer) {
 				FilterContainer c = (FilterContainer) player.openContainer;
 				if (option == Option.WHITELIST)
@@ -65,7 +57,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 				if (option == Option.IGNORE_DATA)
 					c.respectNBT = false;
 				if (option == Option.UPDATE_FILTER_ITEM)
-					c.filterInventory.setStackInSlot(
+					c.ghostInventory.setStackInSlot(
 							data.getInt("Slot"),
 							net.minecraft.item.ItemStack.read(data.getCompound("Item")));
 			}

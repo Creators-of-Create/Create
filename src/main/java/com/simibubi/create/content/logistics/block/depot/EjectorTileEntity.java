@@ -47,11 +47,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceContext.BlockMode;
 import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -483,12 +483,19 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	@Override
+	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+		super.writeSafe(compound, clientPacket);
+		compound.putInt("HorizontalDistance", launcher.getHorizontalDistance());
+		compound.putInt("VerticalDistance", launcher.getVerticalDistance());
+	}
+
+	@Override
 	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(blockState, compound, clientPacket);
 		int horizontalDistance = compound.getInt("HorizontalDistance");
 		int verticalDistance = compound.getInt("VerticalDistance");
 
-		if (launcher == null || launcher.getHorizontalDistance() != horizontalDistance
+		if (launcher.getHorizontalDistance() != horizontalDistance
 			|| launcher.getVerticalDistance() != verticalDistance) {
 			launcher.set(horizontalDistance, verticalDistance);
 			launcher.clamp(AllConfigs.SERVER.kinetics.maxEjectorDistance.get());
@@ -542,7 +549,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 
