@@ -725,7 +725,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.patternLine(" B ")
 				.patternLine("SCS")),
 
-		NIXIE_TUBE = create(AllBlocks.NIXIE_TUBE).unlockedBy(I::brassCasing)
+		NIXIE_TUBE = create(AllBlocks.ORANGE_NIXIE_TUBE).unlockedBy(I::brassCasing)
 			.viaShaped(b -> b.key('E', I.electronTube())
 				.key('B', I.brassCasing())
 				.patternLine("EBE")),

@@ -317,8 +317,8 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":brass_casing");
 
 		Advancement nixie_tube =
-			advancement("nixie_tube", AllBlocks.NIXIE_TUBE.get(), TaskType.NORMAL).withParent(brass_casing)
-				.withCriterion("0", placeBlock(AllBlocks.NIXIE_TUBE.get()))
+			advancement("nixie_tube", AllBlocks.ORANGE_NIXIE_TUBE.get(), TaskType.NORMAL).withParent(brass_casing)
+				.withCriterion("0", placeBlock(AllBlocks.ORANGE_NIXIE_TUBE.get()))
 				.register(t, id + ":nixie_tube");
 
 		Advancement crafter = kinecticAdvancement("crafter", AllBlocks.MECHANICAL_CRAFTER.get(), TaskType.MILESTONE)

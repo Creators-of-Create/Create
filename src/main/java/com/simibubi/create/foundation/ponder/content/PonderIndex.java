@@ -285,7 +285,7 @@ public class PonderIndex {
 			.addStoryBoard("powered_toggle_latch", RedstoneScenes::poweredToggleLatch);
 		PonderRegistry.forComponents(AllBlocks.ANALOG_LEVER)
 			.addStoryBoard("analog_lever", RedstoneScenes::analogLever);
-		PonderRegistry.forComponents(AllBlocks.NIXIE_TUBE)
+		PonderRegistry.forComponents(AllBlocks.ORANGE_NIXIE_TUBE)
 			.addStoryBoard("nixie_tube", RedstoneScenes::nixieTube);
 		PonderRegistry.forComponents(AllBlocks.REDSTONE_LINK)
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
@@ -392,7 +392,7 @@ public class PonderIndex {
 			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE);
 
 		PonderRegistry.tags.forTag(PonderTag.DECORATION)
-			.add(AllBlocks.NIXIE_TUBE)
+			.add(AllBlocks.ORANGE_NIXIE_TUBE)
 			.add(AllBlocks.CUCKOO_CLOCK)
 			.add(AllBlocks.WOODEN_BRACKET)
 			.add(AllBlocks.METAL_BRACKET)
@@ -411,7 +411,7 @@ public class PonderIndex {
 			.add(Blocks.WHITE_WOOL);
 
 		PonderRegistry.tags.forTag(PonderTag.REDSTONE)
-			.add(AllBlocks.NIXIE_TUBE)
+			.add(AllBlocks.ORANGE_NIXIE_TUBE)
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(AllBlocks.ANALOG_LEVER)
 			.add(AllBlocks.REDSTONE_LINK)

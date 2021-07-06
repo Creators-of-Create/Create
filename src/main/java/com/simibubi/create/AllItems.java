@@ -252,11 +252,6 @@ public class AllItems {
 		REGISTRATE.startSection(CURIOSITIES);
 	}
 
-	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
-		.model(AssetLookup.itemModelWithPartials())
-		.register();
-
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
 			.properties(p -> p.maxStackSize(1))
@@ -270,6 +265,11 @@ public class AllItems {
 			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
+	
+	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
+		.model(AssetLookup.itemModelWithPartials())
+		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)

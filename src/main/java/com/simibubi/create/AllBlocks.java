@@ -13,6 +13,7 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.contraptions.base.CasingBlock;
+import com.simibubi.create.content.contraptions.components.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.actors.DrillBlock;
 import com.simibubi.create.content.contraptions.components.actors.DrillMovementBehaviour;
@@ -40,7 +41,6 @@ import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBloc
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelGenerator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.millstone.MillstoneBlock;
-import com.simibubi.create.content.contraptions.components.AssemblyOperatorBlockItem;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorBlock;
 import com.simibubi.create.content.contraptions.components.motor.CreativeMotorGenerator;
@@ -1204,14 +1204,28 @@ public class AllBlocks {
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.register();
 
-	public static final BlockEntry<NixieTubeBlock> NIXIE_TUBE = REGISTRATE.block("nixie_tube", NixieTubeBlock::new)
-		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.luminance($ -> 5))
-		.blockstate(new NixieTubeGenerator()::generate)
-		.addLayer(() -> RenderType::getTranslucent)
-		.item()
-		.transform(customItemModel())
-		.register();
+	public static final BlockEntry<NixieTubeBlock> ORANGE_NIXIE_TUBE =
+		REGISTRATE.block("nixie_tube", p -> new NixieTubeBlock(p, DyeColor.ORANGE))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.luminance($ -> 5))
+			.blockstate(new NixieTubeGenerator()::generate)
+			.addLayer(() -> RenderType::getTranslucent)
+			.item()
+			.transform(customItemModel())
+			.register();
+
+	public static final DyedBlockList<NixieTubeBlock> NIXIE_TUBES = new DyedBlockList<>(colour -> {
+		if (colour == DyeColor.ORANGE)
+			return ORANGE_NIXIE_TUBE;
+		String colourName = colour.getString();
+		return REGISTRATE.block(colourName + "_nixie_tube", p -> new NixieTubeBlock(p, colour))
+			.initialProperties(SharedProperties::softMetal)
+			.properties(p -> p.luminance($ -> 5))
+			.blockstate(new NixieTubeGenerator()::generate)
+			.loot((p, b) -> p.registerDropping(b, ORANGE_NIXIE_TUBE.get()))
+			.addLayer(() -> RenderType::getTranslucent)
+			.register();
+	});
 
 	public static final BlockEntry<RedstoneLinkBlock> REDSTONE_LINK =
 		REGISTRATE.block("redstone_link", RedstoneLinkBlock::new)
