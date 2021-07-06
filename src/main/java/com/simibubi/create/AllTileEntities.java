@@ -598,7 +598,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<NixieTubeTileEntity> NIXIE_TUBE = Create.registrate()
 		.tileEntity("nixie_tube", NixieTubeTileEntity::new)
-		.validBlocks(AllBlocks.NIXIE_TUBE)
+		.validBlocks(AllBlocks.ORANGE_NIXIE_TUBE)
+		.validBlocks(AllBlocks.NIXIE_TUBES.toArray())
 		.renderer(() -> NixieTubeRenderer::new)
 		.register();
 
