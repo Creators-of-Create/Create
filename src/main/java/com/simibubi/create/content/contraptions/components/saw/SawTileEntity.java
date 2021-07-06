@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
@@ -435,6 +436,12 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public void onBlockBroken(BlockState stateToBreak) {
+		Optional<AbstractBlockBreakQueue> dynamicTree = TreeCutter.findDynamicTree(stateToBreak.getBlock(), breakingPos);
+		if (dynamicTree.isPresent()) {
+			dynamicTree.get().destroyBlocks(world, null, this::dropItemFromCutTree);
+			return;
+		}
+
 		super.onBlockBroken(stateToBreak);
 		TreeCutter.findTree(world, breakingPos)
 			.destroyBlocks(world, null, this::dropItemFromCutTree);
@@ -473,6 +480,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		if (block instanceof KelpTopBlock)
 			return true;
 		if (block instanceof ChorusPlantBlock)
+			return true;
+		if (TreeCutter.canDynamicTreeCutFrom(block))
 			return true;
 		return false;
 	}

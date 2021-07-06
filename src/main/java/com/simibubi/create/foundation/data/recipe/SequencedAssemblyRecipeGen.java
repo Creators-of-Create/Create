@@ -9,8 +9,11 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerAppl
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
 
+import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.tags.ItemTags;
 
 public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
@@ -30,32 +33,47 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 //		.addStep(FillingRecipe::new, rb -> rb.require(Fluids.WATER, 100))
 //		)
 
-	CLOCKWORK_COMPONENT = create("clockwork_component", b -> b.require(I.goldSheet())
-		.transitionTo(AllItems.INCOMPLETE_CLOCKWORK_COMPONENT.get())
-		.addOutput(AllItems.CLOCKWORK_COMPONENT.get(), 12)
-		.addOutput(AllItems.GOLDEN_SHEET.get(), 2)
-		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
-		.addOutput(AllBlocks.COGWHEEL.get(), 1) //TODO add more junk
+	PRECISION_MECHANISM = create("precision_mechanism", b -> b.require(I.goldSheet())
+		.transitionTo(AllItems.INCOMPLETE_PRECISION_MECHANISM.get())
+		.addOutput(AllItems.PRECISION_MECHANISM.get(), 60)
+		.addOutput(AllItems.GOLDEN_SHEET.get(), 8)
+		.addOutput(AllItems.ANDESITE_ALLOY.get(), 8)
+		.addOutput(AllBlocks.COGWHEEL.get(), 5)
+		.addOutput(AllBlocks.SHAFT.get(), 2)
+		.addOutput(AllItems.CRUSHED_GOLD.get(), 2)
+		.addOutput(Items.GOLD_NUGGET, 2)
+		.addOutput(Items.IRON_INGOT, 1)
+		.addOutput(Items.CLOCK, 1)
 		.loops(5)
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.cog()))
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.largeCog()))
 		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.ironNugget()))
 		),
 
-	COGWHEEL = create("cogwheel", b -> b.require(I.shaft())
+	COGWHEEL = create("cogwheel", b -> b.require(I.andesite())
 		.transitionTo(AllItems.INCOMPLETE_COGWHEEL.get())
-		.addOutput(new ItemStack(AllBlocks.COGWHEEL.get(), 12), 12)
+		.addOutput(new ItemStack(AllBlocks.COGWHEEL.get(), 12), 22)
+		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
+		.addOutput(Blocks.ANDESITE, 1)
+		.addOutput(AllBlocks.LARGE_COGWHEEL.get(), 1)
+		.addOutput(Items.STICK, 1)
+		.addOutput(Items.IRON_NUGGET, 1)
 		.loops(4)
-		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.planks()))
-		.addStep(CuttingRecipe::new, rb -> rb.duration(20))
-		.addStep(CuttingRecipe::new, rb -> rb.duration(40))
+		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ItemTags.WOODEN_BUTTONS))
+		.addStep(CuttingRecipe::new, rb -> rb.duration(50))
 		),
 
 	LARGE_COGWHEEL = create("large_cogwheel", b -> b.require(I.andesite())
 		.transitionTo(AllItems.INCOMPLETE_LARGE_COGWHEEL.get())
-		.addOutput(new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 3), 12)
-		.loops(8)
-		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.woodSlab()))
+		.addOutput(new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 6), 22)
+		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
+		.addOutput(Blocks.ANDESITE, 1)
+		.addOutput(AllBlocks.COGWHEEL.get(), 1)
+		.addOutput(Items.STICK, 1)
+		.addOutput(Items.IRON_NUGGET, 1)
+		.loops(3)
+		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(I.planks()))
+		.addStep(DeployerApplicationRecipe::new, rb -> rb.require(ItemTags.WOODEN_BUTTONS))
 		.addStep(CuttingRecipe::new, rb -> rb.duration(50))
 		)
 	;

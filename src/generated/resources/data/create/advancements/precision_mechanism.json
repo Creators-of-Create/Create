@@ -2,13 +2,13 @@
   "parent": "create:deployer",
   "display": {
     "icon": {
-      "item": "create:clockwork_component"
+      "item": "create:precision_mechanism"
     },
     "title": {
-      "translate": "advancement.create.clockwork_component"
+      "translate": "advancement.create.precision_mechanism"
     },
     "description": {
-      "translate": "advancement.create.clockwork_component.desc"
+      "translate": "advancement.create.precision_mechanism.desc"
     },
     "frame": "task",
     "show_toast": true,
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:clockwork_component"
+            "item": "create:precision_mechanism"
           }
         ]
       }

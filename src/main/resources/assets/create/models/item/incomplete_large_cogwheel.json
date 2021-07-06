@@ -5,24 +5,10 @@
 	"textures": {
 		"0": "create:block/axis",
 		"3": "create:block/axis_top",
-		"particle": "block/stripped_spruce_log",
-		"4": "create:block/large_cogwheel"
+		"4": "create:block/large_cogwheel",
+		"particle": "block/stripped_spruce_log"
 	},
 	"elements": [
-		{
-			"name": "GearCaseInnerRotated",
-			"from": [-2, 6.9, -2],
-			"to": [18, 8.9, 18],
-			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
-			"faces": {
-				"north": {"uv": [0, 10, 10, 11], "texture": "#4"},
-				"east": {"uv": [0, 10, 10, 11], "texture": "#4"},
-				"south": {"uv": [0, 10, 10, 11], "texture": "#4"},
-				"west": {"uv": [0, 10, 10, 11], "texture": "#4"},
-				"up": {"uv": [0, 0, 10, 10], "texture": "#4"},
-				"down": {"uv": [0, 0, 10, 10], "texture": "#4"}
-			}
-		},
 		{
 			"name": "Axis",
 			"from": [6, 0, 6],

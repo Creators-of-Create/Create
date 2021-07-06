@@ -4,6 +4,7 @@ import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawRenderer;
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -22,6 +23,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.Optional;
 
 public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 
@@ -58,6 +61,13 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	protected void onBlockBroken(MovementContext context, BlockPos pos, BlockState brokenState) {
 		if (brokenState.isIn(BlockTags.LEAVES))
 			return;
+
+		Optional<AbstractBlockBreakQueue> dynamicTree = TreeCutter.findDynamicTree(brokenState.getBlock(), pos);
+		if (dynamicTree.isPresent()) {
+			dynamicTree.get().destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
+			return;
+		}
+
 		TreeCutter.findTree(context.world, pos).destroyBlocks(context.world, null, (stack, dropPos) -> dropItemFromCutTree(context, stack, dropPos));
 	}
 
@@ -79,6 +89,11 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 									ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
+	}
+
+	@Override
+	protected boolean shouldDestroyStartBlock(BlockState stateToBreak) {
+		return !TreeCutter.canDynamicTreeCutFrom(stateToBreak.getBlock());
 	}
 
 	@Override

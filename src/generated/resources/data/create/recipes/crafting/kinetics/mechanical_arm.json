@@ -10,7 +10,7 @@
       "tag": "forge:plates/brass"
     },
     "I": {
-      "item": "create:clockwork_component"
+      "item": "create:precision_mechanism"
     },
     "A": {
       "item": "create:andesite_alloy"

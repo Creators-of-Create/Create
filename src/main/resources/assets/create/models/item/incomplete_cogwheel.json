@@ -5,7 +5,8 @@
 	"textures": {
 		"0": "create:block/axis",
 		"3": "create:block/axis_top",
-		"1_2": "create:block/cogwheel"
+		"1_2": "create:block/cogwheel",
+		"particle": "block/stripped_spruce_log"
 	},
 	"elements": [
 		{
@@ -26,20 +27,6 @@
 			"name": "GearCaseInner",
 			"from": [2, 7, 2],
 			"to": [14, 9, 14],
-			"faces": {
-				"north": {"uv": [0, 6, 6, 7], "texture": "#1_2"},
-				"east": {"uv": [0, 6, 6, 7], "texture": "#1_2"},
-				"south": {"uv": [0, 6, 6, 7], "texture": "#1_2"},
-				"west": {"uv": [0, 6, 6, 7], "texture": "#1_2"},
-				"up": {"uv": [4, 0, 10, 6], "texture": "#1_2"},
-				"down": {"uv": [4, 0, 10, 6], "texture": "#1_2"}
-			}
-		},
-		{
-			"name": "GearCaseInnerDiagonal",
-			"from": [2, 7.1, 2],
-			"to": [14, 8.9, 14],
-			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 6, 6, 7], "texture": "#1_2"},
 				"east": {"uv": [0, 6, 6, 7], "texture": "#1_2"},

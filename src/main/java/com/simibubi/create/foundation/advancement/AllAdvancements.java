@@ -365,11 +365,11 @@ public class AllAdvancements implements IDataProvider {
 				.register(t, id + ":deployer");
 		
 		Advancement clockwork_component =
-			itemAdvancement("clockwork_component", AllItems.CLOCKWORK_COMPONENT, TaskType.NORMAL).withParent(deployer)
-				.register(t, id + ":clockwork_component");
+			itemAdvancement("precision_mechanism", AllItems.PRECISION_MECHANISM, TaskType.NORMAL).withParent(deployer)
+				.register(t, id + ":precision_mechanism");
 
 		Advancement clockwork_component_eob = deadEnd().withParent(clockwork_component)
-			.withCriterion("0", itemGathered(AllItems.CLOCKWORK_COMPONENT.get()))
+			.withCriterion("0", itemGathered(AllItems.PRECISION_MECHANISM.get()))
 			.register(t, id + ":clockwork_component_eob");
 		
 		Advancement extendo_grip =

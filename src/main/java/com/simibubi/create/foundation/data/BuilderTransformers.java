@@ -224,10 +224,15 @@ public class BuilderTransformers {
 				.sound(SoundType.ANVIL))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.BRITTLE.tag)
-			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), state ->
-				AssetLookup.partialBaseModel(c, p, state.get(BlockStateProperties.BELL_ATTACHMENT).getString())))
+			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), state -> {
+				String variant = state.get(BlockStateProperties.BELL_ATTACHMENT)
+					.getString();
+				return p.models()
+					.withExistingParent(c.getName() + "_" + variant, p.modLoc("block/bell_base/block_" + variant));
+			}))
 			.item()
-			.transform(ModelGen.customItemModel());
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/" + c.getName())))
+			.build();
 	}
 
 }

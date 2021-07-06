@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "create:item/clockwork_component"
+    "layer0": "create:item/precision_mechanism"
   }
 }
