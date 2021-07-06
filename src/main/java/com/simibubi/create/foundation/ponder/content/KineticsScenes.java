@@ -595,7 +595,7 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.world.rotateSection(wheelElement, 0, 180, 0, 5);
 		scene.idle(10);
-		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.HORIZONTAL_FACING, Direction.WEST), false);
+		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.FACING, Direction.WEST), false);
 		scene.world.rotateSection(wheelElement, 0, -180, 0, 0);
 		scene.idle(1);
 		scene.world.moveSection(water, util.vector.of(0, -2, 2), 10);
@@ -618,7 +618,7 @@ public class KineticsScenes {
 		scene.rotateCameraY(30);
 		scene.world.rotateSection(wheelElement, 0, 180, 0, 5);
 		scene.idle(10);
-		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.HORIZONTAL_FACING, Direction.EAST), false);
+		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.FACING, Direction.EAST), false);
 		scene.world.rotateSection(wheelElement, 0, -180, 0, 0);
 		scene.idle(1);
 		scene.world.moveSection(water, util.vector.of(0, -2, 2), 10);
