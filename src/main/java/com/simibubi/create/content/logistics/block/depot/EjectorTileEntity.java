@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
+import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -28,6 +29,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ObserverBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
@@ -224,7 +226,14 @@ public class EjectorTileEntity extends KineticTileEntity {
 		}
 
 		if (!world.isRemote)
-			world.markAndNotifyBlock(pos, world.getChunkAt(pos), getBlockState(), getBlockState(), 0, 512);
+			for (Direction d : Iterate.directions) {
+				BlockState blockState = world.getBlockState(pos.offset(d));
+				if (!(blockState.getBlock() instanceof ObserverBlock))
+					continue;
+				if (blockState.get(ObserverBlock.FACING) != d.getOpposite())
+					continue;
+				blockState.updatePostPlacement(d.getOpposite(), blockState, world, pos.offset(d), pos);
+			}
 
 		if (depotBehaviour.heldItem != null) {
 			addToLaunchedItems(heldItemStack);

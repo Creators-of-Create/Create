@@ -210,6 +210,11 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	}
 
 	@Override
+	public boolean isDynamic() {
+		return true;
+	}
+	
+	@Override
 	public IRecipeType<?> getType() {
 		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
 	}

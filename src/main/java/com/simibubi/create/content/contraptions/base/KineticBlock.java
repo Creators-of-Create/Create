@@ -78,6 +78,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		if (oldState.getBlock() != newState.getBlock())
+			return false;
 		return getRotationAxis(newState) == getRotationAxis(oldState);
 	}
 
