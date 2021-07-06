@@ -33,7 +33,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	}
 
 	@FunctionalInterface
-	interface GeneratedRecipe {
+	public interface GeneratedRecipe {
 		void register(Consumer<IFinishedRecipe> consumer);
 	}
 
