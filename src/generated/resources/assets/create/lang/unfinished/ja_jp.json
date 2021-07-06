@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 19",
+	"_": "Missing Localizations: 20",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2063,6 +2063,7 @@
 	"create.ponder.nixie_tube.header": "ニキシー管の使い方",
 	"create.ponder.nixie_tube.text_1": "ニキシー管は受けたレッドストーン信号の強度を表示します",
 	"create.ponder.nixie_tube.text_2": "金床で名付けた名札を使って、好きな文字を表示することもできます",
+	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "ピストン延長ポール",
 	"create.ponder.piston_pole.text_1": "ポールが無いとメカニカルピストンは動きません",

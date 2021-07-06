@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 260",
+	"_": "Missing Localizations: 261",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2063,6 +2063,7 @@
 	"create.ponder.nixie_tube.header": "Использовании Газоразрядных индикаторов",
 	"create.ponder.nixie_tube.text_1": "При подаче Редстоун сигнала, Газоразрядные индикаторы отобразят его силу.",
 	"create.ponder.nixie_tube.text_2": "С помощью бирок, отредактированных на наковальне, вы можете отобразить любой текст.",
+	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "Удлиннителях Поршня",
 	"create.ponder.piston_pole.text_1": "Без присоединённых Удлиннителей, Механический Поршень не может двигаться",

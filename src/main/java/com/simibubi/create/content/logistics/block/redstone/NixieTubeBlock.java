@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -26,6 +27,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
@@ -33,7 +35,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTileEntity> {
+public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTileEntity>, IWrenchable {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 	private DyeColor color;
@@ -92,12 +94,12 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 
 		while (true) {
 			final int rowPosition = index;
-			
-			if (display) 
+
+			if (display)
 				withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
-			if (dye != null) 
+			if (dye != null)
 				world.setBlockState(currentPos, withColor(state, dye));
-			
+
 			BlockPos nextPos = currentPos.offset(right);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
@@ -114,11 +116,27 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 	}
 
 	@Override
+	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+		boolean p_196243_5_) {
+		if (!(p_196243_4_.getBlock() instanceof NixieTubeBlock))
+			p_196243_2_.removeTileEntity(p_196243_3_);
+	}
+
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
 		return (state.get(CEILING) ? AllShapes.NIXIE_TUBE_CEILING : AllShapes.NIXIE_TUBE)
 			.get(state.get(HORIZONTAL_FACING)
 				.getAxis());
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
+		PlayerEntity player) {
+		if (color != DyeColor.ORANGE)
+			return AllBlocks.ORANGE_NIXIE_TUBE.get()
+				.getPickBlock(state, target, world, pos, player);
+		return super.getPickBlock(state, target, world, pos, player);
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 265",
+	"_": "Missing Localizations: 266",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2063,6 +2063,7 @@
 	"create.ponder.nixie_tube.header": "표시등의 이용",
 	"create.ponder.nixie_tube.text_1": "레드스톤 신호를 받으면, 표시등은 레드스톤 신호의 전력을 표시합니다",
 	"create.ponder.nixie_tube.text_2": "모루로 이름을 바꾼 이름표를 사용하면 원하는 글씨를 표시할 수 있습니다",
+	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "피스톤 연장대",
 	"create.ponder.piston_pole.text_1": "연결된 연장대가 없다면, 기계식 피스톤은 사용할 수 없습니다",

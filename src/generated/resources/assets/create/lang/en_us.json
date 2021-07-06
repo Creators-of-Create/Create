@@ -2062,6 +2062,7 @@
 	"create.ponder.nixie_tube.header": "Using Nixie Tubes",
 	"create.ponder.nixie_tube.text_1": "When powered by Redstone, Nixie Tubes will display the redstone signals' strength",
 	"create.ponder.nixie_tube.text_2": "Using name tags edited with an anvil, custom text can be displayed",
+	"create.ponder.nixie_tube.text_3": "Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "Without attached Poles, a Mechanical Piston cannot move",

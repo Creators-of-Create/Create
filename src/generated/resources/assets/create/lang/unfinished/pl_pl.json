@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 229",
+	"_": "Missing Localizations: 230",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2063,6 +2063,7 @@
 	"create.ponder.nixie_tube.header": "Używanie lamp cyfrowych",
 	"create.ponder.nixie_tube.text_1": "Kiedy zasilone, lampy cyfrowe wyświetlą siłę sygnału Redstone, jaki otrzymują",
 	"create.ponder.nixie_tube.text_2": "Używając znaczników i kowadła można wyświetlić własny tekst",
+	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "Przedłużenia tłoka",
 	"create.ponder.piston_pole.text_1": "Bez przyłączonych przedłużeń, mechaniczny tłok nie może się wysunąć",

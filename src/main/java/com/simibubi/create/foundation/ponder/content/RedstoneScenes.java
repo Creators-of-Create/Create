@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
@@ -9,6 +10,7 @@ import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
+import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
@@ -22,6 +24,7 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.block.RedstoneWireBlock;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -676,8 +679,26 @@ public class RedstoneScenes {
 			.placeNearTarget()
 			.text("Using name tags edited with an anvil, custom text can be displayed")
 			.pointAt(util.vector.topOf(util.grid.at(3, 1, 3))
-				.add(.25, -.05f, 0));
-		scene.idle(70);
+				.add(-.75, -.05f, 0));
+		scene.idle(90);
+
+		InputWindowElement input =
+			new InputWindowElement(util.vector.blockSurface(util.grid.at(3, 1, 3), Direction.UP), Pointing.DOWN)
+				.withItem(new ItemStack(Items.BLUE_DYE));
+		scene.overlay.showControls(input, 30);
+		scene.idle(7);
+		scene.world.setBlocks(util.select.fromTo(1, 1, 3, 3, 1, 3), AllBlocks.NIXIE_TUBES.get(DyeColor.BLUE)
+			.getDefaultState()
+			.with(NixieTubeBlock.HORIZONTAL_FACING, Direction.NORTH), false);
+		scene.idle(10);
+		scene.overlay.showText(80)
+			.colored(PonderPalette.BLUE)
+			.text("Right-Click with Dye to change their display colour")
+			.attachKeyFrame()
+			.pointAt(util.vector.topOf(util.grid.at(3, 1, 3))
+				.add(-.75, -.05f, 0))
+			.placeNearTarget();
+		scene.idle(60);
 	}
 
 	public static void redstoneLink(SceneBuilder scene, SceneBuildingUtil util) {

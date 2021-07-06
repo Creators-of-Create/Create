@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 270",
+	"_": "Missing Localizations: 271",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2063,6 +2063,7 @@
 	"create.ponder.nixie_tube.header": "使用辉光管",
 	"create.ponder.nixie_tube.text_1": "通入红石信号后，辉光管会显示出红石信号的强度",
 	"create.ponder.nixie_tube.text_2": "使用命名牌在铁砧上为其命名，可以自定义它的显示文本",
+	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "活塞延长杆",
 	"create.ponder.piston_pole.text_1": "若无相接的延长杆，动力活塞无法移动其他方块",

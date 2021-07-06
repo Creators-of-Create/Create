@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1359",
+	"_": "Missing Localizations: 1360",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -2063,6 +2063,7 @@
 	"create.ponder.nixie_tube.header": "UNLOCALIZED: Using Nixie Tubes",
 	"create.ponder.nixie_tube.text_1": "UNLOCALIZED: When powered by Redstone, Nixie Tubes will display the redstone signals' strength",
 	"create.ponder.nixie_tube.text_2": "UNLOCALIZED: Using name tags edited with an anvil, custom text can be displayed",
+	"create.ponder.nixie_tube.text_3": "UNLOCALIZED: Right-Click with Dye to change their display colour",
 
 	"create.ponder.piston_pole.header": "UNLOCALIZED: Piston Extension Poles",
 	"create.ponder.piston_pole.text_1": "UNLOCALIZED: Without attached Poles, a Mechanical Piston cannot move",

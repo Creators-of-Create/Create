@@ -30,10 +30,10 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		// DyeColor, ( Front RGB, Back RGB )
 		.put(DyeColor.BLACK, Couple.create(0x45403B, 0x21201F))
 		.put(DyeColor.RED, Couple.create(0xB13937, 0x632737))
-		.put(DyeColor.GREEN, Couple.create(0xC04488, 0x1D6045))
+		.put(DyeColor.GREEN, Couple.create(0x208A46, 0x1D6045))
 		.put(DyeColor.BROWN, Couple.create(0xAC855C, 0x68533E))
 
-		.put(DyeColor.BLUE, Couple.create(0xC04488, 0xC04488))
+		.put(DyeColor.BLUE, Couple.create(0x5391E1, 0x504B90))
 		.put(DyeColor.GRAY, Couple.create(0x5D666F, 0x313538))
 		.put(DyeColor.LIGHT_GRAY, Couple.create(0x95969B, 0x707070))
 		.put(DyeColor.PURPLE, Couple.create(0x9F54AE, 0x63366C))
