@@ -110,12 +110,12 @@ public class AllShapes {
 			.forDirectional(Direction.UP),
 		CRUSHING_WHEEL_CONTROLLER_COLLISION = shape(0, 0, 0, 16, 13, 16).forDirectional(Direction.DOWN),
 
-		BELL_FLOOR = shape(0, 0, 2, 16, 12, 14).forHorizontal(SOUTH),
-		BELL_WALL = shape(4, 4, 8, 12, 12, 16).add(3, 1, 3, 13, 13, 13)
+		BELL_FLOOR = shape(0, 0, 5, 16, 11, 11).add(3, 1, 3, 13, 13, 13).forHorizontal(SOUTH),
+		BELL_WALL = shape(5, 5, 8, 11, 11, 16).add(3, 1, 3, 13, 13, 13)
 			.forHorizontal(SOUTH),
-		BELL_DOUBLE_WALL = shape(4, 4, 0, 12, 12, 16).add(3, 1, 3, 13, 13, 13)
+		BELL_DOUBLE_WALL = shape(5, 5, 0, 11, 11, 16).add(3, 1, 3, 13, 13, 13)
 			.forHorizontal(SOUTH),
-		BELL_CEILING = shape(0, 4, 2, 16, 16, 14).add(3, 1, 3, 13, 13, 13)
+		BELL_CEILING = shape(0, 5, 5, 16, 16, 11).add(3, 1, 3, 13, 13, 13)
 			.forHorizontal(SOUTH)
 
 	;
