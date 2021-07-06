@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 271",
+	"_": "Missing Localizations: 277",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -690,13 +690,19 @@
 	"itemGroup.create.palettes": "机械动力建筑方块",
 
 	"death.attack.create.crush": "%1$s被压扁了",
+	"death.attack.create.crush.player": "UNLOCALIZED: %1$s was thrown into Crushing Wheels by %2$s",
 	"death.attack.create.fan_fire": "%1$s试图接受热风的洗礼",
+	"death.attack.create.fan_fire.player": "UNLOCALIZED: %1$s was thrown into a smoker by %2$s",
 	"death.attack.create.fan_lava": "%1$s在接受热风的洗礼中浴火焚身",
+	"death.attack.create.fan_lava.player": "UNLOCALIZED: %1$s was thrown into a smelter by %2$s",
 	"death.attack.create.mechanical_drill": "%1$s被钻头钻的坏掉了",
+	"death.attack.create.mechanical_drill.player": "UNLOCALIZED: %1$s was thrown in front of a Drill by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s被圆锯切成了两截",
+	"death.attack.create.mechanical_saw.player": "UNLOCALIZED: %1$s was thrown into a Saw by %2$s",
 	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
 	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s被布谷鸟钟炸得粉身碎骨",
+	"death.attack.create.cuckoo_clock_explosion.player": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
 
 	"create.block.deployer.damage_source_name": "二五仔机械手",
 	"create.block.cart_assembler.invalid": "请将矿车装配器放置在铁轨上",

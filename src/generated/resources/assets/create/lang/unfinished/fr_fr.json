@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1360",
+	"_": "Missing Localizations: 1366",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -690,13 +690,19 @@
 	"itemGroup.create.palettes": "Create Palettes",
 
 	"death.attack.create.crush": "%1$s a été concassé.e",
+	"death.attack.create.crush.player": "UNLOCALIZED: %1$s was thrown into Crushing Wheels by %2$s",
 	"death.attack.create.fan_fire": "%1$s a été brûlé à mort par l'air chaud",
+	"death.attack.create.fan_fire.player": "UNLOCALIZED: %1$s was thrown into a smoker by %2$s",
 	"death.attack.create.fan_lava": "%1$s a été brûlé à mort par un ventilateur de lave",
+	"death.attack.create.fan_lava.player": "UNLOCALIZED: %1$s was thrown into a smelter by %2$s",
 	"death.attack.create.mechanical_drill": "%1$s a été empalé par une perceuse mécanique",
+	"death.attack.create.mechanical_drill.player": "UNLOCALIZED: %1$s was thrown in front of a Drill by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s a été coupé en deux par une scie mécanique",
+	"death.attack.create.mechanical_saw.player": "UNLOCALIZED: %1$s was thrown into a Saw by %2$s",
 	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
 	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s a été explosé par un coucou trafiquée",
+	"death.attack.create.cuckoo_clock_explosion.player": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
 
 	"create.block.deployer.damage_source_name": "un déployeur voyou",
 	"create.block.cart_assembler.invalid": "UNLOCALIZED: Place your Cart Assembler on a rail block",

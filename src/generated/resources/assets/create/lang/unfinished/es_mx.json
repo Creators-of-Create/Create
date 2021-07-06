@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1475",
+	"_": "Missing Localizations: 1481",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -690,13 +690,19 @@
 	"itemGroup.create.palettes": "UNLOCALIZED: Create Palettes",
 
 	"death.attack.create.crush": "UNLOCALIZED: %1$s was processed by Crushing Wheels",
-	"death.attack.create.fan_fire": "UNLOCALIZED: %1$s was burned to death by hot air",
-	"death.attack.create.fan_lava": "UNLOCALIZED: %1$s was burned to death by lava fan",
+	"death.attack.create.crush.player": "UNLOCALIZED: %1$s was thrown into Crushing Wheels by %2$s",
+	"death.attack.create.fan_fire": "UNLOCALIZED: %1$s got smoked by an Encased Fan",
+	"death.attack.create.fan_fire.player": "UNLOCALIZED: %1$s was thrown into a smoker by %2$s",
+	"death.attack.create.fan_lava": "UNLOCALIZED: %1$s was incinerated by an Encased Fan",
+	"death.attack.create.fan_lava.player": "UNLOCALIZED: %1$s was thrown into a smelter by %2$s",
 	"death.attack.create.mechanical_drill": "UNLOCALIZED: %1$s was impaled by a Mechanical Drill",
+	"death.attack.create.mechanical_drill.player": "UNLOCALIZED: %1$s was thrown in front of a Drill by %2$s",
 	"death.attack.create.mechanical_saw": "UNLOCALIZED: %1$s got cut in half by a Mechanical Saw",
+	"death.attack.create.mechanical_saw.player": "UNLOCALIZED: %1$s was thrown into a Saw by %2$s",
 	"death.attack.create.potato_cannon": "UNLOCALIZED: %1$s was shot by %2$s's Potato Cannon",
 	"death.attack.create.potato_cannon.item": "UNLOCALIZED: %1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
+	"death.attack.create.cuckoo_clock_explosion.player": "UNLOCALIZED: %1$s was blown up by tampered cuckoo clock",
 
 	"create.block.deployer.damage_source_name": "UNLOCALIZED: a rogue Deployer",
 	"create.block.cart_assembler.invalid": "UNLOCALIZED: Place your Cart Assembler on a rail block",
