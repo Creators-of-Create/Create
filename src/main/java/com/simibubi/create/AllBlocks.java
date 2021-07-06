@@ -369,7 +369,7 @@ public class AllBlocks {
 	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
 		.initialProperties(SharedProperties::wooden)
 		.properties(AbstractBlock.Properties::nonOpaque)
-		.blockstate(BlockStateGen.horizontalWheelProvider(false))
+		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
 		.addLayer(() -> RenderType::getCutoutMipped)
 		.transform(StressConfigDefaults.setCapacity(16.0))
 		.simpleItem()
