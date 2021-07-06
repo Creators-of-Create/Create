@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -13,6 +14,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTags;
+
+import com.simibubi.create.compat.Mods;
+
+import com.simibubi.create.compat.dynamictrees.DynamicTree;
 
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
@@ -35,6 +40,18 @@ import net.minecraft.world.World;
 
 public class TreeCutter {
 	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
+
+	public static boolean canDynamicTreeCutFrom(Block startBlock) {
+		return Mods.DYNAMICTREES.runIfInstalled(() -> () -> DynamicTree.isDynamicBranch(startBlock)).orElse(false);
+	}
+
+	@Nonnull
+	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
+		if (canDynamicTreeCutFrom(startBlock)) {
+			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
+		}
+		return Optional.empty();
+	}
 
 	/**
 	 * Finds a tree at the given pos. Block at the position should be air
