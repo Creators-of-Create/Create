@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 877",
+	"_": "Missing Localizations: 881",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -430,6 +430,8 @@
 	"block.create.yellow_valve_handle": "Asa de válvula amarillo",
 	"block.create.zinc_block": "Bloque de zinc",
 	"block.create.zinc_ore": "Mineral de zinc",
+
+	"enchantment.create.potato_recovery": "UNLOCALIZED: Potato Recovery",
 
 	"entity.create.contraption": "Artilugio",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
@@ -1171,6 +1173,10 @@
 	"create.crafting_blueprint.manually_assigned": "UNLOCALIZED: Manually assigned",
 	"create.crafting_blueprint.secondary_display_slot": "UNLOCALIZED: Secondary Display Slot",
 	"create.crafting_blueprint.optional": "UNLOCALIZED: Optional",
+
+	"create.potato_cannon.ammo.attack_damage": "UNLOCALIZED: %1$s Attack Damage",
+	"create.potato_cannon.ammo.reload_ticks": "UNLOCALIZED: %1$s Reload Ticks",
+	"create.potato_cannon.ammo.knockback": "UNLOCALIZED: %1$s Knockback",
 
 	"create.hint.hose_pulley.title": "Suministro sin fondo",
 	"create.hint.hose_pulley": "La masa de fluido objetivo se considera infinita",

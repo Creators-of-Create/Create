@@ -3,8 +3,9 @@ package com.simibubi.create.content.curiosities.weapons;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
@@ -255,10 +256,8 @@ public class PotatoCannonProjectileTypes {
 	private float fwoompPitch = 1;
 	private boolean sticky = false;
 	private PotatoProjectileRenderMode renderMode = new PotatoProjectileRenderMode.Billboard();
-	private Consumer<EntityRayTraceResult> onEntityHit = e -> {
-	};
-	private BiConsumer<IWorld, BlockRayTraceResult> onBlockHit = (w, ray) -> {
-	};
+	private Predicate<EntityRayTraceResult> onEntityHit = e -> false;
+	private BiPredicate<IWorld, BlockRayTraceResult> onBlockHit = (w, ray) -> false;
 
 	public float getGravityMultiplier() {
 		return gravityMultiplier;
@@ -298,12 +297,12 @@ public class PotatoCannonProjectileTypes {
 
 	public boolean isSticky() { return sticky; }
 
-	public void onEntityHit(EntityRayTraceResult ray) {
-		onEntityHit.accept(ray);
+	public boolean onEntityHit(EntityRayTraceResult ray) {
+		return onEntityHit.test(ray);
 	}
 
-	public void onBlockHit(IWorld world, BlockRayTraceResult ray) {
-		onBlockHit.accept(world, ray);
+	public boolean onBlockHit(IWorld world, BlockRayTraceResult ray) {
+		return onBlockHit.test(world, ray);
 	}
 
 	private static Consumer<EntityRayTraceResult> potion(Effect effect, int level, int ticks) {
@@ -326,37 +325,38 @@ public class PotatoCannonProjectileTypes {
 		};
 	}
 
-	private static BiConsumer<IWorld, BlockRayTraceResult> plantCrop(IRegistryDelegate<? extends Block> cropBlock) {
+	private static BiPredicate<IWorld, BlockRayTraceResult> plantCrop(IRegistryDelegate<? extends Block> cropBlock) {
 		return (world, ray) -> {
 			BlockPos hitPos = ray.getPos();
 			if (!world.isAreaLoaded(hitPos, 1))
-				return;
+				return true;
 			Direction face = ray.getFace();
 			BlockPos placePos = hitPos.offset(face);
 			if (!world.getBlockState(placePos)
 				.getMaterial()
 				.isReplaceable())
-				return;
+				return false;
 			if (!(cropBlock.get() instanceof IPlantable))
-				return;
+				return false;
 			BlockState blockState = world.getBlockState(hitPos);
 			if (!blockState.canSustainPlant(world, hitPos, face, (IPlantable) cropBlock.get()))
-				return;
+				return false;
 			world.setBlockState(placePos, cropBlock.get().getDefaultState(), 3);
+			return true;
 		};
 	}
 
-	private static BiConsumer<IWorld, BlockRayTraceResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
+	private static BiPredicate<IWorld, BlockRayTraceResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
 		return (world, ray) -> {
 			BlockPos hitPos = ray.getPos();
 			if (!world.isAreaLoaded(hitPos, 1))
-				return;
+				return true;
 			Direction face = ray.getFace();
 			BlockPos placePos = hitPos.offset(face);
 			if (!world.getBlockState(placePos)
 				.getMaterial()
 				.isReplaceable())
-				return;
+				return false;
 
 			if (face == Direction.UP) {
 				world.setBlockState(placePos, block.get().getDefaultState(), 3);
@@ -372,6 +372,8 @@ public class PotatoCannonProjectileTypes {
 				falling.fallTime = 1;
 				world.addEntity(falling);
 			}
+			
+			return true;
 		};
 	}
 
@@ -481,12 +483,20 @@ public class PotatoCannonProjectileTypes {
 			return this;
 		}
 
-		public Builder onEntityHit(Consumer<EntityRayTraceResult> callback) {
+		public Builder onEntityHitRecoveryCancelable(Predicate<EntityRayTraceResult> callback) {
 			result.onEntityHit = callback;
 			return this;
 		}
+		
+		public Builder onEntityHit(Consumer<EntityRayTraceResult> callback) {
+			result.onEntityHit = ray -> {
+				callback.accept(ray);
+				return false;
+			};
+			return this;
+		}
 
-		public Builder onBlockHit(BiConsumer<IWorld, BlockRayTraceResult> callback) {
+		public Builder onBlockHit(BiPredicate<IWorld, BlockRayTraceResult> callback) {
 			result.onBlockHit = callback;
 			return this;
 		}

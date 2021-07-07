@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 26",
+	"_": "Missing Localizations: 30",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -430,6 +430,8 @@
 	"block.create.yellow_valve_handle": "黄色のバルブハンドル",
 	"block.create.zinc_block": "亜鉛ブロック",
 	"block.create.zinc_ore": "亜鉛鉱石",
+
+	"enchantment.create.potato_recovery": "UNLOCALIZED: Potato Recovery",
 
 	"entity.create.contraption": "からくり",
 	"entity.create.crafting_blueprint": "クラフトブループリント",
@@ -1171,6 +1173,10 @@
 	"create.crafting_blueprint.manually_assigned": "手動割り当て",
 	"create.crafting_blueprint.secondary_display_slot": "第2表示スロット",
 	"create.crafting_blueprint.optional": "オプション",
+
+	"create.potato_cannon.ammo.attack_damage": "UNLOCALIZED: %1$s Attack Damage",
+	"create.potato_cannon.ammo.reload_ticks": "UNLOCALIZED: %1$s Reload Ticks",
+	"create.potato_cannon.ammo.knockback": "UNLOCALIZED: %1$s Knockback",
 
 	"create.hint.hose_pulley.title": "底なし搬出",
 	"create.hint.hose_pulley": "対象となる液体は無限とみなされています。",

@@ -430,6 +430,8 @@
 	"block.create.zinc_block": "Block of Zinc",
 	"block.create.zinc_ore": "Zinc Ore",
 
+	"enchantment.create.potato_recovery": "Potato Recovery",
+
 	"entity.create.contraption": "Contraption",
 	"entity.create.crafting_blueprint": "Crafting Blueprint",
 	"entity.create.gantry_contraption": "Gantry Contraption",
@@ -1170,6 +1172,10 @@
 	"create.crafting_blueprint.manually_assigned": "Manually assigned",
 	"create.crafting_blueprint.secondary_display_slot": "Secondary Display Slot",
 	"create.crafting_blueprint.optional": "Optional",
+
+	"create.potato_cannon.ammo.attack_damage": "%1$s Attack Damage",
+	"create.potato_cannon.ammo.reload_ticks": "%1$s Reload Ticks",
+	"create.potato_cannon.ammo.knockback": "%1$s Knockback",
 
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",

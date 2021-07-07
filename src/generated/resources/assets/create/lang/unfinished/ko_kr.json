@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 272",
+	"_": "Missing Localizations: 276",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -430,6 +430,8 @@
 	"block.create.yellow_valve_handle": "노란색 밸브 손잡이",
 	"block.create.zinc_block": "아연 블록",
 	"block.create.zinc_ore": "아연 광석",
+
+	"enchantment.create.potato_recovery": "UNLOCALIZED: Potato Recovery",
 
 	"entity.create.contraption": "장치",
 	"entity.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
@@ -1171,6 +1173,10 @@
 	"create.crafting_blueprint.manually_assigned": "UNLOCALIZED: Manually assigned",
 	"create.crafting_blueprint.secondary_display_slot": "UNLOCALIZED: Secondary Display Slot",
 	"create.crafting_blueprint.optional": "UNLOCALIZED: Optional",
+
+	"create.potato_cannon.ammo.attack_damage": "UNLOCALIZED: %1$s Attack Damage",
+	"create.potato_cannon.ammo.reload_ticks": "UNLOCALIZED: %1$s Reload Ticks",
+	"create.potato_cannon.ammo.knockback": "UNLOCALIZED: %1$s Knockback",
 
 	"create.hint.hose_pulley.title": "무한한 공급량",
 	"create.hint.hose_pulley": "액체를 무한하다고 간주합니다.",

@@ -426,6 +426,7 @@
   "block.create.yellow_valve_handle": "\u01DD\u05DFpu\u0250H \u01DD\u028C\u05DF\u0250\u039B \u028Do\u05DF\u05DF\u01DD\u028E",
   "block.create.zinc_block": "\u0254u\u0131Z \u025Fo \u029E\u0254o\u05DF\u15FA",
   "block.create.zinc_ore": "\u01DD\u0279O \u0254u\u0131Z",
+  "enchantment.create.potato_recovery": "\u028E\u0279\u01DD\u028Co\u0254\u01DD\u1D1A o\u0287\u0250\u0287o\u0500",
   "entity.create.contraption": "uo\u0131\u0287d\u0250\u0279\u0287uo\u0186",
   "entity.create.crafting_blueprint": "\u0287u\u0131\u0279d\u01DDn\u05DF\u15FA bu\u0131\u0287\u025F\u0250\u0279\u0186",
   "entity.create.gantry_contraption": "uo\u0131\u0287d\u0250\u0279\u0287uo\u0186 \u028E\u0279\u0287u\u0250\u2141",

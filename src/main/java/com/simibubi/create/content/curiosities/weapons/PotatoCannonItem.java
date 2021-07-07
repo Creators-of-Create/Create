@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -11,12 +12,16 @@ import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,7 +33,9 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -50,6 +57,21 @@ public class PotatoCannonItem extends ShootableItem {
 	public boolean canPlayerBreakBlockWhileHolding(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_,
 		PlayerEntity p_195938_4_) {
 		return false;
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if (enchantment == Enchantments.POWER)
+			return true;
+		if (enchantment == Enchantments.PUNCH)
+			return true;
+		if (enchantment == Enchantments.FLAME)
+			return true;
+		if (enchantment == Enchantments.LOOTING)
+			return true;
+		if (enchantment == AllEnchantments.POTATO_RECOVERY.get())
+			return true;
+		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
 	@Override
@@ -118,25 +140,30 @@ public class PotatoCannonItem extends ShootableItem {
 			PotatoCannonProjectileTypes projectileType = PotatoCannonProjectileTypes.getProjectileTypeOf(itemStack)
 				.orElse(PotatoCannonProjectileTypes.FALLBACK);
 			Vector3d lookVec = player.getLookVec();
-			Vector3d motion = lookVec.add(correction).normalize().scale(projectileType.getVelocityMultiplier());
+			Vector3d motion = lookVec.add(correction)
+				.normalize()
+				.scale(projectileType.getVelocityMultiplier());
 
 			float soundPitch = projectileType.getSoundPitch() + (Create.RANDOM.nextFloat() - .5f) / 4f;
 
 			boolean spray = projectileType.getSplit() > 1;
-			Vector3d sprayBase = VecHelper.rotate(new Vector3d(0,0.1,0),
-					360*Create.RANDOM.nextFloat(), Axis.Z);
+			Vector3d sprayBase = VecHelper.rotate(new Vector3d(0, 0.1, 0), 360 * Create.RANDOM.nextFloat(), Axis.Z);
 			float sprayChange = 360f / projectileType.getSplit();
 
 			for (int i = 0; i < projectileType.getSplit(); i++) {
 				PotatoProjectileEntity projectile = AllEntityTypes.POTATO_PROJECTILE.create(world);
 				projectile.setItem(itemStack);
+				projectile.setEnchantmentEffectsFromCannon(stack);
 
 				Vector3d splitMotion = motion;
 				if (spray) {
-					float imperfection = 40*(Create.RANDOM.nextFloat() - 0.5f);
+					float imperfection = 40 * (Create.RANDOM.nextFloat() - 0.5f);
 					Vector3d sprayOffset = VecHelper.rotate(sprayBase, i * sprayChange + imperfection, Axis.Z);
 					splitMotion = splitMotion.add(VecHelper.lookAt(sprayOffset, motion));
 				}
+				
+				if (i != 0)
+					projectile.recoveryChance = 0;
 
 				projectile.setPosition(barrelPos.x, barrelPos.y, barrelPos.z);
 				projectile.setMotion(splitMotion);
@@ -197,20 +224,45 @@ public class PotatoCannonItem extends ShootableItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+		int power = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
+		int punch = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, stack);
+		final float additionalDamage = power * 2;
+		final float additionalKnockback = punch * .5f;
+		
 		getAmmoforPreview(stack).ifPresent(ammo -> {
+			String _attack = "potato_cannon.ammo.attack_damage";
+			String _reload = "potato_cannon.ammo.reload_ticks";
+			String _knockback = "potato_cannon.ammo.knockback";
+
 			tooltip.add(new StringTextComponent(""));
 			tooltip.add(new TranslationTextComponent(ammo.getTranslationKey()).append(new StringTextComponent(":"))
 				.formatted(TextFormatting.GRAY));
 			PotatoCannonProjectileTypes type = PotatoCannonProjectileTypes.getProjectileTypeOf(ammo)
 				.get();
 			StringTextComponent spacing = new StringTextComponent(" ");
+			TextFormatting green = TextFormatting.GREEN;
 			TextFormatting darkGreen = TextFormatting.DARK_GREEN;
+
+			float damageF = type.getDamage() + additionalDamage;
+			IFormattableTextComponent damage = new StringTextComponent(
+				damageF == MathHelper.floor(damageF) ? "" + MathHelper.floor(damageF) : "" + damageF);
+			IFormattableTextComponent reloadTicks = new StringTextComponent("" + type.getReloadTicks());
+			IFormattableTextComponent knockback =
+				new StringTextComponent("" + (type.getKnockback() + additionalKnockback));
+
+			damage = damage.formatted(additionalDamage > 0 ? green : darkGreen);
+			knockback = knockback.formatted(additionalKnockback > 0 ? green : darkGreen);
+			reloadTicks = reloadTicks.formatted(darkGreen);
+
 			tooltip.add(spacing.copy()
-				.append(new StringTextComponent(type.getDamage() + " Attack Damage").formatted(darkGreen)));
+				.append(Lang.translate(_attack, damage)
+					.formatted(darkGreen)));
 			tooltip.add(spacing.copy()
-				.append(new StringTextComponent(type.getReloadTicks() + " Reload Ticks").formatted(darkGreen)));
+				.append(Lang.translate(_reload, reloadTicks)
+					.formatted(darkGreen)));
 			tooltip.add(spacing.copy()
-				.append(new StringTextComponent(type.getKnockback() + " Knockback").formatted(darkGreen)));
+				.append(Lang.translate(_knockback, knockback)
+					.formatted(darkGreen)));
 		});
 		super.addInformation(stack, world, tooltip, flag);
 	}

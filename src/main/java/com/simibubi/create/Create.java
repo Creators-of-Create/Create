@@ -89,6 +89,7 @@ public class Create {
 		AllMovementBehaviours.register();
 		AllWorldFeatures.register();
 		AllConfigs.register();
+		AllEnchantments.register();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 			.getModEventBus();
