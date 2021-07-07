@@ -1,6 +1,6 @@
 package com.simibubi.create.content.curiosities.armor;
 
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.content.curiosities.armor.CapacityEnchantment.ICapacityEnchantable;
 
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
@@ -12,7 +12,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 
-public class CopperBacktankItem extends CopperArmorItem {
+public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
 
 	public static final int DURABILITY_BAR = 0xefefef;
 	private BlockItem blockItem;
@@ -31,6 +31,11 @@ public class CopperBacktankItem extends CopperArmorItem {
 	public boolean isDamageable() {
 		return false;
 	}
+	
+	@Override
+	public boolean isEnchantable(ItemStack p_77616_1_) {
+		return true;
+	}
 
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
@@ -44,7 +49,7 @@ public class CopperBacktankItem extends CopperArmorItem {
 		
 		ItemStack stack = new ItemStack(this);
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putInt("Air", AllConfigs.SERVER.curiosities.maxAirInBacktank.get());
+		nbt.putInt("Air", BackTankUtil.maxAirWithoutEnchants());
 		stack.setTag(nbt);
 		p_150895_2_.add(stack);
 	}
@@ -52,7 +57,7 @@ public class CopperBacktankItem extends CopperArmorItem {
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		return 1 - MathHelper
-			.clamp(getRemainingAir(stack) / ((float) AllConfigs.SERVER.curiosities.maxAirInBacktank.get()), 0, 1);
+			.clamp(getRemainingAir(stack) / ((float) BackTankUtil.maxAir(stack)), 0, 1);
 	}
 
 	@Override
@@ -64,5 +69,5 @@ public class CopperBacktankItem extends CopperArmorItem {
 		CompoundNBT orCreateTag = stack.getOrCreateTag();
 		return orCreateTag.getInt("Air");
 	}
-
+	
 }

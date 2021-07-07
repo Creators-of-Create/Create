@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 public class CopperArmorItem extends ArmorItem {
 
 	public CopperArmorItem(EquipmentSlotType p_i48534_2_, Properties p_i48534_3_) {
-		super(AllArmorMaterials.COPPER, p_i48534_2_, p_i48534_3_);
+		super(AllArmorMaterials.COPPER, p_i48534_2_, p_i48534_3_.maxStackSize(1));
 	}
 
 	public boolean isWornBy(Entity entity) {

@@ -1,10 +1,12 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -28,17 +30,26 @@ public class BackTankUtil {
 
 	public static float getAir(ItemStack backtank) {
 		CompoundNBT tag = backtank.getOrCreateTag();
-		return tag.getFloat("Air");
+		return Math.min(tag.getFloat("Air"), maxAir(backtank));
 	}
 
 	public static void consumeAir(ItemStack backtank, float i) {
 		CompoundNBT tag = backtank.getOrCreateTag();
-		tag.putFloat("Air", getAir(backtank) - i);
+		tag.putFloat("Air", Math.min(getAir(backtank) - i, maxAir(backtank)));
 		backtank.setTag(tag);
 	}
 
-	private static float maxAir() {
-		return AllConfigs.SERVER.curiosities.maxAirInBacktank.get();
+	public static int maxAir(ItemStack backtank) {
+		return maxAir(EnchantmentHelper.getEnchantmentLevel(AllEnchantments.CAPACITY.get(), backtank));
+	}
+
+	public static int maxAir(int enchantLevel) {
+		return AllConfigs.SERVER.curiosities.airInBacktank.get()
+			+ AllConfigs.SERVER.curiosities.enchantedBacktankCapacity.get() * enchantLevel;
+	}
+
+	public static int maxAirWithoutEnchants() {
+		return AllConfigs.SERVER.curiosities.airInBacktank.get();
 	}
 
 	public static boolean canAbsorbDamage(LivingEntity entity, int usesPerTank) {
@@ -51,7 +62,7 @@ public class BackTankUtil {
 			return false;
 		if (!hasAirRemaining(backtank))
 			return false;
-		float cost = maxAir() / usesPerTank;
+		float cost = ((float) maxAirWithoutEnchants()) / usesPerTank;
 		consumeAir(backtank, cost);
 		return true;
 	}

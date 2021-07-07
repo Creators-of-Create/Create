@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 271",
+	"_": "Missing Localizations: 272",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -431,6 +431,7 @@
 	"block.create.zinc_block": "Цинковый блок",
 	"block.create.zinc_ore": "Цинковая руда",
 
+	"enchantment.create.capacity": "UNLOCALIZED: Capacity",
 	"enchantment.create.potato_recovery": "UNLOCALIZED: Potato Recovery",
 
 	"entity.create.contraption": "Штуковина",

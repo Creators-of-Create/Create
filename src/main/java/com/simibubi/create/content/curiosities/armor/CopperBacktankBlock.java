@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.Optional;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.block.ITE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -19,6 +21,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -96,8 +100,11 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		if (stack == null)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
+			te.setCapacityEnchantLevel(EnchantmentHelper.getEnchantmentLevel(AllEnchantments.CAPACITY.get(), stack));
 			te.setAirLevel(stack.getOrCreateTag()
 				.getInt("Air"));
+			if (stack.isEnchanted())
+				te.setEnchantmentTag(stack.getEnchantmentTagList());
 			if (stack.hasDisplayName())
 				te.setCustomName(stack.getDisplayName());
 		});
@@ -130,12 +137,22 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	public ItemStack getItem(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		ItemStack item = AllItems.COPPER_BACKTANK.asStack();
 		Optional<CopperBacktankTileEntity> tileEntityOptional = getTileEntityOptional(p_185473_1_, p_185473_2_);
+
 		int air = tileEntityOptional.map(CopperBacktankTileEntity::getAirLevel)
 			.orElse(0);
+		CompoundNBT tag = item.getOrCreateTag();
+		tag.putInt("Air", air);
+
+		ListNBT enchants = tileEntityOptional.map(CopperBacktankTileEntity::getEnchantmentTag)
+			.orElse(new ListNBT());
+		if (!enchants.isEmpty()) {
+			ListNBT enchantmentTagList = item.getEnchantmentTagList();
+			enchantmentTagList.addAll(enchants);
+			tag.put("Enchantments", enchantmentTagList);
+		}
+
 		ITextComponent customName = tileEntityOptional.map(CopperBacktankTileEntity::getCustomName)
 			.orElse(null);
-		item.getOrCreateTag()
-			.putInt("Air", air);
 		if (customName != null)
 			item.setDisplayName(customName);
 		return item;

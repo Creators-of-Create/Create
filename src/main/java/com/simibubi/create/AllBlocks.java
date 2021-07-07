@@ -1324,7 +1324,9 @@ public class AllBlocks {
 					.addEntry(ItemLootEntry.builder(AllItems.COPPER_BACKTANK.get())
 						.acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
 						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
-							.func_216056_a("Air", "Air")))));
+							.func_216056_a("Air", "Air"))
+						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
+							.func_216056_a("Enchantments", "Enchantments")))));
 			})
 			.register();
 

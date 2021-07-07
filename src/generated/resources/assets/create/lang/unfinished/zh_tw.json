@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 276",
+	"_": "Missing Localizations: 277",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -431,6 +431,7 @@
 	"block.create.zinc_block": "鋅磚",
 	"block.create.zinc_ore": "鋅礦石",
 
+	"enchantment.create.capacity": "UNLOCALIZED: Capacity",
 	"enchantment.create.potato_recovery": "UNLOCALIZED: Potato Recovery",
 
 	"entity.create.contraption": "結構",

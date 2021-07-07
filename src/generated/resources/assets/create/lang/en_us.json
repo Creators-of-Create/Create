@@ -430,6 +430,7 @@
 	"block.create.zinc_block": "Block of Zinc",
 	"block.create.zinc_ore": "Zinc Ore",
 
+	"enchantment.create.capacity": "Capacity",
 	"enchantment.create.potato_recovery": "Potato Recovery",
 
 	"entity.create.contraption": "Contraption",

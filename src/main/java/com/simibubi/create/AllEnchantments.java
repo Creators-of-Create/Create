@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.curiosities.armor.CapacityEnchantment;
 import com.simibubi.create.content.curiosities.weapons.PotatoRecoveryEnchantment;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -17,6 +18,13 @@ public class AllEnchantments {
 		.addSlots(EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND)
 		.lang("Potato Recovery")
 		.rarity(Rarity.UNCOMMON)
+		.register();
+	
+	public static final RegistryEntry<CapacityEnchantment> CAPACITY = REGISTRATE.object("capacity")
+		.enchantment(EnchantmentType.ARMOR_CHEST, CapacityEnchantment::new)
+		.addSlots(EquipmentSlotType.CHEST)
+		.lang("Capacity")
+		.rarity(Rarity.COMMON)
 		.register();
 
 	public static void register() {}
