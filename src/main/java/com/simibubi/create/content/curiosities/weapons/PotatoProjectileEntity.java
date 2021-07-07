@@ -36,6 +36,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class PotatoProjectileEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData {
 
 	ItemStack stack = ItemStack.EMPTY;
+
+	Entity stuckEntity;
+	Vector3d stuckOffset;
+	PotatoProjectileRenderMode stuckRenderer;
+	double stuckFallSpeed;
+
 	PotatoCannonProjectileTypes type;
 
 	public PotatoProjectileEntity(EntityType<? extends DamagingProjectileEntity> type, World world) {
@@ -69,10 +75,48 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		super.writeAdditional(nbt);
 	}
 
+	public Entity getStuckEntity() {
+		if (stuckEntity == null)
+			return null;
+		if (!stuckEntity.isAlive())
+			return null;
+		return stuckEntity;
+	}
+
+	public void setStuckEntity(Entity stuckEntity) {
+		this.stuckEntity = stuckEntity;
+		this.stuckOffset = getPositionVec().subtract(stuckEntity.getPositionVec());
+		this.stuckRenderer = new PotatoProjectileRenderMode.StuckToEntity(stuckOffset);
+		this.stuckFallSpeed = 0.0;
+		setMotion(Vector3d.ZERO);
+	}
+
+	public PotatoProjectileRenderMode getRenderMode() {
+		if (getStuckEntity() != null)
+			return stuckRenderer;
+
+		return getProjectileType().getRenderMode();
+	}
+
 	public void tick() {
 		PotatoCannonProjectileTypes projectileType = getProjectileType();
-		setMotion(getMotion().add(0, -.05 * projectileType.getGravityMultiplier(), 0)
-			.scale(projectileType.getDrag()));
+
+		Entity stuckEntity = getStuckEntity();
+		if (stuckEntity != null) {
+			if (getY() < stuckEntity.getY() - 0.1) {
+				pop(getPositionVec());
+				remove();
+			} else {
+				stuckFallSpeed += 0.007 * projectileType.getGravityMultiplier();
+				stuckOffset = stuckOffset.add(0, -stuckFallSpeed, 0);
+				Vector3d pos = stuckEntity.getPositionVec().add(stuckOffset);
+				setPosition(pos.x, pos.y, pos.z);
+			}
+		} else {
+			setMotion(getMotion().add(0, -0.05 * projectileType.getGravityMultiplier(), 0)
+				.scale(projectileType.getDrag()));
+		}
+
 		super.tick();
 	}
 
@@ -95,6 +139,9 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	protected void onEntityHit(EntityRayTraceResult ray) {
 		super.onEntityHit(ray);
 
+		if (getStuckEntity() != null)
+			return;
+
 		Vector3d hit = ray.getHitVec();
 		Entity target = ray.getEntity();
 		PotatoCannonProjectileTypes projectileType = getProjectileType();
@@ -116,7 +163,8 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		if (this.isBurning() && !targetIsEnderman)
 			target.setFire(5);
 
-		if (!target.attackEntityFrom(causePotatoDamage(), (float) damage)) {
+		boolean onServer = !world.isRemote;
+		if (onServer && !target.attackEntityFrom(causePotatoDamage(), (float) damage)) {
 			target.setFireTicks(k);
 			remove();
 			return;
@@ -147,13 +195,12 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 				livingentity.addVelocity(appliedMotion.x, 0.1D, appliedMotion.z);
 		}
 
-		boolean onServer = !world.isRemote;
 		if (onServer && owner instanceof LivingEntity) {
 			EnchantmentHelper.applyThornEnchantments(livingentity, owner);
 			EnchantmentHelper.applyArthropodEnchantments((LivingEntity) owner, livingentity);
 		}
 
-		if (owner != null && livingentity != owner && livingentity instanceof PlayerEntity
+		if (livingentity != owner && livingentity instanceof PlayerEntity
 			&& owner instanceof ServerPlayerEntity && !this.isSilent()) {
 			((ServerPlayerEntity) owner).connection
 				.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.PROJECTILE_HIT_PLAYER, 0.0F));
@@ -167,7 +214,12 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 				AllTriggers.POTATO_KILL.trigger(serverplayerentity);
 		}
 
-		remove();
+		if (type.isSticky() && target.isAlive()) {
+			setStuckEntity(target);
+		} else {
+			remove();
+		}
+
 	}
 
 	public static void playHitSound(World world, Vector3d location) {

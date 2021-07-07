@@ -26,8 +26,7 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 		ms.push();
 		ms.translate(0, entity.getBoundingBox()
 			.getYSize() / 2 - 1 / 8f, 0);
-		entity.getProjectileType()
-			.getRenderMode()
+		entity.getRenderMode()
 			.transform(ms, entity, pt);
 
 		Minecraft.getInstance()

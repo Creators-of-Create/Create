@@ -72,6 +72,22 @@ public abstract class PotatoProjectileRenderMode {
 
 	}
 
+	public static class StuckToEntity extends PotatoProjectileRenderMode {
+
+		private Vector3d offset;
+
+		public StuckToEntity(Vector3d offset) {
+			this.offset = offset;
+		}
+
+		@Override
+		@OnlyIn(Dist.CLIENT)
+		public void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt) {
+			MatrixStacker.of(ms).rotateY(AngleHelper.deg(MathHelper.atan2(offset.x, offset.z)));
+		}
+
+	}
+
 	public static int entityRandom(Entity entity, int maxValue) {
 		return (System.identityHashCode(entity) * 31) % maxValue;
 	}

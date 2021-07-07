@@ -194,7 +194,35 @@ public class PotatoCannonProjectileTypes {
 			.renderTumbling()
 			.soundPitch(0.9f)
 			.onBlockHit(placeBlockOnGround(Blocks.PUMPKIN.delegate))
-			.registerAndAssign(Blocks.PUMPKIN)
+			.registerAndAssign(Blocks.PUMPKIN),
+
+		PUMPKIN_PIE = create("pumpkin_pie").damage(7)
+			.reloadTicks(15)
+			.knockback(0.05f)
+			.velocity(1.1f)
+			.renderTumbling()
+			.sticky()
+			.soundPitch(1.1f)
+			.registerAndAssign(Items.PUMPKIN_PIE),
+
+		CAKE = create("cake").damage(8)
+			.reloadTicks(15)
+			.knockback(0.1f)
+			.velocity(1.1f)
+			.renderTumbling()
+			.sticky()
+			.soundPitch(1.0f)
+			.registerAndAssign(Items.CAKE),
+
+		BLAZE_CAKE = create("blaze_cake").damage(12)
+			.reloadTicks(20)
+			.knockback(0.3f)
+			.velocity(1.1f)
+			.renderTumbling()
+			.sticky()
+			.onEntityHit(ray -> ray.getEntity().setFire(12))
+			.soundPitch(1.0f)
+			.registerAndAssign(AllItems.BLAZE_CAKE.get())
 	;
 
 	public static void registerType(ResourceLocation resLoc, PotatoCannonProjectileTypes type) {
@@ -225,6 +253,7 @@ public class PotatoCannonProjectileTypes {
 	private int damage = 1;
 	private int split = 1;
 	private float fwoompPitch = 1;
+	private boolean sticky = false;
 	private PotatoProjectileRenderMode renderMode = new PotatoProjectileRenderMode.Billboard();
 	private Consumer<EntityRayTraceResult> onEntityHit = e -> {
 	};
@@ -266,6 +295,8 @@ public class PotatoCannonProjectileTypes {
 	public int getDamage() {
 		return damage;
 	}
+
+	public boolean isSticky() { return sticky; }
 
 	public void onEntityHit(EntityRayTraceResult ray) {
 		onEntityHit.accept(ray);
@@ -442,6 +473,11 @@ public class PotatoCannonProjectileTypes {
 
 		public Builder renderTowardMotion(int spriteAngle, float spin) {
 			result.renderMode = new PotatoProjectileRenderMode.TowardMotion(spriteAngle, spin);
+			return this;
+		}
+
+		public Builder sticky() {
+			result.sticky = true;
 			return this;
 		}
 
