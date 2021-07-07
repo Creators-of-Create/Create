@@ -36,11 +36,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.EntityTeleportEvent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileTypes {
@@ -116,7 +115,7 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.20f)
 			.knockback(0.05f)
 			.renderTumbling()
-			.onEntityHit(chorusTeleport(20))
+			.onEntityHitRecoveryCancelable(chorusTeleport(20))
 			.registerAndAssign(Items.CHORUS_FRUIT),
 
 		APPLE = create("apple").damage(5)
@@ -142,7 +141,7 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.05f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHit(foodEffects(Foods.GOLDEN_APPLE))
+			.onEntityHitRecoveryCancelable(foodEffects(Foods.GOLDEN_APPLE))
 			.registerAndAssign(Items.GOLDEN_APPLE),
 
 		ENCHANTED_GOLDEN_APPLE = create("enchanted_golden_apple").damage(1)
@@ -151,7 +150,7 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.05f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHit(foodEffects(Foods.ENCHANTED_GOLDEN_APPLE))
+			.onEntityHitRecoveryCancelable(foodEffects(Foods.ENCHANTED_GOLDEN_APPLE))
 			.registerAndAssign(Items.ENCHANTED_GOLDEN_APPLE),
 
 		BEETROOT = create("beetroot").damage(2)
@@ -313,7 +312,7 @@ public class PotatoCannonProjectileTypes {
 		};
 	}
 
-	private static Consumer<EntityRayTraceResult> foodEffects(Food food) {
+	private static Predicate<EntityRayTraceResult> foodEffects(Food food) {
 		return ray -> {
 			Entity entity = ray.getEntity();
 			if (entity instanceof LivingEntity) {
@@ -322,6 +321,7 @@ public class PotatoCannonProjectileTypes {
 						((LivingEntity) entity).addPotionEffect(effect.getFirst());
 				}
 			}
+			return true;
 		};
 	}
 
@@ -377,14 +377,14 @@ public class PotatoCannonProjectileTypes {
 		};
 	}
 
-	private static Consumer<EntityRayTraceResult> chorusTeleport(double teleportDiameter) {
+	private static Predicate<EntityRayTraceResult> chorusTeleport(double teleportDiameter) {
 		return ray -> {
 			Entity entity = ray.getEntity();
 			World world = entity.getEntityWorld();
 			if (world.isRemote)
-				return;
+				return true;
 			if (!(entity instanceof LivingEntity))
-				return;
+				return false;
 			LivingEntity livingEntity = (LivingEntity) entity;
 
 			double entityX = livingEntity.getX();
@@ -396,20 +396,26 @@ public class PotatoCannonProjectileTypes {
 				double teleportY = MathHelper.clamp(entityY + (livingEntity.getRNG().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getDimensionHeight() - 1);
 				double teleportZ = entityZ + (livingEntity.getRNG().nextDouble() - 0.5D) * teleportDiameter;
 
-				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
-				if (event.isCanceled())
-					return;
-
-				if (livingEntity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
+				/* Usable as soon as lowest supported forge > 36.1.3 */
+				
+//				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
+//				if (event.isCanceled())
+//					return;
+//				if (livingEntity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
+				
+				if (livingEntity.attemptTeleport(teleportX, teleportY, teleportZ, true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
 
 					SoundEvent soundevent = livingEntity instanceof FoxEntity ? SoundEvents.ENTITY_FOX_TELEPORT : SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
 					world.playSound(null, entityX, entityY, entityZ, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
 					livingEntity.playSound(soundevent, 1.0F, 1.0F);
-					break;
+					livingEntity.setMotion(Vector3d.ZERO);
+					return true;
 				}
 			}
+			
+			return false;
 		};
 	}
 
