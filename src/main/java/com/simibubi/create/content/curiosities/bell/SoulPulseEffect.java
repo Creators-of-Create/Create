@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.simibubi.create.content.curiosities.bell.SoulParticle.ExpandingPerimeterData;
+import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -17,7 +20,7 @@ import net.minecraft.world.spawner.WorldEntitySpawner;
 
 public class SoulPulseEffect {
 
-	public static final int MAX_DISTANCE = 10;
+	public static final int MAX_DISTANCE = 11;
 	private static final List<List<BlockPos>> LAYERS = genLayers();
 
 	private static final int WAITING_TICKS = 100;
@@ -50,10 +53,10 @@ public class SoulPulseEffect {
 		if (ticks < 0 || ticks % TICKS_PER_LAYER != 0)
 			return null;
 
-		List<BlockPos> spawns = getSoulSpawns(world);
+		List<BlockPos> spawns = getPotentialSoulSpawns(world);
 		while (spawns.isEmpty() && ticks > 0) {
 			ticks -= TICKS_PER_LAYER;
-			spawns.addAll(getSoulSpawns(world));
+			spawns.addAll(getPotentialSoulSpawns(world));
 		}
 		return spawns;
 	}
@@ -62,28 +65,30 @@ public class SoulPulseEffect {
 		return distance - ticks / TICKS_PER_LAYER - 1;
 	}
 
-	public List<BlockPos> getSoulSpawns(World world) {
+	public List<BlockPos> getPotentialSoulSpawns(World world) {
 		if (world == null)
 			return new ArrayList<>();
 
 		return getLayer(currentLayerIdx()).map(p -> p.add(pos))
-				.filter(p -> canSpawnSoulAt(world, p))
-				.collect(Collectors.toList());
+			.filter(p -> canSpawnSoulAt(world, p, true))
+			.collect(Collectors.toList());
 	}
 
-	public static boolean canSpawnSoulAt(World world, BlockPos at) {
+	public static boolean canSpawnSoulAt(World world, BlockPos at, boolean ignoreLight) {
 		EntityType<?> dummy = EntityType.ZOMBIE;
 		double dummyWidth = 0.2, dummyHeight = 0.75;
 		double w2 = dummyWidth / 2;
 
 		return world != null
-			&& WorldEntitySpawner.canCreatureTypeSpawnAtLocation(
-				EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, world, at, dummy)
-			&& world.getLightLevel(LightType.BLOCK, at) < 8
-			&& world.getBlockCollisions(null, new AxisAlignedBB(
-				at.getX() + 0.5 - w2, at.getY(), at.getZ() + 0.5 - w2,
-				at.getX() + 0.5 + w2, at.getY() + dummyHeight, at.getZ() + 0.5 + w2
-			), (a,b) -> true).allMatch(VoxelShape::isEmpty);
+			&& WorldEntitySpawner
+				.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, world, at, dummy)
+			&& (ignoreLight || world.getLightLevel(LightType.BLOCK, at) < 8)
+			&& world
+				.getBlockCollisions(null,
+					new AxisAlignedBB(at.getX() + 0.5 - w2, at.getY(), at.getZ() + 0.5 - w2, at.getX() + 0.5 + w2,
+						at.getY() + dummyHeight, at.getZ() + 0.5 + w2),
+					(a, b) -> true)
+				.allMatch(VoxelShape::isEmpty);
 	}
 
 	public void spawnParticles(World world, BlockPos at) {
@@ -91,8 +96,15 @@ public class SoulPulseEffect {
 			return;
 
 		Vector3d p = Vector3d.of(at);
-		world.addOptionalParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
-		world.addParticle(new SoulBaseParticle.Data(), p.x + 0.5, p.y + 0.01, p.z + 0.5, 0, 0, 0);
+		if (canOverlap())
+			world.addOptionalParticle(((int) Math.round(VecHelper.getCenterOf(pos)
+				.distanceTo(VecHelper.getCenterOf(at)))) >= distance ? new SoulParticle.PerimeterData()
+					: new ExpandingPerimeterData(),
+				p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
+		if (world.getLightLevel(LightType.BLOCK, at) < 8) {
+			world.addOptionalParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
+			world.addParticle(new SoulBaseParticle.Data(), p.x + 0.5, p.y + 0.01, p.z + 0.5, 0, 0, 0);
+		}
 	}
 
 	private static List<List<BlockPos>> genLayers() {
@@ -142,7 +154,8 @@ public class SoulPulseEffect {
 	public static Stream<BlockPos> getLayer(int idx) {
 		if (idx < 0 || idx >= MAX_DISTANCE)
 			return Stream.empty();
-		return LAYERS.get(idx).stream();
+		return LAYERS.get(idx)
+			.stream();
 	}
 
 }

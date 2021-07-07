@@ -35,7 +35,9 @@ public enum AllParticleTypes {
 	BASIN_FLUID(FluidParticleData::new),
 	FLUID_DRIP(FluidParticleData::new),
 	SOUL(SoulParticle.Data::new),
-	SOUL_BASE(SoulBaseParticle.Data::new)
+	SOUL_BASE(SoulBaseParticle.Data::new),
+	SOUL_PERIMETER(SoulParticle.PerimeterData::new),
+	SOUL_EXPANDING_PERIMETER(SoulParticle.ExpandingPerimeterData::new)
 	;
 
 	private ParticleEntry<?> entry;
