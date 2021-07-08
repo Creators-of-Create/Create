@@ -30,7 +30,9 @@ public class SoundScapes {
 
 		KINETIC(SoundScapes::kinetic),
 		COG(SoundScapes::cogwheel),
-	
+		CRUSHING(SoundScapes::crushing),
+		MILLING(SoundScapes::milling),
+
 		;
 
 		private BiFunction<Float, AmbienceGroup, SoundScape> factory;
@@ -51,6 +53,17 @@ public class SoundScapes {
 
 	private static SoundScape cogwheel(float pitch, AmbienceGroup group) {
 		return new SoundScape(pitch, group).continuous(AllSoundEvents.COGS.getMainEvent(), 1.5f, 1);
+	}
+
+	private static SoundScape crushing(float pitch, AmbienceGroup group) {
+		return new SoundScape(pitch, group).repeating(AllSoundEvents.CRUSHING_1.getMainEvent(), 1.545f, .75f, 1)
+			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2)
+			.repeating(AllSoundEvents.CRUSHING_3.getMainEvent(), 2f, 1.75f, 2);
+	}
+	
+	private static SoundScape milling(float pitch, AmbienceGroup group) {
+		return new SoundScape(pitch, group).repeating(AllSoundEvents.CRUSHING_1.getMainEvent(), 1.545f, .75f, 1)
+			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2);
 	}
 
 	enum PitchGroup {

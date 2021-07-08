@@ -19,6 +19,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ColorAttribut
 import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ShulkerFillLevelAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
@@ -56,6 +57,7 @@ public interface ItemAttribute {
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
+	static ItemAttribute shulkerFillLevel = register(ShulkerFillLevelAttribute.EMPTY);
 	static ItemAttribute hasColor = register(ColorAttribute.EMPTY);
 	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));

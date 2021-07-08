@@ -4,6 +4,8 @@ import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HarvesterTileEntity extends SyncedTileEntity {
 
@@ -17,6 +19,7 @@ public class HarvesterTileEntity extends SyncedTileEntity {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		return RENDER_BOX.offset(pos);
 	}

@@ -1,9 +1,9 @@
 package com.simibubi.create.compat;
 
-import net.minecraftforge.fml.ModList;
-
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import net.minecraftforge.fml.ModList;
 
 /**
  * For compatibility with and without another mod present, we have to define load conditions of the specific code

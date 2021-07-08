@@ -6,6 +6,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -35,7 +38,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTileEntity>, IWrenchable {
+public class NixieTubeBlock extends HorizontalBlock
+	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 	private DyeColor color;
@@ -120,6 +124,17 @@ public class NixieTubeBlock extends HorizontalBlock implements ITE<NixieTubeTile
 		boolean p_196243_5_) {
 		if (!(p_196243_4_.getBlock() instanceof NixieTubeBlock))
 			p_196243_2_.removeTileEntity(p_196243_3_);
+	}
+
+	@Override
+	public ItemStack getItem(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
+	}
+	
+	@Override
+	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.ORANGE_NIXIE_TUBE.get()
+			.asItem());
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.sound.SoundScapes;
+import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -19,6 +21,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -41,11 +45,26 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		outputInv = new ItemStackHandler(9);
 		capability = LazyOptional.of(MillstoneInventoryHandler::new);
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
 		super.addBehaviours(behaviours);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void tickAudio() {
+		super.tickAudio();
+
+		if (getSpeed() == 0)
+			return;
+		if (inputInv.getStackInSlot(0)
+			.isEmpty())
+			return;
+
+		float pitch = MathHelper.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
+		SoundScapes.play(AmbienceGroup.MILLING, pos, pitch);
 	}
 
 	@Override
@@ -98,7 +117,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		super.remove();
 		capability.invalidate();
 	}
-	
+
 	private void process() {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 

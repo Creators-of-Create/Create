@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 277",
+	"_": "Missing Localizations: 283",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1065,6 +1065,11 @@
 	"create.item_attributes.in_item_group.inverted": "'%1$s' 그룹에 속해 있지 않은",
 	"create.item_attributes.added_by": "%1$s에 의해 추가된",
 	"create.item_attributes.added_by.inverted": "%1$s에 의해 추가되지 않은",
+	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
+	"create.item_attributes.shulker_level.empty": "UNLOCALIZED: empty",
+	"create.item_attributes.shulker_level.partial": "UNLOCALIZED: partially filled",
 	"create.item_attributes.has_enchant": "%1$s 마법이 부여된",
 	"create.item_attributes.has_enchant.inverted": "%1$s 마법이 부여되지 않은",
 	"create.item_attributes.color": "염색된 %1$s",
@@ -1217,6 +1222,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "기계식 압착기가 무언가를 압착함",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
+	"create.subtitle.crushing_1": "UNLOCALIZED: Crushing noises",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.blaze_munch": "블레이즈 가열기가 무언가를 먹어 치움",

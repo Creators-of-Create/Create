@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1371",
+	"_": "Missing Localizations: 1377",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1065,6 +1065,11 @@
 	"create.item_attributes.in_item_group.inverted": "n'appartient pas à %1$s'",
 	"create.item_attributes.added_by": "a été ajouté par %1$s",
 	"create.item_attributes.added_by.inverted": "n'a pas été ajouté par %1$s",
+	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
+	"create.item_attributes.shulker_level.empty": "UNLOCALIZED: empty",
+	"create.item_attributes.shulker_level.partial": "UNLOCALIZED: partially filled",
 	"create.item_attributes.has_enchant": "est enchanté %1$s",
 	"create.item_attributes.has_enchant.inverted": "n'est pas enchenté %1$s",
 	"create.item_attributes.color": "UNLOCALIZED: is dyed %1$s",
@@ -1217,6 +1222,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
+	"create.subtitle.crushing_1": "UNLOCALIZED: Crushing noises",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.blaze_munch": "UNLOCALIZED: Blaze Burner munches",

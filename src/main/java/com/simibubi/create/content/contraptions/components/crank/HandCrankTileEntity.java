@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 
@@ -82,6 +84,7 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		super.tickAudio();
 		if (inUse > 0 && AnimationTickHolder.getTicks() % 10 == 0) {
