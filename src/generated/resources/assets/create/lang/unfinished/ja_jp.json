@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 36",
+	"_": "Missing Localizations: 37",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1222,6 +1222,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "メカニカルプレスがボンと鳴る",
 	"create.subtitle.fwoomp": "ポテトランチャーがバキューンと鳴る",
 	"create.subtitle.worldshaper_place": "ワールドシェーパーが設置する",
+	"create.subtitle.crushing_1": "UNLOCALIZED: Crushing noises",
 	"create.subtitle.depot_slide": "アイテムが滑る",
 	"create.subtitle.saw_activate_stone": "メカニカルソーが動作する",
 	"create.subtitle.blaze_munch": "ブレイズの咀嚼音",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 282",
+	"_": "Missing Localizations: 283",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1222,6 +1222,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "기계식 압착기가 무언가를 압착함",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
+	"create.subtitle.crushing_1": "UNLOCALIZED: Crushing noises",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.blaze_munch": "블레이즈 가열기가 무언가를 먹어 치움",

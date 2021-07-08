@@ -199,6 +199,21 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
+		CRUSHING_1 = create("crushing_1").subtitle("Crushing noises")
+			.playExisting(SoundEvents.BLOCK_NETHERRACK_HIT)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+			
+		CRUSHING_2 = create("crushing_2").noSubtitle()
+			.playExisting(SoundEvents.BLOCK_GRAVEL_PLACE)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+			
+		CRUSHING_3 = create("crushing_3").noSubtitle()
+			.playExisting(SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK)
+			.category(SoundCategory.BLOCKS)
+			.build(),
+			
 		PECULIAR_BELL_USE = create("peculiar_bell_use").subtitle("Peculiar Bell tolls")
 			.playExisting(SoundEvents.BLOCK_BELL_USE)
 			.category(SoundCategory.BLOCKS)
@@ -230,7 +245,8 @@ public class AllSoundEvents {
 	public static JsonElement provideLangEntries() {
 		JsonObject object = new JsonObject();
 		for (SoundEntry entry : entries.values())
-			object.addProperty(entry.getSubtitleKey(), entry.getSubtitle());
+			if (entry.hasSubtitle())
+				object.addProperty(entry.getSubtitleKey(), entry.getSubtitle());
 		return object;
 	}
 
@@ -306,6 +322,11 @@ public class AllSoundEvents {
 			this.subtitle = subtitle;
 			return this;
 		}
+		
+		public SoundEntryBuilder noSubtitle() {
+			this.subtitle = null;
+			return this;
+		}
 
 		public SoundEntryBuilder category(SoundCategory category) {
 			this.category = category;
@@ -360,6 +381,10 @@ public class AllSoundEvents {
 
 		public ResourceLocation getLocation() {
 			return Create.asResource(id);
+		}
+		
+		public boolean hasSubtitle() {
+			return subtitle != null;
 		}
 
 		public String getSubtitle() {
@@ -460,7 +485,7 @@ public class AllSoundEvents {
 				s.addProperty("type", "event");
 				list.add(s);
 				entry.add("sounds", list);
-				if (i == 0)
+				if (i == 0 && hasSubtitle())
 					entry.addProperty("subtitle", getSubtitleKey());
 				json.add(getIdOf(i), entry);
 			}
