@@ -56,6 +56,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -70,6 +71,8 @@ import net.minecraftforge.items.IItemHandler;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawTileEntity extends BlockBreakingKineticTileEntity {
+
+	private static final AxisAlignedBB RENDER_BOX = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
 
 	private static final Object cuttingRecipesKey = new Object();
 	public static final LazyValue<IRecipeType<?>> woodcuttingRecipeType =
@@ -118,6 +121,13 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		recipeIndex = compound.getInt("RecipeIndex");
 		if (compound.contains("PlayEvent"))
 			playEvent = ItemStack.read(compound.getCompound("PlayEvent"));
+	}
+
+	@Override
+	protected AxisAlignedBB makeRenderBoundingBox() {
+		Direction facing = getBlockState().get(SawBlock.FACING);
+		AxisAlignedBB box = RENDER_BOX.expand(facing.getXOffset() * 0.125f, facing.getYOffset() * 0.125f, facing.getZOffset() * 0.125f);
+		return box.offset(pos);
 	}
 
 	@Override

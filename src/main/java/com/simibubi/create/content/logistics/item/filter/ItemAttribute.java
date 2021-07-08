@@ -9,8 +9,6 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import com.simibubi.create.content.logistics.item.filter.attribute.ShulkerFillLevelAttribute;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -21,6 +19,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ColorAttribut
 import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ShulkerFillLevelAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
