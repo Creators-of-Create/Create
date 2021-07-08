@@ -9,6 +9,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.content.logistics.item.filter.attribute.ShulkerFillLevelAttribute;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.simibubi.create.AllRecipeTypes;
@@ -56,6 +58,7 @@ public interface ItemAttribute {
 	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
+	static ItemAttribute shulkerFillLevel = register(ShulkerFillLevelAttribute.EMPTY);
 	static ItemAttribute hasColor = register(ColorAttribute.EMPTY);
 	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));

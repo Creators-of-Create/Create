@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 31",
+	"_": "Missing Localizations: 36",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1065,6 +1065,11 @@
 	"create.item_attributes.in_item_group.inverted": "%1$sに属していないか",
 	"create.item_attributes.added_by": "%1$sによって追加されたか",
 	"create.item_attributes.added_by.inverted": "%1$sによって追加されていないか",
+	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
+	"create.item_attributes.shulker_level.empty": "UNLOCALIZED: empty",
+	"create.item_attributes.shulker_level.partial": "UNLOCALIZED: partially filled",
 	"create.item_attributes.has_enchant": "エンチャントされているか%1$s",
 	"create.item_attributes.has_enchant.inverted": "エンチャントがされていないか",
 	"create.item_attributes.color": "%1$sで染められているか",

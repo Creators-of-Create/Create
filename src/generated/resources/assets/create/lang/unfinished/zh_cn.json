@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 282",
+	"_": "Missing Localizations: 287",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1065,6 +1065,11 @@
 	"create.item_attributes.in_item_group.inverted": "不属于%1$s",
 	"create.item_attributes.added_by": "由%1$s添加",
 	"create.item_attributes.added_by.inverted": "不是由%1$s添加",
+	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
+	"create.item_attributes.shulker_level.empty": "UNLOCALIZED: empty",
+	"create.item_attributes.shulker_level.partial": "UNLOCALIZED: partially filled",
 	"create.item_attributes.has_enchant": "有附魔效果%1$s",
 	"create.item_attributes.has_enchant.inverted": "没有附魔效果%1$s",
 	"create.item_attributes.color": "染色为%1$s",

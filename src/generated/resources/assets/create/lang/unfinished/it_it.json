@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 899",
+	"_": "Missing Localizations: 904",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1065,6 +1065,11 @@
 	"create.item_attributes.in_item_group.inverted": "non appartiene a '%1$s'",
 	"create.item_attributes.added_by": "è stato aggiunto da %1$s",
 	"create.item_attributes.added_by.inverted": "non è stato aggiunto da %1$s",
+	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
+	"create.item_attributes.shulker_level.empty": "UNLOCALIZED: empty",
+	"create.item_attributes.shulker_level.partial": "UNLOCALIZED: partially filled",
 	"create.item_attributes.has_enchant": "è stato incantato con %1$s",
 	"create.item_attributes.has_enchant.inverted": "non è stato incantato con %1$s",
 	"create.item_attributes.color": "UNLOCALIZED: is dyed %1$s",

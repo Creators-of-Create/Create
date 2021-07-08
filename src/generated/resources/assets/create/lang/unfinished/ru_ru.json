@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 272",
+	"_": "Missing Localizations: 277",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1065,6 +1065,11 @@
 	"create.item_attributes.in_item_group.inverted": "не принадлежит '%1$s'",
 	"create.item_attributes.added_by": "был добавлен %1$s",
 	"create.item_attributes.added_by.inverted": "не был добавлен %1$s",
+	"create.item_attributes.shulker_level": "UNLOCALIZED: is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "UNLOCALIZED: is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "UNLOCALIZED: full",
+	"create.item_attributes.shulker_level.empty": "UNLOCALIZED: empty",
+	"create.item_attributes.shulker_level.partial": "UNLOCALIZED: partially filled",
 	"create.item_attributes.has_enchant": "зачарован на %1$s",
 	"create.item_attributes.has_enchant.inverted": "не зачарован на %1$s",
 	"create.item_attributes.color": "Покрашено в %1$s",
