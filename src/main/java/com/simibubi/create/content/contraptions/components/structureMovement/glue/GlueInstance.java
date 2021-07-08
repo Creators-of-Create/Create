@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
+import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.instancing.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
@@ -29,6 +30,7 @@ import net.minecraft.world.LightType;
 
 public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {
 
+	private static final boolean USE_ATLAS = false;
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Create.ID, "textures/entity/super_glue/slime.png");
 
 	private final Quaternion rotation;
@@ -37,8 +39,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	public GlueInstance(MaterialManager<?> materialManager, SuperGlueEntity entity) {
 		super(materialManager, entity);
 
-		Instancer<OrientedData> instancer = materialManager.getMaterial(Materials.ORIENTED)
-				.get(entity.getType(), GlueInstance::supplyModel);
+		Instancer<OrientedData> instancer = getInstancer(materialManager, entity);
 
 		Direction face = entity.getFacingDirection();
 		rotation = new Quaternion(AngleHelper.verticalAngle(face), AngleHelper.horizontalAngleNew(face), 0, true);
@@ -47,6 +48,17 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				.withCondition(this::shouldShow)
 				.withSetupFunc(this::positionModel)
 				.update();
+	}
+
+	private Instancer<OrientedData> getInstancer(MaterialManager<?> materialManager, SuperGlueEntity entity) {
+		InstanceMaterial<OrientedData> material;
+
+		if (USE_ATLAS)
+			material = materialManager.getMaterial(Materials.ORIENTED);
+		else
+			material = materialManager.getMaterial(Materials.ORIENTED, TEXTURE);
+
+		return material.get(entity.getType(), GlueInstance::supplyModel);
 	}
 
 	@Override
@@ -114,19 +126,33 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 
 		VecBuffer buffer = VecBuffer.allocate(Formats.UNLIT_MODEL.getStride() * 8);
 
-		TextureAtlasSprite sprite = AllStitchedTextures.SUPER_GLUE.getSprite();
+		float minU;
+		float maxU;
+		float minV;
+		float maxV;
+
+		if (USE_ATLAS) {
+			TextureAtlasSprite sprite = AllStitchedTextures.SUPER_GLUE.getSprite();
+			minU = sprite.getMinU();
+			maxU = sprite.getMaxU();
+			minV = sprite.getMinV();
+			maxV = sprite.getMaxV();
+		} else {
+			minU = minV = 0;
+			maxU = maxV = 1;
+		}
 
 		//             pos                                               normal                                   uv
 		// inside quad
-		buffer.putVec3((float) a1.x, (float) a1.y, (float) a1.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(sprite.getMaxU(), sprite.getMinV());
-		buffer.putVec3((float) a2.x, (float) a2.y, (float) a2.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(sprite.getMaxU(), sprite.getMaxV());
-		buffer.putVec3((float) a3.x, (float) a3.y, (float) a3.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(sprite.getMinU(), sprite.getMaxV());
-		buffer.putVec3((float) a4.x, (float) a4.y, (float) a4.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(sprite.getMinU(), sprite.getMinV());
+		buffer.putVec3((float) a1.x, (float) a1.y, (float) a1.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(maxU, minV);
+		buffer.putVec3((float) a2.x, (float) a2.y, (float) a2.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(maxU, maxV);
+		buffer.putVec3((float) a3.x, (float) a3.y, (float) a3.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(minU, maxV);
+		buffer.putVec3((float) a4.x, (float) a4.y, (float) a4.z).putVec3((byte) 0, (byte) 0, (byte) -127).putVec2(minU, minV);
 		// outside quad
-		buffer.putVec3((float) b4.x, (float) b4.y, (float) b4.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(sprite.getMinU(), sprite.getMinV());
-		buffer.putVec3((float) b3.x, (float) b3.y, (float) b3.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(sprite.getMinU(), sprite.getMaxV());
-		buffer.putVec3((float) b2.x, (float) b2.y, (float) b2.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(sprite.getMaxU(), sprite.getMaxV());
-		buffer.putVec3((float) b1.x, (float) b1.y, (float) b1.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(sprite.getMaxU(), sprite.getMinV());
+		buffer.putVec3((float) b4.x, (float) b4.y, (float) b4.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(minU, minV);
+		buffer.putVec3((float) b3.x, (float) b3.y, (float) b3.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(minU, maxV);
+		buffer.putVec3((float) b2.x, (float) b2.y, (float) b2.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(maxU, maxV);
+		buffer.putVec3((float) b1.x, (float) b1.y, (float) b1.z).putVec3((byte) 0, (byte) 0, (byte) 127).putVec2(maxU, minV);
 
 		buffer.rewind();
 
