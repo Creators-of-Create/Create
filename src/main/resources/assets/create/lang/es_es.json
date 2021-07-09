@@ -1728,7 +1728,7 @@
 	"create.ponder.empty_blaze_burner.text_2": "Alternativamente, los blaze pueden ser recogidos de sus spawners directamente",
 	"create.ponder.empty_blaze_burner.text_3": "Ahora tienes una fuente de calor ideal para varias máquinas",
 	"create.ponder.empty_blaze_burner.text_4": "Por motivos estéticos, los quemadores de blaze vacíos también se pueden encender con pedernal y acero",
-	"create.ponder.empty_blaze_burner.text_5": "Sin embargo, no son adecuados para la calefacción industrial",
+	"create.ponder.empty_blaze_burner.text_6": "Sin embargo, no son adecuados para la calefacción industrial",
 
     "create.ponder.encased_fluid_pipe.header": "Revestir tuberías de fluídos",
     "create.ponder.encased_fluid_pipe.text_1": "Copper Casing can be used to decorate Fluid Pipes",

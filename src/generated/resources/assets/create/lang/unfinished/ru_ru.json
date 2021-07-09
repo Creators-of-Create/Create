@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 278",
+	"_": "Missing Localizations: 279",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1765,7 +1765,8 @@
 	"create.ponder.empty_blaze_burner.text_2": "Также Всполохи можут быть захвачены из Спавнера напрямую",
 	"create.ponder.empty_blaze_burner.text_3": "Теперь у вас есть идеальный источник тепла для ряда машин",
 	"create.ponder.empty_blaze_burner.text_4": "В эстетических целях, Пустые Горелки могут быть зажжены Огнивом",
-	"create.ponder.empty_blaze_burner.text_5": "Однако они не будут подходить для промышленного нагрева",
+	"create.ponder.empty_blaze_burner.text_5": "UNLOCALIZED: The flame can be transformed using a soul-infused item",
+	"create.ponder.empty_blaze_burner.text_6": "Однако они не будут подходить для промышленного нагрева",
 
 	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
 	"create.ponder.encased_fluid_pipe.text_1": "UNLOCALIZED: Copper Casing can be used to decorate Fluid Pipes",

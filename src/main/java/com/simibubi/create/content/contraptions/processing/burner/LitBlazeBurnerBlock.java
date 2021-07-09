@@ -4,16 +4,20 @@ import java.util.Random;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.EnumProperty;
+import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -25,23 +29,21 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ToolType;
 
 public class LitBlazeBurnerBlock extends Block {
 
-// 	1.16: add a soul fire variant
+	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 
-//	public enum FlameType implements IStringSerializable {
-//		REGULAR, SOULFIRE;
-//
-//		@Override
-//		public String getName() {
-//			return Lang.asId(name());
-//		}
-//
-//	}
+	public LitBlazeBurnerBlock(Properties properties) {
+		super(properties);
+		setDefaultState(getDefaultState().with(FLAME_TYPE, FlameType.REGULAR));
+	}
 
-	public LitBlazeBurnerBlock(Properties p_i48440_1_) {
-		super(p_i48440_1_);
+	@Override
+	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder);
+		builder.add(FLAME_TYPE);
 	}
 
 	@Override
@@ -49,19 +51,26 @@ public class LitBlazeBurnerBlock extends Block {
 		BlockRayTraceResult blockRayTraceResult) {
 		ItemStack heldItem = player.getHeldItem(hand);
 
-		// Check for 'Shovels'
-		if (!heldItem.canHarvestBlock(Blocks.SNOW.getDefaultState()))
-			return ActionResultType.PASS;
-
-		world.playSound(player, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, .5f, 2);
-
-		if (world.isRemote)
-			return ActionResultType.SUCCESS;
-		if (!player.isCreative())
+		if (heldItem.getToolTypes().contains(ToolType.SHOVEL)) {
+			world.playSound(player, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5f, 2);
+			if (world.isRemote)
+				return ActionResultType.SUCCESS;
 			heldItem.damageItem(1, player, p -> p.sendBreakAnimation(hand));
+			world.setBlockState(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
+			return ActionResultType.SUCCESS;
+		}
 
-		world.setBlockState(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
-		return ActionResultType.SUCCESS;
+		if (state.get(FLAME_TYPE) == FlameType.REGULAR) {
+			if (heldItem.getItem().isIn(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
+				world.playSound(player, pos, SoundEvents.BLOCK_SOUL_SAND_PLACE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.4F + 0.8F);
+				if (world.isRemote)
+					return ActionResultType.SUCCESS;
+				world.setBlockState(pos, getDefaultState().with(FLAME_TYPE, FlameType.SOUL));
+				return ActionResultType.SUCCESS;
+			}
+		}
+
+		return ActionResultType.PASS;
 	}
 
 	@Override
@@ -77,7 +86,7 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState p_180655_1_, World world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
 		world.addOptionalParticle(ParticleTypes.LARGE_SMOKE, true,
 			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
 			(double) pos.getY() + random.nextDouble() + random.nextDouble(),
@@ -90,6 +99,17 @@ public class LitBlazeBurnerBlock extends Block {
 				0.25F + random.nextFloat() * .25f, random.nextFloat() * 0.7F + 0.6F, false);
 		}
 
+		if (state.get(FLAME_TYPE) == FlameType.SOUL) {
+			if (random.nextInt(8) == 0) {
+				world.addParticle(ParticleTypes.SOUL,
+					pos.getX() + 0.5F + random.nextDouble() / 4 * (random.nextBoolean() ? 1 : -1),
+					pos.getY() + 0.3F + random.nextDouble() / 2,
+					pos.getZ() + 0.5F + random.nextDouble() / 4 * (random.nextBoolean() ? 1 : -1),
+					0.0, random.nextDouble() * 0.04 + 0.04, 0.0);
+			}
+			return;
+		}
+
 		if (random.nextInt(5) == 0) {
 			for (int i = 0; i < random.nextInt(1) + 1; ++i) {
 				world.addParticle(ParticleTypes.LAVA, (double) ((float) pos.getX() + 0.5F),
@@ -98,15 +118,15 @@ public class LitBlazeBurnerBlock extends Block {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
 		return true;
 	}
-	
+
 	@Override
 	public int getComparatorInputOverride(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
-		return 1;
+		return state.get(FLAME_TYPE) == FlameType.REGULAR ? 1 : 2;
 	}
 
 	@Override
@@ -115,10 +135,28 @@ public class LitBlazeBurnerBlock extends Block {
 		return AllBlocks.BLAZE_BURNER.get()
 			.getCollisionShape(state, reader, pos, context);
 	}
-	
+
 	@Override
 	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
+	}
+
+	public static int getLight(BlockState state) {
+		if (state.get(FLAME_TYPE) == FlameType.SOUL)
+			return 9;
+		else
+			return 12;
+	}
+
+	public enum FlameType implements IStringSerializable {
+
+		REGULAR, SOUL;
+
+		@Override
+		public String getString() {
+			return Lang.asId(name());
+		}
+
 	}
 
 }

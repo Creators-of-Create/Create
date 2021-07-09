@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 283",
+	"_": "Missing Localizations: 284",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1765,7 +1765,8 @@
 	"create.ponder.empty_blaze_burner.text_2": "或者，也可以透過右擊烈焰人刷怪籠來填充啟動烈焰人燃燒室",
 	"create.ponder.empty_blaze_burner.text_3": "這樣，你便有了一個可供部分機器加工的熱源",
 	"create.ponder.empty_blaze_burner.text_4": "如果是為了美觀，空的烈焰人燃燒室也可以被打火石點燃",
-	"create.ponder.empty_blaze_burner.text_5": "但是，這樣的熱源不足以給機器提加工供足夠的熱量",
+	"create.ponder.empty_blaze_burner.text_5": "UNLOCALIZED: The flame can be transformed using a soul-infused item",
+	"create.ponder.empty_blaze_burner.text_6": "但是，這樣的熱源不足以給機器提加工供足夠的熱量",
 
 	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
 	"create.ponder.encased_fluid_pipe.text_1": "UNLOCALIZED: Copper Casing can be used to decorate Fluid Pipes",

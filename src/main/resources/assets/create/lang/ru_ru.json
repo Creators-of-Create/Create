@@ -1705,7 +1705,7 @@
 	"create.ponder.empty_blaze_burner.text_2": "Также Всполохи можут быть захвачены из Спавнера напрямую",
 	"create.ponder.empty_blaze_burner.text_3": "Теперь у вас есть идеальный источник тепла для ряда машин",
 	"create.ponder.empty_blaze_burner.text_4": "В эстетических целях, Пустые Горелки могут быть зажжены Огнивом",
-	"create.ponder.empty_blaze_burner.text_5": "Однако они не будут подходить для промышленного нагрева",
+	"create.ponder.empty_blaze_burner.text_6": "Однако они не будут подходить для промышленного нагрева",
 
 	"create.ponder.fan_direction.header": "Воздушном потоке Вентиляторов в Корпусе",
 	"create.ponder.fan_direction.text_1": "Вентиляторы в Корпусе используют Силу Вращения для создания Воздушного Потока",

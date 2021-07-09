@@ -497,12 +497,16 @@ public class AllBlocks {
 	public static final BlockEntry<LitBlazeBurnerBlock> LIT_BLAZE_BURNER =
 		REGISTRATE.block("lit_blaze_burner", LitBlazeBurnerBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.luminance($ -> 12))
+			.properties(p -> p.luminance(LitBlazeBurnerBlock::getLight))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 			.loot((lt, block) -> lt.registerDropping(block, AllItems.EMPTY_BLAZE_BURNER.get()))
-			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), p.models()
-				.getExistingFile(p.modLoc("block/blaze_burner/block_with_fire"))))
+			.blockstate((c, p) -> p.getVariantBuilder(c.get()).forAllStates(state ->
+				ConfiguredModel.builder()
+					.modelFile(p.models().getExistingFile(p.modLoc(
+						"block/blaze_burner/" + (state.get(LitBlazeBurnerBlock.FLAME_TYPE) == LitBlazeBurnerBlock.FlameType.SOUL ? "block_with_soul_fire" : "block_with_fire")
+					)))
+					.build()))
 			.register();
 
 	public static final BlockEntry<DepotBlock> DEPOT = REGISTRATE.block("depot", DepotBlock::new)

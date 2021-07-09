@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1125",
+	"_": "Missing Localizations: 1126",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1765,7 +1765,8 @@
 	"create.ponder.empty_blaze_burner.text_2": "UNLOCALIZED: Alternatively, Blazes can be collected from their Spawners directly",
 	"create.ponder.empty_blaze_burner.text_3": "UNLOCALIZED: You now have an ideal heat source for various machines",
 	"create.ponder.empty_blaze_burner.text_4": "UNLOCALIZED: For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel",
-	"create.ponder.empty_blaze_burner.text_5": "UNLOCALIZED: However, these are not suitable for industrial heating",
+	"create.ponder.empty_blaze_burner.text_5": "UNLOCALIZED: The flame can be transformed using a soul-infused item",
+	"create.ponder.empty_blaze_burner.text_6": "UNLOCALIZED: However, these are not suitable for industrial heating",
 
 	"create.ponder.encased_fluid_pipe.header": "UNLOCALIZED: Encasing Fluid Pipes",
 	"create.ponder.encased_fluid_pipe.text_1": "UNLOCALIZED: Copper Casing can be used to decorate Fluid Pipes",
