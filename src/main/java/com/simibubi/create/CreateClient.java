@@ -127,8 +127,6 @@ public class CreateClient {
 	}
 
 	public static void onModelRegistry(ModelRegistryEvent event) {
-		PartialModel.onModelRegistry(event);
-
 		getCustomRenderedItems().foreach((item, modelFunc) -> modelFunc.apply(null)
 			.getModelLocations()
 			.forEach(ModelLoader::addSpecialModel));
@@ -136,7 +134,6 @@ public class CreateClient {
 
 	public static void onModelBake(ModelBakeEvent event) {
 		Map<ResourceLocation, IBakedModel> modelRegistry = event.getModelRegistry();
-		PartialModel.onModelBake(event);
 
 		getCustomBlockModels()
 			.foreach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
