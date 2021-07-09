@@ -638,10 +638,10 @@ public class ProcessingScenes {
 			.pointAt(util.vector.blockSurface(center.east()
 				.up(), Direction.UP))
 			.placeNearTarget();
-		scene.idle(70);
-		scene.overlay.showText(60)
+		scene.idle(80);
+		scene.overlay.showText(90)
 			.colored(PonderPalette.RED)
-			.text("However, these are not suitable for industrial heating")
+			.text("However, without a blaze they are not suitable for industrial heating")
 			.pointAt(util.vector.blockSurface(center.east()
 				.up(), Direction.UP))
 			.placeNearTarget();

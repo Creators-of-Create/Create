@@ -197,7 +197,9 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 			finished = true;
 			running = false;
 
-			if (onBasin() && matchBasinRecipe(currentRecipe))
+			if (onBasin() && matchBasinRecipe(currentRecipe)
+				&& getBasin().filter(BasinTileEntity::canContinueProcessing)
+					.isPresent())
 				startProcessingBasin();
 
 			pressedItems.clear();

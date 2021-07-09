@@ -14,7 +14,7 @@ public class ProcessingInventory extends ItemStackHandler {
 	private boolean limit;
 
 	public ProcessingInventory(Consumer<ItemStack> callback) {
-		super(10);
+		super(16);
 		this.callback = callback;
 	}
 	
