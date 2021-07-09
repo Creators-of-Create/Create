@@ -30,6 +30,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -55,6 +56,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -261,6 +263,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean attackEntityFrom(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source))
 			return false;
+
+		boolean mobGriefing = world.getGameRules().getBoolean(GameRules.MOB_GRIEFING);
+		Entity trueSource = source.getTrueSource();
+		if (!mobGriefing && trueSource instanceof MobEntity)
+			return false;
+
 		Entity immediateSource = source.getImmediateSource();
 		if (!isVisible() && immediateSource instanceof PlayerEntity) {
 			if (!AllItems.SUPER_GLUE.isIn(((PlayerEntity) immediateSource).getHeldItemMainhand()))
