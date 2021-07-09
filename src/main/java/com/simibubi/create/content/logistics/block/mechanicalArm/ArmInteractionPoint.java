@@ -1,16 +1,17 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
+import java.util.HashMap;
 import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterBlock;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
@@ -65,74 +66,80 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public abstract class ArmInteractionPoint {
-
-	enum Mode {
+	public enum Mode {
 		DEPOSIT, TAKE
 	}
 
-	BlockPos pos;
-	BlockState state;
-	Mode mode;
+	protected BlockPos pos;
+	protected BlockState state;
+	protected Mode mode;
 
-	private LazyOptional<IItemHandler> cachedHandler;
-	private ArmAngleTarget cachedAngles;
+	protected LazyOptional<IItemHandler> cachedHandler;
+	protected ArmAngleTarget cachedAngles;
 
-	private static ImmutableMap<ArmInteractionPoint, Supplier<ArmInteractionPoint>> POINTS =
-		ImmutableMap.<ArmInteractionPoint, Supplier<ArmInteractionPoint>>builder()
-			.put(new Saw(), Saw::new)
-			.put(new Belt(), Belt::new)
-			.put(new Depot(), Depot::new)
-			.put(new Chute(), Chute::new)
-			.put(new Basin(), Basin::new)
-			.put(new Funnel(), Funnel::new)
-			.put(new Jukebox(), Jukebox::new)
-			.put(new Crafter(), Crafter::new)
-			.put(new Deployer(), Deployer::new)
-			.put(new Composter(), Composter::new)
-			.put(new Millstone(), Millstone::new)
-			.put(new BlazeBurner(), BlazeBurner::new)
-			.put(new CrushingWheels(), CrushingWheels::new)
-			.build();
+	protected static final HashMap<ArmInteractionPoint, Supplier<ArmInteractionPoint>> POINTS = new HashMap<>();
+
+	static {
+		addPoint(new Saw(), Saw::new);
+		addPoint(new Belt(), Belt::new);
+		addPoint(new Depot(), Depot::new);
+		addPoint(new Chute(), Chute::new);
+		addPoint(new Basin(), Basin::new);
+		addPoint(new Funnel(), Funnel::new);
+		addPoint(new Jukebox(), Jukebox::new);
+		addPoint(new Crafter(), Crafter::new);
+		addPoint(new Deployer(), Deployer::new);
+		addPoint(new Composter(), Composter::new);
+		addPoint(new Millstone(), Millstone::new);
+		addPoint(new BlazeBurner(), BlazeBurner::new);
+		addPoint(new CrushingWheels(), CrushingWheels::new);
+	}
+
+	public static void addPoint(ArmInteractionPoint instance, Supplier<ArmInteractionPoint> factory) {
+		if (POINTS.containsKey(instance))
+			Create.LOGGER.warn("Point for " + instance.getClass().getSimpleName() + " was overridden");
+		POINTS.put(instance, factory);
+	}
 
 	public ArmInteractionPoint() {
 		cachedHandler = LazyOptional.empty();
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	void transformFlag(MatrixStack stack) {}
+	protected void transformFlag(MatrixStack stack) {}
 
-	PartialModel getFlagType() {
+	protected PartialModel getFlagType() {
 		return mode == Mode.TAKE ? AllBlockPartials.FLAG_LONG_OUT : AllBlockPartials.FLAG_LONG_IN;
 	}
 
-	void cycleMode() {
+	protected void cycleMode() {
 		mode = mode == Mode.DEPOSIT ? Mode.TAKE : Mode.DEPOSIT;
 	}
 
-	Vector3d getInteractionPositionVector() {
+	protected Vector3d getInteractionPositionVector() {
 		return VecHelper.getCenterOf(pos);
 	}
 
-	Direction getInteractionDirection() {
+	protected Direction getInteractionDirection() {
 		return Direction.DOWN;
 	}
 
-	boolean isStillValid(IBlockReader reader) {
+	protected boolean isStillValid(IBlockReader reader) {
 		return isValid(reader, pos, reader.getBlockState(pos));
 	}
 
-	void keepAlive(IWorld world) {}
+	protected void keepAlive(IWorld world) {}
 
-	abstract boolean isValid(IBlockReader reader, BlockPos pos, BlockState state);
+	protected abstract boolean isValid(IBlockReader reader, BlockPos pos, BlockState state);
 
-	static boolean isInteractable(IBlockReader reader, BlockPos pos, BlockState state) {
+	protected static boolean isInteractable(IBlockReader reader, BlockPos pos, BlockState state) {
 		for (ArmInteractionPoint armInteractionPoint : POINTS.keySet())
 			if (armInteractionPoint.isValid(reader, pos, state))
 				return true;
 		return false;
 	}
 
-	ArmAngleTarget getTargetAngles(BlockPos armPos, boolean ceiling) {
+	protected ArmAngleTarget getTargetAngles(BlockPos armPos, boolean ceiling) {
 		if (cachedAngles == null)
 			cachedAngles =
 				new ArmAngleTarget(armPos, getInteractionPositionVector(), getInteractionDirection(), ceiling);
@@ -141,7 +148,7 @@ public abstract class ArmInteractionPoint {
 	}
 
 	@Nullable
-	IItemHandler getHandler(World world) {
+	protected IItemHandler getHandler(World world) {
 		if (!cachedHandler.isPresent()) {
 			TileEntity te = world.getTileEntity(pos);
 			if (te == null)
@@ -151,25 +158,25 @@ public abstract class ArmInteractionPoint {
 		return cachedHandler.orElse(null);
 	}
 
-	ItemStack insert(World world, ItemStack stack, boolean simulate) {
+	protected ItemStack insert(World world, ItemStack stack, boolean simulate) {
 		IItemHandler handler = getHandler(world);
 		if (handler == null)
 			return stack;
 		return ItemHandlerHelper.insertItem(handler, stack, simulate);
 	}
 
-	ItemStack extract(World world, int slot, int amount, boolean simulate) {
+	protected ItemStack extract(World world, int slot, int amount, boolean simulate) {
 		IItemHandler handler = getHandler(world);
 		if (handler == null)
 			return ItemStack.EMPTY;
 		return handler.extractItem(slot, amount, simulate);
 	}
 
-	ItemStack extract(World world, int slot, boolean simulate) {
+	protected ItemStack extract(World world, int slot, boolean simulate) {
 		return extract(world, slot, 64, simulate);
 	}
 
-	int getSlotCount(World world) {
+	protected int getSlotCount(World world) {
 		IItemHandler handler = getHandler(world);
 		if (handler == null)
 			return 0;
@@ -177,7 +184,7 @@ public abstract class ArmInteractionPoint {
 	}
 
 	@Nullable
-	static ArmInteractionPoint createAt(IBlockReader world, BlockPos pos) {
+	protected static ArmInteractionPoint createAt(IBlockReader world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		ArmInteractionPoint point = null;
 
@@ -195,14 +202,14 @@ public abstract class ArmInteractionPoint {
 		return point;
 	}
 
-	CompoundNBT serialize(BlockPos anchor) {
+	protected CompoundNBT serialize(BlockPos anchor) {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.put("Pos", NBTUtil.writeBlockPos(pos.subtract(anchor)));
 		NBTHelper.writeEnum(nbt, "Mode", mode);
 		return nbt;
 	}
 
-	static ArmInteractionPoint deserialize(IBlockReader world, BlockPos anchor, CompoundNBT nbt) {
+	protected static ArmInteractionPoint deserialize(IBlockReader world, BlockPos anchor, CompoundNBT nbt) {
 		BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("Pos"));
 		ArmInteractionPoint interactionPoint = createAt(world, pos.add(anchor));
 		if (interactionPoint == null)
@@ -211,112 +218,112 @@ public abstract class ArmInteractionPoint {
 		return interactionPoint;
 	}
 
-	static abstract class TopFaceArmInteractionPoint extends ArmInteractionPoint {
+	public static abstract class TopFaceArmInteractionPoint extends ArmInteractionPoint {
 
 		@Override
-		Vector3d getInteractionPositionVector() {
+		protected Vector3d getInteractionPositionVector() {
 			return Vector3d.of(pos).add(.5f, 1, .5f);
 		}
 
 	}
 
-	static class Depot extends ArmInteractionPoint {
+	public static class Depot extends ArmInteractionPoint {
 
 		@Override
-		Vector3d getInteractionPositionVector() {
+		protected Vector3d getInteractionPositionVector() {
 			return Vector3d.of(pos).add(.5f, 14 / 16f, .5f);
 		}
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.DEPOT.has(state) || AllBlocks.WEIGHTED_EJECTOR.has(state);
 		}
 
 	}
 
-	static class Saw extends Depot {
+	public static class Saw extends Depot {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.MECHANICAL_SAW.has(state) && state.get(SawBlock.FACING) == Direction.UP
 				&& ((KineticTileEntity) reader.getTileEntity(pos)).getSpeed() != 0;
 		}
 
 	}
 
-	static class Millstone extends ArmInteractionPoint {
+	public static class Millstone extends ArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.MILLSTONE.has(state);
 		}
 
 	}
 
-	static class CrushingWheels extends TopFaceArmInteractionPoint {
+	public static class CrushingWheels extends TopFaceArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(state);
 		}
 
 	}
 
-	static class Composter extends TopFaceArmInteractionPoint {
+	public static class Composter extends TopFaceArmInteractionPoint {
 
 		@Override
-		Vector3d getInteractionPositionVector() {
+		protected Vector3d getInteractionPositionVector() {
 			return Vector3d.of(pos).add(.5f, 13 / 16f, .5f);
 		}
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return Blocks.COMPOSTER.equals(state.getBlock());
 		}
 
 		@Nullable
 		@Override
-		IItemHandler getHandler(World world) {
+		protected IItemHandler getHandler(World world) {
 			return new InvWrapper(
 				((ComposterBlock) Blocks.COMPOSTER).createInventory(world.getBlockState(pos), world, pos));
 		}
 	}
 
-	static class Deployer extends ArmInteractionPoint {
+	public static class Deployer extends ArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.DEPLOYER.has(state);
 		}
 
 		@Override
-		Direction getInteractionDirection() {
+		protected Direction getInteractionDirection() {
 			return state.get(DeployerBlock.FACING)
 				.getOpposite();
 		}
 
 		@Override
-		Vector3d getInteractionPositionVector() {
+		protected Vector3d getInteractionPositionVector() {
 			return super.getInteractionPositionVector()
 				.add(Vector3d.of(getInteractionDirection().getDirectionVec()).scale(.65f));
 		}
 
 	}
 
-	static class BlazeBurner extends ArmInteractionPoint {
+	public static class BlazeBurner extends ArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.BLAZE_BURNER.has(state);
 		}
 
 		@Override
-		ItemStack extract(World world, int slot, int amount, boolean simulate) {
+		protected ItemStack extract(World world, int slot, int amount, boolean simulate) {
 			return ItemStack.EMPTY;
 		}
 
 		@Override
-		ItemStack insert(World world, ItemStack stack, boolean simulate) {
+		protected ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
 			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, true)
 				.getResult()
@@ -330,25 +337,25 @@ public abstract class ArmInteractionPoint {
 		}
 
 		@Override
-		void cycleMode() {}
+		protected void cycleMode() {}
 
 	}
 
-	static class Crafter extends ArmInteractionPoint {
+	public static class Crafter extends ArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.MECHANICAL_CRAFTER.has(state);
 		}
 
 		@Override
-		Direction getInteractionDirection() {
+		protected Direction getInteractionDirection() {
 			return state.get(MechanicalCrafterBlock.HORIZONTAL_FACING)
 				.getOpposite();
 		}
 
 		@Override
-		ItemStack extract(World world, int slot, int amount, boolean simulate) {
+		protected ItemStack extract(World world, int slot, int amount, boolean simulate) {
 			TileEntity te = world.getTileEntity(pos);
 			if (!(te instanceof MechanicalCrafterTileEntity))
 				return ItemStack.EMPTY;
@@ -361,36 +368,36 @@ public abstract class ArmInteractionPoint {
 		}
 
 		@Override
-		Vector3d getInteractionPositionVector() {
+		protected Vector3d getInteractionPositionVector() {
 			return super.getInteractionPositionVector()
 				.add(Vector3d.of(getInteractionDirection().getDirectionVec()).scale(.5f));
 		}
 
 	}
 
-	static class Basin extends ArmInteractionPoint {
+	public static class Basin extends ArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.BASIN.has(state);
 		}
 
 	}
 
-	static class Jukebox extends TopFaceArmInteractionPoint {
+	public static class Jukebox extends TopFaceArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return state.getBlock() instanceof JukeboxBlock;
 		}
 
 		@Override
-		int getSlotCount(World world) {
+		protected int getSlotCount(World world) {
 			return 1;
 		}
 
 		@Override
-		ItemStack insert(World world, ItemStack stack, boolean simulate) {
+		protected ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (!(tileEntity instanceof JukeboxTileEntity))
 				return stack;
@@ -414,7 +421,7 @@ public abstract class ArmInteractionPoint {
 		}
 
 		@Override
-		ItemStack extract(World world, int slot, int amount, boolean simulate) {
+		protected ItemStack extract(World world, int slot, int amount, boolean simulate) {
 			TileEntity tileEntity = world.getTileEntity(pos);
 			if (!(tileEntity instanceof JukeboxTileEntity))
 				return ItemStack.EMPTY;
@@ -434,16 +441,16 @@ public abstract class ArmInteractionPoint {
 
 	}
 
-	static class Belt extends Depot {
+	public static class Belt extends Depot {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AllBlocks.BELT.has(state) && !(reader.getBlockState(pos.up())
 				.getBlock() instanceof BeltTunnelBlock);
 		}
 
 		@Override
-		void keepAlive(IWorld world) {
+		protected void keepAlive(IWorld world) {
 			super.keepAlive(world);
 			BeltTileEntity beltTE = BeltHelper.getSegmentTE(world, pos);
 			if (beltTE == null)
@@ -464,41 +471,41 @@ public abstract class ArmInteractionPoint {
 
 	}
 
-	static class Chute extends TopFaceArmInteractionPoint {
+	public static class Chute extends TopFaceArmInteractionPoint {
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return AbstractChuteBlock.isChute(state);
 		}
 	}
 
-	static class Funnel extends ArmInteractionPoint {
+	public static class Funnel extends ArmInteractionPoint {
 
 		@Override
-		Vector3d getInteractionPositionVector() {
+		protected Vector3d getInteractionPositionVector() {
 			return VecHelper.getCenterOf(pos)
 				.add(Vector3d.of(FunnelBlock.getFunnelFacing(state)
 					.getDirectionVec()).scale(-.15f));
 		}
 
 		@Override
-		int getSlotCount(World world) {
+		protected int getSlotCount(World world) {
 			return 0;
 		}
 
 		@Override
-		ItemStack extract(World world, int slot, int amount, boolean simulate) {
+		protected ItemStack extract(World world, int slot, int amount, boolean simulate) {
 			return ItemStack.EMPTY;
 		}
 
 		@Override
-		Direction getInteractionDirection() {
+		protected Direction getInteractionDirection() {
 			return FunnelBlock.getFunnelFacing(state)
 				.getOpposite();
 		}
 
 		@Override
-		ItemStack insert(World world, ItemStack stack, boolean simulate) {
+		protected ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			FilteringBehaviour filtering = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 			InvManipulationBehaviour inserter = TileEntityBehaviour.get(world, pos, InvManipulationBehaviour.TYPE);
 			BlockState state = world.getBlockState(pos);
@@ -524,15 +531,14 @@ public abstract class ArmInteractionPoint {
 		}
 
 		@Override
-		boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
+		protected boolean isValid(IBlockReader reader, BlockPos pos, BlockState state) {
 			return state.getBlock() instanceof AbstractFunnelBlock
 				&& !(state.contains(FunnelBlock.EXTRACTING) && state.get(FunnelBlock.EXTRACTING))
 				&& !(state.contains(BeltFunnelBlock.SHAPE) && state.get(BeltFunnelBlock.SHAPE) == Shape.PUSHING);
 		}
 
 		@Override
-		void cycleMode() {}
+		protected void cycleMode() {}
 
 	}
-
 }
