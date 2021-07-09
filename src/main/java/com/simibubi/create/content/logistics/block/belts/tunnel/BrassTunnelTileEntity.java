@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -43,6 +44,9 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
@@ -50,7 +54,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
+public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHaveGoggleInformation {
 
 	SidedFilteringBehaviour filtering;
 
@@ -319,6 +323,36 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 		return stackToDistribute;
 	}
 
+	public List<ItemStack> grabAllStacksOfGroup(boolean simulate) {
+		List<ItemStack> list = new ArrayList<>();
+
+		ItemStack own = getStackToDistribute();
+		if (!own.isEmpty()) {
+			list.add(own);
+			if (!simulate)
+				setStackToDistribute(ItemStack.EMPTY);
+		}
+
+		for (boolean left : Iterate.trueAndFalse) {
+			BrassTunnelTileEntity adjacent = this;
+			while (adjacent != null) {
+				if (!world.isAreaLoaded(adjacent.getPos(), 1))
+					return null;
+				adjacent = adjacent.getAdjacent(left);
+				if (adjacent == null)
+					continue;
+				ItemStack other = adjacent.getStackToDistribute();
+				if (other.isEmpty())
+					continue;
+				list.add(other);
+				if (!simulate)
+					adjacent.setStackToDistribute(ItemStack.EMPTY);
+			}
+		}
+
+		return list;
+	}
+
 	@Nullable
 	protected ItemStack insertIntoTunnel(BrassTunnelTileEntity tunnel, Direction side, ItemStack stack,
 		boolean simulate) {
@@ -357,7 +391,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 					float movementSpeed = Math.max(Math.abs(beltMovementSpeed), 1 / 8f);
 					int additionalOffset = beltMovementSpeed > 0 ? 1 : 0;
 					Vector3d outPos = BeltHelper.getVectorForOffset(controllerTE, below.index + additionalOffset);
-					Vector3d outMotion = Vector3d.of(side.getDirectionVec()).scale(movementSpeed)
+					Vector3d outMotion = Vector3d.of(side.getDirectionVec())
+						.scale(movementSpeed)
 						.add(0, 1 / 8f, 0);
 					outPos.add(outMotion.normalize());
 					ItemEntity entity = new ItemEntity(world, outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
@@ -706,6 +741,28 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity {
 
 	public boolean canTakeItems() {
 		return stackToDistribute.isEmpty() && !syncedOutputActive;
+	}
+
+	@Override
+	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
+		if (allStacks.isEmpty())
+			return false;
+		
+		tooltip.add(componentSpacing.copy()
+			.append(Lang.translate("tooltip.brass_tunnel.contains"))
+			.formatted(TextFormatting.WHITE));
+		for (ItemStack item : allStacks) {
+			tooltip.add(componentSpacing.copy()
+				.append(Lang.translate("tooltip.brass_tunnel.contains_entry", new TranslationTextComponent(item.getItem()
+					.getTranslationKey(item)).getString(), item.getCount()))
+				.formatted(TextFormatting.GRAY));
+		}
+		tooltip.add(componentSpacing.copy()
+			.append(Lang.translate("tooltip.brass_tunnel.retrieve"))
+			.formatted(TextFormatting.DARK_GRAY));
+		
+		return true;
 	}
 
 }

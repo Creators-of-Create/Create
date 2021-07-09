@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 49",
+	"_": "Missing Localizations: 52",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1165,6 +1165,9 @@
 	"create.tooltip.chute.fans_pull_up": "Los ventiladores tiran desde arriba",
 	"create.tooltip.chute.fans_pull_down": "Los ventiladores tiran desde abajo",
 	"create.tooltip.chute.contains": "Contiene: %1$s x%2$s",
+	"create.tooltip.brass_tunnel.contains": "UNLOCALIZED: Currently distributing:",
+	"create.tooltip.brass_tunnel.contains_entry": "UNLOCALIZED: > %1$s x%2$s",
+	"create.tooltip.brass_tunnel.retrieve": "UNLOCALIZED: Right-Click to retrieve",
 
 	"create.linked_controller.bind_mode": "Modo de enlace activo",
 	"create.linked_controller.press_keybind": "Presiona %1$s, %2$s, %3$s, %4$s, %5$s o %6$s, para vincular esta frecuencia a la tecla correspondiente",

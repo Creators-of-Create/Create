@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 279",
+	"_": "Missing Localizations: 282",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1165,6 +1165,9 @@
 	"create.tooltip.chute.fans_pull_up": "Вентилятор тянет сверху",
 	"create.tooltip.chute.fans_pull_down": "Вентилятор тянет снизу",
 	"create.tooltip.chute.contains": "Содержит: %1$s x%2$s",
+	"create.tooltip.brass_tunnel.contains": "UNLOCALIZED: Currently distributing:",
+	"create.tooltip.brass_tunnel.contains_entry": "UNLOCALIZED: > %1$s x%2$s",
+	"create.tooltip.brass_tunnel.retrieve": "UNLOCALIZED: Right-Click to retrieve",
 
 	"create.linked_controller.bind_mode": "UNLOCALIZED: Bind mode active",
 	"create.linked_controller.press_keybind": "UNLOCALIZED: Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
