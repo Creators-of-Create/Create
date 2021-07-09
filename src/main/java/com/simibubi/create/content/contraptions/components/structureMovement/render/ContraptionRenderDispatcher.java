@@ -13,6 +13,9 @@ import static org.lwjgl.opengl.GL20.glUseProgram;
 import java.util.List;
 import java.util.Random;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.foundation.config.AllConfigs;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -79,7 +82,9 @@ public class ContraptionRenderDispatcher {
 		if (Minecraft.getInstance().isGamePaused()) return;
 
 		for (RenderedContraption contraption : RENDERERS.values()) {
-			contraption.getLighter().tick(contraption);
+			ContraptionLighter<?> lighter = contraption.getLighter();
+			if (lighter.getBounds().volume() < AllConfigs.CLIENT.maxContraptionLightVolume.get())
+				lighter.tick(contraption);
 
 			contraption.kinetics.tick();
 		}
