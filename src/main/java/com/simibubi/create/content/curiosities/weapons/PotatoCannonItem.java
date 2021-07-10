@@ -131,7 +131,7 @@ public class PotatoCannonItem extends ShootableItem {
 			}
 
 			Vector3d barrelPos = ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND,
-				new Vector3d(.75f, -0.3f, 1.5f));
+				new Vector3d(.75f, -0.15f, 1.5f));
 			Vector3d correction =
 				ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND, new Vector3d(-.05f, 0, 0))
 					.subtract(player.getPositionVec()
