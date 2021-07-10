@@ -47,7 +47,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	PotatoProjectileRenderMode stuckRenderer;
 	double stuckFallSpeed;
 
-	float additionalDamageMult = 0;
+	float additionalDamageMult = 1;
 	float additionalKnockback = 0;
 	float recoveryChance = 0;
 
