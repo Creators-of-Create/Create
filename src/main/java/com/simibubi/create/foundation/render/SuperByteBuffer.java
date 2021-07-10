@@ -49,6 +49,7 @@ public class SuperByteBuffer {
 	// Vertex Lighting
 	private boolean useWorldLight;
 	private boolean hybridLight;
+	private boolean useCustomLightCoords;
 	private int packedLightCoords;
 	private Matrix4f lightTransform;
 
@@ -100,7 +101,6 @@ public class SuperByteBuffer {
 			WORLD_LIGHT_CACHE.clear();
 		}
 
-		boolean hasDefaultLight = packedLightCoords != 0;
 		float f = .5f;
 		int vertexCount = template.getVertexCount();
 		for (int i = 0; i < vertexCount; i++) {
@@ -177,10 +177,9 @@ public class SuperByteBuffer {
 				}
 
 				light = getLight(Minecraft.getInstance().world, lightPos);
-				if (hasDefaultLight) {
+				if (useCustomLightCoords) 
 					light = maxLight(light, packedLightCoords);
-				}
-			} else if (hasDefaultLight) {
+			} else if (useCustomLightCoords) {
 				light = packedLightCoords;
 			} else {
 				light = template.getLight(i);
@@ -213,6 +212,7 @@ public class SuperByteBuffer {
 		hasOverlay = false;
 		overlay = OverlayTexture.DEFAULT_UV;
 		useWorldLight = false;
+		useCustomLightCoords = false;
 		hybridLight = false;
 		packedLightCoords = 0;
 		lightTransform = null;
@@ -368,6 +368,7 @@ public class SuperByteBuffer {
 	}
 
 	public SuperByteBuffer light(int packedLightCoords) {
+		useCustomLightCoords = true;
 		this.packedLightCoords = packedLightCoords;
 		return this;
 	}
