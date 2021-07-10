@@ -30,6 +30,7 @@ import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -46,9 +47,9 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	PotatoProjectileRenderMode stuckRenderer;
 	double stuckFallSpeed;
 
-	float additionalDamage = 0;
+	float additionalDamageMult = 0;
 	float additionalKnockback = 0;
-	float recoveryChance = .125f;
+	float recoveryChance = 0;
 
 	public PotatoProjectileEntity(EntityType<? extends DamagingProjectileEntity> type, World world) {
 		super(type, world);
@@ -76,7 +77,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		int recovery = EnchantmentHelper.getEnchantmentLevel(AllEnchantments.POTATO_RECOVERY.get(), cannon);
 
 		if (power > 0)
-			additionalDamage = power * 2;
+			additionalDamageMult = 1 + power * .2f;
 		if (punch > 0)
 			additionalKnockback = punch * .5f;
 		if (flame > 0)
@@ -88,7 +89,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	@Override
 	public void readAdditional(CompoundNBT nbt) {
 		stack = ItemStack.read(nbt.getCompound("Item"));
-		additionalDamage = nbt.getFloat("AdditionalDamage");
+		additionalDamageMult = nbt.getFloat("AdditionalDamage");
 		additionalKnockback = nbt.getFloat("AdditionalKnockback");
 		recoveryChance = nbt.getFloat("Recovery");
 		super.readAdditional(nbt);
@@ -97,7 +98,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	@Override
 	public void writeAdditional(CompoundNBT nbt) {
 		nbt.put("Item", stack.serializeNBT());
-		nbt.putFloat("AdditionalDamage", additionalDamage);
+		nbt.putFloat("AdditionalDamage", additionalDamageMult);
 		nbt.putFloat("AdditionalKnockback", additionalKnockback);
 		nbt.putFloat("Recovery", recoveryChance);
 		super.writeAdditional(nbt);
@@ -174,7 +175,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		Vector3d hit = ray.getHitVec();
 		Entity target = ray.getEntity();
 		PotatoCannonProjectileTypes projectileType = getProjectileType();
-		float damage = projectileType.getDamage() + additionalDamage;
+		float damage = MathHelper.floor(projectileType.getDamage() * additionalDamageMult);
 		float knockback = projectileType.getKnockback() + additionalKnockback;
 		Entity owner = this.getOwner();
 
@@ -193,7 +194,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 			target.setFire(5);
 
 		boolean onServer = !world.isRemote;
-		if (onServer && !target.attackEntityFrom(causePotatoDamage(), (float) damage)) {
+		if (onServer && !target.attackEntityFrom(causePotatoDamage(), damage)) {
 			target.setFireTicks(k);
 			remove();
 			return;
