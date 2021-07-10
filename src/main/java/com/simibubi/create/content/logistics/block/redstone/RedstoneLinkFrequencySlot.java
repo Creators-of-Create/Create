@@ -28,12 +28,12 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 		if (facing.getAxis()
 			.isHorizontal()) {
 			location = horizontal;
-			if (!isFirst())
+			if (isFirst())
 				location = location.add(0, 5 / 16f, 0);
 			return rotateHorizontally(state, location);
 		}
 
-		if (!isFirst())
+		if (isFirst())
 			location = location.add(0, 0, 5 / 16f);
 		location = VecHelper.rotateCentered(location, facing == Direction.DOWN ? 180 : 0, Axis.X);
 		return location;

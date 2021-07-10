@@ -44,7 +44,7 @@ public class LinkRenderer {
 
 		for (boolean first : Iterate.trueAndFalse) {
 			AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.25f);
-			ITextComponent label = first ? freq2 : freq1;
+			ITextComponent label = first ? freq1 : freq2;
 			boolean hit = behaviour.testHit(first, target.getHitVec());
 			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
 
