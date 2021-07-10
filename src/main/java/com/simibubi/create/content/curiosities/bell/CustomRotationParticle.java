@@ -1,10 +1,12 @@
 package com.simibubi.create.content.curiosities.bell;
 
+import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
 import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
@@ -61,7 +63,7 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 		float maxU = mirror ? getMinU() : getMaxU();
 		float minV = getMinV();
 		float maxV = getMaxV();
-		int brightness = getBrightnessForRender(partialTicks);
+		int brightness = OptifineHandler.usingShaders() ? LightTexture.pack(12, 15 ) : getBrightnessForRender(partialTicks);
 		builder.vertex(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ()).texture(maxU, maxV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
 		builder.vertex(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ()).texture(maxU, minV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
 		builder.vertex(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ()).texture(minU, minV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
