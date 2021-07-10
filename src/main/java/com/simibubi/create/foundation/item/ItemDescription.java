@@ -22,10 +22,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
+import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
@@ -92,6 +94,7 @@ public class ItemDescription {
 		List<ITextComponent> list = new ArrayList<>();
 
 		boolean isEngine = block instanceof EngineBlock;
+		boolean isHandle = block instanceof ValveHandleBlock;
 		CKinetics config = AllConfigs.SERVER.kinetics;
 		SpeedLevel minimumRequiredSpeedLevel =
 			isEngine ? SpeedLevel.NONE : ((IRotate) block).getMinimumRequiredSpeedLevel();
@@ -101,7 +104,7 @@ public class ItemDescription {
 		Map<ResourceLocation, ConfigValue<Double>> capacities = config.stressValues.getCapacities();
 		boolean hasStressImpact = impacts.containsKey(id) && impacts.get(id)
 			.get() > 0 && StressImpact.isEnabled();
-		boolean hasStressCapacity = capacities.containsKey(id) && StressImpact.isEnabled();
+		boolean hasStressCapacity = (isHandle || capacities.containsKey(id)) && StressImpact.isEnabled();
 		boolean hasGlasses =
 			AllItems.GOGGLES.get() == Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD)
 				.getItem();
@@ -151,7 +154,7 @@ public class ItemDescription {
 		if (hasStressCapacity) {
 			List<ITextComponent> stressCapacityLevels =
 				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");
-			double capacity = capacities.get(id)
+			double capacity = capacities.get(isHandle ? AllBlocks.HAND_CRANK.getId() : id)
 				.get();
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
