@@ -39,16 +39,14 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.patternLine("SSS")
 				.patternLine("SSS")
 				.patternLine(" H ")),
-			
+
 		POTATO_CANNON = create(AllItems.POTATO_CANNON::get).returns(1)
 			.recipe(b -> b.key('L', I.andesite())
 				.key('R', I.precisionMechanism())
-				.key('S', Ingredient.fromTag(I.copper()))
-				.patternLine("L")
-				.patternLine("R")
-				.patternLine("S")
-				.patternLine("S")
-				.patternLine("S")),
+				.key('S', AllBlocks.FLUID_PIPE.get())
+				.key('C', Ingredient.fromTag(I.copper()))
+				.patternLine("LRSSS")
+				.patternLine("CC   ")),
 
 		FURNACE_ENGINE = create(AllBlocks.FURNACE_ENGINE::get).returns(1)
 			.recipe(b -> b.key('P', Ingredient.fromTag(I.brassSheet()))
