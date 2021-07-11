@@ -37,12 +37,12 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	protected final Screen parent;
 	protected boolean returnOnClose;
 
-	private static final RenderSkyboxCube PANORAMA_RESOURCES =
+	public static final RenderSkyboxCube PANORAMA_RESOURCES =
 		new RenderSkyboxCube(Create.asResource("textures/gui/title/background/panorama"));
-	private static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
+	public static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
 	private RenderSkybox vanillaPanorama = new RenderSkybox(MainMenuScreen.PANORAMA_RESOURCES);
-	private RenderSkybox panorama = new RenderSkybox(PANORAMA_RESOURCES);
+	public static RenderSkybox panorama = new RenderSkybox(PANORAMA_RESOURCES);
 	private long firstRenderTime;
 	private Button gettingStarted;
 
@@ -65,11 +65,12 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		float f = (float) (Util.milliTime() - this.firstRenderTime) / 1000.0F;
 		float alpha = MathHelper.clamp(f, 0.0F, 1.0F);
+		float elapsedPartials = client.getTickLength();
 
 		if (parent instanceof MainMenuScreen) {
 			if (alpha < 1)
-				vanillaPanorama.render(partialTicks, 1);
-			panorama.render(partialTicks, alpha);
+				vanillaPanorama.render(elapsedPartials, 1);
+			panorama.render(elapsedPartials, alpha);
 
 			client.getTextureManager()
 				.bindTexture(PANORAMA_OVERLAY_TEXTURES);

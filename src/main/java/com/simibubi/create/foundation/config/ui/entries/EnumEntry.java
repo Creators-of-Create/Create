@@ -30,13 +30,17 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 			height, width, Theme.p(Theme.Key.TEXT)));
 
 		DelegatedStencilElement l = AllIcons.I_CONFIG_PREV.asStencil();
-		cycleLeft = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(l)
-			.withCallback(() -> cycleValue(-1));
+		cycleLeft = new BoxWidget(0, 0, cycleWidth + 8, 16)
+				.withCustomBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.showingElement(l)
+				.withCallback(() -> cycleValue(-1));
 		l.withElementRenderer(BoxWidget.gradientFactory.apply(cycleLeft));
 
 		DelegatedStencilElement r = AllIcons.I_CONFIG_NEXT.asStencil();
-		cycleRight = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(r)
-			.withCallback(() -> cycleValue(1));
+		cycleRight = new BoxWidget(0, 0, cycleWidth + 8, 16)
+				.withCustomBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.showingElement(r)
+				.withCallback(() -> cycleValue(1));
 		r.at(cycleWidth - 8, 0);
 		r.withElementRenderer(BoxWidget.gradientFactory.apply(cycleRight));
 
@@ -89,10 +93,10 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		cycleRight.render(ms, mouseX, mouseY, partialTicks);
 
 		new BoxElement()
-				.withBackground(0)
-				.flatBorder(0)
-				.withBounds(10, 10)
-				.at(cycleLeft.x + cycleWidth + 4, cycleLeft.y + 3)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.flatBorder(0x01_000000)
+				.withBounds(48, 6)
+				.at(cycleLeft.x + 22, cycleLeft.y + 5)
 				.render(ms);
 	}
 
