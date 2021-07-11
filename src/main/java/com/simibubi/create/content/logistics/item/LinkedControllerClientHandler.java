@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
@@ -145,6 +146,13 @@ public class LinkedControllerClientHandler {
 				onReset();
 				return;
 			}
+		}
+
+		if (inLectern() && AllBlocks.LECTERN_CONTROLLER.get().getTileEntityOptional(mc.world, lecternPos)
+			.map(te -> !te.isUsedBy(mc.player))
+			.orElse(true)) {
+			deactivateInLectern();
+			return;
 		}
 
 		if (mc.currentScreen != null) {

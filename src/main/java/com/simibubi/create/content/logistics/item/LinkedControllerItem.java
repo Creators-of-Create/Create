@@ -70,6 +70,9 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 					}
 					return ActionResultType.SUCCESS;
 				}
+
+				if (AllBlocks.LECTERN_CONTROLLER.has(hitState))
+					return ActionResultType.PASS;
 			}
 		}
 

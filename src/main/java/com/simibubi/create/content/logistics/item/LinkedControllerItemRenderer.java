@@ -79,11 +79,6 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 			boolean noControllerInMain = !AllItems.LINKED_CONTROLLER.isIn(mc.player.getHeldItemMainhand());
 			if (transformType == mainHand || (transformType == offHand && noControllerInMain)) {
-				float equip = equipProgress.getValue(pt);
-				int handModifier = transformType == TransformType.FIRST_PERSON_LEFT_HAND ? -1 : 1;
-				msr.translate(0, equip / 4, equip / 4 * handModifier);
-				msr.rotateY(equip * -30 * handModifier);
-				msr.rotateZ(equip * -30);
 				active = true;
 			}
 
@@ -94,8 +89,16 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 					active = true;
 			}
 
-			active &= LinkedControllerClientHandler.MODE != Mode.IDLE;
+			active &= LinkedControllerClientHandler.MODE != Mode.IDLE && !LinkedControllerClientHandler.inLectern();
 			usedByMe = active;
+
+			if (active && (transformType == mainHand || transformType == offHand)) {
+				float equip = equipProgress.getValue(pt);
+				int handModifier = transformType == TransformType.FIRST_PERSON_LEFT_HAND ? -1 : 1;
+				msr.translate(0, equip / 4, equip / 4 * handModifier);
+				msr.rotateY(equip * -30 * handModifier);
+				msr.rotateZ(equip * -30);
+			}
 		}
 
 		renderer.render(active ? model.getPartial("powered") : model.getOriginalModel(), light);
