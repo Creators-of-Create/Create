@@ -48,10 +48,10 @@ public class SuperByteBuffer {
 
 	// Vertex Lighting
 	private boolean useWorldLight;
-	private boolean hybridLight;
-	private boolean useCustomLightCoords;
-	private int packedLightCoords;
 	private Matrix4f lightTransform;
+	private boolean hasCustomLight;
+	private int packedLightCoords;
+	private boolean hybridLight;
 
 	// Vertex Normals
 	private boolean fullNormalTransform;
@@ -177,9 +177,10 @@ public class SuperByteBuffer {
 				}
 
 				light = getLight(Minecraft.getInstance().world, lightPos);
-				if (useCustomLightCoords) 
+				if (hasCustomLight) {
 					light = maxLight(light, packedLightCoords);
-			} else if (useCustomLightCoords) {
+				}
+			} else if (hasCustomLight) {
 				light = packedLightCoords;
 			} else {
 				light = template.getLight(i);
@@ -212,10 +213,10 @@ public class SuperByteBuffer {
 		hasOverlay = false;
 		overlay = OverlayTexture.DEFAULT_UV;
 		useWorldLight = false;
-		useCustomLightCoords = false;
-		hybridLight = false;
-		packedLightCoords = 0;
 		lightTransform = null;
+		hasCustomLight = false;
+		packedLightCoords = 0;
+		hybridLight = false;
 		fullNormalTransform = false;
 		return this;
 	}
@@ -368,15 +369,14 @@ public class SuperByteBuffer {
 	}
 
 	public SuperByteBuffer light(int packedLightCoords) {
-		useCustomLightCoords = true;
+		hasCustomLight = true;
 		this.packedLightCoords = packedLightCoords;
 		return this;
 	}
 
 	public SuperByteBuffer light(Matrix4f lightTransform, int packedLightCoords) {
-		useWorldLight = true;
-		this.lightTransform = lightTransform;
-		this.packedLightCoords = packedLightCoords;
+		light(lightTransform);
+		light(packedLightCoords);
 		return this;
 	}
 
@@ -404,6 +404,10 @@ public class SuperByteBuffer {
 		return this;
 	}
 
+	public boolean isEmpty() {
+		return template.isEmpty();
+	}
+
 	public static int transformColor(byte component, float scale) {
 		return MathHelper.clamp((int) (Byte.toUnsignedInt(component) * scale), 0, 255);
 	}
@@ -423,10 +427,6 @@ public class SuperByteBuffer {
 	private static int getLight(World world, Vector4f lightPos) {
 		BlockPos pos = new BlockPos(lightPos.getX(), lightPos.getY(), lightPos.getZ());
 		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.toLong(), $ -> WorldRenderer.getLightmapCoordinates(world, pos));
-	}
-
-	public boolean isEmpty() {
-		return template.isEmpty();
 	}
 
 	@FunctionalInterface
