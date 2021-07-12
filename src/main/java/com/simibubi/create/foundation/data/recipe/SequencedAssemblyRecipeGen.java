@@ -35,7 +35,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
 	PRECISION_MECHANISM = create("precision_mechanism", b -> b.require(I.goldSheet())
 		.transitionTo(AllItems.INCOMPLETE_PRECISION_MECHANISM.get())
-		.addOutput(AllItems.PRECISION_MECHANISM.get(), 60)
+		.addOutput(AllItems.PRECISION_MECHANISM.get(), 120)
 		.addOutput(AllItems.GOLDEN_SHEET.get(), 8)
 		.addOutput(AllItems.ANDESITE_ALLOY.get(), 8)
 		.addOutput(AllBlocks.COGWHEEL.get(), 5)
@@ -52,7 +52,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
 	COGWHEEL = create("cogwheel", b -> b.require(I.andesite())
 		.transitionTo(AllItems.INCOMPLETE_COGWHEEL.get())
-		.addOutput(new ItemStack(AllBlocks.COGWHEEL.get(), 12), 22)
+		.addOutput(new ItemStack(AllBlocks.COGWHEEL.get(), 12), 32)
 		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
 		.addOutput(Blocks.ANDESITE, 1)
 		.addOutput(AllBlocks.LARGE_COGWHEEL.get(), 1)
@@ -65,7 +65,7 @@ public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
 	LARGE_COGWHEEL = create("large_cogwheel", b -> b.require(I.andesite())
 		.transitionTo(AllItems.INCOMPLETE_LARGE_COGWHEEL.get())
-		.addOutput(new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 6), 22)
+		.addOutput(new ItemStack(AllBlocks.LARGE_COGWHEEL.get(), 6), 32)
 		.addOutput(AllItems.ANDESITE_ALLOY.get(), 2)
 		.addOutput(Blocks.ANDESITE, 1)
 		.addOutput(AllBlocks.COGWHEEL.get(), 1)

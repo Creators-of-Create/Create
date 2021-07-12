@@ -5,12 +5,15 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
+import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.INameable;
@@ -25,7 +28,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements IName
 	public int airLevel;
 	public int airLevelTimer;
 	private ITextComponent customName;
-	
+
 	private int capacityEnchantLevel;
 	private ListNBT enchantmentTag;
 
@@ -39,6 +42,12 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements IName
 		super.tick();
 		if (getSpeed() == 0)
 			return;
+
+		BlockState state = getBlockState();
+		BooleanProperty waterProperty = BlockStateProperties.WATERLOGGED;
+		if (state.contains(waterProperty) && state.get(waterProperty))
+			return;
+
 		if (airLevelTimer > 0) {
 			airLevelTimer--;
 			return;
@@ -57,12 +66,20 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements IName
 		if (airLevel == max)
 			return;
 
+		int prevComparatorLevel = getComparatorOutput();
 		float abs = Math.abs(getSpeed());
 		int increment = MathHelper.clamp(((int) abs - 100) / 20, 1, 5);
 		airLevel = Math.min(max, airLevel + increment);
+		if (getComparatorOutput() != prevComparatorLevel && !world.isRemote)
+			world.updateComparatorOutputLevel(pos, state.getBlock());
 		if (airLevel == max)
 			sendData();
 		airLevelTimer = MathHelper.clamp((int) (128f - abs / 5f) - 108, 0, 20);
+	}
+
+	public int getComparatorOutput() {
+		int max = BackTankUtil.maxAir(capacityEnchantLevel);
+		return ComparatorUtil.fractionToRedstoneLevel(airLevel / (float) max);
 	}
 
 	@Override
@@ -139,7 +156,7 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements IName
 	public void setEnchantmentTag(ListNBT enchantmentTag) {
 		this.enchantmentTag = enchantmentTag;
 	}
-	
+
 	public void setCapacityEnchantLevel(int capacityEnchantLevel) {
 		this.capacityEnchantLevel = capacityEnchantLevel;
 	}
