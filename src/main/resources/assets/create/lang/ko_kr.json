@@ -1835,7 +1835,7 @@
 	"create.ponder.empty_blaze_burner.text_3": "이제 당신은 다양한 장치에 쓰일 이상적인 열원을 얻었습니다.",
 	"create.ponder.empty_blaze_burner.text_4": "장식적인 요소로는 라이터로 불을 붙일 수 있습니다.",
 	"create.ponder.empty_blaze_burner.text_5": "불꽃은 영혼불꽃으로 바꿀 수 있습니다.",
-	"create.ponder.empty_blaze_burner.text_5": "그러나 장치에 쓰일 열원으로는 적합하지 않습니다.",
+	"create.ponder.empty_blaze_burner.text_6": "그러나 장치에 쓰일 열원으로는 적합하지 않습니다.",
 
 	"create.ponder.encased_fluid_pipe.header": "파이프에 케이스 씌우기",
 	"create.ponder.encased_fluid_pipe.text_1": "구리 케이스로 파이프를 꾸밀 수 있습니다.",
