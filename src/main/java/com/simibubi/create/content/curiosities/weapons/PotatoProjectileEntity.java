@@ -14,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
@@ -188,6 +189,9 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 
 		pop(hit);
 
+		if (target instanceof WitherEntity && ((WitherEntity) target).shouldRenderOverlay())
+			return;
+
 		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
 		int k = target.getFireTimer();
 		if (this.isBurning() && !targetIsEnderman)
@@ -203,7 +207,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		if (targetIsEnderman)
 			return;
 
-		if (!projectileType.onEntityHit(ray))
+		if (!projectileType.onEntityHit(ray) && onServer)
 			if (rand.nextDouble() <= recoveryChance)
 				recoverItem();
 
@@ -271,7 +275,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	protected void onBlockHit(BlockRayTraceResult ray) {
 		Vector3d hit = ray.getHitVec();
 		pop(hit);
-		if (!getProjectileType().onBlockHit(world, ray))
+		if (!getProjectileType().onBlockHit(world, ray) && !world.isRemote)
 			if (rand.nextDouble() <= recoveryChance)
 				recoverItem();
 		super.onBlockHit(ray);

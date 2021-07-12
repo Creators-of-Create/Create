@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.mojang.datafixers.util.Pair;
@@ -17,7 +16,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.FallingBlockEntity;
+import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.passive.FoxEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Foods;
 import net.minecraft.item.Item;
@@ -27,6 +28,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -39,7 +41,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileTypes {
@@ -64,7 +68,7 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.25f)
 			.knockback(0.5f)
 			.renderTumbling()
-			.onEntityHit(ray -> ray.getEntity().setFire(3))
+			.onEntityHit(setFire(3))
 			.registerAndAssign(Items.BAKED_POTATO),
 
 		CARROT = create("carrot").damage(4)
@@ -107,7 +111,7 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.05f)
 			.velocity(1.25f)
 			.renderTumbling()
-			.onEntityHit(potion(Effects.POISON, 1,160))
+			.onEntityHit(potion(Effects.POISON, 1,160, true))
 			.registerAndAssign(Items.POISONOUS_POTATO),
 
 		CHORUS_FRUIT = create("chorus_fruit").damage(3)
@@ -115,7 +119,7 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.20f)
 			.knockback(0.05f)
 			.renderTumbling()
-			.onEntityHitRecoveryCancelable(chorusTeleport(20))
+			.onEntityHit(chorusTeleport(20))
 			.registerAndAssign(Items.CHORUS_FRUIT),
 
 		APPLE = create("apple").damage(5)
@@ -132,7 +136,7 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.1f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHit(potion(Effects.SLOWNESS, 2,160))
+			.onEntityHit(potion(Effects.SLOWNESS, 2,160, true))
 			.registerAndAssign(AllItems.HONEYED_APPLE.get()),
 
 		GOLDEN_APPLE = create("golden_apple").damage(1)
@@ -141,7 +145,21 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.05f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHitRecoveryCancelable(foodEffects(Foods.GOLDEN_APPLE))
+			.onEntityHit(ray -> {
+				Entity entity = ray.getEntity();
+				World world = entity.world;
+
+				if (!(entity instanceof ZombieVillagerEntity)
+					|| !((ZombieVillagerEntity) entity).isPotionActive(Effects.WEAKNESS))
+					return foodEffects(Foods.GOLDEN_APPLE, false).test(ray);
+				if (world.isRemote)
+					return false;
+
+				PlayerEntity dummy = FakePlayerFactory.getMinecraft((ServerWorld) world);
+				dummy.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.GOLDEN_APPLE));
+				((ZombieVillagerEntity) entity).interactMob(dummy, Hand.MAIN_HAND);
+				return true;
+			})
 			.registerAndAssign(Items.GOLDEN_APPLE),
 
 		ENCHANTED_GOLDEN_APPLE = create("enchanted_golden_apple").damage(1)
@@ -150,7 +168,7 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.05f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHitRecoveryCancelable(foodEffects(Foods.ENCHANTED_GOLDEN_APPLE))
+			.onEntityHit(foodEffects(Foods.ENCHANTED_GOLDEN_APPLE, false))
 			.registerAndAssign(Items.ENCHANTED_GOLDEN_APPLE),
 
 		BEETROOT = create("beetroot").damage(2)
@@ -175,7 +193,7 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.45f)
 			.renderTumbling()
 			.soundPitch(1.5f)
-			.onEntityHit(potion(Effects.GLOWING, 1, 100))
+			.onEntityHit(potion(Effects.GLOWING, 1, 100, true))
 			.registerAndAssign(Items.GLISTERING_MELON_SLICE),
 
 		MELON_BLOCK = create("melon_block").damage(8)
@@ -214,13 +232,13 @@ public class PotatoCannonProjectileTypes {
 			.soundPitch(1.0f)
 			.registerAndAssign(Items.CAKE),
 
-		BLAZE_CAKE = create("blaze_cake").damage(12)
+		BLAZE_CAKE = create("blaze_cake").damage(15)
 			.reloadTicks(20)
 			.knockback(0.3f)
 			.velocity(1.1f)
 			.renderTumbling()
 			.sticky()
-			.onEntityHit(ray -> ray.getEntity().setFire(12))
+			.onEntityHit(setFire(12))
 			.soundPitch(1.0f)
 			.registerAndAssign(AllItems.BLAZE_CAKE.get())
 	;
@@ -304,29 +322,52 @@ public class PotatoCannonProjectileTypes {
 		return onBlockHit.test(world, ray);
 	}
 
-	private static Consumer<EntityRayTraceResult> potion(Effect effect, int level, int ticks) {
+	private static Predicate<EntityRayTraceResult> setFire(int seconds) {
 		return ray -> {
-			Entity entity = ray.getEntity();
-			if (entity instanceof LivingEntity)
-				((LivingEntity) entity).addPotionEffect(new EffectInstance(effect, ticks, level - 1));
+			ray.getEntity().setFire(seconds);
+			return false;
 		};
 	}
 
-	private static Predicate<EntityRayTraceResult> foodEffects(Food food) {
+	private static Predicate<EntityRayTraceResult> potion(Effect effect, int level, int ticks, boolean recoverable) {
 		return ray -> {
 			Entity entity = ray.getEntity();
+			if (entity.world.isRemote)
+				return true;
+			if (entity instanceof LivingEntity)
+				applyEffect((LivingEntity) entity, new EffectInstance(effect, ticks, level - 1));
+			return !recoverable;
+		};
+	}
+
+	private static Predicate<EntityRayTraceResult> foodEffects(Food food, boolean recoverable) {
+		return ray -> {
+			Entity entity = ray.getEntity();
+			if (entity.world.isRemote)
+				return true;
+
 			if (entity instanceof LivingEntity) {
 				for (Pair<EffectInstance, Float> effect : food.getEffects()) {
 					if (Create.RANDOM.nextFloat() < effect.getSecond())
-						((LivingEntity) entity).addPotionEffect(effect.getFirst());
+						applyEffect((LivingEntity) entity, new EffectInstance(effect.getFirst()));
 				}
 			}
-			return true;
+			return !recoverable;
 		};
+	}
+
+	public static void applyEffect(LivingEntity entity, EffectInstance effect) {
+		if (effect.getPotion().isInstant())
+			effect.getPotion().affectEntity(null, null, entity, effect.getDuration(), 1.0);
+		else
+			entity.addPotionEffect(effect);
 	}
 
 	private static BiPredicate<IWorld, BlockRayTraceResult> plantCrop(IRegistryDelegate<? extends Block> cropBlock) {
 		return (world, ray) -> {
+			if (world.isRemote())
+				return true;
+
 			BlockPos hitPos = ray.getPos();
 			if (!world.isAreaLoaded(hitPos, 1))
 				return true;
@@ -348,6 +389,9 @@ public class PotatoCannonProjectileTypes {
 
 	private static BiPredicate<IWorld, BlockRayTraceResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
 		return (world, ray) -> {
+			if (world.isRemote())
+				return true;
+
 			BlockPos hitPos = ray.getPos();
 			if (!world.isAreaLoaded(hitPos, 1))
 				return true;
@@ -372,7 +416,7 @@ public class PotatoCannonProjectileTypes {
 				falling.fallTime = 1;
 				world.addEntity(falling);
 			}
-			
+
 			return true;
 		};
 	}
@@ -397,12 +441,12 @@ public class PotatoCannonProjectileTypes {
 				double teleportZ = entityZ + (livingEntity.getRNG().nextDouble() - 0.5D) * teleportDiameter;
 
 				/* Usable as soon as lowest supported forge > 36.1.3 */
-				
+
 //				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
 //				if (event.isCanceled())
 //					return;
 //				if (livingEntity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
-				
+
 				if (livingEntity.attemptTeleport(teleportX, teleportY, teleportZ, true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
@@ -414,7 +458,7 @@ public class PotatoCannonProjectileTypes {
 					return true;
 				}
 			}
-			
+
 			return false;
 		};
 	}
@@ -489,16 +533,8 @@ public class PotatoCannonProjectileTypes {
 			return this;
 		}
 
-		public Builder onEntityHitRecoveryCancelable(Predicate<EntityRayTraceResult> callback) {
+		public Builder onEntityHit(Predicate<EntityRayTraceResult> callback) {
 			result.onEntityHit = callback;
-			return this;
-		}
-		
-		public Builder onEntityHit(Consumer<EntityRayTraceResult> callback) {
-			result.onEntityHit = ray -> {
-				callback.accept(ray);
-				return false;
-			};
 			return this;
 		}
 

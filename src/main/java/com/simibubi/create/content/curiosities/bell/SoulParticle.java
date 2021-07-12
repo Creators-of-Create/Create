@@ -73,7 +73,7 @@ public class SoulParticle extends CustomRotationParticle {
 		BlockPos pos = new BlockPos(posX, posY, posZ);
 		if (animationStage == null)
 			setExpired();
-		if (!SoulPulseEffect.canSpawnSoulAt(world, pos, false)) {
+		if (!SoulPulseEffect.isDark(world, pos)) {
 			isVisible = true;
 			if (!isPerimeter)
 				setExpired();

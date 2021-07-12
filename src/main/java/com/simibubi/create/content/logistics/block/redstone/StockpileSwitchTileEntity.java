@@ -170,6 +170,6 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (inverted == this.inverted)
 			return;
 		this.inverted = inverted;
-		world.updateNeighbors(pos, getBlockState().getBlock());
+		updatePowerAfterDelay();
 	}
 }

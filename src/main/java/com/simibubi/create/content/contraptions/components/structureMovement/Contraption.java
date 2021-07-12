@@ -84,6 +84,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.state.properties.PistonType;
@@ -102,6 +103,7 @@ import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.BlockFlags;
@@ -949,8 +951,7 @@ public abstract class Contraption {
 				int flags = BlockFlags.IS_MOVING | BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.UPDATE_NEIGHBORS
 					| BlockFlags.BLOCK_UPDATE | BlockFlags.RERENDER_MAIN_THREAD;
 				if (blockIn instanceof IWaterLoggable && oldState.contains(BlockStateProperties.WATERLOGGED)
-					&& oldState.get(BlockStateProperties.WATERLOGGED)
-						.booleanValue()) {
+					&& oldState.get(BlockStateProperties.WATERLOGGED)) {
 					world.setBlockState(add, Blocks.WATER.getDefaultState(), flags);
 					continue;
 				}
@@ -962,8 +963,22 @@ public abstract class Contraption {
 				.add(offset);
 //			if (!shouldUpdateAfterMovement(block))
 //				continue;
+
 			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
 			world.notifyBlockUpdate(add, block.state, Blocks.AIR.getDefaultState(), flags);
+
+			// when the blockstate is set to air, the block's POI data is removed, but markAndNotifyBlock tries to
+			// remove it again, so to prevent an error from being logged by double-removal we add the POI data back now
+			// (code copied from ServerWorld.onBlockStateChange)
+			ServerWorld serverWorld = (ServerWorld) world;
+			PointOfInterestType.forState(block.state).ifPresent(poiType -> {
+				world.getServer().execute(() -> {
+					serverWorld.getPointOfInterestManager().func_219135_a(add, poiType);
+					DebugPacketSender.func_218799_a(serverWorld, add);
+				});
+			});
+
+			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.getDefaultState(), flags, 512);
 			block.state.updateDiagonalNeighbors(world, add, flags & -2);
 		}
 	}

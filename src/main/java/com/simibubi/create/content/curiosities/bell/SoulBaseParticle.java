@@ -31,7 +31,7 @@ public class SoulBaseParticle extends CustomRotationParticle {
 		selectSpriteLoopingWithAge(animatedSprite);
 
 		BlockPos pos = new BlockPos(posX, posY, posZ);
-		if (age++ >= maxAge || !SoulPulseEffect.canSpawnSoulAt(world, pos, false))
+		if (age++ >= maxAge || !SoulPulseEffect.isDark(world, pos))
 			setExpired();
 	}
 

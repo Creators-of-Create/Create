@@ -74,6 +74,10 @@ public class SoulPulseEffect {
 			.collect(Collectors.toList());
 	}
 
+	public static boolean isDark(World world, BlockPos at) {
+		return world.getLightLevel(LightType.BLOCK, at) < 8;
+	}
+
 	public static boolean canSpawnSoulAt(World world, BlockPos at, boolean ignoreLight) {
 		EntityType<?> dummy = EntityType.ZOMBIE;
 		double dummyWidth = 0.2, dummyHeight = 0.75;
@@ -82,7 +86,7 @@ public class SoulPulseEffect {
 		return world != null
 			&& WorldEntitySpawner
 				.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, world, at, dummy)
-			&& (ignoreLight || world.getLightLevel(LightType.BLOCK, at) < 8)
+			&& (ignoreLight || isDark(world, at))
 			&& world
 				.getBlockCollisions(null,
 					new AxisAlignedBB(at.getX() + 0.5 - w2, at.getY(), at.getZ() + 0.5 - w2, at.getX() + 0.5 + w2,
