@@ -27,8 +27,8 @@ public class ContraptionHandler {
 	static WorldAttached<List<AbstractContraptionEntity>> queuedAdditions;
 
 	static {
-		loadedContraptions = new WorldAttached<>(HashMap::new);
-		queuedAdditions = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
+		loadedContraptions = new WorldAttached<>($ -> new HashMap<>());
+		queuedAdditions = new WorldAttached<>($ -> ObjectLists.synchronize(new ObjectArrayList<>()));
 	}
 
 	public static void tick(World world) {

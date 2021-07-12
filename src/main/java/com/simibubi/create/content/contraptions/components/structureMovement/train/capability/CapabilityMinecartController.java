@@ -80,10 +80,10 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	}
 
 	static {
-		loadedMinecartsByUUID = new WorldAttached<>(HashMap::new);
-		loadedMinecartsWithCoupling = new WorldAttached<>(HashSet::new);
-		queuedAdditions = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
-		queuedUnloads = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
+		loadedMinecartsByUUID = new WorldAttached<>($ -> new HashMap<>());
+		loadedMinecartsWithCoupling = new WorldAttached<>($ -> new HashSet<>());
+		queuedAdditions = new WorldAttached<>($ -> ObjectLists.synchronize(new ObjectArrayList<>()));
+		queuedUnloads = new WorldAttached<>($ -> ObjectLists.synchronize(new ObjectArrayList<>()));
 	}
 
 	public static void tick(World world) {
@@ -99,16 +99,16 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 
 		for (AbstractMinecartEntity cart : queued) {
 			UUID uniqueID = cart.getUniqueID();
-			
+
 			if (world.isRemote && carts.containsKey(uniqueID)) {
 				MinecartController minecartController = carts.get(uniqueID);
 				if (minecartController != null) {
 					AbstractMinecartEntity minecartEntity = minecartController.cart();
-					if (minecartEntity != null && minecartEntity.getEntityId() != cart.getEntityId()) 
+					if (minecartEntity != null && minecartEntity.getEntityId() != cart.getEntityId())
 						continue; // Away with you, Fake Entities!
 				}
 			}
-			
+
 			cartsWithCoupling.remove(uniqueID);
 
 			LazyOptional<MinecartController> capability = cart.getCapability(MINECART_CONTROLLER_CAPABILITY);

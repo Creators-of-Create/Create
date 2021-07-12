@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
@@ -14,9 +14,9 @@ public class WorldAttached<T> {
 
 	static List<Map<IWorld, ?>> allMaps = new ArrayList<>();
 	Map<IWorld, T> attached;
-	private Supplier<T> factory;
+	private Function<IWorld, T> factory;
 
-	public WorldAttached(Supplier<T> factory) {
+	public WorldAttached(Function<IWorld, T> factory) {
 		this.factory = factory;
 		attached = new HashMap<>();
 		allMaps.add(attached);
@@ -31,7 +31,7 @@ public class WorldAttached<T> {
 		T t = attached.get(world);
 		if (t != null)
 			return t;
-		T entry = factory.get();
+		T entry = factory.apply(world);
 		put(world, entry);
 		return entry;
 	}

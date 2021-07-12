@@ -23,7 +23,7 @@ public class SchematicInstances {
 	public static WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
 
 	static {
-		loadedSchematics = new WorldAttached<>(() -> CacheBuilder.newBuilder()
+		loadedSchematics = new WorldAttached<>($ -> CacheBuilder.newBuilder()
 			.expireAfterAccess(5, TimeUnit.MINUTES)
 			.build());
 	}

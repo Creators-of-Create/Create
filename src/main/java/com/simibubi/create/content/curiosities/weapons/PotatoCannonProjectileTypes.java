@@ -3,12 +3,15 @@ package com.simibubi.create.content.curiosities.weapons;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,7 +21,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Foods;
 import net.minecraft.item.Item;
@@ -43,10 +45,15 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileTypes {
+
+	private static final GameProfile ZOMBIE_CONVERTER_NAME =
+		new GameProfile(UUID.fromString("be12d3dc-27d3-4992-8c97-66be53fd49c5"), "Converter");
+	private static final WorldAttached<FakePlayer> ZOMBIE_CONVERTERS =
+		new WorldAttached<>(w -> new FakePlayer((ServerWorld) w, ZOMBIE_CONVERTER_NAME));
 
 	public static final Map<ResourceLocation, PotatoCannonProjectileTypes> ALL = new HashMap<>();
 	public static final Map<IRegistryDelegate<Item>, PotatoCannonProjectileTypes> ITEM_MAP = new HashMap<>();
@@ -155,8 +162,8 @@ public class PotatoCannonProjectileTypes {
 				if (world.isRemote)
 					return false;
 
-				PlayerEntity dummy = FakePlayerFactory.getMinecraft((ServerWorld) world);
-				dummy.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.GOLDEN_APPLE));
+				FakePlayer dummy = ZOMBIE_CONVERTERS.get(world);
+				dummy.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.GOLDEN_APPLE, 1));
 				((ZombieVillagerEntity) entity).interactMob(dummy, Hand.MAIN_HAND);
 				return true;
 			})

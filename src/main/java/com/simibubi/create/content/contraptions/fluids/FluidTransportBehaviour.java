@@ -131,7 +131,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 				sendUpdate |= connection.manageFlows(world, pos, internalFluid, extractionPredicate);
 			}
 
-			if (sendUpdate) 
+			if (sendUpdate)
 				tileEntity.notifyUpdate();
 		}
 
@@ -272,7 +272,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 	// for switching TEs, but retaining flows
 
 	public static final WorldAttached<Map<BlockPos, Map<Direction, PipeConnection>>> interfaceTransfer =
-		new WorldAttached<>(HashMap::new);
+		new WorldAttached<>($ -> new HashMap<>());
 
 	public static void cacheFlows(IWorld world, BlockPos pos) {
 		FluidTransportBehaviour pipe = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
