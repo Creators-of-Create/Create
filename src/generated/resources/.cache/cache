@@ -433,7 +433,7 @@ a01222895bd7e3d06d7ae3d34fa4caecbd86448d assets/create/lang/unfinished/es_mx.jso
 b05d56b0e9d724490ea143a3685b0bc9ebe6268a assets/create/lang/unfinished/fr_fr.json
 1633b5a42865fba17572980560ad07a3015c1743 assets/create/lang/unfinished/it_it.json
 5422e990c8075d4132d58287fa9ca858f9a0bc1f assets/create/lang/unfinished/ja_jp.json
-05eac4946a1172cf32d171d23f4049a58654b43b assets/create/lang/unfinished/ko_kr.json
+a1cfa4e628a915c25dc406918028ef6aa99c5c3d assets/create/lang/unfinished/ko_kr.json
 95828eb4fa2e1353f737dc909407af21d50be149 assets/create/lang/unfinished/nl_nl.json
 d8ed3929f5d8f0e58f4bd4de34ab20395f8d2c55 assets/create/lang/unfinished/pl_pl.json
 ae37d77d132f6fac4bc718273637a367959533a1 assets/create/lang/unfinished/pt_br.json
@@ -1699,7 +1699,7 @@ d080b1b25e5bc8baf5aee68691b08c7f12ece3b0 assets/create/models/item/windmill_bear
 a80fb25a0b655e76be986b5b49fcb0f03461a1ab assets/create/models/item/zinc_nugget.json
 b1689617190c05ef34bd18456b0c7ae09bb3210f assets/create/models/item/zinc_ore.json
 58880e397902f8ca5b3b59ed4423e626109ddc4c assets/create/sounds.json
-0f1b4b980afba9bf2caf583b88e261bba8b10313 data/create/advancements/aesthetics.json
+5d0cc4c0255dc241e61c173b31ddca70c88d08e4 data/create/advancements/aesthetics.json
 187921fa131b06721bfaf63f2623a28c141aae9a data/create/advancements/andesite_alloy.json
 0ea2db7173b5be28b289ea7c9a6a0cf5805c60c7 data/create/advancements/andesite_casing.json
 83c046bd200623933545c9e4326f782fb02c87fa data/create/advancements/arm_blaze_burner.json
