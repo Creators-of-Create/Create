@@ -27,9 +27,11 @@ import net.minecraft.state.properties.BellAttachment;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.Half;
 import net.minecraft.state.properties.SlabType;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -41,27 +43,33 @@ public class StructureTransform {
 	int angle;
 	Axis rotationAxis;
 	BlockPos offset;
+	Mirror mirror;
 
-	private StructureTransform(BlockPos offset, int angle, Axis axis, Rotation rotation) {
+	private StructureTransform(BlockPos offset, int angle, Axis axis, Rotation rotation, Mirror mirror) {
 		this.offset = offset;
 		this.angle = angle;
 		rotationAxis = axis;
 		this.rotation = rotation;
+		this.mirror = mirror;
+	}
+
+	public StructureTransform(BlockPos offset, Axis axis, Rotation rotation, Mirror mirror) {
+		this(offset, rotation == Rotation.NONE ? 0 : (4 - rotation.ordinal())*90, axis, rotation, mirror);
 	}
 
 	public StructureTransform(BlockPos offset, float xRotation, float yRotation, float zRotation) {
 		this.offset = offset;
 		if (xRotation != 0) {
 			rotationAxis = Axis.X;
-			angle = (int) (Math.round(xRotation / 90) * 90);
+			angle = Math.round(xRotation / 90) * 90;
 		}
 		if (yRotation != 0) {
 			rotationAxis = Axis.Y;
-			angle = (int) (Math.round(yRotation / 90) * 90);
+			angle = Math.round(yRotation / 90) * 90;
 		}
 		if (zRotation != 0) {
 			rotationAxis = Axis.Z;
-			angle = (int) (Math.round(zRotation / 90) * 90);
+			angle = Math.round(zRotation / 90) * 90;
 		}
 
 		angle %= 360;
@@ -76,22 +84,33 @@ public class StructureTransform {
 		if (angle == 180)
 			this.rotation = Rotation.CLOCKWISE_180;
 
+		mirror = Mirror.NONE;
 	}
 
-	public Vector3d apply(Vector3d localVec) {
+	public Vector3d applyWithoutOffset(Vector3d localVec) {
 		Vector3d vec = localVec;
+		if (mirror != null)
+			vec = VecHelper.mirrorCentered(vec, mirror);
 		if (rotationAxis != null)
 			vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
-		vec = vec.add(Vector3d.of(offset));
 		return vec;
 	}
 
+	public Vector3d apply(Vector3d localVec) {
+		return applyWithoutOffset(localVec).add(Vector3d.of(offset));
+	}
+
+	public BlockPos applyWithoutOffset(BlockPos localPos) {
+		return new BlockPos(applyWithoutOffset(VecHelper.getCenterOf(localPos)));
+	}
+
 	public BlockPos apply(BlockPos localPos) {
-		Vector3d vec = VecHelper.getCenterOf(localPos);
-		if (rotationAxis != null)
-			vec = VecHelper.rotateCentered(vec, angle, rotationAxis);
-		localPos = new BlockPos(vec);
-		return localPos.add(offset);
+		return applyWithoutOffset(localPos).add(offset);
+	}
+
+	public void apply(TileEntity te) {
+		if (te instanceof ITransformableTE)
+			((ITransformableTE) te).transform(this);
 	}
 
 	/**
@@ -100,6 +119,9 @@ public class StructureTransform {
 	 * horizontal axes
 	 */
 	public BlockState apply(BlockState state) {
+		if (mirror != null)
+			state = state.mirror(mirror);
+
 		Block block = state.getBlock();
 
 		if (rotationAxis == Axis.Y) {
@@ -299,6 +321,8 @@ public class StructureTransform {
 	}
 
 	public Direction transformFacing(Direction facing) {
+		if (mirror != null)
+			facing = mirror.mirror(facing);
 		for (int i = 0; i < rotation.ordinal(); i++)
 			facing = DirectionHelper.rotateAround(facing, rotationAxis);
 		return facing;
@@ -335,8 +359,10 @@ public class StructureTransform {
 		int readAngle = buffer.readInt();
 		int axisIndex = buffer.readVarInt();
 		int rotationIndex = buffer.readVarInt();
+		int mirrorIndex = buffer.readVarInt();
 		return new StructureTransform(readBlockPos, readAngle, axisIndex == -1 ? null : Axis.values()[axisIndex],
-			rotationIndex == -1 ? null : Rotation.values()[rotationIndex]);
+			rotationIndex == -1 ? null : Rotation.values()[rotationIndex],
+			mirrorIndex == -1 ? null : Mirror.values()[mirrorIndex]);
 	}
 
 	public void writeToBuffer(PacketBuffer buffer) {
@@ -344,6 +370,7 @@ public class StructureTransform {
 		buffer.writeInt(angle);
 		buffer.writeVarInt(rotationAxis == null ? -1 : rotationAxis.ordinal());
 		buffer.writeVarInt(rotation == null ? -1 : rotation.ordinal());
+		buffer.writeVarInt(mirror == null ? - 1 : mirror.ordinal());
 	}
 
 }

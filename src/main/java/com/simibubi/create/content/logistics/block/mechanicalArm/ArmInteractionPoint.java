@@ -17,6 +17,7 @@ import com.simibubi.create.content.contraptions.components.crafter.MechanicalCra
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
@@ -216,6 +217,12 @@ public abstract class ArmInteractionPoint {
 			return null;
 		interactionPoint.mode = NBTHelper.readEnum(nbt, "Mode", Mode.class);
 		return interactionPoint;
+	}
+
+	protected static void transformPos(StructureTransform transform, CompoundNBT nbt) {
+		BlockPos pos = NBTUtil.readBlockPos(nbt.getCompound("Pos"));
+		pos = transform.applyWithoutOffset(pos);
+		nbt.put("Pos", NBTUtil.writeBlockPos(pos));
 	}
 
 	public static abstract class TopFaceArmInteractionPoint extends ArmInteractionPoint {

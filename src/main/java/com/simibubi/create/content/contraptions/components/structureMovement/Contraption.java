@@ -1057,6 +1057,8 @@ public abstract class Contraption {
 							mountedStorage.addStorageToWorld(tileEntity);
 					}
 				}
+
+				transform.apply(tileEntity);
 			}
 		}
 		for (BlockInfo block : blocks.values()) {
