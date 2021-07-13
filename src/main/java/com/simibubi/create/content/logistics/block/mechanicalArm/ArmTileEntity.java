@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.ITransformableTE;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Jukebox;
 import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionPoint.Mode;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -41,7 +43,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 
-public class ArmTileEntity extends KineticTileEntity {
+public class ArmTileEntity extends KineticTileEntity implements ITransformableTE {
 
 	// Server
 	List<ArmInteractionPoint> inputs;
@@ -382,6 +384,19 @@ public class ArmTileEntity extends KineticTileEntity {
 		sendData();
 		if (!redstoneLocked)
 			searchForItem();
+	}
+
+	@Override
+	public void transform(StructureTransform transform) {
+		if (interactionPointTag == null)
+			return;
+
+		for (INBT inbt : interactionPointTag) {
+			ArmInteractionPoint.transformPos(transform, (CompoundNBT) inbt);
+		}
+
+		sendData();
+		markDirty();
 	}
 
 	protected void initInteractionPoints() {

@@ -59,7 +59,7 @@
   "results": [
     {
       "item": "create:precision_mechanism",
-      "chance": 60.0
+      "chance": 120.0
     },
     {
       "item": "create:golden_sheet",

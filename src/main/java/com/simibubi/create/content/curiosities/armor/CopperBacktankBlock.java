@@ -63,6 +63,17 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		builder.add(BlockStateProperties.WATERLOGGED);
 		super.fillStateContainer(builder);
 	}
+	
+	@Override
+	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
+		return true;
+	}
+	
+	@Override
+	public int getComparatorInputOverride(BlockState p_180641_1_, World world, BlockPos pos) {
+		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
+			.orElse(0);
+	}
 
 	@Override
 	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,

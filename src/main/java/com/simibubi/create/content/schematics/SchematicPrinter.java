@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
@@ -80,6 +81,12 @@ public class SchematicPrinter {
 		schematicAnchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
 		activeTemplate.place(blockReader, schematicAnchor, settings, blockReader.getRandom());
+
+		StructureTransform transform = new StructureTransform(settings.getCenterOffset(), Direction.Axis.Y,
+			settings.getRotation(), settings.getMirror());
+		for (TileEntity te : blockReader.tileEntities.values()) {
+			transform.apply(te);
+		}
 
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
@@ -292,7 +299,8 @@ public class SchematicPrinter {
 	}
 
 	public static boolean shouldDeferBlock(BlockState state) {
-		return state.getBlock().is(AllBlocks.GANTRY_CARRIAGE.get()) || BlockMovementChecks.isBrittle(state);
+		return AllBlocks.GANTRY_CARRIAGE.has(state) || AllBlocks.MECHANICAL_ARM.has(state)
+			|| BlockMovementChecks.isBrittle(state);
 	}
 
 }

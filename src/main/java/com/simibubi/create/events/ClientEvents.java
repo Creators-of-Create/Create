@@ -168,7 +168,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		if (event.getWorld().isRemote()) {
+		if (event.getWorld()
+			.isRemote()) {
 			CreateClient.invalidateRenderers();
 			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 			AnimationTickHolder.reset();
@@ -178,7 +179,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
 		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
-				.getProjectedView();
+			.getProjectedView();
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
@@ -239,17 +240,16 @@ public class ClientEvents {
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem()
 			.getTranslationKey(stack);
-		if (!translationKey.startsWith(itemPrefix) && !translationKey.startsWith(blockPrefix))
-			return;
 
-		if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
-			List<ITextComponent> itemTooltip = event.getToolTip();
-			List<ITextComponent> toolTip = new ArrayList<>();
-			toolTip.add(itemTooltip.remove(0));
-			TooltipHelper.getTooltip(stack)
-				.addInformation(toolTip);
-			itemTooltip.addAll(0, toolTip);
-		}
+		if (translationKey.startsWith(itemPrefix) || translationKey.startsWith(blockPrefix))
+			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
+				List<ITextComponent> itemTooltip = event.getToolTip();
+				List<ITextComponent> toolTip = new ArrayList<>();
+				toolTip.add(itemTooltip.remove(0));
+				TooltipHelper.getTooltip(stack)
+					.addInformation(toolTip);
+				itemTooltip.addAll(0, toolTip);
+			}
 
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem item = (BlockItem) stack.getItem();
@@ -337,8 +337,11 @@ public class ClientEvents {
 	}
 
 	public static void loadCompleted(FMLLoadCompleteEvent event) {
-		ModContainer createContainer = ModList.get().getModContainerById(Create.ID).orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen));
+		ModContainer createContainer = ModList.get()
+			.getModContainerById(Create.ID)
+			.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+			() -> (mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen));
 	}
 
 }

@@ -62,7 +62,7 @@
 	"create.recipe.assembly.deploying_item": "Deploy %1$s",
 	"create.recipe.assembly.cutting": "Cut with Saw",
 	"create.recipe.assembly.repeat": "Repeat Sequence %1$s Times",
-	"create.recipe.assembly.junk": "Random junk",
+	"create.recipe.assembly.junk": "Random salvage",
 
 	"create.recipe.processing.chance": "%1$s%% Chance",
 	"create.recipe.heat_requirement.none": "No Heating Required",

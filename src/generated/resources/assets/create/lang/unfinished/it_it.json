@@ -751,7 +751,7 @@
 	"create.recipe.assembly.deploying_item": "UNLOCALIZED: Deploy %1$s",
 	"create.recipe.assembly.cutting": "UNLOCALIZED: Cut with Saw",
 	"create.recipe.assembly.repeat": "UNLOCALIZED: Repeat Sequence %1$s Times",
-	"create.recipe.assembly.junk": "UNLOCALIZED: Random junk",
+	"create.recipe.assembly.junk": "UNLOCALIZED: Random salvage",
 	"create.recipe.processing.chance": "%1$s%% di probabilità",
 	"create.recipe.heat_requirement.none": "Nessun riscaldamento",
 	"create.recipe.heat_requirement.heated": "Riscaldamento",
