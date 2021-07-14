@@ -105,7 +105,7 @@ public class AllItems {
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.onRegister(i -> i.setBurnTime(240))
+		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
 	public static final ItemEntry<CombustibleItem> CREATIVE_CAKE = REGISTRATE.item("creative_cake", CombustibleItem::new)
