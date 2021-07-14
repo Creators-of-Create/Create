@@ -53,6 +53,8 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 			.getMatchingStacks()));
 		itemStacks.init(2, false, 131, 50);
 		itemStacks.set(2, recipe.getRecipeOutput());
+
+		addStochasticTooltip(itemStacks, recipe.getRollableResults());
 	}
 
 	@Override
