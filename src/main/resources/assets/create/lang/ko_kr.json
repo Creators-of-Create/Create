@@ -621,10 +621,10 @@
 	"advancement.create.reinforced": "튼튼 보강!",
 	"advancement.create.reinforced.desc": "축, 파이프, 벨트에 적절한 케이스를 씌우세요.",
    	"advancement.create.water_wheel": "수력 동력화",
-	"advancement.create.water_wheel.desc": "물레방아를 설치하고 회전하게 만드세요!",
-	"advancement.create.chocolate_wheel": "초콜릿방아",
-	"advancement.create.chocolate_wheel.desc": "녹은 초콜릿으로 물레방아를 돌리세요.",
-	"advancement.create.lava_wheel": "불레방아",
+	"advancement.create.water_wheel.desc": "물레바퀴를 설치하고 회전하게 만드세요!",
+	"advancement.create.chocolate_wheel": "초콜릿바퀴",
+	"advancement.create.chocolate_wheel.desc": "녹은 초콜릿으로 물레바퀴를 돌리세요.",
+	"advancement.create.lava_wheel": "불레바퀴",
 	"advancement.create.lava_wheel.desc": "용암으로 물레바퀴를 회전하게 만드세ㅇ... 어?",
 	"advancement.create.cuckoo": "벌써 이렇게나 시간이 지났어?",
 	"advancement.create.cuckoo.desc": "뻐꾸기 시계가 잘 시간을 알립니다. 잘 자...",
@@ -1398,7 +1398,7 @@
 
 	"item.create.schematic.tooltip": "SCHEMATIC",
 	"item.create.schematic.tooltip.summary": "세계에 구조물을 _홀로그램으로_ 불러와 지정하고 설치합니다. 지정된 홀로그램은 _청사진_ _대포_의 _작업_ _영역_이 됩니다.",
-	"item.create.schematic.tooltip.condition1": "들고 있을 떄",
+	"item.create.schematic.tooltip.condition1": "들고 있을 때",
 	"item.create.schematic.tooltip.behaviour1": "UI의 도구로 _변경/설치_ 할 수 있습니다.",
 	"item.create.schematic.tooltip.control1": "웅크린 상태에서 우클릭",
 	"item.create.schematic.tooltip.action1": "정확한 _좌표_ 입력을 위한 창을 엽니다.",
@@ -1443,7 +1443,7 @@
 	"item.create.wrench.tooltip.action2": "_장치_를 _해체_하고 _즉시_ _보관함_으로 넣습니다.",
 
 	"block.create.nozzle.tooltip": "NOZZLE",
-	"block.create.nozzle.tooltip.summary": "덮힌 선풍기 _앞_에 붙여 환풍기의 효과를 _전방_으로 _확대_합니다.",
+	"block.create.nozzle.tooltip.summary": "선풍기 _앞_에 붙여 선풍기의 효과를 _전방향_으로 _확대_합니다.",
 	
 	"block.create.cuckoo_clock.tooltip": "CUCKOO CLOCK",
 	"block.create.cuckoo_clock.tooltip.summary": "_시간의_ _흐름_을 알고 공간을 _꾸미는_ 데 좋은 공예품입니다.",
@@ -2225,7 +2225,7 @@
 	"create.ponder.rope_pulley_attachment.header": "구조물로서의 밧줄 도르래",
 	"create.ponder.rope_pulley_attachment.text_1": "도르래가 장치에 의해 움직여지면...",
 	"create.ponder.rope_pulley_attachment.text_2": "...도르래에 딸린 구조물도 함께 움직입니다.",
-	"create.ponder.rope_pulley_attachment.text_3": "다만 도르래는 멈춰있을 떄만 작동합니다.",
+	"create.ponder.rope_pulley_attachment.text_3": "다만 도르래는 멈춰있을 때만 작동합니다.",
 
 	"create.ponder.rope_pulley_modes.header": "밧줄 도르래의 이동 설정",
 	"create.ponder.rope_pulley_modes.text_1": "도르래가 움직임을 멈추면, 움직인 구조물은 블록으로 바뀝니다.",
