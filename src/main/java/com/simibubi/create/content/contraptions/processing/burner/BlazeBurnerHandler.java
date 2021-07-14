@@ -57,16 +57,18 @@ public class BlazeBurnerHandler {
 		World world = event.getThrowable().world;
 		if (world.isRemote)
 			return;
-		
+
 		BlazeBurnerTileEntity heater = (BlazeBurnerTileEntity) tile;
-		if (heater.activeFuel != FuelType.SPECIAL) {
-			heater.activeFuel = FuelType.NORMAL;
-			heater.remainingBurnTime =
-				MathHelper.clamp(heater.remainingBurnTime + 80, 0, BlazeBurnerTileEntity.maxHeatCapacity);
-			heater.updateBlockState();
-			heater.notifyUpdate();
+		if (!heater.isCreative()) {
+			if (heater.activeFuel != FuelType.SPECIAL) {
+				heater.activeFuel = FuelType.NORMAL;
+				heater.remainingBurnTime =
+					MathHelper.clamp(heater.remainingBurnTime + 80, 0, BlazeBurnerTileEntity.MAX_HEAT_CAPACITY);
+				heater.updateBlockState();
+				heater.notifyUpdate();
+			}
 		}
-		
+
 		AllSoundEvents.BLAZE_MUNCH.playOnServer(world, heater.getPos());
 	}
 

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1762",
+	"_": "Missing Localizations: 1763",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -468,6 +468,7 @@
 	"item.create.copper_sheet": "UNLOCALIZED: Copper Sheet",
 	"item.create.crafter_slot_cover": "UNLOCALIZED: Crafter Slot Cover",
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
+	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
 	"item.create.crushed_aluminum_ore": "UNLOCALIZED: Crushed Aluminum Ore",
 	"item.create.crushed_brass": "Gemalen Brons",
 	"item.create.crushed_copper_ore": "UNLOCALIZED: Crushed Copper Ore",

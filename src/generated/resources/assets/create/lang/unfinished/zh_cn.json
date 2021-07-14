@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 292",
+	"_": "Missing Localizations: 293",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -468,6 +468,7 @@
 	"item.create.copper_sheet": "铜板",
 	"item.create.crafter_slot_cover": "合成器盖板",
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
+	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
 	"item.create.crushed_aluminum_ore": "粉碎铝矿石",
 	"item.create.crushed_brass": "粉碎黄铜",
 	"item.create.crushed_copper_ore": "粉碎铜矿石",

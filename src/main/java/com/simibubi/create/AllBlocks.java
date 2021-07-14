@@ -484,7 +484,7 @@ public class AllBlocks {
 	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER =
 		REGISTRATE.block("blaze_burner", BlazeBurnerBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.luminance($ -> 12))
+			.properties(p -> p.luminance(BlazeBurnerBlock::getLight))
 			.addLayer(() -> RenderType::getCutoutMipped)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
 			.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))

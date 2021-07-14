@@ -3,6 +3,7 @@
   "values": [
     "create:blaze_cake_base",
     "create:blaze_cake",
+    "create:creative_cake",
     "create:builders_tea",
     "minecraft:glass_bottle",
     "minecraft:potion",
