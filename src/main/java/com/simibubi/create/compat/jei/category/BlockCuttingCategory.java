@@ -45,7 +45,7 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 	public void setRecipe(IRecipeLayout recipeLayout, CondensedBlockCuttingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		itemStacks.init(0, true, 4, 4);
-		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getMatchingStacks()));
+		itemStacks.set(0, Arrays.asList(recipe.getIngredients().get(0).getItems()));
 
 		List<List<ItemStack>> results = recipe.getCondensedOutputs();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {
@@ -110,19 +110,19 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 				Ingredient i1 = recipe.getIngredients().get(0);
 				for (CondensedBlockCuttingRecipe condensedRecipe : condensed) {
 					if (ItemHelper.matchIngredients(i1, condensedRecipe.getIngredients().get(0))) {
-						condensedRecipe.addOutput(recipe.getRecipeOutput());
+						condensedRecipe.addOutput(recipe.getResultItem());
 						continue Recipes;
 					}
 				}
 				CondensedBlockCuttingRecipe cr = new CondensedBlockCuttingRecipe(i1);
-				cr.addOutput(recipe.getRecipeOutput());
+				cr.addOutput(recipe.getResultItem());
 				condensed.add(cr);
 			}
 			return condensed;
 		}
 		
 		@Override
-		public boolean isDynamic() {
+		public boolean isSpecial() {
 			return true;
 		}
 

@@ -10,6 +10,9 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.OreFeatureConfig.FillerBlockType;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import com.simibubi.create.foundation.config.ConfigBase.ConfigFloat;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
+
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	public final String id;
@@ -49,11 +52,11 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	private ConfiguredFeature<?, ?> createFeature() {
 		ConfigDrivenOreFeatureConfig config =
-			new ConfigDrivenOreFeatureConfig(FillerBlockType.BASE_STONE_OVERWORLD, block.get()
-				.getDefaultState(), id);
+			new ConfigDrivenOreFeatureConfig(FillerBlockType.NATURAL_STONE, block.get()
+				.defaultBlockState(), id);
 
-		return ConfigDrivenOreFeature.INSTANCE.configure(config)
-			.decorate(ConfigDrivenDecorator.INSTANCE.configure(config));
+		return ConfigDrivenOreFeature.INSTANCE.configured(config)
+			.decorated(ConfigDrivenDecorator.INSTANCE.configured(config));
 	}
 
 	public void addToConfig(ForgeConfigSpec.Builder builder) {

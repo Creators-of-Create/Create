@@ -32,16 +32,16 @@ public class ArmAngleTarget {
 		Vector3d origin = VecHelper.getCenterOf(armPos)
 			.add(0, ceiling ? -4 / 16f : 4 / 16f, 0);
 		Vector3d clawTarget = target;
-		target = target.add(Vector3d.of(clawFacing.getOpposite()
-			.getDirectionVec()).scale(.5f));
+		target = target.add(Vector3d.atLowerCornerOf(clawFacing.getOpposite()
+			.getNormal()).scale(.5f));
 
 		Vector3d diff = target.subtract(origin);
-		float horizontalDistance = (float) diff.mul(1, 0, 1)
+		float horizontalDistance = (float) diff.multiply(1, 0, 1)
 			.length();
 
 		float baseAngle = AngleHelper.deg(MathHelper.atan2(diff.x, diff.z)) + 180;
 		if (ceiling) {
-			diff = diff.mul(1, -1, 1);
+			diff = diff.multiply(1, -1, 1);
 			baseAngle = 180 - baseAngle;
 		}
 
@@ -74,9 +74,9 @@ public class ArmAngleTarget {
 		Vector3d headDiff = clawTarget.subtract(headPos);
 
 		if (ceiling)
-			headDiff = headDiff.mul(1, -1, 1);
+			headDiff = headDiff.multiply(1, -1, 1);
 
-		float horizontalHeadDistance = (float) headDiff.mul(1, 0, 1)
+		float horizontalHeadDistance = (float) headDiff.multiply(1, 0, 1)
 			.length();
 		float headAngle =
 			(float) (alpha + beta + 135 - AngleHelper.deg(MathHelper.atan2(headDiff.y, horizontalHeadDistance)));

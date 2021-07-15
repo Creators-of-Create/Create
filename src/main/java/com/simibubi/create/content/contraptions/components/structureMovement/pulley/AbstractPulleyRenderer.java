@@ -36,7 +36,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean isGlobalRenderer(KineticTileEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(KineticTileEntity p_188185_1_) {
 		return true;
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		float offset = getOffset(te, partialTicks);
@@ -53,18 +53,18 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 		Axis rotationAxis = ((IRotate) te.getBlockState()
 				.getBlock()).getRotationAxis(te.getBlockState());
 		kineticRotationTransform(getRotatedCoil(te), te, rotationAxis, AngleHelper.rad(offset * 180), light)
-				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
-		World world = te.getWorld();
+		World world = te.getLevel();
 		BlockState blockState = te.getBlockState();
-		BlockPos pos = te.getPos();
+		BlockPos pos = te.getBlockPos();
 
 		SuperByteBuffer halfMagnet = PartialBufferer.get(this.halfMagnet, blockState);
 		SuperByteBuffer halfRope = PartialBufferer.get(this.halfRope, blockState);
 		SuperByteBuffer magnet = renderMagnet(te);
 		SuperByteBuffer rope = renderRope(te);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 		if (running || offset == 0)
 			renderAt(world, offset > .25f ? magnet : halfMagnet, offset, pos, ms, vb);
 
@@ -81,8 +81,8 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	private void renderAt(IWorld world, SuperByteBuffer partial, float offset, BlockPos pulleyPos, MatrixStack ms,
 		IVertexBuilder buffer) {
-		BlockPos actualPos = pulleyPos.down((int) offset);
-		int light = WorldRenderer.getLightmapCoordinates(world, world.getBlockState(actualPos), actualPos);
+		BlockPos actualPos = pulleyPos.below((int) offset);
+		int light = WorldRenderer.getLightColor(world, world.getBlockState(actualPos), actualPos);
 		partial.translate(0, -offset, 0)
 			.light(light)
 			.renderInto(ms, buffer);
@@ -107,7 +107,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
 		BlockState blockState = te.getBlockState();
-		return PartialBufferer.getFacing(getCoil(), blockState, Direction.getFacingFromAxis(AxisDirection.POSITIVE, getShaftAxis(te)));
+		return PartialBufferer.getFacing(getCoil(), blockState, Direction.get(AxisDirection.POSITIVE, getShaftAxis(te)));
 	}
 
 }

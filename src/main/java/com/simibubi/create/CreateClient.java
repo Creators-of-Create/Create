@@ -110,7 +110,7 @@ public class CreateClient {
 		IResourceManager resourceManager = Minecraft.getInstance()
 			.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
-			((IReloadableResourceManager) resourceManager).addReloadListener(new ResourceReloadHandler());
+			((IReloadableResourceManager) resourceManager).registerReloadListener(new ResourceReloadHandler());
 
 		event.enqueueWork(() -> {
 			CopperBacktankArmorLayer.register();
@@ -119,8 +119,8 @@ public class CreateClient {
 
 	public static void onTextureStitch(TextureStitchEvent.Pre event) {
 		if (!event.getMap()
-			.getId()
-			.equals(PlayerContainer.BLOCK_ATLAS_TEXTURE))
+			.location()
+			.equals(PlayerContainer.BLOCK_ATLAS))
 			return;
 		SpriteShifter.getAllTargetSprites()
 			.forEach(event::addSprite);
@@ -151,10 +151,10 @@ public class CreateClient {
 
 	protected static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		block.getStateContainer()
-			.getValidStates()
+		block.getStateDefinition()
+			.getPossibleStates()
 			.forEach(state -> {
-				models.add(getBlockModelLocation(block, BlockModelShapes.getPropertyMapString(state.getValues())));
+				models.add(getBlockModelLocation(block, BlockModelShapes.statePropertiesToString(state.getValues())));
 			});
 		return models;
 	}
@@ -210,21 +210,21 @@ public class CreateClient {
 		if (mc.player == null)
 			return;
 
-		if (mc.gameSettings.graphicsMode != GraphicsFanciness.FABULOUS)
+		if (mc.options.graphicsMode != GraphicsFanciness.FABULOUS)
 			return;
 
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
 			return;
 
-		IFormattableTextComponent text = TextComponentUtils.bracketed(new StringTextComponent("WARN"))
-			.formatted(TextFormatting.GOLD)
+		IFormattableTextComponent text = TextComponentUtils.wrapInSquareBrackets(new StringTextComponent("WARN"))
+			.withStyle(TextFormatting.GOLD)
 			.append(new StringTextComponent(
 				" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
-			.styled(style -> style
+			.withStyle(style -> style
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
 				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 					new StringTextComponent("Click here to disable this warning"))));
 
-		mc.ingameGUI.addChatMessage(ChatType.CHAT, text, mc.player.getUniqueID());
+		mc.gui.handleChat(ChatType.CHAT, text, mc.player.getUUID());
 	}
 }

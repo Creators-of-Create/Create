@@ -61,9 +61,9 @@ public class PonderWorldParticles {
 
 	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo renderInfo, float pt) {
 		Minecraft mc = Minecraft.getInstance();
-		LightTexture lightTexture = mc.gameRenderer.getLightmapTextureManager();
+		LightTexture lightTexture = mc.gameRenderer.lightTexture();
 
-		lightTexture.enableLightmap();
+		lightTexture.turnOnLightLayer();
 		Runnable enable = () -> {
 			RenderSystem.enableAlphaTest();
 			RenderSystem.defaultAlphaFunc();
@@ -71,8 +71,8 @@ public class PonderWorldParticles {
 			RenderSystem.enableFog();
 		};
 		RenderSystem.pushMatrix();
-		RenderSystem.multMatrix(ms.peek()
-			.getModel());
+		RenderSystem.multMatrix(ms.last()
+			.pose());
 
 		for (IParticleRenderType iparticlerendertype : this.byType.keySet()) {
 			if (iparticlerendertype == IParticleRenderType.NO_RENDER)
@@ -82,13 +82,13 @@ public class PonderWorldParticles {
 			if (iterable != null) {
 				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 				Tessellator tessellator = Tessellator.getInstance();
-				BufferBuilder bufferbuilder = tessellator.getBuffer();
-				iparticlerendertype.beginRender(bufferbuilder, mc.textureManager);
+				BufferBuilder bufferbuilder = tessellator.getBuilder();
+				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
 
 				for (Particle particle : iterable)
-					particle.buildGeometry(bufferbuilder, renderInfo, pt);
+					particle.render(bufferbuilder, renderInfo, pt);
 
-				iparticlerendertype.finishRender(tessellator);
+				iparticlerendertype.end(tessellator);
 			}
 		}
 
@@ -97,7 +97,7 @@ public class PonderWorldParticles {
 		RenderSystem.depthFunc(515);
 		RenderSystem.disableBlend();
 		RenderSystem.defaultAlphaFunc();
-		lightTexture.disableLightmap();
+		lightTexture.turnOffLightLayer();
 		RenderSystem.disableFog();
 	}
 

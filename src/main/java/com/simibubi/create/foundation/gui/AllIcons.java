@@ -163,24 +163,24 @@ public class AllIcons implements IScreenRenderable {
 	public void bind() {
 		Minecraft.getInstance()
 			.getTextureManager()
-			.bindTexture(ICON_ATLAS);
+			.bind(ICON_ATLAS);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(MatrixStack matrixStack, AbstractGui screen, int x, int y) {
 		bind();
-		screen.drawTexture(matrixStack, x, y, iconX, iconY, 16, 16);
+		screen.blit(matrixStack, x, y, iconX, iconY, 16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public void draw(MatrixStack ms, IRenderTypeBuffer buffer, int color) {
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTextSeeThrough(ICON_ATLAS));
+		IVertexBuilder builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
 		float sheetSize = 256;
 		int i = 15 << 20 | 15 << 4;
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
-		Entry peek = ms.peek();
+		Entry peek = ms.last();
 		Vector3d rgb = ColorHelper.getRGB(color);
 
 		Vector3d vec4 = new Vector3d(1, 1, 0);
@@ -206,10 +206,10 @@ public class AllIcons implements IScreenRenderable {
 
 	@OnlyIn(Dist.CLIENT)
 	private void vertex(Entry peek, IVertexBuilder builder, int j, int k, Vector3d rgb, Vector3d vec, float u, float v) {
-		builder.vertex(peek.getModel(), (float) vec.x, (float) vec.y, (float) vec.z)
+		builder.vertex(peek.pose(), (float) vec.x, (float) vec.y, (float) vec.z)
 			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, 1)
-			.texture(u, v)
-			.light(j, k)
+			.uv(u, v)
+			.uv2(j, k)
 			.endVertex();
 	}
 

@@ -21,7 +21,7 @@ public class PumpCogInstance extends SingleRotatingInstance {
     @Override
     protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = tile.getBlockState();
-		Direction facing = referenceState.get(FACING);
+		Direction facing = referenceState.getValue(FACING);
 		return getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_PUMP_COG, referenceState, facing);
 	}
 }

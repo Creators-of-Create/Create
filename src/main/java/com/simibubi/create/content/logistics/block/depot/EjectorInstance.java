@@ -32,7 +32,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 	public void beginFrame() {
 		float lidProgress = getLidProgress();
 
-		if (MathHelper.epsilonEquals(lidProgress, lastProgress)) return;
+		if (MathHelper.equal(lidProgress, lastProgress)) return;
 
 		pivotPlate(lidProgress);
 		lastProgress = lidProgress;

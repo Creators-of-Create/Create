@@ -19,7 +19,7 @@ public class RaycastHelper {
 		Vector3d origin = getTraceOrigin(playerIn);
 		Vector3d target = getTraceTarget(playerIn, range, origin);
 		RayTraceContext context = new RayTraceContext(origin, target, BlockMode.COLLIDER, FluidMode.NONE, playerIn);
-		return worldIn.rayTraceBlocks(context);
+		return worldIn.clip(context);
 	}
 
 	public static PredicateTraceResult rayTraceUntil(PlayerEntity playerIn, double range,
@@ -30,8 +30,8 @@ public class RaycastHelper {
 	}
 
 	public static Vector3d getTraceTarget(PlayerEntity playerIn, double range, Vector3d origin) {
-		float f = playerIn.rotationPitch;
-		float f1 = playerIn.rotationYaw;
+		float f = playerIn.xRot;
+		float f1 = playerIn.yRot;
 		float f2 = MathHelper.cos(-f1 * 0.017453292F - (float) Math.PI);
 		float f3 = MathHelper.sin(-f1 * 0.017453292F - (float) Math.PI);
 		float f4 = -MathHelper.cos(-f * 0.017453292F);
@@ -67,7 +67,7 @@ public class RaycastHelper {
 		BlockPos currentPos = new BlockPos(x, y, z);
 
 		if (predicate.test(currentPos))
-			return new PredicateTraceResult(currentPos, Direction.getFacingFromVector(dx - x, dy - y, dz - z));
+			return new PredicateTraceResult(currentPos, Direction.getNearest(dx - x, dy - y, dz - z));
 
 		int remainingDistance = 200;
 

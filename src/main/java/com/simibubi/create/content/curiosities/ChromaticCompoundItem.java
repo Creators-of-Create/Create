@@ -27,6 +27,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 
+import net.minecraft.item.Item.Properties;
+
 public class ChromaticCompoundItem extends Item {
 
 	public ChromaticCompoundItem(Properties properties) {
@@ -34,7 +36,7 @@ public class ChromaticCompoundItem extends Item {
 	}
 
 	@Override
-	public boolean shouldSyncTag() {
+	public boolean shouldOverrideMultiplayerNbt() {
 		return true;
 	}
 
@@ -65,15 +67,15 @@ public class ChromaticCompoundItem extends Item {
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
 		double y = entity.getY();
-		double yMotion = entity.getMotion().y;
-		World world = entity.world;
+		double yMotion = entity.getDeltaMovement().y;
+		World world = entity.level;
 		CompoundNBT data = entity.getPersistentData();
 		CompoundNBT itemData = entity.getItem()
 			.getOrCreateTag();
 
-		Vector3d positionVec = entity.getPositionVec();
+		Vector3d positionVec = entity.position();
 		CRecipes config = AllConfigs.SERVER.recipes;
-		if (world.isRemote) {
+		if (world.isClientSide) {
 			int light = itemData.getInt("CollectingLight");
 			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
 				Vector3d start = VecHelper.offsetRandomly(positionVec, random, 3);
@@ -100,11 +102,11 @@ public class ChromaticCompoundItem extends Item {
 		if (itemData.getInt("CollectingLight") >= config.lightSourceCountForRefinedRadiance.get()) {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
-			newEntity.setMotion(entity.getMotion());
+			newEntity.setDeltaMovement(entity.getDeltaMovement());
 			newEntity.getPersistentData()
 				.putBoolean("JustCreated", true);
 			itemData.remove("CollectingLight");
-			world.addEntity(newEntity);
+			world.addFreshEntity(newEntity);
 
 			stack.split(1);
 			entity.setItem(stack);
@@ -125,17 +127,17 @@ public class ChromaticCompoundItem extends Item {
 		while (testPos.getY() > 0) {
 			testPos.move(Direction.DOWN);
 			BlockState state = world.getBlockState(testPos);
-			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
+			if (state.getLightBlock(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
 				break;
 			if (state.getBlock() == Blocks.BEACON) {
-				TileEntity te = world.getTileEntity(testPos);
+				TileEntity te = world.getBlockEntity(testPos);
 
 				if (!(te instanceof BeaconTileEntity))
 					break;
 
 				BeaconTileEntity bte = (BeaconTileEntity) te;
 
-				if (bte.getLevels() != 0 && !bte.beamSegments.isEmpty())
+				if (bte.getLevels() != 0 && !bte.beamSections.isEmpty())
 					isOverBeacon = true;
 
 				break;
@@ -151,7 +153,7 @@ public class ChromaticCompoundItem extends Item {
 		}
 
 		// Find a light source and eat it.
-		Random r = world.rand;
+		Random r = world.random;
 		int range = 3;
 		float rate = 1 / 2f;
 		if (r.nextFloat() > rate)
@@ -161,15 +163,15 @@ public class ChromaticCompoundItem extends Item {
 		BlockState state = world.getBlockState(randomOffset);
 		if (state.getLightValue(world, randomOffset) == 0)
 			return false;
-		if (state.getBlockHardness(world, randomOffset) == -1)
+		if (state.getDestroySpeed(world, randomOffset) == -1)
 			return false;
 		if (state.getBlock() == Blocks.BEACON)
 			return false;
 
 		RayTraceContext context = new RayTraceContext(positionVec, VecHelper.getCenterOf(randomOffset),
 			BlockMode.COLLIDER, FluidMode.NONE, entity);
-		if (!randomOffset.equals(world.rayTraceBlocks(context)
-			.getPos()))
+		if (!randomOffset.equals(world.clip(context)
+			.getBlockPos()))
 			return false;
 
 		world.destroyBlock(randomOffset, false);
@@ -178,9 +180,9 @@ public class ChromaticCompoundItem extends Item {
 		newStack.getOrCreateTag()
 			.putInt("CollectingLight", itemData.getInt("CollectingLight") + 1);
 		ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
-		newEntity.setMotion(entity.getMotion());
-		newEntity.setDefaultPickupDelay();
-		world.addEntity(newEntity);
+		newEntity.setDeltaMovement(entity.getDeltaMovement());
+		newEntity.setDefaultPickUpDelay();
+		world.addFreshEntity(newEntity);
 		entity.lifespan = 6000;
 		if (stack.isEmpty())
 			entity.remove();

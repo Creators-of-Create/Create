@@ -31,7 +31,7 @@ public class ChapterLabel extends AbstractSimiWidget {
 	@Override
 	public void render(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 2, width);
-		Minecraft.getInstance().fontRenderer.draw(ms, Lang.translate("ponder.chapter." + chapter.getId()), x + 50,
+		Minecraft.getInstance().font.draw(ms, Lang.translate("ponder.chapter." + chapter.getId()), x + 50,
 			y + 20, Theme.i(Theme.Key.TEXT_ACCENT_SLIGHT));
 
 		button.renderButton(ms, mouseX, mouseY, partialTicks);

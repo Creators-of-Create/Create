@@ -21,7 +21,7 @@ public class ReplaceInCommandBlocksCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("replaceInCommandBlocks")
-			.requires(cs -> cs.hasPermissionLevel(0))
+			.requires(cs -> cs.hasPermission(0))
 			.then(Commands.argument("begin", BlockPosArgument.blockPos())
 				.then(Commands.argument("end", BlockPosArgument.blockPos())
 					.then(Commands.argument("toReplace", StringArgumentType.string())
@@ -38,31 +38,31 @@ public class ReplaceInCommandBlocksCommand {
 
 	private static void doReplace(CommandSource source, BlockPos from, BlockPos to, String toReplace,
 		String replaceWith) {
-		ServerWorld world = source.getWorld();
+		ServerWorld world = source.getLevel();
 		MutableInt blocks = new MutableInt(0);
-		BlockPos.getAllInBox(from, to)
+		BlockPos.betweenClosedStream(from, to)
 			.forEach(pos -> {
 				BlockState blockState = world.getBlockState(pos);
 				if (!(blockState.getBlock() instanceof CommandBlockBlock))
 					return;
-				TileEntity tileEntity = world.getTileEntity(pos);
+				TileEntity tileEntity = world.getBlockEntity(pos);
 				if (!(tileEntity instanceof CommandBlockTileEntity))
 					return;
 				CommandBlockTileEntity cb = (CommandBlockTileEntity) tileEntity;
-				CommandBlockLogic commandBlockLogic = cb.getCommandBlockLogic();
+				CommandBlockLogic commandBlockLogic = cb.getCommandBlock();
 				String command = commandBlockLogic.getCommand();
 				if (command.indexOf(toReplace) != -1)
 					blocks.increment();
 				commandBlockLogic.setCommand(command.replaceAll(toReplace, replaceWith));
-				cb.markDirty();
-				world.notifyBlockUpdate(pos, blockState, blockState, 2);
+				cb.setChanged();
+				world.sendBlockUpdated(pos, blockState, blockState, 2);
 			});
 		int intValue = blocks.intValue();
 		if (intValue == 0) {
-			source.sendFeedback(new StringTextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
+			source.sendSuccess(new StringTextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
 			return;
 		}
-		source.sendFeedback(new StringTextComponent("Replaced occurrences in " + intValue + " blocks."), true);
+		source.sendSuccess(new StringTextComponent("Replaced occurrences in " + intValue + " blocks."), true);
 	}
 
 }

@@ -19,7 +19,7 @@ public interface ICustomParticleDataWithSprite<T extends IParticleData> extends 
 		return new ParticleType<T>(false, getDeserializer()) {
 
 			@Override
-			public Codec<T> getCodec() {
+			public Codec<T> codec() {
 				return ICustomParticleDataWithSprite.this.getCodec(this);
 			}
 		};
@@ -37,7 +37,7 @@ public interface ICustomParticleDataWithSprite<T extends IParticleData> extends 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public default void register(ParticleType<T> type, ParticleManager particles) {
-		particles.registerFactory(type, getMetaFactory());
+		particles.register(type, getMetaFactory());
 	}
 	
 }

@@ -32,13 +32,13 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 		Instancer<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
 				.getModel(flapPartial, blockState);
 
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightType.BLOCK, pos);
+        int skyLight = world.getBrightness(LightType.SKY, pos);
 
         Direction direction = FunnelBlock.getFunnelFacing(blockState);
 
         float flapness = tile.flap.get(AnimationTickHolder.getPartialTicks());
-        float horizontalAngle = direction.getOpposite().getHorizontalAngle();
+        float horizontalAngle = direction.getOpposite().toYRot();
 
         for (int segment = 0; segment <= 3; segment++) {
             float intensity = segment == 3 ? 1.5f : segment + 1;

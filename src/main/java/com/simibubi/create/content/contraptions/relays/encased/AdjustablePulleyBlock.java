@@ -14,18 +14,20 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<AdjustablePulleyTileEntity> {
 
 	public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	public AdjustablePulleyBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(POWERED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(POWERED));
 	}
 
 	@Override
@@ -34,8 +36,8 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		if (oldState.getBlock() == state.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, AdjustablePulleyTileEntity::neighborChanged);
@@ -43,27 +45,27 @@ public class AdjustablePulleyBlock extends EncasedBeltBlock implements ITE<Adjus
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).with(POWERED, context.getWorld()
-			.isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).setValue(POWERED, context.getLevel()
+			.hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
 		return super.areStatesKineticallyEquivalent(oldState, newState)
-			&& oldState.get(POWERED) == newState.get(POWERED);
+			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
 		withTileEntityDo(worldIn, pos, AdjustablePulleyTileEntity::neighborChanged);
 
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 18);
+		boolean previouslyPowered = state.getValue(POWERED);
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
+			worldIn.setBlock(pos, state.cycle(POWERED), 18);
 	}
 
 	@Override

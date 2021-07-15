@@ -37,23 +37,23 @@ public class KineticDebugger {
 		if (te == null)
 			return;
 
-		World world = Minecraft.getInstance().world;
-		BlockPos toOutline = te.hasSource() ? te.source : te.getPos();
+		World world = Minecraft.getInstance().level;
+		BlockPos toOutline = te.hasSource() ? te.source : te.getBlockPos();
 		BlockState state = te.getBlockState();
 		VoxelShape shape = world.getBlockState(toOutline)
-			.getRenderShape(world, toOutline);
+			.getBlockSupportShape(world, toOutline);
 
 		if (te.getTheoreticalSpeed() != 0 && !shape.isEmpty())
-			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.getBoundingBox()
-					.offset(toOutline))
+			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.bounds()
+					.move(toOutline))
 					.lineWidth(1 / 16f)
 					.colored(te.hasSource() ? ColorHelper.colorFromLong(te.network) : 0xffcc00);
 
 		if (state.getBlock() instanceof IRotate) {
 			Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-			Vector3d vec = Vector3d.of(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
-					.getDirectionVec());
-			Vector3d center = VecHelper.getCenterOf(te.getPos());
+			Vector3d vec = Vector3d.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, axis)
+					.getNormal());
+			Vector3d center = VecHelper.getCenterOf(te.getBlockPos());
 			CreateClient.OUTLINER.showLine("rotationAxis", center.add(vec), center.subtract(vec))
 					.lineWidth(1 / 16f);
 		}
@@ -61,12 +61,12 @@ public class KineticDebugger {
 	}
 
 	public static boolean isActive() {
-		return Minecraft.getInstance().gameSettings.showDebugInfo && AllConfigs.CLIENT.rainbowDebug.get();
+		return Minecraft.getInstance().options.renderDebug && AllConfigs.CLIENT.rainbowDebug.get();
 	}
 
 	public static KineticTileEntity getSelectedTE() {
-		RayTraceResult obj = Minecraft.getInstance().objectMouseOver;
-		ClientWorld world = Minecraft.getInstance().world;
+		RayTraceResult obj = Minecraft.getInstance().hitResult;
+		ClientWorld world = Minecraft.getInstance().level;
 		if (obj == null)
 			return null;
 		if (world == null)
@@ -75,7 +75,7 @@ public class KineticDebugger {
 			return null;
 
 		BlockRayTraceResult ray = (BlockRayTraceResult) obj;
-		TileEntity te = world.getTileEntity(ray.getPos());
+		TileEntity te = world.getBlockEntity(ray.getBlockPos());
 		if (!(te instanceof KineticTileEntity))
 			return null;
 

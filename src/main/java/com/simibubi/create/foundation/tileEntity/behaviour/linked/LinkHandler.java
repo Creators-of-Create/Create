@@ -30,14 +30,14 @@ public class LinkHandler {
 		PlayerEntity player = event.getPlayer();
 		Hand hand = event.getHand();
 		
-		if (player.isSneaking() || player.isSpectator())
+		if (player.isShiftKeyDown() || player.isSpectator())
 			return;
 
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
 			return;
@@ -47,12 +47,12 @@ public class LinkHandler {
 			return;
 
 		for (boolean first : Arrays.asList(false, true)) {
-			if (behaviour.testHit(first, ray.getHitVec())) {
+			if (behaviour.testHit(first, ray.getLocation())) {
 				if (event.getSide() != LogicalSide.CLIENT) 
 					behaviour.setFrequency(first, heldItem);
 				event.setCanceled(true);
 				event.setCancellationResult(ActionResultType.SUCCESS);
-				world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
+				world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
 			}
 		}
 	}

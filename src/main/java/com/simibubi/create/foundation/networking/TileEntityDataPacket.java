@@ -38,12 +38,12 @@ public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends 
 	public void handle(Supplier<NetworkEvent.Context> context) {
 		NetworkEvent.Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ClientWorld world = Minecraft.getInstance().world;
+			ClientWorld world = Minecraft.getInstance().level;
 
 			if (world == null)
 				return;
 
-			TileEntity tile = world.getTileEntity(tilePos);
+			TileEntity tile = world.getBlockEntity(tilePos);
 
 			if (tile instanceof SyncedTileEntity) {
 				handlePacket((TE) tile);

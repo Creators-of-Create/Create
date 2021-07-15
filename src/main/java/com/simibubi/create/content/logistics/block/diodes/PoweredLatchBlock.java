@@ -16,90 +16,92 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class PoweredLatchBlock extends ToggleLatchBlock {
 
 	public static BooleanProperty POWERED_SIDE = BooleanProperty.create("powered_side");
 
 	public PoweredLatchBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED_SIDE, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED_SIDE, false));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(POWERED_SIDE));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(POWERED_SIDE));
 	}
 
 	@Override
-	protected void updateState(World worldIn, BlockPos pos, BlockState state) {
-		boolean back = state.get(POWERED);
-		boolean shouldBack = shouldBePowered(worldIn, pos, state);
-		boolean side = state.get(POWERED_SIDE);
+	protected void checkTickOnNeighbor(World worldIn, BlockPos pos, BlockState state) {
+		boolean back = state.getValue(POWERED);
+		boolean shouldBack = shouldTurnOn(worldIn, pos, state);
+		boolean side = state.getValue(POWERED_SIDE);
 		boolean shouldSide = isPoweredOnSides(worldIn, pos, state);
 
 		TickPriority tickpriority = TickPriority.HIGH;
-		if (this.isFacingTowardsRepeater(worldIn, pos, state))
+		if (this.shouldPrioritize(worldIn, pos, state))
 			tickpriority = TickPriority.EXTREMELY_HIGH;
 		else if (side || back)
 			tickpriority = TickPriority.VERY_HIGH;
 
-		if (worldIn.getPendingBlockTicks().isTickPending(pos, this))
+		if (worldIn.getBlockTicks().willTickThisTick(pos, this))
 			return;
 		if (back != shouldBack || side != shouldSide)
-			worldIn.getPendingBlockTicks().scheduleTick(pos, this, this.getDelay(state), tickpriority);
+			worldIn.getBlockTicks().scheduleTick(pos, this, this.getDelay(state), tickpriority);
 	}
 
 	protected boolean isPoweredOnSides(World worldIn, BlockPos pos, BlockState state) {
-		Direction direction = state.get(HORIZONTAL_FACING);
-		Direction left = direction.rotateY();
-		Direction right = direction.rotateYCCW();
+		Direction direction = state.getValue(FACING);
+		Direction left = direction.getClockWise();
+		Direction right = direction.getCounterClockWise();
 
 		for (Direction d : new Direction[] { left, right }) {
-			BlockPos blockpos = pos.offset(d);
-			int i = worldIn.getRedstonePower(blockpos, d);
+			BlockPos blockpos = pos.relative(d);
+			int i = worldIn.getSignal(blockpos, d);
 			if (i > 0)
 				return true;
 			BlockState blockstate = worldIn.getBlockState(blockpos);
-			if (blockstate.getBlock() == Blocks.REDSTONE_WIRE && blockstate.get(RedstoneWireBlock.POWER) > 0)
+			if (blockstate.getBlock() == Blocks.REDSTONE_WIRE && blockstate.getValue(RedstoneWireBlock.POWER) > 0)
 				return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		boolean back = state.get(POWERED);
-		boolean shouldBack = this.shouldBePowered(worldIn, pos, state);
-		boolean side = state.get(POWERED_SIDE);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+		boolean back = state.getValue(POWERED);
+		boolean shouldBack = this.shouldTurnOn(worldIn, pos, state);
+		boolean side = state.getValue(POWERED_SIDE);
 		boolean shouldSide = isPoweredOnSides(worldIn, pos, state);
 		BlockState stateIn = state;
 
 		if (back != shouldBack) {
-			state = state.with(POWERED, shouldBack);
+			state = state.setValue(POWERED, shouldBack);
 			if (shouldBack)
-				state = state.with(POWERING, true);
+				state = state.setValue(POWERING, true);
 			else if (side)
-				state = state.with(POWERING, false);
+				state = state.setValue(POWERING, false);
 		}
 
 		if (side != shouldSide) {
-			state = state.with(POWERED_SIDE, shouldSide);
+			state = state.setValue(POWERED_SIDE, shouldSide);
 			if (shouldSide)
-				state = state.with(POWERING, false);
+				state = state.setValue(POWERING, false);
 			else if (back)
-				state = state.with(POWERING, true);
+				state = state.setValue(POWERING, true);
 		}
 
 		if (state != stateIn)
-			worldIn.setBlockState(pos, state, 2);
+			worldIn.setBlock(pos, state, 2);
 	}
 
 	@Override
 	protected ActionResultType activated(World worldIn, BlockPos pos, BlockState state) {
-		if (state.get(POWERED) != state.get(POWERED_SIDE))
+		if (state.getValue(POWERED) != state.getValue(POWERED_SIDE))
 			return ActionResultType.PASS;
-		if (!worldIn.isRemote)
-			worldIn.setBlockState(pos, state.cycle(POWERING), 2);
+		if (!worldIn.isClientSide)
+			worldIn.setBlock(pos, state.cycle(POWERING), 2);
 		return ActionResultType.SUCCESS;
 	}
 

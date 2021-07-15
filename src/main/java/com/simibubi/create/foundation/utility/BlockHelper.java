@@ -60,10 +60,10 @@ public class BlockHelper {
 		ClientWorld world = (ClientWorld) worldIn;
 		VoxelShape voxelshape = state.getShape(world, pos);
 		MutableInt amtBoxes = new MutableInt(0);
-		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
+		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
 		double chance = 1d / amtBoxes.getValue();
 
-		voxelshape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
+		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
 			double d1 = Math.min(1.0D, x2 - x1);
 			double d2 = Math.min(1.0D, y2 - y1);
 			double d3 = Math.min(1.0D, z2 - z1);
@@ -74,7 +74,7 @@ public class BlockHelper {
 			for (int l = 0; l < i; ++l) {
 				for (int i1 = 0; i1 < j; ++i1) {
 					for (int j1 = 0; j1 < k; ++j1) {
-						if (world.rand.nextDouble() > chance)
+						if (world.random.nextDouble() > chance)
 							continue;
 
 						double d4 = ((double) l + 0.5D) / (double) i;
@@ -84,8 +84,8 @@ public class BlockHelper {
 						double d8 = d5 * d2 + y1;
 						double d9 = d6 * d3 + z1;
 						manager
-							.addEffect((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
-								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).setBlockPos(pos));
+							.add((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
+								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
 					}
 				}
 			}
@@ -94,32 +94,32 @@ public class BlockHelper {
 	}
 
 	public static BlockState setZeroAge(BlockState blockState) {
-		if (blockState.contains(BlockStateProperties.AGE_0_1))
-			return blockState.with(BlockStateProperties.AGE_0_1, 0);
-		if (blockState.contains(BlockStateProperties.AGE_0_2))
-			return blockState.with(BlockStateProperties.AGE_0_2, 0);
-		if (blockState.contains(BlockStateProperties.AGE_0_3))
-			return blockState.with(BlockStateProperties.AGE_0_3, 0);
-		if (blockState.contains(BlockStateProperties.AGE_0_5))
-			return blockState.with(BlockStateProperties.AGE_0_5, 0);
-		if (blockState.contains(BlockStateProperties.AGE_0_7))
-			return blockState.with(BlockStateProperties.AGE_0_7, 0);
-		if (blockState.contains(BlockStateProperties.AGE_0_15))
-			return blockState.with(BlockStateProperties.AGE_0_15, 0);
-		if (blockState.contains(BlockStateProperties.AGE_0_25))
-			return blockState.with(BlockStateProperties.AGE_0_25, 0);
-		if (blockState.contains(BlockStateProperties.HONEY_LEVEL))
-			return blockState.with(BlockStateProperties.HONEY_LEVEL, 0);
-		if (blockState.contains(BlockStateProperties.HATCH_0_2))
-			return blockState.with(BlockStateProperties.HATCH_0_2, 0);
-		if (blockState.contains(BlockStateProperties.STAGE_0_1))
-			return blockState.with(BlockStateProperties.STAGE_0_1, 0);
-		if (blockState.contains(BlockStateProperties.LEVEL_0_3))
-			return blockState.with(BlockStateProperties.LEVEL_0_3, 0);
-		if (blockState.contains(BlockStateProperties.LEVEL_0_8))
-			return blockState.with(BlockStateProperties.LEVEL_0_8, 0);
-		if (blockState.contains(BlockStateProperties.EXTENDED))
-			return blockState.with(BlockStateProperties.EXTENDED, false);
+		if (blockState.hasProperty(BlockStateProperties.AGE_1))
+			return blockState.setValue(BlockStateProperties.AGE_1, 0);
+		if (blockState.hasProperty(BlockStateProperties.AGE_2))
+			return blockState.setValue(BlockStateProperties.AGE_2, 0);
+		if (blockState.hasProperty(BlockStateProperties.AGE_3))
+			return blockState.setValue(BlockStateProperties.AGE_3, 0);
+		if (blockState.hasProperty(BlockStateProperties.AGE_5))
+			return blockState.setValue(BlockStateProperties.AGE_5, 0);
+		if (blockState.hasProperty(BlockStateProperties.AGE_7))
+			return blockState.setValue(BlockStateProperties.AGE_7, 0);
+		if (blockState.hasProperty(BlockStateProperties.AGE_15))
+			return blockState.setValue(BlockStateProperties.AGE_15, 0);
+		if (blockState.hasProperty(BlockStateProperties.AGE_25))
+			return blockState.setValue(BlockStateProperties.AGE_25, 0);
+		if (blockState.hasProperty(BlockStateProperties.LEVEL_HONEY))
+			return blockState.setValue(BlockStateProperties.LEVEL_HONEY, 0);
+		if (blockState.hasProperty(BlockStateProperties.HATCH))
+			return blockState.setValue(BlockStateProperties.HATCH, 0);
+		if (blockState.hasProperty(BlockStateProperties.STAGE))
+			return blockState.setValue(BlockStateProperties.STAGE, 0);
+		if (blockState.hasProperty(BlockStateProperties.LEVEL_CAULDRON))
+			return blockState.setValue(BlockStateProperties.LEVEL_CAULDRON, 0);
+		if (blockState.hasProperty(BlockStateProperties.LEVEL_COMPOSTER))
+			return blockState.setValue(BlockStateProperties.LEVEL_COMPOSTER, 0);
+		if (blockState.hasProperty(BlockStateProperties.EXTENDED))
+			return blockState.setValue(BlockStateProperties.EXTENDED, false);
 		return blockState;
 	}
 
@@ -127,41 +127,41 @@ public class BlockHelper {
 		int amountFound = 0;
 		Item required = getRequiredItem(block).getItem();
 
-		boolean needsTwo = block.contains(BlockStateProperties.SLAB_TYPE)
-			&& block.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
+		boolean needsTwo = block.hasProperty(BlockStateProperties.SLAB_TYPE)
+			&& block.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE;
 
 		if (needsTwo)
 			amount *= 2;
 
-		if (block.contains(BlockStateProperties.EGGS_1_4))
-			amount *= block.get(BlockStateProperties.EGGS_1_4);
+		if (block.hasProperty(BlockStateProperties.EGGS))
+			amount *= block.getValue(BlockStateProperties.EGGS);
 
-		if (block.contains(BlockStateProperties.PICKLES_1_4))
-			amount *= block.get(BlockStateProperties.PICKLES_1_4);
+		if (block.hasProperty(BlockStateProperties.PICKLES))
+			amount *= block.getValue(BlockStateProperties.PICKLES);
 
 		{
 			// Try held Item first
-			int preferredSlot = player.inventory.currentItem;
-			ItemStack itemstack = player.inventory.getStackInSlot(preferredSlot);
+			int preferredSlot = player.inventory.selected;
+			ItemStack itemstack = player.inventory.getItem(preferredSlot);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.inventory.setInventorySlotContents(preferredSlot,
+				player.inventory.setItem(preferredSlot,
 					new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
 
 		// Search inventory
-		for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+		for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
 			if (amountFound == amount)
 				break;
 
-			ItemStack itemstack = player.inventory.getStackInSlot(i);
+			ItemStack itemstack = player.inventory.getItem(i);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.inventory.setInventorySlotContents(i, new ItemStack(itemstack.getItem(), count - taken));
+				player.inventory.setItem(i, new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
@@ -169,7 +169,7 @@ public class BlockHelper {
 		if (needsTwo) {
 			// Give back 1 if uneven amount was removed
 			if (amountFound % 2 != 0)
-				player.inventory.addItemStackToInventory(new ItemStack(required));
+				player.inventory.add(new ItemStack(required));
 			amountFound /= 2;
 		}
 
@@ -186,7 +186,7 @@ public class BlockHelper {
 	}
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance) {
-		destroyBlock(world, pos, effectChance, stack -> Block.spawnAsEntity(world, pos, stack));
+		destroyBlock(world, pos, effectChance, stack -> Block.popResource(world, pos, stack));
 	}
 
 	public static void destroyBlock(World world, BlockPos pos, float effectChance,
@@ -198,9 +198,9 @@ public class BlockHelper {
 		float effectChance, Consumer<ItemStack> droppedItemCallback) {
 		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
-		if (world.rand.nextFloat() < effectChance)
-			world.playEvent(2001, pos, Block.getStateId(state));
-		TileEntity tileentity = state.hasTileEntity() ? world.getTileEntity(pos) : null;
+		if (world.random.nextFloat() < effectChance)
+			world.levelEvent(2001, pos, Block.getId(state));
+		TileEntity tileentity = state.hasTileEntity() ? world.getBlockEntity(pos) : null;
 		if (player != null) {
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
 			MinecraftForge.EVENT_BUS.post(event);
@@ -209,25 +209,25 @@ public class BlockHelper {
 
 			if (event.getExpToDrop() > 0 && world instanceof ServerWorld)
 				state.getBlock()
-					.dropXpOnBlockBreak((ServerWorld) world, pos, event.getExpToDrop());
+					.popExperience((ServerWorld) world, pos, event.getExpToDrop());
 
-			usedTool.onBlockDestroyed(world, state, pos, player);
-			player.addStat(Stats.BLOCK_MINED.get(state.getBlock()));
+			usedTool.mineBlock(world, state, pos, player);
+			player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
 		}
 
 		if (world instanceof ServerWorld && world.getGameRules()
-			.getBoolean(GameRules.DO_TILE_DROPS) && !world.restoringBlockSnapshots
+			.getBoolean(GameRules.RULE_DOBLOCKDROPS) && !world.restoringBlockSnapshots
 			&& (player == null || !player.isCreative())) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
-			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerWorld) world, pos, ItemStack.EMPTY);
 		}
 
-		world.setBlockState(pos, fluidState.getBlockState());
+		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());
 	}
 
 	public static boolean isSolidWall(IBlockReader reader, BlockPos fromPos, Direction toDirection) {
-		return hasBlockSolidSide(reader.getBlockState(fromPos.offset(toDirection)), reader, fromPos.offset(toDirection),
+		return hasBlockSolidSide(reader.getBlockState(fromPos.relative(toDirection)), reader, fromPos.relative(toDirection),
 			toDirection.getOpposite());
 	}
 
@@ -248,69 +248,69 @@ public class BlockHelper {
 			chunk.getSections()[j >> 4] = chunksection;
 		}
 		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
-		chunk.markDirty();
+		chunk.markUnsaved();
 		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
-		world.setBlockState(target, state, 82);
-		world.neighborChanged(target, world.getBlockState(target.down()).getBlock(), target.down());
+		world.setBlock(target, state, 82);
+		world.neighborChanged(target, world.getBlockState(target.below()).getBlock(), target.below());
 	}
 
 	public static void placeSchematicBlock(World world, BlockState state, BlockPos target, ItemStack stack,
 		@Nullable CompoundNBT data) {
 		// Piston
-		if (state.contains(BlockStateProperties.EXTENDED))
-			state = state.with(BlockStateProperties.EXTENDED, Boolean.FALSE);
-		if (state.contains(BlockStateProperties.WATERLOGGED))
-			state = state.with(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
+		if (state.hasProperty(BlockStateProperties.EXTENDED))
+			state = state.setValue(BlockStateProperties.EXTENDED, Boolean.FALSE);
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED))
+			state = state.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE);
 
 		if (AllBlocks.BELT.has(state)) {
-			world.setBlockState(target, state, 2);
+			world.setBlock(target, state, 2);
 			return;
 		} else if (state.getBlock() == Blocks.COMPOSTER)
-			state = Blocks.COMPOSTER.getDefaultState();
+			state = Blocks.COMPOSTER.defaultBlockState();
 		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
 			state = ((IPlantable) state.getBlock()).getPlant(world, target);
 
-		if (world.getDimension()
-			.isUltrawarm()
+		if (world.dimensionType()
+			.ultraWarm()
 			&& state.getFluidState()
-				.getFluid()
-				.isIn(FluidTags.WATER)) {
+				.getType()
+				.is(FluidTags.WATER)) {
 			int i = target.getX();
 			int j = target.getY();
 			int k = target.getZ();
-			world.playSound(null, target, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
-				2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
+			world.playSound(null, target, SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
+				2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
 			for (int l = 0; l < 8; ++l) {
 				world.addParticle(ParticleTypes.LARGE_SMOKE, i + Math.random(), j + Math.random(), k + Math.random(),
 					0.0D, 0.0D, 0.0D);
 			}
-			Block.spawnDrops(state, world, target);
+			Block.dropResources(state, world, target);
 			return;
 		}
 
 		if (state.getBlock() instanceof AbstractRailBlock) {
 			placeRailWithoutUpdate(world, state, target);
 		} else {
-			world.setBlockState(target, state, 18);
+			world.setBlock(target, state, 18);
 		}
 
 		if (data != null) {
-			TileEntity tile = world.getTileEntity(target);
+			TileEntity tile = world.getBlockEntity(target);
 			if (tile != null) {
 				data.putInt("x", target.getX());
 				data.putInt("y", target.getY());
 				data.putInt("z", target.getZ());
 				if (tile instanceof KineticTileEntity)
 					((KineticTileEntity) tile).warnOfMovement();
-				tile.fromTag(tile.getBlockState(), data);
+				tile.load(tile.getBlockState(), data);
 			}
 		}
 
 		try {
 			state.getBlock()
-				.onBlockPlacedBy(world, target, state, null, stack);
+				.setPlacedBy(world, target, state, null, stack);
 		} catch (Exception e) {
 		}
 	}
@@ -325,16 +325,16 @@ public class BlockHelper {
 
 	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_,
 		Direction p_220056_3_) {
-		return !p_220056_0_.isIn(BlockTags.LEAVES)
-			&& Block.doesSideFillSquare(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
+		return !p_220056_0_.is(BlockTags.LEAVES)
+			&& Block.isFaceFull(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
 	}
 
 	public static boolean extinguishFire(World world, @Nullable PlayerEntity p_175719_1_, BlockPos p_175719_2_,
 		Direction p_175719_3_) {
-		p_175719_2_ = p_175719_2_.offset(p_175719_3_);
+		p_175719_2_ = p_175719_2_.relative(p_175719_3_);
 		if (world.getBlockState(p_175719_2_)
 			.getBlock() == Blocks.FIRE) {
-			world.playEvent(p_175719_1_, 1009, p_175719_2_, 0);
+			world.levelEvent(p_175719_1_, 1009, p_175719_2_, 0);
 			world.removeBlock(p_175719_2_, false);
 			return true;
 		} else {

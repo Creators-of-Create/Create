@@ -43,11 +43,11 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		nameField = new TextFieldWidget(textRenderer, x + 49, y + 26, 131, 10, StringTextComponent.EMPTY);
+		nameField = new TextFieldWidget(font, x + 49, y + 26, 131, 10, StringTextComponent.EMPTY);
 		nameField.setTextColor(-1);
-		nameField.setDisabledTextColour(-1);
-		nameField.setEnableBackgroundDrawing(false);
-		nameField.setMaxStringLength(35);
+		nameField.setTextColorUneditable(-1);
+		nameField.setBordered(false);
+		nameField.setMaxLength(35);
 		nameField.changeFocus(true);
 
 		abort = new IconButton(x + 7, y + 53, AllIcons.I_TRASH);
@@ -74,7 +74,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		int y = guiTop;
 
 		background.draw(ms, this, x, y);
-		drawCenteredText(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 				.at(x + 22, y + 23, 0)
 				.render(ms);
@@ -106,7 +106,7 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		}
 		if (abort.isHovered()) {
 			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.discard();
-			client.player.closeScreen();
+			minecraft.player.closeContainer();
 			return true;
 		}
 		if (convert.isHovered()) {
@@ -117,8 +117,8 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	}
 
 	private void confirm(boolean convertImmediately) {
-		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getText(), convertImmediately);
-		client.player.closeScreen();
+		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), convertImmediately);
+		minecraft.player.closeContainer();
 	}
 
 }

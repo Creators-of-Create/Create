@@ -31,42 +31,42 @@ public class ContraptionBlockSource implements IBlockSource {
 	}
 
 	@Override
-	public double getX() {
+	public double x() {
 		return (double)this.pos.getX() + 0.5D;
 	}
 
 	@Override
-	public double getY() {
+	public double y() {
 		return (double)this.pos.getY() + 0.5D;
 	}
 
 	@Override
-	public double getZ() {
+	public double z() {
 		return (double)this.pos.getZ() + 0.5D;
 	}
 
 	@Override
-	public BlockPos getBlockPos() {
+	public BlockPos getPos() {
 		return pos;
 	}
 
 	@Override
 	public BlockState getBlockState() {
-		if(context.state.contains(BlockStateProperties.FACING) && overrideFacing != null)
-			return context.state.with(BlockStateProperties.FACING, overrideFacing);
+		if(context.state.hasProperty(BlockStateProperties.FACING) && overrideFacing != null)
+			return context.state.setValue(BlockStateProperties.FACING, overrideFacing);
 		return context.state;
 	}
 
 	@Override
 	@Nullable
-	public <T extends TileEntity> T getBlockTileEntity() {
+	public <T extends TileEntity> T getEntity() {
 		return null;
 	}
 
 	@Override
 	@Nullable
-	public ServerWorld getWorld() {
+	public ServerWorld getLevel() {
 		MinecraftServer server = context.world.getServer();
-		return server != null ? server.getWorld(context.world.getRegistryKey()) : null;
+		return server != null ? server.getLevel(context.world.dimension()) : null;
 	}
 }

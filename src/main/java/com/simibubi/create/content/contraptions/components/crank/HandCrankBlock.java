@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandCrankTileEntity> {
 
 	public HandCrankBlock(Properties properties) {
@@ -37,7 +39,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.CRANK.get(state.get(FACING));
+		return AllShapes.CRANK.get(state.getValue(FACING));
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -50,16 +52,16 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
+	public BlockRenderType getRenderShape(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
 
-		withTileEntityDo(worldIn, pos, te -> te.turn(player.isSneaking()));
-		player.addExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
+		withTileEntityDo(worldIn, pos, te -> te.turn(player.isShiftKeyDown()));
+		player.causeFoodExhaustion(getRotationSpeed() * AllConfigs.SERVER.kinetics.crankHungerMultiplier.getF());
 		return ActionResultType.SUCCESS;
 	}
 
@@ -67,16 +69,16 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredFacing(context);
 		if (preferred == null || (context.getPlayer() != null && context.getPlayer()
-			.isSneaking()))
-			return getDefaultState().with(FACING, context.getFace());
-		return getDefaultState().with(FACING, preferred.getOpposite());
+			.isShiftKeyDown()))
+			return defaultBlockState().setValue(FACING, context.getClickedFace());
+		return defaultBlockState().setValue(FACING, preferred.getOpposite());
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction facing = state.get(FACING)
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		Direction facing = state.getValue(FACING)
 			.getOpposite();
-		BlockPos neighbourPos = pos.offset(facing);
+		BlockPos neighbourPos = pos.relative(facing);
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
 		return !neighbour.getCollisionShape(worldIn, neighbourPos)
 			.isEmpty();
@@ -85,12 +87,12 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
-		Direction blockFacing = state.get(FACING);
-		if (fromPos.equals(pos.offset(blockFacing.getOpposite()))) {
-			if (!isValidPosition(state, worldIn, pos)) {
+		Direction blockFacing = state.getValue(FACING);
+		if (fromPos.equals(pos.relative(blockFacing.getOpposite()))) {
+			if (!canSurvive(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
 				return;
 			}
@@ -104,13 +106,13 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING)
+		return face == state.getValue(FACING)
 			.getOpposite();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis();
 	}
 
@@ -120,7 +122,7 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

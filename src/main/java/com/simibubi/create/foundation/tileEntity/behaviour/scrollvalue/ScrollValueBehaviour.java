@@ -81,7 +81,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	public void tick() {
 		super.tick();
 
-		if (!getWorld().isRemote)
+		if (!getWorld().isClientSide)
 			return;
 		if (ticksUntilScrollPacket == -1)
 			return;
@@ -154,7 +154,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		this.value = value;
 		forceClientState = true;
 		callback.accept(value);
-		tileEntity.markDirty();
+		tileEntity.setChanged();
 		tileEntity.sendData();
 		scrollableValue = value;
 	}
@@ -178,7 +178,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 
 	public boolean testHit(Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.atLowerCornerOf(tileEntity.getBlockPos()));
 		return slotPositioning.testHit(state, localHit);
 	}
 

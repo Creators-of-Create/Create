@@ -41,7 +41,7 @@ public class OrientedBB {
 	}
 
 	private static Vector3d extentsFromBB(AxisAlignedBB bb) {
-		return new Vector3d(bb.getXSize() / 2, bb.getYSize() / 2, bb.getZSize() / 2);
+		return new Vector3d(bb.getXsize() / 2, bb.getYsize() / 2, bb.getZsize() / 2);
 	}
 
 	public Matrix3d getRotation() {
@@ -65,8 +65,8 @@ public class OrientedBB {
 	}
 
 	public AxisAlignedBB getAsAxisAlignedBB() {
-		return new AxisAlignedBB(0, 0, 0, 0, 0, 0).offset(center)
-			.grow(extents.x, extents.y, extents.z);
+		return new AxisAlignedBB(0, 0, 0, 0, 0, 0).move(center)
+			.inflate(extents.x, extents.y, extents.z);
 	}
 
 	/*

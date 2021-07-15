@@ -49,7 +49,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 			.forEach(stack -> {
 				if (stack.getItem() instanceof PotionItem) {
 					FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-					Ingredient potion = Ingredient.fromStacks(stack);
+					Ingredient potion = Ingredient.of(stack);
 					recipes.add(new ProcessingRecipeBuilder<>(EmptyingRecipe::new, Create.asResource("potions"))
 						.withItemIngredients(potion)
 						.withFluidOutputs(fluidFromPotionItem)
@@ -71,7 +71,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				if (extracted.isEmpty())
 					return;
 
-				Ingredient ingredient = Ingredient.fromStacks(stack);
+				Ingredient ingredient = Ingredient.of(stack);
 				ResourceLocation itemName = stack.getItem()
 					.getRegistryName();
 				ResourceLocation fluidName = extracted.getFluid()
@@ -99,7 +99,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
 		if (!recipe.getRollableResults()
 			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		if (!recipe.getFluidResults()
 			.isEmpty())
 			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
@@ -112,14 +112,14 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 		FluidStack fluidOutput = recipe.getResultingFluid();
 		List<ItemStack> matchingIngredients = Arrays.asList(recipe.getIngredients()
 			.get(0)
-			.getMatchingStacks());
+			.getItems());
 
 		fluidStacks.init(0, true, 132, 8);
 		fluidStacks.set(0, withImprovedVisibility(fluidOutput));
 		itemStacks.init(0, true, 26, 7);
 		itemStacks.set(0, matchingIngredients);
 		itemStacks.init(1, false, 131, 26);
-		itemStacks.set(1, recipe.getRecipeOutput());
+		itemStacks.set(1, recipe.getResultItem());
 
 		addFluidTooltip(fluidStacks, Collections.emptyList(), ImmutableList.of(fluidOutput));
 	}

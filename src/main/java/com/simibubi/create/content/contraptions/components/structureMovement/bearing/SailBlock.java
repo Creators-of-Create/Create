@@ -41,6 +41,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class SailBlock extends ProperDirectionalBlock {
 
 	public static SailBlock frame(Properties properties) {
@@ -63,19 +65,19 @@ public class SailBlock extends ProperDirectionalBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = super.getStateForPlacement(context);
-		return state.with(FACING, state.get(FACING).getOpposite());
+		return state.setValue(FACING, state.getValue(FACING).getOpposite());
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
-		ItemStack heldItem = player.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
+		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (placementHelper.matchesItem(heldItem))
 			return placementHelper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		if (heldItem.getItem() instanceof ShearsItem) {
-			if (!world.isRemote)
+			if (!world.isClientSide)
 				applyDye(state, world, pos, null);
 			return ActionResultType.SUCCESS;
 		}
@@ -85,9 +87,9 @@ public class SailBlock extends ProperDirectionalBlock {
 
 		for (DyeColor color : DyeColor.values()) {
 			if (!heldItem.getItem()
-					.isIn(DyeHelper.getTagOfDye(color)))
+					.is(DyeHelper.getTagOfDye(color)))
 				continue;
-			if (!world.isRemote)
+			if (!world.isClientSide)
 				applyDye(state, world, pos, color);
 			return ActionResultType.SUCCESS;
 		}
@@ -98,27 +100,27 @@ public class SailBlock extends ProperDirectionalBlock {
 	protected void applyDye(BlockState state, World world, BlockPos pos, @Nullable DyeColor color) {
 		BlockState newState =
 				(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState()
-						.with(FACING, state.get(FACING));
+						.setValue(FACING, state.getValue(FACING));
 
 		// Dye the block itself
 		if (state != newState) {
-			world.setBlockState(pos, newState);
+			world.setBlockAndUpdate(pos, newState);
 			return;
 		}
 
 		// Dye all adjacent
 		for (Direction d : Iterate.directions) {
-			if (d.getAxis() == state.get(FACING)
+			if (d.getAxis() == state.getValue(FACING)
 					.getAxis())
 				continue;
-			BlockPos offset = pos.offset(d);
+			BlockPos offset = pos.relative(d);
 			BlockState adjacentState = world.getBlockState(offset);
 			Block block = adjacentState.getBlock();
 			if (!(block instanceof SailBlock) || ((SailBlock) block).frame)
 				continue;
 			if (state == adjacentState)
 				continue;
-			world.setBlockState(offset, newState);
+			world.setBlockAndUpdate(offset, newState);
 			return;
 		}
 
@@ -135,10 +137,10 @@ public class SailBlock extends ProperDirectionalBlock {
 			visited.add(currentPos);
 
 			for (Direction d : Iterate.directions) {
-				if (d.getAxis() == state.get(FACING)
+				if (d.getAxis() == state.getValue(FACING)
 						.getAxis())
 					continue;
-				BlockPos offset = currentPos.offset(d);
+				BlockPos offset = currentPos.relative(d);
 				if (visited.contains(offset))
 					continue;
 				BlockState adjacentState = world.getBlockState(offset);
@@ -146,7 +148,7 @@ public class SailBlock extends ProperDirectionalBlock {
 				if (!(block instanceof SailBlock) || ((SailBlock) block).frame && color != null)
 					continue;
 				if (state != adjacentState)
-					world.setBlockState(offset, newState);
+					world.setBlockAndUpdate(offset, newState);
 				frontier.add(offset);
 				visited.add(offset);
 			}
@@ -155,13 +157,13 @@ public class SailBlock extends ProperDirectionalBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-		return (frame ? AllShapes.SAIL_FRAME : AllShapes.SAIL).get(state.get(FACING));
+		return (frame ? AllShapes.SAIL_FRAME : AllShapes.SAIL).get(state.getValue(FACING));
 	}
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader p_220071_2_, BlockPos p_220071_3_, ISelectionContext p_220071_4_) {
 		if (frame)
-			return AllShapes.SAIL_FRAME_COLLISION.get(state.get(FACING));
+			return AllShapes.SAIL_FRAME_COLLISION.get(state.getValue(FACING));
 		return getShape(state, p_220071_2_, p_220071_3_, p_220071_4_);
 	}
 
@@ -174,31 +176,31 @@ public class SailBlock extends ProperDirectionalBlock {
 		return pickBlock;
 	}
 
-	public void onFallenUpon(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
 		if (frame)
-			super.onFallenUpon(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
-		super.onFallenUpon(p_180658_1_, p_180658_2_, p_180658_3_, 0);
+			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
+		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, 0);
 	}
 
-	public void onLanded(IBlockReader p_176216_1_, Entity p_176216_2_) {
-		if (frame || p_176216_2_.bypassesLandingEffects()) {
-			super.onLanded(p_176216_1_, p_176216_2_);
+	public void updateEntityAfterFallOn(IBlockReader p_176216_1_, Entity p_176216_2_) {
+		if (frame || p_176216_2_.isSuppressingBounce()) {
+			super.updateEntityAfterFallOn(p_176216_1_, p_176216_2_);
 		} else {
 			this.bounce(p_176216_2_);
 		}
 	}
 
 	private void bounce(Entity p_226860_1_) {
-		Vector3d Vector3d = p_226860_1_.getMotion();
+		Vector3d Vector3d = p_226860_1_.getDeltaMovement();
 		if (Vector3d.y < 0.0D) {
 			double d0 = p_226860_1_ instanceof LivingEntity ? 1.0D : 0.8D;
-			p_226860_1_.setMotion(Vector3d.x, -Vector3d.y * (double) 0.26F * d0, Vector3d.z);
+			p_226860_1_.setDeltaMovement(Vector3d.x, -Vector3d.y * (double) 0.26F * d0, Vector3d.z);
 		}
 
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
@@ -216,12 +218,12 @@ public class SailBlock extends ProperDirectionalBlock {
 
 		@Override
 		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
-			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getHitVec(), state.get(SailBlock.FACING).getAxis(), dir -> world.getBlockState(pos.offset(dir)).getMaterial().isReplaceable());
+			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(), state.getValue(SailBlock.FACING).getAxis(), dir -> world.getBlockState(pos.relative(dir)).getMaterial().isReplaceable());
 
 			if (directions.isEmpty())
 				return PlacementOffset.fail();
 			else {
-				return PlacementOffset.success(pos.offset(directions.get(0)), s -> s.with(FACING, state.get(FACING)));
+				return PlacementOffset.success(pos.relative(directions.get(0)), s -> s.setValue(FACING, state.getValue(FACING)));
 			}
 		}
 	}

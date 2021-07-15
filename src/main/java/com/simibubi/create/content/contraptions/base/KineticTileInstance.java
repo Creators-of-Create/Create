@@ -90,6 +90,6 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
 
     public static BlockState shaft(Direction.Axis axis) {
         return AllBlocks.SHAFT.getDefaultState()
-                .with(ShaftBlock.AXIS, axis);
+                .setValue(ShaftBlock.AXIS, axis);
     }
 }

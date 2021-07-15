@@ -19,6 +19,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity> {
 
 	public PeculiarBellBlock(Properties properties) {
@@ -46,15 +48,15 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 		if (newState == null)
 			return null;
 
-		World world = ctx.getWorld();
-		BlockPos pos = ctx.getPos();
-		return tryConvert(world, pos, newState, world.getBlockState(pos.offset(Direction.DOWN)));
+		World world = ctx.getLevel();
+		BlockPos pos = ctx.getClickedPos();
+		return tryConvert(world, pos, newState, world.getBlockState(pos.relative(Direction.DOWN)));
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world,
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world,
 										  BlockPos currentPos, BlockPos facingPos) {
-		BlockState newState = super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
+		BlockState newState = super.updateShape(state, facing, facingState, world, currentPos, facingPos);
 		if (facing != Direction.DOWN)
 			return newState;
 
@@ -66,16 +68,16 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 		if (!(Blocks.SOUL_FIRE.is(underBlock) || Blocks.SOUL_CAMPFIRE.is(underBlock)))
 			return state;
 
-		if (world.isRemote()) {
+		if (world.isClientSide()) {
 			spawnConversionParticles(world, pos);
 		} else if (world instanceof World) {
 			AllSoundEvents.HAUNTED_BELL_CONVERT.playOnServer((World) world, pos);
 		}
 
 		return AllBlocks.HAUNTED_BELL.getDefaultState()
-				.with(HauntedBellBlock.field_220133_a, state.get(field_220133_a))
-				.with(HauntedBellBlock.field_220134_b, state.get(field_220134_b))
-				.with(HauntedBellBlock.POWERED, state.get(POWERED));
+				.setValue(HauntedBellBlock.FACING, state.getValue(FACING))
+				.setValue(HauntedBellBlock.ATTACHMENT, state.getValue(ATTACHMENT))
+				.setValue(HauntedBellBlock.POWERED, state.getValue(POWERED));
 	}
 
 	public void spawnConversionParticles(IWorld world, BlockPos blockPos) {
@@ -84,8 +86,8 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 		for (int i = 0; i < num; i++) {
 			float pitch = random.nextFloat() * 120 - 90;
 			float yaw = random.nextFloat() * 360;
-			Vector3d vel = Vector3d.fromPitchYaw(pitch, yaw).scale(random.nextDouble() * 0.1 + 0.1);
-			Vector3d pos = Vector3d.ofCenter(blockPos);
+			Vector3d vel = Vector3d.directionFromRotation(pitch, yaw).scale(random.nextDouble() * 0.1 + 0.1);
+			Vector3d pos = Vector3d.atCenterOf(blockPos);
 			world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
 		}
 	}

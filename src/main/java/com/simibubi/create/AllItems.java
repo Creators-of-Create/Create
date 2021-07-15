@@ -115,33 +115,33 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(6)
-			.saturation(0.3F)
+		.properties(p -> p.food(new Food.Builder().nutrition(6)
+			.saturationMod(0.3F)
 			.build()))
 		.lang("Bar of Chocolate")
 		.register();
 
 	public static final ItemEntry<Item> SWEET_ROLL = REGISTRATE.item("sweet_roll", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(6)
-			.saturation(0.8F)
+		.properties(p -> p.food(new Food.Builder().nutrition(6)
+			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<Item> CHOCOLATE_BERRIES = REGISTRATE.item("chocolate_glazed_berries", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(7)
-			.saturation(0.8F)
+		.properties(p -> p.food(new Food.Builder().nutrition(7)
+			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<Item> HONEYED_APPLE = REGISTRATE.item("honeyed_apple", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(8)
-			.saturation(0.8F)
+		.properties(p -> p.food(new Food.Builder().nutrition(8)
+			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.properties(p -> p.maxStackSize(16))
+		.properties(p -> p.stacksTo(16))
 		.lang("Builder's Tea")
 		.register();
 
@@ -210,7 +210,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
 		.lang("Engineer's Goggles")
 		.register();
@@ -236,7 +236,7 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchModel::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
@@ -261,14 +261,14 @@ public class AllItems {
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
@@ -332,16 +332,16 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.register();
 
 	public static final ItemEntry<SchematicAndQuillItem> SCHEMATIC_AND_QUILL =
 		REGISTRATE.item("schematic_and_quill", SchematicAndQuillItem::new)
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.register();
 
 	public static final ItemEntry<SchematicItem> SCHEMATIC = REGISTRATE.item("schematic", SchematicItem::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.register();
 
 	// Shortcuts

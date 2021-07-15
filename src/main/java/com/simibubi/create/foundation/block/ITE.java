@@ -31,7 +31,7 @@ public interface ITE<T extends TileEntity> {
 	@Nullable
 	@SuppressWarnings("unchecked")
 	default T getTileEntity(IBlockReader worldIn, BlockPos pos) {
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		Class<T> expectedClass = getTileEntityClass();
 
 		if (tileEntity == null)

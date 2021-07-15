@@ -9,7 +9,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 
 	@Override
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, -16, 13);
 		matrixStack.translate(-2, 18, 0);
@@ -25,7 +25,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 }

@@ -55,14 +55,14 @@ public class LerpedFloat {
 	public boolean updateChaseSpeed(double speed) {
 		float prevSpeed = this.chaseSpeed;
 		this.chaseSpeed = (float) speed;
-		return !MathHelper.epsilonEquals(prevSpeed, speed);
+		return !MathHelper.equal(prevSpeed, speed);
 	}
 
 	public void tickChaser() {
 		previousValue = value;
 		if (chaseFunction == null)
 			return;
-		if (MathHelper.epsilonEquals((double) value, chaseTarget)) {
+		if (MathHelper.equal((double) value, chaseTarget)) {
 			value = chaseTarget;
 			return;
 		}
@@ -83,7 +83,7 @@ public class LerpedFloat {
 	}
 
 	public boolean settled() {
-		return MathHelper.epsilonEquals((double) previousValue, value);
+		return MathHelper.equal((double) previousValue, value);
 	}
 
 	public float getChaseTarget() {

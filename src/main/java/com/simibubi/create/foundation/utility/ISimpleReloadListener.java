@@ -13,7 +13,7 @@ public interface ISimpleReloadListener extends IFutureReloadListener {
 
 	@Override
 	default CompletableFuture<Void> reload(IFutureReloadListener.IStage stage, IResourceManager resourceManager, IProfiler prepareProfiler, IProfiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-		return stage.markCompleteAwaitingOthers(Unit.INSTANCE).thenRunAsync(() -> {
+		return stage.wait(Unit.INSTANCE).thenRunAsync(() -> {
 			onReload(resourceManager, applyProfiler);
 		}, applyExecutor);
 	}

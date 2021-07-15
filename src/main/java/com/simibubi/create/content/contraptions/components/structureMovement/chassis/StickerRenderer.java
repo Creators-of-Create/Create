@@ -26,16 +26,16 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 	protected void renderSafe(StickerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
 		SuperByteBuffer head = PartialBufferer.get(AllBlockPartials.STICKER_HEAD, state);
-		float offset = te.piston.getValue(AnimationTickHolder.getPartialTicks(te.getWorld()));
+		float offset = te.piston.getValue(AnimationTickHolder.getPartialTicks(te.getLevel()));
 
-		if (te.getWorld() != Minecraft.getInstance().world && !te.isVirtual())
-			offset = state.get(StickerBlock.EXTENDED) ? 1 : 0;
+		if (te.getLevel() != Minecraft.getInstance().level && !te.isVirtual())
+			offset = state.getValue(StickerBlock.EXTENDED) ? 1 : 0;
 
-		Direction facing = state.get(StickerBlock.FACING);
+		Direction facing = state.getValue(StickerBlock.FACING);
 		head.matrixStacker()
 				.nudge(te.hashCode())
 				.centre()
@@ -45,7 +45,7 @@ public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 			.translate(0, (offset * offset) * 4 / 16f, 0);
 
 		head.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 }

@@ -29,10 +29,10 @@ public class RepeatingSound {
 		if (AnimationTickHolder.getTicks() % repeatDelay != 0)
 			return;
 
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		Vector3d meanPos = scape.getMeanPos();
 
-		world.playSound(meanPos.x, meanPos.y, meanPos.z, event, SoundCategory.AMBIENT,
+		world.playLocalSound(meanPos.x, meanPos.y, meanPos.z, event, SoundCategory.AMBIENT,
 			scape.getVolume() * relativeVolume, sharedPitch, true);
 	}
 

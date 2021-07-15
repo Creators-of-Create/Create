@@ -31,23 +31,23 @@ public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> exte
 		BlockState state = NBTUtil.readBlockState(stack.getTag()
 			.getCompound("BlockUsed"));
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(-0.3F, -0.45F, -0.0F);
 		ms.scale(0.25F, 0.25F, 0.25F);
 		IBakedModel modelForState = Minecraft.getInstance()
-			.getBlockRendererDispatcher()
-			.getModelForState(state);
+			.getBlockRenderer()
+			.getBlockModel(state);
 
 		if (state.getBlock() instanceof FourWayBlock)
 			modelForState = Minecraft.getInstance()
 				.getItemRenderer()
-				.getItemModelWithOverrides(new ItemStack(state.getBlock()), Minecraft.getInstance().world, null);
+				.getModel(new ItemStack(state.getBlock()), Minecraft.getInstance().level, null);
 
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderItem(new ItemStack(state.getBlock()), TransformType.NONE, false, ms, buffer, light, overlay,
+			.render(new ItemStack(state.getBlock()), TransformType.NONE, false, ms, buffer, light, overlay,
 				modelForState);
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected float getAnimationProgress(float pt, boolean leftHanded, boolean mainHand) {

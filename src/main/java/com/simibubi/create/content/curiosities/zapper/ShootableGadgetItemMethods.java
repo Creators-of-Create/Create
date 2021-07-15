@@ -18,9 +18,9 @@ public class ShootableGadgetItemMethods {
 	public static void applyCooldown(PlayerEntity player, ItemStack item, Hand hand, Predicate<ItemStack> predicate,
 		int cooldown) {
 		boolean gunInOtherHand =
-			predicate.test(player.getHeldItem(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND));
-		player.getCooldownTracker()
-			.setCooldown(item.getItem(), gunInOtherHand ? cooldown * 2 / 3 : cooldown);
+			predicate.test(player.getItemInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND));
+		player.getCooldowns()
+			.addCooldown(item.getItem(), gunInOtherHand ? cooldown * 2 / 3 : cooldown);
 	}
 
 	public static void sendPackets(PlayerEntity player, Function<Boolean, ? extends ShootGadgetPacket> factory) {
@@ -34,7 +34,7 @@ public class ShootableGadgetItemMethods {
 		boolean isSwap = item.getTag()
 			.contains("_Swap");
 		boolean mainHand = hand == Hand.MAIN_HAND;
-		boolean gunInOtherHand = predicate.test(player.getHeldItem(mainHand ? Hand.OFF_HAND : Hand.MAIN_HAND));
+		boolean gunInOtherHand = predicate.test(player.getItemInHand(mainHand ? Hand.OFF_HAND : Hand.MAIN_HAND));
 
 		// Pass To Offhand
 		if (mainHand && isSwap && gunInOtherHand)
@@ -46,22 +46,22 @@ public class ShootableGadgetItemMethods {
 			item.getTag()
 				.remove("_Swap");
 		if (!mainHand && gunInOtherHand)
-			player.getHeldItem(Hand.MAIN_HAND)
+			player.getItemInHand(Hand.MAIN_HAND)
 				.getTag()
 				.remove("_Swap");
-		player.setActiveHand(hand);
+		player.startUsingItem(hand);
 		return false;
 	}
 
 	public static Vector3d getGunBarrelVec(PlayerEntity player, boolean mainHand, Vector3d rightHandForward) {
-		Vector3d start = player.getPositionVec()
+		Vector3d start = player.position()
 			.add(0, player.getEyeHeight(), 0);
-		float yaw = (float) ((player.rotationYaw) / -180 * Math.PI);
-		float pitch = (float) ((player.rotationPitch) / -180 * Math.PI);
-		int flip = mainHand == (player.getPrimaryHand() == HandSide.RIGHT) ? -1 : 1;
+		float yaw = (float) ((player.yRot) / -180 * Math.PI);
+		float pitch = (float) ((player.xRot) / -180 * Math.PI);
+		int flip = mainHand == (player.getMainArm() == HandSide.RIGHT) ? -1 : 1;
 		Vector3d barrelPosNoTransform = new Vector3d(flip * rightHandForward.x, rightHandForward.y, rightHandForward.z);
-		Vector3d barrelPos = start.add(barrelPosNoTransform.rotatePitch(pitch)
-			.rotateYaw(yaw));
+		Vector3d barrelPos = start.add(barrelPosNoTransform.xRot(pitch)
+			.yRot(yaw));
 		return barrelPos;
 	}
 

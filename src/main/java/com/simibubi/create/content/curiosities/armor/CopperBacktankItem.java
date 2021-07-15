@@ -12,6 +12,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 
+import net.minecraft.item.Item.Properties;
+
 public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
 
 	public static final int DURABILITY_BAR = 0xefefef;
@@ -23,12 +25,12 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext p_195939_1_) {
-		return blockItem.onItemUse(p_195939_1_);
+	public ActionResultType useOn(ItemUseContext p_195939_1_) {
+		return blockItem.useOn(p_195939_1_);
 	}
 
 	@Override
-	public boolean isDamageable() {
+	public boolean canBeDepleted() {
 		return false;
 	}
 	
@@ -43,8 +45,8 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (!isInGroup(p_150895_1_))
+	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+		if (!allowdedIn(p_150895_1_))
 			return;
 		
 		ItemStack stack = new ItemStack(this);

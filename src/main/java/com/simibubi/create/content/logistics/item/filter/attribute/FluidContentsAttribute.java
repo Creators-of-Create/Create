@@ -62,7 +62,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 
     @Override
     public ItemAttribute readNBT(CompoundNBT nbt) {
-        return nbt.contains("id") ? new FluidContentsAttribute(ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryCreate(nbt.getString("id")))) : EMPTY;
+        return nbt.contains("id") ? new FluidContentsAttribute(ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
     }
 
     private List<Fluid> extractFluids(ItemStack stack) {

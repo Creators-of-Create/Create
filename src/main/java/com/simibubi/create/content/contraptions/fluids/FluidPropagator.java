@@ -54,14 +54,14 @@ public class FluidPropagator {
 			pipe.wipePressure();
 
 			for (Direction direction : getPipeConnections(currentState, pipe)) {
-				BlockPos target = currentPos.offset(direction);
+				BlockPos target = currentPos.relative(direction);
 				if (!world.isAreaLoaded(target, 0))
 					continue;
 
-				TileEntity tileEntity = world.getTileEntity(target);
+				TileEntity tileEntity = world.getBlockEntity(target);
 				BlockState targetState = world.getBlockState(target);
 				if (tileEntity instanceof PumpTileEntity) {
-					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.get(PumpBlock.FACING)
+					if (!AllBlocks.MECHANICAL_PUMP.has(targetState) || targetState.getValue(PumpBlock.FACING)
 						.getAxis() != direction.getAxis())
 						continue;
 					discoveredPumps.add(Pair.of((PumpTileEntity) tileEntity, direction.getOpposite()));
@@ -101,7 +101,7 @@ public class FluidPropagator {
 			for (Direction d : Iterate.directions) {
 				if (pos.equals(start) && d != side)
 					continue;
-				BlockPos target = pos.offset(d);
+				BlockPos target = pos.relative(d);
 				if (visited.contains(target))
 					continue;
 
@@ -123,7 +123,7 @@ public class FluidPropagator {
 
 	public static Direction validateNeighbourChange(BlockState state, World world, BlockPos pos, Block otherBlock,
 		BlockPos neighborPos, boolean isMoving) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			return null;
 		if (otherBlock instanceof FluidPipeBlock)
 			return null;
@@ -136,7 +136,7 @@ public class FluidPropagator {
 		if (getStraightPipeAxis(state) == null)
 			return null;
 		for (Direction d : Iterate.directions) {
-			if (!pos.offset(d)
+			if (!pos.relative(d)
 				.equals(neighborPos))
 				continue;
 			return d;
@@ -149,21 +149,21 @@ public class FluidPropagator {
 	}
 
 	public static boolean isOpenEnd(IBlockReader reader, BlockPos pos, Direction side) {
-		BlockPos connectedPos = pos.offset(side);
+		BlockPos connectedPos = pos.relative(side);
 		BlockState connectedState = reader.getBlockState(connectedPos);
 		FluidTransportBehaviour pipe = FluidPropagator.getPipe(reader, connectedPos);
 		if (pipe != null && pipe.canHaveFlowToward(connectedState, side.getOpposite()))
 			return false;
-		if (PumpBlock.isPump(connectedState) && connectedState.get(PumpBlock.FACING)
+		if (PumpBlock.isPump(connectedState) && connectedState.getValue(PumpBlock.FACING)
 			.getAxis() == side.getAxis())
 			return false;
-		if (connectedState.contains(BlockStateProperties.HONEY_LEVEL))
+		if (connectedState.hasProperty(BlockStateProperties.LEVEL_HONEY))
 			return true;
 		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
 			return false;
 		if (!(connectedState.getMaterial()
-			.isReplaceable() && connectedState.getBlockHardness(reader, connectedPos) != -1)
-			&& !connectedState.contains(BlockStateProperties.WATERLOGGED))
+			.isReplaceable() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
+			&& !connectedState.hasProperty(BlockStateProperties.WATERLOGGED))
 			return false;
 		return true;
 	}
@@ -202,7 +202,7 @@ public class FluidPropagator {
 //	}
 
 	public static boolean hasFluidCapability(IBlockReader world, BlockPos pos, Direction side) {
-		TileEntity tileEntity = world.getTileEntity(pos);
+		TileEntity tileEntity = world.getBlockEntity(pos);
 		return tileEntity != null && tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
 			.isPresent();
 	}
@@ -210,17 +210,17 @@ public class FluidPropagator {
 	@Nullable
 	public static Axis getStraightPipeAxis(BlockState state) {
 		if (state.getBlock() instanceof PumpBlock)
-			return state.get(PumpBlock.FACING)
+			return state.getValue(PumpBlock.FACING)
 				.getAxis();
 		if (state.getBlock() instanceof AxisPipeBlock)
-			return state.get(AxisPipeBlock.AXIS);
+			return state.getValue(AxisPipeBlock.AXIS);
 		if (!FluidPipeBlock.isPipe(state))
 			return null;
 		Axis axisFound = null;
 		int connections = 0;
 		for (Axis axis : Iterate.axes) {
-			Direction d1 = Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis);
-			Direction d2 = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+			Direction d1 = Direction.get(AxisDirection.NEGATIVE, axis);
+			Direction d2 = Direction.get(AxisDirection.POSITIVE, axis);
 			boolean openAt1 = FluidPipeBlock.isOpenAt(state, d1);
 			boolean openAt2 = FluidPipeBlock.isOpenAt(state, d2);
 			if (openAt1)

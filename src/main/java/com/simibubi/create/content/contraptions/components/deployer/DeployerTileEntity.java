@@ -104,24 +104,24 @@ public class DeployerTileEntity extends KineticTileEntity {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (!world.isRemote) {
-			player = new DeployerFakePlayer((ServerWorld) world);
+		if (!level.isClientSide) {
+			player = new DeployerFakePlayer((ServerWorld) level);
 			if (deferredInventoryList != null) {
-				player.inventory.read(deferredInventoryList);
+				player.inventory.load(deferredInventoryList);
 				deferredInventoryList = null;
-				heldItem = player.getHeldItemMainhand();
+				heldItem = player.getMainHandItem();
 				sendData();
 			}
-			Vector3d initialPos = VecHelper.getCenterOf(pos.offset(getBlockState().get(FACING)));
-			player.setPosition(initialPos.x, initialPos.y, initialPos.z);
+			Vector3d initialPos = VecHelper.getCenterOf(worldPosition.relative(getBlockState().getValue(FACING)));
+			player.setPos(initialPos.x, initialPos.y, initialPos.z);
 		}
 		invHandler = LazyOptional.of(this::createHandler);
 	}
 
 	protected void onExtract(ItemStack stack) {
-		player.setHeldItem(Hand.MAIN_HAND, stack.copy());
+		player.setItemInHand(Hand.MAIN_HAND, stack.copy());
 		sendData();
-		markDirty();
+		setChanged();
 	}
 
 	protected int getTimerSpeed() {
@@ -134,9 +134,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (getSpeed() == 0)
 			return;
-		if (!world.isRemote && player != null && player.blockBreakingProgress != null) {
-			if (world.isAirBlock(player.blockBreakingProgress.getKey())) {
-				world.sendBlockBreakProgress(player.getEntityId(), player.blockBreakingProgress.getKey(), -1);
+		if (!level.isClientSide && player != null && player.blockBreakingProgress != null) {
+			if (level.isEmptyBlock(player.blockBreakingProgress.getKey())) {
+				level.destroyBlockProgress(player.getId(), player.blockBreakingProgress.getKey(), -1);
 				player.blockBreakingProgress = null;
 			}
 		}
@@ -144,10 +144,10 @@ public class DeployerTileEntity extends KineticTileEntity {
 			timer -= getTimerSpeed();
 			return;
 		}
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 
-		ItemStack stack = player.getHeldItemMainhand();
+		ItemStack stack = player.getMainHandItem();
 		if (state == State.WAITING) {
 			if (!overflowItems.isEmpty()) {
 				timer = getTimerSpeed() * 10;
@@ -155,15 +155,15 @@ public class DeployerTileEntity extends KineticTileEntity {
 			}
 
 			boolean changed = false;
-			for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+			for (int i = 0; i < player.inventory.getContainerSize(); i++) {
 				if (overflowItems.size() > 10)
 					break;
-				ItemStack item = player.inventory.getStackInSlot(i);
+				ItemStack item = player.inventory.getItem(i);
 				if (item.isEmpty())
 					continue;
 				if (item != stack || !filtering.test(item)) {
 					overflowItems.add(item);
-					player.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
+					player.inventory.setItem(i, ItemStack.EMPTY);
 					changed = true;
 				}
 			}
@@ -174,8 +174,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 				return;
 			}
 
-			Direction facing = getBlockState().get(FACING);
-			if (mode == Mode.USE && !DeployerHandler.shouldActivate(stack, world, pos.offset(facing, 2), facing)) {
+			Direction facing = getBlockState().getValue(FACING);
+			if (mode == Mode.USE && !DeployerHandler.shouldActivate(stack, level, worldPosition.relative(facing, 2), facing)) {
 				timer = getTimerSpeed() * 10;
 				return;
 			}
@@ -213,14 +213,14 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected void start() {
 		state = State.EXPANDING;
 		Vector3d movementVector = getMovementVector();
-		Vector3d rayOrigin = VecHelper.getCenterOf(pos)
+		Vector3d rayOrigin = VecHelper.getCenterOf(worldPosition)
 			.add(movementVector.scale(3 / 2f));
-		Vector3d rayTarget = VecHelper.getCenterOf(pos)
+		Vector3d rayTarget = VecHelper.getCenterOf(worldPosition)
 			.add(movementVector.scale(5 / 2f));
 		RayTraceContext rayTraceContext =
 			new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
-		BlockRayTraceResult result = world.rayTraceBlocks(rayTraceContext);
-		reach = (float) (.5f + Math.min(result.getHitVec()
+		BlockRayTraceResult result = level.clip(rayTraceContext);
+		reach = (float) (.5f + Math.min(result.getLocation()
 			.subtract(rayOrigin)
 			.length(), .75f));
 		timer = 1000;
@@ -228,17 +228,17 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	public boolean startBoop(Direction facing) {
-		if (!world.isAirBlock(pos.offset(facing, 1)) || !world.isAirBlock(pos.offset(facing, 2)))
+		if (!level.isEmptyBlock(worldPosition.relative(facing, 1)) || !level.isEmptyBlock(worldPosition.relative(facing, 2)))
 			return false;
-		BlockPos otherDeployer = pos.offset(facing, 4);
-		if (!world.isBlockPresent(otherDeployer))
+		BlockPos otherDeployer = worldPosition.relative(facing, 4);
+		if (!level.isLoaded(otherDeployer))
 			return false;
-		TileEntity otherTile = world.getTileEntity(otherDeployer);
+		TileEntity otherTile = level.getBlockEntity(otherDeployer);
 		if (!(otherTile instanceof DeployerTileEntity))
 			return false;
 		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
-		if (world.getBlockState(otherDeployer)
-			.get(FACING)
+		if (level.getBlockState(otherDeployer)
+			.getValue(FACING)
 			.getOpposite() != facing || deployerTile.mode != Mode.PUNCH)
 			return false;
 
@@ -251,7 +251,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	public void triggerBoop() {
-		TileEntity otherTile = world.getTileEntity(pos.offset(getBlockState().get(FACING), 4));
+		TileEntity otherTile = level.getBlockEntity(worldPosition.relative(getBlockState().getValue(FACING), 4));
 		if (!(otherTile instanceof DeployerTileEntity))
 			return;
 
@@ -270,32 +270,32 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		// award nearby players
 		List<ServerPlayerEntity> players =
-			world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(9));
+			level.getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(worldPosition).inflate(9));
 		players.forEach(AllTriggers.DEPLOYER_BOOP::trigger);
 	}
 
 	protected void activate() {
 		Vector3d movementVector = getMovementVector();
-		Direction direction = getBlockState().get(FACING);
-		Vector3d center = VecHelper.getCenterOf(pos);
-		BlockPos clickedPos = pos.offset(direction, 2);
-		player.rotationYaw = direction.getHorizontalAngle();
-		player.rotationPitch = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
+		Direction direction = getBlockState().getValue(FACING);
+		Vector3d center = VecHelper.getCenterOf(worldPosition);
+		BlockPos clickedPos = worldPosition.relative(direction, 2);
+		player.yRot = direction.toYRot();
+		player.xRot = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
 
 		if (direction == Direction.DOWN
-			&& TileEntityBehaviour.get(world, clickedPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
+			&& TileEntityBehaviour.get(level, clickedPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
 			return; // Belt processing handled in BeltDeployerCallbacks
 
 		DeployerHandler.activate(player, center, clickedPos, movementVector, mode);
 		if (player != null)
-			heldItem = player.getHeldItemMainhand();
+			heldItem = player.getMainHandItem();
 	}
 
 	protected Vector3d getMovementVector() {
 		if (!AllBlocks.DEPLOYER.has(getBlockState()))
 			return Vector3d.ZERO;
-		return Vector3d.of(getBlockState().get(FACING)
-			.getDirectionVec());
+		return Vector3d.atLowerCornerOf(getBlockState().getValue(FACING)
+			.getNormal());
 	}
 
 	@Override
@@ -308,16 +308,16 @@ public class DeployerTileEntity extends KineticTileEntity {
 		deferredInventoryList = compound.getList("Inventory", NBT.TAG_COMPOUND);
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
-			heldItem = ItemStack.read(compound.getCompound("HeldItem"));
+			heldItem = ItemStack.of(compound.getCompound("HeldItem"));
 		super.fromTag(blockState, compound, clientPacket);
 
 		if (!clientPacket)
 			return;
 		reach = compound.getFloat("Reach");
 		if (compound.contains("Particle")) {
-			ItemStack particleStack = ItemStack.read(compound.getCompound("Particle"));
-			SandPaperItem.spawnParticles(VecHelper.getCenterOf(pos)
-				.add(getMovementVector().scale(reach + 1)), particleStack, this.world);
+			ItemStack particleStack = ItemStack.of(compound.getCompound("Particle"));
+			SandPaperItem.spawnParticles(VecHelper.getCenterOf(worldPosition)
+				.add(getMovementVector().scale(reach + 1)), particleStack, this.level);
 		}
 	}
 
@@ -330,9 +330,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (player != null) {
 			ListNBT invNBT = new ListNBT();
-			player.inventory.write(invNBT);
+			player.inventory.save(invNBT);
 			compound.put("Inventory", invNBT);
-			compound.put("HeldItem", player.getHeldItemMainhand().serializeNBT());
+			compound.put("HeldItem", player.getMainHandItem().serializeNBT());
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
 		} else if (deferredInventoryList != null) {
 			compound.put("Inventory", deferredInventoryList);
@@ -345,7 +345,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putFloat("Reach", reach);
 		if (player == null)
 			return;
-		compound.put("HeldItem", player.getHeldItemMainhand()
+		compound.put("HeldItem", player.getMainHandItem()
 			.serializeNBT());
 		if (player.spawnedItemEffects != null) {
 			compound.put("Particle", player.spawnedItemEffects.serializeNBT());
@@ -358,9 +358,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	public void redstoneUpdate() {
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
-		boolean blockPowered = world.isBlockPowered(pos);
+		boolean blockPowered = level.hasNeighborSignal(worldPosition);
 		if (blockPowered == redstoneLocked)
 			return;
 		redstoneLocked = blockPowered;
@@ -374,19 +374,19 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	@Override
 	public AxisAlignedBB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().grow(3);
+		return super.makeRenderBoundingBox().inflate(3);
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		if (invHandler != null)
 			invHandler.invalidate();
 	}
 
 	public void changeMode() {
 		mode = mode == Mode.PUNCH ? Mode.USE : Mode.PUNCH;
-		markDirty();
+		setChanged();
 		sendData();
 	}
 
@@ -444,21 +444,21 @@ public class DeployerTileEntity extends KineticTileEntity {
 	public IRecipe<?> getRecipe(ItemStack stack) {
 		if (player == null)
 			return null;
-		ItemStack heldItemMainhand = player.getHeldItemMainhand();
+		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
-			sandpaperInv.setInventorySlotContents(0, stack);
-			return AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, world)
+			sandpaperInv.setItem(0, stack);
+			return AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, level)
 				.orElse(null);
 		}
-		recipeInv.setInventorySlotContents(0, stack);
-		recipeInv.setInventorySlotContents(1, heldItemMainhand);
+		recipeInv.setItem(0, stack);
+		recipeInv.setItem(1, heldItemMainhand);
 
-		Optional<DeployerApplicationRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(world, recipeInv,
+		Optional<DeployerApplicationRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(level, recipeInv,
 			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class);
 		if (assemblyRecipe.isPresent())
 			return assemblyRecipe.get();
 
-		return AllRecipeTypes.DEPLOYING.find(recipeInv, world)
+		return AllRecipeTypes.DEPLOYING.find(recipeInv, level)
 			.orElse(null);
 	}
 

@@ -56,6 +56,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -119,8 +120,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return super.getMaxRenderDistanceSquared() * 16;
+	public double getViewDistance() {
+		return super.getViewDistance() * 16;
 	}
 
 	public SchematicannonTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -141,13 +142,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		attachedInventories.clear();
 		for (Direction facing : Iterate.directions) {
 
-			if (!world.isBlockPresent(pos.offset(facing)))
+			if (!level.isLoaded(worldPosition.relative(facing)))
 				continue;
 
-			if (AllBlocks.CREATIVE_CRATE.has(world.getBlockState(pos.offset(facing))))
+			if (AllBlocks.CREATIVE_CRATE.has(level.getBlockState(worldPosition.relative(facing))))
 				hasCreativeCrate = true;
 
-			TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
+			TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(facing));
 			if (tileEntity != null) {
 				LazyOptional<IItemHandler> capability =
 					tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
@@ -175,7 +176,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		missingItem = null;
 		if (compound.contains("MissingItem"))
-			missingItem = ItemStack.read(compound.getCompound("MissingItem"));
+			missingItem = ItemStack.of(compound.getCompound("MissingItem"));
 
 		// Settings
 		CompoundNBT options = compound.getCompound("Options");
@@ -205,7 +206,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			BlockPos readBlockPos = launched.target;
 
 			// Always write to Server tile
-			if (world == null || !world.isRemote) {
+			if (level == null || !level.isClientSide) {
 				flyingBlocks.add(launched);
 				continue;
 			}
@@ -281,7 +282,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		previousTarget = printer.getCurrentTarget();
 		tickFlyingBlocks();
 
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 
 		// Update Fuel and Paper
@@ -302,7 +303,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		// Update Client Tile
 		if (sendUpdate) {
 			sendUpdate = false;
-			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 6);
+			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 6);
 		}
 	}
 
@@ -369,7 +370,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		// Check block
-		if (!getWorld().isAreaLoaded(printer.getCurrentTarget(), 0)) {
+		if (!getLevel().isAreaLoaded(printer.getCurrentTarget(), 0)) {
 			positionNotLoaded = true;
 			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;
@@ -383,7 +384,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		// Get item requirement
 		ItemRequirement requirement = printer.getCurrentRequirement();
-		if (requirement.isInvalid() || !printer.shouldPlaceCurrent(world, this::shouldPlace)) {
+		if (requirement.isInvalid() || !printer.shouldPlaceCurrent(level, this::shouldPlace)) {
 			statusMsg = "searching";
 			blockSkipped = true;
 			return;
@@ -455,7 +456,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		}
 
 		// Load blocks into reader
-		printer.loadSchematic(blueprint, world, true);
+		printer.loadSchematic(blueprint, level, true);
 
 		if (printer.isWorldEmpty()) {
 			state = State.STOPPED;
@@ -466,7 +467,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			return;
 		}
 
-		if (!printer.getAnchor().withinDistance(getPos(), MAX_ANCHOR_DISTANCE)) {
+		if (!printer.getAnchor().closerThan(getBlockPos(), MAX_ANCHOR_DISTANCE)) {
 			state = State.STOPPED;
 			statusMsg = "targetOutsideRange";
 			printer.resetSchematic();
@@ -481,7 +482,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	protected ItemStack getItemForBlock(BlockState blockState) {
-		Item item = BlockItem.BLOCK_TO_ITEM.getOrDefault(blockState.getBlock(), Items.AIR);
+		Item item = BlockItem.BY_BLOCK.getOrDefault(blockState.getBlock(), Items.AIR);
 		return item == Items.AIR ? ItemStack.EMPTY : new ItemStack(item);
 	}
 
@@ -499,13 +500,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 					ItemStack extractItem = iItemHandler.extractItem(slot, 1, true);
 					if (!ItemRequirement.validate(required, extractItem))
 						continue;
-					if (!extractItem.isDamageable())
+					if (!extractItem.isDamageableItem())
 						continue;
 
 					if (!simulate) {
 						ItemStack stack = iItemHandler.extractItem(slot, 1, false);
-						stack.setDamage(stack.getDamage() + 1);
-						if (stack.getDamage() <= stack.getMaxDamage()) {
+						stack.setDamageValue(stack.getDamageValue() + 1);
+						if (stack.getDamageValue() <= stack.getMaxDamage()) {
 							if (iItemHandler.getStackInSlot(slot)
 								.isEmpty())
 								iItemHandler.insertItem(slot, stack, false);
@@ -562,7 +563,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		state = State.STOPPED;
 		statusMsg = "finished";
 		resetPrinter();
-		AllSoundEvents.SCHEMATICANNON_FINISH.playOnServer(world, pos);
+		AllSoundEvents.SCHEMATICANNON_FINISH.playOnServer(level, worldPosition);
 		sendUpdate = true;
 	}
 
@@ -577,7 +578,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 	protected boolean shouldPlace(BlockPos pos, BlockState state, TileEntity te,
 								  BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube) {
-		if (pos.withinDistance(getPos(), 2f))
+		if (pos.closerThan(getBlockPos(), 2f))
 			return false;
 		if (!replaceTileEntities
 				&& (toReplace.hasTileEntity() || (toReplaceOther != null && toReplaceOther.hasTileEntity())))
@@ -586,19 +587,19 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		if (shouldIgnoreBlockState(state, te))
 			return false;
 
-		boolean placingAir = state.getBlock().isAir(state, world, pos);
+		boolean placingAir = state.getBlock().isAir(state, level, pos);
 
 		if (replaceMode == 3)
 			return true;
 		if (replaceMode == 2 && !placingAir)
 			return true;
 		if (replaceMode == 1
-				&& (isNormalCube || (!toReplace.isNormalCube(world, pos)
-				&& (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos))))
+				&& (isNormalCube || (!toReplace.isRedstoneConductor(level, pos)
+				&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos))))
 				&& !placingAir)
 			return true;
-		if (replaceMode == 0 && !toReplace.isNormalCube(world, pos)
-				&& (toReplaceOther == null || !toReplaceOther.isNormalCube(world, pos)) && !placingAir)
+		if (replaceMode == 0 && !toReplace.isRedstoneConductor(level, pos)
+				&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)) && !placingAir)
 			return true;
 
 		return false;
@@ -616,10 +617,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			return false;
 
 		// Block doesnt need to be placed twice (Doors, beds, double plants)
-		if (state.contains(BlockStateProperties.DOUBLE_BLOCK_HALF)
-				&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
+		if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+				&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
-		if (state.contains(BlockStateProperties.BED_PART) && state.get(BlockStateProperties.BED_PART) == BedPart.HEAD)
+		if (state.hasProperty(BlockStateProperties.BED_PART) && state.getValue(BlockStateProperties.BED_PART) == BedPart.HEAD)
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;
@@ -630,7 +631,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	protected void tickFlyingBlocks() {
 		List<LaunchedItem> toRemove = new LinkedList<>();
 		for (LaunchedItem b : flyingBlocks)
-			if (b.update(world))
+			if (b.update(level))
 				toRemove.add(b);
 		flyingBlocks.removeAll(toRemove);
 	}
@@ -699,11 +700,11 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public static BlockState stripBeltIfNotLast(BlockState blockState) {
 		// is highest belt?
 		boolean isLastSegment = false;
-		Direction facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
-		BeltSlope slope = blockState.get(BeltBlock.SLOPE);
+		Direction facing = blockState.getValue(BeltBlock.HORIZONTAL_FACING);
+		BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
 		boolean positive = facing.getAxisDirection() == AxisDirection.POSITIVE;
-		boolean start = blockState.get(BeltBlock.PART) == BeltPart.START;
-		boolean end = blockState.get(BeltBlock.PART) == BeltPart.END;
+		boolean start = blockState.getValue(BeltBlock.PART) == BeltPart.START;
+		boolean end = blockState.getValue(BeltBlock.PART) == BeltPart.END;
 
 		switch (slope) {
 			case DOWNWARD:
@@ -718,9 +719,9 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 				isLastSegment = positive && end || !positive && start;
 		}
 		if (!isLastSegment)
-			blockState = (blockState.get(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.getDefaultState()
+			blockState = (blockState.getValue(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.defaultBlockState()
 					: AllBlocks.SHAFT.getDefaultState()
-					.with(AbstractShaftBlock.AXIS, facing.rotateY()
+					.setValue(AbstractShaftBlock.AXIS, facing.getClockWise()
 							.getAxis());
 		return blockState;
 	}
@@ -736,7 +737,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			CompoundNBT data = null;
 			if (tile != null) {
 				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-					data = tile.write(new CompoundNBT());
+					data = tile.save(new CompoundNBT());
 					data = NBTProcessors.process(tile, data, true);
 				} else if (tile instanceof IPartialSafeNBT) {
 					data = new CompoundNBT();
@@ -751,30 +752,30 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	protected void launchBelt(BlockPos target, BlockState state, int length) {
 		blocksPlaced++;
 		ItemStack connector = AllItems.BELT_CONNECTOR.asStack();
-		flyingBlocks.add(new LaunchedItem.ForBelt(this.getPos(), target, connector, state, length));
+		flyingBlocks.add(new LaunchedItem.ForBelt(this.getBlockPos(), target, connector, state, length));
 		playFiringSound();
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundNBT data) {
-		if (!state.getBlock().isAir(state, world, target))
+		if (!state.getBlock().isAir(state, level, target))
 			blocksPlaced++;
-		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getPos(), target, stack, state, data));
+		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getBlockPos(), target, stack, state, data));
 		playFiringSound();
 	}
 
 	protected void launchEntity(BlockPos target, ItemStack stack, Entity entity) {
 		blocksPlaced++;
-		flyingBlocks.add(new LaunchedItem.ForEntity(this.getPos(), target, stack, entity));
+		flyingBlocks.add(new LaunchedItem.ForEntity(this.getBlockPos(), target, stack, entity));
 		playFiringSound();
 	}
 
 	public void playFiringSound() {
-		AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.playOnServer(world, pos);
+		AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.playOnServer(level, worldPosition);
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {
-		buffer.writeBlockPos(getPos());
-		buffer.writeCompoundTag(getUpdateTag());
+		buffer.writeBlockPos(getBlockPos());
+		buffer.writeNbt(getUpdateTag());
 	}
 
 	@Override
@@ -794,7 +795,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 
 		if (printer.isLoaded()) {
 			blocksToPlace = blocksPlaced;
-			blocksToPlace += printer.markAllBlockRequirements(checklist, world, this::shouldPlace);
+			blocksToPlace += printer.markAllBlockRequirements(checklist, level, this::shouldPlace);
 			printer.markAllEntityRequirements(checklist);
 		}
 		checklist.gathered.clear();
@@ -827,4 +828,6 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public boolean shouldRenderNormally() {
 		return true;
 	}
+
+
 }

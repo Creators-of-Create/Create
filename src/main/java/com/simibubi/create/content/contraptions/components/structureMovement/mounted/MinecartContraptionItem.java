@@ -46,6 +46,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import net.minecraft.item.Item.Properties;
+
 @EventBusSubscriber
 public class MinecartContraptionItem extends Item {
 
@@ -66,7 +68,7 @@ public class MinecartContraptionItem extends Item {
 	private MinecartContraptionItem(Type minecartTypeIn, Properties builder) {
 		super(builder);
 		this.minecartType = minecartTypeIn;
-		DispenserBlock.registerDispenseBehavior(this, DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, DISPENSER_BEHAVIOR);
 	}
 
 	// Taken and adjusted from MinecartItem
@@ -74,35 +76,35 @@ public class MinecartContraptionItem extends Item {
 		private final DefaultDispenseItemBehavior behaviourDefaultDispenseItem = new DefaultDispenseItemBehavior();
 
 		@Override
-		public ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
+		public ItemStack execute(IBlockSource source, ItemStack stack) {
 			Direction direction = source.getBlockState()
-				.get(DispenserBlock.FACING);
-			World world = source.getWorld();
-			double d0 = source.getX() + (double) direction.getXOffset() * 1.125D;
-			double d1 = Math.floor(source.getY()) + (double) direction.getYOffset();
-			double d2 = source.getZ() + (double) direction.getZOffset() * 1.125D;
-			BlockPos blockpos = source.getBlockPos()
-				.offset(direction);
+				.getValue(DispenserBlock.FACING);
+			World world = source.getLevel();
+			double d0 = source.x() + (double) direction.getStepX() * 1.125D;
+			double d1 = Math.floor(source.y()) + (double) direction.getStepY();
+			double d2 = source.z() + (double) direction.getStepZ() * 1.125D;
+			BlockPos blockpos = source.getPos()
+				.relative(direction);
 			BlockState blockstate = world.getBlockState(blockpos);
 			RailShape railshape = blockstate.getBlock() instanceof AbstractRailBlock
 				? ((AbstractRailBlock) blockstate.getBlock()).getRailDirection(blockstate, world, blockpos, null)
 				: RailShape.NORTH_SOUTH;
 			double d3;
-			if (blockstate.isIn(BlockTags.RAILS)) {
+			if (blockstate.is(BlockTags.RAILS)) {
 				if (railshape.isAscending()) {
 					d3 = 0.6D;
 				} else {
 					d3 = 0.1D;
 				}
 			} else {
-				if (blockstate.getMaterial() != Material.AIR || !world.getBlockState(blockpos.down())
-					.isIn(BlockTags.RAILS)) {
+				if (blockstate.getMaterial() != Material.AIR || !world.getBlockState(blockpos.below())
+					.is(BlockTags.RAILS)) {
 					return this.behaviourDefaultDispenseItem.dispense(source, stack);
 				}
 
-				BlockState blockstate1 = world.getBlockState(blockpos.down());
+				BlockState blockstate1 = world.getBlockState(blockpos.below());
 				RailShape railshape1 = blockstate1.getBlock() instanceof AbstractRailBlock
-					? ((AbstractRailBlock) blockstate1.getBlock()).getRailDirection(blockstate1, world, blockpos.down(),
+					? ((AbstractRailBlock) blockstate1.getBlock()).getRailDirection(blockstate1, world, blockpos.below(),
 						null)
 					: RailShape.NORTH_SOUTH;
 				if (direction != Direction.DOWN && railshape1.isAscending()) {
@@ -112,11 +114,11 @@ public class MinecartContraptionItem extends Item {
 				}
 			}
 
-			AbstractMinecartEntity abstractminecartentity = AbstractMinecartEntity.create(world, d0, d1 + d3, d2,
+			AbstractMinecartEntity abstractminecartentity = AbstractMinecartEntity.createMinecart(world, d0, d1 + d3, d2,
 				((MinecartContraptionItem) stack.getItem()).minecartType);
-			if (stack.hasDisplayName())
-				abstractminecartentity.setCustomName(stack.getDisplayName());
-			world.addEntity(abstractminecartentity);
+			if (stack.hasCustomHoverName())
+				abstractminecartentity.setCustomName(stack.getHoverName());
+			world.addFreshEntity(abstractminecartentity);
 			addContraptionToMinecart(world, stack, abstractminecartentity, direction);
 
 			stack.shrink(1);
@@ -124,23 +126,23 @@ public class MinecartContraptionItem extends Item {
 		}
 
 		@Override
-		protected void playDispenseSound(IBlockSource source) {
-			source.getWorld()
-				.playEvent(1000, source.getBlockPos(), 0);
+		protected void playSound(IBlockSource source) {
+			source.getLevel()
+				.levelEvent(1000, source.getPos(), 0);
 		}
 	};
 
 	// Taken and adjusted from MinecartItem
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos blockpos = context.getPos();
+	public ActionResultType useOn(ItemUseContext context) {
+		World world = context.getLevel();
+		BlockPos blockpos = context.getClickedPos();
 		BlockState blockstate = world.getBlockState(blockpos);
-		if (!blockstate.isIn(BlockTags.RAILS)) {
+		if (!blockstate.is(BlockTags.RAILS)) {
 			return ActionResultType.FAIL;
 		} else {
-			ItemStack itemstack = context.getItem();
-			if (!world.isRemote) {
+			ItemStack itemstack = context.getItemInHand();
+			if (!world.isClientSide) {
 				RailShape railshape = blockstate.getBlock() instanceof AbstractRailBlock
 					? ((AbstractRailBlock) blockstate.getBlock()).getRailDirection(blockstate, world, blockpos, null)
 					: RailShape.NORTH_SOUTH;
@@ -150,14 +152,14 @@ public class MinecartContraptionItem extends Item {
 				}
 
 				AbstractMinecartEntity abstractminecartentity =
-					AbstractMinecartEntity.create(world, (double) blockpos.getX() + 0.5D,
+					AbstractMinecartEntity.createMinecart(world, (double) blockpos.getX() + 0.5D,
 						(double) blockpos.getY() + 0.0625D + d0, (double) blockpos.getZ() + 0.5D, this.minecartType);
-				if (itemstack.hasDisplayName())
-					abstractminecartentity.setCustomName(itemstack.getDisplayName());
+				if (itemstack.hasCustomHoverName())
+					abstractminecartentity.setCustomName(itemstack.getHoverName());
 				PlayerEntity player = context.getPlayer();
-				world.addEntity(abstractminecartentity);
+				world.addFreshEntity(abstractminecartentity);
 				addContraptionToMinecart(world, itemstack, abstractminecartentity,
-					player == null ? null : player.getHorizontalFacing());
+					player == null ? null : player.getDirection());
 			}
 
 			itemstack.shrink(1);
@@ -177,21 +179,21 @@ public class MinecartContraptionItem extends Item {
 			OrientedContraptionEntity contraptionEntity =
 				newFacing == null ? OrientedContraptionEntity.create(world, mountedContraption, intialOrientation)
 					: OrientedContraptionEntity.createAtYaw(world, mountedContraption, intialOrientation,
-						newFacing.getHorizontalAngle());
+						newFacing.toYRot());
 
 			contraptionEntity.startRiding(cart);
-			contraptionEntity.setPosition(cart.getX(), cart.getY(), cart.getZ());
-			world.addEntity(contraptionEntity);
+			contraptionEntity.setPos(cart.getX(), cart.getY(), cart.getZ());
+			world.addFreshEntity(contraptionEntity);
 		}
 	}
 
 	@Override
-	public String getTranslationKey(ItemStack stack) {
+	public String getDescriptionId(ItemStack stack) {
 		return "item.create.minecart_contraption";
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {}
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {}
 
 	@SubscribeEvent
 	public static void wrenchCanBeUsedToPickUpMinecartContraptions(PlayerInteractEvent.EntityInteract event) {
@@ -200,11 +202,11 @@ public class MinecartContraptionItem extends Item {
 		if (player == null || entity == null)
 			return;
 
-		ItemStack wrench = player.getHeldItem(event.getHand());
+		ItemStack wrench = player.getItemInHand(event.getHand());
 		if (!AllItems.WRENCH.isIn(wrench))
 			return;
 		if (entity instanceof AbstractContraptionEntity)
-			entity = entity.getRidingEntity();
+			entity = entity.getVehicle();
 		if (!(entity instanceof AbstractMinecartEntity))
 			return;
 		if (!entity.isAlive())
@@ -222,27 +224,27 @@ public class MinecartContraptionItem extends Item {
 			Contraption blocks = contraption.getContraption();
 			if (blocks != null && blocks.getBlocks().values().stream()
 					.anyMatch(i -> i.state.getBlock() instanceof SpawnerBlock)) {
-				player.sendStatusMessage(Lang.translate("contraption.minecart_contraption_illegal_pickup")
-						.formatted(TextFormatting.RED), true);
+				player.displayClientMessage(Lang.translate("contraption.minecart_contraption_illegal_pickup")
+						.withStyle(TextFormatting.RED), true);
 				return;
 			}
 		}
 
-		if (event.getWorld().isRemote) {
+		if (event.getWorld().isClientSide) {
 			event.setCancellationResult(ActionResultType.SUCCESS);
 			event.setCanceled(true);
 			return;
 		}
 
-		ItemStack generatedStack = create(type, contraption).setDisplayName(entity.getCustomName());
+		ItemStack generatedStack = create(type, contraption).setHoverName(entity.getCustomName());
 
 		try {
 			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
 			CompressedStreamTools.write(generatedStack.serializeNBT(), dataOutput);
 			int estimatedPacketSize = dataOutput.toByteArray().length;
 			if (estimatedPacketSize > 2_000_000) {
-				player.sendStatusMessage(Lang.translate("contraption.minecart_contraption_too_big")
-					.formatted(TextFormatting.RED), true);
+				player.displayClientMessage(Lang.translate("contraption.minecart_contraption_too_big")
+					.withStyle(TextFormatting.RED), true);
 				return;
 			}
 

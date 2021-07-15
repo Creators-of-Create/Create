@@ -82,13 +82,13 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 		}
 
 		private static boolean isShulker(ItemStack stack) {
-			return Block.getBlockFromItem(stack.getItem()) instanceof ShulkerBoxBlock;
+			return Block.byItem(stack.getItem()) instanceof ShulkerBoxBlock;
 		}
 
 		public boolean canApply(ItemStack testStack) {
 			if (!isShulker(testStack))
 				return false;
-			CompoundNBT compoundnbt = testStack.getChildTag("BlockEntityTag");
+			CompoundNBT compoundnbt = testStack.getTagElement("BlockEntityTag");
 			if (compoundnbt == null)
 				return requiredSize.test(0);
 			if (compoundnbt.contains("LootTable", 8))

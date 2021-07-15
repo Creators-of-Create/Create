@@ -61,7 +61,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     public void beginFrame() {
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
 
-        if (MathHelper.epsilonEquals(gaugeTile.prevDialState, gaugeTile.dialState))
+        if (MathHelper.equal(gaugeTile.prevDialState, gaugeTile.dialState))
             return;
 
         float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
@@ -102,7 +102,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         private void setupTransform(MatrixStacker msr, float progress) {
             float dialPivot = 5.75f / 16;
 
-            ms.push();
+            ms.pushPose();
             rotateToFace(msr);
 
             getSecond().setTransform(ms);
@@ -113,13 +113,13 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
             getFirst().setTransform(ms);
 
-            ms.pop();
+            ms.popPose();
         }
 
         private void updateTransform(MatrixStacker msr, float progress) {
             float dialPivot = 5.75f / 16;
 
-            ms.push();
+            ms.pushPose();
 
             rotateToFace(msr)
                     .translate(0, dialPivot, dialPivot)
@@ -128,12 +128,12 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
             getFirst().setTransform(ms);
 
-            ms.pop();
+            ms.popPose();
         }
 
         protected MatrixStacker rotateToFace(MatrixStacker msr) {
             return msr.centre()
-                      .rotate(Direction.UP, (float) ((-face.getHorizontalAngle() - 90) / 180 * Math.PI))
+                      .rotate(Direction.UP, (float) ((-face.toYRot() - 90) / 180 * Math.PI))
                       .unCentre();
         }
 

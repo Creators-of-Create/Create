@@ -72,7 +72,7 @@ public class AllEntityTypes {
 			.properties(propertyBuilder)
 			.properties(b -> {
 				if (immuneToFire)
-					b.immuneToFire();
+					b.fireImmune();
 			})
 			.renderer(renderer);
 	}

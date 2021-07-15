@@ -30,7 +30,7 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void fill(NonNullList<ItemStack> items) {
+	public void fillItemList(NonNullList<ItemStack> items) {
 		addItems(items, true);
 		addBlocks(items);
 		addItems(items, false);
@@ -42,7 +42,7 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 			Block def = entry.get();
 			Item item = def.asItem();
 			if (item != Items.AIR)
-				def.fillItemGroup(this, items);
+				def.fillItemCategory(this, items);
 		}
 	}
 
@@ -50,17 +50,17 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
 		Minecraft mc = Minecraft.getInstance();
 		ItemRenderer itemRenderer = mc.getItemRenderer();
-		ClientWorld world = mc.world;
+		ClientWorld world = mc.level;
 
 		for (RegistryEntry<? extends Item> entry : getItems()) {
 			Item item = entry.get();
 			if (item instanceof BlockItem)
 				continue;
 			ItemStack stack = new ItemStack(item);
-			IBakedModel model = itemRenderer.getItemModelWithOverrides(stack, world, null);
+			IBakedModel model = itemRenderer.getModel(stack, world, null);
 			if (model.isGui3d() != specialItems)
 				continue;
-			item.fillItemGroup(this, items);
+			item.fillItemCategory(this, items);
 		}
 	}
 

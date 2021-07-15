@@ -47,17 +47,17 @@ public interface IMovedDispenseItemBehaviour {
 				if (context.world instanceof ServerWorld) {
 					EntityType<?> entityType = ((SpawnEggItem) itemStack.getItem()).getType(itemStack.getTag());
 					Entity spawnedEntity = entityType.spawn((ServerWorld) context.world, itemStack, null,
-						pos.add(facing.x + .7, facing.y + .7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5,
+						pos.offset(facing.x + .7, facing.y + .7, facing.z + .7), SpawnReason.DISPENSER, facing.y < .5,
 						false);
 					if (spawnedEntity != null)
-						spawnedEntity.setMotion(context.motion.scale(2));
+						spawnedEntity.setDeltaMovement(context.motion.scale(2));
 				}
 				itemStack.shrink(1);
 				return itemStack;
 			}
 		};
 
-		for (SpawnEggItem spawneggitem : SpawnEggItem.getEggs())
+		for (SpawnEggItem spawneggitem : SpawnEggItem.eggs())
 			DispenserMovementBehaviour.registerMovedDispenseItemBehaviour(spawneggitem, spawnEggDispenseBehaviour);
 	}
 
@@ -92,10 +92,10 @@ public interface IMovedDispenseItemBehaviour {
 					double y = pos.getY() + facing.y * .7 + .5;
 					double z = pos.getZ() + facing.z * .7 + .5;
 					TNTEntity tntentity = new TNTEntity(context.world, x, y, z, null);
-					tntentity.addVelocity(context.motion.x, context.motion.y, context.motion.z);
-					context.world.addEntity(tntentity);
+					tntentity.push(context.motion.x, context.motion.y, context.motion.z);
+					context.world.addFreshEntity(tntentity);
 					context.world.playSound(null, tntentity.getX(), tntentity.getY(), tntentity.getZ(),
-						SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
+						SoundEvents.TNT_PRIMED, SoundCategory.BLOCKS, 1.0F, 1.0F);
 					itemStack.shrink(1);
 					return itemStack;
 				}
@@ -112,14 +112,14 @@ public interface IMovedDispenseItemBehaviour {
 					FireworkRocketEntity fireworkrocketentity =
 						new FireworkRocketEntity(context.world, itemStack, x, y, z, true);
 					fireworkrocketentity.shoot(facing.x, facing.y, facing.z, 0.5F, 1.0F);
-					context.world.addEntity(fireworkrocketentity);
+					context.world.addFreshEntity(fireworkrocketentity);
 					itemStack.shrink(1);
 					return itemStack;
 				}
 
 				@Override
 				protected void playDispenseSound(IWorld world, BlockPos pos) {
-					world.playEvent(1004, pos, 0);
+					world.levelEvent(1004, pos, 0);
 				}
 			});
 
@@ -127,22 +127,22 @@ public interface IMovedDispenseItemBehaviour {
 			new MovedDefaultDispenseItemBehaviour() {
 				@Override
 				protected void playDispenseSound(IWorld world, BlockPos pos) {
-					world.playEvent(1018, pos, 0);
+					world.levelEvent(1018, pos, 0);
 				}
 
 				@Override
 				protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos,
 					Vector3d facing) {
-					Random random = context.world.rand;
+					Random random = context.world.random;
 					double x = pos.getX() + facing.x * .7 + .5;
 					double y = pos.getY() + facing.y * .7 + .5;
 					double z = pos.getZ() + facing.z * .7 + .5;
-					context.world.addEntity(Util.make(
+					context.world.addFreshEntity(Util.make(
 						new SmallFireballEntity(context.world, x, y, z,
 							random.nextGaussian() * 0.05D + facing.x + context.motion.x,
 							random.nextGaussian() * 0.05D + facing.y + context.motion.y,
 							random.nextGaussian() * 0.05D + facing.z + context.motion.z),
-						(p_229425_1_) -> p_229425_1_.setStack(itemStack)));
+						(p_229425_1_) -> p_229425_1_.setItem(itemStack)));
 					itemStack.shrink(1);
 					return itemStack;
 				}
@@ -154,21 +154,21 @@ public interface IMovedDispenseItemBehaviour {
 				protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos,
 					Vector3d facing) {
 					this.successful = false;
-					BlockPos interactAt = pos.offset(getClosestFacingDirection(facing));
+					BlockPos interactAt = pos.relative(getClosestFacingDirection(facing));
 					BlockState state = context.world.getBlockState(interactAt);
 					Block block = state.getBlock();
 
-					if (block.isIn(BlockTags.BEEHIVES) && state.get(BeehiveBlock.HONEY_LEVEL) >= 5) { 
-						((BeehiveBlock) block).takeHoney(context.world, state, interactAt, null,
+					if (block.is(BlockTags.BEEHIVES) && state.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) { 
+						((BeehiveBlock) block).releaseBeesAndResetHoneyLevel(context.world, state, interactAt, null,
 							BeehiveTileEntity.State.BEE_RELEASED);
 						this.successful = true;
 						return placeItemInInventory(itemStack, new ItemStack(Items.HONEY_BOTTLE), context, pos,
 							facing);
 					} else if (context.world.getFluidState(interactAt)
-						.isTagged(FluidTags.WATER)) {
+						.is(FluidTags.WATER)) {
 						this.successful = true;
 						return placeItemInInventory(itemStack,
-							PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER), context, pos,
+							PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), context, pos,
 							facing);
 					} else {
 						return super.dispenseStack(itemStack, context, pos, facing);
@@ -181,13 +181,13 @@ public interface IMovedDispenseItemBehaviour {
 				@Override
 				protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos,
 					Vector3d facing) {
-					BlockPos interactAt = pos.offset(getClosestFacingDirection(facing));
+					BlockPos interactAt = pos.relative(getClosestFacingDirection(facing));
 					BlockState state = context.world.getBlockState(interactAt);
 					Block block = state.getBlock();
 					if (block instanceof IBucketPickupHandler) {
-						Fluid fluid = ((IBucketPickupHandler) block).pickupFluid(context.world, interactAt, state);
+						Fluid fluid = ((IBucketPickupHandler) block).takeLiquid(context.world, interactAt, state);
 						if (fluid instanceof FlowingFluid)
-							return placeItemInInventory(itemStack, new ItemStack(fluid.getFilledBucket()), context, pos,
+							return placeItemInInventory(itemStack, new ItemStack(fluid.getBucket()), context, pos,
 								facing);
 					}
 					return super.dispenseStack(itemStack, context, pos, facing);

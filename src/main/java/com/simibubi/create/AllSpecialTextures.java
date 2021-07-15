@@ -24,7 +24,7 @@ public enum AllSpecialTextures {
 	public void bind() {
 		Minecraft.getInstance()
 			.getTextureManager()
-			.bindTexture(location);
+			.bind(location);
 	}
 
 	public ResourceLocation getLocation() {

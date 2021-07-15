@@ -28,13 +28,15 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
 	public FluidValveBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(ENABLED, false));
+		registerDefaultState(defaultBlockState().setValue(ENABLED, false));
 	}
 
 	@Override
@@ -44,14 +46,14 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(ENABLED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(ENABLED));
 	}
 
 	@Override
 	protected boolean prefersConnectionTo(IWorldReader reader, BlockPos pos, Direction facing, boolean shaftAxis) {
 		if (!shaftAxis) {
-			BlockPos offset = pos.offset(facing);
+			BlockPos offset = pos.relative(facing);
 			BlockState blockState = reader.getBlockState(offset);
 			return FluidPipeBlock.canConnectTo(reader, offset, blockState, facing);
 		}
@@ -67,8 +69,8 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	public static Axis getPipeAxis(BlockState state) {
 		if (!(state.getBlock() instanceof FluidValveBlock))
 			throw new IllegalStateException("Provided BlockState is for a different block.");
-		Direction facing = state.get(FACING);
-		boolean alongFirst = !state.get(AXIS_ALONG_FIRST_COORDINATE);
+		Direction facing = state.getValue(FACING);
+		boolean alongFirst = !state.getValue(AXIS_ALONG_FIRST_COORDINATE);
 		for (Axis axis : Iterate.axes) {
 			if (axis == facing.getAxis())
 				continue;
@@ -87,38 +89,38 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isRemote)
+		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+	public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
 		return true;
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.isRemote)
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getPendingBlockTicks()
+			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.func_218806_a(world, pos);
+		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getPendingBlockTicks()
+		world.getBlockTicks()
 			.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
@@ -127,12 +129,12 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

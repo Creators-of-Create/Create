@@ -13,6 +13,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import net.minecraft.item.Item.Properties;
+
 @EventBusSubscriber
 public class ArmItem extends BlockItem {
 
@@ -21,24 +23,24 @@ public class ArmItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext ctx) {
-		World world = ctx.getWorld();
-		BlockPos pos = ctx.getPos();
+	public ActionResultType useOn(ItemUseContext ctx) {
+		World world = ctx.getLevel();
+		BlockPos pos = ctx.getClickedPos();
 		if (ArmInteractionPoint.isInteractable(world, pos, world.getBlockState(pos)))
 			return ActionResultType.SUCCESS;
-		return super.onItemUse(ctx);
+		return super.useOn(ctx);
 	}
 
 	@Override
-	protected boolean onBlockPlaced(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
-		return super.onBlockPlaced(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
+		return super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
 	}
 
 	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World world, BlockPos pos,
+	public boolean canAttackBlock(BlockState state, World world, BlockPos pos,
 		PlayerEntity p_195938_4_) {
 		return !ArmInteractionPoint.isInteractable(world, pos, state);
 	}

@@ -18,6 +18,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class AdjustableCrateBlock extends CrateBlock {
 
 	public AdjustableCrateBlock(Properties p_i48415_1_) {
@@ -35,10 +37,10 @@ public class AdjustableCrateBlock extends CrateBlock {
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (oldState.getBlock() != state.getBlock() && state.hasTileEntity() && state.get(DOUBLE)
-				&& state.get(FACING).getAxisDirection() == AxisDirection.POSITIVE) {
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (oldState.getBlock() != state.getBlock() && state.hasTileEntity() && state.getValue(DOUBLE)
+				&& state.getValue(FACING).getAxisDirection() == AxisDirection.POSITIVE) {
+			TileEntity tileEntity = worldIn.getBlockEntity(pos);
 			if (!(tileEntity instanceof AdjustableCrateTileEntity))
 				return;
 
@@ -57,13 +59,13 @@ public class AdjustableCrateBlock extends CrateBlock {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
 
-		if (worldIn.isRemote) {
+		if (worldIn.isClientSide) {
 			return ActionResultType.SUCCESS;
 		} else {
-			TileEntity te = worldIn.getTileEntity(pos);
+			TileEntity te = worldIn.getBlockEntity(pos);
 			if (te instanceof AdjustableCrateTileEntity) {
 				AdjustableCrateTileEntity fte = (AdjustableCrateTileEntity) te;
 				fte = fte.getMainCrate();
@@ -77,39 +79,39 @@ public class AdjustableCrateBlock extends CrateBlock {
 		BlockState state = world.getBlockState(pos);
 		if (!AllBlocks.ADJUSTABLE_CRATE.has(state))
 			return;
-		if (!state.get(DOUBLE))
+		if (!state.getValue(DOUBLE))
 			return;
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if (!(te instanceof AdjustableCrateTileEntity))
 			return;
 		AdjustableCrateTileEntity crateTe = (AdjustableCrateTileEntity) te;
 		crateTe.onSplit();
-		world.setBlockState(pos, state.with(DOUBLE, false));
-		world.setBlockState(crateTe.getOtherCrate().getPos(), state.with(DOUBLE, false));
+		world.setBlockAndUpdate(pos, state.setValue(DOUBLE, false));
+		world.setBlockAndUpdate(crateTe.getOtherCrate().getBlockPos(), state.setValue(DOUBLE, false));
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(worldIn.getTileEntity(pos) instanceof AdjustableCrateTileEntity))
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!(worldIn.getBlockEntity(pos) instanceof AdjustableCrateTileEntity))
 			return;
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			AdjustableCrateTileEntity te = (AdjustableCrateTileEntity) worldIn.getTileEntity(pos);
+			AdjustableCrateTileEntity te = (AdjustableCrateTileEntity) worldIn.getBlockEntity(pos);
 			if (!isMoving)
 				te.onDestroyed();
-			worldIn.removeTileEntity(pos);
+			worldIn.removeBlockEntity(pos);
 		}
 
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if (te instanceof AdjustableCrateTileEntity) {
 			AdjustableCrateTileEntity flexcrateTileEntity = ((AdjustableCrateTileEntity) te).getMainCrate();
 			return ItemHelper.calcRedstoneFromInventory(flexcrateTileEntity.inventory);

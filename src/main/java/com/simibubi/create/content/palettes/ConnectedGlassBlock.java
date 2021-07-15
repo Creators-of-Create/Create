@@ -9,6 +9,8 @@ import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ConnectedGlassBlock extends GlassBlock {
 
 	public ConnectedGlassBlock(Properties p_i48392_1_) {
@@ -17,9 +19,9 @@ public class ConnectedGlassBlock extends GlassBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock ? true
-			: super.isSideInvisible(state, adjacentBlockState, side);
+			: super.skipRendering(state, adjacentBlockState, side);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(C entity) {
+	public ResourceLocation getTextureLocation(C entity) {
 		return null;
 	}
 

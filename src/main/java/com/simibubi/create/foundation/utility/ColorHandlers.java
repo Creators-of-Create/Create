@@ -10,7 +10,7 @@ import net.minecraft.world.biome.BiomeColors;
 public class ColorHandlers {
 
 	public static IBlockColor getGrassyBlock() {
-		return (state, world, pos, layer) -> pos != null && world != null ? BiomeColors.getGrassColor(world, pos)
+		return (state, world, pos, layer) -> pos != null && world != null ? BiomeColors.getAverageGrassColor(world, pos)
 				: GrassColors.get(0.5D, 1.0D);
 	}
 
@@ -20,7 +20,7 @@ public class ColorHandlers {
 
 	public static IBlockColor getRedstonePower() {
 		return (state, world, pos, layer) -> RedstoneWireBlock
-				.getWireColor(pos != null && world != null ? state.get(BlockStateProperties.POWER_0_15) : 0);
+				.getColorForPower(pos != null && world != null ? state.getValue(BlockStateProperties.POWER) : 0);
 	}
 
 }

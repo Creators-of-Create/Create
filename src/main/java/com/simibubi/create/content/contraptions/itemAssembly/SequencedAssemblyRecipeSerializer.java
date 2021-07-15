@@ -20,7 +20,7 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 	protected void writeToJson(JsonObject json, SequencedAssemblyRecipe recipe) {
 		JsonArray nestedRecipes = new JsonArray();
 		JsonArray results = new JsonArray();
-		json.add("ingredient", recipe.getIngredient().serialize());
+		json.add("ingredient", recipe.getIngredient().toJson());
 		recipe.getSequence().forEach(i -> nestedRecipes.add(i.toJson()));
 		recipe.resultPool.forEach(p -> results.add(p.serialize()));
 		json.add("transitionalItem", recipe.transitionalItem.serialize());
@@ -31,20 +31,20 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 
 	protected SequencedAssemblyRecipe readFromJson(ResourceLocation recipeId, JsonObject json) {
 		SequencedAssemblyRecipe recipe = new SequencedAssemblyRecipe(recipeId, this);
-		recipe.ingredient = Ingredient.deserialize(json.get("ingredient"));
-		recipe.transitionalItem = ProcessingOutput.deserialize(JSONUtils.getJsonObject(json, "transitionalItem"));
+		recipe.ingredient = Ingredient.fromJson(json.get("ingredient"));
+		recipe.transitionalItem = ProcessingOutput.deserialize(JSONUtils.getAsJsonObject(json, "transitionalItem"));
 		int i = 0;
-		for (JsonElement je : JSONUtils.getJsonArray(json, "sequence"))
+		for (JsonElement je : JSONUtils.getAsJsonArray(json, "sequence"))
 			recipe.getSequence().add(SequencedRecipe.fromJson(je.getAsJsonObject(), recipe, i++));
-		for (JsonElement je : JSONUtils.getJsonArray(json, "results"))
+		for (JsonElement je : JSONUtils.getAsJsonArray(json, "results"))
 			recipe.resultPool.add(ProcessingOutput.deserialize(je));
-		if (JSONUtils.hasField(json, "loops")) 
-			recipe.loops = JSONUtils.getInt(json, "loops");
+		if (JSONUtils.isValidNode(json, "loops")) 
+			recipe.loops = JSONUtils.getAsInt(json, "loops");
 		return recipe;
 	}
 
 	protected void writeToBuffer(PacketBuffer buffer, SequencedAssemblyRecipe recipe) {
-		recipe.getIngredient().write(buffer);
+		recipe.getIngredient().toNetwork(buffer);
 		buffer.writeVarInt(recipe.getSequence().size());
 		recipe.getSequence().forEach(sr -> sr.writeToBuffer(buffer));
 		buffer.writeVarInt(recipe.resultPool.size());
@@ -55,7 +55,7 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 
 	protected SequencedAssemblyRecipe readFromBuffer(ResourceLocation recipeId, PacketBuffer buffer) {
 		SequencedAssemblyRecipe recipe = new SequencedAssemblyRecipe(recipeId, this);
-		recipe.ingredient = Ingredient.read(buffer);
+		recipe.ingredient = Ingredient.fromNetwork(buffer);
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
 			recipe.getSequence().add(SequencedRecipe.readFromBuffer(buffer));
@@ -72,17 +72,17 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 	}
 
 	@Override
-	public final SequencedAssemblyRecipe read(ResourceLocation id, JsonObject json) {
+	public final SequencedAssemblyRecipe fromJson(ResourceLocation id, JsonObject json) {
 		return readFromJson(id, json);
 	}
 
 	@Override
-	public final void write(PacketBuffer buffer, SequencedAssemblyRecipe recipe) {
+	public final void toNetwork(PacketBuffer buffer, SequencedAssemblyRecipe recipe) {
 		writeToBuffer(buffer, recipe);
 	}
 
 	@Override
-	public final SequencedAssemblyRecipe read(ResourceLocation id, PacketBuffer buffer) {
+	public final SequencedAssemblyRecipe fromNetwork(ResourceLocation id, PacketBuffer buffer) {
 		return readFromBuffer(id, buffer);
 	}
 

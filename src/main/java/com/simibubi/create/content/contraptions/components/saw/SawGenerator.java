@@ -13,13 +13,13 @@ public class SawGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.get(SawBlock.FACING) == Direction.DOWN ? 180 : 0;
+		return state.getValue(SawBlock.FACING) == Direction.DOWN ? 180 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		Direction facing = state.get(SawBlock.FACING);
-		boolean axisAlongFirst = state.get(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
+		Direction facing = state.getValue(SawBlock.FACING);
+		boolean axisAlongFirst = state.getValue(SawBlock.AXIS_ALONG_FIRST_COORDINATE);
 		if (facing.getAxis()
 			.isVertical())
 			return axisAlongFirst ? 90 : 0;
@@ -30,7 +30,7 @@ public class SawGenerator extends SpecialBlockStateGen {
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		String path = "block/" + ctx.getName() + "/";
-		String orientation = state.get(SawBlock.FACING)
+		String orientation = state.getValue(SawBlock.FACING)
 			.getAxis()
 			.isVertical() ? "vertical" : "horizontal";
 

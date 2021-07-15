@@ -61,7 +61,7 @@ public class SchematicInstances {
 			.getCompound("Anchor"));
 		SchematicWorld world = new SchematicWorld(anchor, wrapped);
 		PlacementSettings settings = SchematicItem.getSettings(schematic);
-		activeTemplate.place(world, anchor, settings, wrapped.getRandom());
+		activeTemplate.placeInWorldChunk(world, anchor, settings, wrapped.getRandom());
 
 		return world;
 	}

@@ -40,11 +40,11 @@ public class HarvesterActorInstance extends ActorInstance {
 
         BlockState state = context.state;
 
-        facing = state.get(HORIZONTAL_FACING);
+        facing = state.getValue(HORIZONTAL_FACING);
 
         harvester = instanceMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
-        horizontalAngle = facing.getHorizontalAngle() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
+        horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
         harvester.setBlockLight(localBlockLight());
     }

@@ -31,15 +31,15 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	private RotationIndicatorParticle(ClientWorld world, double x, double y, double z, int color, float radius1,
 									  float radius2, float speed, Axis axis, int lifeSpan, boolean isVisible, IAnimatedSprite sprite) {
 		super(world, x, y, z, sprite, 0);
-		this.motionX = 0;
-		this.motionY = 0;
-		this.motionZ = 0;
+		this.xd = 0;
+		this.yd = 0;
+		this.zd = 0;
 		this.origin = new Vector3d(x, y, z);
-		this.particleScale *= 0.75F;
-		this.maxAge = lifeSpan + this.rand.nextInt(32);
-		this.setColorFade(color);
+		this.quadSize *= 0.75F;
+		this.lifetime = lifeSpan + this.random.nextInt(32);
+		this.setFadeColor(color);
 		this.setColor(ColorHelper.mixColors(color, 0xFFFFFF, .5f));
-		this.selectSpriteWithAge(sprite);
+		this.setSpriteFromAge(sprite);
 		this.radius1 = radius1;
 		this.radius = radius1;
 		this.radius2 = radius2;
@@ -48,9 +48,9 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		this.isVisible = isVisible;
 		this.offset = axis.isHorizontal() ? new Vector3d(0, 1, 0) : new Vector3d(1, 0, 0);
 		move(0, 0, 0);
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
+		this.xo = this.x;
+		this.yo = this.y;
+		this.zo = this.z;
 	}
 
 	@Override
@@ -60,21 +60,21 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	}
 
 	@Override
-	public void buildGeometry(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
+	public void render(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
 		if (!isVisible)
 			return;
-		super.buildGeometry(buffer, renderInfo, partialTicks);
+		super.render(buffer, renderInfo, partialTicks);
 	}
 
 	public void move(double x, double y, double z) {
-		float time = AnimationTickHolder.getTicks(world);
-		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / maxAge));
+		float time = AnimationTickHolder.getTicks(level);
+		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / lifetime));
 		if (speed < 0 && axis.isVertical())
 			angle += 180;
 		Vector3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
-		posX = position.x;
-		posY = position.y;
-		posZ = position.z;
+		x = position.x;
+		y = position.y;
+		z = position.z;
 	}
 
 	public static class Factory implements IParticleFactory<RotationIndicatorParticleData> {
@@ -84,11 +84,11 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle makeParticle(RotationIndicatorParticleData data, ClientWorld worldIn, double x, double y, double z,
+		public Particle createParticle(RotationIndicatorParticleData data, ClientWorld worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
 			Minecraft mc = Minecraft.getInstance();
 			ClientPlayerEntity player = mc.player;
-			boolean visible = worldIn != mc.world || player != null && GogglesItem.canSeeParticles(player);
+			boolean visible = worldIn != mc.level || player != null && GogglesItem.canSeeParticles(player);
 			return new RotationIndicatorParticle(worldIn, x, y, z, data.color, data.radius1, data.radius2, data.speed,
 				data.getAxis(), data.lifeSpan, visible, this.spriteSet);
 		}

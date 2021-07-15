@@ -45,8 +45,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	public NavigatableSimiScreen() {
 		MainWindow window = Minecraft.getInstance()
 			.getWindow();
-		depthPointX = window.getScaledWidth() / 2;
-		depthPointY = window.getScaledHeight() / 2;
+		depthPointX = window.getGuiScaledWidth() / 2;
+		depthPointY = window.getGuiScaledHeight() / 2;
 	}
 
 	@Override
@@ -100,18 +100,18 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (backTrack == null)
 			return;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
 			TranslationTextComponent translate = Lang.translate(backTrackingLangKey());
-			textRenderer.draw(ms, translate, 41 - textRenderer.getWidth(translate) / 2, height - 16,
+			font.draw(ms, translate, 41 - font.width(translate) / 2, height - 16,
 				Theme.i(Theme.Key.TEXT_DARKER));
-			if (MathHelper.epsilonEquals(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
+			if (MathHelper.equal(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
 				arrowAnimation.setValue(1);// called twice to also set the previous value to 1
 			}
 		}
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected String backTrackingLangKey() {
@@ -145,24 +145,24 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 		// draw last screen into buffer
 		if (lastScreen != null && lastScreen != this && !transition.settled()) {
-			ms.push();
-			UIRenderHelper.framebuffer.framebufferClear(Minecraft.IS_RUNNING_ON_MAC);
+			ms.pushPose();
+			UIRenderHelper.framebuffer.clear(Minecraft.ON_OSX);
 			ms.translate(0, 0, -1000);
-			UIRenderHelper.framebuffer.bindFramebuffer(true);
+			UIRenderHelper.framebuffer.bindWrite(true);
 			lastScreen.render(ms, mouseX, mouseY, partialTicks);
 
-			ms.pop();
-			ms.push();
+			ms.popPose();
+			ms.pushPose();
 
 			// use the buffer texture
 			Minecraft.getInstance()
-				.getFramebuffer()
-				.bindFramebuffer(true);
+				.getMainRenderTarget()
+				.bindWrite(true);
 
 			MainWindow window = Minecraft.getInstance()
 				.getWindow();
-			int dpx = window.getScaledWidth() / 2;
-			int dpy = window.getScaledHeight() / 2;
+			int dpx = window.getGuiScaledWidth() / 2;
+			int dpy = window.getGuiScaledHeight() / 2;
 			if (lastScreen instanceof AbstractSimiScreen) {
 				dpx = ((NavigatableSimiScreen) lastScreen).depthPointX;
 				dpy = ((NavigatableSimiScreen) lastScreen).depthPointY;
@@ -177,7 +177,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
 			RenderSystem.disableBlend();
 			RenderSystem.enableAlphaTest();
-			ms.pop();
+			ms.popPose();
 		}
 
 		// modify current screen as well
@@ -202,9 +202,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	}
 
 	public void centerScalingOnMouse() {
-		MainWindow w = client.getWindow();
-		double mouseX = client.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
-		double mouseY = client.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
+		MainWindow w = minecraft.getWindow();
+		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
+		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
 		centerScalingOn((int) mouseX, (int) mouseY);
 	}
 
@@ -219,7 +219,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (history.isEmpty())
 			return;
 
-		history.add(0, Minecraft.getInstance().currentScreen);
+		history.add(0, Minecraft.getInstance().screen);
 		int spacing = 20;
 
 		List<String> names = history.stream()
@@ -227,7 +227,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			.collect(Collectors.toList());
 
 		int bWidth = names.stream()
-			.mapToInt(s -> textRenderer.getStringWidth(s) + spacing)
+			.mapToInt(s -> font.width(s) + spacing)
 			.sum();
 
 		MutableInt x = new MutableInt(width - bWidth);
@@ -237,18 +237,18 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (x.getValue() < 25)
 			x.setValue(25);
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, 0, 600);
 		names.forEach(s -> {
-			int sWidth = textRenderer.getStringWidth(s);
+			int sWidth = font.width(s);
 			UIRenderHelper.breadcrumbArrow(ms, x.getValue(), y.getValue(), 0, sWidth + spacing, 14, spacing / 2,
 				0xdd101010, 0x44101010);
-			textRenderer.draw(ms, s, x.getValue() + 5, y.getValue() + 3, first.getValue() ? 0xffeeffee : 0xffddeeff);
+			font.draw(ms, s, x.getValue() + 5, y.getValue() + 3, first.getValue() ? 0xffeeffee : 0xffddeeff);
 			first.setFalse();
 
 			x.add(sWidth + spacing);
 		});
-		ms.pop();
+		ms.popPose();
 	}
 
 	private static String screenTitle(Screen screen) {

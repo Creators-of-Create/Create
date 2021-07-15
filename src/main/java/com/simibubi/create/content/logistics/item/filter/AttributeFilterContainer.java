@@ -51,8 +51,8 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	protected void init(PlayerInventory inv, ItemStack contentHolder) {
 		super.init(inv, contentHolder);
 		ItemStack stack = new ItemStack(Items.NAME_TAG);
-		stack.setDisplayName(
-				new StringTextComponent("Selected Tags").formatted(TextFormatting.RESET, TextFormatting.BLUE));
+		stack.setHoverName(
+				new StringTextComponent("Selected Tags").withStyle(TextFormatting.RESET, TextFormatting.BLUE));
 		ghostInventory.setStackInSlot(1, stack);
 	}
 
@@ -71,7 +71,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 		this.addSlot(new SlotItemHandler(ghostInventory, 0, 16, 22));
 		this.addSlot(new SlotItemHandler(ghostInventory, 1, 22, 57) {
 			@Override
-			public boolean canTakeStack(PlayerEntity playerIn) {
+			public boolean mayPickup(PlayerEntity playerIn) {
 				return false;
 			}
 		});
@@ -88,28 +88,28 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
 		if (slotId == 37)
 			return ItemStack.EMPTY;
-		return super.slotClick(slotId, dragType, clickTypeIn, player);
+		return super.clicked(slotId, dragType, clickTypeIn, player);
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slotIn) {
-		if (slotIn.slotNumber == 37)
+	public boolean canDragTo(Slot slotIn) {
+		if (slotIn.index == 37)
 			return false;
-		return super.canDragIntoSlot(slotIn);
+		return super.canDragTo(slotIn);
 	}
 
 	@Override
-	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-		if (slotIn.slotNumber == 37)
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+		if (slotIn.index == 37)
 			return false;
-		return super.canMergeSlot(stack, slotIn);
+		return super.canTakeItemForPickAll(stack, slotIn);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		if (index == 37)
 			return ItemStack.EMPTY;
 		if (index == 36) {
@@ -117,7 +117,7 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 			return ItemStack.EMPTY;
 		}
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getStackInSlot(index);
+			ItemStack stackToInsert = playerInventory.getItem(index);
 			ItemStack copy = stackToInsert.copy();
 			copy.setCount(1);
 			ghostInventory.setStackInSlot(0, copy);

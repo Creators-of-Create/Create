@@ -19,6 +19,8 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.particles.IParticleData.IDeserializer;
+
 public class RotationIndicatorParticleData
 	implements IParticleData, ICustomParticleDataWithSprite<RotationIndicatorParticleData> {
 
@@ -58,7 +60,7 @@ public class RotationIndicatorParticleData
 
 	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
-			public RotationIndicatorParticleData deserialize(ParticleType<RotationIndicatorParticleData> particleTypeIn,
+			public RotationIndicatorParticleData fromCommand(ParticleType<RotationIndicatorParticleData> particleTypeIn,
 				StringReader reader) throws CommandSyntaxException {
 				reader.expect(' ');
 				int color = reader.readInt();
@@ -75,7 +77,7 @@ public class RotationIndicatorParticleData
 				return new RotationIndicatorParticleData(color, speed, rad1, rad2, lifeSpan, axis);
 			}
 
-			public RotationIndicatorParticleData read(ParticleType<RotationIndicatorParticleData> particleTypeIn,
+			public RotationIndicatorParticleData fromNetwork(ParticleType<RotationIndicatorParticleData> particleTypeIn,
 				PacketBuffer buffer) {
 				return new RotationIndicatorParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(),
 					buffer.readFloat(), buffer.readInt(), buffer.readChar());
@@ -113,7 +115,7 @@ public class RotationIndicatorParticleData
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void writeToNetwork(PacketBuffer buffer) {
 		buffer.writeInt(color);
 		buffer.writeFloat(speed);
 		buffer.writeFloat(radius1);
@@ -123,7 +125,7 @@ public class RotationIndicatorParticleData
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return String.format(Locale.ROOT, "%s %d %.2f %.2f %.2f %d %c", AllParticleTypes.ROTATION_INDICATOR.parameter(),
 			color, speed, radius1, radius2, lifeSpan, axis);
 	}

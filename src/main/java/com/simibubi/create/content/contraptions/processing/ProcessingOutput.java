@@ -79,16 +79,16 @@ public class ProcessingOutput {
 			throw new JsonSyntaxException("ProcessingOutput must be a json object");
 
 		JsonObject json = je.getAsJsonObject();
-		String itemId = JSONUtils.getString(json, "item");
-		int count = JSONUtils.getInt(json, "count", 1);
-		float chance = JSONUtils.hasField(json, "chance") ? JSONUtils.getFloat(json, "chance") : 1;
+		String itemId = JSONUtils.getAsString(json, "item");
+		int count = JSONUtils.getAsInt(json, "count", 1);
+		float chance = JSONUtils.isValidNode(json, "chance") ? JSONUtils.getAsFloat(json, "chance") : 1;
 		ItemStack itemstack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
 
-		if (JSONUtils.hasField(json, "nbt")) {
+		if (JSONUtils.isValidNode(json, "nbt")) {
 			try {
 				JsonElement element = json.get("nbt");
-				itemstack.setTag(JsonToNBT.getTagFromJson(
-					element.isJsonObject() ? Create.GSON.toJson(element) : JSONUtils.getString(element, "nbt")));
+				itemstack.setTag(JsonToNBT.parseTag(
+					element.isJsonObject() ? Create.GSON.toJson(element) : JSONUtils.convertToString(element, "nbt")));
 			} catch (CommandSyntaxException e) {
 				e.printStackTrace();
 			}
@@ -98,12 +98,12 @@ public class ProcessingOutput {
 	}
 
 	public void write(PacketBuffer buf) {
-		buf.writeItemStack(getStack());
+		buf.writeItem(getStack());
 		buf.writeFloat(getChance());
 	}
 
 	public static ProcessingOutput read(PacketBuffer buf) {
-		return new ProcessingOutput(buf.readItemStack(), buf.readFloat());
+		return new ProcessingOutput(buf.readItem(), buf.readFloat());
 	}
 
 }

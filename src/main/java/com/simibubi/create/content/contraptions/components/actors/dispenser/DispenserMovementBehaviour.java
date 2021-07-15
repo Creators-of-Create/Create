@@ -19,6 +19,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 
+import net.minecraft.block.AbstractBlock;
+
 public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_DISPENSE_ITEM_BEHAVIOURS = new HashMap<>();
 	private static final HashMap<Item, IMovedDispenseItemBehaviour> MOVED_PROJECTILE_DISPENSE_BEHAVIOURS = new HashMap<>();
@@ -42,7 +44,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 		
 		DispenseItemLocation location = getDispenseLocation(context);
 		if (location.isEmpty()) {
-			context.world.playEvent(1001, pos, 0);
+			context.world.levelEvent(1001, pos, 0);
 		} else {
 			ItemStack itemstack = getItemStackAt(location, context);
 			// Special dispense item behaviour for moving contraptions
@@ -59,7 +61,7 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 
-				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getBehavior(itemstack);
+				IDispenseItemBehavior idispenseitembehavior = BEHAVIOUR_LOOKUP.getDispenseMethod(itemstack);
 				if (idispenseitembehavior instanceof ProjectileDispenseBehavior) { // Projectile behaviours can be converted most of the time
 					IMovedDispenseItemBehaviour iMovedDispenseItemBehaviour = MovedProjectileDispenserBehaviour.of((ProjectileDispenseBehavior) idispenseitembehavior);
 					setItemStackAt(location, iMovedDispenseItemBehaviour.dispense(itemstack, context, pos), context);
@@ -67,10 +69,10 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 					return;
 				}
 
-				Vector3d facingVec = Vector3d.of(context.state.get(DispenserBlock.FACING).getDirectionVec());
+				Vector3d facingVec = Vector3d.atLowerCornerOf(context.state.getValue(DispenserBlock.FACING).getNormal());
 				facingVec = context.rotation.apply(facingVec);
 				facingVec.normalize();
-				Direction clostestFacing = Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z);
+				Direction clostestFacing = Direction.getNearest(facingVec.x, facingVec.y, facingVec.z);
 				ContraptionBlockSource blockSource = new ContraptionBlockSource(context, pos, clostestFacing);
 
 				if (idispenseitembehavior.getClass() != DefaultDispenseItemBehavior.class) { // There is a dispense item behaviour registered for the vanilla dispenser
@@ -89,11 +91,11 @@ public class DispenserMovementBehaviour extends DropperMovementBehaviour {
 	@MethodsReturnNonnullByDefault
 	private static class DispenserLookup extends DispenserBlock {
 		protected DispenserLookup() {
-			super(Block.Properties.from(Blocks.DISPENSER));
+			super(AbstractBlock.Properties.copy(Blocks.DISPENSER));
 		}
 
-		public IDispenseItemBehavior getBehavior(ItemStack itemStack) {
-			return super.getBehavior(itemStack);
+		public IDispenseItemBehavior getDispenseMethod(ItemStack itemStack) {
+			return super.getDispenseMethod(itemStack);
 		}
 	}
 }

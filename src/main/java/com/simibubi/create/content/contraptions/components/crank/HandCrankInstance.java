@@ -31,7 +31,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
 		if (renderedHandle == null)
 			return;
 
-		facing = blockState.get(BlockStateProperties.FACING);
+		facing = blockState.getValue(BlockStateProperties.FACING);
 		Direction opposite = facing.getOpposite();
 		Instancer<ModelData> model = getTransformMaterial().getModel(renderedHandle, blockState, opposite);
 		crank = model.createInstance();
@@ -54,7 +54,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
         MatrixStacker.of(ms)
                      .translate(getInstancePosition())
                      .centre()
-                     .rotate(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis), angle)
+                     .rotate(Direction.get(Direction.AxisDirection.POSITIVE, axis), angle)
                      .unCentre();
 
         crank.setTransform(ms);

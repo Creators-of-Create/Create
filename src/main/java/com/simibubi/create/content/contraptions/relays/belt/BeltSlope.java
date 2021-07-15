@@ -8,7 +8,7 @@ public enum BeltSlope implements IStringSerializable {
 	HORIZONTAL, UPWARD, DOWNWARD, VERTICAL, SIDEWAYS;
 
 	@Override
-	public String getString() {
+	public String getSerializedName() {
 		return Lang.asId(name());
 	}
 

@@ -48,7 +48,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 	}
 
 	@Override
-	public Instance<T> conditionsFromJson(JsonObject json, ConditionArrayParser context) {
+	public Instance<T> createInstance(JsonObject json, ConditionArrayParser context) {
 		if (json.has(getJsonKey())) {
 			JsonArray elements = json.getAsJsonArray(getJsonKey());
 			return new Instance<>(this, StreamSupport.stream(elements.spliterator(), false)
@@ -77,7 +77,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		private final StringSerializableTrigger<T> trigger;
 
 		public Instance(StringSerializableTrigger<T> trigger, @Nullable Set<T> entries) {
-			super(trigger.getId(), EntityPredicate.AndPredicate.EMPTY);
+			super(trigger.getId(), EntityPredicate.AndPredicate.ANY);
 			this.trigger = trigger;
 			this.entries = entries;
 		}
@@ -91,8 +91,8 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		}
 
 		@Override
-		public JsonObject toJson(ConditionArraySerializer p_230240_1_) {
-			JsonObject jsonobject = super.toJson(p_230240_1_);
+		public JsonObject serializeToJson(ConditionArraySerializer p_230240_1_) {
+			JsonObject jsonobject = super.serializeToJson(p_230240_1_);
 			JsonArray elements = new JsonArray();
 
 			if (entries == null) {

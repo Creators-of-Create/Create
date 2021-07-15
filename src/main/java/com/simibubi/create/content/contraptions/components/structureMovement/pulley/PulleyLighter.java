@@ -17,9 +17,9 @@ public class PulleyLighter extends ContraptionLighter<PulleyContraption> {
 
         GridAlignedBB bounds = GridAlignedBB.from(contraption.bounds);
 
-        World world = contraption.entity.world;
+        World world = contraption.entity.level;
 
-        BlockPos.Mutable pos = contraption.anchor.mutableCopy();
+        BlockPos.Mutable pos = contraption.anchor.mutable();
         while (!AllBlocks.ROPE_PULLEY.has(world.getBlockState(pos)) && pos.getY() < 256) {
             pos.move(0, 1, 0);
         }

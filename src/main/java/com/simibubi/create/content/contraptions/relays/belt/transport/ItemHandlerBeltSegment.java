@@ -35,7 +35,7 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 				newStack.beltPosition = offset + .5f + (beltInventory.beltMovementPositive ? -1 : 1) / 16f;
 				newStack.prevBeltPosition = newStack.beltPosition;
 				this.beltInventory.addItem(newStack);
-				this.beltInventory.belt.markDirty();
+				this.beltInventory.belt.setChanged();
 				this.beltInventory.belt.sendData();
 			}
 			return ItemStack.EMPTY;
@@ -52,7 +52,7 @@ public class ItemHandlerBeltSegment implements IItemHandler {
 		amount = Math.min(amount, transported.stack.getCount());
 		ItemStack extracted = simulate ? transported.stack.copy().split(amount) : transported.stack.split(amount);
 		if (!simulate) {
-			this.beltInventory.belt.markDirty();
+			this.beltInventory.belt.setChanged();
 			this.beltInventory.belt.sendData();
 		}
 		return extracted;

@@ -37,6 +37,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class CrushingWheelControllerBlock extends DirectionalBlock
 		implements ITE<CrushingWheelControllerTileEntity> {
 
@@ -52,7 +54,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	}
 
 	@Override
-	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+	public boolean canBeReplaced(BlockState state, BlockItemUseContext useContext) {
 		return false;
 	}
 
@@ -67,17 +69,17 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(VALID);
 		builder.add(FACING);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (!state.get(VALID))
+	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+		if (!state.getValue(VALID))
 			return;
 
-		Direction facing = state.get(FACING);
+		Direction facing = state.getValue(FACING);
 		Axis axis = facing.getAxis();
 
 		checkEntityForProcessing(worldIn, pos, entityIn);
@@ -85,7 +87,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.processingEntity == entityIn)
 
-				entityIn.setMotionMultiplier(state, new Vector3d(axis == Axis.X ? (double) 0.05F : 0.25D
+				entityIn.makeStuckInBlock(state, new Vector3d(axis == Axis.X ? (double) 0.05F : 0.25D
 						, axis == Axis.Y ? (double) 0.05F : 0.25D
 						, axis == Axis.Z ? (double) 0.05F : 0.25D));
 		});
@@ -98,7 +100,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 		if (te.crushingspeed == 0)
 			return;
 		if (entityIn instanceof ItemEntity)
-			((ItemEntity) entityIn).setPickupDelay(10);
+			((ItemEntity) entityIn).setPickUpDelay(10);
 		CompoundNBT data = entityIn.getPersistentData();
 		if (data.contains("BypassCrushingWheel")) {
 			if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
@@ -109,21 +111,21 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 		boolean isPlayer = entityIn instanceof PlayerEntity;
 		if (isPlayer && ((PlayerEntity) entityIn).isCreative())
 			return;
-		if (isPlayer && entityIn.world.getDifficulty() == Difficulty.PEACEFUL)
+		if (isPlayer && entityIn.level.getDifficulty() == Difficulty.PEACEFUL)
 			return;
 
 		te.startCrushing(entityIn);
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
+	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
 		//Moved to onEntityCollision to allow for omnidirectional input
 	}
 
 	@Override
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		if (!stateIn.get(VALID))
+		if (!stateIn.getValue(VALID))
 			return;
 		if (rand.nextInt(1) != 0)
 			return;
@@ -134,7 +136,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
 		updateSpeed(stateIn, worldIn, currentPos);
 		return stateIn;
@@ -142,7 +144,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 
 	public void updateSpeed(BlockState state, IWorld world, BlockPos pos) {
 		withTileEntityDo(world, pos, te -> {
-			if (!state.get(VALID)) {
+			if (!state.getValue(VALID)) {
 				if (te.crushingspeed != 0) {
 					te.crushingspeed = 0;
 					te.sendData();
@@ -151,12 +153,12 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 			}
 
 			for (Direction d : Iterate.directions) {
-				BlockState neighbour = world.getBlockState(pos.offset(d));
+				BlockState neighbour = world.getBlockState(pos.relative(d));
 				if (!AllBlocks.CRUSHING_WHEEL.has(neighbour))
 					continue;
-				if (neighbour.get(BlockStateProperties.AXIS) == d.getAxis())
+				if (neighbour.getValue(BlockStateProperties.AXIS) == d.getAxis())
 					continue;
-				KineticTileEntity wheelTe = (KineticTileEntity) world.getTileEntity(pos.offset(d));
+				KineticTileEntity wheelTe = (KineticTileEntity) world.getBlockEntity(pos.relative(d));
 				te.crushingspeed = Math.abs(wheelTe.getSpeed() / 50f);
 				te.sendData();
 				break;
@@ -167,9 +169,9 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
 										ISelectionContext context) {
-		VoxelShape standardShape = AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.get(FACING));
+		VoxelShape standardShape = AllShapes.CRUSHING_WHEEL_CONTROLLER_COLLISION.get(state.getValue(FACING));
 
-		if (!state.get(VALID))
+		if (!state.getValue(VALID))
 			return standardShape;
 
 		Entity entity = context.getEntity();
@@ -179,7 +181,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 		CompoundNBT data = entity.getPersistentData();
 		if (data.contains("BypassCrushingWheel"))
 			if (pos.equals(NBTUtil.readBlockPos(data.getCompound("BypassCrushingWheel"))))
-				if (state.get(FACING) != Direction.UP) // Allow output items to land on top of the block rather than falling back through.
+				if (state.getValue(FACING) != Direction.UP) // Allow output items to land on top of the block rather than falling back through.
 					return VoxelShapes.empty();
 
 		CrushingWheelControllerTileEntity te = getTileEntity(worldIn, pos);
@@ -190,12 +192,12 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
-		worldIn.removeTileEntity(pos);
+		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
@@ -204,7 +206,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

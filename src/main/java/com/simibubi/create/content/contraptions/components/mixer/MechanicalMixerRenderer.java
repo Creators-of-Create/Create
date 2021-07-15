@@ -25,7 +25,7 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean isGlobalRenderer(KineticTileEntity te) {
+	public boolean shouldRenderOffScreen(KineticTileEntity te) {
 		return true;
 	}
 
@@ -33,21 +33,21 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		BlockState blockState = te.getBlockState();
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) te;
-		BlockPos pos = te.getPos();
+		BlockPos pos = te.getBlockPos();
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
-		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
+		int packedLightmapCoords = WorldRenderer.getLightColor(te.getLevel(), blockState, pos);
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
 		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 		float angle = ((time * speed * 6 / 10f) % 360) / 180 * (float) Math.PI;
 
 		SuperByteBuffer poleRender = PartialBufferer.get(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState);

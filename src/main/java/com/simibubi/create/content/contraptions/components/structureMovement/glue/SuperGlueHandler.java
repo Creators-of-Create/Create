@@ -35,7 +35,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public class SuperGlueHandler {
 
 	public static Map<Direction, SuperGlueEntity> gatherGlue(IWorld world, BlockPos pos) {
-		List<SuperGlueEntity> entities = world.getEntitiesWithinAABB(SuperGlueEntity.class, new AxisAlignedBB(pos));
+		List<SuperGlueEntity> entities = world.getEntitiesOfClass(SuperGlueEntity.class, new AxisAlignedBB(pos));
 		Map<Direction, SuperGlueEntity> map = new HashMap<>();
 		for (SuperGlueEntity entity : entities)
 			map.put(entity.getAttachedDirection(pos), entity);
@@ -50,7 +50,7 @@ public class SuperGlueHandler {
 
 		if (entity == null || world == null || pos == null)
 			return;
-		if (world.isRemote())
+		if (world.isClientSide())
 			return;
 
 		Map<Direction, SuperGlueEntity> gatheredGlue = gatherGlue(world, pos);
@@ -63,50 +63,50 @@ public class SuperGlueHandler {
 	}
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, PlayerEntity placer) {
-		ItemStack itemstack = placer.getHeldItemOffhand();
+		ItemStack itemstack = placer.getOffhandItem();
 		ModifiableAttributeInstance reachAttribute = placer.getAttribute(ForgeMod.REACH_DISTANCE.get());
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
-		if (AllItems.WRENCH.isIn(placer.getHeldItemMainhand()))
+		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
 			return;
 		if (event.getPlacedAgainst() == IPlacementHelper.ID)
 			return;
 
 		double distance = reachAttribute.getValue();
 		Vector3d start = placer.getEyePosition(1);
-		Vector3d look = placer.getLook(1);
+		Vector3d look = placer.getViewVector(1);
 		Vector3d end = start.add(look.x * distance, look.y * distance, look.z * distance);
-		World world = placer.world;
+		World world = placer.level;
 
 		RayTraceWorld rayTraceWorld =
-			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.getDefaultState() : state);
-		BlockRayTraceResult ray = rayTraceWorld.rayTraceBlocks(
+			new RayTraceWorld(world, (p, state) -> p.equals(pos) ? Blocks.AIR.defaultBlockState() : state);
+		BlockRayTraceResult ray = rayTraceWorld.clip(
 			new RayTraceContext(start, end, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, placer));
 
-		Direction face = ray.getFace();
+		Direction face = ray.getDirection();
 		if (face == null || ray.getType() == Type.MISS)
 			return;
 
-		if (!ray.getPos()
-			.offset(face)
+		if (!ray.getBlockPos()
+			.relative(face)
 			.equals(pos)) {
 			event.setCanceled(true);
 			return;
 		}
 
-		SuperGlueEntity entity = new SuperGlueEntity(world, ray.getPos(), face.getOpposite());
+		SuperGlueEntity entity = new SuperGlueEntity(world, ray.getBlockPos(), face.getOpposite());
 		CompoundNBT compoundnbt = itemstack.getTag();
 		if (compoundnbt != null)
-			EntityType.applyItemNBT(world, placer, entity, compoundnbt);
+			EntityType.updateCustomEntityTag(world, placer, entity, compoundnbt);
 
 		if (entity.onValidSurface()) {
-			if (!world.isRemote) {
+			if (!world.isClientSide) {
 				entity.playPlaceSound();
-				world.addEntity(entity);
+				world.addFreshEntity(entity);
 				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-					new GlueEffectPacket(ray.getPos(), face, true));
+					new GlueEffectPacket(ray.getBlockPos(), face, true));
 			}
-			itemstack.damageItem(1, placer, SuperGlueItem::onBroken);
+			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);
 		}
 	}
 

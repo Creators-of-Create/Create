@@ -31,10 +31,10 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		SuperByteBuffer flapBuffer = PartialBufferer.get(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 		Vector3d pivot = VecHelper.voxelSpace(0, 10, 1f);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
@@ -46,13 +46,13 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 			float f = te.flaps.get(direction)
 				.get(partialTicks);
 
-			ms.push();
+			ms.pushPose();
 			msr.centre()
 				.rotateY(horizontalAngle)
 				.unCentre();
 
 			for (int segment = 0; segment <= 3; segment++) {
-				ms.push();
+				ms.pushPose();
 				float intensity = segment == 3 ? 1.5f : segment + 1;
 				float abs = Math.abs(f);
 				float flapAngle = MathHelper.sin((float) ((1 - abs) * Math.PI * intensity)) * 30 * f
@@ -66,10 +66,10 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 				flapBuffer.light(light)
 					.renderInto(ms, vb);
 
-				ms.pop();
+				ms.popPose();
 				ms.translate(-3 / 16f, 0, 0);
 			}
-			ms.pop();
+			ms.popPose();
 		}
 
 	}

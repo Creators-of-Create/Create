@@ -15,7 +15,7 @@ public class OverlayConfigCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("overlay")
-				.requires(cs -> cs.hasPermissionLevel(0))
+				.requires(cs -> cs.hasPermission(0))
 				.then(Commands.literal("reset")
 					.executes(ctx -> {
 						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
@@ -26,7 +26,7 @@ public class OverlayConfigCommand {
 										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
 
 					ctx.getSource()
-						.sendFeedback(new StringTextComponent("reset overlay offset"), true);
+						.sendSuccess(new StringTextComponent("reset overlay offset"), true);
 
 						return 1;
 					})
@@ -40,7 +40,7 @@ public class OverlayConfigCommand {
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
 
 					ctx.getSource()
-							.sendFeedback(new StringTextComponent("window opened"), true);
+							.sendSuccess(new StringTextComponent("window opened"), true);
 
 				return 1;
 			});

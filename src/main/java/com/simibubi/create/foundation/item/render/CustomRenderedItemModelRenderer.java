@@ -12,16 +12,16 @@ public abstract class CustomRenderedItemModelRenderer<M extends CustomRenderedIt
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void render(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		M mainModel = ((M) Minecraft.getInstance()
 			.getItemRenderer()
-			.getItemModelWithOverrides(stack, null, null));
+			.getModel(stack, null, null));
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0.5F, 0.5F, 0.5F);
 		render(stack, mainModel, renderer, transformType, ms, buffer, light, overlay);
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected abstract void render(ItemStack stack, M model, PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType,

@@ -27,13 +27,13 @@ public class GlueEffectPacket extends SimplePacketBase {
 
 	public GlueEffectPacket(PacketBuffer buffer) {
 		pos = buffer.readBlockPos();
-		direction = Direction.byIndex(buffer.readByte());
+		direction = Direction.from3DDataValue(buffer.readByte());
 		fullBlock = buffer.readBoolean();
 	}
 
 	public void write(PacketBuffer buffer) {
 		buffer.writeBlockPos(pos);
-		buffer.writeByte(direction.getIndex());
+		buffer.writeByte(direction.get3DDataValue());
 		buffer.writeBoolean(fullBlock);
 	}
 
@@ -41,9 +41,9 @@ public class GlueEffectPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			Minecraft mc = Minecraft.getInstance();
-			if (!mc.player.getBlockPos().withinDistance(pos, 100))
+			if (!mc.player.blockPosition().closerThan(pos, 100))
 				return;
-			SuperGlueItem.spawnParticles(mc.world, pos, direction, fullBlock);
+			SuperGlueItem.spawnParticles(mc.level, pos, direction, fullBlock);
 		}));
 		context.get().setPacketHandled(true);
 	}

@@ -83,7 +83,7 @@ public class GenericItemFilling {
 			return -1;
 		if (tank instanceof FluidBucketWrapper) {
 			Item filledBucket = availableFluid.getFluid()
-				.getFilledBucket();
+				.getBucket();
 			if (filledBucket == null || filledBucket == Items.AIR)
 				return -1;
 			if (!((FluidBucketWrapper) tank).getFluid()
@@ -98,14 +98,14 @@ public class GenericItemFilling {
 
 	private static boolean canFillGlassBottleInternally(FluidStack availableFluid) {
 		return availableFluid.getFluid()
-			.isEquivalentTo(Fluids.WATER)
+			.isSame(Fluids.WATER)
 			|| availableFluid.getFluid()
-				.isEquivalentTo(AllFluids.POTION.get());
+				.isSame(AllFluids.POTION.get());
 	}
 
 	private static boolean canFillBucketInternally(FluidStack availableFluid) {
 		return availableFluid.getFluid()
-			.isEquivalentTo(AllFluids.MILK.get().getFlowingFluid());
+			.isSame(AllFluids.MILK.get().getFlowing());
 	}
 
 	public static ItemStack fillItem(World world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
@@ -116,7 +116,7 @@ public class GenericItemFilling {
 		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(toFill)) {
 			ItemStack fillBottle = ItemStack.EMPTY;
 			if (FluidHelper.isWater(toFill.getFluid()))
-				fillBottle = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WATER);
+				fillBottle = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
 			else
 				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
 			stack.shrink(1);

@@ -30,11 +30,11 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (!te.hasFlap() || Backend.getInstance().canUseInstancing(te.getWorld()))
+		if (!te.hasFlap() || Backend.getInstance().canUseInstancing(te.getLevel()))
 			return;
 
 		BlockState blockState = te.getBlockState();
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 		PartialModel partialModel = (blockState.getBlock() instanceof FunnelBlock ? AllBlockPartials.FUNNEL_FLAP
 				: AllBlockPartials.BELT_FUNNEL_FLAP);
 		SuperByteBuffer flapBuffer = PartialBufferer.get(partialModel, blockState);
@@ -45,14 +45,14 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 				.getOpposite());
 		float f = te.flap.get(partialTicks);
 
-		ms.push();
+		ms.pushPose();
 		msr.centre()
 				.rotateY(horizontalAngle)
 			.unCentre();
 		ms.translate(0, 0, -te.getFlapOffset());
 
 		for (int segment = 0; segment <= 3; segment++) {
-			ms.push();
+			ms.pushPose();
 
 			float intensity = segment == 3 ? 1.5f : segment + 1;
 			float abs = Math.abs(f);
@@ -67,10 +67,10 @@ public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 			flapBuffer.light(light)
 				.renderInto(ms, vb);
 
-			ms.pop();
+			ms.popPose();
 			ms.translate(-3 / 16f, 0, 0);
 		}
-		ms.pop();
+		ms.popPose();
 	}
 
 }

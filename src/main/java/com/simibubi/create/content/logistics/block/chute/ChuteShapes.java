@@ -19,24 +19,24 @@ public class ChuteShapes {
 	static Map<BlockState, VoxelShape> cache = new HashMap<>();
 	static Map<BlockState, VoxelShape> collisionCache = new HashMap<>();
 
-	public static final VoxelShape INTERSECTION_MASK = Block.makeCuboidShape(0, -16, 0, 16, 16, 16);
-	public static final VoxelShape COLLISION_MASK = Block.makeCuboidShape(0, 0, 0, 16, 24, 16);
+	public static final VoxelShape INTERSECTION_MASK = Block.box(0, -16, 0, 16, 16, 16);
+	public static final VoxelShape COLLISION_MASK = Block.box(0, 0, 0, 16, 24, 16);
 
 	public static VoxelShape createShape(BlockState state) {
 		if (AllBlocks.SMART_CHUTE.has(state))
 			return AllShapes.SMART_CHUTE;
 		
-		Direction direction = state.get(ChuteBlock.FACING);
-		Shape shape = state.get(ChuteBlock.SHAPE);
+		Direction direction = state.getValue(ChuteBlock.FACING);
+		Shape shape = state.getValue(ChuteBlock.SHAPE);
 
 		boolean intersection = shape == Shape.INTERSECTION;
 		if (direction == Direction.DOWN)
-			return intersection ? VoxelShapes.fullCube() : AllShapes.CHUTE;
+			return intersection ? VoxelShapes.block() : AllShapes.CHUTE;
 
-		VoxelShape combineWith = intersection ? VoxelShapes.fullCube() : VoxelShapes.empty();
+		VoxelShape combineWith = intersection ? VoxelShapes.block() : VoxelShapes.empty();
 		VoxelShape result = VoxelShapes.or(combineWith, AllShapes.CHUTE_SLOPE.get(direction));
 		if (intersection)
-			result = VoxelShapes.combine(INTERSECTION_MASK, result, IBooleanFunction.AND);
+			result = VoxelShapes.joinUnoptimized(INTERSECTION_MASK, result, IBooleanFunction.AND);
 		return result;
 	}
 
@@ -51,18 +51,18 @@ public class ChuteShapes {
 	public static VoxelShape getCollisionShape(BlockState state) {
 		if (collisionCache.containsKey(state))
 			return collisionCache.get(state);
-		VoxelShape createdShape = VoxelShapes.combine(COLLISION_MASK, getShape(state), IBooleanFunction.AND);
+		VoxelShape createdShape = VoxelShapes.joinUnoptimized(COLLISION_MASK, getShape(state), IBooleanFunction.AND);
 		collisionCache.put(state, createdShape);
 		return createdShape;
 	}
 
-	public static final VoxelShape PANEL = Block.makeCuboidShape(1, -15, 0, 15, 4, 1);
+	public static final VoxelShape PANEL = Block.box(1, -15, 0, 15, 4, 1);
 
 	public static VoxelShape createSlope() {
 		VoxelShape shape = VoxelShapes.empty();
 		for (int i = 0; i < 16; i++) {
 			float offset = i / 16f;
-			shape = VoxelShapes.combineAndSimplify(shape, PANEL.withOffset(0, offset, offset), IBooleanFunction.OR);
+			shape = VoxelShapes.join(shape, PANEL.move(0, offset, offset), IBooleanFunction.OR);
 		}
 		return shape;
 	}

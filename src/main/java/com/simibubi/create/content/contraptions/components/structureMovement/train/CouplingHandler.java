@@ -67,8 +67,8 @@ public class CouplingHandler {
 	}
 
 	public static boolean tryToCoupleCarts(@Nullable PlayerEntity player, World world, int cartId1, int cartId2) {
-		Entity entity1 = world.getEntityByID(cartId1);
-		Entity entity2 = world.getEntityByID(cartId2);
+		Entity entity1 = world.getEntity(cartId1);
+		Entity entity2 = world.getEntity(cartId2);
 
 		if (!(entity1 instanceof AbstractMinecartEntity))
 			return false;
@@ -80,8 +80,8 @@ public class CouplingHandler {
 		String noLoops = "no_loops";
 		String tooFar = "too_far";
 
-		int distanceTo = (int) entity1.getPositionVec()
-			.distanceTo(entity2.getPositionVec());
+		int distanceTo = (int) entity1.position()
+			.distanceTo(entity2.position());
 		boolean contraptionCoupling = player == null;
 		
 		if (distanceTo < 2) {
@@ -97,8 +97,8 @@ public class CouplingHandler {
 
 		AbstractMinecartEntity cart1 = (AbstractMinecartEntity) entity1;
 		AbstractMinecartEntity cart2 = (AbstractMinecartEntity) entity2;
-		UUID mainID = cart1.getUniqueID();
-		UUID connectedID = cart2.getUniqueID();
+		UUID mainID = cart1.getUUID();
+		UUID connectedID = cart2.getUUID();
 		MinecartController mainController = CapabilityMinecartController.getIfPresent(world, mainID);
 		MinecartController connectedController = CapabilityMinecartController.getIfPresent(world, connectedID);
 
@@ -146,7 +146,7 @@ public class CouplingHandler {
 			for (Hand hand : Hand.values()) {
 				if (player.isCreative())
 					break;
-				ItemStack heldItem = player.getHeldItem(hand);
+				ItemStack heldItem = player.getItemInHand(hand);
 				if (!AllItems.MINECART_COUPLING.isIn(heldItem))
 					continue;
 				heldItem.shrink(1);
@@ -177,7 +177,7 @@ public class CouplingHandler {
 	public static void status(PlayerEntity player, String key) {
 		if (player == null)
 			return;
-		player.sendStatusMessage(Lang.translate("minecart_coupling." + key), true);
+		player.displayClientMessage(Lang.translate("minecart_coupling." + key), true);
 	}
 
 }

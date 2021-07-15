@@ -19,34 +19,34 @@ import net.minecraft.util.math.vector.Vector3f;
 public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 
 	@Override
-	public void render(ItemStack stack, TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderByItem(ItemStack stack, TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getItemModelWithOverrides(stack, Minecraft.getInstance().world, null);
+		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getModel(stack, Minecraft.getInstance().level, null);
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean firstPerson = leftHand || transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(.5f, .5f, .5f);
 
 		CompoundNBT tag = stack.getOrCreateTag();
 		boolean jeiMode = tag.contains("JEI");
 
 		if (tag.contains("Polishing")) {
-			ms.push();
+			ms.pushPose();
 
 			if (transformType == TransformType.GUI) {
 				ms.translate(0.0F, .2f, 1.0F);
 				ms.scale(.75f, .75f, .75f);
 			} else {
 				int modifier = leftHand ? -1 : 1;
-				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(modifier * 40));
+				ms.mulPose(Vector3f.YP.rotationDegrees(modifier * 40));
 			}
 
 			// Reverse bobbing
-			float time = (float) (!jeiMode ? player.getItemInUseCount()
+			float time = (float) (!jeiMode ? player.getUseItemRemainingTicks()
 					: (-AnimationTickHolder.getTicks()) % stack.getUseDuration()) - partialTicks + 1.0F;
 			if (time / (float) stack.getUseDuration() < 0.8F) {
 				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
@@ -57,26 +57,26 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 					ms.translate(0.0f, bobbing, 0.0F);
 			}
 
-			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
-			itemRenderer.renderItem(toPolish, TransformType.NONE, light, overlay, ms, buffer);
+			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
+			itemRenderer.renderStatic(toPolish, TransformType.NONE, light, overlay, ms, buffer);
 
-			ms.pop();
+			ms.popPose();
 		}
 
 		if (firstPerson) {
-			int itemInUseCount = player.getItemInUseCount();
+			int itemInUseCount = player.getUseItemRemainingTicks();
 			if (itemInUseCount > 0) {
 				int modifier = leftHand ? -1 : 1;
 				ms.translate(modifier * .5f, 0, -.25f);
-				ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(modifier * 40));
-				ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(modifier * 10));
-				ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(modifier * 90));
+				ms.mulPose(Vector3f.ZP.rotationDegrees(modifier * 40));
+				ms.mulPose(Vector3f.XP.rotationDegrees(modifier * 10));
+				ms.mulPose(Vector3f.YP.rotationDegrees(modifier * 90));
 			}
 		}
 
-		itemRenderer.renderItem(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getOriginalModel());
+		itemRenderer.render(stack, TransformType.NONE, false, ms, buffer, light, overlay, mainModel.getOriginalModel());
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	public static class SandPaperModel extends CustomRenderedItemModel {

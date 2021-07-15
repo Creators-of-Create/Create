@@ -39,26 +39,26 @@ public class DoubleItemIcon implements IDrawable {
 			secondaryStack = secondarySupplier.get();
 		}
 
-		RenderHelper.enable();
+		RenderHelper.turnBackOn();
 		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(1, 1, 0);
 		GuiGameElement.of(primaryStack)
 			.render(matrixStack);
-		matrixStack.pop();
+		matrixStack.popPose();
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(10, 10, 100);
 		matrixStack.scale(.5f, .5f, .5f);
 		GuiGameElement.of(secondaryStack)
 			.render(matrixStack);
-		matrixStack.pop();
+		matrixStack.popPose();
 
-		matrixStack.pop();
+		matrixStack.popPose();
 		RenderSystem.enableBlend();
 	}
 

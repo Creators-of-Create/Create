@@ -19,6 +19,9 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
+import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity>, ICogWheel {
 
 	public MechanicalMixerBlock(Properties properties) {
@@ -31,8 +34,8 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.down()));
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.below()));
 	}
 
 	@Override
@@ -74,7 +77,7 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

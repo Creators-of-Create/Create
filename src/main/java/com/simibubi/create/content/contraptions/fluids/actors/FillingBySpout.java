@@ -19,7 +19,7 @@ public class FillingBySpout {
 	static RecipeWrapper wrapper = new RecipeWrapper(new ItemStackHandler(1));
 
 	public static boolean canItemBeFilled(World world, ItemStack stack) {
-		wrapper.setInventorySlotContents(0, stack);
+		wrapper.setItem(0, stack);
 
 		Optional<FillingRecipe> assemblyRecipe =
 			SequencedAssemblyRecipe.getRecipe(world, wrapper, AllRecipeTypes.FILLING.getType(), FillingRecipe.class);
@@ -33,7 +33,7 @@ public class FillingBySpout {
 	}
 
 	public static int getRequiredAmountForItem(World world, ItemStack stack, FluidStack availableFluid) {
-		wrapper.setInventorySlotContents(0, stack);
+		wrapper.setItem(0, stack);
 
 		Optional<FillingRecipe> assemblyRecipe =
 			SequencedAssemblyRecipe.getRecipe(world, wrapper, AllRecipeTypes.FILLING.getType(), FillingRecipe.class);
@@ -45,7 +45,7 @@ public class FillingBySpout {
 		}
 
 		for (IRecipe<RecipeWrapper> recipe : world.getRecipeManager()
-			.getRecipes(AllRecipeTypes.FILLING.getType(), wrapper, world)) {
+			.getRecipesFor(AllRecipeTypes.FILLING.getType(), wrapper, world)) {
 			FillingRecipe fillingRecipe = (FillingRecipe) recipe;
 			FluidIngredient requiredFluid = fillingRecipe.getRequiredFluid();
 			if (requiredFluid.test(availableFluid))
@@ -58,7 +58,7 @@ public class FillingBySpout {
 		FluidStack toFill = availableFluid.copy();
 		toFill.setAmount(requiredAmount);
 
-		wrapper.setInventorySlotContents(0, stack);
+		wrapper.setItem(0, stack);
 
 		FillingRecipe fillingRecipe =
 			SequencedAssemblyRecipe.getRecipe(world, wrapper, AllRecipeTypes.FILLING.getType(), FillingRecipe.class)
@@ -66,7 +66,7 @@ public class FillingBySpout {
 					.test(toFill))
 				.orElseGet(() -> {
 					for (IRecipe<RecipeWrapper> recipe : world.getRecipeManager()
-						.getRecipes(AllRecipeTypes.FILLING.getType(), wrapper, world)) {
+						.getRecipesFor(AllRecipeTypes.FILLING.getType(), wrapper, world)) {
 						FillingRecipe fr = (FillingRecipe) recipe;
 						FluidIngredient requiredFluid = fr.getRequiredFluid();
 						if (requiredFluid.test(toFill))

@@ -60,14 +60,14 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 	}
 
 	public void onCraftMatrixChanged() {
-		if (contentHolder.getBlueprintWorld().isRemote)
+		if (contentHolder.getBlueprintWorld().isClientSide)
 			return;
 
 		ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
 		CraftingInventory craftingInventory = new BlueprintCraftingInventory(this, ghostInventory);
 		Optional<ICraftingRecipe> optional = player.getServer()
 				.getRecipeManager()
-				.getRecipe(IRecipeType.CRAFTING, craftingInventory, player.getEntityWorld());
+				.getRecipeFor(IRecipeType.CRAFTING, craftingInventory, player.getCommandSenderWorld());
 
 		if (!optional.isPresent()) {
 			if (ghostInventory.getStackInSlot(9)
@@ -77,23 +77,23 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 				return;
 
 			ghostInventory.setStackInSlot(9, ItemStack.EMPTY);
-			serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 36 + 9, ItemStack.EMPTY));
+			serverplayerentity.connection.send(new SSetSlotPacket(containerId, 36 + 9, ItemStack.EMPTY));
 			contentHolder.inferredIcon = false;
 			return;
 		}
 
 		ICraftingRecipe icraftingrecipe = optional.get();
-		ItemStack itemstack = icraftingrecipe.getCraftingResult(craftingInventory);
+		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory);
 		ghostInventory.setStackInSlot(9, itemstack);
 		contentHolder.inferredIcon = true;
 		ItemStack toSend = itemstack.copy();
 		toSend.getOrCreateTag()
 				.putBoolean("InferredFromRecipe", true);
-		serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 36 + 9, toSend));
+		serverplayerentity.connection.send(new SSetSlotPacket(containerId, 36 + 9, toSend));
 	}
 
 	@Override
-	public void putStackInSlot(int p_75141_1_, ItemStack p_75141_2_) {
+	public void setItem(int p_75141_1_, ItemStack p_75141_2_) {
 		if (p_75141_1_ == 36 + 9) {
 			if (p_75141_2_.hasTag()) {
 				contentHolder.inferredIcon = p_75141_2_.getTag()
@@ -103,7 +103,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 			} else
 				contentHolder.inferredIcon = false;
 		}
-		super.putStackInSlot(p_75141_1_, p_75141_2_);
+		super.setItem(p_75141_1_, p_75141_2_);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 	protected BlueprintSection createOnClient(PacketBuffer extraData) {
 		int entityID = extraData.readVarInt();
 		int section = extraData.readVarInt();
-		Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityID);
+		Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
 		if (!(entityByID instanceof BlueprintEntity))
 			return null;
 		BlueprintEntity blueprintEntity = (BlueprintEntity) entityByID;
@@ -134,7 +134,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return contentHolder != null && contentHolder.canPlayerUse(player);
 	}
 
@@ -145,7 +145,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 3; x++) {
 					ItemStack stack = items.getStackInSlot(y * 3 + x);
-					setInventorySlotContents(y * 3 + x, stack == null ? ItemStack.EMPTY : stack.copy());
+					setItem(y * 3 + x, stack == null ? ItemStack.EMPTY : stack.copy());
 				}
 			}
 		}
@@ -162,12 +162,12 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 		}
 
 		@Override
-		public void onSlotChanged() {
-			super.onSlotChanged();
-			if (index == 9 && getHasStack() && !contentHolder.getBlueprintWorld().isRemote) {
+		public void setChanged() {
+			super.setChanged();
+			if (index == 9 && hasItem() && !contentHolder.getBlueprintWorld().isClientSide) {
 				contentHolder.inferredIcon = false;
 				ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
-				serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 36 + 9, getStack()));
+				serverplayerentity.connection.send(new SSetSlotPacket(containerId, 36 + 9, getItem()));
 			}
 			if (index < 9)
 				onCraftMatrixChanged();

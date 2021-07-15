@@ -27,7 +27,7 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 
 	@Override
 	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(pos).grow(1);
+		return new AxisAlignedBB(worldPosition).inflate(1);
 	}
 
 	@Override
@@ -35,10 +35,10 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 		if (!ICogWheel.isLargeCog(state))
 			return super.addPropagationLocations(block, state, neighbours);
 
-		BlockPos.getAllInBox(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
+		BlockPos.betweenClosedStream(new BlockPos(-1, -1, -1), new BlockPos(1, 1, 1))
 			.forEach(offset -> {
-				if (offset.distanceSq(0, 0, 0, false) == BlockPos.ZERO.distanceSq(1, 1, 0, false))
-					neighbours.add(pos.add(offset));
+				if (offset.distSqr(0, 0, 0, false) == BlockPos.ZERO.distSqr(1, 1, 0, false))
+					neighbours.add(worldPosition.offset(offset));
 			});
 		return neighbours;
 	}

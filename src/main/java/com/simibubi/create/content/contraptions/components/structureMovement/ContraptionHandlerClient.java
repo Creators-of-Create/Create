@@ -52,8 +52,8 @@ public class ContraptionHandlerClient {
 		}
 
 		float limbSwing = data.getFloat("OverrideLimbSwing");
-		remotePlayer.prevPosX = remotePlayer.getX() - (limbSwing / 4);
-		remotePlayer.prevPosZ = remotePlayer.getZ();
+		remotePlayer.xo = remotePlayer.getX() - (limbSwing / 4);
+		remotePlayer.zo = remotePlayer.getZ();
 	}
 
 	@SubscribeEvent
@@ -65,20 +65,20 @@ public class ContraptionHandlerClient {
 			return;
 		if (player.isPassenger())
 			return;
-		if (mc.world == null)
+		if (mc.level == null)
 			return;
 		if (!event.isUseItem())
 			return;
 		Vector3d origin = RaycastHelper.getTraceOrigin(player);
 
-		double reach = mc.playerController.getBlockReachDistance();
-		if (mc.objectMouseOver != null && mc.objectMouseOver.getHitVec() != null)
-			reach = Math.min(mc.objectMouseOver.getHitVec()
+		double reach = mc.gameMode.getPickRange();
+		if (mc.hitResult != null && mc.hitResult.getLocation() != null)
+			reach = Math.min(mc.hitResult.getLocation()
 				.distanceTo(origin), reach);
 
 		Vector3d target = RaycastHelper.getTraceTarget(player, reach, origin);
-		for (AbstractContraptionEntity contraptionEntity : mc.world
-			.getEntitiesWithinAABB(AbstractContraptionEntity.class, new AxisAlignedBB(origin, target))) {
+		for (AbstractContraptionEntity contraptionEntity : mc.level
+			.getEntitiesOfClass(AbstractContraptionEntity.class, new AxisAlignedBB(origin, target))) {
 
 			Vector3d localOrigin = contraptionEntity.toLocalVector(origin, 1);
 			Vector3d localTarget = contraptionEntity.toLocalVector(target, 1);
@@ -91,10 +91,10 @@ public class ContraptionHandlerClient {
 				if (blockInfo == null)
 					return false;
 				BlockState state = blockInfo.state;
-				VoxelShape raytraceShape = state.getShape(Minecraft.getInstance().world, BlockPos.ZERO.down());
+				VoxelShape raytraceShape = state.getShape(Minecraft.getInstance().level, BlockPos.ZERO.below());
 				if (raytraceShape.isEmpty())
 					return false;
-				BlockRayTraceResult rayTrace = raytraceShape.rayTrace(localOrigin, localTarget, p);
+				BlockRayTraceResult rayTrace = raytraceShape.clip(localOrigin, localTarget, p);
 				if (rayTrace != null) {
 					mutableResult.setValue(rayTrace);
 					return true;
@@ -107,8 +107,8 @@ public class ContraptionHandlerClient {
 
 			BlockRayTraceResult rayTraceResult = mutableResult.getValue();
 			Hand hand = event.getHand();
-			Direction face = rayTraceResult.getFace();
-			BlockPos pos = rayTraceResult.getPos();
+			Direction face = rayTraceResult.getDirection();
+			BlockPos pos = rayTraceResult.getBlockPos();
 
 			if (!contraptionEntity.handlePlayerInteraction(player, pos, face, hand))
 				return;

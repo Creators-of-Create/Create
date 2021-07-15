@@ -100,8 +100,8 @@ public class BoxElement extends RenderElement {
 		Color c2 = ColorHelper.applyAlpha(borderTop, alpha);
 		Color c3 = ColorHelper.applyAlpha(borderBot, alpha);
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder b = tessellator.getBuffer();
-		Matrix4f model = ms.peek().getModel();
+		BufferBuilder b = tessellator.getBuilder();
+		Matrix4f model = ms.last().pose();
 		b.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		//outer top
 		b.vertex(model, x - f - 1        , y - f - 2         , z).color(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()).endVertex();
@@ -128,7 +128,7 @@ public class BoxElement extends RenderElement {
 		b.vertex(model, x - f - 1        , y + f + 1 + height, z).color(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()).endVertex();
 		b.vertex(model, x + f + 1 + width, y + f + 1 + height, z).color(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()).endVertex();
 		b.vertex(model, x + f + 1 + width, y - f - 1         , z).color(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()).endVertex();
-		tessellator.draw();
+		tessellator.end();
 		b.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 		//inner top - includes corners
 		b.vertex(model, x - f - 1        , y - f - 1         , z).color(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha()).endVertex();
@@ -151,7 +151,7 @@ public class BoxElement extends RenderElement {
 		b.vertex(model, x + f + 1 + width, y + f     + height, z).color(c3.getRed(), c3.getGreen(), c3.getBlue(), c3.getAlpha()).endVertex();
 		b.vertex(model, x + f + 1 + width, y - f             , z).color(c2.getRed(), c2.getGreen(), c2.getBlue(), c2.getAlpha()).endVertex();
 
-		tessellator.draw();
+		tessellator.end();
 
 		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();

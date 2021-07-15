@@ -70,7 +70,7 @@ public abstract class FlowSource {
 		public void manageSource(World world) {
 			if (fluidHandler.isPresent())
 				return;
-			TileEntity tileEntity = world.getTileEntity(location.getConnectedPos());
+			TileEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
 			if (tileEntity != null)
 				fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
 					location.getOppositeFace());

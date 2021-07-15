@@ -15,7 +15,7 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 
 	@Override
 	protected Vector3d getLocalOffset(BlockState state) {
-		Direction facing = state.get(DeployerBlock.FACING);
+		Direction facing = state.getValue(DeployerBlock.FACING);
 		Vector3d vec = VecHelper.voxelSpace(8f, 13.5f, 11.5f);
 
 		float yRot = AngleHelper.horizontalAngle(facing);
@@ -28,7 +28,7 @@ public class DeployerFilterSlot extends ValueBoxTransform {
 
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
-		Direction facing = state.get(DeployerBlock.FACING);
+		Direction facing = state.getValue(DeployerBlock.FACING);
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
 		float yRot = AngleHelper.horizontalAngle(facing) + 180;
 		MatrixStacker.of(ms)

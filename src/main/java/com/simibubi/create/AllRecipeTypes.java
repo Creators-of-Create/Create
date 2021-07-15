@@ -101,6 +101,6 @@ public enum AllRecipeTypes {
 
 	public <C extends IInventory, T extends IRecipe<C>> Optional<T> find(C inv, World world) {
 		return world.getRecipeManager()
-			.getRecipe(getType(), inv, world);
+			.getRecipeFor(getType(), inv, world);
 	}
 }

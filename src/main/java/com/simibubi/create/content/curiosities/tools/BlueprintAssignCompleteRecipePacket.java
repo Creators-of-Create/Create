@@ -34,11 +34,11 @@ public class BlueprintAssignCompleteRecipePacket extends SimplePacketBase {
 							.getSender();
 					if (player == null)
 						return;
-					if (player.openContainer instanceof BlueprintContainer) {
-						BlueprintContainer c = (BlueprintContainer) player.openContainer;
-						player.getServerWorld()
+					if (player.containerMenu instanceof BlueprintContainer) {
+						BlueprintContainer c = (BlueprintContainer) player.containerMenu;
+						player.getLevel()
 								.getRecipeManager()
-								.getRecipe(recipeID)
+								.byKey(recipeID)
 								.ifPresent(r -> BlueprintItem.assignCompleteRecipe(c.ghostInventory, r));
 					}
 				});

@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 
+import com.simibubi.create.content.curiosities.bell.BasicParticleData.IBasicParticleFactory;
+
 public class SoulParticle extends CustomRotationParticle {
 
 	private final IAnimatedSprite animatedSprite;
@@ -43,23 +45,23 @@ public class SoulParticle extends CustomRotationParticle {
 		IAnimatedSprite spriteSet, IParticleData data) {
 		super(worldIn, x, y, z, spriteSet, 0);
 		this.animatedSprite = spriteSet;
-		this.particleScale = 0.5f;
-		this.setSize(this.particleScale, this.particleScale);
+		this.quadSize = 0.5f;
+		this.setSize(this.quadSize, this.quadSize);
 
-		this.loopLength = loopFrames + (int) (this.rand.nextFloat() * 5f - 4f);
-		this.startTicks = startFrames + (int) (this.rand.nextFloat() * 5f - 4f);
-		this.endTicks = endFrames + (int) (this.rand.nextFloat() * 5f - 4f);
-		this.numLoops = (int) (1f + this.rand.nextFloat() * 2f);
+		this.loopLength = loopFrames + (int) (this.random.nextFloat() * 5f - 4f);
+		this.startTicks = startFrames + (int) (this.random.nextFloat() * 5f - 4f);
+		this.endTicks = endFrames + (int) (this.random.nextFloat() * 5f - 4f);
+		this.numLoops = (int) (1f + this.random.nextFloat() * 2f);
 
 		this.setFrame(0);
-		this.field_21507 = true; // disable movement
-		this.mirror = this.rand.nextBoolean();
+		this.stoppedByCollision = true; // disable movement
+		this.mirror = this.random.nextBoolean();
 
 		this.isPerimeter = data instanceof PerimeterData;
 		this.isExpandingPerimeter = data instanceof ExpandingPerimeterData;
 		this.animationStage = !isPerimeter ? new StartAnimation(this) : new PerimeterAnimation(this);
 		if (isPerimeter) {
-			prevPosY = posY -= .5f - 1 / 128f;
+			yo = y -= .5f - 1 / 128f;
 			totalFrames = perimeterFrames;
 			isVisible = false;
 		}
@@ -70,22 +72,22 @@ public class SoulParticle extends CustomRotationParticle {
 		animationStage.tick();
 		animationStage = animationStage.getNext();
 
-		BlockPos pos = new BlockPos(posX, posY, posZ);
+		BlockPos pos = new BlockPos(x, y, z);
 		if (animationStage == null)
-			setExpired();
-		if (!SoulPulseEffect.isDark(world, pos)) {
+			remove();
+		if (!SoulPulseEffect.isDark(level, pos)) {
 			isVisible = true;
 			if (!isPerimeter)
-				setExpired();
+				remove();
 		} else if (isPerimeter)
 			isVisible = false;
 	}
 
 	@Override
-	public void buildGeometry(IVertexBuilder builder, ActiveRenderInfo camera, float partialTicks) {
+	public void render(IVertexBuilder builder, ActiveRenderInfo camera, float partialTicks) {
 		if (!isVisible)
 			return;
-		super.buildGeometry(builder, camera, partialTicks);
+		super.render(builder, camera, partialTicks);
 	}
 
 	public void setFrame(int frame) {
@@ -96,8 +98,8 @@ public class SoulParticle extends CustomRotationParticle {
 	@Override
 	public Quaternion getCustomRotation(ActiveRenderInfo camera, float partialTicks) {
 		if (isPerimeter)
-			return Vector3f.POSITIVE_X.getDegreesQuaternion(90);
-		return new Quaternion(0, -camera.getYaw(), 0, true);
+			return Vector3f.XP.rotationDegrees(90);
+		return new Quaternion(0, -camera.getYRot(), 0, true);
 	}
 
 	public static class Data extends BasicParticleData<SoulParticle> {

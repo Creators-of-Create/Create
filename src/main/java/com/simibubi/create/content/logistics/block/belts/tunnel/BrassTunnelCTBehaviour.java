@@ -10,6 +10,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 
+import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
+
 public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override
@@ -25,7 +27,7 @@ public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 		if (yDiff != 0)
 			return false;
 
-		TileEntity te = reader.getTileEntity(pos);
+		TileEntity te = reader.getBlockEntity(pos);
 		if (!(te instanceof BrassTunnelTileEntity))
 			return false;
 		BrassTunnelTileEntity tunnelTE = (BrassTunnelTileEntity) te;

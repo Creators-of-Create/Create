@@ -1,4 +1,8 @@
 package com.simibubi.create.foundation.config;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigFloat;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigGroup;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
+
 
 public class CSchematics extends ConfigBase {
 

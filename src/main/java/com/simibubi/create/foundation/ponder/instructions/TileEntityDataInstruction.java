@@ -30,16 +30,16 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 		PonderWorld world = scene.getWorld();
 		selection.forEach(pos -> {
 			if (!world.getBounds()
-				.isVecInside(pos))
+				.isInside(pos))
 				return;
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getBlockEntity(pos);
 			if (!type.isInstance(tileEntity))
 				return;
-			CompoundNBT apply = data.apply(tileEntity.write(new CompoundNBT()));
+			CompoundNBT apply = data.apply(tileEntity.save(new CompoundNBT()));
 			BlockState state = world.getBlockState(pos);
 			if (tileEntity instanceof SyncedTileEntity)
 				((SyncedTileEntity) tileEntity).readClientUpdate(state, apply);
-			tileEntity.fromTag(state, apply);
+			tileEntity.load(state, apply);
 		});
 	}
 

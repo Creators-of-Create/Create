@@ -35,6 +35,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>, IWrenchable {
 
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
@@ -42,14 +44,14 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 
 	public BeltTunnelBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(SHAPE, Shape.STRAIGHT));
+		registerDefaultState(defaultBlockState().setValue(SHAPE, Shape.STRAIGHT));
 	}
 
 	public enum Shape implements IStringSerializable {
 		STRAIGHT, WINDOW, CLOSED, T_LEFT, T_RIGHT, CROSS;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 	}
@@ -70,58 +72,58 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		BlockState blockState = worldIn.getBlockState(pos.down());
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		BlockState blockState = worldIn.getBlockState(pos.below());
 		if (!isValidPositionForPlacement(state, worldIn, pos))
 			return false;
-		if (!blockState.get(BeltBlock.CASING))
+		if (!blockState.getValue(BeltBlock.CASING))
 			return false;
 		return true;
 	}
 
 	public boolean isValidPositionForPlacement(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		BlockState blockState = worldIn.getBlockState(pos.down());
+		BlockState blockState = worldIn.getBlockState(pos.below());
 		if (!AllBlocks.BELT.has(blockState))
 			return false;
-		if (blockState.get(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
+		if (blockState.getValue(BeltBlock.SLOPE) != BeltSlope.HORIZONTAL)
 			return false;
 		return true;
 	}
 
 	public static boolean hasWindow(BlockState state) {
-		return state.get(SHAPE) == Shape.WINDOW || state.get(SHAPE) == Shape.CLOSED;
+		return state.getValue(SHAPE) == Shape.WINDOW || state.getValue(SHAPE) == Shape.CLOSED;
 	}
 
 	public static boolean isStraight(BlockState state) {
-		return hasWindow(state) || state.get(SHAPE) == Shape.STRAIGHT;
+		return hasWindow(state) || state.getValue(SHAPE) == Shape.STRAIGHT;
 	}
 	
 	public static boolean isJunction(BlockState state) {
-		Shape shape = state.get(SHAPE);
+		Shape shape = state.getValue(SHAPE);
 		return shape == Shape.CROSS || shape == Shape.T_LEFT || shape == Shape.T_RIGHT;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getTunnelState(context.getWorld(), context.getPos());
+		return getTunnelState(context.getLevel(), context.getClickedPos());
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
-		if (!(world instanceof WrappedWorld) && !world.isRemote())
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+		if (!(world instanceof WrappedWorld) && !world.isClientSide())
 			withTileEntityDo(world, pos, BeltTunnelTileEntity::updateTunnelConnections);
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 		if (facing.getAxis()
 			.isVertical())
 			return state;
-		if (!(worldIn instanceof WrappedWorld) && !worldIn.isRemote())
+		if (!(worldIn instanceof WrappedWorld) && !worldIn.isClientSide())
 			withTileEntityDo(worldIn, currentPos, BeltTunnelTileEntity::updateTunnelConnections);
 		BlockState tunnelState = getTunnelState(worldIn, currentPos);
-		if (tunnelState.get(HORIZONTAL_AXIS) == state.get(HORIZONTAL_AXIS)) {
+		if (tunnelState.getValue(HORIZONTAL_AXIS) == state.getValue(HORIZONTAL_AXIS)) {
 			if (hasWindow(tunnelState) == hasWindow(state))
 				return state;
 		}
@@ -132,55 +134,55 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	public void updateTunnel(IWorld world, BlockPos pos) {
 		BlockState tunnel = world.getBlockState(pos);
 		BlockState newTunnel = getTunnelState(world, pos);
-		if (tunnel != newTunnel && !world.isRemote()) {
-			world.setBlockState(pos, newTunnel, 3);
-			TileEntity te = world.getTileEntity(pos);
+		if (tunnel != newTunnel && !world.isClientSide()) {
+			world.setBlock(pos, newTunnel, 3);
+			TileEntity te = world.getBlockEntity(pos);
 			if (te != null && (te instanceof BeltTunnelTileEntity))
 				((BeltTunnelTileEntity) te).updateTunnelConnections();
 		}
 	}
 
 	private BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
-		BlockState state = getDefaultState();
-		BlockState belt = reader.getBlockState(pos.down());
+		BlockState state = defaultBlockState();
+		BlockState belt = reader.getBlockState(pos.below());
 		if (AllBlocks.BELT.has(belt))
-			state = state.with(HORIZONTAL_AXIS, belt.get(BeltBlock.HORIZONTAL_FACING)
+			state = state.setValue(HORIZONTAL_AXIS, belt.getValue(BeltBlock.HORIZONTAL_FACING)
 				.getAxis());
-		Axis axis = state.get(HORIZONTAL_AXIS);
+		Axis axis = state.getValue(HORIZONTAL_AXIS);
 
 		// T and Cross
-		Direction left = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)
-			.rotateY();
-		boolean onLeft = hasValidOutput(reader, pos.down(), left);
-		boolean onRight = hasValidOutput(reader, pos.down(), left.getOpposite());
+		Direction left = Direction.get(AxisDirection.POSITIVE, axis)
+			.getClockWise();
+		boolean onLeft = hasValidOutput(reader, pos.below(), left);
+		boolean onRight = hasValidOutput(reader, pos.below(), left.getOpposite());
 
 		if (onLeft && onRight)
-			state = state.with(SHAPE, Shape.CROSS);
+			state = state.setValue(SHAPE, Shape.CROSS);
 		else if (onLeft)
-			state = state.with(SHAPE, Shape.T_LEFT);
+			state = state.setValue(SHAPE, Shape.T_LEFT);
 		else if (onRight)
-			state = state.with(SHAPE, Shape.T_RIGHT);
+			state = state.setValue(SHAPE, Shape.T_RIGHT);
 
-		if (state.get(SHAPE) == Shape.STRAIGHT) {
+		if (state.getValue(SHAPE) == Shape.STRAIGHT) {
 			boolean canHaveWindow = canHaveWindow(reader, pos, axis);
 			if (canHaveWindow)
-				state = state.with(SHAPE, Shape.WINDOW);
+				state = state.setValue(SHAPE, Shape.WINDOW);
 		}
 
 		return state;
 	}
 
 	protected boolean canHaveWindow(IBlockReader reader, BlockPos pos, Axis axis) {
-		Direction fw = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-		BlockState blockState1 = reader.getBlockState(pos.offset(fw));
-		BlockState blockState2 = reader.getBlockState(pos.offset(fw.getOpposite()));
+		Direction fw = Direction.get(AxisDirection.POSITIVE, axis);
+		BlockState blockState1 = reader.getBlockState(pos.relative(fw));
+		BlockState blockState2 = reader.getBlockState(pos.relative(fw.getOpposite()));
 		
 		boolean funnel1 = blockState1.getBlock() instanceof BeltFunnelBlock
-			&& blockState1.get(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
-			&& blockState1.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw.getOpposite();
+			&& blockState1.getValue(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
+			&& blockState1.getValue(BeltFunnelBlock.HORIZONTAL_FACING) == fw.getOpposite();
 		boolean funnel2 = blockState2.getBlock() instanceof BeltFunnelBlock
-			&& blockState2.get(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
-			&& blockState2.get(BeltFunnelBlock.HORIZONTAL_FACING) == fw;
+			&& blockState2.getValue(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
+			&& blockState2.getValue(BeltFunnelBlock.HORIZONTAL_FACING) == fw;
 		
 		boolean valid1 = blockState1.getBlock() instanceof BeltTunnelBlock || funnel1;
 		boolean valid2 = blockState2.getBlock() instanceof BeltTunnelBlock || funnel2;
@@ -189,12 +191,12 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	private boolean hasValidOutput(IBlockReader world, BlockPos pos, Direction side) {
-		BlockState blockState = world.getBlockState(pos.offset(side));
+		BlockState blockState = world.getBlockState(pos.relative(side));
 		if (AllBlocks.BELT.has(blockState))
-			return blockState.get(BeltBlock.HORIZONTAL_FACING)
+			return blockState.getValue(BeltBlock.HORIZONTAL_FACING)
 				.getAxis() == side.getAxis();
 		DirectBeltInputBehaviour behaviour =
-			TileEntityBehaviour.get(world, pos.offset(side), DirectBeltInputBehaviour.TYPE);
+			TileEntityBehaviour.get(world, pos.relative(side), DirectBeltInputBehaviour.TYPE);
 		return behaviour != null && behaviour.canInsertFromSide(side);
 	}
 
@@ -204,30 +206,30 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 			return ActionResultType.PASS;
 
 		// Toggle windows
-		Shape shape = state.get(SHAPE);
+		Shape shape = state.getValue(SHAPE);
 		shape = shape == Shape.CLOSED ? Shape.WINDOW : Shape.CLOSED;
-		World world = context.getWorld();
-		if (!world.isRemote)
-			world.setBlockState(context.getPos(), state.with(SHAPE, shape), 2);
+		World world = context.getLevel();
+		if (!world.isClientSide)
+			world.setBlock(context.getClickedPos(), state.setValue(SHAPE, shape), 2);
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rotation) {
-		Direction fromAxis = Direction.getFacingFromAxis(AxisDirection.POSITIVE, state.get(HORIZONTAL_AXIS));
+		Direction fromAxis = Direction.get(AxisDirection.POSITIVE, state.getValue(HORIZONTAL_AXIS));
 		Direction rotated = rotation.rotate(fromAxis);
 
-		return state.with(HORIZONTAL_AXIS, rotated.getAxis());
+		return state.setValue(HORIZONTAL_AXIS, rotated.getAxis());
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
-		if (fromPos.equals(pos.down())) {
-			if (!isValidPosition(state, worldIn, pos)) {
+		if (fromPos.equals(pos.below())) {
+			if (!canSurvive(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
 				return;
 			}
@@ -235,9 +237,9 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_AXIS, SHAPE);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override

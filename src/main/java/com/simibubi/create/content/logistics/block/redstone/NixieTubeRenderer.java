@@ -57,36 +57,36 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 	@Override
 	protected void renderSafe(NixieTubeTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		ms.push();
+		ms.pushPose();
 		BlockState blockState = te.getBlockState();
 		MatrixStacker.of(ms)
 			.centre()
-			.rotateY(AngleHelper.horizontalAngle(blockState.get(NixieTubeBlock.HORIZONTAL_FACING)));
+			.rotateY(AngleHelper.horizontalAngle(blockState.getValue(NixieTubeBlock.FACING)));
 
-		float height = blockState.get(NixieTubeBlock.CEILING) ? 2 : 6;
+		float height = blockState.getValue(NixieTubeBlock.CEILING) ? 2 : 6;
 		float scale = 1 / 20f;
 
 		Couple<String> s = te.getDisplayedStrings();
 		DyeColor color = NixieTubeBlock.colorOf(te.getBlockState());
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(-4 / 16f, 0, 0);
 		ms.scale(scale, -scale, scale);
 		drawTube(ms, buffer, s.getFirst(), height, color);
-		ms.pop();
+		ms.popPose();
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(4 / 16f, 0, 0);
 		ms.scale(scale, -scale, scale);
 		drawTube(ms, buffer, s.getSecond(), height, color);
-		ms.pop();
+		ms.popPose();
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	private void drawTube(MatrixStack ms, IRenderTypeBuffer buffer, String c, float height, DyeColor color) {
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-		float charWidth = fontRenderer.getStringWidth(c);
+		FontRenderer fontRenderer = Minecraft.getInstance().font;
+		float charWidth = fontRenderer.width(c);
 		float shadowOffset = .5f;
 		float flicker = r.nextFloat();
 		Couple<Integer> couple = DYE_TABLE.get(color);
@@ -94,34 +94,34 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		int darkColor = couple.getSecond();
 		int flickeringBrightColor = ColorHelper.mixColors(brightColor, darkColor, flicker / 4);
 
-		ms.push();
+		ms.pushPose();
 		ms.translate((charWidth - shadowOffset) / -2f, -height, 0);
 		drawChar(ms, buffer, c, flickeringBrightColor);
-		ms.push();
+		ms.pushPose();
 		ms.translate(shadowOffset, shadowOffset, -1 / 16f);
 		drawChar(ms, buffer, c, darkColor);
-		ms.pop();
-		ms.pop();
+		ms.popPose();
+		ms.popPose();
 
-		ms.push();
+		ms.pushPose();
 		ms.scale(-1, 1, 1);
 		ms.translate((charWidth - shadowOffset) / -2f, -height, 0);
 		drawChar(ms, buffer, c, darkColor);
-		ms.push();
+		ms.pushPose();
 		ms.translate(-shadowOffset, shadowOffset, -1 / 16f);
 		drawChar(ms, buffer, c, ColorHelper.mixColors(darkColor, 0, .35f));
-		ms.pop();
-		ms.pop();
+		ms.popPose();
+		ms.popPose();
 	}
 
 	private static void drawChar(MatrixStack ms, IRenderTypeBuffer buffer, String c, int color) {
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-		fontRenderer.draw(c, 0, 0, color, false, ms.peek()
-			.getModel(), buffer, false, 0, 15728880);
+		FontRenderer fontRenderer = Minecraft.getInstance().font;
+		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
+			.pose(), buffer, false, 0, 15728880);
 		if (buffer instanceof Impl) {
-			TexturedGlyph texturedglyph = fontRenderer.getFontStorage(Style.DEFAULT_FONT_ID)
-				.getRectangleRenderer();
-			((Impl) buffer).draw(texturedglyph.getLayer(false));
+			TexturedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
+				.whiteGlyph();
+			((Impl) buffer).endBatch(texturedglyph.renderType(false));
 		}
 	}
 

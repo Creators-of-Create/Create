@@ -29,12 +29,12 @@ public class FluidFX {
 		if (fluid == Fluids.EMPTY)
 			return;
 
-		FluidState defaultState = fluid.getDefaultState();
+		FluidState defaultState = fluid.defaultFluidState();
 		if (defaultState == null || defaultState.isEmpty()) {
 			return;
 		}
 
-		BlockParticleData blockParticleData = new BlockParticleData(ParticleTypes.BLOCK, defaultState.getBlockState());
+		BlockParticleData blockParticleData = new BlockParticleData(ParticleTypes.BLOCK, defaultState.createLegacyBlock());
 		Vector3d center = VecHelper.getCenterOf(pos);
 
 		for (int i = 0; i < 20; i++) {
@@ -61,17 +61,17 @@ public class FluidFX {
 
 	public static void spawnRimParticles(World world, BlockPos pos, Direction side, int amount, IParticleData particle,
 		float rimRadius) {
-		Vector3d directionVec = Vector3d.of(side.getDirectionVec());
+		Vector3d directionVec = Vector3d.atLowerCornerOf(side.getNormal());
 		for (int i = 0; i < amount; i++) {
 			Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1)
 				.normalize();
 			vec = VecHelper.clampComponentWise(vec, rimRadius)
-				.mul(VecHelper.axisAlingedPlaneOf(directionVec))
+				.multiply(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.45 + r.nextFloat() / 16f));
 			Vector3d m = vec.scale(.05f);
 			vec = vec.add(VecHelper.getCenterOf(pos));
 
-			world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
+			world.addAlwaysVisibleParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
 		}
 	}
 
@@ -79,7 +79,7 @@ public class FluidFX {
 		float rimRadius, Vector3d directionVec, boolean inbound) {
 		for (int i = 0; i < amount; i++) {
 			Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, rimRadius * .75f);
-			vec = vec.mul(VecHelper.axisAlingedPlaneOf(directionVec))
+			vec = vec.multiply(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.5 + r.nextFloat() / 4f));
 			Vector3d m = vec.scale(1 / 4f);
 			Vector3d centerOf = VecHelper.getCenterOf(pos);
@@ -90,7 +90,7 @@ public class FluidFX {
 					.subtract(vec)
 					.scale(1 / 16f);
 			}
-			world.addOptionalParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
+			world.addAlwaysVisibleParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
 		}
 	}
 
@@ -99,7 +99,7 @@ public class FluidFX {
 	}
 
 	private static World world() {
-		return Minecraft.getInstance().world;
+		return Minecraft.getInstance().level;
 	}
 
 }

@@ -122,7 +122,7 @@ public class GantryScenes {
 		scene.overlay.showText(60)
 			.attachKeyFrame()
 			.colored(PonderPalette.RED)
-			.pointAt(util.vector.centerOf(cogPos.down()
+			.pointAt(util.vector.centerOf(cogPos.below()
 				.south()))
 			.text("Redstone-powered gantry shafts stop moving their carriages")
 			.placeNearTarget();
@@ -210,7 +210,7 @@ public class GantryScenes {
 
 		BlockPos leverPos = util.grid.at(4, 1, 0);
 		scene.world.modifyBlocks(util.select.fromTo(1, 1, 0, 3, 1, 1),
-			s -> s.contains(RedstoneWireBlock.POWER) ? s.with(RedstoneWireBlock.POWER, 15) : s, false);
+			s -> s.hasProperty(RedstoneWireBlock.POWER) ? s.setValue(RedstoneWireBlock.POWER, 15) : s, false);
 		scene.world.toggleRedstonePower(util.select.position(leverPos));
 		scene.world.toggleRedstonePower(shafts);
 		scene.effects.indicateRedstone(leverPos);

@@ -56,7 +56,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	private void updateTargetRotation() {
 		if (hasNetwork())
 			getOrCreateNetwork().remove(this);
-		RotationPropagator.handleRemoved(world, pos, this);
+		RotationPropagator.handleRemoved(level, worldPosition, this);
 		removeSource();
 		attachKinetics();
 	}
@@ -96,7 +96,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			return 0;
 		}
 
-		boolean wheelPowersController = speedController.source.equals(cogWheel.getPos());
+		boolean wheelPowersController = speedController.source.equals(cogWheel.getBlockPos());
 
 		if (wheelPowersController) {
 			if (targetingController)
@@ -110,11 +110,11 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	}
 
 	public void updateBracket() {
-		if (world == null || !world.isRemote)
+		if (level == null || !level.isClientSide)
 			return;
-		BlockState stateAbove = world.getBlockState(pos.up());
+		BlockState stateAbove = level.getBlockState(worldPosition.above());
 		hasBracket = ICogWheel.isDedicatedCogWheel(stateAbove.getBlock()) && ICogWheel.isLargeCog(stateAbove)
-			&& stateAbove.get(CogWheelBlock.AXIS).isHorizontal();
+			&& stateAbove.getValue(CogWheelBlock.AXIS).isHorizontal();
 	}
 
 	@Override
@@ -134,7 +134,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			if (direction.getAxis()
 				.isVertical())
 				return false;
-			return state.get(SpeedControllerBlock.HORIZONTAL_AXIS) != direction.getAxis();
+			return state.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) != direction.getAxis();
 		}
 
 		@Override

@@ -51,20 +51,20 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(DeployerBlock.FACING)
-			.getDirectionVec())
+		return Vector3d.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
+			.getNormal())
 			.scale(2);
 	}
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		if (context.world.isRemote)
+		if (context.world.isClientSide)
 			return;
 
 		tryGrabbingItem(context);
 		DeployerFakePlayer player = getPlayer(context);
 		Mode mode = getMode(context);
-		if (mode == Mode.USE && !DeployerHandler.shouldActivate(player.getHeldItemMainhand(), context.world, pos, null))
+		if (mode == Mode.USE && !DeployerHandler.shouldActivate(player.getMainHandItem(), context.world, pos, null))
 			return;
 
 		activate(context, pos, player, mode);
@@ -79,12 +79,12 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (AllItems.SCHEMATIC.isIn(filter))
 			activateAsSchematicPrinter(context, pos, player, world, filter);
 
-		Vector3d facingVec = Vector3d.of(context.state.get(DeployerBlock.FACING)
-			.getDirectionVec());
+		Vector3d facingVec = Vector3d.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
+			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
 		Vector3d vec = context.position.subtract(facingVec.scale(2));
-		player.rotationYaw = AbstractContraptionEntity.yawFromVector(facingVec);
-		player.rotationPitch = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
+		player.yRot = AbstractContraptionEntity.yawFromVector(facingVec);
+		player.xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}
@@ -105,10 +105,10 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (schematicWorld == null)
 			return;
 		if (!schematicWorld.getBounds()
-				.isVecInside(pos.subtract(schematicWorld.anchor)))
+				.isInside(pos.subtract(schematicWorld.anchor)))
 			return;
 		BlockState blockState = schematicWorld.getBlockState(pos);
-		ItemRequirement requirement = ItemRequirement.of(blockState, schematicWorld.getTileEntity(pos));
+		ItemRequirement requirement = ItemRequirement.of(blockState, schematicWorld.getBlockEntity(pos));
 		if (requirement.isInvalid() || requirement.isEmpty())
 			return;
 		if (AllBlocks.BELT.has(blockState))
@@ -134,14 +134,14 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 		CompoundNBT data = null;
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-			TileEntity tile = schematicWorld.getTileEntity(pos);
+			TileEntity tile = schematicWorld.getBlockEntity(pos);
 			if (tile != null) {
-				data = tile.write(new CompoundNBT());
+				data = tile.save(new CompoundNBT());
 				data = NBTProcessors.process(tile, data, true);
 			}
 		}
 
-		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.getRegistryKey(), world, pos);
+		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
 		BlockHelper.placeSchematicBlock(world, blockState, pos, firstRequired, data);
 		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
 			blocksnapshot.restore(true, false);
@@ -149,7 +149,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void tick(MovementContext context) {
-		if (context.world.isRemote)
+		if (context.world.isClientSide)
 			return;
 		if (!context.stall)
 			return;
@@ -176,14 +176,14 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void stopMoving(MovementContext context) {
-		if (context.world.isRemote)
+		if (context.world.isClientSide)
 			return;
 
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
 
-		context.tileData.put("Inventory", player.inventory.write(new ListNBT()));
+		context.tileData.put("Inventory", player.inventory.save(new ListNBT()));
 		player.remove();
 	}
 
@@ -191,14 +191,14 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		if (player.getHeldItemMainhand()
+		if (player.getMainHandItem()
 			.isEmpty()) {
 			ItemStack filter = getFilter(context);
 			if (AllItems.SCHEMATIC.isIn(filter))
 				return;
 			ItemStack held = ItemHelper.extract(context.contraption.inventory,
 				stack -> FilterItem.test(context.world, stack, filter), 1, false);
-			player.setHeldItem(Hand.MAIN_HAND, held);
+			player.setItemInHand(Hand.MAIN_HAND, held);
 		}
 	}
 
@@ -209,13 +209,13 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		PlayerInventory inv = player.inventory;
 		ItemStack filter = getFilter(context);
 
-		for (List<ItemStack> list : Arrays.asList(inv.armorInventory, inv.offHandInventory, inv.mainInventory)) {
+		for (List<ItemStack> list : Arrays.asList(inv.armor, inv.offhand, inv.items)) {
 			for (int i = 0; i < list.size(); ++i) {
 				ItemStack itemstack = list.get(i);
 				if (itemstack.isEmpty())
 					continue;
 
-				if (list == inv.mainInventory && i == inv.currentItem
+				if (list == inv.items && i == inv.selected
 					&& FilterItem.test(context.world, itemstack, filter))
 					continue;
 
@@ -230,16 +230,16 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		context.data.put("HeldItem", player.getHeldItemMainhand()
+		context.data.put("HeldItem", player.getMainHandItem()
 			.serializeNBT());
 	}
 
 	private DeployerFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerWorld) {
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerWorld) context.world);
-			deployerFakePlayer.inventory.read(context.tileData.getList("Inventory", NBT.TAG_COMPOUND));
+			deployerFakePlayer.inventory.load(context.tileData.getList("Inventory", NBT.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
-				deployerFakePlayer.setHeldItem(Hand.MAIN_HAND, ItemStack.read(context.data.getCompound("HeldItem")));
+				deployerFakePlayer.setItemInHand(Hand.MAIN_HAND, ItemStack.of(context.data.getCompound("HeldItem")));
 			context.tileData.remove("Inventory");
 			context.temporaryData = deployerFakePlayer;
 		}
@@ -247,7 +247,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	private ItemStack getFilter(MovementContext context) {
-		return ItemStack.read(context.tileData.getCompound("Filter"));
+		return ItemStack.of(context.tileData.getCompound("Filter"));
 	}
 
 	private Mode getMode(MovementContext context) {

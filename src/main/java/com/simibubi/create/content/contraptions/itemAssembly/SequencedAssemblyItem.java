@@ -9,14 +9,16 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 
+import net.minecraft.item.Item.Properties;
+
 public class SequencedAssemblyItem extends Item {
 
 	public SequencedAssemblyItem(Properties p_i48487_1_) {
-		super(p_i48487_1_.maxStackSize(1));
+		super(p_i48487_1_.stacksTo(1));
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {}
+	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {

@@ -21,7 +21,7 @@ public class HarvesterTileEntity extends SyncedTileEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return RENDER_BOX.offset(pos);
+		return RENDER_BOX.move(worldPosition);
 	}
 
 	public float getAnimatedSpeed() {

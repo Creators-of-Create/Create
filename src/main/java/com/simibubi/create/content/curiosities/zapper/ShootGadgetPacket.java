@@ -57,10 +57,10 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 		context.get()
 			.enqueueWork(() -> {
 				Entity renderViewEntity = Minecraft.getInstance()
-					.getRenderViewEntity();
+					.getCameraEntity();
 				if (renderViewEntity == null)
 					return;
-				if (renderViewEntity.getPositionVec()
+				if (renderViewEntity.position()
 					.distanceTo(location) > 100)
 					return;
 

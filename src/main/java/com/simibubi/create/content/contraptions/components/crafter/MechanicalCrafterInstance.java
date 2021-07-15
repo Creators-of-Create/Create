@@ -21,7 +21,7 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
     @Override
     protected Instancer<RotatingData> getModel() {
-        Direction facing = blockState.get(MechanicalCrafterBlock.HORIZONTAL_FACING);
+        Direction facing = blockState.getValue(MechanicalCrafterBlock.HORIZONTAL_FACING);
 
         Supplier<MatrixStack> ms = () -> {
             MatrixStack stack = new MatrixStack();

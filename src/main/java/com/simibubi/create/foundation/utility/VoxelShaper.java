@@ -57,11 +57,11 @@ public class VoxelShaper {
 	}
 
 	public static Direction axisAsFace(Axis axis) {
-		return Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
+		return Direction.get(AxisDirection.POSITIVE, axis);
 	}
 
 	protected static float horizontalAngleFromDirection(Direction direction) {
-		return (float) ((Math.max(direction.getHorizontalIndex(), 0) & 3) * 90);
+		return (float) ((Math.max(direction.get2DDataValue(), 0) & 3) * 90);
 	}
 
 	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Direction facing,
@@ -79,7 +79,7 @@ public class VoxelShaper {
 			return shape;
 
 		return rotatedCopy(shape, usingValues.apply(from)
-			.inverse()
+			.reverse()
 			.add(usingValues.apply(to)));
 	}
 
@@ -90,7 +90,7 @@ public class VoxelShaper {
 		MutableObject<VoxelShape> result = new MutableObject<>(VoxelShapes.empty());
 		Vector3d center = new Vector3d(8, 8, 8);
 
-		shape.forEachBox((x1, y1, z1, x2, y2, z2) -> {
+		shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
 			Vector3d v1 = new Vector3d(x1, y1, z1).scale(16)
 				.subtract(center);
 			Vector3d v2 = new Vector3d(x2, y2, z2).scale(16)
@@ -106,7 +106,7 @@ public class VoxelShaper {
 			v2 = VecHelper.rotate(v2, (float) rotation.z, Axis.Z)
 				.add(center);
 
-			VoxelShape rotated = Block.makeCuboidShape(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+			VoxelShape rotated = Block.box(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
 			result.setValue(VoxelShapes.or(result.getValue(), rotated));
 		});
 

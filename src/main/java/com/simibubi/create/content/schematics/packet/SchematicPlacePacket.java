@@ -22,11 +22,11 @@ public class SchematicPlacePacket extends SimplePacketBase {
 	}
 
 	public SchematicPlacePacket(PacketBuffer buffer) {
-		stack = buffer.readItemStack();
+		stack = buffer.readItem();
 	}
 
 	public void write(PacketBuffer buffer) {
-		buffer.writeItemStack(stack);
+		buffer.writeItem(stack);
 	}
 
 	public void handle(Supplier<Context> context) {
@@ -35,19 +35,19 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			if (player == null)
 				return;
 
-			World world = player.getServerWorld();
+			World world = player.getLevel();
 			SchematicPrinter printer = new SchematicPrinter();
-			printer.loadSchematic(stack, world, !player.canUseCommandBlock());
+			printer.loadSchematic(stack, world, !player.canUseGameMasterBlocks());
 
 			while (printer.advanceCurrentPos()) {
 				if (!printer.shouldPlaceCurrent(world))
 					continue;
 
 				printer.handleCurrentTarget((pos, state, tile) -> {
-					CompoundNBT tileData = tile != null ? tile.write(new CompoundNBT()) : null;
+					CompoundNBT tileData = tile != null ? tile.save(new CompoundNBT()) : null;
 					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
 				}, (pos, entity) -> {
-					world.addEntity(entity);
+					world.addFreshEntity(entity);
 				});
 			}
 		});

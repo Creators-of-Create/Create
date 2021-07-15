@@ -82,7 +82,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	private void onDirectionChanged() {
 		if (!running)
 			return;
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			updateGeneratedRotation();
 	}
 

@@ -21,7 +21,7 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 		Direction face) {
 		if (state.getBlock() != other.getBlock())
 			return false;
-		if (state.get(HORIZONTAL_FACING) != other.get(HORIZONTAL_FACING))
+		if (state.getValue(HORIZONTAL_FACING) != other.getValue(HORIZONTAL_FACING))
 			return false;
 
 		ConnectedInput input1 = CrafterHelper.getInput(reader, pos);
@@ -32,8 +32,8 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 		if (input1.data.isEmpty() || input2.data.isEmpty())
 			return false;
 		try {
-			if (pos.add(input1.data.get(0))
-					.equals(otherPos.add(input2.data.get(0))))
+			if (pos.offset(input1.data.get(0))
+					.equals(otherPos.offset(input2.data.get(0))))
 				return true;
 		} catch (IndexOutOfBoundsException e) {
 			// race condition. data somehow becomes empty between the last 2 if statements
@@ -47,7 +47,7 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 		if (!direction.getAxis()
 			.isVertical())
 			return false;
-		Direction facing = state.get(HORIZONTAL_FACING);
+		Direction facing = state.getValue(HORIZONTAL_FACING);
 		if (facing.getAxis() == direction.getAxis())
 			return false;
 
@@ -59,7 +59,7 @@ public class CrafterCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override
 	public CTSpriteShiftEntry get(BlockState state, Direction direction) {
-		Direction facing = state.get(HORIZONTAL_FACING);
+		Direction facing = state.getValue(HORIZONTAL_FACING);
 		boolean isFront = facing.getAxis() == direction.getAxis();
 		boolean isVertical = direction.getAxis()
 			.isVertical();

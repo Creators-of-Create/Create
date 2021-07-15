@@ -41,7 +41,7 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityId);
+				Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
 				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
 				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;

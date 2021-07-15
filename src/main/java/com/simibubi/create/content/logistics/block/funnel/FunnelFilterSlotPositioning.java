@@ -22,7 +22,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 		float stateAngle = AngleHelper.horizontalAngle(funnelFacing);
 
 		if (state.getBlock() instanceof BeltFunnelBlock) {
-			switch (state.get(BeltFunnelBlock.SHAPE)) {
+			switch (state.getValue(BeltFunnelBlock.SHAPE)) {
 
 			case EXTENDED:
 				return VecHelper.rotateCentered(VecHelper.voxelSpace(8, 15.5f, 13), stateAngle, Axis.Y);
@@ -55,8 +55,8 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 		}
 
 		boolean isBeltFunnel = state.getBlock() instanceof BeltFunnelBlock;
-		if (isBeltFunnel && state.get(BeltFunnelBlock.SHAPE) != Shape.EXTENDED) {
-			Shape shape = state.get(BeltFunnelBlock.SHAPE);
+		if (isBeltFunnel && state.getValue(BeltFunnelBlock.SHAPE) != Shape.EXTENDED) {
+			Shape shape = state.getValue(BeltFunnelBlock.SHAPE);
 			super.rotate(state, ms);
 			if (shape == Shape.PULLING || shape == Shape.PUSHING)
 				MatrixStacker.of(ms)
@@ -88,7 +88,7 @@ public class FunnelFilterSlotPositioning extends ValueBoxTransform.Sided {
 			.isVertical())
 			return direction.getAxis()
 				.isHorizontal();
-		if (state.getBlock() instanceof BeltFunnelBlock && state.get(BeltFunnelBlock.SHAPE) == Shape.EXTENDED)
+		if (state.getBlock() instanceof BeltFunnelBlock && state.getValue(BeltFunnelBlock.SHAPE) == Shape.EXTENDED)
 			return direction == Direction.UP;
 		return direction == facing;
 	}

@@ -90,7 +90,7 @@ public class KineticsScenes {
 			.withItem(andesiteCasingItem), 60);
 		scene.idle(7);
 		scene.world.setBlocks(andesite, andesiteEncased.getDefaultState()
-			.with(EncasedShaftBlock.AXIS, Axis.X), true);
+			.setValue(EncasedShaftBlock.AXIS, Axis.X), true);
 		scene.world.setKineticSpeed(shaft, 32);
 		scene.idle(10);
 
@@ -101,7 +101,7 @@ public class KineticsScenes {
 			.withItem(brassCasingItem), 60);
 		scene.idle(7);
 		scene.world.setBlocks(brass, brassEncased.getDefaultState()
-			.with(EncasedShaftBlock.AXIS, Axis.X), true);
+			.setValue(EncasedShaftBlock.AXIS, Axis.X), true);
 		scene.world.setKineticSpeed(shaft, 32);
 
 		scene.idle(10);
@@ -154,7 +154,7 @@ public class KineticsScenes {
 		scene.title("large_cogwheel", "Relaying rotational force using Large Cogwheels");
 		scene.configureBasePlate(1, 1, 5);
 		scene.world.setBlock(util.grid.at(4, 2, 3), AllBlocks.LARGE_COGWHEEL.getDefaultState()
-			.with(CogWheelBlock.AXIS, Axis.X), false);
+			.setValue(CogWheelBlock.AXIS, Axis.X), false);
 
 		scene.showBasePlate();
 		scene.idle(5);
@@ -177,7 +177,7 @@ public class KineticsScenes {
 		scene.world.hideSection(util.select.fromTo(3, 2, 1, 3, 2, 5), Direction.SOUTH);
 
 		scene.idle(15);
-		scene.world.modifyBlock(util.grid.at(3, 2, 3), s -> s.with(ShaftBlock.AXIS, Axis.X), false);
+		scene.world.modifyBlock(util.grid.at(3, 2, 3), s -> s.setValue(ShaftBlock.AXIS, Axis.X), false);
 		scene.world.setKineticSpeed(util.select.fromTo(1, 2, 3, 5, 2, 3), 16);
 		scene.world.showSection(util.select.position(4, 2, 3), Direction.WEST);
 
@@ -209,9 +209,9 @@ public class KineticsScenes {
 		BlockPos lowerCog = util.grid.at(3, 1, 2);
 		BlockPos upperCog = util.grid.at(3, 2, 3);
 		BlockState largeCogState = AllBlocks.LARGE_COGWHEEL.getDefaultState()
-			.with(CogWheelBlock.AXIS, Axis.X);
+			.setValue(CogWheelBlock.AXIS, Axis.X);
 		BlockState smallCogState = AllBlocks.COGWHEEL.getDefaultState()
-			.with(CogWheelBlock.AXIS, Axis.X);
+			.setValue(CogWheelBlock.AXIS, Axis.X);
 
 		scene.world.setBlock(lowerCog, largeCogState, false);
 		scene.world.setBlock(upperCog, smallCogState, false);
@@ -330,10 +330,10 @@ public class KineticsScenes {
 
 		BlockState defaultState = AllBlocks.SHAFT.getDefaultState();
 		BlockState cogState = AllBlocks.COGWHEEL.getDefaultState();
-		scene.world.setBlock(largeCogBack, defaultState.with(CogWheelBlock.AXIS, Axis.Z), false);
-		scene.world.setBlock(largeCogFront, defaultState.with(CogWheelBlock.AXIS, Axis.Z), false);
-		scene.world.setBlock(largeCogRight, defaultState.with(CogWheelBlock.AXIS, Axis.X), false);
-		scene.world.setBlock(largeCogLeft, defaultState.with(CogWheelBlock.AXIS, Axis.X), false);
+		scene.world.setBlock(largeCogBack, defaultState.setValue(CogWheelBlock.AXIS, Axis.Z), false);
+		scene.world.setBlock(largeCogFront, defaultState.setValue(CogWheelBlock.AXIS, Axis.Z), false);
+		scene.world.setBlock(largeCogRight, defaultState.setValue(CogWheelBlock.AXIS, Axis.X), false);
+		scene.world.setBlock(largeCogLeft, defaultState.setValue(CogWheelBlock.AXIS, Axis.X), false);
 		scene.world.showSection(util.select.fromTo(4, 2, 2, 2, 2, 4), Direction.DOWN);
 
 		scene.idle(20);
@@ -345,8 +345,8 @@ public class KineticsScenes {
 			.text("A gearbox is the more compact equivalent of this setup");
 
 		scene.idle(90);
-		scene.world.setBlock(largeCogFront.north(), cogState.with(CogWheelBlock.AXIS, Axis.Z), true);
-		scene.world.setBlock(largeCogRight.west(), cogState.with(CogWheelBlock.AXIS, Axis.X), true);
+		scene.world.setBlock(largeCogFront.north(), cogState.setValue(CogWheelBlock.AXIS, Axis.Z), true);
+		scene.world.setBlock(largeCogRight.west(), cogState.setValue(CogWheelBlock.AXIS, Axis.X), true);
 		scene.idle(10);
 		scene.effects.rotationDirectionIndicator(largeCogFront.north());
 		scene.effects.rotationDirectionIndicator(largeCogRight.west());
@@ -360,7 +360,7 @@ public class KineticsScenes {
 
 		scene.world.hideSection(util.select.fromTo(1, 2, 3, 2, 2, 3), Direction.WEST);
 		scene.world.hideSection(util.select.fromTo(4, 2, 3, 5, 2, 3), Direction.EAST);
-		scene.world.setBlock(largeCogBack.south(), cogState.with(CogWheelBlock.AXIS, Axis.Z), true);
+		scene.world.setBlock(largeCogBack.south(), cogState.setValue(CogWheelBlock.AXIS, Axis.Z), true);
 		scene.idle(10);
 
 		scene.effects.rotationDirectionIndicator(largeCogFront.north());
@@ -498,7 +498,7 @@ public class KineticsScenes {
 
 		Vector3d blockSurface = util.vector.blockSurface(motor, Direction.EAST);
 		AxisAlignedBB point = new AxisAlignedBB(blockSurface, blockSurface);
-		AxisAlignedBB expanded = point.grow(1 / 16f, 1 / 5f, 1 / 5f);
+		AxisAlignedBB expanded = point.inflate(1 / 16f, 1 / 5f, 1 / 5f);
 
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, blockSurface, point, 1);
 		scene.idle(1);
@@ -533,7 +533,7 @@ public class KineticsScenes {
 		for (int i = 0; i < 4; i++) {
 			scene.idle(5);
 			scene.world.showSection(util.select.fromTo(gaugePos.east(i)
-				.down(), gaugePos.east(i)), Direction.DOWN);
+				.below(), gaugePos.east(i)), Direction.DOWN);
 		}
 
 		scene.idle(10);
@@ -557,17 +557,17 @@ public class KineticsScenes {
 			.pointAt(util.vector.topOf(wheel));
 		scene.idle(50);
 
-		AxisAlignedBB bb = new AxisAlignedBB(wheel).grow(.125f, 0, 0);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, 1.2, 0)
+		AxisAlignedBB bb = new AxisAlignedBB(wheel).inflate(.125f, 0, 0);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.move(0, 1.2, 0)
 			.contract(0, .75, 0), 80);
 		scene.idle(5);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, 0, 1.2)
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.move(0, 0, 1.2)
 			.contract(0, 0, .75), 80);
 		scene.idle(5);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, -1.2, 0)
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.move(0, -1.2, 0)
 			.contract(0, -.75, 0), 80);
 		scene.idle(5);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.offset(0, 0, -1.2)
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.move(0, 0, -1.2)
 			.contract(0, 0, -.75), 80);
 		scene.idle(5);
 		scene.overlay.showText(50)
@@ -595,7 +595,7 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.world.rotateSection(wheelElement, 0, 180, 0, 5);
 		scene.idle(10);
-		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.FACING, Direction.WEST), false);
+		scene.world.modifyBlock(wheel, s -> s.setValue(WaterWheelBlock.FACING, Direction.WEST), false);
 		scene.world.rotateSection(wheelElement, 0, -180, 0, 0);
 		scene.idle(1);
 		scene.world.moveSection(water, util.vector.of(0, -2, 2), 10);
@@ -618,7 +618,7 @@ public class KineticsScenes {
 		scene.rotateCameraY(30);
 		scene.world.rotateSection(wheelElement, 0, 180, 0, 5);
 		scene.idle(10);
-		scene.world.modifyBlock(wheel, s -> s.with(WaterWheelBlock.FACING, Direction.EAST), false);
+		scene.world.modifyBlock(wheel, s -> s.setValue(WaterWheelBlock.FACING, Direction.EAST), false);
 		scene.world.rotateSection(wheelElement, 0, -180, 0, 0);
 		scene.idle(1);
 		scene.world.moveSection(water, util.vector.of(0, -2, 2), 10);
@@ -641,7 +641,7 @@ public class KineticsScenes {
 				.withItem(new ItemStack(Items.BLUE_DYE)), 40);
 		scene.idle(7);
 		scene.world.modifyBlock(util.grid.at(2, 2, 2), s -> AllBlocks.DYED_VALVE_HANDLES.get(DyeColor.BLUE).getDefaultState()
-				.with(ValveHandleBlock.FACING, Direction.UP), true);
+				.setValue(ValveHandleBlock.FACING, Direction.UP), true);
 		scene.idle(10);
 		scene.overlay.showText(70)
 				.text("Valve handles can be dyed for aesthetic purposes")
@@ -861,7 +861,7 @@ public class KineticsScenes {
 
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
-		scene.world.modifyBlock(wire, s -> s.with(RedstoneWireBlock.POWER, 0), false);
+		scene.world.modifyBlock(wire, s -> s.setValue(RedstoneWireBlock.POWER, 0), false);
 		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
 		scene.world.setKineticSpeed(outputKinetics, 0);
@@ -937,9 +937,9 @@ public class KineticsScenes {
 		scene.idle(10);
 		scene.world.hideSection(furnaceSelect, Direction.NORTH);
 		scene.idle(15);
-		scene.world.setBlock(furnacePos, Blocks.BLAST_FURNACE.getDefaultState()
-			.with(FurnaceBlock.FACING, Direction.NORTH)
-			.with(FurnaceBlock.LIT, true), false);
+		scene.world.setBlock(furnacePos, Blocks.BLAST_FURNACE.defaultBlockState()
+			.setValue(FurnaceBlock.FACING, Direction.NORTH)
+			.setValue(FurnaceBlock.LIT, true), false);
 		scene.world.showSection(furnaceSelect, Direction.NORTH);
 		scene.idle(10);
 		scene.world.moveSection(engine, util.vector.of(0, -1, 0), 15);
@@ -1052,7 +1052,7 @@ public class KineticsScenes {
 		scene.idle(10);
 
 		scene.world.setBlock(gaugePos, (speed ? AllBlocks.SPEEDOMETER : AllBlocks.STRESSOMETER).getDefaultState()
-			.with(GaugeBlock.FACING, Direction.UP), true);
+			.setValue(GaugeBlock.FACING, Direction.UP), true);
 		scene.world.setKineticSpeed(util.select.position(gaugePos), 32);
 		scene.idle(10);
 
@@ -1072,7 +1072,7 @@ public class KineticsScenes {
 
 		} else {
 			BlockState state = AllBlocks.CRUSHING_WHEEL.getDefaultState()
-				.with(CrushingWheelBlock.AXIS, Axis.X);
+				.setValue(CrushingWheelBlock.AXIS, Axis.X);
 			scene.world.setBlock(util.grid.at(5, 1, 3), state, true);
 			scene.world.setKineticSpeed(util.select.position(5, 1, 3), 32);
 			scene.world.modifyTileNBT(util.select.position(gaugePos), StressGaugeTileEntity.class,

@@ -12,6 +12,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ProperDirectionalBlock extends DirectionalBlock implements IWrenchable {
 
 	public ProperDirectionalBlock(Properties p_i48415_1_) {
@@ -19,36 +21,36 @@ public class ProperDirectionalBlock extends DirectionalBlock implements IWrencha
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(FACING);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
 	public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
-		Direction facing = originalState.get(FACING);
+		Direction facing = originalState.getValue(FACING);
 
 		if (facing.getAxis() == targetedFace.getAxis())
 			return originalState;
 
 		Direction newFacing = DirectionHelper.rotateAround(facing, targetedFace.getAxis());
 
-		return originalState.with(FACING, newFacing);
+		return originalState.setValue(FACING, newFacing);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getNearestLookingDirection());
+		return defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
 	}
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
+		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
 
 }

@@ -26,7 +26,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
     public FluidValveInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
-        Direction facing = blockState.get(FluidValveBlock.FACING);
+        Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
         yRot = AngleHelper.horizontalAngle(facing);
         xRot = facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90;

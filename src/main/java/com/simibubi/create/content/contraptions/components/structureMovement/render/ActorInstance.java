@@ -22,6 +22,6 @@ public abstract class ActorInstance {
     public void beginFrame() { }
 
     protected int localBlockLight() {
-        return simulationWorld.getLightLevel(LightType.BLOCK, context.localPos);
+        return simulationWorld.getBrightness(LightType.BLOCK, context.localPos);
     }
 }

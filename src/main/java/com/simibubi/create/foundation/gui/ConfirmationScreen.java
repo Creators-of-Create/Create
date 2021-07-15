@@ -95,8 +95,8 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	public void open(@Nonnull Screen source) {
 		this.source = source;
 		Minecraft client = source.getMinecraft();
-		this.init(client, client.getWindow().getScaledWidth(), client.getWindow().getScaledHeight());
-		this.client.currentScreen = this;
+		this.init(client, client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight());
+		this.minecraft.screen = this;
 	}
 
 	@Override
@@ -112,9 +112,9 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 		ArrayList<ITextProperties> copy = new ArrayList<>(text);
 		text.clear();
-		copy.forEach(t -> text.addAll(client.fontRenderer.getTextHandler().wrapLines(t, 300, Style.EMPTY)));
+		copy.forEach(t -> text.addAll(minecraft.font.getSplitter().splitLines(t, 300, Style.EMPTY)));
 
-		textHeight = text.size() * (client.fontRenderer.FONT_HEIGHT + 1) + 4;
+		textHeight = text.size() * (minecraft.font.lineHeight + 1) + 4;
 		textWidth = 300;
 
 		if (centered) {
@@ -136,7 +136,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		int buttonX = x + textWidth / 2 - 6 - (int) (70 * (tristate ? 1.5f : 1));
 
 		TextStencilElement confirmText =
-				new TextStencilElement(client.fontRenderer, tristate ? "Save" : "Confirm").centered(true, true);
+				new TextStencilElement(minecraft.font, tristate ? "Save" : "Confirm").centered(true, true);
 		confirm = new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.Confirm));
 		confirm.showingElement(confirmText.withElementRenderer(BoxWidget.gradientFactory.apply(confirm)));
 		widgets.add(confirm);
@@ -145,7 +145,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 		if (tristate) {
 			TextStencilElement confirmDontSaveText =
-					new TextStencilElement(client.fontRenderer, "Don't Save").centered(true, true);
+					new TextStencilElement(minecraft.font, "Don't Save").centered(true, true);
 			confirmDontSave =
 					new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.ConfirmDontSave));
 			confirmDontSave.showingElement(
@@ -154,7 +154,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 			buttonX += 12 + 70;
 		}
 
-		TextStencilElement cancelText = new TextStencilElement(client.fontRenderer, "Cancel").centered(true, true);
+		TextStencilElement cancelText = new TextStencilElement(minecraft.font, "Cancel").centered(true, true);
 		cancel = new BoxWidget(buttonX, y + textHeight + 6, 70, 16)
 				.withCallback(() -> accept(Response.Cancel));
 		cancel.showingElement(cancelText.withElementRenderer(BoxWidget.gradientFactory.apply(cancel)));
@@ -173,7 +173,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	}
 
 	private void accept(Response success) {
-		client.currentScreen = source;
+		minecraft.screen = source;
 		action.accept(success);
 	}
 
@@ -181,10 +181,10 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		textBackground.render(ms);
-		int offset = client.fontRenderer.FONT_HEIGHT + 1;
+		int offset = minecraft.font.lineHeight + 1;
 		int lineY = y - offset;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, 0, 200);
 
 		for (ITextProperties line : text) {
@@ -193,11 +193,11 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 				continue;
 			int textX = x;
 			if (text.size() == 1)
-				x = (width - client.fontRenderer.getWidth(line)) / 2;
-			client.fontRenderer.draw(ms, line.getString(), textX, lineY, 0xeaeaea);
+				x = (width - minecraft.font.width(line)) / 2;
+			minecraft.font.draw(ms, line.getString(), textX, lineY, 0xeaeaea);
 		}
 
-		ms.pop();
+		ms.popPose();
 
 	}
 
@@ -215,14 +215,14 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	@Override
 	protected void prepareFrame() {
 		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
-		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
+		Framebuffer mainBuffer = Minecraft.getInstance().getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
-		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.framebufferObject);
-		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.framebufferObject);
-		functions.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.frameBufferId);
+		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.frameBufferId);
+		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		functions.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, thisBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(FramebufferConstants.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
 		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
 	}
@@ -231,14 +231,14 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	protected void endFrame() {
 
 		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
-		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
+		Framebuffer mainBuffer = Minecraft.getInstance().getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
-		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.framebufferObject);
-		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
-		functions.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.frameBufferId);
+		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.frameBufferId);
+		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		functions.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(FramebufferConstants.GL_FRAMEBUFFER, mainBuffer.frameBufferId);
 	}
 
 	@Override

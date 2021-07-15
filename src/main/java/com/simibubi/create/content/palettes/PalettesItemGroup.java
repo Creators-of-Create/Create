@@ -23,7 +23,7 @@ public class PalettesItemGroup extends CreateItemGroupBase {
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {}
 
 	@Override
-	public ItemStack createIcon() {
+	public ItemStack makeIcon() {
 		return new ItemStack(AllPaletteBlocks.ORNATE_IRON_WINDOW.get());
 	}
 

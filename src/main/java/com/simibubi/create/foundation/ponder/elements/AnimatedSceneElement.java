@@ -34,27 +34,27 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 
 	@Override
 	public final void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float pt) {
-		ms.push();
+		ms.pushPose();
 		float currentFade = applyFade(ms, pt);
 		renderFirst(world, buffer, ms, currentFade, pt);
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override
 	public final void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms,
 		float pt) {
-		ms.push();
+		ms.pushPose();
 		float currentFade = applyFade(ms, pt);
 		renderLayer(world, buffer, type, ms, currentFade, pt);
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override
 	public final void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float pt) {
-		ms.push();
+		ms.pushPose();
 		float currentFade = applyFade(ms, pt);
 		renderLast(world, buffer, ms, currentFade, pt);
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected float applyFade(MatrixStack ms, float pt) {

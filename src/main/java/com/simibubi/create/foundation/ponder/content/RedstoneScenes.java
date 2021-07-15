@@ -67,7 +67,7 @@ public class RedstoneScenes {
 		scene.idle(70);
 
 		scene.world.toggleRedstonePower(redstone);
-		scene.world.modifyBlock(stickerPos, s -> s.with(StickerBlock.EXTENDED, true), false);
+		scene.world.modifyBlock(stickerPos, s -> s.setValue(StickerBlock.EXTENDED, true), false);
 		scene.effects.indicateRedstone(buttonPos);
 		scene.world.modifyTileNBT(stickerSelect, StickerTileEntity.class, nbt -> {
 		});
@@ -93,7 +93,7 @@ public class RedstoneScenes {
 		scene.addKeyframe();
 
 		scene.world.toggleRedstonePower(redstone);
-		scene.world.modifyBlock(stickerPos, s -> s.with(StickerBlock.EXTENDED, false), false);
+		scene.world.modifyBlock(stickerPos, s -> s.setValue(StickerBlock.EXTENDED, false), false);
 		scene.effects.indicateRedstone(buttonPos);
 		scene.world.modifyTileNBT(stickerSelect, StickerTileEntity.class, nbt -> {
 		});
@@ -402,8 +402,8 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 3, 1, 2));
 
-		AxisAlignedBB bb = new AxisAlignedBB(circuitPos).grow(-.48f, -.45f, -.05f)
-			.offset(.575, -.45, 0);
+		AxisAlignedBB bb = new AxisAlignedBB(circuitPos).inflate(-.48f, -.45f, -.05f)
+			.move(.575, -.45, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 40);
 		scene.overlay.showText(40)
 			.colored(PonderPalette.GREEN)
@@ -419,10 +419,10 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.toggleRedstonePower(util.select.fromTo(2, 1, 0, 2, 1, 1));
 
-		bb = new AxisAlignedBB(circuitPos).grow(-.05f, -.45f, -.48f)
-			.offset(0, -.45, .575);
-		AxisAlignedBB bb2 = new AxisAlignedBB(circuitPos).grow(-.05f, -.45f, -.48f)
-			.offset(0, -.45, -.575);
+		bb = new AxisAlignedBB(circuitPos).inflate(-.05f, -.45f, -.48f)
+			.move(0, -.45, .575);
+		AxisAlignedBB bb2 = new AxisAlignedBB(circuitPos).inflate(-.05f, -.45f, -.48f)
+			.move(0, -.45, -.575);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb, bb, 40);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb2, bb2, 40);
 		scene.overlay.showText(40)
@@ -482,8 +482,8 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 3, 1, 2));
 
-		AxisAlignedBB bb = new AxisAlignedBB(circuitPos).grow(-.48f, -.45f, -.05f)
-			.offset(.575, -.45, 0);
+		AxisAlignedBB bb = new AxisAlignedBB(circuitPos).inflate(-.48f, -.45f, -.05f)
+			.move(.575, -.45, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 40);
 		scene.overlay.showText(40)
 			.colored(PonderPalette.GREEN)
@@ -565,7 +565,7 @@ public class RedstoneScenes {
 			scene.idle(2);
 			final int state = i + 1;
 			scene.world.modifyTileNBT(leverSelection, AnalogLeverTileEntity.class, nbt -> nbt.putInt("State", state));
-			scene.world.modifyBlock(wireLocations[i], s -> s.with(power, 7 - state), false);
+			scene.world.modifyBlock(wireLocations[i], s -> s.setValue(power, 7 - state), false);
 			scene.effects.indicateRedstone(wireLocations[i]);
 		}
 		scene.idle(20);
@@ -588,9 +588,9 @@ public class RedstoneScenes {
 					nbt -> nbt.putInt("State", state));
 				scene.effects.indicateRedstone(wireLocations[i]);
 			}
-			scene.world.modifyBlock(wireLocations[i], s -> s.with(power, state > 2 ? 0 : 3 - state), false);
+			scene.world.modifyBlock(wireLocations[i], s -> s.setValue(power, state > 2 ? 0 : 3 - state), false);
 		}
-		scene.world.modifyBlock(wireLocations[0], s -> s.with(power, 3), false);
+		scene.world.modifyBlock(wireLocations[0], s -> s.setValue(power, 3), false);
 		scene.idle(20);
 
 		scene.overlay.showText(60)
@@ -610,7 +610,7 @@ public class RedstoneScenes {
 					nbt -> nbt.putInt("State", state));
 				scene.effects.indicateRedstone(wireLocations[i]);
 			}
-			scene.world.modifyBlock(wireLocations[i], s -> s.with(power, 15 - state), false);
+			scene.world.modifyBlock(wireLocations[i], s -> s.setValue(power, 15 - state), false);
 		}
 
 		scene.world.toggleRedstonePower(lamp);
@@ -633,7 +633,7 @@ public class RedstoneScenes {
 		scene.effects.indicateRedstone(util.grid.at(2, 1, 1));
 		scene.world.modifyTileNBT(util.select.position(2, 1, 1), AnalogLeverTileEntity.class,
 			nbt -> nbt.putInt("State", 11));
-		scene.world.modifyBlock(util.grid.at(2, 1, 2), s -> s.with(RedstoneWireBlock.POWER, 11), false);
+		scene.world.modifyBlock(util.grid.at(2, 1, 2), s -> s.setValue(RedstoneWireBlock.POWER, 11), false);
 		scene.world.modifyTileNBT(tubes, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 11));
 		scene.idle(20);
 
@@ -689,7 +689,7 @@ public class RedstoneScenes {
 		scene.idle(7);
 		scene.world.setBlocks(util.select.fromTo(1, 1, 3, 3, 1, 3), AllBlocks.NIXIE_TUBES.get(DyeColor.BLUE)
 			.getDefaultState()
-			.with(NixieTubeBlock.HORIZONTAL_FACING, Direction.NORTH), false);
+			.setValue(NixieTubeBlock.FACING, Direction.NORTH), false);
 		scene.idle(10);
 		scene.overlay.showText(80)
 			.colored(PonderPalette.BLUE)
@@ -809,30 +809,30 @@ public class RedstoneScenes {
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(frontSlot, Pointing.UP).withItem(sapling), 40);
 		scene.world.modifyTileNBT(link1Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyLast", iron.write(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundNBT())));
 		scene.idle(7);
 		scene.world.modifyTileNBT(link1Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.write(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundNBT())));
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(top2Slot, Pointing.DOWN).withItem(iron), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(bottom2Slot, Pointing.UP).withItem(sapling), 40);
 		scene.world.modifyTileNBT(link2Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyLast", iron.write(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundNBT())));
 		scene.idle(7);
 		scene.world.modifyTileNBT(link2Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.write(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundNBT())));
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(top3Slot, Pointing.DOWN).withItem(gold), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(bottom3Slot, Pointing.UP).withItem(sapling), 40);
 		scene.world.modifyTileNBT(link3Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyLast", gold.write(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyLast", gold.save(new CompoundNBT())));
 		scene.idle(7);
 		scene.world.modifyTileNBT(link3Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.write(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundNBT())));
 		scene.idle(20);
 
 		scene.world.toggleRedstonePower(redstone);

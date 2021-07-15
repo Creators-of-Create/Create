@@ -31,14 +31,14 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 		Instancer<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
 				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightType.BLOCK, pos);
+        int skyLight = world.getBrightness(LightType.SKY, pos);
 
         tile.flaps.forEach((direction, flapValue) -> {
 
             float flapness = flapValue.get(AnimationTickHolder.getPartialTicks());
 
-            float horizontalAngle = direction.getOpposite().getHorizontalAngle();
+            float horizontalAngle = direction.getOpposite().toYRot();
 
             float flapScale = direction.getAxis() == Direction.Axis.X ? 1 : -1;
 

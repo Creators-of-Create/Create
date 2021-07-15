@@ -52,7 +52,7 @@ class SoundScape {
 
 	public void play() {
 		continuous.forEach(Minecraft.getInstance()
-			.getSoundHandler()::play);
+			.getSoundManager()::play);
 	}
 
 	public void tick() {
@@ -82,10 +82,10 @@ class SoundScape {
 	}
 
 	public float getVolume() {
-		Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
+		Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
 		float distanceMultiplier = 0;
 		if (renderViewEntity != null) {
-			double distanceTo = renderViewEntity.getPositionVec()
+			double distanceTo = renderViewEntity.position()
 				.distanceTo(getMeanPos());
 			distanceMultiplier = (float) MathHelper.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
 		}

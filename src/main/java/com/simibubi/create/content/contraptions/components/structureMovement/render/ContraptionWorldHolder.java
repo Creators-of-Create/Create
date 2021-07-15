@@ -13,7 +13,7 @@ public class ContraptionWorldHolder {
 	}
 
     public int getEntityId() {
-        return contraption.entity.getEntityId();
+        return contraption.entity.getId();
     }
 
     public boolean isDead() {

@@ -66,8 +66,8 @@ public class RecipeGridHandler {
 				empty = true;
 			else
 				allEmpty = false;
-			if (poweredStart && current.getWorld()
-				.isBlockPowered(current.getPos()))
+			if (poweredStart && current.getLevel()
+				.hasNeighborSignal(current.getBlockPos()))
 				powered = true;
 
 			crafters.add(current);
@@ -89,29 +89,29 @@ public class RecipeGridHandler {
 		if (!isCrafter(state))
 			return null;
 
-		BlockPos targetPos = crafter.getPos()
-			.offset(MechanicalCrafterBlock.getTargetDirection(state));
-		MechanicalCrafterTileEntity targetTE = CrafterHelper.getCrafter(crafter.getWorld(), targetPos);
+		BlockPos targetPos = crafter.getBlockPos()
+			.relative(MechanicalCrafterBlock.getTargetDirection(state));
+		MechanicalCrafterTileEntity targetTE = CrafterHelper.getCrafter(crafter.getLevel(), targetPos);
 		if (targetTE == null)
 			return null;
 
 		BlockState targetState = targetTE.getBlockState();
 		if (!isCrafter(targetState))
 			return null;
-		if (state.get(HORIZONTAL_FACING) != targetState.get(HORIZONTAL_FACING))
+		if (state.getValue(HORIZONTAL_FACING) != targetState.getValue(HORIZONTAL_FACING))
 			return null;
 		return targetTE;
 	}
 
 	public static List<MechanicalCrafterTileEntity> getPrecedingCrafters(MechanicalCrafterTileEntity crafter) {
-		BlockPos pos = crafter.getPos();
-		World world = crafter.getWorld();
+		BlockPos pos = crafter.getBlockPos();
+		World world = crafter.getLevel();
 		List<MechanicalCrafterTileEntity> crafters = new ArrayList<>();
 		BlockState blockState = crafter.getBlockState();
 		if (!isCrafter(blockState))
 			return crafters;
 
-		Direction blockFacing = blockState.get(HORIZONTAL_FACING);
+		Direction blockFacing = blockState.getValue(HORIZONTAL_FACING);
 		Direction blockPointing = MechanicalCrafterBlock.getTargetDirection(blockState);
 		for (Direction facing : Iterate.directions) {
 			if (blockFacing.getAxis() == facing.getAxis())
@@ -119,13 +119,13 @@ public class RecipeGridHandler {
 			if (blockPointing == facing)
 				continue;
 
-			BlockPos neighbourPos = pos.offset(facing);
+			BlockPos neighbourPos = pos.relative(facing);
 			BlockState neighbourState = world.getBlockState(neighbourPos);
 			if (!isCrafter(neighbourState))
 				continue;
 			if (MechanicalCrafterBlock.getTargetDirection(neighbourState) != facing.getOpposite())
 				continue;
-			if (blockFacing != neighbourState.get(HORIZONTAL_FACING))
+			if (blockFacing != neighbourState.getValue(HORIZONTAL_FACING))
 				continue;
 			MechanicalCrafterTileEntity te = CrafterHelper.getCrafter(world, neighbourPos);
 			if (te == null)
@@ -147,21 +147,21 @@ public class RecipeGridHandler {
 		ItemStack result = null;
 		if (AllConfigs.SERVER.recipes.allowRegularCraftingInCrafter.get())
 			result = world.getRecipeManager()
-				.getRecipe(IRecipeType.CRAFTING, craftinginventory, world)
+				.getRecipeFor(IRecipeType.CRAFTING, craftinginventory, world)
 				.filter(r -> isRecipeAllowed(r, craftinginventory))
-				.map(r -> r.getCraftingResult(craftinginventory))
+				.map(r -> r.assemble(craftinginventory))
 				.orElse(null);
 		if (result == null)
 			result = AllRecipeTypes.MECHANICAL_CRAFTING.find(craftinginventory, world)
-				.map(r -> r.getCraftingResult(craftinginventory))
+				.map(r -> r.assemble(craftinginventory))
 				.orElse(null);
 		return result;
 	}
 
 	public static boolean isRecipeAllowed(ICraftingRecipe recipe, CraftingInventory inventory) {
 		if (!AllConfigs.SERVER.recipes.allowBiggerFireworksInCrafter.get() && recipe instanceof FireworkRocketRecipe) {
-			int numItems = IntStream.range(0, inventory.getSizeInventory())
-				.map(i -> inventory.getStackInSlot(i).isEmpty() ? 0 : 1)
+			int numItems = IntStream.range(0, inventory.getContainerSize())
+				.map(i -> inventory.getItem(i).isEmpty() ? 0 : 1)
 				.sum();
 			if (numItems > 9)
 				return false;
@@ -207,7 +207,7 @@ public class RecipeGridHandler {
 				CompoundNBT entry = (CompoundNBT) inbt;
 				int x = entry.getInt("x");
 				int y = entry.getInt("y");
-				ItemStack stack = ItemStack.read(entry.getCompound("item"));
+				ItemStack stack = ItemStack.of(entry.getCompound("item"));
 				items.grid.put(Pair.of(x, y), stack);
 			});
 			return items;

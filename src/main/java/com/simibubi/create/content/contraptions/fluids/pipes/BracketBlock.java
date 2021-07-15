@@ -19,6 +19,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.IStringSerializable;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BracketBlock extends ProperDirectionalBlock {
 
 	public static final BooleanProperty AXIS_ALONG_FIRST_COORDINATE =
@@ -29,15 +31,15 @@ public class BracketBlock extends ProperDirectionalBlock {
 		PIPE, COG, SHAFT;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(AXIS_ALONG_FIRST_COORDINATE)
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(AXIS_ALONG_FIRST_COORDINATE)
 			.add(TYPE));
 	}
 
@@ -47,7 +49,7 @@ public class BracketBlock extends ProperDirectionalBlock {
 
 	public Optional<BlockState> getSuitableBracket(BlockState blockState, Direction direction) {
 		if (blockState.getBlock() instanceof AbstractShaftBlock)
-			return getSuitableBracket(blockState.get(RotatedPillarKineticBlock.AXIS), direction,
+			return getSuitableBracket(blockState.getValue(RotatedPillarKineticBlock.AXIS), direction,
 				blockState.getBlock() instanceof CogWheelBlock ? BracketType.COG : BracketType.SHAFT);
 		return getSuitableBracket(FluidPropagator.getStraightPipeAxis(blockState), direction, BracketType.PIPE);
 	}
@@ -58,9 +60,9 @@ public class BracketBlock extends ProperDirectionalBlock {
 			return Optional.empty();
 
 		boolean alongFirst = axis != Axis.Z ? targetBlockAxis == Axis.Z : targetBlockAxis == Axis.Y;
-		return Optional.of(getDefaultState().with(TYPE, type)
-			.with(FACING, direction)
-			.with(AXIS_ALONG_FIRST_COORDINATE, !alongFirst));
+		return Optional.of(defaultBlockState().setValue(TYPE, type)
+			.setValue(FACING, direction)
+			.setValue(AXIS_ALONG_FIRST_COORDINATE, !alongFirst));
 	}
 
 }

@@ -47,8 +47,8 @@ public class TransparentStraightPipeRenderer extends SafeTileEntityRenderer<Stra
 					if (opposite == null)
 						value -= 1e-6f;
 				} else {
-					FluidTransportBehaviour adjacent = TileEntityBehaviour.get(te.getWorld(), te.getPos()
-						.offset(side), FluidTransportBehaviour.TYPE);
+					FluidTransportBehaviour adjacent = TileEntityBehaviour.get(te.getLevel(), te.getBlockPos()
+						.relative(side), FluidTransportBehaviour.TYPE);
 					if (adjacent == null)
 						value -= 1e-6f;
 					else {

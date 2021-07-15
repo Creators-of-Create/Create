@@ -24,7 +24,7 @@ public class EmptyNamedTag<T> implements Tags.IOptionalNamedTag<T> {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public ResourceLocation getName() {
 		return id;
 	}
 
@@ -34,7 +34,7 @@ public class EmptyNamedTag<T> implements Tags.IOptionalNamedTag<T> {
 	}
 
 	@Override
-	public List<T> values() {
+	public List<T> getValues() {
 		return Collections.emptyList();
 	}
 }

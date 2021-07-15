@@ -37,13 +37,13 @@ public class MinecartElement extends AnimatedSceneElement {
 	@Override
 	public void reset(PonderScene scene) {
 		super.reset(scene);
-		entity.setPos(0, 0, 0);
-		entity.prevPosX = 0;
-		entity.prevPosY = 0;
-		entity.prevPosZ = 0;
-		entity.lastTickPosX = 0;
-		entity.lastTickPosY = 0;
-		entity.lastTickPosZ = 0;
+		entity.setPosRaw(0, 0, 0);
+		entity.xo = 0;
+		entity.yo = 0;
+		entity.zo = 0;
+		entity.xOld = 0;
+		entity.yOld = 0;
+		entity.zOld = 0;
 		rotation.startWithValue(initialRotation);
 	}
 
@@ -53,25 +53,25 @@ public class MinecartElement extends AnimatedSceneElement {
 		if (entity == null)
 			entity = constructor.create(scene.getWorld(), 0, 0, 0);
 
-		entity.ticksExisted++;
+		entity.tickCount++;
 		entity.onGround = true;
-		entity.prevPosX = entity.getX();
-		entity.prevPosY = entity.getY();
-		entity.prevPosZ = entity.getZ();
-		entity.lastTickPosX = entity.getX();
-		entity.lastTickPosY = entity.getY();
-		entity.lastTickPosZ = entity.getZ();
+		entity.xo = entity.getX();
+		entity.yo = entity.getY();
+		entity.zo = entity.getZ();
+		entity.xOld = entity.getX();
+		entity.yOld = entity.getY();
+		entity.zOld = entity.getZ();
 	}
 
 	public void setPositionOffset(Vector3d position, boolean immediate) {
 		if (entity == null)
 			return;
-		entity.setPosition(position.x, position.y, position.z);
+		entity.setPos(position.x, position.y, position.z);
 		if (!immediate)
 			return;
-		entity.prevPosX = position.x;
-		entity.prevPosY = position.y;
-		entity.prevPosZ = position.z;
+		entity.xo = position.x;
+		entity.yo = position.y;
+		entity.zo = position.z;
 	}
 
 	public void setRotation(float angle, boolean immediate) {
@@ -84,7 +84,7 @@ public class MinecartElement extends AnimatedSceneElement {
 	}
 
 	public Vector3d getPositionOffset() {
-		return entity != null ? entity.getPositionVec() : Vector3d.ZERO;
+		return entity != null ? entity.position() : Vector3d.ZERO;
 	}
 
 	public Vector3d getRotation() {
@@ -94,20 +94,20 @@ public class MinecartElement extends AnimatedSceneElement {
 	@Override
 	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {
 		EntityRendererManager entityrenderermanager = Minecraft.getInstance()
-			.getRenderManager();
+			.getEntityRenderDispatcher();
 		if (entity == null)
 			entity = constructor.create(world, 0, 0, 0);
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(location.x, location.y, location.z);
-		ms.translate(MathHelper.lerp(pt, entity.prevPosX, entity.getX()),
-			MathHelper.lerp(pt, entity.prevPosY, entity.getY()), MathHelper.lerp(pt, entity.prevPosZ, entity.getZ()));
+		ms.translate(MathHelper.lerp(pt, entity.xo, entity.getX()),
+			MathHelper.lerp(pt, entity.yo, entity.getY()), MathHelper.lerp(pt, entity.zo, entity.getZ()));
 
 		MatrixStacker.of(ms)
 			.rotateY(rotation.getValue(pt));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));
-		ms.pop();
+		ms.popPose();
 	}
 
 }

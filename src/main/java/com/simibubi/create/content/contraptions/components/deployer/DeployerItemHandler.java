@@ -32,16 +32,16 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 	public ItemStack getHeld() {
 		if (player == null)
 			return ItemStack.EMPTY;
-		return player.getHeldItemMainhand();
+		return player.getMainHandItem();
 	}
 
 	public void set(ItemStack stack) {
 		if (player == null)
 			return;
-		if (te.getWorld().isRemote)
+		if (te.getLevel().isClientSide)
 			return;
-		player.setHeldItem(Hand.MAIN_HAND, stack);
-		te.markDirty();
+		player.setItemInHand(Hand.MAIN_HAND, stack);
+		te.setChanged();
 		te.sendData();
 	}
 
@@ -119,7 +119,7 @@ public class DeployerItemHandler implements IItemHandlerModifiable {
 				.split(amount);
 
 		ItemStack toReturn = held.split(amount);
-		te.markDirty();
+		te.setChanged();
 		te.sendData();
 		return toReturn;
 	}

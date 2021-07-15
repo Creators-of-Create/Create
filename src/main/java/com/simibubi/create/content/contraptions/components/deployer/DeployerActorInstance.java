@@ -51,9 +51,9 @@ public class DeployerActorInstance extends ActorInstance {
         PartialModel handPose = DeployerRenderer.getHandPose(mode);
 
         stationaryTimer = context.data.contains("StationaryTimer");
-        facing = state.get(FACING);
+        facing = state.getValue(FACING);
 
-        boolean rotatePole = state.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
+        boolean rotatePole = state.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
         yRot = AngleHelper.horizontalAngle(facing);
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRotPole = rotatePole ? 90 : 0;
@@ -89,7 +89,7 @@ public class DeployerActorInstance extends ActorInstance {
             factor = .5f - MathHelper.clamp(MathHelper.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
         }
 
-        Vector3d offset = Vector3d.of(facing.getDirectionVec()).scale(factor);
+        Vector3d offset = Vector3d.atLowerCornerOf(facing.getNormal()).scale(factor);
 
         MatrixStack ms = new MatrixStack();
         MatrixStacker msr = MatrixStacker.of(ms);

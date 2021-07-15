@@ -7,6 +7,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BrassFunnelBlock extends FunnelBlock {
 
 	public BrassFunnelBlock(Properties p_i48415_1_) {
@@ -17,8 +19,8 @@ public class BrassFunnelBlock extends FunnelBlock {
 	public BlockState getEquivalentBeltFunnel(IBlockReader world, BlockPos pos, BlockState state) {
 		Direction facing = getFacing(state);
 		return AllBlocks.BRASS_BELT_FUNNEL.getDefaultState()
-			.with(BeltFunnelBlock.HORIZONTAL_FACING, facing)
-			.with(POWERED, state.get(POWERED));
+			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, facing)
+			.setValue(POWERED, state.getValue(POWERED));
 	}
 
 }

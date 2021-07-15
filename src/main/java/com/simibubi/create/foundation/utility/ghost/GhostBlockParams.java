@@ -23,7 +23,7 @@ public class GhostBlockParams {
 	}
 
 	public static GhostBlockParams of(Block block) {
-		return of(block.getDefaultState());
+		return of(block.defaultBlockState());
 	}
 
 	public GhostBlockParams at(BlockPos pos) {

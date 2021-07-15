@@ -221,14 +221,14 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.DISPENSER)
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 			.loot((lt, block) -> {
-				Builder builder = LootTable.builder();
-				IBuilder survivesExplosion = SurvivesExplosion.builder();
-				lt.registerLootTable(block, builder.addLootPool(LootPool.builder()
-						.acceptCondition(survivesExplosion)
-						.rolls(ConstantRange.of(1))
-						.addEntry(ItemLootEntry.builder(AllBlocks.SCHEMATICANNON.get().asItem())
-								.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
-										.func_216056_a("Options", "BlockEntityTag.Options")))));
+				Builder builder = LootTable.lootTable();
+				IBuilder survivesExplosion = SurvivesExplosion.survivesExplosion();
+				lt.add(block, builder.withPool(LootPool.lootPool()
+						.when(survivesExplosion)
+						.setRolls(ConstantRange.exactly(1))
+						.add(ItemLootEntry.lootTableItem(AllBlocks.SCHEMATICANNON.get().asItem())
+								.apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+										.copy("Options", "BlockEntityTag.Options")))));
 			})
 			.item()
 			.transform(customItemModel())
@@ -289,11 +289,11 @@ public class AllBlocks {
 
 	public static final BlockEntry<GearboxBlock> GEARBOX = REGISTRATE.block("gearbox", GearboxBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(AbstractBlock.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::noOcclusion)
 		.transform(StressConfigDefaults.setNoImpact())
 		.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.ANDESITE_CASING)))
 		.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.ANDESITE_CASING,
-			(s, f) -> f.getAxis() == s.get(GearboxBlock.AXIS))))
+			(s, f) -> f.getAxis() == s.getValue(GearboxBlock.AXIS))))
 		.blockstate((c, p) -> axisBlock(c, p, $ -> AssetLookup.partialBaseModel(c, p), true))
 		.item()
 		.transform(customItemModel())
@@ -301,7 +301,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ClutchBlock> CLUTCH = REGISTRATE.block("clutch", ClutchBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(AbstractBlock.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::noOcclusion)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -310,7 +310,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<GearshiftBlock> GEARSHIFT = REGISTRATE.block("gearshift", GearshiftBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(AbstractBlock.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::noOcclusion)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
@@ -320,7 +320,7 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedBeltBlock> ENCASED_CHAIN_DRIVE =
 		REGISTRATE.block("encased_chain_drive", EncasedBeltBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> p.models()
 				.getExistingFile(p.modLoc("block/" + c.getName() + "/" + suffix))).generate(c, p))
@@ -331,10 +331,10 @@ public class AllBlocks {
 	public static final BlockEntry<AdjustablePulleyBlock> ADJUSTABLE_CHAIN_GEARSHIFT =
 		REGISTRATE.block("adjustable_chain_gearshift", AdjustablePulleyBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate((c, p) -> new EncasedBeltGenerator((state, suffix) -> {
-				String powered = state.get(AdjustablePulleyBlock.POWERED) ? "_powered" : "";
+				String powered = state.getValue(AdjustablePulleyBlock.POWERED) ? "_powered" : "";
 				return p.models()
 					.withExistingParent(c.getName() + "_" + suffix + powered,
 						p.modLoc("block/encased_chain_drive/" + suffix))
@@ -347,9 +347,9 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<BeltBlock> BELT = REGISTRATE.block("belt", BeltBlock::new)
-		.initialProperties(SharedProperties.beltMaterial, MaterialColor.GRAY)
-		.properties(p -> p.sound(SoundType.CLOTH))
-		.properties(p -> p.hardnessAndResistance(0.8F))
+		.initialProperties(SharedProperties.beltMaterial, MaterialColor.COLOR_GRAY)
+		.properties(p -> p.sound(SoundType.WOOL))
+		.properties(p -> p.strength(0.8F))
 		.blockstate(new BeltGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(1.0))
 		.onRegister(CreateRegistrate.blockModel(() -> BeltModel::new))
@@ -368,9 +368,9 @@ public class AllBlocks {
 
 	public static final BlockEntry<WaterWheelBlock> WATER_WHEEL = REGISTRATE.block("water_wheel", WaterWheelBlock::new)
 		.initialProperties(SharedProperties::wooden)
-		.properties(AbstractBlock.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::noOcclusion)
 		.blockstate(BlockStateGen.directionalBlockProviderIgnoresWaterlogged(false))
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(StressConfigDefaults.setCapacity(16.0))
 		.simpleItem()
 		.register();
@@ -378,7 +378,7 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedFanBlock> ENCASED_FAN = REGISTRATE.block("encased_fan", EncasedFanBlock::new)
 		.initialProperties(SharedProperties::stone)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.transform(StressConfigDefaults.setCapacity(16.0))
 		.transform(StressConfigDefaults.setImpact(2.0))
 		.item()
@@ -389,7 +389,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::stone)
 		.tag(AllBlockTags.BRITTLE.tag)
 		.blockstate(BlockStateGen.directionalBlockProvider(true))
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -434,9 +434,9 @@ public class AllBlocks {
 	public static final BlockEntry<CrushingWheelBlock> CRUSHING_WHEEL =
 		REGISTRATE.block("crushing_wheel", CrushingWheelBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.axisBlockProvider(false))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(StressConfigDefaults.setImpact(8.0))
 			.simpleItem()
 			.register();
@@ -454,7 +454,7 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPressBlock> MECHANICAL_PRESS =
 		REGISTRATE.block("mechanical_press", MechanicalPressBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(8.0))
 			.item(AssemblyOperatorBlockItem::new)
@@ -464,9 +464,9 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalMixerBlock> MECHANICAL_MIXER =
 		REGISTRATE.block("mechanical_mixer", MechanicalMixerBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.item(AssemblyOperatorBlockItem::new)
 			.transform(customItemModel())
@@ -474,7 +474,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<BasinBlock> BASIN = REGISTRATE.block("basin", BasinBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(p -> p.sound(SoundType.NETHERITE))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.blockstate(new BasinGenerator()::generate)
 		.onRegister(addMovementBehaviour(new BasinMovementBehaviour()))
 		.item()
@@ -484,10 +484,10 @@ public class AllBlocks {
 	public static final BlockEntry<BlazeBurnerBlock> BLAZE_BURNER =
 		REGISTRATE.block("blaze_burner", BlazeBurnerBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.luminance(BlazeBurnerBlock::getLight))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.properties(p -> p.lightLevel(BlazeBurnerBlock::getLight))
+			.addLayer(() -> RenderType::cutoutMipped)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
-			.loot((lt, block) -> lt.registerLootTable(block, BlazeBurnerBlock.buildLootTable()))
+			.loot((lt, block) -> lt.add(block, BlazeBurnerBlock.buildLootTable()))
 			.blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
 			.item(BlazeBurnerBlockItem::withBlaze)
 			.model(AssetLookup.<BlazeBurnerBlockItem>customBlockItemModel("blaze_burner", "block_with_blaze"))
@@ -497,14 +497,14 @@ public class AllBlocks {
 	public static final BlockEntry<LitBlazeBurnerBlock> LIT_BLAZE_BURNER =
 		REGISTRATE.block("lit_blaze_burner", LitBlazeBurnerBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.luminance(LitBlazeBurnerBlock::getLight))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.properties(p -> p.lightLevel(LitBlazeBurnerBlock::getLight))
+			.addLayer(() -> RenderType::cutoutMipped)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag, AllBlockTags.FAN_HEATERS.tag)
-			.loot((lt, block) -> lt.registerDropping(block, AllItems.EMPTY_BLAZE_BURNER.get()))
+			.loot((lt, block) -> lt.dropOther(block, AllItems.EMPTY_BLAZE_BURNER.get()))
 			.blockstate((c, p) -> p.getVariantBuilder(c.get()).forAllStates(state ->
 				ConfiguredModel.builder()
 					.modelFile(p.models().getExistingFile(p.modLoc(
-						"block/blaze_burner/" + (state.get(LitBlazeBurnerBlock.FLAME_TYPE) == LitBlazeBurnerBlock.FlameType.SOUL ? "block_with_soul_fire" : "block_with_fire")
+						"block/blaze_burner/" + (state.getValue(LitBlazeBurnerBlock.FLAME_TYPE) == LitBlazeBurnerBlock.FlameType.SOUL ? "block_with_soul_fire" : "block_with_fire")
 					)))
 					.build()))
 			.register();
@@ -519,7 +519,7 @@ public class AllBlocks {
 	public static final BlockEntry<EjectorBlock> WEIGHTED_EJECTOR =
 		REGISTRATE.block("weighted_ejector", EjectorBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p), 180))
 			.transform(StressConfigDefaults.setImpact(2.0))
 			.item(EjectorItem::new)
@@ -528,8 +528,8 @@ public class AllBlocks {
 
 	public static final BlockEntry<ChuteBlock> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.sound(SoundType.NETHERITE))
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.addLayer(() -> RenderType::cutoutMipped)
 		.blockstate(new ChuteGenerator()::generate)
 		.item(ChuteItem::new)
 		.transform(customItemModel("_", "block"))
@@ -537,7 +537,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<SmartChuteBlock> SMART_CHUTE = REGISTRATE.block("smart_chute", SmartChuteBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(p -> p.sound(SoundType.NETHERITE))
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
 		.blockstate((c, p) -> BlockStateGen.simpleBlock(c, p, AssetLookup.forPowered(c, p)))
 		.item()
 		.transform(customItemModel("_", "block"))
@@ -584,23 +584,23 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedPipeBlock> ENCASED_FLUID_PIPE =
 		REGISTRATE.block("encased_fluid_pipe", EncasedPipeBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.encasedPipe())
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(AllSpriteShifts.COPPER_CASING)))
 			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, AllSpriteShifts.COPPER_CASING,
-				(s, f) -> !s.get(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
+				(s, f) -> !s.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(f)))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
-			.loot((p, b) -> p.registerDropping(b, FLUID_PIPE.get()))
+			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
 	public static final BlockEntry<GlassFluidPipeBlock> GLASS_FLUID_PIPE =
 		REGISTRATE.block("glass_fluid_pipe", GlassFluidPipeBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.blockstate((c, p) -> BlockStateGen.axisBlock(c, p, s -> p.models()
-				.getExistingFile(p.modLoc("block/fluid_pipe/window" + (s.get(GlassFluidPipeBlock.ALT) ? "_alt" : "")))))
+				.getExistingFile(p.modLoc("block/fluid_pipe/window" + (s.getValue(GlassFluidPipeBlock.ALT) ? "_alt" : "")))))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
-			.loot((p, b) -> p.registerDropping(b, FLUID_PIPE.get()))
+			.loot((p, b) -> p.dropOther(b, FLUID_PIPE.get()))
 			.register();
 
 	public static final BlockEntry<PumpBlock> MECHANICAL_PUMP = REGISTRATE.block("mechanical_pump", PumpBlock::new)
@@ -625,7 +625,7 @@ public class AllBlocks {
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((c, p) -> BlockStateGen.directionalAxisBlock(c, p,
 			(state, vertical) -> AssetLookup.partialBaseModel(c, p, vertical ? "vertical" : "horizontal",
-				state.get(FluidValveBlock.ENABLED) ? "open" : "closed")))
+				state.getValue(FluidValveBlock.ENABLED) ? "open" : "closed")))
 			.onRegister(CreateRegistrate.blockModel(() -> PipeAttachmentModel::new))
 			.item()
 			.transform(customItemModel())
@@ -637,25 +637,25 @@ public class AllBlocks {
 					.register();
 
 	public static final DyedBlockList<ValveHandleBlock> DYED_VALVE_HANDLES = new DyedBlockList<>(colour -> {
-		String colourName = colour.getString();
+		String colourName = colour.getSerializedName();
 		return REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
 				.transform(BuilderTransformers.valveHandle(colour))
-				.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get())
-						.patternLine("#")
-						.patternLine("-")
-						.key('#', DyeHelper.getTagOfDye(colour))
-						.key('-', AllItemTags.VALVE_HANDLES.tag)
-						.addCriterion("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
-						.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
+				.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get())
+						.pattern("#")
+						.pattern("-")
+						.define('#', DyeHelper.getTagOfDye(colour))
+						.define('-', AllItemTags.VALVE_HANDLES.tag)
+						.unlockedBy("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
+						.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
 				.register();
 	});
 
 	public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::regular)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(new FluidTankGenerator()::generate)
 			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item(FluidTankItem::new)
 			.model(AssetLookup.<FluidTankItem>customBlockItemModel("_", "block_single_window"))
 			.build()
@@ -665,10 +665,10 @@ public class AllBlocks {
 		REGISTRATE.block("creative_fluid_tank", FluidTankBlock::creative)
 			.initialProperties(SharedProperties::softMetal)
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(new FluidTankGenerator("creative_")::generate)
 			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::creative))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item(FluidTankItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
 			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/fluid_tank/block_single_window"))
@@ -688,7 +688,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<ItemDrainBlock> ITEM_DRAIN = REGISTRATE.block("item_drain", ItemDrainBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
 		.simpleItem()
 		.register();
@@ -696,7 +696,7 @@ public class AllBlocks {
 	public static final BlockEntry<SpoutBlock> SPOUT = REGISTRATE.block("spout", SpoutBlock::new)
 		.initialProperties(SharedProperties::softMetal)
 		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.item(AssemblyOperatorBlockItem::new)
 		.transform(customItemModel())
 		.register();
@@ -734,16 +734,16 @@ public class AllBlocks {
 	public static final BlockEntry<MechanicalPistonHeadBlock> MECHANICAL_PISTON_HEAD =
 		REGISTRATE.block("mechanical_piston_head", MechanicalPistonHeadBlock::new)
 			.initialProperties(() -> Blocks.PISTON_HEAD)
-			.loot((p, b) -> p.registerDropping(b, PISTON_EXTENSION_POLE.get()))
+			.loot((p, b) -> p.dropOther(b, PISTON_EXTENSION_POLE.get()))
 			.blockstate((c, p) -> BlockStateGen.directionalBlockIgnoresWaterlogged(c, p, state -> p.models()
-				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.get(MechanicalPistonHeadBlock.TYPE)
-					.getString() + "/head"))))
+				.getExistingFile(p.modLoc("block/mechanical_piston/" + state.getValue(MechanicalPistonHeadBlock.TYPE)
+					.getSerializedName() + "/head"))))
 			.register();
 
 	public static final BlockEntry<GantryCarriageBlock> GANTRY_CARRIAGE =
 		REGISTRATE.block("gantry_carriage", GantryCarriageBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.directionalAxisBlockProvider())
 			.item()
 			.transform(customItemModel())
@@ -753,11 +753,11 @@ public class AllBlocks {
 		REGISTRATE.block("gantry_shaft", GantryShaftBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.blockstate((c, p) -> p.directionalBlock(c.get(), s -> {
-				boolean isPowered = s.get(GantryShaftBlock.POWERED);
-				boolean isFlipped = s.get(GantryShaftBlock.FACING)
+				boolean isPowered = s.getValue(GantryShaftBlock.POWERED);
+				boolean isFlipped = s.getValue(GantryShaftBlock.FACING)
 					.getAxisDirection() == AxisDirection.NEGATIVE;
-				String partName = s.get(GantryShaftBlock.PART)
-					.getString();
+				String partName = s.getValue(GantryShaftBlock.PART)
+					.getSerializedName();
 				String flipped = isFlipped ? "_flipped" : "";
 				String powered = isPowered ? "_powered" : "";
 				ModelFile existing = AssetLookup.partialBaseModel(c, p, partName);
@@ -804,9 +804,9 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<PulleyBlock.RopeBlock> ROPE = REGISTRATE.block("rope", PulleyBlock.RopeBlock::new)
-		.initialProperties(SharedProperties.beltMaterial, MaterialColor.BROWN)
+		.initialProperties(SharedProperties.beltMaterial, MaterialColor.COLOR_BROWN)
 		.tag(AllBlockTags.BRITTLE.tag)
-		.properties(p -> p.sound(SoundType.CLOTH))
+		.properties(p -> p.sound(SoundType.WOOL))
 		.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 			.getExistingFile(p.modLoc("block/rope_pulley/" + c.getName()))))
 		.register();
@@ -822,9 +822,9 @@ public class AllBlocks {
 	public static final BlockEntry<CartAssemblerBlock> CART_ASSEMBLER =
 		REGISTRATE.block("cart_assembler", CartAssemblerBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.cartAssembler())
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.tag(BlockTags.RAILS, AllBlockTags.SAFE_NBT.tag)
 			.item(CartAssemblerBlockItem::new)
 			.transform(customItemModel())
@@ -833,9 +833,9 @@ public class AllBlocks {
 	public static final BlockEntry<ReinforcedRailBlock> REINFORCED_RAIL =
 		REGISTRATE.block("reinforced_rail", ReinforcedRailBlock::new)
 			.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.reinforcedRail())
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.tag(BlockTags.RAILS)
 			.item()
 			.model((c, p) -> p.blockItem(() -> c.getEntry()
@@ -847,7 +847,7 @@ public class AllBlocks {
 			REGISTRATE.block("controller_rail", ControllerRailBlock::new)
 					.initialProperties(() -> Blocks.POWERED_RAIL)
 					.blockstate(new ControllerRailGenerator()::generate)
-					.addLayer(() -> RenderType::getCutoutMipped)
+					.addLayer(() -> RenderType::cutoutMipped)
 					.color(() -> ColorHandlers::getRedstonePower)
 			.tag(BlockTags.RAILS)
 			.item()
@@ -896,8 +896,8 @@ public class AllBlocks {
 
 	public static final BlockEntry<StickerBlock> STICKER = REGISTRATE.block("sticker", StickerBlock::new)
 		.initialProperties(SharedProperties::stone)
-		.properties(Block.Properties::nonOpaque)
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.properties(AbstractBlock.Properties::noOcclusion)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.blockstate((c, p) -> p.directionalBlock(c.get(), AssetLookup.forPowered(c, p)))
 		.item()
 		.transform(customItemModel())
@@ -917,7 +917,7 @@ public class AllBlocks {
 		.blockstate(new SawGenerator()::generate)
 		.transform(StressConfigDefaults.setImpact(4.0))
 		.onRegister(addMovementBehaviour(new SawMovementBehaviour()))
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.item()
 		.transform(customItemModel())
 		.register();
@@ -954,7 +954,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.onRegister(addMovementBehaviour(new HarvesterMovementBehaviour()))
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel())
 				.register();
@@ -968,7 +968,7 @@ public class AllBlocks {
 					.register();
 
 	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
-		String colourName = colour.getString();
+		String colourName = colour.getSerializedName();
 		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
 		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
 				.initialProperties(SharedProperties::wooden)
@@ -980,20 +980,20 @@ public class AllBlocks {
 							.texture("2", p.modLoc("block/seat/side_" + colourName)));
 				})
 				.recipe((c, p) -> {
-					ShapedRecipeBuilder.shapedRecipe(c.get())
-							.patternLine("#")
-							.patternLine("-")
-							.key('#', DyeHelper.getWoolOfDye(colour))
-							.key('-', ItemTags.WOODEN_SLABS)
-							.addCriterion("has_wool", RegistrateRecipeProvider.hasItem(ItemTags.WOOL))
-							.build(p, Create.asResource("crafting/kinetics/" + c.getName()));
-					ShapedRecipeBuilder.shapedRecipe(c.get())
-							.patternLine("#")
-							.patternLine("-")
-							.key('#', DyeHelper.getTagOfDye(colour))
-							.key('-', AllItemTags.SEATS.tag)
-							.addCriterion("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
-							.build(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
+					ShapedRecipeBuilder.shaped(c.get())
+							.pattern("#")
+							.pattern("-")
+							.define('#', DyeHelper.getWoolOfDye(colour))
+							.define('-', ItemTags.WOODEN_SLABS)
+							.unlockedBy("has_wool", RegistrateRecipeProvider.hasItem(ItemTags.WOOL))
+							.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
+					ShapedRecipeBuilder.shaped(c.get())
+							.pattern("#")
+							.pattern("-")
+							.define('#', DyeHelper.getTagOfDye(colour))
+							.define('-', AllItemTags.SEATS.tag)
+							.unlockedBy("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
+							.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 				})
 				.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
 				.tag(AllBlockTags.SEATS.tag)
@@ -1005,7 +1005,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<SailBlock> SAIL_FRAME = REGISTRATE.block("sail_frame", p -> SailBlock.frame(p))
 			.initialProperties(SharedProperties::wooden)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
 			.tag(AllBlockTags.FAN_TRANSPARENT.tag)
@@ -1014,7 +1014,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p))
 			.initialProperties(SharedProperties::wooden)
-			.properties(Block.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.directionalBlockProvider(false))
 			.tag(AllBlockTags.WINDMILL_SAILS.tag)
 			.simpleItem()
@@ -1024,16 +1024,16 @@ public class AllBlocks {
 		if (colour == DyeColor.WHITE) {
 			return SAIL;
 		}
-		String colourName = colour.getString();
+		String colourName = colour.getSerializedName();
 		return REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p))
-				.properties(Block.Properties::nonOpaque)
+				.properties(AbstractBlock.Properties::noOcclusion)
 				.initialProperties(SharedProperties::wooden)
 				.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
 						.withExistingParent(colourName + "_sail", p.modLoc("block/white_sail"))
 						.texture("0", p.modLoc("block/sail/canvas_" + colourName))))
 				.tag(AllBlockTags.WINDMILL_SAILS.tag)
 				.tag(AllBlockTags.SAILS.tag)
-				.loot((p, b) -> p.registerDropping(b, SAIL.get()))
+				.loot((p, b) -> p.dropOther(b, SAIL.get()))
 				.register();
 	});
 
@@ -1058,18 +1058,18 @@ public class AllBlocks {
 	public static final BlockEntry<CasingBlock> REFINED_RADIANCE_CASING =
 		REGISTRATE.block("refined_radiance_casing", CasingBlock::new)
 			.transform(BuilderTransformers.casing(AllSpriteShifts.REFINED_RADIANCE_CASING))
-			.properties(p -> p.luminance($ -> 12))
+			.properties(p -> p.lightLevel($ -> 12))
 			.lang("Radiant Casing")
 			.register();
 
 	public static final BlockEntry<MechanicalCrafterBlock> MECHANICAL_CRAFTER =
 		REGISTRATE.block("mechanical_crafter", MechanicalCrafterBlock::new)
 			.initialProperties(SharedProperties::softMetal)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.blockstate(BlockStateGen.horizontalBlockProvider(true))
 			.transform(StressConfigDefaults.setImpact(2.0))
 			.onRegister(CreateRegistrate.connectedTextures(new CrafterCTBehaviour()))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -1078,7 +1078,7 @@ public class AllBlocks {
 		REGISTRATE.block("sequenced_gearshift", SequencedGearshiftBlock::new)
 			.initialProperties(SharedProperties::stone)
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.properties(AbstractBlock.Properties::nonOpaque)
+			.properties(AbstractBlock.Properties::noOcclusion)
 			.transform(StressConfigDefaults.setNoImpact())
 			.blockstate(new SequencedGearshiftGenerator()::generate)
 			.item()
@@ -1087,7 +1087,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<FlywheelBlock> FLYWHEEL = REGISTRATE.block("flywheel", FlywheelBlock::new)
 		.initialProperties(SharedProperties::softMetal)
-		.properties(AbstractBlock.Properties::nonOpaque)
+		.properties(AbstractBlock.Properties::noOcclusion)
 		.transform(StressConfigDefaults.setNoImpact())
 		.blockstate(new FlywheelGenerator()::generate)
 		.item()
@@ -1125,7 +1125,7 @@ public class AllBlocks {
 		.blockstate((c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(s -> ConfiguredModel.builder()
 				.modelFile(AssetLookup.partialBaseModel(c, p))
-				.rotationX(s.get(ArmBlock.CEILING) ? 180 : 0)
+				.rotationX(s.getValue(ArmBlock.CEILING) ? 180 : 0)
 				.build()))
 		.transform(StressConfigDefaults.setImpact(2.0))
 		.item(ArmItem::new)
@@ -1148,7 +1148,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::stone)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new BeltFunnelGenerator("andesite", new ResourceLocation("block/polished_andesite"))::generate)
-			.loot((p, b) -> p.registerDropping(b, ANDESITE_FUNNEL.get()))
+			.loot((p, b) -> p.dropOther(b, ANDESITE_FUNNEL.get()))
 			.register();
 
 	public static final BlockEntry<BrassFunnelBlock> BRASS_FUNNEL =
@@ -1167,7 +1167,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::softMetal)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new BeltFunnelGenerator("brass", Create.asResource("block/brass_block"))::generate)
-			.loot((p, b) -> p.registerDropping(b, BRASS_FUNNEL.get()))
+			.loot((p, b) -> p.dropOther(b, BRASS_FUNNEL.get()))
 			.register();
 
 	public static final BlockEntry<BeltTunnelBlock> ANDESITE_TUNNEL =
@@ -1211,9 +1211,9 @@ public class AllBlocks {
 	public static final BlockEntry<NixieTubeBlock> ORANGE_NIXIE_TUBE =
 		REGISTRATE.block("nixie_tube", p -> new NixieTubeBlock(p, DyeColor.ORANGE))
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.luminance($ -> 5))
+			.properties(p -> p.lightLevel($ -> 5))
 			.blockstate(new NixieTubeGenerator()::generate)
-			.addLayer(() -> RenderType::getTranslucent)
+			.addLayer(() -> RenderType::translucent)
 			.item()
 			.transform(customItemModel())
 			.register();
@@ -1221,13 +1221,13 @@ public class AllBlocks {
 	public static final DyedBlockList<NixieTubeBlock> NIXIE_TUBES = new DyedBlockList<>(colour -> {
 		if (colour == DyeColor.ORANGE)
 			return ORANGE_NIXIE_TUBE;
-		String colourName = colour.getString();
+		String colourName = colour.getSerializedName();
 		return REGISTRATE.block(colourName + "_nixie_tube", p -> new NixieTubeBlock(p, colour))
 			.initialProperties(SharedProperties::softMetal)
-			.properties(p -> p.luminance($ -> 5))
+			.properties(p -> p.lightLevel($ -> 5))
 			.blockstate(new NixieTubeGenerator()::generate)
-			.loot((p, b) -> p.registerDropping(b, ORANGE_NIXIE_TUBE.get()))
-			.addLayer(() -> RenderType::getTranslucent)
+			.loot((p, b) -> p.dropOther(b, ORANGE_NIXIE_TUBE.get()))
+			.addLayer(() -> RenderType::translucent)
 			.register();
 	});
 
@@ -1236,7 +1236,7 @@ public class AllBlocks {
 			.initialProperties(SharedProperties::wooden)
 			.tag(AllBlockTags.BRITTLE.tag, AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new RedstoneLinkGenerator()::generate)
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel("_", "transmitter"))
 			.register();
@@ -1255,7 +1255,7 @@ public class AllBlocks {
 		REGISTRATE.block("pulse_repeater", PulseRepeaterBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
 			.blockstate(new PulseRepeaterGenerator()::generate)
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel("diodes", "pulse_repeater"))
 			.register();
@@ -1275,7 +1275,7 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.REPEATER)
 			.tag(AllBlockTags.SAFE_NBT.tag)
 			.blockstate(new AdjustableRepeaterGenerator()::generate)
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.model(AbstractDiodeGenerator.diodeItemModel(true))
 			.build()
@@ -1285,7 +1285,7 @@ public class AllBlocks {
 		REGISTRATE.block("powered_latch", PoweredLatchBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
 			.blockstate(new PoweredLatchGenerator()::generate)
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.simpleItem()
 			.register();
 
@@ -1293,7 +1293,7 @@ public class AllBlocks {
 		REGISTRATE.block("powered_toggle_latch", ToggleLatchBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
 			.blockstate(new ToggleLatchGenerator()::generate)
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
 			.transform(customItemModel("diodes", "latch_off"))
 			.register();
@@ -1303,7 +1303,7 @@ public class AllBlocks {
 			.initialProperties(() -> Blocks.LECTERN)
 			.blockstate((c,p) -> p.horizontalBlock(c.get(), p.models()
 				.getExistingFile(p.mcLoc("block/lectern"))))
-			.loot((lt, block) -> lt.registerDropping(block, Blocks.LECTERN))
+			.loot((lt, block) -> lt.dropOther(block, Blocks.LECTERN))
 			.register();
 
 
@@ -1317,20 +1317,20 @@ public class AllBlocks {
 		REGISTRATE.block("copper_backtank", CopperBacktankBlock::new)
 			.initialProperties(SharedProperties::softMetal)
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
-			.addLayer(() -> RenderType::getCutoutMipped)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.transform(StressConfigDefaults.setImpact(4.0))
 			.loot((lt, block) -> {
-				Builder builder = LootTable.builder();
-				IBuilder survivesExplosion = SurvivesExplosion.builder();
-				lt.registerLootTable(block, builder.addLootPool(LootPool.builder()
-					.acceptCondition(survivesExplosion)
-					.rolls(ConstantRange.of(1))
-					.addEntry(ItemLootEntry.builder(AllItems.COPPER_BACKTANK.get())
-						.acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
-							.func_216056_a("Air", "Air"))
-						.acceptFunction(CopyNbt.func_215881_a(CopyNbt.Source.BLOCK_ENTITY)
-							.func_216056_a("Enchantments", "Enchantments")))));
+				Builder builder = LootTable.lootTable();
+				IBuilder survivesExplosion = SurvivesExplosion.survivesExplosion();
+				lt.add(block, builder.withPool(LootPool.lootPool()
+					.when(survivesExplosion)
+					.setRolls(ConstantRange.exactly(1))
+					.add(ItemLootEntry.lootTableItem(AllItems.COPPER_BACKTANK.get())
+						.apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+						.apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+							.copy("Air", "Air"))
+						.apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+							.copy("Enchantments", "Enchantments")))));
 			})
 			.register();
 

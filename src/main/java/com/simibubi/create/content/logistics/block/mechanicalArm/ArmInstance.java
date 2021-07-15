@@ -62,7 +62,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 		arm = tile;
-		ceiling = blockState.get(ArmBlock.CEILING);
+		ceiling = blockState.getValue(ArmBlock.CEILING);
 
 		animateArm(false);
 	}
@@ -82,10 +82,10 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		float upperArmAngleNow = this.arm.upperArmAngle.get(pt);
 		float headAngleNow = this.arm.headAngle.get(pt);
 
-		boolean settled = MathHelper.epsilonEquals(baseAngle, baseAngleNow)
-				&& MathHelper.epsilonEquals(lowerArmAngle, lowerArmAngleNow)
-				&& MathHelper.epsilonEquals(upperArmAngle, upperArmAngleNow)
-				&& MathHelper.epsilonEquals(headAngle, headAngleNow);
+		boolean settled = MathHelper.equal(baseAngle, baseAngleNow)
+				&& MathHelper.equal(lowerArmAngle, lowerArmAngleNow)
+				&& MathHelper.equal(upperArmAngle, upperArmAngleNow)
+				&& MathHelper.equal(headAngle, headAngleNow);
 
 		this.baseAngle = baseAngleNow;
 		this.lowerArmAngle = lowerArmAngleNow;
@@ -107,7 +107,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		int color;
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getWorld()) + (tile.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (tile.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -151,15 +151,15 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 				.getItemRenderer();
 		boolean hasItem = !item.isEmpty();
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
-				&& itemRenderer.getItemModelWithOverrides(item, Minecraft.getInstance().world, null)
+				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null)
 				.isGui3d();
 
 		for (int index : Iterate.zeroAndOne) {
-			msLocal.push();
+			msLocal.pushPose();
 			int flip = index * 2 - 1;
 			ArmRenderer.transformClawHalf(msr, hasItem, isBlockItem, flip);
 			clawGrips.get(index).setTransform(msLocal);
-			msLocal.pop();
+			msLocal.popPose();
 		}
 	}
 

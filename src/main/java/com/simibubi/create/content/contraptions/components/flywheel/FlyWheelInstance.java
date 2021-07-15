@@ -48,16 +48,16 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
     public FlyWheelInstance(MaterialManager<?> modelManager, FlywheelTileEntity tile) {
 		super(modelManager, tile);
 
-		facing = blockState.get(HORIZONTAL_FACING);
+		facing = blockState.getValue(HORIZONTAL_FACING);
 
 		shaft = setup(shaftModel().createInstance());
 
 		BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
-		wheel = getTransformMaterial().getModel(AllBlockPartials.FLYWHEEL, referenceState, referenceState.get(HORIZONTAL_FACING)).createInstance();
+		wheel = getTransformMaterial().getModel(AllBlockPartials.FLYWHEEL, referenceState, referenceState.getValue(HORIZONTAL_FACING)).createInstance();
 
 		connection = FlywheelBlock.getConnection(blockState);
 		if (connection != null) {
-			connectedLeft = blockState.get(FlywheelBlock.CONNECTION) == FlywheelBlock.ConnectionState.LEFT;
+			connectedLeft = blockState.getValue(FlywheelBlock.CONNECTION) == FlywheelBlock.ConnectionState.LEFT;
 
 			boolean flipAngle = connection.getAxis() == Direction.Axis.X ^ connection.getAxisDirection() == Direction.AxisDirection.NEGATIVE;
 
@@ -102,34 +102,34 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         if (connection != null) {
             float rotation = angle * connectorAngleMult;
 
-            ms.push();
+            ms.pushPose();
             rotateToFacing(msr, connection);
 
-            ms.push();
+            ms.pushPose();
             transformConnector(msr, true, true, rotation, connectedLeft);
             upperRotating.setTransform(ms);
-            ms.pop();
+            ms.popPose();
 
-            ms.push();
+            ms.pushPose();
             transformConnector(msr, false, true, rotation, connectedLeft);
             lowerRotating.setTransform(ms);
-            ms.pop();
+            ms.popPose();
 
-            ms.push();
+            ms.pushPose();
             transformConnector(msr, true, false, rotation, connectedLeft);
             upperSliding.setTransform(ms);
-            ms.pop();
+            ms.popPose();
 
-            ms.push();
+            ms.pushPose();
             transformConnector(msr, false, false, rotation, connectedLeft);
             lowerSliding.setTransform(ms);
-            ms.pop();
+            ms.popPose();
 
-            ms.pop();
+            ms.popPose();
         }
 
         msr.centre()
-           .rotate(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, facing.getAxis()), AngleHelper.rad(angle))
+           .rotate(Direction.get(Direction.AxisDirection.POSITIVE, facing.getAxis()), AngleHelper.rad(angle))
            .unCentre();
 
         wheel.setTransform(ms);
@@ -145,7 +145,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
         relight(pos, shaft, wheel);
 
         if (connection != null) {
-            relight(this.pos.offset(connection), connectors.stream());
+            relight(this.pos.relative(connection), connectors.stream());
         }
     }
 

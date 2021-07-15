@@ -31,9 +31,9 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
 
-        AttachFace face = blockState.get(AnalogLeverBlock.FACE);
+        AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);
         rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
-        rY = AngleHelper.horizontalAngle(blockState.get(AnalogLeverBlock.HORIZONTAL_FACING));
+        rY = AngleHelper.horizontalAngle(blockState.getValue(AnalogLeverBlock.FACING));
 
         animateLever();
     }

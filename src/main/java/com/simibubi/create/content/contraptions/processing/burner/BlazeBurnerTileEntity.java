@@ -80,7 +80,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	public void tick() {
 		super.tick();
 
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			tickRotation();
 			spawnParticles(getHeatLevelFromBlock(), 1);
 			return;
@@ -120,8 +120,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 				x = player.getX();
 				z = player.getZ();
 			}
-			double dx = x - (getPos().getX() + 0.5);
-			double dz = z - (getPos().getZ() + 0.5);
+			double dx = x - (getBlockPos().getX() + 0.5);
+			double dz = z - (getBlockPos().getZ() + 0.5);
 			target = AngleHelper.deg(-MathHelper.atan2(dz, dx)) - 90;
 		}
 		target = headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), target);
@@ -163,12 +163,12 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		HeatLevel inBlockState = getHeatLevelFromBlock();
 		if (inBlockState == heat)
 			return;
-		world.setBlockState(pos, getBlockState().with(BlazeBurnerBlock.HEAT_LEVEL, heat));
+		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(BlazeBurnerBlock.HEAT_LEVEL, heat));
 		notifyUpdate();
 	}
 
 	/**
-	 * @return true if the heater updated its burn time and a item should be
+	 * @return true if the heater updated its burn time and an item should be
 	 *         consumed
 	 */
 	protected boolean tryUpdateFuel(ItemStack itemStack, boolean forceOverflow, boolean simulate) {
@@ -206,7 +206,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		activeFuel = newFuel;
 		remainingBurnTime = newBurnTime;
 
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			HeatLevel level = getHeatLevelFromFuelType(activeFuel);
 			for (int i = 0; i < 20; i++)
 				spawnParticles(level, 1 + (.25 * (i / 4)));
@@ -225,7 +225,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		remainingBurnTime = 0;
 		isCreative = true;
 
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			for (int i = 0; i < 30; i++) {
 				double burstMult = 1 + (.25 * (i / 4));
 				spawnParticle(CREATIVE_PARTICLE_COLORS, 0.04F, 35, false, 0.03 * burstMult, 0.15 * burstMult);
@@ -242,8 +242,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	protected void playSound() {
-		world.playSound(null, pos, SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS,
-			.125f + world.rand.nextFloat() * .125f, .75f - world.rand.nextFloat() * .25f);
+		level.playSound(null, worldPosition, SoundEvents.BLAZE_SHOOT, SoundCategory.BLOCKS,
+			.125f + level.random.nextFloat() * .125f, .75f - level.random.nextFloat() * .25f);
 	}
 
 	protected HeatLevel getHeatLevelFromFuelType(FuelType fuel) {
@@ -264,12 +264,12 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	protected void spawnParticles(HeatLevel heatLevel, double burstMult) {
-		if (world == null)
+		if (level == null)
 			return;
 		if (heatLevel == BlazeBurnerBlock.HeatLevel.NONE)
 			return;
 
-		Random r = world.getRandom();
+		Random r = level.getRandom();
 		switch (heatLevel) {
 		case SMOULDERING:
 			if (r.nextDouble() > 0.25)
@@ -297,12 +297,12 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	protected void spawnParticle(Vector3d color, float scale, int avgAge, boolean hot, double speed, double spread) {
-		Random random = world.getRandom();
-		world.addOptionalParticle(
+		Random random = level.getRandom();
+		level.addAlwaysVisibleParticle(
 			new CubeParticleData((float) color.x, (float) color.y, (float) color.z, scale, avgAge, hot),
-			(double) pos.getX() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
-			(double) pos.getY() + 0.6D + (random.nextDouble() / 4.0),
-			(double) pos.getZ() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread, 0.0D, speed, 0.0D);
+			(double) worldPosition.getX() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
+			(double) worldPosition.getY() + 0.6D + (random.nextDouble() / 4.0),
+			(double) worldPosition.getZ() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread, 0.0D, speed, 0.0D);
 	}
 
 	protected void spawnParticle(Vector3d[] colors, float scale, int avgAge, boolean hot, double speed, double spread) {

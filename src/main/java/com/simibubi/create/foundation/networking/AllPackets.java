@@ -143,7 +143,7 @@ public enum AllPackets {
 
 	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
 		channel.send(PacketDistributor.NEAR
-			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getRegistryKey())), message);
+			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())), message);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {

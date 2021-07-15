@@ -39,9 +39,9 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		for (RenderType type : RenderType.getBlockLayers())
+		for (RenderType type : RenderType.chunkBufferLayers())
 			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
 				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
 	}
@@ -58,7 +58,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		float angle = ((time * te.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 		return angle;
@@ -66,7 +66,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	public static SuperByteBuffer standardKineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te,
 		int light) {
-		final BlockPos pos = te.getPos();
+		final BlockPos pos = te.getBlockPos();
 		Axis axis = ((IRotate) te.getBlockState()
 			.getBlock()).getRotationAxis(te.getBlockState());
 		return kineticRotationTransform(buffer, te, axis, getAngleForTe(te, pos, axis), light);
@@ -75,7 +75,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te, Axis axis,
 		float angle, int light) {
 		buffer.light(light);
-		buffer.rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), angle);
+		buffer.rotateCentered(Direction.get(AxisDirection.POSITIVE, axis), angle);
 
 		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {
@@ -107,7 +107,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	public static BlockState shaft(Axis axis) {
 		return AllBlocks.SHAFT.getDefaultState()
-			.with(BlockStateProperties.AXIS, axis);
+			.setValue(BlockStateProperties.AXIS, axis);
 	}
 
 	public static Axis getRotationAxisOf(KineticTileEntity te) {

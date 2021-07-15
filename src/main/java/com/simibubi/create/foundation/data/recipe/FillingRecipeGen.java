@@ -12,6 +12,8 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
 import net.minecraftforge.common.Tags;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+
 public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

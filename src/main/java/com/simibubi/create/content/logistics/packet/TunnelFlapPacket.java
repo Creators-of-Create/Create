@@ -23,7 +23,7 @@ public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity>
         this.flaps = new ArrayList<>(size);
 
         for (int i = 0; i < size; i++) {
-            Direction direction = Direction.byIndex(buffer.readByte());
+            Direction direction = Direction.from3DDataValue(buffer.readByte());
             boolean inwards = buffer.readBoolean();
 
             flaps.add(Pair.of(direction, inwards));
@@ -31,7 +31,7 @@ public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity>
     }
 
     public TunnelFlapPacket(BeltTunnelTileEntity tile, List<Pair<Direction, Boolean>> flaps) {
-        super(tile.getPos());
+        super(tile.getBlockPos());
 
         this.flaps = new ArrayList<>(flaps);
     }
@@ -41,7 +41,7 @@ public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity>
         buffer.writeByte(flaps.size());
 
         for (Pair<Direction, Boolean> flap : flaps) {
-            buffer.writeByte(flap.getLeft().getIndex());
+            buffer.writeByte(flap.getLeft().get3DDataValue());
             buffer.writeBoolean(flap.getRight());
         }
     }

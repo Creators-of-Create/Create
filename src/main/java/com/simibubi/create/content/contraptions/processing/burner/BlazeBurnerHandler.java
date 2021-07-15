@@ -42,20 +42,20 @@ public class BlazeBurnerHandler {
 			.getType() != RayTraceResult.Type.BLOCK)
 			return;
 
-		TileEntity tile = event.getThrowable().world.getTileEntity(new BlockPos(event.getRayTraceResult()
-			.getHitVec()));
+		TileEntity tile = event.getThrowable().level.getBlockEntity(new BlockPos(event.getRayTraceResult()
+			.getLocation()));
 		if (!(tile instanceof BlazeBurnerTileEntity)) {
 			return;
 		}
 
 		event.setCanceled(true);
 		event.getThrowable()
-			.setMotion(Vector3d.ZERO);
+			.setDeltaMovement(Vector3d.ZERO);
 		event.getThrowable()
 			.remove();
 
-		World world = event.getThrowable().world;
-		if (world.isRemote)
+		World world = event.getThrowable().level;
+		if (world.isClientSide)
 			return;
 
 		BlazeBurnerTileEntity heater = (BlazeBurnerTileEntity) tile;
@@ -69,11 +69,11 @@ public class BlazeBurnerHandler {
 			}
 		}
 
-		AllSoundEvents.BLAZE_MUNCH.playOnServer(world, heater.getPos());
+		AllSoundEvents.BLAZE_MUNCH.playOnServer(world, heater.getBlockPos());
 	}
 
 	public static void splashExtinguishesBurner(ProjectileImpactEvent.Throwable event) {
-		if (event.getThrowable().world.isRemote)
+		if (event.getThrowable().level.isClientSide)
 			return;
 
 		if (!(event.getThrowable() instanceof PotionEntity))
@@ -85,18 +85,18 @@ public class BlazeBurnerHandler {
 			return;
 
 		ItemStack stack = entity.getItem();
-		Potion potion = PotionUtils.getPotionFromItem(stack);
-		if (potion == Potions.WATER && PotionUtils.getEffectsFromStack(stack).isEmpty()) {
+		Potion potion = PotionUtils.getPotion(stack);
+		if (potion == Potions.WATER && PotionUtils.getMobEffects(stack).isEmpty()) {
 			BlockRayTraceResult result = (BlockRayTraceResult) event.getRayTraceResult();
-			World world = entity.world;
-			Direction face = result.getFace();
-			BlockPos pos = result.getPos().offset(face);
+			World world = entity.level;
+			Direction face = result.getDirection();
+			BlockPos pos = result.getBlockPos().relative(face);
 
 			extinguishLitBurners(world, pos, face);
-			extinguishLitBurners(world, pos.offset(face.getOpposite()), face);
+			extinguishLitBurners(world, pos.relative(face.getOpposite()), face);
 
 			for (Direction face1 : Direction.Plane.HORIZONTAL) {
-				extinguishLitBurners(world, pos.offset(face1), face1);
+				extinguishLitBurners(world, pos.relative(face1), face1);
 			}
 		}
 	}
@@ -104,8 +104,8 @@ public class BlazeBurnerHandler {
 	private static void extinguishLitBurners(World world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
 		if (AllBlocks.LIT_BLAZE_BURNER.has(state)) {
-			world.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.8F);
-			world.setBlockState(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
+			world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
 		}
 	}
 

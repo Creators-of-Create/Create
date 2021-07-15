@@ -40,9 +40,9 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         super(dispatcher, tile);
 
         this.tile = (DeployerTileEntity) super.tile;
-        facing = blockState.get(FACING);
+        facing = blockState.getValue(FACING);
 
-        boolean rotatePole = blockState.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
+        boolean rotatePole = blockState.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
 
         yRot = AngleHelper.horizontalAngle(facing);
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
@@ -68,7 +68,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
         float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
 
-        if (!newHand && MathHelper.epsilonEquals(newProgress, progress)) return;
+        if (!newHand && MathHelper.equal(newProgress, progress)) return;
 
         progress = newProgress;
         newHand = false;
@@ -118,7 +118,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
         float handLength = currentHand == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
                 : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
         float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
-        Vector3i facingVec = facing.getDirectionVec();
+        Vector3i facingVec = facing.getNormal();
         BlockPos blockPos = getInstancePosition();
 
         float x = blockPos.getX() + ((float) facingVec.getX()) * distance;
@@ -131,12 +131,12 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
     static void updateRotation(OrientedData pole, OrientedData hand, float yRot, float zRot, float zRotPole) {
 
-        Quaternion q = Direction.SOUTH.getUnitVector().getDegreesQuaternion(zRot);
-        q.multiply(Direction.UP.getUnitVector().getDegreesQuaternion(yRot));
+        Quaternion q = Direction.SOUTH.step().rotationDegrees(zRot);
+        q.mul(Direction.UP.step().rotationDegrees(yRot));
 
         hand.setRotation(q);
 
-        q.multiply(Direction.SOUTH.getUnitVector().getDegreesQuaternion(zRotPole));
+        q.mul(Direction.SOUTH.step().rotationDegrees(zRotPole));
 
         pole.setRotation(q);
     }

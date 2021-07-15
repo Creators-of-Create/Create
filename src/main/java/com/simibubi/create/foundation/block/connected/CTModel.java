@@ -36,11 +36,11 @@ public class CTModel extends BakedModelWrapperWithData {
 		}
 
 		void put(Direction face, int texture) {
-			indices[face.getIndex()] = texture;
+			indices[face.get3DDataValue()] = texture;
 		}
 
 		int get(Direction face) {
-			return indices[face.getIndex()];
+			return indices[face.get3DDataValue()];
 		}
 	}
 
@@ -57,7 +57,7 @@ public class CTModel extends BakedModelWrapperWithData {
 	protected CTData createCTData(IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
 		for (Direction face : Iterate.directions) {
-			if (!Block.shouldSideBeRendered(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())
+			if (!Block.shouldRenderFace(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
 			if (spriteShift == null)
@@ -81,17 +81,17 @@ public class CTModel extends BakedModelWrapperWithData {
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);
 
-			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.getFace());
+			CTSpriteShiftEntry spriteShift = behaviour.get(state, quad.getDirection());
 			if (spriteShift == null)
 				continue;
 			if (quad.getSprite() != spriteShift.getOriginal())
 				continue;
-			int index = data.get(quad.getFace());
+			int index = data.get(quad.getDirection());
 			if (index == -1)
 				continue;
 
 			BakedQuad newQuad = QuadHelper.clone(quad);
-			int[] vertexData = newQuad.getVertexData();
+			int[] vertexData = newQuad.getVertices();
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
 				int uvOffset = 16 / 4;

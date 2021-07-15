@@ -35,9 +35,9 @@ public class FluidTankGenerator extends SpecialBlockStateGen {
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		Boolean top = state.get(FluidTankBlock.TOP);
-		Boolean bottom = state.get(FluidTankBlock.BOTTOM);
-		Shape shape = state.get(FluidTankBlock.SHAPE);
+		Boolean top = state.getValue(FluidTankBlock.TOP);
+		Boolean bottom = state.getValue(FluidTankBlock.BOTTOM);
+		Shape shape = state.getValue(FluidTankBlock.SHAPE);
 
 		String shapeName = "middle";
 		if (top && bottom)
@@ -47,7 +47,7 @@ public class FluidTankGenerator extends SpecialBlockStateGen {
 		else if (bottom)
 			shapeName = "bottom";
 
-		String modelName = shapeName + (shape == Shape.PLAIN ? "" : "_" + shape.getString());
+		String modelName = shapeName + (shape == Shape.PLAIN ? "" : "_" + shape.getSerializedName());
 
 		if (!prefix.isEmpty())
 			return prov.models()

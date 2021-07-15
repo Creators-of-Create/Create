@@ -57,11 +57,11 @@ public class InWorldProcessing {
 		public static Type byBlock(IBlockReader reader, BlockPos pos) {
 			BlockState blockState = reader.getBlockState(pos);
 			FluidState fluidState = reader.getFluidState(pos);
-			if (fluidState.getFluid() == Fluids.WATER || fluidState.getFluid() == Fluids.FLOWING_WATER)
+			if (fluidState.getType() == Fluids.WATER || fluidState.getType() == Fluids.FLOWING_WATER)
 				return Type.SPLASHING;
 			Block block = blockState.getBlock();
 			if (block == Blocks.FIRE || AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				|| (BlockTags.CAMPFIRES.contains(block) && blockState.method_28500(CampfireBlock.LIT).orElse(false))
+				|| (BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT).orElse(false))
 				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
@@ -79,7 +79,7 @@ public class InWorldProcessing {
 				CompoundNBT processing = compound.getCompound("Processing");
 
 				if (Type.valueOf(processing.getString("Type")) != type) {
-					boolean canProcess = canProcess(entity.getItem(), type, entity.world);
+					boolean canProcess = canProcess(entity.getItem(), type, entity.level);
 					processing.putString("Type", type.name());
 					if (!canProcess)
 						processing.putInt("Time", -1);
@@ -90,32 +90,32 @@ public class InWorldProcessing {
 					return false;
 			}
 		}
-		return canProcess(entity.getItem(), type, entity.world);
+		return canProcess(entity.getItem(), type, entity.level);
 	}
 
 	private static boolean canProcess(ItemStack stack, Type type, World world) {
 		if (type == Type.BLASTING) {
-			WRAPPER.setInventorySlotContents(0, stack);
+			WRAPPER.setItem(0, stack);
 			Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
-				.getRecipe(IRecipeType.SMELTING, WRAPPER, world);
+				.getRecipeFor(IRecipeType.SMELTING, WRAPPER, world);
 
 			if (smeltingRecipe.isPresent())
 				return true;
 
-			WRAPPER.setInventorySlotContents(0, stack);
+			WRAPPER.setItem(0, stack);
 			Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
-				.getRecipe(IRecipeType.BLASTING, WRAPPER, world);
+				.getRecipeFor(IRecipeType.BLASTING, WRAPPER, world);
 
 			if (blastingRecipe.isPresent())
 				return true;
 
-			return !stack.getItem().isFireproof();
+			return !stack.getItem().isFireResistant();
 		}
 
 		if (type == Type.SMOKING) {
-			WRAPPER.setInventorySlotContents(0, stack);
+			WRAPPER.setItem(0, stack);
 			Optional<SmokingRecipe> recipe = world.getRecipeManager()
-				.getRecipe(IRecipeType.SMOKING, WRAPPER, world);
+				.getRecipeFor(IRecipeType.SMOKING, WRAPPER, world);
 			return recipe.isPresent();
 		}
 
@@ -126,7 +126,7 @@ public class InWorldProcessing {
 	}
 
 	public static boolean isWashable(ItemStack stack, World world) {
-		SPLASHING_WRAPPER.setInventorySlotContents(0, stack);
+		SPLASHING_WRAPPER.setItem(0, stack);
 		Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
 		return recipe.isPresent();
 	}
@@ -134,7 +134,7 @@ public class InWorldProcessing {
 	public static void applyProcessing(ItemEntity entity, Type type) {
 		if (decrementProcessingTime(entity, type) != 0)
 			return;
-		List<ItemStack> stacks = process(entity.getItem(), type, entity.world);
+		List<ItemStack> stacks = process(entity.getItem(), type, entity.level);
 		if (stacks == null)
 			return;
 		if (stacks.isEmpty()) {
@@ -143,9 +143,9 @@ public class InWorldProcessing {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.world, entity.getX(), entity.getY(), entity.getZ(), additional);
-			entityIn.setMotion(entity.getMotion());
-			entity.world.addEntity(entityIn);
+			ItemEntity entityIn = new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), additional);
+			entityIn.setDeltaMovement(entity.getDeltaMovement());
+			entity.level.addFreshEntity(entityIn);
 		}
 	}
 
@@ -181,29 +181,29 @@ public class InWorldProcessing {
 
 	private static List<ItemStack> process(ItemStack stack, Type type, World world) {
 		if (type == Type.SPLASHING) {
-			SPLASHING_WRAPPER.setInventorySlotContents(0, stack);
+			SPLASHING_WRAPPER.setItem(0, stack);
 			Optional<SplashingRecipe> recipe = AllRecipeTypes.SPLASHING.find(SPLASHING_WRAPPER, world);
 			if (recipe.isPresent())
 				return applyRecipeOn(stack, recipe.get());
 			return null;
 		}
 
-		WRAPPER.setInventorySlotContents(0, stack);
+		WRAPPER.setItem(0, stack);
 		Optional<SmokingRecipe> smokingRecipe = world.getRecipeManager()
-			.getRecipe(IRecipeType.SMOKING, WRAPPER, world);
+			.getRecipeFor(IRecipeType.SMOKING, WRAPPER, world);
 
 		if (type == Type.BLASTING) {
 			if (!smokingRecipe.isPresent()) {
-				WRAPPER.setInventorySlotContents(0, stack);
+				WRAPPER.setItem(0, stack);
 				Optional<FurnaceRecipe> smeltingRecipe = world.getRecipeManager()
-					.getRecipe(IRecipeType.SMELTING, WRAPPER, world);
+					.getRecipeFor(IRecipeType.SMELTING, WRAPPER, world);
 
 				if (smeltingRecipe.isPresent())
 					return applyRecipeOn(stack, smeltingRecipe.get());
 
-				WRAPPER.setInventorySlotContents(0, stack);
+				WRAPPER.setItem(0, stack);
 				Optional<BlastingRecipe> blastingRecipe = world.getRecipeManager()
-					.getRecipe(IRecipeType.BLASTING, WRAPPER, world);
+					.getRecipeFor(IRecipeType.BLASTING, WRAPPER, world);
 
 				if (blastingRecipe.isPresent())
 					return applyRecipeOn(stack, blastingRecipe.get());
@@ -253,9 +253,9 @@ public class InWorldProcessing {
 		}
 		entity.setItem(stacks.remove(0));
 		for (ItemStack additional : stacks) {
-			ItemEntity entityIn = new ItemEntity(entity.world, entity.getX(), entity.getY(), entity.getZ(), additional);
-			entityIn.setMotion(entity.getMotion());
-			entity.world.addEntity(entityIn);
+			ItemEntity entityIn = new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), additional);
+			entityIn.setDeltaMovement(entity.getDeltaMovement());
+			entity.level.addFreshEntity(entityIn);
 		}
 	}
 
@@ -285,7 +285,7 @@ public class InWorldProcessing {
 				}
 			}
 		} else {
-			ItemStack out = recipe.getRecipeOutput()
+			ItemStack out = recipe.getResultItem()
 				.copy();
 			stacks = ItemHelper.multipliedOutput(stackIn, out);
 		}
@@ -294,9 +294,9 @@ public class InWorldProcessing {
 	}
 
 	public static void spawnParticlesForProcessing(@Nullable World world, Vector3d vec, Type type) {
-		if (world == null || !world.isRemote)
+		if (world == null || !world.isClientSide)
 			return;
-		if (world.rand.nextInt(8) != 0)
+		if (world.random.nextInt(8) != 0)
 			return;
 
 		switch (type) {
@@ -309,10 +309,10 @@ public class InWorldProcessing {
 		case SPLASHING:
 			Vector3d color = ColorHelper.getRGB(0x0055FF);
 			world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
-				vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f, vec.z + (world.rand.nextFloat() - .5f) * .5f,
+				vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f,
 				0, 1 / 8f, 0);
-			world.addParticle(ParticleTypes.SPIT, vec.x + (world.rand.nextFloat() - .5f) * .5f, vec.y + .5f,
-				vec.z + (world.rand.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
+			world.addParticle(ParticleTypes.SPIT, vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f,
+				vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 			break;
 		default:
 			break;

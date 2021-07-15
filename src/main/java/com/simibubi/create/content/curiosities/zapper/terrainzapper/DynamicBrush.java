@@ -83,10 +83,10 @@ public class DynamicBrush extends Brush {
 				for (int z = -1; z <= 1; z++)
 					if (Math.abs(x) + Math.abs(y) + Math.abs(z) < 2 || searchDiagonals)
 						if (targetFace.getAxis()
-							.getCoordinate(x, y, z) == 0 || !surface)
+							.choose(x, y, z) == 0 || !surface)
 							offsets.add(new BlockPos(x, y, z));
 
-		BlockPos startPos = replace ? targetPos : targetPos.offset(targetFace);
+		BlockPos startPos = replace ? targetPos : targetPos.relative(targetFace);
 		frontier.add(startPos);
 
 		while (!frontier.isEmpty()) {
@@ -94,36 +94,36 @@ public class DynamicBrush extends Brush {
 			if (visited.contains(currentPos))
 				continue;
 			visited.add(currentPos);
-			if (!currentPos.withinDistance(startPos, searchRange))
+			if (!currentPos.closerThan(startPos, searchRange))
 				continue;
 
 			// Replace Mode
 			if (replace) {
 				BlockState stateToReplace = world.getBlockState(currentPos);
-				BlockState stateAboveStateToReplace = world.getBlockState(currentPos.offset(targetFace));
+				BlockState stateAboveStateToReplace = world.getBlockState(currentPos.relative(targetFace));
 
 				// Criteria
-				if (stateToReplace.getBlockHardness(world, currentPos) == -1)
+				if (stateToReplace.getDestroySpeed(world, currentPos) == -1)
 					continue;
 				if (stateToReplace.getBlock() != state.getBlock() && !fuzzy)
 					continue;
 				if (stateToReplace.getMaterial()
 					.isReplaceable())
 					continue;
-				if (BlockHelper.hasBlockSolidSide(stateAboveStateToReplace, world, currentPos.offset(targetFace),
+				if (BlockHelper.hasBlockSolidSide(stateAboveStateToReplace, world, currentPos.relative(targetFace),
 					targetFace.getOpposite()) && surface)
 					continue;
 				affectedPositions.add(currentPos);
 
 				// Search adjacent spaces
 				for (BlockPos offset : offsets)
-					frontier.add(currentPos.add(offset));
+					frontier.add(currentPos.offset(offset));
 				continue;
 			}
 
 			// Place Mode
 			BlockState stateToPlaceAt = world.getBlockState(currentPos);
-			BlockState stateToPlaceOn = world.getBlockState(currentPos.offset(targetFace.getOpposite()));
+			BlockState stateToPlaceOn = world.getBlockState(currentPos.relative(targetFace.getOpposite()));
 
 			// Criteria
 			if (stateToPlaceOn.getMaterial()
@@ -138,7 +138,7 @@ public class DynamicBrush extends Brush {
 
 			// Search adjacent spaces
 			for (BlockPos offset : offsets)
-				frontier.add(currentPos.add(offset));
+				frontier.add(currentPos.offset(offset));
 			continue;
 		}
 

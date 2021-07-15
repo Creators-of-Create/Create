@@ -48,9 +48,9 @@ public class FluidHelper {
 	}
 
 	public static boolean hasBlockState(Fluid fluid) {
-		BlockState blockState = fluid.getDefaultState()
-			.getBlockState();
-		return blockState != null && blockState != Blocks.AIR.getDefaultState();
+		BlockState blockState = fluid.defaultFluidState()
+			.createLegacyBlock();
+		return blockState != null && blockState != Blocks.AIR.defaultBlockState();
 	}
 
 	public static FluidStack copyStackWithAmount(FluidStack fs, int amount) {
@@ -67,7 +67,7 @@ public class FluidHelper {
 		if (fluid == Fluids.LAVA)
 			return Fluids.FLOWING_LAVA;
 		if (fluid instanceof ForgeFlowingFluid)
-			return ((ForgeFlowingFluid) fluid).getFlowingFluid();
+			return ((ForgeFlowingFluid) fluid).getFlowing();
 		return fluid;
 	}
 
@@ -77,7 +77,7 @@ public class FluidHelper {
 		if (fluid == Fluids.FLOWING_LAVA)
 			return Fluids.LAVA;
 		if (fluid instanceof ForgeFlowingFluid)
-			return ((ForgeFlowingFluid) fluid).getStillFluid();
+			return ((ForgeFlowingFluid) fluid).getSource();
 		return fluid;
 	}
 
@@ -94,11 +94,11 @@ public class FluidHelper {
 	}
 
 	public static FluidStack deserializeFluidStack(JsonObject json) {
-		ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluid"));
+		ResourceLocation id = new ResourceLocation(JSONUtils.getAsString(json, "fluid"));
 		Fluid fluid = ForgeRegistries.FLUIDS.getValue(id);
 		if (fluid == null)
 			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
-		int amount = JSONUtils.getInt(json, "amount");
+		int amount = JSONUtils.getAsInt(json, "amount");
 		FluidStack stack = new FluidStack(fluid, amount);
 
 		if (!json.has("nbt"))
@@ -106,8 +106,8 @@ public class FluidHelper {
 
 		try {
 			JsonElement element = json.get("nbt");
-			stack.setTag(JsonToNBT.getTagFromJson(
-				element.isJsonObject() ? Create.GSON.toJson(element) : JSONUtils.getString(element, "nbt")));
+			stack.setTag(JsonToNBT.parseTag(
+				element.isJsonObject() ? Create.GSON.toJson(element) : JSONUtils.convertToString(element, "nbt")));
 
 		} catch (CommandSyntaxException e) {
 			e.printStackTrace();
@@ -128,7 +128,7 @@ public class FluidHelper {
 
 		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
 			return false;
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return true;
 
 		ItemStack copyOfHeld = heldItem.copy();
@@ -137,9 +137,9 @@ public class FluidHelper {
 
 		if (!player.isCreative() && !(te instanceof CreativeFluidTankTileEntity)) {
 			if (copyOfHeld.isEmpty())
-				player.setHeldItem(handIn, emptyingResult.getSecond());
+				player.setItemInHand(handIn, emptyingResult.getSecond());
 			else {
-				player.setHeldItem(handIn, copyOfHeld);
+				player.setItemInHand(handIn, copyOfHeld);
 				player.inventory.placeItemBackInInventory(worldIn, emptyingResult.getSecond());
 			}
 		}
@@ -167,7 +167,7 @@ public class FluidHelper {
 			if (requiredAmountForItem > fluid.getAmount())
 				continue;
 
-			if (world.isRemote)
+			if (world.isClientSide)
 				return true;
 
 			if (player.isCreative() || te instanceof CreativeFluidTankTileEntity)

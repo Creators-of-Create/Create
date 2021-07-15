@@ -56,7 +56,7 @@ public class ColorAttribute implements ItemAttribute {
 			colors.addAll(getFireworkStarColors(nbt.getCompound("Explosion")));
 		}
 
-		Arrays.stream(DyeColor.values()).filter(c -> stack.getItem().getRegistryName().getPath().startsWith(c.getTranslationKey() + "_")).forEach(colors::add);
+		Arrays.stream(DyeColor.values()).filter(c -> stack.getItem().getRegistryName().getPath().startsWith(c.getName() + "_")).forEach(colors::add);
 
 		return colors;
 	}
@@ -75,7 +75,7 @@ public class ColorAttribute implements ItemAttribute {
 
 	@Override
 	public Object[] getTranslationParameters() {
-		return new Object[]{new TranslationTextComponent(color.getTranslationKey()).getUnformattedComponentText()};
+		return new Object[]{new TranslationTextComponent(color.getName()).getContents()};
 	}
 
 	@Override
