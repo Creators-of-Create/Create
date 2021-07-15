@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
@@ -18,8 +19,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
-		for (ItemStack itemStack : entity.getArmorSlots())
-			if (AllItems.COPPER_BACKTANK.isIn(itemStack))
+		for (ItemStack itemStack : entity.getArmorInventoryList())
+			if (itemStack.getItem().isIn(AllTags.AllItemTags.PRESSURIZED_AIR_SOURCE.tag))
 				return itemStack;
 		return ItemStack.EMPTY;
 	}
