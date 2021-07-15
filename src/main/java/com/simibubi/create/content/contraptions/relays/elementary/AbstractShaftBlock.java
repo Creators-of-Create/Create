@@ -30,12 +30,14 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	implements IWaterLoggable, IWrenchableWithBracket {
 
 	public AbstractShaftBlock(Properties properties) {
 		super(properties);
-		setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+		registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
 	}
 
@@ -55,52 +57,52 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state != newState && !isMoving)
-			removeBracket(world, pos, true).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
-		super.onReplaced(state, world, pos, newState, isMoving);
+			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
+		super.onRemove(state, world, pos, newState, isMoving);
 	}
 
 	// IRotate:
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.get(AXIS);
+		return face.getAxis() == state.getValue(AXIS);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(AXIS);
+		return state.getValue(AXIS);
 	}
 
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
-			: Fluids.EMPTY.getDefaultState();
+		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false)
+			: Fluids.EMPTY.defaultFluidState();
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(BlockStateProperties.WATERLOGGED);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
 		IWorld world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.get(BlockStateProperties.WATERLOGGED)) {
-			world.getPendingFluidTicks()
-				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+			world.getLiquidTicks()
+				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		return state;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		FluidState ifluidstate = context.getWorld()
-			.getFluidState(context.getPos());
-		return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+		FluidState ifluidstate = context.getLevel()
+			.getFluidState(context.getClickedPos());
+		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
+			Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
 	}
 
 	@Override
@@ -110,13 +112,13 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 			return Optional.empty();
 		BlockState bracket = behaviour.getBracket();
 		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.getDefaultState())
+		if (bracket == Blocks.AIR.defaultBlockState())
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

@@ -5,6 +5,8 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RedstoneDiodeBlock;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class AbstractDiodeBlock extends RedstoneDiodeBlock implements IWrenchable {
 
 	public AbstractDiodeBlock(Properties builder) {
@@ -12,7 +14,7 @@ public abstract class AbstractDiodeBlock extends RedstoneDiodeBlock implements I
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return true;
 	}
 }

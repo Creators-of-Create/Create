@@ -19,10 +19,10 @@ public abstract class ColoredOverlayTileEntityRenderer<T extends TileEntity> ext
 	protected void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		SuperByteBuffer render = render(getOverlayBuffer(te), getColor(te, partialTicks), light);
-		render.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		render.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	protected abstract int getColor(T te, float partialTicks);

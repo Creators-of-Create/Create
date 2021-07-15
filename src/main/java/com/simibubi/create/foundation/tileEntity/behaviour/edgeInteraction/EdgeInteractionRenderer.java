@@ -25,17 +25,17 @@ public class EdgeInteractionRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult target = mc.objectMouseOver;
+		RayTraceResult target = mc.hitResult;
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = mc.world;
-		BlockPos pos = result.getPos();
+		ClientWorld world = mc.level;
+		BlockPos pos = result.getBlockPos();
 		PlayerEntity player = mc.player;
-		ItemStack heldItem = player.getHeldItemMainhand();
+		ItemStack heldItem = player.getMainHandItem();
 
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return;
 		EdgeInteractionBehaviour behaviour = TileEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)
@@ -43,7 +43,7 @@ public class EdgeInteractionRenderer {
 		if (behaviour.requiredItem.orElse(heldItem.getItem()) != heldItem.getItem())
 			return;
 
-		Direction face = result.getFace();
+		Direction face = result.getDirection();
 		List<Direction> connectiveSides = EdgeInteractionHandler.getConnectiveSides(world, pos, face, behaviour);
 		if (connectiveSides.isEmpty())
 			return;
@@ -52,7 +52,7 @@ public class EdgeInteractionRenderer {
 		double bestDistance = Double.MAX_VALUE;
 		Vector3d center = VecHelper.getCenterOf(pos);
 		for (Direction direction : connectiveSides) {
-			double distance = Vector3d.of(direction.getDirectionVec()).subtract(target.getHitVec()
+			double distance = Vector3d.atLowerCornerOf(direction.getNormal()).subtract(target.getLocation()
 				.subtract(center))
 				.length();
 			if (distance > bestDistance)
@@ -62,9 +62,9 @@ public class EdgeInteractionRenderer {
 		}
 
 		AxisAlignedBB bb = EdgeInteractionHandler.getBB(pos, closestEdge);
-		boolean hit = bb.contains(target.getHitVec());
+		boolean hit = bb.contains(target.getLocation());
 
-		ValueBox box = new ValueBox(StringTextComponent.EMPTY, bb.offset(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
+		ValueBox box = new ValueBox(StringTextComponent.EMPTY, bb.move(-pos.getX(), -pos.getY(), -pos.getZ()), pos);
 		Vector3d textOffset = Vector3d.ZERO;
 
 		boolean positive = closestEdge.getAxisDirection() == AxisDirection.POSITIVE;

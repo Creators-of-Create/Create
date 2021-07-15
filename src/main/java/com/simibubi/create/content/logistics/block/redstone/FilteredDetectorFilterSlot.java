@@ -20,7 +20,7 @@ public class FilteredDetectorFilterSlot extends ValueBoxTransform {
 
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
-		float yRot = AngleHelper.horizontalAngle(state.get(HorizontalBlock.HORIZONTAL_FACING)) + 180;
+		float yRot = AngleHelper.horizontalAngle(state.getValue(HorizontalBlock.FACING)) + 180;
 		MatrixStacker.of(ms)
 			.rotateY(yRot)
 			.rotateX(90);

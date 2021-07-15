@@ -23,14 +23,14 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(DrillBlock.FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(DrillBlock.FACING)
 			.getOpposite());
 	}
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(DrillBlock.FACING)
-			.getDirectionVec()).scale(.65f);
+		return Vector3d.atLowerCornerOf(context.state.getValue(DrillBlock.FACING)
+			.getNormal()).scale(.65f);
 	}
 
 	@Override

@@ -14,6 +14,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @MethodsReturnNonnullByDefault
 public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBlock {
     public AbstractEncasedShaftBlock(Properties properties) {
@@ -21,8 +23,8 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        super.fillStateContainer(builder);
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
@@ -31,28 +33,28 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     }
 
     @Override
-    public PushReaction getPushReaction(@Nullable BlockState state) {
+    public PushReaction getPistonPushReaction(@Nullable BlockState state) {
         return PushReaction.NORMAL;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         if (context.getPlayer() != null && context.getPlayer()
-                .isSneaking())
+                .isShiftKeyDown())
             return super.getStateForPlacement(context);
         Direction.Axis preferredAxis = getPreferredAxis(context);
-        return this.getDefaultState()
-                .with(AXIS, preferredAxis == null ? context.getNearestLookingDirection()
+        return this.defaultBlockState()
+                .setValue(AXIS, preferredAxis == null ? context.getNearestLookingDirection()
                         .getAxis() : preferredAxis);
     }
 
     @Override
     public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-        return face.getAxis() == state.get(AXIS);
+        return face.getAxis() == state.getValue(AXIS);
     }
 
     @Override
     public Direction.Axis getRotationAxis(BlockState state) {
-        return state.get(AXIS);
+        return state.getValue(AXIS);
     }
 }

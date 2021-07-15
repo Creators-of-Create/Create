@@ -41,7 +41,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 		itemStacks.init(0, true, 43, 4);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
 			.get(0)
-			.getMatchingStacks()));
+			.getItems()));
 
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++) {

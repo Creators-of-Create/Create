@@ -61,7 +61,7 @@ public class SceneBuildingUtil {
 		}
 
 		public Vector3d blockSurface(BlockPos pos, Direction face, float margin) {
-			return centerOf(pos).add(Vector3d.of(face.getDirectionVec())
+			return centerOf(pos).add(Vector3d.atLowerCornerOf(face.getNormal())
 				.scale(.5f + margin));
 		}
 
@@ -94,7 +94,7 @@ public class SceneBuildingUtil {
 		}
 
 		public Selection column(int x, int z) {
-			return cuboid(new BlockPos(x, 1, z), new Vector3i(0, sceneBounds.getYSize(), 0));
+			return cuboid(new BlockPos(x, 1, z), new Vector3i(0, sceneBounds.getYSpan(), 0));
 		}
 
 		public Selection layer(int y) {
@@ -102,16 +102,16 @@ public class SceneBuildingUtil {
 		}
 
 		public Selection layersFrom(int y) {
-			return layers(y, sceneBounds.getYSize() - y);
+			return layers(y, sceneBounds.getYSpan() - y);
 		}
 
 		public Selection layers(int y, int height) {
-			return cuboid(new BlockPos(0, y, 0), new Vector3i(sceneBounds.getXSize() - 1,
-				Math.min(sceneBounds.getYSize() - y, height) - 1, sceneBounds.getZSize() - 1));
+			return cuboid(new BlockPos(0, y, 0), new Vector3i(sceneBounds.getXSpan() - 1,
+				Math.min(sceneBounds.getYSpan() - y, height) - 1, sceneBounds.getZSpan() - 1));
 		}
 
 		public Selection cuboid(BlockPos origin, Vector3i size) {
-			return Selection.of(new MutableBoundingBox(origin, origin.add(size)));
+			return Selection.of(new MutableBoundingBox(origin, origin.offset(size)));
 		}
 
 	}

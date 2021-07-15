@@ -55,9 +55,9 @@ public class BlueprintOverlayRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult mouseOver = mc.objectMouseOver;
+		RayTraceResult mouseOver = mc.hitResult;
 		BlueprintSection last = lastTargetedSection;
-		boolean sneak = mc.player.isSneaking();
+		boolean sneak = mc.player.isShiftKeyDown();
 		lastTargetedSection = null;
 		active = false;
 		if (mouseOver == null)
@@ -70,8 +70,8 @@ public class BlueprintOverlayRenderer {
 			return;
 
 		BlueprintEntity blueprintEntity = (BlueprintEntity) entityRay.getEntity();
-		BlueprintSection sectionAt = blueprintEntity.getSectionAt(entityRay.getHitVec()
-			.subtract(blueprintEntity.getPositionVec()));
+		BlueprintSection sectionAt = blueprintEntity.getSectionAt(entityRay.getLocation()
+			.subtract(blueprintEntity.position()));
 
 		lastTargetedSection = last;
 		active = true;
@@ -104,9 +104,9 @@ public class BlueprintOverlayRenderer {
 		boolean firstPass = true;
 		boolean success = true;
 		Minecraft mc = Minecraft.getInstance();
-		ItemStackHandler playerInv = new ItemStackHandler(mc.player.inventory.getSizeInventory());
+		ItemStackHandler playerInv = new ItemStackHandler(mc.player.inventory.getContainerSize());
 		for (int i = 0; i < playerInv.getSlots(); i++)
-			playerInv.setStackInSlot(i, mc.player.inventory.getStackInSlot(i)
+			playerInv.setStackInSlot(i, mc.player.inventory.getItem(i)
 				.copy());
 
 		int amountCrafted = 0;
@@ -132,7 +132,7 @@ public class BlueprintOverlayRenderer {
 				}
 
 				for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-					if (!FilterItem.test(mc.world, playerInv.getStackInSlot(slot), requestedItem))
+					if (!FilterItem.test(mc.level, playerInv.getStackInSlot(slot), requestedItem))
 						continue;
 					ItemStack currentItem = playerInv.extractItem(slot, 1, false);
 					craftingGrid.put(i, currentItem);
@@ -147,10 +147,10 @@ public class BlueprintOverlayRenderer {
 			if (success) {
 				CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 				if (!recipe.isPresent())
-					recipe = mc.world.getRecipeManager()
-						.getRecipe(IRecipeType.CRAFTING, craftingInventory, mc.world);
-				ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.world))
-					.map(r -> r.getCraftingResult(craftingInventory))
+					recipe = mc.level.getRecipeManager()
+						.getRecipeFor(IRecipeType.CRAFTING, craftingInventory, mc.level);
+				ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.level))
+					.map(r -> r.assemble(craftingInventory))
 					.orElse(ItemStack.EMPTY);
 
 				if (resultFromRecipe.isEmpty()) {
@@ -211,9 +211,9 @@ public class BlueprintOverlayRenderer {
 		int w = 30 + 21 * ingredients.size() + 21;
 
 		int x = (mc.getWindow()
-			.getScaledWidth() - w) / 2;
+			.getGuiScaledWidth() - w) / 2;
 		int y = (int) (mc.getWindow()
-			.getScaledHeight() / 3f * 2);
+			.getGuiScaledHeight() / 3f * 2);
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();
@@ -243,7 +243,7 @@ public class BlueprintOverlayRenderer {
 
 	public static void drawItemStack(MatrixStack ms, Minecraft mc, int x, int y, ItemStack itemStack, String count) {
 		if (itemStack.getItem() instanceof FilterItem) {
-			int step = AnimationTickHolder.getTicks(mc.world) / 10;
+			int step = AnimationTickHolder.getTicks(mc.level) / 10;
 			ItemStack[] itemsMatchingFilter = getItemsMatchingFilter(itemStack);
 			if (itemsMatchingFilter.length > 0)
 				itemStack = itemsMatchingFilter[step % itemsMatchingFilter.length];
@@ -253,7 +253,7 @@ public class BlueprintOverlayRenderer {
 			.at(x + 3, y + 3)
 			.render(ms);
 		mc.getItemRenderer()
-			.renderItemOverlayIntoGUI(mc.fontRenderer, itemStack, x + 3, y + 3, count);
+			.renderGuiItemDecorations(mc.font, itemStack, x + 3, y + 3, count);
 	}
 
 	private static ItemStack[] getItemsMatchingFilter(ItemStack filter) {
@@ -278,12 +278,12 @@ public class BlueprintOverlayRenderer {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundNBT) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {
 						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						ITag<Item> itag = TagCollectionManager.getTagManager()
+						ITag<Item> itag = TagCollectionManager.getInstance()
 							.getItems()
-							.get(inTag.tagName);
+							.getTag(inTag.tagName);
 						if (itag != null)
-							return Ingredient.fromTag(itag)
-								.getMatchingStacks();
+							return Ingredient.of(itag)
+								.getItems();
 					}
 				}
 			}

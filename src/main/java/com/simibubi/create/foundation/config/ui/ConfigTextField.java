@@ -16,8 +16,8 @@ public class ConfigTextField extends TextFieldWidget {
 	}
 
 	@Override
-	public void setFocused2(boolean focus) {
-		super.setFocused2(focus);
+	public void setFocus(boolean focus) {
+		super.setFocus(focus);
 
 		if (!focus) {
 			if (ConfigScreenList.currentText == this)
@@ -27,7 +27,7 @@ public class ConfigTextField extends TextFieldWidget {
 		}
 
 		if (ConfigScreenList.currentText != null && ConfigScreenList.currentText != this)
-			ConfigScreenList.currentText.setFocused2(false);
+			ConfigScreenList.currentText.setFocus(false);
 
 		ConfigScreenList.currentText = this;
 	}

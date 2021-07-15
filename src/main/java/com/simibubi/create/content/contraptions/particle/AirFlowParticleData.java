@@ -16,6 +16,8 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.particles.IParticleData.IDeserializer;
+
 public class AirFlowParticleData implements IParticleData, ICustomParticleDataWithSprite<AirFlowParticleData> {
 	
 	public static final Codec<AirFlowParticleData> CODEC = RecordCodecBuilder.create(i -> 
@@ -26,7 +28,7 @@ public class AirFlowParticleData implements IParticleData, ICustomParticleDataWi
 		.apply(i, AirFlowParticleData::new));
 
 	public static final IParticleData.IDeserializer<AirFlowParticleData> DESERIALIZER = new IParticleData.IDeserializer<AirFlowParticleData>() {
-		public AirFlowParticleData deserialize(ParticleType<AirFlowParticleData> particleTypeIn, StringReader reader)
+		public AirFlowParticleData fromCommand(ParticleType<AirFlowParticleData> particleTypeIn, StringReader reader)
 				throws CommandSyntaxException {
 			reader.expect(' ');
 			int x = reader.readInt();
@@ -37,7 +39,7 @@ public class AirFlowParticleData implements IParticleData, ICustomParticleDataWi
 			return new AirFlowParticleData(x, y, z);
 		}
 
-		public AirFlowParticleData read(ParticleType<AirFlowParticleData> particleTypeIn, PacketBuffer buffer) {
+		public AirFlowParticleData fromNetwork(ParticleType<AirFlowParticleData> particleTypeIn, PacketBuffer buffer) {
 			return new AirFlowParticleData(buffer.readInt(), buffer.readInt(), buffer.readInt());
 		}
 	};
@@ -66,14 +68,14 @@ public class AirFlowParticleData implements IParticleData, ICustomParticleDataWi
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void writeToNetwork(PacketBuffer buffer) {
 		buffer.writeInt(posX);
 		buffer.writeInt(posY);
 		buffer.writeInt(posZ);
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return String.format(Locale.ROOT, "%s %d %d %d", AllParticleTypes.AIR_FLOW.parameter(), posX, posY, posZ);
 	}
 

@@ -21,32 +21,32 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 		double d0 = p_82486_4_.getX() + facing.x + .5;
 		double d1 = p_82486_4_.getY() + facing.y + .5;
 		double d2 = p_82486_4_.getZ() + facing.z + .5;
-		if (Direction.getFacingFromVector(facing.x, facing.y, facing.z).getAxis() == Direction.Axis.Y) {
+		if (Direction.getNearest(facing.x, facing.y, facing.z).getAxis() == Direction.Axis.Y) {
 			d1 = d1 - 0.125D;
 		} else {
 			d1 = d1 - 0.15625D;
 		}
 
 		ItemEntity itementity = new ItemEntity(p_82486_0_, d0, d1, d2, p_82486_1_);
-		double d3 = p_82486_0_.rand.nextDouble() * 0.1D + 0.2D;
-		itementity.setMotion(p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getX() * d3 + context.motion.x, p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getY() * d3 + context.motion.y, p_82486_0_.rand.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.getZ() * d3 + context.motion.z);
-		p_82486_0_.addEntity(itementity);
+		double d3 = p_82486_0_.random.nextDouble() * 0.1D + 0.2D;
+		itementity.setDeltaMovement(p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.x() * d3 + context.motion.x, p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.y() * d3 + context.motion.y, p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.z() * d3 + context.motion.z);
+		p_82486_0_.addFreshEntity(itementity);
 	}
 
 	@Override
 	public ItemStack dispense(ItemStack itemStack, MovementContext context, BlockPos pos) {
-		Vector3d facingVec = Vector3d.of(context.state.get(DispenserBlock.FACING).getDirectionVec());
+		Vector3d facingVec = Vector3d.atLowerCornerOf(context.state.getValue(DispenserBlock.FACING).getNormal());
 		facingVec = context.rotation.apply(facingVec);
 		facingVec.normalize();
 
 		Direction closestToFacing = getClosestFacingDirection(facingVec);
-		IInventory iinventory = HopperTileEntity.getInventoryAtPosition(context.world, pos.offset(closestToFacing));
+		IInventory iinventory = HopperTileEntity.getContainerAt(context.world, pos.relative(closestToFacing));
 		if (iinventory == null) {
 			this.playDispenseSound(context.world, pos);
 			this.spawnDispenseParticles(context.world, pos, closestToFacing);
 			return this.dispenseStack(itemStack, context, pos, facingVec);
 		} else {
-			if (HopperTileEntity.putStackInInventoryAllSlots(null, iinventory, itemStack.copy().split(1), closestToFacing.getOpposite()).isEmpty())
+			if (HopperTileEntity.addItem(null, iinventory, itemStack.copy().split(1), closestToFacing.getOpposite()).isEmpty())
 				itemStack.shrink(1);
 			return itemStack;
 		}
@@ -65,7 +65,7 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	 * Play the dispense sound from the specified block.
 	 */
 	protected void playDispenseSound(IWorld world, BlockPos pos) {
-		world.playEvent(1000, pos, 0);
+		world.levelEvent(1000, pos, 0);
 	}
 
 	/**
@@ -76,11 +76,11 @@ public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBeha
 	}
 
 	protected void spawnDispenseParticles(IWorld world, BlockPos pos, Direction direction) {
-		world.playEvent(2000, pos, direction.getIndex());
+		world.levelEvent(2000, pos, direction.get3DDataValue());
 	}
 
 	protected Direction getClosestFacingDirection(Vector3d exactFacing) {
-		return Direction.getFacingFromVector(exactFacing.x, exactFacing.y, exactFacing.z);
+		return Direction.getNearest(exactFacing.x, exactFacing.y, exactFacing.z);
 	}
 
 	protected ItemStack placeItemInInventory(ItemStack consumedFrom, ItemStack output, MovementContext context, BlockPos pos, Vector3d facing) {

@@ -87,7 +87,7 @@ public class BlueprintEntity extends HangingEntity
 		for (int size = 3; size > 0; size--) {
 			this.size = size;
 			this.updateFacingWithBoundingBox(facing, verticalOrientation);
-			if (this.onValidSurface())
+			if (this.survives())
 				break;
 		}
 	}
@@ -99,45 +99,45 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT p_213281_1_) {
-		p_213281_1_.putByte("Facing", (byte) this.facingDirection.getIndex());
-		p_213281_1_.putByte("Orientation", (byte) this.verticalOrientation.getIndex());
+	public void addAdditionalSaveData(CompoundNBT p_213281_1_) {
+		p_213281_1_.putByte("Facing", (byte) this.direction.get3DDataValue());
+		p_213281_1_.putByte("Orientation", (byte) this.verticalOrientation.get3DDataValue());
 		p_213281_1_.putInt("Size", size);
-		super.writeAdditional(p_213281_1_);
+		super.addAdditionalSaveData(p_213281_1_);
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT p_70037_1_) {
-		this.facingDirection = Direction.byIndex(p_70037_1_.getByte("Facing"));
-		this.verticalOrientation = Direction.byIndex(p_70037_1_.getByte("Orientation"));
+	public void readAdditionalSaveData(CompoundNBT p_70037_1_) {
+		this.direction = Direction.from3DDataValue(p_70037_1_.getByte("Facing"));
+		this.verticalOrientation = Direction.from3DDataValue(p_70037_1_.getByte("Orientation"));
 		this.size = p_70037_1_.getInt("Size");
-		super.readAdditional(p_70037_1_);
-		this.updateFacingWithBoundingBox(this.facingDirection, this.verticalOrientation);
+		super.readAdditionalSaveData(p_70037_1_);
+		this.updateFacingWithBoundingBox(this.direction, this.verticalOrientation);
 	}
 
 	protected void updateFacingWithBoundingBox(Direction facing, Direction verticalOrientation) {
 		Validate.notNull(facing);
-		this.facingDirection = facing;
+		this.direction = facing;
 		this.verticalOrientation = verticalOrientation;
 		if (facing.getAxis()
 			.isHorizontal()) {
-			this.rotationPitch = 0.0F;
-			this.rotationYaw = (float) (this.facingDirection.getHorizontalIndex() * 90);
+			this.xRot = 0.0F;
+			this.yRot = (float) (this.direction.get2DDataValue() * 90);
 		} else {
-			this.rotationPitch = (float) (-90 * facing.getAxisDirection()
-				.getOffset());
-			this.rotationYaw = verticalOrientation.getAxis()
-				.isHorizontal() ? 180 + verticalOrientation.getHorizontalAngle() : 0;
+			this.xRot = (float) (-90 * facing.getAxisDirection()
+				.getStep());
+			this.yRot = verticalOrientation.getAxis()
+				.isHorizontal() ? 180 + verticalOrientation.toYRot() : 0;
 		}
 
-		this.prevRotationPitch = this.rotationPitch;
-		this.prevRotationYaw = this.rotationYaw;
-		this.updateBoundingBox();
+		this.xRotO = this.xRot;
+		this.yRotO = this.yRot;
+		this.recalculateBoundingBox();
 	}
 
 	@Override
@@ -146,43 +146,43 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	protected void updateBoundingBox() {
-		if (this.facingDirection == null)
+	protected void recalculateBoundingBox() {
+		if (this.direction == null)
 			return;
 		if (this.verticalOrientation == null)
 			return;
 
-		Vector3d pos = Vector3d.of(hangingPosition)
+		Vector3d pos = Vector3d.atLowerCornerOf(blockPosition())
 			.add(.5, .5, .5)
-			.subtract(Vector3d.of(facingDirection.getDirectionVec())
+			.subtract(Vector3d.atLowerCornerOf(direction.getNormal())
 				.scale(0.46875));
 		double d1 = pos.x;
 		double d2 = pos.y;
 		double d3 = pos.z;
-		this.setPos(d1, d2, d3);
+		this.setPosRaw(d1, d2, d3);
 
-		Axis axis = facingDirection.getAxis();
+		Axis axis = direction.getAxis();
 		if (size == 2)
-			pos = pos.add(Vector3d.of(axis.isHorizontal() ? facingDirection.rotateYCCW()
-				.getDirectionVec()
-				: verticalOrientation.rotateY()
-					.getDirectionVec())
+			pos = pos.add(Vector3d.atLowerCornerOf(axis.isHorizontal() ? direction.getCounterClockWise()
+				.getNormal()
+				: verticalOrientation.getClockWise()
+					.getNormal())
 				.scale(0.5))
 				.add(Vector3d
-					.of(axis.isHorizontal() ? Direction.UP.getDirectionVec()
-						: facingDirection == Direction.UP ? verticalOrientation.getDirectionVec()
+					.atLowerCornerOf(axis.isHorizontal() ? Direction.UP.getNormal()
+						: direction == Direction.UP ? verticalOrientation.getNormal()
 							: verticalOrientation.getOpposite()
-								.getDirectionVec())
+								.getNormal())
 					.scale(0.5));
 
 		d1 = pos.x;
 		d2 = pos.y;
 		d3 = pos.z;
 
-		double d4 = (double) this.getWidthPixels();
-		double d5 = (double) this.getHeightPixels();
-		double d6 = (double) this.getWidthPixels();
-		Direction.Axis direction$axis = this.facingDirection.getAxis();
+		double d4 = (double) this.getWidth();
+		double d5 = (double) this.getHeight();
+		double d6 = (double) this.getWidth();
+		Direction.Axis direction$axis = this.direction.getAxis();
 		switch (direction$axis) {
 		case X:
 			d4 = 1.0D;
@@ -200,29 +200,30 @@ public class BlueprintEntity extends HangingEntity
 		this.setBoundingBox(new AxisAlignedBB(d1 - d4, d2 - d5, d3 - d6, d1 + d4, d2 + d5, d3 + d6));
 	}
 
-	public boolean onValidSurface() {
-		if (!world.isSpaceEmpty(this))
+	@Override
+	public boolean survives() {
+		if (!level.noCollision(this))
 			return false;
 
-		int i = Math.max(1, this.getWidthPixels() / 16);
-		int j = Math.max(1, this.getHeightPixels() / 16);
-		BlockPos blockpos = this.hangingPosition.offset(this.facingDirection.getOpposite());
-		Direction upDirection = facingDirection.getAxis()
+		int i = Math.max(1, this.getWidth() / 16);
+		int j = Math.max(1, this.getHeight() / 16);
+		BlockPos blockpos = this.pos.relative(this.direction.getOpposite());
+		Direction upDirection = direction.getAxis()
 			.isHorizontal() ? Direction.UP
-				: facingDirection == Direction.UP ? verticalOrientation : verticalOrientation.getOpposite();
-		Direction direction = facingDirection.getAxis()
-			.isVertical() ? verticalOrientation.rotateY() : facingDirection.rotateYCCW();
+				: direction == Direction.UP ? verticalOrientation : verticalOrientation.getOpposite();
+		Direction newDirection = direction.getAxis()
+			.isVertical() ? verticalOrientation.getClockWise() : direction.getCounterClockWise();
 		BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
 
 		for (int k = 0; k < i; ++k) {
 			for (int l = 0; l < j; ++l) {
 				int i1 = (i - 1) / -2;
 				int j1 = (j - 1) / -2;
-				blockpos$mutable.setPos(blockpos)
-					.move(direction, k + i1)
+				blockpos$mutable.set(blockpos)
+					.move(newDirection, k + i1)
 					.move(upDirection, l + j1);
-				BlockState blockstate = this.world.getBlockState(blockpos$mutable);
-				if (Block.hasEnoughSolidSide(this.world, blockpos$mutable, this.facingDirection))
+				BlockState blockstate = this.level.getBlockState(blockpos$mutable);
+				if (Block.canSupportCenter(this.level, blockpos$mutable, this.direction))
 					continue;
 				if (!blockstate.getMaterial()
 					.isSolid() && !RedstoneDiodeBlock.isDiode(blockstate)) {
@@ -231,44 +232,44 @@ public class BlueprintEntity extends HangingEntity
 			}
 		}
 
-		return this.world.getEntitiesInAABBexcluding(this, this.getBoundingBox(), IS_HANGING_ENTITY)
+		return this.level.getEntities(this, this.getBoundingBox(), HANGING_ENTITY)
 			.isEmpty();
 	}
 
 	@Override
-	public int getWidthPixels() {
+	public int getWidth() {
 		return 16 * size;
 	}
 
 	@Override
-	public int getHeightPixels() {
+	public int getHeight() {
 		return 16 * size;
 	}
 
 	@Override
-	public boolean hitByEntity(Entity source) {
-		if (!(source instanceof PlayerEntity) || world.isRemote)
-			return super.hitByEntity(source);
+	public boolean skipAttackInteraction(Entity source) {
+		if (!(source instanceof PlayerEntity) || level.isClientSide)
+			return super.skipAttackInteraction(source);
 
 		PlayerEntity player = (PlayerEntity) source;
 		double attrib = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
 			.getValue() + (player.isCreative() ? 0 : -0.5F);
 
 		Vector3d eyePos = source.getEyePosition(1);
-		Vector3d look = source.getLook(1);
+		Vector3d look = source.getViewVector(1);
 		Vector3d target = eyePos.add(look.scale(attrib));
-		
-		Optional<Vector3d> rayTrace = getBoundingBox().rayTrace(eyePos, target);
+
+		Optional<Vector3d> rayTrace = getBoundingBox().clip(eyePos, target);
 		if (!rayTrace.isPresent())
-			return super.hitByEntity(source);
-		
+			return super.skipAttackInteraction(source);
+
 		Vector3d hitVec = rayTrace.get();
-		BlueprintSection sectionAt = getSectionAt(hitVec.subtract(getPositionVec()));
+		BlueprintSection sectionAt = getSectionAt(hitVec.subtract(position()));
 		ItemStackHandler items = sectionAt.getItems();
 
 		if (items.getStackInSlot(9)
 			.isEmpty())
-			return super.hitByEntity(source);
+			return super.skipAttackInteraction(source);
 		for (int i = 0; i < items.getSlots(); i++)
 			items.setStackInSlot(i, ItemStack.EMPTY);
 		sectionAt.save(items);
@@ -276,20 +277,20 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public void onBroken(@Nullable Entity p_110128_1_) {
-		if (!world.getGameRules()
-			.getBoolean(GameRules.DO_ENTITY_DROPS))
+	public void dropItem(@Nullable Entity p_110128_1_) {
+		if (!level.getGameRules()
+			.getBoolean(GameRules.RULE_DOENTITYDROPS))
 			return;
 
-		playSound(SoundEvents.ENTITY_PAINTING_BREAK, 1.0F, 1.0F);
+		playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
 		if (p_110128_1_ instanceof PlayerEntity) {
 			PlayerEntity playerentity = (PlayerEntity) p_110128_1_;
-			if (playerentity.abilities.isCreativeMode) {
+			if (playerentity.abilities.instabuild) {
 				return;
 			}
 		}
 
-		entityDropItem(AllItems.CRAFTING_BLUEPRINT.asStack());
+		spawnAtLocation(AllItems.CRAFTING_BLUEPRINT.asStack());
 	}
 
 	@Override
@@ -303,49 +304,49 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public void playPlaceSound() {
-		this.playSound(SoundEvents.ENTITY_PAINTING_PLACE, 1.0F, 1.0F);
+	public void playPlacementSound() {
+		this.playSound(SoundEvents.PAINTING_PLACE, 1.0F, 1.0F);
 	}
 
 	@Override
-	public void setLocationAndAngles(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_,
+	public void moveTo(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_,
 		float p_70012_8_) {
-		this.setPosition(p_70012_1_, p_70012_3_, p_70012_5_);
+		this.setPos(p_70012_1_, p_70012_3_, p_70012_5_);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void setPositionAndRotationDirect(double p_180426_1_, double p_180426_3_, double p_180426_5_,
+	public void lerpTo(double p_180426_1_, double p_180426_3_, double p_180426_5_,
 		float p_180426_7_, float p_180426_8_, int p_180426_9_, boolean p_180426_10_) {
 		BlockPos blockpos =
-			this.hangingPosition.add(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
-		this.setPosition((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
+			this.pos.offset(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
+		this.setPos((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
 	}
 
 	@Override
 	public void writeSpawnData(PacketBuffer buffer) {
 		CompoundNBT compound = new CompoundNBT();
-		writeAdditional(compound);
-		buffer.writeCompoundTag(compound);
-		buffer.writeCompoundTag(getPersistentData());
+		addAdditionalSaveData(compound);
+		buffer.writeNbt(compound);
+		buffer.writeNbt(getPersistentData());
 	}
 
 	@Override
 	public void readSpawnData(PacketBuffer additionalData) {
-		readAdditional(additionalData.readCompoundTag());
-		getPersistentData().merge(additionalData.readCompoundTag());
+		readAdditionalSaveData(additionalData.readNbt());
+		getPersistentData().merge(additionalData.readNbt());
 	}
 
 	@Override
-	public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
+	public ActionResultType interactAt(PlayerEntity player, Vector3d vec, Hand hand) {
 		if (player instanceof FakePlayer)
 			return ActionResultType.PASS;
 
-		boolean holdingWrench = AllItems.WRENCH.isIn(player.getHeldItem(hand));
+		boolean holdingWrench = AllItems.WRENCH.isIn(player.getItemInHand(hand));
 		BlueprintSection section = getSectionAt(vec);
 		ItemStackHandler items = section.getItems();
 
-		if (!holdingWrench && !world.isRemote && !items.getStackInSlot(9)
+		if (!holdingWrench && !level.isClientSide && !items.getStackInSlot(9)
 			.isEmpty()) {
 
 			IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
@@ -367,7 +368,7 @@ public class BlueprintEntity extends HangingEntity
 					}
 
 					for (int slot = 0; slot < playerInv.getSlots(); slot++) {
-						if (!FilterItem.test(world, playerInv.getStackInSlot(slot), requestedItem))
+						if (!FilterItem.test(level, playerInv.getStackInSlot(slot), requestedItem))
 							continue;
 						ItemStack currentItem = playerInv.extractItem(slot, 1, false);
 						if (stacksTaken.containsKey(slot))
@@ -387,10 +388,10 @@ public class BlueprintEntity extends HangingEntity
 					CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 
 					if (!recipe.isPresent())
-						recipe = world.getRecipeManager()
-							.getRecipe(IRecipeType.CRAFTING, craftingInventory, world);
-					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, world))
-						.map(r -> r.getCraftingResult(craftingInventory))
+						recipe = level.getRecipeManager()
+							.getRecipeFor(IRecipeType.CRAFTING, craftingInventory, level);
+					ItemStack result = recipe.filter(r -> r.matches(craftingInventory, level))
+						.map(r -> r.assemble(craftingInventory))
 						.orElse(ItemStack.EMPTY);
 
 					if (result.isEmpty()) {
@@ -399,17 +400,17 @@ public class BlueprintEntity extends HangingEntity
 						success = false;
 					} else {
 						amountCrafted += result.getCount();
-						result.onCrafting(player.world, player, 1);
+						result.onCraftedBy(player.level, player, 1);
 						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
-						NonNullList<ItemStack> nonnulllist = world.getRecipeManager()
-							.getRecipeNonNull(IRecipeType.CRAFTING, craftingInventory, world);
+						NonNullList<ItemStack> nonnulllist = level.getRecipeManager()
+							.getRemainingItemsFor(IRecipeType.CRAFTING, craftingInventory, level);
 
 						if (firstPass)
-							world.playSound(null, player.getBlockPos(), SoundEvents.ENTITY_ITEM_PICKUP,
+							level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP,
 								SoundCategory.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
-						player.inventory.placeItemBackInInventory(world, result);
+						player.inventory.placeItemBackInInventory(level, result);
 						for (ItemStack itemStack : nonnulllist)
-							player.inventory.placeItemBackInInventory(world, itemStack);
+							player.inventory.placeItemBackInInventory(level, itemStack);
 						firstPass = false;
 					}
 				}
@@ -420,15 +421,15 @@ public class BlueprintEntity extends HangingEntity
 					break;
 				}
 
-			} while (player.isSneaking());
+			} while (player.isShiftKeyDown());
 			ForgeHooks.setCraftingPlayer(null);
 			return ActionResultType.SUCCESS;
 		}
 
 		int i = section.index;
-		if (!world.isRemote && player instanceof ServerPlayerEntity) {
+		if (!level.isClientSide && player instanceof ServerPlayerEntity) {
 			NetworkHooks.openGui((ServerPlayerEntity) player, section, buf -> {
-				buf.writeVarInt(getEntityId());
+				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
 			});
 		}
@@ -439,8 +440,8 @@ public class BlueprintEntity extends HangingEntity
 	public BlueprintSection getSectionAt(Vector3d vec) {
 		int index = 0;
 		if (size > 1) {
-			vec = VecHelper.rotate(vec, rotationYaw, Axis.Y);
-			vec = VecHelper.rotate(vec, -rotationPitch, Axis.X);
+			vec = VecHelper.rotate(vec, yRot, Axis.Y);
+			vec = VecHelper.rotate(vec, -xRot, Axis.X);
 			vec = vec.add(0.5, 0.5, 0);
 			if (size == 3)
 				vec = vec.add(1, 1, 0);
@@ -456,7 +457,7 @@ public class BlueprintEntity extends HangingEntity
 	static class BlueprintCraftingInventory extends CraftingInventory {
 
 		private static Container dummyContainer = new Container(null, -1) {
-			public boolean canInteractWith(PlayerEntity playerIn) {
+			public boolean stillValid(PlayerEntity playerIn) {
 				return false;
 			}
 		};
@@ -466,7 +467,7 @@ public class BlueprintEntity extends HangingEntity
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 3; x++) {
 					ItemStack stack = items.get(y * 3 + x);
-					setInventorySlotContents(y * 3 + x, stack == null ? ItemStack.EMPTY : stack.copy());
+					setItem(y * 3 + x, stack == null ? ItemStack.EMPTY : stack.copy());
 				}
 			}
 		}
@@ -517,7 +518,7 @@ public class BlueprintEntity extends HangingEntity
 			list.put(index + "", inventory.serializeNBT());
 			list.putBoolean("InferredIcon", inferredIcon);
 			cachedDisplayItems = null;
-			if (!world.isRemote)
+			if (!level.isClientSide)
 				syncPersistentDataWithTracking(BlueprintEntity.this);
 		}
 
@@ -526,7 +527,7 @@ public class BlueprintEntity extends HangingEntity
 		}
 
 		public World getBlueprintWorld() {
-			return world;
+			return level;
 		}
 
 		@Override
@@ -537,7 +538,7 @@ public class BlueprintEntity extends HangingEntity
 		@Override
 		public ITextComponent getDisplayName() {
 			return new TranslationTextComponent(AllItems.CRAFTING_BLUEPRINT.get()
-				.getTranslationKey());
+				.getDescriptionId());
 		}
 
 		@Override

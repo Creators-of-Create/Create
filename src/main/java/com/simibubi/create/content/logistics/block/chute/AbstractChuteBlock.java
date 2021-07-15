@@ -32,6 +32,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
 
 	public AbstractChuteBlock(Properties p_i48440_1_) {
@@ -76,16 +78,16 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
+	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		if (entityIn.world.isRemote)
+		if (entityIn.level.isClientSide)
 			return;
 		if (!entityIn.isAlive())
 			return;
-		DirectBeltInputBehaviour input = TileEntityBehaviour.get(entityIn.world, new BlockPos(entityIn.getPositionVec()
-			.add(0, 0.5f, 0)).down(), DirectBeltInputBehaviour.TYPE);
+		DirectBeltInputBehaviour input = TileEntityBehaviour.get(entityIn.level, new BlockPos(entityIn.position()
+			.add(0, 0.5f, 0)).below(), DirectBeltInputBehaviour.TYPE);
 		if (input == null)
 			return;
 		if (!input.canInsertFromSide(Direction.UP))
@@ -102,7 +104,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		withTileEntityDo(world, pos, ChuteTileEntity::onAdded);
 		if (p_220082_5_)
 			return;
@@ -114,24 +116,24 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 			return;
 		AbstractChuteBlock block = (AbstractChuteBlock) state.getBlock();
 		Direction facing = block.getFacing(state);
-		BlockPos toUpdate = pos.down();
+		BlockPos toUpdate = pos.below();
 		if (facing.getAxis()
 			.isHorizontal())
-			toUpdate = toUpdate.offset(facing.getOpposite());
+			toUpdate = toUpdate.relative(facing.getOpposite());
 
 		BlockState stateToUpdate = world.getBlockState(toUpdate);
-		BlockState updated = updateChuteState(stateToUpdate, world.getBlockState(toUpdate.up()), world, toUpdate);
-		if (stateToUpdate != updated && !world.isRemote)
-			world.setBlockState(toUpdate, updated);
+		BlockState updated = updateChuteState(stateToUpdate, world.getBlockState(toUpdate.above()), world, toUpdate);
+		if (stateToUpdate != updated && !world.isClientSide)
+			world.setBlockAndUpdate(toUpdate, updated);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
 		boolean differentBlock = state.getBlock() != p_196243_4_.getBlock();
 		if (state.hasTileEntity() && (differentBlock || !p_196243_4_.hasTileEntity())) {
 			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
 			withTileEntityDo(world, pos, c -> c.onRemoved(state));
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 		}
 		if (p_196243_5_ || !differentBlock)
 			return;
@@ -139,20 +141,20 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		updateDiagonalNeighbour(state, world, pos);
 
 		for (Direction direction : Iterate.horizontalDirections) {
-			BlockPos toUpdate = pos.up()
-				.offset(direction);
+			BlockPos toUpdate = pos.above()
+				.relative(direction);
 			BlockState stateToUpdate = world.getBlockState(toUpdate);
 			if (!isChute(stateToUpdate))
 				continue;
 			BlockState updated = ((AbstractChuteBlock) stateToUpdate.getBlock()).updateChuteState(stateToUpdate,
-				world.getBlockState(toUpdate.up()), world, toUpdate);
-			if (stateToUpdate != updated && !world.isRemote)
-				world.setBlockState(toUpdate, updated);
+				world.getBlockState(toUpdate.above()), world, toUpdate);
+			if (stateToUpdate != updated && !world.isClientSide)
+				world.setBlockAndUpdate(toUpdate, updated);
 		}
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState above, IWorld world,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState above, IWorld world,
 		BlockPos pos, BlockPos p_196271_6_) {
 		if (direction != Direction.UP)
 			return state;
@@ -162,10 +164,10 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
 		BlockPos neighbourPos, boolean p_220069_6_) {
-		if (pos.down()
+		if (pos.below()
 			.equals(neighbourPos))
 			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
-		else if (pos.up()
+		else if (pos.above()
 			.equals(neighbourPos))
 			withTileEntityDo(world, pos, chute -> chute.capAbove = LazyOptional.empty());
 	}
@@ -197,12 +199,12 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult p_225533_6_) {
-		if (!player.getHeldItem(hand)
+		if (!player.getItemInHand(hand)
 				.isEmpty())
 			return ActionResultType.PASS;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		return onTileEntityUse(world, pos, te -> {

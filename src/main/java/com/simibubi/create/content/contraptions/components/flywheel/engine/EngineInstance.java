@@ -27,7 +27,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
         EngineBlock engineBlock = (EngineBlock) block;
         PartialModel frame = engineBlock.getFrameModel();
 
-        Direction facing = blockState.get(BlockStateProperties.HORIZONTAL_FACING);
+        Direction facing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         this.frame = getTransformMaterial().getModel(frame, blockState).createInstance();
 

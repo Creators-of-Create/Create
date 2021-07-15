@@ -17,14 +17,14 @@ public class FlywheelGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(FlywheelBlock.HORIZONTAL_FACING)) + 90;
+		return horizontalAngle(state.getValue(FlywheelBlock.HORIZONTAL_FACING)) + 90;
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		return prov.models()
-			.getExistingFile(prov.modLoc("block/" + ctx.getName() + "/casing_" + state.get(FlywheelBlock.CONNECTION)
-				.getString()));
+			.getExistingFile(prov.modLoc("block/" + ctx.getName() + "/casing_" + state.getValue(FlywheelBlock.CONNECTION)
+				.getSerializedName()));
 	}
 }

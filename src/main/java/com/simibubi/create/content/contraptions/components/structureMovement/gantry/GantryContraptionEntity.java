@@ -28,6 +28,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
+
 public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 	Direction movementAxis;
@@ -51,27 +53,27 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 			return;
 
 		double prevAxisMotion = axisMotion;
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			clientOffsetDiff *= .75f;
 			updateClientMotion();
 		}
 
 		checkPinionShaft();
 		tickActors();
-		Vector3d movementVec = getMotion();
+		Vector3d movementVec = getDeltaMovement();
 
 		if (ContraptionCollider.collideBlocks(this)) {
-			if (!world.isRemote)
+			if (!level.isClientSide)
 				disassemble();
 			return;
 		}
 
-		if (!isStalled() && ticksExisted > 2)
+		if (!isStalled() && tickCount > 2)
 			move(movementVec.x, movementVec.y, movementVec.z);
 
 		if (Math.signum(prevAxisMotion) != Math.signum(axisMotion) && prevAxisMotion != 0)
-			contraption.stop(world);
-		if (!world.isRemote && (prevAxisMotion != axisMotion || ticksExisted % 3 == 0))
+			contraption.stop(level);
+		if (!level.isClientSide && (prevAxisMotion != axisMotion || tickCount % 3 == 0))
 			sendPacket();
 	}
 
@@ -79,11 +81,11 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		Vector3d movementVec;
 		Direction facing = ((GantryContraption) contraption).getFacing();
 		Vector3d currentPosition = getAnchorVec().add(.5, .5, .5);
-		BlockPos gantryShaftPos = new BlockPos(currentPosition).offset(facing.getOpposite());
+		BlockPos gantryShaftPos = new BlockPos(currentPosition).relative(facing.getOpposite());
 
-		TileEntity te = world.getTileEntity(gantryShaftPos);
+		TileEntity te = level.getBlockEntity(gantryShaftPos);
 		if (!(te instanceof GantryShaftTileEntity) || !AllBlocks.GANTRY_SHAFT.has(te.getBlockState())) {
-			if (!world.isRemote) {
+			if (!level.isClientSide) {
 				setContraptionMotion(Vector3d.ZERO);
 				disassemble();
 			}
@@ -91,35 +93,35 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		}
 
 		BlockState blockState = te.getBlockState();
-		Direction direction = blockState.get(GantryShaftBlock.FACING);
+		Direction direction = blockState.getValue(GantryShaftBlock.FACING);
 		GantryShaftTileEntity gantryShaftTileEntity = (GantryShaftTileEntity) te;
 
 		float pinionMovementSpeed = gantryShaftTileEntity.getPinionMovementSpeed();
-		movementVec = Vector3d.of(direction.getDirectionVec()).scale(pinionMovementSpeed);
+		movementVec = Vector3d.atLowerCornerOf(direction.getNormal()).scale(pinionMovementSpeed);
 
-		if (blockState.get(GantryShaftBlock.POWERED) || pinionMovementSpeed == 0) {
+		if (blockState.getValue(GantryShaftBlock.POWERED) || pinionMovementSpeed == 0) {
 			setContraptionMotion(Vector3d.ZERO);
-			if (!world.isRemote)
+			if (!level.isClientSide)
 				disassemble();
 			return;
 		}
 
 		Vector3d nextPosition = currentPosition.add(movementVec);
 		double currentCoord = direction.getAxis()
-			.getCoordinate(currentPosition.x, currentPosition.y, currentPosition.z);
+			.choose(currentPosition.x, currentPosition.y, currentPosition.z);
 		double nextCoord = direction.getAxis()
-			.getCoordinate(nextPosition.x, nextPosition.y, nextPosition.z);
+			.choose(nextPosition.x, nextPosition.y, nextPosition.z);
 
 		if ((MathHelper.floor(currentCoord) + .5f < nextCoord != (pinionMovementSpeed * direction.getAxisDirection()
-			.getOffset() < 0)))
+			.getStep() < 0)))
 			if (!gantryShaftTileEntity.canAssembleOn()) {
 				setContraptionMotion(Vector3d.ZERO);
-				if (!world.isRemote)
+				if (!level.isClientSide)
 					disassemble();
 				return;
 			}
 
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		
 		axisMotion = pinionMovementSpeed;
@@ -158,15 +160,15 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public void setPositionAndUpdate(double p_70634_1_, double p_70634_3_, double p_70634_5_) {}
+	public void teleportTo(double p_70634_1_, double p_70634_3_, double p_70634_5_) {}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void setPositionAndRotationDirect(double x, double y, double z, float yw, float pt, int inc, boolean t) {}
+	public void lerpTo(double x, double y, double z, float yw, float pt, int inc, boolean t) {}
 
 	@Override
 	protected void handleStallInformation(float x, float y, float z, float angle) {
-		setPos(x, y, z);
+		setPosRaw(x, y, z);
 		clientOffsetDiff = 0;
 	}
 
@@ -180,25 +182,25 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 	public void updateClientMotion() {
 		float modifier = movementAxis.getAxisDirection()
-			.getOffset();
-		setContraptionMotion(Vector3d.of(movementAxis.getDirectionVec())
+			.getStep();
+		setContraptionMotion(Vector3d.atLowerCornerOf(movementAxis.getNormal())
 			.scale((axisMotion + clientOffsetDiff * modifier / 2f) * ServerSpeedProvider.get()));
 	}
 
 	public double getAxisCoord() {
 		Vector3d anchorVec = getAnchorVec();
 		return movementAxis.getAxis()
-			.getCoordinate(anchorVec.x, anchorVec.y, anchorVec.z);
+			.choose(anchorVec.x, anchorVec.y, anchorVec.z);
 	}
 
 	public void sendPacket() {
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new GantryContraptionUpdatePacket(getEntityId(), getAxisCoord(), axisMotion));
+			new GantryContraptionUpdatePacket(getId(), getAxisCoord(), axisMotion));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void handlePacket(GantryContraptionUpdatePacket packet) {
-		Entity entity = Minecraft.getInstance().world.getEntityByID(packet.entityID);
+		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
 		if (!(entity instanceof GantryContraptionEntity))
 			return;
 		GantryContraptionEntity ce = (GantryContraptionEntity) entity;

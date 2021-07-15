@@ -51,10 +51,10 @@ public class SchematicProcessor extends StructureProcessor {
 	@Override
 	public Template.EntityInfo processEntity(IWorldReader world, BlockPos pos, Template.EntityInfo rawInfo,
 			Template.EntityInfo info, PlacementSettings settings, Template template) {
-		return EntityType.readEntityType(info.nbt).flatMap(type -> {
+		return EntityType.by(info.nbt).flatMap(type -> {
 			if (world instanceof World) {
 				Entity e = type.create((World) world);
-				if (e != null && !e.ignoreItemEntityData()) {
+				if (e != null && !e.onlyOpCanSetNbt()) {
 					return Optional.of(info);
 				}
 			}

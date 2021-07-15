@@ -19,6 +19,6 @@ public class HalfShaftInstance extends SingleRotatingInstance {
 	}
 
     protected Direction getShaftDirection() {
-        return blockState.get(BlockStateProperties.FACING);
+        return blockState.getValue(BlockStateProperties.FACING);
     }
 }

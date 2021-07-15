@@ -56,14 +56,14 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	public static <C extends IInventory, R extends ProcessingRecipe<C>> Optional<R> getRecipe(World world, C inv,
 		IRecipeType<R> type, Class<R> recipeClass) {
 		//return getRecipe(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world));
-		return getRecipes(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world))
+		return getRecipes(world, inv.getItem(0), type, recipeClass).filter(r -> r.matches(inv, world))
 				.findFirst();
 	}
 
 	public static <R extends ProcessingRecipe<?>> Optional<R> getRecipe(World world, ItemStack item,
 		IRecipeType<R> type, Class<R> recipeClass) {
 		List<SequencedAssemblyRecipe> all = world.getRecipeManager()
-			.<RecipeWrapper, SequencedAssemblyRecipe>listAllOfType(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+			.<RecipeWrapper, SequencedAssemblyRecipe>getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
 		for (SequencedAssemblyRecipe sequencedAssemblyRecipe : all) {
 			if (!sequencedAssemblyRecipe.appliesTo(item))
 				continue;
@@ -80,7 +80,7 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	public static <R extends ProcessingRecipe<?>> Stream<R> getRecipes(World world, ItemStack item,
 		IRecipeType<R> type, Class<R> recipeClass) {
 		List<SequencedAssemblyRecipe> all = world.getRecipeManager()
-			.<RecipeWrapper, SequencedAssemblyRecipe>listAllOfType(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+			.<RecipeWrapper, SequencedAssemblyRecipe>getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
 
 		return all.stream()
 				.filter(it -> it.appliesTo(item))
@@ -122,7 +122,7 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		sequence.forEach(sr -> sr.getAsAssemblyRecipe()
 			.addRequiredMachines(machines));
 		machines.stream()
-			.map(Ingredient::fromItems)
+			.map(Ingredient::of)
 			.forEach(list::add);
 	}
 
@@ -176,17 +176,17 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(RecipeWrapper p_77572_1_) {
+	public ItemStack assemble(RecipeWrapper p_77572_1_) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canFit(int p_194133_1_, int p_194133_2_) {
+	public boolean canCraftInDimensions(int p_194133_1_, int p_194133_2_) {
 		return false;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return resultPool.get(0)
 			.getStack();
 	}
@@ -210,7 +210,7 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public boolean isDynamic() {
+	public boolean isSpecial() {
 		return true;
 	}
 	
@@ -227,8 +227,8 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		CompoundNBT compound = stack.getTag()
 			.getCompound("SequencedAssembly");
 		ResourceLocation resourceLocation = new ResourceLocation(compound.getString("id"));
-		Optional<? extends IRecipe<?>> recipe = Minecraft.getInstance().world.getRecipeManager()
-			.getRecipe(resourceLocation);
+		Optional<? extends IRecipe<?>> recipe = Minecraft.getInstance().level.getRecipeManager()
+			.byKey(resourceLocation);
 		if (!recipe.isPresent())
 			return;
 		IRecipe<?> iRecipe = recipe.get();
@@ -241,9 +241,9 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		int total = length * sequencedAssemblyRecipe.loops;
 		toolTip.add(new StringTextComponent(""));
 		toolTip.add(Lang.translate("recipe.sequenced_assembly")
-			.formatted(TextFormatting.GRAY));
+			.withStyle(TextFormatting.GRAY));
 		toolTip.add(Lang.translate("recipe.assembly.progress", step, total)
-			.formatted(TextFormatting.DARK_GRAY));
+			.withStyle(TextFormatting.DARK_GRAY));
 
 		int remaining = total - step;
 		for (int i = 0; i < length; i++) {
@@ -254,10 +254,10 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 				.getDescriptionForAssembly();
 			if (i == 0)
 				toolTip.add(Lang.translate("recipe.assembly.next", textComponent)
-					.formatted(TextFormatting.AQUA));
+					.withStyle(TextFormatting.AQUA));
 			else
 				toolTip.add(new StringTextComponent("-> ").append(textComponent)
-					.formatted(TextFormatting.DARK_AQUA));
+					.withStyle(TextFormatting.DARK_AQUA));
 		}
 
 	}

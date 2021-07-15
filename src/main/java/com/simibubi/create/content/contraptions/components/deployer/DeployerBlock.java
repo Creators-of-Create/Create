@@ -31,6 +31,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<DeployerTileEntity> {
@@ -45,63 +47,63 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.CASING_12PX.get(state.get(FACING));
+		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		if (context.getFace() == state.get(FACING)) {
-			if (!context.getWorld().isRemote)
-				withTileEntityDo(context.getWorld(), context.getPos(), DeployerTileEntity::changeMode);
+		if (context.getClickedFace() == state.getValue(FACING)) {
+			if (!context.getLevel().isClientSide)
+				withTileEntityDo(context.getLevel(), context.getClickedPos(), DeployerTileEntity::changeMode);
 			return ActionResultType.SUCCESS;
 		}
 		return super.onWrenched(state, context);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				if (te.player != null && !isMoving) {
-					te.player.inventory.dropAllItems();
-					te.overflowItems.forEach(itemstack -> te.player.dropItem(itemstack, true, false));
+					te.player.inventory.dropAll();
+					te.overflowItems.forEach(itemstack -> te.player.drop(itemstack, true, false));
 					te.player.remove();
 					te.player = null;
 				}
 			});
 
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-			worldIn.removeTileEntity(pos);
+			worldIn.removeBlockEntity(pos);
 		}
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		ItemStack heldByPlayer = player.getHeldItem(handIn)
+		ItemStack heldByPlayer = player.getItemInHand(handIn)
 			.copy();
 		if (AllItems.WRENCH.isIn(heldByPlayer))
 			return ActionResultType.PASS;
 
-		if (hit.getFace() != state.get(FACING))
+		if (hit.getDirection() != state.getValue(FACING))
 			return ActionResultType.PASS;
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		withTileEntityDo(worldIn, pos, te -> {
-			ItemStack heldByDeployer = te.player.getHeldItemMainhand()
+			ItemStack heldByDeployer = te.player.getMainHandItem()
 				.copy();
 			if (heldByDeployer.isEmpty() && heldByPlayer.isEmpty())
 				return;
 
-			player.setHeldItem(handIn, heldByDeployer);
-			te.player.setHeldItem(Hand.MAIN_HAND, heldByPlayer);
+			player.setItemInHand(handIn, heldByDeployer);
+			te.player.setItemInHand(Hand.MAIN_HAND, heldByPlayer);
 			te.sendData();
 		});
 
@@ -114,8 +116,8 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onBlockAdded(state, world, pos, oldState, isMoving);
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, world, pos, oldState, isMoving);
 		withTileEntityDo(world, pos, DeployerTileEntity::redstoneUpdate);
 	}
 
@@ -126,7 +128,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

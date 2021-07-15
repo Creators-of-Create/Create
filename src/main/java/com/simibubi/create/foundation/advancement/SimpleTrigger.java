@@ -23,7 +23,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 	}
 
 	@Override
-	public Instance conditionsFromJson(JsonObject json, ConditionArrayParser context) {
+	public Instance createInstance(JsonObject json, ConditionArrayParser context) {
 		return new Instance(getId());
 	}
 
@@ -38,7 +38,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 	public static class Instance extends CriterionTriggerBase.Instance {
 
 		public Instance(ResourceLocation idIn) {
-			super(idIn, EntityPredicate.AndPredicate.EMPTY); // FIXME: Is this right?
+			super(idIn, EntityPredicate.AndPredicate.ANY); // FIXME: Is this right?
 		}
 
 		@Override

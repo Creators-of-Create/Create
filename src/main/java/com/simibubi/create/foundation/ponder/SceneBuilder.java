@@ -82,6 +82,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 
+import com.simibubi.create.foundation.ponder.elements.TextWindowElement.Builder;
+
 /**
  * Enqueue instructions to the schedule via this object's methods.
  */
@@ -264,7 +266,7 @@ public class SceneBuilder {
 		private void rotationIndicator(BlockPos pos, boolean direction) {
 			addInstruction(scene -> {
 				BlockState blockState = scene.world.getBlockState(pos);
-				TileEntity tileEntity = scene.world.getTileEntity(pos);
+				TileEntity tileEntity = scene.world.getBlockEntity(pos);
 
 				if (!(blockState.getBlock() instanceof KineticBlock))
 					return;
@@ -564,7 +566,7 @@ public class SceneBuilder {
 		}
 
 		public void destroyBlock(BlockPos pos) {
-			setBlock(pos, Blocks.AIR.getDefaultState(), true);
+			setBlock(pos, Blocks.AIR.defaultBlockState(), true);
 		}
 
 		public void setBlock(BlockPos pos, BlockState state, boolean spawnParticles) {
@@ -581,7 +583,7 @@ public class SceneBuilder {
 
 		public void cycleBlockProperty(BlockPos pos, Property<?> property) {
 			modifyBlocks(scene.getSceneBuildingUtil().select.position(pos),
-				s -> s.contains(property) ? s.cycle(property) : s, false);
+				s -> s.hasProperty(property) ? s.cycle(property) : s, false);
 		}
 
 		public void modifyBlocks(Selection selection, UnaryOperator<BlockState> stateFunc, boolean spawnParticles) {
@@ -590,11 +592,11 @@ public class SceneBuilder {
 
 		public void toggleRedstonePower(Selection selection) {
 			modifyBlocks(selection, s -> {
-				if (s.contains(BlockStateProperties.POWER_0_15))
-					s = s.with(BlockStateProperties.POWER_0_15, s.get(BlockStateProperties.POWER_0_15) == 0 ? 15 : 0);
-				if (s.contains(BlockStateProperties.POWERED))
+				if (s.hasProperty(BlockStateProperties.POWER))
+					s = s.setValue(BlockStateProperties.POWER, s.getValue(BlockStateProperties.POWER) == 0 ? 15 : 0);
+				if (s.hasProperty(BlockStateProperties.POWERED))
 					s = s.cycle(BlockStateProperties.POWERED);
-				if (s.contains(RedstoneTorchBlock.LIT))
+				if (s.hasProperty(RedstoneTorchBlock.LIT))
 					s = s.cycle(RedstoneTorchBlock.LIT);
 				return s;
 			}, false);
@@ -607,7 +609,7 @@ public class SceneBuilder {
 		public <T extends Entity> void modifyEntitiesInside(Class<T> entityClass, Selection area,
 			Consumer<T> entityCallBack) {
 			addInstruction(scene -> scene.forEachWorldEntity(entityClass, e -> {
-				if (area.test(e.getBlockPos()))
+				if (area.test(e.blockPosition()))
 					entityCallBack.accept(e);
 			}));
 		}
@@ -628,7 +630,7 @@ public class SceneBuilder {
 				EntityElement handle = new EntityElement(entity);
 				scene.addElement(handle);
 				scene.linkElement(handle, link);
-				world.addEntity(entity);
+				world.addFreshEntity(entity);
 			});
 			return link;
 		}
@@ -636,7 +638,7 @@ public class SceneBuilder {
 		public ElementLink<EntityElement> createItemEntity(Vector3d location, Vector3d motion, ItemStack stack) {
 			return createEntity(world -> {
 				ItemEntity itemEntity = new ItemEntity(world, location.x, location.y, location.z, stack);
-				itemEntity.setMotion(motion);
+				itemEntity.setDeltaMovement(motion);
 				return itemEntity;
 			});
 		}
@@ -649,7 +651,7 @@ public class SceneBuilder {
 		public void createItemOnBeltLike(BlockPos location, Direction insertionSide, ItemStack stack) {
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
-				TileEntity tileEntity = world.getTileEntity(location);
+				TileEntity tileEntity = world.getBlockEntity(location);
 				if (!(tileEntity instanceof SmartTileEntity))
 					return;
 				SmartTileEntity beltTileEntity = (SmartTileEntity) tileEntity;
@@ -658,7 +660,7 @@ public class SceneBuilder {
 					return;
 				behaviour.handleInsertion(stack, insertionSide.getOpposite(), false);
 			});
-			flapFunnel(location.up(), true);
+			flapFunnel(location.above(), true);
 		}
 
 		public ElementLink<BeltItemElement> createItemOnBelt(BlockPos beltLocation, Direction insertionSide,
@@ -666,7 +668,7 @@ public class SceneBuilder {
 			ElementLink<BeltItemElement> link = new ElementLink<>(BeltItemElement.class);
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
-				TileEntity tileEntity = world.getTileEntity(beltLocation);
+				TileEntity tileEntity = world.getBlockEntity(beltLocation);
 				if (!(tileEntity instanceof BeltTileEntity))
 					return;
 
@@ -687,14 +689,14 @@ public class SceneBuilder {
 					return TransportedResult.doNothing();
 				});
 			});
-			flapFunnel(beltLocation.up(), true);
+			flapFunnel(beltLocation.above(), true);
 			return link;
 		}
 
 		public void removeItemsFromBelt(BlockPos beltLocation) {
 			addInstruction(scene -> {
 				PonderWorld world = scene.getWorld();
-				TileEntity tileEntity = world.getTileEntity(beltLocation);
+				TileEntity tileEntity = world.getBlockEntity(beltLocation);
 				if (!(tileEntity instanceof SmartTileEntity))
 					return;
 				SmartTileEntity beltTileEntity = (SmartTileEntity) tileEntity;
@@ -757,7 +759,7 @@ public class SceneBuilder {
 
 		public <T extends TileEntity> void modifyTileEntity(BlockPos position, Class<T> teType, Consumer<T> consumer) {
 			addInstruction(scene -> {
-				TileEntity tileEntity = scene.world.getTileEntity(position);
+				TileEntity tileEntity = scene.world.getBlockEntity(position);
 				if (teType.isInstance(tileEntity))
 					consumer.accept(teType.cast(tileEntity));
 			});

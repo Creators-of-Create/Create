@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -58,7 +59,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	@Override
 	public void tick() {
-		if (!initialized && hasWorld()) {
+		if (!initialized && hasLevel()) {
 			initialize();
 			initialized = true;
 		}
@@ -77,7 +78,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public final CompoundNBT write(CompoundNBT compound) {
+	public final CompoundNBT save(CompoundNBT compound) {
 		write(compound, false);
 		return compound;
 	}
@@ -94,7 +95,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public final void fromTag(BlockState state, CompoundNBT tag) {
+	public final void load(BlockState state, CompoundNBT tag) {
 		fromTag(state, tag, false);
 	}
 
@@ -110,7 +111,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 			updateBehaviorList();
 		}
-		super.fromTag(state, compound);
+		super.load(state, compound);
 		behaviourList.forEach(tb -> tb.read(compound, clientPacket));
 	}
 
@@ -118,13 +119,13 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	 * Hook only these in future subclasses of STE
 	 */
 	protected void write(CompoundNBT compound, boolean clientPacket) {
-		super.write(compound);
+		super.save(compound);
 		behaviourList.forEach(tb -> tb.write(compound, clientPacket));
 	}
 
 	@Override
 	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
-		super.write(compound);
+		super.save(compound);
 		behaviourList.forEach(tb -> {
 			if (tb.isSafeNBT())
 				tb.write(compound, clientPacket);
@@ -140,9 +141,9 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	@Override
-	public void remove() {
+	public void setRemoved() {
 		forEachBehaviour(TileEntityBehaviour::remove);
-		super.remove();
+		super.setRemoved();
 	}
 
 	public void setLazyTickRate(int slowTickRate) {
@@ -205,10 +206,13 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 
 	@Override
 	public boolean canPlayerUse(PlayerEntity player) {
-		if (world == null || world.getTileEntity(pos) != this) {
+		if (level == null || level.getBlockEntity(worldPosition) != this) {
 			return false;
 		}
-		return player.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64.0D;
 	}
 
+	public World getWorld() {
+		return getLevel();
+	}
 }

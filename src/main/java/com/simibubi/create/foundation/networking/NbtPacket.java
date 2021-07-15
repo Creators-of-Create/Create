@@ -30,13 +30,13 @@ public class NbtPacket extends SimplePacketBase {
 	}
 
 	public NbtPacket(PacketBuffer buffer) {
-		stack = buffer.readItemStack();
+		stack = buffer.readItem();
 		slot = buffer.readInt();
 		hand = Hand.values()[buffer.readInt()];
 	}
 
 	public void write(PacketBuffer buffer) {
-		buffer.writeItemStack(stack);
+		buffer.writeItem(stack);
 		buffer.writeInt(slot);
 		buffer.writeInt(hand.ordinal());
 	}
@@ -51,16 +51,16 @@ public class NbtPacket extends SimplePacketBase {
 				if (!(stack.getItem() instanceof SymmetryWandItem || stack.getItem() instanceof ZapperItem)) {
 					return;
 				}
-				stack.removeChildTag("AttributeModifiers");
+				stack.removeTagKey("AttributeModifiers");
 				if (slot == -1) {
-					ItemStack heldItem = player.getHeldItem(hand);
+					ItemStack heldItem = player.getItemInHand(hand);
 					if (heldItem.getItem() == stack.getItem()) {
 						heldItem.setTag(stack.getTag());
 					}
 					return;
 				}
 
-				ItemStack heldInSlot = player.inventory.getStackInSlot(slot);
+				ItemStack heldInSlot = player.inventory.getItem(slot);
 				if (heldInSlot.getItem() == stack.getItem()) {
 					heldInSlot.setTag(stack.getTag());
 				}

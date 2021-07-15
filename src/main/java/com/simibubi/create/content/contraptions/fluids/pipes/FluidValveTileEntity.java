@@ -40,20 +40,20 @@ public class FluidValveTileEntity extends KineticTileEntity {
 		super.tick();
 		pointer.tickChaser();
 
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof FluidValveBlock))
 			return;
-		boolean stateOpen = blockState.get(FluidValveBlock.ENABLED);
+		boolean stateOpen = blockState.getValue(FluidValveBlock.ENABLED);
 
 		if (stateOpen && pointer.getValue() == 0) {
-			switchToBlockState(world, pos, blockState.with(FluidValveBlock.ENABLED, false));
+			switchToBlockState(level, worldPosition, blockState.setValue(FluidValveBlock.ENABLED, false));
 			return;
 		}
 		if (!stateOpen && pointer.getValue() == 1) {
-			switchToBlockState(world, pos, blockState.with(FluidValveBlock.ENABLED, true));
+			switchToBlockState(level, worldPosition, blockState.setValue(FluidValveBlock.ENABLED, true));
 			return;
 		}
 	}
@@ -97,7 +97,7 @@ public class FluidValveTileEntity extends KineticTileEntity {
 
 		@Override
 		public boolean canPullFluidFrom(FluidStack fluid, BlockState state, Direction direction) {
-			if (state.contains(FluidValveBlock.ENABLED) && state.get(FluidValveBlock.ENABLED))
+			if (state.hasProperty(FluidValveBlock.ENABLED) && state.getValue(FluidValveBlock.ENABLED))
 				return super.canPullFluidFrom(fluid, state, direction);
 			return false;
 		}

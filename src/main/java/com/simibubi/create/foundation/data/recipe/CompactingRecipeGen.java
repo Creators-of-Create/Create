@@ -12,6 +12,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 import net.minecraftforge.common.Tags;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+
 public class CompactingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

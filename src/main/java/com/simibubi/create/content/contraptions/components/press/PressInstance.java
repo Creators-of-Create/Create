@@ -24,7 +24,7 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
                 .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
                 .createInstance();
 
-        Quaternion q = Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(blockState.get(MechanicalPressBlock.HORIZONTAL_FACING)));
+        Quaternion q = Vector3f.YP.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
 
         pressHead.setRotation(q);
 

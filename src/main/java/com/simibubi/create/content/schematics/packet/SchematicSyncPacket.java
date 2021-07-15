@@ -38,8 +38,8 @@ public class SchematicSyncPacket extends SimplePacketBase {
 		slot = buffer.readVarInt();
 		deployed = buffer.readBoolean();
 		anchor = buffer.readBlockPos();
-		rotation = buffer.readEnumValue(Rotation.class);
-		mirror = buffer.readEnumValue(Mirror.class);
+		rotation = buffer.readEnum(Rotation.class);
+		mirror = buffer.readEnum(Mirror.class);
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class SchematicSyncPacket extends SimplePacketBase {
 		buffer.writeVarInt(slot);
 		buffer.writeBoolean(deployed);
 		buffer.writeBlockPos(anchor);
-		buffer.writeEnumValue(rotation);
-		buffer.writeEnumValue(mirror);
+		buffer.writeEnum(rotation);
+		buffer.writeEnum(mirror);
 	}
 
 	@Override
@@ -59,9 +59,9 @@ public class SchematicSyncPacket extends SimplePacketBase {
 				return;
 			ItemStack stack = ItemStack.EMPTY;
 			if (slot == -1) {
-				stack = player.getHeldItemMainhand();
+				stack = player.getMainHandItem();
 			} else {
-				stack = player.inventory.getStackInSlot(slot);
+				stack = player.inventory.getItem(slot);
 			}
 			if (!AllItems.SCHEMATIC.isIn(stack)) {
 				return;

@@ -24,7 +24,7 @@ public class EntityLauncher {
 
 	public void clamp(int max) {
 		set(Math.min(horizontalDistance, max),
-			MathHelper.signum(verticalDistance) * Math.min(Math.abs(verticalDistance), max));
+			MathHelper.sign(verticalDistance) * Math.min(Math.abs(verticalDistance), max));
 	}
 
 	public void set(int horizontalDistance, int verticalDistance) {
@@ -36,7 +36,7 @@ public class EntityLauncher {
 	public void applyMotion(Entity entity, Direction facing) {
 		Vector3d motionVec = new Vector3d(0, yMotion, xMotion);
 		motionVec = VecHelper.rotate(motionVec, AngleHelper.horizontalAngle(facing), Axis.Y);
-		entity.setMotion(motionVec.x * .91, motionVec.y * .98, motionVec.z * .91);
+		entity.setDeltaMovement(motionVec.x * .91, motionVec.y * .98, motionVec.z * .91);
 	}
 
 	public int getHorizontalDistance() {

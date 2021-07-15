@@ -51,7 +51,7 @@ public class BeltModel extends BakedModelWrapper<IBakedModel> {
 			TextureAtlasSprite original = quad.getSprite();
 			TextureAtlasSprite target = spriteShift.getTarget();
 			BakedQuad newQuad = QuadHelper.clone(quad);
-			int[] vertexData = newQuad.getVertexData();
+			int[] vertexData = newQuad.getVertices();
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
 				int uvOffset = 16 / 4;
@@ -60,9 +60,9 @@ public class BeltModel extends BakedModelWrapper<IBakedModel> {
 				float u = Float.intBitsToFloat(vertexData[uIndex]);
 				float v = Float.intBitsToFloat(vertexData[vIndex]);
 				vertexData[uIndex] =
-					Float.floatToRawIntBits(target.getInterpolatedU(SuperByteBuffer.getUnInterpolatedU(original, u)));
+					Float.floatToRawIntBits(target.getU(SuperByteBuffer.getUnInterpolatedU(original, u)));
 				vertexData[vIndex] =
-					Float.floatToRawIntBits(target.getInterpolatedV(SuperByteBuffer.getUnInterpolatedV(original, v)));
+					Float.floatToRawIntBits(target.getV(SuperByteBuffer.getUnInterpolatedV(original, v)));
 			}
 
 			quads.set(i, newQuad);

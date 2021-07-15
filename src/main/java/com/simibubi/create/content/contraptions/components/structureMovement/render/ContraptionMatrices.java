@@ -30,36 +30,36 @@ public class ContraptionMatrices {
 	}
 
 	public Matrix4f getFinalModel() {
-		Matrix4f finalModel = entityStack.peek().getModel().copy();
-		finalModel.multiply(contraptionStack.peek().getModel());
+		Matrix4f finalModel = entityStack.last().pose().copy();
+		finalModel.multiply(contraptionStack.last().pose());
 		return finalModel;
 	}
 
 	public Matrix3f getFinalNormal() {
-		Matrix3f finalNormal = entityStack.peek().getNormal().copy();
-		finalNormal.multiply(contraptionStack.peek().getNormal());
+		Matrix3f finalNormal = entityStack.last().normal().copy();
+		finalNormal.mul(contraptionStack.last().normal());
 		return finalNormal;
 	}
 
 	public Matrix4f getFinalLight() {
 		Matrix4f lightTransform = entityMatrix.copy();
-		lightTransform.multiply(contraptionStack.peek().getModel());
+		lightTransform.multiply(contraptionStack.last().pose());
 		return lightTransform;
 	}
 
 	public static Matrix4f translateTo(Entity entity, float partialTicks) {
-		double x = MathHelper.lerp(partialTicks, entity.lastTickPosX, entity.getX());
-		double y = MathHelper.lerp(partialTicks, entity.lastTickPosY, entity.getY());
-		double z = MathHelper.lerp(partialTicks, entity.lastTickPosZ, entity.getZ());
-		return Matrix4f.translate((float) x, (float) y, (float) z);
+		double x = MathHelper.lerp(partialTicks, entity.xOld, entity.getX());
+		double y = MathHelper.lerp(partialTicks, entity.yOld, entity.getY());
+		double z = MathHelper.lerp(partialTicks, entity.zOld, entity.getZ());
+		return Matrix4f.createTranslateMatrix((float) x, (float) y, (float) z);
 	}
 
 	public static void transform(MatrixStack ms, MatrixStack transform) {
-		ms.peek().getModel()
-			.multiply(transform.peek()
-			.getModel());
-		ms.peek().getNormal()
-			.multiply(transform.peek()
-			.getNormal());
+		ms.last().pose()
+			.multiply(transform.last()
+			.pose());
+		ms.last().normal()
+			.mul(transform.last()
+			.normal());
 	}
 }

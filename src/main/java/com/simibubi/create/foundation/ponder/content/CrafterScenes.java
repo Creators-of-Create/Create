@@ -39,7 +39,7 @@ public class CrafterScenes {
 		BlockPos depotPos = util.grid.at(0, 1, 2);
 		Selection crafters = util.select.fromTo(1, 1, 2, 3, 3, 2);
 
-		scene.world.modifyBlocks(crafters, s -> s.with(MechanicalCrafterBlock.POINTING, Pointing.DOWN), false);
+		scene.world.modifyBlocks(crafters, s -> s.setValue(MechanicalCrafterBlock.POINTING, Pointing.DOWN), false);
 		scene.world.setKineticSpeed(crafters, 0);
 
 		for (int y = 0; y < 3; y++) {
@@ -280,7 +280,7 @@ public class CrafterScenes {
 		scene.idle(40);
 
 		Vector3d v = util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST);
-		AxisAlignedBB bb = new AxisAlignedBB(v, v).grow(.125f, .5, .5);
+		AxisAlignedBB bb = new AxisAlignedBB(v, v).inflate(.125f, .5, .5);
 		v = v.add(0, 0, .5);
 
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, new Object(), bb, 45);
@@ -348,7 +348,7 @@ public class CrafterScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
-		scene.world.setBlock(util.grid.at(2, 2, 2), Blocks.AIR.getDefaultState(), false);
+		scene.world.setBlock(util.grid.at(2, 2, 2), Blocks.AIR.defaultBlockState(), false);
 
 		Selection kinetics = util.select.fromTo(3, 1, 2, 3, 1, 5);
 		scene.world.setKineticSpeed(util.select.fromTo(1, 2, 2, 3, 1, 2), 0);

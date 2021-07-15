@@ -49,7 +49,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			tickRotation();
 			spawnParticles(getHeatLevelFromBlock(), 1);
 			return;
@@ -82,8 +82,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 				x = -4;
 				z = -10;
 			}
-			double dx = x - (getPos().getX() + 0.5);
-			double dz = z - (getPos().getZ() + 0.5);
+			double dx = x - (getBlockPos().getX() + 0.5);
+			double dz = z - (getBlockPos().getZ() + 0.5);
 			target = AngleHelper.deg(-MathHelper.atan2(dz, dx)) - 90;
 		}
 		target = headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), target);
@@ -142,7 +142,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		activeFuel = newFuel;
 		remainingBurnTime = newBurnTime;
 
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			HeatLevel level = getHeatLevelFromFuelType(newFuel);
 			for (int i = 0; i < 20; i++)
 				spawnParticles(level, 1 + (.25 * (i / 4)));
@@ -162,7 +162,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		HeatLevel inTE = getHeatLevelFromFuelType(activeFuel);
 		if (inBlockState == inTE)
 			return;
-		world.setBlockState(pos, getBlockState().with(BlazeBurnerBlock.HEAT_LEVEL, inTE));
+		level.setBlockAndUpdate(worldPosition, getBlockState().setValue(BlazeBurnerBlock.HEAT_LEVEL, inTE));
 		notifyUpdate();
 	}
 
@@ -184,12 +184,12 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	private void spawnParticles(HeatLevel heatLevel, double burstMult) {
-		if (world == null)
+		if (level == null)
 			return;
 		if (heatLevel == BlazeBurnerBlock.HeatLevel.NONE)
 			return;
 
-		Random r = world.getRandom();
+		Random r = level.getRandom();
 		switch (heatLevel) {
 		case SMOULDERING:
 			if (r.nextDouble() > 0.25)
@@ -217,13 +217,13 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	private void spawnParticle(HeatLevel heatLevel, float scale, int avgAge, boolean hot, double speed, double spread) {
-		Random random = world.getRandom();
+		Random random = level.getRandom();
 		Vector3d color = randomColor(heatLevel);
-		world.addOptionalParticle(
+		level.addAlwaysVisibleParticle(
 			new CubeParticleData((float) color.x, (float) color.y, (float) color.z, scale, avgAge, hot),
-			(double) pos.getX() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
-			(double) pos.getY() + 0.6D + (random.nextDouble() / 4.0),
-			(double) pos.getZ() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread, 0.0D, speed, 0.0D);
+			(double) worldPosition.getX() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
+			(double) worldPosition.getY() + 0.6D + (random.nextDouble() / 4.0),
+			(double) worldPosition.getZ() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread, 0.0D, speed, 0.0D);
 	}
 
 	private static Vector3d randomColor(BlazeBurnerBlock.HeatLevel heatLevel) {

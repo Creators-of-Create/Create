@@ -12,9 +12,9 @@ public class AirCurrentSound extends TickableSound {
 		super(p_i46532_1_, SoundCategory.BLOCKS);
 		this.pitch = pitch;
 		volume = 0.01f;
-		repeat = true;
-		repeatDelay = 0;
-		global = true;
+		looping = true;
+		delay = 0;
+		relative = true;
 	}
 
 	@Override
@@ -23,26 +23,26 @@ public class AirCurrentSound extends TickableSound {
 	public void setPitch(float pitch) {
 		this.pitch = pitch;
 	}
-	
+
 	public void fadeIn(float maxVolume) {
 		volume = Math.min(maxVolume, volume + .05f);
 	}
-	
+
 	public void fadeOut() {
 		volume = Math.max(0, volume - .05f);
 	}
-	
+
 	public boolean isFaded() {
 		return volume == 0;
 	}
-	
+
 	@Override
 	public float getPitch() {
 		return pitch;
 	}
-	
-	public void stop() {
-		setDone();
+
+	public void stopSound() {
+		stop();
 	}
-	
+
 }

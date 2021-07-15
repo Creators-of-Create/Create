@@ -31,41 +31,43 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class LitBlazeBurnerBlock extends Block {
 
 	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 
 	public LitBlazeBurnerBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(FLAME_TYPE, FlameType.REGULAR));
+		registerDefaultState(defaultBlockState().setValue(FLAME_TYPE, FlameType.REGULAR));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(FLAME_TYPE);
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult blockRayTraceResult) {
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 
 		if (heldItem.getToolTypes().contains(ToolType.SHOVEL)) {
-			world.playSound(player, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5f, 2);
-			if (world.isRemote)
+			world.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5f, 2);
+			if (world.isClientSide)
 				return ActionResultType.SUCCESS;
-			heldItem.damageItem(1, player, p -> p.sendBreakAnimation(hand));
-			world.setBlockState(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
+			heldItem.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
+			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
 			return ActionResultType.SUCCESS;
 		}
 
-		if (state.get(FLAME_TYPE) == FlameType.REGULAR) {
-			if (heldItem.getItem().isIn(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
-				world.playSound(player, pos, SoundEvents.BLOCK_SOUL_SAND_PLACE, SoundCategory.BLOCKS, 1.0f, world.rand.nextFloat() * 0.4F + 0.8F);
-				if (world.isRemote)
+		if (state.getValue(FLAME_TYPE) == FlameType.REGULAR) {
+			if (heldItem.getItem().is(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
+				world.playSound(player, pos, SoundEvents.SOUL_SAND_PLACE, SoundCategory.BLOCKS, 1.0f, world.random.nextFloat() * 0.4F + 0.8F);
+				if (world.isClientSide)
 					return ActionResultType.SUCCESS;
-				world.setBlockState(pos, getDefaultState().with(FLAME_TYPE, FlameType.SOUL));
+				world.setBlockAndUpdate(pos, defaultBlockState().setValue(FLAME_TYPE, FlameType.SOUL));
 				return ActionResultType.SUCCESS;
 			}
 		}
@@ -87,19 +89,19 @@ public class LitBlazeBurnerBlock extends Block {
 
 	@OnlyIn(Dist.CLIENT)
 	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
-		world.addOptionalParticle(ParticleTypes.LARGE_SMOKE, true,
+		world.addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true,
 			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
 			(double) pos.getY() + random.nextDouble() + random.nextDouble(),
 			(double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D,
 			0.07D, 0.0D);
 
 		if (random.nextInt(10) == 0) {
-			world.playSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F),
-				(double) ((float) pos.getZ() + 0.5F), SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS,
+			world.playLocalSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F),
+				(double) ((float) pos.getZ() + 0.5F), SoundEvents.CAMPFIRE_CRACKLE, SoundCategory.BLOCKS,
 				0.25F + random.nextFloat() * .25f, random.nextFloat() * 0.7F + 0.6F, false);
 		}
 
-		if (state.get(FLAME_TYPE) == FlameType.SOUL) {
+		if (state.getValue(FLAME_TYPE) == FlameType.SOUL) {
 			if (random.nextInt(8) == 0) {
 				world.addParticle(ParticleTypes.SOUL,
 					pos.getX() + 0.5F + random.nextDouble() / 4 * (random.nextBoolean() ? 1 : -1),
@@ -120,13 +122,13 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
+	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
-		return state.get(FLAME_TYPE) == FlameType.REGULAR ? 1 : 2;
+	public int getAnalogOutputSignal(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+		return state.getValue(FLAME_TYPE) == FlameType.REGULAR ? 1 : 2;
 	}
 
 	@Override
@@ -137,12 +139,12 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
 	public static int getLight(BlockState state) {
-		if (state.get(FLAME_TYPE) == FlameType.SOUL)
+		if (state.getValue(FLAME_TYPE) == FlameType.SOUL)
 			return 9;
 		else
 			return 12;
@@ -153,7 +155,7 @@ public class LitBlazeBurnerBlock extends Block {
 		REGULAR, SOUL;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 

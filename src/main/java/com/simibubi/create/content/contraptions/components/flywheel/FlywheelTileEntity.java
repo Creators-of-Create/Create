@@ -40,7 +40,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public float getGeneratedSpeed() {
-		return convertToDirection(generatedSpeed, getBlockState().get(FlywheelBlock.HORIZONTAL_FACING));
+		return convertToDirection(generatedSpeed, getBlockState().getValue(FlywheelBlock.HORIZONTAL_FACING));
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 
 	@Override
 	public AxisAlignedBB makeRenderBoundingBox() {
-		return super.makeRenderBoundingBox().grow(2);
+		return super.makeRenderBoundingBox().inflate(2);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	public void tick() {
 		super.tick();
 
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			float targetSpeed = isVirtual() ? speed : getGeneratedSpeed();
 			visualSpeed.target(targetSpeed);
 			visualSpeed.tick();

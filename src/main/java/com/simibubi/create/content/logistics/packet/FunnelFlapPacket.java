@@ -16,7 +16,7 @@ public class FunnelFlapPacket extends TileEntityDataPacket<FunnelTileEntity> {
     }
 
     public FunnelFlapPacket(FunnelTileEntity tile, boolean inwards) {
-        super(tile.getPos());
+        super(tile.getBlockPos());
         this.inwards = inwards;
     }
 

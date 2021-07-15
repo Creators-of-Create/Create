@@ -20,7 +20,7 @@ public class WindowResizeMixin {
 
 	@Shadow @Final private MainWindow mainWindow;
 
-	@Inject(at = @At("TAIL"), method = "updateWindowSize")
+	@Inject(at = @At("TAIL"), method = "updateWindowSize") // resizeDisplay()V
 	private void updateWindowSize(CallbackInfo ci) {
 		UIRenderHelper.updateWindowSize(mainWindow);
 	}

@@ -69,13 +69,13 @@ public class SoulPulseEffect {
 		if (world == null)
 			return new ArrayList<>();
 
-		return getLayer(currentLayerIdx()).map(p -> p.add(pos))
+		return getLayer(currentLayerIdx()).map(p -> p.offset(pos))
 			.filter(p -> canSpawnSoulAt(world, p, true))
 			.collect(Collectors.toList());
 	}
 
 	public static boolean isDark(World world, BlockPos at) {
-		return world.getLightLevel(LightType.BLOCK, at) < 8;
+		return world.getBrightness(LightType.BLOCK, at) < 8;
 	}
 
 	public static boolean canSpawnSoulAt(World world, BlockPos at, boolean ignoreLight) {
@@ -85,7 +85,7 @@ public class SoulPulseEffect {
 
 		return world != null
 			&& WorldEntitySpawner
-				.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, world, at, dummy)
+				.isSpawnPositionOk(EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, world, at, dummy)
 			&& (ignoreLight || isDark(world, at))
 			&& world
 				.getBlockCollisions(null,
@@ -96,17 +96,17 @@ public class SoulPulseEffect {
 	}
 
 	public void spawnParticles(World world, BlockPos at) {
-		if (world == null || !world.isRemote)
+		if (world == null || !world.isClientSide)
 			return;
 
-		Vector3d p = Vector3d.of(at);
+		Vector3d p = Vector3d.atLowerCornerOf(at);
 		if (canOverlap())
-			world.addOptionalParticle(((int) Math.round(VecHelper.getCenterOf(pos)
+			world.addAlwaysVisibleParticle(((int) Math.round(VecHelper.getCenterOf(pos)
 				.distanceTo(VecHelper.getCenterOf(at)))) >= distance ? new SoulParticle.PerimeterData()
 					: new ExpandingPerimeterData(),
 				p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
-		if (world.getLightLevel(LightType.BLOCK, at) < 8) {
-			world.addOptionalParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
+		if (world.getBrightness(LightType.BLOCK, at) < 8) {
+			world.addAlwaysVisibleParticle(new SoulParticle.Data(), p.x + 0.5, p.y + 0.5, p.z + 0.5, 0, 0, 0);
 			world.addParticle(new SoulBaseParticle.Data(), p.x + 0.5, p.y + 0.01, p.z + 0.5, 0, 0, 0);
 		}
 	}
@@ -121,7 +121,7 @@ public class SoulPulseEffect {
 				for (int z = 0; z < MAX_DISTANCE; z++) {
 					BlockPos candidate = new BlockPos(x, y, z);
 
-					int dist = (int) Math.round(Math.sqrt(candidate.distanceSq(0, 0, 0, false)));
+					int dist = (int) Math.round(Math.sqrt(candidate.distSqr(0, 0, 0, false)));
 					if (dist > MAX_DISTANCE)
 						continue;
 					if (dist <= 0)

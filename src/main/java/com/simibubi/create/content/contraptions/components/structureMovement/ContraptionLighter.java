@@ -24,7 +24,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 
         lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
 
-        lightVolume.initialize(contraption.entity.world);
+        lightVolume.initialize(contraption.entity.level);
         scheduleRebuild = true;
 
         startListening();
@@ -32,7 +32,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 
     public void tick(RenderedContraption owner) {
         if (scheduleRebuild) {
-            lightVolume.initialize(owner.contraption.entity.world);
+            lightVolume.initialize(owner.contraption.entity.level);
             scheduleRebuild = false;
         }
     }

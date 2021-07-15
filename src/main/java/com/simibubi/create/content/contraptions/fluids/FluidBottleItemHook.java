@@ -18,6 +18,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import net.minecraft.item.Item.Properties;
+
 @EventBusSubscriber
 public class FluidBottleItemHook extends Item {
 
@@ -35,15 +37,15 @@ public class FluidBottleItemHook extends Item {
 
 		World world = event.getWorld();
 		PlayerEntity player = event.getPlayer();
-		RayTraceResult raytraceresult = rayTrace(world, player, RayTraceContext.FluidMode.SOURCE_ONLY);
+		RayTraceResult raytraceresult = getPlayerPOVHitResult(world, player, RayTraceContext.FluidMode.SOURCE_ONLY);
 		if (raytraceresult.getType() != RayTraceResult.Type.BLOCK)
 			return;
-		BlockPos blockpos = ((BlockRayTraceResult) raytraceresult).getPos();
-		if (!world.isBlockModifiable(player, blockpos))
+		BlockPos blockpos = ((BlockRayTraceResult) raytraceresult).getBlockPos();
+		if (!world.mayInteract(player, blockpos))
 			return;
 
 		FluidState fluidState = world.getFluidState(blockpos);
-		if (fluidState.isTagged(FluidTags.WATER) && fluidState.getFluid()
+		if (fluidState.is(FluidTags.WATER) && fluidState.getType()
 			.getRegistryName()
 			.getNamespace()
 			.equals(Create.ID)) {

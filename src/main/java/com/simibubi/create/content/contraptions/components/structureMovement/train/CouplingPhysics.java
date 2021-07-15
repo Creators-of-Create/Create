@@ -28,7 +28,7 @@ public class CouplingPhysics {
 		float couplingLength = c.getFirst()
 			.getCouplingLength(true);
 		softCollisionStep(world, carts, couplingLength);
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 		hardCollisionStep(world, carts, couplingLength);
 	}
@@ -44,15 +44,15 @@ public class CouplingPhysics {
 			AbstractMinecartEntity cart = carts.get(current);
 			AbstractMinecartEntity otherCart = carts.get(!current);
 
-			float stress = (float) (couplingLength - cart.getPositionVec()
-				.distanceTo(otherCart.getPositionVec()));
+			float stress = (float) (couplingLength - cart.position()
+				.distanceTo(otherCart.position()));
 
 			if (Math.abs(stress) < 1 / 8f)
 				continue;
 
 			RailShape shape = null;
 			BlockPos railPosition = cart.getCurrentRailPosition();
-			BlockState railState = world.getBlockState(railPosition.up());
+			BlockState railState = world.getBlockState(railPosition.above());
 
 			if (railState.getBlock() instanceof AbstractRailBlock) {
 				AbstractRailBlock block = (AbstractRailBlock) railState.getBlock();
@@ -60,8 +60,8 @@ public class CouplingPhysics {
 			}
 
 			Vector3d correction = Vector3d.ZERO;
-			Vector3d pos = cart.getPositionVec();
-			Vector3d link = otherCart.getPositionVec()
+			Vector3d pos = cart.position();
+			Vector3d link = otherCart.position()
 				.subtract(pos);
 			float correctionMagnitude = firstLoop ? -stress / 2f : -stress;
 			
@@ -83,7 +83,7 @@ public class CouplingPhysics {
 				MinecartSim2020.moveCartAlongTrack(cart, correction, railPosition, railState);
 			else {
 				cart.move(MoverType.SELF, correction);
-				cart.setMotion(cart.getMotion()
+				cart.setDeltaMovement(cart.getDeltaMovement()
 					.scale(0.95f));
 			}
 			firstLoop = false;
@@ -95,20 +95,20 @@ public class CouplingPhysics {
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
 		
 		// Assuming Minecarts will never move faster than 1 block/tick
-		Couple<Vector3d> motions = carts.map(Entity::getMotion);
+		Couple<Vector3d> motions = carts.map(Entity::getDeltaMovement);
 		motions.replaceWithParams(VecHelper::clamp, Couple.create(1f, 1f));
 		Couple<Vector3d> nextPositions = carts.map(MinecartSim2020::predictNextPositionOf);
 
 		Couple<RailShape> shapes = carts.mapWithContext((cart, current) -> {
 			AbstractMinecartEntity minecart = cart.getMinecart();
 			Vector3d vec = nextPositions.get(current);
-			int x = MathHelper.floor(vec.getX());
-	        int y = MathHelper.floor(vec.getY());
-	        int z = MathHelper.floor(vec.getZ());
+			int x = MathHelper.floor(vec.x());
+	        int y = MathHelper.floor(vec.y());
+	        int z = MathHelper.floor(vec.z());
 	        BlockPos pos = new BlockPos(x, y - 1, z);
-	        if (minecart.world.getBlockState(pos).isIn(BlockTags.RAILS)) pos = pos.down();
+	        if (minecart.level.getBlockState(pos).is(BlockTags.RAILS)) pos = pos.below();
 			BlockPos railPosition = pos;
-			BlockState railState = world.getBlockState(railPosition.up());
+			BlockState railState = world.getBlockState(railPosition.above());
 			if (!(railState.getBlock() instanceof AbstractRailBlock))
 				return null;
 			AbstractRailBlock block = (AbstractRailBlock) railState.getBlock();
@@ -117,7 +117,7 @@ public class CouplingPhysics {
 
 		float futureStress = (float) (couplingLength - nextPositions.getFirst()
 			.distanceTo(nextPositions.getSecond()));
-		if (MathHelper.epsilonEquals(futureStress, 0D))
+		if (MathHelper.equal(futureStress, 0D))
 			return;
 
 		for (boolean current : Iterate.trueAndFalse) {
@@ -147,11 +147,11 @@ public class CouplingPhysics {
 		}
 
 		motions.replaceWithParams(VecHelper::clamp, maxSpeed);
-		carts.forEachWithParams(Entity::setMotion, motions);
+		carts.forEachWithParams(Entity::setDeltaMovement, motions);
 	}
 
 	public static Vector3d followLinkOnRail(Vector3d link, Vector3d cart, float diffToReduce, Vector3d railAxis) {
-		double dotProduct = railAxis.dotProduct(link);
+		double dotProduct = railAxis.dot(link);
 		if (Double.isNaN(dotProduct) || dotProduct == 0 || diffToReduce == 0)
 			return cart;
 

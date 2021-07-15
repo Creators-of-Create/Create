@@ -22,12 +22,12 @@ public class AdjustableCrateContainer extends Container {
 
 	public AdjustableCrateContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
 		super(type, id);
-		ClientWorld world = Minecraft.getInstance().world;
-		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
+		ClientWorld world = Minecraft.getInstance().level;
+		TileEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		this.playerInventory = inv;
 		if (tileEntity instanceof AdjustableCrateTileEntity) {
 			this.te = (AdjustableCrateTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), extraData.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), extraData.readNbt());
 			init();
 		}
 	}
@@ -66,28 +66,28 @@ public class AdjustableCrateContainer extends Container {
 			this.addSlot(new Slot(playerInventory, hotbarSlot, xOffset + hotbarSlot * 18, yOffset + 58));
 		}
 
-		detectAndSendChanges();
+		broadcastChanges();
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
-		if (!clickedSlot.getHasStack())
+		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;
 
-		ItemStack stack = clickedSlot.getStack();
+		ItemStack stack = clickedSlot.getItem();
 		int crateSize = doubleCrate ? 32 : 16;
 		if (index < crateSize) {
-			mergeItemStack(stack, crateSize, inventorySlots.size(), false);
+			moveItemStackTo(stack, crateSize, slots.size(), false);
 			te.inventory.onContentsChanged(index);
 		} else
-			mergeItemStack(stack, 0, crateSize - 1, false);
+			moveItemStackTo(stack, 0, crateSize - 1, false);
 
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return te != null && te.canPlayerUse(player);
 	}
 

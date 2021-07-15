@@ -25,9 +25,9 @@ public class ClearContainerPacket extends SimplePacketBase {
 					.getSender();
 				if (player == null)
 					return;
-				if (!(player.openContainer instanceof IClearableContainer))
+				if (!(player.containerMenu instanceof IClearableContainer))
 					return;
-				((IClearableContainer) player.openContainer).clearContents();
+				((IClearableContainer) player.containerMenu).clearContents();
 			});
 		context.get()
 			.setPacketHandled(true);

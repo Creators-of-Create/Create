@@ -43,15 +43,15 @@ public class ParrotElement extends AnimatedSceneElement {
 	public void reset(PonderScene scene) {
 		super.reset(scene);
 		setPose(initialPose.get());
-		entity.setPos(0, 0, 0);
-		entity.prevPosX = 0;
-		entity.prevPosY = 0;
-		entity.prevPosZ = 0;
-		entity.lastTickPosX = 0;
-		entity.lastTickPosY = 0;
-		entity.lastTickPosZ = 0;
-		entity.prevRotationPitch = entity.rotationPitch = 0;
-		entity.prevRotationYaw = entity.rotationYaw = 180;
+		entity.setPosRaw(0, 0, 0);
+		entity.xo = 0;
+		entity.yo = 0;
+		entity.zo = 0;
+		entity.xOld = 0;
+		entity.yOld = 0;
+		entity.zOld = 0;
+		entity.xRotO = entity.xRot = 0;
+		entity.yRotO = entity.yRot = 180;
 	}
 
 	@Override
@@ -59,78 +59,78 @@ public class ParrotElement extends AnimatedSceneElement {
 		super.tick(scene);
 		if (entity == null) {
 			entity = pose.create(scene.getWorld());
-			entity.prevRotationYaw = entity.rotationYaw = 180;
+			entity.yRotO = entity.yRot = 180;
 		}
 
-		entity.ticksExisted++;
-		entity.prevRotationYawHead = entity.rotationYawHead;
+		entity.tickCount++;
+		entity.yHeadRotO = entity.yHeadRot;
 		entity.oFlapSpeed = entity.flapSpeed;
 		entity.oFlap = entity.flap;
 		entity.onGround = true;
 
-		entity.prevPosX = entity.getX();
-		entity.prevPosY = entity.getY();
-		entity.prevPosZ = entity.getZ();
-		entity.prevRotationYaw = entity.rotationYaw;
-		entity.prevRotationPitch = entity.rotationPitch;
+		entity.xo = entity.getX();
+		entity.yo = entity.getY();
+		entity.zo = entity.getZ();
+		entity.yRotO = entity.yRot;
+		entity.xRotO = entity.xRot;
 
 		pose.tick(scene, entity, location);
 
-		entity.lastTickPosX = entity.getX();
-		entity.lastTickPosY = entity.getY();
-		entity.lastTickPosZ = entity.getZ();
+		entity.xOld = entity.getX();
+		entity.yOld = entity.getY();
+		entity.zOld = entity.getZ();
 	}
 
 	public void setPositionOffset(Vector3d position, boolean immediate) {
 		if (entity == null)
 			return;
-		entity.setPosition(position.x, position.y, position.z);
+		entity.setPos(position.x, position.y, position.z);
 		if (!immediate)
 			return;
-		entity.prevPosX = position.x;
-		entity.prevPosY = position.y;
-		entity.prevPosZ = position.z;
+		entity.xo = position.x;
+		entity.yo = position.y;
+		entity.zo = position.z;
 	}
 
 	public void setRotation(Vector3d eulers, boolean immediate) {
 		if (entity == null)
 			return;
-		entity.rotationPitch = (float) eulers.x;
-		entity.rotationYaw = (float) eulers.y;
+		entity.xRot = (float) eulers.x;
+		entity.yRot = (float) eulers.y;
 		if (!immediate)
 			return;
-		entity.prevRotationPitch = entity.rotationPitch;
-		entity.prevRotationYaw = entity.rotationYaw;
+		entity.xRotO = entity.xRot;
+		entity.yRotO = entity.yRot;
 	}
 
 	public Vector3d getPositionOffset() {
-		return entity != null ? entity.getPositionVec() : Vector3d.ZERO;
+		return entity != null ? entity.position() : Vector3d.ZERO;
 	}
 
 	public Vector3d getRotation() {
-		return entity != null ? new Vector3d(entity.rotationPitch, entity.rotationYaw, 0) : Vector3d.ZERO;
+		return entity != null ? new Vector3d(entity.xRot, entity.yRot, 0) : Vector3d.ZERO;
 	}
 
 	@Override
 	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {
 		EntityRendererManager entityrenderermanager = Minecraft.getInstance()
-			.getRenderManager();
+			.getEntityRenderDispatcher();
 
 		if (entity == null) {
 			entity = pose.create(world);
-			entity.prevRotationYaw = entity.rotationYaw = 180;
+			entity.yRotO = entity.yRot = 180;
 		}
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(location.x, location.y, location.z);
-		ms.translate(MathHelper.lerp(pt, entity.prevPosX, entity.getX()),
-			MathHelper.lerp(pt, entity.prevPosY, entity.getY()), MathHelper.lerp(pt, entity.prevPosZ, entity.getZ()));
+		ms.translate(MathHelper.lerp(pt, entity.xo, entity.getX()),
+			MathHelper.lerp(pt, entity.yo, entity.getY()), MathHelper.lerp(pt, entity.zo, entity.getZ()));
 
 		MatrixStacker.of(ms)
-			.rotateY(AngleHelper.angleLerp(pt, entity.prevRotationYaw, entity.rotationYaw));
+			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.yRot));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void setPose(ParrotPose pose) {
@@ -155,14 +155,14 @@ public class ParrotElement extends AnimatedSceneElement {
 		@Override
 		ParrotEntity create(PonderWorld world) {
 			ParrotEntity entity = super.create(world);
-			entity.setPartying(BlockPos.ZERO, true);
+			entity.setRecordPlayingNearby(BlockPos.ZERO, true);
 			return entity;
 		}
 
 		@Override
 		void tick(PonderScene scene, ParrotEntity entity, Vector3d location) {
-			entity.prevRotationYaw = entity.rotationYaw;
-			entity.rotationYaw -= 2;
+			entity.yRotO = entity.yRot;
+			entity.yRot -= 2;
 		}
 
 	}
@@ -171,8 +171,8 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		@Override
 		void tick(PonderScene scene, ParrotEntity entity, Vector3d location) {
-			double length = entity.getPositionVec()
-				.subtract(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ)
+			double length = entity.position()
+				.subtract(entity.xOld, entity.yOld, entity.zOld)
 				.length();
 			entity.onGround = false;
 			double phase = Math.min(length * 15, 8);
@@ -195,12 +195,12 @@ public class ParrotElement extends AnimatedSceneElement {
 		@Override
 		void tick(PonderScene scene, ParrotEntity entity, Vector3d location) {
 			TileEntity tileEntity = scene.getWorld()
-				.getTileEntity(componentPos);
+				.getBlockEntity(componentPos);
 			if (!(tileEntity instanceof KineticTileEntity))
 				return;
 			float rpm = ((KineticTileEntity) tileEntity).getSpeed();
-			entity.prevRotationYaw = entity.rotationYaw;
-			entity.rotationYaw += (rpm * .3f);
+			entity.yRotO = entity.yRot;
+			entity.yRot += (rpm * .3f);
 		}
 
 	}
@@ -220,8 +220,8 @@ public class ParrotElement extends AnimatedSceneElement {
 			float targetYaw =
 				MathHelper.wrapDegrees((float) -(MathHelper.atan2(d2, d0) * (double) (180F / (float) Math.PI)) + 90);
 
-			entity.rotationPitch = AngleHelper.angleLerp(.4f, entity.rotationPitch, targetPitch);
-			entity.rotationYaw = AngleHelper.angleLerp(.4f, entity.rotationYaw, targetYaw);
+			entity.xRot = AngleHelper.angleLerp(.4f, entity.xRot, targetPitch);
+			entity.yRot = AngleHelper.angleLerp(.4f, entity.yRot, targetYaw);
 		}
 
 		protected abstract Vector3d getFacedVec(PonderScene scene);
@@ -243,8 +243,8 @@ public class ParrotElement extends AnimatedSceneElement {
 		protected Vector3d getFacedVec(PonderScene scene) {
 			Minecraft minecraft = Minecraft.getInstance();
 			MainWindow w = minecraft.getWindow();
-			double mouseX = minecraft.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
-			double mouseY = minecraft.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
+			double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
+			double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
 			return scene.getTransform()
 				.screenToScene(mouseX, mouseY, 300, 0);
 		}

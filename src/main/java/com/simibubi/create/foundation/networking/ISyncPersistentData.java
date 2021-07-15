@@ -26,29 +26,29 @@ public interface ISyncPersistentData {
 
 		public Packet(Entity entity) {
 			this.entity = entity;
-			this.entityId = entity.getEntityId();
+			this.entityId = entity.getId();
 		}
 
 		public Packet(PacketBuffer buffer) {
 			entityId = buffer.readInt();
-			readData = buffer.readCompoundTag();
+			readData = buffer.readNbt();
 		}
 
 		@Override
 		public void write(PacketBuffer buffer) {
 			buffer.writeInt(entityId);
-			buffer.writeCompoundTag(entity.getPersistentData());
+			buffer.writeNbt(entity.getPersistentData());
 		}
 
 		@Override
 		public void handle(Supplier<Context> context) {
 			context.get()
 					.enqueueWork(() -> {
-						Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityId);
+						Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
 						if (!(entityByID instanceof ISyncPersistentData))
 							return;
 						CompoundNBT data = entityByID.getPersistentData();
-						for (Iterator<String> iterator = data.keySet()
+						for (Iterator<String> iterator = data.getAllKeys()
 								.iterator(); iterator.hasNext(); ) {
 							data.remove(iterator.next());
 						}

@@ -117,7 +117,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		super.init();
 		returnOnClose = true;
 
-		TextStencilElement clientText = new TextStencilElement(client.fontRenderer, new StringTextComponent(clientTile)).centered(true, true);
+		TextStencilElement clientText = new TextStencilElement(minecraft.font, new StringTextComponent(clientTile)).centered(true, true);
 		widgets.add(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (clientSpec != null) {
@@ -129,7 +129,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			clientText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement commonText = new TextStencilElement(client.fontRenderer, new StringTextComponent(commonTile)).centered(true, true);
+		TextStencilElement commonText = new TextStencilElement(minecraft.font, new StringTextComponent(commonTile)).centered(true, true);
 		widgets.add(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		if (commonSpec != null) {
@@ -141,14 +141,14 @@ public class BaseConfigScreen extends ConfigScreen {
 			commonText.withElementRenderer(DISABLED_RENDERER);
 		}
 
-		TextStencilElement serverText = new TextStencilElement(client.fontRenderer, new StringTextComponent(serverTile)).centered(true, true);
+		TextStencilElement serverText = new TextStencilElement(minecraft.font, new StringTextComponent(serverTile)).centered(true, true);
 		widgets.add(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		if (serverSpec == null) {
 			serverConfigWidget.active = false;
 			serverConfigWidget.updateColorsFromState();
 			serverText.withElementRenderer(DISABLED_RENDERER);
-		} else if (Minecraft.getInstance().world == null) {
+		} else if (Minecraft.getInstance().level == null) {
 			serverText.withElementRenderer(DISABLED_RENDERER);
 			serverConfigWidget.getToolTip()
 					.add(new StringTextComponent("Stored individually per World"));
@@ -162,7 +162,7 @@ public class BaseConfigScreen extends ConfigScreen {
 			serverText.withElementRenderer(BoxWidget.gradientFactory.apply(serverConfigWidget));
 		}
 
-		TextStencilElement titleText = new TextStencilElement(client.fontRenderer, modID.toUpperCase(Locale.ROOT))
+		TextStencilElement titleText = new TextStencilElement(minecraft.font, modID.toUpperCase(Locale.ROOT))
 				.centered(true, true)
 				.withElementRenderer((ms, w, h, alpha) -> {
 					UIRenderHelper.angledGradient(ms, 0, 0, h / 2, h, w / 2, Theme.p(Theme.Key.CONFIG_TITLE_A));
@@ -195,7 +195,7 @@ public class BaseConfigScreen extends ConfigScreen {
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		drawCenteredString(ms, client.fontRenderer, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
+		drawCenteredString(ms, minecraft.font, "Access Configs for Mod:", width / 2, height / 2 - 105, Theme.i(Theme.Key.TEXT_ACCENT_STRONG));
 	}
 
 	private void linkTo(Screen screen) {

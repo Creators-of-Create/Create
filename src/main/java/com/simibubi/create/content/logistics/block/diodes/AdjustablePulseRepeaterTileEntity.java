@@ -17,12 +17,12 @@ public class AdjustablePulseRepeaterTileEntity extends AdjustableRepeaterTileEnt
 
 		if (charging && atMax) {
 			if (powering) {
-				world.setBlockState(pos, getBlockState().with(POWERING, false));
+				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, false));
 				charging = false;
 				return;
 			}
-			if (!powering && !world.isRemote)
-				world.setBlockState(pos, getBlockState().with(POWERING, true));
+			if (!powering && !level.isClientSide)
+				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, true));
 			return;
 		}
 		
@@ -30,8 +30,8 @@ public class AdjustablePulseRepeaterTileEntity extends AdjustableRepeaterTileEnt
 			return;
 
 		if (!charging && !atMin) {
-			if (!world.isRemote)
-				world.setBlockState(pos, getBlockState().with(POWERING, false));
+			if (!level.isClientSide)
+				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, false));
 			state = 0;
 			return;
 		}

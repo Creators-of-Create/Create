@@ -25,7 +25,7 @@ public class ConfigCommand {
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("config")
 				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource().asPlayer();
+					ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
 					AllPackets.channel.send(
 							PacketDistributor.PLAYER.with(() -> player),
 							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), "")
@@ -35,7 +35,7 @@ public class ConfigCommand {
 				})
 				.then(Commands.argument("path", StringArgumentType.string())
 						.executes(ctx -> {
-							ServerPlayerEntity player = ctx.getSource().asPlayer();
+							ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
 							AllPackets.channel.send(
 									PacketDistributor.PLAYER.with(() -> player),
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), StringArgumentType.getString(ctx, "path"))
@@ -44,7 +44,7 @@ public class ConfigCommand {
 							return Command.SINGLE_SUCCESS;
 						})
 						.then(Commands.literal("set")
-								.requires(cs -> cs.hasPermissionLevel(2))
+								.requires(cs -> cs.hasPermission(2))
 								.then(Commands.argument("value", StringArgumentType.string())
 										.executes(ctx -> {
 											String path = StringArgumentType.getString(ctx, "path");
@@ -55,12 +55,12 @@ public class ConfigCommand {
 											try {
 												configPath = ConfigHelper.ConfigPath.parse(path);
 											} catch (IllegalArgumentException e) {
-												ctx.getSource().sendErrorMessage(new StringTextComponent(e.getMessage()));
+												ctx.getSource().sendFailure(new StringTextComponent(e.getMessage()));
 												return 0;
 											}
 
 											if (configPath.getType() == ModConfig.Type.CLIENT) {
-												ServerPlayerEntity player = ctx.getSource().asPlayer();
+												ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
 												AllPackets.channel.send(
 														PacketDistributor.PLAYER.with(() -> player),
 														new SConfigureConfigPacket("SET" + path, value)
@@ -71,13 +71,13 @@ public class ConfigCommand {
 
 											try {
 												ConfigHelper.setConfigValue(configPath, value);
-												ctx.getSource().sendFeedback(new StringTextComponent("Great Success!"), false);
+												ctx.getSource().sendSuccess(new StringTextComponent("Great Success!"), false);
 												return Command.SINGLE_SUCCESS;
 											} catch (ConfigHelper.InvalidValueException e) {
-												ctx.getSource().sendErrorMessage(new StringTextComponent("Config could not be set the the specified value!"));
+												ctx.getSource().sendFailure(new StringTextComponent("Config could not be set the the specified value!"));
 												return 0;
 											} catch (Exception e) {
-												ctx.getSource().sendErrorMessage(new StringTextComponent("Something went wrong while trying to set config value. Check the server logs for more information"));
+												ctx.getSource().sendFailure(new StringTextComponent("Something went wrong while trying to set config value. Check the server logs for more information"));
 												Create.LOGGER.warn("Exception during server-side config value set:", e);
 												return 0;
 											}

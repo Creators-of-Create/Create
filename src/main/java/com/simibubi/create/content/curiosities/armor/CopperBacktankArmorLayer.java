@@ -53,21 +53,21 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.isWornBy(entity))
 			return;
 
-		M entityModel = renderer.getEntityModel();
+		M entityModel = renderer.getModel();
 		if (!(entityModel instanceof BipedModel))
 			return;
 
-		ms.push();
+		ms.pushPose();
 		BipedModel<?> model = (BipedModel<?>) entityModel;
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
-				.with(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
-		RenderType renderType = Atlases.getEntityCutout();
+				.setValue(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
+		RenderType renderType = Atlases.cutoutBlockSheet();
 
 		SuperByteBuffer backtank = CreateClient.BUFFER_CACHE.renderBlock(renderedState);
 		SuperByteBuffer cogs =
 				CreateClient.BUFFER_CACHE.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
 
-		model.bipedBody.rotate(ms);
+		model.body.translateAndRotate(ms);
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
 		backtank.forEntityRender()
@@ -79,20 +79,20 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.rotateY(180)
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
-			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.world) % 360))
+			.rotate(Direction.EAST, AngleHelper.rad(2 * AnimationTickHolder.getRenderTime(entity.level) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 
 		cogs.forEntityRender()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	public static void register() {
 		EntityRendererManager renderManager = Minecraft.getInstance()
-			.getRenderManager();
-		registerOn(renderManager.playerRenderer);
+			.getEntityRenderDispatcher();
+		registerOn(renderManager.defaultPlayerRenderer);
 		for (EntityRenderer<?> renderer : renderManager.renderers.values())
 			registerOn(renderer);
 	}
@@ -112,19 +112,19 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		if (!player.getPersistentData()
 			.contains("VisualBacktankAir"))
 			return;
-		if (!player.areEyesInFluid(FluidTags.WATER))
+		if (!player.isEyeInFluid(FluidTags.WATER))
 			return;
 
 		int timeLeft = player.getPersistentData()
 			.getInt("VisualBacktankAir");
 
-		ms.push();
+		ms.pushPose();
 
 		MainWindow window = Minecraft.getInstance()
 			.getWindow();
-		ms.translate(window.getScaledWidth() / 2 + 90, window.getScaledHeight() - 53, 0);
+		ms.translate(window.getGuiScaledWidth() / 2 + 90, window.getGuiScaledHeight() - 53, 0);
 
-		ITextComponent text = new StringTextComponent(StringUtils.ticksToElapsedTime(timeLeft * 20));
+		ITextComponent text = new StringTextComponent(StringUtils.formatTickDuration(timeLeft * 20));
 		GuiGameElement.of(AllItems.COPPER_BACKTANK.asStack())
 			.at(0, 0)
 			.render(ms);
@@ -132,10 +132,10 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		if (timeLeft < 60 && timeLeft % 2 == 0) {
 			color = ColorHelper.mixColors(0xFF_FF0000, color, Math.max(timeLeft / 60f, .25f));
 		}
-		Minecraft.getInstance().fontRenderer.drawWithShadow(ms, text, 16, 5, color);
-		buffers.draw();
+		Minecraft.getInstance().font.drawShadow(ms, text, 16, 5, color);
+		buffers.endBatch();
 
-		ms.pop();
+		ms.popPose();
 	}
 
 }

@@ -56,14 +56,14 @@ public abstract class Selection implements Predicate<BlockPos> {
 
 		@Override
 		public Selection add(Selection other) {
-			other.forEach(p -> posSet.add(p.toImmutable()));
+			other.forEach(p -> posSet.add(p.immutable()));
 			center = null;
 			return this;
 		}
 
 		@Override
 		public Selection substract(Selection other) {
-			other.forEach(p -> posSet.remove(p.toImmutable()));
+			other.forEach(p -> posSet.remove(p.immutable()));
 			center = null;
 			return this;
 		}
@@ -88,7 +88,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 			if (posSet.isEmpty())
 				return center;
 			for (BlockPos blockPos : posSet)
-				center = center.add(Vector3d.of(blockPos));
+				center = center.add(Vector3d.atLowerCornerOf(blockPos));
 			center = center.scale(1f / posSet.size());
 			return center.add(new Vector3d(.5, .5, .5));
 		}
@@ -112,7 +112,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 
 		@Override
 		public boolean test(BlockPos t) {
-			return bb.isVecInside(t);
+			return bb.isInside(t);
 		}
 
 		@Override
@@ -127,7 +127,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 
 		@Override
 		public void forEach(Consumer<BlockPos> callback) {
-			BlockPos.stream(bb)
+			BlockPos.betweenClosedStream(bb)
 				.forEach(callback);
 		}
 
@@ -142,7 +142,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 		}
 
 		private AxisAlignedBB getAABB() {
-			return new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX + 1, bb.maxY + 1, bb.maxZ + 1);
+			return new AxisAlignedBB(bb.x0, bb.y0, bb.z0, bb.x1 + 1, bb.y1 + 1, bb.z1 + 1);
 		}
 
 		@Override

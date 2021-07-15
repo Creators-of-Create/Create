@@ -34,19 +34,19 @@ public class GantryContraption extends TranslatingContraption {
 	@Override
 	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT tag = super.writeNBT(spawnPacket);
-		tag.putInt("Facing", facing.getIndex());
+		tag.putInt("Facing", facing.get3DDataValue());
 		return tag;
 	}
 
 	@Override
 	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
-		facing = Direction.byIndex(tag.getInt("Facing"));
+		facing = Direction.from3DDataValue(tag.getInt("Facing"));
 		super.readNBT(world, tag, spawnData);
 	}
 
 	@Override
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
-		return super.isAnchoringBlockAt(pos.offset(facing));
+		return super.isAnchoringBlockAt(pos.relative(facing));
 	}
 
 	@Override

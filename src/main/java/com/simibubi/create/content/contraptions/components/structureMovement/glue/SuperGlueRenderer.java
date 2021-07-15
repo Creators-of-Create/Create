@@ -41,7 +41,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(SuperGlueEntity entity) {
+	public ResourceLocation getTextureLocation(SuperGlueEntity entity) {
 		return regular;
 	}
 
@@ -50,8 +50,8 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		if (super.shouldRender(entity, frustum, x, y, z)) {
 			PlayerEntity player = Minecraft.getInstance().player;
 			boolean visible = entity.isVisible();
-			boolean holdingGlue = AllItems.SUPER_GLUE.isIn(player.getHeldItemMainhand())
-				|| AllItems.SUPER_GLUE.isIn(player.getHeldItemOffhand());
+			boolean holdingGlue = AllItems.SUPER_GLUE.isIn(player.getMainHandItem())
+				|| AllItems.SUPER_GLUE.isIn(player.getOffhandItem());
 
 			if (visible || holdingGlue)
 				return true;
@@ -64,29 +64,29 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		IRenderTypeBuffer buffer, int light) {
 		super.render(entity, yaw, partialTicks, ms, buffer, light);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getEntityCutout(getEntityTexture(entity)));
+		IVertexBuilder builder = buffer.getBuffer(RenderType.entityCutout(getTextureLocation(entity)));
 		light = getBrightnessForRender(entity);
 		Direction face = entity.getFacingDirection();
 
-		ms.push();
+		ms.pushPose();
 		MatrixStacker.of(ms)
 			.rotateY(AngleHelper.horizontalAngleNew(face))
 			.rotateX(AngleHelper.verticalAngle(face));
-		Entry peek = ms.peek();
+		Entry peek = ms.last();
 
 		renderQuad(builder, peek, insideQuad, light, -1);
 		renderQuad(builder, peek, outsideQuad, light, 1);
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	private void initQuads() {
-		Vector3d diff = Vector3d.of(Direction.SOUTH.getDirectionVec());
+		Vector3d diff = Vector3d.atLowerCornerOf(Direction.SOUTH.getNormal());
 		Vector3d extension = diff.normalize()
 			.scale(1 / 32f - 1 / 128f);
 
 		Vector3d plane = VecHelper.axisAlingedPlaneOf(diff);
-		Axis axis = Direction.getFacingFromVector(diff.x, diff.y, diff.z)
+		Axis axis = Direction.getNearest(diff.x, diff.y, diff.z)
 			.getAxis();
 
 		Vector3d start = Vector3d.ZERO.subtract(extension);
@@ -121,24 +121,24 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
 	private int getBrightnessForRender(SuperGlueEntity entity) {
 		BlockPos blockpos = entity.getHangingPosition();
-		BlockPos blockpos2 = blockpos.offset(entity.getFacingDirection()
+		BlockPos blockpos2 = blockpos.relative(entity.getFacingDirection()
 			.getOpposite());
 
-		World world = entity.getEntityWorld();
-		int light = world.isBlockPresent(blockpos) ? WorldRenderer.getLightmapCoordinates(world, blockpos) : 15;
-		int light2 = world.isBlockPresent(blockpos2) ? WorldRenderer.getLightmapCoordinates(world, blockpos2) : 15;
+		World world = entity.getCommandSenderWorld();
+		int light = world.isLoaded(blockpos) ? WorldRenderer.getLightColor(world, blockpos) : 15;
+		int light2 = world.isLoaded(blockpos2) ? WorldRenderer.getLightColor(world, blockpos2) : 15;
 		return Math.max(light, light2);
 	}
 
 	// Vertex format: pos x, pos y, pos z, u, v
 	private void renderQuad(IVertexBuilder builder, Entry matrix, float[] data, int light, float normalZ) {
 		for (int i = 0; i < 4; i++) {
-			builder.vertex(matrix.getModel(), data[5 * i], data[5 * i + 1], data[5 * i + 2])
+			builder.vertex(matrix.pose(), data[5 * i], data[5 * i + 1], data[5 * i + 2])
 				.color(255, 255, 255, 255)
-				.texture(data[5 * i + 3], data[5 * i + 4])
-				.overlay(OverlayTexture.DEFAULT_UV)
-				.light(light)
-				.normal(matrix.getNormal(), 0.0f, 0.0f, normalZ)
+				.uv(data[5 * i + 3], data[5 * i + 4])
+				.overlayCoords(OverlayTexture.NO_OVERLAY)
+				.uv2(light)
+				.normal(matrix.normal(), 0.0f, 0.0f, normalZ)
 				.endVertex();
 		}
 	}

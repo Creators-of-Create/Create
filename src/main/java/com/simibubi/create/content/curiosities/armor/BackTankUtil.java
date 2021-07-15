@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
-		for (ItemStack itemStack : entity.getArmorInventoryList())
+		for (ItemStack itemStack : entity.getArmorSlots())
 			if (AllItems.COPPER_BACKTANK.isIn(itemStack))
 				return itemStack;
 		return ItemStack.EMPTY;
@@ -40,7 +40,7 @@ public class BackTankUtil {
 	}
 
 	public static int maxAir(ItemStack backtank) {
-		return maxAir(EnchantmentHelper.getEnchantmentLevel(AllEnchantments.CAPACITY.get(), backtank));
+		return maxAir(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), backtank));
 	}
 
 	public static int maxAir(int enchantLevel) {
@@ -78,7 +78,7 @@ public class BackTankUtil {
 			return 0;
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return MathHelper.hsvToRGB(
+			return MathHelper.hsvToRgb(
 				Math.max(0.0F, (float) (1.0F - getDurabilityForDisplay(stack, usesPerTank))) / 3.0F, 1.0F, 1.0F);
 		return backtank.getItem()
 			.getRGBDurabilityForDisplay(backtank);
@@ -93,7 +93,7 @@ public class BackTankUtil {
 			return 0;
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return (double) stack.getDamage() / (double) stack.getMaxDamage();
+			return (double) stack.getDamageValue() / (double) stack.getMaxDamage();
 		return backtank.getItem()
 			.getDurabilityForDisplay(backtank);
 	}

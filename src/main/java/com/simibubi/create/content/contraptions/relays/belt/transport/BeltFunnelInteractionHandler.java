@@ -28,21 +28,21 @@ public class BeltFunnelInteractionHandler {
 		for (int segment = firstUpcomingSegment; beltMovementPositive ? segment <= nextOffset
 			: segment + 1 >= nextOffset; segment += step) {
 			BlockPos funnelPos = BeltHelper.getPositionForOffset(beltInventory.belt, segment)
-				.up();
-			World world = beltInventory.belt.getWorld();
+				.above();
+			World world = beltInventory.belt.getLevel();
 			BlockState funnelState = world.getBlockState(funnelPos);
 			if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
 				continue;
-			Direction funnelFacing = funnelState.get(BeltFunnelBlock.HORIZONTAL_FACING);
+			Direction funnelFacing = funnelState.getValue(BeltFunnelBlock.HORIZONTAL_FACING);
 			Direction movementFacing = beltInventory.belt.getMovementFacing();
 			boolean blocking = funnelFacing == movementFacing.getOpposite();
 			if (funnelFacing == movementFacing)
 				continue;
-			if (funnelState.get(BeltFunnelBlock.SHAPE) == Shape.PUSHING)
+			if (funnelState.getValue(BeltFunnelBlock.SHAPE) == Shape.PUSHING)
 				continue;
 
 			float funnelEntry = segment + .5f;
-			if (funnelState.get(BeltFunnelBlock.SHAPE) == Shape.EXTENDED)
+			if (funnelState.getValue(BeltFunnelBlock.SHAPE) == Shape.EXTENDED)
 				funnelEntry += .499f * (beltMovementPositive ? -1 : 1);
 			
 			boolean hasCrossed = nextOffset > funnelEntry && beltMovementPositive
@@ -52,13 +52,13 @@ public class BeltFunnelInteractionHandler {
 			if (blocking)
 				currentItem.beltPosition = funnelEntry;
 
-			if (world.isRemote || funnelState.method_28500(BeltFunnelBlock.POWERED).orElse(false))
+			if (world.isClientSide || funnelState.getOptionalValue(BeltFunnelBlock.POWERED).orElse(false))
 				if (blocking)
 					return true;
 				else
 					continue;
 
-			TileEntity te = world.getTileEntity(funnelPos);
+			TileEntity te = world.getBlockEntity(funnelPos);
 			if (!(te instanceof FunnelTileEntity))
 				return true;
 

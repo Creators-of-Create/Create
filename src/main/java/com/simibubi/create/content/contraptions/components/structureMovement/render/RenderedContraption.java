@@ -90,18 +90,18 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		MatrixStack stack = new MatrixStack();
 
-		double x = MathHelper.lerp(pt, entity.lastTickPosX, entity.getX()) - camX;
-		double y = MathHelper.lerp(pt, entity.lastTickPosY, entity.getY()) - camY;
-		double z = MathHelper.lerp(pt, entity.lastTickPosZ, entity.getZ()) - camZ;
+		double x = MathHelper.lerp(pt, entity.xOld, entity.getX()) - camX;
+		double y = MathHelper.lerp(pt, entity.yOld, entity.getY()) - camY;
+		double z = MathHelper.lerp(pt, entity.zOld, entity.getZ()) - camZ;
 		stack.translate(x, y, z);
 
 		entity.doLocalTransforms(pt, new MatrixStack[] { stack });
 
-		model = stack.peek().getModel();
+		model = stack.last().pose();
 
 		AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
 
-		this.lightBox = lightBox.offset(-camX, -camY, -camZ);
+		this.lightBox = lightBox.move(-camX, -camY, -camZ);
 	}
 
 	void setup(ContraptionProgram shader) {
@@ -129,7 +129,7 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 		renderLayers.clear();
 
-		List<RenderType> blockLayers = RenderType.getBlockLayers();
+		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
 
 		for (RenderType layer : blockLayers) {
 			BufferedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
@@ -148,11 +148,11 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		if (!tileEntities.isEmpty()) {
 			for (TileEntity te : tileEntities) {
 				if (te instanceof IInstanceRendered) {
-					World world = te.getWorld();
-					BlockPos pos = te.getPos();
-					te.setLocation(renderWorld, pos);
+					World world = te.getLevel();
+					BlockPos pos = te.getBlockPos();
+					te.setLevelAndPosition(renderWorld, pos);
 					kinetics.add(te);
-					te.setLocation(world, pos);
+					te.setLevelAndPosition(world, pos);
 				}
 			}
 		}
@@ -193,8 +193,8 @@ public class RenderedContraption extends ContraptionWorldHolder {
 
 			int light = reader.getLight(i);
 
-			byte block = (byte) (LightTexture.getBlockLightCoordinates(light) << 4);
-			byte sky = (byte) (LightTexture.getSkyLightCoordinates(light) << 4);
+			byte block = (byte) (LightTexture.block(light) << 4);
+			byte sky = (byte) (LightTexture.sky(light) << 4);
 
 			vertices.put(block);
 			vertices.put(sky);

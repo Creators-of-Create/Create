@@ -36,7 +36,7 @@ public class ContraptionHandler {
 		List<AbstractContraptionEntity> queued = queuedAdditions.get(world);
 
 		for (AbstractContraptionEntity contraptionEntity : queued)
-			map.put(contraptionEntity.getEntityId(), new WeakReference<>(contraptionEntity));
+			map.put(contraptionEntity.getId(), new WeakReference<>(contraptionEntity));
 		queued.clear();
 
 		Collection<WeakReference<AbstractContraptionEntity>> values = map.values();
@@ -58,14 +58,14 @@ public class ContraptionHandler {
 	}
 
 	public static void entitiesWhoJustDismountedGetSentToTheRightLocation(LivingEntity entityLiving, World world) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 		CompoundNBT data = entityLiving.getPersistentData();
 		if (!data.contains("ContraptionDismountLocation"))
 			return;
 		Vector3d position = VecHelper.readNBT(data.getList("ContraptionDismountLocation", NBT.TAG_DOUBLE));
-		if (entityLiving.getRidingEntity() == null)
-			entityLiving.setPositionAndUpdate(position.x, position.y, position.z);
+		if (entityLiving.getVehicle() == null)
+			entityLiving.teleportTo(position.x, position.y, position.z);
 		data.remove("ContraptionDismountLocation");
 	}
 

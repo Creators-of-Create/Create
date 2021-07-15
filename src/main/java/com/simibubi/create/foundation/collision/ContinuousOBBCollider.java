@@ -5,6 +5,8 @@ import static java.lang.Math.signum;
 
 import net.minecraft.util.math.vector.Vector3d;
 
+import com.simibubi.create.foundation.collision.OBBCollider.SeparationManifold;
+
 public class ContinuousOBBCollider extends OBBCollider {
 
 	public static ContinuousSeparationManifold separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB,
@@ -89,19 +91,19 @@ public class ContinuousOBBCollider extends OBBCollider {
 			mf.normalSeparation = seperation;
 		}
 
-		double dot = mf.stepSeparationAxis.dotProduct(axis);
+		double dot = mf.stepSeparationAxis.dot(axis);
 		if (dot != 0 && discreteCollision) {
-			Vector3d cross = axis.crossProduct(mf.stepSeparationAxis);
+			Vector3d cross = axis.cross(mf.stepSeparationAxis);
 			double dotSeparation = signum(dot) * TL - (rA + rB);
 			double stepSeparation = -dotSeparation;
 			Vector3d stepSeparationVec = axis;
 
 			if (!cross.equals(Vector3d.ZERO)) {
 				Vector3d sepVec = normalizedAxis.scale(dotSeparation);
-				Vector3d axisPlane = axis.crossProduct(cross);
-				Vector3d stepPlane = mf.stepSeparationAxis.crossProduct(cross);
+				Vector3d axisPlane = axis.cross(cross);
+				Vector3d stepPlane = mf.stepSeparationAxis.cross(cross);
 				stepSeparationVec =
-					sepVec.subtract(axisPlane.scale(sepVec.dotProduct(stepPlane) / axisPlane.dotProduct(stepPlane)));
+					sepVec.subtract(axisPlane.scale(sepVec.dot(stepPlane) / axisPlane.dot(stepPlane)));
 				stepSeparation = stepSeparationVec.length();
 				if (abs(mf.stepSeparation) > abs(stepSeparation) && stepSeparation != 0)
 					mf.stepSeparation = stepSeparation;

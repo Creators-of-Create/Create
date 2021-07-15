@@ -7,6 +7,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class WindowBlock extends ConnectedGlassBlock {
 
 	public WindowBlock(Properties p_i48392_1_) {
@@ -15,11 +17,11 @@ public class WindowBlock extends ConnectedGlassBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock
-			? (!RenderTypeLookup.canRenderInLayer(state, RenderType.getTranslucent()) && side.getAxis()
+			? (!RenderTypeLookup.canRenderInLayer(state, RenderType.translucent()) && side.getAxis()
 				.isHorizontal() || state.getBlock() == adjacentBlockState.getBlock())
-			: super.isSideInvisible(state, adjacentBlockState, side);
+			: super.skipRendering(state, adjacentBlockState, side);
 	}
 
 }

@@ -28,13 +28,13 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 	protected void renderSafe(AnalogLeverTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		BlockState leverState = te.getBlockState();
-		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), leverState, te.getPos());
+		int lightCoords = WorldRenderer.getLightColor(te.getLevel(), leverState, te.getBlockPos());
 		float state = te.clientState.get(partialTicks);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 
 		// Handle
 		SuperByteBuffer handle = PartialBufferer.get(AllBlockPartials.ANALOG_LEVER_HANDLE, leverState);
@@ -54,9 +54,9 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 	}
 
 	private SuperByteBuffer transform(SuperByteBuffer buffer, BlockState leverState) {
-		AttachFace face = leverState.get(AnalogLeverBlock.FACE);
+		AttachFace face = leverState.getValue(AnalogLeverBlock.FACE);
 		float rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
-		float rY = AngleHelper.horizontalAngle(leverState.get(AnalogLeverBlock.HORIZONTAL_FACING));
+		float rY = AngleHelper.horizontalAngle(leverState.getValue(AnalogLeverBlock.FACING));
 		buffer.rotateCentered(Direction.UP, (float) (rY / 180 * Math.PI));
 		buffer.rotateCentered(Direction.EAST, (float) (rX / 180 * Math.PI));
 		return buffer;

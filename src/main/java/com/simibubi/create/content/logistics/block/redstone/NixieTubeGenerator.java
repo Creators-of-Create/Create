@@ -12,12 +12,12 @@ public class NixieTubeGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.get(NixieTubeBlock.CEILING) ? 180 : 0;
+		return state.getValue(NixieTubeBlock.CEILING) ? 180 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(NixieTubeBlock.HORIZONTAL_FACING));
+		return horizontalAngle(state.getValue(NixieTubeBlock.FACING));
 	}
 
 	@Override

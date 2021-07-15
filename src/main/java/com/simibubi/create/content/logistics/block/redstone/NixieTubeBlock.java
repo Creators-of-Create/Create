@@ -38,6 +38,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class NixieTubeBlock extends HorizontalBlock
 	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
@@ -47,19 +49,19 @@ public class NixieTubeBlock extends HorizontalBlock
 	public NixieTubeBlock(Properties properties, DyeColor color) {
 		super(properties);
 		this.color = color;
-		setDefaultState(getDefaultState().with(CEILING, false));
+		registerDefaultState(defaultBlockState().setValue(CEILING, false));
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
 
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 		NixieTubeTileEntity nixie = getTileEntity(world, pos);
 
 		if (nixie == null)
 			return ActionResultType.PASS;
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return ActionResultType.PASS;
 		if (heldItem.isEmpty()) {
 			if (nixie.reactsToRedstone())
@@ -69,26 +71,26 @@ public class NixieTubeBlock extends HorizontalBlock
 			return ActionResultType.SUCCESS;
 		}
 
-		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasDisplayName();
+		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
 		DyeColor dye = null;
 		for (DyeColor color : DyeColor.values())
 			if (heldItem.getItem()
-				.isIn(DyeHelper.getTagOfDye(color)))
+				.is(DyeHelper.getTagOfDye(color)))
 				dye = color;
 
 		if (!display && dye == null)
 			return ActionResultType.PASS;
 
-		Direction left = state.get(HORIZONTAL_FACING)
-			.rotateY();
+		Direction left = state.getValue(FACING)
+			.getClockWise();
 		Direction right = left.getOpposite();
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		BlockPos currentPos = pos;
 		while (true) {
-			BlockPos nextPos = currentPos.offset(left);
+			BlockPos nextPos = currentPos.relative(left);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
 			currentPos = nextPos;
@@ -102,9 +104,9 @@ public class NixieTubeBlock extends HorizontalBlock
 			if (display)
 				withTileEntityDo(world, currentPos, te -> te.displayCustomNameOf(heldItem, rowPosition));
 			if (dye != null)
-				world.setBlockState(currentPos, withColor(state, dye));
+				world.setBlockAndUpdate(currentPos, withColor(state, dye));
 
-			BlockPos nextPos = currentPos.offset(right);
+			BlockPos nextPos = currentPos.relative(right);
 			if (!areNixieBlocksEqual(world.getBlockState(nextPos), state))
 				break;
 			currentPos = nextPos;
@@ -115,19 +117,19 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(CEILING, HORIZONTAL_FACING));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(CEILING, FACING));
 	}
 
 	@Override
-	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+	public void onRemove(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
 		if (!(p_196243_4_.getBlock() instanceof NixieTubeBlock))
-			p_196243_2_.removeTileEntity(p_196243_3_);
+			p_196243_2_.removeBlockEntity(p_196243_3_);
 	}
 
 	@Override
-	public ItemStack getItem(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
 	
@@ -140,8 +142,8 @@ public class NixieTubeBlock extends HorizontalBlock
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return (state.get(CEILING) ? AllShapes.NIXIE_TUBE_CEILING : AllShapes.NIXIE_TUBE)
-			.get(state.get(HORIZONTAL_FACING)
+		return (state.getValue(CEILING) ? AllShapes.NIXIE_TUBE_CEILING : AllShapes.NIXIE_TUBE)
+			.get(state.getValue(FACING)
 				.getAxis());
 	}
 
@@ -156,34 +158,34 @@ public class NixieTubeBlock extends HorizontalBlock
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockPos pos = context.getPos();
-		boolean ceiling = context.getFace() == Direction.DOWN;
-		Vector3d hitVec = context.getHitVec();
+		BlockPos pos = context.getClickedPos();
+		boolean ceiling = context.getClickedFace() == Direction.DOWN;
+		Vector3d hitVec = context.getClickLocation();
 		if (hitVec != null)
 			ceiling = hitVec.y - pos.getY() > .5f;
-		return getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()
+		return defaultBlockState().setValue(FACING, context.getHorizontalDirection()
 			.getOpposite())
-			.with(CEILING, ceiling);
+			.setValue(CEILING, ceiling);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
-		if (!worldIn.getPendingBlockTicks()
-			.isTickPending(pos, this))
-			worldIn.getPendingBlockTicks()
+		if (!worldIn.getBlockTicks()
+			.willTickThisTick(pos, this))
+			worldIn.getBlockTicks()
 				.scheduleTick(pos, this, 0);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
 		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (state.getBlock() == oldState.getBlock() || isMoving)
 			return;
 		updateDisplayedRedstoneValue(state, worldIn, pos);
@@ -200,7 +202,7 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	private void updateDisplayedRedstoneValue(BlockState state, World worldIn, BlockPos pos) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.reactsToRedstone())
@@ -209,7 +211,7 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	static boolean isValidBlock(IBlockReader world, BlockPos pos, boolean above) {
-		BlockState state = world.getBlockState(pos.up(above ? 1 : -1));
+		BlockState state = world.getBlockState(pos.above(above ? 1 : -1));
 		return !state.getShape(world, pos)
 			.isEmpty();
 	}
@@ -217,14 +219,14 @@ public class NixieTubeBlock extends HorizontalBlock
 	private int getPower(World worldIn, BlockPos pos) {
 		int power = 0;
 		for (Direction direction : Iterate.directions)
-			power = Math.max(worldIn.getRedstonePower(pos.offset(direction), direction), power);
+			power = Math.max(worldIn.getSignal(pos.relative(direction), direction), power);
 		for (Direction direction : Iterate.directions)
-			power = Math.max(worldIn.getRedstonePower(pos.offset(direction), Direction.UP), power);
+			power = Math.max(worldIn.getSignal(pos.relative(direction), Direction.UP), power);
 		return power;
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
@@ -249,8 +251,8 @@ public class NixieTubeBlock extends HorizontalBlock
 	public static BlockState withColor(BlockState state, DyeColor color) {
 		return (color == DyeColor.ORANGE ? AllBlocks.ORANGE_NIXIE_TUBE : AllBlocks.NIXIE_TUBES.get(color))
 			.getDefaultState()
-			.with(HORIZONTAL_FACING, state.get(HORIZONTAL_FACING))
-			.with(CEILING, state.get(CEILING));
+			.setValue(FACING, state.getValue(FACING))
+			.setValue(CEILING, state.getValue(CEILING));
 	}
 
 	public static DyeColor colorOf(BlockState blockState) {

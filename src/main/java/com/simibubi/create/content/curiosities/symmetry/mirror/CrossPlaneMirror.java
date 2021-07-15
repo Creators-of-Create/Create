@@ -29,7 +29,7 @@ public class CrossPlaneMirror extends SymmetryMirror {
 		}
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return name;
 		}
 

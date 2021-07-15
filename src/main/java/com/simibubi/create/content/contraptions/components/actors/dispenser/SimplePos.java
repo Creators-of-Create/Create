@@ -14,17 +14,17 @@ public class SimplePos implements IPosition {
 	}
 
 	@Override
-	public double getX() {
+	public double x() {
 		return x;
 	}
 
 	@Override
-	public double getY() {
+	public double y() {
 		return y;
 	}
 
 	@Override
-	public double getZ() {
+	public double z() {
 		return z;
 	}
 }

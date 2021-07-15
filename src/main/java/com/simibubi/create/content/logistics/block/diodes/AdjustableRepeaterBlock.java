@@ -12,20 +12,22 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 
 	public AdjustableRepeaterBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false)
-			.with(POWERING, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false)
+			.setValue(POWERING, false));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(POWERED, POWERING, HORIZONTAL_FACING);
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		builder.add(POWERED, POWERING, FACING);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
@@ -40,13 +42,13 @@ public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 	}
 
 	@Override
-	protected int getActiveSignal(IBlockReader worldIn, BlockPos pos, BlockState state) {
-		return state.get(POWERING) ? 15 : 0;
+	protected int getOutputSignal(IBlockReader worldIn, BlockPos pos, BlockState state) {
+		return state.getValue(POWERING) ? 15 : 0;
 	}
 
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		return blockState.get(HORIZONTAL_FACING) == side ? this.getActiveSignal(blockAccess, pos, blockState) : 0;
+	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return blockState.getValue(FACING) == side ? this.getOutputSignal(blockAccess, pos, blockState) : 0;
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
-		return side.getAxis() == state.get(HORIZONTAL_FACING)
+		return side.getAxis() == state.getValue(FACING)
 			.getAxis();
 	}
 

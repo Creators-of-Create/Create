@@ -20,7 +20,7 @@ public class EmptyMirror extends SymmetryMirror {
 
 		private final String name;
 		private Align(String name) { this.name = name; }
-		@Override public String getString() { return name; }
+		@Override public String getSerializedName() { return name; }
 		@Override public String toString() { return name; }
 	}
 

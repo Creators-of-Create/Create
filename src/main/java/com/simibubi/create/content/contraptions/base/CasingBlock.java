@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class CasingBlock extends Block implements IWrenchable {
 
 	public CasingBlock(Properties p_i48440_1_) {
@@ -29,7 +31,7 @@ public class CasingBlock extends Block implements IWrenchable {
 
 	@Override
 	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
-		for (ToolType toolType : player.getHeldItemMainhand().getToolTypes()) {
+		for (ToolType toolType : player.getMainHandItem().getToolTypes()) {
 			if (isToolEffective(state, toolType))
 				return true;
 		}		

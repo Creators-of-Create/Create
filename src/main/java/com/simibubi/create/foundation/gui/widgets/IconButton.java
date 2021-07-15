@@ -22,15 +22,15 @@ public class IconButton extends AbstractSimiWidget {
 	@Override
 	public void renderButton(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
-			this.hovered =
+			this.isHovered =
 				mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
 			AllGuiTextures button = (pressed || !active) ? button = AllGuiTextures.BUTTON_DOWN
-				: (hovered) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
+				: (isHovered) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
 			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 			AllGuiTextures.BUTTON.bind();
-			drawTexture(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
+			blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
 			icon.draw(matrixStack, this, x + 1, y + 1);
 		}
 	}

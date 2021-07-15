@@ -43,20 +43,20 @@ public class PaletteBlockPattern {
 			.addRecipes(v -> (c, p) -> {
 				DataIngredient ingredient = DataIngredient.items(c.get());
 				Block result = v.getBaseBlock().get();
-				CookingRecipeBuilder.smeltingRecipe(ingredient, result, 0.1f, 200)
-					.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
-					.build(p, p.safeId(result));
+				CookingRecipeBuilder.smelting(ingredient, result, 0.1f, 200)
+					.unlockedBy("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+					.save(p, p.safeId(result));
 			}),
 
 		POLISHED = create("polished", PREFIX, FOR_POLISHED)
 			.addRecipes(v -> (c, p) -> {
 				DataIngredient ingredient = DataIngredient.items(v.getBaseBlock().get());
-				ShapedRecipeBuilder.shapedRecipe(c.get(), 4)
-					.key('#', ingredient)
-					.patternLine("##")
-					.patternLine("##")
-					.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
-					.build(p, p.safeId(c.get()));
+				ShapedRecipeBuilder.shaped(c.get(), 4)
+					.define('#', ingredient)
+					.pattern("##")
+					.pattern("##")
+					.unlockedBy("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+					.save(p, p.safeId(c.get()));
 			}),
 
 		BRICKS = create("bricks", SUFFIX, ALL_PARTIALS), FANCY_BRICKS = create("fancy_bricks", WRAP, ALL_PARTIALS),
@@ -77,12 +77,12 @@ public class PaletteBlockPattern {
 			.textures("pillar", "pillar_end")
 			.addRecipes(v -> (c, p) -> {
 				DataIngredient ingredient = DataIngredient.items(v.getBaseBlock().get());
-				ShapedRecipeBuilder.shapedRecipe(c.get(), 2)
-					.key('#', ingredient)
-					.patternLine("#")
-					.patternLine("#")
-					.addCriterion("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
-					.build(p, p.safeId(c.get()));
+				ShapedRecipeBuilder.shaped(c.get(), 2)
+					.define('#', ingredient)
+					.pattern("#")
+					.pattern("#")
+					.unlockedBy("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
+					.save(p, p.safeId(c.get()));
 			}),
 
 		MOSSY = create("mossy", PREFIX).blockStateFactory(p -> p::cubeAllButMossy)

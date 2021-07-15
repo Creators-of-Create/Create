@@ -40,7 +40,7 @@ public class SelectionScrollInput extends ScrollInput {
 	@Override
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.copy().formatted(TextFormatting.BLUE));
+		toolTip.add(title.plainCopy().withStyle(TextFormatting.BLUE));
 		int min = Math.min(this.max - 16, state - 7);
 		int max = Math.max(this.min + 16, state + 8);
 		min = Math.max(min, this.min);
@@ -48,19 +48,19 @@ public class SelectionScrollInput extends ScrollInput {
 		if (this.min + 1 == min)
 			min--;
 		if (min > this.min)
-			toolTip.add(new StringTextComponent("> ...").formatted(TextFormatting.GRAY));
+			toolTip.add(new StringTextComponent("> ...").withStyle(TextFormatting.GRAY));
 		if (this.max - 1 == max)
 			max++;
 		for (int i = min; i < max; i++) {
 			if (i == state)
-				toolTip.add(StringTextComponent.EMPTY.copy().append("-> ").append(options.get(i)).formatted(TextFormatting.WHITE));
+				toolTip.add(StringTextComponent.EMPTY.plainCopy().append("-> ").append(options.get(i)).withStyle(TextFormatting.WHITE));
 			else
-				toolTip.add(StringTextComponent.EMPTY.copy().append("> ").append(options.get(i)).formatted(TextFormatting.GRAY));
+				toolTip.add(StringTextComponent.EMPTY.plainCopy().append("> ").append(options.get(i)).withStyle(TextFormatting.GRAY));
 		}
 		if (max < this.max)
-			toolTip.add(new StringTextComponent("> ...").formatted(TextFormatting.GRAY));
+			toolTip.add(new StringTextComponent("> ...").withStyle(TextFormatting.GRAY));
 
-		toolTip.add(scrollToSelect.copy().formatted(TextFormatting.DARK_GRAY, TextFormatting.ITALIC));
+		toolTip.add(scrollToSelect.plainCopy().withStyle(TextFormatting.DARK_GRAY, TextFormatting.ITALIC));
 	}
 
 }

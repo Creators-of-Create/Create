@@ -18,6 +18,7 @@ public class FixNormalScalingMixin {
 	 * same as in the beginning.
 	 */
 	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/vector/Matrix3f;multiply(F)V", shift = Shift.AFTER), method = "scale(FFF)V", cancellable = true)
+	// At mul(F)V, method: scale(FFF)V
 	private void returnAfterNegate(float x, float y, float z, CallbackInfo ci) {
 		ci.cancel();
 	}
@@ -30,6 +31,7 @@ public class FixNormalScalingMixin {
 	 * does not work for negative numbers.
 	 */
 	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;fastInverseCbrt(F)F"), method = "scale(FFF)V")
+	// at fastInvCubeRoot(F)F, method: fastInvCubeRoot(F)F
 	private float absInvCbrtInput(float input) {
 		return Math.abs(input);
 	}

@@ -123,9 +123,9 @@ public class AllShapes {
 	// Internally Shared Shapes
 	private static final VoxelShape
 
-	PISTON_HEAD = Blocks.PISTON_HEAD.getDefaultState()
-		.with(DirectionalBlock.FACING, UP)
-		.with(PistonHeadBlock.SHORT, true)
+	PISTON_HEAD = Blocks.PISTON_HEAD.defaultBlockState()
+		.setValue(DirectionalBlock.FACING, UP)
+		.setValue(PistonHeadBlock.SHORT, true)
 		.getShape(null, null), PISTON_EXTENDED =
 			shape(CASING_12PX.get(UP)).add(FOUR_VOXEL_POLE.get(Axis.Y))
 				.build(),
@@ -159,7 +159,7 @@ public class AllShapes {
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
-		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.fullCube()).erase(4, 0, 4, 12, 16, 12)
+		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.block()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)
 			.build(),
@@ -237,7 +237,7 @@ public class AllShapes {
 	}
 
 	private static VoxelShape cuboid(double x1, double y1, double z1, double x2, double y2, double z2) {
-		return Block.makeCuboidShape(x1, y1, z1, x2, y2, z2);
+		return Block.box(x1, y1, z1, x2, y2, z2);
 	}
 
 	public static class Builder {
@@ -258,7 +258,7 @@ public class AllShapes {
 
 		public Builder erase(double x1, double y1, double z1, double x2, double y2, double z2) {
 			this.shape =
-				VoxelShapes.combineAndSimplify(shape, cuboid(x1, y1, z1, x2, y2, z2), IBooleanFunction.ONLY_FIRST);
+				VoxelShapes.join(shape, cuboid(x1, y1, z1, x2, y2, z2), IBooleanFunction.ONLY_FIRST);
 			return this;
 		}
 

@@ -28,21 +28,21 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		Direction direction = te.getBlockState()
-				.get(FACING);
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutoutMipped());
+				.getValue(FACING);
+		IVertexBuilder vb = buffer.getBuffer(RenderType.cutoutMipped());
 
-		int lightBehind = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction.getOpposite()));
-		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
+		int lightBehind = WorldRenderer.getLightColor(te.getLevel(), te.getBlockPos().relative(direction.getOpposite()));
+		int lightInFront = WorldRenderer.getLightColor(te.getLevel(), te.getBlockPos().relative(direction));
 
 		SuperByteBuffer shaftHalf =
 				PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction.getOpposite());
 		SuperByteBuffer fanInner =
 				PartialBufferer.getFacing(AllBlockPartials.ENCASED_FAN_INNER, te.getBlockState(), direction.getOpposite());
 
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 		float speed = te.getSpeed() * 5;
 		if (speed > 0)
 			speed = MathHelper.clamp(speed, 80, 64 * 20);

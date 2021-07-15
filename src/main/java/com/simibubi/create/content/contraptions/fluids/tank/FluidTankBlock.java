@@ -47,6 +47,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity> {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
@@ -66,9 +68,9 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	protected FluidTankBlock(Properties p_i48440_1_, boolean creative) {
 		super(p_i48440_1_);
 		this.creative = creative;
-		setDefaultState(getDefaultState().with(TOP, true)
-			.with(BOTTOM, true)
-			.with(SHAPE, Shape.WINDOW));
+		registerDefaultState(defaultBlockState().setValue(TOP, true)
+			.setValue(BOTTOM, true)
+			.setValue(SHAPE, Shape.WINDOW));
 	}
 
 	public static boolean isTank(BlockState state) {
@@ -76,7 +78,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
 		if (oldState.getBlock() == state.getBlock())
 			return;
 		if (moved)
@@ -85,7 +87,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
 		p_206840_1_.add(TOP, BOTTOM, SHAPE);
 	}
 
@@ -102,15 +104,15 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		withTileEntityDo(context.getWorld(), context.getPos(), FluidTankTileEntity::toggleWindows);
+		withTileEntityDo(context.getLevel(), context.getClickedPos(), FluidTankTileEntity::toggleWindows);
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
-		ItemStack heldItem = player.getHeldItem(hand);
-		boolean onClient = world.isRemote;
+		ItemStack heldItem = player.getItemInHand(hand);
+		boolean onClient = world.isClientSide;
 
 		if (heldItem.isEmpty())
 			return ActionResultType.PASS;
@@ -155,13 +157,13 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			}
 
 			Fluid fluid = fluidInTank.getFluid();
-			fluidState = fluid.getDefaultState()
-				.getBlockState();
+			fluidState = fluid.defaultFluidState()
+				.createLegacyBlock();
 			FluidAttributes attributes = fluid.getAttributes();
 			soundevent = attributes.getEmptySound();
 			if (soundevent == null)
 				soundevent =
-					fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY;
+					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		}
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
@@ -169,13 +171,13 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 					((CreativeSmartFluidTank) fluidTank).setContainedFluid(FluidStack.EMPTY);
 
 			Fluid fluid = prevFluidInTank.getFluid();
-			fluidState = fluid.getDefaultState()
-				.getBlockState();
+			fluidState = fluid.defaultFluidState()
+				.createLegacyBlock();
 			soundevent = fluid.getAttributes()
 				.getFillSound();
 			if (soundevent == null)
 				soundevent =
-					fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL;
+					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
 		}
 
 		if (soundevent != null && !onClient) {
@@ -183,7 +185,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 				.clamp(1 - (1f * fluidInTank.getAmount() / (FluidTankTileEntity.getCapacityMultiplier() * 16)), 0, 1);
 			pitch /= 1.5f;
 			pitch += .5f;
-			pitch += (world.rand.nextFloat() - .5f) / 4f;
+			pitch += (world.random.nextFloat() - .5f) / 4f;
 			world.playSound(null, pos, soundevent, SoundCategory.BLOCKS, .5f, pitch);
 		}
 
@@ -201,10 +203,10 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						if (reversed)
 							level = 1 - level;
 
-						Vector3d vec = ray.getHitVec();
-						vec = new Vector3d(vec.x, controllerTE.getPos()
+						Vector3d vec = ray.getLocation();
+						vec = new Vector3d(vec.x, controllerTE.getBlockPos()
 							.getY() + level * (controllerTE.height - .5f) + .25f, vec.z);
-						Vector3d motion = player.getPositionVec()
+						Vector3d motion = player.position()
 							.subtract(vec)
 							.scale(1 / 20f);
 						vec = vec.add(motion);
@@ -213,7 +215,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 					}
 
 					controllerTE.sendDataImmediately();
-					controllerTE.markDirty();
+					controllerTE.setChanged();
 				}
 			}
 		}
@@ -227,13 +229,13 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
-			TileEntity te = world.getTileEntity(pos);
+			TileEntity te = world.getBlockEntity(pos);
 			if (!(te instanceof FluidTankTileEntity))
 				return;
 			FluidTankTileEntity tankTE = (FluidTankTileEntity) te;
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 			FluidTankConnectivityHandler.splitTank(tankTE);
 		}
 	}
@@ -253,15 +255,15 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (mirror == Mirror.NONE)
 			return state;
 		boolean x = mirror == Mirror.FRONT_BACK;
-		switch (state.get(SHAPE)) {
+		switch (state.getValue(SHAPE)) {
 		case WINDOW_NE:
-			return state.with(SHAPE, x ? Shape.WINDOW_NW : Shape.WINDOW_SE);
+			return state.setValue(SHAPE, x ? Shape.WINDOW_NW : Shape.WINDOW_SE);
 		case WINDOW_NW:
-			return state.with(SHAPE, x ? Shape.WINDOW_NE : Shape.WINDOW_SW);
+			return state.setValue(SHAPE, x ? Shape.WINDOW_NE : Shape.WINDOW_SW);
 		case WINDOW_SE:
-			return state.with(SHAPE, x ? Shape.WINDOW_SW : Shape.WINDOW_NE);
+			return state.setValue(SHAPE, x ? Shape.WINDOW_SW : Shape.WINDOW_NE);
 		case WINDOW_SW:
-			return state.with(SHAPE, x ? Shape.WINDOW_SE : Shape.WINDOW_NW);
+			return state.setValue(SHAPE, x ? Shape.WINDOW_SE : Shape.WINDOW_NW);
 		default:
 			return state;
 		}
@@ -275,15 +277,15 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	private BlockState rotateOnce(BlockState state) {
-		switch (state.get(SHAPE)) {
+		switch (state.getValue(SHAPE)) {
 		case WINDOW_NE:
-			return state.with(SHAPE, Shape.WINDOW_SE);
+			return state.setValue(SHAPE, Shape.WINDOW_SE);
 		case WINDOW_NW:
-			return state.with(SHAPE, Shape.WINDOW_NE);
+			return state.setValue(SHAPE, Shape.WINDOW_NE);
 		case WINDOW_SE:
-			return state.with(SHAPE, Shape.WINDOW_SW);
+			return state.setValue(SHAPE, Shape.WINDOW_SW);
 		case WINDOW_SW:
-			return state.with(SHAPE, Shape.WINDOW_NW);
+			return state.setValue(SHAPE, Shape.WINDOW_NW);
 		default:
 			return state;
 		}
@@ -293,15 +295,15 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		PLAIN, WINDOW, WINDOW_NW, WINDOW_SW, WINDOW_NE, WINDOW_SE;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 	}
 
 	// Tanks are less noisy when placed in batch
 	public static final SoundType SILENCED_METAL =
-		new SoundType(0.1F, 1.5F, SoundEvents.BLOCK_METAL_BREAK, SoundEvents.BLOCK_METAL_STEP,
-			SoundEvents.BLOCK_METAL_PLACE, SoundEvents.BLOCK_METAL_HIT, SoundEvents.BLOCK_METAL_FALL);
+		new SoundType(0.1F, 1.5F, SoundEvents.METAL_BREAK, SoundEvents.METAL_STEP,
+			SoundEvents.METAL_PLACE, SoundEvents.METAL_HIT, SoundEvents.METAL_FALL);
 
 	@Override
 	public SoundType getSoundType(BlockState state, IWorldReader world, BlockPos pos, Entity entity) {
@@ -313,12 +315,12 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
 		return getTileEntityOptional(worldIn, pos).map(FluidTankTileEntity::getControllerTE)
 			.map(te -> ComparatorUtil.fractionToRedstoneLevel(te.getFillState()))
 			.orElse(0);

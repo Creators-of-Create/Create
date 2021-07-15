@@ -47,15 +47,15 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 	}
 
 	public void draw() {
-		earlyBuffer.draw();
-		defaultBuffer.draw();
-		lateBuffer.draw();
+		earlyBuffer.endBatch();
+		defaultBuffer.endBatch();
+		lateBuffer.endBatch();
 	}
 
 	public void draw(RenderType type) {
-		earlyBuffer.draw(type);
-		defaultBuffer.draw(type);
-		lateBuffer.draw(type);
+		earlyBuffer.endBatch(type);
+		defaultBuffer.endBatch(type);
+		lateBuffer.endBatch(type);
 	}
 
 	private static class SuperRenderTypeBufferPhase extends IRenderTypeBuffer.Impl {
@@ -65,28 +65,28 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 
 		static final SortedMap<RenderType, BufferBuilder> createEntityBuilders() {
 			return Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
-				map.put(Atlases.getEntitySolid(), blockBuilders.get(RenderType.getSolid()));
+				map.put(Atlases.solidBlockSheet(), blockBuilders.builder(RenderType.solid()));
 				assign(map, RenderTypes.getOutlineSolid());
-				map.put(Atlases.getEntityCutout(), blockBuilders.get(RenderType.getCutout()));
-				map.put(Atlases.getBannerPatterns(), blockBuilders.get(RenderType.getCutoutMipped()));
-				map.put(Atlases.getEntityTranslucentCull(), blockBuilders.get(RenderType.getTranslucent())); // FIXME new equivalent of getEntityTranslucent() ?
-				assign(map, Atlases.getShieldPatterns());
-				assign(map, Atlases.getBeds());
-				assign(map, Atlases.getShulkerBoxes());
-				assign(map, Atlases.getSign());
-				assign(map, Atlases.getChest());
-				assign(map, RenderType.getTranslucentNoCrumbling());
-				assign(map, RenderType.getGlint());
-				assign(map, RenderType.getEntityGlint());
-				assign(map, RenderType.getWaterMask());
-				ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.forEach((p_228488_1_) -> {
+				map.put(Atlases.cutoutBlockSheet(), blockBuilders.builder(RenderType.cutout()));
+				map.put(Atlases.bannerSheet(), blockBuilders.builder(RenderType.cutoutMipped()));
+				map.put(Atlases.translucentCullBlockSheet(), blockBuilders.builder(RenderType.translucent())); // FIXME new equivalent of getEntityTranslucent() ?
+				assign(map, Atlases.shieldSheet());
+				assign(map, Atlases.bedSheet());
+				assign(map, Atlases.shulkerBoxSheet());
+				assign(map, Atlases.signSheet());
+				assign(map, Atlases.chestSheet());
+				assign(map, RenderType.translucentNoCrumbling());
+				assign(map, RenderType.glint());
+				assign(map, RenderType.entityGlint());
+				assign(map, RenderType.waterMask());
+				ModelBakery.DESTROY_TYPES.forEach((p_228488_1_) -> {
 					assign(map, p_228488_1_);
 				});
 			});
 		}
 
 		private static void assign(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, RenderType type) {
-			map.put(type, new BufferBuilder(type.getExpectedBufferSize()));
+			map.put(type, new BufferBuilder(type.bufferSize()));
 		}
 
 		protected SuperRenderTypeBufferPhase() {

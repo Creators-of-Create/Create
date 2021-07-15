@@ -21,7 +21,7 @@ public class Lang {
 	}
 
 	public static void sendStatus(PlayerEntity player, String key, Object... args) {
-		player.sendStatusMessage(createTranslationTextComponent(key, args), true);
+		player.displayClientMessage(createTranslationTextComponent(key, args), true);
 	}
 
 	public static List<ITextComponent> translatedOptions(String prefix, String... keys) {

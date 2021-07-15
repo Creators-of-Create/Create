@@ -41,13 +41,13 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 		super.tick();
 		prevDialState = dialState;
 		dialState += (dialTarget - dialState) * .125f;
-		if (dialState > 1 && world.rand.nextFloat() < 1 / 2f)
-			dialState -= (dialState - 1) * world.rand.nextFloat();
+		if (dialState > 1 && level.random.nextFloat() < 1 / 2f)
+			dialState -= (dialState - 1) * level.random.nextFloat();
 	}
 
 	@Override
 	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.gauge.info_header")));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.gauge.info_header")));
 
 		return true;
 	}

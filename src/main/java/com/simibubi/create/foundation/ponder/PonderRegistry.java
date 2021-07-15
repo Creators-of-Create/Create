@@ -88,8 +88,8 @@ public class PonderRegistry {
 		for (int i = 0; i < entries.size(); i++) {
 			PonderStoryBoardEntry sb = entries.get(i);
 			Template activeTemplate = loadSchematic(sb.getSchematicName());
-			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().world);
-			activeTemplate.placeAndNotifyListeners(world, BlockPos.ZERO, new PlacementSettings(), world.rand);
+			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, new PlacementSettings(), world.random);
 			world.createBackup();
 			PonderScene scene = compileScene(i, sb, world);
 			scene.begin();
@@ -119,7 +119,7 @@ public class PonderRegistry {
 		try (DataInputStream stream =
 			new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceAsStream)))) {
 			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
-			t.read(nbt);
+			t.load(nbt);
 		} catch (IOException e) {
 			Create.LOGGER.warn("Failed to read ponder schematic", e);
 		}

@@ -46,15 +46,15 @@ public class ClientMotionPacket extends SimplePacketBase {
 					.getSender();
 				if (sender == null)
 					return;
-				sender.setMotion(motion);
+				sender.setDeltaMovement(motion);
 				sender.setOnGround(onGround);
 				if (onGround) {
-					sender.handleFallDamage(sender.fallDistance, 1);
+					sender.causeFallDamage(sender.fallDistance, 1);
 					sender.fallDistance = 0;
-					sender.connection.floatingTickCount = 0;
+					sender.connection.aboveGroundTickCount = 0;
 				}
 				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> sender),
-					new LimbSwingUpdatePacket(sender.getEntityId(), sender.getPositionVec(), limbSwing));
+					new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing));
 			});
 		context.get()
 			.setPacketHandled(true);

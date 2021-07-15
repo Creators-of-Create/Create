@@ -26,8 +26,8 @@ public class CuboidBrush extends ShapedBrush {
 		if (updateShape) {
 			BlockPos zero = BlockPos.ZERO;
 			positions = BlockPos
-				.getAllInBox(zero.add((param0 - 1) / -2, (param1 - 1) / -2, (param2 - 1) / -2),
-					zero.add((param0) / 2, (param1) / 2, (param2) / 2))
+				.betweenClosedStream(zero.offset((param0 - 1) / -2, (param1 - 1) / -2, (param2 - 1) / -2),
+					zero.offset((param0) / 2, (param1) / 2, (param2) / 2))
 				.map(BlockPos::new)
 				.collect(Collectors.toList());
 		}
@@ -54,8 +54,8 @@ public class CuboidBrush extends ShapedBrush {
 		int y = (param1 + (param1 == 0 ? 0 : offset)) / 2;
 		int z = (param2 + (param2 == 0 ? 0 : offset)) / 2;
 
-		return BlockPos.ZERO.offset(face, face.getAxis()
-			.getCoordinate(x, y, z) * (option == PlacementOptions.Attached ? 1 : -1));
+		return BlockPos.ZERO.relative(face, face.getAxis()
+			.choose(x, y, z) * (option == PlacementOptions.Attached ? 1 : -1));
 	}
 
 	@Override

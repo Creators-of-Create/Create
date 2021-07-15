@@ -51,7 +51,7 @@ public class ItemDescription {
 
 	public static final ItemDescription MISSING = new ItemDescription(null);
 	public static ITextComponent trim =
-		new StringTextComponent("                          ").formatted(WHITE, STRIKETHROUGH);
+		new StringTextComponent("                          ").withStyle(WHITE, STRIKETHROUGH);
 
 	public enum Palette {
 
@@ -106,7 +106,7 @@ public class ItemDescription {
 			.get() > 0 && StressImpact.isEnabled();
 		boolean hasStressCapacity = (isHandle || capacities.containsKey(id)) && StressImpact.isEnabled();
 		boolean hasGlasses =
-			AllItems.GOGGLES.get() == Minecraft.getInstance().player.getItemStackFromSlot(EquipmentSlotType.HEAD)
+			AllItems.GOGGLES.get() == Minecraft.getInstance().player.getItemBySlot(EquipmentSlotType.HEAD)
 				.getItem();
 
 		ITextComponent rpmUnit = Lang.translate("generic.unit.rpm");
@@ -115,7 +115,7 @@ public class ItemDescription {
 				Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
 			IFormattableTextComponent level =
-				new StringTextComponent(makeProgressBar(3, index)).formatted(minimumRequiredSpeedLevel.getTextColor());
+				new StringTextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
 
 			if (hasGlasses)
 				level.append(String.valueOf(minimumRequiredSpeedLevel.getSpeedValue()))
@@ -125,7 +125,7 @@ public class ItemDescription {
 				level.append(speedLevels.get(index));
 
 			list.add(Lang.translate("tooltip.speedRequirement")
-				.formatted(GRAY));
+				.withStyle(GRAY));
 			list.add(level);
 		}
 
@@ -137,7 +137,7 @@ public class ItemDescription {
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
 			IFormattableTextComponent level =
-				new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
+				new StringTextComponent(makeProgressBar(3, index)).withStyle(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
 				level.append(impacts.get(id)
@@ -147,7 +147,7 @@ public class ItemDescription {
 				level.append(stressLevels.get(index));
 
 			list.add(Lang.translate("tooltip.stressImpact")
-				.formatted(GRAY));
+				.withStyle(GRAY));
 			list.add(level);
 		}
 
@@ -160,7 +160,7 @@ public class ItemDescription {
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
 			IFormattableTextComponent level =
-				new StringTextComponent(makeProgressBar(3, index)).formatted(impactId.getAbsoluteColor());
+				new StringTextComponent(makeProgressBar(3, index)).withStyle(impactId.getAbsoluteColor());
 
 			if (hasGlasses)
 				level.append(capacity + "x ")
@@ -173,14 +173,14 @@ public class ItemDescription {
 //					" " + DARK_GRAY + TextFormatting.ITALIC + Lang.translate("tooltip.capacityProvided.asGenerator");
 
 			list.add(Lang.translate("tooltip.capacityProvided")
-				.formatted(GRAY));
+				.withStyle(GRAY));
 			list.add(level);
 
 			IFormattableTextComponent genSpeed = generatorSpeed(block, rpmUnit);
 			if (!genSpeed.getString()
 				.isEmpty())
 				list.add(new StringTextComponent(" ").append(genSpeed)
-					.formatted(DARK_GRAY));
+					.withStyle(DARK_GRAY));
 		}
 
 		// if (hasSpeedRequirement || hasStressImpact || hasStressCapacity)
@@ -199,13 +199,13 @@ public class ItemDescription {
 	}
 
 	public ItemDescription withBehaviour(String condition, String behaviour) {
-		add(linesOnShift, new StringTextComponent(condition).formatted(GRAY));
+		add(linesOnShift, new StringTextComponent(condition).withStyle(GRAY));
 		addStrings(linesOnShift, cutStringTextComponent(behaviour, palette.color, palette.hColor, 1));
 		return this;
 	}
 
 	public ItemDescription withControl(String condition, String action) {
-		add(linesOnCtrl, new StringTextComponent(condition).formatted(GRAY));
+		add(linesOnCtrl, new StringTextComponent(condition).withStyle(GRAY));
 		addStrings(linesOnCtrl, cutStringTextComponent(action, palette.color, palette.hColor, 1));
 		return this;
 	}
@@ -230,19 +230,19 @@ public class ItemDescription {
 
 				if (hasControls) {
 					IFormattableTextComponent tabBuilder = new StringTextComponent("");
-					tabBuilder.append(new StringTextComponent(holdCtrl[0]).formatted(DARK_GRAY));
-					tabBuilder.append(keyCtrl.copy()
-						.formatted(ctrl ? WHITE : GRAY));
-					tabBuilder.append(new StringTextComponent(holdCtrl[1]).formatted(DARK_GRAY));
+					tabBuilder.append(new StringTextComponent(holdCtrl[0]).withStyle(DARK_GRAY));
+					tabBuilder.append(keyCtrl.plainCopy()
+						.withStyle(ctrl ? WHITE : GRAY));
+					tabBuilder.append(new StringTextComponent(holdCtrl[1]).withStyle(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
 
 				if (hasDescription) {
 					IFormattableTextComponent tabBuilder = new StringTextComponent("");
-					tabBuilder.append(new StringTextComponent(holdDesc[0]).formatted(DARK_GRAY));
-					tabBuilder.append(keyShift.copy()
-						.formatted(shift ? WHITE : GRAY));
-					tabBuilder.append(new StringTextComponent(holdDesc[1]).formatted(DARK_GRAY));
+					tabBuilder.append(new StringTextComponent(holdDesc[0]).withStyle(DARK_GRAY));
+					tabBuilder.append(keyShift.plainCopy()
+						.withStyle(shift ? WHITE : GRAY));
+					tabBuilder.append(new StringTextComponent(holdDesc[1]).withStyle(DARK_GRAY));
 					list.add(0, tabBuilder);
 				}
 
@@ -325,7 +325,7 @@ public class ItemDescription {
 		}
 
 		return !value.equals("") ? Lang.translate("tooltip.generationSpeed", value, unitRPM)
-			: StringTextComponent.EMPTY.copy();
+			: StringTextComponent.EMPTY.plainCopy();
 	}
 
 }

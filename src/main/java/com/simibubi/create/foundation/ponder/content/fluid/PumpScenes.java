@@ -82,17 +82,17 @@ public class PumpScenes {
 			.pointAt(util.vector.topOf(pumpPos)
 				.subtract(0.5f, 0.125f, 0));
 
-		AxisAlignedBB bb1 = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.25, .25, 0)
-			.offset(0, 0, .25);
-		AxisAlignedBB bb2 = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.25, .25, 1.25);
+		AxisAlignedBB bb1 = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.25, .25, 0)
+			.move(0, 0, .25);
+		AxisAlignedBB bb2 = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.25, .25, 1.25);
 		scene.idle(65);
 
 		Object in = new Object();
 		Object out = new Object();
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.offset(util.vector.centerOf(3, 1, 3)), 3);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.move(util.vector.centerOf(3, 1, 3)), 3);
 		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.offset(util.vector.centerOf(3, 1, 2)), 50);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.move(util.vector.centerOf(3, 1, 2)), 50);
 		scene.idle(10);
 
 		scene.overlay.showText(50)
@@ -104,10 +104,10 @@ public class PumpScenes {
 
 		scene.idle(60);
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.offset(util.vector.centerOf(1, 1, 1)
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.move(util.vector.centerOf(1, 1, 1)
 			.add(0, 0, -.5)), 3);
 		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.offset(util.vector.centerOf(1, 1, 2)), 50);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.move(util.vector.centerOf(1, 1, 2)), 50);
 		scene.idle(10);
 
 		scene.overlay.showText(50)
@@ -132,20 +132,20 @@ public class PumpScenes {
 				.subtract(0.5f, 0.125f, 0));
 
 		scene.idle(25);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.offset(util.vector.centerOf(1, 1, 3)), 3);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.move(util.vector.centerOf(1, 1, 3)), 3);
 		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.offset(util.vector.centerOf(1, 1, 2)), 30);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.move(util.vector.centerOf(1, 1, 2)), 30);
 		scene.idle(15);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.offset(util.vector.centerOf(3, 1, 1)
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.move(util.vector.centerOf(3, 1, 1)
 			.add(0, 0, -.5)), 3);
 		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.offset(util.vector.centerOf(3, 1, 2)), 30);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.move(util.vector.centerOf(3, 1, 2)), 30);
 		scene.idle(55);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(pumpPos), Pointing.DOWN).rightClick()
 			.withWrench(), 40);
 		scene.idle(7);
-		scene.world.modifyBlock(pumpPos, s -> s.with(PumpBlock.FACING, Direction.EAST), true);
+		scene.world.modifyBlock(pumpPos, s -> s.setValue(PumpBlock.FACING, Direction.EAST), true);
 		scene.overlay.showText(70)
 			.attachKeyFrame()
 			.pointAt(util.vector.centerOf(2, 1, 1))
@@ -154,14 +154,14 @@ public class PumpScenes {
 		scene.world.propagatePipeChange(pumpPos);
 		scene.idle(40);
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.offset(util.vector.centerOf(3, 1, 3)), 3);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb1.move(util.vector.centerOf(3, 1, 3)), 3);
 		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.offset(util.vector.centerOf(3, 1, 2)), 30);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.INPUT, in, bb2.move(util.vector.centerOf(3, 1, 2)), 30);
 		scene.idle(15);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.offset(util.vector.centerOf(1, 1, 1)
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb1.move(util.vector.centerOf(1, 1, 1)
 			.add(0, 0, -.5)), 3);
 		scene.idle(2);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.offset(util.vector.centerOf(1, 1, 2)), 30);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, out, bb2.move(util.vector.centerOf(1, 1, 2)), 30);
 		scene.idle(25);
 
 	}
@@ -187,12 +187,12 @@ public class PumpScenes {
 			.drain(3000, FluidAction.EXECUTE));
 
 		BlockPos east = pumpPos.east();
-		scene.world.setBlock(east, Blocks.AIR.getDefaultState(), false);
+		scene.world.setBlock(east, Blocks.AIR.defaultBlockState(), false);
 		scene.world.setBlock(east, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
-			.with(GlassFluidPipeBlock.AXIS, Axis.X), false);
+			.setValue(GlassFluidPipeBlock.AXIS, Axis.X), false);
 
 		scene.world.setBlock(pumpPos.south(), AllBlocks.COGWHEEL.getDefaultState()
-			.with(CogWheelBlock.AXIS, Axis.X), false);
+			.setValue(CogWheelBlock.AXIS, Axis.X), false);
 		Selection southPump = util.select.position(pumpPos.south());
 		scene.world.setKineticSpeed(southPump, 32);
 
@@ -255,34 +255,34 @@ public class PumpScenes {
 		scene.idle(60);
 
 		BlockState pipeState = AllBlocks.FLUID_PIPE.getDefaultState()
-			.with(FluidPipeBlock.DOWN, false)
-			.with(FluidPipeBlock.UP, false);
+			.setValue(FluidPipeBlock.DOWN, false)
+			.setValue(FluidPipeBlock.UP, false);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.idle(10);
 
 		scene.world.setBlock(east, pipeState, true);
 		scene.world.setBlock(west, pipeState, true);
 
-		scene.world.setBlock(east.north(), pipeState.with(FluidPipeBlock.NORTH, false)
-			.with(FluidPipeBlock.EAST, false), false);
-		scene.world.setBlock(east.south(), pipeState.with(FluidPipeBlock.SOUTH, false)
-			.with(FluidPipeBlock.EAST, false), false);
+		scene.world.setBlock(east.north(), pipeState.setValue(FluidPipeBlock.NORTH, false)
+			.setValue(FluidPipeBlock.EAST, false), false);
+		scene.world.setBlock(east.south(), pipeState.setValue(FluidPipeBlock.SOUTH, false)
+			.setValue(FluidPipeBlock.EAST, false), false);
 		scene.world.showSection(util.select.position(east.north()), Direction.DOWN);
 		scene.world.showSection(util.select.position(east.south()), Direction.DOWN);
 		Selection northPump = util.select.position(pumpPos.north());
 
-		scene.world.setBlock(west.north(), pipeState.with(FluidPipeBlock.NORTH, false)
-			.with(FluidPipeBlock.WEST, false), false);
-		scene.world.setBlock(west.south(), pipeState.with(FluidPipeBlock.SOUTH, false)
-			.with(FluidPipeBlock.WEST, false), false);
+		scene.world.setBlock(west.north(), pipeState.setValue(FluidPipeBlock.NORTH, false)
+			.setValue(FluidPipeBlock.WEST, false), false);
+		scene.world.setBlock(west.south(), pipeState.setValue(FluidPipeBlock.SOUTH, false)
+			.setValue(FluidPipeBlock.WEST, false), false);
 		scene.world.showSection(util.select.position(west.north()), Direction.DOWN);
 		scene.world.showSection(util.select.position(west.south()), Direction.DOWN);
 
 		scene.world.restoreBlocks(southPump);
-		scene.world.modifyBlock(pumpPos.south(), s -> s.with(PumpBlock.FACING, Direction.EAST), false);
+		scene.world.modifyBlock(pumpPos.south(), s -> s.setValue(PumpBlock.FACING, Direction.EAST), false);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.world.showSection(northPump, Direction.DOWN);
-		scene.world.modifyBlock(pumpPos.north(), s -> s.with(PumpBlock.FACING, Direction.EAST), false);
+		scene.world.modifyBlock(pumpPos.north(), s -> s.setValue(PumpBlock.FACING, Direction.EAST), false);
 		scene.idle(4);
 
 		scene.world.setKineticSpeed(util.select.everywhere(), -16);
@@ -303,13 +303,13 @@ public class PumpScenes {
 			.showControls(new InputWindowElement(util.vector.topOf(pumpPos.south()), Pointing.DOWN).rightClick()
 				.withWrench(), 30);
 		scene.idle(7);
-		scene.world.modifyBlock(pumpPos.south(), s -> s.with(PumpBlock.FACING, Direction.WEST), true);
+		scene.world.modifyBlock(pumpPos.south(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.idle(30);
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(pumpPos.north()), Pointing.DOWN).rightClick()
 				.withWrench(), 30);
 		scene.idle(7);
-		scene.world.modifyBlock(pumpPos.north(), s -> s.with(PumpBlock.FACING, Direction.WEST), true);
+		scene.world.modifyBlock(pumpPos.north(), s -> s.setValue(PumpBlock.FACING, Direction.WEST), true);
 		scene.idle(30);
 
 		scene.overlay.showText(70)

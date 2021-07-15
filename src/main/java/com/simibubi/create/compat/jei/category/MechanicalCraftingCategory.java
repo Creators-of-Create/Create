@@ -41,7 +41,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 	@Override
 	public void setIngredients(ICraftingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 
 		itemStacks.init(0, false, 133, 80);
-		itemStacks.set(0, recipe.getRecipeOutput()
+		itemStacks.set(0, recipe.getResultItem()
 			.getStack());
 
 		int x = getXPadding(recipe);
@@ -66,7 +66,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 			int yPosition = (int) (y + 1 + (i / getWidth(recipe)) * f);
 			itemStacks.init(i + 1, true, renderer, xPosition, yPosition, slotSize, slotSize, 0, 0);
 			itemStacks.set(i + 1, Arrays.asList(recipeIngredients.get(i)
-				.getMatchingStacks()));
+				.getItems()));
 		}
 
 	}
@@ -97,7 +97,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 
 	@Override
 	public void draw(ICraftingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		matrixStack.push();
+		matrixStack.pushPose();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
 
@@ -105,24 +105,24 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 			for (int col = 0; col < getWidth(recipe); col++)
 				if (!recipe.getIngredients()
 					.get(row * getWidth(recipe) + col)
-					.hasNoMatchingItems()) {
-					matrixStack.push();
+					.isEmpty()) {
+					matrixStack.pushPose();
 					matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
 					matrixStack.scale(scale, scale, scale);
 					AllGuiTextures.JEI_SLOT.draw(matrixStack, 0, 0);
-					matrixStack.pop();
+					matrixStack.popPose();
 				}
 
-		matrixStack.pop();
+		matrixStack.popPose();
 
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 133, 80);
 		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 128, 59);
 		crafter.draw(matrixStack, 129, 25);
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 300);
 
-		RenderHelper.disableStandardItemLighting();
+		RenderHelper.turnOff();
 		int amount = 0;
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			if (Ingredient.EMPTY == ingredient)
@@ -130,8 +130,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 			amount++;
 		}
 
-		Minecraft.getInstance().fontRenderer.drawWithShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
-		matrixStack.pop();
+		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
+		matrixStack.popPose();
 	}
 
 	@Override
@@ -149,27 +149,27 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 
 		@Override
 		public void render(MatrixStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
-			matrixStack.push();
+			matrixStack.pushPose();
 			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
 			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
 				RenderSystem.pushMatrix();
-				RenderSystem.multMatrix(matrixStack.peek().getModel());
+				RenderSystem.multMatrix(matrixStack.last().pose());
 				RenderSystem.enableDepthTest();
-				RenderHelper.enable();
+				RenderHelper.turnBackOn();
 				Minecraft minecraft = Minecraft.getInstance();
 				FontRenderer font = getFontRenderer(minecraft, ingredient);
 				ItemRenderer itemRenderer = minecraft.getItemRenderer();
-				itemRenderer.renderItemAndEffectIntoGUI(null, ingredient, 0, 0);
-				itemRenderer.renderItemOverlayIntoGUI(font, ingredient, 0, 0, null);
+				itemRenderer.renderAndDecorateItem(null, ingredient, 0, 0);
+				itemRenderer.renderGuiItemDecorations(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
-				RenderHelper.disableStandardItemLighting();
+				RenderHelper.turnOff();
 				RenderSystem.popMatrix();
 			}
 
-			matrixStack.pop();
+			matrixStack.popPose();
 		}
 
 		@Override
@@ -177,11 +177,11 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 			Minecraft minecraft = Minecraft.getInstance();
 			PlayerEntity player = minecraft.player;
 			try {
-				return ingredient.getTooltip(player, tooltipFlag);
+				return ingredient.getTooltipLines(player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
 				List<ITextComponent> list = new ArrayList<>();
 				TranslationTextComponent crash = new TranslationTextComponent("jei.tooltip.error.crash");
-				list.add(crash.formatted(TextFormatting.RED));
+				list.add(crash.withStyle(TextFormatting.RED));
 				return list;
 			}
 		}

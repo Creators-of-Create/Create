@@ -5,6 +5,8 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ConnectedGlassPaneBlock extends GlassPaneBlock {
 
 	public ConnectedGlassPaneBlock(Properties builder) {
@@ -13,11 +15,11 @@ public class ConnectedGlassPaneBlock extends GlassPaneBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
 		if (side.getAxis()
 			.isVertical())
 			return adjacentBlockState == state;
-		return super.isSideInvisible(state, adjacentBlockState, side);
+		return super.skipRendering(state, adjacentBlockState, side);
 	}
 
 }

@@ -62,21 +62,21 @@ public class MountedStorage {
 		// Split double chests
 		if (te.getType() == TileEntityType.CHEST || te.getType() == TileEntityType.TRAPPED_CHEST) {
 			if (te.getBlockState()
-				.get(ChestBlock.TYPE) != ChestType.SINGLE)
-				te.getWorld()
-					.setBlockState(te.getPos(), te.getBlockState()
-						.with(ChestBlock.TYPE, ChestType.SINGLE));
-			te.updateContainingBlockInfo();
+				.getValue(ChestBlock.TYPE) != ChestType.SINGLE)
+				te.getLevel()
+					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
+						.setValue(ChestBlock.TYPE, ChestType.SINGLE));
+			te.clearCache();
 		}
 
 		// Split double flexcrates
 		if (AllTileEntities.ADJUSTABLE_CRATE.is(te)) {
 			if (te.getBlockState()
-				.get(AdjustableCrateBlock.DOUBLE))
-				te.getWorld()
-					.setBlockState(te.getPos(), te.getBlockState()
-						.with(AdjustableCrateBlock.DOUBLE, false));
-			te.updateContainingBlockInfo();
+				.getValue(AdjustableCrateBlock.DOUBLE))
+				te.getLevel()
+					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
+						.setValue(AdjustableCrateBlock.DOUBLE, false));
+			te.clearCache();
 		}
 
 		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -146,7 +146,7 @@ public class MountedStorage {
 		storage.valid = true;
 
 		if (nbt.contains("Bottomless")) {
-			ItemStack providedStack = ItemStack.read(nbt.getCompound("ProvidedStack"));
+			ItemStack providedStack = ItemStack.of(nbt.getCompound("ProvidedStack"));
 			storage.handler = new BottomlessItemHandler(() -> providedStack);
 			return storage;
 		}

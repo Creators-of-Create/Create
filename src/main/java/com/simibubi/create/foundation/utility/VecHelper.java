@@ -85,11 +85,11 @@ public class VecHelper {
 	public static Vector3d lookAt(Vector3d vec, Vector3d fwd) {
 		fwd = fwd.normalize();
 		Vector3d up = new Vector3d(0,1,0);
-		double dot = fwd.dotProduct(up);
+		double dot = fwd.dot(up);
 		if (Math.abs(dot) > 1 - 1.0E-3)
 			up = new Vector3d(0, 0, dot > 0 ? 1 : -1);
-		Vector3d right = fwd.crossProduct(up).normalize();
-		up = right.crossProduct(fwd).normalize();
+		Vector3d right = fwd.cross(up).normalize();
+		up = right.cross(fwd).normalize();
 		double x = vec.x * right.x + vec.y * up.x + vec.z * fwd.x;
 		double y = vec.x * right.y + vec.y * up.y + vec.z * fwd.y;
 		double z = vec.x * right.z + vec.y * up.z + vec.z * fwd.z;
@@ -97,14 +97,14 @@ public class VecHelper {
 	}
 
 	public static boolean isVecPointingTowards(Vector3d vec, Direction direction) {
-		return Vector3d.of(direction.getDirectionVec())
-			.dotProduct(vec.normalize()) > 0.125; // slight tolerance to activate perpendicular movement actors
+		return Vector3d.atLowerCornerOf(direction.getNormal())
+			.dot(vec.normalize()) > 0.125; // slight tolerance to activate perpendicular movement actors
 	}
 
 	public static Vector3d getCenterOf(Vector3i pos) {
-		if (pos.equals(Vector3i.NULL_VECTOR))
+		if (pos.equals(Vector3i.ZERO))
 			return CENTER_OF_ORIGIN;
-		return Vector3d.of(pos)
+		return Vector3d.atLowerCornerOf(pos)
 			.add(.5f, .5f, .5f);
 	}
 
@@ -119,14 +119,14 @@ public class VecHelper {
 	}
 
 	public static Vector3d axisAlingedPlaneOf(Direction face) {
-		return axisAlingedPlaneOf(Vector3d.of(face.getDirectionVec()));
+		return axisAlingedPlaneOf(Vector3d.atLowerCornerOf(face.getNormal()));
 	}
 
 	public static ListNBT writeNBT(Vector3d vec) {
 		ListNBT listnbt = new ListNBT();
-		listnbt.add(DoubleNBT.of(vec.x));
-		listnbt.add(DoubleNBT.of(vec.y));
-		listnbt.add(DoubleNBT.of(vec.z));
+		listnbt.add(DoubleNBT.valueOf(vec.x));
+		listnbt.add(DoubleNBT.valueOf(vec.y));
+		listnbt.add(DoubleNBT.valueOf(vec.z));
 		return listnbt;
 	}
 
@@ -141,11 +141,11 @@ public class VecHelper {
 	}
 
 	public static int getCoordinate(Vector3i pos, Axis axis) {
-		return axis.getCoordinate(pos.getX(), pos.getY(), pos.getZ());
+		return axis.choose(pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	public static float getCoordinate(Vector3d vec, Axis axis) {
-		return (float) axis.getCoordinate(vec.x, vec.y, vec.z);
+		return (float) axis.choose(vec.x, vec.y, vec.z);
 	}
 
 	public static boolean onSameAxis(BlockPos pos1, BlockPos pos2, Axis axis) {
@@ -176,7 +176,7 @@ public class VecHelper {
 	public static Vector3d project(Vector3d vec, Vector3d ontoVec) {
 		if (ontoVec.equals(Vector3d.ZERO))
 			return Vector3d.ZERO;
-		return ontoVec.scale(vec.dotProduct(ontoVec) / ontoVec.lengthSquared());
+		return ontoVec.scale(vec.dot(ontoVec) / ontoVec.lengthSqr());
 	}
 
 	@Nullable
@@ -188,8 +188,8 @@ public class VecHelper {
 			lineDirection = lineDirection.normalize();
 
 		Vector3d diff = origin.subtract(sphereCenter);
-		double lineDotDiff = lineDirection.dotProduct(diff);
-		double delta = lineDotDiff * lineDotDiff - (diff.lengthSquared() - radius * radius);
+		double lineDotDiff = lineDirection.dot(diff);
+		double delta = lineDotDiff * lineDotDiff - (diff.lengthSqr() - radius * radius);
 		if (delta < 0)
 			return null;
 		double t = -lineDotDiff + MathHelper.sqrt(delta);
@@ -202,52 +202,52 @@ public class VecHelper {
 		 * The (centered) location on the screen of the given 3d point in the world.
 		 * Result is (dist right of center screen, dist up from center screen, if < 0, then in front of view plane)
 		 */
-		ActiveRenderInfo ari = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
-		Vector3d camera_pos = ari.getProjectedView();
-		Quaternion camera_rotation_conj = ari.getRotation()
+		ActiveRenderInfo ari = Minecraft.getInstance().gameRenderer.getMainCamera();
+		Vector3d camera_pos = ari.getPosition();
+		Quaternion camera_rotation_conj = ari.rotation()
 			.copy();
-		camera_rotation_conj.conjugate();
+		camera_rotation_conj.conj();
 
 		Vector3f result3f = new Vector3f((float) (camera_pos.x - target.x), (float) (camera_pos.y - target.y),
 			(float) (camera_pos.z - target.z));
-		result3f.func_214905_a(camera_rotation_conj);
+		result3f.transform(camera_rotation_conj);
 
 		// ----- compensate for view bobbing (if active) -----
 		// the following code adapted from GameRenderer::applyBobbing (to invert it)
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.gameSettings.viewBobbing) {
-			Entity renderViewEntity = mc.getRenderViewEntity();
+		if (mc.options.bobView) {
+			Entity renderViewEntity = mc.getCameraEntity();
 			if (renderViewEntity instanceof PlayerEntity) {
 				PlayerEntity playerentity = (PlayerEntity) renderViewEntity;
-				float distwalked_modified = playerentity.distanceWalkedModified;
+				float distwalked_modified = playerentity.walkDist;
 
-				float f = distwalked_modified - playerentity.prevDistanceWalkedModified;
+				float f = distwalked_modified - playerentity.walkDistO;
 				float f1 = -(distwalked_modified + f * partialTicks);
-				float f2 = MathHelper.lerp(partialTicks, playerentity.prevCameraYaw, playerentity.cameraYaw);
-				Quaternion q2 = new Quaternion(Vector3f.POSITIVE_X,
+				float f2 = MathHelper.lerp(partialTicks, playerentity.oBob, playerentity.bob);
+				Quaternion q2 = new Quaternion(Vector3f.XP,
 					Math.abs(MathHelper.cos(f1 * (float) Math.PI - 0.2F) * f2) * 5.0F, true);
-				q2.conjugate();
-				result3f.func_214905_a(q2);
+				q2.conj();
+				result3f.transform(q2);
 
 				Quaternion q1 =
-					new Quaternion(Vector3f.POSITIVE_Z, MathHelper.sin(f1 * (float) Math.PI) * f2 * 3.0F, true);
-				q1.conjugate();
-				result3f.func_214905_a(q1);
+					new Quaternion(Vector3f.ZP, MathHelper.sin(f1 * (float) Math.PI) * f2 * 3.0F, true);
+				q1.conj();
+				result3f.transform(q1);
 
 				Vector3f bob_translation = new Vector3f((MathHelper.sin(f1 * (float) Math.PI) * f2 * 0.5F),
 					(-Math.abs(MathHelper.cos(f1 * (float) Math.PI) * f2)), 0.0f);
-				bob_translation.setY(-bob_translation.getY()); // this is weird but hey, if it works
+				bob_translation.setY(-bob_translation.y()); // this is weird but hey, if it works
 				result3f.add(bob_translation);
 			}
 		}
 
 		// ----- adjust for fov -----
-		float fov = (float) mc.gameRenderer.getFOVModifier(ari, partialTicks, true);
+		float fov = (float) mc.gameRenderer.getFov(ari, partialTicks, true);
 
 		float half_height = (float) mc.getWindow()
-			.getScaledHeight() / 2;
-		float scale_factor = half_height / (result3f.getZ() * (float) Math.tan(Math.toRadians(fov / 2)));
-		return new Vector3d(-result3f.getX() * scale_factor, result3f.getY() * scale_factor, result3f.getZ());
+			.getGuiScaledHeight() / 2;
+		float scale_factor = half_height / (result3f.z() * (float) Math.tan(Math.toRadians(fov / 2)));
+		return new Vector3d(-result3f.x() * scale_factor, result3f.y() * scale_factor, result3f.z());
 	}
 
 }

@@ -24,41 +24,41 @@ public class FluidReactions {
 		AllTriggers.triggerForNearbyPlayers(AllTriggers.PIPE_COLLISION, world, pos, 5);
 
 		if (f1 == Fluids.WATER && f2 == Fluids.LAVA || f2 == Fluids.WATER && f1 == Fluids.LAVA)
-			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
 		else if (f1 == Fluids.LAVA && FluidHelper.hasBlockState(f2)) {
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(FluidHelper.convertToFlowing(f2)
-				.getDefaultState());
+				.defaultFluidState());
 			if (lavaInteraction != null)
-				world.setBlockState(pos, lavaInteraction);
+				world.setBlockAndUpdate(pos, lavaInteraction);
 		} else if (f2 == Fluids.LAVA && FluidHelper.hasBlockState(f1)) {
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(FluidHelper.convertToFlowing(f1)
-				.getDefaultState());
+				.defaultFluidState());
 			if (lavaInteraction != null)
-				world.setBlockState(pos, lavaInteraction);
+				world.setBlockAndUpdate(pos, lavaInteraction);
 		}
 	}
 
 	public static void handlePipeSpillCollision(World world, BlockPos pos, Fluid pipeFluid, FluidState worldFluid) {
 		Fluid pf = FluidHelper.convertToStill(pipeFluid);
-		Fluid wf = worldFluid.getFluid();
-		if (pf.isIn(FluidTags.WATER) && wf == Fluids.LAVA)
-			world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+		Fluid wf = worldFluid.getType();
+		if (pf.is(FluidTags.WATER) && wf == Fluids.LAVA)
+			world.setBlockAndUpdate(pos, Blocks.OBSIDIAN.defaultBlockState());
 		else if (pf == Fluids.WATER && wf == Fluids.FLOWING_LAVA)
-			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
 		else if (pf == Fluids.LAVA && wf == Fluids.WATER)
-			world.setBlockState(pos, Blocks.STONE.getDefaultState());
+			world.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
 		else if (pf == Fluids.LAVA && wf == Fluids.FLOWING_WATER)
-			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+			world.setBlockAndUpdate(pos, Blocks.COBBLESTONE.defaultBlockState());
 
 		if (pf == Fluids.LAVA) {
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(worldFluid);
 			if (lavaInteraction != null)
-				world.setBlockState(pos, lavaInteraction);
+				world.setBlockAndUpdate(pos, lavaInteraction);
 		} else if (wf == Fluids.FLOWING_LAVA && FluidHelper.hasBlockState(pf)) {
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(FluidHelper.convertToFlowing(pf)
-				.getDefaultState());
+				.defaultFluidState());
 			if (lavaInteraction != null)
-				world.setBlockState(pos, lavaInteraction);
+				world.setBlockAndUpdate(pos, lavaInteraction);
 		}
 	}
 

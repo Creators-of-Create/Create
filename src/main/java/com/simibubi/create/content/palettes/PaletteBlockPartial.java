@@ -95,7 +95,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected StairsBlock createBlock(Supplier<? extends Block> block) {
 			return new StairsBlock(() -> block.get()
-				.getDefaultState(), Properties.from(block.get()));
+				.defaultBlockState(), Properties.copy(block.get()));
 		}
 
 		@Override
@@ -135,7 +135,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected SlabBlock createBlock(Supplier<? extends Block> block) {
-			return new SlabBlock(Properties.from(block.get()));
+			return new SlabBlock(Properties.copy(block.get()));
 		}
 
 		@Override
@@ -186,7 +186,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		protected BlockBuilder<SlabBlock, CreateRegistrate> transformBlock(
 				BlockBuilder<SlabBlock, CreateRegistrate> builder,
 				String variantName, PaletteBlockPattern pattern) {
-			builder.loot((lt, block) -> lt.registerLootTable(block, RegistrateBlockLootTables.droppingSlab(block)));
+			builder.loot((lt, block) -> lt.add(block, RegistrateBlockLootTables.droppingSlab(block)));
 			return super.transformBlock(builder, variantName, pattern);
 		}
 
@@ -200,7 +200,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected WallBlock createBlock(Supplier<? extends Block> block) {
-			return new WallBlock(Properties.from(block.get()));
+			return new WallBlock(Properties.copy(block.get()));
 		}
 
 		@Override

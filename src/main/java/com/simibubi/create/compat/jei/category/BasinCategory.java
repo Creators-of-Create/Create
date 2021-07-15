@@ -51,9 +51,9 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE))
-			itemIngredients.add(Ingredient.fromItems(AllBlocks.BLAZE_BURNER.get()));
+			itemIngredients.add(Ingredient.of(AllBlocks.BLAZE_BURNER.get()));
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED))
-			itemIngredients.add(Ingredient.fromItems(AllItems.BLAZE_CAKE.get()));
+			itemIngredients.add(Ingredient.of(AllItems.BLAZE_CAKE.get()));
 
 		ingredients.setInputIngredients(itemIngredients);
 		ingredients.setInputLists(VanillaTypes.FLUID, recipe.getFluidIngredients()
@@ -62,7 +62,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			.collect(Collectors.toList()));
 		if (!recipe.getRollableResults()
 			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		if (!recipe.getFluidResults()
 			.isEmpty())
 			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
@@ -97,7 +97,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			Ingredient ingredient = pair.getFirst();
 			MutableInt amount = pair.getSecond();
 
-			for (ItemStack itemStack : ingredient.getMatchingStacks()) {
+			for (ItemStack itemStack : ingredient.getItems()) {
 				ItemStack stack = itemStack.copy();
 				stack.setCount(amount.getValue());
 				stacks.add(stack);
@@ -117,7 +117,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		if (!itemOutput.isEmpty()) {
 			itemStacks.init(i, false, 141, 50 + yOffset);
-			itemStacks.set(i, recipe.getRecipeOutput()
+			itemStacks.set(i, recipe.getResultItem()
 				.getStack());
 			yOffset -= 19;
 		}
@@ -165,7 +165,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.draw(matrixStack, 4, 80);
-		Minecraft.getInstance().fontRenderer.draw(matrixStack, Lang.translate(requiredHeat.getTranslationKey()), 9,
+		Minecraft.getInstance().font.draw(matrixStack, Lang.translate(requiredHeat.getTranslationKey()), 9,
 			86, requiredHeat.getColor());
 	}
 

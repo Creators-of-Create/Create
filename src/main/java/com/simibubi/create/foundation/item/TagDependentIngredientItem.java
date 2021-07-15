@@ -8,6 +8,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
+import net.minecraft.item.Item.Properties;
+
 public class TagDependentIngredientItem extends Item {
 
 	private ResourceLocation tag;
@@ -18,15 +20,15 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 		if (!shouldHide())
-			super.fillItemGroup(p_150895_1_, p_150895_2_);
+			super.fillItemCategory(p_150895_1_, p_150895_2_);
 	}
 
 	public boolean shouldHide() {
-		ITag<?> tag = ItemTags.getCollection()
-			.get(this.tag);
-		return tag == null || tag.values()
+		ITag<?> tag = ItemTags.getAllTags()
+			.getTag(this.tag);
+		return tag == null || tag.getValues()
 			.isEmpty();
 	}
 

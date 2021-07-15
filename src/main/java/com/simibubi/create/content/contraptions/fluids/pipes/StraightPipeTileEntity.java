@@ -15,6 +15,8 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
+
 public class StraightPipeTileEntity extends SmartTileEntity {
 
 	public StraightPipeTileEntity(TileEntityType<?> tileEntityTypeIn) {
@@ -35,14 +37,14 @@ public class StraightPipeTileEntity extends SmartTileEntity {
 
 		@Override
 		public boolean canHaveFlowToward(BlockState state, Direction direction) {
-			return state.contains(AxisPipeBlock.AXIS) && state.get(AxisPipeBlock.AXIS) == direction.getAxis();
+			return state.hasProperty(AxisPipeBlock.AXIS) && state.getValue(AxisPipeBlock.AXIS) == direction.getAxis();
 		}
 
 		@Override
 		public AttachmentTypes getRenderedRimAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state,
 			Direction direction) {
 			AttachmentTypes attachment = super.getRenderedRimAttachment(world, pos, state, direction);
-			BlockState otherState = world.getBlockState(pos.offset(direction));
+			BlockState otherState = world.getBlockState(pos.relative(direction));
 
 			Axis axis = IAxisPipe.getAxisOf(state);
 			Axis otherAxis = IAxisPipe.getAxisOf(otherState);

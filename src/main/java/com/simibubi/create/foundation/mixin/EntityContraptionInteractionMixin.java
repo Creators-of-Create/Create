@@ -44,27 +44,27 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	@Final
 	@Shadow
-	protected Random rand;
+	protected Random rand; // levelRenderer
 
 	@Shadow
-	private float nextStepDistance;
+	private float nextStepDistance; // levelRenderer
 
 	@Shadow
-	protected abstract float determineNextStepDistance();
+	protected abstract float determineNextStepDistance(); // nextStep()F
 
 	@Shadow
-	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
+	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_); // nextStep()F
 
 	private Set<AbstractContraptionEntity> getIntersectingContraptions() {
-		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(self.world)
+		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(self.level)
 			.values()
 			.stream()
 			.map(Reference::get)
 			.filter(cEntity -> cEntity != null && cEntity.collidingEntities.containsKey(self))
 			.collect(Collectors.toSet());
 
-		contraptions.addAll(self.world.getEntitiesWithinAABB(AbstractContraptionEntity.class, self.getBoundingBox()
-			.grow(1f)));
+		contraptions.addAll(self.level.getEntitiesOfClass(AbstractContraptionEntity.class, self.getBoundingBox()
+			.inflate(1f)));
 		return contraptions;
 	}
 
@@ -87,9 +87,9 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	}
 
 	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
-		ordinal = 4), method = "move")
+		ordinal = 4), method = "move") // nextStep()F
 	private void movementMixin(MoverType mover, Vector3d movement, CallbackInfo ci) {
-		Vector3d worldPos = self.getPositionVec()
+		Vector3d worldPos = self.position()
 			.add(0, -0.2, 0);
 		AtomicBoolean stepped = new AtomicBoolean(false);
 
@@ -104,25 +104,25 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 			this.nextStepDistance = this.determineNextStepDistance();
 	}
 
-	@Inject(method = { "spawnSprintingParticles" }, at = @At(value = "TAIL"))
+	@Inject(method = { "spawnSprintingParticles" }, at = @At(value = "TAIL")) // spawnSprintParticle()V
 	private void createRunningParticlesMixin(CallbackInfo ci) {
-		Vector3d worldPos = self.getPositionVec()
+		Vector3d worldPos = self.position()
 			.add(0, -0.2, 0);
 		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
-			if (!blockstate.addRunningEffects(self.world, blockpos, self)
-				&& blockstate.getRenderType() != BlockRenderType.INVISIBLE) {
-				Vector3d vec3d = self.getMotion();
-				self.world.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
-					self.getX() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(), self.getY() + 0.1D,
-					self.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) self.getWidth(), vec3d.x * -4.0D, 1.5D,
+			if (!blockstate.addRunningEffects(self.level, blockpos, self)
+				&& blockstate.getRenderShape() != BlockRenderType.INVISIBLE) {
+				Vector3d vec3d = self.getDeltaMovement();
+				self.level.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
+					self.getX() + ((double) rand.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,
+					self.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) self.getBbWidth(), vec3d.x * -4.0D, 1.5D,
 					vec3d.z * -4.0D);
 			}
 		});
 	}
 
-	@Inject(method = "playSound", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "playSound", at = @At("HEAD"), cancellable = true) // playSound(Lnet/minecraft/util/SoundEvent;FF)V
 	private void playSoundShifted(SoundEvent event, float pitch, float volume, CallbackInfo ci) {
 		if (this.contraption != null && (!self.isSilent() || self instanceof PlayerEntity)) {
 			double x = self.getX();
@@ -132,7 +132,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 			worldPos = worldPos.add(x, y, z);
 
-			self.world.playSound(null, worldPos.x + x, worldPos.y + y, worldPos.z + z, event, self.getSoundCategory(),
+			self.level.playSound(null, worldPos.x + x, worldPos.y + y, worldPos.z + z, event, self.getSoundSource(),
 				pitch, volume);
 
 			ci.cancel();

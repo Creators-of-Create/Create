@@ -31,7 +31,7 @@ public class ToggleLatchGenerator extends AbstractDiodeGenerator {
 
 	@Override
 	int getModelIndex(BlockState state) {
-		return (state.get(ToggleLatchBlock.POWERING) ? 2 : 0) + (state.get(ToggleLatchBlock.POWERED) ? 1 : 0);
+		return (state.getValue(ToggleLatchBlock.POWERING) ? 2 : 0) + (state.getValue(ToggleLatchBlock.POWERED) ? 1 : 0);
 	}
 
 }

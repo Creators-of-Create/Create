@@ -26,21 +26,21 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 	}
 
 	public ConfigureSchematicannonPacket(PacketBuffer buffer) {
-		this(buffer.readEnumValue(Option.class), buffer.readBoolean());
+		this(buffer.readEnum(Option.class), buffer.readBoolean());
 	}
 
 	public void write(PacketBuffer buffer) {
-		buffer.writeEnumValue(option);
+		buffer.writeEnum(option);
 		buffer.writeBoolean(set);
 	}
 
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			ServerPlayerEntity player = context.get().getSender();
-			if (player == null || !(player.openContainer instanceof SchematicannonContainer))
+			if (player == null || !(player.containerMenu instanceof SchematicannonContainer))
 				return;
 
-			SchematicannonTileEntity te = ((SchematicannonContainer) player.openContainer).getTileEntity();
+			SchematicannonTileEntity te = ((SchematicannonContainer) player.containerMenu).getTileEntity();
 			switch (option) {
 			case DONT_REPLACE:
 			case REPLACE_ANY:

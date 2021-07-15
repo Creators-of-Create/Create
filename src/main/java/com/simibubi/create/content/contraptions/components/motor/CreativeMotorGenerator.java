@@ -14,20 +14,20 @@ public class CreativeMotorGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.get(CreativeMotorBlock.FACING) == Direction.DOWN ? 180 : 0;
+		return state.getValue(CreativeMotorBlock.FACING) == Direction.DOWN ? 180 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return state.get(CreativeMotorBlock.FACING)
+		return state.getValue(CreativeMotorBlock.FACING)
 			.getAxis()
-			.isVertical() ? 0 : horizontalAngle(state.get(CreativeMotorBlock.FACING));
+			.isVertical() ? 0 : horizontalAngle(state.getValue(CreativeMotorBlock.FACING));
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		return state.get(CreativeMotorBlock.FACING)
+		return state.getValue(CreativeMotorBlock.FACING)
 			.getAxis()
 			.isVertical() ? AssetLookup.partialBaseModel(ctx, prov, "vertical")
 				: AssetLookup.partialBaseModel(ctx, prov);

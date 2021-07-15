@@ -10,7 +10,7 @@ import net.minecraft.block.material.PushReaction;
 @MethodsReturnNonnullByDefault
 public class SharedProperties {
 	public static Material beltMaterial =
-		new Material(MaterialColor.GRAY, false, true, true, true, false, false, PushReaction.NORMAL);
+		new Material(MaterialColor.COLOR_GRAY, false, true, true, true, false, false, PushReaction.NORMAL);
 
 	public static Block stone() {
 		return Blocks.ANDESITE;

@@ -25,16 +25,16 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 	}
 
 	public CConfigureConfigPacket(PacketBuffer buffer) {
-		this.modID = buffer.readString(32767);
-		this.path = buffer.readString(32767);
-		this.value = buffer.readString(32767);
+		this.modID = buffer.readUtf(32767);
+		this.path = buffer.readUtf(32767);
+		this.value = buffer.readUtf(32767);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
-		buffer.writeString(modID);
-		buffer.writeString(path);
-		buffer.writeString(value);
+		buffer.writeUtf(modID);
+		buffer.writeUtf(path);
+		buffer.writeUtf(value);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 		context.get().enqueueWork(() -> {
 			try {
 				ServerPlayerEntity sender = context.get().getSender();
-				if (sender == null || !sender.hasPermissionLevel(2))
+				if (sender == null || !sender.hasPermissions(2))
 					return;
 
 				ForgeConfigSpec spec = ConfigHelper.findConfigSpecFor(ModConfig.Type.SERVER, modID);

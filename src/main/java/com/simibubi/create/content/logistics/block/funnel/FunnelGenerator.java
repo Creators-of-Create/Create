@@ -29,21 +29,21 @@ public class FunnelGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.get(FunnelBlock.FACING) == Direction.DOWN ? 180 : 0;
+		return state.getValue(FunnelBlock.FACING) == Direction.DOWN ? 180 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(FunnelBlock.FACING)) + 180;
+		return horizontalAngle(state.getValue(FunnelBlock.FACING)) + 180;
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> c, RegistrateBlockstateProvider p,
 		BlockState s) {
-		String powered = s.get(FunnelBlock.POWERED) ? "_powered" : "";
-		String closed = s.get(FunnelBlock.POWERED) ? "_closed" : "_open";
-		String extracting = s.get(FunnelBlock.EXTRACTING) ? "_push" : "_pull";
-		Direction facing = s.get(FunnelBlock.FACING);
+		String powered = s.getValue(FunnelBlock.POWERED) ? "_powered" : "";
+		String closed = s.getValue(FunnelBlock.POWERED) ? "_closed" : "_open";
+		String extracting = s.getValue(FunnelBlock.EXTRACTING) ? "_push" : "_pull";
+		Direction facing = s.getValue(FunnelBlock.FACING);
 		boolean horizontal = facing.getAxis()
 			.isHorizontal();
 		String parent = horizontal ? "horizontal" : hasFilter ? "vertical" : "vertical_filterless";

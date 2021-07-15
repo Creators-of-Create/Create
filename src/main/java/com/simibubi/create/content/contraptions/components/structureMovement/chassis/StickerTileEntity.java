@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -39,26 +40,26 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			return;
 		piston.startWithValue(isBlockStateExtended() ? 1 : 0);
 	}
 
 	public boolean isBlockStateExtended() {
 		BlockState blockState = getBlockState();
-		boolean extended = AllBlocks.STICKER.has(blockState) && blockState.get(StickerBlock.EXTENDED);
+		boolean extended = AllBlocks.STICKER.has(blockState) && blockState.getValue(StickerBlock.EXTENDED);
 		return extended;
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			return;
 		piston.tickChaser();
 
 		if (isAttachedToBlock() && piston.getValue(0) != piston.getValue() && piston.getValue() == 1) {
-			SuperGlueItem.spawnParticles(world, pos, getBlockState().get(StickerBlock.FACING), true);
+			SuperGlueItem.spawnParticles(level, worldPosition, getBlockState().getValue(StickerBlock.FACING), true);
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(true));
 		}
 
@@ -77,8 +78,8 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.STICKER.has(blockState))
 			return false;
-		Direction direction = blockState.get(StickerBlock.FACING);
-		return SuperGlueEntity.isValidFace(world, pos.offset(direction), direction.getOpposite());
+		Direction direction = blockState.getValue(StickerBlock.FACING);
+		return SuperGlueEntity.isValidFace(level, worldPosition.relative(direction), direction.getOpposite());
 	}
 
 	@Override
@@ -90,7 +91,8 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 
 	@OnlyIn(Dist.CLIENT)
 	public void playSound(boolean attach) {
-		AllSoundEvents.SLIME_ADDED.play(world, Minecraft.getInstance().player, pos, 0.35f, attach ? 0.75f : 0.2f);
+		AllSoundEvents.SLIME_ADDED.play(level, Minecraft.getInstance().player, worldPosition, 0.35f, attach ? 0.75f : 0.2f);
 	}
+
 
 }

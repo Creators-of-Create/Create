@@ -72,9 +72,9 @@ public interface IRotate extends IWrenchable {
 			level.append(" (" + IHaveGoggleInformation.format(Math.abs(speed))).append(Lang.translate("generic.unit.rpm")).append(") ");
 
 			if (overstressed)
-				level.formatted(TextFormatting.DARK_GRAY, TextFormatting.STRIKETHROUGH);
+				level.withStyle(TextFormatting.DARK_GRAY, TextFormatting.STRIKETHROUGH);
 			else
-				level.formatted(speedLevel.getTextColor());
+				level.withStyle(speedLevel.getTextColor());
 
 			return level;
 		}
@@ -115,7 +115,7 @@ public interface IRotate extends IWrenchable {
 
 			level.append(String.format(" (%s%%) ", (int) (stressPercent * 100)));
 
-			return level.formatted(color);
+			return level.withStyle(color);
 		}
 	}
 

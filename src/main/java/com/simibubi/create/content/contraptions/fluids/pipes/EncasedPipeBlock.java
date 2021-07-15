@@ -38,24 +38,26 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement {
 
-	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = SixWayBlock.FACING_TO_PROPERTY_MAP;
+	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = SixWayBlock.PROPERTY_BY_DIRECTION;
 
 	public EncasedPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
-		setDefaultState(getDefaultState().with(NORTH, false)
-			.with(SOUTH, false)
-			.with(DOWN, false)
-			.with(UP, false)
-			.with(WEST, false)
-			.with(EAST, false));
+		registerDefaultState(defaultBlockState().setValue(NORTH, false)
+			.setValue(SOUTH, false)
+			.setValue(DOWN, false)
+			.setValue(UP, false)
+			.setValue(WEST, false)
+			.setValue(EAST, false));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
@@ -64,18 +66,18 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isRemote)
+		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (!world.isRemote && state != oldState)
-			world.getPendingBlockTicks()
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (!world.isClientSide && state != oldState)
+			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
@@ -88,18 +90,18 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.func_218806_a(world, pos);
+		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
-		if (!state.get(FACING_TO_PROPERTY_MAP.get(d)))
+		if (!state.getValue(FACING_TO_PROPERTY_MAP.get(d)))
 			return;
-		world.getPendingBlockTicks()
+		world.getBlockTicks()
 			.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
@@ -110,25 +112,25 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 
-		context.getWorld()
-			.playEvent(2001, context.getPos(), Block.getStateId(state));
+		context.getLevel()
+			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
 		BlockState equivalentPipe = transferSixWayProperties(state, AllBlocks.FLUID_PIPE.getDefaultState());
 
 		Direction firstFound = Direction.UP;
 		for (Direction d : Iterate.directions)
-			if (state.get(FACING_TO_PROPERTY_MAP.get(d))) {
+			if (state.getValue(FACING_TO_PROPERTY_MAP.get(d))) {
 				firstFound = d;
 				break;
 			}
 
 		FluidTransportBehaviour.cacheFlows(world, pos);
-		world.setBlockState(pos, AllBlocks.FLUID_PIPE.get()
+		world.setBlockAndUpdate(pos, AllBlocks.FLUID_PIPE.get()
 			.updateBlockState(equivalentPipe, firstFound, null, world, pos));
 		FluidTransportBehaviour.loadFlows(world, pos);
 		return ActionResultType.SUCCESS;
@@ -137,7 +139,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	public static BlockState transferSixWayProperties(BlockState from, BlockState to) {
 		for (Direction d : Iterate.directions) {
 			BooleanProperty property = FACING_TO_PROPERTY_MAP.get(d);
-			to = to.with(property, from.get(property));
+			to = to.setValue(property, from.getValue(property));
 		}
 		return to;
 	}

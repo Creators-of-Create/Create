@@ -73,7 +73,7 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 		nbt.putFloat("PrevOffset", prevSideOffset);
 		nbt.putInt("InSegment", insertedAt);
 		nbt.putInt("Angle", angle);
-		nbt.putInt("InDirection", insertedFrom.getIndex());
+		nbt.putInt("InDirection", insertedFrom.get3DDataValue());
 		if (locked)
 			nbt.putBoolean("Locked", locked);
 		if (lockedExternally)
@@ -82,14 +82,14 @@ public class TransportedItemStack implements Comparable<TransportedItemStack> {
 	}
 
 	public static TransportedItemStack read(CompoundNBT nbt) {
-		TransportedItemStack stack = new TransportedItemStack(ItemStack.read(nbt.getCompound("Item")));
+		TransportedItemStack stack = new TransportedItemStack(ItemStack.of(nbt.getCompound("Item")));
 		stack.beltPosition = nbt.getFloat("Pos");
 		stack.prevBeltPosition = nbt.getFloat("PrevPos");
 		stack.sideOffset = nbt.getFloat("Offset");
 		stack.prevSideOffset = nbt.getFloat("PrevOffset");
 		stack.insertedAt = nbt.getInt("InSegment");
 		stack.angle = nbt.getInt("Angle");
-		stack.insertedFrom = Direction.byIndex(nbt.getInt("InDirection"));
+		stack.insertedFrom = Direction.from3DDataValue(nbt.getInt("InDirection"));
 		stack.locked = nbt.getBoolean("Locked");
 		stack.lockedExternally = nbt.getBoolean("LockedExternally");
 		return stack;

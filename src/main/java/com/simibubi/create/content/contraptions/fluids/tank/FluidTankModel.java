@@ -41,7 +41,7 @@ public class FluidTankModel extends CTModel {
 	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
 		CullData cullData = new CullData();
 		for (Direction d : Iterate.horizontalDirections)
-			cullData.setCulled(d, FluidTankConnectivityHandler.isConnected(world, pos, pos.offset(d)));
+			cullData.setCulled(d, FluidTankConnectivityHandler.isConnected(world, pos, pos.relative(d)));
 		return super.gatherModelData(builder, world, pos, state).withInitial(CULL_PROPERTY, cullData);
 	}
 
@@ -73,14 +73,14 @@ public class FluidTankModel extends CTModel {
 			if (face.getAxis()
 				.isVertical())
 				return;
-			culledFaces[face.getHorizontalIndex()] = cull;
+			culledFaces[face.get2DDataValue()] = cull;
 		}
 
 		boolean isCulled(Direction face) {
 			if (face.getAxis()
 				.isVertical())
 				return false;
-			return culledFaces[face.getHorizontalIndex()];
+			return culledFaces[face.get2DDataValue()];
 		}
 	}
 

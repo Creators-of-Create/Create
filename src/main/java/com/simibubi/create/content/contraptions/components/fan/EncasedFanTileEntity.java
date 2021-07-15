@@ -78,11 +78,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		if (!AllBlocks.ENCASED_FAN.has(blockState))
 			shouldGenerate = false;
 
-		if (shouldGenerate && blockState.get(EncasedFanBlock.FACING) != Direction.DOWN)
+		if (shouldGenerate && blockState.getValue(EncasedFanBlock.FACING) != Direction.DOWN)
 			shouldGenerate = false;
 
 		if (shouldGenerate)
-			shouldGenerate = world != null && world.isBlockPowered(pos) && world.isBlockPresent(pos.down()) && blockBelowIsHot();
+			shouldGenerate = level != null && level.hasNeighborSignal(worldPosition) && level.isLoaded(worldPosition.below()) && blockBelowIsHot();
 
 		if (shouldGenerate == isGenerator)
 			return;
@@ -91,19 +91,19 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	}
 
 	public boolean blockBelowIsHot() {
-		if (world == null)
+		if (level == null)
 			return false;
-		BlockState checkState = world.getBlockState(pos.down());
+		BlockState checkState = level.getBlockState(worldPosition.below());
 
 		if (!checkState.getBlock()
-			.isIn(AllBlockTags.FAN_HEATERS.tag))
+			.is(AllBlockTags.FAN_HEATERS.tag))
 			return false;
 
-		if (checkState.contains(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.get(BlazeBurnerBlock.HEAT_LEVEL)
+		if (checkState.hasProperty(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.getValue(BlazeBurnerBlock.HEAT_LEVEL)
 			.isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
 			return false;
 
-		if (checkState.contains(BlockStateProperties.LIT) && !checkState.get(BlockStateProperties.LIT))
+		if (checkState.hasProperty(BlockStateProperties.LIT) && !checkState.getValue(BlockStateProperties.LIT))
 			return false;
 
 		return true;
@@ -117,18 +117,18 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	@Nullable
 	@Override
 	public World getAirCurrentWorld() {
-		return world;
+		return level;
 	}
 
 	@Override
 	public BlockPos getAirCurrentPos() {
-		return pos;
+		return worldPosition;
 	}
 
 	@Override
 	public Direction getAirflowOriginSide() {
 		return this.getBlockState()
-			.get(EncasedFanBlock.FACING);
+			.getValue(EncasedFanBlock.FACING);
 	}
 
 	@Override
@@ -136,14 +136,14 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		float speed = getSpeed();
 		if (speed == 0)
 			return null;
-		Direction facing = getBlockState().get(BlockStateProperties.FACING);
+		Direction facing = getBlockState().getValue(BlockStateProperties.FACING);
 		speed = convertToDirection(speed, facing);
 		return speed > 0 ? facing : facing.getOpposite();
 	}
 
 	@Override
 	public boolean isSourceRemoved() {
-		return removed;
+		return remove;
 	}
 
 	@Override
@@ -154,11 +154,11 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	}
 
 	public void updateChute() {
-		Direction direction = getBlockState().get(EncasedFanBlock.FACING);
+		Direction direction = getBlockState().getValue(EncasedFanBlock.FACING);
 		if (!direction.getAxis()
 			.isVertical())
 			return;
-		TileEntity poweredChute = world.getTileEntity(pos.offset(direction));
+		TileEntity poweredChute = level.getBlockEntity(worldPosition.relative(direction));
 		if (!(poweredChute instanceof ChuteTileEntity))
 			return;
 		ChuteTileEntity chuteTE = (ChuteTileEntity) poweredChute;
@@ -176,7 +176,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	public void tick() {
 		super.tick();
 
-		boolean server = !world.isRemote || isVirtual();
+		boolean server = !level.isClientSide || isVirtual();
 		
 		if (server && airCurrentUpdateCooldown-- <= 0) {
 			airCurrentUpdateCooldown = AllConfigs.SERVER.kinetics.fanBlockCheckRate.get();

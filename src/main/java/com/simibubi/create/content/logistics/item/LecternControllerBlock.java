@@ -25,16 +25,18 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class LecternControllerBlock extends LecternBlock implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement {
 
 	public LecternControllerBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(HAS_BOOK, true));
+		registerDefaultState(defaultBlockState().setValue(HAS_BOOK, true));
 	}
 
 	@Nullable
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader p_196283_1_) {
+	public TileEntity newBlockEntity(IBlockReader p_196283_1_) {
 		return null;
 	}
 
@@ -50,15 +52,15 @@ public class LecternControllerBlock extends LecternBlock implements ITE<LecternC
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!player.isSneaking() && LecternControllerTileEntity.playerInRange(player, world, pos)) {
-			if (!world.isRemote)
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		if (!player.isShiftKeyDown() && LecternControllerTileEntity.playerInRange(player, world, pos)) {
+			if (!world.isClientSide)
 				withTileEntityDo(world, pos, te -> te.tryStartUsing(player));
 			return ActionResultType.SUCCESS;
 		}
 
-		if (player.isSneaking()) {
-			if (!world.isRemote)
+		if (player.isShiftKeyDown()) {
+			if (!world.isClientSide)
 				replaceWithLectern(state, world, pos);
 			return ActionResultType.SUCCESS;
 		}
@@ -67,32 +69,32 @@ public class LecternControllerBlock extends LecternBlock implements ITE<LecternC
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.isIn(newState.getBlock())) {
-			if (!world.isRemote)
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.is(newState.getBlock())) {
+			if (!world.isClientSide)
 				withTileEntityDo(world, pos, te -> te.dropController(state));
 
-			super.onReplaced(state, world, pos, newState, isMoving);
+			super.onRemove(state, world, pos, newState, isMoving);
 		}
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos) {
 		return 15;
 	}
 
 	public void replaceLectern(BlockState lecternState, World world, BlockPos pos, ItemStack controller) {
-		world.setBlockState(pos, getDefaultState()
-			.with(FACING, lecternState.get(FACING))
-			.with(POWERED, lecternState.get(POWERED)));
+		world.setBlockAndUpdate(pos, defaultBlockState()
+			.setValue(FACING, lecternState.getValue(FACING))
+			.setValue(POWERED, lecternState.getValue(POWERED)));
 		withTileEntityDo(world, pos, te -> te.setController(controller));
 	}
 
 	public void replaceWithLectern(BlockState state, World world, BlockPos pos) {
 		AllSoundEvents.CONTROLLER_TAKE.playOnServer(world, pos);
-		world.setBlockState(pos, Blocks.LECTERN.getDefaultState()
-			.with(FACING, state.get(FACING))
-			.with(POWERED, state.get(POWERED)));
+		world.setBlockAndUpdate(pos, Blocks.LECTERN.defaultBlockState()
+			.setValue(FACING, state.getValue(FACING))
+			.setValue(POWERED, state.getValue(POWERED)));
 	}
 
 	@Override

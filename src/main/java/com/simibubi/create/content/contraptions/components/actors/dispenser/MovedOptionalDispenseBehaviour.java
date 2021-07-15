@@ -8,6 +8,6 @@ public class MovedOptionalDispenseBehaviour extends MovedDefaultDispenseItemBeha
 
 	@Override
 	protected void playDispenseSound(IWorld world, BlockPos pos) {
-		world.playEvent(this.successful ? 1000 : 1001, pos, 0);
+		world.levelEvent(this.successful ? 1000 : 1001, pos, 0);
 	}
 }

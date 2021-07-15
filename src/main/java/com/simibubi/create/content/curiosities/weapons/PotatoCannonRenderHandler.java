@@ -22,7 +22,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 
 	@Override
 	protected void playSound(Hand hand, Vector3d position) {
-		PotatoProjectileEntity.playLaunchSound(Minecraft.getInstance().world, position, nextPitch);
+		PotatoProjectileEntity.playLaunchSound(Minecraft.getInstance().level, position, nextPitch);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 		this.nextPitch = nextPitch;
 		if (stack.isEmpty())
 			return;
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		for (int i = 0; i < 2; i++) {
 			Vector3d m = VecHelper.offsetRandomly(motion.scale(0.1f), Create.RANDOM, .025f);
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), location.x, location.y, location.z, m.x,

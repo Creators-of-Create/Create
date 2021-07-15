@@ -30,10 +30,10 @@ public class ZapperInteractionHandler {
 
 	@SubscribeEvent
 	public static void leftClickingBlocksWithTheZapperSelectsTheBlock(PlayerInteractEvent.LeftClickBlock event) {
-		if (event.getWorld().isRemote)
+		if (event.getWorld().isClientSide)
 			return;
 		ItemStack heldItem = event.getPlayer()
-			.getHeldItemMainhand();
+			.getMainHandItem();
 		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer())) {
 			event.setCancellationResult(ActionResultType.FAIL);
 			event.setCanceled(true);
@@ -41,46 +41,46 @@ public class ZapperInteractionHandler {
 	}
 
 	public static boolean trySelect(ItemStack stack, PlayerEntity player) {
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return false;
 
-		Vector3d start = player.getPositionVec()
+		Vector3d start = player.position()
 			.add(0, player.getEyeHeight(), 0);
-		Vector3d range = player.getLookVec()
+		Vector3d range = player.getLookAngle()
 			.scale(getRange(stack));
-		BlockRayTraceResult raytrace = player.world
-			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
-		BlockPos pos = raytrace.getPos();
+		BlockRayTraceResult raytrace = player.level
+			.clip(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		BlockPos pos = raytrace.getBlockPos();
 		if (pos == null)
 			return false;
 
-		player.world.sendBlockBreakProgress(player.getEntityId(), pos, -1);
-		BlockState newState = player.world.getBlockState(pos);
+		player.level.destroyBlockProgress(player.getId(), pos, -1);
+		BlockState newState = player.level.getBlockState(pos);
 
 		if (BlockHelper.getRequiredItem(newState)
 			.isEmpty())
 			return false;
 		if (newState.hasTileEntity() && !AllBlockTags.SAFE_NBT.matches(newState))
 			return false;
-		if (newState.contains(BlockStateProperties.DOUBLE_BLOCK_HALF))
+		if (newState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF))
 			return false;
-		if (newState.contains(BlockStateProperties.ATTACHED))
+		if (newState.hasProperty(BlockStateProperties.ATTACHED))
 			return false;
-		if (newState.contains(BlockStateProperties.HANGING))
+		if (newState.hasProperty(BlockStateProperties.HANGING))
 			return false;
-		if (newState.contains(BlockStateProperties.BED_PART))
+		if (newState.hasProperty(BlockStateProperties.BED_PART))
 			return false;
-		if (newState.contains(BlockStateProperties.STAIRS_SHAPE))
-			newState = newState.with(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
-		if (newState.contains(BlockStateProperties.PERSISTENT))
-			newState = newState.with(BlockStateProperties.PERSISTENT, true);
-		if (newState.contains(BlockStateProperties.WATERLOGGED))
-			newState = newState.with(BlockStateProperties.WATERLOGGED, false);
+		if (newState.hasProperty(BlockStateProperties.STAIRS_SHAPE))
+			newState = newState.setValue(BlockStateProperties.STAIRS_SHAPE, StairsShape.STRAIGHT);
+		if (newState.hasProperty(BlockStateProperties.PERSISTENT))
+			newState = newState.setValue(BlockStateProperties.PERSISTENT, true);
+		if (newState.hasProperty(BlockStateProperties.WATERLOGGED))
+			newState = newState.setValue(BlockStateProperties.WATERLOGGED, false);
 
 		CompoundNBT data = null;
-		TileEntity tile = player.world.getTileEntity(pos);
+		TileEntity tile = player.level.getBlockEntity(pos);
 		if (tile != null) {
-			data = tile.write(new CompoundNBT());
+			data = tile.save(new CompoundNBT());
 			data.remove("x");
 			data.remove("y");
 			data.remove("z");
@@ -98,7 +98,7 @@ public class ZapperInteractionHandler {
 		else
 			tag.put("BlockData", data);
 
-		AllSoundEvents.CONFIRM.playOnServer(player.world, player.getBlockPos());
+		AllSoundEvents.CONFIRM.playOnServer(player.level, player.blockPosition());
 		return true;
 	}
 

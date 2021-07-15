@@ -31,24 +31,24 @@ public class SpeedControllerRenderer extends SmartTileEntityRenderer<SpeedContro
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		super.renderSafe(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
-		if (!Backend.getInstance().canUseInstancing(tileEntityIn.getWorld())) {
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		if (!Backend.getInstance().canUseInstancing(tileEntityIn.getLevel())) {
 			KineticTileEntityRenderer.renderRotatingBuffer(tileEntityIn, getRotatedModel(tileEntityIn), ms, builder, light);
 		}
 
 		if (!tileEntityIn.hasBracket)
 			return;
 
-		BlockPos pos = tileEntityIn.getPos();
-		World world = tileEntityIn.getWorld();
+		BlockPos pos = tileEntityIn.getBlockPos();
+		World world = tileEntityIn.getLevel();
 		BlockState blockState = tileEntityIn.getBlockState();
-		boolean alongX = blockState.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
+		boolean alongX = blockState.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X;
 
 		SuperByteBuffer bracket = PartialBufferer.get(AllBlockPartials.SPEED_CONTROLLER_BRACKET, blockState);
 		bracket.translate(0, 1, 0);
 		bracket.rotateCentered(Direction.UP,
 				(float) (alongX ? Math.PI : Math.PI / 2));
-		bracket.light(WorldRenderer.getLightmapCoordinates(world, pos.up()));
+		bracket.light(WorldRenderer.getLightColor(world, pos.above()));
 		bracket.renderInto(ms, builder);
 	}
 

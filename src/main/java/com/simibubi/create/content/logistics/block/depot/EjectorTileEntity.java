@@ -126,7 +126,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	protected boolean cannotLaunch() {
-		return state != State.CHARGED && !(world.isRemote && state == State.LAUNCHING);
+		return state != State.CHARGED && !(level.isClientSide && state == State.LAUNCHING);
 	}
 
 	public void activateDeferred() {
@@ -134,10 +134,10 @@ public class EjectorTileEntity extends KineticTileEntity {
 			return;
 		Direction facing = getFacing();
 		List<Entity> entities =
-			world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos).grow(-1 / 16f, 0, -1 / 16f));
+			level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f));
 
 		// Launch Items
-		boolean doLogic = !world.isRemote || isVirtual();
+		boolean doLogic = !level.isClientSide || isVirtual();
 		if (doLogic)
 			launchItems();
 
@@ -151,33 +151,33 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 			entity.onGround = false;
 
-			if (isPlayerEntity != world.isRemote)
+			if (isPlayerEntity != level.isClientSide)
 				continue;
 
-			entity.setPosition(pos.getX() + .5f, pos.getY() + 1, pos.getZ() + .5f);
+			entity.setPos(worldPosition.getX() + .5f, worldPosition.getY() + 1, worldPosition.getZ() + .5f);
 			launcher.applyMotion(entity, facing);
 
 			if (!isPlayerEntity)
 				continue;
 			PlayerEntity playerEntity = (PlayerEntity) entity;
-			if (!(playerEntity.getItemStackFromSlot(EquipmentSlotType.CHEST)
+			if (!(playerEntity.getItemBySlot(EquipmentSlotType.CHEST)
 				.getItem() instanceof ElytraItem))
 				continue;
 
-			playerEntity.rotationYaw = facing.getHorizontalAngle();
-			playerEntity.rotationPitch = -35;
-			playerEntity.setMotion(playerEntity.getMotion()
+			playerEntity.yRot = facing.toYRot();
+			playerEntity.xRot = -35;
+			playerEntity.setDeltaMovement(playerEntity.getDeltaMovement()
 				.scale(.75f));
 			deployElytra(playerEntity);
-			AllPackets.channel.sendToServer(new EjectorElytraPacket(pos));
+			AllPackets.channel.sendToServer(new EjectorElytraPacket(worldPosition));
 		}
 
 		if (doLogic) {
 			lidProgress.chase(1, .8f, Chaser.EXP);
 			state = State.LAUNCHING;
-			if (!world.isRemote) {
-				world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, .35f, 1f);
-				world.playSound(null, pos, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, .1f, 1.4f);
+			if (!level.isClientSide) {
+				level.playSound(null, worldPosition, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundCategory.BLOCKS, .35f, 1f);
+				level.playSound(null, worldPosition, SoundEvents.CHEST_OPEN, SoundCategory.BLOCKS, .1f, 1.4f);
 			}
 		}
 	}
@@ -190,7 +190,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		ItemStack heldItemStack = depotBehaviour.getHeldItemStack();
 		Direction funnelFacing = getFacing().getOpposite();
 
-		if (AbstractFunnelBlock.getFunnelFacing(world.getBlockState(pos.up())) == funnelFacing) {
+		if (AbstractFunnelBlock.getFunnelFacing(level.getBlockState(worldPosition.above())) == funnelFacing) {
 			DirectBeltInputBehaviour directOutput = getBehaviour(DirectBeltInputBehaviour.TYPE);
 
 			if (depotBehaviour.heldItem != null) {
@@ -199,7 +199,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 					;
 				else if (remainder.isEmpty())
 					depotBehaviour.removeHeldItem();
-				else if (!remainder.isItemEqual(heldItemStack))
+				else if (!remainder.sameItem(heldItemStack))
 					depotBehaviour.heldItem.stack = remainder;
 			}
 
@@ -211,7 +211,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 					;
 				else if (remainder.isEmpty())
 					iterator.remove();
-				else if (!remainder.isItemEqual(stack))
+				else if (!remainder.sameItem(stack))
 					transportedItemStack.stack = remainder;
 			}
 
@@ -225,14 +225,14 @@ public class EjectorTileEntity extends KineticTileEntity {
 			return;
 		}
 
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			for (Direction d : Iterate.directions) {
-				BlockState blockState = world.getBlockState(pos.offset(d));
+				BlockState blockState = level.getBlockState(worldPosition.relative(d));
 				if (!(blockState.getBlock() instanceof ObserverBlock))
 					continue;
-				if (blockState.get(ObserverBlock.FACING) != d.getOpposite())
+				if (blockState.getValue(ObserverBlock.FACING) != d.getOpposite())
 					continue;
-				blockState.updatePostPlacement(d.getOpposite(), blockState, world, pos.offset(d), pos);
+				blockState.updateShape(d.getOpposite(), blockState, level, worldPosition.relative(d), worldPosition);
 			}
 
 		if (depotBehaviour.heldItem != null) {
@@ -253,7 +253,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	protected boolean addToLaunchedItems(ItemStack stack) {
-		if ((!world.isRemote || isVirtual()) && trackedItem == null && scanCooldown == 0) {
+		if ((!level.isClientSide || isVirtual()) && trackedItem == null && scanCooldown == 0) {
 			scanCooldown = AllConfigs.SERVER.kinetics.ejectorScanInterval.get();
 			trackedItem = stack;
 		}
@@ -264,7 +264,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.WEIGHTED_EJECTOR.has(blockState))
 			return Direction.UP;
-		Direction facing = blockState.get(EjectorBlock.HORIZONTAL_FACING);
+		Direction facing = blockState.getValue(EjectorBlock.HORIZONTAL_FACING);
 		return facing;
 	}
 
@@ -272,7 +272,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	public void tick() {
 		super.tick();
 
-		boolean doLogic = !world.isRemote || isVirtual();
+		boolean doLogic = !level.isClientSide || isVirtual();
 		State prevState = state;
 		float totalTime = Math.max(3, (float) launcher.getTotalFlyingTicks());
 
@@ -331,8 +331,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 				int soundRate = (int) (1 / (getWindUpSpeed() * 5)) + 1;
 				float volume = .125f;
 				float pitch = 1.5f - lidProgress.getValue();
-				if (((int) world.getGameTime()) % soundRate == 0 && doLogic)
-					world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, volume,
+				if (((int) level.getGameTime()) % soundRate == 0 && doLogic)
+					level.playSound(null, worldPosition, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundCategory.BLOCKS, volume,
 						pitch);
 			}
 		}
@@ -349,7 +349,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		Vector3d target = getLaunchedItemLocation(time + 1);
 
 		BlockRayTraceResult rayTraceBlocks =
-			world.rayTraceBlocks(new RayTraceContext(source, target, BlockMode.COLLIDER, FluidMode.NONE, null));
+			level.clip(new RayTraceContext(source, target, BlockMode.COLLIDER, FluidMode.NONE, null));
 		if (rayTraceBlocks.getType() == Type.MISS) {
 			if (earlyTarget != null && earlyTargetTime < time + 1) {
 				earlyTarget = null;
@@ -358,19 +358,19 @@ public class EjectorTileEntity extends KineticTileEntity {
 			return false;
 		}
 
-		Vector3d vec = rayTraceBlocks.getHitVec();
-		earlyTarget = Pair.of(vec.add(Vector3d.of(rayTraceBlocks.getFace()
-			.getDirectionVec()).scale(.25f)), rayTraceBlocks.getPos());
+		Vector3d vec = rayTraceBlocks.getLocation();
+		earlyTarget = Pair.of(vec.add(Vector3d.atLowerCornerOf(rayTraceBlocks.getDirection()
+			.getNormal()).scale(.25f)), rayTraceBlocks.getBlockPos());
 		earlyTargetTime = (float) (time + (source.distanceTo(vec) / source.distanceTo(target)));
 		sendData();
 		return true;
 	}
 
 	protected void nudgeEntities() {
-		for (Entity entity : world.getEntitiesWithinAABB(Entity.class,
-			new AxisAlignedBB(pos).grow(-1 / 16f, 0, -1 / 16f)))
+		for (Entity entity : level.getEntitiesOfClass(Entity.class,
+			new AxisAlignedBB(worldPosition).inflate(-1 / 16f, 0, -1 / 16f)))
 			if (!(entity instanceof PlayerEntity))
-				entity.setPosition(entity.getX(), entity.getY() + .125f, entity.getZ());
+				entity.setPos(entity.getX(), entity.getY() + .125f, entity.getZ());
 	}
 
 	protected void ejectIfTriggered() {
@@ -386,7 +386,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		Direction funnelFacing = getFacing().getOpposite();
 		ItemStack held = depotBehaviour.getHeldItemStack();
-		if (AbstractFunnelBlock.getFunnelFacing(world.getBlockState(pos.up())) == funnelFacing) {
+		if (AbstractFunnelBlock.getFunnelFacing(level.getBlockState(worldPosition.above())) == funnelFacing) {
 			DirectBeltInputBehaviour directOutput = getBehaviour(DirectBeltInputBehaviour.TYPE);
 			if (depotBehaviour.heldItem != null) {
 				ItemStack tryFunnel = directOutput.tryExportingToBeltFunnel(held, funnelFacing, true);
@@ -425,25 +425,25 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		Vector3d ejectVec = earlyTarget != null ? earlyTarget.getFirst() : getLaunchedItemLocation(maxTime);
 		Vector3d ejectMotionVec = getLaunchedItemMotion(maxTime);
-		ItemEntity item = new ItemEntity(world, ejectVec.x, ejectVec.y, ejectVec.z, intAttached.getValue());
-		item.setMotion(ejectMotionVec);
-		item.setDefaultPickupDelay();
-		world.addEntity(item);
+		ItemEntity item = new ItemEntity(level, ejectVec.x, ejectVec.y, ejectVec.z, intAttached.getValue());
+		item.setDeltaMovement(ejectMotionVec);
+		item.setDefaultPickUpDelay();
+		level.addFreshEntity(item);
 	}
 
 	public DirectBeltInputBehaviour getTargetOpenInv() {
 		BlockPos targetPos = earlyTarget != null ? earlyTarget.getSecond()
-			: pos.up(launcher.getVerticalDistance())
-				.offset(getFacing(), Math.max(1, launcher.getHorizontalDistance()));
-		return TileEntityBehaviour.get(world, targetPos, DirectBeltInputBehaviour.TYPE);
+			: worldPosition.above(launcher.getVerticalDistance())
+				.relative(getFacing(), Math.max(1, launcher.getHorizontalDistance()));
+		return TileEntityBehaviour.get(level, targetPos, DirectBeltInputBehaviour.TYPE);
 	}
 
 	public Vector3d getLaunchedItemLocation(float time) {
-		return launcher.getGlobalPos(time, getFacing().getOpposite(), pos);
+		return launcher.getGlobalPos(time, getFacing().getOpposite(), worldPosition);
 	}
 
 	public Vector3d getLaunchedItemMotion(float time) {
-		return launcher.getGlobalVelocity(time, getFacing().getOpposite(), pos)
+		return launcher.getGlobalVelocity(time, getFacing().getOpposite(), worldPosition)
 			.scale(.5f);
 	}
 
@@ -451,11 +451,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 		for (IntAttached<ItemStack> intAttached : launchedItems) {
 			Vector3d ejectVec = getLaunchedItemLocation(intAttached.getFirst());
 			Vector3d ejectMotionVec = getLaunchedItemMotion(intAttached.getFirst());
-			ItemEntity item = new ItemEntity(world, 0, 0, 0, intAttached.getValue());
-			item.setPos(ejectVec.x, ejectVec.y, ejectVec.z);
-			item.setMotion(ejectMotionVec);
-			item.setDefaultPickupDelay();
-			world.addEntity(item);
+			ItemEntity item = new ItemEntity(level, 0, 0, 0, intAttached.getValue());
+			item.setPosRaw(ejectVec.x, ejectVec.y, ejectVec.z);
+			item.setDeltaMovement(ejectMotionVec);
+			item.setDefaultPickUpDelay();
+			level.addFreshEntity(item);
 		}
 		launchedItems.clear();
 	}
@@ -514,7 +514,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		lidProgress.readNBT(compound.getCompound("Lid"), false);
 		launchedItems = NBTHelper.readCompoundList(compound.getList("LaunchedItems", NBT.TAG_COMPOUND),
-			nbt -> IntAttached.read(nbt, ItemStack::read));
+			nbt -> IntAttached.read(nbt, ItemStack::of));
 
 		earlyTarget = null;
 		earlyTargetTime = 0;
@@ -529,7 +529,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	public void updateSignal() {
-		boolean shoudPower = world.isBlockPowered(pos);
+		boolean shoudPower = level.hasNeighborSignal(worldPosition);
 		if (shoudPower == powered)
 			return;
 		powered = shoudPower;
@@ -544,10 +544,10 @@ public class EjectorTileEntity extends KineticTileEntity {
 	public BlockPos getTargetPosition() {
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.WEIGHTED_EJECTOR.has(blockState))
-			return pos;
-		Direction facing = blockState.get(EjectorBlock.HORIZONTAL_FACING);
-		return pos.offset(facing, launcher.getHorizontalDistance())
-			.up(launcher.getVerticalDistance());
+			return worldPosition;
+		Direction facing = blockState.getValue(EjectorBlock.HORIZONTAL_FACING);
+		return worldPosition.relative(facing, launcher.getHorizontalDistance())
+			.above(launcher.getVerticalDistance());
 	}
 
 	@Override
@@ -578,8 +578,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return super.getMaxRenderDistanceSquared() * 16;
+	public double getViewDistance() {
+		return super.getViewDistance() * 16;
 	}
 
 	private static abstract class EntityHack extends Entity {
@@ -589,8 +589,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 		}
 
 		public static void setElytraFlying(Entity e) {
-			EntityDataManager data = e.getDataManager();
-			data.set(FLAGS, (byte) (data.get(FLAGS) | 1 << 7));
+			EntityDataManager data = e.getEntityData();
+			data.set(DATA_SHARED_FLAGS_ID, (byte) (data.get(DATA_SHARED_FLAGS_ID) | 1 << 7));
 		}
 
 	}
@@ -611,7 +611,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 
 		protected float angle(BlockState state) {
 			float horizontalAngle = AllBlocks.WEIGHTED_EJECTOR.has(state)
-				? AngleHelper.horizontalAngle(state.get(EjectorBlock.HORIZONTAL_FACING))
+				? AngleHelper.horizontalAngle(state.getValue(EjectorBlock.HORIZONTAL_FACING))
 				: 0;
 			return horizontalAngle;
 		}

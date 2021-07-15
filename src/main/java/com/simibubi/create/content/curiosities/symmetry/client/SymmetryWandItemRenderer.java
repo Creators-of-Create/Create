@@ -27,7 +27,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 		float angle = worldTime * -10 % 360;
 
 		ms.translate(0, floating, 0);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
+		ms.mulPose(Vector3f.YP.rotationDegrees(angle));
 
 		renderer.renderGlowing(model.getPartial("bits"), maxLight);
 	}

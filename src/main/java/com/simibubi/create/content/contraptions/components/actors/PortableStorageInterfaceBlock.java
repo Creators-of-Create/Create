@@ -18,6 +18,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
@@ -57,22 +59,22 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getNearestLookingDirection()
+		return defaultBlockState().setValue(FACING, context.getNearestLookingDirection()
 			.getOpposite());
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.PORTABLE_STORAGE_INTERFACE.get(state.get(FACING));
+		return AllShapes.PORTABLE_STORAGE_INTERFACE.get(state.getValue(FACING));
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
 		return getTileEntityOptional(worldIn, pos).map(te -> te.isConnected() ? 15 : 0)
 			.orElse(0);
 	}

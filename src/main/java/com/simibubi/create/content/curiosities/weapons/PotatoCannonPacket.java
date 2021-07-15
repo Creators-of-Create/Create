@@ -32,7 +32,7 @@ public class PotatoCannonPacket extends ShootGadgetPacket {
 	protected void readAdditional(PacketBuffer buffer) {
 		pitch = buffer.readFloat();
 		motion = new Vector3d(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
-		item = buffer.readItemStack();
+		item = buffer.readItem();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class PotatoCannonPacket extends ShootGadgetPacket {
 		buffer.writeFloat((float) motion.x);
 		buffer.writeFloat((float) motion.y);
 		buffer.writeFloat((float) motion.z);
-		buffer.writeItemStack(item);
+		buffer.writeItem(item);
 	}
 
 	@Override

@@ -107,7 +107,7 @@ public class PonderScene {
 		schedule = new ArrayList<>();
 		activeSchedule = new ArrayList<>();
 		transform = new SceneTransform();
-		basePlateSize = getBounds().getXSize();
+		basePlateSize = getBounds().getXSpan();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
 		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
@@ -150,10 +150,10 @@ public class PonderScene {
 
 		BlockPos origin = new BlockPos(basePlateOffsetX, 0, basePlateOffsetZ);
 		if (!world.getBounds()
-			.isVecInside(selectedPos))
+			.isInside(selectedPos))
 			return Pair.of(ItemStack.EMPTY, null);
-		if (new MutableBoundingBox(origin, origin.add(new Vector3i(basePlateSize - 1, 0, basePlateSize - 1)))
-			.isVecInside(selectedPos)) {
+		if (new MutableBoundingBox(origin, origin.offset(new Vector3i(basePlateSize - 1, 0, basePlateSize - 1)))
+			.isInside(selectedPos)) {
 			if (PonderIndex.EDITOR_MODE)
 				nearestHit.getValue()
 					.getFirst()
@@ -223,15 +223,15 @@ public class PonderScene {
 	}
 
 	public void renderScene(SuperRenderTypeBuffer buffer, MatrixStack ms, float pt) {
-		ms.push();
+		ms.pushPose();
 		Minecraft mc = Minecraft.getInstance();
-		Entity prevRVE = mc.renderViewEntity;
+		Entity prevRVE = mc.cameraEntity;
 
-		mc.renderViewEntity = this.renderViewEntity;
+		mc.cameraEntity = this.renderViewEntity;
 		forEachVisible(PonderSceneElement.class, e -> e.renderFirst(world, buffer, ms, pt));
-		mc.renderViewEntity = prevRVE;
+		mc.cameraEntity = prevRVE;
 
-		for (RenderType type : RenderType.getBlockLayers())
+		for (RenderType type : RenderType.chunkBufferLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
 		
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
@@ -240,13 +240,13 @@ public class PonderScene {
 		world.renderParticles(ms, buffer, info, pt);
 		outliner.renderOutlines(ms, buffer, pt);
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void renderOverlay(PonderUI screen, MatrixStack ms, float partialTicks) {
-		ms.push();
+		ms.pushPose();
 		forEachVisible(PonderOverlayElement.class, e -> e.render(this, screen, ms, partialTicks));
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void setPointOfInterest(Vector3d poi) {
@@ -464,7 +464,7 @@ public class PonderScene {
 
 		public void updateSceneRVE(float pt) {
 			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);
-			renderViewEntity.setPosition(v.x, v.y, v.z);
+			renderViewEntity.setPos(v.x, v.y, v.z);
 		}
 
 		public Vector3d screenToScene(double x, double y, int depth, float pt) {
@@ -482,7 +482,7 @@ public class PonderScene {
 
 			float f = 1f / (30 * scaleFactor);
 
-			vec = vec.mul(f, -f, f);
+			vec = vec.multiply(f, -f, f);
 			vec = vec.subtract((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
 				(basePlateSize + basePlateOffsetZ) / -2f);
 
@@ -493,14 +493,14 @@ public class PonderScene {
 			refreshMatrix(pt);
 			Vector4f vec4 = new Vector4f((float) vec.x, (float) vec.y, (float) vec.z, 1);
 			vec4.transform(cachedMat);
-			return new Vector2f(vec4.getX(), vec4.getY());
+			return new Vector2f(vec4.x(), vec4.y());
 		}
 
 		protected void refreshMatrix(float pt) {
 			if (cachedMat != null)
 				return;
-			cachedMat = apply(new MatrixStack(), pt, false).peek()
-				.getModel();
+			cachedMat = apply(new MatrixStack(), pt, false).last()
+				.pose();
 		}
 
 	}
@@ -508,7 +508,7 @@ public class PonderScene {
 	public class SceneRenderInfo extends ActiveRenderInfo {
 
 		public void set(float xRotation, float yRotation) {
-			setDirection(yRotation, xRotation);
+			setRotation(yRotation, xRotation);
 		}
 
 	}

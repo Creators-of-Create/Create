@@ -28,7 +28,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 		mapping = new HashMap<>();
 		short size = buffer.readShort();
 		for (int i = 0; i < size; i++)
-			mapping.put(buffer.readUniqueId(), (int) buffer.readShort());
+			mapping.put(buffer.readUUID(), (int) buffer.readShort());
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 		buffer.writeInt(entityID);
 		buffer.writeShort(mapping.size());
 		mapping.forEach((k, v) -> {
-			buffer.writeUniqueId(k);
+			buffer.writeUUID(k);
 			buffer.writeShort(v);
 		});
 	}
@@ -45,7 +45,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				Entity entityByID = Minecraft.getInstance().world.getEntityByID(entityID);
+				Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
 				if (!(entityByID instanceof AbstractContraptionEntity))
 					return;
 				AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;

@@ -35,6 +35,8 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
+
 public class MountedContraption extends Contraption {
 
 	public CartMovementMode rotationMode;
@@ -56,14 +58,14 @@ public class MountedContraption extends Contraption {
 	@Override
 	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
 		BlockState state = world.getBlockState(pos);
-		if (!state.contains(RAIL_SHAPE))
+		if (!state.hasProperty(RAIL_SHAPE))
 			return false;
 		if (!searchMovedStructure(world, pos, null))
 			return false;
 
-		Axis axis = state.get(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
+		Axis axis = state.getValue(RAIL_SHAPE) == RailShape.EAST_WEST ? Axis.X : Axis.Z;
 		addBlock(pos, Pair.of(new BlockInfo(pos, AllBlocks.MINECART_ANCHOR.getDefaultState()
-			.with(BlockStateProperties.HORIZONTAL_AXIS, axis), null), null));
+			.setValue(BlockStateProperties.HORIZONTAL_AXIS, axis), null), null));
 
 		if (blocks.size() == 1)
 			return false;
@@ -74,7 +76,7 @@ public class MountedContraption extends Contraption {
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) {
 		frontier.clear();
-		frontier.add(pos.up());
+		frontier.add(pos.above());
 		return true;
 	}
 
@@ -94,11 +96,11 @@ public class MountedContraption extends Contraption {
 			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
 				continue;
 			for (AbstractMinecartEntity abstractMinecartEntity : world
-				.getEntitiesWithinAABB(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
+				.getEntitiesOfClass(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
 				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 					break;
 				connectedCart = abstractMinecartEntity;
-				connectedCart.setPosition(pos.getX() + .5, pos.getY(), pos.getZ() + .5f);
+				connectedCart.setPos(pos.getX() + .5, pos.getY(), pos.getZ() + .5f);
 			}
 		}
 
@@ -117,7 +119,7 @@ public class MountedContraption extends Contraption {
 			if (axis.isVertical() || !VecHelper.onSameAxis(anchor, pos, axis))
 				continue;
 			for (AbstractMinecartEntity abstractMinecartEntity : world
-				.getEntitiesWithinAABB(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
+				.getEntitiesOfClass(AbstractMinecartEntity.class, new AxisAlignedBB(pos))) {
 				if (!CartAssemblerBlock.canAssembleTo(abstractMinecartEntity))
 					break;
 				return true;

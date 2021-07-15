@@ -82,7 +82,7 @@ public class FluidTankScenes {
 		scene.world.hideIndependentSection(chocLink, Direction.DOWN);
 		scene.idle(5);
 		FluidStack content = new FluidStack(AllFluids.CHOCOLATE.get()
-			.getStillFluid(), 16000);
+			.getSource(), 16000);
 		scene.world.modifyTileEntity(tankPos, FluidTankTileEntity.class, te -> te.getTankInventory()
 			.fill(content, FluidAction.EXECUTE));
 		scene.idle(25);
@@ -337,7 +337,7 @@ public class FluidTankScenes {
 				.withWrench(),
 			60);
 		scene.idle(7);
-		scene.world.modifyBlocks(full2, s -> s.with(FluidTankBlock.SHAPE, FluidTankBlock.Shape.PLAIN), false);
+		scene.world.modifyBlocks(full2, s -> s.setValue(FluidTankBlock.SHAPE, FluidTankBlock.Shape.PLAIN), false);
 		scene.idle(30);
 
 		scene.overlay.showText(60)

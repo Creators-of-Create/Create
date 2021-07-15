@@ -61,7 +61,7 @@ public class FluidMovementActorScenes {
 		scene.world.rotateBearing(bearing, 360, 70);
 		scene.world.rotateSection(contraption, 0, 360, 0, 70);
 		scene.overlay.showText(60)
-			.pointAt(util.vector.topOf(bearing.up(2)))
+			.pointAt(util.vector.topOf(bearing.above(2)))
 			.colored(PonderPalette.RED)
 			.placeNearTarget()
 			.attachKeyFrame()

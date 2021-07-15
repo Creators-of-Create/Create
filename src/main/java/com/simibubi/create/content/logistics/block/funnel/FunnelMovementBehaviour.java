@@ -38,9 +38,9 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
 		Direction facing = FunnelBlock.getFunnelFacing(context.state);
-		Vector3d vec = Vector3d.of(facing.getDirectionVec());
+		Vector3d vec = Vector3d.atLowerCornerOf(facing.getNormal());
 		if (facing != Direction.UP)
-			return vec.scale(context.state.get(FunnelBlock.EXTRACTING) ? .15 : .65);
+			return vec.scale(context.state.getValue(FunnelBlock.EXTRACTING) ? .15 : .65);
 
 		return vec.scale(.65);
 	}
@@ -49,7 +49,7 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
 
-		if (context.state.get(FunnelBlock.EXTRACTING))
+		if (context.state.getValue(FunnelBlock.EXTRACTING))
 			extract(context, pos);
 		else
 			succ(context, pos);
@@ -61,13 +61,13 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 		World world = context.world;
 
 		Vector3d entityPos = context.position;
-		if (context.state.get(FunnelBlock.FACING) != Direction.DOWN)
+		if (context.state.getValue(FunnelBlock.FACING) != Direction.DOWN)
 			entityPos = entityPos.add(0, -.5f, 0);
 
 		if (!world.getBlockState(pos).getCollisionShape(world, pos).isEmpty())
 			return;//only drop items if the target block is a empty space
 
-		if (!world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(new BlockPos(entityPos))).isEmpty())
+		if (!world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(new BlockPos(entityPos))).isEmpty())
 			return;//don't drop items if there already are any in the target block space
 
 		ItemStack filter = getFilter(context);
@@ -85,21 +85,21 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 		if (extract.isEmpty())
 			return;
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
 
 
 		ItemEntity entity = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, extract);
-		entity.setMotion(Vector3d.ZERO);
-		entity.setPickupDelay(5);
-		world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 1/16f, .1f);
-		world.addEntity(entity);
+		entity.setDeltaMovement(Vector3d.ZERO);
+		entity.setPickUpDelay(5);
+		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1/16f, .1f);
+		world.addFreshEntity(entity);
 	}
 
 	private void succ(MovementContext context, BlockPos pos) {
 		World world = context.world;
-		List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos));
+		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos));
 		ItemStack filter = getFilter(context);
 
 		for (ItemEntity item : items) {
@@ -122,7 +122,7 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 	}
 
 	private ItemStack getFilter(MovementContext context) {
-		return hasFilter ? ItemStack.read(context.tileData.getCompound("Filter")) : ItemStack.EMPTY;
+		return hasFilter ? ItemStack.of(context.tileData.getCompound("Filter")) : ItemStack.EMPTY;
 	}
 
 }

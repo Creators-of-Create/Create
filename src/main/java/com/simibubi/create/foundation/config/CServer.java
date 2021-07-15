@@ -1,4 +1,7 @@
 package com.simibubi.create.foundation.config;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigGroup;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
+
 
 public class CServer extends ConfigBase {
 

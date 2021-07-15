@@ -24,7 +24,7 @@ public class KineticData extends BasicData {
     }
 
     public KineticData setPosition(Vector3f pos) {
-        return setPosition(pos.getX(), pos.getY(), pos.getZ());
+        return setPosition(pos.x(), pos.y(), pos.z());
     }
 
     public KineticData setPosition(float x, float y, float z) {

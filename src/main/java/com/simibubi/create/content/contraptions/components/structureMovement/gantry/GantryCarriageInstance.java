@@ -36,15 +36,15 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
                                  .getModel(AllBlockPartials.GANTRY_COGS, blockState)
                                  .createInstance();
 
-        facing = blockState.get(GantryCarriageBlock.FACING);
-        alongFirst = blockState.get(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
+        facing = blockState.getValue(GantryCarriageBlock.FACING);
+        alongFirst = blockState.getValue(GantryCarriageBlock.AXIS_ALONG_FIRST_COORDINATE);
         rotationAxis = KineticTileEntityRenderer.getRotationAxisOf(tile);
 
         rotationMult = getRotationMultiplier(getGantryAxis(), facing);
 
-        visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getPos()
-                : tile.getPos()
-                      .offset(facing.getOpposite());
+        visualPos = facing.getAxisDirection() == Direction.AxisDirection.POSITIVE ? tile.getBlockPos()
+                : tile.getBlockPos()
+                      .relative(facing.getOpposite());
 
         animateCogs(getCogAngle());
     }
@@ -53,7 +53,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
     public void beginFrame() {
         float cogAngle = getCogAngle();
 
-        if (MathHelper.epsilonEquals(cogAngle, lastAngle)) return;
+        if (MathHelper.equal(cogAngle, lastAngle)) return;
 
         animateCogs(cogAngle);
     }
@@ -71,7 +71,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
                      .rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
                      .rotateY(alongFirst ^ facing.getAxis() == Direction.Axis.Z ? 90 : 0)
                      .translate(0, -9 / 16f, 0)
-                     .multiply(Vector3f.POSITIVE_X.getRadialQuaternion(-cogAngle))
+                     .multiply(Vector3f.XP.rotation(-cogAngle))
                      .translate(0, 9 / 16f, 0)
                      .unCentre();
 

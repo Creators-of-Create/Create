@@ -21,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.item.Item.Properties;
+
 public class WorldshaperItem extends ZapperItem {
 
 	public WorldshaperItem(Properties properties) {
@@ -62,7 +64,7 @@ public class WorldshaperItem extends ZapperItem {
 	protected boolean activate(World world, PlayerEntity player, ItemStack stack, BlockState stateToUse,
 		BlockRayTraceResult raytrace, CompoundNBT data) {
 
-		BlockPos targetPos = raytrace.getPos();
+		BlockPos targetPos = raytrace.getBlockPos();
 		List<BlockPos> affectedPositions = new ArrayList<>();
 
 		CompoundNBT tag = stack.getOrCreateTag();
@@ -73,11 +75,11 @@ public class WorldshaperItem extends ZapperItem {
 		TerrainTools tool = NBTHelper.readEnum(tag, "Tool", TerrainTools.class);
 
 		brush.set(params.getX(), params.getY(), params.getZ());
-		targetPos = targetPos.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), option));
-		brush.addToGlobalPositions(world, targetPos, raytrace.getFace(), affectedPositions, tool);
+		targetPos = targetPos.offset(brush.getOffset(player.getLookAngle(), raytrace.getDirection(), option));
+		brush.addToGlobalPositions(world, targetPos, raytrace.getDirection(), affectedPositions, tool);
 		PlacementPatterns.applyPattern(affectedPositions, stack);
 		brush.redirectTool(tool)
-			.run(world, affectedPositions, raytrace.getFace(), stateToUse, data, player);
+			.run(world, affectedPositions, raytrace.getDirection(), stateToUse, data, player);
 
 		return true;
 	}

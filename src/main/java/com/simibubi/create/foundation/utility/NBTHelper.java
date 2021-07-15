@@ -58,17 +58,17 @@ public class NBTHelper {
 	}
 
 	public static List<ItemStack> readItemList(ListNBT stacks) {
-		return readCompoundList(stacks, ItemStack::read);
+		return readCompoundList(stacks, ItemStack::of);
 	}
 
 	public static ListNBT writeAABB(AxisAlignedBB bb) {
 		ListNBT bbtag = new ListNBT();
-		bbtag.add(FloatNBT.of((float) bb.minX));
-		bbtag.add(FloatNBT.of((float) bb.minY));
-		bbtag.add(FloatNBT.of((float) bb.minZ));
-		bbtag.add(FloatNBT.of((float) bb.maxX));
-		bbtag.add(FloatNBT.of((float) bb.maxY));
-		bbtag.add(FloatNBT.of((float) bb.maxZ));
+		bbtag.add(FloatNBT.valueOf((float) bb.minX));
+		bbtag.add(FloatNBT.valueOf((float) bb.minY));
+		bbtag.add(FloatNBT.valueOf((float) bb.minZ));
+		bbtag.add(FloatNBT.valueOf((float) bb.maxX));
+		bbtag.add(FloatNBT.valueOf((float) bb.maxY));
+		bbtag.add(FloatNBT.valueOf((float) bb.maxZ));
 		return bbtag;
 	}
 

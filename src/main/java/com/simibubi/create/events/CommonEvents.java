@@ -71,12 +71,12 @@ public class CommonEvents {
 		BlockPos pos = event.getPos();
 		IWorld world = event.getWorld();
 
-		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getFluid()))
+		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getType()))
 			return;
 
 		for (Direction direction : Iterate.directions) {
-			FluidState metFluidState = fluidState.isSource() ? fluidState : world.getFluidState(pos.offset(direction));
-			if (!metFluidState.isTagged(FluidTags.WATER))
+			FluidState metFluidState = fluidState.isSource() ? fluidState : world.getFluidState(pos.relative(direction));
+			if (!metFluidState.is(FluidTags.WATER))
 				continue;
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(metFluidState);
 			if (lavaInteraction == null)
@@ -100,7 +100,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void onUpdateLivingEntity(LivingUpdateEvent event) {
 		LivingEntity entityLiving = event.getEntityLiving();
-		World world = entityLiving.world;
+		World world = entityLiving.level;
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);
@@ -161,7 +161,7 @@ public class CommonEvents {
 	}
 
 	public static void leftClickEmpty(ServerPlayerEntity player) {
-		ItemStack stack = player.getHeldItemMainhand();
+		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof ZapperItem) {
 			ZapperInteractionHandler.trySelect(stack, player);
 		}

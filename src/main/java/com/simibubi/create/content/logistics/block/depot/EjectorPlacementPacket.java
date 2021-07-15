@@ -31,7 +31,7 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 		h = buffer.readInt();
 		v = buffer.readInt();
 		pos = buffer.readBlockPos();
-		facing = Direction.byIndex(buffer.readVarInt());
+		facing = Direction.from3DDataValue(buffer.readVarInt());
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 		buffer.writeInt(h);
 		buffer.writeInt(v);
 		buffer.writeBlockPos(pos);
-		buffer.writeVarInt(facing.getIndex());
+		buffer.writeVarInt(facing.get3DDataValue());
 	}
 
 	@Override
@@ -50,15 +50,15 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 					.getSender();
 				if (player == null)
 					return;
-				World world = player.world;
-				if (world == null || !world.isBlockPresent(pos))
+				World world = player.level;
+				if (world == null || !world.isLoaded(pos))
 					return;
-				TileEntity tileEntity = world.getTileEntity(pos);
+				TileEntity tileEntity = world.getBlockEntity(pos);
 				BlockState state = world.getBlockState(pos);
 				if (tileEntity instanceof EjectorTileEntity)
 					((EjectorTileEntity) tileEntity).setTarget(h, v);
 				if (AllBlocks.WEIGHTED_EJECTOR.has(state))
-					world.setBlockState(pos, state.with(EjectorBlock.HORIZONTAL_FACING, facing));
+					world.setBlockAndUpdate(pos, state.setValue(EjectorBlock.HORIZONTAL_FACING, facing));
 			});
 		context.get()
 			.setPacketHandled(true);

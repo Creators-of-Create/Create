@@ -54,14 +54,14 @@ public class MechanicalCraftingRecipeBuilder {
 	 * Adds a key to the recipe pattern.
 	 */
 	public MechanicalCraftingRecipeBuilder key(Character p_200469_1_, Tag<Item> p_200469_2_) {
-		return this.key(p_200469_1_, Ingredient.fromTag(p_200469_2_));
+		return this.key(p_200469_1_, Ingredient.of(p_200469_2_));
 	}
 
 	/**
 	 * Adds a key to the recipe pattern.
 	 */
 	public MechanicalCraftingRecipeBuilder key(Character p_200462_1_, IItemProvider p_200462_2_) {
-		return this.key(p_200462_1_, Ingredient.fromItems(p_200462_2_));
+		return this.key(p_200462_1_, Ingredient.of(p_200462_2_));
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class MechanicalCraftingRecipeBuilder {
 			this.key = p_i48271_7_;
 		}
 
-		public void serialize(JsonObject p_218610_1_) {
+		public void serializeRecipeData(JsonObject p_218610_1_) {
 			JsonArray jsonarray = new JsonArray();
 			for (String s : this.pattern)
 				jsonarray.add(s);
@@ -170,7 +170,7 @@ public class MechanicalCraftingRecipeBuilder {
 			JsonObject jsonobject = new JsonObject();
 			for (Entry<Character, Ingredient> entry : this.key.entrySet())
 				jsonobject.add(String.valueOf(entry.getKey()), entry.getValue()
-					.serialize());
+					.toJson());
 
 			p_218610_1_.add("key", jsonobject);
 			JsonObject jsonobject1 = new JsonObject();
@@ -182,21 +182,21 @@ public class MechanicalCraftingRecipeBuilder {
 			p_218610_1_.add("result", jsonobject1);
 		}
 
-		public IRecipeSerializer<?> getSerializer() {
+		public IRecipeSerializer<?> getType() {
 			return AllRecipeTypes.MECHANICAL_CRAFTING.serializer;
 		}
 
-		public ResourceLocation getID() {
+		public ResourceLocation getId() {
 			return this.id;
 		}
 
 		@Nullable
-		public JsonObject getAdvancementJson() {
+		public JsonObject serializeAdvancement() {
 			return null;
 		}
 
 		@Nullable
-		public ResourceLocation getAdvancementID() {
+		public ResourceLocation getAdvancementId() {
 			return null;
 		}
 	}

@@ -42,7 +42,7 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected final int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(AbstractDiodeBlock.HORIZONTAL_FACING));
+		return horizontalAngle(state.getValue(AbstractDiodeBlock.FACING));
 	}
 
 	abstract <T extends Block> Vector<ModelFile> createModels(DataGenContext<Block, T> ctx, BlockModelProvider prov);

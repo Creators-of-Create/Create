@@ -18,13 +18,13 @@ public class BeltHelper {
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
 			.isPresent()
 			|| stack.getItem()
-				.isIn(AllItemTags.UPRIGHT_ON_BELT.tag);
+				.is(AllItemTags.UPRIGHT_ON_BELT.tag);
 	}
 
 	public static BeltTileEntity getSegmentTE(IWorld world, BlockPos pos) {
 		if (!world.isAreaLoaded(pos, 0))
 			return null;
-		TileEntity tileEntity = world.getTileEntity(pos);
+		TileEntity tileEntity = world.getBlockEntity(pos);
 		if (!(tileEntity instanceof BeltTileEntity))
 			return null;
 		return (BeltTileEntity) tileEntity;
@@ -46,36 +46,36 @@ public class BeltHelper {
 
 	public static BeltTileEntity getBeltAtSegment(BeltTileEntity controller, int segment) {
 		BlockPos pos = getPositionForOffset(controller, segment);
-		TileEntity te = controller.getWorld()
-			.getTileEntity(pos);
+		TileEntity te = controller.getLevel()
+			.getBlockEntity(pos);
 		if (te == null || !(te instanceof BeltTileEntity))
 			return null;
 		return (BeltTileEntity) te;
 	}
 
 	public static BlockPos getPositionForOffset(BeltTileEntity controller, int offset) {
-		BlockPos pos = controller.getPos();
+		BlockPos pos = controller.getBlockPos();
 		Vector3i vec = controller.getBeltFacing()
-			.getDirectionVec();
+			.getNormal();
 		BeltSlope slope = controller.getBlockState()
-			.get(BeltBlock.SLOPE);
+			.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 
-		return pos.add(offset * vec.getX(), MathHelper.clamp(offset, 0, controller.beltLength - 1) * verticality,
+		return pos.offset(offset * vec.getX(), MathHelper.clamp(offset, 0, controller.beltLength - 1) * verticality,
 			offset * vec.getZ());
 	}
 
 	public static Vector3d getVectorForOffset(BeltTileEntity controller, float offset) {
 		BeltSlope slope = controller.getBlockState()
-			.get(BeltBlock.SLOPE);
+			.getValue(BeltBlock.SLOPE);
 		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
 		float verticalMovement = verticality;
 		if (offset < .5)
 			verticalMovement = 0;
 		verticalMovement = verticalMovement * (Math.min(offset, controller.beltLength - .5f) - .5f);
-		Vector3d vec = VecHelper.getCenterOf(controller.getPos());
-		Vector3d horizontalMovement = Vector3d.of(controller.getBeltFacing()
-			.getDirectionVec()).scale(offset - .5f);
+		Vector3d vec = VecHelper.getCenterOf(controller.getBlockPos());
+		Vector3d horizontalMovement = Vector3d.atLowerCornerOf(controller.getBeltFacing()
+			.getNormal()).scale(offset - .5f);
 
 		if (slope == BeltSlope.VERTICAL)
 			horizontalMovement = Vector3d.ZERO;

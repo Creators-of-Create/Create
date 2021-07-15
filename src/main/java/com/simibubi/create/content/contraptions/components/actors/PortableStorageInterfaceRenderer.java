@@ -37,7 +37,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		IRenderTypeBuffer buffer, int light, int overlay) {
 		BlockState blockState = te.getBlockState();
 		float progress = te.getExtensionDistance(partialTicks);
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 		render(blockState, te.isConnected(), progress, null, sbb -> sbb.light(light)
 			.renderInto(ms, vb));
 	}
@@ -46,7 +46,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		BlockState blockState = context.state;
 		PortableStorageInterfaceTileEntity te = getTargetPSI(context);
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 		float renderPartialTicks = AnimationTickHolder.getPartialTicks();
 
 		float progress = 0;
@@ -70,7 +70,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			middle.transform(local);
 			top.transform(local);
 		}
-		Direction facing = blockState.get(PortableStorageInterfaceBlock.FACING);
+		Direction facing = blockState.getValue(PortableStorageInterfaceBlock.FACING);
 		rotateToFacing(middle, facing);
 		rotateToFacing(top, facing);
 		middle.translate(0, progress * 0.5f + 0.375f, 0);
@@ -94,7 +94,7 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			return null;
 
 		BlockPos pos = NBTUtil.readBlockPos(context.data.getCompound(_workingPos_));
-		TileEntity tileEntity = context.world.getTileEntity(pos);
+		TileEntity tileEntity = context.world.getBlockEntity(pos);
 		if (!(tileEntity instanceof PortableStorageInterfaceTileEntity))
 			return null;
 

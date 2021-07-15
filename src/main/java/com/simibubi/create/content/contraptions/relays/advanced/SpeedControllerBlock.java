@@ -33,6 +33,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements ITE<SpeedControllerTileEntity> {
@@ -50,27 +52,27 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState above = context.getWorld()
-			.getBlockState(context.getPos()
-				.up());
-		if (ICogWheel.isLargeCog(above) && above.get(CogWheelBlock.AXIS)
+		BlockState above = context.getLevel()
+			.getBlockState(context.getClickedPos()
+				.above());
+		if (ICogWheel.isLargeCog(above) && above.getValue(CogWheelBlock.AXIS)
 			.isHorizontal())
-			return getDefaultState().with(HORIZONTAL_AXIS, above.get(CogWheelBlock.AXIS) == Axis.X ? Axis.Z : Axis.X);
+			return defaultBlockState().setValue(HORIZONTAL_AXIS, above.getValue(CogWheelBlock.AXIS) == Axis.X ? Axis.Z : Axis.X);
 		return super.getStateForPlacement(context);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos neighbourPos,
 		boolean p_220069_6_) {
-		if (neighbourPos.equals(pos.up()))
+		if (neighbourPos.equals(pos.above()))
 			withTileEntityDo(world, pos, SpeedControllerTileEntity::updateBracket);
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
 
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
 		if (helper.matchesItem(heldItem))
 			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
@@ -97,18 +99,18 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 
 		@Override
 		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
-			BlockPos newPos = pos.up();
+			BlockPos newPos = pos.above();
 			if (!world.getBlockState(newPos)
 				.getMaterial()
 				.isReplaceable())
 				return PlacementOffset.fail();
 
-			Axis newAxis = state.get(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;
+			Axis newAxis = state.getValue(HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;
 
 			if (!CogWheelBlock.isValidCogwheelPosition(true, world, newPos, newAxis))
 				return PlacementOffset.fail();
 
-			return PlacementOffset.success(newPos, s -> s.with(CogWheelBlock.AXIS, newAxis));
+			return PlacementOffset.success(newPos, s -> s.setValue(CogWheelBlock.AXIS, newAxis));
 		}
 	}
 
