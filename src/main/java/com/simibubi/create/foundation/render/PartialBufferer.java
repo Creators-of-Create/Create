@@ -20,7 +20,7 @@ public class PartialBufferer {
 	}
 
 	public static SuperByteBuffer getFacing(PartialModel partial, BlockState referenceState) {
-		Direction facing = referenceState.get(FACING);
+		Direction facing = referenceState.getValue(FACING);
 		return getFacing(partial, referenceState, facing);
 	}
 

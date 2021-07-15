@@ -43,22 +43,22 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	@Override
 	protected void write(CompoundNBT compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		compound.put("Controller", controller.write(new CompoundNBT()));
+		compound.put("Controller", controller.save(new CompoundNBT()));
 		if (user != null)
-			compound.putUniqueId("User", user);
+			compound.putUUID("User", user);
 	}
 
 	@Override
 	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
 		super.writeSafe(compound, clientPacket);
-		compound.put("Controller", controller.write(new CompoundNBT()));
+		compound.put("Controller", controller.save(new CompoundNBT()));
 	}
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
-		controller = ItemStack.read(compound.getCompound("Controller"));
-		user = compound.hasUniqueId("User") ? compound.getUniqueId("User") : null;
+		controller = ItemStack.of(compound.getCompound("Controller"));
+		user = compound.hasUUID("User") ? compound.getUUID("User") : null;
 	}
 
 	public ItemStack getController() {
@@ -68,11 +68,11 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	public boolean hasUser() { return user != null; }
 
 	public boolean isUsedBy(PlayerEntity player) {
-		return hasUser() && user.equals(player.getUniqueID());
+		return hasUser() && user.equals(player.getUUID());
 	}
 
 	public void tryStartUsing(PlayerEntity player) {
-		if (!deactivatedThisTick && !hasUser() && !playerIsUsingLectern(player) && playerInRange(player, world, pos))
+		if (!deactivatedThisTick && !hasUser() && !playerIsUsingLectern(player) && playerInRange(player, level, worldPosition))
 			startUsing(player);
 	}
 
@@ -82,7 +82,7 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	private void startUsing(PlayerEntity player) {
-		user = player.getUniqueID();
+		user = player.getUUID();
 		player.getPersistentData().putBoolean("IsUsingLecternController", true);
 		sendData();
 	}
@@ -103,52 +103,52 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	public void tick() {
 		super.tick();
 
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::tryToggleActive);
 			prevUser = user;
 		}
 
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			deactivatedThisTick = false;
 
-			if (!(world instanceof ServerWorld))
+			if (!(level instanceof ServerWorld))
 				return;
 			if (user == null)
 				return;
 
-			Entity entity = ((ServerWorld) world).getEntityByUuid(user);
+			Entity entity = ((ServerWorld) level).getEntity(user);
 			if (!(entity instanceof PlayerEntity)) {
 				stopUsing(null);
 				return;
 			}
 
 			PlayerEntity player = (PlayerEntity) entity;
-			if (!playerInRange(player, world, pos) || !playerIsUsingLectern(player))
+			if (!playerInRange(player, level, worldPosition) || !playerIsUsingLectern(player))
 				stopUsing(player);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private void tryToggleActive() {
-		if (user == null && Minecraft.getInstance().player.getUniqueID().equals(prevUser)) {
+		if (user == null && Minecraft.getInstance().player.getUUID().equals(prevUser)) {
 			LinkedControllerClientHandler.deactivateInLectern();
-		} else if (prevUser == null && Minecraft.getInstance().player.getUniqueID().equals(user)) {
-			LinkedControllerClientHandler.activateInLectern(pos);
+		} else if (prevUser == null && Minecraft.getInstance().player.getUUID().equals(user)) {
+			LinkedControllerClientHandler.activateInLectern(worldPosition);
 		}
 	}
 
 	public void setController(ItemStack newController) {
 		controller = newController;
 		if (newController != null) {
-			AllSoundEvents.CONTROLLER_PUT.playOnServer(world, pos);
+			AllSoundEvents.CONTROLLER_PUT.playOnServer(level, worldPosition);
 		}
 	}
 
 	public void swapControllers(ItemStack stack, PlayerEntity player, Hand hand, BlockState state) {
 		ItemStack newController = stack.copy();
 		stack.setCount(0);
-		if (player.getHeldItem(hand).isEmpty()) {
-			player.setHeldItem(hand, controller);
+		if (player.getItemInHand(hand).isEmpty()) {
+			player.setItemInHand(hand, controller);
 		} else {
 			dropController(state);
 		}
@@ -156,24 +156,24 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	public void dropController(BlockState state) {
-		Entity playerEntity = ((ServerWorld) world).getEntityByUuid(user);
+		Entity playerEntity = ((ServerWorld) level).getEntity(user);
 		if (playerEntity instanceof PlayerEntity)
 			stopUsing((PlayerEntity) playerEntity);
 
-		Direction dir = state.get(LecternControllerBlock.FACING);
-		double x = pos.getX() + 0.5 + 0.25*dir.getXOffset();
-		double y = pos.getY() + 1;
-		double z = pos.getZ() + 0.5 + 0.25*dir.getZOffset();
-		ItemEntity itementity = new ItemEntity(world, x, y, z, controller.copy());
-		itementity.setDefaultPickupDelay();
-		world.addEntity(itementity);
+		Direction dir = state.getValue(LecternControllerBlock.FACING);
+		double x = worldPosition.getX() + 0.5 + 0.25*dir.getStepX();
+		double y = worldPosition.getY() + 1;
+		double z = worldPosition.getZ() + 0.5 + 0.25*dir.getStepZ();
+		ItemEntity itementity = new ItemEntity(level, x, y, z, controller.copy());
+		itementity.setDefaultPickUpDelay();
+		level.addFreshEntity(itementity);
 		controller = null;
 	}
 
 	public static boolean playerInRange(PlayerEntity player, World world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
 		double reach = 0.4*player.getAttributeValue(ForgeMod.REACH_DISTANCE.get());// + modifier;
-		return player.getDistanceSq(Vector3d.ofCenter(pos)) < reach*reach;
+		return player.distanceToSqr(Vector3d.atCenterOf(pos)) < reach*reach;
 	}
 
 }

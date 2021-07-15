@@ -14,7 +14,7 @@ public class StandardFoliageColorHandler implements IBlockColor {
 
 	@Override
 	public int getColor(BlockState state, IBlockDisplayReader light, BlockPos pos, int layer) {
-		return pos != null && light != null ? BiomeColors.getGrassColor(light, pos) : GrassColors.get(0.5D, 1.0D);
+		return pos != null && light != null ? BiomeColors.getAverageGrassColor(light, pos) : GrassColors.get(0.5D, 1.0D);
 	}
 
 }

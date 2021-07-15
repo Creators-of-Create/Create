@@ -14,6 +14,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+
 public class MillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

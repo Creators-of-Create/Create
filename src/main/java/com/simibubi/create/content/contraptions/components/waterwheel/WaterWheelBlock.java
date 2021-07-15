@@ -32,6 +32,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<WaterWheelTileEntity> {
@@ -46,21 +48,21 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
+	public BlockRenderType getRenderShape(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		for (Direction direction : Iterate.directions) {
-			BlockPos neighbourPos = pos.offset(direction);
+			BlockPos neighbourPos = pos.relative(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!AllBlocks.WATER_WHEEL.has(neighbourState))
 				continue;
-			if (neighbourState.get(FACING)
-				.getAxis() != state.get(FACING)
+			if (neighbourState.getValue(FACING)
+				.getAxis() != state.getValue(FACING)
 					.getAxis()
-				|| state.get(FACING)
+				|| state.getValue(FACING)
 					.getAxis() != direction.getAxis())
 				return false;
 		}
@@ -69,7 +71,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 		if (worldIn instanceof WrappedWorld)
 			return stateIn;
@@ -79,7 +81,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateAllSides(state, worldIn, pos);
 	}
 
@@ -90,25 +92,25 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	}
 
 	private void updateFlowAt(BlockState state, IWorld world, BlockPos pos, Direction side) {
-		if (side.getAxis() == state.get(FACING)
+		if (side.getAxis() == state.getValue(FACING)
 			.getAxis())
 			return;
 
-		FluidState fluid = world.getFluidState(pos.offset(side));
-		Direction wf = state.get(FACING);
+		FluidState fluid = world.getFluidState(pos.relative(side));
+		Direction wf = state.getValue(FACING);
 		boolean clockwise = wf.getAxisDirection() == AxisDirection.POSITIVE;
 		int clockwiseMultiplier = 2;
 
-		Vector3d vec = fluid.getFlow(world, pos.offset(side));
+		Vector3d vec = fluid.getFlow(world, pos.relative(side));
 		if (side.getAxis()
 			.isHorizontal()) {
-			BlockState adjacentBlock = world.getBlockState(pos.offset(side));
+			BlockState adjacentBlock = world.getBlockState(pos.relative(side));
 			if (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN.getBlock())
-				vec = new Vector3d(0, adjacentBlock.get(BubbleColumnBlock.DRAG) ? -1 : 1, 0);
+				vec = new Vector3d(0, adjacentBlock.getValue(BubbleColumnBlock.DRAG_DOWN) ? -1 : 1, 0);
 		}
 
 		vec = vec.scale(side.getAxisDirection()
-			.getOffset());
+			.getStep());
 		vec = new Vector3d(Math.signum(vec.x), Math.signum(vec.y), Math.signum(vec.z));
 		Vector3d flow = vec;
 
@@ -136,12 +138,12 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 					flowStrength = flow.z > 0 ^ !clockwise ? -flow.z * clockwiseMultiplier : -flow.z;
 			}
 
-			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isRemote()) {
+			if (te.getSpeed() == 0 && flowStrength != 0 && !world.isClientSide()) {
 				AllTriggers.triggerForNearbyPlayers(AllTriggers.WATER_WHEEL, world, pos, 5);
-				if (FluidHelper.isLava(fluid.getFluid()))
+				if (FluidHelper.isLava(fluid.getType()))
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.LAVA_WHEEL, world, pos, 5);
-				if (fluid.getFluid()
-					.isEquivalentTo(AllFluids.CHOCOLATE.get()))
+				if (fluid.getType()
+					.isSame(AllFluids.CHOCOLATE.get()))
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.CHOCOLATE_WHEEL, world, pos, 5);
 			}
 
@@ -156,48 +158,48 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction face = context.getFace();
-		Direction horizontalFacing = context.getPlacementHorizontalFacing();
-		BlockPos pos = context.getPos();
-		World world = context.getWorld();
+		Direction face = context.getClickedFace();
+		Direction horizontalFacing = context.getHorizontalDirection();
+		BlockPos pos = context.getClickedPos();
+		World world = context.getLevel();
 		PlayerEntity player = context.getPlayer();
 
-		BlockState placedOn = world.getBlockState(pos.offset(face.getOpposite()));
+		BlockState placedOn = world.getBlockState(pos.relative(face.getOpposite()));
 		if (AllBlocks.WATER_WHEEL.has(placedOn))
-			return getDefaultState().with(FACING, placedOn.get(FACING));
+			return defaultBlockState().setValue(FACING, placedOn.getValue(FACING));
 
 		Direction facing = face;
-		boolean sneaking = player != null && player.isSneaking();
+		boolean sneaking = player != null && player.isShiftKeyDown();
 		if (player != null) {
 
-			Vector3d lookVec = player.getLookVec();
+			Vector3d lookVec = player.getLookAngle();
 			double tolerance = 0.985;
 
-			if (!isValidPosition(getDefaultState().with(FACING, Direction.UP), world, pos))
+			if (!canSurvive(defaultBlockState().setValue(FACING, Direction.UP), world, pos))
 				facing = horizontalFacing;
-			else if (Vector3d.of(Direction.DOWN.getDirectionVec())
-				.dotProduct(lookVec.normalize()) > tolerance)
+			else if (Vector3d.atLowerCornerOf(Direction.DOWN.getNormal())
+				.dot(lookVec.normalize()) > tolerance)
 				facing = Direction.DOWN;
-			else if (Vector3d.of(Direction.UP.getDirectionVec())
-				.dotProduct(lookVec.normalize()) > tolerance)
+			else if (Vector3d.atLowerCornerOf(Direction.UP.getNormal())
+				.dot(lookVec.normalize()) > tolerance)
 				facing = Direction.UP;
 			else
 				facing = horizontalFacing;
 			
 		}
 
-		return getDefaultState().with(FACING, sneaking ? facing.getOpposite() : facing);
+		return defaultBlockState().setValue(FACING, sneaking ? facing.getOpposite() : facing);
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis() == face.getAxis();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis();
 	}
 

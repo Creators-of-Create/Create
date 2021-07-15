@@ -21,23 +21,23 @@ public class PlacementSimulationServerWorld extends WrappedServerWorld {
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
-		blocksAdded.put(pos.toImmutable(), newState);
+	public boolean setBlock(BlockPos pos, BlockState newState, int flags) {
+		blocksAdded.put(pos.immutable(), newState);
 		return true;
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState state) {
-		return setBlockState(pos, state, 0);
+	public boolean setBlockAndUpdate(BlockPos pos, BlockState state) {
+		return setBlock(pos, state, 0);
 	}
 
 	@Override
-	public boolean hasBlockState(BlockPos pos, Predicate<BlockState> condition) {
+	public boolean isStateAtPosition(BlockPos pos, Predicate<BlockState> condition) {
 		return condition.test(getBlockState(pos));
 	}
 	
 	@Override
-	public boolean isBlockPresent(BlockPos pos) {
+	public boolean isLoaded(BlockPos pos) {
 		return true;
 	}
 	
@@ -50,7 +50,7 @@ public class PlacementSimulationServerWorld extends WrappedServerWorld {
 	public BlockState getBlockState(BlockPos pos) {
 		if (blocksAdded.containsKey(pos))
 			return blocksAdded.get(pos);
-		return Blocks.AIR.getDefaultState();
+		return Blocks.AIR.defaultBlockState();
 	}
 	
 }

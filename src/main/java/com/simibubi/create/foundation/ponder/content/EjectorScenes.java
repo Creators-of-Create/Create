@@ -77,7 +77,7 @@ public class EjectorScenes {
 		AxisAlignedBB bb = new AxisAlignedBB(ejectorPos.west());
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.OUTPUT, slot, bb, 20);
 		scene.idle(10);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, slot, bb.expand(-15, 15, 0), 100);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, slot, bb.expandTowards(-15, 15, 0), 100);
 		scene.idle(10);
 
 		scene.overlay.showText(60)
@@ -87,7 +87,7 @@ public class EjectorScenes {
 			.pointAt(util.vector.blockSurface(targetPos, Direction.WEST))
 			.placeNearTarget();
 		scene.idle(70);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, new Object(), bb.offset(-2, 0, -1), 60);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, new Object(), bb.move(-2, 0, -1), 60);
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.colored(PonderPalette.RED)
@@ -303,7 +303,7 @@ public class EjectorScenes {
 		scene.world.showSection(redstone, Direction.EAST);
 
 		BlockPos ejectorPos = util.grid.at(4, 1, 2);
-		Vector3d topOf = util.vector.topOf(ejectorPos.up(2));
+		Vector3d topOf = util.vector.topOf(ejectorPos.above(2));
 		ItemStack copper = AllItems.COPPER_INGOT.asStack();
 
 		for (int i = 0; i < 3; i++) {

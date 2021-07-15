@@ -14,11 +14,13 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class GogglesItem extends Item {
 
 	public GogglesItem(Properties properties) {
 		super(properties);
-		DispenserBlock.registerDispenseBehavior(this, ArmorItem.DISPENSER_BEHAVIOR);
+		DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
 	}
 
 	@Override
@@ -26,12 +28,12 @@ public class GogglesItem extends Item {
 		return EquipmentSlotType.HEAD;
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		EquipmentSlotType equipmentslottype = MobEntity.getSlotForItemStack(itemstack);
-		ItemStack itemstack1 = playerIn.getItemStackFromSlot(equipmentslottype);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
+		EquipmentSlotType equipmentslottype = MobEntity.getEquipmentSlotForItem(itemstack);
+		ItemStack itemstack1 = playerIn.getItemBySlot(equipmentslottype);
 		if (itemstack1.isEmpty()) {
-			playerIn.setItemStackToSlot(equipmentslottype, itemstack.copy());
+			playerIn.setItemSlot(equipmentslottype, itemstack.copy());
 			itemstack.setCount(0);
 			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 		} else {
@@ -40,7 +42,7 @@ public class GogglesItem extends Item {
 	}
 
 	public static boolean canSeeParticles(PlayerEntity player) {
-		for (ItemStack itemStack : player.getArmorInventoryList())
+		for (ItemStack itemStack : player.getArmorSlots())
 			if (AllItems.GOGGLES.isIn(itemStack))
 				return true;
 		return false;

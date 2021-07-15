@@ -41,15 +41,15 @@ public class AllTags {
 	}
 
 	public static ITag.INamedTag<Block> forgeBlockTag(String name) {
-		return forgeTag(BlockTags::makeWrapperTag, name);
+		return forgeTag(BlockTags::bind, name);
 	}
 
 	public static ITag.INamedTag<Item> forgeItemTag(String name) {
-		return forgeTag(ItemTags::makeWrapperTag, name);
+		return forgeTag(ItemTags::bind, name);
 	}
 
 	public static ITag.INamedTag<Fluid> forgeFluidTag(String name) {
-		return forgeTag(FluidTags::makeWrapperTag, name);
+		return forgeTag(FluidTags::bind, name);
 	}
 
 	public static <T> ITag.INamedTag<T> forgeTag(Function<String, ITag.INamedTag<T>> wrapperFactory, String name) {
@@ -96,9 +96,9 @@ public class AllTags {
 		}
 
 		private AllItemTags(NameSpace namespace, String path) {
-			tag = ItemTags.makeWrapperTag(
+			tag = ItemTags.bind(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -106,12 +106,12 @@ public class AllTags {
 		}
 
 		public void add(Item... values) {
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
 				.add(values));
 		}
 
 		public void includeIn(AllItemTags parent) {
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.getOrCreateTagBuilder(parent.tag)
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(parent.tag)
 				.addTag(tag));
 		}
 	}
@@ -138,7 +138,7 @@ public class AllTags {
 		}
 
 		public boolean matches(Fluid fluid) {
-			return fluid != null && fluid.isIn(tag);
+			return fluid != null && fluid.is(tag);
 		}
 
 		static void loadClass() {}
@@ -174,8 +174,8 @@ public class AllTags {
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
 			if (ModList.get()
 				.isLoaded(namespace.id)) {
-				tag = BlockTags.makeWrapperTag(id.toString());
-				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag));
+				tag = BlockTags.bind(id.toString());
+				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
 			} else {
 				tag = new EmptyNamedTag<>(id);
 			}
@@ -187,17 +187,17 @@ public class AllTags {
 		}
 
 		public void includeIn(AllBlockTags parent) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(parent.tag)
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(parent.tag)
 				.addTag(tag));
 		}
 
 		public void includeAll(ITag.INamedTag<Block> child) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
 		}
 
 		public void add(Block... values) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.getOrCreateTagBuilder(tag)
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.add(values));
 		}
 	}

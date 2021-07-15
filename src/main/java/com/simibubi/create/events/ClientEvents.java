@@ -96,7 +96,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
-		World world = Minecraft.getInstance().world;
+		World world = Minecraft.getInstance().level;
 		if (!isGameActive())
 			return;
 
@@ -153,7 +153,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
-		if (world.isRemote() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
+		if (world.isClientSide() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
 		}
@@ -169,7 +169,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		if (event.getWorld()
-			.isRemote()) {
+			.isClientSide()) {
 			CreateClient.invalidateRenderers();
 			CreateClient.SOUL_PULSE_EFFECT_HANDLER.refresh();
 			AnimationTickHolder.reset();
@@ -178,13 +178,13 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
-			.getProjectedView();
+		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
+			.getPosition();
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		MatrixStack ms = event.getMatrixStack();
-		ms.push();
-		ms.translate(-cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ());
+		ms.pushPose();
+		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 
 		CouplingRenderer.renderAll(ms, buffer);
@@ -196,17 +196,17 @@ public class ClientEvents {
 		buffer.draw();
 		RenderSystem.enableCull();
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	@SubscribeEvent
 	public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
 		MatrixStack ms = event.getMatrixStack();
 		Impl buffers = Minecraft.getInstance()
-			.getBufferBuilders()
-			.getEntityVertexConsumers();
+			.renderBuffers()
+			.bufferSource();
 		int light = 0xF000F0;
-		int overlay = OverlayTexture.DEFAULT_UV;
+		int overlay = OverlayTexture.NO_OVERLAY;
 		float pt = event.getPartialTicks();
 
 		if (event.getType() == ElementType.AIR)
@@ -239,7 +239,7 @@ public class ClientEvents {
 
 		ItemStack stack = event.getItemStack();
 		String translationKey = stack.getItem()
-			.getTranslationKey(stack);
+			.getDescriptionId(stack);
 
 		if (translationKey.startsWith(itemPrefix) || translationKey.startsWith(blockPrefix))
 			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
@@ -276,31 +276,31 @@ public class ClientEvents {
 	}
 
 	protected static boolean isGameActive() {
-		return !(Minecraft.getInstance().world == null || Minecraft.getInstance().player == null);
+		return !(Minecraft.getInstance().level == null || Minecraft.getInstance().player == null);
 	}
 
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
 		ActiveRenderInfo info = event.getInfo();
-		FluidState fluidState = info.getFluidState();
+		FluidState fluidState = info.getFluidInCamera();
 		if (fluidState.isEmpty())
 			return;
-		Fluid fluid = fluidState.getFluid();
+		Fluid fluid = fluidState.getType();
 
-		if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get())) {
+		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setDensity(5f);
 			event.setCanceled(true);
 			return;
 		}
 
-		if (fluid.isEquivalentTo(AllFluids.HONEY.get())) {
+		if (fluid.isSame(AllFluids.HONEY.get())) {
 			event.setDensity(1.5f);
 			event.setCanceled(true);
 			return;
 		}
 
 		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
-			.isWornBy(Minecraft.getInstance().renderViewEntity)) {
+			.isWornBy(Minecraft.getInstance().cameraEntity)) {
 			event.setDensity(0.010f);
 			event.setCanceled(true);
 			return;
@@ -310,18 +310,18 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
 		ActiveRenderInfo info = event.getInfo();
-		FluidState fluidState = info.getFluidState();
+		FluidState fluidState = info.getFluidInCamera();
 		if (fluidState.isEmpty())
 			return;
-		Fluid fluid = fluidState.getFluid();
+		Fluid fluid = fluidState.getType();
 
-		if (fluid.isEquivalentTo(AllFluids.CHOCOLATE.get())) {
+		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setRed(98 / 256f);
 			event.setGreen(32 / 256f);
 			event.setBlue(32 / 256f);
 		}
 
-		if (fluid.isEquivalentTo(AllFluids.HONEY.get())) {
+		if (fluid.isSame(AllFluids.HONEY.get())) {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);

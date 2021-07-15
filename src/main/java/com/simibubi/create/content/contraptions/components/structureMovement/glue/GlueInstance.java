@@ -87,25 +87,25 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 
 	private void updateLight(OrientedData model) {
 		BlockPos pos = entity.getHangingPosition();
-		model.setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-				.setSkyLight(world.getLightLevel(LightType.SKY, pos));
+		model.setBlockLight(world.getBrightness(LightType.BLOCK, pos))
+				.setSkyLight(world.getBrightness(LightType.SKY, pos));
 	}
 
 	private boolean shouldShow() {
 		PlayerEntity player = Minecraft.getInstance().player;
 
 		return entity.isVisible()
-				|| AllItems.SUPER_GLUE.isIn(player.getHeldItemMainhand())
-				|| AllItems.SUPER_GLUE.isIn(player.getHeldItemOffhand());
+				|| AllItems.SUPER_GLUE.isIn(player.getMainHandItem())
+				|| AllItems.SUPER_GLUE.isIn(player.getOffhandItem());
 	}
 
 	public static BufferedModel supplyModel() {
-		Vector3d diff = Vector3d.of(Direction.SOUTH.getDirectionVec());
+		Vector3d diff = Vector3d.atLowerCornerOf(Direction.SOUTH.getNormal());
 		Vector3d extension = diff.normalize()
 				.scale(1 / 32f - 1 / 128f);
 
 		Vector3d plane = VecHelper.axisAlingedPlaneOf(diff);
-		Direction.Axis axis = Direction.getFacingFromVector(diff.x, diff.y, diff.z)
+		Direction.Axis axis = Direction.getNearest(diff.x, diff.y, diff.z)
 				.getAxis();
 
 		Vector3d start = Vector3d.ZERO.subtract(extension);
@@ -133,10 +133,10 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 
 		if (USE_ATLAS) {
 			TextureAtlasSprite sprite = AllStitchedTextures.SUPER_GLUE.getSprite();
-			minU = sprite.getMinU();
-			maxU = sprite.getMaxU();
-			minV = sprite.getMinV();
-			maxV = sprite.getMaxV();
+			minU = sprite.getU0();
+			maxU = sprite.getU1();
+			minV = sprite.getV0();
+			maxV = sprite.getV1();
 		} else {
 			minU = minV = 0;
 			maxU = maxV = 1;

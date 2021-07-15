@@ -27,60 +27,62 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
+import net.minecraft.item.Item.Properties;
+
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class SandPaperItem extends Item {
 
 	public SandPaperItem(Properties properties) {
-		super(properties.maxDamage(8));
+		super(properties.durability(8));
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack) {
+	public UseAction getUseAnimation(ItemStack stack) {
 		return UseAction.EAT;
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		return ActionResultType.PASS;
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		ActionResult<ItemStack> FAIL = new ActionResult<>(ActionResultType.FAIL, itemstack);
 
 		if (itemstack.getOrCreateTag()
 			.contains("Polishing")) {
-			playerIn.setActiveHand(handIn);
+			playerIn.startUsingItem(handIn);
 			return new ActionResult<>(ActionResultType.PASS, itemstack);
 		}
 
 		Hand otherHand = handIn == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
-		ItemStack itemInOtherHand = playerIn.getHeldItem(otherHand);
+		ItemStack itemInOtherHand = playerIn.getItemInHand(otherHand);
 		if (SandPaperPolishingRecipe.canPolish(worldIn, itemInOtherHand)) {
 			ItemStack item = itemInOtherHand.copy();
 			ItemStack toPolish = item.split(1);
-			playerIn.setActiveHand(handIn);
+			playerIn.startUsingItem(handIn);
 			itemstack.getOrCreateTag()
 				.put("Polishing", toPolish.serializeNBT());
-			playerIn.setHeldItem(otherHand, item);
+			playerIn.setItemInHand(otherHand, item);
 			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 		}
 
-		RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
+		RayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
 		if (!(raytraceresult instanceof BlockRayTraceResult))
 			return FAIL;
 		BlockRayTraceResult ray = (BlockRayTraceResult) raytraceresult;
-		Vector3d hitVec = ray.getHitVec();
+		Vector3d hitVec = ray.getLocation();
 
-		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).grow(1f);
+		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).inflate(1f);
 		ItemEntity pickUp = null;
-		for (ItemEntity itemEntity : worldIn.getEntitiesWithinAABB(ItemEntity.class, bb)) {
+		for (ItemEntity itemEntity : worldIn.getEntitiesOfClass(ItemEntity.class, bb)) {
 			if (!itemEntity.isAlive())
 				continue;
-			if (itemEntity.getPositionVec()
-				.distanceTo(playerIn.getPositionVec()) > 3)
+			if (itemEntity.position()
+				.distanceTo(playerIn.position()) > 3)
 				continue;
 			ItemStack stack = itemEntity.getItem();
 			if (!SandPaperPolishingRecipe.canPolish(worldIn, stack))
@@ -96,9 +98,9 @@ public class SandPaperItem extends Item {
 			.copy();
 		ItemStack toPolish = item.split(1);
 
-		playerIn.setActiveHand(handIn);
+		playerIn.startUsingItem(handIn);
 
-		if (!worldIn.isRemote) {
+		if (!worldIn.isClientSide) {
 			itemstack.getOrCreateTag()
 				.put("Polishing", toPolish.serializeNBT());
 			if (item.isEmpty())
@@ -121,19 +123,19 @@ public class SandPaperItem extends Item {
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+	public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof PlayerEntity))
 			return stack;
 		PlayerEntity player = (PlayerEntity) entityLiving;
 		CompoundNBT tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
-			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
+			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
 			ItemStack polished =
-				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.getPositionVec(), toPolish, stack);
+				SandPaperPolishingRecipe.applyPolish(worldIn, entityLiving.position(), toPolish, stack);
 
-			if (worldIn.isRemote) {
+			if (worldIn.isClientSide) {
 				spawnParticles(entityLiving.getEyePosition(1)
-					.add(entityLiving.getLookVec()
+					.add(entityLiving.getLookAngle()
 						.scale(.5f)),
 					toPolish, worldIn);
 				return stack;
@@ -141,13 +143,13 @@ public class SandPaperItem extends Item {
 
 			if (!polished.isEmpty()) {
 				if (player instanceof FakePlayer) {
-					player.dropItem(polished, false, false);
+					player.drop(polished, false, false);
 				} else {
 					player.inventory.placeItemBackInInventory(worldIn, polished);
 				}
 			}
 			tag.remove("Polishing");
-			stack.damageItem(1, entityLiving, p -> p.sendBreakAnimation(p.getActiveHand()));
+			stack.hurtAndBreak(1, entityLiving, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
 		}
 
 		return stack;
@@ -155,20 +157,20 @@ public class SandPaperItem extends Item {
 
 	public static void spawnParticles(Vector3d location, ItemStack polishedStack, World world) {
 		for (int i = 0; i < 20; i++) {
-			Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 1 / 8f);
+			Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.random, 1 / 8f);
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, polishedStack), location.x, location.y,
 				location.z, motion.x, motion.y, motion.z);
 		}
 	}
 
 	@Override
-	public void onPlayerStoppedUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
+	public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
 		if (!(entityLiving instanceof PlayerEntity))
 			return;
 		PlayerEntity player = (PlayerEntity) entityLiving;
 		CompoundNBT tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
-			ItemStack toPolish = ItemStack.read(tag.getCompound("Polishing"));
+			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
 			player.inventory.placeItemBackInInventory(worldIn, toPolish);
 			tag.remove("Polishing");
 		}
@@ -180,7 +182,7 @@ public class SandPaperItem extends Item {
 	}
 
 	@Override
-	public int getItemEnchantability() {
+	public int getEnchantmentValue() {
 		return 5;
 	}
 

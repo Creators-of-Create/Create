@@ -34,7 +34,7 @@ public class BlockFace extends Pair<BlockPos, Direction> {
 	}
 
 	public BlockPos getConnectedPos() {
-		return getPos().offset(getFace());
+		return getPos().relative(getFace());
 	}
 
 	public CompoundNBT serializeNBT() {

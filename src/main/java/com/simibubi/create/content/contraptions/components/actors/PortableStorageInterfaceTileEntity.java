@@ -65,8 +65,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 		}
 
 		boolean isConnected = isConnected();
-		if (wasConnected != isConnected && !world.isRemote)
-			markDirty();
+		if (wasConnected != isConnected && !level.isClientSide)
+			setChanged();
 
 		float progress = 0;
 		if (isConnected)
@@ -79,8 +79,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		invalidateCapability();
 	}
 
@@ -101,7 +101,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	public void neighbourChanged() {
-		boolean isBlockPowered = world.isBlockPowered(pos);
+		boolean isBlockPowered = level.hasNeighborSignal(worldPosition);
 		if (isBlockPowered == powered)
 			return;
 		powered = isBlockPowered;
@@ -118,7 +118,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
-			cachedBoundingBox = super.getRenderBoundingBox().grow(2);
+			cachedBoundingBox = super.getRenderBoundingBox().inflate(2);
 		}
 		return cachedBoundingBox;
 	}

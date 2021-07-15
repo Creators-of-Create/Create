@@ -31,7 +31,7 @@ public final class FontHelper {
 		StringBuilder currentLine = new StringBuilder();
 		int width = 0;
 		for (String word : words) {
-			int newWidth = font.getStringWidth(word);
+			int newWidth = font.width(word);
 			if (width + newWidth > maxWidthPerLine) {
 				if (width > 0) {
 					String line = currentLine.toString();
@@ -55,13 +55,13 @@ public final class FontHelper {
 	public static void drawSplitString(MatrixStack ms, FontRenderer font, String text, int x, int y, int width,
 		int color) {
 		List<String> list = cutString(font, text, width);
-		Matrix4f matrix4f = ms.peek()
-			.getModel();
+		Matrix4f matrix4f = ms.last()
+			.pose();
 
 		for (String s : list) {
 			float f = (float) x;
-			if (font.getBidiFlag()) {
-				int i = font.getStringWidth(font.bidiReorder(s));
+			if (font.isBidirectional()) {
+				int i = font.width(font.bidirectionalShaping(s));
 				f += (float) (width - i);
 			}
 
@@ -76,10 +76,10 @@ public final class FontHelper {
 			return 0;
 		} else {
 			IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.immediate(Tessellator.getInstance()
-				.getBuffer());
-			int i = font.draw(p_228078_1_, p_228078_2_, p_228078_3_, p_228078_4_, p_228078_6_, p_228078_5_,
+				.getBuilder());
+			int i = font.drawInBatch(p_228078_1_, p_228078_2_, p_228078_3_, p_228078_4_, p_228078_6_, p_228078_5_,
 				irendertypebuffer$impl, false, 0, 15728880);
-			irendertypebuffer$impl.draw();
+			irendertypebuffer$impl.endBatch();
 			return i;
 		}
 	}

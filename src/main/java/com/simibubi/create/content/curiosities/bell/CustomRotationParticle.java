@@ -28,20 +28,20 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 	}
 
 	public Quaternion getCustomRotation(ActiveRenderInfo camera, float partialTicks) {
-		Quaternion quaternion = new Quaternion(camera.getRotation());
-		if (particleAngle != 0.0F) {
-			float angle = MathHelper.lerp(partialTicks, prevParticleAngle, particleAngle);
-			quaternion.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(angle));
+		Quaternion quaternion = new Quaternion(camera.rotation());
+		if (roll != 0.0F) {
+			float angle = MathHelper.lerp(partialTicks, oRoll, roll);
+			quaternion.mul(Vector3f.ZP.rotation(angle));
 		}
 		return quaternion;
 	}
 
 	@Override
-	public void buildGeometry(IVertexBuilder builder, ActiveRenderInfo camera, float partialTicks) {
-		Vector3d cameraPos = camera.getProjectedView();
-		float originX = (float) (MathHelper.lerp(partialTicks, prevPosX, posX) - cameraPos.getX());
-		float originY = (float) (MathHelper.lerp(partialTicks, prevPosY, posY) - cameraPos.getY());
-		float originZ = (float) (MathHelper.lerp(partialTicks, prevPosZ, posZ) - cameraPos.getZ());
+	public void render(IVertexBuilder builder, ActiveRenderInfo camera, float partialTicks) {
+		Vector3d cameraPos = camera.getPosition();
+		float originX = (float) (MathHelper.lerp(partialTicks, xo, x) - cameraPos.x());
+		float originY = (float) (MathHelper.lerp(partialTicks, yo, y) - cameraPos.y());
+		float originZ = (float) (MathHelper.lerp(partialTicks, zo, z) - cameraPos.z());
 
 		Vector3f[] vertices = new Vector3f[] {
 				new Vector3f(-1.0F, -1.0F, 0.0F),
@@ -49,24 +49,24 @@ public class CustomRotationParticle extends SimpleAnimatedParticle {
 				new Vector3f(1.0F, 1.0F, 0.0F),
 				new Vector3f(1.0F, -1.0F, 0.0F)
 		};
-		float scale = getScale(partialTicks);
+		float scale = getQuadSize(partialTicks);
 
 		Quaternion rotation = getCustomRotation(camera, partialTicks);
 		for(int i = 0; i < 4; ++i) {
 			Vector3f vertex = vertices[i];
-			vertex.func_214905_a(rotation);
+			vertex.transform(rotation);
 			vertex.mul(scale);
 			vertex.add(originX, originY, originZ);
 		}
 
-		float minU = mirror ? getMaxU() : getMinU();
-		float maxU = mirror ? getMinU() : getMaxU();
-		float minV = getMinV();
-		float maxV = getMaxV();
-		int brightness = OptifineHandler.usingShaders() ? LightTexture.pack(12, 15 ) : getBrightnessForRender(partialTicks);
-		builder.vertex(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ()).texture(maxU, maxV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
-		builder.vertex(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ()).texture(maxU, minV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
-		builder.vertex(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ()).texture(minU, minV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
-		builder.vertex(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ()).texture(minU, maxV).color(particleRed, particleGreen, particleBlue, particleAlpha).light(brightness).endVertex();
+		float minU = mirror ? getU1() : getU0();
+		float maxU = mirror ? getU0() : getU1();
+		float minV = getV0();
+		float maxV = getV1();
+		int brightness = OptifineHandler.usingShaders() ? LightTexture.pack(12, 15 ) : getLightColor(partialTicks);
+		builder.vertex(vertices[0].x(), vertices[0].y(), vertices[0].z()).uv(maxU, maxV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
+		builder.vertex(vertices[1].x(), vertices[1].y(), vertices[1].z()).uv(maxU, minV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
+		builder.vertex(vertices[2].x(), vertices[2].y(), vertices[2].z()).uv(minU, minV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
+		builder.vertex(vertices[3].x(), vertices[3].y(), vertices[3].z()).uv(minU, maxV).color(rCol, gCol, bCol, alpha).uv2(brightness).endVertex();
 	}
 }

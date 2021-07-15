@@ -6,6 +6,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * Combines multiple IFluidHandlers into one interface (See CombinedInvWrapper
  * for items)

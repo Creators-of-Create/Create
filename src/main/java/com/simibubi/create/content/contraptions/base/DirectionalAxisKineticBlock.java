@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBlock {
 
 	public static final BooleanProperty AXIS_ALONG_FIRST_COORDINATE = BooleanProperty.create("axis_along_first");
@@ -24,30 +26,30 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(AXIS_ALONG_FIRST_COORDINATE);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	protected Direction getFacingForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getNearestLookingDirection()
 			.getOpposite();
 		if (context.getPlayer() != null && context.getPlayer()
-			.isSneaking())
+			.isShiftKeyDown())
 			facing = facing.getOpposite();
 		return facing;
 	}
 
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
-		return context.getPlacementHorizontalFacing()
+		return context.getHorizontalDirection()
 			.getAxis() == Axis.X;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = getFacingForPlacement(context);
-		BlockPos pos = context.getPos();
-		World world = context.getWorld();
+		BlockPos pos = context.getClickedPos();
+		World world = context.getLevel();
 		boolean alongFirst = false;
 		Axis faceAxis = facing.getAxis();
 
@@ -70,7 +72,7 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 
 			for (Direction side : Iterate.horizontalDirections) {
 				if (!prefersConnectionTo(world, pos, side, true)
-					&& !prefersConnectionTo(world, pos, side.rotateY(), false))
+					&& !prefersConnectionTo(world, pos, side.getClockWise(), false))
 					continue;
 				if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
 					prefferedSide = null;
@@ -83,15 +85,15 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 				alongFirst = prefferedSide.getAxis() == Axis.X;
 		}
 
-		return this.getDefaultState()
-			.with(FACING, facing)
-			.with(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
+		return this.defaultBlockState()
+			.setValue(FACING, facing)
+			.setValue(AXIS_ALONG_FIRST_COORDINATE, alongFirst);
 	}
 
 	protected boolean prefersConnectionTo(IWorldReader reader, BlockPos pos, Direction facing, boolean shaftAxis) {
 		if (!shaftAxis)
 			return false;
-		BlockPos neighbourPos = pos.offset(facing);
+		BlockPos neighbourPos = pos.relative(facing);
 		BlockState blockState = reader.getBlockState(neighbourPos);
 		Block block = blockState.getBlock();
 		return block instanceof IRotate
@@ -100,9 +102,9 @@ public abstract class DirectionalAxisKineticBlock extends DirectionalKineticBloc
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		Axis pistonAxis = state.get(FACING)
+		Axis pistonAxis = state.getValue(FACING)
 			.getAxis();
-		boolean alongFirst = state.get(AXIS_ALONG_FIRST_COORDINATE);
+		boolean alongFirst = state.getValue(AXIS_ALONG_FIRST_COORDINATE);
 
 		if (pistonAxis == Axis.X)
 			return alongFirst ? Axis.Y : Axis.Z;

@@ -21,13 +21,13 @@ public class DirectionalExtenderScrollOptionSlot extends CenteredSideValueBoxTra
 	@Override
 	protected Vector3d getLocalOffset(BlockState state) {
 		return super.getLocalOffset(state)
-				.add(Vector3d.of(state.get(BlockStateProperties.FACING).getDirectionVec()).scale(-2 / 16f));
+				.add(Vector3d.atLowerCornerOf(state.getValue(BlockStateProperties.FACING).getNormal()).scale(-2 / 16f));
 	}
 
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
 		if (!getSide().getAxis().isHorizontal())
-			MatrixStacker.of(ms).rotateY(AngleHelper.horizontalAngle(state.get(BlockStateProperties.FACING)) - 90);
+			MatrixStacker.of(ms).rotateY(AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.FACING)) - 90);
 		super.rotate(state, ms);
 	}
 }

@@ -77,17 +77,17 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void remove() {
-		if (!world.isRemote && destroyProgress != 0)
-			world.sendBlockBreakProgress(breakerId, breakingPos, -1);
-		super.remove();
+	public void setRemoved() {
+		if (!level.isClientSide && destroyProgress != 0)
+			level.destroyBlockProgress(breakerId, breakingPos, -1);
+		super.setRemoved();
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
 
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		if (!shouldRun())
 			return;
@@ -101,31 +101,31 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (ticksUntilNextProgress-- > 0)
 			return;
 
-		BlockState stateToBreak = world.getBlockState(breakingPos);
-		float blockHardness = stateToBreak.getBlockHardness(world, breakingPos);
+		BlockState stateToBreak = level.getBlockState(breakingPos);
+		float blockHardness = stateToBreak.getDestroySpeed(level, breakingPos);
 
 		if (!canBreak(stateToBreak, blockHardness)) {
 			if (destroyProgress != 0) {
 				destroyProgress = 0;
-				world.sendBlockBreakProgress(breakerId, breakingPos, -1);
+				level.destroyBlockProgress(breakerId, breakingPos, -1);
 			}
 			return;
 		}
 
 		float breakSpeed = getBreakSpeed();
 		destroyProgress += MathHelper.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
-		world.playSound(null, pos, stateToBreak.getSoundType().getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
+		level.playSound(null, worldPosition, stateToBreak.getSoundType().getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
 
 		if (destroyProgress >= 10) {
 			onBlockBroken(stateToBreak);
 			destroyProgress = 0;
 			ticksUntilNextProgress = -1;
-			world.sendBlockBreakProgress(breakerId, breakingPos, -1);
+			level.destroyBlockProgress(breakerId, breakingPos, -1);
 			return;
 		}
 
 		ticksUntilNextProgress = (int) (blockHardness / breakSpeed);
-		world.sendBlockBreakProgress(breakerId, breakingPos, (int) destroyProgress);
+		level.destroyBlockProgress(breakerId, breakingPos, (int) destroyProgress);
 	}
 
 	public boolean canBreak(BlockState stateToBreak, float blockHardness) {
@@ -138,23 +138,23 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	public void onBlockBroken(BlockState stateToBreak) {
-		FluidState FluidState = world.getFluidState(breakingPos);
-		world.playEvent(2001, breakingPos, Block.getStateId(stateToBreak));
-		TileEntity tileentity = stateToBreak.hasTileEntity() ? world.getTileEntity(breakingPos) : null;
-		Vector3d vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), world.rand, .125f);
+		FluidState FluidState = level.getFluidState(breakingPos);
+		level.levelEvent(2001, breakingPos, Block.getId(stateToBreak));
+		TileEntity tileentity = stateToBreak.hasTileEntity() ? level.getBlockEntity(breakingPos) : null;
+		Vector3d vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
 
-		Block.getDrops(stateToBreak, (ServerWorld) world, breakingPos, tileentity).forEach((stack) -> {
-			if (!stack.isEmpty() && world.getGameRules().getBoolean(GameRules.DO_TILE_DROPS)
-					&& !world.restoringBlockSnapshots) {
-				ItemEntity itementity = new ItemEntity(world, vec.x, vec.y, vec.z, stack);
-				itementity.setDefaultPickupDelay();
-				itementity.setMotion(Vector3d.ZERO);
-				world.addEntity(itementity);
+		Block.getDrops(stateToBreak, (ServerWorld) level, breakingPos, tileentity).forEach((stack) -> {
+			if (!stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)
+					&& !level.restoringBlockSnapshots) {
+				ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
+				itementity.setDefaultPickUpDelay();
+				itementity.setDeltaMovement(Vector3d.ZERO);
+				level.addFreshEntity(itementity);
 			}
 		});
-		if (world instanceof ServerWorld)
-			stateToBreak.spawnAdditionalDrops((ServerWorld) world, breakingPos, ItemStack.EMPTY);
-		world.setBlockState(breakingPos, FluidState.getBlockState(), 3);
+		if (level instanceof ServerWorld)
+			stateToBreak.spawnAfterBreak((ServerWorld) level, breakingPos, ItemStack.EMPTY);
+		level.setBlock(breakingPos, FluidState.createLegacyBlock(), 3);
 	}
 
 	protected float getBreakSpeed() {

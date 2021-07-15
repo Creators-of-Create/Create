@@ -44,12 +44,12 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
         msr.translate(getInstancePosition());
 
-        ms.push();
+        ms.pushPose();
         msr.centre();
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
         msr.unCentre();
         connector.setTransform(ms);
-        ms.pop();
+        ms.popPose();
 
         msr.translate(.5f, 15 / 16f, .5f);
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));

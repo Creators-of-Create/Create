@@ -90,8 +90,8 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 		public void putBracket(BlockState state) {
 			this.bracket = Minecraft.getInstance()
-				.getBlockRendererDispatcher()
-				.getModelForState(state);
+				.getBlockRenderer()
+				.getBlockModel(state);
 		}
 
 		public IBakedModel getBracket() {
@@ -99,7 +99,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		}
 
 		public void putRim(Direction face, AttachmentTypes rim) {
-			rims[face.getIndex()] = rim;
+			rims[face.get3DDataValue()] = rim;
 		}
 
 		public void setEncased(boolean encased) {
@@ -107,11 +107,11 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		}
 
 		public boolean hasRim(Direction face) {
-			return rims[face.getIndex()] != AttachmentTypes.NONE;
+			return rims[face.get3DDataValue()] != AttachmentTypes.NONE;
 		}
 
 		public AttachmentTypes getRim(Direction face) {
-			return rims[face.getIndex()];
+			return rims[face.get3DDataValue()];
 		}
 
 		public boolean isEncased() {

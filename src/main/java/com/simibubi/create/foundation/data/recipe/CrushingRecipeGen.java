@@ -14,6 +14,9 @@ import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
+
 public class CrushingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

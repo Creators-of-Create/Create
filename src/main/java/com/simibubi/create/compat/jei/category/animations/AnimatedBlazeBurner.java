@@ -20,10 +20,10 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 	}
 
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 200);
-		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-15.5f));
-		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 23;
 
 		defaultBlockElement(AllBlocks.BLAZE_BURNER.getDefaultState())
@@ -39,7 +39,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 }

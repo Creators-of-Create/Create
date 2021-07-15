@@ -50,7 +50,7 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 		ghostInventory = createGhostInventory();
 		readData(contentHolder);
 		addSlots();
-		detectAndSendChanges();
+		broadcastChanges();
 	}
 
 	@Override
@@ -68,22 +68,22 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 	}
 
 	@Override
-	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-		return slotIn.inventory == playerInventory;
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+		return slotIn.container == playerInventory;
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slotIn) {
+	public boolean canDragTo(Slot slotIn) {
 		if (allowRepeats())
 			return true;
-		return slotIn.inventory == playerInventory;
+		return slotIn.container == playerInventory;
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		ItemStack held = playerInventory.getItemStack();
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+		ItemStack held = playerInventory.getCarried();
 		if (slotId < 36)
-			return super.slotClick(slotId, dragType, clickTypeIn, player);
+			return super.clicked(slotId, dragType, clickTypeIn, player);
 		if (clickTypeIn == ClickType.THROW)
 			return ItemStack.EMPTY;
 
@@ -93,7 +93,7 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 				ItemStack stackInSlot = ghostInventory.getStackInSlot(slot)
 						.copy();
 				stackInSlot.setCount(stackInSlot.getMaxStackSize());
-				playerInventory.setItemStack(stackInSlot);
+				playerInventory.setCarried(stackInSlot);
 				return ItemStack.EMPTY;
 			}
 			return ItemStack.EMPTY;
@@ -101,21 +101,21 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 
 		if (held.isEmpty()) {
 			ghostInventory.setStackInSlot(slot, ItemStack.EMPTY);
-			getSlot(slotId).onSlotChanged();
+			getSlot(slotId).setChanged();
 			return ItemStack.EMPTY;
 		}
 
 		ItemStack insert = held.copy();
 		insert.setCount(1);
 		ghostInventory.setStackInSlot(slot, insert);
-		getSlot(slotId).onSlotChanged();
+		getSlot(slotId).setChanged();
 		return held;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getStackInSlot(index);
+			ItemStack stackToInsert = playerInventory.getItem(index);
 			for (int i = 0; i < ghostInventory.getSlots(); i++) {
 				ItemStack stack = ghostInventory.getStackInSlot(i);
 				if (!allowRepeats() && ItemHandlerHelper.canItemStacksStack(stack, stackToInsert))
@@ -124,20 +124,20 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 					ItemStack copy = stackToInsert.copy();
 					copy.setCount(1);
 					ghostInventory.insertItem(i, copy, false);
-					getSlot(i + 36).onSlotChanged();
+					getSlot(i + 36).setChanged();
 					break;
 				}
 			}
 		} else {
 			ghostInventory.extractItem(index - 36, 1, false);
-			getSlot(index).onSlotChanged();
+			getSlot(index).setChanged();
 		}
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void onContainerClosed(PlayerEntity playerIn) {
-		super.onContainerClosed(playerIn);
+	public void removed(PlayerEntity playerIn) {
+		super.removed(playerIn);
 		saveData(contentHolder);
 	}
 

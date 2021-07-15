@@ -29,9 +29,9 @@ public class KineticEffectHandler {
 	}
 
 	public void tick() {
-		World world = kte.getWorld();
+		World world = kte.getLevel();
 
-		if (world.isRemote) {
+		if (world.isClientSide) {
 			if (overStressedTime > 0)
 				if (--overStressedTime == 0)
 					if (kte.isOverStressed()) {
@@ -59,15 +59,15 @@ public class KineticEffectHandler {
 	}
 
 	public void spawnEffect(IParticleData particle, float maxMotion, int amount) {
-		World world = kte.getWorld();
+		World world = kte.getLevel();
 		if (world == null)
 			return;
-		if (!world.isRemote)
+		if (!world.isClientSide)
 			return;
-		Random r = world.rand;
+		Random r = world.random;
 		for (int i = 0; i < amount; i++) {
 			Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, r, maxMotion);
-			Vector3d position = VecHelper.getCenterOf(kte.getPos());
+			Vector3d position = VecHelper.getCenterOf(kte.getBlockPos());
 			world.addParticle(particle, position.x, position.y, position.z, motion.x, motion.y, motion.z);
 		}
 	}
@@ -87,8 +87,8 @@ public class KineticEffectHandler {
 		float radius2 = kb.getParticleTargetRadius();
 
 		Axis axis = kb.getRotationAxis(state);
-		BlockPos pos = kte.getPos();
-		World world = kte.getWorld();
+		BlockPos pos = kte.getBlockPos();
+		World world = kte.getLevel();
 		if (axis == null)
 			return;
 		if (world == null)
@@ -105,7 +105,7 @@ public class KineticEffectHandler {
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.ROTATION, world, pos, 5);
 			RotationIndicatorParticleData particleData =
 				new RotationIndicatorParticleData(color, particleSpeed, radius1, radius2, 10, axisChar);
-			((ServerWorld) world).spawnParticle(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);
+			((ServerWorld) world).sendParticles(particleData, vec.x, vec.y, vec.z, 20, 0, 0, 0, 1);
 		}
 	}
 

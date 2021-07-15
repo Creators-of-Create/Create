@@ -35,13 +35,13 @@ public class DynamicTree extends AbstractBlockBreakQueue {
 			return;
 
 		// Play and render block break sound and particles
-		world.playEvent(null, 2001, startCutPos, Block.getStateId(world.getBlockState(startCutPos)));
+		world.levelEvent(null, 2001, startCutPos, Block.getId(world.getBlockState(startCutPos)));
 		// Actually breaks the tree
 
 		BranchDestructionData data = start.destroyBranchFromNode(world, startCutPos, Direction.DOWN, false, playerEntity);
 
 		// Feed all the tree drops to drop bi-consumer
-		data.leavesDrops.forEach(stackPos -> drop.accept(stackPos.pos.add(startCutPos), stackPos.stack));
+		data.leavesDrops.forEach(stackPos -> drop.accept(stackPos.pos.offset(startCutPos), stackPos.stack));
 		start.getLogDrops(world, startCutPos, data.species, data.woodVolume).forEach(stack -> drop.accept(startCutPos, stack));
 	}
 

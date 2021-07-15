@@ -13,6 +13,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import net.minecraft.item.Item.Properties;
+
 @EventBusSubscriber
 public class DivingBootsItem extends CopperArmorItem {
 
@@ -26,9 +28,9 @@ public class DivingBootsItem extends CopperArmorItem {
 		if (!affects(entity))
 			return;
 
-		Vector3d motion = entity.getMotion();
-		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "field_70703_bu");
-		entity.onGround |= entity.collidedVertically;
+		Vector3d motion = entity.getDeltaMovement();
+		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "field_70703_bu"); // jumping
+		entity.onGround |= entity.verticalCollision;
 
 		if (isJumping && entity.onGround) {
 			motion = motion.add(0, .5f, 0);
@@ -38,10 +40,10 @@ public class DivingBootsItem extends CopperArmorItem {
 		}
 
 		float multiplier = 1.3f;
-		if (motion.mul(1, 0, 1)
-			.length() < 0.145f && (entity.moveForward > 0 || entity.moveStrafing != 0) && !entity.isSneaking())
-			motion = motion.mul(multiplier, 1, multiplier);
-		entity.setMotion(motion);
+		if (motion.multiply(1, 0, 1)
+			.length() < 0.145f && (entity.zza > 0 || entity.xxa != 0) && !entity.isShiftKeyDown())
+			motion = motion.multiply(multiplier, 1, multiplier);
+		entity.setDeltaMovement(motion);
 	}
 
 	protected static boolean affects(LivingEntity entity) {
@@ -59,7 +61,7 @@ public class DivingBootsItem extends CopperArmorItem {
 			return false;
 		if (entity instanceof PlayerEntity) {
 			PlayerEntity playerEntity = (PlayerEntity) entity;
-			if (playerEntity.abilities.isFlying)
+			if (playerEntity.abilities.flying)
 				return false;
 		}
 		return true;

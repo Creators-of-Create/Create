@@ -25,6 +25,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ReinforcedRailBlock extends AbstractRailBlock {
 
     public static Property<RailShape> RAIL_SHAPE =
@@ -38,7 +40,7 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     }
 
     @Override
-    public void fillItemGroup(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
+    public void fillItemCategory(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
     	// TODO re-add when finished
     }
 
@@ -49,15 +51,15 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     }
 
     @Override
-    protected void fillStateContainer(Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(RAIL_SHAPE, CONNECTS_N, CONNECTS_S);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        boolean alongX = context.getPlacementHorizontalFacing().getAxis() == Axis.X;
-        return super.getStateForPlacement(context).with(RAIL_SHAPE, alongX ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH).with(CONNECTS_N, false).with(CONNECTS_S, false);
+        boolean alongX = context.getHorizontalDirection().getAxis() == Axis.X;
+        return super.getStateForPlacement(context).setValue(RAIL_SHAPE, alongX ? RailShape.EAST_WEST : RailShape.NORTH_SOUTH).setValue(CONNECTS_N, false).setValue(CONNECTS_S, false);
     }
 
     @Override
@@ -68,22 +70,22 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     @Override
     protected void updateState(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos, @Nonnull Block block) {
         super.updateState(state, world, pos, block);
-        world.setBlockState(pos, getUpdatedState(world, pos, state, true));
+        world.setBlockAndUpdate(pos, updateDir(world, pos, state, true));
     }
 
     @Override
     @Nonnull
-    protected BlockState getUpdatedState(@Nonnull World world, BlockPos pos, BlockState state,
+    protected BlockState updateDir(@Nonnull World world, BlockPos pos, BlockState state,
                                          boolean p_208489_4_) {
 
-        boolean alongX = state.get(RAIL_SHAPE) == RailShape.EAST_WEST;
-        BlockPos sPos = pos.add(alongX ? -1 : 0, 0, alongX ? 0 : 1);
-        BlockPos nPos = pos.add(alongX ? 1 : 0, 0, alongX ? 0 : -1);
+        boolean alongX = state.getValue(RAIL_SHAPE) == RailShape.EAST_WEST;
+        BlockPos sPos = pos.offset(alongX ? -1 : 0, 0, alongX ? 0 : 1);
+        BlockPos nPos = pos.offset(alongX ? 1 : 0, 0, alongX ? 0 : -1);
 
-        return super.getUpdatedState(world, pos, state, p_208489_4_).with(CONNECTS_S, world.getBlockState(sPos).getBlock() instanceof ReinforcedRailBlock &&
-                (world.getBlockState(sPos).get(RAIL_SHAPE) == state.get(RAIL_SHAPE)))
-                .with(CONNECTS_N, world.getBlockState(nPos).getBlock() instanceof ReinforcedRailBlock &&
-                        (world.getBlockState(nPos).get(RAIL_SHAPE) == state.get(RAIL_SHAPE)));
+        return super.updateDir(world, pos, state, p_208489_4_).setValue(CONNECTS_S, world.getBlockState(sPos).getBlock() instanceof ReinforcedRailBlock &&
+                (world.getBlockState(sPos).getValue(RAIL_SHAPE) == state.getValue(RAIL_SHAPE)))
+                .setValue(CONNECTS_N, world.getBlockState(nPos).getBlock() instanceof ReinforcedRailBlock &&
+                        (world.getBlockState(nPos).getValue(RAIL_SHAPE) == state.getValue(RAIL_SHAPE)));
     }
 
     @Override
@@ -98,13 +100,13 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     @Override
     @Nonnull
     public VoxelShape getShape(BlockState state, @Nonnull IBlockReader reader, @Nonnull BlockPos pos, ISelectionContext context) {
-        boolean alongX = state.get(RAIL_SHAPE) == RailShape.EAST_WEST;
-        return VoxelShapes.or(makeCuboidShape(0, -2, 0, 16, 2, 16), VoxelShapes.or(makeCuboidShape(0, -2, 0, alongX ? 16 : -1, 12, alongX ? -1 : 16), makeCuboidShape(alongX ? 0 : 17, -2, alongX ? 17 : 0, 16, 12, 16)));
+        boolean alongX = state.getValue(RAIL_SHAPE) == RailShape.EAST_WEST;
+        return VoxelShapes.or(box(0, -2, 0, 16, 2, 16), VoxelShapes.or(box(0, -2, 0, alongX ? 16 : -1, 12, alongX ? -1 : 16), box(alongX ? 0 : 17, -2, alongX ? 17 : 0, 16, 12, 16)));
     }
 
     @Override
     @Nonnull
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.BLOCK;
     }
 
@@ -115,16 +117,16 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     }*/
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-        return !(world.getBlockState(pos.down()).getBlock() instanceof AbstractRailBlock || world.getBlockState(pos.up()).getBlock() instanceof AbstractRailBlock);
+    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+        return !(world.getBlockState(pos.below()).getBlock() instanceof AbstractRailBlock || world.getBlockState(pos.above()).getBlock() instanceof AbstractRailBlock);
     }
 
     @Override
     public void neighborChanged(@Nonnull BlockState state, World world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos pos2, boolean p_220069_6_) {
-        if (!world.isRemote) {
-            if ((world.getBlockState(pos.down()).getBlock() instanceof AbstractRailBlock)) {
+        if (!world.isClientSide) {
+            if ((world.getBlockState(pos.below()).getBlock() instanceof AbstractRailBlock)) {
                 if (!p_220069_6_) {
-                    spawnDrops(state, world, pos);
+                    dropResources(state, world, pos);
                 }
                 world.removeBlock(pos, false);
             } else {

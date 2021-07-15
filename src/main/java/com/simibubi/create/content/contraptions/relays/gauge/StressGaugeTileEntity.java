@@ -43,7 +43,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		}
 
 		sendData();
-		markDirty();
+		setChanged();
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		super.onSpeedChanged(prevSpeed);
 		if (getSpeed() == 0) {
 			dialTarget = 0;
-			markDirty();
+			setChanged();
 			return;
 		}
 
@@ -68,30 +68,30 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		double capacity = getNetworkCapacity();
 		double stressFraction = getNetworkStress() / (capacity == 0 ? 1 : capacity);
 
-		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.title").formatted(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.title").withStyle(TextFormatting.GRAY)));
 
 		if (getTheoreticalSpeed() == 0)
-			tooltip.add(new StringTextComponent(spacing + ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).formatted(TextFormatting.DARK_GRAY));
+			tooltip.add(new StringTextComponent(spacing + ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).withStyle(TextFormatting.DARK_GRAY));
 		//	tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
 		//			+ Lang.translate("gui.stressometer.no_rotation")));
 		else {
-			tooltip.add(componentSpacing.copy().append(StressImpact.getFormattedStressText(stressFraction)));
+			tooltip.add(componentSpacing.plainCopy().append(StressImpact.getFormattedStressText(stressFraction)));
 
-			tooltip.add(componentSpacing.copy().append(Lang.translate("gui.stressometer.capacity").formatted(TextFormatting.GRAY)));
+			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.capacity").withStyle(TextFormatting.GRAY)));
 
 			double remainingCapacity = capacity - getNetworkStress();
 
 			ITextComponent su = Lang.translate("generic.unit.stress");
-			IFormattableTextComponent stressTooltip = componentSpacing.copy()
+			IFormattableTextComponent stressTooltip = componentSpacing.plainCopy()
 					.append(new StringTextComponent(" " + IHaveGoggleInformation.format(remainingCapacity))
-							.append(su.copy())
-							.formatted(StressImpact.of(stressFraction).getRelativeColor()));
+							.append(su.plainCopy())
+							.withStyle(StressImpact.of(stressFraction).getRelativeColor()));
 			if (remainingCapacity != capacity) {
 				stressTooltip
-						.append(new StringTextComponent(" / ").formatted(TextFormatting.GRAY))
+						.append(new StringTextComponent(" / ").withStyle(TextFormatting.GRAY))
 						.append(new StringTextComponent(IHaveGoggleInformation.format(capacity))
-								.append(su.copy())
-								.formatted(TextFormatting.DARK_GRAY));
+								.append(su.plainCopy())
+								.withStyle(TextFormatting.DARK_GRAY));
 			}
 			tooltip.add(stressTooltip);
 		}

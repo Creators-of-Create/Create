@@ -74,7 +74,7 @@ public class AnimateTileEntityInstruction extends TickingInstruction {
 	}
 
 	private static <T> Optional<T> castIfPresent(PonderWorld world, BlockPos pos, Class<T> teType) {
-		TileEntity tileEntity = world.getTileEntity(pos);
+		TileEntity tileEntity = world.getBlockEntity(pos);
 		if (teType.isInstance(tileEntity))
 			return Optional.of(teType.cast(tileEntity));
 		return Optional.empty();

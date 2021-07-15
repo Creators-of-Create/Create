@@ -19,8 +19,8 @@ public class HosePulleyRenderer extends AbstractPulleyRenderer {
 	@Override
 	protected Axis getShaftAxis(KineticTileEntity te) {
 		return te.getBlockState()
-			.get(HosePulleyBlock.HORIZONTAL_FACING)
-			.rotateY()
+			.getValue(HosePulleyBlock.HORIZONTAL_FACING)
+			.getClockWise()
 			.getAxis();
 	}
 

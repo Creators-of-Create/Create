@@ -42,7 +42,7 @@ public class RedstoneLinkNetworkHandler {
 		private Frequency(ItemStack stack) {
 			this.stack = stack;
 			item = stack.getItem();
-			CompoundNBT displayTag = stack.getChildTag("display");
+			CompoundNBT displayTag = stack.getTagElement("display");
 			color = displayTag != null && displayTag.contains("color") ? displayTag.getInt("color") : -1;
 		}
 
@@ -138,7 +138,7 @@ public class RedstoneLinkNetworkHandler {
 		if (from == to)
 			return true;
 		return from.getLocation()
-			.withinDistance(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
+			.closerThan(to.getLocation(), AllConfigs.SERVER.logistics.linkRange.get());
 	}
 
 	public Map<Pair<Frequency, Frequency>, Set<IRedstoneLinkable>> networksIn(IWorld world) {

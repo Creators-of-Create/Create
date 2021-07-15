@@ -16,7 +16,7 @@ public class FabulousWarningCommand {
 				.requires(AllCommands.sourceIsPlayer)
 				.executes(ctx -> {
 					ServerPlayerEntity player = ctx.getSource()
-							.asPlayer();
+							.getPlayerOrException();
 
 					AllPackets.channel.send(
 							PacketDistributor.PLAYER.with(() -> player),

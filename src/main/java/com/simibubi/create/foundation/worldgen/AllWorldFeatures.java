@@ -77,7 +77,7 @@ public class AllWorldFeatures {
 				if (event.getCategory() == Category.NETHER)
 					return;
 				event.getGeneration()
-					.feature(GenerationStage.Decoration.UNDERGROUND_ORES, entry.getFeature());
+					.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, entry.getFeature());
 			});
 	}
 

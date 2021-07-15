@@ -14,6 +14,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ClockworkBearingBlock extends BearingBlock implements ITE<ClockworkBearingTileEntity> {
 
 	public ClockworkBearingBlock(Properties properties) {
@@ -26,14 +28,14 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos,
 			PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if (!player.isAllowEdit())
+		if (!player.mayBuild())
 			return ActionResultType.FAIL;
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return ActionResultType.FAIL;
-		if (player.getHeldItem(handIn).isEmpty()) {
-			if (!worldIn.isRemote) {
+		if (player.getItemInHand(handIn).isEmpty()) {
+			if (!worldIn.isClientSide) {
 				withTileEntityDo(worldIn, pos, te -> {
 					if (te.running) {
 						te.disassemble();
@@ -55,8 +57,8 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		ActionResultType resultType = super.onWrenched(state, context);
-		if (!context.getWorld().isRemote && resultType.isAccepted())
-			withTileEntityDo(context.getWorld(), context.getPos(), ClockworkBearingTileEntity::disassemble);
+		if (!context.getLevel().isClientSide && resultType.consumesAction())
+			withTileEntityDo(context.getLevel(), context.getClickedPos(), ClockworkBearingTileEntity::disassemble);
 		return resultType;
 	}
 

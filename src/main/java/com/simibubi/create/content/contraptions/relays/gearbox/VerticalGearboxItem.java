@@ -20,6 +20,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class VerticalGearboxItem extends BlockItem {
 
 	public VerticalGearboxItem(Properties builder) {
@@ -27,25 +29,25 @@ public class VerticalGearboxItem extends BlockItem {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 	}
 	
 	@Override
-	public String getTranslationKey() {
+	public String getDescriptionId() {
 		return "item.create.vertical_gearbox";
 	}
 
 	@Override
-	public void addToBlockToItemMap(Map<Block, Item> p_195946_1_, Item p_195946_2_) {
+	public void registerBlocks(Map<Block, Item> p_195946_1_, Item p_195946_2_) {
 	}
 
 	@Override
-	protected boolean onBlockPlaced(BlockPos pos, World world, PlayerEntity player, ItemStack stack, BlockState state) {
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, World world, PlayerEntity player, ItemStack stack, BlockState state) {
 		Axis prefferedAxis = null;
 		for (Direction side : Iterate.horizontalDirections) {
-			BlockState blockState = world.getBlockState(pos.offset(side));
+			BlockState blockState = world.getBlockState(pos.relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(world, pos.offset(side), blockState,
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(world, pos.relative(side), blockState,
 						side.getOpposite()))
 					if (prefferedAxis != null && prefferedAxis != side.getAxis()) {
 						prefferedAxis = null;
@@ -56,11 +58,11 @@ public class VerticalGearboxItem extends BlockItem {
 			}
 		}
 
-		Axis axis = prefferedAxis == null ? player.getHorizontalFacing()
-				.rotateY()
+		Axis axis = prefferedAxis == null ? player.getDirection()
+				.getClockWise()
 				.getAxis() : prefferedAxis == Axis.X ? Axis.Z : Axis.X;
-		world.setBlockState(pos, state.with(BlockStateProperties.AXIS, axis));
-		return super.onBlockPlaced(pos, world, player, stack, state);
+		world.setBlockAndUpdate(pos, state.setValue(BlockStateProperties.AXIS, axis));
+		return super.updateCustomBlockEntityTag(pos, world, player, stack, state);
 	}
 
 }

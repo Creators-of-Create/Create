@@ -18,11 +18,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @Mixin(Minecraft.class)
 public class WindowResizeMixin {
 
-	@Shadow @Final private MainWindow mainWindow;
+	@Shadow @Final private MainWindow window;
 
-	@Inject(at = @At("TAIL"), method = "updateWindowSize")
+	@Inject(at = @At("TAIL"), method = "resizeDisplay")
 	private void updateWindowSize(CallbackInfo ci) {
-		UIRenderHelper.updateWindowSize(mainWindow);
+		UIRenderHelper.updateWindowSize(window);
 	}
 
 }

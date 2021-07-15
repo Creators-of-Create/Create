@@ -51,9 +51,9 @@ public class LinkedControllerInputPacket extends LinkedControllerPacketBase {
 
 	@Override
 	protected void handleItem(ServerPlayerEntity player, ItemStack heldItem) {
-		World world = player.getEntityWorld();
-		UUID uniqueID = player.getUniqueID();
-		BlockPos pos = player.getBlockPos();
+		World world = player.getCommandSenderWorld();
+		UUID uniqueID = player.getUUID();
+		BlockPos pos = player.blockPosition();
 
 		if (player.isSpectator() && press)
 			return;

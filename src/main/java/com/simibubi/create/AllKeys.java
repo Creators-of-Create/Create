@@ -42,24 +42,24 @@ public enum AllKeys {
 	public boolean isPressed() {
 		if (!modifiable)
 			return isKeyDown(key);
-		return keybind.isKeyDown();
+		return keybind.isDown();
 	}
 
 	public String getBoundKey() {
-		return keybind.getBoundKeyLocalizedText()
+		return keybind.getTranslatedKeyMessage()
 			.getString()
 			.toUpperCase();
 	}
 
 	public int getBoundCode() {
 		return keybind.getKey()
-			.getKeyCode();
+			.getValue();
 	}
 
 	public static boolean isKeyDown(int key) {
 		return GLFW.glfwGetKey(Minecraft.getInstance()
 			.getWindow()
-			.getHandle(), key) != 0;
+			.getWindow(), key) != 0;
 	}
 
 	public static boolean ctrlDown() {

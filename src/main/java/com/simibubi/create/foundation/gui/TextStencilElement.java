@@ -50,10 +50,10 @@ public class TextStencilElement extends DelegatedStencilElement {
 
 		float x = 0, y = 0;
 		if (centerHorizontally)
-			x = width / 2f - font.getWidth(component) / 2f;
+			x = width / 2f - font.width(component) / 2f;
 
 		if (centerVertically)
-			y = height / 2f - (font.FONT_HEIGHT - 1) / 2f;
+			y = height / 2f - (font.lineHeight - 1) / 2f;
 
 		font.draw(ms, component, x, y, 0xff_000000);
 	}
@@ -62,15 +62,15 @@ public class TextStencilElement extends DelegatedStencilElement {
 	protected void renderElement(MatrixStack ms) {
 		float x = 0, y = 0;
 		if (centerHorizontally)
-			x = width / 2f - font.getWidth(component) / 2f;
+			x = width / 2f - font.width(component) / 2f;
 
 		if (centerVertically)
-			y = height / 2f - (font.FONT_HEIGHT - 1) / 2f;
+			y = height / 2f - (font.lineHeight - 1) / 2f;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(x, y, 0);
-		element.render(ms, font.getWidth(component), font.FONT_HEIGHT + 2, alpha);
-		ms.pop();
+		element.render(ms, font.width(component), font.lineHeight + 2, alpha);
+		ms.popPose();
 	}
 
 	public IFormattableTextComponent getComponent() {

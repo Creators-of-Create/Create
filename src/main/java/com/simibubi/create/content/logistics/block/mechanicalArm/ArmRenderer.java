@@ -32,7 +32,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean isGlobalRenderer(KineticTileEntity te) {
+	public boolean shouldRenderOffScreen(KineticTileEntity te) {
 		return true;
 	}
 
@@ -44,7 +44,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		ArmTileEntity arm = (ArmTileEntity) te;
 		ItemStack item = arm.heldItem;
 		boolean hasItem = !item.isEmpty();
-		boolean usingFlywheel = Backend.getInstance().canUseInstancing(te.getWorld());
+		boolean usingFlywheel = Backend.getInstance().canUseInstancing(te.getLevel());
 
 		if (usingFlywheel && !hasItem) return;
 
@@ -52,10 +52,10 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 											 .getItemRenderer();
 
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
-				&& itemRenderer.getItemModelWithOverrides(item, Minecraft.getInstance().world, null)
+				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null)
 							   .isGui3d();
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
 		BlockState blockState = te.getBlockState();
 
 		MatrixStack msLocal = new MatrixStack();
@@ -69,7 +69,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 		boolean rave = arm.phase == Phase.DANCING && te.getSpeed() != 0;
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel()) + (te.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -85,7 +85,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 		msr.centre();
 
-		if (blockState.get(ArmBlock.CEILING))
+		if (blockState.getValue(ArmBlock.CEILING))
 			msr.rotateX(180);
 
 		if (usingFlywheel)
@@ -94,17 +94,17 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			renderArm(builder, ms, msLocal, msr, blockState, color, baseAngle, lowerArmAngle, upperArmAngle, headAngle, hasItem, isBlockItem, light);
 
 		if (hasItem) {
-			ms.push();
+			ms.pushPose();
 			float itemScale = isBlockItem ? .5f : .625f;
 			msr.rotateX(90);
 			msLocal.translate(0, -4 / 16f, 0);
 			msLocal.scale(itemScale, itemScale, itemScale);
 
-			ms.peek().getModel().multiply(msLocal.peek().getModel());
+			ms.last().pose().multiply(msLocal.last().pose());
 
 			itemRenderer
-				.renderItem(item, TransformType.FIXED, light, overlay, ms, buffer);
-			ms.pop();
+				.renderStatic(item, TransformType.FIXED, light, overlay, ms, buffer);
+			ms.popPose();
 		}
 
 	}
@@ -140,10 +140,10 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			.renderInto(ms, builder);
 
 		for (int flip : Iterate.positiveAndNegative) {
-			msLocal.push();
+			msLocal.pushPose();
 			transformClawHalf(msr, hasItem, isBlockItem, flip);
 			clawGrip.light(light).transform(msLocal).renderInto(ms, builder);
-			msLocal.pop();
+			msLocal.popPose();
 		}
 	}
 

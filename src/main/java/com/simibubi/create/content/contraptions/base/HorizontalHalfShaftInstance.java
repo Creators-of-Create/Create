@@ -13,6 +13,6 @@ public class HorizontalHalfShaftInstance extends HalfShaftInstance {
 
     @Override
     protected Direction getShaftDirection() {
-        return blockState.get(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+        return blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
     }
 }

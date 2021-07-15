@@ -24,7 +24,7 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 	protected void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
 		int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		Block block = te.getBlockState()
 				.getBlock();
@@ -33,13 +33,13 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 			PartialModel frame = engineBlock.getFrameModel();
 			if (frame != null) {
 				Direction facing = te.getBlockState()
-						.get(EngineBlock.HORIZONTAL_FACING);
+						.getValue(EngineBlock.FACING);
 				float angle = AngleHelper.rad(AngleHelper.horizontalAngle(facing));
 				PartialBufferer.get(frame, te.getBlockState())
 						.rotateCentered(Direction.UP, angle)
 						.translate(0, 0, -1)
-						.light(WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getBlockState(), te.getPos()))
-						.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+						.light(WorldRenderer.getLightColor(te.getLevel(), te.getBlockState(), te.getBlockPos()))
+						.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 			}
 		}
 	}

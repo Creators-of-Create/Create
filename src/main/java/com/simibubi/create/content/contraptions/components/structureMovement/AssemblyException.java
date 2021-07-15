@@ -22,7 +22,7 @@ public class AssemblyException extends Exception {
 		nbt.putString("Component", ITextComponent.Serializer.toJson(exception.component));
 		if (exception.hasPosition())
 			nbt.putLong("Position", exception.getPosition()
-				.toLong());
+				.asLong());
 
 		compound.put("LastException", nbt);
 	}
@@ -35,7 +35,7 @@ public class AssemblyException extends Exception {
 		String string = nbt.getString("Component");
 		AssemblyException exception = new AssemblyException(ITextComponent.Serializer.fromJson(string));
 		if (nbt.contains("Position"))
-			exception.position = BlockPos.fromLong(nbt.getLong("Position"));
+			exception.position = BlockPos.of(nbt.getLong("Position"));
 
 		return exception;
 	}
@@ -51,7 +51,7 @@ public class AssemblyException extends Exception {
 	public static AssemblyException unmovableBlock(BlockPos pos, BlockState state) {
 		AssemblyException e = new AssemblyException("unmovableBlock", pos.getX(), pos.getY(), pos.getZ(),
 			new TranslationTextComponent(state.getBlock()
-				.getTranslationKey()));
+				.getDescriptionId()));
 		e.position = pos;
 		return e;
 	}

@@ -25,7 +25,7 @@ public class ControllerRailGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		RailShape shape = state.get(ControllerRailBlock.SHAPE);
+		RailShape shape = state.getValue(ControllerRailBlock.SHAPE);
 		boolean backwards = ControllerRailBlock.isStateBackwards(state);
 		int rotation = backwards ? 180 : 0;
 
@@ -45,7 +45,7 @@ public class ControllerRailGenerator extends SpecialBlockStateGen {
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		RailShape shape = state.get(ControllerRailBlock.SHAPE);
+		RailShape shape = state.getValue(ControllerRailBlock.SHAPE);
 		boolean backwards = ControllerRailBlock.isStateBackwards(state);
 
 		String model = shape.isAscending() ? backwards ? "ascending_south" : "ascending_north" : "north_south";

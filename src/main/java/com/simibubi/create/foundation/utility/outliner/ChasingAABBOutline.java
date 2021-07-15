@@ -13,8 +13,8 @@ public class ChasingAABBOutline extends AABBOutline {
 
 	public ChasingAABBOutline(AxisAlignedBB bb) {
 		super(bb);
-		prevBB = bb.grow(0);
-		targetBB = bb.grow(0);
+		prevBB = bb.inflate(0);
+		targetBB = bb.inflate(0);
 	}
 
 	public void target(AxisAlignedBB target) {

@@ -41,7 +41,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		new RenderSkyboxCube(Create.asResource("textures/gui/title/background/panorama"));
 	public static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
-	private RenderSkybox vanillaPanorama = new RenderSkybox(MainMenuScreen.PANORAMA_RESOURCES);
+	private RenderSkybox vanillaPanorama = new RenderSkybox(MainMenuScreen.CUBE_MAP);
 	public static RenderSkybox panorama = new RenderSkybox(PANORAMA_RESOURCES);
 	private long firstRenderTime;
 	private Button gettingStarted;
@@ -51,74 +51,74 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		returnOnClose = true;
 		if (parent instanceof MainMenuScreen)
 			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen) parent,
-				"field_209101_K");
+				"panorama");
 	}
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (firstRenderTime == 0L)
-			this.firstRenderTime = Util.milliTime();
+			this.firstRenderTime = Util.getMillis();
 		super.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		float f = (float) (Util.milliTime() - this.firstRenderTime) / 1000.0F;
+		float f = (float) (Util.getMillis() - this.firstRenderTime) / 1000.0F;
 		float alpha = MathHelper.clamp(f, 0.0F, 1.0F);
-		float elapsedPartials = client.getTickLength();
+		float elapsedPartials = minecraft.getDeltaFrameTime();
 
 		if (parent instanceof MainMenuScreen) {
 			if (alpha < 1)
 				vanillaPanorama.render(elapsedPartials, 1);
 			panorama.render(elapsedPartials, alpha);
 
-			client.getTextureManager()
-				.bindTexture(PANORAMA_OVERLAY_TEXTURES);
+			minecraft.getTextureManager()
+				.bind(PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			drawTexture(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
+			blit(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 		}
 
 		RenderSystem.enableDepthTest();
 
 		for (int side : Iterate.positiveAndNegative) {
-			ms.push();
+			ms.pushPose();
 			ms.translate(width / 2, 60, 200);
 			ms.scale(24 * side, 24 * side, 32);
 			ms.translate(-1.75 * ((alpha * alpha) / 2f + .5f), .25f, 0);
 			MatrixStacker.of(ms)
 				.rotateX(45);
 			GuiGameElement.of(AllBlocks.LARGE_COGWHEEL.getDefaultState())
-				.rotateBlock(0, Util.milliTime() / 32f * side, 0)
+				.rotateBlock(0, Util.getMillis() / 32f * side, 0)
 				.render(ms);
 			ms.translate(-1, 0, -1);
 			GuiGameElement.of(AllBlocks.COGWHEEL.getDefaultState())
-				.rotateBlock(0, Util.milliTime() / -16f * side + 22.5f, 0)
+				.rotateBlock(0, Util.getMillis() / -16f * side + 22.5f, 0)
 				.render(ms);
-			ms.pop();
+			ms.popPose();
 		}
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(width / 2 - 32, 32, -10);
-		ms.push();
+		ms.pushPose();
 		ms.scale(0.25f, 0.25f, 0.25f);
 		AllGuiTextures.LOGO.draw(ms, 0, 0);
-		ms.pop();
+		ms.popPose();
 		new BoxElement().withBackground(0x88_000000)
 			.flatBorder(new Color(0x01_000000, true))
 			.at(-32, 56, 100)
 			.withBounds(128, 11)
 			.render(ms);
-		ms.pop();
+		ms.popPose();
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, 0, 200);
-		drawCenteredText(ms, textRenderer, new StringTextComponent(Create.NAME).formatted(TextFormatting.BOLD)
+		drawCenteredString(ms, font, new StringTextComponent(Create.NAME).withStyle(TextFormatting.BOLD)
 			.append(
-				new StringTextComponent(" v" + Create.VERSION).formatted(TextFormatting.BOLD, TextFormatting.WHITE)),
+				new StringTextComponent(" v" + Create.VERSION).withStyle(TextFormatting.BOLD, TextFormatting.WHITE)),
 			width / 2, 89, 0xff_E4BB67);
-		ms.pop();
+		ms.popPose();
 
 		RenderSystem.disableDepthTest();
 	}
@@ -170,7 +170,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				return;
 			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
 				return;
-			renderTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), TextFormatting.GRAY,
+			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), TextFormatting.GRAY,
 				TextFormatting.GRAY), mouseX, mouseY);
 		}
 	}
@@ -188,9 +188,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		returnOnClose = false;
 		ScreenOpener.open(new ConfirmOpenLinkScreen((p_213069_2_) -> {
 			if (p_213069_2_)
-				Util.getOSType()
-					.openURI(url);
-			this.client.displayGuiScreen(this);
+				Util.getPlatform()
+					.openUri(url);
+			this.minecraft.setScreen(this);
 		}, url, true));
 	}
 

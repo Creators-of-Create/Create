@@ -25,7 +25,7 @@ public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 	public static ConversionRecipe create(ItemStack from, ItemStack to) {
 		ResourceLocation recipeId = Create.asResource("conversion_" + counter++);
 		return new ProcessingRecipeBuilder<>(ConversionRecipe::new, recipeId)
-			.withItemIngredients(Ingredient.fromStacks(from))
+			.withItemIngredients(Ingredient.of(from))
 			.withSingleItemOutput(to)
 			.build();
 	}

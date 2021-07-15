@@ -26,7 +26,7 @@ public abstract class SafeTileEntityRenderer<T extends TileEntity> extends TileE
 		int overlay);
 
 	public boolean isInvalid(T te) {
-		return !te.hasWorld() || te.getBlockState()
+		return !te.hasLevel() || te.getBlockState()
 			.getBlock() == Blocks.AIR;
 	}
 }

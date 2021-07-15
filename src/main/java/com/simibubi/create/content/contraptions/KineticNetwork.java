@@ -89,7 +89,7 @@ public class KineticNetwork {
 		te.updateFromNetwork(0, 0, 0);
 
 		if (members.isEmpty()) {
-			TorquePropagator.networks.get(te.getWorld())
+			TorquePropagator.networks.get(te.getLevel())
 				.remove(this.id);
 			return;
 		}
@@ -109,9 +109,9 @@ public class KineticNetwork {
 		boolean wasOverStressed = te.isOverStressed();
 		te.updateFromNetwork(currentCapacity, currentStress, getSize());
 		if (!wasOverStressed && te.isOverStressed() && te.getTheoreticalSpeed() != 0) {
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, te.getWorld(), te.getPos(), 4);
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESSED, te.getLevel(), te.getBlockPos(), 4);
 			if (containsFlywheel)
-				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESS_FLYWHEEL, te.getWorld(), te.getPos(), 4);
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.OVERSTRESS_FLYWHEEL, te.getLevel(), te.getBlockPos(), 4);
 		}
 	}
 
@@ -147,8 +147,8 @@ public class KineticNetwork {
 		for (Iterator<KineticTileEntity> iterator = sources.keySet()
 			.iterator(); iterator.hasNext();) {
 			KineticTileEntity te = iterator.next();
-			if (te.getWorld()
-				.getTileEntity(te.getPos()) != te) {
+			if (te.getLevel()
+				.getBlockEntity(te.getBlockPos()) != te) {
 				iterator.remove();
 				continue;
 			}
@@ -164,8 +164,8 @@ public class KineticNetwork {
 		for (Iterator<KineticTileEntity> iterator = members.keySet()
 			.iterator(); iterator.hasNext();) {
 			KineticTileEntity te = iterator.next();
-			if (te.getWorld()
-				.getTileEntity(te.getPos()) != te) {
+			if (te.getLevel()
+				.getBlockEntity(te.getBlockPos()) != te) {
 				iterator.remove();
 				continue;
 			}

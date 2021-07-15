@@ -60,7 +60,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		if (selectedPos == null)
 			return;
 		lastChasingSelectedPos = chasingSelectedPos;
-		Vector3d target = Vector3d.of(selectedPos);
+		Vector3d target = Vector3d.atLowerCornerOf(selectedPos);
 		if (target.distanceTo(chasingSelectedPos) < 1 / 512f) {
 			chasingSelectedPos = target;
 			return;
@@ -94,30 +94,30 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		if (selectIgnoreBlocks) {
 			float pt = AnimationTickHolder.getPartialTicks();
 			selectedPos = new BlockPos(player.getEyePosition(pt)
-				.add(player.getLookVec()
+				.add(player.getLookAngle()
 					.scale(selectionRange)));
 			if (snap)
-				lastChasingSelectedPos = chasingSelectedPos = Vector3d.of(selectedPos);
+				lastChasingSelectedPos = chasingSelectedPos = Vector3d.atLowerCornerOf(selectedPos);
 			return;
 		}
 
 		// Select targeted Block
 		selectedPos = null;
-		BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.world, player, 75);
+		BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.level, player, 75);
 		if (trace == null || trace.getType() != Type.BLOCK)
 			return;
 
-		BlockPos hit = new BlockPos(trace.getHitVec());
-		boolean replaceable = player.world.getBlockState(hit)
+		BlockPos hit = new BlockPos(trace.getLocation());
+		boolean replaceable = player.level.getBlockState(hit)
 			.getMaterial()
 			.isReplaceable();
-		if (trace.getFace()
+		if (trace.getDirection()
 			.getAxis()
 			.isVertical() && !replaceable)
-			hit = hit.offset(trace.getFace());
+			hit = hit.relative(trace.getDirection());
 		selectedPos = hit;
 		if (snap)
-			lastChasingSelectedPos = chasingSelectedPos = Vector3d.of(selectedPos);
+			lastChasingSelectedPos = chasingSelectedPos = Vector3d.atLowerCornerOf(selectedPos);
 	}
 
 	@Override
@@ -131,7 +131,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		if (!schematicHandler.isDeployed())
 			return;
 
-		ms.push();
+		ms.pushPose();
 		AABBOutline outline = schematicHandler.getOutline();
 		if (renderSelectedFace) {
 			outline.getParams()
@@ -146,7 +146,7 @@ public abstract class SchematicToolBase implements ISchematicTool {
 		outline.render(ms, buffer, AnimationTickHolder.getPartialTicks());
 		outline.getParams()
 			.clearTextures();
-		ms.pop();
+		ms.popPose();
 	}
 
 }

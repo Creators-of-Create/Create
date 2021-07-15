@@ -55,12 +55,12 @@ public class PackingCategory extends BasinCategory {
 		while (i < size) {
 			Ingredient ingredient = ingredients2.get(i);
 			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
-			itemStacks.set(i, Arrays.asList(ingredient.getMatchingStacks()));
+			itemStacks.set(i, Arrays.asList(ingredient.getItems()));
 			i++;
 		}
 
 		itemStacks.init(i, false, 141, 50);
-		itemStacks.set(i, recipe.getRecipeOutput());
+		itemStacks.set(i, recipe.getResultItem());
 	}
 
 	@Override

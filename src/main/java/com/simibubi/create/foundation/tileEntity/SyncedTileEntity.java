@@ -28,46 +28,46 @@ public abstract class SyncedTileEntity extends TileEntity {
 
 	@Override
 	public CompoundNBT getUpdateTag() {
-		return write(new CompoundNBT());
+		return save(new CompoundNBT());
 	}
 
 	@Override
 	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-		fromTag(state, tag);
+		load(state, tag);
 	}
 
 	public void sendData() {
-		if (world != null)
-			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 2 | 4 | 16);
+		if (level != null)
+			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2 | 4 | 16);
 	}
 
 	public void causeBlockUpdate() {
-		if (world != null)
-			world.notifyBlockUpdate(getPos(), getBlockState(), getBlockState(), 1);
+		if (level != null)
+			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 1);
 	}
 
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
-		return new SUpdateTileEntityPacket(getPos(), 1, writeToClient(new CompoundNBT()));
+		return new SUpdateTileEntityPacket(getBlockPos(), 1, writeToClient(new CompoundNBT()));
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-		readClientUpdate(getBlockState(), pkt.getNbtCompound());
+		readClientUpdate(getBlockState(), pkt.getTag());
 	}
 
 	// Special handling for client update packets
 	public void readClientUpdate(BlockState state, CompoundNBT tag) {
-		fromTag(state, tag);
+		load(state, tag);
 	}
 
 	// Special handling for client update packets
 	public CompoundNBT writeToClient(CompoundNBT tag) {
-		return write(tag);
+		return save(tag);
 	}
 
 	public void notifyUpdate() {
-		markDirty();
+		setChanged();
 		sendData();
 	}
 
@@ -76,7 +76,7 @@ public abstract class SyncedTileEntity extends TileEntity {
 	}
 
 	public Chunk containedChunk() {
-		SectionPos sectionPos = SectionPos.from(pos);
-		return world.getChunk(sectionPos.getSectionX(), sectionPos.getSectionZ());
+		SectionPos sectionPos = SectionPos.of(worldPosition);
+		return level.getChunk(sectionPos.x(), sectionPos.z());
 	}
 }

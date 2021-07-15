@@ -57,6 +57,8 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class CartAssemblerBlock extends AbstractRailBlock
 	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
@@ -69,36 +71,36 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 	public CartAssemblerBlock(Properties properties) {
 		super(true, properties);
-		setDefaultState(getDefaultState().with(POWERED, false)
-			.with(BACKWARDS, false)
-			.with(RAIL_TYPE, CartAssembleRailType.POWERED_RAIL));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false)
+			.setValue(BACKWARDS, false)
+			.setValue(RAIL_TYPE, CartAssembleRailType.POWERED_RAIL));
 	}
 
 	public static BlockState createAnchor(BlockState state) {
-		Axis axis = state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
+		Axis axis = state.getValue(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Axis.Z : Axis.X;
 		return AllBlocks.MINECART_ANCHOR.getDefaultState()
-			.with(BlockStateProperties.HORIZONTAL_AXIS, axis);
+			.setValue(BlockStateProperties.HORIZONTAL_AXIS, axis);
 	}
 
 	private static Item getRailItem(BlockState state) {
-		return state.get(RAIL_TYPE)
+		return state.getValue(RAIL_TYPE)
 			.getItem();
 	}
 
 	public static BlockState getRailBlock(BlockState state) {
-		AbstractRailBlock railBlock = (AbstractRailBlock) state.get(RAIL_TYPE)
+		AbstractRailBlock railBlock = (AbstractRailBlock) state.getValue(RAIL_TYPE)
 			.getBlock();
-		BlockState railState = railBlock.getDefaultState()
-			.with(railBlock.getShapeProperty(), state.get(RAIL_SHAPE));
-		if (railState.contains(ControllerRailBlock.BACKWARDS))
-			railState = railState.with(ControllerRailBlock.BACKWARDS, state.get(BACKWARDS));
+		BlockState railState = railBlock.defaultBlockState()
+			.setValue(railBlock.getShapeProperty(), state.getValue(RAIL_SHAPE));
+		if (railState.hasProperty(ControllerRailBlock.BACKWARDS))
+			railState = railState.setValue(ControllerRailBlock.BACKWARDS, state.getValue(BACKWARDS));
 		return railState;
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(RAIL_SHAPE, POWERED, RAIL_TYPE, BACKWARDS);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
@@ -121,7 +123,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		AbstractMinecartEntity cart) {
 		if (!canAssembleTo(cart))
 			return;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
 		withTileEntityDo(world, pos, te -> te.assembleNextTick(cart));
@@ -140,8 +142,8 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	public static CartAssemblerAction getActionForCart(BlockState state, AbstractMinecartEntity cart) {
-		CartAssembleRailType type = state.get(RAIL_TYPE);
-		boolean powered = state.get(POWERED);
+		CartAssembleRailType type = state.getValue(RAIL_TYPE);
+		boolean powered = state.getValue(POWERED);
 		switch (type) {
 		case ACTIVATOR_RAIL:
 			return powered ? CartAssemblerAction.DISASSEMBLE : CartAssemblerAction.PASS;
@@ -166,10 +168,10 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 	@Override
 	@Nonnull
-	public ActionResultType onUse(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos,
+	public ActionResultType use(@Nonnull BlockState state, @Nonnull World world, @Nonnull BlockPos pos,
 		PlayerEntity player, @Nonnull Hand hand, @Nonnull BlockRayTraceResult blockRayTraceResult) {
 
-		ItemStack itemStack = player.getHeldItem(hand);
+		ItemStack itemStack = player.getItemInHand(hand);
 		Item previousItem = getRailItem(state);
 		Item heldItem = itemStack.getItem();
 		if (heldItem != previousItem) {
@@ -180,8 +182,8 @@ public class CartAssemblerBlock extends AbstractRailBlock
 					newType = type;
 			if (newType == null)
 				return ActionResultType.PASS;
-			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
-			world.setBlockState(pos, state.with(RAIL_TYPE, newType));
+			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 1, 1);
+			world.setBlockAndUpdate(pos, state.setValue(RAIL_TYPE, newType));
 
 			if (!player.isCreative()) {
 				itemStack.shrink(1);
@@ -196,11 +198,11 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@Override
 	public void neighborChanged(@Nonnull BlockState state, @Nonnull World worldIn, @Nonnull BlockPos pos,
 		@Nonnull Block blockIn, @Nonnull BlockPos fromPos, boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+		boolean previouslyPowered = state.getValue(POWERED);
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
+			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 	}
 
@@ -218,7 +220,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	protected Axis getRailAxis(BlockState state) {
-		return state.get(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X;
+		return state.getValue(RAIL_SHAPE) == RailShape.NORTH_SOUTH ? Direction.Axis.Z : Direction.Axis.X;
 	}
 
 	@Override
@@ -230,12 +232,12 @@ public class CartAssemblerBlock extends AbstractRailBlock
 			return VoxelShapes.empty();
 		if (entity instanceof PlayerEntity)
 			return AllShapes.CART_ASSEMBLER_PLAYER_COLLISION.get(getRailAxis(state));
-		return VoxelShapes.fullCube();
+		return VoxelShapes.block();
 	}
 
 	@Override
 	@Nonnull
-	public PushReaction getPushReaction(@Nonnull BlockState state) {
+	public PushReaction getPistonPushReaction(@Nonnull BlockState state) {
 		return PushReaction.BLOCK;
 	}
 
@@ -245,7 +247,7 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	@Override
-	public boolean isValidPosition(@Nonnull BlockState state, @Nonnull IWorldReader world, @Nonnull BlockPos pos) {
+	public boolean canSurvive(@Nonnull BlockState state, @Nonnull IWorldReader world, @Nonnull BlockPos pos) {
 		return false;
 	}
 
@@ -270,26 +272,26 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	@SuppressWarnings("deprecation")
 	public List<ItemStack> getDropsNoRail(BlockState state, ServerWorld world, BlockPos pos,
 		@Nullable TileEntity p_220077_3_, @Nullable Entity p_220077_4_, ItemStack p_220077_5_) {
-		return super.getDrops(state, (new LootContext.Builder(world)).withRandom(world.rand)
-			.withParameter(LootParameters.ORIGIN, Vector3d.of(pos))
+		return super.getDrops(state, (new LootContext.Builder(world)).withRandom(world.random)
+			.withParameter(LootParameters.ORIGIN, Vector3d.atLowerCornerOf(pos))
 			.withParameter(LootParameters.TOOL, p_220077_5_)
-			.withNullableParameter(LootParameters.THIS_ENTITY, p_220077_4_)
-			.withNullableParameter(LootParameters.BLOCK_ENTITY, p_220077_3_));
+			.withOptionalParameter(LootParameters.THIS_ENTITY, p_220077_4_)
+			.withOptionalParameter(LootParameters.BLOCK_ENTITY, p_220077_3_));
 	}
 
 	@Override
 	public ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 		PlayerEntity player = context.getPlayer();
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 		if (player != null && !player.isCreative())
-			getDropsNoRail(state, (ServerWorld) world, pos, world.getTileEntity(pos), player, context.getItem())
+			getDropsNoRail(state, (ServerWorld) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 				.forEach(itemStack -> player.inventory.placeItemBackInInventory(world, itemStack));
 		if (world instanceof ServerWorld)
-			state.spawnAdditionalDrops((ServerWorld) world, pos, ItemStack.EMPTY);
-		world.setBlockState(pos, getRailBlock(state));
+			state.spawnAfterBreak((ServerWorld) world, pos, ItemStack.EMPTY);
+		world.setBlockAndUpdate(pos, getRailBlock(state));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -300,9 +302,9 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		}
 
 		@Override
-		protected void fillStateContainer(Builder<Block, BlockState> builder) {
+		protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 			builder.add(BlockStateProperties.HORIZONTAL_AXIS);
-			super.fillStateContainer(builder);
+			super.createBlockStateDefinition(builder);
 		}
 
 		@Override
@@ -314,18 +316,18 @@ public class CartAssemblerBlock extends AbstractRailBlock
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getWorld();
-		if (world.isRemote)
+		World world = context.getLevel();
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
-		BlockPos pos = context.getPos();
-		world.setBlockState(pos, rotate(state, Rotation.CLOCKWISE_90), 3);
-		world.notifyNeighborsOfStateChange(pos.down(), this);
+		BlockPos pos = context.getClickedPos();
+		world.setBlock(pos, rotate(state, Rotation.CLOCKWISE_90), 3);
+		world.updateNeighborsAt(pos.below(), this);
 		return ActionResultType.SUCCESS;
 	}
 
@@ -334,11 +336,11 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		if (rotation == Rotation.NONE)
 			return state;
 		BlockState base = AllBlocks.CONTROLLER_RAIL.getDefaultState()
-			.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
-			.with(ControllerRailBlock.BACKWARDS, state.get(BACKWARDS))
+			.setValue(ControllerRailBlock.SHAPE, state.getValue(RAIL_SHAPE))
+			.setValue(ControllerRailBlock.BACKWARDS, state.getValue(BACKWARDS))
 			.rotate(rotation);
-		return state.with(RAIL_SHAPE, base.get(ControllerRailBlock.SHAPE))
-			.with(BACKWARDS, base.get(ControllerRailBlock.BACKWARDS));
+		return state.setValue(RAIL_SHAPE, base.getValue(ControllerRailBlock.SHAPE))
+			.setValue(BACKWARDS, base.getValue(ControllerRailBlock.BACKWARDS));
 	}
 
 	@Override
@@ -346,21 +348,21 @@ public class CartAssemblerBlock extends AbstractRailBlock
 		if (mirror == Mirror.NONE)
 			return state;
 		BlockState base = AllBlocks.CONTROLLER_RAIL.getDefaultState()
-			.with(ControllerRailBlock.SHAPE, state.get(RAIL_SHAPE))
-			.with(ControllerRailBlock.BACKWARDS, state.get(BACKWARDS))
+			.setValue(ControllerRailBlock.SHAPE, state.getValue(RAIL_SHAPE))
+			.setValue(ControllerRailBlock.BACKWARDS, state.getValue(BACKWARDS))
 			.mirror(mirror);
-		return state.with(BACKWARDS, base.get(ControllerRailBlock.BACKWARDS));
+		return state.setValue(BACKWARDS, base.getValue(ControllerRailBlock.BACKWARDS));
 	}
 
 	public static Direction getHorizontalDirection(BlockState blockState) {
 		if (!(blockState.getBlock() instanceof CartAssemblerBlock))
 			return Direction.SOUTH;
 		Direction pointingTo = getPointingTowards(blockState);
-		return blockState.get(BACKWARDS) ? pointingTo.getOpposite() : pointingTo;
+		return blockState.getValue(BACKWARDS) ? pointingTo.getOpposite() : pointingTo;
 	}
 
 	private static Direction getPointingTowards(BlockState state) {
-		switch (state.get(RAIL_SHAPE)) {
+		switch (state.getValue(RAIL_SHAPE)) {
 		case EAST_WEST:
 			return Direction.WEST;
 		default:

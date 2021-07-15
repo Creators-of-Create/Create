@@ -54,8 +54,8 @@ public class TileEntityRenderHelper {
 				continue;
 			}
 
-			BlockPos pos = tileEntity.getPos();
-			ms.push();
+			BlockPos pos = tileEntity.getBlockPos();
+			ms.pushPose();
 			MatrixStacker.of(ms)
 				.translate(pos);
 
@@ -64,12 +64,12 @@ public class TileEntityRenderHelper {
 				if (lightTransform != null) {
 					Vector4f lightVec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
 					lightVec.transform(lightTransform);
-					lightPos = new BlockPos(lightVec.getX(), lightVec.getY(), lightVec.getZ());
+					lightPos = new BlockPos(lightVec.x(), lightVec.y(), lightVec.z());
 				} else {
 					lightPos = pos;
 				}
 				int worldLight = getCombinedLight(world, lightPos, renderWorld, pos);
-				renderer.render(tileEntity, pt, ms, buffer, worldLight, OverlayTexture.DEFAULT_UV);
+				renderer.render(tileEntity, pt, ms, buffer, worldLight, OverlayTexture.NO_OVERLAY);
 
 			} catch (Exception e) {
 				iterator.remove();
@@ -83,16 +83,16 @@ public class TileEntityRenderHelper {
 					Create.LOGGER.error(message);
 			}
 
-			ms.pop();
+			ms.popPose();
 		}
 	}
 
 	public static int getCombinedLight(World world, BlockPos worldPos, @Nullable PlacementSimulationWorld renderWorld,
 			BlockPos renderWorldPos) {
-		int worldLight = WorldRenderer.getLightmapCoordinates(world, worldPos);
+		int worldLight = WorldRenderer.getLightColor(world, worldPos);
 
 		if (renderWorld != null) {
-			int renderWorldLight = WorldRenderer.getLightmapCoordinates(renderWorld, renderWorldPos);
+			int renderWorldLight = WorldRenderer.getLightColor(renderWorld, renderWorldPos);
 			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
 		}
 

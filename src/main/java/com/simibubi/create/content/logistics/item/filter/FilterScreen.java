@@ -43,8 +43,8 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		setWindowOffset(-11, 5);
 		super.init();
 
-		int x = guiLeft;
-		int y = guiTop;
+		int x = leftPos;
+		int y = topPos;
 
 		blacklist = new IconButton(x + 18, y + 73, AllIcons.I_BLACKLIST);
 		blacklist.setToolTip(denyN);
@@ -73,25 +73,25 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 			return mouseClicked;
 
 		if (blacklist.isHovered()) {
-			container.blacklist = true;
+			menu.blacklist = true;
 			sendOptionUpdate(Option.BLACKLIST);
 			return true;
 		}
 
 		if (whitelist.isHovered()) {
-			container.blacklist = false;
+			menu.blacklist = false;
 			sendOptionUpdate(Option.WHITELIST);
 			return true;
 		}
 
 		if (respectNBT.isHovered()) {
-			container.respectNBT = true;
+			menu.respectNBT = true;
 			sendOptionUpdate(Option.RESPECT_DATA);
 			return true;
 		}
 
 		if (ignoreNBT.isHovered()) {
-			container.respectNBT = false;
+			menu.respectNBT = false;
 			sendOptionUpdate(Option.IGNORE_DATA);
 			return true;
 		}
@@ -106,32 +106,32 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	@Override
 	protected List<IFormattableTextComponent> getTooltipDescriptions() {
-		return Arrays.asList(denyDESC.copy(), allowDESC.copy(), respectDataDESC.copy(), ignoreDataDESC.copy());
+		return Arrays.asList(denyDESC.plainCopy(), allowDESC.plainCopy(), respectDataDESC.plainCopy(), ignoreDataDESC.plainCopy());
 	}
 
 	@Override
 	protected boolean isButtonEnabled(IconButton button) {
 		if (button == blacklist)
-			return !container.blacklist;
+			return !menu.blacklist;
 		if (button == whitelist)
-			return container.blacklist;
+			return menu.blacklist;
 		if (button == respectNBT)
-			return !container.respectNBT;
+			return !menu.respectNBT;
 		if (button == ignoreNBT)
-			return container.respectNBT;
+			return menu.respectNBT;
 		return true;
 	}
 
 	@Override
 	protected boolean isIndicatorOn(Indicator indicator) {
 		if (indicator == blacklistIndicator)
-			return container.blacklist;
+			return menu.blacklist;
 		if (indicator == whitelistIndicator)
-			return !container.blacklist;
+			return !menu.blacklist;
 		if (indicator == respectNBTIndicator)
-			return container.respectNBT;
+			return menu.respectNBT;
 		if (indicator == ignoreNBTIndicator)
-			return !container.respectNBT;
+			return !menu.respectNBT;
 		return false;
 	}
 

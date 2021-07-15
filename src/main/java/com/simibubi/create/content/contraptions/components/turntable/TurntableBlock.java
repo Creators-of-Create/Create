@@ -25,6 +25,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEntity> {
 
 	public TurntableBlock(Properties properties) {
@@ -37,7 +39,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
+	public BlockRenderType getRenderShape(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
@@ -47,10 +49,10 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity e) {
+	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity e) {
 		if (!e.isOnGround())
 			return;
-		if (e.getMotion().y > 0)
+		if (e.getDeltaMovement().y > 0)
 			return;
 		if (e.getY() < pos.getY() + .5f)
 			return;
@@ -60,36 +62,36 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 			if (speed == 0)
 				return;
 
-			World world = e.getEntityWorld();
-			if (world.isRemote && (e instanceof PlayerEntity)) {
-				if (worldIn.getBlockState(e.getBlockPos()) != state) {
+			World world = e.getCommandSenderWorld();
+			if (world.isClientSide && (e instanceof PlayerEntity)) {
+				if (worldIn.getBlockState(e.blockPosition()) != state) {
 					Vector3d origin = VecHelper.getCenterOf(pos);
-					Vector3d offset = e.getPositionVec()
+					Vector3d offset = e.position()
 						.subtract(origin);
 					offset = VecHelper.rotate(offset, MathHelper.clamp(speed, -16, 16) / 1f, Axis.Y);
 					Vector3d movement = origin.add(offset)
-						.subtract(e.getPositionVec());
-					e.setMotion(e.getMotion()
+						.subtract(e.position());
+					e.setDeltaMovement(e.getDeltaMovement()
 						.add(movement));
-					e.velocityChanged = true;
+					e.hurtMarked = true;
 				}
 			}
 
 			if ((e instanceof PlayerEntity))
 				return;
-			if (world.isRemote)
+			if (world.isClientSide)
 				return;
 
 			if ((e instanceof LivingEntity)) {
-				float diff = e.getRotationYawHead() - speed;
-				((LivingEntity) e).setIdleTime(20);
-				e.setRenderYawOffset(diff);
-				e.setRotationYawHead(diff);
+				float diff = e.getYHeadRot() - speed;
+				((LivingEntity) e).setNoActionTime(20);
+				e.setYBodyRot(diff);
+				e.setYHeadRot(diff);
 				e.setOnGround(false);
-				e.velocityChanged = true;
+				e.hurtMarked = true;
 			}
 
-			e.rotationYaw -= speed;
+			e.yRot -= speed;
 		});
 	}
 
@@ -109,7 +111,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

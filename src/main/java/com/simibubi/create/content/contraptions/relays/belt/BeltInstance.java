@@ -43,8 +43,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
         keys = new ArrayList<>(2);
 
-        beltSlope = blockState.get(BeltBlock.SLOPE);
-        facing = blockState.get(BeltBlock.HORIZONTAL_FACING);
+        beltSlope = blockState.getValue(BeltBlock.SLOPE);
+        facing = blockState.getValue(BeltBlock.HORIZONTAL_FACING);
         upward = beltSlope == BeltSlope.UPWARD;
         diagonal = beltSlope.isDiagonal();
         sideways = beltSlope == BeltSlope.SIDEWAYS;
@@ -52,7 +52,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
         alongX = facing.getAxis() == Direction.Axis.X;
         alongZ = facing.getAxis() == Direction.Axis.Z;
 
-        BeltPart part = blockState.get(BeltBlock.PART);
+        BeltPart part = blockState.getValue(BeltBlock.PART);
         boolean start = part == BeltPart.START;
         boolean end = part == BeltPart.END;
         DyeColor color = tile.color.orElse(null);
@@ -144,8 +144,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     }
 
     private Direction getOrientation() {
-        Direction dir = blockState.get(BeltBlock.HORIZONTAL_FACING)
-                                  .rotateY();
+        Direction dir = blockState.getValue(BeltBlock.HORIZONTAL_FACING)
+                                  .getClockWise();
         if (beltSlope == BeltSlope.SIDEWAYS)
             dir = Direction.UP;
 
@@ -155,7 +155,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     private BeltData setup(BeltData key, boolean bottom, SpriteShiftEntry spriteShift) {
         boolean downward = beltSlope == BeltSlope.DOWNWARD;
         float rotX = (!diagonal && beltSlope != BeltSlope.HORIZONTAL ? 90 : 0) + (downward ? 180 : 0) + (sideways ? 90 : 0) + (vertical && alongZ ? 180 : 0);
-        float rotY = facing.getHorizontalAngle() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
+        float rotY = facing.toYRot() + ((diagonal ^ alongX) && !downward ? 180 : 0) + (sideways && alongZ ? 180 : 0) + (vertical && alongX ? 90 : 0);
         float rotZ = (sideways ? 90 : 0) + (vertical && alongX ? 90 : 0);
 
         Quaternion q = new Quaternion(rotX, rotY, rotZ, true);
@@ -167,8 +167,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 				.setRotationOffset(bottom ? 0.5f : 0f)
                 .setColor(tile)
                 .setPosition(getInstancePosition())
-                .setBlockLight(world.getLightLevel(LightType.BLOCK, pos))
-                .setSkyLight(world.getLightLevel(LightType.SKY, pos));
+                .setBlockLight(world.getBrightness(LightType.BLOCK, pos))
+                .setSkyLight(world.getBrightness(LightType.SKY, pos));
 
         return key;
     }

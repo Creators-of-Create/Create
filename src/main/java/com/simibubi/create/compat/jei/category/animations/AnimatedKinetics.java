@@ -27,7 +27,7 @@ public abstract class AnimatedKinetics implements IDrawable {
 	}
 
 	protected BlockState shaft(Axis axis) {
-		return AllBlocks.SHAFT.getDefaultState().with(BlockStateProperties.AXIS, axis);
+		return AllBlocks.SHAFT.getDefaultState().setValue(BlockStateProperties.AXIS, axis);
 	}
 
 	protected PartialModel cogwheel() {

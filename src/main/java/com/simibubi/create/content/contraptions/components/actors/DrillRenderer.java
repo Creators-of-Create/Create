@@ -36,7 +36,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		BlockState state = context.state;
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.DRILL_HEAD, state);
-		Direction facing = state.get(DrillBlock.FACING);
+		Direction facing = state.getValue(DrillBlock.FACING);
 
 		float speed = (float) (context.contraption.stalled
 				|| !VecHelper.isVecPointingTowards(context.relativeMotion, facing
@@ -45,7 +45,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float angle = (float) (((time * speed) % 360));
 
 		MatrixStack m = matrices.contraptionStack;
-		m.push();
+		m.pushPose();
 		MatrixStacker.of(m)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
@@ -57,9 +57,9 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 			.transform(m)
 			.light(matrices.entityMatrix,
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.solid()));
 
-		m.pop();
+		m.popPose();
 	}
 
 }

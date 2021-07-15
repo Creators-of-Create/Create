@@ -7,14 +7,16 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.item.Item.Properties;
+
 public class CopperArmorItem extends ArmorItem {
 
 	public CopperArmorItem(EquipmentSlotType p_i48534_2_, Properties p_i48534_3_) {
-		super(AllArmorMaterials.COPPER, p_i48534_2_, p_i48534_3_.maxStackSize(1));
+		super(AllArmorMaterials.COPPER, p_i48534_2_, p_i48534_3_.stacksTo(1));
 	}
 
 	public boolean isWornBy(Entity entity) {
-		for (ItemStack itemStack : entity.getArmorInventoryList())
+		for (ItemStack itemStack : entity.getArmorSlots())
 			if (itemStack.getItem() == this)
 				return true;
 		return false;

@@ -13,12 +13,12 @@ public class AnimatedSaw extends AnimatedKinetics {
 
 	@Override
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
 		matrixStack.translate(0, 0, 200);
 		matrixStack.translate(2, 22, 0);
-		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-15.5f));
-		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f + 90));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f + 90));
 		int scale = 25;
 
 		defaultBlockElement(shaft(Axis.X))
@@ -27,7 +27,7 @@ public class AnimatedSaw extends AnimatedKinetics {
 			.render(matrixStack);
 
 		defaultBlockElement(AllBlocks.MECHANICAL_SAW.getDefaultState()
-			.with(SawBlock.FACING, Direction.UP))
+			.setValue(SawBlock.FACING, Direction.UP))
 			.rotateBlock(0, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
@@ -37,7 +37,7 @@ public class AnimatedSaw extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 }

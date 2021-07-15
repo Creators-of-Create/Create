@@ -5,6 +5,8 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.DataGenerator;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+
 public class PolishingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

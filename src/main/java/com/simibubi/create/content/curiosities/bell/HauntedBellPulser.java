@@ -46,7 +46,7 @@ public class HauntedBellPulser {
 		boolean firstPulse = false;
 
 		try {
-			IntAttached<Entity> ticker = WARMUP.get(player.getUniqueID(), () -> IntAttached.with(WARMUP_TICKS, player));
+			IntAttached<Entity> ticker = WARMUP.get(player.getUUID(), () -> IntAttached.with(WARMUP_TICKS, player));
 			firstPulse = ticker.getFirst()
 				.intValue() == 1;
 			ticker.decrement();
@@ -55,9 +55,9 @@ public class HauntedBellPulser {
 		} catch (ExecutionException e) {
 		}
 
-		long gameTime = player.world.getGameTime();
+		long gameTime = player.level.getGameTime();
 		if (firstPulse || gameTime % RECHARGE_TICKS != 0)
-			sendPulse(player.world, event.player.getBlockPos(), DISTANCE, false);
+			sendPulse(player.level, event.player.blockPosition(), DISTANCE, false);
 	}
 
 	public static void sendPulse(World world, BlockPos pos, int distance, boolean canOverlap) {

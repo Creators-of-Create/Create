@@ -45,7 +45,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 		if (!super.ring(world, pos, direction))
 			return false;
 
-		if (!world.isRemote)
+		if (!world.isClientSide)
 			HauntedBellPulser.sendPulse(world, pos, DISTANCE, false);
 
 		startEffect();
@@ -78,10 +78,10 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 			return;
 		effectTicks--;
 
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			return;
 
-		Random rand = world.getRandom();
+		Random rand = level.getRandom();
 		if (rand.nextFloat() > 0.25f)
 			return;
 
@@ -90,19 +90,19 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	protected void spawnParticle(Random rand) {
-		double x = pos.getX() + rand.nextDouble();
-		double y = pos.getY() + 0.5;
-		double z = pos.getZ() + rand.nextDouble();
+		double x = worldPosition.getX() + rand.nextDouble();
+		double y = worldPosition.getY() + 0.5;
+		double z = worldPosition.getZ() + rand.nextDouble();
 		double vx = rand.nextDouble() * 0.04 - 0.02;
 		double vy = 0.1;
 		double vz = rand.nextDouble() * 0.04 - 0.02;
-		world.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
+		level.addParticle(ParticleTypes.SOUL, x, y, z, vx, vy, vz);
 	}
 
 	protected void playSound(Random rand) {
 		float vol = rand.nextFloat() * 0.4F + rand.nextFloat() > 0.9F ? 0.6F : 0.0F;
 		float pitch = 0.6F + rand.nextFloat() * 0.4F;
-		world.playSound(null, pos, SoundEvents.PARTICLE_SOUL_ESCAPE, SoundCategory.BLOCKS, vol, pitch);
+		level.playSound(null, worldPosition, SoundEvents.SOUL_ESCAPE, SoundCategory.BLOCKS, vol, pitch);
 	}
 
 }

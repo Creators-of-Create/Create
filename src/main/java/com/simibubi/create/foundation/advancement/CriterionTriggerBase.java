@@ -21,6 +21,8 @@ import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
+import net.minecraft.advancements.ICriterionTrigger.Listener;
+
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {
@@ -33,14 +35,14 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 	protected final Map<PlayerAdvancements, Set<Listener<T>>> listeners = Maps.newHashMap();
 
 	@Override
-	public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
+	public void addPlayerListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
 		Set<Listener<T>> playerListeners = this.listeners.computeIfAbsent(playerAdvancementsIn, k -> new HashSet<>());
 
 		playerListeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
+	public void removePlayerListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
 		Set<Listener<T>> playerListeners = this.listeners.get(playerAdvancementsIn);
 		if (playerListeners != null) {
 			playerListeners.remove(listener);
@@ -51,7 +53,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 	}
 
 	@Override
-	public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+	public void removePlayerListeners(PlayerAdvancements playerAdvancementsIn) {
 		this.listeners.remove(playerAdvancementsIn);
 	}
 
@@ -67,13 +69,13 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 			List<Listener<T>> list = new LinkedList<>();
 
 			for (Listener<T> listener : playerListeners) {
-				if (listener.getCriterionInstance()
+				if (listener.getTriggerInstance()
 					.test(suppliers)) {
 					list.add(listener);
 				}
 			}
 
-			list.forEach(listener -> listener.grantCriterion(playerAdvancements));
+			list.forEach(listener -> listener.run(playerAdvancements));
 
 		}
 	}

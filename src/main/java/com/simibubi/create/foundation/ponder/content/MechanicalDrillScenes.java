@@ -60,7 +60,7 @@ public class MechanicalDrillScenes {
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> 4 * f);
 		scene.effects.rotationSpeedIndicator(breakingPos.east(3));
 		scene.idle(5);
-		scene.world.setBlock(breakingPos, Blocks.OAK_PLANKS.getDefaultState(), false);
+		scene.world.setBlock(breakingPos, Blocks.OAK_PLANKS.defaultBlockState(), false);
 		scene.world.showSection(util.select.position(breakingPos), Direction.DOWN);
 
 		scene.idle(5);
@@ -161,7 +161,7 @@ public class MechanicalDrillScenes {
 		scene.world.hideSection(planks, Direction.UP);
 		scene.idle(40);
 
-		scene.world.setBlocks(planks, Blocks.OAK_PLANKS.getDefaultState(), false);
+		scene.world.setBlocks(planks, Blocks.OAK_PLANKS.defaultBlockState(), false);
 		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
 		scene.world.glueBlockOnto(util.grid.at(4, 3, 2), Direction.DOWN, contraption);
 

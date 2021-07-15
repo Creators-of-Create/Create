@@ -34,9 +34,9 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		BlockState blockState = te.getBlockState();
 		float angle = MathHelper.lerp(pump.arrowDirection.getValue(partialTicks), 0, 90) - 90;
 		for (float yRot : new float[] { 0, 90 }) {
-			ms.push();
+			ms.pushPose();
 			SuperByteBuffer arrow = PartialBufferer.get(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
-			Direction direction = blockState.get(PumpBlock.FACING);
+			Direction direction = blockState.getValue(PumpBlock.FACING);
 			MatrixStacker.of(ms)
 					.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
@@ -46,8 +46,8 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 					.rotateY(yRot)
 					.rotateZ(angle)
 					.translateBack(rotationOffset);
-			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
-			ms.pop();
+			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			ms.popPose();
 		}
 	}
 

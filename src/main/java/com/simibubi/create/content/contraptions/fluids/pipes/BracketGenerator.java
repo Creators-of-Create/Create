@@ -28,9 +28,9 @@ public class BracketGenerator extends DirectionalAxisBlockStateGen {
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		String type = state.get(BracketBlock.TYPE)
-			.getString();
-		boolean vertical = state.get(BracketBlock.FACING)
+		String type = state.getValue(BracketBlock.TYPE)
+			.getSerializedName();
+		boolean vertical = state.getValue(BracketBlock.FACING)
 			.getAxis()
 			.isVertical();
 

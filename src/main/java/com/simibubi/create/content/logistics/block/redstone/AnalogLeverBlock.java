@@ -29,6 +29,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogLeverTileEntity> {
 
 	public AnalogLeverBlock(Properties p_i48402_1_) {
@@ -46,36 +48,36 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 								  BlockRayTraceResult hit) {
-		if (worldIn.isRemote) {
+		if (worldIn.isClientSide) {
 			addParticles(state, worldIn, pos, 1.0F);
 			return ActionResultType.SUCCESS;
 		}
 
 		return onTileEntityUse(worldIn, pos, te -> {
-			boolean sneak = player.isSneaking();
+			boolean sneak = player.isShiftKeyDown();
 			te.changeState(sneak);
 			float f = .25f + ((te.state + 5) / 15f) * .5f;
-			worldIn.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
+			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
 			return ActionResultType.SUCCESS;
 		});
 	}
 
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		return getTileEntityOptional(blockAccess, pos).map(al -> al.state)
 				.orElse(0);
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		return getFacing(blockState) == side ? getWeakPower(blockState, blockAccess, pos, side) : 0;
+	public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return getConnectedDirection(blockState) == side ? getSignal(blockState, blockAccess, pos, side) : 0;
 	}
 
 	@Override
@@ -88,32 +90,32 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (isMoving || state.getBlock() == newState.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.state != 0)
 				updateNeighbors(state, worldIn, pos);
-			worldIn.removeTileEntity(pos);
+			worldIn.removeBlockEntity(pos);
 		});
 	}
 
 	private static void addParticles(BlockState state, IWorld worldIn, BlockPos pos, float alpha) {
-		Direction direction = state.get(HORIZONTAL_FACING)
+		Direction direction = state.getValue(FACING)
 				.getOpposite();
-		Direction direction1 = getFacing(state).getOpposite();
-		double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getXOffset()
-				+ 0.2D * (double) direction1.getXOffset();
-		double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getYOffset()
-				+ 0.2D * (double) direction1.getYOffset();
-		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getZOffset()
-				+ 0.2D * (double) direction1.getZOffset();
+		Direction direction1 = getConnectedDirection(state).getOpposite();
+		double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX()
+				+ 0.2D * (double) direction1.getStepX();
+		double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY()
+				+ 0.2D * (double) direction1.getStepY();
+		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ()
+				+ 0.2D * (double) direction1.getStepZ();
 		worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	}
 
 	static void updateNeighbors(BlockState state, World world, BlockPos pos) {
-		world.notifyNeighborsOfStateChange(pos, state.getBlock());
-		world.notifyNeighborsOfStateChange(pos.offset(getFacing(state).getOpposite()), state.getBlock());
+		world.updateNeighborsAt(pos, state.getBlock());
+		world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -123,8 +125,8 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(HORIZONTAL_FACING, FACE));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(FACING, FACE));
 	}
 
 	@Override
@@ -133,7 +135,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

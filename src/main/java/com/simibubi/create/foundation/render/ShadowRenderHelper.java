@@ -23,26 +23,26 @@ import net.minecraft.world.IWorldReader;
 public class ShadowRenderHelper {
 
 	private static final RenderType SHADOW_LAYER =
-		RenderType.getEntityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
+		RenderType.entityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
 
 	public static void renderShadow(MatrixStack p_229096_0_, IRenderTypeBuffer p_229096_1_, Vector3d pos,
 		float p_229096_3_, float p_229096_6_) {
 		float f = p_229096_6_;
 
-		double d2 = pos.getX();
-		double d0 = pos.getY();
-		double d1 = pos.getZ();
+		double d2 = pos.x();
+		double d0 = pos.y();
+		double d1 = pos.z();
 		int i = MathHelper.floor(d2 - (double) f);
 		int j = MathHelper.floor(d2 + (double) f);
 		int k = MathHelper.floor(d0 - (double) f);
 		int l = MathHelper.floor(d0);
 		int i1 = MathHelper.floor(d1 - (double) f);
 		int j1 = MathHelper.floor(d1 + (double) f);
-		MatrixStack.Entry matrixstack$entry = p_229096_0_.peek();
+		MatrixStack.Entry matrixstack$entry = p_229096_0_.last();
 		IVertexBuilder ivertexbuilder = p_229096_1_.getBuffer(SHADOW_LAYER);
 
-		for (BlockPos blockpos : BlockPos.getAllInBoxMutable(new BlockPos(i, k, i1), new BlockPos(j, l, j1))) {
-			renderShadowPart(matrixstack$entry, ivertexbuilder, Minecraft.getInstance().world, blockpos, d2, d0, d1, f,
+		for (BlockPos blockpos : BlockPos.betweenClosed(new BlockPos(i, k, i1), new BlockPos(j, l, j1))) {
+			renderShadowPart(matrixstack$entry, ivertexbuilder, Minecraft.getInstance().level, blockpos, d2, d0, d1, f,
 				p_229096_3_);
 		}
 
@@ -51,11 +51,11 @@ public class ShadowRenderHelper {
 	private static void renderShadowPart(MatrixStack.Entry p_229092_0_, IVertexBuilder p_229092_1_,
 		IWorldReader p_229092_2_, BlockPos p_229092_3_, double p_229092_4_, double p_229092_6_, double p_229092_8_,
 		float p_229092_10_, float p_229092_11_) {
-		BlockPos blockpos = p_229092_3_.down();
+		BlockPos blockpos = p_229092_3_.below();
 		BlockState blockstate = p_229092_2_.getBlockState(blockpos);
-		if (blockstate.getRenderType() != BlockRenderType.INVISIBLE && p_229092_2_.getLight(p_229092_3_) > 3) {
-			if (blockstate.isFullCube(p_229092_2_, blockpos)) {
-				VoxelShape voxelshape = blockstate.getShape(p_229092_2_, p_229092_3_.down());
+		if (blockstate.getRenderShape() != BlockRenderType.INVISIBLE && p_229092_2_.getMaxLocalRawBrightness(p_229092_3_) > 3) {
+			if (blockstate.isCollisionShapeFullBlock(p_229092_2_, blockpos)) {
+				VoxelShape voxelshape = blockstate.getShape(p_229092_2_, p_229092_3_.below());
 				if (!voxelshape.isEmpty()) {
 					@SuppressWarnings("deprecation")
 					float f = (float) (((double) p_229092_11_ - (p_229092_6_ - (double) p_229092_3_.getY()) / 2.0D)
@@ -65,7 +65,7 @@ public class ShadowRenderHelper {
 							f = 1.0F;
 						}
 
-						AxisAlignedBB axisalignedbb = voxelshape.getBoundingBox();
+						AxisAlignedBB axisalignedbb = voxelshape.bounds();
 						double d0 = (double) p_229092_3_.getX() + axisalignedbb.minX;
 						double d1 = (double) p_229092_3_.getX() + axisalignedbb.maxX;
 						double d2 = (double) p_229092_3_.getY() + axisalignedbb.minY;
@@ -93,12 +93,12 @@ public class ShadowRenderHelper {
 
 	private static void shadowVertex(MatrixStack.Entry p_229091_0_, IVertexBuilder p_229091_1_, float p_229091_2_,
 		float p_229091_3_, float p_229091_4_, float p_229091_5_, float p_229091_6_, float p_229091_7_) {
-		p_229091_1_.vertex(p_229091_0_.getModel(), p_229091_3_, p_229091_4_, p_229091_5_)
+		p_229091_1_.vertex(p_229091_0_.pose(), p_229091_3_, p_229091_4_, p_229091_5_)
 			.color(1.0F, 1.0F, 1.0F, p_229091_2_)
-			.texture(p_229091_6_, p_229091_7_)
-			.overlay(OverlayTexture.DEFAULT_UV)
-			.light(15728880)
-			.normal(p_229091_0_.getNormal(), 0.0F, 1.0F, 0.0F)
+			.uv(p_229091_6_, p_229091_7_)
+			.overlayCoords(OverlayTexture.NO_OVERLAY)
+			.uv2(15728880)
+			.normal(p_229091_0_.normal(), 0.0F, 1.0F, 0.0F)
 			.endVertex();
 	}
 }

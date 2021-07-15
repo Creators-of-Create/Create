@@ -4,6 +4,8 @@ import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 
+import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
+
 public class CWorldGen extends ConfigBase {
 
 	public ConfigBool disable = b(false, "disableWorldGen", Comments.disable);

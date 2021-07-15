@@ -25,8 +25,8 @@ public class MoveTool extends PlacementToolBase {
 			return true;
 
 		SchematicTransformation transformation = schematicHandler.getTransformation();
-		Vector3d vec = Vector3d.of(selectedFace.getDirectionVec()).scale(-Math.signum(delta));
-		vec = vec.mul(transformation.getMirrorModifier(Axis.X), 1, transformation.getMirrorModifier(Axis.Z));
+		Vector3d vec = Vector3d.atLowerCornerOf(selectedFace.getNormal()).scale(-Math.signum(delta));
+		vec = vec.multiply(transformation.getMirrorModifier(Axis.X), 1, transformation.getMirrorModifier(Axis.Z));
 		vec = VecHelper.rotate(vec, transformation.getRotationTarget(), Axis.Y);
 		transformation.move((float) vec.x, 0, (float) vec.z);
 		schematicHandler.markDirty();

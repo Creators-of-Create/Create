@@ -62,30 +62,30 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		xInput = new TextFieldWidget(textRenderer, x + 50, y + 26, 34, 10, StringTextComponent.EMPTY);
-		yInput = new TextFieldWidget(textRenderer, x + 90, y + 26, 34, 10, StringTextComponent.EMPTY);
-		zInput = new TextFieldWidget(textRenderer, x + 130, y + 26, 34, 10, StringTextComponent.EMPTY);
+		xInput = new TextFieldWidget(font, x + 50, y + 26, 34, 10, StringTextComponent.EMPTY);
+		yInput = new TextFieldWidget(font, x + 90, y + 26, 34, 10, StringTextComponent.EMPTY);
+		zInput = new TextFieldWidget(font, x + 130, y + 26, 34, 10, StringTextComponent.EMPTY);
 
 		BlockPos anchor = handler.getTransformation()
 				.getAnchor();
 		if (handler.isDeployed()) {
-			xInput.setText("" + anchor.getX());
-			yInput.setText("" + anchor.getY());
-			zInput.setText("" + anchor.getZ());
+			xInput.setValue("" + anchor.getX());
+			yInput.setValue("" + anchor.getY());
+			zInput.setValue("" + anchor.getZ());
 		} else {
-			BlockPos alt = client.player.getBlockPos();
-			xInput.setText("" + alt.getX());
-			yInput.setText("" + alt.getY());
-			zInput.setText("" + alt.getZ());
+			BlockPos alt = minecraft.player.blockPosition();
+			xInput.setValue("" + alt.getX());
+			yInput.setValue("" + alt.getY());
+			zInput.setValue("" + alt.getZ());
 		}
 
 		for (TextFieldWidget widget : new TextFieldWidget[] { xInput, yInput, zInput }) {
-			widget.setMaxStringLength(6);
-			widget.setEnableBackgroundDrawing(false);
+			widget.setMaxLength(6);
+			widget.setBordered(false);
 			widget.setTextColor(0xFFFFFF);
 			widget.changeFocus(false);
 			widget.mouseClicked(0, 0, 0);
-			widget.setValidator(s -> {
+			widget.setFilter(s -> {
 				if (s.isEmpty() || s.equals("-"))
 					return true;
 				try {
@@ -101,14 +101,14 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			.toSettings();
 		Label labelR = new Label(x + 50, y + 48, StringTextComponent.EMPTY).withShadow();
 		rotationArea = new SelectionScrollInput(x + 45, y + 43, 118, 18).forOptions(rotationOptions)
-			.titled(rotationLabel.copy())
+			.titled(rotationLabel.plainCopy())
 			.setState(settings.getRotation()
 				.ordinal())
 			.writingTo(labelR);
 
 		Label labelM = new Label(x + 50, y + 70, StringTextComponent.EMPTY).withShadow();
 		mirrorArea = new SelectionScrollInput(x + 45, y + 65, 118, 18).forOptions(mirrorOptions)
-			.titled(mirrorLabel.copy())
+			.titled(mirrorLabel.plainCopy())
 			.setState(settings.getMirror()
 				.ordinal())
 			.writingTo(labelM);
@@ -124,7 +124,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 		if (isPaste(code)) {
-			String coords = client.keyboardListener.getClipboardString();
+			String coords = minecraft.keyboardHandler.getClipboard();
 			if (coords != null && !coords.isEmpty()) {
 				coords.replaceAll(" ", "");
 				String[] split = coords.split(",");
@@ -138,9 +138,9 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 						}
 					}
 					if (valid) {
-						xInput.setText(split[0]);
-						yInput.setText(split[1]);
-						zInput.setText(split[2]);
+						xInput.setValue(split[0]);
+						yInput.setValue(split[1]);
+						zInput.setValue(split[2]);
 						return true;
 					}
 				}
@@ -157,7 +157,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 
 		background.draw(ms, this, x, y);
 		String title = handler.getCurrentSchematicName();
-		drawCenteredString(ms, textRenderer, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 				.<GuiGameElement.GuiRenderBuilder>at(x + background.width + 6, y + background.height - 40, -200)
@@ -170,8 +170,8 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		boolean validCoords = true;
 		BlockPos newLocation = null;
 		try {
-			newLocation = new BlockPos(Integer.parseInt(xInput.getText()), Integer.parseInt(yInput.getText()),
-				Integer.parseInt(zInput.getText()));
+			newLocation = new BlockPos(Integer.parseInt(xInput.getValue()), Integer.parseInt(yInput.getValue()),
+				Integer.parseInt(zInput.getValue()));
 		} catch (NumberFormatException e) {
 			validCoords = false;
 		}

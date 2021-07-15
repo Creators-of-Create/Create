@@ -13,6 +13,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class WindmillBearingBlock extends BearingBlock implements ITE<WindmillBearingTileEntity> {
 
 	public WindmillBearingBlock(Properties properties) {
@@ -25,15 +27,15 @@ public class WindmillBearingBlock extends BearingBlock implements ITE<WindmillBe
 	}
 	
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (!player.isAllowEdit())
+		if (!player.mayBuild())
 			return ActionResultType.FAIL;
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return ActionResultType.FAIL;
-		if (player.getHeldItem(handIn)
+		if (player.getItemInHand(handIn)
 			.isEmpty()) {
-			if (worldIn.isRemote)
+			if (worldIn.isClientSide)
 				return ActionResultType.SUCCESS;
 			withTileEntityDo(worldIn, pos, te -> {
 				if (te.running) {

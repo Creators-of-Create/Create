@@ -17,11 +17,11 @@ public abstract class ConfigureConfigCommand {
 
 	ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal(this.commandLiteral)
-			.requires(cs -> cs.hasPermissionLevel(0))
+			.requires(cs -> cs.hasPermission(0))
 			.then(Commands.literal("on")
 				.executes(ctx -> {
 					ServerPlayerEntity player = ctx.getSource()
-						.asPlayer();
+						.getPlayerOrException();
 					sendPacket(player, String.valueOf(true));
 
 					return Command.SINGLE_SUCCESS;
@@ -29,14 +29,14 @@ public abstract class ConfigureConfigCommand {
 			.then(Commands.literal("off")
 				.executes(ctx -> {
 					ServerPlayerEntity player = ctx.getSource()
-						.asPlayer();
+						.getPlayerOrException();
 					sendPacket(player, String.valueOf(false));
 
 					return Command.SINGLE_SUCCESS;
 				}))
 			.executes(ctx -> {
 				ServerPlayerEntity player = ctx.getSource()
-					.asPlayer();
+					.getPlayerOrException();
 				sendPacket(player, "info");
 
 				return Command.SINGLE_SUCCESS;

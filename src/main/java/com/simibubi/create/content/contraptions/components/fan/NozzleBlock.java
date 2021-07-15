@@ -22,6 +22,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class NozzleBlock extends ProperDirectionalBlock {
@@ -47,37 +49,37 @@ public class NozzleBlock extends ProperDirectionalBlock {
 	
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getFace());
+		return defaultBlockState().setValue(FACING, context.getClickedFace());
 	}
 	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.NOZZLE.get(state.get(FACING));
+		return AllShapes.NOZZLE.get(state.getValue(FACING));
 	}
 	
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
-		if (fromPos.equals(pos.offset(state.get(FACING).getOpposite())))
-			if (!isValidPosition(state, worldIn, pos)) {
+		if (fromPos.equals(pos.relative(state.getValue(FACING).getOpposite())))
+			if (!canSurvive(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
 				return;
 			}
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction towardsFan = state.get(FACING).getOpposite();
-		TileEntity te = worldIn.getTileEntity(pos.offset(towardsFan));
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		Direction towardsFan = state.getValue(FACING).getOpposite();
+		TileEntity te = worldIn.getBlockEntity(pos.relative(towardsFan));
 		return te instanceof IAirCurrentSource
 				&& ((IAirCurrentSource) te).getAirflowOriginSide() == towardsFan.getOpposite();
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

@@ -51,11 +51,11 @@ public abstract class SequencedAssemblySubCategory {
 		@Override
 		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
 			press.offset = index;
-			ms.push();
+			ms.pushPose();
 			ms.translate(-5, 50, 0);
 			ms.scale(.6f, .6f, .6f);
 			press.draw(ms, getWidth() / 2, 0);
-			ms.pop();
+			ms.popPose();
 		}
 
 	}
@@ -86,7 +86,7 @@ public abstract class SequencedAssemblySubCategory {
 		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
 			spout.offset = index;
 			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
-			ms.push();
+			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
 			spout.withFluids(recipe.getRecipe()
@@ -94,7 +94,7 @@ public abstract class SequencedAssemblySubCategory {
 				.get(0)
 				.getMatchingFluidStacks())
 				.draw(ms, getWidth() / 2, 0);
-			ms.pop();
+			ms.popPose();
 		}
 
 	}
@@ -114,18 +114,18 @@ public abstract class SequencedAssemblySubCategory {
 			itemStacks.set(index, Arrays.asList(recipe.getRecipe()
 				.getIngredients()
 				.get(1)
-				.getMatchingStacks()));
+				.getItems()));
 			return 1;
 		}
 
 		@Override
 		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
 			deployer.offset = index;
-			ms.push();
+			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
 			deployer.draw(ms, getWidth() / 2, 0);
-			ms.pop();
+			ms.popPose();
 			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
 		}
 
@@ -142,11 +142,11 @@ public abstract class SequencedAssemblySubCategory {
 
 		@Override
 		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
-			ms.push();
+			ms.pushPose();
 			ms.translate(0, 51.5f, 0);
 			ms.scale(.6f, .6f, .6f);
 			saw.draw(ms, getWidth() / 2, 30);
-			ms.pop();
+			ms.popPose();
 		}
 
 	}

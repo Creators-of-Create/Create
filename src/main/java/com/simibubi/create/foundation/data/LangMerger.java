@@ -76,7 +76,7 @@ public class LangMerger implements IDataProvider {
 	}
 
 	@Override
-	public void act(DirectoryCache cache) throws IOException {
+	public void run(DirectoryCache cache) throws IOException {
 		Path path = this.gen.getOutputFolder()
 			.resolve("assets/" + Create.ID + "/lang/" + "en_us.json");
 
@@ -232,9 +232,9 @@ public class LangMerger implements IDataProvider {
 		String data = createString(dataIn, missingKeys);
 //		data = JavaUnicodeEscaper.outsideOf(0, 0x7f)
 //			.translate(data);
-		String hash = IDataProvider.HASH_FUNCTION.hashUnencodedChars(data)
+		String hash = IDataProvider.SHA1.hashUnencodedChars(data)
 			.toString();
-		if (!Objects.equals(cache.getPreviousHash(target), hash) || !Files.exists(target)) {
+		if (!Objects.equals(cache.getHash(target), hash) || !Files.exists(target)) {
 			Files.createDirectories(target.getParent());
 
 			try (BufferedWriter bufferedwriter = Files.newBufferedWriter(target)) {
@@ -244,7 +244,7 @@ public class LangMerger implements IDataProvider {
 			}
 		}
 
-		cache.recordHash(target, hash);
+		cache.putNew(target, hash);
 	}
 
 	protected String createString(List<Object> data, int missingKeys) {

@@ -43,7 +43,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<GlassBlock> TILED_GLASS = REGISTRATE.block("tiled_glass", GlassBlock::new)
 		.initialProperties(() -> Blocks.GLASS)
-		.addLayer(() -> RenderType::getCutoutMipped)
+		.addLayer(() -> RenderType::cutoutMipped)
 		.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 		.blockstate(palettesCubeAll())
 		.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
@@ -61,7 +61,7 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<GlassPaneBlock> TILED_GLASS_PANE =
 		WindowGen.standardGlassPane("tiled_glass", TILED_GLASS, Create.asResource("block/palettes/tiled_glass"),
-			new ResourceLocation("block/glass_pane_top"), () -> RenderType::getCutoutMipped);
+			new ResourceLocation("block/glass_pane_top"), () -> RenderType::cutoutMipped);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> FRAMED_GLASS_PANE =
 		framedGlassPane("framed_glass", FRAMED_GLASS, AllSpriteShifts.FRAMED_GLASS),
@@ -72,26 +72,26 @@ public class AllPaletteBlocks {
 
 	public static final BlockEntry<WindowBlock> OAK_WINDOW = woodenWindowBlock(WoodType.OAK, Blocks.OAK_PLANKS),
 		SPRUCE_WINDOW = woodenWindowBlock(WoodType.SPRUCE, Blocks.SPRUCE_PLANKS),
-		BIRCH_WINDOW = woodenWindowBlock(WoodType.BIRCH, Blocks.BIRCH_PLANKS, () -> RenderType::getTranslucent),
+		BIRCH_WINDOW = woodenWindowBlock(WoodType.BIRCH, Blocks.BIRCH_PLANKS, () -> RenderType::translucent),
 		JUNGLE_WINDOW = woodenWindowBlock(WoodType.JUNGLE, Blocks.JUNGLE_PLANKS),
 		ACACIA_WINDOW = woodenWindowBlock(WoodType.ACACIA, Blocks.ACACIA_PLANKS),
 		DARK_OAK_WINDOW = woodenWindowBlock(WoodType.DARK_OAK, Blocks.DARK_OAK_PLANKS),
 		CRIMSON_WINDOW = woodenWindowBlock(WoodType.CRIMSON, Blocks.CRIMSON_PLANKS),
 		WARPED_WINDOW = woodenWindowBlock(WoodType.WARPED, Blocks.WARPED_PLANKS),
 		ORNATE_IRON_WINDOW = customWindowBlock("ornate_iron_window", AllItems.ANDESITE_ALLOY,
-			AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::getCutoutMipped);
+			AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::cutoutMipped);
 
 	public static final BlockEntry<ConnectedGlassPaneBlock> OAK_WINDOW_PANE =
 		woodenWindowPane(WoodType.OAK, OAK_WINDOW),
 		SPRUCE_WINDOW_PANE = woodenWindowPane(WoodType.SPRUCE, SPRUCE_WINDOW),
-		BIRCH_WINDOW_PANE = woodenWindowPane(WoodType.BIRCH, BIRCH_WINDOW, () -> RenderType::getTranslucent),
+		BIRCH_WINDOW_PANE = woodenWindowPane(WoodType.BIRCH, BIRCH_WINDOW, () -> RenderType::translucent),
 		JUNGLE_WINDOW_PANE = woodenWindowPane(WoodType.JUNGLE, JUNGLE_WINDOW),
 		ACACIA_WINDOW_PANE = woodenWindowPane(WoodType.ACACIA, ACACIA_WINDOW),
 		DARK_OAK_WINDOW_PANE = woodenWindowPane(WoodType.DARK_OAK, DARK_OAK_WINDOW),
 		CRIMSON_WINDOW_PANE = woodenWindowPane(WoodType.CRIMSON, CRIMSON_WINDOW),
 		WARPED_WINDOW_PANE = woodenWindowPane(WoodType.WARPED, WARPED_WINDOW),
 		ORNATE_IRON_WINDOW_PANE = customWindowPane("ornate_iron_window", ORNATE_IRON_WINDOW,
-			AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::getCutoutMipped);
+			AllSpriteShifts.ORNATE_IRON_WINDOW, () -> RenderType::cutoutMipped);
 
 	// Vanilla stone variant patterns
 
@@ -157,7 +157,7 @@ public class AllPaletteBlocks {
 		.initialProperties(() -> Blocks.ANDESITE)
 		.tag(BlockTags.BASE_STONE_OVERWORLD)
 		.onRegister(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
-		.loot((p, g) -> p.registerLootTable(g, RegistrateBlockLootTables.droppingWithSilkTouch(g, SCORIA.get())))
+		.loot((p, g) -> p.add(g, RegistrateBlockLootTables.droppingWithSilkTouch(g, SCORIA.get())))
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();
@@ -174,7 +174,7 @@ public class AllPaletteBlocks {
 		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE, DARK_SCORIA);
 
 	private static <T extends Block> NonNullBiConsumer<RegistrateBlockLootTables, T> cobblestoneLoot(PaletteStoneVariants variant) {
-		return (loot, block) -> loot.registerLootTable(block, RegistrateBlockLootTables.droppingWithSilkTouch(block,
+		return (loot, block) -> loot.add(block, RegistrateBlockLootTables.droppingWithSilkTouch(block,
 			variant.getVariants().registeredBlocks.get(0).get()));
 	}
 

@@ -28,21 +28,21 @@ public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternCon
 		TransformType transformType = TransformType.NONE;
 		LinkedControllerModel mainModel = ((LinkedControllerModel) Minecraft.getInstance()
 			.getItemRenderer()
-			.getItemModelWithOverrides(stack, null, null));
+			.getModel(stack, null, null));
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);
 		boolean active = te.hasUser();
 		boolean usedByMe = te.isUsedBy(Minecraft.getInstance().player);
 
-		Direction facing = te.getBlockState().get(LecternControllerBlock.FACING);
+		Direction facing = te.getBlockState().getValue(LecternControllerBlock.FACING);
 		MatrixStacker msr = MatrixStacker.of(ms);
 
-		ms.push();
+		ms.pushPose();
 		msr.translate(0.5, 1.45, 0.5);
 		msr.rotateY(AngleHelper.horizontalAngle(facing) - 90);
 		msr.translate(0.28, 0, 0);
 		msr.rotateZ(-22.0);
 		LinkedControllerItemRenderer.renderLinkedController(stack, mainModel, renderer, transformType, ms, light, active, usedByMe);
-		ms.pop();
+		ms.popPose();
 	}
 
 }

@@ -18,13 +18,13 @@ public class BasinGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(BasinBlock.FACING));
+		return horizontalAngle(state.getValue(BasinBlock.FACING));
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		if (state.get(BasinBlock.FACING).getAxis().isVertical())
+		if (state.getValue(BasinBlock.FACING).getAxis().isVertical())
 			return AssetLookup.partialBaseModel(ctx, prov);
 		return AssetLookup.partialBaseModel(ctx, prov, "directional");
 	}

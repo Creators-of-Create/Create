@@ -12,12 +12,12 @@ public class SchematicHotbarSlotOverlay extends AbstractGui {
 	
 	public void renderOn(MatrixStack matrixStack, int slot) {
 		MainWindow mainWindow = Minecraft.getInstance().getWindow();
-		int x = mainWindow.getScaledWidth() / 2 - 88;
-		int y = mainWindow.getScaledHeight() - 19;
+		int x = mainWindow.getGuiScaledWidth() / 2 - 88;
+		int y = mainWindow.getGuiScaledHeight() - 19;
 		RenderSystem.enableDepthTest();
-		matrixStack.push();
+		matrixStack.pushPose();
 		AllGuiTextures.SCHEMATIC_SLOT.draw(matrixStack, this, x + 20 * slot, y);
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 }

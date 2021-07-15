@@ -39,9 +39,9 @@ public class ItemUseOverrides {
 
 		BlockRayTraceResult blockTrace =
 				new BlockRayTraceResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
-		ActionResultType result = state.onUse(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
+		ActionResultType result = state.use(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
 
-		if (!result.isAccepted())
+		if (!result.consumesAction())
 			return;
 
 		event.setCanceled(true);

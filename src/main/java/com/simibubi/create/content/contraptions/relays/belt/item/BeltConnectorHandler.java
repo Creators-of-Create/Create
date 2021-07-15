@@ -29,15 +29,15 @@ public class BeltConnectorHandler {
 
 	public static void tick() {
 		PlayerEntity player = Minecraft.getInstance().player;
-		World world = Minecraft.getInstance().world;
+		World world = Minecraft.getInstance().level;
 
 		if (player == null || world == null)
 			return;
-		if (Minecraft.getInstance().currentScreen != null)
+		if (Minecraft.getInstance().screen != null)
 			return;
 
 		for (Hand hand : Hand.values()) {
-			ItemStack heldItem = player.getHeldItem(hand);
+			ItemStack heldItem = player.getItemInHand(hand);
 
 			if (!AllItems.BELT_CONNECTOR.isIn(heldItem))
 				continue;
@@ -50,12 +50,12 @@ public class BeltConnectorHandler {
 
 			BlockPos first = NBTUtil.readBlockPos(tag.getCompound("FirstPulley"));
 
-			if (!world.getBlockState(first).contains(BlockStateProperties.AXIS))
+			if (!world.getBlockState(first).hasProperty(BlockStateProperties.AXIS))
 				continue;
 			Axis axis = world.getBlockState(first)
-				.get(BlockStateProperties.AXIS);
+				.getValue(BlockStateProperties.AXIS);
 
-			RayTraceResult rayTrace = Minecraft.getInstance().objectMouseOver;
+			RayTraceResult rayTrace = Minecraft.getInstance().hitResult;
 			if (rayTrace == null || !(rayTrace instanceof BlockRayTraceResult)) {
 				if (r.nextInt(50) == 0) {
 					world.addParticle(new RedstoneParticleData(.3f, .9f, .5f, 1),
@@ -65,25 +65,25 @@ public class BeltConnectorHandler {
 				return;
 			}
 
-			BlockPos selected = ((BlockRayTraceResult) rayTrace).getPos();
+			BlockPos selected = ((BlockRayTraceResult) rayTrace).getBlockPos();
 
 			if (world.getBlockState(selected)
 				.getMaterial()
 				.isReplaceable())
 				return;
 			if (!ShaftBlock.isShaft(world.getBlockState(selected)))
-				selected = selected.offset(((BlockRayTraceResult) rayTrace).getFace());
-			if (!selected.withinDistance(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
+				selected = selected.relative(((BlockRayTraceResult) rayTrace).getDirection());
+			if (!selected.closerThan(first, AllConfigs.SERVER.kinetics.maxBeltLength.get()))
 				return;
 
 			boolean canConnect =
 				BeltConnectorItem.validateAxis(world, selected) && BeltConnectorItem.canConnect(world, first, selected);
 
-			Vector3d start = Vector3d.of(first);
-			Vector3d end = Vector3d.of(selected);
+			Vector3d start = Vector3d.atLowerCornerOf(first);
+			Vector3d end = Vector3d.atLowerCornerOf(selected);
 			Vector3d actualDiff = end.subtract(start);
-			end = end.subtract(axis.getCoordinate(actualDiff.x, 0, 0), axis.getCoordinate(0, actualDiff.y, 0),
-				axis.getCoordinate(0, 0, actualDiff.z));
+			end = end.subtract(axis.choose(actualDiff.x, 0, 0), axis.choose(0, actualDiff.y, 0),
+				axis.choose(0, 0, actualDiff.z));
 			Vector3d diff = end.subtract(start);
 
 			double x = Math.abs(diff.x);
@@ -98,7 +98,7 @@ public class BeltConnectorHandler {
 				for (int i = -1; i <= 1; i++)
 					for (int j = -1; j <= 1; j++)
 						for (int k = -1; k <= 1; k++) {
-							if (axis.getCoordinate(i, j, k) != 0)
+							if (axis.choose(i, j, k) != 0)
 								continue;
 							if (axis == Axis.Y && i != 0 && k != 0)
 								continue;

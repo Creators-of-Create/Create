@@ -28,12 +28,12 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer pointer = PartialBufferer.get(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
-		Direction facing = blockState.get(FluidValveBlock.FACING);
+		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
 		if (!(te instanceof FluidValveTileEntity))
 			return;
@@ -54,7 +54,7 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 			.unCentre();
 
 		pointer.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override

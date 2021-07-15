@@ -14,25 +14,25 @@ public abstract class ProperProjectileEntity extends Entity {
 	}
 
 	@Override
-	protected void registerData() {
+	protected void defineSynchedData() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT p_70037_1_) {
+	protected void readAdditionalSaveData(CompoundNBT p_70037_1_) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT p_213281_1_) {
+	protected void addAdditionalSaveData(CompoundNBT p_213281_1_) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		// TODO Auto-generated method stub
 		return null;
 	}

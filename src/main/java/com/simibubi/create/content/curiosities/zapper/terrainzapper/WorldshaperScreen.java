@@ -48,7 +48,7 @@ public class WorldshaperScreen extends ZapperScreen {
 	public WorldshaperScreen(ItemStack zapper, boolean offhand) {
 		super(AllGuiTextures.TERRAINZAPPER, zapper, offhand);
 		fontColor = 0x767676;
-		title = zapper.getDisplayName();
+		title = zapper.getHoverName();
 		nbt = zapper.getOrCreateTag();
 	}
 
@@ -100,9 +100,9 @@ public class WorldshaperScreen extends ZapperScreen {
 				.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1)
 				.writingTo(label)
 				.titled(currentBrush.getParamLabel(index)
-					.copy())
+					.plainCopy())
 				.calling(state -> {
-					label.x = x + 65 + 20 * indexFinal - textRenderer.getWidth(label.text) / 2;
+					label.x = x + 65 + 20 * indexFinal - font.width(label.text) / 2;
 				});
 			input.setState(params[index]);
 			input.onChanged();
@@ -218,7 +218,7 @@ public class WorldshaperScreen extends ZapperScreen {
 					placementButtons.forEach(b -> b.active = true);
 					placementButton.active = false;
 					placementButton.playDownSound(Minecraft.getInstance()
-						.getSoundHandler());
+						.getSoundManager());
 					nbt.putString("Placement",
 						PlacementOptions.values()[placementButtons.indexOf(placementButton)].name());
 				}
@@ -230,7 +230,7 @@ public class WorldshaperScreen extends ZapperScreen {
 				toolButtons.forEach(b -> b.active = true);
 				toolButton.active = false;
 				toolButton.playDownSound(Minecraft.getInstance()
-					.getSoundHandler());
+					.getSoundManager());
 				nbt.putString("Tool", supportedTools[toolButtons.indexOf(toolButton)].name());
 			}
 		}
@@ -251,9 +251,9 @@ public class WorldshaperScreen extends ZapperScreen {
 		for (int index = 2; index >= currentBrush.amtParams; index--)
 			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, x + 56 + 20 * index, y + 40);
 
-		textRenderer.draw(matrixStack, toolSection, x + 7, y + 69, fontColor);
+		font.draw(matrixStack, toolSection, x + 7, y + 69, fontColor);
 		if (currentBrush.hasPlacementOptions())
-			textRenderer.draw(matrixStack, placementSection, x + 136, y + 69, fontColor);
+			font.draw(matrixStack, placementSection, x + 136, y + 69, fontColor);
 	}
 
 	@Override

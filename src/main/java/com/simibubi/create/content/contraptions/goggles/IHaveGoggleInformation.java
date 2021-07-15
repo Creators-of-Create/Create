@@ -42,7 +42,7 @@ public interface IHaveGoggleInformation {
 	}
 
 	default boolean containedFluidTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking, LazyOptional<IFluidHandler> handler) {
-		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.goggles.fluid_container")));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.goggles.fluid_container")));
 		TranslationTextComponent mb = Lang.translate("generic.unit.millibuckets");
 		Optional<IFluidHandler> resolve = handler.resolve();
 		if (!resolve.isPresent())
@@ -60,14 +60,14 @@ public interface IHaveGoggleInformation {
 			if (fluidStack.isEmpty())
 				continue;
 
-			ITextComponent fluidName = new TranslationTextComponent(fluidStack.getTranslationKey()).formatted(TextFormatting.GRAY);
-			ITextComponent contained = new StringTextComponent(format(fluidStack.getAmount())).append(mb).formatted(TextFormatting.GOLD);
-			ITextComponent slash = new StringTextComponent(" / ").formatted(TextFormatting.GRAY);
-			ITextComponent capacity = new StringTextComponent(format(tank.getTankCapacity(i))).append(mb).formatted(TextFormatting.DARK_GRAY);
+			ITextComponent fluidName = new TranslationTextComponent(fluidStack.getTranslationKey()).withStyle(TextFormatting.GRAY);
+			ITextComponent contained = new StringTextComponent(format(fluidStack.getAmount())).append(mb).withStyle(TextFormatting.GOLD);
+			ITextComponent slash = new StringTextComponent(" / ").withStyle(TextFormatting.GRAY);
+			ITextComponent capacity = new StringTextComponent(format(tank.getTankCapacity(i))).append(mb).withStyle(TextFormatting.DARK_GRAY);
 
-			tooltip.add(indent.copy()
+			tooltip.add(indent.plainCopy()
 					.append(fluidName));
-			tooltip.add(indent.copy()
+			tooltip.add(indent.plainCopy()
 				.append(contained)
 				.append(slash)
 				.append(capacity));
@@ -84,10 +84,10 @@ public interface IHaveGoggleInformation {
 		if (!isEmpty)
 			return true;
 
-		ITextComponent capacity = Lang.translate("gui.goggles.fluid_container.capacity").formatted(TextFormatting.GRAY);
-		ITextComponent amount = new StringTextComponent(format(tank.getTankCapacity(0))).append(mb).formatted(TextFormatting.GOLD);
+		ITextComponent capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(TextFormatting.GRAY);
+		ITextComponent amount = new StringTextComponent(format(tank.getTankCapacity(0))).append(mb).withStyle(TextFormatting.GOLD);
 
-		tooltip.add(indent.copy()
+		tooltip.add(indent.plainCopy()
 			.append(capacity)
 			.append(amount));
 		return true;
@@ -106,7 +106,7 @@ public interface IHaveGoggleInformation {
 		public void update() {
 			format = NumberFormat.getInstance(Minecraft.getInstance()
 				.getLanguageManager()
-				.getCurrentLanguage()
+				.getSelected()
 				.getJavaLocale());
 			format.setMaximumFractionDigits(2);
 			format.setMinimumFractionDigits(0);

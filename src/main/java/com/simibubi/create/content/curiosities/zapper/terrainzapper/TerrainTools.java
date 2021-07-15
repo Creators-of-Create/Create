@@ -42,14 +42,14 @@ public enum TerrainTools {
 	public void run(World world, List<BlockPos> targetPositions, Direction facing, @Nullable BlockState paintedState, @Nullable CompoundNBT data, PlayerEntity player) {
 		switch (this) {
 		case Clear:
-			targetPositions.forEach(p -> world.setBlockState(p, Blocks.AIR.getDefaultState()));
+			targetPositions.forEach(p -> world.setBlockAndUpdate(p, Blocks.AIR.defaultBlockState()));
 			break;
 		case Fill:
 			targetPositions.forEach(p -> {
 				BlockState toReplace = world.getBlockState(p);
 				if (!isReplaceable(toReplace))
 					return;
-				world.setBlockState(p, paintedState);
+				world.setBlockAndUpdate(p, paintedState);
 				ZapperItem.setTileData(world, p, paintedState, data, player);
 			});
 			break;
@@ -64,18 +64,18 @@ public enum TerrainTools {
 				if (toOverlay == paintedState)
 					return;
 
-				p = p.up();
+				p = p.above();
 
 				BlockState toReplace = world.getBlockState(p);
 				if (!isReplaceable(toReplace))
 					return;
-				world.setBlockState(p, paintedState);
+				world.setBlockAndUpdate(p, paintedState);
 				ZapperItem.setTileData(world, p, paintedState, data, player);
 			});
 			break;
 		case Place:
 			targetPositions.forEach(p -> {
-				world.setBlockState(p, paintedState);
+				world.setBlockAndUpdate(p, paintedState);
 				ZapperItem.setTileData(world, p, paintedState, data, player);
 			});
 			break;
@@ -84,7 +84,7 @@ public enum TerrainTools {
 				BlockState toReplace = world.getBlockState(p);
 				if (isReplaceable(toReplace))
 					return;
-				world.setBlockState(p, paintedState);
+				world.setBlockAndUpdate(p, paintedState);
 				ZapperItem.setTileData(world, p, paintedState, data, player);
 			});
 			break;

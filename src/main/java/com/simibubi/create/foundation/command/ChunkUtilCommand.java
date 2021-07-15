@@ -15,27 +15,27 @@ public class ChunkUtilCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("chunk")
-			.requires(cs -> cs.hasPermissionLevel(2))
+			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.literal("reload")
 				.then(Commands.argument("pos", ColumnPosArgument.columnPos())
 					.executes(ctx -> {
 						// chunk reload <pos>
-						ColumnPos columnPos = ColumnPosArgument.fromBlockPos(ctx, "pos");
+						ColumnPos columnPos = ColumnPosArgument.getColumnPos(ctx, "pos");
 						ChunkPos chunkPos = new ChunkPos(columnPos.x >> 4, columnPos.z >> 4);
 						ServerChunkProvider chunkProvider = ctx.getSource()
-								.getWorld()
-								.getChunkProvider();
+								.getLevel()
+								.getChunkSource();
 
 						boolean success = Create.CHUNK_UTIL.reloadChunk(chunkProvider, chunkPos);
 
 						if (success) {
 							ctx.getSource()
-									.sendFeedback(new StringTextComponent("scheduled unload for chunk "
+									.sendSuccess(new StringTextComponent("scheduled unload for chunk "
 											+ chunkPos.toString() + ", might need to repeat command"), true);
 							return 1;
 						} else {
 							ctx.getSource()
-									.sendFeedback(
+									.sendSuccess(
 											new StringTextComponent(
 										"unable to schedule unload, is chunk " + chunkPos.toString() + " loaded?"),
 									true);
@@ -46,26 +46,26 @@ public class ChunkUtilCommand {
 				.then(Commands.argument("pos", ColumnPosArgument.columnPos())
 					.executes(ctx -> {
 						// chunk unload <pos>
-						ColumnPos columnPos = ColumnPosArgument.fromBlockPos(ctx, "pos");
+						ColumnPos columnPos = ColumnPosArgument.getColumnPos(ctx, "pos");
 						ChunkPos chunkPos = new ChunkPos(columnPos.x >> 4, columnPos.z >> 4);
 						ServerChunkProvider chunkProvider = ctx.getSource()
-								.getWorld()
-								.getChunkProvider();
+								.getLevel()
+								.getChunkSource();
 
 						boolean success = Create.CHUNK_UTIL.unloadChunk(chunkProvider, chunkPos);
 						ctx.getSource()
-								.sendFeedback(
+								.sendSuccess(
 										new StringTextComponent("added chunk " + chunkPos.toString() + " to unload list"),
 										true);
 
 						if (success) {
 							ctx.getSource()
-									.sendFeedback(new StringTextComponent("scheduled unload for chunk "
+									.sendSuccess(new StringTextComponent("scheduled unload for chunk "
 											+ chunkPos.toString() + ", might need to repeat command"), true);
 							return 1;
 						} else {
 							ctx.getSource()
-								.sendFeedback(
+								.sendSuccess(
 									new StringTextComponent(
 										"unable to schedule unload, is chunk " + chunkPos.toString() + " loaded?"),
 									true);
@@ -76,10 +76,10 @@ public class ChunkUtilCommand {
 				.executes(ctx -> {
 					// chunk clear
 					int count = Create.CHUNK_UTIL.clear(ctx.getSource()
-							.getWorld()
-							.getChunkProvider());
+							.getLevel()
+							.getChunkSource());
 					ctx.getSource()
-							.sendFeedback(new StringTextComponent("removed " + count + " entries from unload list"), false);
+							.sendSuccess(new StringTextComponent("removed " + count + " entries from unload list"), false);
 
 					return 1;
 				}));

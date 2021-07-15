@@ -40,7 +40,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	@Override
-	public WorldLightManager getLightingProvider() {
+	public WorldLightManager getLightEngine() {
 		return lighter;
 	}
 
@@ -50,14 +50,14 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 			BlockState state = entry.getValue();
 			int light = state.getLightValue(this, pos);
 			if (light > 0) {
-				lighter.func_215573_a(pos, light);
+				lighter.onBlockEmissionIncrease(pos, light);
 			}
 		}
 	}
 
 	public void setTileEntities(Collection<TileEntity> tileEntities) {
 		tesAdded.clear();
-		tileEntities.forEach(te -> tesAdded.put(te.getPos(), te));
+		tileEntities.forEach(te -> tesAdded.put(te.getBlockPos(), te));
 	}
 
 	public void clear() {
@@ -65,10 +65,10 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+	public boolean setBlock(BlockPos pos, BlockState newState, int flags) {
 		blocksAdded.put(pos, newState);
 
-		SectionPos sectionPos = SectionPos.from(pos);
+		SectionPos sectionPos = SectionPos.of(pos);
 		if (spannedSections.add(sectionPos)) {
 			lighter.updateSectionStatus(sectionPos, false);
 		}
@@ -81,22 +81,22 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState state) {
-		return setBlockState(pos, state, 0);
+	public boolean setBlockAndUpdate(BlockPos pos, BlockState state) {
+		return setBlock(pos, state, 0);
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getBlockEntity(BlockPos pos) {
 		return tesAdded.get(pos);
 	}
 
 	@Override
-	public boolean hasBlockState(BlockPos pos, Predicate<BlockState> condition) {
+	public boolean isStateAtPosition(BlockPos pos, Predicate<BlockState> condition) {
 		return condition.test(getBlockState(pos));
 	}
 
 	@Override
-	public boolean isBlockPresent(BlockPos pos) {
+	public boolean isLoaded(BlockPos pos) {
 		return true;
 	}
 
@@ -106,7 +106,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	public BlockState getBlockState(int x, int y, int z) {
-		return getBlockState(scratch.setPos(x, y, z));
+		return getBlockState(scratch.set(x, y, z));
 	}
 
 	@Override
@@ -114,6 +114,6 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 		BlockState state = blocksAdded.get(pos);
 		if (state != null)
 			return state;
-		return Blocks.AIR.getDefaultState();
+		return Blocks.AIR.defaultBlockState();
 	}
 }

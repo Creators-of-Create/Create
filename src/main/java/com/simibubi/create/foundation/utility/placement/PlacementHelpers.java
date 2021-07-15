@@ -78,30 +78,30 @@ public class PlacementHelpers {
 	@OnlyIn(Dist.CLIENT)
 	private static void checkHelpers() {
 		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.world;
+		ClientWorld world = mc.level;
 
 		if (world == null)
 			return;
 
-		if (!(mc.objectMouseOver instanceof BlockRayTraceResult))
+		if (!(mc.hitResult instanceof BlockRayTraceResult))
 			return;
 
-		BlockRayTraceResult ray = (BlockRayTraceResult) mc.objectMouseOver;
+		BlockRayTraceResult ray = (BlockRayTraceResult) mc.hitResult;
 
 		if (mc.player == null)
 			return;
 
-		if (mc.player.isSneaking())//for now, disable all helpers when sneaking TODO add helpers that respect sneaking but still show position
+		if (mc.player.isShiftKeyDown())//for now, disable all helpers when sneaking TODO add helpers that respect sneaking but still show position
 			return;
 
 		for (Hand hand : Hand.values()) {
 
-			ItemStack heldItem = mc.player.getHeldItem(hand);
+			ItemStack heldItem = mc.player.getItemInHand(hand);
 			List<IPlacementHelper> filteredForHeldItem = helpers.stream().filter(helper -> helper.matchesItem(heldItem)).collect(Collectors.toList());
 			if (filteredForHeldItem.isEmpty())
 				continue;
 
-			BlockPos pos = ray.getPos();
+			BlockPos pos = ray.getBlockPos();
 			BlockState state = world.getBlockState(pos);
 
 			List<IPlacementHelper> filteredForState = filteredForHeldItem.stream().filter(helper -> helper.matchesState(state)).collect(Collectors.toList());
@@ -155,8 +155,8 @@ public class PlacementHelpers {
 		if (player != null && animationTick > 0) {
 			MainWindow res = event.getWindow();
 
-			float screenY = res.getScaledHeight() / 2f;
-			float screenX = res.getScaledWidth() / 2f;
+			float screenY = res.getGuiScaledHeight() / 2f;
+			float screenX = res.getGuiScaledWidth() / 2f;
 			float progress = getCurrentAlpha();
 
 			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
@@ -178,12 +178,12 @@ public class PlacementHelpers {
 
 		Vector3d target = new Vector3d(projTarget.x, projTarget.y, 0);
 		if (projTarget.z > 0) {
-			target = target.inverse();
+			target = target.reverse();
 		}
 
 		Vector3d norm = target.normalize();
 		Vector3d ref = new Vector3d(0, 1, 0);
-		float targetAngle = AngleHelper.deg(Math.acos(norm.dotProduct(ref)));
+		float targetAngle = AngleHelper.deg(Math.acos(norm.dot(ref)));
 
 		angle.withSpeed(0.25f);
 
@@ -210,7 +210,7 @@ public class PlacementHelpers {
 	}
 
 	private static void fadedArrow(MatrixStack ms, float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
-		ms.push();
+		ms.pushPose();
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.disableAlphaTest();
@@ -218,16 +218,16 @@ public class PlacementHelpers {
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		ms.translate(centerX, centerY, 0);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle.get(0)));
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.get(0)));
 		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
 		double scale = AllConfigs.CLIENT.indicatorScale.get();
 		RenderSystem.scaled(scale, scale, 1);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(GL11.GL_POLYGON, DefaultVertexFormats.POSITION_COLOR);
 
-		Matrix4f mat = ms.peek().getModel();
+		Matrix4f mat = ms.last().pose();
 
 		bufferbuilder.vertex(mat, 0, - (10 + length), 0).color(r, g, b, a).endVertex();
 
@@ -239,16 +239,16 @@ public class PlacementHelpers {
 		bufferbuilder.vertex(mat, 6, -6, 0).color(r, g, b, 0f).endVertex();
 		bufferbuilder.vertex(mat, 9, -3, 0).color(r, g, b, 0f).endVertex();
 
-		tessellator.draw();
+		tessellator.end();
 		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
-		ms.pop();
+		ms.popPose();
 	}
 
 	private static void textured(MatrixStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
-		ms.push();
+		ms.pushPose();
 		RenderSystem.enableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
 		RenderSystem.enableBlend();
@@ -270,20 +270,20 @@ public class PlacementHelpers {
 		float th = tex_size;
 
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEXTURE);
+		BufferBuilder buffer = tessellator.getBuilder();
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
 
-		Matrix4f mat = ms.peek().getModel();
-		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty).endVertex();
-		buffer.vertex(mat, -1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx, ty + th).endVertex();
-		buffer.vertex(mat, 1, 1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty + th).endVertex();
-		buffer.vertex(mat, 1, -1, 0).color(1f, 1f, 1f, alpha).texture(tx + tw, ty).endVertex();
+		Matrix4f mat = ms.last().pose();
+		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty).endVertex();
+		buffer.vertex(mat, -1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty + th).endVertex();
+		buffer.vertex(mat, 1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty + th).endVertex();
+		buffer.vertex(mat, 1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty).endVertex();
 
-		tessellator.draw();
+		tessellator.end();
 
 		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
-		ms.pop();
+		ms.popPose();
 	}
 
 }

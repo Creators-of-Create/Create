@@ -11,7 +11,7 @@ public class DrillTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	protected BlockPos getBreakingPos() {
-		return getPos().offset(getBlockState().get(DrillBlock.FACING));
+		return getBlockPos().relative(getBlockState().getValue(DrillBlock.FACING));
 	}
 
 }

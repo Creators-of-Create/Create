@@ -13,6 +13,9 @@ import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
+
 public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

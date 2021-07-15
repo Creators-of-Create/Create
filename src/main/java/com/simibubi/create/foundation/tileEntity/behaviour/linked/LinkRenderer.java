@@ -27,13 +27,13 @@ public class LinkRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult target = mc.objectMouseOver;
+		RayTraceResult target = mc.hitResult;
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = mc.world;
-		BlockPos pos = result.getPos();
+		ClientWorld world = mc.level;
+		BlockPos pos = result.getBlockPos();
 
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
@@ -43,9 +43,9 @@ public class LinkRenderer {
 		ITextComponent freq2 = Lang.translate("logistics.secondFrequency");
 
 		for (boolean first : Iterate.trueAndFalse) {
-			AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.25f);
+			AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.25f);
 			ITextComponent label = first ? freq1 : freq2;
-			boolean hit = behaviour.testHit(first, target.getHitVec());
+			boolean hit = behaviour.testHit(first, target.getLocation());
 			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
 
 			ValueBox box = new ValueBox(label, bb, pos).withColors(0x601F18, 0xB73C2D)
@@ -54,7 +54,7 @@ public class LinkRenderer {
 			CreateClient.OUTLINER.showValueBox(Pair.of(Boolean.valueOf(first), pos), box.transform(transform))
 					.lineWidth(1 / 64f)
 					.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
-					.highlightFace(result.getFace());
+					.highlightFace(result.getDirection());
 		}
 	}
 
@@ -71,10 +71,10 @@ public class LinkRenderer {
 			ValueBoxTransform transform = first ? behaviour.firstSlot : behaviour.secondSlot;
 			ItemStack stack = first ? behaviour.frequencyFirst.getStack() : behaviour.frequencyLast.getStack();
 
-			ms.push();
+			ms.pushPose();
 			transform.transform(te.getBlockState(), ms);
 			ValueBoxRenderer.renderItemIntoValueBox(stack, ms, buffer, light, overlay);
-			ms.pop();
+			ms.popPose();
 		}
 
 	}

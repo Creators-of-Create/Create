@@ -143,7 +143,7 @@ public class PotatoCannonProjectileTypes {
 			.knockback(0.1f)
 			.renderTumbling()
 			.soundPitch(1.1f)
-			.onEntityHit(potion(Effects.SLOWNESS, 2,160, true))
+			.onEntityHit(potion(Effects.MOVEMENT_SLOWDOWN, 2,160, true))
 			.registerAndAssign(AllItems.HONEYED_APPLE.get()),
 
 		GOLDEN_APPLE = create("golden_apple").damage(1)
@@ -154,17 +154,17 @@ public class PotatoCannonProjectileTypes {
 			.soundPitch(1.1f)
 			.onEntityHit(ray -> {
 				Entity entity = ray.getEntity();
-				World world = entity.world;
+				World world = entity.level;
 
 				if (!(entity instanceof ZombieVillagerEntity)
-					|| !((ZombieVillagerEntity) entity).isPotionActive(Effects.WEAKNESS))
+					|| !((ZombieVillagerEntity) entity).hasEffect(Effects.WEAKNESS))
 					return foodEffects(Foods.GOLDEN_APPLE, false).test(ray);
-				if (world.isRemote)
+				if (world.isClientSide)
 					return false;
 
 				FakePlayer dummy = ZOMBIE_CONVERTERS.get(world);
-				dummy.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.GOLDEN_APPLE, 1));
-				((ZombieVillagerEntity) entity).interactMob(dummy, Hand.MAIN_HAND);
+				dummy.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.GOLDEN_APPLE, 1));
+				((ZombieVillagerEntity) entity).mobInteract(dummy, Hand.MAIN_HAND);
 				return true;
 			})
 			.registerAndAssign(Items.GOLDEN_APPLE),
@@ -331,7 +331,7 @@ public class PotatoCannonProjectileTypes {
 
 	private static Predicate<EntityRayTraceResult> setFire(int seconds) {
 		return ray -> {
-			ray.getEntity().setFire(seconds);
+			ray.getEntity().setSecondsOnFire(seconds);
 			return false;
 		};
 	}
@@ -339,7 +339,7 @@ public class PotatoCannonProjectileTypes {
 	private static Predicate<EntityRayTraceResult> potion(Effect effect, int level, int ticks, boolean recoverable) {
 		return ray -> {
 			Entity entity = ray.getEntity();
-			if (entity.world.isRemote)
+			if (entity.level.isClientSide)
 				return true;
 			if (entity instanceof LivingEntity)
 				applyEffect((LivingEntity) entity, new EffectInstance(effect, ticks, level - 1));
@@ -350,7 +350,7 @@ public class PotatoCannonProjectileTypes {
 	private static Predicate<EntityRayTraceResult> foodEffects(Food food, boolean recoverable) {
 		return ray -> {
 			Entity entity = ray.getEntity();
-			if (entity.world.isRemote)
+			if (entity.level.isClientSide)
 				return true;
 
 			if (entity instanceof LivingEntity) {
@@ -364,22 +364,22 @@ public class PotatoCannonProjectileTypes {
 	}
 
 	public static void applyEffect(LivingEntity entity, EffectInstance effect) {
-		if (effect.getPotion().isInstant())
-			effect.getPotion().affectEntity(null, null, entity, effect.getDuration(), 1.0);
+		if (effect.getEffect().isInstantenous())
+			effect.getEffect().applyInstantenousEffect(null, null, entity, effect.getDuration(), 1.0);
 		else
-			entity.addPotionEffect(effect);
+			entity.addEffect(effect);
 	}
 
 	private static BiPredicate<IWorld, BlockRayTraceResult> plantCrop(IRegistryDelegate<? extends Block> cropBlock) {
 		return (world, ray) -> {
-			if (world.isRemote())
+			if (world.isClientSide())
 				return true;
 
-			BlockPos hitPos = ray.getPos();
+			BlockPos hitPos = ray.getBlockPos();
 			if (!world.isAreaLoaded(hitPos, 1))
 				return true;
-			Direction face = ray.getFace();
-			BlockPos placePos = hitPos.offset(face);
+			Direction face = ray.getDirection();
+			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
 				.getMaterial()
 				.isReplaceable())
@@ -389,39 +389,39 @@ public class PotatoCannonProjectileTypes {
 			BlockState blockState = world.getBlockState(hitPos);
 			if (!blockState.canSustainPlant(world, hitPos, face, (IPlantable) cropBlock.get()))
 				return false;
-			world.setBlockState(placePos, cropBlock.get().getDefaultState(), 3);
+			world.setBlock(placePos, cropBlock.get().defaultBlockState(), 3);
 			return true;
 		};
 	}
 
 	private static BiPredicate<IWorld, BlockRayTraceResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
 		return (world, ray) -> {
-			if (world.isRemote())
+			if (world.isClientSide())
 				return true;
 
-			BlockPos hitPos = ray.getPos();
+			BlockPos hitPos = ray.getBlockPos();
 			if (!world.isAreaLoaded(hitPos, 1))
 				return true;
-			Direction face = ray.getFace();
-			BlockPos placePos = hitPos.offset(face);
+			Direction face = ray.getDirection();
+			BlockPos placePos = hitPos.relative(face);
 			if (!world.getBlockState(placePos)
 				.getMaterial()
 				.isReplaceable())
 				return false;
 
 			if (face == Direction.UP) {
-				world.setBlockState(placePos, block.get().getDefaultState(), 3);
+				world.setBlock(placePos, block.get().defaultBlockState(), 3);
 			} else if (world instanceof World) {
-				double y = ray.getHitVec().y - 0.5;
-				if (!world.isAirBlock(placePos.up()))
+				double y = ray.getLocation().y - 0.5;
+				if (!world.isEmptyBlock(placePos.above()))
 					y = Math.min(y, placePos.getY());
-				if (!world.isAirBlock(placePos.down()))
+				if (!world.isEmptyBlock(placePos.below()))
 					y = Math.max(y, placePos.getY());
 
 				FallingBlockEntity falling = new FallingBlockEntity((World) world, placePos.getX() + 0.5, y,
-					placePos.getZ() + 0.5, block.get().getDefaultState());
-				falling.fallTime = 1;
-				world.addEntity(falling);
+					placePos.getZ() + 0.5, block.get().defaultBlockState());
+				falling.time = 1;
+				world.addFreshEntity(falling);
 			}
 
 			return true;
@@ -431,8 +431,8 @@ public class PotatoCannonProjectileTypes {
 	private static Predicate<EntityRayTraceResult> chorusTeleport(double teleportDiameter) {
 		return ray -> {
 			Entity entity = ray.getEntity();
-			World world = entity.getEntityWorld();
-			if (world.isRemote)
+			World world = entity.getCommandSenderWorld();
+			if (world.isClientSide)
 				return true;
 			if (!(entity instanceof LivingEntity))
 				return false;
@@ -443,9 +443,9 @@ public class PotatoCannonProjectileTypes {
 			double entityZ = livingEntity.getZ();
 
 			for (int teleportTry = 0; teleportTry < 16; ++teleportTry) {
-				double teleportX = entityX + (livingEntity.getRNG().nextDouble() - 0.5D) * teleportDiameter;
-				double teleportY = MathHelper.clamp(entityY + (livingEntity.getRNG().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getDimensionHeight() - 1);
-				double teleportZ = entityZ + (livingEntity.getRNG().nextDouble() - 0.5D) * teleportDiameter;
+				double teleportX = entityX + (livingEntity.getRandom().nextDouble() - 0.5D) * teleportDiameter;
+				double teleportY = MathHelper.clamp(entityY + (livingEntity.getRandom().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
+				double teleportZ = entityZ + (livingEntity.getRandom().nextDouble() - 0.5D) * teleportDiameter;
 
 				/* Usable as soon as lowest supported forge > 36.1.3 */
 
@@ -454,14 +454,14 @@ public class PotatoCannonProjectileTypes {
 //					return;
 //				if (livingEntity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
 
-				if (livingEntity.attemptTeleport(teleportX, teleportY, teleportZ, true)) {
+				if (livingEntity.randomTeleport(teleportX, teleportY, teleportZ, true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
 
-					SoundEvent soundevent = livingEntity instanceof FoxEntity ? SoundEvents.ENTITY_FOX_TELEPORT : SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
+					SoundEvent soundevent = livingEntity instanceof FoxEntity ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
 					world.playSound(null, entityX, entityY, entityZ, soundevent, SoundCategory.PLAYERS, 1.0F, 1.0F);
 					livingEntity.playSound(soundevent, 1.0F, 1.0F);
-					livingEntity.setMotion(Vector3d.ZERO);
+					livingEntity.setDeltaMovement(Vector3d.ZERO);
 					return true;
 				}
 			}

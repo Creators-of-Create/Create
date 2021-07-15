@@ -27,8 +27,8 @@ public class StabilizedBearingInstance extends ActorInstance {
 
 		BlockState blockState = context.state;
 
-		facing = blockState.get(BlockStateProperties.FACING);
-		rotationAxis = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, facing.getAxis()).getUnitVector();
+		facing = blockState.getValue(BlockStateProperties.FACING);
+		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, facing.getAxis()).step();
 
 		blockOrientation = BearingInstance.getBlockStateOrientation(facing);
 
@@ -43,9 +43,9 @@ public class StabilizedBearingInstance extends ActorInstance {
 	public void beginFrame() {
 		float counterRotationAngle = StabilizedBearingMovementBehaviour.getCounterRotationAngle(context, facing, AnimationTickHolder.getPartialTicks());
 
-		Quaternion rotation = rotationAxis.getDegreesQuaternion(counterRotationAngle);
+		Quaternion rotation = rotationAxis.rotationDegrees(counterRotationAngle);
 
-		rotation.multiply(blockOrientation);
+		rotation.mul(blockOrientation);
 
 		topInstance.setRotation(rotation);
 	}

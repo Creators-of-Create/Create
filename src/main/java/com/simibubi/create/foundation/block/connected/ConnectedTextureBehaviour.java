@@ -41,10 +41,10 @@ public abstract class ConnectedTextureBehaviour {
 
 	protected boolean isBeingBlocked(BlockState state, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
-		BlockPos blockingPos = otherPos.offset(face);
+		BlockPos blockingPos = otherPos.relative(face);
 		return face.getAxis()
-			.getCoordinate(pos.getX(), pos.getY(), pos.getZ()) == face.getAxis()
-				.getCoordinate(otherPos.getX(), otherPos.getY(), otherPos.getZ())
+			.choose(pos.getX(), pos.getY(), pos.getZ()) == face.getAxis()
+				.choose(otherPos.getX(), otherPos.getY(), otherPos.getZ())
 			&& connectsTo(state, reader.getBlockState(blockingPos), reader, pos, blockingPos, face);
 	}
 
@@ -106,8 +106,8 @@ public abstract class ConnectedTextureBehaviour {
 
 	private boolean testConnection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face,
 		final Direction horizontal, final Direction vertical, int sh, int sv) {
-		BlockPos p = pos.offset(horizontal, sh)
-			.offset(vertical, sv);
+		BlockPos p = pos.relative(horizontal, sh)
+			.relative(vertical, sv);
 		boolean test = connectsTo(state, reader.getBlockState(p), reader, pos, p, face);
 		return test;
 	}

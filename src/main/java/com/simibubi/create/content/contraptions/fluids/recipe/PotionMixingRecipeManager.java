@@ -43,8 +43,8 @@ public class PotionMixingRecipeManager {
 				continue;
 
 			List<ItemStack> bottles = new ArrayList<>();
-			PotionBrewing.POTION_ITEMS.forEach(i -> {
-				for (ItemStack itemStack : i.getMatchingStacks())
+			PotionBrewing.ALLOWED_CONTAINERS.forEach(i -> {
+				for (ItemStack itemStack : i.getItems())
 					bottles.add(itemStack);
 			});
 
@@ -55,7 +55,7 @@ public class PotionMixingRecipeManager {
 				if (potion == Potions.EMPTY)
 					continue;
 				for (ItemStack stack : bottles)
-					basicPotions.add(PotionUtils.addPotionToItemStack(stack.copy(), potion));
+					basicPotions.add(PotionUtils.setPotion(stack.copy(), potion));
 			}
 
 			Set<String> uniqueKeys = new HashSet<>();
@@ -69,7 +69,7 @@ public class PotionMixingRecipeManager {
 				newPotions.clear();
 
 				for (ItemStack inputPotionStack : potionFrontier) {
-					Potion inputPotion = PotionUtils.getPotionFromItem(inputPotionStack);
+					Potion inputPotion = PotionUtils.getPotion(inputPotionStack);
 
 					for (ItemStack potionReagent : reagents) {
 						ItemStack outputPotionStack = iBrewingRecipe.getOutput(inputPotionStack.copy(), potionReagent);
@@ -89,7 +89,7 @@ public class PotionMixingRecipeManager {
 							continue;
 
 						if (inputPotionStack.getItem() == outputPotionStack.getItem()) {
-							Potion outputPotion = PotionUtils.getPotionFromItem(outputPotionStack);
+							Potion outputPotion = PotionUtils.getPotion(outputPotionStack);
 							if (outputPotion == Potions.WATER)
 								continue;
 						}
@@ -100,7 +100,7 @@ public class PotionMixingRecipeManager {
 						fluidFromPotionItem2.setAmount(1000);
 
 						MixingRecipe mixingRecipe = new ProcessingRecipeBuilder<>(MixingRecipe::new,
-							Create.asResource("potion_" + recipeIndex++)).require(Ingredient.fromStacks(potionReagent))
+							Create.asResource("potion_" + recipeIndex++)).require(Ingredient.of(potionReagent))
 								.require(FluidIngredient.fromFluidStack(fluidFromPotionItem))
 								.output(fluidFromPotionItem2)
 								.requiresHeat(HeatCondition.HEATED)
@@ -135,7 +135,7 @@ public class PotionMixingRecipeManager {
 		ALL.clear();
 		getAllBrewingRecipes().forEach(recipe -> {
 			for (Ingredient ingredient : recipe.getIngredients()) {
-				for (ItemStack itemStack : ingredient.getMatchingStacks()) {
+				for (ItemStack itemStack : ingredient.getItems()) {
 					ALL.computeIfAbsent(itemStack.getItem(), t -> new ArrayList<>())
 						.add(recipe);
 					return;

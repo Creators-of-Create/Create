@@ -27,13 +27,13 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	public SeatEntity(World world, BlockPos pos) {
 		this(AllEntityTypes.SEAT.get(), world);
-		noClip = true;
+		noPhysics = true;
 	}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
 		EntityType.Builder<SeatEntity> entityBuilder = (EntityType.Builder<SeatEntity>) builder;
-		return entityBuilder.size(0.25f, 0.35f);
+		return entityBuilder.sized(0.25f, 0.35f);
 	}
 
 	@Override
@@ -42,29 +42,29 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 	
 	@Override
-	public void setPos(double x, double y, double z) {
-		super.setPos(x, y, z);
+	public void setPosRaw(double x, double y, double z) {
+		super.setPosRaw(x, y, z);
 		AxisAlignedBB bb = getBoundingBox();
 		Vector3d diff = new Vector3d(x, y, z).subtract(bb.getCenter());
-		setBoundingBox(bb.offset(diff));
+		setBoundingBox(bb.move(diff));
 	}
 
 	@Override
-	public void setMotion(Vector3d p_213317_1_) {}
+	public void setDeltaMovement(Vector3d p_213317_1_) {}
 
 	@Override
 	public void tick() {
-		if (world.isRemote) 
+		if (level.isClientSide) 
 			return;
-		boolean blockPresent = world.getBlockState(getBlockPos())
+		boolean blockPresent = level.getBlockState(blockPosition())
 			.getBlock() instanceof SeatBlock;
-		if (isBeingRidden() && blockPresent)
+		if (isVehicle() && blockPresent)
 			return;
 		this.remove();
 	}
 
 	@Override
-	protected boolean canBeRidden(Entity entity) {
+	protected boolean canRide(Entity entity) {
 		// Fake Players (tested with deployers) have a BUNCH of weird issues, don't let them ride seats
 		return !(entity instanceof FakePlayer);
 	}
@@ -72,21 +72,21 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	@Override
 	protected void removePassenger(Entity entity) {
 		super.removePassenger(entity);
-		Vector3d pos = entity.getPositionVec();
-		entity.setPosition(pos.x, pos.y + 0.85f, pos.z);
+		Vector3d pos = entity.position();
+		entity.setPos(pos.x, pos.y + 0.85f, pos.z);
 	}
 
 	@Override
-	protected void registerData() {}
+	protected void defineSynchedData() {}
 
 	@Override
-	protected void readAdditional(CompoundNBT p_70037_1_) {}
+	protected void readAdditionalSaveData(CompoundNBT p_70037_1_) {}
 
 	@Override
-	protected void writeAdditional(CompoundNBT p_213281_1_) {}
+	protected void addAdditionalSaveData(CompoundNBT p_213281_1_) {}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -102,7 +102,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 		}
 
 		@Override
-		public ResourceLocation getEntityTexture(SeatEntity p_110775_1_) {
+		public ResourceLocation getTextureLocation(SeatEntity p_110775_1_) {
 			return null;
 		}
 	}

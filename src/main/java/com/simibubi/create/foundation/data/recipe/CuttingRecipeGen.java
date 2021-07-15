@@ -7,6 +7,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
+
 public class CuttingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

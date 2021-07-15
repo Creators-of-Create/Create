@@ -7,6 +7,8 @@ import com.simibubi.create.AllRecipeTypes;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Items;
 
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
+
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
 	/*

@@ -76,7 +76,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (cachedBoundingBox == null)
-			cachedBoundingBox = super.getRenderBoundingBox().expand(0, -2, 0);
+			cachedBoundingBox = super.getRenderBoundingBox().expandTowards(0, -2, 0);
 		return cachedBoundingBox;
 	}
 
@@ -93,11 +93,11 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
-		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
+		if (!FillingBySpout.canItemBeFilled(level, transported.stack))
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
-		if (FillingBySpout.getRequiredAmountForItem(world, transported.stack, getCurrentFluidInTank()) == -1)
+		if (FillingBySpout.getRequiredAmountForItem(level, transported.stack, getCurrentFluidInTank()) == -1)
 			return PASS;
 		return HOLD;
 	}
@@ -107,12 +107,12 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		shouldAnimate = true;
 		if (processingTicks != -1 && processingTicks != 5)
 			return HOLD;
-		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
+		if (!FillingBySpout.canItemBeFilled(level, transported.stack))
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
 		FluidStack fluid = getCurrentFluidInTank();
-		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(world, transported.stack, fluid.copy());
+		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(level, transported.stack, fluid.copy());
 		if (requiredAmountForItem == -1)
 			return PASS;
 		if (requiredAmountForItem > fluid.getAmount())
@@ -125,7 +125,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		// Process finished
-		ItemStack out = FillingBySpout.fillItem(world, requiredAmountForItem, transported.stack, fluid);
+		ItemStack out = FillingBySpout.fillItem(level, requiredAmountForItem, transported.stack, fluid);
 		if (!out.isEmpty()) {
 			List<TransportedItemStack> outList = new ArrayList<>();
 			TransportedItemStack held = null;
@@ -137,10 +137,10 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, world, pos, 5);
-		if (out.getItem() instanceof PotionItem && !PotionUtils.getEffectsFromStack(out)
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, level, worldPosition, 5);
+		if (out.getItem() instanceof PotionItem && !PotionUtils.getMobEffects(out)
 			.isEmpty())
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, world, pos, 5);
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, level, worldPosition, 5);
 
 		tank.getPrimaryHandler()
 			.setFluid(fluid);
@@ -152,7 +152,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	private void processTicCastBlock() {
 		if (!IS_TIC_LOADED || CASTING_FLUID_HANDLER_CLASS == null)
 			return;
-		if (world == null)
+		if (level == null)
 			return;
 		IFluidHandler localTank = this.tank.getCapability()
 			.orElse(null);
@@ -161,10 +161,10 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		FluidStack fluid = getCurrentFluidInTank();
 		if (fluid.getAmount() == 0)
 			return;
-		TileEntity te = world.getTileEntity(pos.down(2));
+		TileEntity te = level.getBlockEntity(worldPosition.below(2));
 		if (te == null)
 			return;
-		IFluidHandler handler = getFluidHandler(pos.down(2), Direction.UP);
+		IFluidHandler handler = getFluidHandler(worldPosition.below(2), Direction.UP);
 		if (!CASTING_FLUID_HANDLER_CLASS.isInstance(handler))
 			return;
 		if (handler.getTanks() != 1)
@@ -242,7 +242,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		processTicCastBlock();
 		if (processingTicks >= 0)
 			processingTicks--;
-		if (processingTicks >= 8 && world.isRemote && shouldAnimate)
+		if (processingTicks >= 8 && level.isClientSide && shouldAnimate)
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());
 	}
@@ -250,10 +250,10 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected void spawnProcessingParticles(FluidStack fluid) {
 		if (isVirtual())
 			return;
-		Vector3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 8 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
-		world.addOptionalParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
+		level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
 	}
 
 	protected static int SPLASH_PARTICLE_COUNT = 20;
@@ -261,22 +261,22 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected void spawnSplash(FluidStack fluid) {
 		if (isVirtual())
 			return;
-		Vector3d vec = VecHelper.getCenterOf(pos);
+		Vector3d vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
 		for (int i = 0; i < SPLASH_PARTICLE_COUNT; i++) {
-			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 0.125f);
+			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, level.random, 0.125f);
 			m = new Vector3d(m.x, Math.abs(m.y), m.z);
-			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
+			level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
 	}
 
 	@Nullable
 	private IFluidHandler getFluidHandler(BlockPos pos, Direction direction) {
-		if (this.world == null) {
+		if (this.level == null) {
 			return null;
 		} else {
-			TileEntity te = this.world.getTileEntity(pos);
+			TileEntity te = this.level.getBlockEntity(pos);
 			return te != null ? te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction)
 				.orElse(null) : null;
 		}

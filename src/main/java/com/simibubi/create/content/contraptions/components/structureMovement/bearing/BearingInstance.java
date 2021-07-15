@@ -27,8 +27,8 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 		super(modelManager, tile);
 		this.bearing = tile;
 
-		Direction facing = blockState.get(BlockStateProperties.FACING);
-		rotationAxis = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector();
+		Direction facing = blockState.getValue(BlockStateProperties.FACING);
+		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, axis).step();
 
 		blockOrientation = getBlockStateOrientation(facing);
 
@@ -44,9 +44,9 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 	public void beginFrame() {
 
 		float interpolatedAngle = bearing.getInterpolatedAngle(AnimationTickHolder.getPartialTicks() - 1);
-		Quaternion rot = rotationAxis.getDegreesQuaternion(interpolatedAngle);
+		Quaternion rot = rotationAxis.rotationDegrees(interpolatedAngle);
 
-		rot.multiply(blockOrientation);
+		rot.mul(blockOrientation);
 
 		topInstance.setRotation(rot);
 	}
@@ -67,12 +67,12 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 		Quaternion orientation;
 
 		if (facing.getAxis().isHorizontal()) {
-			orientation = Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(facing.getOpposite()));
+			orientation = Vector3f.YP.rotationDegrees(AngleHelper.horizontalAngle(facing.getOpposite()));
 		} else {
-			orientation = Quaternion.IDENTITY.copy();
+			orientation = Quaternion.ONE.copy();
 		}
 
-		orientation.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-90 - AngleHelper.verticalAngle(facing)));
+		orientation.mul(Vector3f.XP.rotationDegrees(-90 - AngleHelper.verticalAngle(facing)));
 		return orientation;
 	}
 }

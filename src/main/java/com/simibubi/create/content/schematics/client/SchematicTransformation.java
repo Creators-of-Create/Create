@@ -38,8 +38,8 @@ public class SchematicTransformation {
 		int frontBack = settings.getMirror() == Mirror.FRONT_BACK ? -1 : 1;
 		getScaleFB().start(frontBack);
 		getScaleLR().start(leftRight);
-		xOrigin = bounds.getXSize() / 2f;
-		zOrigin = bounds.getZSize() / 2f;
+		xOrigin = bounds.getXsize() / 2f;
+		zOrigin = bounds.getZsize() / 2f;
 
 		int r = -(settings.getRotation()
 			.ordinal() * 90);
@@ -99,7 +99,7 @@ public class SchematicTransformation {
 		vec = vec.subtract(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
 		vec = VecHelper.rotate(vec, -rotation.get(pt), Axis.Y);
 		vec = vec.add(rotationOffset.x, 0, rotationOffset.z);
-		vec = vec.mul(getScaleFB().get(pt), 1, getScaleLR().get(pt));
+		vec = vec.multiply(getScaleFB().get(pt), 1, getScaleLR().get(pt));
 		vec = vec.add(xOrigin, 0, zOrigin);
 
 		return vec;
@@ -148,7 +148,7 @@ public class SchematicTransformation {
 		Vector3d rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
-		vec = vec.mul(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
+		vec = vec.multiply(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
 		vec = VecHelper.rotate(vec, rotation.getTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 
@@ -161,11 +161,11 @@ public class SchematicTransformation {
 		Vector3d rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
-		vec = vec.mul(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
+		vec = vec.multiply(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
 		vec = VecHelper.rotate(vec, rotation.getTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 
-		return Vector3d.of(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
+		return Vector3d.atLowerCornerOf(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
 	}
 
 	public int getRotationTarget() {

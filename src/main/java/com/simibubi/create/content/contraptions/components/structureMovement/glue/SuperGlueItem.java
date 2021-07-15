@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.item.Item.Properties;
+
 public class SuperGlueItem extends Item {
 
 	public SuperGlueItem(Properties properties) {
@@ -27,7 +29,7 @@ public class SuperGlueItem extends Item {
 	}
 
 	@Override
-	public boolean isDamageable() {
+	public boolean canBeDepleted() {
 		return true;
 	}
 
@@ -42,30 +44,30 @@ public class SuperGlueItem extends Item {
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		BlockPos blockpos = context.getPos();
-		Direction direction = context.getFace();
-		BlockPos blockpos1 = blockpos.offset(direction);
+	public ActionResultType useOn(ItemUseContext context) {
+		BlockPos blockpos = context.getClickedPos();
+		Direction direction = context.getClickedFace();
+		BlockPos blockpos1 = blockpos.relative(direction);
 		PlayerEntity playerentity = context.getPlayer();
-		ItemStack itemstack = context.getItem();
+		ItemStack itemstack = context.getItemInHand();
 
 		if (playerentity == null || !this.canPlace(playerentity, direction, itemstack, blockpos1))
 			return ActionResultType.FAIL;
 
-		World world = context.getWorld();
+		World world = context.getLevel();
 		SuperGlueEntity entity = new SuperGlueEntity(world, blockpos1, direction);
 		CompoundNBT compoundnbt = itemstack.getTag();
 		if (compoundnbt != null)
-			EntityType.applyItemNBT(world, playerentity, entity, compoundnbt);
+			EntityType.updateCustomEntityTag(world, playerentity, entity, compoundnbt);
 
 		if (!entity.onValidSurface())
 			return ActionResultType.FAIL;
 
-		if (!world.isRemote) {
+		if (!world.isClientSide) {
 			entity.playPlaceSound();
-			world.addEntity(entity);
+			world.addFreshEntity(entity);
 		}
-		itemstack.damageItem(1, playerentity, SuperGlueItem::onBroken);
+		itemstack.hurtAndBreak(1, playerentity, SuperGlueItem::onBroken);
 
 		return ActionResultType.SUCCESS;
 	}
@@ -75,22 +77,22 @@ public class SuperGlueItem extends Item {
 	}
 
 	protected boolean canPlace(PlayerEntity entity, Direction facing, ItemStack stack, BlockPos pos) {
-		return !World.isOutsideBuildHeight(pos) && entity.canPlayerEdit(pos, facing, stack);
+		return !World.isOutsideBuildHeight(pos) && entity.mayUseItemAt(pos, facing, stack);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void spawnParticles(World world, BlockPos pos, Direction direction, boolean fullBlock) {
-		Vector3d vec = Vector3d.of(direction.getDirectionVec());
+		Vector3d vec = Vector3d.atLowerCornerOf(direction.getNormal());
 		Vector3d plane = VecHelper.axisAlingedPlaneOf(vec);
 		Vector3d facePos = VecHelper.getCenterOf(pos)
 			.add(vec.scale(.5f));
 
-		float distance = fullBlock ? 1f : .25f + .25f * (world.rand.nextFloat() - .5f);
+		float distance = fullBlock ? 1f : .25f + .25f * (world.random.nextFloat() - .5f);
 		plane = plane.scale(distance);
 		ItemStack stack = new ItemStack(Items.SLIME_BALL);
 
 		for (int i = fullBlock ? 40 : 15; i > 0; i--) {
-			Vector3d offset = VecHelper.rotate(plane, 360 * world.rand.nextFloat(), direction.getAxis());
+			Vector3d offset = VecHelper.rotate(plane, 360 * world.random.nextFloat(), direction.getAxis());
 			Vector3d motion = offset.normalize()
 				.scale(1 / 16f);
 			if (fullBlock)

@@ -16,13 +16,13 @@ public class RotatingData extends KineticData {
 	}
 
     public RotatingData setRotationAxis(Direction.Axis axis) {
-        Direction orientation = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
-        setRotationAxis(orientation.getUnitVector());
+        Direction orientation = Direction.get(Direction.AxisDirection.POSITIVE, axis);
+        setRotationAxis(orientation.step());
         return this;
     }
 
     public RotatingData setRotationAxis(Vector3f axis) {
-        setRotationAxis(axis.getX(), axis.getY(), axis.getZ());
+        setRotationAxis(axis.x(), axis.y(), axis.z());
         return this;
 	}
 

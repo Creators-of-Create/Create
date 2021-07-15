@@ -38,7 +38,7 @@ public class BeltDeployerCallbacks {
 		if (deployerTileEntity.mode == Mode.PUNCH)
 			return ProcessingResult.PASS;
 		BlockState blockState = deployerTileEntity.getBlockState();
-		if (!blockState.contains(FACING) || blockState.get(FACING) != Direction.DOWN)
+		if (!blockState.hasProperty(FACING) || blockState.getValue(FACING) != Direction.DOWN)
 			return ProcessingResult.PASS;
 		if (deployerTileEntity.state != State.WAITING)
 			return ProcessingResult.HOLD;
@@ -58,7 +58,7 @@ public class BeltDeployerCallbacks {
 		if (deployerTileEntity.getSpeed() == 0)
 			return ProcessingResult.PASS;
 		BlockState blockState = deployerTileEntity.getBlockState();
-		if (!blockState.contains(FACING) || blockState.get(FACING) != Direction.DOWN)
+		if (!blockState.hasProperty(FACING) || blockState.getValue(FACING) != Direction.DOWN)
 			return ProcessingResult.PASS;
 		IRecipe<?> recipe = deployerTileEntity.getRecipe(s.stack);
 		if (recipe == null)
@@ -103,17 +103,17 @@ public class BeltDeployerCallbacks {
 		else
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 
-		ItemStack heldItem = deployerTileEntity.player.getHeldItemMainhand();
-		if (heldItem.isDamageable())
-			heldItem.damageItem(1, deployerTileEntity.player, s -> s.sendBreakAnimation(Hand.MAIN_HAND));
+		ItemStack heldItem = deployerTileEntity.player.getMainHandItem();
+		if (heldItem.isDamageableItem())
+			heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
 		else
 			heldItem.shrink(1);
 
-		BlockPos pos = deployerTileEntity.getPos();
-		World world = deployerTileEntity.getWorld();
+		BlockPos pos = deployerTileEntity.getBlockPos();
+		World world = deployerTileEntity.getLevel();
 		if (heldItem.isEmpty())
-			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, .25f, 1);
-		world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .75f);
+			world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundCategory.BLOCKS, .25f, 1);
+		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .75f);
 		if (recipe instanceof SandPaperPolishingRecipe)
 			AllSoundEvents.AUTO_POLISH.playOnServer(world, pos, .25f, 1f);
 

@@ -102,7 +102,7 @@ public class PonderButton extends BoxWidget {
 
 		if (shortcut != null) {
 			ms.translate(0, 0, z + 50);
-			drawCenteredText(ms, Minecraft.getInstance().fontRenderer, shortcut.getBoundKeyLocalizedText(), x + width / 2 + 8, y + height - 6, ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT_DARKER), fadeValue));
+			drawCenteredString(ms, Minecraft.getInstance().font, shortcut.getTranslatedKeyMessage(), x + width / 2 + 8, y + height - 6, ColorHelper.applyAlpha(Theme.i(Theme.Key.TEXT_DARKER), fadeValue));
 		}
 	}
 

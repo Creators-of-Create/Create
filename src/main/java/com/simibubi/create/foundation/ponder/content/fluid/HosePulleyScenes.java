@@ -44,12 +44,12 @@ public class HosePulleyScenes {
 		scene.world.moveSection(hoselink, util.vector.of(0, -1, 0), 0);
 		scene.idle(10);
 
-		Vector3d shaftInput = util.vector.blockSurface(hosePos.down(), Direction.WEST);
+		Vector3d shaftInput = util.vector.blockSurface(hosePos.below(), Direction.WEST);
 		scene.overlay.showText(70)
 			.text("Hose Pulleys can be used to fill or drain large bodies of Fluid")
 			.attachKeyFrame()
 			.placeNearTarget()
-			.pointAt(util.vector.topOf(hosePos.down()));
+			.pointAt(util.vector.topOf(hosePos.below()));
 		scene.idle(80);
 
 		scene.overlay.showText(80)
@@ -71,7 +71,7 @@ public class HosePulleyScenes {
 			.text("The Pulley retracts while the input rotation is inverted")
 			.attachKeyFrame()
 			.placeNearTarget()
-			.pointAt(util.vector.centerOf(hosePos.down(3)));
+			.pointAt(util.vector.centerOf(hosePos.below(3)));
 		scene.idle(30);
 
 		scene.world.setKineticSpeed(kinetics, -32);
@@ -85,7 +85,7 @@ public class HosePulleyScenes {
 			.text("On the opposite side, pipes can be connected")
 			.attachKeyFrame()
 			.placeNearTarget()
-			.pointAt(util.vector.blockSurface(hosePos.down(), Direction.EAST));
+			.pointAt(util.vector.blockSurface(hosePos.below(), Direction.EAST));
 		scene.idle(70);
 
 		scene.rotateCameraY(-70);
@@ -116,7 +116,7 @@ public class HosePulleyScenes {
 		}
 
 		for (BlockPos blockPos : blocks) {
-			scene.world.setBlock(blockPos, Blocks.WATER.getDefaultState(), false);
+			scene.world.setBlock(blockPos, Blocks.WATER.defaultBlockState(), false);
 			scene.idle(3);
 		}
 
@@ -176,7 +176,7 @@ public class HosePulleyScenes {
 		}
 
 		for (BlockPos blockPos : blocks)
-			scene.world.setBlock(blockPos, Blocks.WATER.getDefaultState(), false);
+			scene.world.setBlock(blockPos, Blocks.WATER.defaultBlockState(), false);
 		scene.idle(5);
 
 		Selection water = util.select.fromTo(2, 1, 0, 0, 4, 2);
@@ -197,12 +197,12 @@ public class HosePulleyScenes {
 		scene.world.showSectionAndMerge(crank, Direction.EAST, hoselink);
 		scene.idle(20);
 
-		scene.overlay.showSelectionWithText(util.select.position(hosePos.down()), 50)
+		scene.overlay.showSelectionWithText(util.select.position(hosePos.below()), 50)
 			.text("While fully retracted, the Hose Pulley cannot operate")
 			.placeNearTarget()
 			.colored(PonderPalette.RED)
 			.attachKeyFrame()
-			.pointAt(util.vector.blockSurface(hosePos.down(), Direction.UP));
+			.pointAt(util.vector.blockSurface(hosePos.below(), Direction.UP));
 		scene.idle(55);
 
 		Selection kinetics = util.select.fromTo(1, 6, 1, 0, 6, 1);
@@ -214,7 +214,7 @@ public class HosePulleyScenes {
 			.text("Draining runs from top to bottom")
 			.attachKeyFrame()
 			.placeNearTarget()
-			.pointAt(util.vector.centerOf(hosePos.down(3)));
+			.pointAt(util.vector.centerOf(hosePos.below(3)));
 		scene.idle(10);
 
 		scene.world.showSectionAndMerge(cogs, Direction.NORTH, hoselink);
@@ -228,10 +228,10 @@ public class HosePulleyScenes {
 
 		Vector3d surface = util.vector.topOf(1, 3, 1)
 			.subtract(0, 2 / 8f, 0);
-		AxisAlignedBB bb = new AxisAlignedBB(surface, surface).grow(1.5, 0, 1.5);
+		AxisAlignedBB bb = new AxisAlignedBB(surface, surface).inflate(1.5, 0, 1.5);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb, 3);
 		scene.idle(3);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.expand(0, -2, 0), 70);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.expandTowards(0, -2, 0), 70);
 		scene.idle(20);
 
 		Collections.reverse(blocks);
@@ -243,7 +243,7 @@ public class HosePulleyScenes {
 			scene.idle(3);
 		}
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, bb, bb.offset(0, -2, 0), 60);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, bb, bb.move(0, -2, 0), 60);
 		scene.overlay.showText(60)
 			.text("The surface level will end up just below where the hose ends")
 			.attachKeyFrame()
@@ -269,22 +269,22 @@ public class HosePulleyScenes {
 			.text("Filling runs from bottom to top")
 			.attachKeyFrame()
 			.placeNearTarget()
-			.pointAt(util.vector.centerOf(hosePos.down(3)));
+			.pointAt(util.vector.centerOf(hosePos.below(3)));
 		scene.idle(10);
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.offset(0, -3 + 2 / 8f, 0), 3);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.move(0, -3 + 2 / 8f, 0), 3);
 		scene.idle(3);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.expand(0, -3 + 2 / 8f, 0), 120);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.expandTowards(0, -3 + 2 / 8f, 0), 120);
 		scene.idle(20);
 
-		scene.world.setBlock(util.grid.at(1, 3, 1), Blocks.WATER.getDefaultState(), false);
+		scene.world.setBlock(util.grid.at(1, 3, 1), Blocks.WATER.defaultBlockState(), false);
 		scene.idle(3);
-		scene.world.setBlock(util.grid.at(1, 2, 1), Blocks.WATER.getDefaultState(), false);
+		scene.world.setBlock(util.grid.at(1, 2, 1), Blocks.WATER.defaultBlockState(), false);
 		scene.idle(3);
 
 		Collections.reverse(blocks);
 		for (BlockPos blockPos : blocks) {
-			scene.world.setBlock(blockPos, Blocks.WATER.getDefaultState(), false);
+			scene.world.setBlock(blockPos, Blocks.WATER.defaultBlockState(), false);
 			scene.idle(3);
 		}
 

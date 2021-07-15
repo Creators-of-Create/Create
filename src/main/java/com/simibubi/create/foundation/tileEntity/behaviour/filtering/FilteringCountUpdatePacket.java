@@ -36,7 +36,7 @@ public class FilteringCountUpdatePacket extends TileEntityConfigurationPacket<Sm
 			return;
 		behaviour.forceClientState = true;
 		behaviour.count = amount;
-		te.markDirty();
+		te.setChanged();
 		te.sendData();
 	}
 

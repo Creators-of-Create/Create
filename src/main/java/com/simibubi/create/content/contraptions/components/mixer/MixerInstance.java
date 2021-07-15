@@ -66,7 +66,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 	public void updateLight() {
 		super.updateLight();
 
-		relight(pos.down(), mixerHead);
+		relight(pos.below(), mixerHead);
 		relight(pos, mixerPole);
 	}
 

@@ -53,7 +53,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	public static final Map<String, TriConsumer<Screen, MatrixStack, Float>> backgrounds = new HashMap<>();
 	public static final PhysicalFloat cogSpin = PhysicalFloat.create().withLimit(10f).withDrag(0.3).addForce(new Force.Static(.2f));
-	public static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().with(CogWheelBlock.AXIS, Direction.Axis.Y);
+	public static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, Direction.Axis.Y);
 	public static final Map<String, Object> changes = new HashMap<>();
 	public static String modID = null;
 	protected final Screen parent;
@@ -75,7 +75,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		if (this.client != null && this.client.world != null) {
+		if (this.minecraft != null && this.minecraft.level != null) {
 			//in game
 			fill(ms, 0, 0, this.width, this.height, 0xb0_282c34);
 		} else {
@@ -102,14 +102,14 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	@Override
 	protected void prepareFrame() {
 		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
-		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
+		Framebuffer mainBuffer = Minecraft.getInstance().getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
-		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.framebufferObject);
-		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.framebufferObject);
-		functions.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.frameBufferId);
+		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.frameBufferId);
+		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		functions.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, thisBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(FramebufferConstants.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
 		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
 	}
@@ -118,14 +118,14 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	protected void endFrame() {
 
 		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
-		Framebuffer mainBuffer = Minecraft.getInstance().getFramebuffer();
+		Framebuffer mainBuffer = Minecraft.getInstance().getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
-		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.framebufferObject);
-		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.framebufferObject);
-		functions.blit.blitFramebuffer(0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, 0, 0, mainBuffer.framebufferWidth, mainBuffer.framebufferHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
+		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.frameBufferId);
+		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.frameBufferId);
+		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		functions.fbo.bindFramebuffer(FramebufferConstants.FRAME_BUFFER, mainBuffer.framebufferObject);
+		functions.fbo.bindFramebuffer(FramebufferConstants.GL_FRAMEBUFFER, mainBuffer.frameBufferId);
 	}
 
 	@Override
@@ -164,19 +164,19 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 			return;
 		}
 
-		float elapsedPartials = client.getTickLength();
+		float elapsedPartials = minecraft.getDeltaFrameTime();
 		CreateMainMenuScreen.panorama.render(elapsedPartials, 1);
 
-		client.getTextureManager().bindTexture(CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
+		minecraft.getTextureManager().bind(CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		drawTexture(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
+		blit(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
 
 		fill(ms, 0, 0, this.width, this.height, 0x90_282c34);
 	}
 
 	protected void renderCog(MatrixStack ms, float partialTicks) {
-		ms.push();
+		ms.pushPose();
 
 		ms.translate(-100, 100, -100);
 		ms.scale(200, 200, 1);
@@ -184,6 +184,6 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 				.rotateBlock(22.5, cogSpin.getValue(partialTicks), 22.5)
 				.render(ms);
 
-		ms.pop();
+		ms.popPose();
 	}
 }

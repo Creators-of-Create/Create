@@ -27,9 +27,9 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 			.getItemRenderer();
 		renderer.render(model.getOriginalModel(), light);
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean mainHand = player.getHeldItemMainhand() == stack;
-		boolean offHand = player.getHeldItemOffhand() == stack;
-		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
+		boolean mainHand = player.getMainHandItem() == stack;
+		boolean offHand = player.getOffhandItem() == stack;
+		boolean leftHanded = player.getMainArm() == HandSide.LEFT;
 
 		float offset = .5f / 16;
 		float worldTime = AnimationTickHolder.getRenderTime() / 10;
@@ -41,12 +41,12 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 			angle += 360 * MathHelper.clamp(speed * 5, 0, 1);
 		angle %= 360;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, offset, 0);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(model.getPartial("cog"), light);
-		ms.pop();
+		ms.popPose();
 
 		if (transformType == TransformType.GUI) {
 			PotatoCannonItem.getAmmoforPreview(stack)
@@ -56,7 +56,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 					localMs.scale(.5f, .5f, .5f);
 					MatrixStacker.of(localMs)
 						.rotateY(-34);
-					itemRenderer.renderItem(ammo, TransformType.GUI, light, OverlayTexture.DEFAULT_UV, localMs, buffer);
+					itemRenderer.renderStatic(ammo, TransformType.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer);
 				});
 		}
 

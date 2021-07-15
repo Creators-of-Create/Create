@@ -62,24 +62,24 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		BlockState state = getBlockState();
 		if (!FunnelBlock.isFunnel(state))
 			return Mode.INVALID;
-		if (state.method_28500(BlockStateProperties.POWERED)
+		if (state.getOptionalValue(BlockStateProperties.POWERED)
 			.orElse(false))
 			return Mode.PAUSED;
 		if (state.getBlock() instanceof BeltFunnelBlock) {
-			Shape shape = state.get(BeltFunnelBlock.SHAPE);
+			Shape shape = state.getValue(BeltFunnelBlock.SHAPE);
 			if (shape == Shape.PULLING)
 				return Mode.TAKING_FROM_BELT;
 			if (shape == Shape.PUSHING)
 				return Mode.PUSHING_TO_BELT;
 
-			BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos.down());
+			BeltTileEntity belt = BeltHelper.getSegmentTE(level, worldPosition.below());
 			if (belt != null)
-				return belt.getMovementFacing() == state.get(BeltFunnelBlock.HORIZONTAL_FACING) ? Mode.PUSHING_TO_BELT
+				return belt.getMovementFacing() == state.getValue(BeltFunnelBlock.HORIZONTAL_FACING) ? Mode.PUSHING_TO_BELT
 					: Mode.TAKING_FROM_BELT;
 			return Mode.INVALID;
 		}
 		if (state.getBlock() instanceof FunnelBlock)
-			return state.get(FunnelBlock.EXTRACTING) ? Mode.EXTRACT : Mode.COLLECT;
+			return state.getValue(FunnelBlock.EXTRACTING) ? Mode.EXTRACT : Mode.COLLECT;
 
 		return Mode.INVALID;
 	}
@@ -89,7 +89,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		super.tick();
 		flap.tick();
 		Mode mode = determineCurrentMode();
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 
 		// Redstone resets the extraction cooldown
@@ -140,7 +140,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			.extract(amountToExtract);
 		if (stack.isEmpty())
 			return;
-		for (ItemEntity itemEntity : world.getEntitiesWithinAABB(ItemEntity.class, area)) {
+		for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class, area)) {
 			lastObserved = new WeakReference<>(itemEntity);
 			return;
 		}
@@ -153,12 +153,12 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		flap(false);
 		onTransfer(stack);
 
-		Vector3d outputPos = VecHelper.getCenterOf(pos);
+		Vector3d outputPos = VecHelper.getCenterOf(worldPosition);
 		boolean vertical = facing.getAxis()
 			.isVertical();
 		boolean up = facing == Direction.UP;
 
-		outputPos = outputPos.add(Vector3d.of(facing.getDirectionVec())
+		outputPos = outputPos.add(Vector3d.atLowerCornerOf(facing.getNormal())
 			.scale(vertical ? up ? .15f : .5f : .25f));
 		if (!vertical)
 			outputPos = outputPos.subtract(0, .45f, 0);
@@ -167,31 +167,31 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		if (up)
 			motion = new Vector3d(0, 4 / 16f, 0);
 
-		ItemEntity item = new ItemEntity(world, outputPos.x, outputPos.y, outputPos.z, stack.copy());
-		item.setDefaultPickupDelay();
-		item.setMotion(motion);
-		world.addEntity(item);
+		ItemEntity item = new ItemEntity(level, outputPos.x, outputPos.y, outputPos.z, stack.copy());
+		item.setDefaultPickUpDelay();
+		item.setDeltaMovement(motion);
+		level.addFreshEntity(item);
 		lastObserved = new WeakReference<>(item);
 
 		startCooldown();
 	}
 
 	static final AxisAlignedBB coreBB =
-		new AxisAlignedBB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).grow(.75f);
+		new AxisAlignedBB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).inflate(.75f);
 
 	private AxisAlignedBB getEntityOverflowScanningArea() {
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(getBlockState());
-		AxisAlignedBB bb = coreBB.offset(pos);
+		AxisAlignedBB bb = coreBB.move(worldPosition);
 		if (facing == null || facing == Direction.UP)
 			return bb;
-		return bb.expand(0, -1, 0);
+		return bb.expandTowards(0, -1, 0);
 	}
 
 	private void activateExtractingBeltFunnel() {
 		BlockState blockState = getBlockState();
-		Direction facing = blockState.get(BeltFunnelBlock.HORIZONTAL_FACING);
+		Direction facing = blockState.getValue(BeltFunnelBlock.HORIZONTAL_FACING);
 		DirectBeltInputBehaviour inputBehaviour =
-			TileEntityBehaviour.get(world, pos.down(), DirectBeltInputBehaviour.TYPE);
+			TileEntityBehaviour.get(level, worldPosition.below(), DirectBeltInputBehaviour.TYPE);
 
 		if (inputBehaviour == null)
 			return;
@@ -242,13 +242,13 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		BlockState blockState = getBlockState();
 		boolean beltFunnelsupportsAmount = false;
 		if (blockState.getBlock() instanceof BeltFunnelBlock) {
-			Shape shape = blockState.get(BeltFunnelBlock.SHAPE);
+			Shape shape = blockState.getValue(BeltFunnelBlock.SHAPE);
 			if (shape == Shape.PUSHING)
 				beltFunnelsupportsAmount = true;
 			else
-				beltFunnelsupportsAmount = BeltHelper.getSegmentTE(world, pos.down()) != null;
+				beltFunnelsupportsAmount = BeltHelper.getSegmentTE(level, worldPosition.below()) != null;
 		}
-		boolean extractor = blockState.getBlock() instanceof FunnelBlock && blockState.get(FunnelBlock.EXTRACTING);
+		boolean extractor = blockState.getBlock() instanceof FunnelBlock && blockState.getValue(FunnelBlock.EXTRACTING);
 		return beltFunnelsupportsAmount || extractor;
 	}
 
@@ -258,7 +258,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return false;
 		if (!(blockState.getBlock() instanceof FunnelBlock))
 			return false;
-		if (blockState.get(FunnelBlock.EXTRACTING))
+		if (blockState.getValue(FunnelBlock.EXTRACTING))
 			return false;
 		return FunnelBlock.getFunnelFacing(blockState) == Direction.UP;
 	}
@@ -282,11 +282,11 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	public void flap(boolean inward) {
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
 		} else {
 			flap.set(inward ? 1 : -1);
-			AllSoundEvents.FUNNEL_FLAP.playAt(world, pos, 1, 1, true);
+			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);
 		}
 	}
 
@@ -303,7 +303,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		BlockState blockState = getBlockState();
 		if (!(blockState.getBlock() instanceof BeltFunnelBlock))
 			return -1 / 16f;
-		switch (blockState.get(BeltFunnelBlock.SHAPE)) {
+		switch (blockState.getValue(BeltFunnelBlock.SHAPE)) {
 		default:
 		case RETRACTED:
 			return 0;
@@ -331,13 +331,13 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	@Override
-	public double getMaxRenderDistanceSquared() {
-		return hasFlap() ? super.getMaxRenderDistanceSquared() : 64;
+	public double getViewDistance() {
+		return hasFlap() ? super.getViewDistance() : 64;
 	}
 
 	public void onTransfer(ItemStack stack) {
 		AllBlocks.CONTENT_OBSERVER.get()
-			.onFunnelTransfer(world, pos, stack);
+			.onFunnelTransfer(level, worldPosition, stack);
 	}
 
 	@Override

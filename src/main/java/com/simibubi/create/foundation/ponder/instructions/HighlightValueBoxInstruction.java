@@ -21,7 +21,7 @@ public class HighlightValueBoxInstruction extends TickingInstruction {
 	public void tick(PonderScene scene) {
 		super.tick(scene);
 		AxisAlignedBB point = new AxisAlignedBB(vec, vec);
-		AxisAlignedBB expanded = point.grow(expands.x, expands.y, expands.z);
+		AxisAlignedBB expanded = point.inflate(expands.x, expands.y, expands.z);
 		scene.getOutliner()
 			.chaseAABB(vec, remainingTicks == totalTicks ? point : expanded)
 			.lineWidth(1 / 32f)

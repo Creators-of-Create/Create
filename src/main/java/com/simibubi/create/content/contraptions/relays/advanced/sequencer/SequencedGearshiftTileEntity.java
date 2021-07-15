@@ -35,7 +35,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 
 		if (isIdle())
 			return;
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		if (currentInstructionDuration < 0)
 			return;
@@ -78,8 +78,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			return;
 		if (isPowered == isRunning)
 			return;
-		if (!world.isBlockPowered(pos)) {
-			world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, 0), 3);
+		if (!level.hasNeighborSignal(worldPosition)) {
+			level.setBlock(worldPosition, getBlockState().setValue(SequencedGearshiftBlock.STATE, 0), 3);
 			return;
 		}
 		if (getSpeed() == 0)
@@ -113,8 +113,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 			currentInstructionDuration = -1;
 			currentInstructionProgress = 0;
 			timer = 0;
-			if (!world.isBlockPowered(pos))
-				world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, 0), 3);
+			if (!level.hasNeighborSignal(worldPosition))
+				level.setBlock(worldPosition, getBlockState().setValue(SequencedGearshiftBlock.STATE, 0), 3);
 			else
 				sendData();
 			return;
@@ -125,7 +125,7 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 		currentInstruction = instructionIndex;
 		currentInstructionProgress = 0;
 		timer = 0;
-		world.setBlockState(pos, getBlockState().with(SequencedGearshiftBlock.STATE, instructionIndex + 1), 3);
+		level.setBlock(worldPosition, getBlockState().setValue(SequencedGearshiftBlock.STATE, instructionIndex + 1), 3);
 	}
 
 	public Instruction getInstruction(int instructionIndex) {

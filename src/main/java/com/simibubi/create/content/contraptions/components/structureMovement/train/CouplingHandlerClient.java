@@ -28,8 +28,8 @@ public class CouplingHandlerClient {
 			return;
 		spawnSelectionParticles(selectedCart.getBoundingBox(), false);
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		ItemStack heldItemMainhand = player.getHeldItemMainhand();
-		ItemStack heldItemOffhand = player.getHeldItemOffhand();
+		ItemStack heldItemMainhand = player.getMainHandItem();
+		ItemStack heldItemOffhand = player.getOffhandItem();
 		if (AllItems.MINECART_COUPLING.isIn(heldItemMainhand) || AllItems.MINECART_COUPLING.isIn(heldItemOffhand))
 			return;
 		selectedCart = null;
@@ -53,14 +53,14 @@ public class CouplingHandlerClient {
 	}
 
 	private static void spawnSelectionParticles(AxisAlignedBB axisAlignedBB, boolean highlight) {
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		Vector3d center = axisAlignedBB.getCenter();
 		int amount = highlight ? 100 : 2;
 		IParticleData particleData = highlight ? ParticleTypes.END_ROD : new RedstoneParticleData(1, 1, 1, 1);
 		for (int i = 0; i < amount; i++) {
 			Vector3d v = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1);
 			double yOffset = v.y;
-			v = v.mul(1, 0, 1)
+			v = v.multiply(1, 0, 1)
 				.normalize()
 				.add(0, yOffset / 8f, 0)
 				.add(center);

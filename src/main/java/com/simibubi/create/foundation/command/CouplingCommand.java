@@ -36,7 +36,7 @@ public class CouplingCommand {
 	public static ArgumentBuilder<CommandSource, ?> register() {
 
 		return Commands.literal("coupling")
-			.requires(cs -> cs.hasPermissionLevel(2))
+			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.literal("add")
 				.then(Commands.argument("cart1", EntityArgument.entity())
 					.then(Commands.argument("cart2", EntityArgument.entity())
@@ -49,16 +49,16 @@ public class CouplingCommand {
 							if (!(cart2 instanceof AbstractMinecartEntity))
 								throw ONLY_MINECARTS_ALLOWED.create();
 
-							if (!cart1.getEntityWorld()
-								.equals(cart2.getEntityWorld()))
+							if (!cart1.getCommandSenderWorld()
+								.equals(cart2.getCommandSenderWorld()))
 								throw SAME_DIMENSION.create();
 
 							Entity source = ctx.getSource()
 								.getEntity();
 
 							CouplingHandler.tryToCoupleCarts(
-								source instanceof PlayerEntity ? (PlayerEntity) source : null, cart1.getEntityWorld(),
-								cart1.getEntityId(), cart2.getEntityId());
+								source instanceof PlayerEntity ? (PlayerEntity) source : null, cart1.getCommandSenderWorld(),
+								cart1.getId(), cart2.getId());
 
 							return Command.SINGLE_SUCCESS;
 						})))
@@ -77,15 +77,15 @@ public class CouplingCommand {
 						if (!(cart2 instanceof AbstractMinecartEntity))
 							throw ONLY_MINECARTS_ALLOWED.create();
 
-						if (!cart1.getEntityWorld()
-							.equals(cart2.getEntityWorld()))
+						if (!cart1.getCommandSenderWorld()
+							.equals(cart2.getCommandSenderWorld()))
 							throw SAME_DIMENSION.create();
 
 						Entity source = ctx.getSource()
 							.getEntity();
 
 						CouplingHandler.tryToCoupleCarts(source instanceof PlayerEntity ? (PlayerEntity) source : null,
-							cart1.getEntityWorld(), cart1.getEntityId(), cart2.getEntityId());
+							cart1.getCommandSenderWorld(), cart1.getId(), cart2.getId());
 
 						return Command.SINGLE_SUCCESS;
 					})))
@@ -105,7 +105,7 @@ public class CouplingCommand {
 								cart1.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
 							if (!cart1Capability.isPresent()) {
 								ctx.getSource()
-									.sendFeedback(new StringTextComponent("Minecart has no Couplings Attached"), true);
+									.sendSuccess(new StringTextComponent("Minecart has no Couplings Attached"), true);
 								return 0;
 							}
 
@@ -115,7 +115,7 @@ public class CouplingCommand {
 								+ (cart1Controller.isLeadingCoupling() ? 1 : 0);
 							if (cart1Couplings == 0) {
 								ctx.getSource()
-									.sendFeedback(new StringTextComponent("Minecart has no Couplings Attached"), true);
+									.sendSuccess(new StringTextComponent("Minecart has no Couplings Attached"), true);
 								return 0;
 							}
 
@@ -124,11 +124,11 @@ public class CouplingCommand {
 								if (coupledCart == null)
 									continue;
 
-								if (coupledCart != cart2.getUniqueID())
+								if (coupledCart != cart2.getUUID())
 									continue;
 
 								MinecartController cart2Controller =
-									CapabilityMinecartController.getIfPresent(cart1.getEntityWorld(), coupledCart);
+									CapabilityMinecartController.getIfPresent(cart1.getCommandSenderWorld(), coupledCart);
 								if (cart2Controller == null)
 									return 0;
 
@@ -138,7 +138,7 @@ public class CouplingCommand {
 							}
 
 							ctx.getSource()
-								.sendFeedback(new StringTextComponent("The specified Carts are not coupled"), true);
+								.sendSuccess(new StringTextComponent("The specified Carts are not coupled"), true);
 
 							return 0;
 						}))))
@@ -153,7 +153,7 @@ public class CouplingCommand {
 							cart.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
 						if (!capability.isPresent()) {
 							ctx.getSource()
-								.sendFeedback(new StringTextComponent("Minecart has no Couplings Attached"), true);
+								.sendSuccess(new StringTextComponent("Minecart has no Couplings Attached"), true);
 							return 0;
 						}
 
@@ -163,14 +163,14 @@ public class CouplingCommand {
 							(controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 						if (couplings == 0) {
 							ctx.getSource()
-								.sendFeedback(new StringTextComponent("Minecart has no Couplings Attached"), true);
+								.sendSuccess(new StringTextComponent("Minecart has no Couplings Attached"), true);
 							return 0;
 						}
 
 						controller.decouple();
 
 						ctx.getSource()
-							.sendFeedback(
+							.sendSuccess(
 								new StringTextComponent("Removed " + couplings + " couplings from the Minecart"), true);
 
 						return couplings;

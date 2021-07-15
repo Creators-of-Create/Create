@@ -20,7 +20,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void onSpeedChanged(MovementContext context, Vector3d oldMotion, Vector3d motion) {
-		double dotProduct = oldMotion.dotProduct(motion);
+		double dotProduct = oldMotion.dot(motion);
 
 		if (dotProduct <= 0 && (context.relativeMotion.length() != 0) || context.firstMovement)
 			playSound(context);
@@ -41,7 +41,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 			((AbstractBellBlock<?>) block).playSound(world, pos);
 		} else {
 			// Vanilla bell sound
-			world.playSound(null, pos, SoundEvents.BLOCK_BELL_USE,
+			world.playSound(null, pos, SoundEvents.BELL_BLOCK,
 					SoundCategory.BLOCKS, 2f, 1f);
 		}
 	}

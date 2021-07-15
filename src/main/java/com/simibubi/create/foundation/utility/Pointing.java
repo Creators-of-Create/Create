@@ -15,7 +15,7 @@ public enum Pointing implements IStringSerializable {
 	}
 
 	@Override
-	public String getString() {
+	public String getSerializedName() {
 		return Lang.asId(name());
 	}
 

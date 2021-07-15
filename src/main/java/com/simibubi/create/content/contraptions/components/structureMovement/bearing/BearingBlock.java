@@ -11,6 +11,8 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class BearingBlock extends DirectionalKineticBlock {
 
 	public BearingBlock(Properties properties) {
@@ -19,12 +21,12 @@ public abstract class BearingBlock extends DirectionalKineticBlock {
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING).getOpposite();
+		return face == state.getValue(FACING).getOpposite();
 	}
 	
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING).getAxis();
+		return state.getValue(FACING).getAxis();
 	}
 
 	@Override
@@ -35,8 +37,8 @@ public abstract class BearingBlock extends DirectionalKineticBlock {
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		ActionResultType resultType = super.onWrenched(state, context);
-		if (!context.getWorld().isRemote && resultType.isAccepted()) {
-			TileEntity te = context.getWorld().getTileEntity(context.getPos());
+		if (!context.getLevel().isClientSide && resultType.consumesAction()) {
+			TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 			if (te instanceof MechanicalBearingTileEntity) {
 				((MechanicalBearingTileEntity) te).disassemble();
 			}

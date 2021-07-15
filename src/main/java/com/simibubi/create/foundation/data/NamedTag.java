@@ -22,7 +22,7 @@ public class NamedTag<T> implements ITag.INamedTag<T> {
 	}
 
 	@Override
-	public ResourceLocation getId() {
+	public ResourceLocation getName() {
 		return id;
 	}
 
@@ -34,9 +34,9 @@ public class NamedTag<T> implements ITag.INamedTag<T> {
 	}
 
 	@Override
-	public List<T> values() {
+	public List<T> getValues() {
 		if (tag == null)
 			return Collections.emptyList();
-		return tag.values();
+		return tag.getValues();
 	}
 }

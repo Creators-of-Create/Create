@@ -169,17 +169,17 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	// IRecipe<> paperwork
 
 	@Override
-	public ItemStack getCraftingResult(T inv) {
-		return getRecipeOutput();
+	public ItemStack assemble(T inv) {
+		return getResultItem();
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return getRollableResults().isEmpty() ? ItemStack.EMPTY
 			: getRollableResults().get(0)
 				.getStack();
@@ -191,7 +191,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	@Override
-	public boolean isDynamic() {
+	public boolean isSpecial() {
 		return true;
 	}
 

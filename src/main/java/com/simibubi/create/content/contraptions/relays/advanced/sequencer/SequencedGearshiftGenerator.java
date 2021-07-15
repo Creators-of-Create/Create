@@ -13,19 +13,19 @@ public class SequencedGearshiftGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		return state.get(SequencedGearshiftBlock.VERTICAL) ? 90 : 0;
+		return state.getValue(SequencedGearshiftBlock.VERTICAL) ? 90 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return state.get(SequencedGearshiftBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0;
+		return state.getValue(SequencedGearshiftBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0;
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
 		String variant = "idle";
-		int seq = state.get(SequencedGearshiftBlock.STATE);
+		int seq = state.getValue(SequencedGearshiftBlock.STATE);
 		if (seq > 0)
 			variant = "seq_" + seq;
 		return prov.models()

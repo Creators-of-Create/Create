@@ -55,7 +55,7 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public Stream<BlockPos> getLightSources() {
+    public Stream<BlockPos> getLights() {
         return world.blocksAdded
                 .entrySet()
                 .stream()
@@ -84,7 +84,7 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public void addTileEntity(BlockPos p_177426_1_, TileEntity p_177426_2_) {
+    public void setBlockEntity(BlockPos p_177426_1_, TileEntity p_177426_2_) {
 
     }
 
@@ -94,12 +94,12 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public Set<BlockPos> getTileEntitiesPos() {
+    public Set<BlockPos> getBlockEntitiesPos() {
         return null;
     }
 
     @Override
-    public Collection<Map.Entry<Heightmap.Type, Heightmap>> func_217311_f() {
+    public Collection<Map.Entry<Heightmap.Type, Heightmap>> getHeightmaps() {
         return null;
     }
 
@@ -109,12 +109,12 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public Heightmap getHeightmap(Heightmap.Type p_217303_1_) {
+    public Heightmap getOrCreateHeightmapUnprimed(Heightmap.Type p_217303_1_) {
         return null;
     }
 
     @Override
-    public int getTopBlockY(Heightmap.Type p_201576_1_, int p_201576_2_, int p_201576_3_) {
+    public int getHeight(Heightmap.Type p_201576_1_, int p_201576_2_, int p_201576_3_) {
         return 0;
     }
 
@@ -130,49 +130,49 @@ public class WrappedChunk implements IChunk {
 
     @Nullable
     @Override
-    public BiomeContainer getBiomeArray() {
+    public BiomeContainer getBiomes() {
         return null;
     }
 
     @Override
-    public void setModified(boolean p_177427_1_) {
+    public void setUnsaved(boolean p_177427_1_) {
 
     }
 
     @Override
-    public boolean isModified() {
+    public boolean isUnsaved() {
         return false;
     }
 
     @Override
-    public void removeTileEntity(BlockPos p_177425_1_) {
+    public void removeBlockEntity(BlockPos p_177425_1_) {
 
     }
 
     @Override
-    public ShortList[] getPackedPositions() {
+    public ShortList[] getPostProcessing() {
         return new ShortList[0];
     }
 
     @Nullable
     @Override
-    public CompoundNBT getDeferredTileEntity(BlockPos p_201579_1_) {
+    public CompoundNBT getBlockEntityNbt(BlockPos p_201579_1_) {
         return null;
     }
 
     @Nullable
     @Override
-    public CompoundNBT func_223134_j(BlockPos p_223134_1_) {
+    public CompoundNBT getBlockEntityNbtForSaving(BlockPos p_223134_1_) {
         return null;
     }
 
     @Override
-    public ITickList<Block> getBlocksToBeTicked() {
+    public ITickList<Block> getBlockTicks() {
         return null;
     }
 
     @Override
-    public ITickList<Fluid> getFluidsToBeTicked() {
+    public ITickList<Fluid> getLiquidTicks() {
         return null;
     }
 
@@ -192,18 +192,18 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public boolean hasLight() {
+    public boolean isLightCorrect() {
         return needsLight;
     }
 
     @Override
-    public void setLight(boolean needsLight) {
+    public void setLightCorrect(boolean needsLight) {
         this.needsLight = needsLight;
     }
 
     @Nullable
     @Override
-    public TileEntity getTileEntity(BlockPos pos) {
+    public TileEntity getBlockEntity(BlockPos pos) {
         return null;
     }
 
@@ -218,42 +218,42 @@ public class WrappedChunk implements IChunk {
 	}
 
 	@Override
-	public void addStructureReference(Structure<?> arg0, long arg1) {
+	public void addReferenceForFeature(Structure<?> arg0, long arg1) {
 
 	}
 
 	@Override
-	public Map<Structure<?>, LongSet> getStructureReferences() {
+	public Map<Structure<?>, LongSet> getAllReferences() {
 		return null;
 	}
 
 	@Override
-	public LongSet getStructureReferences(Structure<?> arg0) {
+	public LongSet getReferencesForFeature(Structure<?> arg0) {
 		return null;
 	}
 
 	@Override
-	public StructureStart<?> getStructureStart(Structure<?> arg0) {
+	public StructureStart<?> getStartForFeature(Structure<?> arg0) {
 		return null;
 	}
 
 	@Override
-	public void setStructureReferences(Map<Structure<?>, LongSet> arg0) {
+	public void setAllReferences(Map<Structure<?>, LongSet> arg0) {
 
 	}
 
 	@Override
-	public void setStructureStart(Structure<?> arg0, StructureStart<?> arg1) {
+	public void setStartForFeature(Structure<?> arg0, StructureStart<?> arg1) {
 
 	}
 
 	@Override
-	public void setStructureStarts(Map<Structure<?>, StructureStart<?>> p_201612_1_) {
+	public void setAllStarts(Map<Structure<?>, StructureStart<?>> p_201612_1_) {
 
 	}
 
 	@Override
-	public Map<Structure<?>, StructureStart<?>> getStructureStarts() {
+	public Map<Structure<?>, StructureStart<?>> getAllStarts() {
 		return null;
 	}
 

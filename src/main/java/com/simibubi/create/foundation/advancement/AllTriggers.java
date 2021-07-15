@@ -72,7 +72,7 @@ public class AllTriggers {
 		Predicate<PlayerEntity> playerFilter) {
 		if (world == null)
 			return;
-		if (world.isRemote())
+		if (world.isClientSide())
 			return;
 		List<ServerPlayerEntity> players = getPlayersInRange(world, pos, range);
 		players.stream()
@@ -81,6 +81,6 @@ public class AllTriggers {
 	}
 
 	public static List<ServerPlayerEntity> getPlayersInRange(IWorld world, BlockPos pos, int range) {
-		return world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(range));
+		return world.getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(pos).inflate(range));
 	}
 }

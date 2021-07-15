@@ -45,7 +45,7 @@ public class FilteringHandler {
 		PlayerEntity player = event.getPlayer();
 		Hand hand = event.getHand();
 
-		if (player.isSneaking() || player.isSpectator())
+		if (player.isShiftKeyDown() || player.isSpectator())
 			return;
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
@@ -56,18 +56,18 @@ public class FilteringHandler {
 		if (ray == null)
 			return;
 		if (behaviour instanceof SidedFilteringBehaviour) {
-			behaviour = ((SidedFilteringBehaviour) behaviour).get(ray.getFace());
+			behaviour = ((SidedFilteringBehaviour) behaviour).get(ray.getDirection());
 			if (behaviour == null)
 				return;
 		}
 		if (!behaviour.isActive())
 			return;
 		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
-			((Sided) behaviour.slotPositioning).fromSide(ray.getFace());
-		if (!behaviour.testHit(ray.getHitVec()))
+			((Sided) behaviour.slotPositioning).fromSide(ray.getDirection());
+		if (!behaviour.testHit(ray.getLocation()))
 			return;
 
-		ItemStack toApply = player.getHeldItem(hand)
+		ItemStack toApply = player.getItemInHand(hand)
 			.copy();
 
 		if (AllItems.WRENCH.isIn(toApply))
@@ -78,7 +78,7 @@ public class FilteringHandler {
 		if (event.getSide() != LogicalSide.CLIENT) {
 			if (!player.isCreative()) {
 				if (toApply.getItem() instanceof FilterItem)
-					player.getHeldItem(hand)
+					player.getItemInHand(hand)
 						.shrink(1);
 				if (behaviour.getFilter()
 					.getItem() instanceof FilterItem)
@@ -97,42 +97,42 @@ public class FilteringHandler {
 				feedback = "apply_count";
 			String translationKey = world.getBlockState(pos)
 				.getBlock()
-				.getTranslationKey();
+				.getDescriptionId();
 			ITextComponent formattedText = new TranslationTextComponent(translationKey);
-			player.sendStatusMessage(Lang.createTranslationTextComponent("logistics.filter." + feedback, formattedText)
-				.formatted(TextFormatting.WHITE), true);
+			player.displayClientMessage(Lang.createTranslationTextComponent("logistics.filter." + feedback, formattedText)
+				.withStyle(TextFormatting.WHITE), true);
 		}
 
 		event.setCanceled(true);
 		event.setCancellationResult(ActionResultType.SUCCESS);
-		world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
+		world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
-		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
+		RayTraceResult objectMouseOver = Minecraft.getInstance().hitResult;
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return false;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
 		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.world;
-		BlockPos blockPos = result.getPos();
+		ClientWorld world = mc.level;
+		BlockPos blockPos = result.getBlockPos();
 
 		FilteringBehaviour filtering = TileEntityBehaviour.get(world, blockPos, FilteringBehaviour.TYPE);
 		if (filtering == null)
 			return false;
-		if (mc.player.isSneaking())
+		if (mc.player.isShiftKeyDown())
 			return false;
-		if (!mc.player.isAllowEdit())
+		if (!mc.player.mayBuild())
 			return false;
 		if (!filtering.isCountVisible())
 			return false;
 		if (!filtering.isActive())
 			return false;
 		if (filtering.slotPositioning instanceof ValueBoxTransform.Sided)
-			((Sided) filtering.slotPositioning).fromSide(result.getFace());
-		if (!filtering.testHit(objectMouseOver.getHitVec()))
+			((Sided) filtering.slotPositioning).fromSide(result.getDirection());
+		if (!filtering.testHit(objectMouseOver.getLocation()))
 			return false;
 		
 		ItemStack filterItem = filtering.getFilter();

@@ -45,12 +45,12 @@ public class PonderTooltipHandler {
 		}
 
 		Minecraft instance = Minecraft.getInstance();
-		Screen currentScreen = instance.currentScreen;
+		Screen currentScreen = instance.screen;
 		float value = holdWProgress.getValue();
 		int keyCode = ponderKeybind().getKey()
-			.getKeyCode();
+			.getValue();
 		long window = instance.getWindow()
-			.getHandle();
+			.getWindow();
 
 		if (!subject && InputMappings.isKeyDown(window, keyCode)) {
 			if (value >= 1) {
@@ -77,9 +77,9 @@ public class PonderTooltipHandler {
 			return;
 
 		float renderPartialTicks = Minecraft.getInstance()
-			.getRenderPartialTicks();
+			.getFrameTime();
 		ITextComponent component = subject ? Lang.createTranslationTextComponent(SUBJECT)
-			.formatted(TextFormatting.GREEN)
+			.withStyle(TextFormatting.GREEN)
 			: makeProgressBar(Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f));
 		if (toolTip.size() < 2)
 			toolTip.add(component);
@@ -89,14 +89,14 @@ public class PonderTooltipHandler {
 
 	protected static void updateHovered(ItemStack stack) {
 		Minecraft instance = Minecraft.getInstance();
-		Screen currentScreen = instance.currentScreen;
+		Screen currentScreen = instance.screen;
 		ItemStack prevStack = trackingStack;
 		hoveredStack = ItemStack.EMPTY;
 		subject = false;
 
 		if (currentScreen instanceof PonderUI) {
 			PonderUI ponderUI = (PonderUI) currentScreen;
-			if (stack.isItemEqual(ponderUI.getSubject()))
+			if (stack.sameItem(ponderUI.getSubject()))
 				subject = true;
 		}
 
@@ -106,7 +106,7 @@ public class PonderTooltipHandler {
 			.getRegistryName()))
 			return;
 
-		if (prevStack.isEmpty() || !prevStack.isItemEqual(stack))
+		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
 			holdWProgress.startWithValue(0);
 
 		hoveredStack = stack;
@@ -119,7 +119,7 @@ public class PonderTooltipHandler {
 		if (holdWProgress.getValue() == 0)
 			return;
 		float renderPartialTicks = Minecraft.getInstance()
-			.getRenderPartialTicks();
+			.getFrameTime();
 		int start = event.getOriginalBorderStart();
 		int end = event.getOriginalBorderEnd();
 		float progress = Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f);
@@ -140,12 +140,12 @@ public class PonderTooltipHandler {
 	private static ITextComponent makeProgressBar(float progress) {
 		IFormattableTextComponent holdW = Lang
 			.translate(HOLD_TO_PONDER,
-				((IFormattableTextComponent) ponderKeybind().getBoundKeyLocalizedText()).formatted(TextFormatting.GRAY))
-			.formatted(TextFormatting.DARK_GRAY);
+				((IFormattableTextComponent) ponderKeybind().getTranslatedKeyMessage()).withStyle(TextFormatting.GRAY))
+			.withStyle(TextFormatting.DARK_GRAY);
 
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
-		float charWidth = fontRenderer.getStringWidth("|");
-		float tipWidth = fontRenderer.getWidth(holdW);
+		FontRenderer fontRenderer = Minecraft.getInstance().font;
+		float charWidth = fontRenderer.width("|");
+		float tipWidth = fontRenderer.width(holdW);
 
 		int total = (int) (tipWidth / charWidth);
 		int current = (int) (progress * total);
@@ -162,7 +162,7 @@ public class PonderTooltipHandler {
 	}
 
 	protected static KeyBinding ponderKeybind() {
-		return Minecraft.getInstance().gameSettings.keyBindForward;
+		return Minecraft.getInstance().options.keyUp;
 	}
 
 }

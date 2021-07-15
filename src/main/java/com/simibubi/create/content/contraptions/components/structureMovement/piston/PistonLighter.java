@@ -16,7 +16,7 @@ public class PistonLighter extends ContraptionLighter<PistonContraption> {
         bounds.translate(contraption.anchor);
 
         int length = contraption.extensionLength;
-        Vector3i direction = contraption.orientation.getDirectionVec();
+        Vector3i direction = contraption.orientation.getNormal();
 
         int shift = length / 2;
         int shiftX = direction.getX() * shift;

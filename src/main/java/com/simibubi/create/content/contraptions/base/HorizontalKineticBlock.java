@@ -12,6 +12,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class HorizontalKineticBlock extends KineticBlock {
 
 	public static final Property<Direction> HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -21,27 +23,27 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_FACING);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState()
-			.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()
+		return this.defaultBlockState()
+			.setValue(HORIZONTAL_FACING, context.getHorizontalDirection()
 				.getOpposite());
 	}
 
 	public Direction getPreferredHorizontalFacing(BlockItemUseContext context) {
 		Direction prefferedSide = null;
 		for (Direction side : Iterate.horizontalDirections) {
-			BlockState blockState = context.getWorld()
-				.getBlockState(context.getPos()
-					.offset(side));
+			BlockState blockState = context.getLevel()
+				.getBlockState(context.getClickedPos()
+					.relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos()
-					.offset(side), blockState, side.getOpposite()))
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos()
+					.relative(side), blockState, side.getOpposite()))
 					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
 						prefferedSide = null;
 						break;
@@ -55,12 +57,12 @@ public abstract class HorizontalKineticBlock extends KineticBlock {
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.with(HORIZONTAL_FACING, rot.rotate(state.get(HORIZONTAL_FACING)));
+		return state.setValue(HORIZONTAL_FACING, rot.rotate(state.getValue(HORIZONTAL_FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(HORIZONTAL_FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(HORIZONTAL_FACING)));
 	}
 
 }

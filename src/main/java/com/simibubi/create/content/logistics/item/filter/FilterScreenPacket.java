@@ -30,13 +30,13 @@ public class FilterScreenPacket extends SimplePacketBase {
 
 	public FilterScreenPacket(PacketBuffer buffer) {
 		option = Option.values()[buffer.readInt()];
-		data = buffer.readCompoundTag();
+		data = buffer.readNbt();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
 		buffer.writeInt(option.ordinal());
-		buffer.writeCompoundTag(data);
+		buffer.writeNbt(data);
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class FilterScreenPacket extends SimplePacketBase {
 			if (player == null)
 				return;
 
-			if (player.openContainer instanceof FilterContainer) {
-				FilterContainer c = (FilterContainer) player.openContainer;
+			if (player.containerMenu instanceof FilterContainer) {
+				FilterContainer c = (FilterContainer) player.containerMenu;
 				if (option == Option.WHITELIST)
 					c.blacklist = false;
 				if (option == Option.BLACKLIST)
@@ -59,11 +59,11 @@ public class FilterScreenPacket extends SimplePacketBase {
 				if (option == Option.UPDATE_FILTER_ITEM)
 					c.ghostInventory.setStackInSlot(
 							data.getInt("Slot"),
-							net.minecraft.item.ItemStack.read(data.getCompound("Item")));
+							net.minecraft.item.ItemStack.of(data.getCompound("Item")));
 			}
 
-			if (player.openContainer instanceof AttributeFilterContainer) {
-				AttributeFilterContainer c = (AttributeFilterContainer) player.openContainer;
+			if (player.containerMenu instanceof AttributeFilterContainer) {
+				AttributeFilterContainer c = (AttributeFilterContainer) player.containerMenu;
 				if (option == Option.WHITELIST)
 					c.whitelistMode = WhitelistMode.WHITELIST_DISJ;
 				if (option == Option.WHITELIST2)

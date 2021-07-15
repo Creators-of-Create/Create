@@ -35,9 +35,9 @@ public class EdgeInteractionHandler {
 		BlockPos pos = event.getPos();
 		PlayerEntity player = event.getPlayer();
 		Hand hand = event.getHand();
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (player.isSneaking() || player.isSpectator())
+		if (player.isShiftKeyDown() || player.isSpectator())
 			return;
 		EdgeInteractionBehaviour behaviour = TileEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)
@@ -48,28 +48,28 @@ public class EdgeInteractionHandler {
 		if (behaviour.requiredItem.orElse(heldItem.getItem()) != heldItem.getItem())
 			return;
 
-		Direction activatedDirection = getActivatedDirection(world, pos, ray.getFace(), ray.getHitVec(), behaviour);
+		Direction activatedDirection = getActivatedDirection(world, pos, ray.getDirection(), ray.getLocation(), behaviour);
 		if (activatedDirection == null)
 			return;
 
 		if (event.getSide() != LogicalSide.CLIENT)
-			behaviour.connectionCallback.apply(world, pos, pos.offset(activatedDirection));
+			behaviour.connectionCallback.apply(world, pos, pos.relative(activatedDirection));
 		event.setCanceled(true);
 		event.setCancellationResult(ActionResultType.SUCCESS);
-		world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
+		world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
 	}
 
 	public static List<Direction> getConnectiveSides(World world, BlockPos pos, Direction face,
 		EdgeInteractionBehaviour behaviour) {
 		List<Direction> sides = new ArrayList<>(6);
-		if (BlockHelper.hasBlockSolidSide(world.getBlockState(pos.offset(face)), world, pos.offset(face), face.getOpposite()))
+		if (BlockHelper.hasBlockSolidSide(world.getBlockState(pos.relative(face)), world, pos.relative(face), face.getOpposite()))
 			return sides;
 
 		for (Direction direction : Iterate.directions) {
 			if (direction.getAxis() == face.getAxis())
 				continue;
-			BlockPos neighbourPos = pos.offset(direction);
-			if (BlockHelper.hasBlockSolidSide(world.getBlockState(neighbourPos.offset(face)), world, neighbourPos.offset(face),
+			BlockPos neighbourPos = pos.relative(direction);
+			if (BlockHelper.hasBlockSolidSide(world.getBlockState(neighbourPos.relative(face)), world, neighbourPos.relative(face),
 				face.getOpposite()))
 				continue;
 			if (!behaviour.connectivityPredicate.test(world, pos, face, direction))
@@ -92,7 +92,7 @@ public class EdgeInteractionHandler {
 
 	static AxisAlignedBB getBB(BlockPos pos, Direction direction) {
 		AxisAlignedBB bb = new AxisAlignedBB(pos);
-		Vector3i vec = direction.getDirectionVec();
+		Vector3i vec = direction.getNormal();
 		int x = vec.getX();
 		int y = vec.getY();
 		int z = vec.getZ();
@@ -102,9 +102,9 @@ public class EdgeInteractionHandler {
 		double absZ = Math.abs(z) * margin;
 
 		bb = bb.contract(absX, absY, absZ);
-		bb = bb.offset(absX / 2d, absY / 2d, absZ / 2d);
-		bb = bb.offset(x / 2d, y / 2d, z / 2d);
-		bb = bb.grow(1 / 256f);
+		bb = bb.move(absX / 2d, absY / 2d, absZ / 2d);
+		bb = bb.move(x / 2d, y / 2d, z / 2d);
+		bb = bb.inflate(1 / 256f);
 		return bb;
 	}
 

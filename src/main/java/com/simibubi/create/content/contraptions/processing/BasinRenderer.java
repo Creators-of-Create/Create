@@ -42,9 +42,9 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 		float fluidLevel = renderFluids(basin, partialTicks, ms, buffer, light, overlay);
 		float level = MathHelper.clamp(fluidLevel - .3f, .125f, .6f);
 
-		ms.push();
+		ms.pushPose();
 
-		BlockPos pos = basin.getPos();
+		BlockPos pos = basin.getBlockPos();
 		ms.translate(.5, .2f, .5);
 		MatrixStacker.of(ms)
 			.rotateY(basin.ingredientRotation.getValue(partialTicks));
@@ -68,12 +68,12 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			if (stack.isEmpty())
 				continue;
 
-			ms.push();
+			ms.pushPose();
 
 			if (fluidLevel > 0) {
 				ms.translate(0,
 					(MathHelper.sin(
-						AnimationTickHolder.getRenderTime(basin.getWorld()) / 12f + anglePartition * itemCount) + 1.5f)
+						AnimationTickHolder.getRenderTime(basin.getLevel()) / 12f + anglePartition * itemCount) + 1.5f)
 						* 1 / 32f,
 					0);
 			}
@@ -85,34 +85,34 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				.rotateX(65);
 
 			for (int i = 0; i <= stack.getCount() / 8; i++) {
-				ms.push();
+				ms.pushPose();
 
 				Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1 / 16f);
 
 				ms.translate(vec.x, vec.y, vec.z);
 				renderItem(ms, buffer, light, overlay, stack);
-				ms.pop();
+				ms.popPose();
 			}
-			ms.pop();
+			ms.popPose();
 
 			itemCount--;
 		}
-		ms.pop();
+		ms.popPose();
 
 		BlockState blockState = basin.getBlockState();
 		if (!(blockState.getBlock() instanceof BasinBlock))
 			return;
-		Direction direction = blockState.get(BasinBlock.FACING);
+		Direction direction = blockState.getValue(BasinBlock.FACING);
 		if (direction == Direction.DOWN)
 			return;
-		Vector3d directionVec = Vector3d.of(direction.getDirectionVec());
+		Vector3d directionVec = Vector3d.atLowerCornerOf(direction.getNormal());
 		Vector3d outVec = VecHelper.getCenterOf(BlockPos.ZERO)
 			.add(directionVec.scale(.55)
 				.subtract(0, 1 / 2f, 0));
 
-		boolean outToBasin = basin.getWorld()
-			.getBlockState(basin.getPos()
-				.offset(direction))
+		boolean outToBasin = basin.getLevel()
+			.getBlockState(basin.getBlockPos()
+				.relative(direction))
 			.getBlock() instanceof BasinBlock;
 
 		for (IntAttached<ItemStack> intAttached : basin.visualizedOutputItems) {
@@ -121,7 +121,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 			if (!outToBasin && progress > .35f)
 				continue;
 
-			ms.push();
+			ms.pushPose();
 			MatrixStacker.of(ms)
 				.translate(outVec)
 				.translate(new Vector3d(0, Math.max(-.55f, -(progress * progress * 2)), 0))
@@ -129,14 +129,14 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 				.rotateY(AngleHelper.horizontalAngle(direction))
 				.rotateX(progress * 180);
 			renderItem(ms, buffer, light, overlay, intAttached.getValue());
-			ms.pop();
+			ms.popPose();
 		}
 	}
 
 	protected void renderItem(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay, ItemStack stack) {
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderItem(stack, TransformType.GROUND, light, overlay, ms, buffer);
+			.renderStatic(stack, TransformType.GROUND, light, overlay, ms, buffer);
 	}
 
 	protected float renderFluids(BasinTileEntity basin, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,

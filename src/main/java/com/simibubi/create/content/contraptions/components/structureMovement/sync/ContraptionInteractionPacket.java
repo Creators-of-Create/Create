@@ -24,7 +24,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 	public ContraptionInteractionPacket(AbstractContraptionEntity target, Hand hand, BlockPos localPos, Direction side) {
 		this.interactionHand = hand;
 		this.localPos = localPos;
-		this.target = target.getEntityId();
+		this.target = target.getId();
 		this.face = side;
 	}
 
@@ -33,7 +33,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 		int handId = buffer.readInt();
 		interactionHand = handId == -1 ? null : Hand.values()[handId];
 		localPos = buffer.readBlockPos();
-		face = Direction.byIndex(buffer.readShort());
+		face = Direction.from3DDataValue(buffer.readShort());
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 		buffer.writeInt(target);
 		buffer.writeInt(interactionHand == null ? -1 : interactionHand.ordinal());
 		buffer.writeBlockPos(localPos);
-		buffer.writeShort(face.getIndex());
+		buffer.writeShort(face.get3DDataValue());
 	}
 
 	@Override
@@ -50,20 +50,20 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			ServerPlayerEntity sender = context.get().getSender();
 			if (sender == null)
 				return;
-			Entity entityByID = sender.getServerWorld().getEntityByID(target);
+			Entity entityByID = sender.getLevel().getEntity(target);
 			if (!(entityByID instanceof AbstractContraptionEntity))
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
 			double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 10;
-			if (!sender.canEntityBeSeen(entityByID))
+			if (!sender.canSee(entityByID))
 				d -= 3;
 			d *= d;
-			if (sender.getDistanceSq(entityByID) > d) {
+			if (sender.distanceToSqr(entityByID) > d) {
 				// TODO log?
 				return;
 			}
 			if (contraptionEntity.handlePlayerInteraction(sender, localPos, face, interactionHand))
-				sender.swingHand(interactionHand, true);
+				sender.swing(interactionHand, true);
 		});
 		context.get().setPacketHandled(true);
 	}

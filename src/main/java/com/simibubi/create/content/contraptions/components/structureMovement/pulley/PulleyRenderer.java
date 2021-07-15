@@ -21,7 +21,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 	@Override
 	protected Axis getShaftAxis(KineticTileEntity te) {
 		return te.getBlockState()
-			.get(PulleyBlock.HORIZONTAL_AXIS);
+			.getValue(PulleyBlock.HORIZONTAL_AXIS);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 		if (tile.movedContraption != null) {
 			AbstractContraptionEntity e = tile.movedContraption;
 			PulleyContraption c = (PulleyContraption) tile.movedContraption.getContraption();
-			double entityPos = MathHelper.lerp(partialTicks, e.lastTickPosY, e.getY());
+			double entityPos = MathHelper.lerp(partialTicks, e.yOld, e.getY());
 			offset = (float) -(entityPos - c.anchor.getY() - c.initialOffset);
 		}
 

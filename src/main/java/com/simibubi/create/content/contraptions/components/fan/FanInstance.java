@@ -21,7 +21,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     public FanInstance(MaterialManager<?> modelManager, EncasedFanTileEntity tile) {
 		super(modelManager, tile);
 
-		direction = blockState.get(FACING);
+		direction = blockState.getValue(FACING);
 
 		opposite = direction.getOpposite();
 		shaft = getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite).createInstance();
@@ -48,10 +48,10 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
     @Override
     public void updateLight() {
-        BlockPos behind = pos.offset(opposite);
+        BlockPos behind = pos.relative(opposite);
         relight(behind, shaft);
 
-        BlockPos inFront = pos.offset(direction);
+        BlockPos inFront = pos.relative(direction);
         relight(inFront, fan);
     }
 

@@ -87,7 +87,7 @@ public class BlockStateGen {
 	public static <P> NonNullUnaryOperator<BlockBuilder<OxidizingBlock, P>> oxidizedBlockstate() {
 		return b -> b.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.getEntry())
 			.forAllStates(state -> {
-				String name = AssetLookup.getOxidizedModel(ctx.getName(), state.get(OxidizingBlock.OXIDIZATION));
+				String name = AssetLookup.getOxidizedModel(ctx.getName(), state.getValue(OxidizingBlock.OXIDIZATION));
 				return ConfiguredModel.builder()
 					.modelFile(prov.models()
 						.cubeAll(name, prov.modLoc(name)))
@@ -108,14 +108,14 @@ public class BlockStateGen {
 		RegistrateBlockstateProvider prov, Function<BlockState, ModelFile> modelFunc) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStatesExcept(state -> {
-				Direction dir = state.get(BlockStateProperties.FACING);
+				Direction dir = state.getValue(BlockStateProperties.FACING);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
 					.rotationX(dir == Direction.DOWN ? 180
 						: dir.getAxis()
 							.isHorizontal() ? 90 : 0)
 					.rotationY(dir.getAxis()
-						.isVertical() ? 0 : (((int) dir.getHorizontalAngle()) + 180) % 360)
+						.isVertical() ? 0 : (((int) dir.toYRot()) + 180) % 360)
 					.build();
 			}, BlockStateProperties.WATERLOGGED);
 	}
@@ -129,7 +129,7 @@ public class BlockStateGen {
 		Function<BlockState, ModelFile> modelFunc, boolean uvLock) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStatesExcept(state -> {
-				Axis axis = state.get(BlockStateProperties.AXIS);
+				Axis axis = state.getValue(BlockStateProperties.AXIS);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
 					.uvLock(uvLock)
@@ -153,7 +153,7 @@ public class BlockStateGen {
 		RegistrateBlockstateProvider prov, Function<BlockState, ModelFile> modelFunc) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStates(state -> {
-				Axis axis = state.get(BlockStateProperties.HORIZONTAL_AXIS);
+				Axis axis = state.getValue(BlockStateProperties.HORIZONTAL_AXIS);
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state))
 					.rotationY(axis == Axis.X ? 90 : 0)
@@ -166,13 +166,13 @@ public class BlockStateGen {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStates(state -> {
 
-				boolean alongFirst = state.get(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
-				Direction direction = state.get(DirectionalAxisKineticBlock.FACING);
+				boolean alongFirst = state.getValue(DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE);
+				Direction direction = state.getValue(DirectionalAxisKineticBlock.FACING);
 				boolean vertical = direction.getAxis()
 					.isHorizontal() && (direction.getAxis() == Axis.X) == alongFirst;
 				int xRot = direction == Direction.DOWN ? 270 : direction == Direction.UP ? 90 : 0;
 				int yRot = direction.getAxis()
-					.isVertical() ? alongFirst ? 0 : 90 : (int) direction.getHorizontalAngle();
+					.isVertical() ? alongFirst ? 0 : 90 : (int) direction.toYRot();
 
 				return ConfiguredModel.builder()
 					.modelFile(modelFunc.apply(state, vertical))
@@ -188,8 +188,8 @@ public class BlockStateGen {
 			.forAllStates(state -> ConfiguredModel.builder()
 				.modelFile(modelFunc.apply(state))
 				.rotationX(90)
-				.rotationY(((int) state.get(BlockStateProperties.HORIZONTAL_FACING)
-					.getHorizontalAngle() + 180) % 360)
+				.rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING)
+					.toYRot() + 180) % 360)
 				.build());
 	}
 
@@ -209,17 +209,17 @@ public class BlockStateGen {
 		ModelFile top, ModelFile covered) {
 		prov.getVariantBuilder(ctx.getEntry())
 			.forAllStates(state -> ConfiguredModel.builder()
-				.modelFile(state.get(PavedBlock.COVERED) ? covered : top)
+				.modelFile(state.getValue(PavedBlock.COVERED) ? covered : top)
 				.build());
 	}
 
 	public static NonNullBiConsumer<DataGenContext<Block, CartAssemblerBlock>, RegistrateBlockstateProvider> cartAssembler() {
 		return (c, p) -> p.getVariantBuilder(c.get())
 			.forAllStates(state -> {
-				CartAssembleRailType type = state.get(CartAssemblerBlock.RAIL_TYPE);
-				Boolean powered = state.get(CartAssemblerBlock.POWERED);
-				Boolean backwards = state.get(CartAssemblerBlock.BACKWARDS);
-				RailShape shape = state.get(CartAssemblerBlock.RAIL_SHAPE);
+				CartAssembleRailType type = state.getValue(CartAssemblerBlock.RAIL_TYPE);
+				Boolean powered = state.getValue(CartAssemblerBlock.POWERED);
+				Boolean backwards = state.getValue(CartAssemblerBlock.BACKWARDS);
+				RailShape shape = state.getValue(CartAssemblerBlock.RAIL_SHAPE);
 
 				int yRotation = shape == RailShape.EAST_WEST ? 270 : 0;
 				if (backwards)
@@ -228,7 +228,7 @@ public class BlockStateGen {
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
 						.getExistingFile(p.modLoc(
-							"block/" + c.getName() + "/block_" + type.getString() + (powered ? "_powered" : ""))))
+							"block/" + c.getName() + "/block_" + type.getSerializedName() + (powered ? "_powered" : ""))))
 					.rotationY(yRotation % 360)
 					.build();
 			});
@@ -247,9 +247,9 @@ public class BlockStateGen {
 				return ConfiguredModel.builder()
 					.modelFile(p.models()
 						.getExistingFile(p.modLoc(
-							"block/" + c.getName() + "/block" + (state.get(ReinforcedRailBlock.CONNECTS_S) ? "_s" : "")
-								+ (state.get(ReinforcedRailBlock.CONNECTS_N) ? "_n" : ""))))
-					.rotationY(state.get(ReinforcedRailBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
+							"block/" + c.getName() + "/block" + (state.getValue(ReinforcedRailBlock.CONNECTS_S) ? "_s" : "")
+								+ (state.getValue(ReinforcedRailBlock.CONNECTS_N) ? "_n" : ""))))
+					.rotationY(state.getValue(ReinforcedRailBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
 					.build();
 			});
 	}
@@ -272,8 +272,8 @@ public class BlockStateGen {
 						.texture("top", isTopSticky ? top_sticky : top));
 			BiFunction<Boolean, Boolean, ModelFile> modelFunc = (t, b) -> models.get((t ? 0 : 2) + (b ? 0 : 1));
 
-			axisBlock(c, p, state -> modelFunc.apply(state.get(LinearChassisBlock.STICKY_TOP),
-				state.get(LinearChassisBlock.STICKY_BOTTOM)));
+			axisBlock(c, p, state -> modelFunc.apply(state.getValue(LinearChassisBlock.STICKY_TOP),
+				state.getValue(LinearChassisBlock.STICKY_BOTTOM)));
 		};
 	}
 
@@ -290,14 +290,14 @@ public class BlockStateGen {
 			Vector<ModelFile> stickyFaces = new Vector<>(3);
 
 			for (Axis axis : Iterate.axes) {
-				String suffix = "side_" + axis.getString();
+				String suffix = "side_" + axis.getSerializedName();
 				faces.add(p.models()
 					.withExistingParent("block/" + c.getName() + "_" + suffix,
 						p.modLoc(templateModelPath + "/" + suffix))
 					.texture("side", side));
 			}
 			for (Axis axis : Iterate.axes) {
-				String suffix = "side_" + axis.getString();
+				String suffix = "side_" + axis.getSerializedName();
 				stickyFaces.add(p.models()
 					.withExistingParent("block/" + c.getName() + "_" + suffix + "_sticky",
 						p.modLoc(templateModelPath + "/" + suffix))
@@ -306,8 +306,8 @@ public class BlockStateGen {
 
 			MultiPartBlockStateBuilder builder = p.getMultipartBuilder(c.get());
 			BlockState propertyGetter = c.get()
-				.getDefaultState()
-				.with(RadialChassisBlock.AXIS, Axis.Y);
+				.defaultBlockState()
+				.setValue(RadialChassisBlock.AXIS, Axis.Y);
 
 			for (Axis axis : Iterate.axes)
 				builder.part()
@@ -321,7 +321,7 @@ public class BlockStateGen {
 			for (Direction face : Iterate.horizontalDirections) {
 				for (boolean sticky : Iterate.trueAndFalse) {
 					for (Axis axis : Iterate.axes) {
-						int horizontalAngle = (int) (face.getHorizontalAngle());
+						int horizontalAngle = (int) (face.toYRot());
 						int index = axis.ordinal();
 						int xRot = 0;
 						int yRot = 0;
@@ -367,7 +367,7 @@ public class BlockStateGen {
 					builder.part()
 						.modelFile(flatPass ? flat : open)
 						.rotationX(verticalAngle)
-						.rotationY((int) (d.getHorizontalAngle() + (d.getAxis()
+						.rotationY((int) (d.toYRot() + (d.getAxis()
 							.isVertical() ? 90 : 0)) % 360)
 						.addModel()
 						.condition(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), !flatPass)
@@ -403,22 +403,22 @@ public class BlockStateGen {
 			Map<Pair<String, Axis>, ModelFile> coreModels = new HashMap<>();
 
 			for (Axis axis : Iterate.axes)
-				coreTemplates.put(axis, p.modLoc(path + "/core_" + axis.getString()));
+				coreTemplates.put(axis, p.modLoc(path + "/core_" + axis.getSerializedName()));
 			ModelFile end = AssetLookup.partialBaseModel(c, p, "end");
 
 			for (Axis axis : Iterate.axes) {
 				ResourceLocation parent = coreTemplates.get(axis);
 				for (String s : orientations) {
 					Pair<String, Axis> key = Pair.of(s, axis);
-					String modelName = path + "/" + s + "_" + axis.getString();
+					String modelName = path + "/" + s + "_" + axis.getSerializedName();
 					coreModels.put(key, p.models()
 						.withExistingParent(modelName, parent)
 						.element()
 						.from(4, 4, 4)
 						.to(12, 12, 12)
-						.face(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis))
+						.face(Direction.get(AxisDirection.POSITIVE, axis))
 						.end()
-						.face(Direction.getFacingFromAxis(AxisDirection.NEGATIVE, axis))
+						.face(Direction.get(AxisDirection.NEGATIVE, axis))
 						.end()
 						.faces((d, builder) -> {
 							Pair<Integer, Integer> pair = uvs.get(s);
@@ -441,9 +441,9 @@ public class BlockStateGen {
 				builder.part()
 					.modelFile(end)
 					.rotationX(d == Direction.UP ? 0 : d == Direction.DOWN ? 180 : 90)
-					.rotationY((int) (d.getHorizontalAngle() + 180) % 360)
+					.rotationY((int) (d.toYRot() + 180) % 360)
 					.addModel()
-					.condition(FluidPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true)
+					.condition(FluidPipeBlock.PROPERTY_BY_DIRECTION.get(d), true)
 					.end();
 
 			for (Axis axis : Iterate.axes) {
@@ -464,8 +464,8 @@ public class BlockStateGen {
 
 	private static void putPart(Map<Pair<String, Axis>, ModelFile> coreModels, MultiPartBlockStateBuilder builder,
 		Axis axis, String s, boolean up, boolean down, boolean left, boolean right) {
-		Direction positiveAxis = Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis);
-		Map<Direction, BooleanProperty> propertyMap = FluidPipeBlock.FACING_TO_PROPERTY_MAP;
+		Direction positiveAxis = Direction.get(AxisDirection.POSITIVE, axis);
+		Map<Direction, BooleanProperty> propertyMap = FluidPipeBlock.PROPERTY_BY_DIRECTION;
 		builder.part()
 			.modelFile(coreModels.get(Pair.of(s, axis)))
 			.addModel()

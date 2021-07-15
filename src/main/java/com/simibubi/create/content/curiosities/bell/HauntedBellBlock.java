@@ -9,6 +9,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 
 	public HauntedBellBlock(Properties properties) {
@@ -31,7 +33,7 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (oldState.getBlock() != this)
 			withTileEntityDo(world, pos, HauntedBellTileEntity::startEffect);
 	}
