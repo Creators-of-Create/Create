@@ -137,6 +137,6 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	private static SaveFormat.LevelSave getLevelSaveFromWorld(World world) {
-		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "storageSource"); // storageSource
+		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "field_71310_m"); // storageSource
 	}
 }

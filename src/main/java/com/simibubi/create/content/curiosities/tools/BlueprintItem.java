@@ -95,7 +95,7 @@ public class BlueprintItem extends Item {
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
 		Ingredient.IItemList[] acceptedItems =
-				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "values"); // values
+				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "field_199807_b"); // values
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)

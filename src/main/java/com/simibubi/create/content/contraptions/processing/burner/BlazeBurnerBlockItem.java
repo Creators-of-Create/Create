@@ -91,11 +91,11 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		AbstractSpawner spawner = ((MobSpawnerTileEntity) te).getSpawner();
 		List<WeightedSpawnerEntity> possibleSpawns =
-			ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "spawnPotentials"); // spawnPotentials
+			ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "field_98285_e");
 		if (possibleSpawns.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
 			possibleSpawns
-				.add(ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "nextSpawnData")); // nextSpawnData
+				.add(ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "field_98282_f"));
 		}
 
 		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();
