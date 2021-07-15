@@ -6,6 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Items;
+import net.minecraftforge.common.ForgeMod;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 
@@ -27,7 +28,7 @@ public class EmptyingRecipeGen extends ProcessingRecipeGen {
 	
 		MILK_BUCKET = create("milk_bucket", b -> b
 			.require(Items.MILK_BUCKET)
-			.output(AllFluids.MILK.get(), 1000)
+			.output(ForgeMod.MILK.get(), 1000)
 			.output(Items.BUCKET))
 
 	;

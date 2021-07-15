@@ -16,7 +16,7 @@
       "item": "minecraft:glass_bottle"
     },
     {
-      "fluid": "create:milk",
+      "fluid": "minecraft:milk",
       "amount": 250
     }
   ]

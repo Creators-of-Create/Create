@@ -13,6 +13,7 @@ import net.minecraft.item.MilkBucketItem;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -105,7 +106,7 @@ public class GenericItemFilling {
 
 	private static boolean canFillBucketInternally(FluidStack availableFluid) {
 		return availableFluid.getFluid()
-			.isEquivalentTo(AllFluids.MILK.get().getFlowingFluid());
+			.isEquivalentTo(ForgeMod.MILK.get());
 	}
 
 	public static ItemStack fillItem(World world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {

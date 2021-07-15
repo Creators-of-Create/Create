@@ -41,6 +41,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -108,6 +109,8 @@ public class Create {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
+		
+		ForgeMod.enableMilkFluid();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
