@@ -22,7 +22,7 @@ public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayerEntity
 		super(p_i50991_1_, p_i50991_2_);
 	}
 
-	@Inject(at = @At("HEAD"), method = "canSwim", cancellable = true) // isUnderWater()Z
+	@Inject(at = @At("HEAD"), method = "isUnderWater", cancellable = true)
 	public void noSwimmingWithHeavyBootsOn(CallbackInfoReturnable<Boolean> cir) {
 		CompoundNBT persistentData = getPersistentData();
 		if (persistentData.contains("HeavyBoots"))

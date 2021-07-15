@@ -44,16 +44,16 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 
 	@Final
 	@Shadow
-	protected Random rand; // levelRenderer
+	protected Random random;
 
 	@Shadow
-	private float nextStepDistance; // levelRenderer
+	private float nextStep;
 
 	@Shadow
-	protected abstract float determineNextStepDistance(); // nextStep()F
+	protected abstract float nextStep();
 
 	@Shadow
-	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_); // nextStep()F
+	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
 
 	private Set<AbstractContraptionEntity> getIntersectingContraptions() {
 		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(self.level)
@@ -87,7 +87,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	}
 
 	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
-		ordinal = 4), method = "move") // nextStep()F
+		ordinal = 4), method = "move")
 	private void movementMixin(MoverType mover, Vector3d movement, CallbackInfo ci) {
 		Vector3d worldPos = self.position()
 			.add(0, -0.2, 0);
@@ -101,10 +101,10 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		});
 
 		if (stepped.get())
-			this.nextStepDistance = this.determineNextStepDistance();
+			this.nextStep = this.nextStep();
 	}
 
-	@Inject(method = { "spawnSprintingParticles" }, at = @At(value = "TAIL")) // spawnSprintParticle()V
+	@Inject(method = { "spawnSprintParticle" }, at = @At(value = "TAIL"))
 	private void createRunningParticlesMixin(CallbackInfo ci) {
 		Vector3d worldPos = self.position()
 			.add(0, -0.2, 0);
@@ -115,14 +115,14 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 				&& blockstate.getRenderShape() != BlockRenderType.INVISIBLE) {
 				Vector3d vec3d = self.getDeltaMovement();
 				self.level.addParticle(new BlockParticleData(ParticleTypes.BLOCK, blockstate).setPos(pos),
-					self.getX() + ((double) rand.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,
-					self.getZ() + ((double) rand.nextFloat() - 0.5D) * (double) self.getBbWidth(), vec3d.x * -4.0D, 1.5D,
+					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,
+					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), vec3d.x * -4.0D, 1.5D,
 					vec3d.z * -4.0D);
 			}
 		});
 	}
 
-	@Inject(method = "playSound", at = @At("HEAD"), cancellable = true) // playSound(Lnet/minecraft/util/SoundEvent;FF)V
+	@Inject(method = "playSound", at = @At("HEAD"), cancellable = true)
 	private void playSoundShifted(SoundEvent event, float pitch, float volume, CallbackInfo ci) {
 		if (this.contraption != null && (!self.isSilent() || self instanceof PlayerEntity)) {
 			double x = self.getX();
