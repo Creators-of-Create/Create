@@ -155,10 +155,6 @@ public class AllTags {
 		SAFE_NBT,
 		SLIMY_LOGS(TIC),
 		WRENCH_PICKUP,
-		FAN_SPLASHING,
-		FAN_SMOKING,
-		FAN_BLASTING,
-		FAN_IGNORE_HEAT_LEVEL
 
 		;
 
@@ -231,10 +227,6 @@ public class AllTags {
 		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 				Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
 				Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
-
-		AllBlockTags.FAN_SPLASHING.add(Blocks.WATER);
-		AllBlockTags.FAN_SMOKING.add(Blocks.FIRE);
-		AllBlockTags.FAN_BLASTING.add(Blocks.LAVA);
 
 		AllFluidTags.loadClass();
 	}
