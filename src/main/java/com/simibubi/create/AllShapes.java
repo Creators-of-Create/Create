@@ -241,7 +241,8 @@ public class AllShapes {
 	}
 
 	public static class Builder {
-		VoxelShape shape;
+
+		private VoxelShape shape;
 
 		public Builder(VoxelShape shape) {
 			this.shape = shape;

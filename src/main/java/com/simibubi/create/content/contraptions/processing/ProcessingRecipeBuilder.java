@@ -192,15 +192,15 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	public static class ProcessingRecipeParams {
 
-		ResourceLocation id;
-		NonNullList<Ingredient> ingredients;
-		NonNullList<ProcessingOutput> results;
-		NonNullList<FluidIngredient> fluidIngredients;
-		NonNullList<FluidStack> fluidResults;
-		int processingDuration;
-		HeatCondition requiredHeat;
+		protected ResourceLocation id;
+		protected NonNullList<Ingredient> ingredients;
+		protected NonNullList<ProcessingOutput> results;
+		protected NonNullList<FluidIngredient> fluidIngredients;
+		protected NonNullList<FluidStack> fluidResults;
+		protected int processingDuration;
+		protected HeatCondition requiredHeat;
 
-		ProcessingRecipeParams(ResourceLocation id) {
+		protected ProcessingRecipeParams(ResourceLocation id) {
 			this.id = id;
 			ingredients = NonNullList.create();
 			results = NonNullList.create();
@@ -226,7 +226,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 			String typeName = Lang.asId(recipeType.name());
 			this.recipe = recipe;
 
-			if (!(recipeType.serializer instanceof ProcessingRecipeSerializer))
+			if (!(recipeType.getSerializer() instanceof ProcessingRecipeSerializer))
 				throw new IllegalStateException("Cannot datagen ProcessingRecipe of type: " + typeName);
 
 			this.id = new ResourceLocation(recipe.getId().getNamespace(),
