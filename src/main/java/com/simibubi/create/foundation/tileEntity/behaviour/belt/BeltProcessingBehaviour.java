@@ -19,7 +19,7 @@ public class BeltProcessingBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<BeltProcessingBehaviour> TYPE = new BehaviourType<>();
 
-	public static enum ProcessingResult {
+	public enum ProcessingResult {
 		PASS, HOLD, REMOVE;
 	}
 

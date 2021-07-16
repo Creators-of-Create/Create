@@ -21,12 +21,12 @@ public enum AllLangPartials {
 	private String display;
 	private Supplier<JsonElement> provider;
 
-	private AllLangPartials(String display) {
+	AllLangPartials(String display) {
 		this.display = display;
 		this.provider = this::fromResource;
 	}
 
-	private AllLangPartials(String display, Supplier<JsonElement> customProvider) {
+	AllLangPartials(String display, Supplier<JsonElement> customProvider) {
 		this.display = display;
 		this.provider = customProvider;
 	}

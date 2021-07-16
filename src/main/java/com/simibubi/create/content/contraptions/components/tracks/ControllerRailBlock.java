@@ -77,8 +77,8 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 	}
 
 	@Override
-	protected BlockState updateDir(World world, BlockPos pos, BlockState state, boolean p_208489_4_) {
-		BlockState updatedState = super.updateDir(world, pos, state, p_208489_4_);
+	protected BlockState updateDir(World world, BlockPos pos, BlockState state, boolean pPlacing) {
+		BlockState updatedState = super.updateDir(world, pos, state, pPlacing);
 		if (updatedState.getValue(SHAPE) == state.getValue(SHAPE))
 			return updatedState;
 		BlockState reversedUpdatedState = updatedState;
@@ -124,9 +124,9 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
-		Direction direction = p_196258_1_.getHorizontalDirection();
-		BlockState base = super.getStateForPlacement(p_196258_1_);
+	public BlockState getStateForPlacement(BlockItemUseContext pContext) {
+		Direction direction = pContext.getHorizontalDirection();
+		BlockState base = super.getStateForPlacement(pContext);
 		return (base == null ? defaultBlockState() : base).setValue(BACKWARDS,
 			direction.getAxisDirection() == AxisDirection.POSITIVE);
 	}
@@ -137,8 +137,8 @@ public class ControllerRailBlock extends AbstractRailBlock implements IWrenchabl
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> p_206840_1_) {
-		p_206840_1_.add(SHAPE, POWER, BACKWARDS);
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> pBuilder) {
+		pBuilder.add(SHAPE, POWER, BACKWARDS);
 	}
 
 	@Override

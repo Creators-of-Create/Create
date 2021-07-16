@@ -22,7 +22,7 @@ public enum PaletteStoneVariants {
 	private Supplier<Supplier<Block>> baseBlock;
 	private Supplier<PalettesVariantEntry> variants;
 
-	private PaletteStoneVariants(Supplier<Supplier<Block>> baseBlock, Supplier<PalettesVariantEntry> variants) {
+	PaletteStoneVariants(Supplier<Supplier<Block>> baseBlock, Supplier<PalettesVariantEntry> variants) {
 		this.baseBlock = baseBlock;
 		this.variants = variants;
 	}

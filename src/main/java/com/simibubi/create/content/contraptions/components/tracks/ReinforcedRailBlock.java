@@ -40,7 +40,7 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     }
 
     @Override
-    public void fillItemCategory(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
+    public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
     	// TODO re-add when finished
     }
 
@@ -76,13 +76,13 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     @Override
     @Nonnull
     protected BlockState updateDir(@Nonnull World world, BlockPos pos, BlockState state,
-                                         boolean p_208489_4_) {
+                                         boolean pPlacing) {
 
         boolean alongX = state.getValue(RAIL_SHAPE) == RailShape.EAST_WEST;
         BlockPos sPos = pos.offset(alongX ? -1 : 0, 0, alongX ? 0 : 1);
         BlockPos nPos = pos.offset(alongX ? 1 : 0, 0, alongX ? 0 : -1);
 
-        return super.updateDir(world, pos, state, p_208489_4_).setValue(CONNECTS_S, world.getBlockState(sPos).getBlock() instanceof ReinforcedRailBlock &&
+        return super.updateDir(world, pos, state, pPlacing).setValue(CONNECTS_S, world.getBlockState(sPos).getBlock() instanceof ReinforcedRailBlock &&
                 (world.getBlockState(sPos).getValue(RAIL_SHAPE) == state.getValue(RAIL_SHAPE)))
                 .setValue(CONNECTS_N, world.getBlockState(nPos).getBlock() instanceof ReinforcedRailBlock &&
                         (world.getBlockState(nPos).getValue(RAIL_SHAPE) == state.getValue(RAIL_SHAPE)));
@@ -122,10 +122,10 @@ public class ReinforcedRailBlock extends AbstractRailBlock {
     }
 
     @Override
-    public void neighborChanged(@Nonnull BlockState state, World world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos pos2, boolean p_220069_6_) {
+    public void neighborChanged(@Nonnull BlockState state, World world, @Nonnull BlockPos pos, @Nonnull Block block, @Nonnull BlockPos pos2, boolean pIsMoving) {
         if (!world.isClientSide) {
             if ((world.getBlockState(pos.below()).getBlock() instanceof AbstractRailBlock)) {
-                if (!p_220069_6_) {
+                if (!pIsMoving) {
                     dropResources(state, world, pos);
                 }
                 world.removeBlock(pos, false);

@@ -79,7 +79,7 @@ public class PartialItemModelRenderer {
 		ms.popPose();
 	}
 
-	private void renderBakedItemModel(IBakedModel model, int light, MatrixStack ms, IVertexBuilder p_229114_6_) {
+	private void renderBakedItemModel(IBakedModel model, int light, MatrixStack ms, IVertexBuilder pBufferIn) {
 		ItemRenderer ir = Minecraft.getInstance()
 			.getItemRenderer();
 		Random random = new Random();
@@ -87,12 +87,12 @@ public class PartialItemModelRenderer {
 
 		for (Direction direction : Iterate.directions) {
 			random.setSeed(42L);
-			ir.renderQuadList(ms, p_229114_6_, model.getQuads(null, direction, random, data), stack, light,
+			ir.renderQuadList(ms, pBufferIn, model.getQuads(null, direction, random, data), stack, light,
 				overlay);
 		}
 
 		random.setSeed(42L);
-		ir.renderQuadList(ms, p_229114_6_, model.getQuads(null, null, random, data), stack, light, overlay);
+		ir.renderQuadList(ms, pBufferIn, model.getQuads(null, null, random, data), stack, light, overlay);
 	}
 
 }

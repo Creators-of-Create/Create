@@ -25,8 +25,8 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext p_195939_1_) {
-		return blockItem.useOn(p_195939_1_);
+	public ActionResultType useOn(ItemUseContext pContext) {
+		return blockItem.useOn(pContext);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 	
 	@Override
-	public boolean isEnchantable(ItemStack p_77616_1_) {
+	public boolean isEnchantable(ItemStack pStack) {
 		return true;
 	}
 
@@ -45,15 +45,15 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (!allowdedIn(p_150895_1_))
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
+		if (!allowdedIn(pGroup))
 			return;
 		
 		ItemStack stack = new ItemStack(this);
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putInt("Air", BackTankUtil.maxAirWithoutEnchants());
 		stack.setTag(nbt);
-		p_150895_2_.add(stack);
+		pItems.add(stack);
 	}
 
 	@Override

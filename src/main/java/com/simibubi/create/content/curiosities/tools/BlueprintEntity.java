@@ -104,19 +104,19 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundNBT p_213281_1_) {
-		p_213281_1_.putByte("Facing", (byte) this.direction.get3DDataValue());
-		p_213281_1_.putByte("Orientation", (byte) this.verticalOrientation.get3DDataValue());
-		p_213281_1_.putInt("Size", size);
-		super.addAdditionalSaveData(p_213281_1_);
+	public void addAdditionalSaveData(CompoundNBT pCompound) {
+		pCompound.putByte("Facing", (byte) this.direction.get3DDataValue());
+		pCompound.putByte("Orientation", (byte) this.verticalOrientation.get3DDataValue());
+		pCompound.putInt("Size", size);
+		super.addAdditionalSaveData(pCompound);
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundNBT p_70037_1_) {
-		this.direction = Direction.from3DDataValue(p_70037_1_.getByte("Facing"));
-		this.verticalOrientation = Direction.from3DDataValue(p_70037_1_.getByte("Orientation"));
-		this.size = p_70037_1_.getInt("Size");
-		super.readAdditionalSaveData(p_70037_1_);
+	public void readAdditionalSaveData(CompoundNBT pCompound) {
+		this.direction = Direction.from3DDataValue(pCompound.getByte("Facing"));
+		this.verticalOrientation = Direction.from3DDataValue(pCompound.getByte("Orientation"));
+		this.size = pCompound.getInt("Size");
+		super.readAdditionalSaveData(pCompound);
 		this.updateFacingWithBoundingBox(this.direction, this.verticalOrientation);
 	}
 
@@ -141,7 +141,7 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	protected float getEyeHeight(Pose p_213316_1_, EntitySize p_213316_2_) {
+	protected float getEyeHeight(Pose pPoseIn, EntitySize pSizeIn) {
 		return 0;
 	}
 
@@ -277,14 +277,14 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public void dropItem(@Nullable Entity p_110128_1_) {
+	public void dropItem(@Nullable Entity pBrokenEntity) {
 		if (!level.getGameRules()
 			.getBoolean(GameRules.RULE_DOENTITYDROPS))
 			return;
 
 		playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
-		if (p_110128_1_ instanceof PlayerEntity) {
-			PlayerEntity playerentity = (PlayerEntity) p_110128_1_;
+		if (pBrokenEntity instanceof PlayerEntity) {
+			PlayerEntity playerentity = (PlayerEntity) pBrokenEntity;
 			if (playerentity.abilities.instabuild) {
 				return;
 			}
@@ -309,17 +309,17 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public void moveTo(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_,
-		float p_70012_8_) {
-		this.setPos(p_70012_1_, p_70012_3_, p_70012_5_);
+	public void moveTo(double pX, double pY, double pZ, float pYaw,
+		float pPitch) {
+		this.setPos(pX, pY, pZ);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void lerpTo(double p_180426_1_, double p_180426_3_, double p_180426_5_,
-		float p_180426_7_, float p_180426_8_, int p_180426_9_, boolean p_180426_10_) {
+	public void lerpTo(double pX, double pY, double pZ,
+		float pYaw, float pPitch, int pPosRotationIncrements, boolean pTeleport) {
 		BlockPos blockpos =
-			this.pos.offset(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
+			this.pos.offset(pX - this.getX(), pY - this.getY(), pZ - this.getZ());
 		this.setPos((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
 	}
 

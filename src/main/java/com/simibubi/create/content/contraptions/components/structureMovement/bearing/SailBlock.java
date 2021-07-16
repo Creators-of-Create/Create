@@ -156,15 +156,15 @@ public class SailBlock extends ProperDirectionalBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos, ISelectionContext pContext) {
 		return (frame ? AllShapes.SAIL_FRAME : AllShapes.SAIL).get(state.getValue(FACING));
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader p_220071_2_, BlockPos p_220071_3_, ISelectionContext p_220071_4_) {
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos, ISelectionContext pContext) {
 		if (frame)
 			return AllShapes.SAIL_FRAME_COLLISION.get(state.getValue(FACING));
-		return getShape(state, p_220071_2_, p_220071_3_, p_220071_4_);
+		return getShape(state, pWorldIn, pPos, pContext);
 	}
 
 	@Override
@@ -176,25 +176,25 @@ public class SailBlock extends ProperDirectionalBlock {
 		return pickBlock;
 	}
 
-	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	public void fallOn(World pWorldIn, BlockPos pPos, Entity pEntityIn, float pFallDistance) {
 		if (frame)
-			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
-		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, 0);
+			super.fallOn(pWorldIn, pPos, pEntityIn, pFallDistance);
+		super.fallOn(pWorldIn, pPos, pEntityIn, 0);
 	}
 
-	public void updateEntityAfterFallOn(IBlockReader p_176216_1_, Entity p_176216_2_) {
-		if (frame || p_176216_2_.isSuppressingBounce()) {
-			super.updateEntityAfterFallOn(p_176216_1_, p_176216_2_);
+	public void updateEntityAfterFallOn(IBlockReader pWorldIn, Entity pEntityIn) {
+		if (frame || pEntityIn.isSuppressingBounce()) {
+			super.updateEntityAfterFallOn(pWorldIn, pEntityIn);
 		} else {
-			this.bounce(p_176216_2_);
+			this.bounce(pEntityIn);
 		}
 	}
 
-	private void bounce(Entity p_226860_1_) {
-		Vector3d Vector3d = p_226860_1_.getDeltaMovement();
+	private void bounce(Entity pEntity) {
+		Vector3d Vector3d = pEntity.getDeltaMovement();
 		if (Vector3d.y < 0.0D) {
-			double d0 = p_226860_1_ instanceof LivingEntity ? 1.0D : 0.8D;
-			p_226860_1_.setDeltaMovement(Vector3d.x, -Vector3d.y * (double) 0.26F * d0, Vector3d.z);
+			double d0 = pEntity instanceof LivingEntity ? 1.0D : 0.8D;
+			pEntity.setDeltaMovement(Vector3d.x, -Vector3d.y * (double) 0.26F * d0, Vector3d.z);
 		}
 
 	}

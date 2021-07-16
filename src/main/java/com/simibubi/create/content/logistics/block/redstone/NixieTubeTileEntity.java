@@ -193,10 +193,10 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	// From SignTileEntity
-	public CommandSource getCommandSource(@Nullable ServerPlayerEntity p_195539_1_) {
-		String s = p_195539_1_ == null ? "Nixie Tube" : p_195539_1_.getName().getString();
-		ITextComponent itextcomponent = (ITextComponent)(p_195539_1_ == null ? new StringTextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
-		return new CommandSource(ICommandSource.NULL, Vector3d.atCenterOf(this.worldPosition), Vector2f.ZERO, (ServerWorld)this.level, 2, s, itextcomponent, this.level.getServer(), p_195539_1_);
+	public CommandSource getCommandSource(@Nullable ServerPlayerEntity pPlayerIn) {
+		String s = pPlayerIn == null ? "Nixie Tube" : pPlayerIn.getName().getString();
+		ITextComponent itextcomponent = (ITextComponent)(pPlayerIn == null ? new StringTextComponent("Nixie Tube") : pPlayerIn.getDisplayName());
+		return new CommandSource(ICommandSource.NULL, Vector3d.atCenterOf(this.worldPosition), Vector2f.ZERO, (ServerWorld)this.level, 2, s, itextcomponent, this.level.getServer(), pPlayerIn);
 	}
 
 	@Override

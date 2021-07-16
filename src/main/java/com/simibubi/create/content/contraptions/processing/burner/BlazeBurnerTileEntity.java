@@ -31,7 +31,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	public static final int maxHeatCapacity = 10000;
 
-	public static enum FuelType {
+	public enum FuelType {
 		NONE, NORMAL, SPECIAL
 	}
 

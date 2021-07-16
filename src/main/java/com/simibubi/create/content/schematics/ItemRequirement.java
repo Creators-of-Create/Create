@@ -2,6 +2,7 @@ package com.simibubi.create.content.schematics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,7 +60,7 @@ public class ItemRequirement {
 	}
 
 	public ItemRequirement(ItemUseType usage, ItemStack items) {
-		this(Arrays.asList(new StackRequirement(usage, items)));
+		this(Collections.singletonList(new StackRequirement(usage, items)));
 	}
 
 	public ItemRequirement(ItemUseType usage, Item item) {
@@ -96,17 +97,17 @@ public class ItemRequirement {
 
 		// double slab needs two items
 		if (state.hasProperty(BlockStateProperties.SLAB_TYPE) && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, 2)));
+			return new ItemRequirement(ItemUseType.CONSUME, Collections.singletonList(new ItemStack(item, 2)));
 		if (block instanceof TurtleEggBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(TurtleEggBlock.EGGS).intValue())));
+			return new ItemRequirement(ItemUseType.CONSUME, Collections.singletonList(new ItemStack(item, state.getValue(TurtleEggBlock.EGGS))));
 		if (block instanceof SeaPickleBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(SeaPickleBlock.PICKLES).intValue())));
+			return new ItemRequirement(ItemUseType.CONSUME, Collections.singletonList(new ItemStack(item, state.getValue(SeaPickleBlock.PICKLES))));
 		if (block instanceof SnowBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(SnowBlock.LAYERS).intValue())));
+			return new ItemRequirement(ItemUseType.CONSUME, Collections.singletonList(new ItemStack(item, state.getValue(SnowBlock.LAYERS))));
 		if (block instanceof GrassPathBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(Items.GRASS_BLOCK)));
+			return new ItemRequirement(ItemUseType.CONSUME, Collections.singletonList(new ItemStack(Items.GRASS_BLOCK)));
 		if (block instanceof FarmlandBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(Items.DIRT)));
+			return new ItemRequirement(ItemUseType.CONSUME, Collections.singletonList(new ItemStack(Items.DIRT)));
 
 		return item == Items.AIR ? INVALID : new ItemRequirement(ItemUseType.CONSUME, item);
 	}

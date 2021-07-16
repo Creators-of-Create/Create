@@ -114,57 +114,57 @@ public abstract class GhostBlockRenderer {
 
 		// BlockModelRenderer
 		public void renderModel(GhostBlockParams params, MatrixStack.Entry entry, IVertexBuilder vb,
-			@Nullable BlockState state, IBakedModel model, float p_228804_5_, float p_228804_6_, float p_228804_7_,
-			int p_228804_8_, int p_228804_9_, net.minecraftforge.client.model.data.IModelData modelData) {
+			@Nullable BlockState state, IBakedModel model, float pRed, float pGreen, float pBlue,
+			int pCombinedLightIn, int pCombinedOverlayIn, net.minecraftforge.client.model.data.IModelData modelData) {
 			Random random = new Random();
 
 			for (Direction direction : Direction.values()) {
 				random.setSeed(42L);
-				renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_,
-					model.getQuads(state, direction, random, modelData), p_228804_8_, p_228804_9_);
+				renderQuad(params, entry, vb, pRed, pGreen, pBlue,
+					model.getQuads(state, direction, random, modelData), pCombinedLightIn, pCombinedOverlayIn);
 			}
 
 			random.setSeed(42L);
-			renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_,
-				model.getQuads(state, (Direction) null, random, modelData), p_228804_8_, p_228804_9_);
+			renderQuad(params, entry, vb, pRed, pGreen, pBlue,
+				model.getQuads(state, (Direction) null, random, modelData), pCombinedLightIn, pCombinedOverlayIn);
 		}
 
 		// BlockModelRenderer
-		private static void renderQuad(GhostBlockParams params, MatrixStack.Entry p_228803_0_,
-			IVertexBuilder p_228803_1_, float p_228803_2_, float p_228803_3_, float p_228803_4_,
-			List<BakedQuad> p_228803_5_, int p_228803_6_, int p_228803_7_) {
-			Float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
+		private static void renderQuad(GhostBlockParams params, MatrixStack.Entry pMatrixEntry,
+			IVertexBuilder pBuffer, float pRed, float pGreen, float pBlue,
+			List<BakedQuad> pListQuads, int pCombinedLightIn, int pCombinedOverlayIn) {
+			float alpha = params.alphaSupplier.get() * .75f * PlacementHelpers.getCurrentAlpha();
 
-			for (BakedQuad bakedquad : p_228803_5_) {
+			for (BakedQuad bakedquad : pListQuads) {
 				float f;
 				float f1;
 				float f2;
 				if (bakedquad.isTinted()) {
-					f = MathHelper.clamp(p_228803_2_, 0.0F, 1.0F);
-					f1 = MathHelper.clamp(p_228803_3_, 0.0F, 1.0F);
-					f2 = MathHelper.clamp(p_228803_4_, 0.0F, 1.0F);
+					f = MathHelper.clamp(pRed, 0.0F, 1.0F);
+					f1 = MathHelper.clamp(pGreen, 0.0F, 1.0F);
+					f2 = MathHelper.clamp(pBlue, 0.0F, 1.0F);
 				} else {
 					f = 1.0F;
 					f1 = 1.0F;
 					f2 = 1.0F;
 				}
 
-				quad(alpha, p_228803_1_, p_228803_0_, bakedquad, new float[] { 1f, 1f, 1f, 1f }, f, f1, f2,
-					new int[] { p_228803_6_, p_228803_6_, p_228803_6_, p_228803_6_ }, p_228803_7_);
+				quad(alpha, pBuffer, pMatrixEntry, bakedquad, new float[] { 1f, 1f, 1f, 1f }, f, f1, f2,
+					new int[] { pCombinedLightIn, pCombinedLightIn, pCombinedLightIn, pCombinedLightIn }, pCombinedOverlayIn);
 			}
 
 		}
 
 		// IVertexBuilder
-		static void quad(float alpha, IVertexBuilder vb, MatrixStack.Entry p_227890_1_, BakedQuad p_227890_2_,
-			float[] p_227890_3_, float p_227890_4_, float p_227890_5_, float p_227890_6_, int[] p_227890_7_,
-			int p_227890_8_) {
-			int[] aint = p_227890_2_.getVertices();
-			Vector3i Vector3i = p_227890_2_.getDirection()
+		static void quad(float alpha, IVertexBuilder vb, MatrixStack.Entry pMatrixEntryIn, BakedQuad pQuadIn,
+			float[] pColorMuls, float pRedIn, float pGreenIn, float pBlueIn, int[] pCombinedLightsIn,
+			int pCombinedOverlayIn) {
+			int[] aint = pQuadIn.getVertices();
+			Vector3i Vector3i = pQuadIn.getDirection()
 				.getNormal();
 			Vector3f vector3f = new Vector3f((float) Vector3i.getX(), (float) Vector3i.getY(), (float) Vector3i.getZ());
-			Matrix4f matrix4f = p_227890_1_.pose();
-			vector3f.transform(p_227890_1_.normal());
+			Matrix4f matrix4f = pMatrixEntryIn.pose();
+			vector3f.transform(pMatrixEntryIn.normal());
 			int vertexSize = DefaultVertexFormats.BLOCK.getIntegerSize();
 			int j = aint.length / vertexSize;
 
@@ -182,17 +182,17 @@ public abstract class GhostBlockRenderer {
 					float g;
 					float b;
 
-					r = p_227890_3_[k] * p_227890_4_;
-					g = p_227890_3_[k] * p_227890_5_;
-					b = p_227890_3_[k] * p_227890_6_;
+					r = pColorMuls[k] * pRedIn;
+					g = pColorMuls[k] * pGreenIn;
+					b = pColorMuls[k] * pBlueIn;
 
-					int l = vb.applyBakedLighting(p_227890_7_[k], bytebuffer);
+					int l = vb.applyBakedLighting(pCombinedLightsIn[k], bytebuffer);
 					float f9 = bytebuffer.getFloat(16);
 					float f10 = bytebuffer.getFloat(20);
 					Vector4f vector4f = new Vector4f(f, f1, f2, 1.0F);
 					vector4f.transform(matrix4f);
-					vb.applyBakedNormals(vector3f, bytebuffer, p_227890_1_.normal());
-					vb.vertex(vector4f.x(), vector4f.y(), vector4f.z(), r, g, b, alpha, f9, f10, p_227890_8_,
+					vb.applyBakedNormals(vector3f, bytebuffer, pMatrixEntryIn.normal());
+					vb.vertex(vector4f.x(), vector4f.y(), vector4f.z(), r, g, b, alpha, f9, f10, pCombinedOverlayIn,
 						l, vector3f.x(), vector3f.y(), vector3f.z());
 				}
 			}

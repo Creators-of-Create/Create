@@ -78,7 +78,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 	// client
 	public byte[] light;
 
-	public static enum CasingType {
+	public enum CasingType {
 		NONE, ANDESITE, BRASS;
 	}
 

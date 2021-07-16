@@ -50,7 +50,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 
 	@Override
-	public void setDeltaMovement(Vector3d p_213317_1_) {}
+	public void setDeltaMovement(Vector3d pMotionIn) {}
 
 	@Override
 	public void tick() {
@@ -80,10 +80,10 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	protected void defineSynchedData() {}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundNBT p_70037_1_) {}
+	protected void readAdditionalSaveData(CompoundNBT pCompound) {}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundNBT p_213281_1_) {}
+	protected void addAdditionalSaveData(CompoundNBT pCompound) {}
 
 	@Override
 	public IPacket<?> getAddEntityPacket() {
@@ -97,12 +97,12 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 		}
 
 		@Override
-		public boolean shouldRender(SeatEntity p_225626_1_, ClippingHelper p_225626_2_, double p_225626_3_, double p_225626_5_, double p_225626_7_) {
+		public boolean shouldRender(SeatEntity pLivingEntityIn, ClippingHelper pCamera, double pCamX, double pCamY, double pCamZ) {
 			return false;
 		}
 
 		@Override
-		public ResourceLocation getTextureLocation(SeatEntity p_110775_1_) {
+		public ResourceLocation getTextureLocation(SeatEntity pEntity) {
 			return null;
 		}
 	}

@@ -385,7 +385,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		return running;
 	}
 
-	static enum ClockHands implements INamedIconOptions {
+	enum ClockHands implements INamedIconOptions {
 
 		HOUR_FIRST(AllIcons.I_HOUR_HAND_FIRST),
 		MINUTE_FIRST(AllIcons.I_MINUTE_HAND_FIRST),
@@ -396,7 +396,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		private String translationKey;
 		private AllIcons icon;
 
-		private ClockHands(AllIcons icon) {
+		ClockHands(AllIcons icon) {
 			this.icon = icon;
 			translationKey = "contraptions.clockwork." + Lang.asId(name());
 		}

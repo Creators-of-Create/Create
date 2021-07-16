@@ -48,9 +48,9 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
-		return super.getStateForPlacement(p_196258_1_).setValue(POWERED, p_196258_1_.getLevel()
-			.hasNeighborSignal(p_196258_1_.getClickedPos()));
+	public BlockState getStateForPlacement(BlockItemUseContext pContext) {
+		return super.getStateForPlacement(pContext).setValue(POWERED, pContext.getLevel()
+			.hasNeighborSignal(pContext.getClickedPos()));
 	}
 
 	@Override
@@ -64,8 +64,8 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		super.createBlockStateDefinition(p_206840_1_.add(POWERED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		super.createBlockStateDefinition(pBuilder.add(POWERED));
 	}
 
 	@Override

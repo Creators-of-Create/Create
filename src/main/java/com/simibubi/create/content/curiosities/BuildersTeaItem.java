@@ -48,17 +48,17 @@ public class BuildersTeaItem extends Item {
 		return stack;
 	}
 
-	public int getUseDuration(ItemStack p_77626_1_) {
+	public int getUseDuration(ItemStack pStack) {
 		return 42;
 	}
 
-	public UseAction getUseAnimation(ItemStack p_77661_1_) {
+	public UseAction getUseAnimation(ItemStack pStack) {
 		return UseAction.DRINK;
 	}
 
-	public ActionResult<ItemStack> use(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
-		p_77659_2_.startUsingItem(p_77659_3_);
-		return ActionResult.success(p_77659_2_.getItemInHand(p_77659_3_));
+	public ActionResult<ItemStack> use(World pWorldIn, PlayerEntity pPlayerIn, Hand pHandIn) {
+		pPlayerIn.startUsingItem(pHandIn);
+		return ActionResult.success(pPlayerIn.getItemInHand(pHandIn));
 	}
 
 }

@@ -31,7 +31,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean shouldRenderOffScreen(KineticTileEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(KineticTileEntity pTe) {
 		return true;
 	}
 

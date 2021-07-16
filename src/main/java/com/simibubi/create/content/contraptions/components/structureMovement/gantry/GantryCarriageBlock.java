@@ -84,8 +84,8 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos updatePos,
-		boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block pBlockIn, BlockPos updatePos,
+		boolean pIsMoving) {
 		if (updatePos.equals(pos.relative(state.getValue(FACING)
 			.getOpposite())) && !canSurvive(state, world, pos))
 			world.destroyBlock(pos, true);
@@ -93,7 +93,7 @@ public class GantryCarriageBlock extends DirectionalAxisKineticBlock implements 
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState otherState, IWorld world,
-		BlockPos pos, BlockPos p_196271_6_) {
+		BlockPos pos, BlockPos pFacingPos) {
 		if (state.getValue(FACING) != direction.getOpposite())
 			return state;
 		return cycleAxisIfNecessary(state, direction, otherState);

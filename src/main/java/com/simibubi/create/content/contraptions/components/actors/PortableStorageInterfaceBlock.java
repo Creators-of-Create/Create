@@ -52,8 +52,8 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
-		boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block pBlockIn, BlockPos pFromPos,
+		boolean pIsMoving) {
 		withTileEntityDo(world, pos, PortableStorageInterfaceTileEntity::neighbourChanged);
 	}
 

@@ -98,41 +98,41 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 	}
 
 	@Override
-	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
-		if (!isUprightSticker(p_180658_1_, p_180658_2_) || p_180658_3_.isSuppressingBounce()) {
-			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
+	public void fallOn(World pWorldIn, BlockPos pPos, Entity pEntityIn, float pFallDistance) {
+		if (!isUprightSticker(pWorldIn, pPos) || pEntityIn.isSuppressingBounce()) {
+			super.fallOn(pWorldIn, pPos, pEntityIn, pFallDistance);
 		} else {
-			p_180658_3_.causeFallDamage(p_180658_4_, 0.0F);
+			pEntityIn.causeFallDamage(pFallDistance, 0.0F);
 		}
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(IBlockReader p_176216_1_, Entity p_176216_2_) {
-		if (!isUprightSticker(p_176216_1_, p_176216_2_.blockPosition()
-			.below()) || p_176216_2_.isSuppressingBounce()) {
-			super.updateEntityAfterFallOn(p_176216_1_, p_176216_2_);
+	public void updateEntityAfterFallOn(IBlockReader pWorldIn, Entity pEntityIn) {
+		if (!isUprightSticker(pWorldIn, pEntityIn.blockPosition()
+			.below()) || pEntityIn.isSuppressingBounce()) {
+			super.updateEntityAfterFallOn(pWorldIn, pEntityIn);
 		} else {
-			this.bounceUp(p_176216_2_);
+			this.bounceUp(pEntityIn);
 		}
 	}
 
-	private void bounceUp(Entity p_226946_1_) {
-		Vector3d Vector3d = p_226946_1_.getDeltaMovement();
+	private void bounceUp(Entity pEntity) {
+		Vector3d Vector3d = pEntity.getDeltaMovement();
 		if (Vector3d.y < 0.0D) {
-			double d0 = p_226946_1_ instanceof LivingEntity ? 1.0D : 0.8D;
-			p_226946_1_.setDeltaMovement(Vector3d.x, -Vector3d.y * d0, Vector3d.z);
+			double d0 = pEntity instanceof LivingEntity ? 1.0D : 0.8D;
+			pEntity.setDeltaMovement(Vector3d.x, -Vector3d.y * d0, Vector3d.z);
 		}
 	}
 
 	@Override
-	public void stepOn(World p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
-		double d0 = Math.abs(p_176199_3_.getDeltaMovement().y);
-		if (d0 < 0.1D && !p_176199_3_.isSteppingCarefully() && isUprightSticker(p_176199_1_, p_176199_2_)) {
+	public void stepOn(World pWorldIn, BlockPos pPos, Entity pEntityIn) {
+		double d0 = Math.abs(pEntityIn.getDeltaMovement().y);
+		if (d0 < 0.1D && !pEntityIn.isSteppingCarefully() && isUprightSticker(pWorldIn, pPos)) {
 			double d1 = 0.4D + d0 * 0.2D;
-			p_176199_3_.setDeltaMovement(p_176199_3_.getDeltaMovement()
+			pEntityIn.setDeltaMovement(pEntityIn.getDeltaMovement()
 				.multiply(d1, 1.0D, d1));
 		}
-		super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
+		super.stepOn(pWorldIn, pPos, pEntityIn);
 	}
 
 	@Override

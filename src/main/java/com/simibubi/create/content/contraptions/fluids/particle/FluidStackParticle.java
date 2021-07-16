@@ -54,8 +54,8 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	protected int getLightColor(float p_189214_1_) {
-		int brightnessForRender = super.getLightColor(p_189214_1_);
+	protected int getLightColor(float pPartialTick) {
+		int brightnessForRender = super.getLightColor(pPartialTick);
 		int skyLight = brightnessForRender >> 20;
 		int blockLight = (brightnessForRender >> 4) & 0xf;
 		blockLight = Math.max(blockLight, fluid.getFluid()

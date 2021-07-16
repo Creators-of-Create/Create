@@ -124,7 +124,7 @@ public interface ItemAttribute {
 			getTranslationParameters());
 	}
 
-	public static enum StandardTraits implements ItemAttribute {
+	public enum StandardTraits implements ItemAttribute {
 
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
@@ -149,7 +149,7 @@ public interface ItemAttribute {
 		private Predicate<ItemStack> test;
 		private BiPredicate<ItemStack, World> testWithWorld;
 
-		private StandardTraits(Predicate<ItemStack> test) {
+		StandardTraits(Predicate<ItemStack> test) {
 			this.test = test;
 		}
 
@@ -167,7 +167,7 @@ public interface ItemAttribute {
 				.anyMatch(e -> e.getKey().getMaxLevel() <= e.getValue());
 		}
 
-		private StandardTraits(BiPredicate<ItemStack, World> test) {
+		StandardTraits(BiPredicate<ItemStack, World> test) {
 			this.testWithWorld = test;
 		}
 
@@ -287,7 +287,7 @@ public interface ItemAttribute {
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
 			ItemGroup group = stack.getItem()
 				.getItemCategory();
-			return group == null ? Collections.emptyList() : Arrays.asList(new InItemGroup(group));
+			return group == null ? Collections.emptyList() : Collections.singletonList(new InItemGroup(group));
 		}
 
 		@Override
@@ -337,7 +337,7 @@ public interface ItemAttribute {
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
 			String id = stack.getItem()
 				.getCreatorModId(stack);
-			return id == null ? Collections.emptyList() : Arrays.asList(new AddedBy(id));
+			return id == null ? Collections.emptyList() : Collections.singletonList(new AddedBy(id));
 		}
 
 		@Override

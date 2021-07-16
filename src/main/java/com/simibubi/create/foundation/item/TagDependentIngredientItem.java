@@ -20,9 +20,9 @@ public class TagDependentIngredientItem extends Item {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
 		if (!shouldHide())
-			super.fillItemCategory(p_150895_1_, p_150895_2_);
+			super.fillItemCategory(pGroup, pItems);
 	}
 
 	public boolean shouldHide() {

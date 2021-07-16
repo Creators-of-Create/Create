@@ -4,6 +4,7 @@ import static net.minecraft.util.text.TextFormatting.GOLD;
 import static net.minecraft.util.text.TextFormatting.GRAY;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -313,7 +314,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public void setNetwork(@Nullable Long networkIn) {
-		if (network == networkIn)
+		if (Objects.equals(network, networkIn))
 			return;
 		if (network != null)
 			getOrCreateNetwork().remove(this);
@@ -323,7 +324,6 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (networkIn == null)
 			return;
 
-		network = networkIn;
 		KineticNetwork network = getOrCreateNetwork();
 		network.initialized = true;
 		network.add(this);

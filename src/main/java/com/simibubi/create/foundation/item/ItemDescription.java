@@ -64,7 +64,7 @@ public class ItemDescription {
 
 		;
 
-		private Palette(TextFormatting primary, TextFormatting highlight) {
+		Palette(TextFormatting primary, TextFormatting highlight) {
 			color = primary;
 			hColor = highlight;
 		}

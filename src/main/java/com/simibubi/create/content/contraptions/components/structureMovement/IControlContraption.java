@@ -9,18 +9,18 @@ import net.minecraft.util.math.BlockPos;
 public interface IControlContraption {
 
 	public boolean isAttachedTo(AbstractContraptionEntity contraption);
-	
+
 	public void attach(ControlledContraptionEntity contraption);
 
 	public void onStall();
 
 	public boolean isValid();
-	
+
 	public void collided();
-	
+
 	public BlockPos getBlockPosition();
 
-	static enum MovementMode implements INamedIconOptions {
+	enum MovementMode implements INamedIconOptions {
 
 		MOVE_PLACE(AllIcons.I_MOVE_PLACE),
 		MOVE_PLACE_RETURNED(AllIcons.I_MOVE_PLACE_RETURNED),
@@ -31,7 +31,7 @@ public interface IControlContraption {
 		private String translationKey;
 		private AllIcons icon;
 
-		private MovementMode(AllIcons icon) {
+		MovementMode(AllIcons icon) {
 			this.icon = icon;
 			translationKey = "contraptions.movement_mode." + Lang.asId(name());
 		}
@@ -48,7 +48,7 @@ public interface IControlContraption {
 
 	}
 
-	static enum RotationMode implements INamedIconOptions {
+	enum RotationMode implements INamedIconOptions {
 
 		ROTATE_PLACE(AllIcons.I_ROTATE_PLACE),
 		ROTATE_PLACE_RETURNED(AllIcons.I_ROTATE_PLACE_RETURNED),
@@ -59,7 +59,7 @@ public interface IControlContraption {
 		private String translationKey;
 		private AllIcons icon;
 
-		private RotationMode(AllIcons icon) {
+		RotationMode(AllIcons icon) {
 			this.icon = icon;
 			translationKey = "contraptions.movement_mode." + Lang.asId(name());
 		}

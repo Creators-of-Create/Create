@@ -114,7 +114,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	protected void playEquipSound(ItemStack p_184606_1_) {}
+	protected void playEquipSound(ItemStack pStack) {}
 
 	@Override
 	public void remove(boolean keepData) {

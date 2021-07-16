@@ -1,6 +1,7 @@
 package com.simibubi.create.content.palettes;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import com.simibubi.create.Create;
@@ -106,12 +107,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
-			return Arrays.asList(BlockTags.STAIRS);
+			return Collections.singletonList(BlockTags.STAIRS);
 		}
 
 		@Override
 		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
-			return Arrays.asList(ItemTags.STAIRS);
+			return Collections.singletonList(ItemTags.STAIRS);
 		}
 
 		@Override
@@ -166,12 +167,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
-			return Arrays.asList(BlockTags.SLABS);
+			return Collections.singletonList(BlockTags.SLABS);
 		}
 
 		@Override
 		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
-			return Arrays.asList(ItemTags.SLABS);
+			return Collections.singletonList(ItemTags.SLABS);
 		}
 
 		@Override
@@ -219,12 +220,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
-			return Arrays.asList(BlockTags.WALLS);
+			return Collections.singletonList(BlockTags.WALLS);
 		}
 
 		@Override
 		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
-			return Arrays.asList(ItemTags.WALLS);
+			return Collections.singletonList(ItemTags.WALLS);
 		}
 
 		@Override

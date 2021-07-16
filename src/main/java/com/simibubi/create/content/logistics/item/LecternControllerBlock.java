@@ -36,7 +36,7 @@ public class LecternControllerBlock extends LecternBlock implements ITE<LecternC
 
 	@Nullable
 	@Override
-	public TileEntity newBlockEntity(IBlockReader p_196283_1_) {
+	public TileEntity newBlockEntity(IBlockReader pWorldIn) {
 		return null;
 	}
 

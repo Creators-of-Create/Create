@@ -145,8 +145,8 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState p_196271_3_, IWorld world,
-		BlockPos pos, BlockPos p_196271_6_) {
+	public BlockState updateShape(BlockState state, Direction direction, BlockState pFacingState, IWorld world,
+		BlockPos pos, BlockPos pFacingPos) {
 		if (getFacing(state).getAxis()
 			.isVertical() || direction != Direction.DOWN)
 			return state;

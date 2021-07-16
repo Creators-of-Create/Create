@@ -43,7 +43,7 @@ public class ContraptionWorld extends WrappedWorld {
     }
 
     @Override
-    public void playLocalSound(double x, double y, double z, SoundEvent p_184134_7_, SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
-        world.playLocalSound(x, y, z, p_184134_7_, p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
+    public void playLocalSound(double x, double y, double z, SoundEvent pSoundIn, SoundCategory pCategory, float pVolume, float pPitch, boolean pDistanceDelay) {
+        world.playLocalSound(x, y, z, pSoundIn, pCategory, pVolume, pPitch, pDistanceDelay);
     }
 }

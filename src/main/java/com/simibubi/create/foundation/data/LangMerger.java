@@ -60,7 +60,7 @@ public class LangMerger implements IDataProvider {
 	private void populateLangIgnore() {
 		// Key prefixes added here will NOT be transferred to lang templates
 		langIgnore.add("create.ponder.debug_"); // Ponder debug scene text
-		langIgnore.add("create.gui.chromatic_projector"); 
+		langIgnore.add("create.gui.chromatic_projector");
 	}
 
 	private boolean shouldIgnore(String key) {
@@ -251,7 +251,7 @@ public class LangMerger implements IDataProvider {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n");
 		if (missingKeys != -1)
-			builder.append("\t\"_\": \"Missing Localizations: " + missingKeys + "\",\n");
+			builder.append("\t\"_\": \"Missing Localizations: ").append(missingKeys).append("\",\n");
 		data.forEach(builder::append);
 		builder.append("\t\"_\": \"Thank you for translating Create!\"\n\n");
 		builder.append("}");

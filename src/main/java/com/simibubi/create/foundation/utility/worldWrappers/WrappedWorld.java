@@ -63,8 +63,8 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public boolean isStateAtPosition(@Nullable BlockPos p_217375_1_, @Nullable Predicate<BlockState> p_217375_2_) {
-		return world.isStateAtPosition(p_217375_1_, p_217375_2_);
+	public boolean isStateAtPosition(@Nullable BlockPos pPos, @Nullable Predicate<BlockState> pState) {
+		return world.isStateAtPosition(pPos, pState);
 	}
 
 	@Override
@@ -115,8 +115,8 @@ public class WrappedWorld extends World {
 		SoundCategory category, float volume, float pitch) {}
 
 	@Override
-	public void playSound(@Nullable PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-		SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {}
+	public void playSound(@Nullable PlayerEntity pPlayerIn, Entity pEntityIn, SoundEvent pEventIn,
+		SoundCategory pCategoryIn, float pVolume, float pPitch) {}
 
 	@Override
 	public Entity getEntity(int id) {
@@ -163,8 +163,8 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public Biome getUncachedNoiseBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
-		return world.getUncachedNoiseBiome(p_225604_1_, p_225604_2_, p_225604_3_);
+	public Biome getUncachedNoiseBiome(int pX, int pY, int pZ) {
+		return world.getUncachedNoiseBiome(pX, pY, pZ);
 	}
 
 	@Override
@@ -178,16 +178,16 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void blockEntityChanged(BlockPos p_175646_1_, TileEntity p_175646_2_) {
+	public void blockEntityChanged(BlockPos pPos, TileEntity pUnusedTileEntity) {
 	}
 
 	@Override
-	public boolean hasChunkAt(BlockPos p_175667_1_) {
+	public boolean hasChunkAt(BlockPos pPos) {
 		return true;
 	}
 
 	@Override
-	public void updateNeighbourForOutputSignal(BlockPos p_175666_1_, Block p_175666_2_) {
+	public void updateNeighbourForOutputSignal(BlockPos pPos, Block pBlockIn) {
 		return;
 	}
 }

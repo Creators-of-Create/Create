@@ -94,8 +94,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		Set<UUID> cartsWithCoupling = loadedMinecartsWithCoupling.get(world);
 		Set<UUID> keySet = carts.keySet();
 
-		keySet.removeAll(queuedRemovals);
-		cartsWithCoupling.removeAll(queuedRemovals);
+		queuedRemovals.forEach(keySet::remove);
+		queuedRemovals.forEach(cartsWithCoupling::remove);
 
 		for (AbstractMinecartEntity cart : queued) {
 			UUID uniqueID = cart.getUUID();
@@ -138,8 +138,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			toRemove.add(entry.getKey());
 		}
 
-		cartsWithCoupling.removeAll(toRemove);
-		keySet.removeAll(toRemove);
+		toRemove.forEach(cartsWithCoupling::remove);
+		toRemove.forEach(keySet::remove);
 	}
 
 	public static void onChunkUnloaded(ChunkEvent.Unload event) {

@@ -109,7 +109,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState pOldState, boolean pIsMoving) {
 		if (!(world instanceof WrappedWorld) && !world.isClientSide())
 			withTileEntityDo(world, pos, BeltTunnelTileEntity::updateTunnelConnections);
 	}

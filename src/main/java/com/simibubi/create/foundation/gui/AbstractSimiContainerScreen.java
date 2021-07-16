@@ -61,7 +61,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+	protected void renderLabels(MatrixStack pMatrixStack, int pX, int pY) {
 		// no-op to prevent screen- and inventory-title from being rendered at incorrect location
 		// could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper values instead
 	}
@@ -146,7 +146,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
-	protected void renderBg(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+	protected void renderBg(MatrixStack pMatrixStack, float pPartialTicks, int pX, int pY) {
 	}
 
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {

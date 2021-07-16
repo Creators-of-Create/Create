@@ -112,15 +112,15 @@ public enum AllGuiTextures implements IScreenRenderable {
 	public int width, height;
 	public int startX, startY;
 
-	private AllGuiTextures(String location, int width, int height) {
+	AllGuiTextures(String location, int width, int height) {
 		this(location, 0, 0, width, height);
 	}
 
-	private AllGuiTextures(int startX, int startY) {
+	AllGuiTextures(int startX, int startY) {
 		this("icons.png", startX * 16, startY * 16, 16, 16);
 	}
 
-	private AllGuiTextures(String location, int startX, int startY, int width, int height) {
+	AllGuiTextures(String location, int startX, int startY, int width, int height) {
 		this.location = new ResourceLocation(Create.ID, "textures/gui/" + location);
 		this.width = width;
 		this.height = height;

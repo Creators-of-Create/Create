@@ -122,12 +122,12 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+	public boolean hasAnalogOutputSignal(BlockState pState) {
 		return true;
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+	public int getAnalogOutputSignal(BlockState state, World pWorldIn, BlockPos pPos) {
 		return state.getValue(FLAME_TYPE) == FlameType.REGULAR ? 1 : 2;
 	}
 

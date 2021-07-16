@@ -20,13 +20,13 @@ public abstract class ProperProjectileEntity extends Entity {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundNBT p_70037_1_) {
+	protected void readAdditionalSaveData(CompoundNBT pCompound) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundNBT p_213281_1_) {
+	protected void addAdditionalSaveData(CompoundNBT pCompound) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -136,7 +136,7 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	public int getBrightness(LightType p_226658_1_, BlockPos p_226658_2_) {
+	public int getBrightness(LightType pLightTypeIn, BlockPos pBlockPosIn) {
 		return overrideLight == -1 ? 15 : overrideLight;
 	}
 
@@ -156,7 +156,7 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override // For particle collision
-	public IBlockReader getChunkForCollisions(int p_225522_1_, int p_225522_2_) {
+	public IBlockReader getChunkForCollisions(int pChunkX, int pChunkZ) {
 		return this;
 	}
 
@@ -350,7 +350,7 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	public boolean hasNearbyAlivePlayer(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
+	public boolean hasNearbyAlivePlayer(double pX, double pY, double pZ, double pDistance) {
 		return true; // always enable spawner animations
 	}
 }

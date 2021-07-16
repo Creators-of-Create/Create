@@ -300,7 +300,7 @@ public class PaletteBlockPattern {
 
 	// Textures with connectability, used by Spriteshifter
 
-	public static enum CTs {
+	public enum CTs {
 
 		POLISHED(CTType.OMNIDIRECTIONAL), LAYERED(CTType.HORIZONTAL)
 
@@ -308,7 +308,7 @@ public class PaletteBlockPattern {
 
 		public CTType type;
 
-		private CTs(CTType type) {
+		CTs(CTType type) {
 			this.type = type;
 		}
 

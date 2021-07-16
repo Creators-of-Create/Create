@@ -56,8 +56,8 @@ public class LinearChassisBlock extends AbstractChassisBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction side, BlockState other, IWorld p_196271_4_,
-		BlockPos p_196271_5_, BlockPos p_196271_6_) {
+	public BlockState updateShape(BlockState state, Direction side, BlockState other, IWorld pWorldIn,
+		BlockPos pCurrentPos, BlockPos pFacingPos) {
 		BooleanProperty property = getGlueableSide(state, side);
 		if (property == null || !sameKind(state, other) || state.getValue(AXIS) != other.getValue(AXIS))
 			return state;

@@ -67,12 +67,12 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 	
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+	public boolean hasAnalogOutputSignal(BlockState pState) {
 		return true;
 	}
 	
 	@Override
-	public int getAnalogOutputSignal(BlockState p_180641_1_, World world, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState pBlockState, World world, BlockPos pos) {
 		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
 			.orElse(0);
 	}
@@ -124,8 +124,8 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand p_225533_5_,
-		BlockRayTraceResult p_225533_6_) {
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand pHandIn,
+		BlockRayTraceResult pHit) {
 		if (player == null)
 			return ActionResultType.PASS;
 		if (player instanceof FakePlayer)
@@ -147,9 +147,9 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(IBlockReader pWorldIn, BlockPos pPos, BlockState pState) {
 		ItemStack item = AllItems.COPPER_BACKTANK.asStack();
-		Optional<CopperBacktankTileEntity> tileEntityOptional = getTileEntityOptional(p_185473_1_, p_185473_2_);
+		Optional<CopperBacktankTileEntity> tileEntityOptional = getTileEntityOptional(pWorldIn, pPos);
 
 		int air = tileEntityOptional.map(CopperBacktankTileEntity::getAirLevel)
 			.orElse(0);
@@ -172,8 +172,8 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.BACKTANK;
 	}
 

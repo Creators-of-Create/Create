@@ -62,10 +62,10 @@ public class ValveHandleBlock extends HandCrankBlock {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> p_149666_2_) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> pItems) {
 		if (group != ItemGroup.TAB_SEARCH && !inCreativeTab)
 			return;
-		super.fillItemCategory(group, p_149666_2_);
+		super.fillItemCategory(group, pItems);
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class EmptyNamedTag<T> implements Tags.IOptionalNamedTag<T> {
 	}
 
 	@Override
-	public boolean contains(Object p_230235_1_) {
+	public boolean contains(Object pElement) {
 		return false;
 	}
 

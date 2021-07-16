@@ -47,8 +47,8 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 
 	@Override
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
-		boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		boolean pIsMouseOver, float partialTicks) {
+		super.render(ms, index, y, x, width, height, mouseX, mouseY, pIsMouseOver, partialTicks);
 
 		button.x = x + width - 80 - resetWidth;
 		button.y = y + 10;

@@ -93,17 +93,17 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 	}
 
 	@Override
-	public void setItem(int p_75141_1_, ItemStack p_75141_2_) {
-		if (p_75141_1_ == 36 + 9) {
-			if (p_75141_2_.hasTag()) {
-				contentHolder.inferredIcon = p_75141_2_.getTag()
+	public void setItem(int pSlotID, ItemStack pStack) {
+		if (pSlotID == 36 + 9) {
+			if (pStack.hasTag()) {
+				contentHolder.inferredIcon = pStack.getTag()
 						.getBoolean("InferredFromRecipe");
-				p_75141_2_.getTag()
+				pStack.getTag()
 						.remove("InferredFromRecipe");
 			} else
 				contentHolder.inferredIcon = false;
 		}
-		super.setItem(p_75141_1_, p_75141_2_);
+		super.setItem(pSlotID, pStack);
 	}
 
 	@Override

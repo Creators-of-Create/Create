@@ -44,8 +44,8 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.CONTENT_OBSERVER.get(state.getValue(FACING));
 	}
 

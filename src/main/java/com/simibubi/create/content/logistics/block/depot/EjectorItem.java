@@ -32,23 +32,23 @@ public class EjectorItem extends BlockItem {
 	}
 
 	@Override
-	protected BlockState getPlacementState(BlockItemUseContext p_195945_1_) {
-		BlockState stateForPlacement = super.getPlacementState(p_195945_1_);
+	protected BlockState getPlacementState(BlockItemUseContext pContext) {
+		BlockState stateForPlacement = super.getPlacementState(pContext);
 		return stateForPlacement;
 	}
 
 	@Override
-	protected boolean updateCustomBlockEntityTag(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
-		BlockState p_195943_5_) {
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, World world, PlayerEntity pPlayer, ItemStack pStack,
+		BlockState pState) {
 		if (world.isClientSide)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> EjectorTargetHandler.flushSettings(pos));
-		return super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
+		return super.updateCustomBlockEntityTag(pos, world, pPlayer, pStack, pState);
 	}
 
 	@Override
 	public boolean canAttackBlock(BlockState state, World world, BlockPos pos,
-		PlayerEntity p_195938_4_) {
-		return !p_195938_4_.isShiftKeyDown();
+		PlayerEntity pPlayer) {
+		return !pPlayer.isShiftKeyDown();
 	}
 
 }

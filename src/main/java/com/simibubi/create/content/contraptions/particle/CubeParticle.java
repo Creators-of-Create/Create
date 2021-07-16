@@ -130,13 +130,13 @@ public class CubeParticle extends Particle {
 	}
 
 	@Override
-	public void render(IVertexBuilder builder, ActiveRenderInfo renderInfo, float p_225606_3_) {
+	public void render(IVertexBuilder builder, ActiveRenderInfo renderInfo, float pPartialTicks) {
 		Vector3d projectedView = renderInfo.getPosition();
-		float lerpedX = (float) (MathHelper.lerp(p_225606_3_, this.xo, this.x) - projectedView.x());
-		float lerpedY = (float) (MathHelper.lerp(p_225606_3_, this.yo, this.y) - projectedView.y());
-		float lerpedZ = (float) (MathHelper.lerp(p_225606_3_, this.zo, this.z) - projectedView.z());
+		float lerpedX = (float) (MathHelper.lerp(pPartialTicks, this.xo, this.x) - projectedView.x());
+		float lerpedY = (float) (MathHelper.lerp(pPartialTicks, this.yo, this.y) - projectedView.y());
+		float lerpedZ = (float) (MathHelper.lerp(pPartialTicks, this.zo, this.z) - projectedView.z());
 
-		// int light = getBrightnessForRender(p_225606_3_);
+		// int light = getBrightnessForRender(pPartialTicks);
 		int light = 15728880;// 15<<20 && 15<<4
 		double ageMultiplier = 1 - Math.pow(age, 3) / Math.pow(lifetime, 3);
 

@@ -53,10 +53,10 @@ public class BlazeBurnerBlockItem extends BlockItem {
 	}
 
 	@Override
-	public void registerBlocks(Map<Block, Item> p_195946_1_, Item p_195946_2_) {
+	public void registerBlocks(Map<Block, Item> pBlockToItemMap, Item pItemIn) {
 		if (!hasCapturedBlaze())
 			return;
-		super.registerBlocks(p_195946_1_, p_195946_2_);
+		super.registerBlocks(pBlockToItemMap, pItemIn);
 	}
 
 	private BlazeBurnerBlockItem(Block block, Properties properties, boolean capturedBlaze) {
@@ -65,10 +65,10 @@ public class BlazeBurnerBlockItem extends BlockItem {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
 		if (!hasCapturedBlaze())
 			return;
-		super.fillItemCategory(p_150895_1_, p_150895_2_);
+		super.fillItemCategory(pGroup, pItems);
 	}
 
 	@Override
@@ -91,11 +91,11 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		AbstractSpawner spawner = ((MobSpawnerTileEntity) te).getSpawner();
 		List<WeightedSpawnerEntity> possibleSpawns =
-			ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "field_98285_e");
+			ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "spawnPotentials");
 		if (possibleSpawns.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
 			possibleSpawns
-				.add(ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "field_98282_f"));
+				.add(ObfuscationReflectionHelper.getPrivateValue(AbstractSpawner.class, spawner, "nextSpawnData"));
 		}
 
 		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();

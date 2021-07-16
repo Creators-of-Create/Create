@@ -103,8 +103,8 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos fromPos,
-		boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block pBlockIn, BlockPos fromPos,
+		boolean pIsMoving) {
 		Direction direction = state.getValue(FACING);
 		if (!fromPos.equals(pos.relative(direction.getOpposite())))
 			return;
@@ -159,7 +159,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		BlockPos pistonBase = pos;
 		boolean dropBlocks = player == null || !player.isCreative();
 
-		Integer maxPoles = maxAllowedPistonPoles();
+		int maxPoles = maxAllowedPistonPoles();
 		for (int offset = 1; offset < maxPoles; offset++) {
 			BlockPos currentPos = pos.relative(direction, offset);
 			BlockState block = worldIn.getBlockState(currentPos);

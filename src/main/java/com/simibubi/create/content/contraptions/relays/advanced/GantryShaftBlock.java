@@ -80,8 +80,8 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.EIGHT_VOXEL_POLE.get(state.getValue(FACING)
 			.getAxis());
 	}
@@ -186,8 +186,8 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
-		boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block pBlockIn, BlockPos pFromPos,
+		boolean pIsMoving) {
 		if (worldIn.isClientSide)
 			return;
 		boolean previouslyPowered = state.getValue(POWERED);

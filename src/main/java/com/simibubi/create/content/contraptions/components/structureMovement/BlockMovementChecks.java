@@ -408,7 +408,7 @@ public class BlockMovementChecks {
 	public static interface AllChecks extends MovementNecessaryCheck, MovementAllowedCheck, BrittleCheck, AttachedCheck, NotSupportiveCheck {
 	}
 
-	public static enum CheckResult {
+	public enum CheckResult {
 		SUCCESS,
 		FAIL,
 		PASS;

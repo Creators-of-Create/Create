@@ -27,8 +27,8 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 	}
 
 	@Override
-	protected void buildShapelessRecipes(Consumer<IFinishedRecipe> p_200404_1_) {
-		all.forEach(c -> c.register(p_200404_1_));
+	protected void buildShapelessRecipes(Consumer<IFinishedRecipe> pConsumer2) {
+		all.forEach(c -> c.register(pConsumer2));
 		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
 	}
 

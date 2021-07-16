@@ -48,10 +48,10 @@ public class BeltConnectorItem extends BlockItem {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (p_150895_1_ == Create.BASE_CREATIVE_TAB)
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
+		if (pGroup == Create.BASE_CREATIVE_TAB)
 			return;
-		super.fillItemCategory(p_150895_1_, p_150895_2_);
+		super.fillItemCategory(pGroup, pItems);
 	}
 
 	@Nonnull

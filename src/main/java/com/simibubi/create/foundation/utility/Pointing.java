@@ -10,7 +10,7 @@ public enum Pointing implements IStringSerializable {
 
 	private int xRotation;
 
-	private Pointing(int xRotation) {
+	Pointing(int xRotation) {
 		this.xRotation = xRotation;
 	}
 

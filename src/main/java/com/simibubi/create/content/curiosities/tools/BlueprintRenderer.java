@@ -129,7 +129,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(BlueprintEntity p_110775_1_) {
+	public ResourceLocation getTextureLocation(BlueprintEntity pEntity) {
 		return null;
 	}
 

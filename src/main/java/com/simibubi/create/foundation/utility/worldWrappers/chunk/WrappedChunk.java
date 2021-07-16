@@ -79,17 +79,17 @@ public class WrappedChunk implements IChunk {
 
     @Nullable
     @Override
-    public BlockState setBlockState(BlockPos p_177436_1_, BlockState p_177436_2_, boolean p_177436_3_) {
+    public BlockState setBlockState(BlockPos pPos, BlockState pState, boolean pIsMoving) {
         return null;
     }
 
     @Override
-    public void setBlockEntity(BlockPos p_177426_1_, TileEntity p_177426_2_) {
+    public void setBlockEntity(BlockPos pPos, TileEntity pTileEntityIn) {
 
     }
 
     @Override
-    public void addEntity(Entity p_76612_1_) {
+    public void addEntity(Entity pEntityIn) {
 
     }
 
@@ -104,17 +104,17 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public void setHeightmap(Heightmap.Type p_201607_1_, long[] p_201607_2_) {
+    public void setHeightmap(Heightmap.Type pType, long[] pData) {
 
     }
 
     @Override
-    public Heightmap getOrCreateHeightmapUnprimed(Heightmap.Type p_217303_1_) {
+    public Heightmap getOrCreateHeightmapUnprimed(Heightmap.Type pTypeIn) {
         return null;
     }
 
     @Override
-    public int getHeight(Heightmap.Type p_201576_1_, int p_201576_2_, int p_201576_3_) {
+    public int getHeight(Heightmap.Type pHeightmapType, int pX, int pZ) {
         return 0;
     }
 
@@ -124,7 +124,7 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public void setLastSaveTime(long p_177432_1_) {
+    public void setLastSaveTime(long pSaveTime) {
 
     }
 
@@ -135,7 +135,7 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public void setUnsaved(boolean p_177427_1_) {
+    public void setUnsaved(boolean pModified) {
 
     }
 
@@ -145,7 +145,7 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public void removeBlockEntity(BlockPos p_177425_1_) {
+    public void removeBlockEntity(BlockPos pPos) {
 
     }
 
@@ -156,13 +156,13 @@ public class WrappedChunk implements IChunk {
 
     @Nullable
     @Override
-    public CompoundNBT getBlockEntityNbt(BlockPos p_201579_1_) {
+    public CompoundNBT getBlockEntityNbt(BlockPos pPos) {
         return null;
     }
 
     @Nullable
     @Override
-    public CompoundNBT getBlockEntityNbtForSaving(BlockPos p_223134_1_) {
+    public CompoundNBT getBlockEntityNbtForSaving(BlockPos pPos) {
         return null;
     }
 
@@ -182,7 +182,7 @@ public class WrappedChunk implements IChunk {
     }
 
     @Override
-    public void setInhabitedTime(long p_177415_1_) {
+    public void setInhabitedTime(long pNewInhabitedTime) {
 
     }
 
@@ -213,7 +213,7 @@ public class WrappedChunk implements IChunk {
     }
 
 	@Override
-	public FluidState getFluidState(BlockPos p_204610_1_) {
+	public FluidState getFluidState(BlockPos pPos) {
 		return null;
 	}
 
@@ -248,7 +248,7 @@ public class WrappedChunk implements IChunk {
 	}
 
 	@Override
-	public void setAllStarts(Map<Structure<?>, StructureStart<?>> p_201612_1_) {
+	public void setAllStarts(Map<Structure<?>, StructureStart<?>> pStructureStartsIn) {
 
 	}
 

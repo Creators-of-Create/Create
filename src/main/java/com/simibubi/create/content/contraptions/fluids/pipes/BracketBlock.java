@@ -27,7 +27,7 @@ public class BracketBlock extends ProperDirectionalBlock {
 		DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 	public static final EnumProperty<BracketType> TYPE = EnumProperty.create("type", BracketType.class);
 
-	public static enum BracketType implements IStringSerializable {
+	public enum BracketType implements IStringSerializable {
 		PIPE, COG, SHAFT;
 
 		@Override

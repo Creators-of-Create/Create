@@ -23,16 +23,16 @@ public class EmptierChunk extends Chunk {
 		super(null, null, null);
 	}
 
-	public BlockState getBlockState(BlockPos p_180495_1_) {
+	public BlockState getBlockState(BlockPos pPos) {
 		return Blocks.VOID_AIR.defaultBlockState();
 	}
 
 	@Nullable
-	public BlockState setBlockState(BlockPos p_177436_1_, BlockState p_177436_2_, boolean p_177436_3_) {
+	public BlockState setBlockState(BlockPos pPos, BlockState pState, boolean pIsMoving) {
 		return null;
 	}
 
-	public FluidState getFluidState(BlockPos p_204610_1_) {
+	public FluidState getFluidState(BlockPos pPos) {
 		return Fluids.EMPTY.defaultFluidState();
 	}
 
@@ -41,38 +41,38 @@ public class EmptierChunk extends Chunk {
 		return null;
 	}
 
-	public int getLightEmission(BlockPos p_217298_1_) {
+	public int getLightEmission(BlockPos pPos) {
 		return 0;
 	}
 
-	public void addEntity(Entity p_76612_1_) { }
+	public void addEntity(Entity pEntityIn) { }
 
-	public void removeEntity(Entity p_76622_1_) { }
+	public void removeEntity(Entity pEntityIn) { }
 
-	public void removeEntity(Entity p_76608_1_, int p_76608_2_) { }
+	public void removeEntity(Entity pEntityIn, int pIndex) { }
 
 	@Nullable
-	public TileEntity getBlockEntity(BlockPos p_177424_1_, Chunk.CreateEntityType p_177424_2_) {
+	public TileEntity getBlockEntity(BlockPos pPos, Chunk.CreateEntityType pCreationMode) {
 		return null;
 	}
 
-	public void addBlockEntity(TileEntity p_150813_1_) { }
+	public void addBlockEntity(TileEntity pTileEntityIn) { }
 
-	public void setBlockEntity(BlockPos p_177426_1_, TileEntity p_177426_2_) { }
+	public void setBlockEntity(BlockPos pPos, TileEntity pTileEntityIn) { }
 
-	public void removeBlockEntity(BlockPos p_177425_1_) { }
+	public void removeBlockEntity(BlockPos pPos) { }
 
 	public void markUnsaved() { }
 
-	public void getEntities(@Nullable Entity p_177414_1_, AxisAlignedBB p_177414_2_, List<Entity> p_177414_3_, Predicate<? super Entity> p_177414_4_) { }
+	public void getEntities(@Nullable Entity pEntityIn, AxisAlignedBB pAabb, List<Entity> pListToFill, Predicate<? super Entity> pFilter) { }
 
-	public <T extends Entity> void getEntitiesOfClass(Class<? extends T> p_177430_1_, AxisAlignedBB p_177430_2_, List<T> p_177430_3_, Predicate<? super T> p_177430_4_) { }
+	public <T extends Entity> void getEntitiesOfClass(Class<? extends T> pEntityClass, AxisAlignedBB pAabb, List<T> pListToFill, Predicate<? super T> pFilter) { }
 
 	public boolean isEmpty() {
 		return true;
 	}
 
-	public boolean isYSpaceEmpty(int p_76606_1_, int p_76606_2_) {
+	public boolean isYSpaceEmpty(int pStartY, int pEndY) {
 		return true;
 	}
 

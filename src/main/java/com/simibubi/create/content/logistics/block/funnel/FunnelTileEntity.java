@@ -46,7 +46,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	InterpolatedChasingValue flap;
 
-	static enum Mode {
+	enum Mode {
 		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
 	}
 

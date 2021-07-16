@@ -28,12 +28,12 @@ public enum SequencerInstructions {
 	int shiftStep;
 	int defaultValue;
 
-	private SequencerInstructions(String parameterName, AllGuiTextures background) {
+	SequencerInstructions(String parameterName, AllGuiTextures background) {
 		this(parameterName, background, false, false, -1, -1, -1);
 	}
 
-	private SequencerInstructions(String parameterName, AllGuiTextures background, boolean hasValueParameter,
-			boolean hasSpeedParameter, int maxValue, int shiftStep, int defaultValue) {
+	SequencerInstructions(String parameterName, AllGuiTextures background, boolean hasValueParameter,
+                          boolean hasSpeedParameter, int maxValue, int shiftStep, int defaultValue) {
 		this.hasValueParameter = hasValueParameter;
 		this.hasSpeedParameter = hasSpeedParameter;
 		this.background = background;

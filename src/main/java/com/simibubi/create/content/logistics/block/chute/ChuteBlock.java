@@ -95,8 +95,8 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		super.createBlockStateDefinition(p_206840_1_.add(SHAPE, FACING));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		super.createBlockStateDefinition(pBuilder.add(SHAPE, FACING));
 	}
 
 	@Override

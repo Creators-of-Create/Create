@@ -21,7 +21,7 @@ public enum AllSections {
 
 	/** Decorative blocks */
 	PALETTES(Palette.Green),
-	
+
 	/** Helpful gadgets and other shenanigans */
 	CURIOSITIES(Palette.Purple),
 
@@ -35,7 +35,7 @@ public enum AllSections {
 
 	private Palette tooltipPalette;
 
-	private AllSections(Palette tooltipPalette) {
+	AllSections(Palette tooltipPalette) {
 		this.tooltipPalette = tooltipPalette;
 	}
 

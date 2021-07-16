@@ -203,17 +203,17 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.NETHERRACK_HIT)
 			.category(SoundCategory.BLOCKS)
 			.build(),
-			
+
 		CRUSHING_2 = create("crushing_2").noSubtitle()
 			.playExisting(SoundEvents.GRAVEL_PLACE)
 			.category(SoundCategory.BLOCKS)
 			.build(),
-			
+
 		CRUSHING_3 = create("crushing_3").noSubtitle()
 			.playExisting(SoundEvents.NETHERITE_BLOCK_BREAK)
 			.category(SoundCategory.BLOCKS)
 			.build(),
-			
+
 		PECULIAR_BELL_USE = create("peculiar_bell_use").subtitle("Peculiar Bell tolls")
 			.playExisting(SoundEvents.BELL_BLOCK)
 			.category(SoundCategory.BLOCKS)
@@ -322,7 +322,7 @@ public class AllSoundEvents {
 			this.subtitle = subtitle;
 			return this;
 		}
-		
+
 		public SoundEntryBuilder noSubtitle() {
 			this.subtitle = null;
 			return this;
@@ -382,7 +382,7 @@ public class AllSoundEvents {
 		public ResourceLocation getLocation() {
 			return Create.asResource(id);
 		}
-		
+
 		public boolean hasSubtitle() {
 			return subtitle != null;
 		}

@@ -94,7 +94,7 @@ public class PotionFluidHandler {
 
 	// Modified version of PotionUtils#addPotionTooltip
 	@OnlyIn(Dist.CLIENT)
-	public static void addPotionTooltip(FluidStack fs, List<ITextComponent> tooltip, float p_185182_2_) {
+	public static void addPotionTooltip(FluidStack fs, List<ITextComponent> tooltip, float pDurationFactor) {
 		List<EffectInstance> list = PotionUtils.getAllEffects(fs.getOrCreateTag());
 		List<Tuple<String, AttributeModifier>> list1 = Lists.newArrayList();
 		if (list.isEmpty()) {
@@ -123,7 +123,7 @@ public class PotionFluidHandler {
 
 				if (effectinstance.getDuration() > 20) {
 					textcomponent.append(" (")
-						.append(EffectUtils.formatDuration(effectinstance, p_185182_2_))
+						.append(EffectUtils.formatDuration(effectinstance, pDurationFactor))
 						.append(")");
 				}
 

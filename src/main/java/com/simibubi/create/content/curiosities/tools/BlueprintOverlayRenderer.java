@@ -268,7 +268,7 @@ public class BlueprintOverlayRenderer {
 					if (!stackInSlot.isEmpty())
 						list.add(stackInSlot);
 				}
-				return list.toArray(new ItemStack[list.size()]);
+				return list.toArray(new ItemStack[0]);
 			}
 
 			if (AllItems.ATTRIBUTE_FILTER.isIn(itemStack)) {

@@ -39,41 +39,41 @@ public class MechanicalCraftingRecipeBuilder {
 	/**
 	 * Creates a new builder for a shaped recipe.
 	 */
-	public static MechanicalCraftingRecipeBuilder shapedRecipe(IItemProvider p_200470_0_) {
-		return shapedRecipe(p_200470_0_, 1);
+	public static MechanicalCraftingRecipeBuilder shapedRecipe(IItemProvider pResultIn) {
+		return shapedRecipe(pResultIn, 1);
 	}
 
 	/**
 	 * Creates a new builder for a shaped recipe.
 	 */
-	public static MechanicalCraftingRecipeBuilder shapedRecipe(IItemProvider p_200468_0_, int p_200468_1_) {
-		return new MechanicalCraftingRecipeBuilder(p_200468_0_, p_200468_1_);
+	public static MechanicalCraftingRecipeBuilder shapedRecipe(IItemProvider pResultIn, int pCountIn) {
+		return new MechanicalCraftingRecipeBuilder(pResultIn, pCountIn);
 	}
 
 	/**
 	 * Adds a key to the recipe pattern.
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200469_1_, Tag<Item> p_200469_2_) {
-		return this.key(p_200469_1_, Ingredient.of(p_200469_2_));
+	public MechanicalCraftingRecipeBuilder key(Character pSymbol, Tag<Item> pTagIn) {
+		return this.key(pSymbol, Ingredient.of(pTagIn));
 	}
 
 	/**
 	 * Adds a key to the recipe pattern.
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200462_1_, IItemProvider p_200462_2_) {
-		return this.key(p_200462_1_, Ingredient.of(p_200462_2_));
+	public MechanicalCraftingRecipeBuilder key(Character pSymbol, IItemProvider pItemIn) {
+		return this.key(pSymbol, Ingredient.of(pItemIn));
 	}
 
 	/**
 	 * Adds a key to the recipe pattern.
 	 */
-	public MechanicalCraftingRecipeBuilder key(Character p_200471_1_, Ingredient p_200471_2_) {
-		if (this.key.containsKey(p_200471_1_)) {
-			throw new IllegalArgumentException("Symbol '" + p_200471_1_ + "' is already defined!");
-		} else if (p_200471_1_ == ' ') {
+	public MechanicalCraftingRecipeBuilder key(Character pSymbol, Ingredient pIngredientIn) {
+		if (this.key.containsKey(pSymbol)) {
+			throw new IllegalArgumentException("Symbol '" + pSymbol + "' is already defined!");
+		} else if (pSymbol == ' ') {
 			throw new IllegalArgumentException("Symbol ' ' (whitespace) is reserved and cannot be defined");
 		} else {
-			this.key.put(p_200471_1_, p_200471_2_);
+			this.key.put(pSymbol, pIngredientIn);
 			return this;
 		}
 	}
@@ -81,12 +81,12 @@ public class MechanicalCraftingRecipeBuilder {
 	/**
 	 * Adds a new entry to the patterns for this recipe.
 	 */
-	public MechanicalCraftingRecipeBuilder patternLine(String p_200472_1_) {
-		if (!this.pattern.isEmpty() && p_200472_1_.length() != this.pattern.get(0)
+	public MechanicalCraftingRecipeBuilder patternLine(String pPatternIn) {
+		if (!this.pattern.isEmpty() && pPatternIn.length() != this.pattern.get(0)
 			.length()) {
 			throw new IllegalArgumentException("Pattern must be the same width on every line!");
 		} else {
-			this.pattern.add(p_200472_1_);
+			this.pattern.add(pPatternIn);
 			return this;
 		}
 	}
@@ -94,37 +94,37 @@ public class MechanicalCraftingRecipeBuilder {
 	/**
 	 * Builds this recipe into an {@link IFinishedRecipe}.
 	 */
-	public void build(Consumer<IFinishedRecipe> p_200464_1_) {
-		this.build(p_200464_1_, ForgeRegistries.ITEMS.getKey(this.result));
+	public void build(Consumer<IFinishedRecipe> pConsumerIn) {
+		this.build(pConsumerIn, ForgeRegistries.ITEMS.getKey(this.result));
 	}
 
 	/**
 	 * Builds this recipe into an {@link IFinishedRecipe}. Use
 	 * {@link #build(Consumer)} if save is the same as the ID for the result.
 	 */
-	public void build(Consumer<IFinishedRecipe> p_200466_1_, String p_200466_2_) {
+	public void build(Consumer<IFinishedRecipe> pConsumerIn, String pSave) {
 		ResourceLocation resourcelocation = ForgeRegistries.ITEMS.getKey(this.result);
-		if ((new ResourceLocation(p_200466_2_)).equals(resourcelocation)) {
-			throw new IllegalStateException("Shaped Recipe " + p_200466_2_ + " should remove its 'save' argument");
+		if ((new ResourceLocation(pSave)).equals(resourcelocation)) {
+			throw new IllegalStateException("Shaped Recipe " + pSave + " should remove its 'save' argument");
 		} else {
-			this.build(p_200466_1_, new ResourceLocation(p_200466_2_));
+			this.build(pConsumerIn, new ResourceLocation(pSave));
 		}
 	}
 
 	/**
 	 * Builds this recipe into an {@link IFinishedRecipe}.
 	 */
-	public void build(Consumer<IFinishedRecipe> p_200467_1_, ResourceLocation p_200467_2_) {
-		validate(p_200467_2_);
-		p_200467_1_.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key));
+	public void build(Consumer<IFinishedRecipe> pConsumerIn, ResourceLocation pId) {
+		validate(pId);
+		pConsumerIn.accept(new MechanicalCraftingRecipeBuilder.Result(pId, result, count, pattern, key));
 	}
 
 	/**
 	 * Makes sure that this recipe is valid.
 	 */
-	private void validate(ResourceLocation p_200463_1_) {
+	private void validate(ResourceLocation pId) {
 		if (pattern.isEmpty()) {
-			throw new IllegalStateException("No pattern is defined for shaped recipe " + p_200463_1_ + "!");
+			throw new IllegalStateException("No pattern is defined for shaped recipe " + pId + "!");
 		} else {
 			Set<Character> set = Sets.newHashSet(key.keySet());
 			set.remove(' ');
@@ -134,14 +134,14 @@ public class MechanicalCraftingRecipeBuilder {
 					char c0 = s.charAt(i);
 					if (!key.containsKey(c0) && c0 != ' ')
 						throw new IllegalStateException(
-							"Pattern in recipe " + p_200463_1_ + " uses undefined symbol '" + c0 + "'");
+							"Pattern in recipe " + pId + " uses undefined symbol '" + c0 + "'");
 					set.remove(c0);
 				}
 			}
 
 			if (!set.isEmpty())
 				throw new IllegalStateException(
-					"Ingredients are defined but not used in pattern for recipe " + p_200463_1_);
+					"Ingredients are defined but not used in pattern for recipe " + pId);
 		}
 	}
 
@@ -161,25 +161,25 @@ public class MechanicalCraftingRecipeBuilder {
 			this.key = p_i48271_7_;
 		}
 
-		public void serializeRecipeData(JsonObject p_218610_1_) {
+		public void serializeRecipeData(JsonObject pJson) {
 			JsonArray jsonarray = new JsonArray();
 			for (String s : this.pattern)
 				jsonarray.add(s);
 
-			p_218610_1_.add("pattern", jsonarray);
+			pJson.add("pattern", jsonarray);
 			JsonObject jsonobject = new JsonObject();
 			for (Entry<Character, Ingredient> entry : this.key.entrySet())
 				jsonobject.add(String.valueOf(entry.getKey()), entry.getValue()
 					.toJson());
 
-			p_218610_1_.add("key", jsonobject);
+			pJson.add("key", jsonobject);
 			JsonObject jsonobject1 = new JsonObject();
 			jsonobject1.addProperty("item", ForgeRegistries.ITEMS.getKey(this.result)
 				.toString());
 			if (this.count > 1)
 				jsonobject1.addProperty("count", this.count);
 
-			p_218610_1_.add("result", jsonobject1);
+			pJson.add("result", jsonobject1);
 		}
 
 		public IRecipeSerializer<?> getType() {

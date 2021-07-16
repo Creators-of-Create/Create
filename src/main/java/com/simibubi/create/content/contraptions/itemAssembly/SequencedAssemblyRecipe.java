@@ -171,17 +171,17 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World p_77569_2_) {
+	public boolean matches(RecipeWrapper inv, World pWorldIn) {
 		return false;
 	}
 
 	@Override
-	public ItemStack assemble(RecipeWrapper p_77572_1_) {
+	public ItemStack assemble(RecipeWrapper pInv) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canCraftInDimensions(int p_194133_1_, int p_194133_2_) {
+	public boolean canCraftInDimensions(int pWidth, int pHeight) {
 		return false;
 	}
 

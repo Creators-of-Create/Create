@@ -45,8 +45,8 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
-		if (state.hasTileEntity() && (state.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState pNewState, boolean pIsMoving) {
+		if (state.hasTileEntity() && (state.getBlock() != pNewState.getBlock() || !pNewState.hasTileEntity())) {
 			withTileEntityDo(world, pos, EncasedFanTileEntity::updateChute);
 			world.removeBlockEntity(pos);
 		}

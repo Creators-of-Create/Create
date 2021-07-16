@@ -30,13 +30,13 @@ public abstract class AbstractHorizontalFunnelBlock extends AbstractFunnelBlock 
 	}
 	
 	@Override
-	public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-		return p_185499_1_.setValue(HORIZONTAL_FACING, p_185499_2_.rotate(p_185499_1_.getValue(HORIZONTAL_FACING)));
+	public BlockState rotate(BlockState pState, Rotation pRot) {
+		return pState.setValue(HORIZONTAL_FACING, pRot.rotate(pState.getValue(HORIZONTAL_FACING)));
 	}
 
 	@Override
-	public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
-		return p_185471_1_.rotate(p_185471_2_.getRotation(p_185471_1_.getValue(HORIZONTAL_FACING)));
+	public BlockState mirror(BlockState pState, Mirror pMirrorIn) {
+		return pState.rotate(pMirrorIn.getRotation(pState.getValue(HORIZONTAL_FACING)));
 	}
 
 }

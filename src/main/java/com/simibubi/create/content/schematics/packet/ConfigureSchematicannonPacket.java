@@ -13,7 +13,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ConfigureSchematicannonPacket extends SimplePacketBase {
 
-	public static enum Option {
+	public enum Option {
 		DONT_REPLACE, REPLACE_SOLID, REPLACE_ANY, REPLACE_EMPTY, SKIP_MISSING, SKIP_TILES, PLAY, PAUSE, STOP;
 	}
 

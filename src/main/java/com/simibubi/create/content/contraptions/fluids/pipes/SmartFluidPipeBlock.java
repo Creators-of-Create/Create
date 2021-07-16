@@ -91,7 +91,7 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	}
 
 	@Override
-	public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+	public boolean canSurvive(BlockState pState, IWorldReader pWorldIn, BlockPos pPos) {
 		return true;
 	}
 
@@ -143,8 +143,8 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		AttachFace face = state.getValue(FACE);
 		VoxelShaper shape = face == AttachFace.FLOOR ? AllShapes.SMART_FLUID_PIPE_FLOOR
 			: face == AttachFace.CEILING ? AllShapes.SMART_FLUID_PIPE_CEILING : AllShapes.SMART_FLUID_PIPE_WALL;

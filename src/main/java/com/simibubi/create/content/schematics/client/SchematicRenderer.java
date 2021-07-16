@@ -88,7 +88,6 @@ public class SchematicRenderer {
 		final SchematicWorld blockAccess = schematic;
 		final BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRenderer();
 
-		List<BlockState> blockstates = new LinkedList<>();
 		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
 		MatrixStack ms = new MatrixStack();
 
@@ -118,7 +117,6 @@ public class SchematicRenderer {
 						tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE)) {
 						usedBlockRenderLayers.add(blockRenderLayer);
 					}
-					blockstates.add(state);
 				}
 
 				ForgeHooksClient.setRenderLayer(null);

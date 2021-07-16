@@ -18,7 +18,7 @@ public class SequencedAssemblyItem extends Item {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {}
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {

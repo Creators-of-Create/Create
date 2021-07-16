@@ -27,10 +27,10 @@ public class NamedTag<T> implements ITag.INamedTag<T> {
 	}
 
 	@Override
-	public boolean contains(T p_230235_1_) {
+	public boolean contains(T pElement) {
 		if (tag == null)
 			return false;
-		return tag.contains(p_230235_1_);
+		return tag.contains(pElement);
 	}
 
 	@Override

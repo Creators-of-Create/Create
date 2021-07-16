@@ -26,7 +26,7 @@ public class WrappedChunkSection extends ChunkSection {
     }
 
     @Override
-    public BlockState setBlockState(int p_177484_1_, int p_177484_2_, int p_177484_3_, BlockState p_177484_4_, boolean p_177484_5_) {
+    public BlockState setBlockState(int pX, int pY, int pZ, BlockState pState, boolean pUseLocks) {
         throw new IllegalStateException("Chunk sections should not be mutated in a fake world.");
     }
 }

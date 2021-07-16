@@ -17,20 +17,20 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class MovedDefaultDispenseItemBehaviour implements IMovedDispenseItemBehaviour {
 	private static final MovedDefaultDispenseItemBehaviour defaultInstance = new MovedDefaultDispenseItemBehaviour();
 
-	public static void doDispense(World p_82486_0_, ItemStack p_82486_1_, int p_82486_2_, Vector3d facing, BlockPos p_82486_4_, MovementContext context) {
-		double d0 = p_82486_4_.getX() + facing.x + .5;
-		double d1 = p_82486_4_.getY() + facing.y + .5;
-		double d2 = p_82486_4_.getZ() + facing.z + .5;
+	public static void doDispense(World pWorldIn, ItemStack pStack, int pSpeed, Vector3d facing, BlockPos pPosition, MovementContext context) {
+		double d0 = pPosition.getX() + facing.x + .5;
+		double d1 = pPosition.getY() + facing.y + .5;
+		double d2 = pPosition.getZ() + facing.z + .5;
 		if (Direction.getNearest(facing.x, facing.y, facing.z).getAxis() == Direction.Axis.Y) {
 			d1 = d1 - 0.125D;
 		} else {
 			d1 = d1 - 0.15625D;
 		}
 
-		ItemEntity itementity = new ItemEntity(p_82486_0_, d0, d1, d2, p_82486_1_);
-		double d3 = p_82486_0_.random.nextDouble() * 0.1D + 0.2D;
-		itementity.setDeltaMovement(p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.x() * d3 + context.motion.x, p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.y() * d3 + context.motion.y, p_82486_0_.random.nextGaussian() * (double) 0.0075F * (double) p_82486_2_ + facing.z() * d3 + context.motion.z);
-		p_82486_0_.addFreshEntity(itementity);
+		ItemEntity itementity = new ItemEntity(pWorldIn, d0, d1, d2, pStack);
+		double d3 = pWorldIn.random.nextDouble() * 0.1D + 0.2D;
+		itementity.setDeltaMovement(pWorldIn.random.nextGaussian() * (double) 0.0075F * (double) pSpeed + facing.x() * d3 + context.motion.x, pWorldIn.random.nextGaussian() * (double) 0.0075F * (double) pSpeed + facing.y() * d3 + context.motion.y, pWorldIn.random.nextGaussian() * (double) 0.0075F * (double) pSpeed + facing.z() * d3 + context.motion.z);
+		pWorldIn.addFreshEntity(itementity);
 	}
 
 	@Override

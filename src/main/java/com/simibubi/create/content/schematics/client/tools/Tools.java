@@ -22,7 +22,7 @@ public enum Tools {
 	private ISchematicTool tool;
 	private AllIcons icon;
 
-	private Tools(ISchematicTool tool, AllIcons icon) {
+	Tools(ISchematicTool tool, AllIcons icon) {
 		this.tool = tool;
 		this.icon = icon;
 	}

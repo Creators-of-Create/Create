@@ -42,7 +42,7 @@ public class SoulPulseEffectHandler {
 
 		for (SoulPulseEffect pulse : pulses) {
 			if (pulse.finished() && !pulse.canOverlap())
-				occupied.removeAll(pulse.added);
+				pulse.added.forEach(occupied::remove);
 		}
 		pulses.removeIf(SoulPulseEffect::finished);
 	}

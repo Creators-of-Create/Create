@@ -37,7 +37,7 @@ public class SoundScapes {
 
 		private BiFunction<Float, AmbienceGroup, SoundScape> factory;
 
-		private AmbienceGroup(BiFunction<Float, AmbienceGroup, SoundScape> factory) {
+		AmbienceGroup(BiFunction<Float, AmbienceGroup, SoundScape> factory) {
 			this.factory = factory;
 		}
 
@@ -60,7 +60,7 @@ public class SoundScapes {
 			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2)
 			.repeating(AllSoundEvents.CRUSHING_3.getMainEvent(), 2f, 1.75f, 2);
 	}
-	
+
 	private static SoundScape milling(float pitch, AmbienceGroup group) {
 		return new SoundScape(pitch, group).repeating(AllSoundEvents.CRUSHING_1.getMainEvent(), 1.545f, .75f, 1)
 			.repeating(AllSoundEvents.CRUSHING_2.getMainEvent(), 0.425f, .75f, 2);

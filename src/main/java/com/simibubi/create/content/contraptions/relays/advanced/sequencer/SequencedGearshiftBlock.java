@@ -160,7 +160,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+	public boolean hasAnalogOutputSignal(BlockState pState) {
 		return true;
 	}
 

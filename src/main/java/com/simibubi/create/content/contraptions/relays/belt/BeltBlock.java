@@ -92,8 +92,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
-		p_149666_2_.add(AllItems.BELT_CONNECTOR.asStack());
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
+		pItems.add(AllItems.BELT_CONNECTOR.asStack());
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public void spawnAfterBreak(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack p_220062_4_) {
+	public void spawnAfterBreak(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack pStack) {
 		BeltTileEntity controllerTE = BeltHelper.getControllerTE(worldIn, pos);
 		if (controllerTE != null)
 			controllerTE.getInventory()
@@ -501,8 +501,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction side, BlockState p_196271_3_, IWorld world,
-		BlockPos pos, BlockPos p_196271_6_) {
+	public BlockState updateShape(BlockState state, Direction side, BlockState pFacingState, IWorld world,
+		BlockPos pos, BlockPos pFacingPos) {
 		if (side.getAxis()
 			.isHorizontal())
 			updateTunnelConnections(world, pos.above());

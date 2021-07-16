@@ -47,15 +47,15 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> p_149666_2_) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> pItems) {
 		if (group != ItemGroup.TAB_SEARCH && !inCreativeTab)
 			return;
-		super.fillItemCategory(group, p_149666_2_);
+		super.fillItemCategory(group, pItems);
 	}
 
 	@Override
-	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
-		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_ * 0.5F);
+	public void fallOn(World pWorldIn, BlockPos pPos, Entity pEntityIn, float pFallDistance) {
+		super.fallOn(pWorldIn, pPos, pEntityIn, pFallDistance * 0.5F);
 	}
 
 	@Override
@@ -78,20 +78,20 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.SEAT;
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
+	public VoxelShape getCollisionShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.SEAT_COLLISION;
 	}
 
 	@Override
 	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult p_225533_6_) {
+		BlockRayTraceResult pHit) {
 		if (player.isShiftKeyDown())
 			return ActionResultType.PASS;
 

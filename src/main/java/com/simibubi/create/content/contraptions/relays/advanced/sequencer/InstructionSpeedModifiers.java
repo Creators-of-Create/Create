@@ -18,12 +18,12 @@ public enum InstructionSpeedModifiers {
 	int value;
 	ITextComponent label;
 
-	private InstructionSpeedModifiers(int modifier, ITextComponent label) {
+	InstructionSpeedModifiers(int modifier, ITextComponent label) {
 		this.label = label;
 		translationKey = "gui.sequenced_gearshift.speed." + Lang.asId(name());
 		value = modifier;
 	}
-	private InstructionSpeedModifiers(int modifier, String label) {
+	InstructionSpeedModifiers(int modifier, String label) {
 		this.label = new StringTextComponent(label);
 		translationKey = "gui.sequenced_gearshift.speed." + Lang.asId(name());
 		value = modifier;

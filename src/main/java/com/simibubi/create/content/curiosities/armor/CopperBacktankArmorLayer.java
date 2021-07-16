@@ -45,7 +45,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 
 	@Override
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer, int light, LivingEntity entity, float yaw, float pitch,
-		float pt, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
+		float pt, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
 
 		if (entity.getPose() == Pose.SLEEPING)
 			return;

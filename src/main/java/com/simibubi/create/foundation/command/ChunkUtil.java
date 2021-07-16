@@ -35,8 +35,7 @@ public class ChunkUtil {
 				(_0, _1, _2, _3, _4, future, _6, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
 					if (markedChunks.contains(chunk.getPos()
 						.toLong())) {
-						LOGGER.debug("trying to load unforced chunk " + chunk.getPos()
-							.toString() + ", returning chunk loading error");
+						LOGGER.debug("trying to load unforced chunk " + chunk.getPos() + ", returning chunk loading error");
 						// this.reloadChunk(world.getChunkProvider(), chunk.getPos());
 						return ChunkHolder.UNLOADED_CHUNK_FUTURE;
 					} else {
@@ -89,8 +88,7 @@ public class ChunkUtil {
 			.getPos()
 			.toLong())) {
 			LOGGER.info("Interesting Chunk Unload: " + event.getChunk()
-				.getPos()
-				.toString());
+				.getPos());
 		}
 	}
 
@@ -101,7 +99,7 @@ public class ChunkUtil {
 		ChunkPos pos = event.getChunk()
 			.getPos();
 		if (interestingChunks.contains(pos.toLong())) {
-			LOGGER.info("Interesting Chunk Load: " + pos.toString());
+			LOGGER.info("Interesting Chunk Load: " + pos);
 			if (!markedChunks.contains(pos.toLong()))
 				interestingChunks.remove(pos.toLong());
 		}

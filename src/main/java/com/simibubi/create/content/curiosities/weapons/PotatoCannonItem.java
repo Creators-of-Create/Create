@@ -56,8 +56,8 @@ public class PotatoCannonItem extends ShootableItem {
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_,
-		PlayerEntity p_195938_4_) {
+	public boolean canAttackBlock(BlockState pState, World pWorldIn, BlockPos pPos,
+		PlayerEntity pPlayer) {
 		return false;
 	}
 

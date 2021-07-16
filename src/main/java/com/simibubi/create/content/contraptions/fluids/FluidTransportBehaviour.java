@@ -256,7 +256,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		return AttachmentTypes.RIM;
 	}
 
-	public static enum AttachmentTypes {
+	public enum AttachmentTypes {
 		NONE, RIM, DRAIN;
 
 		public boolean hasModel() {

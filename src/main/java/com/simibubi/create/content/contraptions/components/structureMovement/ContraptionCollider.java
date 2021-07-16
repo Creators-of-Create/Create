@@ -125,8 +125,7 @@ public class ContraptionCollider {
 				ReuseableStream<VoxelShape> potentialHits =
 					getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
 				potentialHits.getStream()
-					.forEach(shape -> shape.toAabbs()
-						.forEach(bbs::add));
+					.forEach(shape -> bbs.addAll(shape.toAabbs()));
 				return bbs;
 
 			});

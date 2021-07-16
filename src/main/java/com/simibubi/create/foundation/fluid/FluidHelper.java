@@ -35,7 +35,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidHelper {
 
-	public static enum FluidExchange {
+	public enum FluidExchange {
 		ITEM_TO_TANK, TANK_TO_ITEM;
 	}
 

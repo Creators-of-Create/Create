@@ -69,9 +69,9 @@ public class BlueprintItem extends Item {
 		return ActionResultType.sidedSuccess(world.isClientSide);
 	}
 
-	protected boolean canPlace(PlayerEntity p_200127_1_, Direction p_200127_2_, ItemStack p_200127_3_,
-							   BlockPos p_200127_4_) {
-		return p_200127_1_.mayUseItemAt(p_200127_4_, p_200127_2_, p_200127_3_);
+	protected boolean canPlace(PlayerEntity pPlayerIn, Direction pDirectionIn, ItemStack pItemStackIn,
+							   BlockPos pPosIn) {
+		return pPlayerIn.mayUseItemAt(pPosIn, pDirectionIn, pItemStackIn);
 	}
 
 	public static void assignCompleteRecipe(ItemStackHandler inv, IRecipe<?> recipe) {
@@ -95,7 +95,7 @@ public class BlueprintItem extends Item {
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
 		Ingredient.IItemList[] acceptedItems =
-				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "field_199807_b"); // values
+				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "values"); // values
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)

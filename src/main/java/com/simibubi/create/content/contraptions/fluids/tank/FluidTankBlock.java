@@ -87,8 +87,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		p_206840_1_.add(TOP, BOTTOM, SHAPE);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		pBuilder.add(TOP, BOTTOM, SHAPE);
 	}
 
 	@Override

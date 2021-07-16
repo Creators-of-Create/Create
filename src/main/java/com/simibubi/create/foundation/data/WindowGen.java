@@ -50,12 +50,12 @@ public class WindowGen {
 			.isViewBlocking(WindowGen::never);
 	}
 
-	private static boolean never(BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
+	private static boolean never(BlockState pState, IBlockReader pReader, BlockPos pPos) {
 		return false;
 	}
 
-	private static Boolean never(BlockState p_235427_0_, IBlockReader p_235427_1_, BlockPos p_235427_2_,
-		EntityType<?> p_235427_3_) {
+	private static Boolean never(BlockState pState, IBlockReader pReader, BlockPos pPos,
+		EntityType<?> pEntity) {
 		return false;
 	}
 

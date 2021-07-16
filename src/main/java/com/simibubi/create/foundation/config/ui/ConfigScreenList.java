@@ -49,11 +49,11 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	@Override
-	protected void renderList(MatrixStack p_238478_1_, int p_238478_2_, int p_238478_3_, int p_238478_4_, int p_238478_5_, float p_238478_6_) {
+	protected void renderList(MatrixStack pMatrixStack, int pX, int pY, int pMouseX, int pMouseY, float pPartialTicks) {
 		MainWindow window = Minecraft.getInstance().getWindow();
 		double d0 = window.getGuiScale();
 		RenderSystem.enableScissor((int) (this.x0 * d0), (int) (window.getHeight() - (this.y1 * d0)), (int) (this.width * d0), (int) (this.height * d0));
-		super.renderList(p_238478_1_, p_238478_2_, p_238478_3_, p_238478_4_, p_238478_5_, p_238478_6_);
+		super.renderList(pMatrixStack, pX, pY, pMouseX, pMouseY, pPartialTicks);
 		RenderSystem.disableScissor();
 	}
 
@@ -134,7 +134,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		}
 
 		@Override
-		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean pIsMouseOver, float partialTicks) {
 			UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
 			UIRenderHelper.streak(ms, 180, x + (int) (width * 1.35f) + 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
 			IFormattableTextComponent component = label.getComponent();

@@ -41,8 +41,8 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 	}
 
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		super.createBlockStateDefinition(p_206840_1_.add(ALT, BlockStateProperties.WATERLOGGED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		super.createBlockStateDefinition(pBuilder.add(ALT, BlockStateProperties.WATERLOGGED));
 	}
 
 	@Override

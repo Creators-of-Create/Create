@@ -140,7 +140,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
-	public int getBrightness(LightType p_226658_1_, BlockPos p_226658_2_) {
+	public int getBrightness(LightType pLightTypeIn, BlockPos pBlockPosIn) {
 		return 10;
 	}
 

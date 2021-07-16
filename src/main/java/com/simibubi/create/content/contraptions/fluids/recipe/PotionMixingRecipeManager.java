@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.recipe;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class PotionMixingRecipeManager {
 
 	public static Map<Item, List<MixingRecipe>> ALL = new HashMap<>();
-	
+
 	public static List<MixingRecipe> getAllBrewingRecipes() {
 		List<MixingRecipe> mixingRecipes = new ArrayList<>();
 
@@ -44,8 +45,7 @@ public class PotionMixingRecipeManager {
 
 			List<ItemStack> bottles = new ArrayList<>();
 			PotionBrewing.ALLOWED_CONTAINERS.forEach(i -> {
-				for (ItemStack itemStack : i.getItems())
-					bottles.add(itemStack);
+				bottles.addAll(Arrays.asList(i.getItems()));
 			});
 
 			Collection<ItemStack> reagents = getAllReagents(iBrewingRecipe);
@@ -59,9 +59,8 @@ public class PotionMixingRecipeManager {
 			}
 
 			Set<String> uniqueKeys = new HashSet<>();
-			List<ItemStack> potionFrontier = new ArrayList<>();
 			List<ItemStack> newPotions = new ArrayList<>();
-			potionFrontier.addAll(basicPotions);
+			List<ItemStack> potionFrontier = new ArrayList<>(basicPotions);
 
 			int recipeIndex = 0;
 

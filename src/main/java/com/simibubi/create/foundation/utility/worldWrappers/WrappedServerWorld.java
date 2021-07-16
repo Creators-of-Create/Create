@@ -88,8 +88,8 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public void playSound(PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-			SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {
+	public void playSound(PlayerEntity pPlayerIn, Entity pEntityIn, SoundEvent pEventIn,
+			SoundCategory pCategoryIn, float pVolume, float pPitch) {
 	}
 
 	@Override
@@ -132,11 +132,11 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public Biome getUncachedNoiseBiome(int p_225604_1_, int p_225604_2_, int p_225604_3_) {
-		return world.getUncachedNoiseBiome(p_225604_1_, p_225604_2_, p_225604_3_);
+	public Biome getUncachedNoiseBiome(int pX, int pY, int pZ) {
+		return world.getUncachedNoiseBiome(pX, pY, pZ);
 	}
 
 	private static SaveFormat.LevelSave getLevelSaveFromWorld(World world) {
-		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "field_71310_m"); // storageSource
+		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "storageSource"); // storageSource
 	}
 }

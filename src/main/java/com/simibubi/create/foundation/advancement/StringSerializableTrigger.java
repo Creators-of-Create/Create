@@ -91,8 +91,8 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		}
 
 		@Override
-		public JsonObject serializeToJson(ConditionArraySerializer p_230240_1_) {
-			JsonObject jsonobject = super.serializeToJson(p_230240_1_);
+		public JsonObject serializeToJson(ConditionArraySerializer pConditions) {
+			JsonObject jsonobject = super.serializeToJson(pConditions);
 			JsonArray elements = new JsonArray();
 
 			if (entries == null) {

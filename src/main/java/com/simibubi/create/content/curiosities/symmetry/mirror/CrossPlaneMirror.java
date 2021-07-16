@@ -19,12 +19,12 @@ import net.minecraft.util.text.ITextComponent;
 
 public class CrossPlaneMirror extends SymmetryMirror {
 
-	public static enum Align implements IStringSerializable {
+	public enum Align implements IStringSerializable {
 		Y("y"), D("d");
 
 		private final String name;
 
-		private Align(String name) {
+		Align(String name) {
 			this.name = name;
 		}
 

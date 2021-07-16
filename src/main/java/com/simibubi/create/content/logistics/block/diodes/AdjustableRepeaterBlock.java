@@ -52,7 +52,7 @@ public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 	}
 
 	@Override
-	protected int getDelay(BlockState p_196346_1_) {
+	protected int getDelay(BlockState pState) {
 		return 0;
 	}
 

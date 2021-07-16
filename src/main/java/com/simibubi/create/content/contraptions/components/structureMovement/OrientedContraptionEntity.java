@@ -489,7 +489,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 	@Nullable
 	public UUID getCouplingId() {
 		Optional<UUID> uuid = entityData.get(COUPLING);
-		return uuid == null ? null : uuid.isPresent() ? uuid.get() : null;
+		return uuid.orElse(null);
 	}
 
 	public void setCouplingId(UUID id) {

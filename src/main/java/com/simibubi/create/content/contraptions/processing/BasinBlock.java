@@ -65,8 +65,8 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		super.createBlockStateDefinition(p_206840_1_.add(FACING));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		super.createBlockStateDefinition(pBuilder.add(FACING));
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public VoxelShape getInteractionShape(BlockState p_199600_1_, IBlockReader p_199600_2_, BlockPos p_199600_3_) {
+	public VoxelShape getInteractionShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos) {
 		return AllShapes.BASIN_RAYTRACE_SHAPE;
 	}
 

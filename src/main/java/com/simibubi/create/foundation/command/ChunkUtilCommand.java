@@ -31,13 +31,13 @@ public class ChunkUtilCommand {
 						if (success) {
 							ctx.getSource()
 									.sendSuccess(new StringTextComponent("scheduled unload for chunk "
-											+ chunkPos.toString() + ", might need to repeat command"), true);
+											+ chunkPos + ", might need to repeat command"), true);
 							return 1;
 						} else {
 							ctx.getSource()
 									.sendSuccess(
 											new StringTextComponent(
-										"unable to schedule unload, is chunk " + chunkPos.toString() + " loaded?"),
+										"unable to schedule unload, is chunk " + chunkPos + " loaded?"),
 									true);
 							return 0;
 						}
@@ -55,19 +55,19 @@ public class ChunkUtilCommand {
 						boolean success = Create.CHUNK_UTIL.unloadChunk(chunkProvider, chunkPos);
 						ctx.getSource()
 								.sendSuccess(
-										new StringTextComponent("added chunk " + chunkPos.toString() + " to unload list"),
+										new StringTextComponent("added chunk " + chunkPos + " to unload list"),
 										true);
 
 						if (success) {
 							ctx.getSource()
 									.sendSuccess(new StringTextComponent("scheduled unload for chunk "
-											+ chunkPos.toString() + ", might need to repeat command"), true);
+											+ chunkPos + ", might need to repeat command"), true);
 							return 1;
 						} else {
 							ctx.getSource()
 								.sendSuccess(
 									new StringTextComponent(
-										"unable to schedule unload, is chunk " + chunkPos.toString() + " loaded?"),
+										"unable to schedule unload, is chunk " + chunkPos + " loaded?"),
 									true);
 							return 0;
 						}

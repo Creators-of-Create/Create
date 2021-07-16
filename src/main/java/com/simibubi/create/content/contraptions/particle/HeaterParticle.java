@@ -47,8 +47,8 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 	}
 
 	@Override
-	public float getQuadSize(float p_217561_1_) {
-		float f = ((float) this.age + p_217561_1_) / (float) this.lifetime;
+	public float getQuadSize(float pScaleFactor) {
+		float f = ((float) this.age + pScaleFactor) / (float) this.lifetime;
 		return this.quadSize * (1.0F - f * f * 0.5F);
 	}
 
@@ -60,10 +60,10 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 	}
 
 	@Override
-	public int getLightColor(float p_189214_1_) {
-		float f = ((float) this.age + p_189214_1_) / (float) this.lifetime;
+	public int getLightColor(float pPartialTick) {
+		float f = ((float) this.age + pPartialTick) / (float) this.lifetime;
 		f = MathHelper.clamp(f, 0.0F, 1.0F);
-		int i = super.getLightColor(p_189214_1_);
+		int i = super.getLightColor(pPartialTick);
 		int j = i & 255;
 		int k = i >> 16 & 255;
 		j = j + (int) (f * 15.0F * 16.0F);

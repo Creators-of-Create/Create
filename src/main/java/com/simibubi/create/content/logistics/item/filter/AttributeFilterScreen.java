@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.item.filter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,7 +92,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelectorLabel = new Label(x + 43, y + 26, StringTextComponent.EMPTY).colored(0xF3EBDE)
 			.withShadow();
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
-		attributeSelector.forOptions(Arrays.asList(StringTextComponent.EMPTY));
+		attributeSelector.forOptions(Collections.singletonList(StringTextComponent.EMPTY));
 		attributeSelector.removeCallback();
 		referenceItemChanged(menu.ghostInventory.getStackInSlot(0));
 

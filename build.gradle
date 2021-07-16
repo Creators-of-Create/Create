@@ -1,12 +1,13 @@
 buildscript {
     repositories {
+        maven { url = 'https://sizableshrimp.me/maven' }
         maven { url = 'https://maven.minecraftforge.net' }
         mavenCentral()
         jcenter()
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradle_version}", changing: true
+        classpath group: 'me.sizableshrimp.parchmenttest', name: 'ForgeGradle', version: "${forgegradle_version}", changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: "${mixingradle_version}"
     }
 }
@@ -32,7 +33,7 @@ archivesBaseName = 'create'
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    mappings channel: 'official', version: "${minecraft_version}"
+    mappings channel: mappings_channel, version: mappings_version
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {

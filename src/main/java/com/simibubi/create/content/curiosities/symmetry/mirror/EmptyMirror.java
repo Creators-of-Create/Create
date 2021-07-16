@@ -15,11 +15,11 @@ import net.minecraft.util.text.ITextComponent;
 
 public class EmptyMirror extends SymmetryMirror {
 
-	public static enum Align implements IStringSerializable {
+	public enum Align implements IStringSerializable {
 		None("none");
 
 		private final String name;
-		private Align(String name) { this.name = name; }
+		Align(String name) { this.name = name; }
 		@Override public String getSerializedName() { return name; }
 		@Override public String toString() { return name; }
 	}

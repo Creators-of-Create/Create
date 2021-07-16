@@ -104,9 +104,9 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState pOldState, boolean pIsMoving) {
 		withTileEntityDo(world, pos, ChuteTileEntity::onAdded);
-		if (p_220082_5_)
+		if (pIsMoving)
 			return;
 		updateDiagonalNeighbour(state, world, pos);
 	}
@@ -128,14 +128,14 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
-		boolean differentBlock = state.getBlock() != p_196243_4_.getBlock();
-		if (state.hasTileEntity() && (differentBlock || !p_196243_4_.hasTileEntity())) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState pNewState, boolean pIsMoving) {
+		boolean differentBlock = state.getBlock() != pNewState.getBlock();
+		if (state.hasTileEntity() && (differentBlock || !pNewState.hasTileEntity())) {
 			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
 			withTileEntityDo(world, pos, c -> c.onRemoved(state));
 			world.removeBlockEntity(pos);
 		}
-		if (p_196243_5_ || !differentBlock)
+		if (pIsMoving || !differentBlock)
 			return;
 
 		updateDiagonalNeighbour(state, world, pos);
@@ -155,15 +155,15 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState above, IWorld world,
-		BlockPos pos, BlockPos p_196271_6_) {
+		BlockPos pos, BlockPos pFacingPos) {
 		if (direction != Direction.UP)
 			return state;
 		return updateChuteState(state, above, world, pos);
 	}
 
 	@Override
-	public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_,
-		BlockPos neighbourPos, boolean p_220069_6_) {
+	public void neighborChanged(BlockState pState, World world, BlockPos pos, Block pBlockIn,
+		BlockPos neighbourPos, boolean pIsMoving) {
 		if (pos.below()
 			.equals(neighbourPos))
 			withTileEntityDo(world, pos, ChuteTileEntity::blockBelowChanged);
@@ -182,15 +182,15 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
-		return ChuteShapes.getShape(p_220053_1_);
+	public VoxelShape getShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
+		return ChuteShapes.getShape(pState);
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
-		return ChuteShapes.getCollisionShape(p_220071_1_);
+	public VoxelShape getCollisionShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
+		return ChuteShapes.getCollisionShape(pState);
 	}
 
 	@Override
@@ -199,8 +199,8 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult p_225533_6_) {
+	public ActionResultType use(BlockState pState, World world, BlockPos pos, PlayerEntity player, Hand hand,
+		BlockRayTraceResult pHit) {
 		if (!player.getItemInHand(hand)
 				.isEmpty())
 			return ActionResultType.PASS;

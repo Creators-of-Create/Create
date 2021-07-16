@@ -70,14 +70,14 @@ public final class FontHelper {
 		}
 	}
 
-	private static int draw(FontRenderer font, String p_228078_1_, float p_228078_2_, float p_228078_3_,
-		int p_228078_4_, Matrix4f p_228078_5_, boolean p_228078_6_) {
-		if (p_228078_1_ == null) {
+	private static int draw(FontRenderer font, String pText, float pX, float pY,
+		int pColor, Matrix4f pMatrix, boolean pDropShadow) {
+		if (pText == null) {
 			return 0;
 		} else {
 			IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.immediate(Tessellator.getInstance()
 				.getBuilder());
-			int i = font.drawInBatch(p_228078_1_, p_228078_2_, p_228078_3_, p_228078_4_, p_228078_6_, p_228078_5_,
+			int i = font.drawInBatch(pText, pX, pY, pColor, pDropShadow, pMatrix,
 				irendertypebuffer$impl, false, 0, 15728880);
 			irendertypebuffer$impl.endBatch();
 			return i;

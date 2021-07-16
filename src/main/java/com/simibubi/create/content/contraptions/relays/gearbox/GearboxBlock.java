@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.gearbox;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.simibubi.create.AllItems;
@@ -52,9 +53,9 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		if (state.getValue(AXIS).isVertical())
 			return super.getDrops(state, builder);
-		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
+		return Collections.singletonList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
 	}
-	
+
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
 			PlayerEntity player) {

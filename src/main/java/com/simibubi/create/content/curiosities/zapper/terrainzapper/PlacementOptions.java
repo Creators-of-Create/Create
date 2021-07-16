@@ -12,7 +12,7 @@ public enum PlacementOptions {
 	public String translationKey;
 	public AllIcons icon;
 
-	private PlacementOptions(AllIcons icon) {
+	PlacementOptions(AllIcons icon) {
 		this.translationKey = Lang.asId(name());
 		this.icon = icon;
 	}

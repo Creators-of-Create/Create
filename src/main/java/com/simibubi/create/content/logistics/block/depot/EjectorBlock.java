@@ -41,8 +41,8 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.DEPOT;
 	}
 
@@ -54,19 +54,19 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_,
-		BlockPos p_220069_5_, boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block pBlockIn,
+		BlockPos pFromPos, boolean pIsMoving) {
 		withTileEntityDo(world, pos, EjectorTileEntity::updateSignal);
 	}
 	
 	@Override
-	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
-		Optional<EjectorTileEntity> tileEntityOptional = getTileEntityOptional(p_180658_1_, p_180658_2_);
-		if (tileEntityOptional.isPresent() && !p_180658_3_.isSuppressingBounce()) {
-			p_180658_3_.causeFallDamage(p_180658_4_, 0.0F);
+	public void fallOn(World pWorldIn, BlockPos pPos, Entity pEntityIn, float pFallDistance) {
+		Optional<EjectorTileEntity> tileEntityOptional = getTileEntityOptional(pWorldIn, pPos);
+		if (tileEntityOptional.isPresent() && !pEntityIn.isSuppressingBounce()) {
+			pEntityIn.causeFallDamage(pFallDistance, 0.0F);
 			return;
 		}
-		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
+		super.fallOn(pWorldIn, pPos, pEntityIn, pFallDistance);
 	}
 
 	@Override

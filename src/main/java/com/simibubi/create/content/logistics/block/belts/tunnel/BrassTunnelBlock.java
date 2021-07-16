@@ -31,8 +31,8 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	}
 
 	@Override
-	public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player,
-		Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+	public ActionResultType use(BlockState pState, World world, BlockPos pos, PlayerEntity player,
+		Hand pHandIn, BlockRayTraceResult pHit) {
 		return onTileEntityUse(world, pos, te -> {
 			if (!(te instanceof BrassTunnelTileEntity))
 				return ActionResultType.PASS;
@@ -62,16 +62,16 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
-		boolean p_196243_5_) {
-		if (p_196243_1_.hasTileEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
-			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
-			withTileEntityDo(p_196243_2_, p_196243_3_, te -> {
+	public void onRemove(BlockState pState, World pWorldIn, BlockPos pPos, BlockState pNewState,
+		boolean pIsMoving) {
+		if (pState.hasTileEntity()
+			&& (pState.getBlock() != pNewState.getBlock() || !pNewState.hasTileEntity())) {
+			TileEntityBehaviour.destroy(pWorldIn, pPos, FilteringBehaviour.TYPE);
+			withTileEntityDo(pWorldIn, pPos, te -> {
 				if (te instanceof BrassTunnelTileEntity)
-					Block.popResource(p_196243_2_, p_196243_3_, ((BrassTunnelTileEntity) te).stackToDistribute);
+					Block.popResource(pWorldIn, pPos, ((BrassTunnelTileEntity) te).stackToDistribute);
 			});
-			p_196243_2_.removeBlockEntity(p_196243_3_);
+			pWorldIn.removeBlockEntity(pPos);
 		}
 	}
 

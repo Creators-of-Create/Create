@@ -122,14 +122,14 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
-		boolean p_196243_5_) {
-		if (!(p_196243_4_.getBlock() instanceof NixieTubeBlock))
-			p_196243_2_.removeBlockEntity(p_196243_3_);
+	public void onRemove(BlockState pState, World pWorldIn, BlockPos pPos, BlockState pNewState,
+		boolean pIsMoving) {
+		if (!(pNewState.getBlock() instanceof NixieTubeBlock))
+			pWorldIn.removeBlockEntity(pPos);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(IBlockReader pWorldIn, BlockPos pPos, BlockState pState) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
 	
@@ -140,8 +140,8 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return (state.getValue(CEILING) ? AllShapes.NIXIE_TUBE_CEILING : AllShapes.NIXIE_TUBE)
 			.get(state.getValue(FACING)
 				.getAxis());
@@ -169,8 +169,8 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
-		boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block pBlockIn, BlockPos pFromPos,
+		boolean pIsMoving) {
 		if (worldIn.isClientSide)
 			return;
 		if (!worldIn.getBlockTicks()

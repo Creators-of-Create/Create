@@ -31,7 +31,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World p_77569_2_) {
+	public boolean matches(RecipeWrapper inv, World pWorldIn) {
 		return ingredients.get(0)
 			.test(inv.getItem(0));
 	}

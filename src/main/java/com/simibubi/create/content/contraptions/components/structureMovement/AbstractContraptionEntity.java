@@ -154,8 +154,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	protected boolean canAddPassenger(Entity p_184219_1_) {
-		if (p_184219_1_ instanceof OrientedContraptionEntity)
+	protected boolean canAddPassenger(Entity pPassenger) {
+		if (pPassenger instanceof OrientedContraptionEntity)
 			return true;
 		return contraption.getSeatMapping()
 			.size() < contraption.getSeats()
@@ -395,7 +395,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
 				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
-						+ getContraption().getType().id + " @" + position() + " (" + getUUID().toString() + ")");
+						+ getContraption().getType().id + " @" + position() + " (" + getUUID() + ")");
 				buffer.writeNbt(new CompoundNBT());
 				return;
 			}
@@ -697,7 +697,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	public void setSecondsOnFire(int p_70015_1_) {
+	public void setSecondsOnFire(int pSeconds) {
 		// Contraptions no longer catch fire
 	}
 

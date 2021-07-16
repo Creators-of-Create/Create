@@ -24,7 +24,7 @@ public enum PlacementPatterns {
 	public String translationKey;
 	public AllIcons icon;
 
-	private PlacementPatterns(AllIcons icon) {
+	PlacementPatterns(AllIcons icon) {
 		this.translationKey = Lang.asId(name());
 		this.icon = icon;
 	}
@@ -35,7 +35,7 @@ public enum PlacementPatterns {
 			!tag.contains("Pattern") ? Solid : valueOf(tag.getString("Pattern"));
 		Random r = new Random();
 		Predicate<BlockPos> filter = Predicates.alwaysFalse();
-	
+
 		switch (pattern) {
 		case Chance25:
 			filter = pos -> r.nextBoolean() || r.nextBoolean();
@@ -56,7 +56,7 @@ public enum PlacementPatterns {
 		default:
 			break;
 		}
-	
+
 		blocksIn.removeIf(filter);
 	}
 

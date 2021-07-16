@@ -102,15 +102,15 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean pIsMouseOver, float partialTicks) {
 		if (isCurrentValueChanged()) {
 			IFormattableTextComponent original = label.getComponent();
 			IFormattableTextComponent changed = modComponent.plainCopy().append(original);
 			label.withText(changed);
-			super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+			super.render(ms, index, y, x, width, height, mouseX, mouseY, pIsMouseOver, partialTicks);
 			label.withText(original);
 		} else {
-			super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+			super.render(ms, index, y, x, width, height, mouseX, mouseY, pIsMouseOver, partialTicks);
 		}
 
 		resetButton.x = x + width - resetWidth + 6;

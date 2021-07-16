@@ -45,8 +45,8 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	}
 	
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.CUCKOO_CLOCK;
 	}
 

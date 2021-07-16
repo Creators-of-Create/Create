@@ -32,12 +32,12 @@ public class FluidTankItem extends BlockItem {
 	}
 
 	@Override
-	protected boolean updateCustomBlockEntityTag(BlockPos p_195943_1_, World p_195943_2_, PlayerEntity p_195943_3_,
-		ItemStack p_195943_4_, BlockState p_195943_5_) {
-		MinecraftServer minecraftserver = p_195943_2_.getServer();
+	protected boolean updateCustomBlockEntityTag(BlockPos pPos, World pWorldIn, PlayerEntity pPlayer,
+		ItemStack pStack, BlockState pState) {
+		MinecraftServer minecraftserver = pWorldIn.getServer();
 		if (minecraftserver == null)
 			return false;
-		CompoundNBT nbt = p_195943_4_.getTagElement("BlockEntityTag");
+		CompoundNBT nbt = pStack.getTagElement("BlockEntityTag");
 		if (nbt != null) {
 			nbt.remove("Luminosity");
 			nbt.remove("Size");
@@ -52,7 +52,7 @@ public class FluidTankItem extends BlockItem {
 				}
 			}
 		}
-		return super.updateCustomBlockEntityTag(p_195943_1_, p_195943_2_, p_195943_3_, p_195943_4_, p_195943_5_);
+		return super.updateCustomBlockEntityTag(pPos, pWorldIn, pPlayer, pStack, pState);
 	}
 
 	private void tryMultiPlace(BlockItemUseContext ctx) {

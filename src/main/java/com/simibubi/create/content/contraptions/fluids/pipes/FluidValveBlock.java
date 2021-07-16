@@ -40,8 +40,8 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.FLUID_VALVE.get(getPipeAxis(state));
 	}
 
@@ -98,7 +98,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+	public boolean canSurvive(BlockState pState, IWorldReader pWorldIn, BlockPos pPos) {
 		return true;
 	}
 

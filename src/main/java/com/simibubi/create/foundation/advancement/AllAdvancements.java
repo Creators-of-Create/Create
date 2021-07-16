@@ -363,7 +363,7 @@ public class AllAdvancements implements IDataProvider {
 		Advancement deployer =
 			kinecticAdvancement("deployer", AllBlocks.DEPLOYER.get(), TaskType.MILESTONE).parent(brass_casing)
 				.save(t, id + ":deployer");
-		
+
 		Advancement clockwork_component =
 			itemAdvancement("precision_mechanism", AllItems.PRECISION_MECHANISM, TaskType.NORMAL).parent(deployer)
 				.save(t, id + ":precision_mechanism");
@@ -371,7 +371,7 @@ public class AllAdvancements implements IDataProvider {
 		Advancement clockwork_component_eob = deadEnd().parent(clockwork_component)
 			.addCriterion("0", itemGathered(AllItems.PRECISION_MECHANISM.get()))
 			.save(t, id + ":clockwork_component_eob");
-		
+
 		Advancement extendo_grip =
 			advancement("extendo_grip", AllItems.EXTENDO_GRIP.get(), TaskType.NORMAL).parent(clockwork_component)
 				.addCriterion("0", AllTriggers.EXTENDO.instance())
@@ -491,7 +491,7 @@ public class AllAdvancements implements IDataProvider {
 		return InventoryChangeTrigger.Instance.hasItems(itemprovider);
 	}
 
-	static enum TaskType {
+	enum TaskType {
 
 		NORMAL(FrameType.TASK, true, false, false),
 		MILESTONE(FrameType.TASK, true, true, false),
@@ -507,7 +507,7 @@ public class AllAdvancements implements IDataProvider {
 		private boolean announce;
 		private boolean hide;
 
-		private TaskType(FrameType frame, boolean toast, boolean announce, boolean hide) {
+		TaskType(FrameType frame, boolean toast, boolean announce, boolean hide) {
 			this.frame = frame;
 			this.toast = toast;
 			this.announce = announce;

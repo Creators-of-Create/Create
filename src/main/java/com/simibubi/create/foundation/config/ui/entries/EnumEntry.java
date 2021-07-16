@@ -77,8 +77,8 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 
 	@Override
 	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
-		boolean p_230432_9_, float partialTicks) {
-		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
+		boolean pIsMouseOver, float partialTicks) {
+		super.render(ms, index, y, x, width, height, mouseX, mouseY, pIsMouseOver, partialTicks);
 
 		cycleLeft.x = x + getLabelWidth(width) + 4;
 		cycleLeft.y = y + 10;

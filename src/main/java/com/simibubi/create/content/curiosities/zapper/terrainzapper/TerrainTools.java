@@ -26,11 +26,11 @@ public enum TerrainTools {
 	Flatten(AllIcons.I_FLATTEN),
 
 	;
-	
+
 	public String translationKey;
 	public AllIcons icon;
 
-	private TerrainTools(AllIcons icon) {
+	TerrainTools(AllIcons icon) {
 		this.translationKey = Lang.asId(name());
 		this.icon = icon;
 	}

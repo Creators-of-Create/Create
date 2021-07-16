@@ -36,7 +36,7 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(PotatoProjectileEntity p_110775_1_) {
+	public ResourceLocation getTextureLocation(PotatoProjectileEntity pEntity) {
 		return null;
 	}
 

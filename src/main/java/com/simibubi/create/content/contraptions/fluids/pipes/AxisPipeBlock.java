@@ -112,8 +112,8 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.EIGHT_VOXEL_POLE.get(state.getValue(AXIS));
 	}
 

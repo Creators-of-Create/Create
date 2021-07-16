@@ -53,7 +53,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 	protected abstract float nextStep();
 
 	@Shadow
-	protected abstract void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_);
+	protected abstract void playStepSound(BlockPos pPos, BlockState pBlockIn);
 
 	private Set<AbstractContraptionEntity> getIntersectingContraptions() {
 		Set<AbstractContraptionEntity> contraptions = ContraptionHandler.loadedContraptions.get(self.level)

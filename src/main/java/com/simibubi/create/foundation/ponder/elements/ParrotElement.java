@@ -209,11 +209,11 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		@Override
 		void tick(PonderScene scene, ParrotEntity entity, Vector3d location) {
-			Vector3d p_200602_2_ = getFacedVec(scene);
+			Vector3d pTarget = getFacedVec(scene);
 			Vector3d Vector3d = location.add(entity.getEyePosition(0));
-			double d0 = p_200602_2_.x - Vector3d.x;
-			double d1 = p_200602_2_.y - Vector3d.y;
-			double d2 = p_200602_2_.z - Vector3d.z;
+			double d0 = pTarget.x - Vector3d.x;
+			double d1 = pTarget.y - Vector3d.y;
+			double d2 = pTarget.z - Vector3d.z;
 			double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
 			float targetPitch =
 				MathHelper.wrapDegrees((float) -(MathHelper.atan2(d1, d3) * (double) (180F / (float) Math.PI)));

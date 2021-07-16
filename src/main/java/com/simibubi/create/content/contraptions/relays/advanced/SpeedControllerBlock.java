@@ -62,8 +62,8 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos neighbourPos,
-		boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, World world, BlockPos pos, Block pBlockIn, BlockPos neighbourPos,
+		boolean pIsMoving) {
 		if (neighbourPos.equals(pos.above()))
 			withTileEntityDo(world, pos, SpeedControllerTileEntity::updateBracket);
 	}

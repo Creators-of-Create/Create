@@ -51,7 +51,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 
 		VoxelShaper shaper;
 
-		private Shape(VoxelShaper shaper) {
+		Shape(VoxelShaper shaper) {
 			this.shaper = shaper;
 		}
 
@@ -68,23 +68,23 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 	}
 
 	@Override
-	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
-		super.createBlockStateDefinition(p_206840_1_.add(SHAPE));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> pBuilder) {
+		super.createBlockStateDefinition(pBuilder.add(SHAPE));
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return state.getValue(SHAPE).shaper.get(state.getValue(HORIZONTAL_FACING));
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
-		if (p_220071_4_.getEntity() instanceof ItemEntity
-			&& (p_220071_1_.getValue(SHAPE) == Shape.PULLING || p_220071_1_.getValue(SHAPE) == Shape.PUSHING))
-			return AllShapes.FUNNEL_COLLISION.get(getFacing(p_220071_1_));
-		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
+	public VoxelShape getCollisionShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
+		if (pContext.getEntity() instanceof ItemEntity
+			&& (pState.getValue(SHAPE) == Shape.PULLING || pState.getValue(SHAPE) == Shape.PUSHING))
+			return AllShapes.FUNNEL_COLLISION.get(getFacing(pState));
+		return getShape(pState, pWorldIn, pPos, pContext);
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, IWorld world,
-		BlockPos pos, BlockPos p_196271_6_) {
+		BlockPos pos, BlockPos pFacingPos) {
 		if (!isOnValidBelt(state, world, pos)) {
 			BlockState parentState = parent.getDefaultState();
 			if (state.getOptionalValue(POWERED).orElse(false))

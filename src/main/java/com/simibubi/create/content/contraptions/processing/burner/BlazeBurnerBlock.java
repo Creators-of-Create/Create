@@ -74,7 +74,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState pOldState, boolean pIsMoving) {
 		if (world.isClientSide)
 			return;
 		TileEntity tileEntity = world.getBlockEntity(pos.above());
@@ -91,9 +91,9 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
-		p_149666_2_.add(AllItems.EMPTY_BLAZE_BURNER.asStack());
-		super.fillItemCategory(p_149666_1_, p_149666_2_);
+	public void fillItemCategory(ItemGroup pGroup, NonNullList<ItemStack> pItems) {
+		pItems.add(AllItems.EMPTY_BLAZE_BURNER.asStack());
+		super.fillItemCategory(pGroup, pItems);
 	}
 
 	@Nullable
@@ -183,11 +183,11 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
-		if (p_220071_4_ == ISelectionContext.empty())
+	public VoxelShape getCollisionShape(BlockState pState, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
+		if (pContext == ISelectionContext.empty())
 			return AllShapes.HEATER_BLOCK_SPECIAL_COLLISION_SHAPE;
-		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
+		return getShape(pState, pWorldIn, pPos, pContext);
 	}
 
 	@Override
@@ -221,12 +221,12 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 	
 	@Override
-	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+	public boolean hasAnalogOutputSignal(BlockState pState) {
 		return true;
 	}
 	
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+	public int getAnalogOutputSignal(BlockState state, World pWorldIn, BlockPos pPos) {
 		return Math.max(0, state.getValue(HEAT_LEVEL).ordinal() -1);
 	}
 

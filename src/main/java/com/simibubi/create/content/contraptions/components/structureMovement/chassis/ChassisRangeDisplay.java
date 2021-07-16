@@ -47,12 +47,10 @@ public class ChassisRangeDisplay {
 		}
 
 		protected Set<BlockPos> createSelection(ChassisTileEntity chassis) {
-			Set<BlockPos> positions = new HashSet<>();
 			List<BlockPos> includedBlockPositions = chassis.getIncludedBlockPositions(null, true);
 			if (includedBlockPositions == null)
 				return Collections.emptySet();
-			positions.addAll(includedBlockPositions);
-			return positions;
+			return new HashSet<>(includedBlockPositions);
 		}
 
 	}

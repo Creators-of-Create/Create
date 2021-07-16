@@ -49,7 +49,7 @@ public class WrappedChunkProvider extends AbstractChunkProvider {
 
     @Nullable
     @Override
-    public IChunk getChunk(int x, int z, ChunkStatus status, boolean p_212849_4_) {
+    public IChunk getChunk(int x, int z, ChunkStatus status, boolean pLoad) {
         return getChunk(x, z);
     }
 

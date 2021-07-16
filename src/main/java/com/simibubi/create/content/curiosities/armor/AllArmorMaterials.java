@@ -30,8 +30,8 @@ public enum AllArmorMaterials implements IArmorMaterial {
 	private final float knockbackResistance;
 	private final LazyValue<Ingredient> repairMaterial;
 
-	private AllArmorMaterials(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_,
-		SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
+	AllArmorMaterials(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_,
+					  SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
 		this.name = p_i231593_3_;
 		this.maxDamageFactor = p_i231593_4_;
 		this.damageReductionAmountArray = p_i231593_5_;
@@ -42,12 +42,12 @@ public enum AllArmorMaterials implements IArmorMaterial {
 		this.repairMaterial = new LazyValue<>(p_i231593_10_);
 	}
 
-	public int getDurabilityForSlot(EquipmentSlotType p_200896_1_) {
-		return MAX_DAMAGE_ARRAY[p_200896_1_.getIndex()] * this.maxDamageFactor;
+	public int getDurabilityForSlot(EquipmentSlotType pSlotIn) {
+		return MAX_DAMAGE_ARRAY[pSlotIn.getIndex()] * this.maxDamageFactor;
 	}
 
-	public int getDefenseForSlot(EquipmentSlotType p_200902_1_) {
-		return this.damageReductionAmountArray[p_200902_1_.getIndex()];
+	public int getDefenseForSlot(EquipmentSlotType pSlotIn) {
+		return this.damageReductionAmountArray[pSlotIn.getIndex()];
 	}
 
 	public int getEnchantmentValue() {

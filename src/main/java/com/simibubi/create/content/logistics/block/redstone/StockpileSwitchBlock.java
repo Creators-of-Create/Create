@@ -60,8 +60,8 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader pWorldIn, BlockPos pPos,
+		ISelectionContext pContext) {
 		return AllShapes.STOCKPILE_SWITCH.get(state.getValue(FACING));
 	}
 

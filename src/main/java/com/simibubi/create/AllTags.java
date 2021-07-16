@@ -61,7 +61,7 @@ public class AllTags {
 		return wrapperFactory.apply(new ResourceLocation(domain, name).toString());
 	}
 
-	public static enum NameSpace {
+	public enum NameSpace {
 
 		MOD(Create.ID), FORGE("forge"), MC("minecraft"), TIC("tconstruct")
 
@@ -69,12 +69,12 @@ public class AllTags {
 
 		String id;
 
-		private NameSpace(String id) {
+		NameSpace(String id) {
 			this.id = id;
 		}
 	}
 
-	public static enum AllItemTags {
+	public enum AllItemTags {
 		CRUSHED_ORES(MOD),
 		SEATS(MOD),
 		VALVE_HANDLES(MOD),
@@ -90,11 +90,11 @@ public class AllTags {
 
 		public ITag.INamedTag<Item> tag;
 
-		private AllItemTags(NameSpace namespace) {
+		AllItemTags(NameSpace namespace) {
 			this(namespace, "");
 		}
 
-		private AllItemTags(NameSpace namespace, String path) {
+		AllItemTags(NameSpace namespace, String path) {
 			tag = ItemTags.bind(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
 			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
@@ -115,7 +115,7 @@ public class AllTags {
 		}
 	}
 
-	public static enum AllFluidTags {
+	public enum AllFluidTags {
 		NO_INFINITE_DRAINING,
 		HONEY(FORGE)
 
@@ -123,15 +123,15 @@ public class AllTags {
 
 		public ITag.INamedTag<Fluid> tag;
 
-		private AllFluidTags() {
+		AllFluidTags() {
 			this(MOD, "");
 		}
 
-		private AllFluidTags(NameSpace namespace) {
+		AllFluidTags(NameSpace namespace) {
 			this(namespace, "");
 		}
 
-		private AllFluidTags(NameSpace namespace, String path) {
+		AllFluidTags(NameSpace namespace, String path) {
 			tag = FluidTags.createOptional(
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
 		}
@@ -143,7 +143,7 @@ public class AllTags {
 		static void loadClass() {}
 	}
 
-	public static enum AllBlockTags {
+	public enum AllBlockTags {
 		WINDMILL_SAILS,
 		FAN_HEATERS,
 		WINDOWABLE,
@@ -160,15 +160,15 @@ public class AllTags {
 
 		public ITag.INamedTag<Block> tag;
 
-		private AllBlockTags() {
+		AllBlockTags() {
 			this(MOD, "");
 		}
 
-		private AllBlockTags(NameSpace namespace) {
+		AllBlockTags(NameSpace namespace) {
 			this(namespace, "");
 		}
 
-		private AllBlockTags(NameSpace namespace, String path) {
+		AllBlockTags(NameSpace namespace, String path) {
 			ResourceLocation id =
 				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
 			if (ModList.get()

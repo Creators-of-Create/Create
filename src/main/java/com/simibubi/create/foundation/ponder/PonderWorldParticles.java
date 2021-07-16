@@ -46,11 +46,11 @@ public class PonderWorldParticles {
 				.add(particle);
 	}
 
-	private void tickParticleList(Collection<Particle> p_187240_1_) {
-		if (p_187240_1_.isEmpty())
+	private void tickParticleList(Collection<Particle> pParticlesIn) {
+		if (pParticlesIn.isEmpty())
 			return;
 
-		Iterator<Particle> iterator = p_187240_1_.iterator();
+		Iterator<Particle> iterator = pParticlesIn.iterator();
 		while (iterator.hasNext()) {
 			Particle particle = iterator.next();
 			particle.tick();

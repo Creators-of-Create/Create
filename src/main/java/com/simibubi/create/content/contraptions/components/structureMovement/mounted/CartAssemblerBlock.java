@@ -271,12 +271,12 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 	@SuppressWarnings("deprecation")
 	public List<ItemStack> getDropsNoRail(BlockState state, ServerWorld world, BlockPos pos,
-		@Nullable TileEntity p_220077_3_, @Nullable Entity p_220077_4_, ItemStack p_220077_5_) {
+		@Nullable TileEntity pTileEntityIn, @Nullable Entity pEntityIn, ItemStack pStack) {
 		return super.getDrops(state, (new LootContext.Builder(world)).withRandom(world.random)
 			.withParameter(LootParameters.ORIGIN, Vector3d.atLowerCornerOf(pos))
-			.withParameter(LootParameters.TOOL, p_220077_5_)
-			.withOptionalParameter(LootParameters.THIS_ENTITY, p_220077_4_)
-			.withOptionalParameter(LootParameters.BLOCK_ENTITY, p_220077_3_));
+			.withParameter(LootParameters.TOOL, pStack)
+			.withOptionalParameter(LootParameters.THIS_ENTITY, pEntityIn)
+			.withOptionalParameter(LootParameters.BLOCK_ENTITY, pTileEntityIn));
 	}
 
 	@Override
@@ -309,8 +309,8 @@ public class CartAssemblerBlock extends AbstractRailBlock
 
 		@Override
 		@Nonnull
-		public VoxelShape getShape(@Nonnull BlockState p_220053_1_, @Nonnull IBlockReader p_220053_2_,
-			@Nonnull BlockPos p_220053_3_, @Nonnull ISelectionContext p_220053_4_) {
+		public VoxelShape getShape(@Nonnull BlockState pState, @Nonnull IBlockReader pWorldIn,
+			@Nonnull BlockPos pPos, @Nonnull ISelectionContext pContext) {
 			return VoxelShapes.empty();
 		}
 	}
