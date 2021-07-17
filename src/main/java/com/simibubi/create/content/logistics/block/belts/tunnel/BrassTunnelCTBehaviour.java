@@ -10,8 +10,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 
-import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
-
 public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 
 	@Override

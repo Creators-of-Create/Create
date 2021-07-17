@@ -25,8 +25,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

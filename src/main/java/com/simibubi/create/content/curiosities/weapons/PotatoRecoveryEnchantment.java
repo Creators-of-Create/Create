@@ -5,8 +5,6 @@ import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 
-import net.minecraft.enchantment.Enchantment.Rarity;
-
 public class PotatoRecoveryEnchantment extends Enchantment {
 
 	public PotatoRecoveryEnchantment(Rarity p_i46731_1_, EnchantmentType p_i46731_2_, EquipmentSlotType[] p_i46731_3_) {

@@ -35,8 +35,6 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.Contraption.ContraptionInvWrapper;
-
 public class MountedContraption extends Contraption {
 
 	public CartMovementMode rotationMode;

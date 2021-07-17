@@ -26,8 +26,6 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
-
 public class WashingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

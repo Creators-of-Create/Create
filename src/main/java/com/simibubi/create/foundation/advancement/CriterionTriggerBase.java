@@ -21,8 +21,6 @@ import net.minecraft.advancements.criterion.EntityPredicate;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 
-import net.minecraft.advancements.ICriterionTrigger.Listener;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {

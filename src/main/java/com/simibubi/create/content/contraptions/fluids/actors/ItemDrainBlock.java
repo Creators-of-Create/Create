@@ -25,8 +25,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity> {
 
 	public ItemDrainBlock(Properties p_i48440_1_) {

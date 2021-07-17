@@ -9,8 +9,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class AbstractDirectionalFunnelBlock extends AbstractFunnelBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;

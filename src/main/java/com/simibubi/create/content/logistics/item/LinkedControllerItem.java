@@ -31,8 +31,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemStackHandler;
 
-import net.minecraft.item.Item.Properties;
-
 public class LinkedControllerItem extends Item implements INamedContainerProvider {
 
 	public LinkedControllerItem(Properties properties) {

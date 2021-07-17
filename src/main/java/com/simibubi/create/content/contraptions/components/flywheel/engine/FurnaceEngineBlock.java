@@ -24,8 +24,6 @@ import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 @EventBusSubscriber
 public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngineTileEntity> {
 

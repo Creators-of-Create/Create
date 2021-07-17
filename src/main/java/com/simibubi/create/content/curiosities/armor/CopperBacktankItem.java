@@ -12,8 +12,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraft.item.Item.Properties;
-
 public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
 
 	public static final int DURABILITY_BAR = 0xefefef;

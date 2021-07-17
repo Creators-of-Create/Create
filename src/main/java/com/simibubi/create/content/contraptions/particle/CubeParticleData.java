@@ -15,8 +15,6 @@ import net.minecraft.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 public class CubeParticleData implements IParticleData, ICustomParticleData<CubeParticleData> {
 
 	public static final Codec<CubeParticleData> CODEC = RecordCodecBuilder.create(i -> 

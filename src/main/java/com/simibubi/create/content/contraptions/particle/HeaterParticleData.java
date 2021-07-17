@@ -18,8 +18,6 @@ import net.minecraft.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HeaterParticleData implements IParticleData, ICustomParticleDataWithSprite<HeaterParticleData> {

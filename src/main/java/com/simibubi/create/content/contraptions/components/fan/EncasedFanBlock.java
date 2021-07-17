@@ -19,8 +19,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<EncasedFanTileEntity> {
 
 	public EncasedFanBlock(Properties properties) {

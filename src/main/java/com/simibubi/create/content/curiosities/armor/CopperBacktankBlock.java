@@ -44,8 +44,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CopperBacktankBlock extends HorizontalKineticBlock
 	implements ITE<CopperBacktankTileEntity>, IWaterLoggable {
 

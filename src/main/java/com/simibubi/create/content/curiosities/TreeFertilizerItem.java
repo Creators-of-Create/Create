@@ -13,8 +13,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.item.Item.Properties;
-
 public class TreeFertilizerItem extends Item {
 
 	public TreeFertilizerItem(Properties properties) {

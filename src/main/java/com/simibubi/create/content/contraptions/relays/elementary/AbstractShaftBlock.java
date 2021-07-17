@@ -30,8 +30,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	implements IWaterLoggable, IWrenchableWithBracket {
 

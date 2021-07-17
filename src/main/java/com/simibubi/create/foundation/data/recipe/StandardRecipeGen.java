@@ -51,10 +51,6 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.Marker;
-
 @SuppressWarnings("unused")
 public class StandardRecipeGen extends CreateRecipeProvider {
 

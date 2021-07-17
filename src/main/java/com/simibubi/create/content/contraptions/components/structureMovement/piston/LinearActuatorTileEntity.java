@@ -21,8 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption.MovementMode;
-
 public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	implements IControlContraption, IDisplayAssemblyExceptions {
 

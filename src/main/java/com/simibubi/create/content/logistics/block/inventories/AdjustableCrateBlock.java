@@ -18,8 +18,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class AdjustableCrateBlock extends CrateBlock {
 
 	public AdjustableCrateBlock(Properties p_i48415_1_) {

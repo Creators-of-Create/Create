@@ -15,9 +15,6 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
-
 public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe

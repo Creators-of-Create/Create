@@ -28,8 +28,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
 	public static final BooleanProperty EXTRACTING = BooleanProperty.create("extracting");

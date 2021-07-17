@@ -1,10 +1,4 @@
 package com.simibubi.create.foundation.config;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigEnum;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigFloat;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigGroup;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
-
 
 public class CClient extends ConfigBase {
 

@@ -20,8 +20,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HosePulleyTileEntity> {
 
 	public HosePulleyBlock(Properties properties) {

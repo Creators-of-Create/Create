@@ -8,8 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
-
 public class VirtualFluid extends ForgeFlowingFluid {
 
 	public VirtualFluid(Properties properties) {

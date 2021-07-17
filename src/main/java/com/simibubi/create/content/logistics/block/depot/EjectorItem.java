@@ -14,8 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import net.minecraft.item.Item.Properties;
-
 @EventBusSubscriber
 public class EjectorItem extends BlockItem {
 

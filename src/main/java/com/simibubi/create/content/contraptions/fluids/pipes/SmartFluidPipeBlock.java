@@ -28,8 +28,6 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPipe {
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {

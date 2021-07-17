@@ -36,8 +36,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import net.minecraft.item.Item.Properties;
-
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class BlazeBurnerBlockItem extends BlockItem {

@@ -22,8 +22,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class RedstoneContactBlock extends ProperDirectionalBlock {

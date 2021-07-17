@@ -15,8 +15,6 @@ import net.minecraft.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 public class AirParticleData implements IParticleData, ICustomParticleDataWithSprite<AirParticleData> {
 
 	public static final Codec<AirParticleData> CODEC = RecordCodecBuilder.create(i -> 

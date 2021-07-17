@@ -50,8 +50,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
-import net.minecraft.item.Item.Properties;
-
 public class SchematicItem extends Item {
 
 	private static final Logger LOGGER = LogManager.getLogger();

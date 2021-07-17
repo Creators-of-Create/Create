@@ -42,8 +42,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.DistExecutor;
 
-import net.minecraft.item.Item.Properties;
-
 public abstract class ZapperItem extends Item {
 
 	public ZapperItem(Properties properties) {

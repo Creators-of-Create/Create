@@ -16,8 +16,6 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 public class AirFlowParticleData implements IParticleData, ICustomParticleDataWithSprite<AirFlowParticleData> {
 	
 	public static final Codec<AirFlowParticleData> CODEC = RecordCodecBuilder.create(i -> 

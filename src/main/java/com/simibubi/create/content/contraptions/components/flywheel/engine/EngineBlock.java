@@ -22,8 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class EngineBlock extends HorizontalBlock implements IWrenchable {
 
 	protected EngineBlock(Properties builder) {

@@ -14,8 +14,6 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import net.minecraft.item.Item.Properties;
-
 @EventBusSubscriber
 public class DivingHelmetItem extends CopperArmorItem {
 

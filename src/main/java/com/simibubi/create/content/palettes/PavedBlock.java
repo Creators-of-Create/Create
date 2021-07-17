@@ -9,8 +9,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PavedBlock extends Block {
 
 	public static final BooleanProperty COVERED = BooleanProperty.create("covered");

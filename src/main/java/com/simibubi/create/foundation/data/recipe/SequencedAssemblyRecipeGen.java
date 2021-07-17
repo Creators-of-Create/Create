@@ -15,9 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ItemTags;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
-
 public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe

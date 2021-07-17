@@ -27,8 +27,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-import net.minecraft.item.Item.Properties;
-
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class SandPaperItem extends Item {

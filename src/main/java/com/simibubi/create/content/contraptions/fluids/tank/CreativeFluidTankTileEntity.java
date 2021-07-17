@@ -9,8 +9,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 
 	public CreativeFluidTankTileEntity(TileEntityType<?> tileEntityTypeIn) {

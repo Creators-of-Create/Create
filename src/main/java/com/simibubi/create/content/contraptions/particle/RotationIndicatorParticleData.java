@@ -19,8 +19,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 public class RotationIndicatorParticleData
 	implements IParticleData, ICustomParticleDataWithSprite<RotationIndicatorParticleData> {
 

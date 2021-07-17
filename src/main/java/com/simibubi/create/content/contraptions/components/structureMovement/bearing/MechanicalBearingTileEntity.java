@@ -27,8 +27,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption.RotationMode;
-
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	implements IBearingTileEntity, IDisplayAssemblyExceptions {
 

@@ -15,8 +15,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 
-import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
-
 public class FluidPipeTileEntity extends SmartTileEntity {
 
 	public FluidPipeTileEntity(TileEntityType<?> tileEntityTypeIn) {

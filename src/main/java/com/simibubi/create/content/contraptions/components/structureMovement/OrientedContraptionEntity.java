@@ -48,8 +48,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
-
 /**
  * Ex: Minecarts, Couplings <br>
  * Oriented Contraption Entities can rotate freely around two axes

@@ -25,8 +25,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.Tags;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable {
 
 	public AbstractChassisBlock(Properties properties) {

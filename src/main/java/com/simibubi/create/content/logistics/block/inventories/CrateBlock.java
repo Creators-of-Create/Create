@@ -19,8 +19,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public static final BooleanProperty DOUBLE = BooleanProperty.create("double");

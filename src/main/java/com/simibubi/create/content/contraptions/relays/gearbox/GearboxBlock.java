@@ -23,8 +23,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class GearboxBlock extends RotatedPillarKineticBlock {
 
 	public GearboxBlock(Properties properties) {

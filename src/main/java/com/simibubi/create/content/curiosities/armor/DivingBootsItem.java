@@ -13,8 +13,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-import net.minecraft.item.Item.Properties;
-
 @EventBusSubscriber
 public class DivingBootsItem extends CopperArmorItem {
 

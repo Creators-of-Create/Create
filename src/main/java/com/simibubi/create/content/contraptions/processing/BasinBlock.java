@@ -48,8 +48,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;

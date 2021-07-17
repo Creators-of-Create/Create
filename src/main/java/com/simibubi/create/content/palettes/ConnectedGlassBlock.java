@@ -9,8 +9,6 @@ import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ConnectedGlassBlock extends GlassBlock {
 
 	public ConnectedGlassBlock(Properties p_i48392_1_) {

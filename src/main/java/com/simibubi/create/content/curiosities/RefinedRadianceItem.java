@@ -4,8 +4,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
-import net.minecraft.item.Item.Properties;
-
 public class RefinedRadianceItem extends NoGravMagicalDohickyItem {
 
 	public RefinedRadianceItem(Properties properties) {

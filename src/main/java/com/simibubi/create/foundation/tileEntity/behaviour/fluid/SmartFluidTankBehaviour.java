@@ -20,8 +20,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<SmartFluidTankBehaviour>

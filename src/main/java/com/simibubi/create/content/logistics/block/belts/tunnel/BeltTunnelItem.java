@@ -16,8 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class BeltTunnelItem extends BlockItem {
 
 	public BeltTunnelItem(Block p_i48527_1_, Properties p_i48527_2_) {

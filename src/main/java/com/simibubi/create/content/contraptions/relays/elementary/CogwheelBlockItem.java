@@ -29,8 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class CogwheelBlockItem extends BlockItem {
 
 	boolean large;

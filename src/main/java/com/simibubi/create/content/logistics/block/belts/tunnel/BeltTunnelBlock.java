@@ -35,8 +35,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>, IWrenchable {
 
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);

@@ -21,8 +21,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class OxidizingBlock extends Block {
 
 	public static final IntegerProperty OXIDIZATION = IntegerProperty.create("oxidization", 0, 7);

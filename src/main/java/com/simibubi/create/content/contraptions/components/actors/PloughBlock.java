@@ -7,8 +7,6 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PloughBlock extends AttachedActorBlock {
 	
 	public PloughBlock(Properties p_i48377_1_) {

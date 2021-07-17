@@ -5,8 +5,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ConnectedGlassPaneBlock extends GlassPaneBlock {
 
 	public ConnectedGlassPaneBlock(Properties builder) {

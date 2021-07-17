@@ -32,8 +32,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorTileEntity> {
 
 	public EjectorBlock(Properties properties) {

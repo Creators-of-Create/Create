@@ -19,8 +19,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.IStringSerializable;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class BracketBlock extends ProperDirectionalBlock {
 
 	public static final BooleanProperty AXIS_ALONG_FIRST_COORDINATE =

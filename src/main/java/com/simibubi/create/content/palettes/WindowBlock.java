@@ -7,8 +7,6 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class WindowBlock extends ConnectedGlassBlock {
 
 	public WindowBlock(Properties p_i48392_1_) {

@@ -39,8 +39,6 @@ import net.minecraft.world.NextTickListEntry;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerTickList;
 
-import com.simibubi.create.content.contraptions.fluids.actors.FluidManipulationBehaviour.BlockPosEntry;
-
 public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 	PriorityQueue<BlockPosEntry> queue;

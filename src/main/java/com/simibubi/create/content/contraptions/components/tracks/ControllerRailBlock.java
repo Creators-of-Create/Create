@@ -39,8 +39,6 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class ControllerRailBlock extends AbstractRailBlock implements IWrenchable {

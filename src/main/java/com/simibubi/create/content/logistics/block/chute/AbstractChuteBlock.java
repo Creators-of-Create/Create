@@ -32,8 +32,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
 
 	public AbstractChuteBlock(Properties p_i48440_1_) {

@@ -16,8 +16,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CreativeMotorBlock extends DirectionalKineticBlock {
 
 	public CreativeMotorBlock(Properties properties) {
