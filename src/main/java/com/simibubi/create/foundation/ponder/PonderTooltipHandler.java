@@ -102,7 +102,7 @@ public class PonderTooltipHandler {
 
 		if (stack.isEmpty())
 			return;
-		if (!PonderRegistry.all.containsKey(stack.getItem()
+		if (!PonderRegistry.ALL.containsKey(stack.getItem()
 			.getRegistryName()))
 			return;
 

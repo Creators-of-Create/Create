@@ -59,7 +59,7 @@ public class PonderScene {
 	boolean finished;
 	int sceneIndex;
 	int textIndex;
-	String sceneId;
+	ResourceLocation sceneId;
 
 	IntList keyframeTimes;
 
@@ -69,6 +69,7 @@ public class PonderScene {
 	List<PonderTag> tags;
 
 	PonderWorld world;
+	String namespace;
 	ResourceLocation component;
 	SceneTransform transform;
 	SceneRenderInfo info;
@@ -90,7 +91,7 @@ public class PonderScene {
 	int totalTime;
 	int currentTime;
 
-	public PonderScene(PonderWorld world, ResourceLocation component, Collection<PonderTag> tags) {
+	public PonderScene(PonderWorld world, String namespace, ResourceLocation component, Collection<PonderTag> tags) {
 		if (world != null)
 			world.scene = this;
 
@@ -98,6 +99,7 @@ public class PonderScene {
 		textIndex = 1;
 
 		this.world = world;
+		this.namespace = namespace;
 		this.component = component;
 
 		outliner = new Outliner();
@@ -392,8 +394,28 @@ public class PonderScene {
 		return new SceneBuildingUtil(getBounds());
 	}
 
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public ResourceLocation getId() {
+		return sceneId;
+	}
+
 	public SceneTransform getTransform() {
 		return transform;
+	}
+
+	public Outliner getOutliner() {
+		return outliner;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 	public class SceneTransform {
@@ -511,18 +533,6 @@ public class PonderScene {
 			setRotation(yRotation, xRotation);
 		}
 
-	}
-
-	public Outliner getOutliner() {
-		return outliner;
-	}
-
-	public boolean isFinished() {
-		return finished;
-	}
-
-	public void setFinished(boolean finished) {
-		this.finished = finished;
 	}
 
 }

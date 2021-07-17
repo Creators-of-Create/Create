@@ -73,7 +73,7 @@ public class PonderTagRegistry {
 		}
 
 		public ItemBuilder add(PonderTag tag) {
-			items.forEach(i -> PonderRegistry.tags.add(tag, i));
+			items.forEach(i -> PonderRegistry.TAGS.add(tag, i));
 			return this;
 		}
 
@@ -88,7 +88,7 @@ public class PonderTagRegistry {
 		}
 
 		public TagBuilder add(ResourceLocation item) {
-			PonderRegistry.tags.add(tag, item);
+			PonderRegistry.TAGS.add(tag, item);
 			return this;
 		}
 

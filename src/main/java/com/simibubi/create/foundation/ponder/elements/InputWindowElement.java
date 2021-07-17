@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.elements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -14,13 +15,14 @@ import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class InputWindowElement extends AnimatedOverlayElement {
 
 	private Pointing direction;
-	String key;
+	ResourceLocation key;
 	AllIcons icon;
 	ItemStack item = ItemStack.EMPTY;
 	private Vector3d sceneSpace;
@@ -69,12 +71,12 @@ public class InputWindowElement extends AnimatedOverlayElement {
 	}
 
 	public InputWindowElement whileSneaking() {
-		key = "sneak_and";
+		key = Create.asResource("sneak_and");
 		return this;
 	}
 
 	public InputWindowElement whileCTRL() {
-		key = "ctrl_and";
+		key = Create.asResource("ctrl_and");
 		return this;
 	}
 

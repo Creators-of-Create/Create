@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
-import com.google.gson.JsonElement;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
 import com.simibubi.create.foundation.ponder.content.PonderChapter;
@@ -27,6 +26,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
@@ -34,52 +35,75 @@ import net.minecraft.world.gen.feature.template.Template;
 
 public class PonderRegistry {
 
-	public static final PonderTagRegistry tags = new PonderTagRegistry();
-	public static final PonderChapterRegistry chapters = new PonderChapterRegistry();
-	public static Map<ResourceLocation, List<PonderStoryBoardEntry>> all = new HashMap<>();
+	public static final PonderTagRegistry TAGS = new PonderTagRegistry();
+	public static final PonderChapterRegistry CHAPTERS = new PonderChapterRegistry();
+	// Map from item ids to all storyboards
+	public static final Map<ResourceLocation, List<PonderStoryBoardEntry>> ALL = new HashMap<>();
 
-	public static PonderSceneBuilder addStoryBoard(ItemProviderEntry<?> component, String schematic,
+	private static String currentNamespace;
+
+	public static void startRegistration(String namespace) {
+		if (currentNamespace != null) {
+			throw new IllegalStateException("Cannot start registration when already started!");
+		}
+		currentNamespace = namespace;
+	}
+
+	public static void endRegistration() {
+		if (currentNamespace == null) {
+			throw new IllegalStateException("Cannot end registration when not started!");
+		}
+		currentNamespace = null;
+	}
+
+	private static String getNamespaceOrThrow() {
+		if (currentNamespace == null) {
+			throw new IllegalStateException("Cannot register storyboard without starting registration!");
+		}
+		return currentNamespace;
+	}
+
+	public static PonderSceneBuilder addStoryBoard(ItemProviderEntry<?> component, String schematicPath,
 		PonderStoryBoard storyBoard, PonderTag... tags) {
 		ResourceLocation id = component.getId();
-		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, schematic, id);
+		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, getNamespaceOrThrow(), schematicPath, id);
 		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
 		if (tags.length > 0)
 			builder.highlightTags(tags);
-		all.computeIfAbsent(id, _$ -> new ArrayList<>())
+		ALL.computeIfAbsent(id, _$ -> new ArrayList<>())
 			.add(entry);
 		return builder;
 	}
 
-	public static PonderSceneBuilder addStoryBoard(PonderChapter chapter, ResourceLocation component, String schematic,
-		PonderStoryBoard storyBoard) {
+	public static PonderSceneBuilder addStoryBoard(PonderChapter chapter, ResourceLocation component, String schematicPath,	PonderStoryBoard storyBoard) {
 		if (component == null)
 			component = new ResourceLocation("minecraft", "stick");
 
-		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, schematic, component);
+		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, getNamespaceOrThrow(), schematicPath, component);
 		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
-		chapters.addStoriesToChapter(chapter, entry);
+		CHAPTERS.addStoriesToChapter(chapter, entry);
 		return builder;
 	}
 
 	public static MultiSceneBuilder forComponents(ItemProviderEntry<?>... components) {
 		return new MultiSceneBuilder(Arrays.asList(components));
 	}
-	
+
 	public static MultiSceneBuilder forComponents(Iterable<? extends ItemProviderEntry<?>> components) {
 		return new MultiSceneBuilder(components);
 	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
-		return compile(all.get(id));
+		return compile(ALL.get(id));
 	}
 
 	public static List<PonderScene> compile(PonderChapter chapter) {
-		return compile(chapters.getStories(chapter));
+		return compile(CHAPTERS.getStories(chapter));
 	}
 
 	public static List<PonderScene> compile(List<PonderStoryBoardEntry> entries) {
 		if (PonderIndex.EDITOR_MODE) {
-			PonderLocalization.shared.clear();
+			PonderLocalization.SHARED.clear();
 			SharedText.gatherText();
 		}
 
@@ -87,7 +111,7 @@ public class PonderRegistry {
 
 		for (int i = 0; i < entries.size(); i++) {
 			PonderStoryBoardEntry sb = entries.get(i);
-			Template activeTemplate = loadSchematic(sb.getSchematicName());
+			Template activeTemplate = loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
 			activeTemplate.placeInWorld(world, BlockPos.ZERO, new PlacementSettings(), world.random);
 			world.createBackup();
@@ -100,41 +124,42 @@ public class PonderRegistry {
 	}
 
 	public static PonderScene compileScene(int i, PonderStoryBoardEntry sb, PonderWorld world) {
-		PonderScene scene = new PonderScene(world, sb.getComponent(), sb.getTags());
+		PonderScene scene = new PonderScene(world, sb.getNamespace(), sb.getComponent(), sb.getTags());
 		SceneBuilder builder = scene.builder();
 		sb.getBoard()
 			.program(builder, scene.getSceneBuildingUtil());
 		return scene;
 	}
 
-	public static Template loadSchematic(String path) {
-		Template t = new Template();
-		String filepath = "ponder/" + path + ".nbt";
-		InputStream resourceAsStream = Create.class.getClassLoader()
-			.getResourceAsStream(filepath);
-		if (resourceAsStream == null) {
-			Create.LOGGER.error("Ponder schematic missing: " + path);
-			return t;
-		}
-		try (DataInputStream stream =
-			new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceAsStream)))) {
-			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
-			t.load(nbt);
-		} catch (IOException e) {
-			Create.LOGGER.warn("Failed to read ponder schematic", e);
-		}
-		return t;
+	public static Template loadSchematic(ResourceLocation location) {
+		return loadSchematic(Minecraft.getInstance().getResourceManager(), location);
 	}
 
-	public static JsonElement provideLangEntries() {
-		PonderIndex.register();
-		PonderTag.register();
-		SharedText.gatherText();
-		all.forEach((id, list) -> {
-			for (int i = 0; i < list.size(); i++)
-				compileScene(i, list.get(i), null);
-		});
-		return PonderLocalization.record();
+	public static Template loadSchematic(IResourceManager resourceManager, ResourceLocation location) {
+		String namespace = location.getNamespace();
+		String path = "ponder/" + location.getPath() + ".nbt";
+		ResourceLocation location1 = new ResourceLocation(namespace, path);
+
+		if (!resourceManager.hasResource(location1)) {
+			Create.LOGGER.error("Ponder schematic missing: " + location1);
+			return new Template();
+		}
+		try {
+			IResource resource = resourceManager.getResource(location1);
+			return loadSchematic(resource.getInputStream());
+		} catch (IOException e) {
+			Create.LOGGER.error("Failed to read ponder schematic: " + path, e);
+		}
+		return new Template();
+	}
+
+	public static Template loadSchematic(InputStream resourceStream) throws IOException {
+		Template t = new Template();
+		DataInputStream stream =
+			new DataInputStream(new BufferedInputStream(new GZIPInputStream(resourceStream)));
+		CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
+		t.load(nbt);
+		return t;
 	}
 
 	public static class MultiSceneBuilder {
@@ -183,7 +208,7 @@ public class PonderRegistry {
 		}
 
 		public PonderSceneBuilder chapter(PonderChapter chapter) {
-			PonderRegistry.chapters.addStoriesToChapter(chapter, entry);
+			PonderRegistry.CHAPTERS.addStoriesToChapter(chapter, entry);
 			return this;
 		}
 

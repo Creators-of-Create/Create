@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector2f;
@@ -65,9 +66,13 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			return this;
 		}
 
-		public Builder sharedText(String key) {
+		public Builder sharedText(ResourceLocation key) {
 			textGetter = () -> PonderLocalization.getShared(key);
 			return this;
+		}
+
+		public Builder sharedText(String key) {
+			return sharedText(new ResourceLocation(scene.getNamespace(), key));
 		}
 
 		public Builder placeNearTarget() {

@@ -75,6 +75,7 @@ import net.minecraft.state.Property;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -138,8 +139,8 @@ public class SceneBuilder {
 	 * @param title
 	 */
 	public void title(String sceneId, String title) {
-		scene.sceneId = sceneId;
-		PonderLocalization.registerSpecific(sceneId, PonderScene.TITLE_KEY, title);
+		scene.sceneId = new ResourceLocation(scene.namespace, sceneId);
+		PonderLocalization.registerSpecific(scene.sceneId, PonderScene.TITLE_KEY, title);
 	}
 
 	/**
