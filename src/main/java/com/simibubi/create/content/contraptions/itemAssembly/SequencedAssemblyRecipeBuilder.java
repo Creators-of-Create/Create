@@ -82,8 +82,12 @@ public class SequencedAssemblyRecipeBuilder {
 		return this;
 	}
 
+	public SequencedAssemblyRecipe build() {
+		return recipe;
+	}
+
 	public void build(Consumer<IFinishedRecipe> consumer) {
-		consumer.accept(new DataGenResult(recipe, recipeConditions));
+		consumer.accept(new DataGenResult(build(), recipeConditions));
 	}
 
 	public static class DataGenResult implements IFinishedRecipe {
