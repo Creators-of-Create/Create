@@ -19,10 +19,10 @@ public class AnimatedPress extends AnimatedKinetics {
 	@Override
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
-		matrixStack.translate(xOffset, yOffset, 100);
+		matrixStack.translate(xOffset, yOffset, 200);
 		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
-		int scale = basin ? 20 : 24;
+		int scale = basin ? 23 : 24;
 
 		defaultBlockElement(shaft(Axis.Z))
 				.rotateBlock(0, 0, getCurrentAngle())
