@@ -6,8 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class HarvesterBlock extends AttachedActorBlock {
 
 	public HarvesterBlock(Properties p_i48377_1_) {

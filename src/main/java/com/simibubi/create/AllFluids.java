@@ -23,8 +23,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-import net.minecraftforge.fluids.FluidAttributes.Builder;
-
 public class AllFluids {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate();

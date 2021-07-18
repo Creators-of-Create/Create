@@ -19,9 +19,6 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
-import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity>, ICogWheel {
 
 	public MechanicalMixerBlock(Properties properties) {

@@ -30,8 +30,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<RedstoneLinkTileEntity> {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

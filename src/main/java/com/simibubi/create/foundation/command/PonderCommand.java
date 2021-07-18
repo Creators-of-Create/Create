@@ -21,7 +21,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class PonderCommand {
-	public static final SuggestionProvider<CommandSource> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.suggestResource(PonderRegistry.all.keySet().stream(), builder));
+	public static final SuggestionProvider<CommandSource> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.suggestResource(PonderRegistry.ALL.keySet().stream(), builder));
 
 	static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("ponder")

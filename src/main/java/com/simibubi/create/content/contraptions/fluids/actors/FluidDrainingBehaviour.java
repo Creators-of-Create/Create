@@ -28,8 +28,6 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
-import com.simibubi.create.content.contraptions.fluids.actors.FluidManipulationBehaviour.BlockPosEntry;
-
 public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 	Fluid fluid;

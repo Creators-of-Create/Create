@@ -24,8 +24,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
-import net.minecraft.item.Item.Properties;
-
 public class CardboardBoxItem extends Item {
 
 	static final int SLOTS = 9;

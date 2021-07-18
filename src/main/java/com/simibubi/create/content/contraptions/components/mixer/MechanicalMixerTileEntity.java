@@ -229,7 +229,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		return ((r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE
 			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1)
-			|| r.getType() == AllRecipeTypes.MIXING.type);
+			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 
 	@Override

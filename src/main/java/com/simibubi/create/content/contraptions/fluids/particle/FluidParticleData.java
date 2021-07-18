@@ -21,8 +21,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 public class FluidParticleData implements IParticleData, ICustomParticleData<FluidParticleData> {
 
 	private ParticleType<FluidParticleData> type;

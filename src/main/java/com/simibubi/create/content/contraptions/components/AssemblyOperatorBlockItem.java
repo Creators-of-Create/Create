@@ -12,8 +12,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 
-import net.minecraft.item.Item.Properties;
-
 public class AssemblyOperatorBlockItem extends BlockItem {
 
 	public AssemblyOperatorBlockItem(Block block, Properties builder) {

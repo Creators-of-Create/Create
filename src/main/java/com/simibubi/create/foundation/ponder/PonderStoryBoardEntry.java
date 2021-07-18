@@ -9,36 +9,47 @@ import net.minecraft.util.ResourceLocation;
 
 public class PonderStoryBoardEntry {
 
-	private final String schematicName;
 	private final PonderStoryBoard board;
-	private final List<PonderTag> tags;
+	private final String namespace;
+	private final String schematicPath;
 	private final ResourceLocation component;
+	private final List<PonderTag> tags;
 
-	public PonderStoryBoardEntry(PonderStoryBoard board, String schematicName, ResourceLocation component) {
+	public PonderStoryBoardEntry(PonderStoryBoard board, String namespace, String schematicPath, ResourceLocation component) {
 		this.board = board;
-		this.schematicName = schematicName;
-		this.tags = new ArrayList<>();
+		this.namespace = namespace;
+		this.schematicPath = schematicPath;
 		this.component = component;
-	}
-
-	public interface PonderStoryBoard {
-		void program(SceneBuilder scene, SceneBuildingUtil util);
-	}
-
-	public String getSchematicName() {
-		return schematicName;
+		this.tags = new ArrayList<>();
 	}
 
 	public PonderStoryBoard getBoard() {
 		return board;
 	}
 
-	public List<PonderTag> getTags() {
-		return tags;
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public String getSchematicPath() {
+		return schematicPath;
 	}
 
 	public ResourceLocation getComponent() {
 		return component;
+	}
+
+	public List<PonderTag> getTags() {
+		return tags;
+	}
+
+	public ResourceLocation getSchematicLocation() {
+		return new ResourceLocation(namespace, schematicPath);
+	}
+
+	@FunctionalInterface
+	public interface PonderStoryBoard {
+		void program(SceneBuilder scene, SceneBuildingUtil util);
 	}
 
 }

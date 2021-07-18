@@ -38,8 +38,6 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = SixWayBlock.PROPERTY_BY_DIRECTION;

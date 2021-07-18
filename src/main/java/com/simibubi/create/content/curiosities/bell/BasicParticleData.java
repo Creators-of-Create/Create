@@ -18,8 +18,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class BasicParticleData<T extends Particle> implements IParticleData, ICustomParticleDataWithSprite<BasicParticleData<T>> {

@@ -41,8 +41,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-import net.minecraft.item.Item.Properties;
-
 public class FilterItem extends Item implements INamedContainerProvider {
 
 	private FilterType type;

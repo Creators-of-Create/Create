@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -137,11 +138,11 @@ public class PonderUI extends NavigatableSimiScreen {
 		else
 			stack = new ItemStack(ForgeRegistries.BLOCKS.getValue(component));
 
-		tags = new ArrayList<>(PonderRegistry.tags.getTags(component));
+		tags = new ArrayList<>(PonderRegistry.TAGS.getTags(component));
 		this.scenes = scenes;
 		if (scenes.isEmpty()) {
 			List<PonderStoryBoardEntry> l = Collections.singletonList(new PonderStoryBoardEntry(DebugScenes::empty,
-				"debug/scene_1", new ResourceLocation("minecraft", "stick")));
+				Create.ID, "debug/scene_1", new ResourceLocation("minecraft", "stick")));
 			scenes.addAll(PonderRegistry.compile(l));
 		}
 		lazyIndex = LerpedFloat.linear()
@@ -365,9 +366,9 @@ public class PonderUI extends NavigatableSimiScreen {
 		PonderScene scene = scenes.get(index);
 
 		if (hasShiftDown()) {
-			List<PonderStoryBoardEntry> list = PonderRegistry.all.get(scene.component);
+			List<PonderStoryBoardEntry> list = PonderRegistry.ALL.get(scene.component);
 			PonderStoryBoardEntry sb = list.get(index);
-			Template activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicName());
+			Template activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
 			activeTemplate.placeInWorld(world, BlockPos.ZERO, new PlacementSettings(), new Random());
 			world.createBackup();

@@ -60,7 +60,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		// items
 		items.clear();
-		PonderRegistry.tags.getItems(tag)
+		PonderRegistry.TAGS.getItems(tag)
 			.stream()
 			.map(key -> {
 				Item item = ForgeRegistries.ITEMS.getValue(key);
@@ -87,7 +87,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(i));
 
-			if (PonderRegistry.all.containsKey(i.getRegistryName())) {
+			if (PonderRegistry.ALL.containsKey(i.getRegistryName())) {
 				b.withCallback((mouseX, mouseY) -> {
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
@@ -115,7 +115,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10)
 					.showing(tag.getMainItem());
 
-			if (PonderRegistry.all.containsKey(registryName)) {
+			if (PonderRegistry.ALL.containsKey(registryName)) {
 				b.withCallback((mouseX, mouseY) -> {
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(tag.getMainItem(), tag));
@@ -135,7 +135,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 		// chapters
 		chapters.clear();
-		chapters.addAll(PonderRegistry.tags.getChapters(tag));
+		chapters.addAll(PonderRegistry.TAGS.getChapters(tag));
 
 		rowCount = MathHelper.clamp((int) Math.ceil(chapters.size() / 3f), 1, 3);
 		layout = LayoutHelper.centeredHorizontal(chapters.size(), rowCount, 200, 38, 16);

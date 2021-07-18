@@ -22,8 +22,6 @@ import net.minecraft.world.gen.feature.template.Template.BlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
-
 /**
  * Ex: Pistons, bearings <br>
  * Controlled Contraption Entities can rotate around one axis and translate.

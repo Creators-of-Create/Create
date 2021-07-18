@@ -1,6 +1,8 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 
+import static net.minecraft.block.Block.box;
+
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.block.BlockState;
@@ -9,8 +11,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-
-import static net.minecraft.block.Block.box;
 
 public class BeltTunnelShapes {
 

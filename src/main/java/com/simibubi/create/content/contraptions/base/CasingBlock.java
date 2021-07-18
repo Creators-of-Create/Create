@@ -11,8 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class CasingBlock extends Block implements IWrenchable {
 
 	public CasingBlock(Properties p_i48440_1_) {

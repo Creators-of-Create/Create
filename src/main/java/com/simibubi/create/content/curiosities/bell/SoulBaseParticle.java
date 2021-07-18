@@ -10,8 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 
-import com.simibubi.create.content.curiosities.bell.BasicParticleData.IBasicParticleFactory;
-
 public class SoulBaseParticle extends CustomRotationParticle {
 
 	private final IAnimatedSprite animatedSprite;

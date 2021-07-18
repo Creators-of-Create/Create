@@ -28,8 +28,6 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");

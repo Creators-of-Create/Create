@@ -12,8 +12,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.TickPriority;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PulseRepeaterBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty PULSING = BooleanProperty.create("pulsing");

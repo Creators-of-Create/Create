@@ -10,7 +10,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
@@ -242,7 +241,7 @@ public class AllSoundEvents {
 			entry.prepare();
 	}
 
-	public static JsonElement provideLangEntries() {
+	public static JsonObject provideLangEntries() {
 		JsonObject object = new JsonObject();
 		for (SoundEntry entry : entries.values())
 			if (entry.hasSubtitle())

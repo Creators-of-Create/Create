@@ -18,8 +18,6 @@ import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class LinearChassisBlock extends AbstractChassisBlock {
 
 	public static final BooleanProperty STICKY_TOP = BooleanProperty.create("sticky_top");

@@ -12,8 +12,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ProperDirectionalBlock extends DirectionalBlock implements IWrenchable {
 
 	public ProperDirectionalBlock(Properties p_i48415_1_) {

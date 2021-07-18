@@ -25,8 +25,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ReinforcedRailBlock extends AbstractRailBlock {
 
     public static Property<RailShape> RAIL_SHAPE =

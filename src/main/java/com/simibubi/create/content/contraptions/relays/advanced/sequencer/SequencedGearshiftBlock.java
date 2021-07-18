@@ -36,8 +36,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity> {
 
 	public static final BooleanProperty VERTICAL = BooleanProperty.create("vertical");

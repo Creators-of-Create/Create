@@ -32,8 +32,6 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity>, ICogWheel {
 
 	public MillstoneBlock(Properties properties) {

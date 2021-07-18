@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.client.renderer.RenderType;
@@ -40,8 +41,6 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
-
-import net.minecraft.block.AbstractBlock;
 
 public class BuilderTransformers {
 

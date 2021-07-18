@@ -16,8 +16,6 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorldReader;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 
 	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;

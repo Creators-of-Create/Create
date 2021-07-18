@@ -5,8 +5,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-import net.minecraft.item.Item.Properties;
-
 public class HiddenIngredientItem extends Item {
 
 	public HiddenIngredientItem(Properties p_i48487_1_) {

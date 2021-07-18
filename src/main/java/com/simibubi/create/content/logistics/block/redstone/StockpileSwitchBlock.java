@@ -35,8 +35,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class StockpileSwitchBlock extends HorizontalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);

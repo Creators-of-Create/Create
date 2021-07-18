@@ -12,8 +12,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");

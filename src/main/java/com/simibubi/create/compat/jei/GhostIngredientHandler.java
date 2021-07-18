@@ -17,8 +17,6 @@ import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 
-import mezz.jei.api.gui.handlers.IGhostIngredientHandler.Target;
-
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class GhostIngredientHandler<T extends GhostItemContainer<?>>

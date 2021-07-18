@@ -11,8 +11,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class NoGravMagicalDohickyItem extends Item {
 
 	public NoGravMagicalDohickyItem(Properties p_i48487_1_) {

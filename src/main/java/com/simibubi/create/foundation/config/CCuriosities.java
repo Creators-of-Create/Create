@@ -1,6 +1,4 @@
 package com.simibubi.create.foundation.config;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
-
 
 public class CCuriosities extends ConfigBase {
 

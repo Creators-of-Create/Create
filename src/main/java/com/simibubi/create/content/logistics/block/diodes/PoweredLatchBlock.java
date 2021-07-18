@@ -16,8 +16,6 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PoweredLatchBlock extends ToggleLatchBlock {
 
 	public static BooleanProperty POWERED_SIDE = BooleanProperty.create("powered_side");

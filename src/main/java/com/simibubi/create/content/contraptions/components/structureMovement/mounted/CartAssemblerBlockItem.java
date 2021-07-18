@@ -21,8 +21,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class CartAssemblerBlockItem extends BlockItem {
 
 	public CartAssemblerBlockItem(Block block, Properties properties) {

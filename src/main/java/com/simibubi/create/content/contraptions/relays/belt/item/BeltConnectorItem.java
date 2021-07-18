@@ -34,8 +34,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class BeltConnectorItem extends BlockItem {
 
 	public BeltConnectorItem(Properties properties) {

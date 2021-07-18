@@ -48,8 +48,6 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import net.minecraft.item.Item.Properties;
-
 public class SymmetryWandItem extends Item {
 
 	public static final String SYMMETRY = "symmetry";

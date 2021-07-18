@@ -49,8 +49,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import net.minecraft.item.Item.Properties;
-
 @EventBusSubscriber
 public class ExtendoGripItem extends Item {
 	private static DamageSource lastActiveDamageSource;

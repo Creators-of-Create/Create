@@ -16,8 +16,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class KineticBlock extends Block implements IRotate {
 
 	protected static final Palette color = Palette.Red;

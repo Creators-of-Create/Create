@@ -15,8 +15,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class BuildersTeaItem extends Item {
 
 	public BuildersTeaItem(Properties p_i48487_1_) {

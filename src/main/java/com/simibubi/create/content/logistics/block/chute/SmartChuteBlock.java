@@ -17,8 +17,6 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class SmartChuteBlock extends AbstractChuteBlock {
 
 	public SmartChuteBlock(Properties p_i48440_1_) {

@@ -38,8 +38,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class NixieTubeBlock extends HorizontalBlock
 	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 

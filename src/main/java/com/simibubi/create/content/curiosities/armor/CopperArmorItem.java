@@ -7,8 +7,6 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 
-import net.minecraft.item.Item.Properties;
-
 public class CopperArmorItem extends ArmorItem {
 
 	public CopperArmorItem(EquipmentSlotType p_i48534_2_, Properties p_i48534_3_) {

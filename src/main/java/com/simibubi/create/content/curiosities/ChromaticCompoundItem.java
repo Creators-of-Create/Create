@@ -27,8 +27,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.Heightmap;
 
-import net.minecraft.item.Item.Properties;
-
 public class ChromaticCompoundItem extends Item {
 
 	public ChromaticCompoundItem(Properties properties) {

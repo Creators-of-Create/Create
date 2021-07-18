@@ -22,8 +22,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
-import net.minecraft.item.Item.Properties;
-
 public class WrenchItem extends Item {
 
 	public WrenchItem(Properties properties) {

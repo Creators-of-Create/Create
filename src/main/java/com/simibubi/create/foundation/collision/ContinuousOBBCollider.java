@@ -5,8 +5,6 @@ import static java.lang.Math.signum;
 
 import net.minecraft.util.math.vector.Vector3d;
 
-import com.simibubi.create.foundation.collision.OBBCollider.SeparationManifold;
-
 public class ContinuousOBBCollider extends OBBCollider {
 
 	public static ContinuousSeparationManifold separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB,

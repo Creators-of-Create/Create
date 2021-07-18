@@ -32,8 +32,6 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable, ICogWheel {
 
 	public PumpBlock(Properties p_i48415_1_) {

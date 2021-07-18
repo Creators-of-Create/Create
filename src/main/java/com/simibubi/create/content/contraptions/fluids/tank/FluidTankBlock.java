@@ -47,8 +47,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity> {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");

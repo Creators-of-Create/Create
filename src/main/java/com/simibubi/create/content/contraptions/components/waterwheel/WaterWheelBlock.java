@@ -32,8 +32,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<WaterWheelTileEntity> {

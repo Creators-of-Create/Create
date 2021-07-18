@@ -38,8 +38,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 public class OpenEndedPipe extends FlowSource {
 
 	World world;

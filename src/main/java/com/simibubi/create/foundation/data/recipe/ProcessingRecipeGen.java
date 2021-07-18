@@ -20,8 +20,6 @@ import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
-
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 	protected static List<ProcessingRecipeGen> generators = new ArrayList<>();
@@ -116,9 +114,8 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		return create(Create.asResource(name), transform);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected  <T extends ProcessingRecipe<?>> ProcessingRecipeSerializer<T> getSerializer() {
-		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) getRecipeType().serializer;
+		ProcessingRecipeSerializer<T> serializer = getRecipeType().getSerializer();
 		return serializer;
 	}
 

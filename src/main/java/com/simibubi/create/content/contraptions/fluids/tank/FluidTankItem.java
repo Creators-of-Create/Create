@@ -14,8 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
-import net.minecraft.item.Item.Properties;
-
 public class FluidTankItem extends BlockItem {
 
 	public FluidTankItem(Block p_i48527_1_, Properties p_i48527_2_) {

@@ -18,8 +18,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import net.minecraft.item.Item.Properties;
-
 @EventBusSubscriber
 public class FluidBottleItemHook extends Item {
 

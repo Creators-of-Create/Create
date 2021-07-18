@@ -45,8 +45,6 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class GantryShaftBlock extends DirectionalKineticBlock {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);

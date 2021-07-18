@@ -9,8 +9,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class ChuteItem extends BlockItem {
 
 	public ChuteItem(Block p_i48527_1_, Properties p_i48527_2_) {

@@ -12,8 +12,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class DirectionalKineticBlock extends KineticBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING;

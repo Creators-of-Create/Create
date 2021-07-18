@@ -35,8 +35,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.AttachmentTypes;
-
 public class PumpTileEntity extends KineticTileEntity {
 
 	LerpedFloat arrowDirection;

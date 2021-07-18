@@ -55,7 +55,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		// chapters.addAll(PonderRegistry.chapters.getAllChapters());
 
 		items.clear();
-		PonderRegistry.all.keySet()
+		PonderRegistry.ALL.keySet()
 			.stream()
 			.map(key -> {
 				Item item = ForgeRegistries.ITEMS.getValue(key);
@@ -108,7 +108,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(item))
 					.withCallback((x, y) -> {
-						if (!PonderRegistry.all.containsKey(item.getRegistryName()))
+						if (!PonderRegistry.ALL.containsKey(item.getRegistryName()))
 							return;
 
 						centerScalingOn(x, y);

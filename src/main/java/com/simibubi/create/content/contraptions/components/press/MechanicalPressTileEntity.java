@@ -346,7 +346,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe) {
 		return (recipe instanceof ICraftingRecipe && canCompress(recipe.getIngredients()))
-			|| recipe.getType() == AllRecipeTypes.COMPACTING.type;
+			|| recipe.getType() == AllRecipeTypes.COMPACTING.getType();
 	}
 
 	@Override

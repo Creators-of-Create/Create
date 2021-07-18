@@ -20,9 +20,6 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import net.minecraftforge.fluids.FluidAttributes.Builder;
-import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
-
 public class PotionFluid extends VirtualFluid {
 
 	public enum BottleType {

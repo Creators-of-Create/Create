@@ -7,8 +7,6 @@ import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class RadialChassisBlock extends AbstractChassisBlock {
 
 	public static final BooleanProperty STICKY_NORTH = BooleanProperty.create("sticky_north");

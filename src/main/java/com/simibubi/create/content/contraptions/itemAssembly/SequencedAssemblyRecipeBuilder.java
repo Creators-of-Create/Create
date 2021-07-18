@@ -34,7 +34,7 @@ public class SequencedAssemblyRecipeBuilder {
 	public SequencedAssemblyRecipeBuilder(ResourceLocation id) {
 		recipeConditions = new ArrayList<>();
 		this.recipe = new SequencedAssemblyRecipe(id,
-			(SequencedAssemblyRecipeSerializer) AllRecipeTypes.SEQUENCED_ASSEMBLY.serializer);
+			AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer());
 	}
 
 	public <T extends ProcessingRecipe<?>> SequencedAssemblyRecipeBuilder addStep(ProcessingRecipeFactory<T> factory,

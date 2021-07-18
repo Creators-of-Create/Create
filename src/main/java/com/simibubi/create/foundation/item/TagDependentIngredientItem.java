@@ -8,8 +8,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
-import net.minecraft.item.Item.Properties;
-
 public class TagDependentIngredientItem extends Item {
 
 	private ResourceLocation tag;

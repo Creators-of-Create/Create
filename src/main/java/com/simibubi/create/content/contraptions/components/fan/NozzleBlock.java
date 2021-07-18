@@ -22,8 +22,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class NozzleBlock extends ProperDirectionalBlock {

@@ -183,7 +183,7 @@ public class MechanicalCraftingRecipeBuilder {
 		}
 
 		public IRecipeSerializer<?> getType() {
-			return AllRecipeTypes.MECHANICAL_CRAFTING.serializer;
+			return AllRecipeTypes.MECHANICAL_CRAFTING.getSerializer();
 		}
 
 		public ResourceLocation getId() {

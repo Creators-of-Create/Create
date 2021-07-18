@@ -52,10 +52,10 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
 		this.fluidResults = params.fluidResults;
-		this.serializer = recipeType.serializer;
+		this.serializer = recipeType.getSerializer();
 		this.requiredHeat = params.requiredHeat;
 		this.ingredients = params.ingredients;
-		this.type = recipeType.type;
+		this.type = recipeType.getType();
 		this.results = params.results;
 		this.id = params.id;
 

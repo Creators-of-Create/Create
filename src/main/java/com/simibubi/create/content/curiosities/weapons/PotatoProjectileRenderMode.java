@@ -1,5 +1,7 @@
 package com.simibubi.create.content.curiosities.weapons;
 
+import static com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderMode.entityRandom;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.MatrixStacker;
@@ -11,12 +13,12 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class PotatoProjectileRenderMode {
+public interface PotatoProjectileRenderMode {
 
 	@OnlyIn(Dist.CLIENT)
-	public abstract void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt);
+	void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt);
 
-	public static class Billboard extends PotatoProjectileRenderMode {
+	public static class Billboard implements PotatoProjectileRenderMode {
 
 		@Override
 		@OnlyIn(Dist.CLIENT)
@@ -47,7 +49,7 @@ public abstract class PotatoProjectileRenderMode {
 		}
 	}
 
-	public static class TowardMotion extends PotatoProjectileRenderMode {
+	public static class TowardMotion implements PotatoProjectileRenderMode {
 
 		private int spriteAngleOffset;
 		private float spin;
@@ -72,7 +74,7 @@ public abstract class PotatoProjectileRenderMode {
 
 	}
 
-	public static class StuckToEntity extends PotatoProjectileRenderMode {
+	public static class StuckToEntity implements PotatoProjectileRenderMode {
 
 		private Vector3d offset;
 

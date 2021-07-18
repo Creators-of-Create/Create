@@ -32,8 +32,6 @@ import net.minecraftforge.common.crafting.StackList;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-import net.minecraft.item.Item.Properties;
-
 public class BlueprintItem extends Item {
 
 	public BlueprintItem(Properties p_i48487_1_) {

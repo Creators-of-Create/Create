@@ -4,8 +4,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraft.item.Item.Properties;
-
 public class ShadowSteelItem extends NoGravMagicalDohickyItem {
 
 	public ShadowSteelItem(Properties properties) {

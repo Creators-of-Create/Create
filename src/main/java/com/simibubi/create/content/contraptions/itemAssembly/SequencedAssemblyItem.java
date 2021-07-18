@@ -9,8 +9,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 
-import net.minecraft.item.Item.Properties;
-
 public class SequencedAssemblyItem extends Item {
 
 	public SequencedAssemblyItem(Properties p_i48487_1_) {

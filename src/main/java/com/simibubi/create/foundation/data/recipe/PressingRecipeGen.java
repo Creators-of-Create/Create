@@ -7,9 +7,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.GeneratedRecipe;
-import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
-
 public class PressingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe

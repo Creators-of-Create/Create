@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
+
+import net.minecraft.util.ResourceLocation;
 
 public class SharedText {
 
@@ -18,15 +21,18 @@ public class SharedText {
 		add("movement_anchors", "With the help of Chassis or Super Glue, larger structures can be moved.");
 		add("behaviour_modify_wrench", "This behaviour can be modified using a Wrench");
 		add("storage_on_contraption", "Inventories attached to the Contraption will pick up their drops automatically");
-
 	}
 
-	public static String get(String key) {
+	public static String get(ResourceLocation key) {
 		return PonderLocalization.getShared(key);
 	}
 
-	private static void add(String k, String v) {
+	public static void add(ResourceLocation k, String v) {
 		PonderLocalization.registerShared(k, v);
+	}
+
+	private static void add(String k, String v) {
+		add(Create.asResource(k), v);
 	}
 
 }
