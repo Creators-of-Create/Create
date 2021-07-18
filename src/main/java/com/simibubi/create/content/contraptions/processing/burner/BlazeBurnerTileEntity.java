@@ -41,7 +41,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			{ 0x1C6378, 0x4798B5, 0x4DA6C0, 0xBAC8CE }
 		};
 
-		int[] creativeColors = { 0xFF1FF9, 0xF799FF };
+		int[] creativeColors = { 0x54295D, 0x6E3C76, 0xA5479F, 0x85157C };
 
 		PARTICLE_COLORS = new Vector3d[colors.length][];
 		for (int i = 0; i < colors.length; i++) {
