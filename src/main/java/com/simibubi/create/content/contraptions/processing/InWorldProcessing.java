@@ -2,15 +2,22 @@ package com.simibubi.create.content.contraptions.processing;
 
 import static com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.getHeatLevelOf;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.mixin.CancelEntityRenderMixin;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
@@ -18,6 +25,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.ColorHelper;
+
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -36,6 +45,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
@@ -49,23 +59,55 @@ public class InWorldProcessing {
 	private static final RecipeWrapper WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 	private static final SplashingWrapper SPLASHING_WRAPPER = new SplashingWrapper();
 
+	protected static HashMap<Block, BiFunction<IBlockReader, BlockPos, Type>> fanHandlers = new HashMap<>();
+	protected static List<Pair<BiPredicate<IBlockReader, BlockPos> ,BiFunction<IBlockReader, BlockPos, Type>>> customFanHandlers = new ArrayList<>();
+
 	public enum Type {
 		SMOKING, BLASTING, SPLASHING, NONE
 
 		;
 
+		public static void addTypeHandler(Block block, BiFunction<IBlockReader, BlockPos, Type> function) {
+			fanHandlers.put(block, function);
+		}
+
+		public static void addCustomTypeHandler(BiPredicate<IBlockReader, BlockPos> predicate, BiFunction<IBlockReader, BlockPos, Type> function) {
+			customFanHandlers.add(Pair.of(predicate, function));
+		}
+
+		static {
+			addTypeHandler(Blocks.CAMPFIRE, (block, pos) -> {
+				BlockState state = block.getBlockState(pos);
+				if(state.getOptionalValue(CampfireBlock.LIT).orElse(false)) {
+					return Type.SMOKING;
+				}
+				return null;
+			});
+		}
+
 		public static Type byBlock(IBlockReader reader, BlockPos pos) {
 			BlockState blockState = reader.getBlockState(pos);
-			FluidState fluidState = reader.getFluidState(pos);
-			if (fluidState.getType() == Fluids.WATER || fluidState.getType() == Fluids.FLOWING_WATER)
-				return Type.SPLASHING;
 			Block block = blockState.getBlock();
-			if (block == Blocks.FIRE || AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				|| (BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT).orElse(false))
-				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
+			Set<ResourceLocation> tags = block.getTags();
+			if(fanHandlers.containsKey(block)) {
+				Type r = fanHandlers.get(block).apply(reader, pos);
+				if(r != null) return r;
+			}
+			if (tags.contains(AllTags.AllBlockTags.FAN_SPLASHING.tag.getName()))
+				return Type.SPLASHING;
+			boolean ignoreHeatLevel = tags.contains(AllTags.AllBlockTags.FAN_IGNORE_HEAT_LEVEL.tag.getName());
+			if (tags.contains(AllTags.AllBlockTags.FAN_SMOKING.tag.getName()) ||
+					(!ignoreHeatLevel && getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING))
 				return Type.SMOKING;
-			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
+			if (tags.contains(AllTags.AllBlockTags.FAN_BLASTING.tag.getName()) ||
+					(!ignoreHeatLevel && getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING)))
 				return Type.BLASTING;
+			for(Pair<BiPredicate<IBlockReader, BlockPos>, BiFunction<IBlockReader, BlockPos, Type>> pair : customFanHandlers) {
+				if(pair.getFirst().test(reader, pos)) {
+					Type r = pair.getSecond().apply(reader, pos);
+					if(r != null) return r;
+				}
+			}
 			return Type.NONE;
 		}
 	}
