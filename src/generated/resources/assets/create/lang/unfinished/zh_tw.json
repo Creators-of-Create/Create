@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 15",
+	"_": "Missing Localizations: 19",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1412,6 +1412,11 @@
 	"block.create.creative_crate.tooltip.summary": "這個容器可以給臨近的_藍圖大炮_提供無限物品以及燃料 （創造專用物品）",
 	"block.create.creative_crate.tooltip.condition1": "當標記了物品時",
 	"block.create.creative_crate.tooltip.behaviour1": "容器將會從虛空中提供_無限量_的標記物品，並且任何放置到容器中的物品都會被_送入虛空_",
+
+	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "控制鐵軌",
 	"block.create.controller_rail.tooltip.summary": "單向電動導軌，能夠精細控制礦車的移動速度。",

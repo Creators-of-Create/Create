@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 910",
+	"_": "Missing Localizations: 914",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1412,6 +1412,11 @@
 	"block.create.creative_crate.tooltip.summary": "Fornisce una scorta infinita di blocchi ai _cannoneschematici_ adiacenti.",
 	"block.create.creative_crate.tooltip.condition1": "Quando un oggetto è nel filtro",
 	"block.create.creative_crate.tooltip.behaviour1": "Qualsiasi _estrazione_ da questo contenitore fornisce _provviste infinite_ dell'oggetto in questione. Gli oggetti _inseriti_ in questo baule verranno _svuotati_.",
+
+	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "BINARIO DI CONTROLLO",
 	"block.create.controller_rail.tooltip.summary": "Un _binario alimentato unidirezionale_ capace di _controllare precisamente_ la _velocità di movimento_ di un carrello da miniera.",

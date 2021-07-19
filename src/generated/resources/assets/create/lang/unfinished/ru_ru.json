@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 283",
+	"_": "Missing Localizations: 287",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1412,6 +1412,11 @@
 	"block.create.creative_crate.tooltip.summary": "Этот _контейнер_ для _хранения_ позволяющий _бесконечную_ _дублировать_ любой предмет. Поместите рядом со схематичной пушкой, чтобы удалить любые требования к материалу.",
 	"block.create.creative_crate.tooltip.condition1": "Когда предмет в слоте фильтра",
 	"block.create.creative_crate.tooltip.behaviour1": "Все, что извлечено из этого контейнера, обеспечит бесконечную поставку указанного предмета. Предметы, _вставленные_ в этот ящик, будут _аннулированы_.",
+
+	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "CONTROLLER RAIL",
 	"block.create.controller_rail.tooltip.summary": "_Все-направленные запитанные рельсы_, позволяющие _точную настройку_ _скорости_ вагонеток.",
