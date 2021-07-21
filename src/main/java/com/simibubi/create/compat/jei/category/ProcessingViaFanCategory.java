@@ -10,7 +10,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -75,17 +74,15 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 24;
 
-		GuiGameElement.of(AllBlockPartials.ENCASED_FAN_INNER)
+		AnimatedKinetics.defaultBlockElement(AllBlockPartials.ENCASED_FAN_INNER)
 			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
 			.scale(scale)
-			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
-		GuiGameElement.of(AllBlocks.ENCASED_FAN.getDefaultState())
+		AnimatedKinetics.defaultBlockElement(AllBlocks.ENCASED_FAN.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.atLocal(0, 0, 0)
 			.scale(scale)
-			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
 		renderAttachedBlock(matrixStack);

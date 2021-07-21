@@ -21,18 +21,18 @@ public class AnimatedSaw extends AnimatedKinetics {
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f + 90));
 		int scale = 25;
 
-		defaultBlockElement(shaft(Axis.X))
+		blockElement(shaft(Axis.X))
 			.rotateBlock(-getCurrentAngle(), 0, 0)
 			.scale(scale)
 			.render(matrixStack);
 
-		defaultBlockElement(AllBlocks.MECHANICAL_SAW.getDefaultState()
+		blockElement(AllBlocks.MECHANICAL_SAW.getDefaultState()
 			.setValue(SawBlock.FACING, Direction.UP))
 			.rotateBlock(0, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
 
-		defaultBlockElement(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE)
+		blockElement(AllBlockPartials.SAW_BLADE_VERTICAL_ACTIVE)
 			.rotateBlock(0, -90, -90)
 			.scale(scale)
 			.render(matrixStack);

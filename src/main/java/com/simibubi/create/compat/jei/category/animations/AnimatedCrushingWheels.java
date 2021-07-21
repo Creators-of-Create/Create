@@ -20,12 +20,12 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(-22.5f));
 		int scale = 22;
 
-		defaultBlockElement(wheel)
+		blockElement(wheel)
 				.rotateBlock(0, 90, -getCurrentAngle())
 				.scale(scale)
 				.render(matrixStack);
 
-		defaultBlockElement(wheel)
+		blockElement(wheel)
 				.rotateBlock(0, 90, getCurrentAngle())
 				.atLocal(2, 0, 0)
 				.scale(scale)

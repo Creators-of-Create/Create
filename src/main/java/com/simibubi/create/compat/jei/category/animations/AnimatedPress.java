@@ -24,22 +24,22 @@ public class AnimatedPress extends AnimatedKinetics {
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = basin ? 23 : 24;
 
-		defaultBlockElement(shaft(Axis.Z))
+		blockElement(shaft(Axis.Z))
 				.rotateBlock(0, 0, getCurrentAngle())
 				.scale(scale)
 				.render(matrixStack);
 
-		defaultBlockElement(AllBlocks.MECHANICAL_PRESS.getDefaultState())
+		blockElement(AllBlocks.MECHANICAL_PRESS.getDefaultState())
 				.scale(scale)
 				.render(matrixStack);
 
-		defaultBlockElement(AllBlockPartials.MECHANICAL_PRESS_HEAD)
+		blockElement(AllBlockPartials.MECHANICAL_PRESS_HEAD)
 				.atLocal(0, -getAnimatedHeadOffset(), 0)
 				.scale(scale)
 				.render(matrixStack);
 
 		if (basin)
-			defaultBlockElement(AllBlocks.BASIN.getDefaultState())
+			blockElement(AllBlocks.BASIN.getDefaultState())
 					.atLocal(0, 1.65, 0)
 					.scale(scale)
 					.render(matrixStack);
