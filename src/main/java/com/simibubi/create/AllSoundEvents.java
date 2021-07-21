@@ -55,7 +55,7 @@ public class AllSoundEvents {
 			.category(SoundCategory.BLOCKS)
 			.build(),
 
-		FUNNEL_FLAP = create("funnel_flap").subtitle("Funnel Flaps")
+		FUNNEL_FLAP = create("funnel_flap").subtitle("Funnel flaps")
 			.playExisting(SoundEvents.ITEM_FRAME_ROTATE_ITEM, .125f, 1.5f)
 			.playExisting(SoundEvents.WOOL_BREAK, .0425f, .75f)
 			.category(SoundCategory.BLOCKS)
@@ -79,7 +79,7 @@ public class AllSoundEvents {
 				.category(SoundCategory.BLOCKS)
 				.build(),
 
-		MIXING = create("mixing").subtitle("Mixing Noises")
+		MIXING = create("mixing").subtitle("Mixing noises")
 			.playExisting(SoundEvents.GILDED_BLACKSTONE_BREAK, .125f, .5f)
 			.playExisting(SoundEvents.NETHERRACK_BREAK, .125f, .5f)
 			.category(SoundCategory.BLOCKS)
