@@ -161,7 +161,7 @@ public class PotatoCannonItem extends ShootableItem {
 					Vector3d sprayOffset = VecHelper.rotate(sprayBase, i * sprayChange + imperfection, Axis.Z);
 					splitMotion = splitMotion.add(VecHelper.lookAt(sprayOffset, motion));
 				}
-				
+
 				if (i != 0)
 					projectile.recoveryChance = 0;
 
@@ -226,9 +226,9 @@ public class PotatoCannonItem extends ShootableItem {
 	public void appendHoverText(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
 		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
 		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
-		final float additionalDamage = power * 2;
+		final float additionalDamageMult = 1 + power * .2f;
 		final float additionalKnockback = punch * .5f;
-		
+
 		getAmmoforPreview(stack).ifPresent(ammo -> {
 			String _attack = "potato_cannon.ammo.attack_damage";
 			String _reload = "potato_cannon.ammo.reload_ticks";
@@ -243,14 +243,14 @@ public class PotatoCannonItem extends ShootableItem {
 			TextFormatting green = TextFormatting.GREEN;
 			TextFormatting darkGreen = TextFormatting.DARK_GREEN;
 
-			float damageF = type.getDamage() + additionalDamage;
+			float damageF = type.getDamage() * additionalDamageMult;
 			IFormattableTextComponent damage = new StringTextComponent(
 				damageF == MathHelper.floor(damageF) ? "" + MathHelper.floor(damageF) : "" + damageF);
 			IFormattableTextComponent reloadTicks = new StringTextComponent("" + type.getReloadTicks());
 			IFormattableTextComponent knockback =
 				new StringTextComponent("" + (type.getKnockback() + additionalKnockback));
 
-			damage = damage.withStyle(additionalDamage > 0 ? green : darkGreen);
+			damage = damage.withStyle(additionalDamageMult > 1 ? green : darkGreen);
 			knockback = knockback.withStyle(additionalKnockback > 0 ? green : darkGreen);
 			reloadTicks = reloadTicks.withStyle(darkGreen);
 
