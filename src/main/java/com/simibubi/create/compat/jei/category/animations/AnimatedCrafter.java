@@ -1,9 +1,9 @@
 package com.simibubi.create.compat.jei.category.animations;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 public class AnimatedCrafter extends AnimatedKinetics {
 
@@ -14,7 +14,7 @@ public class AnimatedCrafter extends AnimatedKinetics {
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, -16, 13);
 
 		matrixStack.translate(3, 16, 0);
-		MatrixStacker.of(matrixStack)
+		MatrixTransformStack.of(matrixStack)
 			.rotateX(-12.5f)
 			.rotateY(-22.5f);
 		int scale = 22;

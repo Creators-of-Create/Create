@@ -2,13 +2,13 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.Vector;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler.Mode;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -63,7 +63,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
   		int light, Boolean active, Boolean usedByMe) {
 
 		float pt = AnimationTickHolder.getPartialTicks();
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
 		ms.pushPose();
 

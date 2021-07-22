@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder.elements;
 
 import java.util.function.Supplier;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -9,7 +10,6 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -126,7 +126,7 @@ public class ParrotElement extends AnimatedSceneElement {
 		ms.translate(MathHelper.lerp(pt, entity.xo, entity.getX()),
 			MathHelper.lerp(pt, entity.yo, entity.getY()), MathHelper.lerp(pt, entity.zo, entity.getZ()));
 
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.yRot));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));

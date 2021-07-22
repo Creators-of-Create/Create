@@ -2,12 +2,13 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
+import com.jozufozu.flywheel.backend.material.MaterialGroup;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
+import com.jozufozu.flywheel.backend.state.TextureRenderState;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
@@ -51,14 +52,9 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	}
 
 	private Instancer<OrientedData> getInstancer(MaterialManager<?> materialManager, SuperGlueEntity entity) {
-		InstanceMaterial<OrientedData> material;
+		MaterialGroup<?> group = USE_ATLAS ? materialManager.defaultSolid() : materialManager.solid(TextureRenderState.get(TEXTURE));
 
-		if (USE_ATLAS)
-			material = materialManager.getMaterial(Materials.ORIENTED);
-		else
-			material = materialManager.getMaterial(Materials.ORIENTED, TEXTURE);
-
-		return material.get(entity.getType(), GlueInstance::supplyModel);
+		return group.material(Materials.ORIENTED).model(entity.getType(), GlueInstance::supplyModel);
 	}
 
 	@Override

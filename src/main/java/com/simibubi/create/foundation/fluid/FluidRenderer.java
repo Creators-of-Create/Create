@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.fluid;
 
 import java.util.function.Function;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -9,7 +10,6 @@ import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -58,7 +58,7 @@ public class FluidRenderer {
 		if (inbound)
 			direction = direction.getOpposite();
 
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		ms.pushPose();
 		msr.centre()
 			.rotateY(AngleHelper.horizontalAngle(direction))
@@ -107,12 +107,12 @@ public class FluidRenderer {
 		light = (light & 0xF00000) | luminosity << 4;
 
 		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		ms.pushPose();
 		if (fluidStack.getFluid()
 			.getAttributes()
 			.isLighterThanAir())
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.translate(center)
 				.rotateX(180)
 				.translateBack(center);

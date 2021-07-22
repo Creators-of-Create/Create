@@ -8,7 +8,7 @@ import java.util.Map;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.block.FlapData;
@@ -28,7 +28,8 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
         tunnelFlaps = new EnumMap<>(Direction.class);
 
-		Instancer<FlapData> model = modelManager.getMaterial(AllMaterialSpecs.FLAPS)
+        Instancer<FlapData> model = modelManager.defaultSolid()
+                .material(AllMaterialSpecs.FLAPS)
 				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
         int blockLight = world.getBrightness(LightType.BLOCK, pos);

@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -21,7 +22,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -224,7 +224,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	public void transformMS(MatrixStack ms, float pt) {
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vector3d.ZERO) || !prevAnimatedRotation.equals(Vector3d.ZERO)) {
 			if (centerOfRotation == null)
@@ -232,14 +232,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotX = MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
 			double rotZ = MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
 			double rotY = MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.translate(centerOfRotation)
 				.rotateX(rotX)
 				.rotateZ(rotZ)
 				.rotateY(rotY)
 				.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
-				MatrixStacker.of(ms)
+				MatrixTransformStack.of(ms)
 					.translate(stabilizationAnchor)
 					.rotateX(-rotX)
 					.rotateZ(-rotZ)

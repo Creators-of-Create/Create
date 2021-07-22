@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.components.press;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -20,7 +21,8 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
         super(dispatcher, tile);
         press = tile;
 
-        pressHead = dispatcher.getOrientedMaterial()
+        pressHead = dispatcher.defaultSolid()
+                .material(Materials.ORIENTED)
                 .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
                 .createInstance();
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -22,7 +22,8 @@ public class DrillActorInstance extends ActorInstance {
     public DrillActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld contraption, MovementContext context) {
         super(materialManager, contraption, context);
 
-        InstanceMaterial<ActorData> instanceMaterial = materialManager.getMaterial(AllMaterialSpecs.ACTORS);
+        InstanceMaterial<ActorData> instanceMaterial = materialManager.defaultSolid()
+                .material(AllMaterialSpecs.ACTORS);
 
         BlockState state = context.state;
 

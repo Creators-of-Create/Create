@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.StabilizedContraption;
@@ -18,7 +19,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -536,7 +536,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		}
 
 		for (MatrixStack stack : matrixStacks)
-			MatrixStacker.of(stack)
+			MatrixTransformStack.of(stack)
 				.nudge(getId())
 				.centre()
 				.rotateY(angleYaw)

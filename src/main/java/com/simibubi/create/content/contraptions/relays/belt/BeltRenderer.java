@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -21,7 +22,6 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.BlockState;
@@ -76,7 +76,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean alongX = facing.getAxis() == Axis.X;
 
 			MatrixStack localTransforms = new MatrixStack();
-			MatrixStacker msr = MatrixStacker.of(localTransforms);
+			MatrixTransformStack msr = MatrixTransformStack.of(localTransforms);
 			IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel());
 
@@ -134,7 +134,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
 				Supplier<MatrixStack> matrixStackSupplier = () -> {
 					MatrixStack stack = new MatrixStack();
-					MatrixStacker stacker = MatrixStacker.of(stack);
+					MatrixTransformStack stacker = MatrixTransformStack.of(stack);
 					stacker.centre();
 					if (dir.getAxis() == Axis.X) stacker.rotateY(90);
 					if (dir.getAxis() == Axis.Y) stacker.rotateX(90);
@@ -202,7 +202,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		for (TransportedItemStack transported : te.getInventory()
 			.getTransportedItems()) {
 			ms.pushPose();
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.nudge(transported.angle);
 			float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 			float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);

@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.block.depot;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		int light, int overlay, DepotBehaviour depotBehaviour) {
 
 		TransportedItemStack transported = depotBehaviour.heldItem;
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		Vector3d itemPosition = VecHelper.getCenterOf(te.getBlockPos());
 
 		ms.pushPose();
@@ -102,7 +102,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		int angle, Random r, Vector3d itemPosition) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		int count = (int) (MathHelper.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
 		boolean blockItem = itemRenderer.getModel(itemStack, null, null)

@@ -1,11 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -21,7 +21,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 	@Override
 	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, TransformType transformType,
 		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		MatrixStacker stacker = MatrixStacker.of(ms);
+		MatrixTransformStack stacker = MatrixTransformStack.of(ms);
 		float animation = 0.25f;
 		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean rightHand = transformType == TransformType.FIRST_PERSON_RIGHT_HAND;

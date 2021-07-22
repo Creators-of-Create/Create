@@ -1,11 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -64,7 +64,7 @@ public class ExtendoGripRenderHandler {
 			return;
 
 		MatrixStack ms = event.getMatrixStack();
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
 		mc.getTextureManager()
 			.bind(abstractclientplayerentity.getSkinTextureLocation());

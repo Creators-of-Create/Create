@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.util.BufferBuilderReader;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
@@ -61,10 +61,12 @@ public class SuperByteBuffer {
 	private final Vector4f pos = new Vector4f();
 	private final Vector3f normal = new Vector3f();
 	private final Vector4f lightPos = new Vector4f();
+	private final MatrixTransformStack stacker;
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		template = new BufferBuilderReader(buf);
 		transforms = new MatrixStack();
+		stacker = MatrixTransformStack.of(transforms);
 	}
 
 	public static float getUnInterpolatedU(TextureAtlasSprite sprite, float u) {
@@ -221,8 +223,8 @@ public class SuperByteBuffer {
 		return this;
 	}
 
-	public MatrixStacker matrixStacker() {
-		return MatrixStacker.of(transforms);
+	public MatrixTransformStack matrixStacker() {
+		return stacker;
 	}
 
 	public SuperByteBuffer translate(Vector3d vec) {

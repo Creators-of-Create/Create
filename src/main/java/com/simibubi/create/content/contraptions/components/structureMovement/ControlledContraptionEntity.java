@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -231,7 +231,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 		Axis axis = getRotationAxis();
 
 		for (MatrixStack stack : matrixStacks)
-			MatrixStacker.of(stack)
+			MatrixTransformStack.of(stack)
 						 .nudge(getId())
 						 .centre()
 						 .rotate(angle, axis)

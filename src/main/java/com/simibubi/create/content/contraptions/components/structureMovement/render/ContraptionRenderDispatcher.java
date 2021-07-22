@@ -16,10 +16,12 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.state.RenderLayer;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -35,7 +37,6 @@ import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -130,8 +131,11 @@ public class ContraptionRenderDispatcher {
 		}
 
 		if (Backend.getInstance().canUseInstancing()) {
-			for (RenderedContraption renderer : RENDERERS.values()) {
-				renderer.materialManager.render(layer, event.viewProjection, event.camX, event.camY, event.camZ, renderer::setup);
+			RenderLayer renderLayer = RenderLayer.fromRenderType(layer);
+			if (renderLayer != null) {
+				for (RenderedContraption renderer : RENDERERS.values()) {
+					renderer.materialManager.render(renderLayer, event.viewProjection, event.camX, event.camY, event.camZ, renderer::setup);
+				}
 			}
 		}
 
@@ -236,7 +240,7 @@ public class ContraptionRenderDispatcher {
 
 			MatrixStack m = matrices.contraptionStack;
 			m.pushPose();
-			MatrixStacker.of(m)
+			MatrixTransformStack.of(m)
 					.translate(blockInfo.pos);
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);

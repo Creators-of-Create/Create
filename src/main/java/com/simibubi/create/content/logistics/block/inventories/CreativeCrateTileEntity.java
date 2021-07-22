@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.block.inventories;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -96,7 +96,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 
 			@Override
 			protected void rotate(BlockState state, MatrixStack ms) {
-				MatrixStacker.of(ms)
+				MatrixTransformStack.of(ms)
 					.rotateX(90);
 			}
 

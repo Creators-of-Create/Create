@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -9,7 +10,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -36,7 +36,7 @@ public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEn
 		SuperByteBuffer flapBuffer = PartialBufferer.get(AllBlockPartials.BELT_TUNNEL_FLAP, te.getBlockState());
 		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 		Vector3d pivot = VecHelper.voxelSpace(0, 10, 1f);
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
 		for (Direction direction : Iterate.directions) {
 			if (!te.flaps.containsKey(direction))

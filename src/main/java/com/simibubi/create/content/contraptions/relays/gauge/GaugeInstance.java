@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -13,7 +15,6 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -36,7 +37,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         Instancer<ModelData> headModel = getHeadModel();
 
         ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
         msr.translate(getInstancePosition());
 
         float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
@@ -66,7 +67,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
         float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         for (DialFace faceEntry : faces) {
             faceEntry.updateTransform(msr, progress);
@@ -99,7 +100,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
             this.face = face;
         }
 
-        private void setupTransform(MatrixStacker msr, float progress) {
+        private void setupTransform(MatrixTransformStack msr, float progress) {
             float dialPivot = 5.75f / 16;
 
             ms.pushPose();
@@ -116,7 +117,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
             ms.popPose();
         }
 
-        private void updateTransform(MatrixStacker msr, float progress) {
+        private void updateTransform(MatrixTransformStack msr, float progress) {
             float dialPivot = 5.75f / 16;
 
             ms.pushPose();
@@ -131,7 +132,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
             ms.popPose();
         }
 
-        protected MatrixStacker rotateToFace(MatrixStacker msr) {
+        protected TransformStack rotateToFace(TransformStack msr) {
             return msr.centre()
                       .rotate(Direction.UP, (float) ((-face.toYRot() - 90) / 180 * Math.PI))
                       .unCentre();
