@@ -176,7 +176,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		Vector3d hit = ray.getLocation();
 		Entity target = ray.getEntity();
 		PotatoCannonProjectileTypes projectileType = getProjectileType();
-		float damage = MathHelper.floor(projectileType.getDamage() * additionalDamageMult);
+		float damage = projectileType.getDamage() * additionalDamageMult;
 		float knockback = projectileType.getKnockback() + additionalKnockback;
 		Entity owner = this.getOwner();
 

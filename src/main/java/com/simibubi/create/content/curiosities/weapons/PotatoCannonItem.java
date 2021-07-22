@@ -244,7 +244,8 @@ public class PotatoCannonItem extends ShootableItem {
 			TextFormatting darkGreen = TextFormatting.DARK_GREEN;
 
 			float damageF = type.getDamage() * additionalDamageMult;
-			IFormattableTextComponent damage = new StringTextComponent("" + MathHelper.floor(damageF));
+			IFormattableTextComponent damage = new StringTextComponent(
+				damageF == MathHelper.floor(damageF) ? "" + MathHelper.floor(damageF) : "" + damageF);
 			IFormattableTextComponent reloadTicks = new StringTextComponent("" + type.getReloadTicks());
 			IFormattableTextComponent knockback =
 				new StringTextComponent("" + (type.getKnockback() + additionalKnockback));
