@@ -2220,8 +2220,8 @@
 	"create.ponder.spout_filling.text_1": "注液器可以将流体装入下方经过的，可以接受该流体的物品",
 	"create.ponder.spout_filling.text_2": "注液器的流体存储无法直接手动交互",
 	"create.ponder.spout_filling.text_3": "使用管线可以将流体输入注液器",
-	"create.ponder.spout_filling.text_4": "要被处理的流体可以被放置在其下方的置物台上",
-	"create.ponder.spout_filling.text_5": "当传送带上的物品经过机注液器下方时...",
+	"create.ponder.spout_filling.text_4": "要被处理的物品可以被放置在其下方的置物台上",
+	"create.ponder.spout_filling.text_5": "当传送带上的物品经过注液器下方时...",
 	"create.ponder.spout_filling.text_6": "注液器会使物品停下，然后自动处理这一物品",
 
 	"create.ponder.stabilized_bearings.header": "装置固定朝向",
