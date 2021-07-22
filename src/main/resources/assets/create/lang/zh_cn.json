@@ -743,7 +743,7 @@
 	"create.recipe.mystery_conversion": "神秘转化",
 	"create.recipe.spout_filling": "注液",
 	"create.recipe.draining": "分液",
-	"create.recipe.sequenced_assembly": "机械手流水线",
+	"create.recipe.sequenced_assembly": "流水线装配",
 	"create.recipe.assembly.next": "下一步：%1$s",
 	"create.recipe.assembly.step": "第%1$s步：",
 	"create.recipe.assembly.progress": "组装进度：%1$s/%2$s",
