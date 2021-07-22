@@ -1806,7 +1806,7 @@
 	"create.ponder.fluid_pipe_flow.text_3": "带有观察窗的管道不会建立侧向连接",
 	"create.ponder.fluid_pipe_flow.text_4": "通过使用动力泵，流体管道可以传输流体",
 	"create.ponder.fluid_pipe_flow.text_5": "一开始，流体不会真正被消耗",
-	"create.ponder.fluid_pipe_flow.text_6": "当管道内的液体流彻底联通之后，流体才会开始逐渐从一个容器装转移到另一个",
+	"create.ponder.fluid_pipe_flow.text_6": "当管道内的液体流彻底联通之后，流体才会开始逐渐从一个容器中转移到另一个",
 	"create.ponder.fluid_pipe_flow.text_7": "这意味着流体管道本身并不真正存储任何流体",
 
 	"create.ponder.fluid_pipe_interaction.header": "抽取和填充流体容器",
