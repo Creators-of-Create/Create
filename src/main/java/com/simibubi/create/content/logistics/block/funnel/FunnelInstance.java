@@ -47,7 +47,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
             FlapData key = model.createInstance();
 
-            key.setPosition(pos)
+            key.setPosition(getInstancePosition())
                .setSegmentOffset(segmentOffset, 0, -tile.getFlapOffset())
                .setBlockLight(blockLight)
                .setSkyLight(skyLight)

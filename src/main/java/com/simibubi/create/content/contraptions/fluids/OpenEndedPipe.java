@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.fluids;
 import static net.minecraft.state.properties.BlockStateProperties.LEVEL_HONEY;
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -16,7 +17,6 @@ import com.simibubi.create.foundation.utility.BlockFace;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -40,9 +40,16 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class OpenEndedPipe extends FlowSource {
 
-	World world;
-	BlockPos pos;
-	AxisAlignedBB aoe;
+	private static final List<IEffectHandler> EFFECT_HANDLERS = new ArrayList<>();
+
+	static {
+		registerEffectHandler(new PotionEffectHandler());
+		registerEffectHandler(new MilkEffectHandler());
+	}
+
+	private World world;
+	private BlockPos pos;
+	private AxisAlignedBB aoe;
 
 	private OpenEndFluidHandler fluidHandler;
 	private BlockPos outputPos;
@@ -61,9 +68,55 @@ public class OpenEndedPipe extends FlowSource {
 			aoe = aoe.expandTowards(0, -1, 0);
 	}
 
+	public static void registerEffectHandler(IEffectHandler handler) {
+		EFFECT_HANDLERS.add(handler);
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public BlockPos getPos() {
+		return pos;
+	}
+
+	public BlockPos getOutputPos() {
+		return outputPos;
+	}
+
+	public AxisAlignedBB getAOE() {
+		return aoe;
+	}
+
 	@Override
 	public void manageSource(World world) {
 		this.world = world;
+	}
+
+	@Override
+	public LazyOptional<IFluidHandler> provideHandler() {
+		return LazyOptional.of(() -> fluidHandler);
+	}
+
+	@Override
+	public boolean isEndpoint() {
+		return true;
+	}
+
+	public CompoundNBT serializeNBT() {
+		CompoundNBT compound = new CompoundNBT();
+		fluidHandler.writeToNBT(compound);
+		compound.putBoolean("Pulling", wasPulling);
+		compound.put("Location", location.serializeNBT());
+		return compound;
+	}
+
+	public static OpenEndedPipe fromNBT(CompoundNBT compound, BlockPos tilePos) {
+		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
+		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(tilePos, fromNBT.getFace()));
+		oep.fluidHandler.readFromNBT(compound);
+		oep.wasPulling = compound.getBoolean("Pulling");
+		return oep;
 	}
 
 	private FluidStack removeFluidFromSpace(boolean simulate) {
@@ -125,7 +178,7 @@ public class OpenEndedPipe extends FlowSource {
 			return false;
 		if (!FluidHelper.hasBlockState(fluid.getFluid())) {
 			if (!simulate)
-				applyEffects(world, fluid);
+				applyEffects(fluid);
 			return true;
 		}
 
@@ -167,76 +220,21 @@ public class OpenEndedPipe extends FlowSource {
 		return true;
 	}
 
-	private boolean canApplyEffects(World world, FluidStack fluid) {
-		Fluid fluidType = fluid.getFluid();
-		if (fluidType.isSame(AllFluids.POTION.get()))
-			return true;
-		if (Tags.Fluids.MILK.contains(fluidType))
-			return true;
+	private boolean canApplyEffects(FluidStack fluid) {
+		for (IEffectHandler handler : EFFECT_HANDLERS) {
+			if (handler.canApplyEffects(this, fluid)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
-	private void applyEffects(World world, FluidStack fluid) {
-		Fluid fluidType = fluid.getFluid();
-
-		if (fluidType.isSame(AllFluids.POTION.get()))
-			applyPotionEffects(world, fluid);
-
-		if (Tags.Fluids.MILK.contains(fluidType)) {
-			if (world.getGameTime() % 5 != 0)
-				return;
-			List<LivingEntity> list =
-				world.getEntitiesOfClass(LivingEntity.class, aoe, LivingEntity::isAffectedByPotions);
-			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
-			for (LivingEntity livingentity : list)
-				livingentity.curePotionEffects(curativeItem);
-		}
-	}
-
-	private void applyPotionEffects(World world, FluidStack fluid) {
-		if (cachedFluid == null || cachedEffects == null || !fluid.isFluidEqual(cachedFluid)) {
-			FluidStack copy = fluid.copy();
-			copy.setAmount(250);
-			ItemStack bottle = PotionFluidHandler.fillBottle(new ItemStack(Items.GLASS_BOTTLE), fluid);
-			cachedEffects = PotionUtils.getMobEffects(bottle);
-		}
-
-		if (cachedEffects.isEmpty())
-			return;
-
-		List<LivingEntity> list =
-			world.getEntitiesOfClass(LivingEntity.class, aoe, LivingEntity::isAffectedByPotions);
-		for (LivingEntity livingentity : list) {
-			for (EffectInstance effectinstance : cachedEffects) {
-				Effect effect = effectinstance.getEffect();
-				if (effect.isInstantenous()) {
-					effect.applyInstantenousEffect(null, null, livingentity, effectinstance.getAmplifier(), 0.5D);
-					continue;
-				}
-				livingentity.addEffect(new EffectInstance(effectinstance));
+	private void applyEffects(FluidStack fluid) {
+		for (IEffectHandler handler : EFFECT_HANDLERS) {
+			if (handler.canApplyEffects(this, fluid)) {
+				handler.applyEffects(this, fluid);
 			}
 		}
-	}
-
-	@Override
-	public LazyOptional<IFluidHandler> provideHandler() {
-		return LazyOptional.of(() -> fluidHandler);
-	}
-
-	public CompoundNBT serializeNBT() {
-		CompoundNBT compound = new CompoundNBT();
-		fluidHandler.writeToNBT(compound);
-		compound.putBoolean("Pulling", wasPulling);
-		compound.put("Location", location.serializeNBT());
-		return compound;
-	}
-
-	public static OpenEndedPipe fromNBT(CompoundNBT compound, BlockPos tilePos) {
-		BlockFace fromNBT = BlockFace.fromNBT(compound.getCompound("Location"));
-		OpenEndedPipe oep = new OpenEndedPipe(new BlockFace(tilePos, fromNBT.getFace()));
-		oep.fluidHandler.readFromNBT(compound);
-		oep.wasPulling = compound.getBoolean("Pulling");
-		return oep;
 	}
 
 	private class OpenEndFluidHandler extends FluidTank {
@@ -262,7 +260,7 @@ public class OpenEndedPipe extends FlowSource {
 				setFluid(FluidStack.EMPTY);
 			if (wasPulling)
 				wasPulling = false;
-			if (canApplyEffects(world, resource))
+			if (canApplyEffects(resource))
 				resource = FluidHelper.copyStackWithAmount(resource, 1);
 
 			int fill = super.fill(resource, action);
@@ -326,9 +324,62 @@ public class OpenEndedPipe extends FlowSource {
 
 	}
 
-	@Override
-	public boolean isEndpoint() {
-		return true;
+	public interface IEffectHandler {
+		boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid);
+
+		void applyEffects(OpenEndedPipe pipe, FluidStack fluid);
+	}
+
+	public static class PotionEffectHandler implements IEffectHandler {
+		@Override
+		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			return fluid.getFluid().isSame(AllFluids.POTION.get());
+		}
+
+		@Override
+		public void applyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			if (pipe.cachedFluid == null || pipe.cachedEffects == null || !fluid.isFluidEqual(pipe.cachedFluid)) {
+				FluidStack copy = fluid.copy();
+				copy.setAmount(250);
+				ItemStack bottle = PotionFluidHandler.fillBottle(new ItemStack(Items.GLASS_BOTTLE), fluid);
+				pipe.cachedEffects = PotionUtils.getMobEffects(bottle);
+			}
+
+			if (pipe.cachedEffects.isEmpty())
+				return;
+
+			List<LivingEntity> list =
+				pipe.getWorld().getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
+			for (LivingEntity livingentity : list) {
+				for (EffectInstance effectinstance : pipe.cachedEffects) {
+					Effect effect = effectinstance.getEffect();
+					if (effect.isInstantenous()) {
+						effect.applyInstantenousEffect(null, null, livingentity, effectinstance.getAmplifier(), 0.5D);
+					} else {
+						livingentity.addEffect(new EffectInstance(effectinstance));
+					}
+				}
+			}
+		}
+	}
+
+	public static class MilkEffectHandler implements IEffectHandler {
+		@Override
+		public boolean canApplyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			return Tags.Fluids.MILK.contains(fluid.getFluid());
+		}
+
+		@Override
+		public void applyEffects(OpenEndedPipe pipe, FluidStack fluid) {
+			World world = pipe.getWorld();
+			if (world.getGameTime() % 5 != 0)
+				return;
+			List<LivingEntity> list =
+				world.getEntitiesOfClass(LivingEntity.class, pipe.getAOE(), LivingEntity::isAffectedByPotions);
+			ItemStack curativeItem = new ItemStack(Items.MILK_BUCKET);
+			for (LivingEntity livingentity : list)
+				livingentity.curePotionEffects(curativeItem);
+		}
 	}
 
 }

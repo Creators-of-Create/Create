@@ -19,12 +19,12 @@ public class AnimatedCrafter extends AnimatedKinetics {
 			.rotateY(-22.5f);
 		int scale = 22;
 
-		defaultBlockElement(cogwheel())
+		blockElement(cogwheel())
 			.rotateBlock(90, 0, getCurrentAngle())
 			.scale(scale)
 			.render(matrixStack);
 
-		defaultBlockElement(AllBlocks.MECHANICAL_CRAFTER.getDefaultState())
+		blockElement(AllBlocks.MECHANICAL_CRAFTER.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.scale(scale)
 			.render(matrixStack);

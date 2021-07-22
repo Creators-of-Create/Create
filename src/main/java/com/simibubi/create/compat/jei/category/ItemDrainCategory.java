@@ -70,6 +70,8 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 				ItemStack result = handler.getContainer();
 				if (extracted.isEmpty())
 					return;
+				if (result.isEmpty())
+					return;
 
 				Ingredient ingredient = Ingredient.of(stack);
 				ResourceLocation itemName = stack.getItem()

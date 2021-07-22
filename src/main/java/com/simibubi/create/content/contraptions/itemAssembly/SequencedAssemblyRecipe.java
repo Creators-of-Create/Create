@@ -36,14 +36,14 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 
-	ResourceLocation id;
-	SequencedAssemblyRecipeSerializer serializer;
+	protected ResourceLocation id;
+	protected SequencedAssemblyRecipeSerializer serializer;
 
-	Ingredient ingredient;
-	List<SequencedRecipe<?>> sequence;
-	int loops;
-	ProcessingOutput transitionalItem;
-	List<ProcessingOutput> resultPool;
+	protected Ingredient ingredient;
+	protected List<SequencedRecipe<?>> sequence;
+	protected int loops;
+	protected ProcessingOutput transitionalItem;
+	protected List<ProcessingOutput> resultPool;
 
 	public SequencedAssemblyRecipe(ResourceLocation recipeId, SequencedAssemblyRecipeSerializer serializer) {
 		this.id = recipeId;

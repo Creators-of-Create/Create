@@ -37,7 +37,7 @@ public class ColorHelper {
 	public static int applyAlpha(int color, float alpha) {
 		int prevAlphaChannel = (color >> 24) & 0xFF;
 		if (prevAlphaChannel > 0)
-			alpha *= prevAlphaChannel / 256f;
+			alpha *= prevAlphaChannel / 255f;
 		int alphaChannel = (int) (0xFF * MathHelper.clamp(alpha, 0, 1));
 		return (color & 0xFFFFFF) | alphaChannel << 24;
 	}
@@ -98,7 +98,7 @@ public class ColorHelper {
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
 
-		RenderSystem.color4f(r / 256f, g / 256f, b / 256f, 1);
+		RenderSystem.color4f(r / 255f, g / 255f, b / 255f, 1);
 	}
 
 	public static void glResetColor() {
@@ -109,7 +109,15 @@ public class ColorHelper {
 		int r = (color >> 16) & 0xFF;
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
-		return new Vector3d(r, g, b).scale(1 / 256d);
+		return new Vector3d(r, g, b).scale(1 / 255d);
+	}
+
+	public static Vector3d[] toVectors(int[] colors) {
+		Vector3d[] vectors = new Vector3d[colors.length];
+		for (int i = 0; i < colors.length; i++) {
+			vectors[i] = ColorHelper.getRGB(colors[i]);
+		}
+		return vectors;
 	}
 
 	public static int colorFromUUID(UUID uuid) {

@@ -70,7 +70,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return icon;
 	}
 
-	protected static AllGuiTextures getRenderedSlot(IRecipe<?> recipe, int index) {
+	public static AllGuiTextures getRenderedSlot(IRecipe<?> recipe, int index) {
 		AllGuiTextures jeiSlot = AllGuiTextures.JEI_SLOT;
 		if (!(recipe instanceof ProcessingRecipe))
 			return jeiSlot;
@@ -85,23 +85,29 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
 
-	protected static IDrawable emptyBackground(int width, int height) {
+	public static IDrawable emptyBackground(int width, int height) {
 		return new EmptyBackground(width, height);
 	}
 
-	protected static IDrawable doubleItemIcon(IItemProvider item1, IItemProvider item2) {
+	public static IDrawable doubleItemIcon(IItemProvider item1, IItemProvider item2) {
 		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
 	}
 
-	protected static IDrawable itemIcon(IItemProvider item) {
+	public static IDrawable itemIcon(IItemProvider item) {
 		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
 	}
 
-	protected static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
+	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
+		addStochasticTooltip(itemStacks, results, 1);
+	}
+	
+	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results, int startIndex) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (input)
 				return;
-			ProcessingOutput output = results.get(slotIndex - 1);
+			if (slotIndex < startIndex)
+				return;
+			ProcessingOutput output = results.get(slotIndex - startIndex);
 			float chance = output.getChance();
 			if (chance != 1)
 				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))

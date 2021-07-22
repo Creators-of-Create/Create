@@ -20,10 +20,10 @@ import net.minecraftforge.common.Tags;
 
 public abstract class CreateRecipeProvider extends RecipeProvider {
 
-	final List<GeneratedRecipe> all = new ArrayList<>();
+	protected final List<GeneratedRecipe> all = new ArrayList<>();
 
-	public CreateRecipeProvider(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public CreateRecipeProvider(DataGenerator generator) {
+		super(generator);
 	}
 
 	@Override
@@ -32,14 +32,14 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
 	}
 
-	@FunctionalInterface
-	public interface GeneratedRecipe {
-		void register(Consumer<IFinishedRecipe> consumer);
-	}
-
 	protected GeneratedRecipe register(GeneratedRecipe recipe) {
 		all.add(recipe);
 		return recipe;
+	}
+
+	@FunctionalInterface
+	public interface GeneratedRecipe {
+		void register(Consumer<IFinishedRecipe> consumer);
 	}
 
 	protected static class Marker {

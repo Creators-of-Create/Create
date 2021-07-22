@@ -43,14 +43,6 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 		return setPosition(pos.x(), pos.y(), pos.z());
 	}
 
-	public FlapData setPosition(int x, int y, int z) {
-		Vector3i origin = owner.originCoordinate.get();
-
-		return setPosition((float) (x - origin.getX()),
-				(float) (y - origin.getY()),
-				(float) (z - origin.getZ()));
-	}
-
 	public FlapData setPosition(float x, float y, float z) {
 		this.x = x;
 		this.y = y;

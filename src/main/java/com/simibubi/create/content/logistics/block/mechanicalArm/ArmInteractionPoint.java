@@ -332,12 +332,12 @@ public abstract class ArmInteractionPoint {
 		@Override
 		protected ItemStack insert(World world, ItemStack stack, boolean simulate) {
 			ItemStack input = stack.copy();
-			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, true)
+			if (!BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, true)
 				.getObject()
 				.isEmpty()) {
 				return stack;
 			}
-			ActionResult<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, simulate);
+			ActionResult<ItemStack> res = BlazeBurnerBlock.tryInsert(state, world, pos, input, false, false, simulate);
 			return res.getResult() == ActionResultType.SUCCESS
 				? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1)
 				: stack;

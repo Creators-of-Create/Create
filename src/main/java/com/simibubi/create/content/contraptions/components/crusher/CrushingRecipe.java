@@ -22,7 +22,7 @@ public class CrushingRecipe extends AbstractCrushingRecipe {
 		return ingredients.get(0)
 			.test(inv.getItem(0));
 	}
-	
+
 	@Override
 	protected int getMaxOutputCount() {
 		return 7;

@@ -51,6 +51,7 @@ import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -78,12 +79,6 @@ import net.minecraftforge.fml.ModList;
 public class CreateJEI implements IModPlugin {
 
 	private static final ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
-
-	@Override
-	@Nonnull
-	public ResourceLocation getPluginUid() {
-		return ID;
-	}
 
 	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
@@ -222,6 +217,12 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	@Override
+	@Nonnull
+	public ResourceLocation getPluginUid() {
+		return ID;
+	}
+
+	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		registration.addRecipeTransferHandler(new BlueprintTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
 	}
@@ -269,7 +270,7 @@ public class CreateJEI implements IModPlugin {
 			pred = Predicates.alwaysTrue();
 		}
 
-		public CategoryBuilder<T> recipes(AllRecipeTypes recipeTypeEntry) {
+		public CategoryBuilder<T> recipes(IRecipeTypeInfo recipeTypeEntry) {
 			return recipes(recipeTypeEntry::getType);
 		}
 
