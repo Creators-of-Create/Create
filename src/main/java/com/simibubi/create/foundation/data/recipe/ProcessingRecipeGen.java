@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -22,22 +22,22 @@ import net.minecraftforge.fluids.FluidAttributes;
 
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
-	protected static List<ProcessingRecipeGen> generators = new ArrayList<>();
+	protected static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
 	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
 	protected static final int BOTTLE = 250;
 
 	public static void registerAll(DataGenerator gen) {
-		generators.add(new CrushingRecipeGen(gen));
-		generators.add(new MillingRecipeGen(gen));
-		generators.add(new CuttingRecipeGen(gen));
-		generators.add(new WashingRecipeGen(gen));
-		generators.add(new PolishingRecipeGen(gen));
-		generators.add(new DeployingRecipeGen(gen));
-		generators.add(new MixingRecipeGen(gen));
-		generators.add(new CompactingRecipeGen(gen));
-		generators.add(new PressingRecipeGen(gen));
-		generators.add(new FillingRecipeGen(gen));
-		generators.add(new EmptyingRecipeGen(gen));
+		GENERATORS.add(new CrushingRecipeGen(gen));
+		GENERATORS.add(new MillingRecipeGen(gen));
+		GENERATORS.add(new CuttingRecipeGen(gen));
+		GENERATORS.add(new WashingRecipeGen(gen));
+		GENERATORS.add(new PolishingRecipeGen(gen));
+		GENERATORS.add(new DeployingRecipeGen(gen));
+		GENERATORS.add(new MixingRecipeGen(gen));
+		GENERATORS.add(new CompactingRecipeGen(gen));
+		GENERATORS.add(new PressingRecipeGen(gen));
+		GENERATORS.add(new FillingRecipeGen(gen));
+		GENERATORS.add(new EmptyingRecipeGen(gen));
 
 		gen.addProvider(new IDataProvider() {
 
@@ -48,7 +48,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 			@Override
 			public void run(DirectoryCache dc) throws IOException {
-				generators.forEach(g -> {
+				GENERATORS.forEach(g -> {
 					try {
 						g.run(dc);
 					} catch (IOException e) {
@@ -59,8 +59,8 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		});
 	}
 
-	public ProcessingRecipeGen(DataGenerator p_i48262_1_) {
-		super(p_i48262_1_);
+	public ProcessingRecipeGen(DataGenerator generator) {
+		super(generator);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	 * Create a processing recipe with a single itemstack ingredient, using its id
 	 * as the name of the recipe
 	 */
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<IItemProvider> singleIngredient,
+	<T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<IItemProvider> singleIngredient,
 																	 UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		return create(Create.ID, singleIngredient, transform);
 	}
@@ -109,21 +109,20 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	 * Create a new processing recipe, with recipe definitions provided by the
 	 * function
 	 */
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String name,
+	<T extends ProcessingRecipe<?>> GeneratedRecipe create(String name,
 																	 UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		return create(Create.asResource(name), transform);
 	}
 
-	protected  <T extends ProcessingRecipe<?>> ProcessingRecipeSerializer<T> getSerializer() {
-		ProcessingRecipeSerializer<T> serializer = getRecipeType().getSerializer();
-		return serializer;
+	protected abstract IRecipeTypeInfo getRecipeType();
+
+	protected <T extends ProcessingRecipe<?>> ProcessingRecipeSerializer<T> getSerializer() {
+		return getRecipeType().getSerializer();
 	}
 
 	@Override
-	public final String getName() {
-		return "Create's Processing Recipes: " + getRecipeType();
+	public String getName() {
+		return "Create's Processing Recipes: " + getRecipeType().getId().getPath();
 	}
-
-	protected abstract AllRecipeTypes getRecipeType();
 
 }

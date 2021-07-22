@@ -8,12 +8,10 @@ import java.util.function.UnaryOperator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.Item;
@@ -92,16 +90,17 @@ public class SequencedAssemblyRecipeBuilder {
 
 	public static class DataGenResult implements IFinishedRecipe {
 
-		private List<ICondition> recipeConditions;
-		private SequencedAssemblyRecipeSerializer serializer;
-		private ResourceLocation id;
 		private SequencedAssemblyRecipe recipe;
+		private List<ICondition> recipeConditions;
+		private ResourceLocation id;
+		private SequencedAssemblyRecipeSerializer serializer;
 
 		public DataGenResult(SequencedAssemblyRecipe recipe, List<ICondition> recipeConditions) {
 			this.recipeConditions = recipeConditions;
 			this.recipe = recipe;
-			this.id = Create.asResource(Lang.asId(AllRecipeTypes.SEQUENCED_ASSEMBLY.name()) + "/" + recipe.getId()
-				.getPath());
+			recipe.getId();
+			this.id = new ResourceLocation(recipe.getId().getNamespace(),
+					AllRecipeTypes.SEQUENCED_ASSEMBLY.getId().getPath() + "/" + recipe.getId().getPath());
 			this.serializer = (SequencedAssemblyRecipeSerializer) recipe.getSerializer();
 		}
 

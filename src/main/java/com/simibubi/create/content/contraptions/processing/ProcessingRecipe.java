@@ -10,11 +10,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
@@ -42,24 +41,23 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	private IRecipeType<?> type;
 	private IRecipeSerializer<?> serializer;
-	private AllRecipeTypes enumType;
+	private IRecipeTypeInfo typeInfo;
 	private Supplier<ItemStack> forcedResult;
 
-	public ProcessingRecipe(AllRecipeTypes recipeType, ProcessingRecipeParams params) {
-
+	public ProcessingRecipe(IRecipeTypeInfo typeInfo, ProcessingRecipeParams params) {
 		this.forcedResult = null;
-		this.enumType = recipeType;
+		this.typeInfo = typeInfo;
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
 		this.fluidResults = params.fluidResults;
-		this.serializer = recipeType.getSerializer();
+		this.serializer = typeInfo.getSerializer();
 		this.requiredHeat = params.requiredHeat;
 		this.ingredients = params.ingredients;
-		this.type = recipeType.getType();
+		this.type = typeInfo.getType();
 		this.results = params.results;
 		this.id = params.id;
 
-		validate(Lang.asId(recipeType.name()));
+		validate(typeInfo.getId());
 	}
 
 	// Recipe type options:
@@ -86,8 +84,8 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	//
 
-	private void validate(String recipeTypeName) {
-		String messageHeader = "Your custom " + recipeTypeName + " recipe (" + id.toString() + ")";
+	private void validate(ResourceLocation recipeTypeId) {
+		String messageHeader = "Your custom " + recipeTypeId + " recipe (" + id.toString() + ")";
 		Logger logger = Create.LOGGER;
 		int ingredientCount = ingredients.size();
 		int outputCount = results.size();
@@ -186,18 +184,8 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	@Override
-	public ResourceLocation getId() {
-		return id;
-	}
-
-	@Override
 	public boolean isSpecial() {
 		return true;
-	}
-
-	@Override
-	public IRecipeSerializer<?> getSerializer() {
-		return serializer;
 	}
 
 	// Processing recipes do not show up in the recipe book
@@ -207,8 +195,22 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	@Override
+	public ResourceLocation getId() {
+		return id;
+	}
+
+	@Override
+	public IRecipeSerializer<?> getSerializer() {
+		return serializer;
+	}
+
+	@Override
 	public IRecipeType<?> getType() {
 		return type;
+	}
+
+	public IRecipeTypeInfo getTypeInfo() {
+		return typeInfo;
 	}
 
 	// Additional Data added by subtypes
@@ -220,9 +222,5 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	public void writeAdditional(JsonObject json) {}
 
 	public void writeAdditional(PacketBuffer buffer) {}
-
-	public AllRecipeTypes getEnumType() {
-		return enumType;
-	}
 
 }

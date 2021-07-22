@@ -21,6 +21,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
@@ -32,7 +33,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 
-public enum AllRecipeTypes {
+public enum AllRecipeTypes implements IRecipeTypeInfo {
 
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	CONVERSION(ConversionRecipe::new),
@@ -78,16 +79,19 @@ public enum AllRecipeTypes {
 		this(processingSerializer(processingFactory));
 	}
 
+	@Override
 	public ResourceLocation getId() {
 		return id;
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public <T extends IRecipeSerializer<?>> T getSerializer() {
 		return (T) serializer;
 	}
 
 	@SuppressWarnings("unchecked")
+	@Override
 	public <T extends IRecipeType<?>> T getType() {
 		return (T) type;
 	}
