@@ -50,7 +50,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
                 FlapData key = model.createInstance();
 
-                key.setPosition(pos)
+                key.setPosition(getInstancePosition())
                    .setSegmentOffset(segmentOffset, 0, 0)
                    .setBlockLight(blockLight)
                    .setSkyLight(skyLight)
