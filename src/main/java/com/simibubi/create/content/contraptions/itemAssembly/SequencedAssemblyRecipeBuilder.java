@@ -98,7 +98,6 @@ public class SequencedAssemblyRecipeBuilder {
 		public DataGenResult(SequencedAssemblyRecipe recipe, List<ICondition> recipeConditions) {
 			this.recipeConditions = recipeConditions;
 			this.recipe = recipe;
-			recipe.getId();
 			this.id = new ResourceLocation(recipe.getId().getNamespace(),
 					AllRecipeTypes.SEQUENCED_ASSEMBLY.getId().getPath() + "/" + recipe.getId().getPath());
 			this.serializer = (SequencedAssemblyRecipeSerializer) recipe.getSerializer();
