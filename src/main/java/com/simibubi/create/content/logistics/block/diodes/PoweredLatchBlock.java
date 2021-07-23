@@ -108,7 +108,7 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
 		if (state.getValue(POWERED) != state.getValue(POWERED_SIDE)) {
 			playSound(worldIn, pos, state.getValue(POWERING), false);
-			return InteractionResult.PASS;
+			return InteractionResult.SUCCESS;
 		}
 		if (!worldIn.isClientSide) {
 			state = state.cycle(POWERING);
