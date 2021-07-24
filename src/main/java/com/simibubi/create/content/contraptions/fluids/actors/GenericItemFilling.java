@@ -105,8 +105,7 @@ public class GenericItemFilling {
 	}
 
 	private static boolean canFillBucketInternally(FluidStack availableFluid) {
-		return availableFluid.getFluid()
-			.isSame(ForgeMod.MILK.get());
+		return false;
 	}
 
 	public static ItemStack fillItem(World world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
@@ -122,12 +121,6 @@ public class GenericItemFilling {
 				fillBottle = PotionFluidHandler.fillBottle(stack, toFill);
 			stack.shrink(1);
 			return fillBottle;
-		}
-		
-		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(toFill)) {
-			ItemStack filledBucket = new ItemStack(Items.MILK_BUCKET);
-			stack.shrink(1);
-			return filledBucket;
 		}
 		
 		ItemStack split = stack.copy();

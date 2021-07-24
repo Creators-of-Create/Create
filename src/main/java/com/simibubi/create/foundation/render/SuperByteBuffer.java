@@ -66,6 +66,7 @@ public class SuperByteBuffer {
 	public SuperByteBuffer(BufferBuilder buf) {
 		template = new BufferBuilderReader(buf);
 		transforms = new MatrixStack();
+		transforms.pushPose();
 		stacker = MatrixTransformStack.of(transforms);
 	}
 
@@ -203,7 +204,10 @@ public class SuperByteBuffer {
 	}
 
 	public SuperByteBuffer reset() {
-		transforms = new MatrixStack();
+		while (!transforms.clear())
+			transforms.popPose();
+		transforms.pushPose();
+		
 		shouldColor = false;
 		r = 0;
 		g = 0;

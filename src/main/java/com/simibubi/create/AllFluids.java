@@ -117,18 +117,4 @@ public class AllFluids {
 
 	}
 	
-	@EventBusSubscriber(modid = Create.ID, bus = Bus.FORGE)
-	public static class MissingMappingsSubscriber {
-	    
-	    @SubscribeEvent
-	    public static void missingMappings(RegistryEvent.MissingMappings<Fluid> event) {
-	        for (Mapping<Fluid> mapping : event.getMappings(Create.ID)) {
-	            if (mapping.key.getPath().equals("milk"))
-	                mapping.remap(ForgeMod.MILK.get());
-	            else if (mapping.key.getPath().equals("flowing_milk"))
-                    mapping.remap(ForgeMod.FLOWING_MILK.get());
-	        }
-	    }
-	}
-
 }
