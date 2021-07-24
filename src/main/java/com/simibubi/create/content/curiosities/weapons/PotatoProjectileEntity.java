@@ -31,7 +31,6 @@ import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -222,7 +221,7 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		if (type.getReloadTicks() < 10)
 			livingentity.invulnerableTime = type.getReloadTicks() + 10;
 
-		if (knockback > 0) {
+		if (onServer && knockback > 0) {
 			Vector3d appliedMotion = this.getDeltaMovement()
 				.multiply(1.0D, 0.0D, 1.0D)
 				.normalize()

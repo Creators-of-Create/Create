@@ -62,6 +62,9 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 	}
 
 	protected BlockState tryConvert(IWorld world, BlockPos pos, BlockState state, BlockState underState) {
+		if (!AllBlocks.PECULIAR_BELL.has(state))
+			return state;
+
 		Block underBlock = underState.getBlock();
 		if (!(Blocks.SOUL_FIRE.is(underBlock) || Blocks.SOUL_CAMPFIRE.is(underBlock)))
 			return state;

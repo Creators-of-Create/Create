@@ -8,12 +8,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.ITickList;
 import net.minecraft.world.TickPriority;
 import net.minecraftforge.items.IItemHandler;
 
@@ -75,8 +77,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 			level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
 			currentLevel = -1;
 			state = false;
-			level.blockUpdated(worldPosition, getBlockState().getBlock());
 			sendData();
+			scheduleBlockTick();
 			return;
 		}
 
@@ -116,11 +118,18 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 			displayLevel = (int) (currentLevel * 6);
 		level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
 
-		if (update && !level.getBlockTicks().willTickThisTick(worldPosition, getBlockState().getBlock()))
-			level.getBlockTicks().scheduleTick(worldPosition, getBlockState().getBlock(), 2, TickPriority.NORMAL);
+		if (update)
+			scheduleBlockTick();
 
 		if (changed || update)
 			sendData();
+	}
+
+	protected void scheduleBlockTick() {
+		ITickList<Block> blockTicks = level.getBlockTicks();
+		Block block = getBlockState().getBlock();
+		if (!blockTicks.willTickThisTick(worldPosition, block))
+			blockTicks.scheduleTick(worldPosition, block, 2, TickPriority.NORMAL);
 	}
 
 	@Override
