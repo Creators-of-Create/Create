@@ -35,17 +35,17 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(FACE)
-			.add(HORIZONTAL_FACING);
+			.add(FACING);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
 		BlockState stateForPlacement = super.getStateForPlacement(ctx);
 		Axis prefferedAxis = null;
-		BlockPos pos = ctx.getPos();
-		World world = ctx.getWorld();
+		BlockPos pos = ctx.getClickedPos();
+		World world = ctx.getLevel();
 		for (Direction side : Iterate.directions) {
 			if (!prefersConnectionTo(world, pos, side))
 				continue;
@@ -57,16 +57,16 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 		}
 
 		if (prefferedAxis == Axis.Y)
-			stateForPlacement = stateForPlacement.with(FACE, AttachFace.WALL)
-				.with(HORIZONTAL_FACING, stateForPlacement.get(HORIZONTAL_FACING)
+			stateForPlacement = stateForPlacement.setValue(FACE, AttachFace.WALL)
+				.setValue(FACING, stateForPlacement.getValue(FACING)
 					.getOpposite());
 		else if (prefferedAxis != null) {
-			if (stateForPlacement.get(FACE) == AttachFace.WALL)
-				stateForPlacement = stateForPlacement.with(FACE, AttachFace.FLOOR);
+			if (stateForPlacement.getValue(FACE) == AttachFace.WALL)
+				stateForPlacement = stateForPlacement.setValue(FACE, AttachFace.FLOOR);
 			for (Direction direction : ctx.getNearestLookingDirections()) {
 				if (direction.getAxis() != prefferedAxis)
 					continue;
-				stateForPlacement = stateForPlacement.with(HORIZONTAL_FACING, direction.getOpposite());
+				stateForPlacement = stateForPlacement.setValue(FACING, direction.getOpposite());
 			}
 		}
 
@@ -74,44 +74,44 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	}
 
 	protected boolean prefersConnectionTo(IWorldReader reader, BlockPos pos, Direction facing) {
-		BlockPos offset = pos.offset(facing);
+		BlockPos offset = pos.relative(facing);
 		BlockState blockState = reader.getBlockState(offset);
 		return FluidPipeBlock.canConnectTo(reader, offset, blockState, facing);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isRemote)
+		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+	public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
 		return true;
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.isRemote)
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getPendingBlockTicks()
+			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.func_218806_a(world, pos);
+		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getPendingBlockTicks()
+		world.getBlockTicks()
 			.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
@@ -120,13 +120,13 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	}
 	
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 	protected static Axis getPipeAxis(BlockState state) {
-		return state.get(FACE) == AttachFace.WALL ? Axis.Y
-			: state.get(HORIZONTAL_FACING)
+		return state.getValue(FACE) == AttachFace.WALL ? Axis.Y
+			: state.getValue(FACING)
 				.getAxis();
 	}
 
@@ -143,10 +143,10 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		AttachFace face = state.get(FACE);
+		AttachFace face = state.getValue(FACE);
 		VoxelShaper shape = face == AttachFace.FLOOR ? AllShapes.SMART_FLUID_PIPE_FLOOR
 			: face == AttachFace.CEILING ? AllShapes.SMART_FLUID_PIPE_CEILING : AllShapes.SMART_FLUID_PIPE_WALL;
-		return shape.get(state.get(HORIZONTAL_FACING));
+		return shape.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPip
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

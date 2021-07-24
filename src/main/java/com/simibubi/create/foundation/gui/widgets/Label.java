@@ -20,8 +20,8 @@ public class Label extends AbstractSimiWidget {
 	protected FontRenderer font;
 
 	public Label(int x, int y, ITextComponent text) {
-		super(x, y, Minecraft.getInstance().fontRenderer.getWidth(text), 10);
-		font = Minecraft.getInstance().fontRenderer;
+		super(x, y, Minecraft.getInstance().font.width(text), 10);
+		font = Minecraft.getInstance().font;
 		this.text = new StringTextComponent("Label");
 		color = 0xFFFFFF;
 		hasShadow = false;
@@ -44,15 +44,15 @@ public class Label extends AbstractSimiWidget {
 	}
 
 	public void setTextAndTrim(ITextComponent newText, boolean trimFront, int maxWidthPx) {
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+		FontRenderer fontRenderer = Minecraft.getInstance().font;
 		
-		if (fontRenderer.getWidth(newText) <= maxWidthPx) {
+		if (fontRenderer.width(newText) <= maxWidthPx) {
 			text = newText;
 			return;
 		}
 		
 		String trim = "...";
-		int trimWidth = fontRenderer.getStringWidth(trim);
+		int trimWidth = fontRenderer.width(trim);
 
 		String raw = newText.getString();
 		StringBuilder builder = new StringBuilder(raw);
@@ -62,7 +62,7 @@ public class Label extends AbstractSimiWidget {
 
 		for (int i = startIndex; i != endIndex; i += step) {
 			String sub = builder.substring(trimFront ? i : startIndex, trimFront ? endIndex + 1 : i + 1);
-			if (fontRenderer.getWidth(new StringTextComponent(sub).setStyle(newText.getStyle())) + trimWidth <= maxWidthPx) {
+			if (fontRenderer.width(new StringTextComponent(sub).setStyle(newText.getStyle())) + trimWidth <= maxWidthPx) {
 				text = new StringTextComponent(trimFront ? trim + sub : sub + trim).setStyle(newText.getStyle());
 				return;
 			}
@@ -78,12 +78,12 @@ public class Label extends AbstractSimiWidget {
 			return;
 
 		RenderSystem.color4f(1, 1, 1, 1);
-		IFormattableTextComponent copy = text.copy();
+		IFormattableTextComponent copy = text.plainCopy();
 		if (suffix != null && !suffix.isEmpty())
 			copy.append(suffix);
 		
 		if (hasShadow)
-			font.drawWithShadow(matrixStack, copy, x, y, color);
+			font.drawShadow(matrixStack, copy, x, y, color);
 		else
 			font.draw(matrixStack, copy, x, y, color);
 	}

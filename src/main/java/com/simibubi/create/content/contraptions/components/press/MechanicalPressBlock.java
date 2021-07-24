@@ -33,8 +33,8 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.down()));
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.below()));
 	}
 
 	@Override
@@ -46,19 +46,19 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction prefferedSide = getPreferredHorizontalFacing(context);
 		if (prefferedSide != null)
-			return getDefaultState().with(HORIZONTAL_FACING, prefferedSide);
+			return defaultBlockState().setValue(HORIZONTAL_FACING, prefferedSide);
 		return super.getStateForPlacement(context);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_FACING)
+		return state.getValue(HORIZONTAL_FACING)
 			.getAxis();
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.get(HORIZONTAL_FACING)
+		return face.getAxis() == state.getValue(HORIZONTAL_FACING)
 			.getAxis();
 	}
 
@@ -68,7 +68,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

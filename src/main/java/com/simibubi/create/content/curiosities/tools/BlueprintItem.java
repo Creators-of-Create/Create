@@ -39,37 +39,37 @@ public class BlueprintItem extends Item {
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext ctx) {
-		Direction face = ctx.getFace();
+	public ActionResultType useOn(ItemUseContext ctx) {
+		Direction face = ctx.getClickedFace();
 		PlayerEntity player = ctx.getPlayer();
-		ItemStack stack = ctx.getItem();
-		BlockPos pos = ctx.getPos()
-				.offset(face);
+		ItemStack stack = ctx.getItemInHand();
+		BlockPos pos = ctx.getClickedPos()
+				.relative(face);
 
-		if (player != null && !player.canPlayerEdit(pos, face, stack))
+		if (player != null && !player.mayUseItemAt(pos, face, stack))
 			return ActionResultType.FAIL;
 
-		World world = ctx.getWorld();
+		World world = ctx.getLevel();
 		HangingEntity hangingentity = new BlueprintEntity(world, pos, face, face.getAxis()
-				.isHorizontal() ? Direction.DOWN : ctx.getPlacementHorizontalFacing());
+				.isHorizontal() ? Direction.DOWN : ctx.getHorizontalDirection());
 		CompoundNBT compoundnbt = stack.getTag();
 
 		if (compoundnbt != null)
-			EntityType.applyItemNBT(world, player, hangingentity, compoundnbt);
-		if (!hangingentity.onValidSurface())
+			EntityType.updateCustomEntityTag(world, player, hangingentity, compoundnbt);
+		if (!hangingentity.survives())
 			return ActionResultType.CONSUME;
-		if (!world.isRemote) {
-			hangingentity.playPlaceSound();
-			world.addEntity(hangingentity);
+		if (!world.isClientSide) {
+			hangingentity.playPlacementSound();
+			world.addFreshEntity(hangingentity);
 		}
 
 		stack.shrink(1);
-		return ActionResultType.success(world.isRemote);
+		return ActionResultType.sidedSuccess(world.isClientSide);
 	}
 
 	protected boolean canPlace(PlayerEntity p_200127_1_, Direction p_200127_2_, ItemStack p_200127_3_,
 							   BlockPos p_200127_4_) {
-		return p_200127_1_.canPlayerEdit(p_200127_4_, p_200127_2_, p_200127_3_);
+		return p_200127_1_.mayUseItemAt(p_200127_4_, p_200127_2_, p_200127_3_);
 	}
 
 	public static void assignCompleteRecipe(ItemStackHandler inv, IRecipe<?> recipe) {
@@ -77,7 +77,7 @@ public class BlueprintItem extends Item {
 
 		for (int i = 0; i < 9; i++)
 			inv.setStackInSlot(i, ItemStack.EMPTY);
-		inv.setStackInSlot(9, recipe.getRecipeOutput());
+		inv.setStackInSlot(9, recipe.getResultItem());
 
 		if (recipe instanceof ShapedRecipe) {
 			ShapedRecipe shapedRecipe = (ShapedRecipe) recipe;
@@ -93,7 +93,7 @@ public class BlueprintItem extends Item {
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
 		Ingredient.IItemList[] acceptedItems =
-				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "field_199807_b");
+				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "field_199807_b"); // values
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)
@@ -111,14 +111,14 @@ public class BlueprintItem extends Item {
 	}
 
 	private static ItemStack convertIItemListToFilter(IItemList itemList) {
-		Collection<ItemStack> stacks = itemList.getStacks();
+		Collection<ItemStack> stacks = itemList.getItems();
 		if (itemList instanceof SingleItemList) {
 			for (ItemStack itemStack : stacks)
 				return itemStack;
 		}
 
 		if (itemList instanceof TagList) {
-			ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(itemList.serialize(), "tag"));
+			ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getAsString(itemList.serialize(), "tag"));
 			ItemStack filterItem = AllItems.ATTRIBUTE_FILTER.asStack();
 			filterItem.getOrCreateTag()
 					.putInt("WhitelistMode", WhitelistMode.WHITELIST_DISJ.ordinal());

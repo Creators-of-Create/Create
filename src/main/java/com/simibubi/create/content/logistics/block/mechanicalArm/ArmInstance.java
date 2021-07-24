@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -16,7 +17,6 @@ import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -62,7 +62,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 		arm = tile;
-		ceiling = blockState.get(ArmBlock.CEILING);
+		ceiling = blockState.getValue(ArmBlock.CEILING);
 
 		animateArm(false);
 	}
@@ -82,10 +82,10 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		float upperArmAngleNow = this.arm.upperArmAngle.get(pt);
 		float headAngleNow = this.arm.headAngle.get(pt);
 
-		boolean settled = MathHelper.epsilonEquals(baseAngle, baseAngleNow)
-				&& MathHelper.epsilonEquals(lowerArmAngle, lowerArmAngleNow)
-				&& MathHelper.epsilonEquals(upperArmAngle, upperArmAngleNow)
-				&& MathHelper.epsilonEquals(headAngle, headAngleNow);
+		boolean settled = MathHelper.equal(baseAngle, baseAngleNow)
+				&& MathHelper.equal(lowerArmAngle, lowerArmAngleNow)
+				&& MathHelper.equal(upperArmAngle, upperArmAngleNow)
+				&& MathHelper.equal(headAngle, headAngleNow);
 
 		this.baseAngle = baseAngleNow;
 		this.lowerArmAngle = lowerArmAngleNow;
@@ -107,7 +107,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		int color;
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getWorld()) + (tile.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (tile.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
@@ -122,7 +122,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		}
 
 		MatrixStack msLocal = new MatrixStack();
-		MatrixStacker msr = MatrixStacker.of(msLocal);
+		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
 		msr.translate(getInstancePosition());
 		msr.centre();
 
@@ -151,15 +151,15 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 				.getItemRenderer();
 		boolean hasItem = !item.isEmpty();
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
-				&& itemRenderer.getItemModelWithOverrides(item, Minecraft.getInstance().world, null)
+				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null)
 				.isGui3d();
 
 		for (int index : Iterate.zeroAndOne) {
-			msLocal.push();
+			msLocal.pushPose();
 			int flip = index * 2 - 1;
 			ArmRenderer.transformClawHalf(msr, hasItem, isBlockItem, flip);
 			clawGrips.get(index).setTransform(msLocal);
-			msLocal.pop();
+			msLocal.popPose();
 		}
 	}
 

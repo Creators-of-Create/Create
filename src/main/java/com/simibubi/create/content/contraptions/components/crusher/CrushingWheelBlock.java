@@ -38,11 +38,11 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(AXIS);
+		return state.getValue(AXIS);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
+	public BlockRenderType getRenderShape(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
@@ -53,35 +53,35 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 
 		for (Direction d : Iterate.directions) {
-			if (d.getAxis() == state.get(AXIS))
+			if (d.getAxis() == state.getValue(AXIS))
 				continue;
-			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.offset(d))))
-				worldIn.setBlockState(pos.offset(d), Blocks.AIR.getDefaultState());
+			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(worldIn.getBlockState(pos.relative(d))))
+				worldIn.setBlockAndUpdate(pos.relative(d), Blocks.AIR.defaultBlockState());
 		}
 
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-			worldIn.removeTileEntity(pos);
+			worldIn.removeBlockEntity(pos);
 		}
 	}
 
 	public void updateControllers(BlockState state, World world, BlockPos pos, Direction side) {
-		if (side.getAxis() == state.get(AXIS))
+		if (side.getAxis() == state.getValue(AXIS))
 			return;
 		if (world == null)
 			return;
 
-		BlockPos controllerPos = pos.offset(side);
-		BlockPos otherWheelPos = pos.offset(side, 2);
+		BlockPos controllerPos = pos.relative(side);
+		BlockPos otherWheelPos = pos.relative(side, 2);
 
 		boolean controllerExists = AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(world.getBlockState(controllerPos));
 		boolean controllerIsValid = controllerExists && world.getBlockState(controllerPos)
-				.get(VALID);
+				.getValue(VALID);
 		Direction controllerOldDirection = controllerExists
 				? world.getBlockState(controllerPos)
-				.get(FACING)
+				.getValue(FACING)
 				: null;
 
 		boolean controllerShouldExist = false;
@@ -97,29 +97,29 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 			if (te != null && otherTe != null && (te.getSpeed() > 0) != (otherTe.getSpeed() > 0)
 					&& te.getSpeed() != 0) {
-				Axis wheelAxis = state.get(AXIS);
+				Axis wheelAxis = state.getValue(AXIS);
 				Axis sideAxis = side.getAxis();
-				int controllerADO = Math.round(Math.signum(te.getSpeed())) * side.getAxisDirection().getOffset();
+				int controllerADO = Math.round(Math.signum(te.getSpeed())) * side.getAxisDirection().getStep();
 				Vector3d controllerDirVec = new Vector3d(wheelAxis == Axis.X ? 1 : 0
 						, wheelAxis == Axis.Y ? 1 : 0
 						, wheelAxis == Axis.Z ? 1 : 0)
-						.crossProduct(new Vector3d(sideAxis == Axis.X ? 1 : 0
+						.cross(new Vector3d(sideAxis == Axis.X ? 1 : 0
 								, sideAxis == Axis.Y ? 1 : 0
 								, sideAxis == Axis.Z ? 1 : 0));
 
-				controllerNewDirection = Direction.getFacingFromVector(controllerDirVec.x * controllerADO
+				controllerNewDirection = Direction.getNearest(controllerDirVec.x * controllerADO
 						, controllerDirVec.y * controllerADO
 						, controllerDirVec.z * controllerADO);
 
 				controllerShouldBeValid = true;
 			}
-			if (otherState.get(AXIS) != state.get(AXIS))
+			if (otherState.getValue(AXIS) != state.getValue(AXIS))
 				controllerShouldExist = false;
 		}
 
 		if (!controllerShouldExist) {
 			if (controllerExists)
-				world.setBlockState(controllerPos, Blocks.AIR.getDefaultState());
+				world.setBlockAndUpdate(controllerPos, Blocks.AIR.defaultBlockState());
 			return;
 		}
 
@@ -128,13 +128,13 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 					.getMaterial()
 					.isReplaceable())
 				return;
-			world.setBlockState(controllerPos, AllBlocks.CRUSHING_WHEEL_CONTROLLER.getDefaultState()
-					.with(VALID, controllerShouldBeValid)
-					.with(FACING, controllerNewDirection));
+			world.setBlockAndUpdate(controllerPos, AllBlocks.CRUSHING_WHEEL_CONTROLLER.getDefaultState()
+					.setValue(VALID, controllerShouldBeValid)
+					.setValue(FACING, controllerNewDirection));
 		} else if (controllerIsValid != controllerShouldBeValid || controllerOldDirection != controllerNewDirection) {
-			world.setBlockState(controllerPos, world.getBlockState(controllerPos)
-					.with(VALID, controllerShouldBeValid)
-					.with(FACING, controllerNewDirection));
+			world.setBlockAndUpdate(controllerPos, world.getBlockState(controllerPos)
+					.setValue(VALID, controllerShouldBeValid)
+					.setValue(FACING, controllerNewDirection));
 		}
 
 		((CrushingWheelControllerBlock) AllBlocks.CRUSHING_WHEEL_CONTROLLER.get())
@@ -143,7 +143,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn.getY() < pos.getY() + 1.25f || !entityIn.isOnGround())
 			return;
 
@@ -153,29 +153,29 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 		double x = 0;
 		double z = 0;
 
-		if (state.get(AXIS) == Axis.X) {
+		if (state.getValue(AXIS) == Axis.X) {
 			z = speed / 20f;
 			x += (pos.getX() + .5f - entityIn.getX()) * .1f;
 		}
-		if (state.get(AXIS) == Axis.Z) {
+		if (state.getValue(AXIS) == Axis.Z) {
 			x = speed / -20f;
 			z += (pos.getZ() + .5f - entityIn.getZ()) * .1f;
 		}
-		entityIn.setMotion(entityIn.getMotion()
+		entityIn.setDeltaMovement(entityIn.getDeltaMovement()
 				.add(x, 0, z));
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
 		for (Direction direction : Iterate.directions) {
-			BlockPos neighbourPos = pos.offset(direction);
+			BlockPos neighbourPos = pos.relative(direction);
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
-			Axis stateAxis = state.get(AXIS);
+			Axis stateAxis = state.getValue(AXIS);
 			if (AllBlocks.CRUSHING_WHEEL_CONTROLLER.has(neighbourState) && direction.getAxis() != stateAxis)
 				return false;
 			if (!AllBlocks.CRUSHING_WHEEL.has(neighbourState))
 				continue;
-			if (neighbourState.get(AXIS) != stateAxis || stateAxis != direction.getAxis())
+			if (neighbourState.getValue(AXIS) != stateAxis || stateAxis != direction.getAxis())
 				return false;
 		}
 
@@ -184,7 +184,7 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.get(AXIS);
+		return face.getAxis() == state.getValue(AXIS);
 	}
 
 	@Override

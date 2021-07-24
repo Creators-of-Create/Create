@@ -35,11 +35,11 @@ public class CardboardBoxItem extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if (!playerIn.isSneaking())
-			return super.onItemRightClick(worldIn, playerIn, handIn);
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		if (!playerIn.isShiftKeyDown())
+			return super.use(worldIn, playerIn, handIn);
 
-		ItemStack box = playerIn.getHeldItem(handIn);
+		ItemStack box = playerIn.getItemInHand(handIn);
 		for (ItemStack stack : getContents(box))
 			playerIn.inventory.placeItemBackInInventory(worldIn, stack);
 
@@ -62,7 +62,7 @@ public class CardboardBoxItem extends Item {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
 	}
 	
 	public static void addAddress(ItemStack box, String address) {
@@ -95,13 +95,13 @@ public class CardboardBoxItem extends Item {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 		CompoundNBT compoundnbt = stack.getOrCreateTag();
 
 		if (compoundnbt.contains("Address", Constants.NBT.TAG_STRING)) {
 			tooltip.add(new StringTextComponent("-> " + compoundnbt.getString("Address"))
-					.formatted(TextFormatting.GOLD));
+					.withStyle(TextFormatting.GOLD));
 		}
 
 		if (!compoundnbt.contains("Items", Constants.NBT.TAG_LIST))
@@ -117,15 +117,15 @@ public class CardboardBoxItem extends Item {
 			++j;
 			if (i <= 4) {
 				++i;
-				ITextComponent itextcomponent = itemstack.getDisplayName();
-				tooltip.add(itextcomponent.copy().append(" x").append(String.valueOf(itemstack.getCount()))
-					.formatted(TextFormatting.GRAY));
+				ITextComponent itextcomponent = itemstack.getHoverName();
+				tooltip.add(itextcomponent.plainCopy().append(" x").append(String.valueOf(itemstack.getCount()))
+					.withStyle(TextFormatting.GRAY));
 			}
 		}
 
 		if (j - i > 0) {
 			tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i))
-					.formatted(TextFormatting.ITALIC));
+					.withStyle(TextFormatting.ITALIC));
 		}
 	}
 

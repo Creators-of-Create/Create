@@ -35,16 +35,16 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		int light, int overlay) {
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
-		transform(te.getWorld(), blockState.get(HarvesterBlock.HORIZONTAL_FACING), superBuffer,
+		transform(te.getLevel(), blockState.getValue(HarvesterBlock.FACING), superBuffer,
 				te.getAnimatedSpeed());
 		superBuffer.light(light)
-				.renderInto(ms, buffer.getBuffer(RenderType.getCutoutMipped()));
+				.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		BlockState blockState = context.state;
-		Direction facing = blockState.get(HORIZONTAL_FACING);
+		Direction facing = blockState.getValue(HORIZONTAL_FACING);
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.HARVESTER_BLADE, blockState);
 		float speed = (float) (!VecHelper.isVecPointingTowards(context.relativeMotion, facing.getOpposite())
 				? context.getAnimationSpeed()
@@ -58,7 +58,7 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		superBuffer
 			.light(matrices.entityMatrix,
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, buffers.getBuffer(RenderType.getCutoutMipped()));
+			.renderInto(matrices.entityStack, buffers.getBuffer(RenderType.cutoutMipped()));
 	}
 
 	public static void transform(World world, Direction facing, SuperByteBuffer superBuffer, float speed) {

@@ -4,7 +4,8 @@ public class CCuriosities extends ConfigBase {
 
 	public ConfigInt maxSymmetryWandRange = i(50, 10, "maxSymmetryWandRange", Comments.symmetryRange);
 	public ConfigInt placementAssistRange = i(12, 3, "placementAssistRange", Comments.placementRange);
-	public ConfigInt maxAirInBacktank = i(900, 1, "maxAirInBacktank", Comments.maxAirInBacktank);
+	public ConfigInt airInBacktank = i(900, 1, "airInBacktank", Comments.maxAirInBacktank);
+	public ConfigInt enchantedBacktankCapacity = i(300, 1, "enchantedBacktankCapacity", Comments.enchantedBacktankCapacity);
 
 	public ConfigInt maxExtendoGripActions = i(1000, 0, "maxExtendoGripActions", Comments.maxExtendoGripActions);
 	public ConfigInt maxPotatoCannonShots = i(200, 0, "maxPotatoCannonShots", Comments.maxPotatoCannonShots);
@@ -20,6 +21,8 @@ public class CCuriosities extends ConfigBase {
 		static String symmetryRange = "The Maximum Distance to an active mirror for the symmetry wand to trigger.";
 		static String maxAirInBacktank =
 			"The Maximum volume of Air that can be stored in a backtank = Seconds of underwater breathing";
+		static String enchantedBacktankCapacity =
+			"The volume of Air added by each level of the backtanks Capacity Enchantment";
 		static String placementRange =
 			"The Maximum Distance a Block placed by Create's placement assist will have to its interaction point.";
 		static String maxExtendoGripActions =

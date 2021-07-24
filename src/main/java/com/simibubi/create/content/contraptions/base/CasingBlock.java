@@ -29,7 +29,7 @@ public class CasingBlock extends Block implements IWrenchable {
 
 	@Override
 	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
-		for (ToolType toolType : player.getHeldItemMainhand().getToolTypes()) {
+		for (ToolType toolType : player.getMainHandItem().getToolTypes()) {
 			if (isToolEffective(state, toolType))
 				return true;
 		}		

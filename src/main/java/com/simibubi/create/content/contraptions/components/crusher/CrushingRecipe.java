@@ -20,9 +20,9 @@ public class CrushingRecipe extends AbstractCrushingRecipe {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0)
-			.test(inv.getStackInSlot(0));
+			.test(inv.getItem(0));
 	}
-	
+
 	@Override
 	protected int getMaxOutputCount() {
 		return 7;

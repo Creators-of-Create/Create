@@ -1,10 +1,12 @@
 package com.simibubi.create.content.curiosities.armor;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -16,7 +18,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class BackTankUtil {
 
 	public static ItemStack get(LivingEntity entity) {
-		for (ItemStack itemStack : entity.getArmorInventoryList())
+		for (ItemStack itemStack : entity.getArmorSlots())
 			if (AllItems.COPPER_BACKTANK.isIn(itemStack))
 				return itemStack;
 		return ItemStack.EMPTY;
@@ -28,17 +30,26 @@ public class BackTankUtil {
 
 	public static float getAir(ItemStack backtank) {
 		CompoundNBT tag = backtank.getOrCreateTag();
-		return tag.getFloat("Air");
+		return Math.min(tag.getFloat("Air"), maxAir(backtank));
 	}
 
 	public static void consumeAir(ItemStack backtank, float i) {
 		CompoundNBT tag = backtank.getOrCreateTag();
-		tag.putFloat("Air", getAir(backtank) - i);
+		tag.putFloat("Air", Math.min(getAir(backtank) - i, maxAir(backtank)));
 		backtank.setTag(tag);
 	}
 
-	private static float maxAir() {
-		return AllConfigs.SERVER.curiosities.maxAirInBacktank.get();
+	public static int maxAir(ItemStack backtank) {
+		return maxAir(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), backtank));
+	}
+
+	public static int maxAir(int enchantLevel) {
+		return AllConfigs.SERVER.curiosities.airInBacktank.get()
+			+ AllConfigs.SERVER.curiosities.enchantedBacktankCapacity.get() * enchantLevel;
+	}
+
+	public static int maxAirWithoutEnchants() {
+		return AllConfigs.SERVER.curiosities.airInBacktank.get();
 	}
 
 	public static boolean canAbsorbDamage(LivingEntity entity, int usesPerTank) {
@@ -51,7 +62,7 @@ public class BackTankUtil {
 			return false;
 		if (!hasAirRemaining(backtank))
 			return false;
-		float cost = maxAir() / usesPerTank;
+		float cost = ((float) maxAirWithoutEnchants()) / usesPerTank;
 		consumeAir(backtank, cost);
 		return true;
 	}
@@ -67,7 +78,7 @@ public class BackTankUtil {
 			return 0;
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return MathHelper.hsvToRGB(
+			return MathHelper.hsvToRgb(
 				Math.max(0.0F, (float) (1.0F - getDurabilityForDisplay(stack, usesPerTank))) / 3.0F, 1.0F, 1.0F);
 		return backtank.getItem()
 			.getRGBDurabilityForDisplay(backtank);
@@ -82,7 +93,7 @@ public class BackTankUtil {
 			return 0;
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return (double) stack.getDamage() / (double) stack.getMaxDamage();
+			return (double) stack.getDamageValue() / (double) stack.getMaxDamage();
 		return backtank.getItem()
 			.getDurabilityForDisplay(backtank);
 	}

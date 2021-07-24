@@ -89,7 +89,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(pos).expand(0, -1.5, 0);
+		return new AxisAlignedBB(worldPosition).expandTowards(0, -1.5, 0);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		runningTicks = compound.getInt("Ticks");
 		super.fromTag(state, compound, clientPacket);
 
-		if (clientPacket && hasWorld())
+		if (clientPacket && hasLevel())
 			getBasin().ifPresent(bte -> bte.setAreFluidsMoving(running && runningTicks <= 20));
 	}
 
@@ -116,15 +116,16 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		if (runningTicks >= 40) {
 			running = false;
 			runningTicks = 0;
+			basinChecker.scheduleUpdate();
 			return;
 		}
 
 		float speed = Math.abs(getSpeed());
-		if (running && world != null) {
-			if (world.isRemote && runningTicks == 20)
+		if (running && level != null) {
+			if (level.isClientSide && runningTicks == 20)
 				renderParticles();
 
-			if ((!world.isRemote || isVirtual()) && runningTicks == 20) {
+			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
 					processingTicks = MathHelper.clamp((MathHelper.log2((int) (512 / speed))) * 15 + 1, 1, 512);
 
@@ -136,7 +137,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 							.isEmpty()
 							|| !tanks.getSecond()
 								.isEmpty())
-							world.playSound(null, pos, SoundEvents.BLOCK_BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
+							level.playSound(null, worldPosition, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
 								SoundCategory.BLOCKS, .75f, speed < 65 ? .75f : 1.5f);
 					}
 
@@ -158,13 +159,13 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	public void renderParticles() {
 		Optional<BasinTileEntity> basin = getBasin();
-		if (!basin.isPresent() || world == null)
+		if (!basin.isPresent() || level == null)
 			return;
 
 		for (SmartInventory inv : basin.get()
 			.getInvs()) {
 			for (int slot = 0; slot < inv.getSlots(); slot++) {
-				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				ItemStack stackInSlot = inv.getItem(slot);
 				if (stackInSlot.isEmpty())
 					continue;
 				ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
@@ -185,14 +186,14 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	protected void spillParticle(IParticleData data) {
-		float angle = world.rand.nextFloat() * 360;
+		float angle = level.random.nextFloat() * 360;
 		Vector3d offset = new Vector3d(0, 0, 0.25f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
 		Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
 			.add(0, .25f, 0);
-		Vector3d center = offset.add(VecHelper.getCenterOf(pos));
-		target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
-		world.addParticle(data, center.x, center.y - 1.75f, center.z, target.x, target.y, target.z);
+		Vector3d center = offset.add(VecHelper.getCenterOf(worldPosition));
+		target = VecHelper.offsetRandomly(target.subtract(offset), level.random, 1 / 128f);
+		level.addParticle(data, center.x, center.y - 1.75f, center.z, target.x, target.y, target.z);
 	}
 
 	@Override
@@ -226,10 +227,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
-		return ((r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS
+		return ((r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE
 			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1)
-			|| r.getType() == AllRecipeTypes.MIXING.type);
+			|| r.getType() == AllRecipeTypes.MIXING.getType());
 	}
 
 	@Override
@@ -280,7 +281,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
 			return;
 		if (runningTicks == 20) 
-			AllSoundEvents.MIXING.playAt(world, pos, .75f, 1, true);
+			AllSoundEvents.MIXING.playAt(level, worldPosition, .75f, 1, true);
 	}
 
 }

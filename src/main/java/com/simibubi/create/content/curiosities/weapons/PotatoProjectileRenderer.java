@@ -23,21 +23,20 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 		ItemStack item = entity.getItem();
 		if (item.isEmpty())
 			return;
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, entity.getBoundingBox()
-			.getYSize() / 2 - 1 / 8f, 0);
-		entity.getProjectileType()
-			.getRenderMode()
+			.getYsize() / 2 - 1 / 8f, 0);
+		entity.getRenderMode()
 			.transform(ms, entity, pt);
 
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderItem(item, TransformType.GROUND, light, OverlayTexture.DEFAULT_UV, ms, buffer);
-		ms.pop();
+			.renderStatic(item, TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer);
+		ms.popPose();
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(PotatoProjectileEntity p_110775_1_) {
+	public ResourceLocation getTextureLocation(PotatoProjectileEntity p_110775_1_) {
 		return null;
 	}
 

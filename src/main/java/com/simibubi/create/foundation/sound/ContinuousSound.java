@@ -15,13 +15,13 @@ public class ContinuousSound extends TickableSound {
 		this.scape = scape;
 		this.sharedPitch = sharedPitch;
 		this.relativeVolume = relativeVolume;
-		this.repeat = true;
-		this.repeatDelay = 0;
-		this.global = false;
+		this.looping = true;
+		this.delay = 0;
+		this.relative = false;
 	}
 
 	public void remove() {
-		setDone();
+		stop();
 	}
 
 	@Override

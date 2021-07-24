@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
+import static net.minecraft.block.HorizontalBlock.FACING;
 
 import com.simibubi.create.content.contraptions.components.actors.PloughBlock.PloughFakePlayer;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -31,7 +31,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(HORIZONTAL_FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(FACING)
 			.getOpposite());
 	}
 
@@ -39,10 +39,10 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
 		World world = context.world;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
-		BlockPos below = pos.down();
-		if (!world.isBlockPresent(below))
+		BlockPos below = pos.below();
+		if (!world.isLoaded(below))
 			return;
 
 		Vector3d vec = VecHelper.getCenterOf(pos);
@@ -52,18 +52,18 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 			return;
 
 		BlockRayTraceResult ray = world
-			.rayTraceBlocks(new RayTraceContext(vec, vec.add(0, -1, 0), BlockMode.OUTLINE, FluidMode.NONE, player));
+			.clip(new RayTraceContext(vec, vec.add(0, -1, 0), BlockMode.OUTLINE, FluidMode.NONE, player));
 		if (ray.getType() != Type.BLOCK)
 			return;
 
 		ItemUseContext ctx = new ItemUseContext(player, Hand.MAIN_HAND, ray);
-		new ItemStack(Items.DIAMOND_HOE).onItemUse(ctx);
+		new ItemStack(Items.DIAMOND_HOE).useOn(ctx);
 	}
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(HORIZONTAL_FACING)
-			.getDirectionVec()).scale(.45);
+		return Vector3d.atLowerCornerOf(context.state.getValue(FACING)
+			.getNormal()).scale(.45);
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
-		if (world.getBlockState(breakingPos.down())
+		if (world.getBlockState(breakingPos.below())
 			.getBlock() instanceof FarmlandBlock)
 			return false;
 		if (state.getBlock() instanceof FlowingFluidBlock)
@@ -91,7 +91,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (brokenState.getBlock() == Blocks.SNOW && context.world instanceof ServerWorld) {
 			ServerWorld world = (ServerWorld) context.world;
 			brokenState.getDrops(new LootContext.Builder(world).withParameter(LootParameters.BLOCK_STATE, brokenState)
-				.withParameter(LootParameters.ORIGIN, Vector3d.ofCenter(pos))
+				.withParameter(LootParameters.ORIGIN, Vector3d.atCenterOf(pos))
 				.withParameter(LootParameters.THIS_ENTITY, getPlayer(context))
 				.withParameter(LootParameters.TOOL, new ItemStack(Items.IRON_SHOVEL)))
 				.forEach(s -> dropItem(context, s));
@@ -108,7 +108,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	private PloughFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof PloughFakePlayer) && context.world != null) {
 			PloughFakePlayer player = new PloughFakePlayer((ServerWorld) context.world);
-			player.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.DIAMOND_HOE));
+			player.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.DIAMOND_HOE));
 			context.temporaryData = player;
 		}
 		return (PloughFakePlayer) context.temporaryData;

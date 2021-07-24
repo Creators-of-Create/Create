@@ -3,10 +3,12 @@ package com.simibubi.create.content.contraptions.components.deployer;
 import static com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 import static com.simibubi.create.content.contraptions.base.DirectionalKineticBlock.FACING;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -17,7 +19,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
@@ -44,16 +45,17 @@ public class DeployerActorInstance extends ActorInstance {
     public DeployerActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
-		InstanceMaterial<ModelData> mat = materialManager.getTransformMaterial();
+		InstanceMaterial<ModelData> mat = materialManager.defaultSolid()
+				.material(Materials.TRANSFORMED);
 
         BlockState state = context.state;
         DeployerTileEntity.Mode mode = NBTHelper.readEnum(context.tileData, "Mode", DeployerTileEntity.Mode.class);
         PartialModel handPose = DeployerRenderer.getHandPose(mode);
 
         stationaryTimer = context.data.contains("StationaryTimer");
-        facing = state.get(FACING);
+        facing = state.getValue(FACING);
 
-        boolean rotatePole = state.get(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
+        boolean rotatePole = state.getValue(AXIS_ALONG_FIRST_COORDINATE) ^ facing.getAxis() == Direction.Axis.Z;
         yRot = AngleHelper.horizontalAngle(facing);
         zRot = facing == Direction.UP ? 270 : facing == Direction.DOWN ? 90 : 0;
         zRotPole = rotatePole ? 90 : 0;
@@ -62,7 +64,8 @@ public class DeployerActorInstance extends ActorInstance {
         hand = mat.getModel(handPose, state).createInstance();
 
         Direction.Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);
-		shaft = materialManager.getMaterial(AllMaterialSpecs.ROTATING)
+        shaft = materialManager.defaultSolid()
+                .material(AllMaterialSpecs.ROTATING)
 				.getModel(KineticTileInstance.shaft(axis))
 				.createInstance();
 
@@ -89,10 +92,10 @@ public class DeployerActorInstance extends ActorInstance {
             factor = .5f - MathHelper.clamp(MathHelper.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
         }
 
-        Vector3d offset = Vector3d.of(facing.getDirectionVec()).scale(factor);
+        Vector3d offset = Vector3d.atLowerCornerOf(facing.getNormal()).scale(factor);
 
         MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(context.localPos)
            .translate(offset);
@@ -100,7 +103,7 @@ public class DeployerActorInstance extends ActorInstance {
         transformModel(msr, pole, hand, yRot, zRot, zRotPole);
     }
 
-    static void transformModel(MatrixStacker msr, ModelData pole, ModelData hand, float yRot, float zRot, float zRotPole) {
+    static void transformModel(MatrixTransformStack msr, ModelData pole, ModelData hand, float yRot, float zRot, float zRotPole) {
 
         msr.centre();
         msr.rotate(Direction.SOUTH, (float) ((zRot) / 180 * Math.PI));

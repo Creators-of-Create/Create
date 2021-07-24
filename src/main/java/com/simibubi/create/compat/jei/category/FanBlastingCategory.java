@@ -21,14 +21,14 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 
 	@Override
 	public void renderAttachedBlock(MatrixStack matrixStack) {
-		matrixStack.push();
+		matrixStack.pushPose();
 
 		GuiGameElement.of(Fluids.LAVA)
 			.scale(24)
 			.atLocal(0, 0, 2)
 			.render(matrixStack);
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 }

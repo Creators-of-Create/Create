@@ -90,8 +90,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		super.init();
 		widgets.clear();
 
-		int x = guiLeft;
-		int y = guiTop;
+		int x = leftPos;
+		int y = topPos;
 
 		// Play Pause Stop
 		playButton = new IconButton(x + 75, y + 86, AllIcons.I_PLAY);
@@ -126,8 +126,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (placementSettingsHidden())
 			return;
 
-		int x = guiLeft;
-		int y = guiTop;
+		int x = leftPos;
+		int y = topPos;
 
 		// Replace settings
 		replaceLevelButtons = new Vector<>(4);
@@ -168,7 +168,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 	@Override
 	public void tick() {
-		SchematicannonTileEntity te = container.getTileEntity();
+		SchematicannonTileEntity te = menu.getTileEntity();
 
 		if (!placementSettingsHidden()) {
 			for (int replaceMode = 0; replaceMode < replaceLevelButtons.size(); replaceMode++)
@@ -240,7 +240,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			return;
 		boolean enabled = indicator.state == State.ON;
 		List<ITextComponent> tip = button.getToolTip();
-		tip.add((enabled ? optionEnabled : optionDisabled).copy().formatted(BLUE));
+		tip.add((enabled ? optionEnabled : optionDisabled).plainCopy().withStyle(BLUE));
 		tip.addAll(TooltipHelper.cutTextComponent(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"),
 			GRAY, GRAY));
 	}
@@ -248,16 +248,16 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		int invX = getLeftOfCentered(AllGuiTextures.PLAYER_INVENTORY.width);
-		int invY = guiTop + BG_TOP.height + BG_BOTTOM.height + 2;
+		int invY = topPos + BG_TOP.height + BG_BOTTOM.height + 2;
 		renderPlayerInventory(ms, invX, invY);
 
-		int x = guiLeft;
-		int y = guiTop;
+		int x = leftPos;
+		int y = topPos;
 
 		BG_TOP.draw(ms, this, x, y);
 		BG_BOTTOM.draw(ms, this, x, y + BG_TOP.height);
 
-		SchematicannonTileEntity te = container.getTileEntity();
+		SchematicannonTileEntity te = menu.getTileEntity();
 		renderPrintingProgress(ms, x, y, te.schematicProgress);
 		renderFuelBar(ms, x, y, te.fuelLevel);
 		renderChecklistPrinterProgress(ms, x, y, te.bookPrintingProgress);
@@ -271,10 +271,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			.scale(5)
 			.render(ms);
 
-		drawCenteredText(ms, textRenderer, title, x + (BG_TOP.width - 8) / 2, y + 3, 0xFFFFFF);
+		drawCenteredString(ms, font, title, x + (BG_TOP.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		ITextComponent msg = Lang.translate("schematicannon.status." + te.statusMsg);
-		int stringWidth = textRenderer.getWidth(msg);
+		int stringWidth = font.width(msg);
 
 		if (te.missingItem != null) {
 			stringWidth += 16;
@@ -284,7 +284,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 				.render(ms);
 		}
 
-		textRenderer.drawWithShadow(ms, msg, x + 103 - stringWidth / 2, y + 53, 0xCCDDFF);
+		font.drawShadow(ms, msg, x + 103 - stringWidth / 2, y + 53, 0xCCDDFF);
 	}
 
 	protected void renderBlueprintHighlight(MatrixStack matrixStack, int x, int y) {
@@ -295,53 +295,53 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		progress = Math.min(progress, 1);
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_PROGRESS;
 		sprite.bind();
-		drawTexture(matrixStack, x + 44, y + 64, sprite.startX, sprite.startY, (int) (sprite.width * progress),
+		blit(matrixStack, x + 44, y + 64, sprite.startX, sprite.startY, (int) (sprite.width * progress),
 			sprite.height);
 	}
 
 	protected void renderChecklistPrinterProgress(MatrixStack matrixStack, int x, int y, float progress) {
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_CHECKLIST_PROGRESS;
 		sprite.bind();
-		drawTexture(matrixStack, x + 154, y + 20, sprite.startX, sprite.startY, (int) (sprite.width * progress),
+		blit(matrixStack, x + 154, y + 20, sprite.startX, sprite.startY, (int) (sprite.width * progress),
 			sprite.height);
 	}
 
 	protected void renderFuelBar(MatrixStack matrixStack, int x, int y, float amount) {
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_FUEL;
-		if (container.getTileEntity().hasCreativeCrate) {
+		if (menu.getTileEntity().hasCreativeCrate) {
 			AllGuiTextures.SCHEMATICANNON_FUEL_CREATIVE.draw(matrixStack, this, x + 36, y + 19);
 			return;
 		}
 		sprite.bind();
-		drawTexture(matrixStack, x + 36, y + 19, sprite.startX, sprite.startY, (int) (sprite.width * amount),
+		blit(matrixStack, x + 36, y + 19, sprite.startX, sprite.startY, (int) (sprite.width * amount),
 			sprite.height);
 	}
 
 	@Override
 	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		SchematicannonTileEntity te = container.getTileEntity();
+		SchematicannonTileEntity te = menu.getTileEntity();
 
-		int x = guiLeft;
-		int y = guiTop;
+		int x = leftPos;
+		int y = topPos;
 
 		int fuelX = x + 36, fuelY = y + 19;
 		if (mouseX >= fuelX && mouseY >= fuelY && mouseX <= fuelX + AllGuiTextures.SCHEMATICANNON_FUEL.width
 			&& mouseY <= fuelY + AllGuiTextures.SCHEMATICANNON_FUEL.height) {
 			List<ITextComponent> tooltip = getFuelLevelTooltip(te);
-			renderTooltip(matrixStack, tooltip, mouseX, mouseY);
+			renderComponentTooltip(matrixStack, tooltip, mouseX, mouseY);
 		}
 
-		if (hoveredSlot != null && !hoveredSlot.getHasStack()) {
-			if (hoveredSlot.slotNumber == 0)
-				renderTooltip(matrixStack,
+		if (hoveredSlot != null && !hoveredSlot.hasItem()) {
+			if (hoveredSlot.index == 0)
+				renderComponentTooltip(matrixStack,
 					TooltipHelper.cutTextComponent(Lang.translate(_slotSchematic), GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
-			if (hoveredSlot.slotNumber == 2)
-				renderTooltip(matrixStack,
+			if (hoveredSlot.index == 2)
+				renderComponentTooltip(matrixStack,
 					TooltipHelper.cutTextComponent(Lang.translate(_slotListPrinter), GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
-			if (hoveredSlot.slotNumber == 4)
-				renderTooltip(matrixStack,
+			if (hoveredSlot.index == 4)
+				renderComponentTooltip(matrixStack,
 					TooltipHelper.cutTextComponent(Lang.translate(_slotGunpowder), GRAY, TextFormatting.BLUE),
 					mouseX, mouseY);
 		}
@@ -371,15 +371,15 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (te.hasCreativeCrate) {
 			tooltip.add(Lang.translate(_gunpowderLevel, "" + 100));
 			tooltip.add(new StringTextComponent("(").append(new TranslationTextComponent(AllBlocks.CREATIVE_CRATE.get()
-				.getTranslationKey())).append(")").formatted(DARK_PURPLE));
+				.getDescriptionId())).append(")").withStyle(DARK_PURPLE));
 			return tooltip;
 		}
 
 		int fillPercent = (int) (te.fuelLevel * 100);
 		tooltip.add(Lang.translate(_gunpowderLevel, fillPercent));
-		tooltip.add(Lang.translate(_shotsRemaining, new StringTextComponent(Integer.toString(shotsLeft)).formatted(BLUE)).formatted(GRAY));
+		tooltip.add(Lang.translate(_shotsRemaining, new StringTextComponent(Integer.toString(shotsLeft)).withStyle(BLUE)).withStyle(GRAY));
 		if (shotsLeftWithItems != shotsLeft)
-			tooltip.add(Lang.translate(_shotsRemainingWithBackup, new StringTextComponent(Integer.toString(shotsLeftWithItems)).formatted(BLUE)).formatted(GRAY));
+			tooltip.add(Lang.translate(_shotsRemainingWithBackup, new StringTextComponent(Integer.toString(shotsLeftWithItems)).withStyle(BLUE)).withStyle(GRAY));
 
 		return tooltip;
 	}
@@ -392,7 +392,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		if (confirmButton.isHovered()) {
-			client.player.closeScreen();
+			minecraft.player.closeContainer();
 			return true;
 		}
 
@@ -401,14 +401,14 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 				if (!replaceLevelButtons.get(replaceMode)
 					.isHovered())
 					continue;
-				if (container.getTileEntity().replaceMode == replaceMode)
+				if (menu.getTileEntity().replaceMode == replaceMode)
 					continue;
 				sendOptionUpdate(Option.values()[replaceMode], true);
 			}
 			if (skipMissingButton.isHovered())
-				sendOptionUpdate(Option.SKIP_MISSING, !container.getTileEntity().skipMissing);
+				sendOptionUpdate(Option.SKIP_MISSING, !menu.getTileEntity().skipMissing);
 			if (skipTilesButton.isHovered())
-				sendOptionUpdate(Option.SKIP_TILES, !container.getTileEntity().replaceTileEntities);
+				sendOptionUpdate(Option.SKIP_TILES, !menu.getTileEntity().replaceTileEntities);
 		}
 
 		if (playButton.isHovered() && playButton.active)

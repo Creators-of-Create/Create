@@ -64,15 +64,15 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	@Nonnull
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		if (context.getPlayer() == null)
 			return ActionResultType.PASS;
-		return onItemRightClick(context.getWorld(), context.getPlayer(), context.getHand()).getType();
+		return use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (!AllKeys.shiftDown()) {
 			List<ITextComponent> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
@@ -90,18 +90,18 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			boolean blacklist = filter.getOrCreateTag()
 				.getBoolean("Blacklist");
 
-			list.add((blacklist ? Lang.translate("gui.filter.deny_list") : Lang.translate("gui.filter.allow_list")).formatted(TextFormatting.GOLD));
+			list.add((blacklist ? Lang.translate("gui.filter.deny_list") : Lang.translate("gui.filter.allow_list")).withStyle(TextFormatting.GOLD));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
-					list.add(new StringTextComponent("- ...").formatted(TextFormatting.DARK_GRAY));
+					list.add(new StringTextComponent("- ...").withStyle(TextFormatting.DARK_GRAY));
 					break;
 				}
 
 				ItemStack filterStack = filterItems.getStackInSlot(i);
 				if (filterStack.isEmpty())
 					continue;
-				list.add(new StringTextComponent("- ").append(filterStack.getDisplayName()).formatted(TextFormatting.GRAY));
+				list.add(new StringTextComponent("- ").append(filterStack.getHoverName()).withStyle(TextFormatting.GRAY));
 				count++;
 			}
 
@@ -116,7 +116,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				? Lang.translate("gui.attribute_filter.allow_list_conjunctive")
 				: whitelistMode == WhitelistMode.WHITELIST_DISJ
 					? Lang.translate("gui.attribute_filter.allow_list_disjunctive")
-					: Lang.translate("gui.attribute_filter.deny_list")).formatted(TextFormatting.GOLD));
+					: Lang.translate("gui.attribute_filter.deny_list")).withStyle(TextFormatting.GOLD));
 
 			int count = 0;
 			ListNBT attributes = filter.getOrCreateTag()
@@ -126,7 +126,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
 				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
-					list.add(new StringTextComponent("- ...").formatted(TextFormatting.DARK_GRAY));
+					list.add(new StringTextComponent("- ...").withStyle(TextFormatting.DARK_GRAY));
 					break;
 				}
 				list.add(new StringTextComponent("- ").append(attribute.format(inverted)));
@@ -141,13 +141,13 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack heldItem = player.getHeldItem(hand);
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (!player.isSneaking() && hand == Hand.MAIN_HAND) {
-			if (!world.isRemote && player instanceof ServerPlayerEntity)
+		if (!player.isShiftKeyDown() && hand == Hand.MAIN_HAND) {
+			if (!world.isClientSide && player instanceof ServerPlayerEntity)
 				NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {
-					buf.writeItemStack(heldItem);
+					buf.writeItem(heldItem);
 				});
 			return ActionResult.success(heldItem);
 		}
@@ -156,7 +156,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-		ItemStack heldItem = player.getHeldItemMainhand();
+		ItemStack heldItem = player.getMainHandItem();
 		if (type == FilterType.REGULAR)
 			return FilterContainer.create(id, inv, heldItem);
 		if (type == FilterType.ATTRIBUTE)
@@ -166,14 +166,14 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(getTranslationKey());
+		return new TranslationTextComponent(getDescriptionId());
 	}
 
 	public static ItemStackHandler getFilterItems(ItemStack stack) {
 		ItemStackHandler newInv = new ItemStackHandler(18);
 		if (AllItems.FILTER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get filter items from non-filter: " + stack);
-		CompoundNBT invNBT = stack.getOrCreateChildTag("Items");
+		CompoundNBT invNBT = stack.getOrCreateTagElement("Items");
 		if (!invNBT.isEmpty())
 			newInv.deserializeNBT(invNBT);
 		return newInv;
@@ -193,7 +193,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 		if (!(filter.getItem() instanceof FilterItem))
 			return (matchNBT ? ItemHandlerHelper.canItemStacksStack(filter, stack)
-				: ItemStack.areItemsEqual(filter, stack));
+				: ItemStack.isSame(filter, stack));
 
 		if (AllItems.FILTER.get() == filter.getItem()) {
 			ItemStackHandler filterItems = getFilterItems(filter);
@@ -271,7 +271,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				return false;
 			if (!matchNBT)
 				return fluidInFilter.getFluid()
-					.isEquivalentTo(stack.getFluid());
+					.isSame(stack.getFluid());
 			boolean fluidEqual = fluidInFilter.isFluidEqual(stack);
 			return fluidEqual;
 		}

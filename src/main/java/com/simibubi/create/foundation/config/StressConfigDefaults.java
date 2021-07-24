@@ -17,7 +17,7 @@ public class StressConfigDefaults {
 	 * Worlds from the previous version will overwrite potentially changed values
 	 * with the new defaults.
 	 */
-	public static final int forcedUpdateVersion = 1;
+	public static final int forcedUpdateVersion = 2;
 
 	static Map<ResourceLocation, Double> registeredDefaultImpacts = new HashMap<>();
 	static Map<ResourceLocation, Double> registeredDefaultCapacities = new HashMap<>();

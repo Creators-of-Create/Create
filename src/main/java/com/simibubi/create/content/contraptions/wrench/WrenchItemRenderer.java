@@ -20,7 +20,7 @@ public class WrenchItemRenderer extends CustomRenderedItemModelRenderer<WrenchMo
 
 		float xOffset = -1/16f;
 		ms.translate(-xOffset, 0, 0);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(ScrollValueHandler.getScroll(AnimationTickHolder.getPartialTicks())));
+		ms.mulPose(Vector3f.YP.rotationDegrees(ScrollValueHandler.getScroll(AnimationTickHolder.getPartialTicks())));
 		ms.translate(xOffset, 0, 0);
 
 		renderer.render(model.getPartial("gear"), light);

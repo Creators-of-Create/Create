@@ -15,11 +15,11 @@ public class WindowBlock extends ConnectedGlassBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock
-			? (!RenderTypeLookup.canRenderInLayer(state, RenderType.getTranslucent()) && side.getAxis()
+			? (!RenderTypeLookup.canRenderInLayer(state, RenderType.translucent()) && side.getAxis()
 				.isHorizontal() || state.getBlock() == adjacentBlockState.getBlock())
-			: super.isSideInvisible(state, adjacentBlockState, side);
+			: super.skipRendering(state, adjacentBlockState, side);
 	}
 
 }

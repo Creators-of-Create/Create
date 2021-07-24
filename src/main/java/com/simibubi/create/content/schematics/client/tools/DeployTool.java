@@ -1,11 +1,11 @@
 package com.simibubi.create.content.schematics.client.tools;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.item.ItemStack;
@@ -42,7 +42,7 @@ public class DeployTool extends PlacementToolBase {
 		if (selectedPos == null)
 			return;
 
-		ms.push();
+		ms.pushPose();
 		float pt = AnimationTickHolder.getPartialTicks();
 		double x = MathHelper.lerp(pt, lastChasingSelectedPos.x, chasingSelectedPos.x);
 		double y = MathHelper.lerp(pt, lastChasingSelectedPos.y, chasingSelectedPos.y);
@@ -54,12 +54,12 @@ public class DeployTool extends PlacementToolBase {
 		Vector3d rotationOffset = transformation.getRotationOffset(true);
 		int centerX = (int) center.x;
 		int centerZ = (int) center.z;
-		double xOrigin = bounds.getXSize() / 2f;
-		double zOrigin = bounds.getZSize() / 2f;
+		double xOrigin = bounds.getXsize() / 2f;
+		double zOrigin = bounds.getZsize() / 2f;
 		Vector3d origin = new Vector3d(xOrigin, 0, zOrigin);
 
 		ms.translate(x - centerX, y, z - centerZ);
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.translate(origin)
 			.translate(rotationOffset)
 			.rotateY(transformation.getCurrentRotation())
@@ -70,7 +70,7 @@ public class DeployTool extends PlacementToolBase {
 		outline.render(ms, buffer, pt);
 		outline.getParams()
 			.clearTextures();
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class DeployTool extends PlacementToolBase {
 			return super.handleRightClick();
 		Vector3d center = schematicHandler.getBounds()
 			.getCenter();
-		BlockPos target = selectedPos.add(-((int) center.x), 0, -((int) center.z));
+		BlockPos target = selectedPos.offset(-((int) center.x), 0, -((int) center.z));
 
 		ItemStack item = schematicHandler.getActiveSchematicItem();
 		if (item != null) {

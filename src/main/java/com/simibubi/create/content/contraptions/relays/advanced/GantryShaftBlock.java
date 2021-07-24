@@ -56,19 +56,19 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		START, MIDDLE, END, SINGLE;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(PART, POWERED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(PART, POWERED));
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
-		ItemStack heldItem = player.getHeldItem(hand);
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
+		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (!placementHelper.matchesItem(heldItem))
@@ -80,25 +80,25 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.EIGHT_VOXEL_POLE.get(state.get(FACING)
+		return AllShapes.EIGHT_VOXEL_POLE.get(state.getValue(FACING)
 			.getAxis());
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
+	public BlockRenderType getRenderShape(BlockState state) {
 		return BlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbour, IWorld world,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, IWorld world,
 		BlockPos pos, BlockPos neighbourPos) {
-		Direction facing = state.get(FACING);
+		Direction facing = state.getValue(FACING);
 		Axis axis = facing.getAxis();
 		if (direction.getAxis() != axis)
 			return state;
-		boolean connect = AllBlocks.GANTRY_SHAFT.has(neighbour) && neighbour.get(FACING) == facing;
+		boolean connect = AllBlocks.GANTRY_SHAFT.has(neighbour) && neighbour.getValue(FACING) == facing;
 
-		Part part = state.get(PART);
+		Part part = state.getValue(PART);
 		if (direction.getAxisDirection() == facing.getAxisDirection()) {
 			if (connect) {
 				if (part == Part.END)
@@ -125,58 +125,58 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 			}
 		}
 
-		return state.with(PART, part);
+		return state.setValue(PART, part);
 	}
 
 	public GantryShaftBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false)
-			.with(PART, Part.SINGLE));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false)
+			.setValue(PART, Part.SINGLE));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = super.getStateForPlacement(context);
-		BlockPos pos = context.getPos();
-		World world = context.getWorld();
-		Direction face = context.getFace();
+		BlockPos pos = context.getClickedPos();
+		World world = context.getLevel();
+		Direction face = context.getClickedFace();
 
-		BlockState neighbour = world.getBlockState(pos.offset(state.get(FACING)
+		BlockState neighbour = world.getBlockState(pos.relative(state.getValue(FACING)
 			.getOpposite()));
 
 		BlockState clickedState =
-			AllBlocks.GANTRY_SHAFT.has(neighbour) ? neighbour : world.getBlockState(pos.offset(face.getOpposite()));
+			AllBlocks.GANTRY_SHAFT.has(neighbour) ? neighbour : world.getBlockState(pos.relative(face.getOpposite()));
 
-		if (AllBlocks.GANTRY_SHAFT.has(clickedState) && clickedState.get(FACING)
-			.getAxis() == state.get(FACING)
+		if (AllBlocks.GANTRY_SHAFT.has(clickedState) && clickedState.getValue(FACING)
+			.getAxis() == state.getValue(FACING)
 				.getAxis()) {
-			Direction facing = clickedState.get(FACING);
-			state = state.with(FACING, context.getPlayer() == null || !context.getPlayer()
-				.isSneaking() ? facing : facing.getOpposite());
+			Direction facing = clickedState.getValue(FACING);
+			state = state.setValue(FACING, context.getPlayer() == null || !context.getPlayer()
+				.isShiftKeyDown() ? facing : facing.getOpposite());
 		}
 
-		return state.with(POWERED, shouldBePowered(state, world, pos));
+		return state.setValue(POWERED, shouldBePowered(state, world, pos));
 	}
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		ActionResultType onWrenched = super.onWrenched(state, context);
-		if (onWrenched.isAccepted()) {
-			BlockPos pos = context.getPos();
-			World world = context.getWorld();
+		if (onWrenched.consumesAction()) {
+			BlockPos pos = context.getClickedPos();
+			World world = context.getLevel();
 			neighborChanged(world.getBlockState(pos), world, pos, state.getBlock(), pos, false);
 		}
 		return onWrenched;
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, worldIn, pos, oldState, isMoving);
 
-		if (!worldIn.isRemote() && oldState.getBlock().is(AllBlocks.GANTRY_SHAFT.get())) {
-			Part oldPart = oldState.get(PART), part = state.get(PART);
+		if (!worldIn.isClientSide() && oldState.getBlock().is(AllBlocks.GANTRY_SHAFT.get())) {
+			Part oldPart = oldState.getValue(PART), part = state.getValue(PART);
 			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
-				TileEntity te = worldIn.getTileEntity(pos);
+				TileEntity te = worldIn.getBlockEntity(pos);
 				if (te instanceof GantryShaftTileEntity)
 					((GantryShaftTileEntity) te).checkAttachedCarriageBlocks();
 			}
@@ -186,13 +186,13 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
-		boolean previouslyPowered = state.get(POWERED);
-		boolean shouldPower = worldIn.isBlockPowered(pos); // shouldBePowered(state, worldIn, pos);
+		boolean previouslyPowered = state.getValue(POWERED);
+		boolean shouldPower = worldIn.hasNeighborSignal(pos); // shouldBePowered(state, worldIn, pos);
 
 		if (!previouslyPowered && !shouldPower && shouldBePowered(state, worldIn, pos)) {
-			worldIn.setBlockState(pos, state.with(POWERED, true), 3);
+			worldIn.setBlock(pos, state.setValue(POWERED, true), 3);
 			return;
 		}
 
@@ -201,52 +201,52 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 
 		// Collect affected gantry shafts
 		List<BlockPos> toUpdate = new ArrayList<>();
-		Direction facing = state.get(FACING);
+		Direction facing = state.getValue(FACING);
 		Axis axis = facing.getAxis();
 		for (Direction d : Iterate.directionsInAxis(axis)) {
-			BlockPos currentPos = pos.offset(d);
+			BlockPos currentPos = pos.relative(d);
 			while (true) {
-				if (!worldIn.isBlockPresent(currentPos))
+				if (!worldIn.isLoaded(currentPos))
 					break;
 				BlockState currentState = worldIn.getBlockState(currentPos);
 				if (!(currentState.getBlock() instanceof GantryShaftBlock))
 					break;
-				if (currentState.get(FACING) != facing)
+				if (currentState.getValue(FACING) != facing)
 					break;
-				if (!shouldPower && currentState.get(POWERED) && worldIn.isBlockPowered(currentPos))
+				if (!shouldPower && currentState.getValue(POWERED) && worldIn.hasNeighborSignal(currentPos))
 					return;
-				if (currentState.get(POWERED) == shouldPower)
+				if (currentState.getValue(POWERED) == shouldPower)
 					break;
 				toUpdate.add(currentPos);
-				currentPos = currentPos.offset(d);
+				currentPos = currentPos.relative(d);
 			}
 		}
 
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-			TileEntity te = worldIn.getTileEntity(blockPos);
+			TileEntity te = worldIn.getBlockEntity(blockPos);
 			if (te instanceof KineticTileEntity)
 				((KineticTileEntity) te).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
-				worldIn.setBlockState(blockPos, blockState.with(POWERED, shouldPower), 2);
+				worldIn.setBlock(blockPos, blockState.setValue(POWERED, shouldPower), 2);
 		}
 	}
 
 	protected boolean shouldBePowered(BlockState state, World worldIn, BlockPos pos) {
-		boolean shouldPower = worldIn.isBlockPowered(pos);
+		boolean shouldPower = worldIn.hasNeighborSignal(pos);
 
-		Direction facing = state.get(FACING);
+		Direction facing = state.getValue(FACING);
 		for (Direction d : Iterate.directionsInAxis(facing.getAxis())) {
-			BlockPos neighbourPos = pos.offset(d);
-			if (!worldIn.isBlockPresent(neighbourPos))
+			BlockPos neighbourPos = pos.relative(d);
+			if (!worldIn.isLoaded(neighbourPos))
 				continue;
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!(neighbourState.getBlock() instanceof GantryShaftBlock))
 				continue;
-			if (neighbourState.get(FACING) != facing)
+			if (neighbourState.getValue(FACING) != facing)
 				continue;
-			shouldPower |= neighbourState.get(POWERED);
+			shouldPower |= neighbourState.getValue(POWERED);
 		}
 
 		return shouldPower;
@@ -254,13 +254,13 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.get(FACING)
+		return face.getAxis() == state.getValue(FACING)
 			.getAxis();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis();
 	}
 
@@ -272,7 +272,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	@Override
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
 		return super.areStatesKineticallyEquivalent(oldState, newState)
-			&& oldState.get(POWERED) == newState.get(POWERED);
+			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
 	}
 
 	@Override
@@ -286,14 +286,14 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
 	public static class PlacementHelper extends PoleHelper<Direction> {
 
 		public PlacementHelper() {
-			super(AllBlocks.GANTRY_SHAFT::has, s -> s.get(FACING)
+			super(AllBlocks.GANTRY_SHAFT::has, s -> s.getValue(FACING)
 				.getAxis(), FACING);
 		}
 
@@ -305,7 +305,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		@Override
 		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
 			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
-			offset.withTransform(offset.getTransform().andThen(s -> s.with(POWERED, state.get(POWERED))));
+			offset.withTransform(offset.getTransform().andThen(s -> s.setValue(POWERED, state.getValue(POWERED))));
 			return offset;
 		}
 	}

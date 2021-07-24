@@ -57,7 +57,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.3.2";
+	public static final String VERSION = "0.3.2c";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -90,6 +90,7 @@ public class Create {
 		AllMovementBehaviours.register();
 		AllWorldFeatures.register();
 		AllConfigs.register();
+		AllEnchantments.register();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 			.getModEventBus();

@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.elements;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -14,13 +15,14 @@ import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 
 public class InputWindowElement extends AnimatedOverlayElement {
 
 	private Pointing direction;
-	String key;
+	ResourceLocation key;
 	AllIcons icon;
 	ItemStack item = ItemStack.EMPTY;
 	private Vector3d sceneSpace;
@@ -69,12 +71,12 @@ public class InputWindowElement extends AnimatedOverlayElement {
 	}
 
 	public InputWindowElement whileSneaking() {
-		key = "sneak_and";
+		key = Create.asResource("sneak_and");
 		return this;
 	}
 
 	public InputWindowElement whileCTRL() {
-		key = "ctrl_and";
+		key = Create.asResource("ctrl_and");
 		return this;
 	}
 
@@ -106,7 +108,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		}
 
 		if (hasText) {
-			keyWidth = font.getStringWidth(text);
+			keyWidth = font.width(text);
 			width += keyWidth;
 		}
 
@@ -115,7 +117,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 			height = 24;
 		}
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(sceneToScreen.x + xFade, sceneToScreen.y + yFade, 400);
 
 		PonderUI.renderSpeechBox(ms, 0, 0, width, height, false, direction, true);
@@ -123,15 +125,15 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		ms.translate(0, 0, 100);
 
 		if (hasText)
-			font.draw(ms, text, 2, (height - font.FONT_HEIGHT) / 2f + 2,
+			font.draw(ms, text, 2, (height - font.lineHeight) / 2f + 2,
 				ColorHelper.applyAlpha(PonderPalette.WHITE.getColor(), fade));
 
 		if (hasIcon) {
-			ms.push();
+			ms.pushPose();
 			ms.translate(keyWidth, 0, 0);
 			ms.scale(1.5f, 1.5f, 1.5f);
 			icon.draw(ms, screen, 0, 0);
-			ms.pop();
+			ms.popPose();
 		}
 
 		if (hasItem) {
@@ -142,7 +144,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 			RenderSystem.disableDepthTest();
 		}
 
-		ms.pop();
+		ms.popPose();
 	}
 
 }

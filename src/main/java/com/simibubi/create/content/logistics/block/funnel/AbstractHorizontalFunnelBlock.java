@@ -18,23 +18,23 @@ public abstract class AbstractHorizontalFunnelBlock extends AbstractFunnelBlock 
 	}
 	
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(HORIZONTAL_FACING));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(HORIZONTAL_FACING));
 	}
 
 	@Override
 	protected Direction getFacing(BlockState state) {
-		return state.get(HORIZONTAL_FACING);
+		return state.getValue(HORIZONTAL_FACING);
 	}
 	
 	@Override
 	public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-		return p_185499_1_.with(HORIZONTAL_FACING, p_185499_2_.rotate(p_185499_1_.get(HORIZONTAL_FACING)));
+		return p_185499_1_.setValue(HORIZONTAL_FACING, p_185499_2_.rotate(p_185499_1_.getValue(HORIZONTAL_FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
-		return p_185471_1_.rotate(p_185471_2_.toRotation(p_185471_1_.get(HORIZONTAL_FACING)));
+		return p_185471_1_.rotate(p_185471_2_.getRotation(p_185471_1_.getValue(HORIZONTAL_FACING)));
 	}
 
 }

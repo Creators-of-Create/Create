@@ -26,21 +26,21 @@ public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEnt
 	@Override
 	protected void renderSafe(TE te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
 		BlockState state = te.getBlockState();
-		Direction facing = state.get(BellBlock.field_220133_a);
-		BellAttachment attachment = state.get(BellBlock.field_220134_b);
+		Direction facing = state.getValue(BellBlock.FACING);
+		BellAttachment attachment = state.getValue(BellBlock.ATTACHMENT);
 
 		SuperByteBuffer bell = PartialBufferer.get(te.getBellModel(), state);
 
 		if (te.isRinging)
-			bell.rotateCentered(te.ringDirection.rotateYCCW(), getSwingAngle(te.ringingTicks + partialTicks));
+			bell.rotateCentered(te.ringDirection.getCounterClockWise(), getSwingAngle(te.ringingTicks + partialTicks));
 
 		float rY = AngleHelper.horizontalAngle(facing);
 		if (attachment == BellAttachment.SINGLE_WALL || attachment == BellAttachment.DOUBLE_WALL)
 			rY += 90;
 		bell.rotateCentered(Direction.UP, AngleHelper.rad(rY));
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutout());
-		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), state, te.getPos());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.cutout());
+		int lightCoords = WorldRenderer.getLightColor(te.getLevel(), state, te.getBlockPos());
 		bell.light(lightCoords).renderInto(ms, vb);
 	}
 

@@ -11,6 +11,7 @@ public class PhysicalFloat {
 
     float previousSpeed;
     float speed;
+    float limit = Float.NaN;
 
     float mass;
 
@@ -41,6 +42,11 @@ public class PhysicalFloat {
         return addForce(new Force.Zeroing((float) g));
     }
 
+    public PhysicalFloat withLimit(float limit) {
+    	this.limit = limit;
+    	return this;
+    }
+
     public void tick() {
         previousSpeed = speed;
         previousValue = value;
@@ -52,6 +58,10 @@ public class PhysicalFloat {
         speed += totalImpulse;
 
         forces.removeIf(Force::finished);
+
+        if (Float.isFinite(limit)) {
+        	speed = MathHelper.clamp(speed, -limit, limit);
+        }
 
         value += speed;
     }

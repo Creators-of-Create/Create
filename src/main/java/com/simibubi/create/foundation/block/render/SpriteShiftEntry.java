@@ -20,7 +20,7 @@ public class SpriteShiftEntry {
 
 	protected void loadTextures() {
 		Function<ResourceLocation, TextureAtlasSprite> textureMap = Minecraft.getInstance()
-			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+			.getTextureAtlas(PlayerContainer.BLOCK_ATLAS);
 		original = textureMap.apply(originalTextureLocation);
 		target = textureMap.apply(targetTextureLocation);
 	}

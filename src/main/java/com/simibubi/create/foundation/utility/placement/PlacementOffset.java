@@ -108,23 +108,23 @@ public class PlacementOffset {
 		if (!isReplaceable(world))
 			return ActionResultType.PASS;
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		ItemUseContext context = new ItemUseContext(player, hand, ray);
 		BlockPos newPos = new BlockPos(pos);
 
-		if (!world.isBlockModifiable(player, newPos))
+		if (!world.mayInteract(player, newPos))
 			return ActionResultType.PASS;
 
-		BlockState state = stateTransform.apply(blockItem.getBlock().getDefaultState());
-		if (state.contains(BlockStateProperties.WATERLOGGED)) {
+		BlockState state = stateTransform.apply(blockItem.getBlock().defaultBlockState());
+		if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
 			FluidState fluidState = world.getFluidState(newPos);
-			state = state.with(BlockStateProperties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+			state = state.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 		}
 
-		BlockSnapshot snapshot = BlockSnapshot.create(world.getRegistryKey(), world, newPos);
-		world.setBlockState(newPos, state);
+		BlockSnapshot snapshot = BlockSnapshot.create(world.dimension(), world, newPos);
+		world.setBlockAndUpdate(newPos, state);
 
 		BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(snapshot, IPlacementHelper.ID, player);
 		if (MinecraftForge.EVENT_BUS.post(event)) {
@@ -136,13 +136,13 @@ public class PlacementOffset {
 		SoundType soundtype = newState.getSoundType(world, newPos, player);
 		world.playSound(null, newPos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
-		player.addStat(Stats.ITEM_USED.get(blockItem));
+		player.awardStat(Stats.ITEM_USED.get(blockItem));
 
 		if (player instanceof ServerPlayerEntity)
-			CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, newPos, context.getItem());
+			CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, newPos, context.getItemInHand());
 
 		if (!player.isCreative())
-			context.getItem().shrink(1);
+			context.getItemInHand().shrink(1);
 
 		return ActionResultType.SUCCESS;
 	}

@@ -47,7 +47,7 @@ public class AllEntityTypes {
 
 	public static final EntityEntry<PotatoProjectileEntity> POTATO_PROJECTILE =
 		register("potato_projectile", PotatoProjectileEntity::new, () -> PotatoProjectileRenderer::new,
-			EntityClassification.MISC, 4, 20, true, true, PotatoProjectileEntity::build).register();
+			EntityClassification.MISC, 4, 20, true, false, PotatoProjectileEntity::build).register();
 
 	public static final EntityEntry<SeatEntity> SEAT = register("seat", SeatEntity::new, () -> SeatEntity.Render::new,
 		EntityClassification.MISC, 0, Integer.MAX_VALUE, false, true, SeatEntity::build).register();
@@ -72,7 +72,7 @@ public class AllEntityTypes {
 			.properties(propertyBuilder)
 			.properties(b -> {
 				if (immuneToFire)
-					b.immuneToFire();
+					b.fireImmune();
 			})
 			.renderer(renderer);
 	}

@@ -40,8 +40,8 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 
 		Map<UUID, Integer> seatMapping = context.contraption.getSeatMapping();
 		BlockState blockState = context.world.getBlockState(pos);
-		boolean slab = blockState.getBlock() instanceof SlabBlock && blockState.get(SlabBlock.TYPE) == SlabType.BOTTOM;
-		boolean solid = blockState.isSolid() || slab;
+		boolean slab = blockState.getBlock() instanceof SlabBlock && blockState.getValue(SlabBlock.TYPE) == SlabType.BOTTOM;
+		boolean solid = blockState.canOcclude() || slab;
 
 		// Occupied
 		if (seatMapping.containsValue(index)) {
@@ -53,7 +53,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 					continue;
 				for (Entity entity : contraptionEntity.getPassengers()) {
 					if (!entry.getKey()
-						.equals(entity.getUniqueID()))
+						.equals(entity.getUUID()))
 						continue;
 					toDismount = entity;
 				}
@@ -62,7 +62,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 				toDismount.stopRiding();
 				Vector3d position = VecHelper.getCenterOf(pos)
 					.add(0, slab ? .5f : 1f, 0);
-				toDismount.setPositionAndUpdate(position.x, position.y, position.z);
+				toDismount.teleportTo(position.x, position.y, position.z);
 				toDismount.getPersistentData()
 					.remove("ContraptionDismountLocation");
 			}
@@ -72,8 +72,8 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 		if (solid)
 			return;
 
-		List<Entity> nearbyEntities = context.world.getEntitiesWithinAABB(Entity.class,
-			new AxisAlignedBB(pos).shrink(1 / 16f), SeatBlock::canBePickedUp);
+		List<Entity> nearbyEntities = context.world.getEntitiesOfClass(Entity.class,
+			new AxisAlignedBB(pos).deflate(1 / 16f), SeatBlock::canBePickedUp);
 		if (!nearbyEntities.isEmpty())
 			contraptionEntity.addSittingPassenger(nearbyEntities.get(0), index);
 	}

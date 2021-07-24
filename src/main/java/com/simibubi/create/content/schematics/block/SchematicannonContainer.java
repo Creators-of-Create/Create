@@ -22,11 +22,11 @@ public class SchematicannonContainer extends Container {
 	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer buffer) {
 		super(type, id);
 		player = inv.player;
-		ClientWorld world = Minecraft.getInstance().world;
-		TileEntity tileEntity = world.getTileEntity(buffer.readBlockPos());
+		ClientWorld world = Minecraft.getInstance().level;
+		TileEntity tileEntity = world.getBlockEntity(buffer.readBlockPos());
 		if (tileEntity instanceof SchematicannonTileEntity) {
 			this.te = (SchematicannonTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), buffer.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), buffer.readNbt());
 			init();
 		}
 	}
@@ -62,17 +62,17 @@ public class SchematicannonContainer extends Container {
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
 			addSlot(new Slot(player.inventory, hotbarSlot, invX + hotbarSlot * 18, invY + 58));
 
-		detectAndSendChanges();
+		broadcastChanges();
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return te != null && te.canPlayerUse(player);
 	}
 
 	@Override
-	public void onContainerClosed(PlayerEntity playerIn) {
-		super.onContainerClosed(playerIn);
+	public void removed(PlayerEntity playerIn) {
+		super.removed(playerIn);
 	}
 
 	public SchematicannonTileEntity getTileEntity() {
@@ -80,17 +80,17 @@ public class SchematicannonContainer extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
-		if (!clickedSlot.getHasStack())
+		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;
-		ItemStack stack = clickedSlot.getStack();
+		ItemStack stack = clickedSlot.getItem();
 
 		if (index < 5) {
-			mergeItemStack(stack, 5, inventorySlots.size(), false);
+			moveItemStackTo(stack, 5, slots.size(), false);
 		} else {
-			if (mergeItemStack(stack, 0, 1, false) || mergeItemStack(stack, 2, 3, false)
-					|| mergeItemStack(stack, 4, 5, false))
+			if (moveItemStackTo(stack, 0, 1, false) || moveItemStackTo(stack, 2, 3, false)
+					|| moveItemStackTo(stack, 4, 5, false))
 				;
 		}
 

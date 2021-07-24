@@ -48,7 +48,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
-			markDirty();
+			setChanged();
 
 			itemCount = 0;
 			for (int i = 0; i < getSlots(); i++) {
@@ -78,7 +78,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	public AdjustableCrateTileEntity getOtherCrate() {
 		if (!AllBlocks.ADJUSTABLE_CRATE.has(getBlockState()))
 			return null;
-		TileEntity tileEntity = world.getTileEntity(pos.offset(getFacing()));
+		TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(getFacing()));
 		if (tileEntity instanceof AdjustableCrateTileEntity)
 			return (AdjustableCrateTileEntity) tileEntity;
 		return null;
@@ -139,7 +139,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	}
 
 	private void drop(int slot) {
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
+		InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), inventory.getStackInSlot(slot));
 	}
 
 	@Override
@@ -163,13 +163,13 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	}
 
 	public void sendToContainer(PacketBuffer buffer) {
-		buffer.writeBlockPos(getPos());
-		buffer.writeCompoundTag(getUpdateTag());
+		buffer.writeBlockPos(getBlockPos());
+		buffer.writeNbt(getUpdateTag());
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		invHandler.invalidate();
 	}
 

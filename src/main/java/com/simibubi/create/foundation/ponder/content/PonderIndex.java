@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.content.fluid.DrainScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.FluidMovementActorScenes;
@@ -19,6 +20,8 @@ public class PonderIndex {
 	public static final boolean EDITOR_MODE = false;
 
 	public static void register() {
+		PonderRegistry.startRegistration(Create.ID);
+
 		// Register storyboards here
 		// (!) Added entries require re-launch
 		// (!) Modifications inside storyboard methods only require re-opening the ui
@@ -285,7 +288,7 @@ public class PonderIndex {
 			.addStoryBoard("powered_toggle_latch", RedstoneScenes::poweredToggleLatch);
 		PonderRegistry.forComponents(AllBlocks.ANALOG_LEVER)
 			.addStoryBoard("analog_lever", RedstoneScenes::analogLever);
-		PonderRegistry.forComponents(AllBlocks.NIXIE_TUBE)
+		PonderRegistry.forComponents(AllBlocks.ORANGE_NIXIE_TUBE)
 			.addStoryBoard("nixie_tube", RedstoneScenes::nixieTube);
 		PonderRegistry.forComponents(AllBlocks.REDSTONE_LINK)
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
@@ -293,12 +296,14 @@ public class PonderIndex {
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)
 			DebugScenes.registerAll();
+
+		PonderRegistry.endRegistration();
 	}
 
 	public static void registerTags() {
 		// Add items to tags here
 
-		PonderRegistry.tags.forTag(PonderTag.KINETIC_RELAYS)
+		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_RELAYS)
 			.add(AllBlocks.SHAFT)
 			.add(AllBlocks.COGWHEEL)
 			.add(AllBlocks.LARGE_COGWHEEL)
@@ -311,7 +316,7 @@ public class PonderIndex {
 			.add(AllBlocks.SEQUENCED_GEARSHIFT)
 			.add(AllBlocks.ROTATION_SPEED_CONTROLLER);
 
-		PonderRegistry.tags.forTag(PonderTag.KINETIC_SOURCES)
+		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_SOURCES)
 			.add(AllBlocks.HAND_CRANK)
 			.add(AllBlocks.COPPER_VALVE_HANDLE)
 			.add(AllBlocks.WATER_WHEEL)
@@ -321,7 +326,7 @@ public class PonderIndex {
 			.add(AllBlocks.FLYWHEEL)
 			.add(AllBlocks.CREATIVE_MOTOR);
 
-		PonderRegistry.tags.forTag(PonderTag.KINETIC_APPLIANCES)
+		PonderRegistry.TAGS.forTag(PonderTag.KINETIC_APPLIANCES)
 			.add(AllBlocks.MILLSTONE)
 			.add(AllBlocks.TURNTABLE)
 			.add(AllBlocks.ENCASED_FAN)
@@ -342,7 +347,7 @@ public class PonderIndex {
 			.add(AllBlocks.CLOCKWORK_BEARING)
 			.add(AllBlocks.CRUSHING_WHEEL);
 
-		PonderRegistry.tags.forTag(PonderTag.FLUIDS)
+		PonderRegistry.TAGS.forTag(PonderTag.FLUIDS)
 			.add(AllBlocks.FLUID_PIPE)
 			.add(AllBlocks.MECHANICAL_PUMP)
 			.add(AllBlocks.FLUID_VALVE)
@@ -354,7 +359,7 @@ public class PonderIndex {
 			.add(AllBlocks.FLUID_TANK)
 			.add(AllBlocks.CREATIVE_FLUID_TANK);
 
-		PonderRegistry.tags.forTag(PonderTag.ARM_TARGETS)
+		PonderRegistry.TAGS.forTag(PonderTag.ARM_TARGETS)
 			.add(AllBlocks.MECHANICAL_ARM)
 			.add(AllItems.BELT_CONNECTOR)
 			.add(AllBlocks.CHUTE)
@@ -372,7 +377,7 @@ public class PonderIndex {
 			.add(Blocks.COMPOSTER)
 			.add(Blocks.JUKEBOX);
 
-		PonderRegistry.tags.forTag(PonderTag.LOGISTICS)
+		PonderRegistry.TAGS.forTag(PonderTag.LOGISTICS)
 			.add(AllItems.BELT_CONNECTOR)
 			.add(AllItems.FILTER)
 			.add(AllItems.ATTRIBUTE_FILTER)
@@ -391,8 +396,8 @@ public class PonderIndex {
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.PORTABLE_STORAGE_INTERFACE);
 
-		PonderRegistry.tags.forTag(PonderTag.DECORATION)
-			.add(AllBlocks.NIXIE_TUBE)
+		PonderRegistry.TAGS.forTag(PonderTag.DECORATION)
+			.add(AllBlocks.ORANGE_NIXIE_TUBE)
 			.add(AllBlocks.CUCKOO_CLOCK)
 			.add(AllBlocks.WOODEN_BRACKET)
 			.add(AllBlocks.METAL_BRACKET)
@@ -400,18 +405,18 @@ public class PonderIndex {
 			.add(AllBlocks.BRASS_CASING)
 			.add(AllBlocks.COPPER_CASING);
 
-		PonderRegistry.tags.forTag(PonderTag.CREATIVE)
+		PonderRegistry.TAGS.forTag(PonderTag.CREATIVE)
 			.add(AllBlocks.CREATIVE_CRATE)
 			.add(AllBlocks.CREATIVE_FLUID_TANK)
 			.add(AllBlocks.CREATIVE_MOTOR);
 
-		PonderRegistry.tags.forTag(PonderTag.SAILS)
+		PonderRegistry.TAGS.forTag(PonderTag.SAILS)
 			.add(AllBlocks.SAIL)
 			.add(AllBlocks.SAIL_FRAME)
 			.add(Blocks.WHITE_WOOL);
 
-		PonderRegistry.tags.forTag(PonderTag.REDSTONE)
-			.add(AllBlocks.NIXIE_TUBE)
+		PonderRegistry.TAGS.forTag(PonderTag.REDSTONE)
+			.add(AllBlocks.ORANGE_NIXIE_TUBE)
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(AllBlocks.ANALOG_LEVER)
 			.add(AllBlocks.REDSTONE_LINK)
@@ -421,7 +426,7 @@ public class PonderIndex {
 			.add(AllBlocks.POWERED_LATCH)
 			.add(AllBlocks.POWERED_TOGGLE_LATCH);
 
-		PonderRegistry.tags.forTag(PonderTag.MOVEMENT_ANCHOR)
+		PonderRegistry.TAGS.forTag(PonderTag.MOVEMENT_ANCHOR)
 			.add(AllBlocks.MECHANICAL_PISTON)
 			.add(AllBlocks.WINDMILL_BEARING)
 			.add(AllBlocks.MECHANICAL_BEARING)
@@ -430,7 +435,7 @@ public class PonderIndex {
 			.add(AllBlocks.GANTRY_CARRIAGE)
 			.add(AllBlocks.CART_ASSEMBLER);
 
-		PonderRegistry.tags.forTag(PonderTag.CONTRAPTION_ASSEMBLY)
+		PonderRegistry.TAGS.forTag(PonderTag.CONTRAPTION_ASSEMBLY)
 			.add(AllBlocks.LINEAR_CHASSIS)
 			.add(AllBlocks.SECONDARY_LINEAR_CHASSIS)
 			.add(AllBlocks.RADIAL_CHASSIS)
@@ -439,7 +444,7 @@ public class PonderIndex {
 			.add(Blocks.SLIME_BLOCK)
 			.add(Blocks.HONEY_BLOCK);
 
-		PonderRegistry.tags.forTag(PonderTag.CONTRAPTION_ACTOR)
+		PonderRegistry.TAGS.forTag(PonderTag.CONTRAPTION_ACTOR)
 				.add(AllBlocks.MECHANICAL_HARVESTER)
 				.add(AllBlocks.MECHANICAL_PLOUGH)
 				.add(AllBlocks.MECHANICAL_DRILL)
@@ -455,7 +460,6 @@ public class PonderIndex {
 			.add(Blocks.BELL)
 			.add(Blocks.DISPENSER)
 			.add(Blocks.DROPPER);
-
 	}
 
 }

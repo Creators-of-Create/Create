@@ -23,7 +23,7 @@ public class RotateTool extends PlacementToolBase {
 	@Override
 	public void renderOnSchematic(MatrixStack ms, SuperRenderTypeBuffer buffer) {
 		AxisAlignedBB bounds = schematicHandler.getBounds();
-		double height = bounds.getYSize() + Math.max(20, bounds.getYSize());
+		double height = bounds.getYsize() + Math.max(20, bounds.getYsize());
 		Vector3d center = bounds.getCenter()
 			.add(schematicHandler.getTransformation()
 				.getRotationOffset(false));

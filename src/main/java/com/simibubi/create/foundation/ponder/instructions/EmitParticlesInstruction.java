@@ -29,7 +29,7 @@ public class EmitParticlesInstruction extends TickingInstruction {
 		}
 
 		static ParticleManager paticleManager() {
-			return Minecraft.getInstance().particles;
+			return Minecraft.getInstance().particleEngine;
 		}
 
 		public void create(PonderWorld world, double x, double y, double z);

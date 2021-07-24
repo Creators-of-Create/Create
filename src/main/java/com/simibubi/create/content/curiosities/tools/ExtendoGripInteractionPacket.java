@@ -29,7 +29,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 	public ExtendoGripInteractionPacket(Entity target, Hand hand, Vector3d specificPoint) {
 		interactionHand = hand;
 		this.specificPoint = specificPoint;
-		this.target = target.getEntityId();
+		this.target = target.getId();
 	}
 
 	public ExtendoGripInteractionPacket(PacketBuffer buffer) {
@@ -58,22 +58,22 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 			ServerPlayerEntity sender = context.get().getSender();
 			if (sender == null)
 				return;
-			Entity entityByID = sender.getServerWorld().getEntityByID(target);
+			Entity entityByID = sender.getLevel().getEntity(target);
 			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
 				double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
-				if (!sender.canEntityBeSeen(entityByID))
+				if (!sender.canSee(entityByID))
 					d -= 3;
 				d *= d;
-				if (sender.getDistanceSq(entityByID) > d) {
+				if (sender.distanceToSqr(entityByID) > d) {
 					// TODO log?
 					return;
 				}
 				if (interactionHand == null)
-					sender.attackTargetEntityWithCurrentItem(entityByID);
+					sender.attack(entityByID);
 				else if (specificPoint == null)
 					sender.interactOn(entityByID, interactionHand);
 				else
-					entityByID.applyPlayerInteraction(sender, specificPoint, interactionHand);
+					entityByID.interactAt(sender, specificPoint, interactionHand);
 			}
 		});
 		context.get().setPacketHandled(true);

@@ -151,8 +151,8 @@ public class SpoutScenes {
 				.add(0, 1 / 16f, 0),
 				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vector3d.ZERO, Create.RANDOM, .1f)), 1, 1);
 		}
-		scene.world.removeItemsFromBelt(spoutPos.down(2));
-		ingot = scene.world.createItemOnBelt(spoutPos.down(2), Direction.UP, potion);
+		scene.world.removeItemsFromBelt(spoutPos.below(2));
+		ingot = scene.world.createItemOnBelt(spoutPos.below(2), Direction.UP, potion);
 		scene.world.stallBeltItem(ingot, true);
 		scene.idle(5);
 		scene.world.stallBeltItem(ingot, false);
@@ -165,8 +165,8 @@ public class SpoutScenes {
 				.add(0, 1 / 16f, 0),
 				Emitter.simple(fluidParticle, VecHelper.offsetRandomly(Vector3d.ZERO, Create.RANDOM, .1f)), 1, 1);
 		}
-		scene.world.removeItemsFromBelt(spoutPos.down(2));
-		ingot2 = scene.world.createItemOnBelt(spoutPos.down(2), Direction.UP, potion);
+		scene.world.removeItemsFromBelt(spoutPos.below(2));
+		ingot2 = scene.world.createItemOnBelt(spoutPos.below(2), Direction.UP, potion);
 		scene.world.stallBeltItem(ingot2, true);
 		scene.idle(5);
 		scene.world.stallBeltItem(ingot2, false);

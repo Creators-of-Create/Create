@@ -42,7 +42,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
     }
 
     private static void onRopeBroken(World world, BlockPos pulleyPos) {
-		TileEntity te = world.getTileEntity(pulleyPos);
+		TileEntity te = world.getBlockEntity(pulleyPos);
 		if (te instanceof PulleyTileEntity) {
 			PulleyTileEntity pulley = (PulleyTileEntity) te;
 			pulley.initialOffset = 0;
@@ -56,25 +56,25 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            if (!worldIn.isRemote) {
-                BlockState below = worldIn.getBlockState(pos.down());
+            if (!worldIn.isClientSide) {
+                BlockState below = worldIn.getBlockState(pos.below());
                 if (below.getBlock() instanceof RopeBlockBase)
-                    worldIn.destroyBlock(pos.down(), true);
+                    worldIn.destroyBlock(pos.below(), true);
             }
             if (state.hasTileEntity())
-                worldIn.removeTileEntity(pos);
+                worldIn.removeBlockEntity(pos);
         }
     }
 
-    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
                                   BlockRayTraceResult hit) {
-        if (!player.isAllowEdit())
+        if (!player.mayBuild())
             return ActionResultType.PASS;
-        if (player.isSneaking())
+        if (player.isShiftKeyDown())
             return ActionResultType.PASS;
-        if (player.getHeldItem(handIn)
+        if (player.getItemInHand(handIn)
                 .isEmpty()) {
             withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
             return ActionResultType.SUCCESS;
@@ -84,7 +84,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return AllShapes.PULLEY.get(state.get(HORIZONTAL_AXIS));
+        return AllShapes.PULLEY.get(state.getValue(HORIZONTAL_AXIS));
     }
 
     @Override
@@ -96,16 +96,16 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
         public RopeBlockBase(Properties properties) {
             super(properties);
-            setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+            registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
         }
 
 		@Override
-    	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+    	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
     		return false;
     	}
 
         @Override
-        public PushReaction getPushReaction(BlockState state) {
+        public PushReaction getPistonPushReaction(BlockState state) {
             return PushReaction.BLOCK;
         }
 
@@ -116,48 +116,48 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
 
         @Override
-        public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-            if (!isMoving && (!state.contains(BlockStateProperties.WATERLOGGED) || !newState.contains(BlockStateProperties.WATERLOGGED) || state.get(BlockStateProperties.WATERLOGGED) == newState.get(BlockStateProperties.WATERLOGGED))) {
-                onRopeBroken(worldIn, pos.up());
-                if (!worldIn.isRemote) {
-                    BlockState above = worldIn.getBlockState(pos.up());
-                    BlockState below = worldIn.getBlockState(pos.down());
+        public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+            if (!isMoving && (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !newState.hasProperty(BlockStateProperties.WATERLOGGED) || state.getValue(BlockStateProperties.WATERLOGGED) == newState.getValue(BlockStateProperties.WATERLOGGED))) {
+                onRopeBroken(worldIn, pos.above());
+                if (!worldIn.isClientSide) {
+                    BlockState above = worldIn.getBlockState(pos.above());
+                    BlockState below = worldIn.getBlockState(pos.below());
                     if (above.getBlock() instanceof RopeBlockBase)
-                        worldIn.destroyBlock(pos.up(), true);
+                        worldIn.destroyBlock(pos.above(), true);
                     if (below.getBlock() instanceof RopeBlockBase)
-                        worldIn.destroyBlock(pos.down(), true);
+                        worldIn.destroyBlock(pos.below(), true);
                 }
             }
             if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
-                worldIn.removeTileEntity(pos);
+                worldIn.removeBlockEntity(pos);
             }
         }
 
 
         @Override
         public FluidState getFluidState(BlockState state) {
-            return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
+            return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
         }
 
         @Override
-        protected void fillStateContainer(Builder<Block, BlockState> builder) {
+        protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
             builder.add(BlockStateProperties.WATERLOGGED);
-            super.fillStateContainer(builder);
+            super.createBlockStateDefinition(builder);
         }
 
         @Override
-        public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+        public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
                                               IWorld world, BlockPos pos, BlockPos neighbourPos) {
-            if (state.get(BlockStateProperties.WATERLOGGED)) {
-                world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+                world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
             }
             return state;
         }
 
         @Override
         public BlockState getStateForPlacement(BlockItemUseContext context) {
-            FluidState FluidState = context.getWorld().getFluidState(context.getPos());
-            return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
+            FluidState FluidState = context.getLevel().getFluidState(context.getClickedPos());
+            return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getType() == Fluids.WATER));
         }
 
     }

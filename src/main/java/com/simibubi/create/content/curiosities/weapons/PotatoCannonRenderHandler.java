@@ -1,11 +1,11 @@
 package com.simibubi.create.content.curiosities.weapons;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetRenderHandler;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +22,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 
 	@Override
 	protected void playSound(Hand hand, Vector3d position) {
-		PotatoProjectileEntity.playLaunchSound(Minecraft.getInstance().world, position, nextPitch);
+		PotatoProjectileEntity.playLaunchSound(Minecraft.getInstance().level, position, nextPitch);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 		this.nextPitch = nextPitch;
 		if (stack.isEmpty())
 			return;
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		for (int i = 0; i < 2; i++) {
 			Vector3d m = VecHelper.offsetRandomly(motion.scale(0.1f), Create.RANDOM, .025f);
 			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), location.x, location.y, location.z, m.x,
@@ -50,14 +50,14 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 	protected void transformTool(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.1f, 0, .14f);
 		ms.scale(.75f, .75f, .75f);
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateX(recoil * 80);
 	}
 
 	@Override
 	protected void transformHand(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.09, -.275, -.25);
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateZ(flip * -10);
 	}
 

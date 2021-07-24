@@ -12,11 +12,11 @@ import net.minecraft.util.math.MathHelper;
 public class SequencedAssemblyItem extends Item {
 
 	public SequencedAssemblyItem(Properties p_i48487_1_) {
-		super(p_i48487_1_);
+		super(p_i48487_1_.stacksTo(1));
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {}
+	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {}
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {

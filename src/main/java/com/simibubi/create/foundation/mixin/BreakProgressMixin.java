@@ -17,11 +17,11 @@ import net.minecraft.util.math.BlockPos;
 public class BreakProgressMixin {
 	@Shadow
 	@Final
-	private WorldRenderer worldRenderer;
+	private WorldRenderer levelRenderer; // levelRenderer
 	private final ClientWorld self = (ClientWorld) (Object) this;
 
-	@Inject(at = @At("HEAD"), method = "sendBlockBreakProgress")
+	@Inject(at = @At("HEAD"), method = "destroyBlockProgress")
 	private void onBreakProgress(int playerEntityId, BlockPos pos, int progress, CallbackInfo ci) {
-		BreakProgressHook.whenBreaking(self, this.worldRenderer, playerEntityId, pos, progress);
+		BreakProgressHook.whenBreaking(self, this.levelRenderer, playerEntityId, pos, progress);
 	}
 }

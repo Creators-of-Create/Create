@@ -23,7 +23,7 @@ public class SchematicInstances {
 	public static WorldAttached<Cache<Integer, SchematicWorld>> loadedSchematics;
 
 	static {
-		loadedSchematics = new WorldAttached<>(() -> CacheBuilder.newBuilder()
+		loadedSchematics = new WorldAttached<>($ -> CacheBuilder.newBuilder()
 			.expireAfterAccess(5, TimeUnit.MINUTES)
 			.build());
 	}
@@ -61,7 +61,7 @@ public class SchematicInstances {
 			.getCompound("Anchor"));
 		SchematicWorld world = new SchematicWorld(anchor, wrapped);
 		PlacementSettings settings = SchematicItem.getSettings(schematic);
-		activeTemplate.place(world, anchor, settings, wrapped.getRandom());
+		activeTemplate.placeInWorldChunk(world, anchor, settings, wrapped.getRandom());
 
 		return world;
 	}

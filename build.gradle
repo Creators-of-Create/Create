@@ -29,10 +29,10 @@ version = "mc${minecraft_version}_v${mod_version}" + (dev ? "+${buildnumber}" : 
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
-    mappings channel: 'snapshot', version: '20200920-mixed-1.16.3'
+    mappings channel: 'official', version: "${minecraft_version}"
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
@@ -42,7 +42,8 @@ minecraft {
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             property 'fml.earlyprogresswindow', 'false'
-            property 'mixin.env.disableRefMap', 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 create {
                     source sourceSets.main
@@ -54,6 +55,8 @@ minecraft {
             workingDirectory project.file('run/server')
             arg '-mixin.config=create.mixins.json'
             property 'forge.logging.console.level', 'info'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 create {
                     source sourceSets.main
@@ -66,6 +69,8 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
             mods {
                 create {
@@ -115,6 +120,10 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        //location of the maven for dynamic trees
+        url "http://harleyoconnor.com/maven"
+    }
 }
 
 configurations {
@@ -140,6 +149,8 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.5:${jei_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
+    implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta12.1")
+
 
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")

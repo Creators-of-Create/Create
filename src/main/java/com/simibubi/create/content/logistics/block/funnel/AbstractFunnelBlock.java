@@ -37,23 +37,23 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 
 	protected AbstractFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
-		setDefaultState(getDefaultState().with(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(POWERED, context.getWorld()
-			.isBlockPowered(context.getPos()));
+		return defaultBlockState().setValue(POWERED, context.getLevel()
+			.hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(POWERED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(POWERED));
 	}
 
 	@Override
@@ -66,22 +66,22 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
-		if (!worldIn.getPendingBlockTicks()
-			.isTickPending(pos, this))
-			worldIn.getPendingBlockTicks()
+		if (!worldIn.getBlockTicks()
+			.willTickThisTick(pos, this))
+			worldIn.getBlockTicks()
 				.scheduleTick(pos, this, 0);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+		boolean previouslyPowered = state.getValue(POWERED);
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
+			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 	}
 
 	public static ItemStack tryInsert(World worldIn, BlockPos pos, ItemStack toInsert, boolean simulate) {
@@ -96,7 +96,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		ItemStack insert = inserter.insert(toInsert);
 
 		if (!simulate && insert.getCount() != toInsert.getCount()) {
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			TileEntity tileEntity = worldIn.getBlockEntity(pos);
 			if (tileEntity instanceof FunnelTileEntity) {
 				FunnelTileEntity funnelTileEntity = (FunnelTileEntity) tileEntity;
 				funnelTileEntity.onTransfer(toInsert);
@@ -118,8 +118,8 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
-		Block block = world.getBlockState(pos.offset(getFunnelFacing(state).getOpposite()))
+	public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+		Block block = world.getBlockState(pos.relative(getFunnelFacing(state).getOpposite()))
 			.getBlock();
 		return !(block instanceof AbstractFunnelBlock);
 	}
@@ -139,12 +139,12 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	protected abstract Direction getFacing(BlockState state);
 
 	@Override
-	public void onReplaced(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+	public void onRemove(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
 		if (p_196243_1_.hasTileEntity() && (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_)
 			|| !p_196243_4_.hasTileEntity())) {
 			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
-			p_196243_2_.removeTileEntity(p_196243_3_);
+			p_196243_2_.removeBlockEntity(p_196243_3_);
 		}
 	}
 

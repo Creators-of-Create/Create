@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
@@ -11,12 +12,16 @@ import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -25,9 +30,12 @@ import net.minecraft.item.ShootableItem;
 import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -46,14 +54,29 @@ public class PotatoCannonItem extends ShootableItem {
 	}
 
 	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_,
+	public boolean canAttackBlock(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_,
 		PlayerEntity p_195938_4_) {
 		return false;
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		return onItemRightClick(context.getWorld(), context.getPlayer(), context.getHand()).getType();
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if (enchantment == Enchantments.POWER_ARROWS)
+			return true;
+		if (enchantment == Enchantments.PUNCH_ARROWS)
+			return true;
+		if (enchantment == Enchantments.FLAMING_ARROWS)
+			return true;
+		if (enchantment == Enchantments.MOB_LOOTING)
+			return true;
+		if (enchantment == AllEnchantments.POTATO_RECOVERY.get())
+			return true;
+		return super.canApplyAtEnchantingTable(stack, enchantment);
+	}
+
+	@Override
+	public ActionResultType useOn(ItemUseContext context) {
+		return use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 	}
 
 	@Override
@@ -81,7 +104,7 @@ public class PotatoCannonItem extends ShootableItem {
 	}
 
 	@Override
-	public boolean isDamageable() {
+	public boolean canBeDepleted() {
 		return true;
 	}
 
@@ -95,52 +118,67 @@ public class PotatoCannonItem extends ShootableItem {
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getHeldItem(hand);
+	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+		ItemStack stack = player.getItemInHand(hand);
 		return findAmmoInInventory(world, player, stack).map(itemStack -> {
 
 			if (ShootableGadgetItemMethods.shouldSwap(player, stack, hand, this::isCannon))
 				return ActionResult.fail(stack);
 
-			if (world.isRemote) {
+			if (world.isClientSide) {
 				CreateClient.POTATO_CANNON_RENDER_HANDLER.dontAnimateItem(hand);
 				return ActionResult.success(stack);
 			}
 
 			Vector3d barrelPos = ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND,
-				new Vector3d(.75f, -0.3f, 1.5f));
+				new Vector3d(.75f, -0.15f, 1.5f));
 			Vector3d correction =
 				ShootableGadgetItemMethods.getGunBarrelVec(player, hand == Hand.MAIN_HAND, new Vector3d(-.05f, 0, 0))
-					.subtract(player.getPositionVec()
+					.subtract(player.position()
 						.add(0, player.getEyeHeight(), 0));
-			
-			Vector3d lookVec = player.getLookVec();
 
 			PotatoCannonProjectileTypes projectileType = PotatoCannonProjectileTypes.getProjectileTypeOf(itemStack)
 				.orElse(PotatoCannonProjectileTypes.FALLBACK);
+			Vector3d lookVec = player.getLookAngle();
+			Vector3d motion = lookVec.add(correction)
+				.normalize()
+				.scale(projectileType.getVelocityMultiplier());
+
 			float soundPitch = projectileType.getSoundPitch() + (Create.RANDOM.nextFloat() - .5f) / 4f;
+
 			boolean spray = projectileType.getSplit() > 1;
+			Vector3d sprayBase = VecHelper.rotate(new Vector3d(0, 0.1, 0), 360 * Create.RANDOM.nextFloat(), Axis.Z);
+			float sprayChange = 360f / projectileType.getSplit();
+
 			for (int i = 0; i < projectileType.getSplit(); i++) {
 				PotatoProjectileEntity projectile = AllEntityTypes.POTATO_PROJECTILE.create(world);
 				projectile.setItem(itemStack);
-				Vector3d motion = lookVec.scale(projectileType.getVelocityMultiplier())
-					.add(correction);
-				if (spray)
-					motion = VecHelper.offsetRandomly(motion, Create.RANDOM, 0.25f);
-				projectile.setPosition(barrelPos.x, barrelPos.y, barrelPos.z);
-				projectile.setMotion(motion);
-				projectile.setShooter(player);
-				world.addEntity(projectile);
+				projectile.setEnchantmentEffectsFromCannon(stack);
+
+				Vector3d splitMotion = motion;
+				if (spray) {
+					float imperfection = 40 * (Create.RANDOM.nextFloat() - 0.5f);
+					Vector3d sprayOffset = VecHelper.rotate(sprayBase, i * sprayChange + imperfection, Axis.Z);
+					splitMotion = splitMotion.add(VecHelper.lookAt(sprayOffset, motion));
+				}
+
+				if (i != 0)
+					projectile.recoveryChance = 0;
+
+				projectile.setPos(barrelPos.x, barrelPos.y, barrelPos.z);
+				projectile.setDeltaMovement(splitMotion);
+				projectile.setOwner(player);
+				world.addFreshEntity(projectile);
 			}
 
 			if (!player.isCreative()) {
 				itemStack.shrink(1);
 				if (itemStack.isEmpty())
-					player.inventory.deleteStack(itemStack);
+					player.inventory.removeItem(itemStack);
 			}
 
 			if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
-				stack.damageItem(1, player, p -> p.sendBreakAnimation(hand));
+				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 
 			Integer cooldown =
 				findAmmoInInventory(world, player, stack).flatMap(PotatoCannonProjectileTypes::getProjectileTypeOf)
@@ -161,7 +199,7 @@ public class PotatoCannonItem extends ShootableItem {
 	}
 
 	private Optional<ItemStack> findAmmoInInventory(World world, PlayerEntity player, ItemStack held) {
-		ItemStack findAmmo = player.findAmmo(held);
+		ItemStack findAmmo = player.getProjectile(held);
 		return PotatoCannonProjectileTypes.getProjectileTypeOf(findAmmo)
 			.map($ -> findAmmo);
 	}
@@ -176,7 +214,7 @@ public class PotatoCannonItem extends ShootableItem {
 		CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 		if (player == null)
 			return Optional.empty();
-		ItemStack findAmmo = player.findAmmo(cannon);
+		ItemStack findAmmo = player.getProjectile(cannon);
 		Optional<ItemStack> found = PotatoCannonProjectileTypes.getProjectileTypeOf(findAmmo)
 			.map($ -> findAmmo);
 		found.ifPresent(stack -> CLIENT_CURRENT_AMMO = stack);
@@ -185,33 +223,58 @@ public class PotatoCannonItem extends ShootableItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+	public void appendHoverText(ItemStack stack, World world, List<ITextComponent> tooltip, ITooltipFlag flag) {
+		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
+		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
+		final float additionalDamageMult = 1 + power * .2f;
+		final float additionalKnockback = punch * .5f;
+
 		getAmmoforPreview(stack).ifPresent(ammo -> {
+			String _attack = "potato_cannon.ammo.attack_damage";
+			String _reload = "potato_cannon.ammo.reload_ticks";
+			String _knockback = "potato_cannon.ammo.knockback";
+
 			tooltip.add(new StringTextComponent(""));
-			tooltip.add(new TranslationTextComponent(ammo.getTranslationKey()).append(new StringTextComponent(":"))
-				.formatted(TextFormatting.GRAY));
+			tooltip.add(new TranslationTextComponent(ammo.getDescriptionId()).append(new StringTextComponent(":"))
+				.withStyle(TextFormatting.GRAY));
 			PotatoCannonProjectileTypes type = PotatoCannonProjectileTypes.getProjectileTypeOf(ammo)
 				.get();
 			StringTextComponent spacing = new StringTextComponent(" ");
+			TextFormatting green = TextFormatting.GREEN;
 			TextFormatting darkGreen = TextFormatting.DARK_GREEN;
-			tooltip.add(spacing.copy()
-				.append(new StringTextComponent(type.getDamage() + " Attack Damage").formatted(darkGreen)));
-			tooltip.add(spacing.copy()
-				.append(new StringTextComponent(type.getReloadTicks() + " Reload Ticks").formatted(darkGreen)));
-			tooltip.add(spacing.copy()
-				.append(new StringTextComponent(type.getKnockback() + " Knockback").formatted(darkGreen)));
+
+			float damageF = type.getDamage() * additionalDamageMult;
+			IFormattableTextComponent damage = new StringTextComponent(
+				damageF == MathHelper.floor(damageF) ? "" + MathHelper.floor(damageF) : "" + damageF);
+			IFormattableTextComponent reloadTicks = new StringTextComponent("" + type.getReloadTicks());
+			IFormattableTextComponent knockback =
+				new StringTextComponent("" + (type.getKnockback() + additionalKnockback));
+
+			damage = damage.withStyle(additionalDamageMult > 1 ? green : darkGreen);
+			knockback = knockback.withStyle(additionalKnockback > 0 ? green : darkGreen);
+			reloadTicks = reloadTicks.withStyle(darkGreen);
+
+			tooltip.add(spacing.plainCopy()
+				.append(Lang.translate(_attack, damage)
+					.withStyle(darkGreen)));
+			tooltip.add(spacing.plainCopy()
+				.append(Lang.translate(_reload, reloadTicks)
+					.withStyle(darkGreen)));
+			tooltip.add(spacing.plainCopy()
+				.append(Lang.translate(_knockback, knockback)
+					.withStyle(darkGreen)));
 		});
-		super.addInformation(stack, world, tooltip, flag);
+		super.appendHoverText(stack, world, tooltip, flag);
 	}
 
 	@Override
-	public Predicate<ItemStack> getInventoryAmmoPredicate() {
+	public Predicate<ItemStack> getAllSupportedProjectiles() {
 		return stack -> PotatoCannonProjectileTypes.getProjectileTypeOf(stack)
 			.isPresent();
 	}
 
 	@Override
-	public int getItemEnchantability() {
+	public int getEnchantmentValue() {
 		return 1;
 	}
 
@@ -221,12 +284,12 @@ public class PotatoCannonItem extends ShootableItem {
 	}
 
 	@Override
-	public UseAction getUseAction(ItemStack stack) {
+	public UseAction getUseAnimation(ItemStack stack) {
 		return UseAction.NONE;
 	}
 
 	@Override
-	public int getRange() {
+	public int getDefaultProjectileRange() {
 		return 15;
 	}
 

@@ -39,15 +39,15 @@ public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity>
 					.getSender();
 				if (player == null)
 					return;
-				World world = player.world;
+				World world = player.level;
 
-				if (world == null || !world.isBlockPresent(pos))
+				if (world == null || !world.isLoaded(pos))
 					return;
-				TileEntity tileEntity = world.getTileEntity(pos);
+				TileEntity tileEntity = world.getBlockEntity(pos);
 				if (tileEntity instanceof SyncedTileEntity) {
 					applySettings((TE) tileEntity);
 					((SyncedTileEntity) tileEntity).sendData();
-					tileEntity.markDirty();
+					tileEntity.setChanged();
 				}
 			});
 		context.get()

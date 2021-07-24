@@ -43,9 +43,9 @@ public class ChassisScenes {
 		scene.world.showSectionAndMerge(util.select.position(centralChassis.east()
 			.north()), Direction.SOUTH, chassis);
 		scene.idle(3);
-		scene.world.showSectionAndMerge(util.select.position(centralChassis.up()), Direction.DOWN, chassis);
+		scene.world.showSectionAndMerge(util.select.position(centralChassis.above()), Direction.DOWN, chassis);
 		scene.idle(2);
-		scene.world.showSectionAndMerge(util.select.position(centralChassis.up()
+		scene.world.showSectionAndMerge(util.select.position(centralChassis.above()
 			.east()), Direction.DOWN, chassis);
 		scene.idle(10);
 
@@ -107,7 +107,7 @@ public class ChassisScenes {
 				.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.overlay.showControls(input, 30);
 		scene.idle(7);
-		scene.world.modifyBlock(chassisPos, s -> s.with(LinearChassisBlock.STICKY_BOTTOM, true), false);
+		scene.world.modifyBlock(chassisPos, s -> s.setValue(LinearChassisBlock.STICKY_BOTTOM, true), false);
 		scene.effects.superGlue(chassisPos, Direction.WEST, false);
 		scene.idle(30);
 
@@ -119,7 +119,7 @@ public class ChassisScenes {
 
 		scene.overlay.showControls(input, 15);
 		scene.idle(7);
-		scene.world.modifyBlock(chassisPos, s -> s.with(LinearChassisBlock.STICKY_TOP, true), false);
+		scene.world.modifyBlock(chassisPos, s -> s.setValue(LinearChassisBlock.STICKY_TOP, true), false);
 		scene.effects.superGlue(chassisPos, Direction.EAST, false);
 		scene.idle(15);
 
@@ -138,7 +138,7 @@ public class ChassisScenes {
 				.whileSneaking(),
 			30);
 		scene.idle(7);
-		scene.world.modifyBlock(chassisPos, s -> s.with(LinearChassisBlock.STICKY_BOTTOM, false), false);
+		scene.world.modifyBlock(chassisPos, s -> s.setValue(LinearChassisBlock.STICKY_BOTTOM, false), false);
 		scene.effects.superGlue(chassisPos, Direction.WEST, false);
 		scene.idle(30);
 
@@ -152,7 +152,7 @@ public class ChassisScenes {
 
 		scene.idle(20);
 		ElementLink<WorldSectionElement> glassSection =
-			scene.world.showIndependentSection(util.select.position(chassisPos.up()), Direction.DOWN);
+			scene.world.showIndependentSection(util.select.position(chassisPos.above()), Direction.DOWN);
 		scene.world.moveSection(glassSection, util.vector.of(0, -1, 0), 0);
 		scene.idle(25);
 		scene.addKeyframe();
@@ -281,7 +281,7 @@ public class ChassisScenes {
 		scene.idle(20);
 
 		scene.overlay.showText(80)
-			.pointAt(util.vector.topOf(chassisPos.up(2)))
+			.pointAt(util.vector.topOf(chassisPos.above(2)))
 			.text("Using these mechanics, structures of any shape can move as a Contraption")
 			.placeNearTarget();
 		scene.idle(30);
@@ -307,14 +307,14 @@ public class ChassisScenes {
 		ElementLink<WorldSectionElement> contraption = scene.world.showIndependentSection(chassis, Direction.DOWN);
 		scene.idle(5);
 		ElementLink<WorldSectionElement> top =
-			scene.world.showIndependentSection(util.select.position(chassisPos.up()), Direction.DOWN);
+			scene.world.showIndependentSection(util.select.position(chassisPos.above()), Direction.DOWN);
 		scene.idle(10);
 
 		scene.overlay.showText(50)
 			.attachKeyFrame()
 			.placeNearTarget()
 			.text("Radial Chassis connect to identical Chassis blocks in a row")
-			.pointAt(util.vector.topOf(chassisPos.up()));
+			.pointAt(util.vector.topOf(chassisPos.above()));
 		scene.idle(60);
 
 		BlockPos bearingPos = util.grid.at(2, 1, 2);
@@ -340,7 +340,7 @@ public class ChassisScenes {
 				.withItem(new ItemStack(Items.SLIME_BALL));
 		scene.overlay.showControls(input, 30);
 		scene.idle(7);
-		scene.world.modifyBlock(chassisPos, s -> s.with(RadialChassisBlock.STICKY_WEST, true), false);
+		scene.world.modifyBlock(chassisPos, s -> s.setValue(RadialChassisBlock.STICKY_WEST, true), false);
 		scene.effects.superGlue(chassisPos, Direction.WEST, false);
 		scene.idle(30);
 
@@ -352,9 +352,9 @@ public class ChassisScenes {
 
 		scene.overlay.showControls(input, 15);
 		scene.idle(7);
-		scene.world.modifyBlock(chassisPos, s -> s.with(RadialChassisBlock.STICKY_EAST, true)
-			.with(RadialChassisBlock.STICKY_NORTH, true)
-			.with(RadialChassisBlock.STICKY_SOUTH, true), false);
+		scene.world.modifyBlock(chassisPos, s -> s.setValue(RadialChassisBlock.STICKY_EAST, true)
+			.setValue(RadialChassisBlock.STICKY_NORTH, true)
+			.setValue(RadialChassisBlock.STICKY_SOUTH, true), false);
 		scene.effects.superGlue(chassisPos, Direction.EAST, false);
 		scene.effects.superGlue(chassisPos, Direction.SOUTH, false);
 		scene.effects.superGlue(chassisPos, Direction.NORTH, false);
@@ -375,7 +375,7 @@ public class ChassisScenes {
 				.whileSneaking(),
 			30);
 		scene.idle(7);
-		scene.world.modifyBlock(chassisPos, s -> s.with(RadialChassisBlock.STICKY_WEST, false), false);
+		scene.world.modifyBlock(chassisPos, s -> s.setValue(RadialChassisBlock.STICKY_WEST, false), false);
 		scene.effects.superGlue(chassisPos, Direction.WEST, false);
 		scene.idle(30);
 
@@ -407,7 +407,7 @@ public class ChassisScenes {
 		scene.world.showSection(util.select.fromTo(0, 3, 3, 1, 3, 4), Direction.DOWN);
 		scene.idle(10);
 		Vector3d blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
-		AxisAlignedBB bb = new AxisAlignedBB(blockSurface, blockSurface).grow(.501, .501, 0);
+		AxisAlignedBB bb = new AxisAlignedBB(blockSurface, blockSurface).inflate(.501, .501, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 60);
 		scene.overlay.showOutline(PonderPalette.WHITE, s, s, 80);
 		scene.overlay.showText(40)
@@ -535,7 +535,7 @@ public class ChassisScenes {
 		scene.world.glueBlockOnto(central.north()
 			.east(), Direction.WEST, plank);
 		scene.idle(5);
-		scene.world.glueBlockOnto(central.up(), Direction.DOWN, plank);
+		scene.world.glueBlockOnto(central.above(), Direction.DOWN, plank);
 		scene.idle(5);
 		scene.world.glueBlockOnto(central.south()
 			.west(), Direction.EAST, plank);
@@ -553,7 +553,7 @@ public class ChassisScenes {
 		scene.idle(90);
 
 		glueEntity = scene.world.createGlueEntity(central, Direction.UP);
-		scene.world.destroyBlock(central.up());
+		scene.world.destroyBlock(central.above());
 		scene.idle(20);
 		scene.addKeyframe();
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(central), Pointing.DOWN).leftClick(), 40);

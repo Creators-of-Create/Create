@@ -88,7 +88,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (getWorld().isRemote)
+		if (getWorld().isClientSide)
 			return;
 		foreach(ts -> {
 			ts.fluidLevel.forceNextSync();
@@ -132,7 +132,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	protected void updateFluids() {
 		fluidUpdateCallback.run();
 		tileEntity.sendData();
-		tileEntity.markDirty();
+		tileEntity.setChanged();
 	}
 
 	@Override
@@ -239,10 +239,10 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		}
 
 		public void onFluidStackChanged() {
-			if (!tileEntity.hasWorld())
+			if (!tileEntity.hasLevel())
 				return;
 			fluidLevel.chase(tank.getFluidAmount() / (float) tank.getCapacity(), .25, Chaser.EXP);
-			if (!getWorld().isRemote)
+			if (!getWorld().isClientSide)
 				sendDataLazily();
 			if (tileEntity.isVirtual() && !tank.getFluid()
 				.isEmpty())

@@ -8,12 +8,10 @@ import java.util.function.UnaryOperator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.item.Item;
@@ -34,7 +32,7 @@ public class SequencedAssemblyRecipeBuilder {
 	public SequencedAssemblyRecipeBuilder(ResourceLocation id) {
 		recipeConditions = new ArrayList<>();
 		this.recipe = new SequencedAssemblyRecipe(id,
-			(SequencedAssemblyRecipeSerializer) AllRecipeTypes.SEQUENCED_ASSEMBLY.serializer);
+			AllRecipeTypes.SEQUENCED_ASSEMBLY.getSerializer());
 	}
 
 	public <T extends ProcessingRecipe<?>> SequencedAssemblyRecipeBuilder addStep(ProcessingRecipeFactory<T> factory,
@@ -51,11 +49,11 @@ public class SequencedAssemblyRecipeBuilder {
 	}
 
 	public SequencedAssemblyRecipeBuilder require(IItemProvider ingredient) {
-		return require(Ingredient.fromItems(ingredient));
+		return require(Ingredient.of(ingredient));
 	}
 
 	public SequencedAssemblyRecipeBuilder require(ITag.INamedTag<Item> tag) {
-		return require(Ingredient.fromTag(tag));
+		return require(Ingredient.of(tag));
 	}
 
 	public SequencedAssemblyRecipeBuilder require(Ingredient ingredient) {
@@ -82,27 +80,31 @@ public class SequencedAssemblyRecipeBuilder {
 		return this;
 	}
 
+	public SequencedAssemblyRecipe build() {
+		return recipe;
+	}
+
 	public void build(Consumer<IFinishedRecipe> consumer) {
-		consumer.accept(new DataGenResult(recipe, recipeConditions));
+		consumer.accept(new DataGenResult(build(), recipeConditions));
 	}
 
 	public static class DataGenResult implements IFinishedRecipe {
 
-		private List<ICondition> recipeConditions;
-		private SequencedAssemblyRecipeSerializer serializer;
-		private ResourceLocation id;
 		private SequencedAssemblyRecipe recipe;
+		private List<ICondition> recipeConditions;
+		private ResourceLocation id;
+		private SequencedAssemblyRecipeSerializer serializer;
 
 		public DataGenResult(SequencedAssemblyRecipe recipe, List<ICondition> recipeConditions) {
 			this.recipeConditions = recipeConditions;
 			this.recipe = recipe;
-			this.id = Create.asResource(Lang.asId(AllRecipeTypes.SEQUENCED_ASSEMBLY.name()) + "/" + recipe.getId()
-				.getPath());
+			this.id = new ResourceLocation(recipe.getId().getNamespace(),
+					AllRecipeTypes.SEQUENCED_ASSEMBLY.getId().getPath() + "/" + recipe.getId().getPath());
 			this.serializer = (SequencedAssemblyRecipeSerializer) recipe.getSerializer();
 		}
 
 		@Override
-		public void serialize(JsonObject json) {
+		public void serializeRecipeData(JsonObject json) {
 			serializer.write(json, recipe);
 			if (recipeConditions.isEmpty())
 				return;
@@ -113,22 +115,22 @@ public class SequencedAssemblyRecipeBuilder {
 		}
 
 		@Override
-		public ResourceLocation getID() {
+		public ResourceLocation getId() {
 			return id;
 		}
 
 		@Override
-		public IRecipeSerializer<?> getSerializer() {
+		public IRecipeSerializer<?> getType() {
 			return serializer;
 		}
 
 		@Override
-		public JsonObject getAdvancementJson() {
+		public JsonObject serializeAdvancement() {
 			return null;
 		}
 
 		@Override
-		public ResourceLocation getAdvancementID() {
+		public ResourceLocation getAdvancementId() {
 			return null;
 		}
 

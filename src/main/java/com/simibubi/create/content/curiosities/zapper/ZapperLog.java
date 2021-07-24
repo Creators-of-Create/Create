@@ -35,7 +35,7 @@ public class ZapperLog {
 		activeWorld = world;
 
 		List<BlockInfo> blocks = positions.stream().map(pos -> {
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getBlockEntity(pos);
 			return new BlockInfo(pos, world.getBlockState(pos), tileEntity == null ? null : tileEntity.serializeNBT());
 		}).collect(Collectors.toList());
 

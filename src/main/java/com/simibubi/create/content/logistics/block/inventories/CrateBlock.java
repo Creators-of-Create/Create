@@ -25,8 +25,8 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 
 	public CrateBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
-		setDefaultState(getDefaultState().with(FACING, Direction.UP)
-			.with(DOUBLE, false));
+		registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP)
+			.setValue(DOUBLE, false));
 	}
 
 	@Override
@@ -35,56 +35,56 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 	
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 
-		boolean isDouble = stateIn.get(DOUBLE);
-		Direction blockFacing = stateIn.get(FACING);
-		boolean isFacingOther = facingState.getBlock() == this && facingState.get(DOUBLE)
-			&& facingState.get(FACING) == facing.getOpposite();
+		boolean isDouble = stateIn.getValue(DOUBLE);
+		Direction blockFacing = stateIn.getValue(FACING);
+		boolean isFacingOther = facingState.getBlock() == this && facingState.getValue(DOUBLE)
+			&& facingState.getValue(FACING) == facing.getOpposite();
 
 		if (!isDouble) {
 			if (!isFacingOther)
 				return stateIn;
-			return stateIn.with(DOUBLE, true)
-				.with(FACING, facing);
+			return stateIn.setValue(DOUBLE, true)
+				.setValue(FACING, facing);
 		}
 
 		if (facing != blockFacing)
 			return stateIn;
 		if (!isFacingOther)
-			return stateIn.with(DOUBLE, false);
+			return stateIn.setValue(DOUBLE, false);
 
 		return stateIn;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockPos pos = context.getPos();
-		World world = context.getWorld();
+		BlockPos pos = context.getClickedPos();
+		World world = context.getLevel();
 
 		if (context.getPlayer() == null || !context.getPlayer()
-			.isSneaking()) {
+			.isShiftKeyDown()) {
 			for (Direction d : Iterate.directions) {
-				BlockState state = world.getBlockState(pos.offset(d));
-				if (state.getBlock() == this && !state.get(DOUBLE))
-					return getDefaultState().with(FACING, d)
-						.with(DOUBLE, true);
+				BlockState state = world.getBlockState(pos.relative(d));
+				if (state.getBlock() == this && !state.getValue(DOUBLE))
+					return defaultBlockState().setValue(FACING, d)
+						.setValue(DOUBLE, true);
 			}
 		}
 
-		Direction placedOnFace = context.getFace()
+		Direction placedOnFace = context.getClickedFace()
 			.getOpposite();
-		BlockState state = world.getBlockState(pos.offset(placedOnFace));
-		if (state.getBlock() == this && !state.get(DOUBLE))
-			return getDefaultState().with(FACING, placedOnFace)
-				.with(DOUBLE, true);
-		return getDefaultState();
+		BlockState state = world.getBlockState(pos.relative(placedOnFace));
+		if (state.getBlock() == this && !state.getValue(DOUBLE))
+			return defaultBlockState().setValue(FACING, placedOnFace)
+				.setValue(DOUBLE, true);
+		return defaultBlockState();
 	}
 
 	@Override
@@ -93,8 +93,8 @@ public class CrateBlock extends ProperDirectionalBlock implements IWrenchable {
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(DOUBLE));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(DOUBLE));
 	}
 
 }

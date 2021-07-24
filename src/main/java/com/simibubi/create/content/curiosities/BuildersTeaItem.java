@@ -21,26 +21,26 @@ public class BuildersTeaItem extends Item {
 		super(p_i48487_1_);
 	}
 
-	public ItemStack onItemUseFinish(ItemStack stack, World world, LivingEntity entity) {
+	public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {
 		PlayerEntity playerentity = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
 		if (playerentity instanceof ServerPlayerEntity)
 			CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) playerentity, stack);
 
-		if (!world.isRemote) 
-			entity.addPotionEffect(new EffectInstance(Effects.HASTE, 3 * 60 * 20, 0, false, false, false));
+		if (!world.isClientSide) 
+			entity.addEffect(new EffectInstance(Effects.DIG_SPEED, 3 * 60 * 20, 0, false, false, false));
 
 		if (playerentity != null) {
-			playerentity.addStat(Stats.ITEM_USED.get(this));
-			playerentity.getFoodStats().addStats(1, .6F);
-			if (!playerentity.abilities.isCreativeMode)
+			playerentity.awardStat(Stats.ITEM_USED.get(this));
+			playerentity.getFoodData().eat(1, .6F);
+			if (!playerentity.abilities.instabuild)
 				stack.shrink(1);
 		}
 
-		if (playerentity == null || !playerentity.abilities.isCreativeMode) {
+		if (playerentity == null || !playerentity.abilities.instabuild) {
 			if (stack.isEmpty()) 
 				return new ItemStack(Items.GLASS_BOTTLE);
 			if (playerentity != null) 
-				playerentity.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+				playerentity.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
 		}
 
 		return stack;
@@ -50,13 +50,13 @@ public class BuildersTeaItem extends Item {
 		return 42;
 	}
 
-	public UseAction getUseAction(ItemStack p_77661_1_) {
+	public UseAction getUseAnimation(ItemStack p_77661_1_) {
 		return UseAction.DRINK;
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
-		p_77659_2_.setActiveHand(p_77659_3_);
-		return ActionResult.success(p_77659_2_.getHeldItem(p_77659_3_));
+	public ActionResult<ItemStack> use(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
+		p_77659_2_.startUsingItem(p_77659_3_);
+		return ActionResult.success(p_77659_2_.getItemInHand(p_77659_3_));
 	}
 
 }

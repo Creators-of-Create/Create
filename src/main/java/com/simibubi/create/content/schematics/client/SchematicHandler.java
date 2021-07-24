@@ -126,17 +126,17 @@ public class SchematicHandler {
 		if (size.equals(BlockPos.ZERO))
 			return;
 
-		World clientWorld = Minecraft.getInstance().world;
+		World clientWorld = Minecraft.getInstance().level;
 		SchematicWorld w = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		PlacementSettings placementSettings = new PlacementSettings();
 
-		schematic.place(w, BlockPos.ZERO, placementSettings, w.getRandom());
+		schematic.placeInWorldChunk(w, BlockPos.ZERO, placementSettings, w.getRandom());
 		placementSettings.setMirror(Mirror.FRONT_BACK);
-		schematic.place(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings, wMirroredFB.getRandom());
+		schematic.placeInWorldChunk(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings, wMirroredFB.getRandom());
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
-		schematic.place(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings, wMirroredFB.getRandom());
+		schematic.placeInWorldChunk(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings, wMirroredFB.getRandom());
 
 		renderers.get(0)
 			.display(w);
@@ -152,13 +152,13 @@ public class SchematicHandler {
 			return;
 
 		if (active) {
-			ms.push();
+			ms.pushPose();
 			currentTool.getTool()
 				.renderTool(ms, buffer);
-			ms.pop();
+			ms.popPose();
 		}
 
-		ms.push();
+		ms.pushPose();
 		transformation.applyGLTransformations(ms);
 
 		if (!renderers.isEmpty()) {
@@ -182,7 +182,7 @@ public class SchematicHandler {
 			currentTool.getTool()
 			.renderOnSchematic(ms, buffer);
 		
-		ms.pop();
+		ms.popPose();
 
 	}
 
@@ -202,11 +202,11 @@ public class SchematicHandler {
 		if (!pressed || button != 1)
 			return;
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player.isSneaking())
+		if (mc.player.isShiftKeyDown())
 			return;
-		if (mc.objectMouseOver instanceof BlockRayTraceResult) {
-			BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) mc.objectMouseOver;
-			BlockState clickedBlock = mc.world.getBlockState(blockRayTraceResult.getPos());
+		if (mc.hitResult instanceof BlockRayTraceResult) {
+			BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) mc.hitResult;
+			BlockState clickedBlock = mc.level.getBlockState(blockRayTraceResult.getBlockPos());
 			if (AllBlocks.SCHEMATICANNON.has(clickedBlock))
 				return;
 			if (AllBlocks.DEPLOYER.has(clickedBlock))
@@ -245,23 +245,23 @@ public class SchematicHandler {
 	}
 
 	private ItemStack findBlueprintInHand(PlayerEntity player) {
-		ItemStack stack = player.getHeldItemMainhand();
+		ItemStack stack = player.getMainHandItem();
 		if (!AllItems.SCHEMATIC.isIn(stack))
 			return null;
 		if (!stack.hasTag())
 			return null;
 
 		activeSchematicItem = stack;
-		activeHotbarSlot = player.inventory.currentItem;
+		activeHotbarSlot = player.inventory.selected;
 		return stack;
 	}
 
 	private boolean itemLost(PlayerEntity player) {
-		for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-			if (!player.inventory.getStackInSlot(i)
-				.isItemEqual(activeSchematicItem))
+		for (int i = 0; i < PlayerInventory.getSelectionSize(); i++) {
+			if (!player.inventory.getItem(i)
+				.sameItem(activeSchematicItem))
 				continue;
-			if (!ItemStack.areItemStackTagsEqual(player.inventory.getStackInSlot(i), activeSchematicItem))
+			if (!ItemStack.tagMatches(player.inventory.getItem(i), activeSchematicItem))
 				continue;
 			return false;
 		}

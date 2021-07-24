@@ -45,26 +45,26 @@ public class TooltipHelper {
 
 	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
 		return Lang.translate("tooltip.holdForDescription", Lang.translate("tooltip.keyShift")
-			.formatted(TextFormatting.GRAY))
-			.formatted(TextFormatting.DARK_GRAY);
+			.withStyle(TextFormatting.GRAY))
+			.withStyle(TextFormatting.DARK_GRAY);
 	}
 
 	public static void addHint(List<ITextComponent> tooltip, String hintKey, Object... messageParams) {
 		ITextComponent spacing = IHaveGoggleInformation.componentSpacing;
-		tooltip.add(spacing.copy()
+		tooltip.add(spacing.plainCopy()
 			.append(Lang.translate(hintKey + ".title"))
-			.formatted(GOLD));
+			.withStyle(GOLD));
 		ITextComponent hint = Lang.translate(hintKey);
 		List<ITextComponent> cutComponent = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
 		for (ITextComponent component : cutComponent)
-			tooltip.add(spacing.copy()
+			tooltip.add(spacing.plainCopy()
 				.append(component));
 	}
 
 	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
 		tooltipReferrals.put(item.asItem(), () -> itemWithTooltip.get()
 			.asItem()
-			.getTranslationKey());
+			.getDescriptionId());
 	}
 
 	public static void referTo(IItemProvider item, String string) {
@@ -73,7 +73,7 @@ public class TooltipHelper {
 
 	@Deprecated
 	public static List<String> cutString(ITextComponent s, TextFormatting defaultColor, TextFormatting highlightColor) {
-		return cutString(s.getUnformattedComponentText(), defaultColor, highlightColor, 0);
+		return cutString(s.getContents(), defaultColor, highlightColor, 0);
 	}
 
 	@Deprecated
@@ -92,7 +92,7 @@ public class TooltipHelper {
 			words.add(word);
 		}
 
-		FontRenderer font = Minecraft.getInstance().fontRenderer;
+		FontRenderer font = Minecraft.getInstance().font;
 		List<String> lines = FontHelper.cutString(font, markedUp, maxWidthPerLine);
 
 		// Format
@@ -140,12 +140,12 @@ public class TooltipHelper {
 		}
 
 		// Apply hard wrap
-		FontRenderer font = Minecraft.getInstance().fontRenderer;
+		FontRenderer font = Minecraft.getInstance().font;
 		List<String> lines = new LinkedList<>();
 		StringBuilder currentLine = new StringBuilder();
 		int width = 0;
 		for (String word : words) {
-			int newWidth = font.getStringWidth(word.replaceAll("_", ""));
+			int newWidth = font.width(word.replaceAll("_", ""));
 			if (width + newWidth > maxWidthPerLine) {
 				if (width > 0) {
 					String line = currentLine.toString();
@@ -166,16 +166,16 @@ public class TooltipHelper {
 
 		// Format
 		IFormattableTextComponent lineStart = new StringTextComponent(Strings.repeat(" ", indent));
-		lineStart.formatted(defaultColor);
+		lineStart.withStyle(defaultColor);
 		List<ITextComponent> formattedLines = new ArrayList<>(lines.size());
 		Couple<TextFormatting> f = Couple.create(highlightColor, defaultColor);
 
 		boolean currentlyHighlighted = false;
 		for (String string : lines) {
-			IFormattableTextComponent currentComponent = lineStart.copy();
+			IFormattableTextComponent currentComponent = lineStart.plainCopy();
 			String[] split = string.split("_");
 			for (String part : split) {
-				currentComponent.append(new StringTextComponent(part).formatted(f.get(currentlyHighlighted)));
+				currentComponent.append(new StringTextComponent(part).withStyle(f.get(currentlyHighlighted)));
 				currentlyHighlighted = !currentlyHighlighted;
 			}
 
@@ -228,7 +228,7 @@ public class TooltipHelper {
 	private static void checkLocale() {
 		Language currentLanguage = Minecraft.getInstance()
 			.getLanguageManager()
-			.getCurrentLanguage();
+			.getSelected();
 		if (cachedLanguage != currentLanguage) {
 			cachedTooltips.clear();
 			cachedLanguage = currentLanguage;
@@ -238,7 +238,7 @@ public class TooltipHelper {
 	public static boolean hasTooltip(ItemStack stack, PlayerEntity player) {
 		checkLocale();
 
-		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemStackFromSlot(EquipmentSlotType.HEAD));
+		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemBySlot(EquipmentSlotType.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;
@@ -264,7 +264,7 @@ public class TooltipHelper {
 
 	private static boolean findTooltip(ItemStack stack) {
 		String key = getTooltipTranslationKey(stack);
-		if (I18n.hasKey(key)) {
+		if (I18n.exists(key)) {
 			cachedTooltips.put(key, buildToolTip(key, stack));
 			return true;
 		}
@@ -278,8 +278,8 @@ public class TooltipHelper {
 		String summaryKey = translationKey + ".summary";
 
 		// Summary
-		if (I18n.hasKey(summaryKey))
-			tooltip = tooltip.withSummary(new StringTextComponent(I18n.format(summaryKey)));
+		if (I18n.exists(summaryKey))
+			tooltip = tooltip.withSummary(new StringTextComponent(I18n.get(summaryKey)));
 
 		// Requirements
 //		if (stack.getItem() instanceof BlockItem) {
@@ -293,21 +293,21 @@ public class TooltipHelper {
 		for (int i = 1; i < 100; i++) {
 			String conditionKey = translationKey + ".condition" + i;
 			String behaviourKey = translationKey + ".behaviour" + i;
-			if (!I18n.hasKey(conditionKey))
+			if (!I18n.exists(conditionKey))
 				break;
 			if (i == 1)
 				tooltip.getLinesOnShift()
 					.add(new StringTextComponent(""));
-			tooltip.withBehaviour(I18n.format(conditionKey), I18n.format(behaviourKey));
+			tooltip.withBehaviour(I18n.get(conditionKey), I18n.get(behaviourKey));
 		}
 
 		// Controls
 		for (int i = 1; i < 100; i++) {
 			String controlKey = translationKey + ".control" + i;
 			String actionKey = translationKey + ".action" + i;
-			if (!I18n.hasKey(controlKey))
+			if (!I18n.exists(controlKey))
 				break;
-			tooltip.withControl(I18n.format(controlKey), I18n.format(actionKey));
+			tooltip.withControl(I18n.get(controlKey), I18n.get(actionKey));
 		}
 
 		return tooltip.createTabs();
@@ -318,7 +318,7 @@ public class TooltipHelper {
 		if (tooltipReferrals.containsKey(item))
 			return tooltipReferrals.get(item)
 				.get() + ".tooltip";
-		return item.getTranslationKey(stack) + ".tooltip";
+		return item.getDescriptionId(stack) + ".tooltip";
 	}
 
 //	private static int getComponentLength(ITextComponent component) {

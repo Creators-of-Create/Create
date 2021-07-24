@@ -29,7 +29,7 @@ public class PoweredLatchGenerator extends AbstractDiodeGenerator {
 
 	@Override
 	int getModelIndex(BlockState state) {
-		return state.get(PoweredLatchBlock.POWERING)? 1 : 0;
+		return state.getValue(PoweredLatchBlock.POWERING)? 1 : 0;
 	}
 
 }

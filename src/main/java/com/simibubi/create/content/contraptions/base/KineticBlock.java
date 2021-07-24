@@ -31,7 +31,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	@Override
 	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
-		for (ToolType toolType : player.getHeldItemMainhand()
+		for (ToolType toolType : player.getMainHandItem()
 			.getToolTypes()) {
 			if (isToolEffective(state, toolType))
 				return true;
@@ -45,13 +45,13 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		// onBlockAdded is useless for init, as sometimes the TE gets re-instantiated
 
 		// however, if a block change occurs that does not change kinetic connections,
 		// we can prevent a major re-propagation here
 
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (tileEntity instanceof KineticTileEntity) {
 			KineticTileEntity kineticTileEntity = (KineticTileEntity) tileEntity;
 			kineticTileEntity.preventSpeedUpdate = 0;
@@ -78,6 +78,8 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
+		if (oldState.getBlock() != newState.getBlock())
+			return false;
 		return getRotationAxis(newState) == getRotationAxis(oldState);
 	}
 
@@ -85,11 +87,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 	public abstract TileEntity createTileEntity(BlockState state, IBlockReader world);
 
 	@Override
-	public void updateDiagonalNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags, int count) {
-		if (worldIn.isRemote())
+	public void updateIndirectNeighbourShapes(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags, int count) {
+		if (worldIn.isClientSide())
 			return;
 
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (!(tileEntity instanceof KineticTileEntity))
 			return;
 		KineticTileEntity kte = (KineticTileEntity) tileEntity;
@@ -106,11 +108,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		if (worldIn.isRemote)
+	public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		if (worldIn.isClientSide)
 			return;
 
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (!(tileEntity instanceof KineticTileEntity))
 			return;
 

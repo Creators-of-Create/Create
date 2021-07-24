@@ -49,22 +49,22 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
 		if (!mysterious)
-			super.fillItemGroup(group, items);
+			super.fillItemCategory(group, items);
 	}
 	
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
 		if (preferred != null)
-			return getDefaultState().with(HORIZONTAL_FACING, preferred.getOpposite());
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+			return defaultBlockState().setValue(HORIZONTAL_FACING, preferred.getOpposite());
+		return this.defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(HORIZONTAL_FACING).getOpposite();
+		return face == state.getValue(HORIZONTAL_FACING).getOpposite();
 	}
 
 	public static boolean containsSurprise(BlockState state) {
@@ -74,11 +74,11 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_FACING).getAxis();
+		return state.getValue(HORIZONTAL_FACING).getAxis();
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

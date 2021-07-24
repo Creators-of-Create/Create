@@ -43,10 +43,10 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ISpe
 
 	@Override
 	public ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {
-		if (context.getWorld().isRemote)
+		if (context.getLevel().isClientSide)
 			return ActionResultType.SUCCESS;
-		context.getWorld().playEvent(2001, context.getPos(), Block.getStateId(state));
-		KineticTileEntity.switchToBlockState(context.getWorld(), context.getPos(), AllBlocks.SHAFT.getDefaultState().with(AXIS, state.get(AXIS)));
+		context.getLevel().levelEvent(2001, context.getClickedPos(), Block.getId(state));
+		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(), AllBlocks.SHAFT.getDefaultState().setValue(AXIS, state.getValue(AXIS)));
 		return ActionResultType.SUCCESS;
 	}
 

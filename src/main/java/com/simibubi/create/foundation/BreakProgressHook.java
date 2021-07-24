@@ -12,10 +12,10 @@ public class BreakProgressHook {
 
 	public static void whenBreaking(ClientWorld world, WorldRenderer renderer, int playerEntityId, BlockPos pos, int progress) {
 		if (AllBlocks.BELT.has(world.getBlockState(pos))) {
-			BeltTileEntity belt = (BeltTileEntity) world.getTileEntity(pos);
+			BeltTileEntity belt = (BeltTileEntity) world.getBlockEntity(pos);
 
 			for (BlockPos beltPos : BeltBlock.getBeltChain(world, belt.getController())) {
-				renderer.sendBlockBreakProgress(beltPos.hashCode(), beltPos, progress);
+				renderer.destroyBlockProgress(beltPos.hashCode(), beltPos, progress);
 			}
 		}
 	}

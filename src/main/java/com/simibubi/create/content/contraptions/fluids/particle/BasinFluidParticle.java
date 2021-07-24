@@ -24,72 +24,72 @@ public class BasinFluidParticle extends FluidStackParticle {
 	public BasinFluidParticle(ClientWorld world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
 		super(world, fluid, x, y, z, vx, vy, vz);
-		particleGravity = 0;
-		motionX = 0;
-		motionY = 0;
-		motionZ = 0;
-		yOffset = world.rand.nextFloat() * 1 / 32f;
-		posY += yOffset;
-		particleScale = 0;
-		maxAge = 60;
-		Vector3d currentPos = new Vector3d(posX, posY, posZ);
+		gravity = 0;
+		xd = 0;
+		yd = 0;
+		zd = 0;
+		yOffset = world.random.nextFloat() * 1 / 32f;
+		y += yOffset;
+		quadSize = 0;
+		lifetime = 60;
+		Vector3d currentPos = new Vector3d(x, y, z);
 		basinPos = new BlockPos(currentPos);
 		centerOfBasin = VecHelper.getCenterOf(basinPos);
 
 		if (vx != 0) {
-			maxAge = 20;
+			lifetime = 20;
 			Vector3d centerOf = VecHelper.getCenterOf(basinPos);
 			Vector3d diff = currentPos.subtract(centerOf)
-				.mul(1, 0, 1)
+				.multiply(1, 0, 1)
 				.normalize()
 				.scale(.375);
 			targetPos = centerOf.add(diff);
-			prevPosX = posX = centerOfBasin.x;
-			prevPosZ = posZ = centerOfBasin.z;
+			xo = x = centerOfBasin.x;
+			zo = z = centerOfBasin.z;
 		}
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		particleScale = targetPos != null ? Math.max(1 / 32f, ((1f * age) / maxAge) / 8)
-			: 1 / 8f * (1 - ((Math.abs(age - (maxAge / 2)) / (1f * maxAge))));
+		quadSize = targetPos != null ? Math.max(1 / 32f, ((1f * age) / lifetime) / 8)
+			: 1 / 8f * (1 - ((Math.abs(age - (lifetime / 2)) / (1f * lifetime))));
 
 		if (age % 2 == 0) {
-			if (!AllBlocks.BASIN.has(world.getBlockState(basinPos))) {
-				setExpired();
+			if (!AllBlocks.BASIN.has(level.getBlockState(basinPos))) {
+				remove();
 				return;
 			}
 
-			TileEntity tileEntity = world.getTileEntity(basinPos);
+			TileEntity tileEntity = level.getBlockEntity(basinPos);
 			if (tileEntity instanceof BasinTileEntity) {
 				float totalUnits = ((BasinTileEntity) tileEntity).getTotalFluidUnits(0);
 				if (totalUnits < 1)
 					totalUnits = 0;
 				float fluidLevel = MathHelper.clamp(totalUnits / 2000, 0, 1);
-				posY = 2 / 16f + basinPos.getY() + 12 / 16f * fluidLevel + yOffset;
+				y = 2 / 16f + basinPos.getY() + 12 / 16f * fluidLevel + yOffset;
 			}
 
 		}
 
 		if (targetPos != null) {
-			float progess = (1f * age) / maxAge;
+			float progess = (1f * age) / lifetime;
 			Vector3d currentPos = centerOfBasin.add(targetPos.subtract(centerOfBasin)
 				.scale(progess));
-			posX = currentPos.x;
-			posZ = currentPos.z;
+			x = currentPos.x;
+			z = currentPos.z;
 		}
 	}
 
 	@Override
-	public void buildGeometry(IVertexBuilder vb, ActiveRenderInfo info, float pt) {
-		Quaternion rotation = info.getRotation();
+	public void render(IVertexBuilder vb, ActiveRenderInfo info, float pt) {
+		Quaternion rotation = info.rotation();
 		Quaternion prevRotation = new Quaternion(rotation);
 		rotation.set(1, 0, 0, 1);
 		rotation.normalize();
-		super.buildGeometry(vb, info, pt);
+		super.render(vb, info, pt);
 		rotation.set(0, 0, 0, 1);
-		rotation.multiply(prevRotation);
+		rotation.mul(prevRotation);
 	}
 
 	@Override

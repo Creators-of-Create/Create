@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
@@ -40,8 +40,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
-		rotatingAbout = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis);
-		rotationAxis = rotatingAbout.getUnitVector();
+		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
+		rotationAxis = rotatingAbout.step();
 
 		coil = getCoilModel()
 				.createInstance()
@@ -66,7 +66,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	private void transformModels() {
 		resizeRope();
 
-		coil.setRotation(rotationAxis.getDegreesQuaternion(offset * 180));
+		coil.setRotation(rotationAxis.rotationDegrees(offset * 180));
 		magnet.update().get().ifPresent(data ->
 				{
 					int index = Math.max(0, MathHelper.floor(offset));
@@ -137,7 +137,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		int length = MathHelper.ceil(offset);
 
 		if (volume == null || bLight.length < length + 1) {
-			volume = GridAlignedBB.from(pos.down(length), pos);
+			volume = GridAlignedBB.from(pos.below(length), pos);
 			volume.fixMinMax();
 
 			bLight = Arrays.copyOf(bLight, length + 1);
@@ -188,9 +188,9 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		int top = this.pos.getY();
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 		changed.forEachContained((x, y, z) -> {
-			pos.setPos(x, y, z);
-			byte block = (byte) world.getLightLevel(LightType.BLOCK, pos);
-			byte sky = (byte) world.getLightLevel(LightType.SKY, pos);
+			pos.set(x, y, z);
+			byte block = (byte) world.getBrightness(LightType.BLOCK, pos);
+			byte sky = (byte) world.getBrightness(LightType.SKY, pos);
 
 			int i = top - y;
 

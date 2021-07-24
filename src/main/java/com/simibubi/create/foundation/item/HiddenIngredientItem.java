@@ -12,10 +12,10 @@ public class HiddenIngredientItem extends Item {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-		if (p_150895_1_ != ItemGroup.SEARCH)
+	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+		if (p_150895_1_ != ItemGroup.TAB_SEARCH)
 			return;
-		super.fillItemGroup(p_150895_1_, p_150895_2_);
+		super.fillItemCategory(p_150895_1_, p_150895_2_);
 	}
 
 }

@@ -2,7 +2,6 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -11,11 +10,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.inventory.IInventory;
@@ -43,24 +41,23 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	private IRecipeType<?> type;
 	private IRecipeSerializer<?> serializer;
-	private AllRecipeTypes enumType;
-	private Optional<Supplier<ItemStack>> forcedResult;
+	private IRecipeTypeInfo typeInfo;
+	private Supplier<ItemStack> forcedResult;
 
-	public ProcessingRecipe(AllRecipeTypes recipeType, ProcessingRecipeParams params) {
-
-		this.forcedResult = Optional.empty();
-		this.enumType = recipeType;
+	public ProcessingRecipe(IRecipeTypeInfo typeInfo, ProcessingRecipeParams params) {
+		this.forcedResult = null;
+		this.typeInfo = typeInfo;
 		this.processingDuration = params.processingDuration;
 		this.fluidIngredients = params.fluidIngredients;
 		this.fluidResults = params.fluidResults;
-		this.serializer = recipeType.serializer;
+		this.serializer = typeInfo.getSerializer();
 		this.requiredHeat = params.requiredHeat;
 		this.ingredients = params.ingredients;
-		this.type = recipeType.type;
+		this.type = typeInfo.getType();
 		this.results = params.results;
 		this.id = params.id;
 
-		validate(Lang.asId(recipeType.name()));
+		validate(typeInfo.getId());
 	}
 
 	// Recipe type options:
@@ -87,8 +84,8 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	//
 
-	private void validate(String recipeTypeName) {
-		String messageHeader = "Your custom " + recipeTypeName + " recipe (" + id.toString() + ")";
+	private void validate(ResourceLocation recipeTypeId) {
+		String messageHeader = "Your custom " + recipeTypeId + " recipe (" + id.toString() + ")";
 		Logger logger = Create.LOGGER;
 		int ingredientCount = ingredients.size();
 		int outputCount = results.size();
@@ -144,7 +141,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	public void enforceNextResult(Supplier<ItemStack> stack) {
-		forcedResult = Optional.of(stack);
+		forcedResult = stack;
 	}
 
 	public List<ItemStack> rollResults() {
@@ -152,8 +149,7 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 		NonNullList<ProcessingOutput> rollableResults = getRollableResults();
 		for (int i = 0; i < rollableResults.size(); i++) {
 			ProcessingOutput output = rollableResults.get(i);
-			ItemStack stack = i == 0 && forcedResult.isPresent() ? forcedResult.get()
-				.get() : output.rollOutput();
+			ItemStack stack = i == 0 && forcedResult != null ? forcedResult.get() : output.rollOutput();
 			if (!stack.isEmpty())
 				results.add(stack);
 		}
@@ -171,35 +167,25 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	// IRecipe<> paperwork
 
 	@Override
-	public ItemStack getCraftingResult(T inv) {
-		return getRecipeOutput();
+	public ItemStack assemble(T inv) {
+		return getResultItem();
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return true;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return getRollableResults().isEmpty() ? ItemStack.EMPTY
 			: getRollableResults().get(0)
 				.getStack();
 	}
 
 	@Override
-	public ResourceLocation getId() {
-		return id;
-	}
-
-	@Override
-	public boolean isDynamic() {
+	public boolean isSpecial() {
 		return true;
-	}
-
-	@Override
-	public IRecipeSerializer<?> getSerializer() {
-		return serializer;
 	}
 
 	// Processing recipes do not show up in the recipe book
@@ -209,8 +195,22 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	@Override
+	public ResourceLocation getId() {
+		return id;
+	}
+
+	@Override
+	public IRecipeSerializer<?> getSerializer() {
+		return serializer;
+	}
+
+	@Override
 	public IRecipeType<?> getType() {
 		return type;
+	}
+
+	public IRecipeTypeInfo getTypeInfo() {
+		return typeInfo;
 	}
 
 	// Additional Data added by subtypes
@@ -223,8 +223,4 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	public void writeAdditional(PacketBuffer buffer) {}
 
-	public AllRecipeTypes getEnumType() {
-		return enumType;
-	}
-	
 }

@@ -45,18 +45,18 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 		if (turnOffTicks > 0) {
 			turnOffTicks--;
 			if (turnOffTicks == 0)
-				world.getPendingBlockTicks()
-					.scheduleTick(pos, state.getBlock(), 1);
+				level.getBlockTicks()
+					.scheduleTick(worldPosition, state.getBlock(), 1);
 		}
 
 		if (!isActive())
 			return;
 
-		Direction facing = state.get(ContentObserverBlock.HORIZONTAL_FACING);
-		BlockPos targetPos = pos.offset(facing);
+		Direction facing = state.getValue(ContentObserverBlock.FACING);
+		BlockPos targetPos = worldPosition.relative(facing);
 
 		TransportedItemStackHandlerBehaviour behaviour =
-			TileEntityBehaviour.get(world, targetPos, TransportedItemStackHandlerBehaviour.TYPE);
+			TileEntityBehaviour.get(level, targetPos, TransportedItemStackHandlerBehaviour.TYPE);
 		if (behaviour != null) {
 			behaviour.handleCenteredProcessingOnAllItems(.45f, stack -> {
 				if (!filtering.test(stack.stack) || turnOffTicks == 6)
@@ -83,10 +83,10 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 	public void activate(int ticks) {
 		BlockState state = getBlockState();
 		turnOffTicks = ticks;
-		if (state.get(ContentObserverBlock.POWERED))
+		if (state.getValue(ContentObserverBlock.POWERED))
 			return;
-		world.setBlockState(pos, state.with(ContentObserverBlock.POWERED, true));
-		world.notifyNeighborsOfStateChange(pos, state.getBlock());
+		level.setBlockAndUpdate(worldPosition, state.setValue(ContentObserverBlock.POWERED, true));
+		level.updateNeighborsAt(worldPosition, state.getBlock());
 	}
 
 	private boolean isActive() {

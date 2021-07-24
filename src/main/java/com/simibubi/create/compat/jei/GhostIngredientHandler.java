@@ -28,7 +28,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 		boolean isAttributeFilter = gui instanceof AttributeFilterScreen;
 
 		if (ingredient instanceof ItemStack) {
-			for (int i = 36; i < gui.getContainer().inventorySlots.size(); i++) {
+			for (int i = 36; i < gui.getMenu().slots.size(); i++) {
 				targets.add(new GhostTarget<>(gui, i - 36, isAttributeFilter));
 
 				// Only accept items in 1st slot. 2nd is used for functionality, don't wanna override that one
@@ -61,8 +61,8 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 			this.gui = gui;
 			this.slotIndex = slotIndex;
 			this.isAttributeFilter = isAttributeFilter;
-			Slot slot = gui.getContainer().inventorySlots.get(slotIndex + 36);
-			this.area = new Rectangle2d(gui.getGuiLeft() + slot.xPos, gui.getGuiTop() + slot.yPos, 16, 16);
+			Slot slot = gui.getMenu().slots.get(slotIndex + 36);
+			this.area = new Rectangle2d(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 16, 16);
 		}
 
 		@Override
@@ -74,7 +74,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 		public void accept(I ingredient) {
 			ItemStack stack = ((ItemStack) ingredient).copy();
 			stack.setCount(1);
-			gui.getContainer().ghostInventory.setStackInSlot(slotIndex, stack);
+			gui.getMenu().ghostInventory.setStackInSlot(slotIndex, stack);
 
 			if (isAttributeFilter)
 				return;

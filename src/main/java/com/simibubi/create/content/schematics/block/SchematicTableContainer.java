@@ -25,11 +25,11 @@ public class SchematicTableContainer extends Container {
 	public SchematicTableContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
 		super(type, id);
 		player = inv.player;
-		ClientWorld world = Minecraft.getInstance().world;
-		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
+		ClientWorld world = Minecraft.getInstance().level;
+		TileEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		if (tileEntity instanceof SchematicTableTileEntity) {
 			this.te = (SchematicTableTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), extraData.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), extraData.readNbt());
 			init();
 		}
 	}
@@ -48,7 +48,7 @@ public class SchematicTableContainer extends Container {
 	protected void init() {
 		inputSlot = new SlotItemHandler(te.inventory, 0, 21, 57) {
 			@Override
-			public boolean isItemValid(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return AllItems.EMPTY_SCHEMATIC.isIn(stack) || AllItems.SCHEMATIC_AND_QUILL.isIn(stack)
 						|| AllItems.SCHEMATIC.isIn(stack);
 			}
@@ -56,7 +56,7 @@ public class SchematicTableContainer extends Container {
 
 		outputSlot = new SlotItemHandler(te.inventory, 1, 166, 57) {
 			@Override
-			public boolean isItemValid(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return false;
 			}
 		};
@@ -75,29 +75,29 @@ public class SchematicTableContainer extends Container {
 			this.addSlot(new Slot(player.inventory, hotbarSlot, 38 + hotbarSlot * 18, 163));
 		}
 
-		detectAndSendChanges();
+		broadcastChanges();
 	}
 
 	public boolean canWrite() {
-		return inputSlot.getHasStack() && !outputSlot.getHasStack();
+		return inputSlot.hasItem() && !outputSlot.hasItem();
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(PlayerEntity player) {
 		return te != null && te.canPlayerUse(player);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
-		if (!clickedSlot.getHasStack())
+		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;
 
-		ItemStack stack = clickedSlot.getStack();
+		ItemStack stack = clickedSlot.getItem();
 		if (index < 2)
-			mergeItemStack(stack, 2, inventorySlots.size(), false);
+			moveItemStackTo(stack, 2, slots.size(), false);
 		else
-			mergeItemStack(stack, 0, 1, false);
+			moveItemStackTo(stack, 0, 1, false);
 
 		return ItemStack.EMPTY;
 	}

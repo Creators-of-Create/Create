@@ -15,23 +15,23 @@ public class VirtualFluid extends ForgeFlowingFluid {
 	}
 
 	@Override
-	public Fluid getStillFluid() {
-		return super.getStillFluid();
+	public Fluid getSource() {
+		return super.getSource();
 	}
 
 	@Override
-	public Fluid getFlowingFluid() {
+	public Fluid getFlowing() {
 		return this;
 	}
 
 	@Override
-	public Item getFilledBucket() {
+	public Item getBucket() {
 		return Items.AIR;
 	}
 
 	@Override
-	protected BlockState getBlockState(FluidState state) {
-		return Blocks.AIR.getDefaultState();
+	protected BlockState createLegacyBlock(FluidState state) {
+		return Blocks.AIR.defaultBlockState();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class VirtualFluid extends ForgeFlowingFluid {
 	}
 
 	@Override
-	public int getLevel(FluidState p_207192_1_) {
+	public int getAmount(FluidState p_207192_1_) {
 		return 0;
 	}
 

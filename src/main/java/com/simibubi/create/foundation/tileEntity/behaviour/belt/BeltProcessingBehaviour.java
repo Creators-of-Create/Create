@@ -43,10 +43,10 @@ public class BeltProcessingBehaviour extends TileEntityBehaviour {
 	}
 
 	public static boolean isBlocked(IBlockReader world, BlockPos processingSpace) {
-		BlockState blockState = world.getBlockState(processingSpace.up());
+		BlockState blockState = world.getBlockState(processingSpace.above());
 		if (AbstractFunnelBlock.isFunnel(blockState))
 			return false;
-		return !blockState.getCollisionShape(world, processingSpace.up())
+		return !blockState.getCollisionShape(world, processingSpace.above())
 			.isEmpty();
 	}
 

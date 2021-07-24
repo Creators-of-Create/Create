@@ -34,11 +34,11 @@ public class ChunkUtil {
 			new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.Type.LEVELCHUNK,
 				(_0, _1, _2, _3, _4, future, _6, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
 					if (markedChunks.contains(chunk.getPos()
-						.asLong())) {
+						.toLong())) {
 						LOGGER.debug("trying to load unforced chunk " + chunk.getPos()
 							.toString() + ", returning chunk loading error");
 						// this.reloadChunk(world.getChunkProvider(), chunk.getPos());
-						return ChunkHolder.MISSING_CHUNK_FUTURE;
+						return ChunkHolder.UNLOADED_CHUNK_FUTURE;
 					} else {
 						// LOGGER.debug("regular, chunkStatus: " + chunk.getStatus().toString());
 						return future.apply(chunk);
@@ -48,11 +48,11 @@ public class ChunkUtil {
 	}
 
 	public boolean reloadChunk(ServerChunkProvider provider, ChunkPos pos) {
-		ChunkHolder holder = provider.chunkManager.loadedChunks.remove(pos.asLong());
-		provider.chunkManager.immutableLoadedChunksDirty = true;
+		ChunkHolder holder = provider.chunkMap.updatingChunkMap.remove(pos.toLong());
+		provider.chunkMap.modified = true;
 		if (holder != null) {
-			provider.chunkManager.chunksToUnload.put(pos.asLong(), holder);
-			provider.chunkManager.scheduleSave(pos.asLong(), holder);
+			provider.chunkMap.pendingUnloads.put(pos.toLong(), holder);
+			provider.chunkMap.scheduleUnload(pos.toLong(), holder);
 			return true;
 		} else {
 			return false;
@@ -60,8 +60,8 @@ public class ChunkUtil {
 	}
 
 	public boolean unloadChunk(ServerChunkProvider provider, ChunkPos pos) {
-		this.interestingChunks.add(pos.asLong());
-		this.markedChunks.add(pos.asLong());
+		this.interestingChunks.add(pos.toLong());
+		this.markedChunks.add(pos.toLong());
 
 		return this.reloadChunk(provider, pos);
 	}
@@ -78,8 +78,8 @@ public class ChunkUtil {
 	}
 
 	public void reForce(ServerChunkProvider provider, ChunkPos pos) {
-		provider.forceChunk(pos, true);
-		provider.forceChunk(pos, false);
+		provider.updateChunkForced(pos, true);
+		provider.updateChunkForced(pos, false);
 	}
 
 	@SubscribeEvent
@@ -87,7 +87,7 @@ public class ChunkUtil {
 		// LOGGER.debug("Chunk Unload: " + event.getChunk().getPos().toString());
 		if (interestingChunks.contains(event.getChunk()
 			.getPos()
-			.asLong())) {
+			.toLong())) {
 			LOGGER.info("Interesting Chunk Unload: " + event.getChunk()
 				.getPos()
 				.toString());
@@ -100,10 +100,10 @@ public class ChunkUtil {
 
 		ChunkPos pos = event.getChunk()
 			.getPos();
-		if (interestingChunks.contains(pos.asLong())) {
+		if (interestingChunks.contains(pos.toLong())) {
 			LOGGER.info("Interesting Chunk Load: " + pos.toString());
-			if (!markedChunks.contains(pos.asLong()))
-				interestingChunks.remove(pos.asLong());
+			if (!markedChunks.contains(pos.toLong()))
+				interestingChunks.remove(pos.toLong());
 		}
 
 	}

@@ -26,13 +26,13 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		IBearingTileEntity bearingTe = (IBearingTileEntity) te;
 		final Direction facing = te.getBlockState()
-				.get(BlockStateProperties.FACING);
+				.getValue(BlockStateProperties.FACING);
 		PartialModel top =
 				bearingTe.isWoodenTop() ? AllBlockPartials.BEARING_TOP_WOODEN : AllBlockPartials.BEARING_TOP;
 		SuperByteBuffer superBuffer = PartialBufferer.get(top, te.getBlockState());
@@ -45,13 +45,13 @@ public class BearingRenderer extends KineticTileEntityRenderer {
 			superBuffer.rotateCentered(Direction.UP,
 					AngleHelper.rad(AngleHelper.horizontalAngle(facing.getOpposite())));
 		superBuffer.rotateCentered(Direction.EAST, AngleHelper.rad(-90 - AngleHelper.verticalAngle(facing)));
-		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		superBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), te.getBlockState()
-				.get(BearingBlock.FACING)
+				.getValue(BearingBlock.FACING)
 				.getOpposite());
 	}
 

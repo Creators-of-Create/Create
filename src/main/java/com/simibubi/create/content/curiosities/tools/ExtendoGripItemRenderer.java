@@ -1,11 +1,11 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
@@ -21,7 +21,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 	@Override
 	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, TransformType transformType,
 		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
-		MatrixStacker stacker = MatrixStacker.of(ms);
+		MatrixTransformStack stacker = MatrixTransformStack.of(ms);
 		float animation = 0.25f;
 		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean rightHand = transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
@@ -39,10 +39,10 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		renderer.renderSolid(model.getOriginalModel(), light);
 
 		// bits
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, 1 / 16f, -7 / 16f);
 		ms.scale(1, 1, 1 + animation);
-		ms.push();
+		ms.pushPose();
 		stacker.rotateX(-halfAngle)
 			.translate(rotationOffset);
 		renderer.renderSolid(model.getPartial("thin_short"), light);
@@ -61,8 +61,8 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		renderer.renderSolid(model.getPartial("thin_short"), light);
 		stacker.translateBack(rotationOffset);
 
-		ms.pop();
-		ms.push();
+		ms.popPose();
+		ms.pushPose();
 
 		stacker.rotateX(-180 + halfAngle)
 			.translate(rotationOffset);
@@ -90,12 +90,12 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 		ms.scale(1, 1, 1 / (1 + animation));
 		renderer.renderSolid((leftHand || rightHand) ? ExtendoGripRenderHandler.pose.get()
 			: AllBlockPartials.DEPLOYER_HAND_POINTING.get(), light);
-		ms.pop();
+		ms.popPose();
 
-		ms.pop();
+		ms.popPose();
 
 		// cog
-		ms.push();
+		ms.pushPose();
 		float angle = AnimationTickHolder.getRenderTime() * -2;
 		if (leftHand || rightHand)
 			angle += 360 * animation;
@@ -104,7 +104,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 			.rotateZ(angle)
 			.translateBack(cogRotationOffset);
 		renderer.renderSolid(model.getPartial("cog"), light);
-		ms.pop();
+		ms.popPose();
 	}
 
 }

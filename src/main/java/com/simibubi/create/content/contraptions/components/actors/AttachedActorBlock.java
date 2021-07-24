@@ -37,41 +37,41 @@ public abstract class AttachedActorBlock extends HorizontalBlock implements IWre
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		Direction direction = state.get(HORIZONTAL_FACING);
+		Direction direction = state.getValue(FACING);
 		return AllShapes.HARVESTER_BASE.get(direction);
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(HORIZONTAL_FACING);
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		Direction direction = state.get(HORIZONTAL_FACING);
-		BlockPos offset = pos.offset(direction.getOpposite());
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		Direction direction = state.getValue(FACING);
+		BlockPos offset = pos.relative(direction.getOpposite());
 		return BlockHelper.hasBlockSolidSide(worldIn.getBlockState(offset), worldIn, offset, direction);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing;
-		if (context.getFace().getAxis().isVertical())
-			facing = context.getPlacementHorizontalFacing().getOpposite();
+		if (context.getClickedFace().getAxis().isVertical())
+			facing = context.getHorizontalDirection().getOpposite();
 		else {
 			BlockState blockState =
-				context.getWorld().getBlockState(context.getPos().offset(context.getFace().getOpposite()));
+				context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace().getOpposite()));
 			if (blockState.getBlock() instanceof AttachedActorBlock)
-				facing = blockState.get(HORIZONTAL_FACING);
+				facing = blockState.getValue(FACING);
 			else
-				facing = context.getFace();
+				facing = context.getClickedFace();
 		}
-		return getDefaultState().with(HORIZONTAL_FACING, facing);
+		return defaultBlockState().setValue(FACING, facing);
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 	

@@ -48,14 +48,14 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 				return;
 
 			if (inLectern()) {
-				TileEntity te = player.world.getTileEntity(lecternPos);
+				TileEntity te = player.level.getBlockEntity(lecternPos);
 				if (!(te instanceof LecternControllerTileEntity))
 					return;
 				handleLectern(player, (LecternControllerTileEntity) te);
 			} else {
-				ItemStack controller = player.getHeldItemMainhand();
+				ItemStack controller = player.getMainHandItem();
 				if (!AllItems.LINKED_CONTROLLER.isIn(controller)) {
-					controller = player.getHeldItemOffhand();
+					controller = player.getOffhandItem();
 					if (!AllItems.LINKED_CONTROLLER.isIn(controller))
 						return;
 				}

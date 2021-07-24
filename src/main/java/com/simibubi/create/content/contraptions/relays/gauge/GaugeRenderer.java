@@ -40,12 +40,12 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState gaugeState = te.getBlockState();
 		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
-		int lightCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), gaugeState, te.getPos());
+		int lightCoords = WorldRenderer.getLightColor(te.getLevel(), gaugeState, te.getBlockPos());
 
 		PartialModel partialModel = (type == Type.SPEED ? AllBlockPartials.GAUGE_HEAD_SPEED : AllBlockPartials.GAUGE_HEAD_STRESS);
 		SuperByteBuffer headBuffer =
@@ -56,11 +56,11 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 		float progress = MathHelper.lerp(partialTicks, gaugeTE.prevDialState, gaugeTE.dialState);
 
 		for (Direction facing : Iterate.directions) {
-			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(te.getWorld(), te.getPos(), gaugeState,
+			if (!((GaugeBlock) gaugeState.getBlock()).shouldRenderHeadOnFace(te.getLevel(), te.getBlockPos(), gaugeState,
 					facing))
 				continue;
 
-			IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+			IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 			rotateBufferTowards(dialBuffer, facing).translate(0, dialPivot, dialPivot)
 				.rotate(Direction.EAST, (float) (Math.PI / 2 * -progress))
 				.translate(0, -dialPivot, -dialPivot)
@@ -78,7 +78,7 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 	}
 
 	protected SuperByteBuffer rotateBufferTowards(SuperByteBuffer buffer, Direction target) {
-		return buffer.rotateCentered(Direction.UP, (float) ((-target.getHorizontalAngle() - 90) / 180 * Math.PI));
+		return buffer.rotateCentered(Direction.UP, (float) ((-target.toYRot() - 90) / 180 * Math.PI));
 	}
 
 }

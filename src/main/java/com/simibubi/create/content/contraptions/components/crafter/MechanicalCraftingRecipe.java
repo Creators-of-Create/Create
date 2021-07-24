@@ -23,7 +23,7 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 
 	private static MechanicalCraftingRecipe fromShaped(ShapedRecipe recipe) {
 		return new MechanicalCraftingRecipe(recipe.getId(), recipe.getGroup(), recipe.getWidth(), recipe.getHeight(),
-				recipe.getIngredients(), recipe.getRecipeOutput());
+				recipe.getIngredients(), recipe.getResultItem());
 	}
 
 	@Override
@@ -33,29 +33,29 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 
 	@Override
 	public IRecipeType<?> getType() {
-		return AllRecipeTypes.MECHANICAL_CRAFTING.type;
+		return AllRecipeTypes.MECHANICAL_CRAFTING.getType();
 	}
-	
+
 	@Override
-	public boolean isDynamic() {
+	public boolean isSpecial() {
 		return true;
 	}
-	
+
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return AllRecipeTypes.MECHANICAL_CRAFTING.serializer;
+		return AllRecipeTypes.MECHANICAL_CRAFTING.getSerializer();
 	}
 
 	public static class Serializer extends ShapedRecipe.Serializer {
 
 		@Override
-		public ShapedRecipe read(ResourceLocation recipeId, JsonObject json) {
-			return fromShaped(super.read(recipeId, json));
+		public ShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+			return fromShaped(super.fromJson(recipeId, json));
 		}
-		
+
 		@Override
-		public ShapedRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-			return fromShaped(super.read(recipeId, buffer));
+		public ShapedRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+			return fromShaped(super.fromNetwork(recipeId, buffer));
 		}
 
 	}

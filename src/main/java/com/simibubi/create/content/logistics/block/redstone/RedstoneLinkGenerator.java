@@ -13,13 +13,13 @@ public class RedstoneLinkGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		Direction facing = state.get(RedstoneLinkBlock.FACING);
+		Direction facing = state.getValue(RedstoneLinkBlock.FACING);
 		return facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 270;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		Direction facing = state.get(RedstoneLinkBlock.FACING);
+		Direction facing = state.getValue(RedstoneLinkBlock.FACING);
 		return facing.getAxis()
 			.isVertical() ? 180 : horizontalAngle(facing);
 	}
@@ -27,10 +27,10 @@ public class RedstoneLinkGenerator extends SpecialBlockStateGen {
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		String variant = state.get(RedstoneLinkBlock.RECEIVER) ? "receiver" : "transmitter";
-		if (state.get(RedstoneLinkBlock.FACING).getAxis().isHorizontal())
+		String variant = state.getValue(RedstoneLinkBlock.RECEIVER) ? "receiver" : "transmitter";
+		if (state.getValue(RedstoneLinkBlock.FACING).getAxis().isHorizontal())
 			variant += "_vertical";
-		if (state.get(RedstoneLinkBlock.POWERED))
+		if (state.getValue(RedstoneLinkBlock.POWERED))
 			variant += "_powered";
 		
 		return prov.models().getExistingFile(prov.modLoc("block/redstone_link/" + variant));

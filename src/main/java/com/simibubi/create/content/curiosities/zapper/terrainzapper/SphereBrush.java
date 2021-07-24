@@ -25,7 +25,7 @@ public class SphereBrush extends ShapedBrush {
 		for (int i = 0; i <= MAX_RADIUS; i++) {
 			int radius = i;
 			List<BlockPos> positions =
-				BlockPos.getAllInBox(BlockPos.ZERO.add(-i - 1, -i - 1, -i - 1), BlockPos.ZERO.add(i + 1, i + 1, i + 1))
+				BlockPos.betweenClosedStream(BlockPos.ZERO.offset(-i - 1, -i - 1, -i - 1), BlockPos.ZERO.offset(i + 1, i + 1, i + 1))
 						.map(BlockPos::new).filter(p -> VecHelper.getCenterOf(p)
 								.distanceTo(VecHelper.getCenterOf(BlockPos.ZERO)) < radius + .5f)
 						.collect(Collectors.toList());
@@ -41,7 +41,7 @@ public class SphereBrush extends ShapedBrush {
 		int offset = option == PlacementOptions.Attached ? 0 : -1;
 		int r = (param0 + 1 + offset);
 
-		return BlockPos.ZERO.offset(face, r * (option == PlacementOptions.Attached ? 1 : -1));
+		return BlockPos.ZERO.relative(face, r * (option == PlacementOptions.Attached ? 1 : -1));
 	}
 
 	@Override

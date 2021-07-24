@@ -54,11 +54,11 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		if (!player.getHeldItem(handIn).isEmpty())
+		if (!player.getItemInHand(handIn).isEmpty())
 			return ActionResultType.PASS;
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		withTileEntityDo(worldIn, pos, millstone -> {
@@ -80,7 +80,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 				}
 			}
 
-			millstone.markDirty();
+			millstone.setChanged();
 			millstone.sendData();
 		});
 
@@ -88,10 +88,10 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
+	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
 
-		if (entityIn.world.isRemote)
+		if (entityIn.level.isClientSide)
 			return;
 		if (!(entityIn instanceof ItemEntity))
 			return;
@@ -99,7 +99,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			return;
 
 		MillstoneTileEntity millstone = null;
-		for (BlockPos pos : Iterate.hereAndBelow(entityIn.getBlockPos()))
+		for (BlockPos pos : Iterate.hereAndBelow(entityIn.blockPosition()))
 			if (millstone == null)
 				millstone = getTileEntity(worldIn, pos);
 
@@ -119,14 +119,14 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemHelper.dropContents(worldIn, pos, te.inputInv);
 				ItemHelper.dropContents(worldIn, pos, te.outputInv);
 			});
 
-			worldIn.removeTileEntity(pos);
+			worldIn.removeBlockEntity(pos);
 		}
 	}
 
@@ -141,7 +141,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

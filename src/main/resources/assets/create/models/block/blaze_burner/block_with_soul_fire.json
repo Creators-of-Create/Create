@@ -1,0 +1,6 @@
+{
+	"parent": "create:block/blaze_burner/block_with_fire",
+	"textures": {
+		"fire": "block/soul_campfire_fire"
+	}
+}

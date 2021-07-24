@@ -57,7 +57,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 			BakedQuad quad = quads.get(i);
 
 			BakedQuad newQuad = QuadHelper.clone(quad);
-			int[] vertexData = newQuad.getVertexData();
+			int[] vertexData = newQuad.getVertices();
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
 				float x = Float.intBitsToFloat(vertexData[vertex]);

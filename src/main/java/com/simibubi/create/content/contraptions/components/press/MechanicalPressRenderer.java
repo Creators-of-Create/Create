@@ -24,7 +24,7 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean isGlobalRenderer(KineticTileEntity te) {
+	public boolean shouldRenderOffScreen(KineticTileEntity te) {
 		return true;
 	}
 
@@ -33,17 +33,17 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 			int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		BlockPos pos = te.getPos();
+		BlockPos pos = te.getBlockPos();
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, pos);
+		int packedLightmapCoords = WorldRenderer.getLightColor(te.getLevel(), blockState, pos);
 		float renderedHeadOffset = ((MechanicalPressTileEntity) te).getRenderedHeadOffset(partialTicks);
 
-		SuperByteBuffer headRender = PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState, blockState.get(HORIZONTAL_FACING));
+		SuperByteBuffer headRender = PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState, blockState.getValue(HORIZONTAL_FACING));
 		headRender.translate(0, -renderedHeadOffset, 0)
 				.light(packedLightmapCoords)
-				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override

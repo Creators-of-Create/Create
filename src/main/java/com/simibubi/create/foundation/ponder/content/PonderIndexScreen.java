@@ -55,7 +55,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		// chapters.addAll(PonderRegistry.chapters.getAllChapters());
 
 		items.clear();
-		PonderRegistry.all.keySet()
+		PonderRegistry.ALL.keySet()
 			.stream()
 			.map(key -> {
 				Item item = ForgeRegistries.ITEMS.getValue(key);
@@ -108,7 +108,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(item))
 					.withCallback((x, y) -> {
-						if (!PonderRegistry.all.containsKey(item.getRegistryName()))
+						if (!PonderRegistry.ALL.containsKey(item.getRegistryName()))
 							return;
 
 						centerScalingOn(x, y);
@@ -137,9 +137,9 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		PonderUI.ponderTicks++;
 
 		hoveredItem = ItemStack.EMPTY;
-		MainWindow w = client.getWindow();
-		double mouseX = client.mouseHelper.getMouseX() * w.getScaledWidth() / w.getWidth();
-		double mouseY = client.mouseHelper.getMouseY() * w.getScaledHeight() / w.getHeight();
+		MainWindow w = minecraft.getWindow();
+		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
+		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
 		for (Widget widget : widgets) {
 			if (widget instanceof PonderButton)
 				if (widget.isMouseOver(mouseX, mouseY)) {
@@ -154,25 +154,25 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		int y = (int) (height * chapterYmult);
 
 		if (!chapters.isEmpty()) {
-			ms.push();
+			ms.pushPose();
 			ms.translate(x, y, 0);
 
 			UIRenderHelper.streak(ms, 0, chapterArea.getX() - 10, chapterArea.getY() - 20, 20, 220);
-			textRenderer.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT));
+			font.draw(ms, "Topics to Ponder about", chapterArea.getX() - 5, chapterArea.getY() - 25, Theme.i(Theme.Key.TEXT));
 
-			ms.pop();
+			ms.popPose();
 		}
 
 		x = (int) (width * itemXmult);
 		y = (int) (height * itemYmult);
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(x, y, 0);
 
 		UIRenderHelper.streak(ms, 0, itemArea.getX() - 10, itemArea.getY() - 20, 20, 220);
-		textRenderer.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, Theme.i(Theme.Key.TEXT));
+		font.draw(ms, "Items to inspect", itemArea.getX() - 5, itemArea.getY() - 25, Theme.i(Theme.Key.TEXT));
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override
@@ -180,12 +180,12 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		if (hoveredItem.isEmpty())
 			return;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, 0, 200);
 
 		renderTooltip(ms, hoveredItem, mouseX, mouseY);
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	/*@Override

@@ -61,15 +61,15 @@ public class BeltScenes {
 		Vector3d backEndCenter = util.vector.centerOf(backEnd);
 		AxisAlignedBB connectBB = new AxisAlignedBB(backEndCenter, backEndCenter);
 		AxisAlignedBB shaftBB = AllBlocks.SHAFT.getDefaultState()
-			.with(ShaftBlock.AXIS, Axis.Z)
+			.setValue(ShaftBlock.AXIS, Axis.Z)
 			.getShape(null, null)
-			.getBoundingBox();
+			.bounds();
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(backEnd), Pointing.DOWN).rightClick()
 			.withItem(beltItem), 57);
 		scene.idle(7);
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, backEnd, shaftBB.offset(backEnd), 42);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, backEnd, shaftBB.move(backEnd), 42);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.BLACK, backEndCenter, connectBB, 50);
 		scene.idle(20);
 
@@ -77,8 +77,8 @@ public class BeltScenes {
 			.withItem(beltItem), 37);
 		scene.idle(7);
 
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, frontEnd, shaftBB.offset(frontEnd), 17);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.BLACK, backEndCenter, connectBB.expand(-4, 0, 0), 20);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, frontEnd, shaftBB.move(frontEnd), 17);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.BLACK, backEndCenter, connectBB.expandTowards(-4, 0, 0), 20);
 		scene.idle(20);
 
 		scene.world.moveSection(shafts, util.vector.of(0, -2, 0), 0);
@@ -96,7 +96,7 @@ public class BeltScenes {
 		scene.overlay.showControls(new InputWindowElement(falseSelection, Pointing.DOWN).rightClick()
 			.withItem(beltItem), 37);
 		scene.idle(7);
-		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, backEnd, shaftBB.offset(backEnd.south(1)), 50);
+		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, backEnd, shaftBB.move(backEnd.south(1)), 50);
 
 		scene.overlay.showText(80)
 			.colored(PonderPalette.RED)
@@ -115,7 +115,7 @@ public class BeltScenes {
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(shaftLocation), Pointing.DOWN).rightClick()
 			.withItem(AllBlocks.SHAFT.asStack()), 50);
 		scene.idle(7);
-		scene.world.modifyBlock(shaftLocation, s -> s.with(BeltBlock.PART, BeltPart.PULLEY), true);
+		scene.world.modifyBlock(shaftLocation, s -> s.setValue(BeltBlock.PART, BeltPart.PULLEY), true);
 		scene.idle(10);
 
 		scene.overlay.showText(43)
@@ -145,7 +145,7 @@ public class BeltScenes {
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(shaftLocation), Pointing.DOWN).rightClick()
 			.withWrench(), 50);
 		scene.idle(7);
-		scene.world.modifyBlock(shaftLocation, s -> s.with(BeltBlock.PART, BeltPart.MIDDLE), true);
+		scene.world.modifyBlock(shaftLocation, s -> s.setValue(BeltBlock.PART, BeltPart.MIDDLE), true);
 		scene.idle(10);
 		scene.overlay.showText(50)
 			.text("Added shafts can be removed using the wrench")
@@ -412,13 +412,13 @@ public class BeltScenes {
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(beltPos), Pointing.DOWN).rightClick()
 			.withItem(brassCasingItem), 20);
 		scene.idle(7);
-		scene.world.modifyBlock(beltPos, s -> s.with(BeltBlock.CASING, true), true);
+		scene.world.modifyBlock(beltPos, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(beltPos2), Pointing.DOWN).rightClick()
 			.withItem(andesiteCasingItem), 20);
 		scene.idle(7);
-		scene.world.modifyBlock(beltPos2, s -> s.with(BeltBlock.CASING, true), true);
+		scene.world.modifyBlock(beltPos2, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.world.modifyTileNBT(util.select.position(beltPos2), BeltTileEntity.class, nbt -> {
 			NBTHelper.writeEnum(nbt, "Casing", BeltTileEntity.CasingType.ANDESITE);
 		});
@@ -429,7 +429,7 @@ public class BeltScenes {
 				.withItem(brassCasingItem),
 			20);
 		scene.idle(7);
-		scene.world.modifyBlock(beltPos3, s -> s.with(BeltBlock.CASING, true), true);
+		scene.world.modifyBlock(beltPos3, s -> s.setValue(BeltBlock.CASING, true), true);
 		scene.idle(20);
 
 		scene.overlay.showText(80)
@@ -446,7 +446,7 @@ public class BeltScenes {
 			brassBelts.add(beltPos.south(z));
 		for (int x = 1; x <= 3; x++)
 			brassBelts.add(beltPos3.east(x)
-				.down(x));
+				.below(x));
 		for (int x = 1; x <= 3; x++)
 			andesiteBelts.add(beltPos2.east(x));
 
@@ -455,14 +455,14 @@ public class BeltScenes {
 
 		for (BlockPos pos : andesiteBelts) {
 			scene.idle(4);
-			scene.world.modifyBlock(pos, s -> s.with(BeltBlock.CASING, true), true);
+			scene.world.modifyBlock(pos, s -> s.setValue(BeltBlock.CASING, true), true);
 			scene.world.modifyTileNBT(util.select.position(pos), BeltTileEntity.class, nbt -> {
 				NBTHelper.writeEnum(nbt, "Casing", BeltTileEntity.CasingType.ANDESITE);
 			});
 		}
 		for (BlockPos pos : brassBelts) {
 			scene.idle(4);
-			scene.world.modifyBlock(pos, s -> s.with(BeltBlock.CASING, true), true);
+			scene.world.modifyBlock(pos, s -> s.setValue(BeltBlock.CASING, true), true);
 		}
 		scene.idle(30);
 		scene.addKeyframe();
@@ -471,7 +471,7 @@ public class BeltScenes {
 			.showControls(new InputWindowElement(util.vector.topOf(beltPos.south()), Pointing.DOWN).rightClick()
 				.withWrench(), 40);
 		scene.idle(7);
-		scene.world.modifyBlock(beltPos.south(), s -> s.with(BeltBlock.CASING, false), true);
+		scene.world.modifyBlock(beltPos.south(), s -> s.setValue(BeltBlock.CASING, false), true);
 		scene.overlay.showText(80)
 			.text("A wrench can be used to remove the casing")
 			.placeNearTarget()
@@ -483,7 +483,7 @@ public class BeltScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
 		scene.idle(5);
-		scene.world.setBlock(util.grid.at(3, 2, 2), Blocks.WATER.getDefaultState(), false);
+		scene.world.setBlock(util.grid.at(3, 2, 2), Blocks.WATER.defaultBlockState(), false);
 
 		BlockPos depotPos = util.grid.at(2, 1, 2);
 		scene.world.showSection(util.select.position(2, 1, 2), Direction.DOWN);
@@ -513,31 +513,31 @@ public class BeltScenes {
 		scene.effects.indicateSuccess(depotPos);
 		scene.idle(20);
 
-		scene.world.showSection(util.select.position(depotPos.up(2)), Direction.SOUTH);
+		scene.world.showSection(util.select.position(depotPos.above(2)), Direction.SOUTH);
 		scene.overlay.showText(70)
 			.attachKeyFrame()
 			.text("Just like Mechanical Belts, it can provide items to processing")
 			.placeNearTarget()
-			.pointAt(util.vector.blockSurface(depotPos.up(2), Direction.WEST));
+			.pointAt(util.vector.blockSurface(depotPos.above(2), Direction.WEST));
 		ItemStack bottle = new ItemStack(Items.BUCKET);
 		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, bottle);
 		scene.idle(20);
-		scene.world.modifyTileNBT(util.select.position(depotPos.up(2)), SpoutTileEntity.class,
+		scene.world.modifyTileNBT(util.select.position(depotPos.above(2)), SpoutTileEntity.class,
 			nbt -> nbt.putInt("ProcessingTicks", 20));
 		scene.idle(20);
 		scene.world.removeItemsFromBelt(depotPos);
 		scene.world.createItemOnBeltLike(depotPos, Direction.UP, new ItemStack(Items.WATER_BUCKET));
-		scene.world.modifyTileNBT(util.select.position(depotPos.up(2)), SpoutTileEntity.class,
+		scene.world.modifyTileNBT(util.select.position(depotPos.above(2)), SpoutTileEntity.class,
 			nbt -> nbt.putBoolean("Splash", true));
 		scene.idle(30);
 		scene.world.removeItemsFromBelt(depotPos);
-		scene.world.hideSection(util.select.position(depotPos.up(2)), Direction.SOUTH);
+		scene.world.hideSection(util.select.position(depotPos.above(2)), Direction.SOUTH);
 		scene.idle(20);
-		ElementLink<WorldSectionElement> spout = scene.world.showIndependentSection(util.select.position(depotPos.up(2)
+		ElementLink<WorldSectionElement> spout = scene.world.showIndependentSection(util.select.position(depotPos.above(2)
 			.west()), Direction.SOUTH);
 		scene.world.moveSection(spout, util.vector.of(1, 0, 0), 0);
 
-		BlockPos pressPos = depotPos.up(2)
+		BlockPos pressPos = depotPos.above(2)
 			.west();
 		ItemStack copper = AllItems.COPPER_INGOT.asStack();
 		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, copper);

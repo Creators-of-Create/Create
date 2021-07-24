@@ -15,35 +15,35 @@ public class BeltGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
-		BeltSlope slope = state.get(BeltBlock.SLOPE);
+		Direction direction = state.getValue(BeltBlock.HORIZONTAL_FACING);
+		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 		return slope == BeltSlope.VERTICAL ? 90
 			: slope == BeltSlope.SIDEWAYS && direction.getAxisDirection() == AxisDirection.NEGATIVE ? 180 : 0;
 	}
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		Boolean casing = state.get(BeltBlock.CASING);
-		BeltSlope slope = state.get(BeltBlock.SLOPE);
+		Boolean casing = state.getValue(BeltBlock.CASING);
+		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 
 		boolean flip = slope == BeltSlope.UPWARD;
 		boolean rotate = casing && slope == BeltSlope.VERTICAL;
-		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
+		Direction direction = state.getValue(BeltBlock.HORIZONTAL_FACING);
 		return horizontalAngle(direction) + (flip ? 180 : 0) + (rotate ? 90 : 0);
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		Boolean casing = state.get(BeltBlock.CASING);
+		Boolean casing = state.getValue(BeltBlock.CASING);
 
 		if (!casing)
 			return prov.models()
 				.getExistingFile(prov.modLoc("block/belt/particle"));
 		
-		BeltPart part = state.get(BeltBlock.PART);
-		Direction direction = state.get(BeltBlock.HORIZONTAL_FACING);
-		BeltSlope slope = state.get(BeltBlock.SLOPE);
+		BeltPart part = state.getValue(BeltBlock.PART);
+		Direction direction = state.getValue(BeltBlock.HORIZONTAL_FACING);
+		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 		boolean downward = slope == BeltSlope.DOWNWARD;
 		boolean diagonal = slope == BeltSlope.UPWARD || downward;
 		boolean vertical = slope == BeltSlope.VERTICAL;
@@ -63,8 +63,8 @@ public class BeltGenerator extends SpecialBlockStateGen {
 			slope = BeltSlope.SIDEWAYS;
 
 		String path = "block/" + (casing ? "belt_casing/" : "belt/");
-		String slopeName = slope.getString();
-		String partName = part.getString();
+		String slopeName = slope.getSerializedName();
+		String partName = part.getSerializedName();
 
 		if (diagonal)
 			slopeName = "diagonal";

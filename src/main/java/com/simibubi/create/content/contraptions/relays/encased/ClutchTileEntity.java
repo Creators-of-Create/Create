@@ -13,7 +13,7 @@ public class ClutchTileEntity extends SplitShaftTileEntity {
 	@Override
 	public float getRotationSpeedModifier(Direction face) {
 		if (hasSource()) {
-			if (face != getSourceFacing() && getBlockState().get(BlockStateProperties.POWERED))
+			if (face != getSourceFacing() && getBlockState().getValue(BlockStateProperties.POWERED))
 				return 0;
 		}
 		return 1;

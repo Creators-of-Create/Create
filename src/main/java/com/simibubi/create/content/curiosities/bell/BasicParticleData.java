@@ -29,12 +29,12 @@ public abstract class BasicParticleData<T extends Particle> implements IParticle
 		BasicParticleData<T> data = this;
 		return new IParticleData.IDeserializer<BasicParticleData<T>>() {
 			@Override
-			public BasicParticleData<T> deserialize(ParticleType<BasicParticleData<T>> arg0, StringReader reader) {
+			public BasicParticleData<T> fromCommand(ParticleType<BasicParticleData<T>> arg0, StringReader reader) {
 				return data;
 			}
 
 			@Override
-			public BasicParticleData<T> read(ParticleType<BasicParticleData<T>> type, PacketBuffer buffer) {
+			public BasicParticleData<T> fromNetwork(ParticleType<BasicParticleData<T>> type, PacketBuffer buffer) {
 				return data;
 			}
 		};
@@ -60,10 +60,10 @@ public abstract class BasicParticleData<T extends Particle> implements IParticle
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return Registry.PARTICLE_TYPE.getKey(getType()).toString();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) { }
+	public void writeToNetwork(PacketBuffer buffer) { }
 }

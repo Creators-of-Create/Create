@@ -9,8 +9,8 @@ public final class QuadHelper {
 	private QuadHelper() {}
 
 	public static BakedQuad clone(BakedQuad quad) {
-		return new BakedQuad(Arrays.copyOf(quad.getVertexData(), quad.getVertexData().length),
-			quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.hasShade());
+		return new BakedQuad(Arrays.copyOf(quad.getVertices(), quad.getVertices().length),
+			quad.getTintIndex(), quad.getDirection(), quad.getSprite(), quad.isShade());
 	}
 
 }

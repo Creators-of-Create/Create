@@ -100,7 +100,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		boolean shouldSimulate = simulateNext;
 		simulateNext = false;
 
-		if (getWorld().isRemote)
+		if (getWorld().isClientSide)
 			return ItemStack.EMPTY;
 		IItemHandler inventory = targetCapability.orElse(null);
 		if (inventory == null)
@@ -147,7 +147,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void onNeighborChanged(BlockPos neighborPos) {
-		BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getPos(), tileEntity.getBlockState());
+		BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getBlockPos(), tileEntity.getBlockState());
 		if (targetBlockFace.getConnectedPos().equals(neighborPos))
 			onHandlerInvalidated(targetCapability);
 	}
@@ -182,16 +182,16 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	public void findNewCapability() {
-		BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getPos(), tileEntity.getBlockState())
+		BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getBlockPos(), tileEntity.getBlockState())
 			.getOpposite();
 		BlockPos pos = targetBlockFace.getPos();
 		World world = getWorld();
 
 		targetCapability = LazyOptional.empty();
 
-		if (!world.isBlockPresent(pos))
+		if (!world.isLoaded(pos))
 			return;
-		TileEntity invTE = world.getTileEntity(pos);
+		TileEntity invTE = world.getBlockEntity(pos);
 		if (invTE == null)
 			return;
 		targetCapability = bypassSided ? invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -209,14 +209,14 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 	public interface InterfaceProvider {
 
 		public static InterfaceProvider towardBlockFacing() {
-			return (w, p, s) -> new BlockFace(p, s.contains(BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
-				: s.get(BlockStateProperties.HORIZONTAL_FACING));
+			return (w, p, s) -> new BlockFace(p, s.hasProperty(BlockStateProperties.FACING) ? s.getValue(BlockStateProperties.FACING)
+				: s.getValue(BlockStateProperties.HORIZONTAL_FACING));
 		}
 
 		public static InterfaceProvider oppositeOfBlockFacing() {
 			return (w, p, s) -> new BlockFace(p,
-				(s.contains(BlockStateProperties.FACING) ? s.get(BlockStateProperties.FACING)
-					: s.get(BlockStateProperties.HORIZONTAL_FACING)).getOpposite());
+				(s.hasProperty(BlockStateProperties.FACING) ? s.getValue(BlockStateProperties.FACING)
+					: s.getValue(BlockStateProperties.HORIZONTAL_FACING)).getOpposite());
 		}
 
 		public BlockFace getTarget(World world, BlockPos pos, BlockState blockState);

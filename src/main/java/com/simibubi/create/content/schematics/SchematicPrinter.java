@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
+import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
@@ -22,7 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.PlacementSettings;
 import net.minecraft.world.gen.feature.template.Template;
@@ -80,13 +80,19 @@ public class SchematicPrinter {
 
 		schematicAnchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
-		activeTemplate.place(blockReader, schematicAnchor, settings, blockReader.getRandom());
+		activeTemplate.placeInWorldChunk(blockReader, schematicAnchor, settings, blockReader.getRandom());
+
+		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
+			settings.getRotation(), settings.getMirror());
+		for (TileEntity te : blockReader.tileEntities.values()) {
+			transform.apply(te);
+		}
 
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
 		deferredBlocks.clear();
 		MutableBoundingBox bounds = blockReader.getBounds();
-		currentPos = new BlockPos(bounds.minX - 1, bounds.minY, bounds.minZ);
+		currentPos = new BlockPos(bounds.x0 - 1, bounds.y0, bounds.z0);
 		schematicLoaded = true;
 	}
 
@@ -107,7 +113,7 @@ public class SchematicPrinter {
 	public BlockPos getCurrentTarget() {
 		if (!isLoaded())
 			return null;
-		return schematicAnchor.add(currentPos);
+		return schematicAnchor.offset(currentPos);
 	}
 
 	public PrintStage getPrintStage() {
@@ -119,7 +125,8 @@ public class SchematicPrinter {
 	}
 
 	public boolean isWorldEmpty() {
-		return blockReader.getBounds().getLength().equals(new Vector3i(0,0,0));
+		return blockReader.getAllPositions().isEmpty();
+		//return blockReader.getBounds().getLength().equals(new Vector3i(0,0,0));
 	}
 
 	@FunctionalInterface
@@ -141,7 +148,7 @@ public class SchematicPrinter {
 			entityHandler.handle(target, entity);
 		} else {
 			BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-			TileEntity tileEntity = blockReader.getTileEntity(target);
+			TileEntity tileEntity = blockReader.getBlockEntity(target);
 			blockHandler.handle(target, blockState, tileEntity);
 		}
 	}
@@ -166,28 +173,28 @@ public class SchematicPrinter {
 
 	public boolean shouldPlaceBlock(World world, PlacementPredicate predicate, BlockPos pos) {
 		BlockState state = BlockHelper.setZeroAge(blockReader.getBlockState(pos));
-		TileEntity tileEntity = blockReader.getTileEntity(pos);
+		TileEntity tileEntity = blockReader.getBlockEntity(pos);
 
 		BlockState toReplace = world.getBlockState(pos);
 		BlockState toReplaceOther = null;
-		if (state.contains(BlockStateProperties.BED_PART) && state.contains(BlockStateProperties.HORIZONTAL_FACING)
-				&& state.get(BlockStateProperties.BED_PART) == BedPart.FOOT)
-			toReplaceOther = world.getBlockState(pos.offset(state.get(BlockStateProperties.HORIZONTAL_FACING)));
-		if (state.contains(BlockStateProperties.DOUBLE_BLOCK_HALF)
-				&& state.get(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
-			toReplaceOther = world.getBlockState(pos.up());
+		if (state.hasProperty(BlockStateProperties.BED_PART) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)
+				&& state.getValue(BlockStateProperties.BED_PART) == BedPart.FOOT)
+			toReplaceOther = world.getBlockState(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)));
+		if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+				&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER)
+			toReplaceOther = world.getBlockState(pos.above());
 
-		if (!world.isBlockPresent(pos))
+		if (!world.isLoaded(pos))
 			return false;
-		if (!world.getWorldBorder().contains(pos))
+		if (!world.getWorldBorder().isWithinBounds(pos))
 			return false;
 		if (toReplace == state)
 			return false;
-		if (toReplace.getBlockHardness(world, pos) == -1
-				|| (toReplaceOther != null && toReplaceOther.getBlockHardness(world, pos) == -1))
+		if (toReplace.getDestroySpeed(world, pos) == -1
+				|| (toReplaceOther != null && toReplaceOther.getDestroySpeed(world, pos) == -1))
 			return false;
 
-		boolean isNormalCube = state.isNormalCube(blockReader, currentPos);
+		boolean isNormalCube = state.isRedstoneConductor(blockReader, currentPos);
 		return predicate.shouldPlace(pos, state, tileEntity, toReplace, toReplaceOther, isNormalCube);
 	}
 
@@ -199,18 +206,18 @@ public class SchematicPrinter {
 
 		BlockPos target = getCurrentTarget();
 		BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-		TileEntity tileEntity = blockReader.getTileEntity(target);
+		TileEntity tileEntity = blockReader.getBlockEntity(target);
 		return ItemRequirement.of(blockState, tileEntity);
 	}
 
 	public int markAllBlockRequirements(MaterialChecklist checklist, World world, PlacementPredicate predicate) {
 		int blocksToPlace = 0;
 		for (BlockPos pos : blockReader.getAllPositions()) {
-			BlockPos relPos = pos.add(schematicAnchor);
+			BlockPos relPos = pos.offset(schematicAnchor);
 			BlockState required = blockReader.getBlockState(relPos);
-			TileEntity requiredTE = blockReader.getTileEntity(relPos);
+			TileEntity requiredTE = blockReader.getBlockEntity(relPos);
 
-			if (!world.isAreaLoaded(pos.add(schematicAnchor), 0)) {
+			if (!world.isAreaLoaded(pos.offset(schematicAnchor), 0)) {
 				checklist.warnBlockNotLoaded();
 				continue;
 			}
@@ -260,30 +267,30 @@ public class SchematicPrinter {
 			if (printStage == PrintStage.ENTITIES) {
 				if (printingEntityIndex + 1 < entities.size()) {
 					printingEntityIndex++;
-					currentPos = entities.get(printingEntityIndex).getBlockPos().subtract(schematicAnchor);
+					currentPos = entities.get(printingEntityIndex).blockPosition().subtract(schematicAnchor);
 				} else {
 					// Reached end of printing
 					return false;
 				}
 			}
-		} while (!blockReader.getBounds().isVecInside(currentPos));
+		} while (!blockReader.getBounds().isInside(currentPos));
 
 		// More things available to print
 		return true;
 	}
 
 	public boolean tryAdvanceCurrentPos() {
-		currentPos = currentPos.offset(Direction.EAST);
+		currentPos = currentPos.relative(Direction.EAST);
 		MutableBoundingBox bounds = blockReader.getBounds();
-		BlockPos posInBounds = currentPos.add(-bounds.minX, -bounds.minY, -bounds.minZ);
+		BlockPos posInBounds = currentPos.offset(-bounds.x0, -bounds.y0, -bounds.z0);
 
-		if (posInBounds.getX() > bounds.getXSize())
-			currentPos = new BlockPos(bounds.minX, currentPos.getY(), currentPos.getZ() + 1).west();
-		if (posInBounds.getZ() > bounds.getZSize())
-			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, bounds.minZ).west();
+		if (posInBounds.getX() > bounds.getXSpan())
+			currentPos = new BlockPos(bounds.x0, currentPos.getY(), currentPos.getZ() + 1).west();
+		if (posInBounds.getZ() > bounds.getZSpan())
+			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, bounds.z0).west();
 
 		// End of blocks reached
-		if (currentPos.getY() > bounds.getYSize()) {
+		if (currentPos.getY() > bounds.getYSpan()) {
 			printStage = PrintStage.DEFERRED_BLOCKS;
 			return false;
 		}
@@ -292,7 +299,8 @@ public class SchematicPrinter {
 	}
 
 	public static boolean shouldDeferBlock(BlockState state) {
-		return state.getBlock().is(AllBlocks.GANTRY_CARRIAGE.get()) || BlockMovementChecks.isBrittle(state);
+		return AllBlocks.GANTRY_CARRIAGE.has(state) || AllBlocks.MECHANICAL_ARM.has(state)
+			|| BlockMovementChecks.isBrittle(state);
 	}
 
 }

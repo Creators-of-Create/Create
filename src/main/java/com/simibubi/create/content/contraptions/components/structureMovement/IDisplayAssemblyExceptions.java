@@ -24,12 +24,12 @@ public interface IDisplayAssemblyExceptions {
 		if (!tooltip.isEmpty())
 			tooltip.add(StringTextComponent.EMPTY);
 
-		tooltip.add(IHaveGoggleInformation.componentSpacing.copy().append(Lang.translate("gui.assembly.exception").formatted(TextFormatting.GOLD)));
+		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy().append(Lang.translate("gui.assembly.exception").withStyle(TextFormatting.GOLD)));
 
 		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))
 				.forEach(l -> TooltipHelper.cutStringTextComponent(l, GRAY, WHITE)
-						.forEach(c -> tooltip.add(IHaveGoggleInformation.componentSpacing.copy().append(c))));
+						.forEach(c -> tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy().append(c))));
 
 		return true;
 	}

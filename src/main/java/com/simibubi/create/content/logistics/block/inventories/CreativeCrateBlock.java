@@ -26,7 +26,7 @@ public class CreativeCrateBlock extends CrateBlock implements ITE<CreativeCrateT
 	}
 	
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		withTileEntityDo(worldIn, pos, CreativeCrateTileEntity::onPlaced);
 	}
 

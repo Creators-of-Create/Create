@@ -47,12 +47,12 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void writeToNetwork(PacketBuffer buffer) {
 		buffer.writeFluidStack(fluid);
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return ForgeRegistries.PARTICLE_TYPES.getKey(type) + " " + fluid.getFluid()
 			.getRegistryName();
 	}
@@ -87,12 +87,12 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 		new IParticleData.IDeserializer<FluidParticleData>() {
 
 			// TODO Fluid particles on command
-			public FluidParticleData deserialize(ParticleType<FluidParticleData> particleTypeIn, StringReader reader)
+			public FluidParticleData fromCommand(ParticleType<FluidParticleData> particleTypeIn, StringReader reader)
 				throws CommandSyntaxException {
 				return new FluidParticleData(particleTypeIn, new FluidStack(Fluids.WATER, 1));
 			}
 
-			public FluidParticleData read(ParticleType<FluidParticleData> particleTypeIn, PacketBuffer buffer) {
+			public FluidParticleData fromNetwork(ParticleType<FluidParticleData> particleTypeIn, PacketBuffer buffer) {
 				return new FluidParticleData(particleTypeIn, buffer.readFluidStack());
 			}
 		};

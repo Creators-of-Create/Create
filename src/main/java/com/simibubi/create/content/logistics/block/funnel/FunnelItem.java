@@ -29,25 +29,25 @@ public class FunnelItem extends BlockItem {
 	}
 
 	@Override
-	protected BlockState getStateForPlacement(BlockItemUseContext ctx) {
-		World world = ctx.getWorld();
-		BlockPos pos = ctx.getPos();
-		BlockState state = super.getStateForPlacement(ctx);
+	protected BlockState getPlacementState(BlockItemUseContext ctx) {
+		World world = ctx.getLevel();
+		BlockPos pos = ctx.getClickedPos();
+		BlockState state = super.getPlacementState(ctx);
 		if (state == null)
 			return state;
 		if (!(state.getBlock() instanceof FunnelBlock))
 			return state;
-		if (state.get(FunnelBlock.FACING)
+		if (state.getValue(FunnelBlock.FACING)
 			.getAxis()
 			.isVertical())
 			return state;
 
-		Direction direction = state.get(FunnelBlock.FACING);
+		Direction direction = state.getValue(FunnelBlock.FACING);
 		FunnelBlock block = (FunnelBlock) getBlock();
 		Block beltFunnelBlock = block.getEquivalentBeltFunnel(world, pos, state)
 			.getBlock();
 		BlockState equivalentBeltFunnel = beltFunnelBlock.getStateForPlacement(ctx)
-			.with(BeltFunnelBlock.HORIZONTAL_FACING, direction);
+			.setValue(BeltFunnelBlock.HORIZONTAL_FACING, direction);
 		if (BeltFunnelBlock.isOnValidBelt(equivalentBeltFunnel, world, pos)) {
 			AllTriggers.triggerFor(AllTriggers.BELT_FUNNEL, ctx.getPlayer());
 			return equivalentBeltFunnel;

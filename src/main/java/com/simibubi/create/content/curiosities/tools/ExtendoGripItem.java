@@ -71,7 +71,7 @@ public class ExtendoGripItem extends Item {
 	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier));
 
 	public ExtendoGripItem(Properties properties) {
-		super(properties.maxStackSize(1)
+		super(properties.stacksTo(1)
 			.rarity(Rarity.UNCOMMON));
 	}
 
@@ -86,8 +86,8 @@ public class ExtendoGripItem extends Item {
 		PlayerEntity player = (PlayerEntity) event.getEntityLiving();
 
 		CompoundNBT persistentData = player.getPersistentData();
-		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand());
-		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemMainhand());
+		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
+		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getMainHandItem());
 		boolean holdingDualExtendo = inOff && inMain;
 		boolean holdingExtendo = inOff ^ inMain;
 		holdingExtendo &= !holdingDualExtendo;
@@ -97,13 +97,13 @@ public class ExtendoGripItem extends Item {
 		if (holdingExtendo != wasHoldingExtendo) {
 			if (!holdingExtendo) {
 				player.getAttributes()
-					.removeModifiers(rangeModifier.getValue());
+					.removeAttributeModifiers(rangeModifier.get());
 				persistentData.remove(EXTENDO_MARKER);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-					.addTemporaryModifiers(rangeModifier.getValue());
+					.addTransientAttributeModifiers(rangeModifier.get());
 				persistentData.putBoolean(EXTENDO_MARKER, true);
 			}
 		}
@@ -111,13 +111,13 @@ public class ExtendoGripItem extends Item {
 		if (holdingDualExtendo != wasHoldingDualExtendo) {
 			if (!holdingDualExtendo) {
 				player.getAttributes()
-					.removeModifiers(doubleRangeModifier.getValue());
+					.removeAttributeModifiers(doubleRangeModifier.get());
 				persistentData.remove(DUAL_EXTENDO_MARKER);
 			} else {
 				if (player instanceof ServerPlayerEntity)
 					AllTriggers.GIGA_EXTENDO.trigger((ServerPlayerEntity) player);
 				player.getAttributes()
-					.addTemporaryModifiers(doubleRangeModifier.getValue());
+					.addTransientAttributeModifiers(doubleRangeModifier.get());
 				persistentData.putBoolean(DUAL_EXTENDO_MARKER, true);
 			}
 		}
@@ -131,10 +131,10 @@ public class ExtendoGripItem extends Item {
 
 		if (persistentData.contains(DUAL_EXTENDO_MARKER))
 			player.getAttributes()
-				.addTemporaryModifiers(doubleRangeModifier.getValue());
+				.addTransientAttributeModifiers(doubleRangeModifier.get());
 		else if (persistentData.contains(EXTENDO_MARKER))
 			player.getAttributes()
-				.addTemporaryModifiers(rangeModifier.getValue());
+				.addTransientAttributeModifiers(rangeModifier.get());
 	}
 
 	@SubscribeEvent
@@ -142,11 +142,11 @@ public class ExtendoGripItem extends Item {
 	public static void dontMissEntitiesWhenYouHaveHighReachDistance(ClickInputEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		ClientPlayerEntity player = mc.player;
-		if (mc.world == null || player == null)
+		if (mc.level == null || player == null)
 			return;
 		if (!isHoldingExtendoGrip(player))
 			return;
-		if (mc.objectMouseOver instanceof BlockRayTraceResult && mc.objectMouseOver.getType() != Type.MISS)
+		if (mc.hitResult instanceof BlockRayTraceResult && mc.hitResult.getType() != Type.MISS)
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
@@ -155,23 +155,23 @@ public class ExtendoGripItem extends Item {
 		if (!player.isCreative())
 			d0 -= 0.5f;
 		Vector3d Vector3d = player.getEyePosition(AnimationTickHolder.getPartialTicks());
-		Vector3d Vector3d1 = player.getLook(1.0F);
+		Vector3d Vector3d1 = player.getViewVector(1.0F);
 		Vector3d Vector3d2 = Vector3d.add(Vector3d1.x * d0, Vector3d1.y * d0, Vector3d1.z * d0);
 		AxisAlignedBB axisalignedbb = player.getBoundingBox()
-			.expand(Vector3d1.scale(d0))
-			.grow(1.0D, 1.0D, 1.0D);
+			.expandTowards(Vector3d1.scale(d0))
+			.inflate(1.0D, 1.0D, 1.0D);
 		EntityRayTraceResult entityraytraceresult =
-			ProjectileHelper.rayTraceEntities(player, Vector3d, Vector3d2, axisalignedbb, (e) -> {
-				return !e.isSpectator() && e.canBeCollidedWith();
+			ProjectileHelper.getEntityHitResult(player, Vector3d, Vector3d2, axisalignedbb, (e) -> {
+				return !e.isSpectator() && e.isPickable();
 			}, d0 * d0);
 		if (entityraytraceresult != null) {
 			Entity entity1 = entityraytraceresult.getEntity();
-			Vector3d Vector3d3 = entityraytraceresult.getHitVec();
-			double d2 = Vector3d.squareDistanceTo(Vector3d3);
-			if (d2 < d0 * d0 || mc.objectMouseOver == null || mc.objectMouseOver.getType() == Type.MISS) {
-				mc.objectMouseOver = entityraytraceresult;
+			Vector3d Vector3d3 = entityraytraceresult.getLocation();
+			double d2 = Vector3d.distanceToSqr(Vector3d3);
+			if (d2 < d0 * d0 || mc.hitResult == null || mc.hitResult.getType() == Type.MISS) {
+				mc.hitResult = entityraytraceresult;
 				if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrameEntity)
-					mc.pointedEntity = entity1;
+					mc.crosshairPickEntity = entity1;
 			}
 		}
 	}
@@ -196,19 +196,19 @@ public class ExtendoGripItem extends Item {
 	private static void findAndDamageExtendoGrip(PlayerEntity player) {
 		if (player == null)
 			return;
-		if (player.world.isRemote)
+		if (player.level.isClientSide)
 			return;
 		Hand hand = Hand.MAIN_HAND;
-		ItemStack extendo = player.getHeldItemMainhand();
+		ItemStack extendo = player.getMainHandItem();
 		if (!AllItems.EXTENDO_GRIP.isIn(extendo)) {
-			extendo = player.getHeldItemOffhand();
+			extendo = player.getOffhandItem();
 			hand = Hand.OFF_HAND;
 		}
 		if (!AllItems.EXTENDO_GRIP.isIn(extendo))
 			return;
 		final Hand h = hand;
 		if (!BackTankUtil.canAbsorbDamage(player, maxUses()))
-			extendo.damageItem(1, player, p -> p.sendBreakAnimation(h));
+			extendo.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(h));
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class ExtendoGripItem extends Item {
 	}
 
 	@Override
-	public boolean isDamageable() {
+	public boolean canBeDepleted() {
 		return true;
 	}
 
@@ -248,7 +248,7 @@ public class ExtendoGripItem extends Item {
 		DamageSource source = event.getSource();
 		if (source == null)
 			return;
-		Entity trueSource = source.getTrueSource();
+		Entity trueSource = source.getEntity();
 		if (trueSource instanceof PlayerEntity)
 			findAndDamageExtendoGrip((PlayerEntity) trueSource);
 	}
@@ -257,7 +257,7 @@ public class ExtendoGripItem extends Item {
 	public static void attacksByExtendoGripHaveMoreKnockback(LivingKnockBackEvent event) {
 		if (lastActiveDamageSource == null)
 			return;
-		Entity entity = lastActiveDamageSource.getImmediateSource();
+		Entity entity = lastActiveDamageSource.getDirectEntity();
 		if (!(entity instanceof PlayerEntity))
 			return;
 		PlayerEntity player = (PlayerEntity) entity;
@@ -268,9 +268,9 @@ public class ExtendoGripItem extends Item {
 
 	private static boolean isUncaughtClientInteraction(Entity entity, Entity target) {
 		// Server ignores entity interaction further than 6m
-		if (entity.getDistanceSq(target) < 36)
+		if (entity.distanceToSqr(target) < 36)
 			return false;
-		if (!entity.world.isRemote)
+		if (!entity.level.isClientSide)
 			return false;
 		if (!(entity instanceof PlayerEntity))
 			return false;
@@ -315,8 +315,8 @@ public class ExtendoGripItem extends Item {
 	}
 
 	public static boolean isHoldingExtendoGrip(PlayerEntity player) {
-		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemOffhand());
-		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getHeldItemMainhand());
+		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
+		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getMainHandItem());
 		boolean holdingGrip = inOff || inMain;
 		return holdingGrip;
 	}

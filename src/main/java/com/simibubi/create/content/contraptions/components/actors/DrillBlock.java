@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
-	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").setDamageBypassesArmor();
+	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").bypassArmor();
 
 	public DrillBlock(Properties properties) {
 		super(properties);
@@ -42,15 +42,15 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof ItemEntity)
 			return;
-		if (!new AxisAlignedBB(pos).shrink(.1f).intersects(entityIn.getBoundingBox()))
+		if (!new AxisAlignedBB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
-			entityIn.attackEntityFrom(damageSourceDrill, (float) getDamage(te.getSpeed()));
+			entityIn.hurt(damageSourceDrill, (float) getDamage(te.getSpeed()));
 		});
 	}
 
@@ -61,7 +61,7 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.CASING_12PX.get(state.get(FACING));
+		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -72,16 +72,16 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING).getAxis();
+		return state.getValue(FACING).getAxis();
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING).getOpposite();
+		return face == state.getValue(FACING).getOpposite();
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
 	}
 
@@ -91,7 +91,7 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

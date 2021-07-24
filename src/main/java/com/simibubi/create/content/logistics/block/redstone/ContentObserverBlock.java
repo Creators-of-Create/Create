@@ -38,13 +38,13 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 
 	public ContentObserverBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.CONTENT_OBSERVER.get(state.get(HORIZONTAL_FACING));
+		return AllShapes.CONTENT_OBSERVER.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -58,22 +58,22 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(POWERED, HORIZONTAL_FACING);
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		builder.add(POWERED, FACING);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = getDefaultState();
+		BlockState state = defaultBlockState();
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
-			BlockPos offsetPos = context.getPos()
-				.offset(face);
-			World world = context.getWorld();
+			BlockPos offsetPos = context.getClickedPos()
+				.relative(face);
+			World world = context.getLevel();
 			boolean canDetect = false;
-			TileEntity tileEntity = world.getTileEntity(offsetPos);
+			TileEntity tileEntity = world.getBlockEntity(offsetPos);
 
 			if (TileEntityBehaviour.get(tileEntity, TransportedItemStackHandlerBehaviour.TYPE) != null)
 				canDetect = true;
@@ -94,39 +94,39 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 		}
 
 		if (preferredFacing != null)
-			return state.with(HORIZONTAL_FACING, preferredFacing);
-		return state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()
+			return state.setValue(FACING, preferredFacing);
+		return state.setValue(FACING, context.getHorizontalDirection()
 			.getOpposite());
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
-		return state.get(POWERED);
+	public boolean isSignalSource(BlockState state) {
+		return state.getValue(POWERED);
 	}
 
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		return canProvidePower(blockState) && (side == null || side != blockState.get(HORIZONTAL_FACING)
+	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return isSignalSource(blockState) && (side == null || side != blockState.getValue(FACING)
 			.getOpposite()) ? 15 : 0;
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		worldIn.setBlockState(pos, state.with(POWERED, false), 2);
-		worldIn.notifyNeighborsOfStateChange(pos, this);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+		worldIn.setBlock(pos, state.setValue(POWERED, false), 2);
+		worldIn.updateNeighborsAt(pos, this);
 	}
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
-		return side != state.get(HORIZONTAL_FACING)
+		return side != state.getValue(FACING)
 			.getOpposite();
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-			worldIn.removeTileEntity(pos);
+			worldIn.removeBlockEntity(pos);
 		}
 	}
 
@@ -140,11 +140,11 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 
 	public void onFunnelTransfer(World world, BlockPos funnelPos, ItemStack transferred) {
 		for (Direction direction : Iterate.horizontalDirections) {
-			BlockPos detectorPos = funnelPos.offset(direction);
+			BlockPos detectorPos = funnelPos.relative(direction);
 			BlockState detectorState = world.getBlockState(detectorPos);
 			if (!AllBlocks.CONTENT_OBSERVER.has(detectorState))
 				continue;
-			if (detectorState.get(HORIZONTAL_FACING) != direction.getOpposite())
+			if (detectorState.getValue(FACING) != direction.getOpposite())
 				continue;
 			withTileEntityDo(world, detectorPos, te -> {
 				FilteringBehaviour filteringBehaviour = TileEntityBehaviour.get(te, FilteringBehaviour.TYPE);

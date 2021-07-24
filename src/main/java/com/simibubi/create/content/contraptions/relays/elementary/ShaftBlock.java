@@ -40,7 +40,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.SIX_VOXEL_POLE.get(state.get(AXIS));
+		return AllShapes.SIX_VOXEL_POLE.get(state.getValue(AXIS));
 	}
 
 	@Override
@@ -54,12 +54,12 @@ public class ShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
-		if (player.isSneaking() || !player.isAllowEdit())
+		if (player.isShiftKeyDown() || !player.mayBuild())
 			return ActionResultType.PASS;
 
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 		for (EncasedShaftBlock encasedShaft : new EncasedShaftBlock[] { AllBlocks.ANDESITE_ENCASED_SHAFT.get(),
 			AllBlocks.BRASS_ENCASED_SHAFT.get() }) {
 
@@ -67,12 +67,12 @@ public class ShaftBlock extends AbstractShaftBlock {
 				.isIn(heldItem))
 				continue;
 
-			if (world.isRemote)
+			if (world.isClientSide)
 				return ActionResultType.SUCCESS;
 			
 			AllTriggers.triggerFor(AllTriggers.CASING_SHAFT, player);
-			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.getDefaultState()
-				.with(AXIS, state.get(AXIS)));
+			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
+				.setValue(AXIS, state.getValue(AXIS)));
 			return ActionResultType.SUCCESS;
 		}
 
@@ -90,7 +90,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 		private PlacementHelper(){
 			super(
 					state -> state.getBlock() instanceof AbstractShaftBlock,
-					state -> state.get(AXIS),
+					state -> state.getValue(AXIS),
 					AXIS
 			);
 		}

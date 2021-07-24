@@ -84,7 +84,7 @@ public class BeltPressingCallbacks {
 				handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, pressTe.getWorld(), pressTe.getPos(), 4);
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, pressTe.getLevel(), pressTe.getBlockPos(), 4);
 		pressTe.sendData();
 		return HOLD;
 	}

@@ -79,7 +79,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 		
 		receivedSignal = compound.getInt("Receive");
 		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
-		if (world == null || world.isRemote || !link.newPosition)
+		if (level == null || level.isClientSide || !link.newPosition)
 			transmittedSignal = compound.getInt("Transmit");
 	}
 
@@ -98,29 +98,29 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 
 		if (transmitter)
 			return;
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.REDSTONE_LINK.has(blockState))
 			return;
 
-		if ((getReceivedSignal() > 0) != blockState.get(POWERED)) {
+		if ((getReceivedSignal() > 0) != blockState.getValue(POWERED)) {
 			receivedSignalChanged = true;
-			world.setBlockState(pos, blockState.cycle(POWERED));
+			level.setBlockAndUpdate(worldPosition, blockState.cycle(POWERED));
 		}
 		
 		if (receivedSignalChanged) {
-			Direction attachedFace = blockState.get(RedstoneLinkBlock.FACING).getOpposite();
-			BlockPos attachedPos = pos.offset(attachedFace);
-			world.updateNeighbors(pos, world.getBlockState(pos).getBlock());
-			world.updateNeighbors(attachedPos, world.getBlockState(attachedPos).getBlock());
+			Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING).getOpposite();
+			BlockPos attachedPos = worldPosition.relative(attachedFace);
+			level.blockUpdated(worldPosition, level.getBlockState(worldPosition).getBlock());
+			level.blockUpdated(attachedPos, level.getBlockState(attachedPos).getBlock());
 			receivedSignalChanged = false;
 		}
 	}
 
 	protected Boolean isTransmitterBlock() {
-		return !getBlockState().get(RedstoneLinkBlock.RECEIVER);
+		return !getBlockState().getValue(RedstoneLinkBlock.RECEIVER);
 	}
 
 	public int getReceivedSignal() {

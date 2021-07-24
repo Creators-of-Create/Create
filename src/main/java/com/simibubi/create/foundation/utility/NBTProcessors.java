@@ -54,14 +54,14 @@ public final class NBTProcessors {
 			ListNBT pages = tag.getList("pages", Constants.NBT.TAG_STRING);
 
 			for (INBT inbt : pages) {
-				if (textComponentHasClickEvent(inbt.getString()))
+				if (textComponentHasClickEvent(inbt.getAsString()))
 					return null;
 			}
 			return data;
 		});
 		addSurvivalProcessor(AllTileEntities.FUNNEL.get(), data -> {
 			if (data.contains("Filter")) {
-				ItemStack filter = ItemStack.read(data.getCompound("Filter"));
+				ItemStack filter = ItemStack.of(data.getCompound("Filter"));
 				if (filter.getItem() instanceof FilterItem)
 					data.remove("Filter");
 			}
@@ -90,7 +90,7 @@ public final class NBTProcessors {
 				.apply(compound);
 		if (tileEntity instanceof MobSpawnerTileEntity)
 			return compound;
-		if (tileEntity.onlyOpsCanSetNbt())
+		if (tileEntity.onlyOpCanSetNbt())
 			return null;
 		return compound;
 	}

@@ -51,6 +51,7 @@ import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -78,12 +79,6 @@ import net.minecraftforge.fml.ModList;
 public class CreateJEI implements IModPlugin {
 
 	private static final ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
-
-	@Override
-	@Nonnull
-	public ResourceLocation getPluginUid() {
-		return ID;
-	}
 
 	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
@@ -127,7 +122,7 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
-			.recipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS && r.getIngredients()
+			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
 				.size() > 1 && !MechanicalPressTileEntity.canCompress(r.getIngredients()),
 				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
@@ -153,7 +148,7 @@ public class CreateJEI implements IModPlugin {
 
 		woodCutting = register("wood_cutting", () -> new BlockCuttingCategory(Items.OAK_STAIRS))
 			.recipeList(() -> CondensedBlockCuttingRecipe
-				.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.getValue())))
+				.condenseRecipes(findRecipesByType(SawTileEntity.woodcuttingRecipeType.get())))
 			.catalyst(AllBlocks.MECHANICAL_SAW::get)
 			.enableWhenBool(c -> c.allowWoodcuttingOnSaw.get() && ModList.get()
 				.isLoaded("druidcraft"))
@@ -179,7 +174,7 @@ public class CreateJEI implements IModPlugin {
 
 		deploying = register("deploying", DeployingCategory::new)
 			.recipeList(
-				() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.type)))
+				() -> DeployerApplicationRecipe.convert(findRecipesByType(AllRecipeTypes.SANDPAPER_POLISHING.getType())))
 			.recipes(AllRecipeTypes.DEPLOYING)
 			.catalyst(AllBlocks.DEPLOYER::get)
 			.catalyst(AllBlocks.DEPOT::get)
@@ -202,10 +197,10 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoShaped = register("automatic_shaped", MechanicalCraftingCategory::new)
-			.recipes(r -> r.getSerializer() == IRecipeSerializer.CRAFTING_SHAPELESS && r.getIngredients()
+			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
 				.size() == 1)
 			.recipes(
-				r -> (r.getType() == IRecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.type)
+				r -> (r.getType() == IRecipeType.CRAFTING && r.getType() != AllRecipeTypes.MECHANICAL_CRAFTING.getType())
 					&& (r instanceof ShapedRecipe))
 			.catalyst(AllBlocks.MECHANICAL_CRAFTER::get)
 			.enableWhen(c -> c.allowRegularCraftingInCrafter)
@@ -219,6 +214,12 @@ public class CreateJEI implements IModPlugin {
 	private <T extends IRecipe<?>> CategoryBuilder<T> register(String name,
 		Supplier<CreateRecipeCategory<T>> supplier) {
 		return new CategoryBuilder<T>(name, supplier);
+	}
+
+	@Override
+	@Nonnull
+	public ResourceLocation getPluginUid() {
+		return ID;
 	}
 
 	@Override
@@ -269,7 +270,7 @@ public class CreateJEI implements IModPlugin {
 			pred = Predicates.alwaysTrue();
 		}
 
-		public CategoryBuilder<T> recipes(AllRecipeTypes recipeTypeEntry) {
+		public CategoryBuilder<T> recipes(IRecipeTypeInfo recipeTypeEntry) {
 			return recipes(recipeTypeEntry::getType);
 		}
 
@@ -359,7 +360,7 @@ public class CreateJEI implements IModPlugin {
 	}
 
 	public static List<IRecipe<?>> findRecipes(Predicate<IRecipe<?>> predicate) {
-		return Minecraft.getInstance().world.getRecipeManager()
+		return Minecraft.getInstance().level.getRecipeManager()
 			.getRecipes()
 			.stream()
 			.filter(predicate)
@@ -396,7 +397,7 @@ public class CreateJEI implements IModPlugin {
 	public static boolean doInputsMatch(IRecipe<?> recipe1, IRecipe<?> recipe2) {
 		ItemStack[] matchingStacks = recipe1.getIngredients()
 			.get(0)
-			.getMatchingStacks();
+			.getItems();
 		if (matchingStacks.length == 0)
 			return true;
 		if (recipe2.getIngredients()

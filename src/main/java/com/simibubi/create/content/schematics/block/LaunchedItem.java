@@ -33,7 +33,7 @@ public abstract class LaunchedItem {
 	}
 
 	private static int ticksForDistance(BlockPos start, BlockPos target) {
-		return (int) (Math.max(10, MathHelper.sqrt(MathHelper.sqrt(target.distanceSq(start))) * 4f));
+		return (int) (Math.max(10, MathHelper.sqrt(MathHelper.sqrt(target.distSqr(start))) * 4f));
 	}
 
 	LaunchedItem() {}
@@ -50,7 +50,7 @@ public abstract class LaunchedItem {
 			ticksRemaining--;
 			return false;
 		}
-		if (world.isRemote)
+		if (world.isClientSide)
 			return false;
 
 		place(world);
@@ -79,7 +79,7 @@ public abstract class LaunchedItem {
 		target = NBTUtil.readBlockPos(c.getCompound("Target"));
 		ticksRemaining = c.getInt("TicksLeft");
 		totalTicks = c.getInt("TotalTicks");
-		stack = ItemStack.read(c.getCompound("Stack"));
+		stack = ItemStack.of(c.getCompound("Stack"));
 	}
 
 	public static class ForBlockState extends LaunchedItem {
@@ -150,13 +150,13 @@ public abstract class LaunchedItem {
 		@Override
 		void place(World world) {
 			// todo place belt
-			boolean isStart = state.get(BeltBlock.PART) == BeltPart.START;
+			boolean isStart = state.getValue(BeltBlock.PART) == BeltPart.START;
 			BlockPos offset = BeltBlock.nextSegmentPosition(state, BlockPos.ZERO, isStart);
 			int i = length - 1;
-			Axis axis = state.get(BeltBlock.HORIZONTAL_FACING).rotateY().getAxis();
-			world.setBlockState(target, AllBlocks.SHAFT.getDefaultState().with(AbstractShaftBlock.AXIS, axis));
+			Axis axis = state.getValue(BeltBlock.HORIZONTAL_FACING).getClockWise().getAxis();
+			world.setBlockAndUpdate(target, AllBlocks.SHAFT.getDefaultState().setValue(AbstractShaftBlock.AXIS, axis));
 			BeltConnectorItem
-					.createBelts(world, target, target.add(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
+					.createBelts(world, target, target.offset(offset.getX() * i, offset.getY() * i, offset.getZ() * i));
 		}
 
 	}
@@ -176,7 +176,7 @@ public abstract class LaunchedItem {
 		public boolean update(World world) {
 			if (deferredTag != null && entity == null) {
 				try {
-					Optional<Entity> loadEntityUnchecked = EntityType.loadEntityUnchecked(deferredTag, world);
+					Optional<Entity> loadEntityUnchecked = EntityType.create(deferredTag, world);
 					if (!loadEntityUnchecked.isPresent())
 						return true;
 					entity = loadEntityUnchecked.get();
@@ -205,7 +205,7 @@ public abstract class LaunchedItem {
 
 		@Override
 		void place(World world) {
-			world.addEntity(entity);
+			world.addFreshEntity(entity);
 		}
 
 	}

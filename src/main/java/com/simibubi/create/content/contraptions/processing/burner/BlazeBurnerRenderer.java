@@ -29,7 +29,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		if (heatLevel == HeatLevel.NONE)
 			return;
 
-		float renderTick = AnimationTickHolder.getRenderTime(te.getWorld()) + (te.hashCode() % 13) * 16f;
+		float renderTick = AnimationTickHolder.getRenderTime(te.getLevel()) + (te.hashCode() % 13) * 16f;
 		float offset = (MathHelper.sin((float) ((renderTick / 16f) % (2 * Math.PI))) + .5f) / 16f;
 
 		PartialModel blazeModel = AllBlockPartials.BLAZES.get(heatLevel);
@@ -37,6 +37,6 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		blazeBuffer.rotateCentered(Direction.UP, AngleHelper.rad(te.headAngle.getValue(partialTicks)));
 		blazeBuffer.translate(0, offset, 0);
 		blazeBuffer.light(0xF000F0)
-				.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 }

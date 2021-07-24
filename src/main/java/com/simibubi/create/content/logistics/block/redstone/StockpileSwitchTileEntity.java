@@ -62,7 +62,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		super.write(compound, clientPacket);
 	}
 
-	public float getLevel() {
+	public float getStockLevel() {
 		return currentLevel;
 	}
 
@@ -72,10 +72,10 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (!observedInventory.hasInventory()) {
 			if (currentLevel == -1)
 				return;
-			world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, 0), 3);
+			level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
 			currentLevel = -1;
 			state = false;
-			world.updateNeighbors(pos, getBlockState().getBlock());
+			level.blockUpdated(worldPosition, getBlockState().getBlock());
 			sendData();
 			return;
 		}
@@ -98,10 +98,10 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				occupied += count * (1f / space);
 		}
 
-		float level = (float) occupied / totalSpace;
-		if (currentLevel != level)
+		float stockLevel = occupied / totalSpace;
+		if (currentLevel != stockLevel)
 			changed = true;
-		currentLevel = level;
+		currentLevel = stockLevel;
 		currentLevel = MathHelper.clamp(currentLevel, 0, 1);
 
 		boolean previouslyPowered = state;
@@ -114,10 +114,10 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		int displayLevel = 0;
 		if (currentLevel > 0)
 			displayLevel = (int) (currentLevel * 6);
-		world.setBlockState(pos, getBlockState().with(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
+		level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
 
-		if (update && !world.getPendingBlockTicks().isTickPending(pos, getBlockState().getBlock()))
-			world.getPendingBlockTicks().scheduleTick(pos, getBlockState().getBlock(), 2, TickPriority.NORMAL);
+		if (update && !level.getBlockTicks().willTickThisTick(worldPosition, getBlockState().getBlock()))
+			level.getBlockTicks().scheduleTick(worldPosition, getBlockState().getBlock(), 2, TickPriority.NORMAL);
 
 		if (changed || update)
 			sendData();
@@ -126,7 +126,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		updateCurrentLevel();
 	}
@@ -155,7 +155,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 	public void updatePowerAfterDelay() {
 		poweredAfterDelay = shouldBePowered();
-		world.updateNeighbors(pos, getBlockState().getBlock());
+		level.blockUpdated(worldPosition, getBlockState().getBlock());
 	}
 
 	public boolean isPowered() {
@@ -170,6 +170,6 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (inverted == this.inverted)
 			return;
 		this.inverted = inverted;
-		world.updateNeighbors(pos, getBlockState().getBlock());
+		updatePowerAfterDelay();
 	}
 }

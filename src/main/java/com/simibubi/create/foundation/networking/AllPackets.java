@@ -22,7 +22,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
-import com.simibubi.create.content.curiosities.projector.ConfigureProjectorPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
@@ -74,7 +73,6 @@ public enum AllPackets {
 	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SEQUENCER(ConfigureSequencedGearshiftPacket.class, ConfigureSequencedGearshiftPacket::new,
 			PLAY_TO_SERVER),
-	CONFIGURE_PROJECTOR(ConfigureProjectorPacket.class, ConfigureProjectorPacket::new, PLAY_TO_SERVER),
 	PLACE_SCHEMATIC(SchematicPlacePacket.class, SchematicPlacePacket::new, PLAY_TO_SERVER),
 	UPLOAD_SCHEMATIC(SchematicUploadPacket.class, SchematicUploadPacket::new, PLAY_TO_SERVER),
 	CLEAR_CONTAINER(ClearContainerPacket.class, ClearContainerPacket::new, PLAY_TO_SERVER),
@@ -145,7 +143,7 @@ public enum AllPackets {
 
 	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
 		channel.send(PacketDistributor.NEAR
-			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.getRegistryKey())), message);
+			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())), message);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {

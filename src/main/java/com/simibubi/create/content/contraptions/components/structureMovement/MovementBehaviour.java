@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import javax.annotation.Nullable;
 
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
@@ -39,9 +39,9 @@ public abstract class MovementBehaviour {
 
 		Vector3d vec = context.position;
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
-		itemEntity.setMotion(context.motion.add(0, 0.5f, 0)
-			.scale(context.world.rand.nextFloat() * .3f));
-		context.world.addEntity(itemEntity);
+		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
+			.scale(context.world.random.nextFloat() * .3f));
+		context.world.addFreshEntity(itemEntity);
 	}
 
 	public void stopMoving(MovementContext context) {

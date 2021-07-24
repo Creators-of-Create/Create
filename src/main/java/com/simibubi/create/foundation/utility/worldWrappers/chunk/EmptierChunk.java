@@ -24,7 +24,7 @@ public class EmptierChunk extends Chunk {
 	}
 
 	public BlockState getBlockState(BlockPos p_180495_1_) {
-		return Blocks.VOID_AIR.getDefaultState();
+		return Blocks.VOID_AIR.defaultBlockState();
 	}
 
 	@Nullable
@@ -33,15 +33,15 @@ public class EmptierChunk extends Chunk {
 	}
 
 	public FluidState getFluidState(BlockPos p_204610_1_) {
-		return Fluids.EMPTY.getDefaultState();
+		return Fluids.EMPTY.defaultFluidState();
 	}
 
 	@Nullable
-	public WorldLightManager getWorldLightManager() {
+	public WorldLightManager getLightEngine() {
 		return null;
 	}
 
-	public int getLightValue(BlockPos p_217298_1_) {
+	public int getLightEmission(BlockPos p_217298_1_) {
 		return 0;
 	}
 
@@ -49,34 +49,34 @@ public class EmptierChunk extends Chunk {
 
 	public void removeEntity(Entity p_76622_1_) { }
 
-	public void removeEntityAtIndex(Entity p_76608_1_, int p_76608_2_) { }
+	public void removeEntity(Entity p_76608_1_, int p_76608_2_) { }
 
 	@Nullable
-	public TileEntity getTileEntity(BlockPos p_177424_1_, Chunk.CreateEntityType p_177424_2_) {
+	public TileEntity getBlockEntity(BlockPos p_177424_1_, Chunk.CreateEntityType p_177424_2_) {
 		return null;
 	}
 
-	public void addTileEntity(TileEntity p_150813_1_) { }
+	public void addBlockEntity(TileEntity p_150813_1_) { }
 
-	public void addTileEntity(BlockPos p_177426_1_, TileEntity p_177426_2_) { }
+	public void setBlockEntity(BlockPos p_177426_1_, TileEntity p_177426_2_) { }
 
-	public void removeTileEntity(BlockPos p_177425_1_) { }
+	public void removeBlockEntity(BlockPos p_177425_1_) { }
 
-	public void markDirty() { }
+	public void markUnsaved() { }
 
-	public void getEntitiesWithinAABBForEntity(@Nullable Entity p_177414_1_, AxisAlignedBB p_177414_2_, List<Entity> p_177414_3_, Predicate<? super Entity> p_177414_4_) { }
+	public void getEntities(@Nullable Entity p_177414_1_, AxisAlignedBB p_177414_2_, List<Entity> p_177414_3_, Predicate<? super Entity> p_177414_4_) { }
 
-	public <T extends Entity> void getEntitiesOfTypeWithinAABB(Class<? extends T> p_177430_1_, AxisAlignedBB p_177430_2_, List<T> p_177430_3_, Predicate<? super T> p_177430_4_) { }
+	public <T extends Entity> void getEntitiesOfClass(Class<? extends T> p_177430_1_, AxisAlignedBB p_177430_2_, List<T> p_177430_3_, Predicate<? super T> p_177430_4_) { }
 
 	public boolean isEmpty() {
 		return true;
 	}
 
-	public boolean isEmptyBetween(int p_76606_1_, int p_76606_2_) {
+	public boolean isYSpaceEmpty(int p_76606_1_, int p_76606_2_) {
 		return true;
 	}
 
-	public ChunkHolder.LocationType getLocationType() {
+	public ChunkHolder.LocationType getFullStatus() {
 		return ChunkHolder.LocationType.BORDER;
 	}
 }

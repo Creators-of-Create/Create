@@ -28,12 +28,12 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		Block block = te.getBlockState().getBlock();
 		final Axis boxAxis = ((IRotate) block).getRotationAxis(te.getBlockState());
-		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		final BlockPos pos = te.getBlockPos();
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 
 		for (Direction direction : Iterate.directions) {
 			Axis axis = direction.getAxis();
@@ -54,7 +54,7 @@ public class SplitShaftRenderer extends KineticTileEntityRenderer {
 			SuperByteBuffer superByteBuffer =
 					PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction);
 			kineticRotationTransform(superByteBuffer, te, axis, angle, light);
-			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			superByteBuffer.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 	}
 

@@ -6,10 +6,10 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.IStringSerializable;
@@ -29,7 +29,7 @@ public class PlaneMirror extends SymmetryMirror {
 		}
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return name;
 		}
 
@@ -90,7 +90,7 @@ public class PlaneMirror extends SymmetryMirror {
 	@Override
 	public void applyModelTransform(MatrixStack ms) {
 		super.applyModelTransform(ms);
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.centre()
 			.rotateY(((Align) orientation) == Align.XY ? 0 : 90)
 			.unCentre();

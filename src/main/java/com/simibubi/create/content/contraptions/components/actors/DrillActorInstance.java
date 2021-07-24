@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -22,11 +22,12 @@ public class DrillActorInstance extends ActorInstance {
     public DrillActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld contraption, MovementContext context) {
         super(materialManager, contraption, context);
 
-        InstanceMaterial<ActorData> instanceMaterial = materialManager.getMaterial(AllMaterialSpecs.ACTORS);
+        InstanceMaterial<ActorData> instanceMaterial = materialManager.defaultSolid()
+                .material(AllMaterialSpecs.ACTORS);
 
         BlockState state = context.state;
 
-        facing = state.get(DrillBlock.FACING);
+        facing = state.getValue(DrillBlock.FACING);
 
         Direction.Axis axis = facing.getAxis();
         float eulerX = AngleHelper.verticalAngle(facing);
@@ -35,7 +36,7 @@ public class DrillActorInstance extends ActorInstance {
         if (axis == Direction.Axis.Y)
             eulerY = 0;
         else
-            eulerY = facing.getHorizontalAngle() + ((axis == Direction.Axis.X) ? 180 : 0);
+            eulerY = facing.toYRot() + ((axis == Direction.Axis.X) ? 180 : 0);
 
         drillHead = instanceMaterial.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
 

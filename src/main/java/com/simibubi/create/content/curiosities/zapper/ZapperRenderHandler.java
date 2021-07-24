@@ -50,7 +50,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	@Override
 	protected void transformTool(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -0.1f, 0.1f, -0.4f);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(flip * 5.0F));
+		ms.mulPose(Vector3f.YP.rotationDegrees(flip * 5.0F));
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 	protected void playSound(Hand hand, Vector3d position) {
 		float pitch = hand == Hand.MAIN_HAND ? 0.1f : 0.9f;
 		Minecraft mc = Minecraft.getInstance();
-		AllSoundEvents.WORLDSHAPER_PLACE.play(mc.world, mc.player, position, 0.1f, pitch);
+		AllSoundEvents.WORLDSHAPER_PLACE.play(mc.level, mc.player, position, 0.1f, pitch);
 	}
 
 	public void addBeam(LaserBeam beam) {
@@ -68,7 +68,7 @@ public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 		double x = beam.end.x;
 		double y = beam.end.y;
 		double z = beam.end.z;
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		Supplier<Double> randomSpeed = () -> (r.nextDouble() - .5d) * .2f;
 		Supplier<Double> randomOffset = () -> (r.nextDouble() - .5d) * .2f;
 		for (int i = 0; i < 10; i++) {

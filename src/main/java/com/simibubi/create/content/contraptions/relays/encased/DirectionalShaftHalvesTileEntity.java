@@ -13,8 +13,8 @@ public class DirectionalShaftHalvesTileEntity extends KineticTileEntity {
 	}
 
 	public Direction getSourceFacing() {
-		BlockPos localSource = source.subtract(getPos());
-		return Direction.getFacingFromVector(localSource.getX(), localSource.getY(), localSource.getZ());
+		BlockPos localSource = source.subtract(getBlockPos());
+		return Direction.getNearest(localSource.getX(), localSource.getY(), localSource.getZ());
 	}
 
 }

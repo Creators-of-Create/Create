@@ -178,7 +178,7 @@ public class PipeConnection {
 		}
 
 		FluidTransportBehaviour behaviour =
-			TileEntityBehaviour.get(world, pos.offset(side), FluidTransportBehaviour.TYPE);
+			TileEntityBehaviour.get(world, pos.relative(side), FluidTransportBehaviour.TYPE);
 		source = Optional.of(behaviour == null ? new FlowSource.Blocked(location) : new FlowSource.OtherPipe(location));
 		return true;
 	}
@@ -190,7 +190,7 @@ public class PipeConnection {
 		if (flow.fluid.isEmpty())
 			return;
 
-		if (world.isRemote) {
+		if (world.isClientSide) {
 			if (!source.isPresent())
 				determineSource(world, pos);
 			
@@ -211,12 +211,12 @@ public class PipeConnection {
 
 	public void serializeNBT(CompoundNBT tag, boolean clientPacket) {
 		CompoundNBT connectionData = new CompoundNBT();
-		tag.put(side.getName2(), connectionData);
+		tag.put(side.getName(), connectionData);
 
 		if (hasPressure()) {
 			ListNBT pressureData = new ListNBT();
-			pressureData.add(FloatNBT.of(getInboundPressure()));
-			pressureData.add(FloatNBT.of(getOutwardPressure()));
+			pressureData.add(FloatNBT.valueOf(getInboundPressure()));
+			pressureData.add(FloatNBT.valueOf(getOutwardPressure()));
 			connectionData.put("Pressure", pressureData);
 		}
 
@@ -240,7 +240,7 @@ public class PipeConnection {
 	}
 
 	public void deserializeNBT(CompoundNBT tag, BlockPos tilePos, boolean clientPacket) {
-		CompoundNBT connectionData = tag.getCompound(side.getName2());
+		CompoundNBT connectionData = tag.getCompound(side.getName());
 
 		if (connectionData.contains("Pressure")) {
 			ListNBT pressureData = connectionData.getList("Pressure", NBT.TAG_FLOAT);
@@ -367,7 +367,7 @@ public class PipeConnection {
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnParticlesInner(World world, BlockPos pos, FluidStack fluid) {
-		if (world == Minecraft.getInstance().world)
+		if (world == Minecraft.getInstance().level)
 			if (!isRenderEntityWithinDistance(pos))
 				return;
 		if (hasOpenEnd())
@@ -378,7 +378,7 @@ public class PipeConnection {
 
 	@OnlyIn(Dist.CLIENT)
 	private void spawnSplashOnRimInner(World world, BlockPos pos, FluidStack fluid) {
-		if (world == Minecraft.getInstance().world)
+		if (world == Minecraft.getInstance().level)
 			if (!isRenderEntityWithinDistance(pos))
 				return;
 		spawnRimParticles(world, pos, fluid, SPLASH_PARTICLE_AMOUNT);
@@ -398,7 +398,7 @@ public class PipeConnection {
 	@OnlyIn(Dist.CLIENT)
 	private void spawnPouringLiquid(World world, BlockPos pos, FluidStack fluid, int amount) {
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
-		Vector3d directionVec = Vector3d.of(side.getDirectionVec());
+		Vector3d directionVec = Vector3d.atLowerCornerOf(side.getNormal());
 		if (!hasFlow())
 			return;
 		Flow flow = this.flow.get();
@@ -408,11 +408,11 @@ public class PipeConnection {
 	@OnlyIn(Dist.CLIENT)
 	public static boolean isRenderEntityWithinDistance(BlockPos pos) {
 		Entity renderViewEntity = Minecraft.getInstance()
-			.getRenderViewEntity();
+			.getCameraEntity();
 		if (renderViewEntity == null)
 			return false;
 		Vector3d center = VecHelper.getCenterOf(pos);
-		if (renderViewEntity.getPositionVec()
+		if (renderViewEntity.position()
 			.distanceTo(center) > MAX_PARTICLE_RENDER_DISTANCE)
 			return false;
 		return true;

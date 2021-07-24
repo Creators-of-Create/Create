@@ -20,13 +20,13 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 	}
 
 	public GhostItemSubmitPacket(PacketBuffer buffer) {
-		item = buffer.readItemStack();
+		item = buffer.readItem();
 		slot = buffer.readInt();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
-		buffer.writeItemStack(item);
+		buffer.writeItem(item);
 		buffer.writeInt(slot);
 	}
 
@@ -39,10 +39,10 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 					if (player == null)
 						return;
 
-					if (player.openContainer instanceof GhostItemContainer) {
-						GhostItemContainer<?> c = (GhostItemContainer<?>) player.openContainer;
+					if (player.containerMenu instanceof GhostItemContainer) {
+						GhostItemContainer<?> c = (GhostItemContainer<?>) player.containerMenu;
 						c.ghostInventory.setStackInSlot(slot, item);
-						c.getSlot(36 + slot).onSlotChanged();
+						c.getSlot(36 + slot).setChanged();
 					}
 
 				});

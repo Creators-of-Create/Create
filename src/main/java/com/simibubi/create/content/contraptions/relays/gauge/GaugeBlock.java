@@ -38,7 +38,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		SPEED, STRESS;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 	}
@@ -81,28 +81,28 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		World world = context.getWorld();
-		Direction face = context.getFace();
-		BlockPos placedOnPos = context.getPos()
-			.offset(context.getFace()
+		World world = context.getLevel();
+		Direction face = context.getClickedFace();
+		BlockPos placedOnPos = context.getClickedPos()
+			.relative(context.getClickedFace()
 				.getOpposite());
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 		Block block = placedOnState.getBlock();
 
 		if (block instanceof IRotate && ((IRotate) block).hasShaftTowards(world, placedOnPos, placedOnState, face)) {
-			BlockState toPlace = getDefaultState();
-			Direction horizontalFacing = context.getPlacementHorizontalFacing();
+			BlockState toPlace = defaultBlockState();
+			Direction horizontalFacing = context.getHorizontalDirection();
 			Direction nearestLookingDirection = context.getNearestLookingDirection();
 			boolean lookPositive = nearestLookingDirection.getAxisDirection() == AxisDirection.POSITIVE;
 			if (face.getAxis() == Axis.X) {
-				toPlace = toPlace.with(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
-					.with(AXIS_ALONG_FIRST_COORDINATE, true);
+				toPlace = toPlace.setValue(FACING, lookPositive ? Direction.NORTH : Direction.SOUTH)
+					.setValue(AXIS_ALONG_FIRST_COORDINATE, true);
 			} else if (face.getAxis() == Axis.Y) {
-				toPlace = toPlace.with(FACING, horizontalFacing.getOpposite())
-					.with(AXIS_ALONG_FIRST_COORDINATE, horizontalFacing.getAxis() == Axis.X);
+				toPlace = toPlace.setValue(FACING, horizontalFacing.getOpposite())
+					.setValue(AXIS_ALONG_FIRST_COORDINATE, horizontalFacing.getAxis() == Axis.X);
 			} else {
-				toPlace = toPlace.with(FACING, lookPositive ? Direction.WEST : Direction.EAST)
-					.with(AXIS_ALONG_FIRST_COORDINATE, false);
+				toPlace = toPlace.setValue(FACING, lookPositive ? Direction.WEST : Direction.EAST)
+					.setValue(AXIS_ALONG_FIRST_COORDINATE, false);
 			}
 
 			return toPlace;
@@ -113,12 +113,12 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	protected Direction getFacingForPlacement(BlockItemUseContext context) {
-		return context.getFace();
+		return context.getClickedFace();
 	}
 
 	@Override
 	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
-		return context.getPlacementHorizontalFacing()
+		return context.getHorizontalDirection()
 			.getAxis() != Axis.X;
 	}
 
@@ -126,21 +126,21 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		if (face.getAxis()
 			.isVertical())
 			return false;
-		if (face == state.get(FACING)
+		if (face == state.getValue(FACING)
 			.getOpposite())
 			return false;
 		if (face.getAxis() == getRotationAxis(state))
 			return false;
-		if (getRotationAxis(state) == Axis.Y && face != state.get(FACING))
+		if (getRotationAxis(state) == Axis.Y && face != state.getValue(FACING))
 			return false;
-		if (!Block.shouldSideBeRendered(state, world, pos, face) && !(world instanceof WrappedWorld))
+		if (!Block.shouldRenderFace(state, world, pos, face) && !(world instanceof WrappedWorld))
 			return false;
 		return true;
 	}
 
 	@Override
 	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof GaugeTileEntity))
 			return;
 		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
@@ -153,9 +153,9 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 				continue;
 
 			Vector3d rgb = ColorHelper.getRGB(color);
-			Vector3d faceVec = Vector3d.of(face.getDirectionVec());
-			Direction positiveFacing = Direction.getFacingFromAxis(AxisDirection.POSITIVE, face.getAxis());
-			Vector3d positiveFaceVec = Vector3d.of(positiveFacing.getDirectionVec());
+			Vector3d faceVec = Vector3d.atLowerCornerOf(face.getNormal());
+			Direction positiveFacing = Direction.get(AxisDirection.POSITIVE, face.getAxis());
+			Vector3d positiveFaceVec = Vector3d.atLowerCornerOf(positiveFacing.getNormal());
 			int particleCount = gaugeTE.dialTarget > 1 ? 4 : 1;
 
 			if (particleCount == 1 && rand.nextFloat() > 1 / 4f)
@@ -163,7 +163,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 			for (int i = 0; i < particleCount; i++) {
 				Vector3d mul = VecHelper.offsetRandomly(Vector3d.ZERO, rand, .25f)
-					.mul(new Vector3d(1, 1, 1).subtract(positiveFaceVec))
+					.multiply(new Vector3d(1, 1, 1).subtract(positiveFaceVec))
 					.normalize()
 					.scale(.3f);
 				Vector3d offset = VecHelper.getCenterOf(pos)
@@ -179,17 +179,17 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return GAUGE.get(state.get(FACING), state.get(AXIS_ALONG_FIRST_COORDINATE));
+		return GAUGE.get(state.getValue(FACING), state.getValue(AXIS_ALONG_FIRST_COORDINATE));
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getTileEntity(pos);
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if (te instanceof GaugeTileEntity) {
 			GaugeTileEntity gaugeTileEntity = (GaugeTileEntity) te;
 			return MathHelper.ceil(MathHelper.clamp(gaugeTileEntity.dialTarget * 14, 0, 15));
@@ -198,7 +198,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 }

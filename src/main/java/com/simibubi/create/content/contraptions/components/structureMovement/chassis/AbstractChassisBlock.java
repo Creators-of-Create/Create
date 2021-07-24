@@ -42,51 +42,51 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (!player.isAllowEdit())
+		if (!player.mayBuild())
 			return ActionResultType.PASS;
 
-		ItemStack heldItem = player.getHeldItem(handIn);
+		ItemStack heldItem = player.getItemInHand(handIn);
 		boolean isSlimeBall = heldItem.getItem()
-			.isIn(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
+			.is(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
 
-		BooleanProperty affectedSide = getGlueableSide(state, hit.getFace());
+		BooleanProperty affectedSide = getGlueableSide(state, hit.getDirection());
 		if (affectedSide == null)
 			return ActionResultType.PASS;
 
-		if (isSlimeBall && state.get(affectedSide)) {
+		if (isSlimeBall && state.getValue(affectedSide)) {
 			for (Direction face : Iterate.directions) {
 				BooleanProperty glueableSide = getGlueableSide(state, face);
-				if (glueableSide != null && !state.get(glueableSide) && glueAllowedOnSide(worldIn, pos, state, face)) {
-					if (worldIn.isRemote) {
-						Vector3d vec = hit.getHitVec();
+				if (glueableSide != null && !state.getValue(glueableSide) && glueAllowedOnSide(worldIn, pos, state, face)) {
+					if (worldIn.isClientSide) {
+						Vector3d vec = hit.getLocation();
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 						return ActionResultType.SUCCESS;
 					}
 					AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
-					state = state.with(glueableSide, true);
+					state = state.setValue(glueableSide, true);
 				}
 			}
-			if (!worldIn.isRemote)
-				worldIn.setBlockState(pos, state);
+			if (!worldIn.isClientSide)
+				worldIn.setBlockAndUpdate(pos, state);
 			return ActionResultType.SUCCESS;
 		}
 
-		if ((!heldItem.isEmpty() || !player.isSneaking()) && !isSlimeBall)
+		if ((!heldItem.isEmpty() || !player.isShiftKeyDown()) && !isSlimeBall)
 			return ActionResultType.PASS;
-		if (state.get(affectedSide) == isSlimeBall)
+		if (state.getValue(affectedSide) == isSlimeBall)
 			return ActionResultType.PASS;
-		if (!glueAllowedOnSide(worldIn, pos, state, hit.getFace()))
+		if (!glueAllowedOnSide(worldIn, pos, state, hit.getDirection()))
 			return ActionResultType.PASS;
-		if (worldIn.isRemote) {
-			Vector3d vec = hit.getHitVec();
+		if (worldIn.isClientSide) {
+			Vector3d vec = hit.getLocation();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
 			return ActionResultType.SUCCESS;
 		}
 
 		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
-		worldIn.setBlockState(pos, state.with(affectedSide, isSlimeBall));
+		worldIn.setBlockAndUpdate(pos, state.setValue(affectedSide, isSlimeBall));
 		return ActionResultType.SUCCESS;
 	}
 
@@ -100,17 +100,17 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(rotated, face);
 			if (glueableSide != null)
-				rotated = rotated.with(glueableSide, false);
+				rotated = rotated.setValue(glueableSide, false);
 		}
 
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(state, face);
-			if (glueableSide == null || !state.get(glueableSide))
+			if (glueableSide == null || !state.getValue(glueableSide))
 				continue;
 			Direction rotatedFacing = rotation.rotate(face);
 			BooleanProperty rotatedGlueableSide = getGlueableSide(rotated, rotatedFacing);
 			if (rotatedGlueableSide != null)
-				rotated = rotated.with(rotatedGlueableSide, true);
+				rotated = rotated.setValue(rotatedGlueableSide, true);
 		}
 
 		return rotated;
@@ -125,17 +125,17 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(mirrored, face);
 			if (glueableSide != null)
-				mirrored = mirrored.with(glueableSide, false);
+				mirrored = mirrored.setValue(glueableSide, false);
 		}
 
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(state, face);
-			if (glueableSide == null || !state.get(glueableSide))
+			if (glueableSide == null || !state.getValue(glueableSide))
 				continue;
 			Direction mirroredFacing = mirrorIn.mirror(face);
 			BooleanProperty mirroredGlueableSide = getGlueableSide(mirrored, mirroredFacing);
 			if (mirroredGlueableSide != null)
-				mirrored = mirrored.with(mirroredGlueableSide, true);
+				mirrored = mirrored.setValue(mirroredGlueableSide, true);
 		}
 
 		return mirrored;

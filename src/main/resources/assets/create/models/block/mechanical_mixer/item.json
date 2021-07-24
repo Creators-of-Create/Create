@@ -9,7 +9,8 @@
 		"6": "create:block/mixer_head",
 		"11": "create:block/mechanical_press_top",
 		"1_2": "create:block/cogwheel",
-		"mechanical_press_pole": "create:block/mechanical_press_pole"
+		"mechanical_press_pole": "create:block/mechanical_press_pole",
+		"particle": "create:block/andesite_casing"
 	},
 	"elements": [
 		{

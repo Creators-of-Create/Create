@@ -97,7 +97,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	protected void drawOnBackground(MatrixStack ms, int x, int y) {
-		textRenderer.draw(ms, title, x + 11, y + 4, 0x54214F);
+		font.draw(ms, title, x + 11, y + 4, 0x54214F);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 			if (patternButton.isHovered()) {
 				patternButtons.forEach(b -> b.active = true);
 				patternButton.active = false;
-				patternButton.playDownSound(client.getSoundHandler());
+				patternButton.playDownSound(minecraft.getSoundManager());
 				nbt.putString("Pattern", PlacementPatterns.values()[patternButtons.indexOf(patternButton)].name());
 			}
 		}
@@ -142,13 +142,13 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	protected void renderBlock(MatrixStack ms, int x, int y) {
-		ms.push();
+		ms.pushPose();
 		ms.translate(x + 32, y + 42, 120);
-		ms.multiply(new Vector3f(1f, 0, 0).getDegreesQuaternion(-25f));
-		ms.multiply(new Vector3f(0, 1f, 0).getDegreesQuaternion(-45f));
+		ms.mulPose(new Vector3f(1f, 0, 0).rotationDegrees(-25f));
+		ms.mulPose(new Vector3f(0, 1f, 0).rotationDegrees(-45f));
 		ms.scale(20, 20, 20);
 
-		BlockState state = Blocks.AIR.getDefaultState();
+		BlockState state = Blocks.AIR.defaultBlockState();
 		if (zapper.hasTag() && zapper.getTag()
 			.contains("BlockUsed"))
 			state = NBTUtil.readBlockState(zapper.getTag()
@@ -156,7 +156,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 
 		GuiGameElement.of(state)
 			.render(ms);
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected void writeAdditionalOptions(CompoundNBT nbt) {}

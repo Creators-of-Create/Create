@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -10,7 +11,6 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -48,25 +48,25 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		if (transported == null)
 			return;
 
-		MatrixStacker msr = MatrixStacker.of(ms);
-		Vector3d itemPosition = VecHelper.getCenterOf(te.getPos());
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		Vector3d itemPosition = VecHelper.getCenterOf(te.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;
 		if (!insertedFrom.getAxis()
 			.isHorizontal())
 			return;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(.5f, 15 / 16f, .5f);
 		msr.nudge(0);
 		float offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
 		float sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 
-		Vector3d offsetVec = Vector3d.of(insertedFrom.getOpposite()
-			.getDirectionVec())
+		Vector3d offsetVec = Vector3d.atLowerCornerOf(insertedFrom.getOpposite()
+			.getNormal())
 			.scale(.5f - offset);
 		ms.translate(offsetVec.x, offsetVec.y, offsetVec.z);
-		boolean alongX = insertedFrom.rotateY()
+		boolean alongX = insertedFrom.getClockWise()
 			.getAxis() == Axis.X;
 		if (!alongX)
 			sideOffset *= -1;
@@ -78,14 +78,14 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			.getItemRenderer();
 		int count = (int) (MathHelper.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
-		boolean blockItem = itemRenderer.getItemModelWithOverrides(itemStack, null, null)
+		boolean blockItem = itemRenderer.getModel(itemStack, null, null)
 			.isGui3d();
 
 		if (renderUpright)
 			ms.translate(0, 3 / 32d, 0);
 
 		int positive = insertedFrom.getAxisDirection()
-			.getOffset();
+			.getStep();
 		float verticalAngle = positive * offset * 360;
 		if (insertedFrom.getAxis() != Axis.X)
 			msr.rotateX(verticalAngle);
@@ -93,9 +93,9 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			msr.rotateZ(-verticalAngle);
 
 		if (renderUpright) {
-			Entity renderViewEntity = Minecraft.getInstance().renderViewEntity;
+			Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
 			if (renderViewEntity != null) {
-				Vector3d positionVec = renderViewEntity.getPositionVec();
+				Vector3d positionVec = renderViewEntity.position();
 				Vector3d vectorForOffset = itemPosition.add(offsetVec);
 				Vector3d diff = vectorForOffset.subtract(positionVec);
 
@@ -105,20 +105,20 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 					diff = VecHelper.rotate(diff, -verticalAngle, Axis.Z);
 
 				float yRot = (float) MathHelper.atan2(diff.z, -diff.x);
-				ms.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) (yRot - Math.PI / 2)));
+				ms.mulPose(Vector3f.YP.rotation((float) (yRot - Math.PI / 2)));
 			}
 			ms.translate(0, 0, -1 / 16f);
 		}
 
 		for (int i = 0; i <= count; i++) {
-			ms.push();
+			ms.pushPose();
 			if (blockItem)
 				ms.translate(r.nextFloat() * .0625f * i, 0, r.nextFloat() * .0625f * i);
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright)
 				msr.rotateX(90);
-			itemRenderer.renderItem(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
-			ms.pop();
+			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
+			ms.popPose();
 
 			if (!renderUpright) {
 				if (!blockItem)
@@ -128,7 +128,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 				ms.translate(0, 0, -1 / 16f);
 		}
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected void renderFluid(ItemDrainTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
@@ -147,17 +147,17 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			float min = 2f / 16f;
 			float max = min + (12 / 16f);
 			float yOffset = (7 / 16f) * level;
-			ms.push();
+			ms.pushPose();
 			ms.translate(0, yOffset, 0);
 			FluidRenderer.renderTiledFluidBB(fluidStack, min, yMin - yOffset, min, max, yMin, max, buffer, ms, light,
 				false);
-			ms.pop();
+			ms.popPose();
 		}
 
 		ItemStack heldItemStack = te.getHeldItemStack();
 		if (heldItemStack.isEmpty())
 			return;
-		FluidStack fluidStack2 = EmptyingByBasin.emptyItem(te.getWorld(), heldItemStack, true)
+		FluidStack fluidStack2 = EmptyingByBasin.emptyItem(te.getLevel(), heldItemStack, true)
 			.getFirst();
 		if (fluidStack2.isEmpty()) {
 			if (fluidStack.isEmpty())
@@ -173,7 +173,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 
 		if (processingTicks != -1) {
 			radius = (float) (Math.pow(((2 * processingProgress) - 1), 2) - 1);
-			AxisAlignedBB bb = new AxisAlignedBB(0.5, 1.0, 0.5, 0.5, 0.25, 0.5).grow(radius / 32f);
+			AxisAlignedBB bb = new AxisAlignedBB(0.5, 1.0, 0.5, 0.5, 0.25, 0.5).inflate(radius / 32f);
 			FluidRenderer.renderTiledFluidBB(fluidStack2, (float) bb.minX, (float) bb.minY, (float) bb.minZ,
 				(float) bb.maxX, (float) bb.maxY, (float) bb.maxZ, buffer, ms, light, true);
 		}

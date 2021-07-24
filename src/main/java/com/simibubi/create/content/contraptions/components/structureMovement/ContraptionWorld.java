@@ -29,7 +29,7 @@ public class ContraptionWorld extends WrappedWorld {
         if (blockInfo != null)
             return blockInfo.state;
 
-        return Blocks.AIR.getDefaultState();
+        return Blocks.AIR.defaultBlockState();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ContraptionWorld extends WrappedWorld {
     }
 
     @Override
-    public void playSound(double x, double y, double z, SoundEvent p_184134_7_, SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
-        world.playSound(x, y, z, p_184134_7_, p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
+    public void playLocalSound(double x, double y, double z, SoundEvent p_184134_7_, SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
+        world.playLocalSound(x, y, z, p_184134_7_, p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
     }
 }

@@ -37,7 +37,7 @@ public class PalettesVariantEntry {
 						.apply(name)::accept);
 
 			if (pattern.isTranslucent())
-				builder.addLayer(() -> RenderType::getTranslucent);
+				builder.addLayer(() -> RenderType::translucent);
 			if (pattern == PaletteBlockPattern.COBBLESTONE)
 				builder.item().tag(AllTags.AllItemTags.COBBLESTONE.tag);
 			if (pattern.hasFoliage())

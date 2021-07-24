@@ -2,16 +2,19 @@ package com.simibubi.create.content.curiosities.weapons;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
@@ -28,15 +31,26 @@ import net.minecraft.util.IndirectEntityDamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PotatoProjectileEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData {
 
-	ItemStack stack = ItemStack.EMPTY;
 	PotatoCannonProjectileTypes type;
+	ItemStack stack = ItemStack.EMPTY;
+
+	Entity stuckEntity;
+	Vector3d stuckOffset;
+	PotatoProjectileRenderMode stuckRenderer;
+	double stuckFallSpeed;
+
+	float additionalDamageMult = 1;
+	float additionalKnockback = 0;
+	float recoveryChance = 0;
 
 	public PotatoProjectileEntity(EntityType<? extends DamagingProjectileEntity> type, World world) {
 		super(type, world);
@@ -57,67 +71,135 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		return type;
 	}
 
-	@Override
-	public void readAdditional(CompoundNBT nbt) {
-		stack = ItemStack.read(nbt.getCompound("Item"));
-		super.readAdditional(nbt);
+	public void setEnchantmentEffectsFromCannon(ItemStack cannon) {
+		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, cannon);
+		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, cannon);
+		int flame = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, cannon);
+		int recovery = EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.POTATO_RECOVERY.get(), cannon);
+
+		if (power > 0)
+			additionalDamageMult = 1 + power * .2f;
+		if (punch > 0)
+			additionalKnockback = punch * .5f;
+		if (flame > 0)
+			setSecondsOnFire(100);
+		if (recovery > 0)
+			recoveryChance = .125f + recovery * .125f;
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT nbt) {
+	public void readAdditionalSaveData(CompoundNBT nbt) {
+		stack = ItemStack.of(nbt.getCompound("Item"));
+		additionalDamageMult = nbt.getFloat("AdditionalDamage");
+		additionalKnockback = nbt.getFloat("AdditionalKnockback");
+		recoveryChance = nbt.getFloat("Recovery");
+		super.readAdditionalSaveData(nbt);
+	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundNBT nbt) {
 		nbt.put("Item", stack.serializeNBT());
-		super.writeAdditional(nbt);
+		nbt.putFloat("AdditionalDamage", additionalDamageMult);
+		nbt.putFloat("AdditionalKnockback", additionalKnockback);
+		nbt.putFloat("Recovery", recoveryChance);
+		super.addAdditionalSaveData(nbt);
+	}
+
+	public Entity getStuckEntity() {
+		if (stuckEntity == null)
+			return null;
+		if (!stuckEntity.isAlive())
+			return null;
+		return stuckEntity;
+	}
+
+	public void setStuckEntity(Entity stuckEntity) {
+		this.stuckEntity = stuckEntity;
+		this.stuckOffset = position().subtract(stuckEntity.position());
+		this.stuckRenderer = new PotatoProjectileRenderMode.StuckToEntity(stuckOffset);
+		this.stuckFallSpeed = 0.0;
+		setDeltaMovement(Vector3d.ZERO);
+	}
+
+	public PotatoProjectileRenderMode getRenderMode() {
+		if (getStuckEntity() != null)
+			return stuckRenderer;
+
+		return getProjectileType().getRenderMode();
 	}
 
 	public void tick() {
 		PotatoCannonProjectileTypes projectileType = getProjectileType();
-		setMotion(getMotion().add(0, -.05 * projectileType.getGravityMultiplier(), 0)
-			.scale(projectileType.getDrag()));
+
+		Entity stuckEntity = getStuckEntity();
+		if (stuckEntity != null) {
+			if (getY() < stuckEntity.getY() - 0.1) {
+				pop(position());
+				remove();
+			} else {
+				stuckFallSpeed += 0.007 * projectileType.getGravityMultiplier();
+				stuckOffset = stuckOffset.add(0, -stuckFallSpeed, 0);
+				Vector3d pos = stuckEntity.position()
+					.add(stuckOffset);
+				setPos(pos.x, pos.y, pos.z);
+			}
+		} else {
+			setDeltaMovement(getDeltaMovement().add(0, -0.05 * projectileType.getGravityMultiplier(), 0)
+				.scale(projectileType.getDrag()));
+		}
+
 		super.tick();
 	}
 
 	@Override
-	protected float getMotionFactor() {
+	protected float getInertia() {
 		return 1;
 	}
 
 	@Override
-	protected IParticleData getParticle() {
+	protected IParticleData getTrailParticle() {
 		return new AirParticleData(1, 10);
 	}
 
 	@Override
-	protected boolean isFireballFiery() {
+	protected boolean shouldBurn() {
 		return false;
 	}
 
 	@Override
-	protected void onEntityHit(EntityRayTraceResult ray) {
-		super.onEntityHit(ray);
+	protected void onHitEntity(EntityRayTraceResult ray) {
+		super.onHitEntity(ray);
 
-		Vector3d hit = ray.getHitVec();
+		if (getStuckEntity() != null)
+			return;
+
+		Vector3d hit = ray.getLocation();
 		Entity target = ray.getEntity();
 		PotatoCannonProjectileTypes projectileType = getProjectileType();
-		int damage = projectileType.getDamage();
-		float knockback = projectileType.getKnockback();
+		float damage = projectileType.getDamage() * additionalDamageMult;
+		float knockback = projectileType.getKnockback() + additionalKnockback;
 		Entity owner = this.getOwner();
 
 		if (!target.isAlive())
 			return;
 		if (owner instanceof LivingEntity)
-			((LivingEntity) owner).setLastAttackedEntity(target);
-		if (target instanceof PotatoProjectileEntity && ticksExisted < 10 && target.ticksExisted < 10)
+			((LivingEntity) owner).setLastHurtMob(target);
+		if (target instanceof PotatoProjectileEntity && tickCount < 10 && target.tickCount < 10)
 			return;
 
 		pop(hit);
 
-		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
-		int k = target.getFireTimer();
-		if (this.isBurning() && !targetIsEnderman)
-			target.setFire(5);
+		if (target instanceof WitherEntity && ((WitherEntity) target).isPowered())
+			return;
 
-		if (!target.attackEntityFrom(causePotatoDamage(), (float) damage)) {
-			target.setFireTicks(k);
+		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
+		int k = target.getRemainingFireTicks();
+		if (this.isOnFire() && !targetIsEnderman)
+			target.setSecondsOnFire(5);
+
+		boolean onServer = !level.isClientSide;
+		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
+			target.setRemainingFireTicks(k);
 			remove();
 			return;
 		}
@@ -125,45 +207,60 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 		if (targetIsEnderman)
 			return;
 
-		projectileType.onEntityHit(ray);
+		if (!projectileType.onEntityHit(ray) && onServer)
+			if (random.nextDouble() <= recoveryChance)
+				recoverItem();
 
 		if (!(target instanceof LivingEntity)) {
-			playHitSound(world, getPositionVec());
+			playHitSound(level, position());
 			remove();
 			return;
 		}
 
 		LivingEntity livingentity = (LivingEntity) target;
+
+		if (type.getReloadTicks() < 10)
+			livingentity.invulnerableTime = type.getReloadTicks() + 10;
+
 		if (knockback > 0) {
-			Vector3d appliedMotion = this.getMotion()
-				.mul(1.0D, 0.0D, 1.0D)
+			Vector3d appliedMotion = this.getDeltaMovement()
+				.multiply(1.0D, 0.0D, 1.0D)
 				.normalize()
 				.scale(knockback * 0.6);
-			if (appliedMotion.lengthSquared() > 0.0D)
-				livingentity.addVelocity(appliedMotion.x, 0.1D, appliedMotion.z);
+			if (appliedMotion.lengthSqr() > 0.0D)
+				livingentity.push(appliedMotion.x, 0.1D, appliedMotion.z);
 		}
 
-		boolean onServer = !world.isRemote;
 		if (onServer && owner instanceof LivingEntity) {
-			EnchantmentHelper.applyThornEnchantments(livingentity, owner);
-			EnchantmentHelper.applyArthropodEnchantments((LivingEntity) owner, livingentity);
+			EnchantmentHelper.doPostHurtEffects(livingentity, owner);
+			EnchantmentHelper.doPostDamageEffects((LivingEntity) owner, livingentity);
 		}
 
-		if (owner != null && livingentity != owner && livingentity instanceof PlayerEntity
-			&& owner instanceof ServerPlayerEntity && !this.isSilent()) {
+		if (livingentity != owner && livingentity instanceof PlayerEntity && owner instanceof ServerPlayerEntity
+			&& !this.isSilent()) {
 			((ServerPlayerEntity) owner).connection
-				.sendPacket(new SChangeGameStatePacket(SChangeGameStatePacket.PROJECTILE_HIT_PLAYER, 0.0F));
+				.send(new SChangeGameStatePacket(SChangeGameStatePacket.ARROW_HIT_PLAYER, 0.0F));
 		}
 
 		if (onServer && owner instanceof ServerPlayerEntity) {
 			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) owner;
 			if (!target.isAlive() && target.getType()
-				.getClassification() == EntityClassification.MONSTER
+				.getCategory() == EntityClassification.MONSTER
 				|| (target instanceof PlayerEntity && target != owner))
 				AllTriggers.POTATO_KILL.trigger(serverplayerentity);
 		}
 
-		remove();
+		if (type.isSticky() && target.isAlive()) {
+			setStuckEntity(target);
+		} else {
+			remove();
+		}
+
+	}
+
+	private void recoverItem() {
+		if (!stack.isEmpty())
+			spawnAtLocation(ItemHandlerHelper.copyStackWithSize(stack, 1));
 	}
 
 	public static void playHitSound(World world, Vector3d location) {
@@ -175,19 +272,23 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	}
 
 	@Override
-	protected void onBlockHit(BlockRayTraceResult ray) {
-		Vector3d hit = ray.getHitVec();
+	protected void onHitBlock(BlockRayTraceResult ray) {
+		Vector3d hit = ray.getLocation();
 		pop(hit);
-		getProjectileType().onBlockHit(world, ray);
-		super.onBlockHit(ray);
+		if (!getProjectileType().onBlockHit(level, ray) && !level.isClientSide)
+			if (random.nextDouble() <= recoveryChance)
+				recoverItem();
+		super.onHitBlock(ray);
 		remove();
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-		if (this.isInvulnerableTo(p_70097_1_))
+	public boolean hurt(DamageSource source, float amt) {
+		if (source == DamageSource.IN_FIRE || source == DamageSource.ON_FIRE)
 			return false;
-		pop(getPositionVec());
+		if (this.isInvulnerableTo(source))
+			return false;
+		pop(position());
 		remove();
 		return true;
 	}
@@ -195,12 +296,12 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	private void pop(Vector3d hit) {
 		if (!stack.isEmpty()) {
 			for (int i = 0; i < 7; i++) {
-				Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, this.rand, .25f);
-				world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y, m.z);
+				Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, this.random, .25f);
+				level.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), hit.x, hit.y, hit.z, m.x, m.y, m.z);
 			}
 		}
-		if (!world.isRemote)
-			playHitSound(world, getPositionVec());
+		if (!level.isClientSide)
+			playHitSound(level, position());
 	}
 
 	private DamageSource causePotatoDamage() {
@@ -218,24 +319,24 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 	@SuppressWarnings("unchecked")
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		EntityType.Builder<PotatoProjectileEntity> entityBuilder = (EntityType.Builder<PotatoProjectileEntity>) builder;
-		return entityBuilder.size(.25f, .25f);
+		return entityBuilder.sized(.25f, .25f);
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
 	public void writeSpawnData(PacketBuffer buffer) {
 		CompoundNBT compound = new CompoundNBT();
-		writeAdditional(compound);
-		buffer.writeCompoundTag(compound);
+		addAdditionalSaveData(compound);
+		buffer.writeNbt(compound);
 	}
 
 	@Override
 	public void readSpawnData(PacketBuffer additionalData) {
-		readAdditional(additionalData.readCompoundTag());
+		readAdditionalSaveData(additionalData.readNbt());
 	}
 
 }

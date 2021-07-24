@@ -1,20 +1,20 @@
 {
   "type": "create:mechanical_crafting",
   "pattern": [
-    "L",
-    "R",
-    "S",
-    "S",
-    "S"
+    "LRSSS",
+    "CC   "
   ],
   "key": {
     "L": {
       "item": "create:andesite_alloy"
     },
     "R": {
-      "item": "create:clockwork_component"
+      "item": "create:precision_mechanism"
     },
     "S": {
+      "item": "create:fluid_pipe"
+    },
+    "C": {
       "tag": "forge:ingots/copper"
     }
   },

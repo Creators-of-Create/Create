@@ -38,7 +38,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.FURNACE_ENGINE.get(state.get(HORIZONTAL_FACING));
+		return AllShapes.FURNACE_ENGINE.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -57,11 +57,11 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		if (worldIn instanceof WrappedWorld)
 			return;
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
 		if (fromPos.equals(getBaseBlockPos(state, pos)))
-			if (isValidPosition(state, worldIn, pos))
+			if (canSurvive(state, worldIn, pos))
 				withTileEntityDo(worldIn, pos, FurnaceEngineTileEntity::updateFurnace);
 	}
 

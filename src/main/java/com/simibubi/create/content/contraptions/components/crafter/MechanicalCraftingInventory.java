@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 public class MechanicalCraftingInventory extends CraftingInventory {
 
 	private static Container dummyContainer = new Container(null, -1) {
-		public boolean canInteractWith(PlayerEntity playerIn) {
+		public boolean stillValid(PlayerEntity playerIn) {
 			return false;
 		}
 	};
@@ -22,7 +22,7 @@ public class MechanicalCraftingInventory extends CraftingInventory {
 		for (int y = 0; y < items.height; y++) {
 			for (int x = 0; x < items.width; x++) {
 				ItemStack stack = items.grid.get(Pair.of(x + items.minX, y + items.minY));
-				setInventorySlotContents(x + (items.height - y - 1) * items.width,
+				setItem(x + (items.height - y - 1) * items.width,
 						stack == null ? ItemStack.EMPTY : stack.copy());
 			}
 		}

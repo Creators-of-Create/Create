@@ -19,6 +19,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ColorAttribut
 import com.simibubi.create.content.logistics.item.filter.attribute.EnchantAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.FluidContentsAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemNameAttribute;
+import com.simibubi.create.content.logistics.item.filter.attribute.ShulkerFillLevelAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAmuletAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryAttunementAttribute;
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryCrystalAttribute;
@@ -53,9 +54,10 @@ public interface ItemAttribute {
 
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
-	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.MISC));
+	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.TAB_MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
+	static ItemAttribute shulkerFillLevel = register(ShulkerFillLevelAttribute.EMPTY);
 	static ItemAttribute hasColor = register(ColorAttribute.EMPTY);
 	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
@@ -126,12 +128,12 @@ public interface ItemAttribute {
 
 		DUMMY(s -> false),
 		PLACEABLE(s -> s.getItem() instanceof BlockItem),
-		CONSUMABLE(ItemStack::isFood),
+		CONSUMABLE(ItemStack::isEdible),
 		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
-		RENAMED(ItemStack::hasDisplayName),
+		RENAMED(ItemStack::hasCustomHoverName),
 		DAMAGED(ItemStack::isDamaged),
-		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamage() / s.getMaxDamage() > 3 / 4f),
+		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE(s -> s.getEquipmentSlot() != null),
 		MAX_ENCHANTED(StandardTraits::maxEnchanted),
@@ -152,9 +154,9 @@ public interface ItemAttribute {
 		}
 
 		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> type) {
-			RECIPE_WRAPPER.setInventorySlotContents(0, s.copy());
+			RECIPE_WRAPPER.setItem(0, s.copy());
 			return w.getRecipeManager()
-				.getRecipe(type, RECIPE_WRAPPER, w)
+				.getRecipeFor(type, RECIPE_WRAPPER, w)
 				.isPresent();
 		}
 
@@ -278,13 +280,13 @@ public interface ItemAttribute {
 		@Override
 		public boolean appliesTo(ItemStack stack) {
 			Item item = stack.getItem();
-			return item.getGroup() == group;
+			return item.getItemCategory() == group;
 		}
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
 			ItemGroup group = stack.getItem()
-				.getGroup();
+				.getItemCategory();
 			return group == null ? Collections.emptyList() : Arrays.asList(new InItemGroup(group));
 		}
 
@@ -297,19 +299,19 @@ public interface ItemAttribute {
 		@OnlyIn(value = Dist.CLIENT)
 		public TranslationTextComponent format(boolean inverted) {
 			return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
-				group.getTranslationKey());
+				group.getDisplayName());
 		}
 
 		@Override
 		public void writeNBT(CompoundNBT nbt) {
-			nbt.putString("path", group.getPath());
+			nbt.putString("path", group.getRecipeFolderName());
 		}
 
 		@Override
 		public ItemAttribute readNBT(CompoundNBT nbt) {
 			String readPath = nbt.getString("path");
-			for (ItemGroup group : ItemGroup.GROUPS)
-				if (group.getPath()
+			for (ItemGroup group : ItemGroup.TABS)
+				if (group.getRecipeFolderName()
 					.equals(readPath))
 					return new InItemGroup(group);
 			return null;

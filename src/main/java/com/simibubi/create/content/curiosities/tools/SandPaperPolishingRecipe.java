@@ -26,7 +26,7 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 	@Override
 	public boolean matches(SandPaperInv inv, World worldIn) {
 		return ingredients.get(0)
-			.test(inv.getStackInSlot(0));
+			.test(inv.getItem(0));
 	}
 
 	@Override
@@ -47,14 +47,14 @@ public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {
 		List<IRecipe<SandPaperInv>> matchingRecipes = getMatchingRecipes(world, stack);
 		if (!matchingRecipes.isEmpty())
 			return matchingRecipes.get(0)
-				.getCraftingResult(new SandPaperInv(stack))
+				.assemble(new SandPaperInv(stack))
 				.copy();
 		return stack;
 	}
 
 	public static List<IRecipe<SandPaperInv>> getMatchingRecipes(World world, ItemStack stack) {
 		return world.getRecipeManager()
-			.getRecipes(AllRecipeTypes.SANDPAPER_POLISHING.getType(), new SandPaperInv(stack), world);
+			.getRecipesFor(AllRecipeTypes.SANDPAPER_POLISHING.getType(), new SandPaperInv(stack), world);
 	}
 
 	public static class SandPaperInv extends RecipeWrapper {

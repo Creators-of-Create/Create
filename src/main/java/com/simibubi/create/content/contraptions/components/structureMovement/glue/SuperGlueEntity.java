@@ -30,6 +30,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.Pose;
 import net.minecraft.entity.effect.LightningBoltEntity;
@@ -55,6 +56,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -83,7 +85,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	protected void registerData() {}
+	protected void defineSynchedData() {}
 
 	public int getWidthPixels() {
 		return 12;
@@ -94,7 +96,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	public void onBroken(@Nullable Entity breaker) {
-		playSound(SoundEvents.ENTITY_SLIME_SQUISH_SMALL, 1.0F, 1.0F);
+		playSound(SoundEvents.SLIME_SQUISH_SMALL, 1.0F, 1.0F);
 		if (onValidSurface()) {
 			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
 				new GlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false));
@@ -110,26 +112,26 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		Validate.notNull(getFacingDirection());
 		if (getFacingDirection().getAxis()
 			.isHorizontal()) {
-			this.rotationPitch = 0.0F;
-			this.rotationYaw = getFacingDirection().getHorizontalIndex() * 90;
+			this.xRot = 0.0F;
+			this.yRot = getFacingDirection().get2DDataValue() * 90;
 		} else {
-			this.rotationPitch = -90 * getFacingDirection().getAxisDirection()
-				.getOffset();
-			this.rotationYaw = 0.0F;
+			this.xRot = -90 * getFacingDirection().getAxisDirection()
+				.getStep();
+			this.yRot = 0.0F;
 		}
 
-		this.prevRotationPitch = this.rotationPitch;
-		this.prevRotationYaw = this.rotationYaw;
+		this.xRotO = this.xRot;
+		this.yRotO = this.yRot;
 		this.updateBoundingBox();
 	}
 
 	protected void updateBoundingBox() {
 		if (this.getFacingDirection() != null) {
 			double offset = 0.5 - 1 / 256d;
-			double x = hangingPosition.getX() + 0.5 - facingDirection.getXOffset() * offset;
-			double y = hangingPosition.getY() + 0.5 - facingDirection.getYOffset() * offset;
-			double z = hangingPosition.getZ() + 0.5 - facingDirection.getZOffset() * offset;
-			this.setPos(x, y, z);
+			double x = hangingPosition.getX() + 0.5 - facingDirection.getStepX() * offset;
+			double y = hangingPosition.getY() + 0.5 - facingDirection.getStepY() * offset;
+			double z = hangingPosition.getZ() + 0.5 - facingDirection.getStepZ() * offset;
+			this.setPosRaw(x, y, z);
 			double w = getWidthPixels();
 			double h = getHeightPixels();
 			double l = getWidthPixels();
@@ -157,7 +159,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public void tick() {
-		if (this.validationTimer++ == 10 && !this.world.isRemote) {
+		if (this.validationTimer++ == 10 && !this.level.isClientSide) {
 			this.validationTimer = 0;
 			if (isAlive() && !this.onValidSurface()) {
 				remove();
@@ -170,29 +172,29 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public boolean isVisible() {
 		if (!isAlive())
 			return false;
-		if (world instanceof WrappedWorld)
+		if (level instanceof WrappedWorld)
 			return true;
 
 		BlockPos pos = hangingPosition;
-		BlockPos pos2 = pos.offset(getFacingDirection().getOpposite());
-		return isValidFace(world, pos2, getFacingDirection()) != isValidFace(world, pos,
+		BlockPos pos2 = pos.relative(getFacingDirection().getOpposite());
+		return isValidFace(level, pos2, getFacingDirection()) != isValidFace(level, pos,
 			getFacingDirection().getOpposite());
 	}
 
 	public boolean onValidSurface() {
 		BlockPos pos = hangingPosition;
-		BlockPos pos2 = hangingPosition.offset(getFacingDirection().getOpposite());
+		BlockPos pos2 = hangingPosition.relative(getFacingDirection().getOpposite());
 		if (pos2.getY() >= 256)
 			return false;
-		if (!world.isAreaLoaded(pos, 0) || !world.isAreaLoaded(pos2, 0))
+		if (!level.isAreaLoaded(pos, 0) || !level.isAreaLoaded(pos2, 0))
 			return true;
-		if (!isValidFace(world, pos2, getFacingDirection())
-				&& !isValidFace(world, pos, getFacingDirection().getOpposite()))
+		if (!isValidFace(level, pos2, getFacingDirection())
+				&& !isValidFace(level, pos, getFacingDirection().getOpposite()))
 			return false;
-		if (isSideSticky(world, pos2, getFacingDirection())
-				|| isSideSticky(world, pos, getFacingDirection().getOpposite()))
+		if (isSideSticky(level, pos2, getFacingDirection())
+				|| isSideSticky(level, pos, getFacingDirection().getOpposite()))
 			return false;
-		return world.getEntitiesInAABBexcluding(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
+		return level.getEntities(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
 				.isEmpty();
 	}
 
@@ -210,10 +212,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	public static boolean isSideSticky(World world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
 		if (AllBlocks.STICKY_MECHANICAL_PISTON.has(state))
-			return state.get(DirectionalKineticBlock.FACING) == direction;
+			return state.getValue(DirectionalKineticBlock.FACING) == direction;
 
 		if (AllBlocks.STICKER.has(state))
-			return state.get(DirectionalBlock.FACING) == direction;
+			return state.getValue(DirectionalBlock.FACING) == direction;
 
 		if (state.getBlock() == Blocks.SLIME_BLOCK)
 			return true;
@@ -224,53 +226,59 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			return Direction.UP == direction;
 
 		if (AllBlocks.GANTRY_CARRIAGE.has(state))
-			return state.get(DirectionalKineticBlock.FACING) == direction;
+			return state.getValue(DirectionalKineticBlock.FACING) == direction;
 
 		if (state.getBlock() instanceof BearingBlock) {
-			return state.get(DirectionalKineticBlock.FACING) == direction;
+			return state.getValue(DirectionalKineticBlock.FACING) == direction;
 		}
 
 		if (state.getBlock() instanceof AbstractChassisBlock) {
 			BooleanProperty glueableSide = ((AbstractChassisBlock) state.getBlock()).getGlueableSide(state, direction);
 			if (glueableSide == null)
 				return false;
-			return state.get(glueableSide);
+			return state.getValue(glueableSide);
 		}
 
 		return false;
 	}
 
 	@Override
-	public boolean canBeCollidedWith() {
+	public boolean isPickable() {
 		return true;
 	}
 
 	@Override
-	public boolean hitByEntity(Entity entity) {
+	public boolean skipAttackInteraction(Entity entity) {
 		return entity instanceof PlayerEntity
-			? attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) entity), 0)
+			? hurt(DamageSource.playerAttack((PlayerEntity) entity), 0)
 			: false;
 	}
 
 	@Override
-	public Direction getHorizontalFacing() {
+	public Direction getDirection() {
 		return this.getFacingDirection();
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
+	public boolean hurt(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source))
 			return false;
-		Entity immediateSource = source.getImmediateSource();
+
+		boolean mobGriefing = level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+		Entity trueSource = source.getEntity();
+		if (!mobGriefing && trueSource instanceof MobEntity)
+			return false;
+
+		Entity immediateSource = source.getDirectEntity();
 		if (!isVisible() && immediateSource instanceof PlayerEntity) {
-			if (!AllItems.SUPER_GLUE.isIn(((PlayerEntity) immediateSource).getHeldItemMainhand()))
+			if (!AllItems.SUPER_GLUE.isIn(((PlayerEntity) immediateSource).getMainHandItem()))
 				return true;
 		}
 
-		if (isAlive() && !world.isRemote) {
+		if (isAlive() && !level.isClientSide) {
 			remove();
-			markVelocityChanged();
-			onBroken(source.getTrueSource());
+			markHurt();
+			onBroken(source.getEntity());
 		}
 
 		return true;
@@ -278,15 +286,15 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public void move(MoverType typeIn, Vector3d pos) {
-		if (!world.isRemote && isAlive() && pos.lengthSquared() > 0.0D) {
+		if (!level.isClientSide && isAlive() && pos.lengthSqr() > 0.0D) {
 			remove();
 			onBroken(null);
 		}
 	}
 
 	@Override
-	public void addVelocity(double x, double y, double z) {
-		if (!world.isRemote && isAlive() && x * x + y * y + z * z > 0.0D) {
+	public void push(double x, double y, double z) {
+		if (!level.isClientSide && isAlive() && x * x + y * y + z * z > 0.0D) {
 			remove();
 			onBroken(null);
 		}
@@ -303,12 +311,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void applyEntityCollision(Entity entityIn) {
-		super.applyEntityCollision(entityIn);
+	public void push(Entity entityIn) {
+		super.push(entityIn);
 	}
 
 	@Override
-	public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
+	public ActionResultType interact(PlayerEntity player, Hand hand) {
 		if (player instanceof FakePlayer)
 			return ActionResultType.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
@@ -321,43 +329,43 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	private void triggerPlaceBlock(PlayerEntity player, Hand hand) {
 		if (!(player instanceof ClientPlayerEntity))
 			return;
-		if (!(player.world instanceof ClientWorld))
+		if (!(player.level instanceof ClientWorld))
 			return;
 
 		ClientPlayerEntity cPlayer = (ClientPlayerEntity) player;
 		Minecraft mc = Minecraft.getInstance();
 		RayTraceResult ray =
-			cPlayer.pick(mc.playerController.getBlockReachDistance(), AnimationTickHolder.getPartialTicks(), false);
+			cPlayer.pick(mc.gameMode.getPickRange(), AnimationTickHolder.getPartialTicks(), false);
 
 		if (!(ray instanceof BlockRayTraceResult))
 			return;
 		if (ray.getType() == Type.MISS)
 			return;
 		BlockRayTraceResult blockRay = (BlockRayTraceResult) ray;
-		BlockFace rayFace = new BlockFace(blockRay.getPos(), blockRay.getFace());
+		BlockFace rayFace = new BlockFace(blockRay.getBlockPos(), blockRay.getDirection());
 		BlockFace hangingFace = new BlockFace(getHangingPosition(), getFacingDirection().getOpposite());
 		if (!rayFace.isEquivalent(hangingFace))
 			return;
 
 		for (Hand handIn : Hand.values()) {
-			ItemStack itemstack = cPlayer.getHeldItem(handIn);
+			ItemStack itemstack = cPlayer.getItemInHand(handIn);
 			int countBefore = itemstack.getCount();
 			ActionResultType actionResultType =
-				mc.playerController.func_217292_a(cPlayer, (ClientWorld) cPlayer.world, handIn, blockRay);
+				mc.gameMode.useItemOn(cPlayer, (ClientWorld) cPlayer.level, handIn, blockRay);
 			if (actionResultType != ActionResultType.SUCCESS)
 				return;
 
-			cPlayer.swingArm(handIn);
-			if (!itemstack.isEmpty() && (itemstack.getCount() != countBefore || mc.playerController.isInCreativeMode()))
-				mc.gameRenderer.itemRenderer.resetEquippedProgress(handIn);
+			cPlayer.swing(handIn);
+			if (!itemstack.isEmpty() && (itemstack.getCount() != countBefore || mc.gameMode.hasInfiniteItems()))
+				mc.gameRenderer.itemInHandRenderer.itemUsed(handIn);
 			return;
 		}
 	}
 
 	@Override
-	public void writeAdditional(CompoundNBT compound) {
+	public void addAdditionalSaveData(CompoundNBT compound) {
 		compound.putByte("Facing", (byte) this.getFacingDirection()
-			.getIndex());
+			.get3DDataValue());
 		BlockPos blockpos = this.getHangingPosition();
 		compound.putInt("TileX", blockpos.getX());
 		compound.putInt("TileY", blockpos.getY());
@@ -365,40 +373,40 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void readAdditional(CompoundNBT compound) {
+	public void readAdditionalSaveData(CompoundNBT compound) {
 		this.hangingPosition =
 			new BlockPos(compound.getInt("TileX"), compound.getInt("TileY"), compound.getInt("TileZ"));
-		this.facingDirection = Direction.byIndex(compound.getByte("Facing"));
+		this.facingDirection = Direction.from3DDataValue(compound.getByte("Facing"));
 		updateFacingWithBoundingBox();
 	}
 
 	@Override
-	public ItemEntity entityDropItem(ItemStack stack, float yOffset) {
+	public ItemEntity spawnAtLocation(ItemStack stack, float yOffset) {
 		float xOffset = (float) this.getFacingDirection()
-			.getXOffset() * 0.15F;
+			.getStepX() * 0.15F;
 		float zOffset = (float) this.getFacingDirection()
-			.getZOffset() * 0.15F;
+			.getStepZ() * 0.15F;
 		ItemEntity itementity =
-			new ItemEntity(this.world, this.getX() + xOffset, this.getY() + yOffset, this.getZ() + zOffset, stack);
-		itementity.setDefaultPickupDelay();
-		this.world.addEntity(itementity);
+			new ItemEntity(this.level, this.getX() + xOffset, this.getY() + yOffset, this.getZ() + zOffset, stack);
+		itementity.setDefaultPickUpDelay();
+		this.level.addFreshEntity(itementity);
 		return itementity;
 	}
 
 	@Override
-	protected boolean shouldSetPosAfterLoading() {
+	protected boolean repositionEntityAfterLoad() {
 		return false;
 	}
 
 	@Override
-	public void setPosition(double x, double y, double z) {
+	public void setPos(double x, double y, double z) {
 		hangingPosition = new BlockPos(x, y, z);
 		updateBoundingBox();
-		isAirBorne = true;
+		hasImpulse = true;
 	}
 
 	@Override
-	public float getRotatedYaw(Rotation transformRotation) {
+	public float rotate(Rotation transformRotation) {
 		if (this.getFacingDirection()
 			.getAxis() != Direction.Axis.Y) {
 			switch (transformRotation) {
@@ -406,16 +414,16 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 				facingDirection = facingDirection.getOpposite();
 				break;
 			case COUNTERCLOCKWISE_90:
-				facingDirection = facingDirection.rotateYCCW();
+				facingDirection = facingDirection.getCounterClockWise();
 				break;
 			case CLOCKWISE_90:
-				facingDirection = facingDirection.rotateY();
+				facingDirection = facingDirection.getClockWise();
 			default:
 				break;
 			}
 		}
 
-		float f = MathHelper.wrapDegrees(this.rotationYaw);
+		float f = MathHelper.wrapDegrees(this.yRot);
 		switch (transformRotation) {
 		case CLOCKWISE_180:
 			return f + 180.0F;
@@ -433,8 +441,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public float getMirroredYaw(Mirror transformMirror) {
-		return this.getRotatedYaw(transformMirror.toRotation(this.getFacingDirection()));
+	public float mirror(Mirror transformMirror) {
+		return this.rotate(transformMirror.getRotation(this.getFacingDirection()));
 	}
 
 	public Direction getAttachedDirection(BlockPos pos) {
@@ -442,10 +450,10 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void onStruckByLightning(ServerWorld world, LightningBoltEntity lightningBolt) {}
+	public void thunderHit(ServerWorld world, LightningBoltEntity lightningBolt) {}
 
 	@Override
-	public void recalculateSize() {}
+	public void refreshDimensions() {}
 
 	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
@@ -454,20 +462,20 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
 	public void writeSpawnData(PacketBuffer buffer) {
 		CompoundNBT compound = new CompoundNBT();
-		writeAdditional(compound);
-		buffer.writeCompoundTag(compound);
+		addAdditionalSaveData(compound);
+		buffer.writeNbt(compound);
 	}
 
 	@Override
 	public void readSpawnData(PacketBuffer additionalData) {
-		readAdditional(additionalData.readCompoundTag());
+		readAdditionalSaveData(additionalData.readNbt());
 	}
 
 	public Direction getFacingDirection() {
@@ -480,12 +488,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public boolean doesEntityNotTriggerPressurePlate() {
+	public boolean isIgnoringBlockTriggers() {
 		return true;
 	}
 
 	@Override
 	public World getWorld() {
-		return world;
+		return level;
 	}
 }

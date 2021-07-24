@@ -1,16 +1,16 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
@@ -31,9 +31,9 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();
 
-        AttachFace face = blockState.get(AnalogLeverBlock.FACE);
+        AttachFace face = blockState.getValue(AnalogLeverBlock.FACE);
         rX = face == AttachFace.FLOOR ? 0 : face == AttachFace.WALL ? 90 : 180;
-        rY = AngleHelper.horizontalAngle(blockState.get(AnalogLeverBlock.HORIZONTAL_FACING));
+        rY = AngleHelper.horizontalAngle(blockState.getValue(AnalogLeverBlock.FACING));
 
         animateLever();
     }
@@ -46,7 +46,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
 
     protected void animateLever() {
         MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(getInstancePosition());
         transform(msr);
@@ -76,7 +76,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
         relight(pos, handle, indicator);
     }
 
-    private void transform(MatrixStacker msr) {
+    private void transform(MatrixTransformStack msr) {
         msr.centre()
            .rotate(Direction.UP, (float) (rY / 180 * Math.PI))
            .rotate(Direction.EAST, (float) (rX / 180 * Math.PI))

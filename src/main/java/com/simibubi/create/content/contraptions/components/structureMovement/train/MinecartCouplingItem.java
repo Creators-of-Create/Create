@@ -44,7 +44,7 @@ public class MinecartCouplingItem extends Item {
 			return;
 		MinecartController controller = capability.orElse(null);
 
-		ItemStack heldItem = player.getHeldItem(event.getHand());
+		ItemStack heldItem = player.getItemInHand(event.getHand());
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
 			if (!onCouplingInteractOnMinecart(event, minecart, player, controller))
 				return;
@@ -62,11 +62,11 @@ public class MinecartCouplingItem extends Item {
 		AbstractMinecartEntity minecart, PlayerEntity player, MinecartController controller) {
 		World world = event.getWorld();
 		if (controller.isFullyCoupled()) {
-			if (!world.isRemote)
+			if (!world.isClientSide)
 				CouplingHandler.status(player, "two_couplings_max");
 			return true;
 		}
-		if (world != null && world.isRemote)
+		if (world != null && world.isClientSide)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> cartClicked(player, minecart));
 		return true;
 	}
@@ -76,7 +76,7 @@ public class MinecartCouplingItem extends Item {
 		int couplings = (controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 		if (couplings == 0)
 			return false;
-		if (event.getWorld().isRemote)
+		if (event.getWorld().isClientSide)
 			return true;
 
 		for (boolean forward : Iterate.trueAndFalse) {

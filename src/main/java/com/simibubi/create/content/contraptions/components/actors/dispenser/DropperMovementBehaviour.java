@@ -21,7 +21,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	protected void activate(MovementContext context, BlockPos pos) {
 		DispenseItemLocation location = getDispenseLocation(context);
 		if (location.isEmpty()) {
-			context.world.playEvent(1001, pos, 0);
+			context.world.levelEvent(1001, pos, 0);
 		} else {
 			setItemStackAt(location, defaultBehaviour.dispense(getItemStackAt(location, context), context, pos), context);
 		}
@@ -29,7 +29,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		if (context.world.isRemote)
+		if (context.world.isClientSide)
 			return;
 		collectItems(context);
 		activate(context, pos);
@@ -37,7 +37,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 
 	private void collectItems(MovementContext context) {
 		getStacks(context).stream().filter(itemStack -> !itemStack.isEmpty() && itemStack.getItem() != Items.AIR && itemStack.getMaxStackSize() > itemStack.getCount()).forEach(itemStack -> itemStack.grow(
-			ItemHelper.extract(context.contraption.inventory, itemStack::isItemEqual, ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false).getCount()));
+			ItemHelper.extract(context.contraption.inventory, itemStack::sameItem, ItemHelper.ExtractionCountMode.UPTO, itemStack.getMaxStackSize() - itemStack.getCount(), false).getCount()));
 	}
 
 	private void updateTemporaryData(MovementContext context) {
@@ -62,7 +62,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 			if (testStack == null || testStack.isEmpty())
 				continue;
 			if (testStack.getMaxStackSize() == 1) {
-				location = new DispenseItemLocation(false, ItemHelper.findFirstMatchingSlotIndex(context.contraption.inventory, testStack::isItemEqual));
+				location = new DispenseItemLocation(false, ItemHelper.findFirstMatchingSlotIndex(context.contraption.inventory, testStack::sameItem));
 				if (!getItemStackAt(location, context).isEmpty())
 					useable.add(location);
 			} else if (testStack.getCount() >= 2)

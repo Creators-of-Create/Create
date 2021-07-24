@@ -20,7 +20,7 @@ public abstract class ShapedBrush extends Brush {
 		if (includedPositions == null)
 			return affectedPositions;
 		for (BlockPos blockPos : includedPositions)
-			affectedPositions.add(targetPos.add(blockPos));
+			affectedPositions.add(targetPos.offset(blockPos));
 		return affectedPositions;
 	}
 

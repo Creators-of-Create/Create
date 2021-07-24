@@ -16,39 +16,39 @@ public class ChuteItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType tryPlace(BlockItemUseContext context) {
-		Direction face = context.getFace();
-		BlockPos placedOnPos = context.getPos()
-			.offset(face.getOpposite());
-		World world = context.getWorld();
+	public ActionResultType place(BlockItemUseContext context) {
+		Direction face = context.getClickedFace();
+		BlockPos placedOnPos = context.getClickedPos()
+			.relative(face.getOpposite());
+		World world = context.getLevel();
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 
-		if (!AbstractChuteBlock.isChute(placedOnState) || context.shouldCancelInteraction())
-			return super.tryPlace(context);
+		if (!AbstractChuteBlock.isChute(placedOnState) || context.isSecondaryUseActive())
+			return super.place(context);
 		if (face.getAxis()
 			.isVertical())
-			return super.tryPlace(context);
+			return super.place(context);
 
-		BlockPos correctPos = context.getPos()
-			.up();
+		BlockPos correctPos = context.getClickedPos()
+			.above();
 
 		BlockState blockState = world.getBlockState(correctPos);
 		if (blockState.getMaterial()
 			.isReplaceable())
-			context = BlockItemUseContext.func_221536_a(context, correctPos, face);
+			context = BlockItemUseContext.at(context, correctPos, face);
 		else {
-			if (!(blockState.getBlock() instanceof ChuteBlock) || world.isRemote)
+			if (!(blockState.getBlock() instanceof ChuteBlock) || world.isClientSide)
 				return ActionResultType.FAIL;
 			AbstractChuteBlock block = (AbstractChuteBlock) blockState.getBlock();
 			if (block.getFacing(blockState) == Direction.DOWN) {
-				world.setBlockState(correctPos, block.updateChuteState(blockState.with(ChuteBlock.FACING, face),
-					world.getBlockState(correctPos.up()), world, correctPos));
+				world.setBlockAndUpdate(correctPos, block.updateChuteState(blockState.setValue(ChuteBlock.FACING, face),
+					world.getBlockState(correctPos.above()), world, correctPos));
 				return ActionResultType.SUCCESS;
 			}
 			return ActionResultType.FAIL;
 		}
 
-		return super.tryPlace(context);
+		return super.place(context);
 	}
 
 }

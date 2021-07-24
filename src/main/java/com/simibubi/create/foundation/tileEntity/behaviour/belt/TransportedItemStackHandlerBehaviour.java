@@ -86,7 +86,7 @@ public class TransportedItemStackHandlerBehaviour extends TileEntityBehaviour {
 	public TransportedItemStackHandlerBehaviour(SmartTileEntity te, ProcessingCallback processingCallback) {
 		super(te);
 		this.processingCallback = processingCallback;
-		positionGetter = t -> VecHelper.getCenterOf(te.getPos());
+		positionGetter = t -> VecHelper.getCenterOf(te.getBlockPos());
 	}
 
 	public TransportedItemStackHandlerBehaviour withStackPlacement(PositionGetter function) {

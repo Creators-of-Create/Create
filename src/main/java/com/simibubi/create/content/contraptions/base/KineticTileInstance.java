@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
@@ -84,12 +84,13 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return shaft(getRotationAxis());
     }
 
-    protected final InstanceMaterial<RotatingData> getRotatingMaterial() {
-		return materialManager.getMaterial(AllMaterialSpecs.ROTATING);
+    protected InstanceMaterial<RotatingData> getRotatingMaterial() {
+		return materialManager.defaultSolid()
+				.material(AllMaterialSpecs.ROTATING);
 	}
 
     public static BlockState shaft(Direction.Axis axis) {
         return AllBlocks.SHAFT.getDefaultState()
-                .with(ShaftBlock.AXIS, axis);
+                .setValue(ShaftBlock.AXIS, axis);
     }
 }

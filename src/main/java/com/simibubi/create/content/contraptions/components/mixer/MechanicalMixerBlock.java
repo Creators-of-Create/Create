@@ -31,8 +31,8 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.down()));
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.below()));
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

@@ -37,9 +37,9 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	@Override
 	public boolean matches(RecipeWrapper inv, World p_77569_2_) {
 		return ingredients.get(0)
-			.test(inv.getStackInSlot(0))
+			.test(inv.getItem(0))
 			&& ingredients.get(1)
-				.test(inv.getStackInSlot(1));
+				.test(inv.getItem(1));
 	}
 
 	@Override
@@ -69,8 +69,8 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, Create.asResource(r.getId()
 				.getPath() + "_using_deployer")).require(r.getIngredients()
 					.get(0))
-					.require(Ingredient.fromItems(AllItems.SAND_PAPER.get(), AllItems.RED_SAND_PAPER.get()))
-					.output(r.getRecipeOutput())
+					.require(Ingredient.of(AllItems.SAND_PAPER.get(), AllItems.RED_SAND_PAPER.get()))
+					.output(r.getResultItem())
 					.build())
 			.collect(Collectors.toList());
 	}
@@ -84,11 +84,11 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	@OnlyIn(Dist.CLIENT)
 	public ITextComponent getDescriptionForAssembly() {
 		ItemStack[] matchingStacks = ingredients.get(1)
-			.getMatchingStacks();
+			.getItems();
 		if (matchingStacks.length == 0)
 			return new StringTextComponent("Invalid");
 		return Lang.translate("recipe.assembly.deploying_item",
-			new TranslationTextComponent(matchingStacks[0].getTranslationKey()).getString());
+			new TranslationTextComponent(matchingStacks[0].getDescriptionId()).getString());
 	}
 
 	@Override

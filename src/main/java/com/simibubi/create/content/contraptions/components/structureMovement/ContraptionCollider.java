@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import static net.minecraft.entity.Entity.collideBoundingBoxHeuristically;
-import static net.minecraft.entity.Entity.horizontalMag;
+import static net.minecraft.entity.Entity.getHorizontalDistanceSqr;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ContraptionCollider {
 	}
 
 	static void collideEntities(AbstractContraptionEntity contraptionEntity) {
-		World world = contraptionEntity.getEntityWorld();
+		World world = contraptionEntity.getCommandSenderWorld();
 		Contraption contraption = contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
 
@@ -69,7 +69,7 @@ public class ContraptionCollider {
 		if (bounds == null)
 			return;
 
-		Vector3d contraptionPosition = contraptionEntity.getPositionVec();
+		Vector3d contraptionPosition = contraptionEntity.position();
 		Vector3d contraptionMotion = contraptionPosition.subtract(contraptionEntity.getPrevPositionVec());
 		Vector3d anchorVec = contraptionEntity.getAnchorVec();
 		ContraptionRotationState rotation = null;
@@ -77,8 +77,8 @@ public class ContraptionCollider {
 		// After death, multiple refs to the client player may show up in the area
 		boolean skipClientPlayer = false;
 
-		List<Entity> entitiesWithinAABB = world.getEntitiesWithinAABB(Entity.class, bounds.grow(2)
-			.expand(0, 32, 0), contraptionEntity::canCollideWith);
+		List<Entity> entitiesWithinAABB = world.getEntitiesOfClass(Entity.class, bounds.inflate(2)
+			.expandTowards(0, 32, 0), contraptionEntity::canCollideWith);
 		for (Entity entity : entitiesWithinAABB) {
 
 			PlayerType playerType = getPlayerType(entity);
@@ -86,7 +86,7 @@ public class ContraptionCollider {
 				continue;
 
 			if (playerType == PlayerType.SERVER && entity instanceof ServerPlayerEntity) {
-				((ServerPlayerEntity) entity).connection.floatingTickCount = 0;
+				((ServerPlayerEntity) entity).connection.aboveGroundTickCount = 0;
 				continue;
 			}
 
@@ -102,30 +102,30 @@ public class ContraptionCollider {
 			Matrix3d rotationMatrix = rotation.asMatrix();
 
 			// Transform entity position and motion to local space
-			Vector3d entityPosition = entity.getPositionVec();
+			Vector3d entityPosition = entity.position();
 			AxisAlignedBB entityBounds = entity.getBoundingBox();
-			Vector3d motion = entity.getMotion();
+			Vector3d motion = entity.getDeltaMovement();
 			float yawOffset = rotation.getYawOffset();
 			Vector3d position = getWorldToLocalTranslation(entity, anchorVec, rotationMatrix, yawOffset);
 
 			// Prepare entity bounds
-			AxisAlignedBB localBB = entityBounds.offset(position)
-				.grow(1.0E-7D);
+			AxisAlignedBB localBB = entityBounds.move(position)
+				.inflate(1.0E-7D);
 			OrientedBB obb = new OrientedBB(localBB);
 			obb.setRotation(rotationMatrix);
 			motion = motion.subtract(contraptionMotion);
 			motion = rotationMatrix.transform(motion);
 
-			// Use simplified bbs when present 
+			// Use simplified bbs when present
 			final Vector3d motionCopy = motion;
 			List<AxisAlignedBB> collidableBBs = contraption.simplifiedEntityColliders.orElseGet(() -> {
 
 				// Else find 'nearby' individual block shapes to collide with
 				List<AxisAlignedBB> bbs = new ArrayList<>();
 				ReuseableStream<VoxelShape> potentialHits =
-					getPotentiallyCollidedShapes(world, contraption, localBB.expand(motionCopy));
-				potentialHits.createStream()
-					.forEach(shape -> shape.toBoundingBoxList()
+					getPotentiallyCollidedShapes(world, contraption, localBB.expandTowards(motionCopy));
+				potentialHits.getStream()
+					.forEach(shape -> shape.toAabbs()
 						.forEach(bbs::add));
 				return bbs;
 
@@ -147,12 +147,12 @@ public class ContraptionCollider {
 					Vector3d currentResponse = collisionResponse.getValue();
 					Vector3d currentCenter = obbCenter.add(currentResponse);
 
-					if (Math.abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXSize() - 1 > bb.getXSize() / 2)
+					if (Math.abs(currentCenter.x - bb.getCenter().x) - entityBounds.getXsize() - 1 > bb.getXsize() / 2)
 						continue;
-					if (Math.abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYSize()
-						- 1 > bb.getYSize() / 2)
+					if (Math.abs((currentCenter.y + motion.y) - bb.getCenter().y) - entityBounds.getYsize()
+						- 1 > bb.getYsize() / 2)
 						continue;
-					if (Math.abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZSize() - 1 > bb.getZSize() / 2)
+					if (Math.abs(currentCenter.z - bb.getCenter().z) - entityBounds.getZsize() - 1 > bb.getZsize() / 2)
 						continue;
 
 					obb.setCenter(currentCenter);
@@ -169,7 +169,7 @@ public class ContraptionCollider {
 					Vector3d collisionPosition = intersect.getCollisionPosition();
 
 					if (!isTemporal) {
-						Vector3d separation = intersect.asSeparationVec(entity.stepHeight);
+						Vector3d separation = intersect.asSeparationVec(entity.maxUpStep);
 						if (separation != null && !separation.equals(Vector3d.ZERO)) {
 							collisionResponse.setValue(currentResponse.add(separation));
 							timeOfImpact = 0;
@@ -198,12 +198,12 @@ public class ContraptionCollider {
 
 				// Re-run collisions with horizontal offset
 				collisionResponse.setValue(collisionResponse.getValue()
-					.mul(129 / 128f, 0, 129 / 128f));
+					.multiply(129 / 128f, 0, 129 / 128f));
 				continue;
 			}
 
 			// Resolve collision
-			Vector3d entityMotion = entity.getMotion();
+			Vector3d entityMotion = entity.getDeltaMovement();
 			Vector3d entityMotionNoTemporal = entityMotion;
 			Vector3d collisionNormal = normal.getValue();
 			Vector3d collisionLocation = location.getValue();
@@ -230,7 +230,7 @@ public class ContraptionCollider {
 			double slide = 0;
 
 			if (!collisionLocation.equals(Vector3d.ZERO)) {
-				collisionLocation = collisionLocation.add(entity.getPositionVec()
+				collisionLocation = collisionLocation.add(entity.position()
 					.add(entity.getBoundingBox()
 						.getCenter())
 					.scale(.5f));
@@ -250,8 +250,8 @@ public class ContraptionCollider {
 			boolean anyCollision = hardCollision || temporalCollision;
 
 			if (bounce > 0 && hasNormal && anyCollision && bounceEntity(entity, collisionNormal, contraptionEntity, bounce)) {
-				entity.world.playSound(playerType == PlayerType.CLIENT ? (PlayerEntity) entity : null,
-					entity.getX(), entity.getY(), entity.getZ(), SoundEvents.BLOCK_SLIME_BLOCK_FALL,
+				entity.level.playSound(playerType == PlayerType.CLIENT ? (PlayerEntity) entity : null,
+					entity.getX(), entity.getY(), entity.getZ(), SoundEvents.SLIME_BLOCK_FALL,
 					SoundCategory.BLOCKS, .5f, 1);
 				continue;
 			}
@@ -259,53 +259,53 @@ public class ContraptionCollider {
 			if (temporalCollision) {
 				double idealVerticalMotion = motionResponse.y;
 				if (idealVerticalMotion != entityMotion.y) {
-					entity.setMotion(entityMotion.mul(1, 0, 1)
+					entity.setDeltaMovement(entityMotion.multiply(1, 0, 1)
 						.add(0, idealVerticalMotion, 0));
-					entityMotion = entity.getMotion();
+					entityMotion = entity.getDeltaMovement();
 				}
 			}
 
 			if (hardCollision) {
-				double motionX = entityMotion.getX();
-				double motionY = entityMotion.getY();
-				double motionZ = entityMotion.getZ();
-				double intersectX = totalResponse.getX();
-				double intersectY = totalResponse.getY();
-				double intersectZ = totalResponse.getZ();
+				double motionX = entityMotion.x();
+				double motionY = entityMotion.y();
+				double motionZ = entityMotion.z();
+				double intersectX = totalResponse.x();
+				double intersectY = totalResponse.y();
+				double intersectZ = totalResponse.z();
 
 				double horizonalEpsilon = 1 / 128f;
 				if (motionX != 0 && Math.abs(intersectX) > horizonalEpsilon && motionX > 0 == intersectX < 0)
-					entityMotion = entityMotion.mul(0, 1, 1);
+					entityMotion = entityMotion.multiply(0, 1, 1);
 				if (motionY != 0 && intersectY != 0 && motionY > 0 == intersectY < 0)
-					entityMotion = entityMotion.mul(1, 0, 1)
+					entityMotion = entityMotion.multiply(1, 0, 1)
 						.add(0, contraptionMotion.y, 0);
 				if (motionZ != 0 && Math.abs(intersectZ) > horizonalEpsilon && motionZ > 0 == intersectZ < 0)
-					entityMotion = entityMotion.mul(1, 1, 0);
+					entityMotion = entityMotion.multiply(1, 1, 0);
 			}
 
 			if (bounce == 0 && slide > 0 && hasNormal && anyCollision && rotation.hasVerticalRotation()) {
-				double slideFactor = collisionNormal.mul(1, 0, 1)
+				double slideFactor = collisionNormal.multiply(1, 0, 1)
 					.length() * 1.25f;
-				Vector3d motionIn = entityMotionNoTemporal.mul(0, .9, 0)
+				Vector3d motionIn = entityMotionNoTemporal.multiply(0, .9, 0)
 					.add(0, -.01f, 0);
-				Vector3d slideNormal = collisionNormal.crossProduct(motionIn.crossProduct(collisionNormal))
+				Vector3d slideNormal = collisionNormal.cross(motionIn.cross(collisionNormal))
 					.normalize();
-				Vector3d newMotion = entityMotion.mul(.85, 0, .85)
+				Vector3d newMotion = entityMotion.multiply(.85, 0, .85)
 					.add(slideNormal.scale((.2f + slide) * motionIn.length() * slideFactor)
 						.add(0, -.1f - collisionNormal.y * .125f, 0));
-				entity.setMotion(newMotion);
-				entityMotion = entity.getMotion();
+				entity.setDeltaMovement(newMotion);
+				entityMotion = entity.getDeltaMovement();
 			}
 
 			if (!hardCollision && surfaceCollision.isFalse())
 				continue;
 
 			Vector3d allowedMovement = getAllowedMovement(totalResponse, entity);
-			entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
+			entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
-			entityPosition = entity.getPositionVec();
+			entityPosition = entity.position();
 
-			entity.velocityChanged = true;
+			entity.hurtMarked = true;
 			Vector3d contactPointMotion = Vector3d.ZERO;
 
 			if (surfaceCollision.isTrue()) {
@@ -316,21 +316,21 @@ public class ContraptionCollider {
 					if (canWalk)
 						entity.onGround = true;
 					if (entity instanceof ItemEntity)
-						entityMotion = entityMotion.mul(.5f, 1, .5f);
+						entityMotion = entityMotion.multiply(.5f, 1, .5f);
 				}
 				contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
 				allowedMovement = getAllowedMovement(contactPointMotion, entity);
-				entity.setPosition(entityPosition.x + allowedMovement.x, entityPosition.y,
+				entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y,
 					entityPosition.z + allowedMovement.z);
 			}
 
-			entity.setMotion(entityMotion);
+			entity.setDeltaMovement(entityMotion);
 
 			if (playerType != PlayerType.CLIENT)
 				continue;
 
-			double d0 = entity.getX() - entity.prevPosX - contactPointMotion.x;
-			double d1 = entity.getZ() - entity.prevPosZ - contactPointMotion.z;
+			double d0 = entity.getX() - entity.xo - contactPointMotion.x;
+			double d1 = entity.getZ() - entity.zo - contactPointMotion.z;
 			float limbSwing = MathHelper.sqrt(d0 * d0 + d1 * d1) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
@@ -342,15 +342,15 @@ public class ContraptionCollider {
 	static boolean bounceEntity(Entity entity, Vector3d normal, AbstractContraptionEntity contraption, double factor) {
 		if (factor == 0)
 			return false;
-		if (entity.bypassesLandingEffects())
+		if (entity.isSuppressingBounce())
 			return false;
 
-		Vector3d contactPointMotion = contraption.getContactPointMotion(entity.getPositionVec());
-		Vector3d motion = entity.getMotion().subtract(contactPointMotion);
-		Vector3d deltav = normal.scale(factor*2*motion.dotProduct(normal));
-		if (deltav.dotProduct(deltav) < 0.1f)
+		Vector3d contactPointMotion = contraption.getContactPointMotion(entity.position());
+		Vector3d motion = entity.getDeltaMovement().subtract(contactPointMotion);
+		Vector3d deltav = normal.scale(factor*2*motion.dot(normal));
+		if (deltav.dot(deltav) < 0.1f)
 		 	return false;
-		entity.setMotion(entity.getMotion().subtract(deltav));
+		entity.setDeltaMovement(entity.getDeltaMovement().subtract(deltav));
 		return true;
 	}
 
@@ -363,8 +363,8 @@ public class ContraptionCollider {
 	}
 
 	public static Vector3d getWorldToLocalTranslation(Entity entity, Vector3d anchorVec, Matrix3d rotationMatrix, float yawOffset) {
-		Vector3d entityPosition = entity.getPositionVec();
-		Vector3d centerY = new Vector3d(0, entity.getBoundingBox().getYSize() / 2, 0);
+		Vector3d entityPosition = entity.position();
+		Vector3d centerY = new Vector3d(0, entity.getBoundingBox().getYsize() / 2, 0);
 		Vector3d position = entityPosition;
 		position = position.add(centerY);
 		position = position.subtract(VecHelper.CENTER_OF_ORIGIN);
@@ -399,38 +399,38 @@ public class ContraptionCollider {
 	/** From Entity#getAllowedMovement **/
 	static Vector3d getAllowedMovement(Vector3d movement, Entity e) {
 		AxisAlignedBB bb = e.getBoundingBox();
-		ISelectionContext ctx = ISelectionContext.forEntity(e);
-		World world = e.world;
+		ISelectionContext ctx = ISelectionContext.of(e);
+		World world = e.level;
 		VoxelShape voxelshape = world.getWorldBorder()
-			.getShape();
+			.getCollisionShape();
 		Stream<VoxelShape> stream =
-			VoxelShapes.compare(voxelshape, VoxelShapes.create(bb.shrink(1.0E-7D)), IBooleanFunction.AND)
+			VoxelShapes.joinIsNotEmpty(voxelshape, VoxelShapes.create(bb.deflate(1.0E-7D)), IBooleanFunction.AND)
 				? Stream.empty()
 				: Stream.of(voxelshape);
-		Stream<VoxelShape> stream1 = world.getEntityCollisions(e, bb.expand(movement), entity -> false); // FIXME: 1.15 equivalent translated correctly?
+		Stream<VoxelShape> stream1 = world.getEntityCollisions(e, bb.expandTowards(movement), entity -> false); // FIXME: 1.15 equivalent translated correctly?
 		ReuseableStream<VoxelShape> reuseablestream = new ReuseableStream<>(Stream.concat(stream1, stream));
-		Vector3d allowedMovement = movement.lengthSquared() == 0.0D ? movement
+		Vector3d allowedMovement = movement.lengthSqr() == 0.0D ? movement
 			: collideBoundingBoxHeuristically(e, movement, bb, world, ctx, reuseablestream);
 		boolean xDifferent = movement.x != allowedMovement.x;
 		boolean yDifferent = movement.y != allowedMovement.y;
 		boolean zDifferent = movement.z != allowedMovement.z;
 		boolean notMovingUp = e.isOnGround() || yDifferent && movement.y < 0.0D;
-		if (e.stepHeight > 0.0F && notMovingUp && (xDifferent || zDifferent)) {
-			Vector3d allowedStep = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, (double) e.stepHeight, movement.z),
+		if (e.maxUpStep > 0.0F && notMovingUp && (xDifferent || zDifferent)) {
+			Vector3d allowedStep = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, (double) e.maxUpStep, movement.z),
 				bb, world, ctx, reuseablestream);
-			Vector3d allowedStepGivenMovement = collideBoundingBoxHeuristically(e, new Vector3d(0.0D, (double) e.stepHeight, 0.0D),
-				bb.expand(movement.x, 0.0D, movement.z), world, ctx, reuseablestream);
-			if (allowedStepGivenMovement.y < (double) e.stepHeight) {
+			Vector3d allowedStepGivenMovement = collideBoundingBoxHeuristically(e, new Vector3d(0.0D, (double) e.maxUpStep, 0.0D),
+				bb.expandTowards(movement.x, 0.0D, movement.z), world, ctx, reuseablestream);
+			if (allowedStepGivenMovement.y < (double) e.maxUpStep) {
 				Vector3d vec3 = collideBoundingBoxHeuristically(e, new Vector3d(movement.x, 0.0D, movement.z),
-					bb.offset(allowedStepGivenMovement), world, ctx, reuseablestream).add(allowedStepGivenMovement);
-				if (horizontalMag(vec3) > horizontalMag(allowedStep)) {
+					bb.move(allowedStepGivenMovement), world, ctx, reuseablestream).add(allowedStepGivenMovement);
+				if (getHorizontalDistanceSqr(vec3) > getHorizontalDistanceSqr(allowedStep)) {
 					allowedStep = vec3;
 				}
 			}
 
-			if (horizontalMag(allowedStep) > horizontalMag(allowedMovement)) {
+			if (getHorizontalDistanceSqr(allowedStep) > getHorizontalDistanceSqr(allowedMovement)) {
 				return allowedStep.add(collideBoundingBoxHeuristically(e, new Vector3d(0.0D, -allowedStep.y + movement.y, 0.0D),
-					bb.offset(allowedStep), world, ctx, reuseablestream));
+					bb.move(allowedStep), world, ctx, reuseablestream));
 			}
 		}
 
@@ -440,7 +440,7 @@ public class ContraptionCollider {
 	private static PlayerType getPlayerType(Entity entity) {
 		if (!(entity instanceof PlayerEntity))
 			return PlayerType.NONE;
-		if (!entity.world.isRemote)
+		if (!entity.level.isClientSide)
 			return PlayerType.SERVER;
 		MutableBoolean isClient = new MutableBoolean(false);
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
@@ -455,17 +455,17 @@ public class ContraptionCollider {
 	private static ReuseableStream<VoxelShape> getPotentiallyCollidedShapes(World world, Contraption contraption,
 		AxisAlignedBB localBB) {
 
-		double height = localBB.getYSize();
-		double width = localBB.getXSize();
+		double height = localBB.getYsize();
+		double width = localBB.getXsize();
 		double horizontalFactor = (height > width && width != 0) ? height / width : 1;
 		double verticalFactor = (width > height && height != 0) ? width / height : 1;
-		AxisAlignedBB blockScanBB = localBB.grow(0.5f);
-		blockScanBB = blockScanBB.grow(horizontalFactor, verticalFactor, horizontalFactor);
+		AxisAlignedBB blockScanBB = localBB.inflate(0.5f);
+		blockScanBB = blockScanBB.inflate(horizontalFactor, verticalFactor, horizontalFactor);
 
 		BlockPos min = new BlockPos(blockScanBB.minX, blockScanBB.minY, blockScanBB.minZ);
 		BlockPos max = new BlockPos(blockScanBB.maxX, blockScanBB.maxY, blockScanBB.maxZ);
 
-		ReuseableStream<VoxelShape> potentialHits = new ReuseableStream<>(BlockPos.getAllInBox(min, max)
+		ReuseableStream<VoxelShape> potentialHits = new ReuseableStream<>(BlockPos.betweenClosedStream(min, max)
 			.filter(contraption.getBlocks()::containsKey)
 			.map(p -> {
 				BlockState blockState = contraption.getBlocks()
@@ -473,7 +473,7 @@ public class ContraptionCollider {
 				BlockPos pos = contraption.getBlocks()
 					.get(p).pos;
 				VoxelShape collisionShape = blockState.getCollisionShape(world, p);
-				return collisionShape.withOffset(pos.getX(), pos.getY(), pos.getZ());
+				return collisionShape.move(pos.getX(), pos.getY(), pos.getZ());
 			})
 			.filter(Predicates.not(VoxelShape::isEmpty)));
 
@@ -484,11 +484,11 @@ public class ContraptionCollider {
 		if (!contraptionEntity.supportsTerrainCollision())
 			return false;
 
-		World world = contraptionEntity.getEntityWorld();
-		Vector3d motion = contraptionEntity.getMotion();
+		World world = contraptionEntity.getCommandSenderWorld();
+		Vector3d motion = contraptionEntity.getDeltaMovement();
 		TranslatingContraption contraption = (TranslatingContraption) contraptionEntity.getContraption();
 		AxisAlignedBB bounds = contraptionEntity.getBoundingBox();
-		Vector3d position = contraptionEntity.getPositionVec();
+		Vector3d position = contraptionEntity.position();
 		BlockPos gridPos = new BlockPos(position);
 
 		if (contraption == null)
@@ -498,37 +498,37 @@ public class ContraptionCollider {
 		if (motion.equals(Vector3d.ZERO))
 			return false;
 
-		Direction movementDirection = Direction.getFacingFromVector(motion.x, motion.y, motion.z);
+		Direction movementDirection = Direction.getNearest(motion.x, motion.y, motion.z);
 
 		// Blocks in the world
 		if (movementDirection.getAxisDirection() == AxisDirection.POSITIVE)
-			gridPos = gridPos.offset(movementDirection);
+			gridPos = gridPos.relative(movementDirection);
 		if (isCollidingWithWorld(world, contraption, gridPos, movementDirection))
 			return true;
 
 		// Other moving Contraptions
-		for (ControlledContraptionEntity otherContraptionEntity : world.getEntitiesWithinAABB(
-			ControlledContraptionEntity.class, bounds.grow(1), e -> !e.equals(contraptionEntity))) {
+		for (ControlledContraptionEntity otherContraptionEntity : world.getEntitiesOfClass(
+			ControlledContraptionEntity.class, bounds.inflate(1), e -> !e.equals(contraptionEntity))) {
 
 			if (!otherContraptionEntity.supportsTerrainCollision())
 				continue;
 
-			Vector3d otherMotion = otherContraptionEntity.getMotion();
+			Vector3d otherMotion = otherContraptionEntity.getDeltaMovement();
 			TranslatingContraption otherContraption = (TranslatingContraption) otherContraptionEntity.getContraption();
 			AxisAlignedBB otherBounds = otherContraptionEntity.getBoundingBox();
-			Vector3d otherPosition = otherContraptionEntity.getPositionVec();
+			Vector3d otherPosition = otherContraptionEntity.position();
 
 			if (otherContraption == null)
 				return false;
 			if (otherBounds == null)
 				return false;
 
-			if (!bounds.offset(motion)
-				.intersects(otherBounds.offset(otherMotion)))
+			if (!bounds.move(motion)
+				.intersects(otherBounds.move(otherMotion)))
 				continue;
 
 			for (BlockPos colliderPos : contraption.getColliders(world, movementDirection)) {
-				colliderPos = colliderPos.add(gridPos)
+				colliderPos = colliderPos.offset(gridPos)
 					.subtract(new BlockPos(otherPosition));
 				if (!otherContraption.getBlocks()
 					.containsKey(colliderPos))
@@ -543,9 +543,9 @@ public class ContraptionCollider {
 	public static boolean isCollidingWithWorld(World world, TranslatingContraption contraption, BlockPos anchor,
 		Direction movementDirection) {
 		for (BlockPos pos : contraption.getColliders(world, movementDirection)) {
-			BlockPos colliderPos = pos.add(anchor);
+			BlockPos colliderPos = pos.offset(anchor);
 
-			if (!world.isBlockPresent(colliderPos))
+			if (!world.isLoaded(colliderPos))
 				return true;
 
 			BlockState collidedState = world.getBlockState(colliderPos);

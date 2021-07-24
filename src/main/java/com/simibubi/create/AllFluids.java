@@ -53,7 +53,7 @@ public class AllFluids {
 							.explosionResistance(100f))
 					.tag(AllFluidTags.HONEY.tag)
 					.bucket()
-					.properties(p -> p.maxStackSize(1))
+					.properties(p -> p.stacksTo(1))
 					.build()
 					.register();
 
@@ -68,7 +68,7 @@ public class AllFluids {
 							.slopeFindDistance(3)
 							.explosionResistance(100f))
 					.bucket()
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.build()
 			.register();
 
@@ -82,18 +82,18 @@ public class AllFluids {
 	@OnlyIn(Dist.CLIENT)
 	private static void makeTranslucent(FluidEntry<?> entry) {
 		ForgeFlowingFluid fluid = entry.get();
-		RenderTypeLookup.setRenderLayer(fluid, RenderType.getTranslucent());
-		RenderTypeLookup.setRenderLayer(fluid.getStillFluid(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(fluid, RenderType.translucent());
+		RenderTypeLookup.setRenderLayer(fluid.getSource(), RenderType.translucent());
 	}
 
 	@Nullable
 	public static BlockState getLavaInteraction(FluidState fluidState) {
-		Fluid fluid = fluidState.getFluid();
-		if (fluid.isEquivalentTo(HONEY.get()))
+		Fluid fluid = fluidState.getType();
+		if (fluid.isSame(HONEY.get()))
 			return fluidState.isSource() ? AllPaletteBlocks.LIMESTONE.getDefaultState()
 				: AllPaletteBlocks.LIMESTONE_VARIANTS.registeredBlocks.get(0)
 					.getDefaultState();
-		if (fluid.isEquivalentTo(CHOCOLATE.get()))
+		if (fluid.isSame(CHOCOLATE.get()))
 			return fluidState.isSource() ? AllPaletteBlocks.SCORIA.getDefaultState()
 				: AllPaletteBlocks.SCORIA_VARIANTS.registeredBlocks.get(0)
 					.getDefaultState();

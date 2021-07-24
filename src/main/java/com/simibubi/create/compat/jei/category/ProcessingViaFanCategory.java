@@ -10,7 +10,6 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
@@ -35,12 +34,12 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	@Override
 	public void setIngredients(T recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 
 	public static Supplier<ItemStack> getFan(String name) {
 		return () -> AllBlocks.ENCASED_FAN.asStack()
-			.setDisplayName(Lang.translate("recipe." + name + ".fan").styled(style -> style.withItalic(false)));
+			.setHoverName(Lang.translate("recipe." + name + ".fan").withStyle(style -> style.withItalic(false)));
 	}
 
 	@Override
@@ -49,10 +48,10 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 		itemStacks.init(0, true, 20, 47);
 		itemStacks.set(0, Arrays.asList(recipe.getIngredients()
 			.get(0)
-			.getMatchingStacks()));
+			.getItems()));
 
 		itemStacks.init(1, false, 139, 47);
-		itemStacks.set(1, recipe.getRecipeOutput());
+		itemStacks.set(1, recipe.getResultItem());
 	}
 
 	protected void renderWidgets(MatrixStack matrixStack, T recipe, double mouseX, double mouseY) {
@@ -69,27 +68,25 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 			return;
 		renderWidgets(matrixStack, recipe, mouseX, mouseY);
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		translateFan(matrixStack);
-		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-12.5f));
-		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-12.5f));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 24;
 
-		GuiGameElement.of(AllBlockPartials.ENCASED_FAN_INNER)
+		AnimatedKinetics.defaultBlockElement(AllBlockPartials.ENCASED_FAN_INNER)
 			.rotateBlock(180, 0, AnimatedKinetics.getCurrentAngle() * 16)
 			.scale(scale)
-			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
-		GuiGameElement.of(AllBlocks.ENCASED_FAN.getDefaultState())
+		AnimatedKinetics.defaultBlockElement(AllBlocks.ENCASED_FAN.getDefaultState())
 			.rotateBlock(0, 180, 0)
 			.atLocal(0, 0, 0)
 			.scale(scale)
-			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
 		renderAttachedBlock(matrixStack);
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 	protected void translateFan(MatrixStack matrixStack) {

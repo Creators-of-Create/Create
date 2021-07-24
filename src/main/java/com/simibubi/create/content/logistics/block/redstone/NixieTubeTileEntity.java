@@ -49,7 +49,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 		super.tick();
 
 		// Dynamic text components have to be ticked manually and re-sent to the client
-		if (world instanceof ServerWorld && hasCustomText) {
+		if (level instanceof ServerWorld && hasCustomText) {
 			Couple<String> currentStrings = displayedStrings;
 			parsedCustomText = parseCustomText();
 			updateDisplayedStrings();
@@ -60,7 +60,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 
 	@Override
 	public void initialize() {
-		if (world.isRemote)
+		if (level.isClientSide)
 			updateDisplayedStrings();
 	}
 
@@ -83,7 +83,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	public void displayCustomNameOf(ItemStack stack, int nixiePositionInRow) {
-		CompoundNBT compoundnbt = stack.getChildTag("display");
+		CompoundNBT compoundnbt = stack.getTagElement("display");
 		if (compoundnbt != null && compoundnbt.contains("Name", NBT.TAG_STRING)) {
 			hasCustomText = true;
 			rawCustomText = getJsonFromString(compoundnbt.getString("Name"));
@@ -182,9 +182,9 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	protected ITextComponent parseDynamicComponent(ITextComponent customText) {
-		if (world instanceof ServerWorld) {
+		if (level instanceof ServerWorld) {
 			try {
-				return TextComponentUtils.parse(getCommandSource(null), customText, null, 0);
+				return TextComponentUtils.updateForEntity(getCommandSource(null), customText, null, 0);
 			} catch (CommandSyntaxException e) {
 				//
 			}
@@ -196,7 +196,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	public CommandSource getCommandSource(@Nullable ServerPlayerEntity p_195539_1_) {
 		String s = p_195539_1_ == null ? "Nixie Tube" : p_195539_1_.getName().getString();
 		ITextComponent itextcomponent = (ITextComponent)(p_195539_1_ == null ? new StringTextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
-		return new CommandSource(ICommandSource.field_213139_a_, Vector3d.ofCenter(this.pos), Vector2f.ZERO, (ServerWorld)this.world, 2, s, itextcomponent, this.world.getServer(), p_195539_1_);
+		return new CommandSource(ICommandSource.NULL, Vector3d.atCenterOf(this.worldPosition), Vector2f.ZERO, (ServerWorld)this.level, 2, s, itextcomponent, this.level.getServer(), p_195539_1_);
 	}
 
 	@Override

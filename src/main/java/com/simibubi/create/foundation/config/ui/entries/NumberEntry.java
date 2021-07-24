@@ -38,8 +38,8 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 20, unit);
-		textField.setText(String.valueOf(getValue()));
+		textField = new ConfigTextField(Minecraft.getInstance().font, 0, 0, 200, 20, unit);
+		textField.setValue(String.valueOf(getValue()));
 		textField.setTextColor(Theme.i(Theme.Key.TEXT));
 
 		Object range = spec.getRange();
@@ -51,18 +51,18 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			T min = (T) minField.get(range);
 			T max = (T) maxField.get(range);
 
-			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			FontRenderer font = Minecraft.getInstance().font;
 			if (min.doubleValue() > getTypeMin().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
 				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
-				minOffset = font.getWidth(t);
+				minOffset = font.width(t);
 			}
 			if (max.doubleValue() < getTypeMax().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
 				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
-				maxOffset = font.getWidth(t);
+				maxOffset = font.width(t);
 			}
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {
 
@@ -101,17 +101,17 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	@Override
 	protected void setEditable(boolean b) {
 		super.setEditable(b);
-		textField.setEnabled(b);
+		textField.setEditable(b);
 	}
 
 	@Override
 	public void onValueChange(T newValue) {
 		super.onValueChange(newValue);
 		String newText = String.valueOf(newValue);
-		if (textField.getText().equals(newText))
+		if (textField.getValue().equals(newText))
 			return;
 
-		textField.setText(newText);
+		textField.setValue(newText);
 	}
 
 	@Override
@@ -133,13 +133,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		if (minText != null)
 			minText
 					.at(textField.x - minOffset, textField.y, 0)
-					.withBounds(minOffset, textField.unusedGetHeight())
+					.withBounds(minOffset, textField.getHeight())
 					.render(ms);
 
 		if (maxText != null)
 			maxText
 					.at(textField.x + textField.getWidth(), textField.y, 0)
-					.withBounds(maxOffset, textField.unusedGetHeight())
+					.withBounds(maxOffset, textField.getHeight())
 					.render(ms);
 	}
 

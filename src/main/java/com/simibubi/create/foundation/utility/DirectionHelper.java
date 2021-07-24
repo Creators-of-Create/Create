@@ -27,7 +27,7 @@ public class DirectionHelper {
 			return dir;
 		case Y:
 			if (dir != UP && dir != DOWN) {
-				return dir.rotateY();
+				return dir.getClockWise();
 			}
 
 			return dir;

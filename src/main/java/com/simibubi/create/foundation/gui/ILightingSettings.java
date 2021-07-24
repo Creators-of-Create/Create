@@ -6,7 +6,7 @@ public interface ILightingSettings {
 
 	void applyLighting();
 
-	static final ILightingSettings DEFAULT_3D = () -> RenderHelper.enableGuiDepthLighting();
-	static final ILightingSettings DEFAULT_FLAT = () -> RenderHelper.disableGuiDepthLighting();
+	static final ILightingSettings DEFAULT_3D = () -> RenderHelper.setupFor3DItems();
+	static final ILightingSettings DEFAULT_FLAT = () -> RenderHelper.setupForFlatItems();
 
 }

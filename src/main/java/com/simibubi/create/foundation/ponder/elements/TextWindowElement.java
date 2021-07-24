@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.ColorHelper;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector2f;
@@ -65,9 +66,13 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			return this;
 		}
 
-		public Builder sharedText(String key) {
+		public Builder sharedText(ResourceLocation key) {
 			textGetter = () -> PonderLocalization.getShared(key);
 			return this;
+		}
+
+		public Builder sharedText(String key) {
+			return sharedText(new ResourceLocation(scene.getNamespace(), key));
 		}
 
 		public Builder placeNearTarget() {
@@ -100,16 +105,16 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		int textWidth = Math.min(screen.width - targetX, 180);
 
-		List<ITextProperties> lines = screen.getFontRenderer().getTextHandler().wrapLines(bakedText, textWidth, Style.EMPTY);
+		List<ITextProperties> lines = screen.getFontRenderer().getSplitter().splitLines(bakedText, textWidth, Style.EMPTY);
 
 		int boxWidth = 0;
 		for (ITextProperties line : lines)
-			boxWidth = Math.max(boxWidth, screen.getFontRenderer().getWidth(line));
+			boxWidth = Math.max(boxWidth, screen.getFontRenderer().width(line));
 
 		int boxHeight = screen.getFontRenderer()
-			.getWordWrappedHeight(bakedText, boxWidth);
+			.wordWrapHeight(bakedText, boxWidth);
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, sceneToScreen.y, 400);
 
 		new BoxElement()
@@ -123,14 +128,14 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		int brighterColor = ColorHelper.mixAlphaColors(color, 0xFFffffdd, 1 / 2f);
 		if (vec != null) {
-			ms.push();
+			ms.pushPose();
 			ms.translate(sceneToScreen.x, 0, 0);
 			double lineTarget = (targetX - sceneToScreen.x) * fade;
 			ms.scale((float) lineTarget, 1, 1);
-			Matrix4f model = ms.peek().getModel();
+			Matrix4f model = ms.last().pose();
 			GuiUtils.drawGradientRect(model, -100, 0, 0, 1, 1, brighterColor, brighterColor);
 			GuiUtils.drawGradientRect(model, -100, 0, 1, 1, 2, 0xFF494949, 0xFF393939);
-			ms.pop();
+			ms.popPose();
 		}
 
 		ms.translate(0, 0, 400);
@@ -139,7 +144,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 				.draw(ms, lines.get(i)
 					.getString(), targetX - 10, 3 + 9 * i, ColorHelper.applyAlpha(brighterColor, fade));
 		}
-		ms.pop();
+		ms.popPose();
 	}
 
 	public int getColor() {

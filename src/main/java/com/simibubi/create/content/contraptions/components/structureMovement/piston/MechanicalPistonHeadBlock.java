@@ -36,17 +36,17 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 
     public MechanicalPistonHeadBlock(Properties p_i48415_1_) {
         super(p_i48415_1_);
-        setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+        registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
     @Override
-    protected void fillStateContainer(Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(TYPE, BlockStateProperties.WATERLOGGED);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
-    public PushReaction getPushReaction(BlockState state) {
+    public PushReaction getPistonPushReaction(BlockState state) {
         return PushReaction.NORMAL;
     }
 
@@ -57,20 +57,20 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        Direction direction = state.get(FACING);
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        Direction direction = state.getValue(FACING);
         BlockPos pistonHead = pos;
         BlockPos pistonBase = null;
 
         for (int offset = 1; offset < MechanicalPistonBlock.maxAllowedPistonPoles(); offset++) {
-            BlockPos currentPos = pos.offset(direction.getOpposite(), offset);
+            BlockPos currentPos = pos.relative(direction.getOpposite(), offset);
             BlockState block = worldIn.getBlockState(currentPos);
 
-            if (isExtensionPole(block) && direction.getAxis() == block.get(BlockStateProperties.FACING)
+            if (isExtensionPole(block) && direction.getAxis() == block.getValue(BlockStateProperties.FACING)
                     .getAxis())
                 continue;
 
-            if (MechanicalPistonBlock.isPiston(block) && block.get(BlockStateProperties.FACING) == direction)
+            if (MechanicalPistonBlock.isPiston(block) && block.getValue(BlockStateProperties.FACING) == direction)
                 pistonBase = currentPos;
 
             break;
@@ -78,43 +78,43 @@ public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements
 
         if (pistonHead != null && pistonBase != null) {
             final BlockPos basePos = pistonBase;
-            BlockPos.getAllInBox(pistonBase, pistonHead)
+            BlockPos.betweenClosedStream(pistonBase, pistonHead)
                     .filter(p -> !p.equals(pos) && !p.equals(basePos))
                     .forEach(p -> worldIn.destroyBlock(p, !player.isCreative()));
-            worldIn.setBlockState(basePos, worldIn.getBlockState(basePos)
-                    .with(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
+            worldIn.setBlockAndUpdate(basePos, worldIn.getBlockState(basePos)
+                    .setValue(MechanicalPistonBlock.STATE, PistonState.RETRACTED));
         }
 
-        super.onBlockHarvested(worldIn, pos, state, player);
+        super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return AllShapes.MECHANICAL_PISTON_HEAD.get(state.get(FACING));
+        return AllShapes.MECHANICAL_PISTON_HEAD.get(state.getValue(FACING));
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : Fluids.EMPTY.getDefaultState();
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
                                           IWorld world, BlockPos pos, BlockPos neighbourPos) {
-        if (state.get(BlockStateProperties.WATERLOGGED)) {
-            world.getPendingFluidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+            world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
         return state;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        FluidState FluidState = context.getWorld().getFluidState(context.getPos());
-        return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
+        FluidState FluidState = context.getLevel().getFluidState(context.getClickedPos());
+        return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getType() == Fluids.WATER));
     }
     
     @Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 }

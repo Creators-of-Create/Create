@@ -6,6 +6,7 @@ import java.util.List;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -26,65 +27,65 @@ public class PonderTag implements IScreenRenderable {
 	
 	public static final PonderTag
 
-	KINETIC_RELAYS = new PonderTag("kinetic_relays").item(AllBlocks.COGWHEEL.get(), true, false)
+	KINETIC_RELAYS = create("kinetic_relays").item(AllBlocks.COGWHEEL.get(), true, false)
 		.defaultLang("Kinetic Blocks", "Components which help relaying Rotational Force elsewhere")
 		.addToIndex(),
 
-		KINETIC_SOURCES = new PonderTag("kinetic_sources").item(AllBlocks.WATER_WHEEL.get(), true, false)
+		KINETIC_SOURCES = create("kinetic_sources").item(AllBlocks.WATER_WHEEL.get(), true, false)
 			.defaultLang("Kinetic Sources", "Components which generate Rotational Force")
 			.addToIndex(),
 
-		KINETIC_APPLIANCES = new PonderTag("kinetic_appliances").item(AllBlocks.MECHANICAL_PRESS.get(), true, false)
+		KINETIC_APPLIANCES = create("kinetic_appliances").item(AllBlocks.MECHANICAL_PRESS.get(), true, false)
 			.defaultLang("Kinetic Appliances", "Components which make use of Rotational Force")
 			.addToIndex(),
 
-		FLUIDS = new PonderTag("fluids").item(AllBlocks.FLUID_PIPE.get(), true, false)
+		FLUIDS = create("fluids").item(AllBlocks.FLUID_PIPE.get(), true, false)
 			.defaultLang("Fluid Manipulators", "Components which help relaying and making use of Fluids")
 			.addToIndex(),
 
-		LOGISTICS = new PonderTag("logistics").item(Blocks.CHEST, true, false)
+		LOGISTICS = create("logistics").item(Blocks.CHEST, true, false)
 			.defaultLang("Item Transportation", "Components which help moving items around")
 			.addToIndex(),
 
-		REDSTONE = new PonderTag("redstone").item(Items.REDSTONE, true, false)
+		REDSTONE = create("redstone").item(Items.REDSTONE, true, false)
 			.defaultLang("Logic Components", "Components which help with redstone engineering")
 			.addToIndex(),
 
-		DECORATION = new PonderTag("decoration").item(Items.ROSE_BUSH, true, false)
+		DECORATION = create("decoration").item(Items.ROSE_BUSH, true, false)
 			.defaultLang("Aesthetics", "Components used mostly for decorative purposes"),
 
-		CREATIVE = new PonderTag("creative").item(AllBlocks.CREATIVE_CRATE.get(), true, false)
+		CREATIVE = create("creative").item(AllBlocks.CREATIVE_CRATE.get(), true, false)
 			.defaultLang("Creative Mode", "Components not usually available for Survival Mode")
 			.addToIndex(),
 
-		MOVEMENT_ANCHOR = new PonderTag("movement_anchor").item(AllBlocks.MECHANICAL_PISTON.get(), true, false)
+		MOVEMENT_ANCHOR = create("movement_anchor").item(AllBlocks.MECHANICAL_PISTON.get(), true, false)
 			.defaultLang("Movement Anchors",
 				"Components which allow the creation of moving contraptions, animating an attached structure in a variety of ways")
 			.addToIndex(),
 
-		CONTRAPTION_ACTOR = new PonderTag("contraption_actor").item(AllBlocks.MECHANICAL_HARVESTER.get(), true, false)
+		CONTRAPTION_ACTOR = create("contraption_actor").item(AllBlocks.MECHANICAL_HARVESTER.get(), true, false)
 			.defaultLang("Contraption Actors",
 				"Components which expose special behaviour when attached to a moving contraption")
 			.addToIndex(),
 
-		CONTRAPTION_ASSEMBLY = new PonderTag("contraption_assembly").item(AllItems.SUPER_GLUE.get(), true, false)
+		CONTRAPTION_ASSEMBLY = create("contraption_assembly").item(AllItems.SUPER_GLUE.get(), true, false)
 			.defaultLang("Block Attachment Utility",
 				"Tools and Components used to assemble structures moved as an animated Contraption")
 			.addToIndex(),
 
-		SAILS = new PonderTag("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
+		SAILS = create("windmill_sails").item(AllBlocks.WINDMILL_BEARING.get(), true, true)
 			.defaultLang("Sails for Windmill Bearings",
 				"Blocks that count towards the strength of a Windmill Contraption when assembled. Each of these have equal efficiency in doing so."),
 
-		ARM_TARGETS = new PonderTag("arm_targets").item(AllBlocks.MECHANICAL_ARM.get())
+		ARM_TARGETS = create("arm_targets").item(AllBlocks.MECHANICAL_ARM.get())
 			.defaultLang("Targets for Mechanical Arms",
 				"Components which can be selected as inputs or outputs to the Mechanical Arm");
 
 	public static class Highlight {
-		public static final PonderTag ALL = new PonderTag("_all");
+		public static final PonderTag ALL = create("_all");
 	}
 
-	private final String id;
+	private final ResourceLocation id;
 	private ResourceLocation icon;
 	private ItemStack itemIcon = ItemStack.EMPTY;
 	private ItemStack mainItem = ItemStack.EMPTY;
@@ -99,11 +100,11 @@ public class PonderTag implements IScreenRenderable {
 
 	// Builder
 
-	public PonderTag(String id) {
+	public PonderTag(ResourceLocation id) {
 		this.id = id;
 	}
 
-	public String getId() {
+	public ResourceLocation getId() {
 		return id;
 	}
 
@@ -126,7 +127,12 @@ public class PonderTag implements IScreenRenderable {
 	}
 
 	public PonderTag icon(String location) {
-		this.icon = new ResourceLocation(com.simibubi.create.Create.ID, "textures/ponder/tag/" + location + ".png");
+		this.icon = new ResourceLocation(id.getNamespace(), "textures/ponder/tag/" + location + ".png");
+		return this;
+	}
+
+	public PonderTag icon(ResourceLocation location) {
+		this.icon = new ResourceLocation(location.getNamespace(), "textures/ponder/tag/" + location.getPath() + ".png");
 		return this;
 	}
 
@@ -145,23 +151,27 @@ public class PonderTag implements IScreenRenderable {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
-		ms.push();
+		ms.pushPose();
 		ms.translate(x, y, 0);
 		if (icon != null) {
 			Minecraft.getInstance()
 				.getTextureManager()
-				.bindTexture(icon);
+				.bind(icon);
 			ms.scale(0.25f, 0.25f, 1);
 			// x and y offset, blit z offset, tex x and y, tex width and height, entire tex
 			// sheet width and height
-			AbstractGui.drawTexture(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
+			AbstractGui.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
 			ms.translate(-4, -4, 0);
 			ms.scale(1.5f, 1.5f, 1.5f);
 			GuiGameElement.of(itemIcon)
 				.render(ms);
 		}
-		ms.pop();
+		ms.popPose();
+	}
+
+	private static PonderTag create(String id) {
+		return new PonderTag(Create.asResource(id));
 	}
 
 	// Load class

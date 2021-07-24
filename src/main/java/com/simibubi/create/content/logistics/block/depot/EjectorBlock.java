@@ -58,24 +58,24 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 	
 	@Override
-	public void onFallenUpon(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
 		Optional<EjectorTileEntity> tileEntityOptional = getTileEntityOptional(p_180658_1_, p_180658_2_);
-		if (tileEntityOptional.isPresent() && !p_180658_3_.bypassesLandingEffects()) {
-			p_180658_3_.handleFallDamage(p_180658_4_, 0.0F);
+		if (tileEntityOptional.isPresent() && !p_180658_3_.isSuppressingBounce()) {
+			p_180658_3_.causeFallDamage(p_180658_4_, 0.0F);
 			return;
 		}
-		super.onFallenUpon(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
+		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
-		BlockPos position = entityIn.getBlockPos();
+	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
+		BlockPos position = entityIn.blockPosition();
 		if (!AllBlocks.WEIGHTED_EJECTOR.has(worldIn.getBlockState(position)))
 			return;
 		if (!entityIn.isAlive())
 			return;
-		if (entityIn.bypassesLandingEffects())
+		if (entityIn.isSuppressingBounce())
 			return;
 		if (entityIn instanceof ItemEntity) {
 			SharedDepotBlockMethods.onLanded(worldIn, entityIn);
@@ -98,41 +98,41 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 			entityIn.onGround = false;
 			Vector3d center = VecHelper.getCenterOf(position)
 				.add(0, 7 / 16f, 0);
-			Vector3d positionVec = entityIn.getPositionVec();
+			Vector3d positionVec = entityIn.position();
 			double diff = center.distanceTo(positionVec);
-			entityIn.setMotion(0, -0.125, 0);
+			entityIn.setDeltaMovement(0, -0.125, 0);
 			Vector3d vec = center.add(positionVec)
 				.scale(.5f);
 			if (diff > 4 / 16f) {
-				entityIn.setPosition(vec.x, vec.y, vec.z);
+				entityIn.setPos(vec.x, vec.y, vec.z);
 				return;
 			}
 		}
 
 		ejectorTileEntity.activate();
 		ejectorTileEntity.notifyUpdate();
-		if (entityIn.world.isRemote)
-			AllPackets.channel.sendToServer(new EjectorTriggerPacket(ejectorTileEntity.getPos()));
+		if (entityIn.level.isClientSide)
+			AllPackets.channel.sendToServer(new EjectorTriggerPacket(ejectorTileEntity.getBlockPos()));
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
-		if (AllItems.WRENCH.isIn(player.getHeldItem(hand)))
+		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
 			return ActionResultType.PASS;
 		return SharedDepotBlockMethods.onUse(state, world, pos, player, hand, ray);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		withTileEntityDo(worldIn, pos, EjectorTileEntity::dropFlyingItems);
 		SharedDepotBlockMethods.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_FACING)
-			.rotateY()
+		return state.getValue(HORIZONTAL_FACING)
+			.getClockWise()
 			.getAxis();
 	}
 
@@ -152,17 +152,17 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
 		return SharedDepotBlockMethods.getComparatorInputOverride(blockState, worldIn, pos);
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

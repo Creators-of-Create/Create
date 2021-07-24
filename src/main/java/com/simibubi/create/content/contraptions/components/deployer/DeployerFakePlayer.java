@@ -57,7 +57,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public OptionalInt openContainer(INamedContainerProvider container) {
+	public OptionalInt openMenu(INamedContainerProvider container) {
 		return OptionalInt.empty();
 	}
 
@@ -73,12 +73,12 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public Vector3d getPositionVec() {
+	public Vector3d position() {
 		return new Vector3d(getX(), getY(), getZ());
 	}
 
 	@Override
-	public float getCooldownPeriod() {
+	public float getCurrentItemAttackStrengthDelay() {
 		return 1 / 64f;
 	}
 
@@ -88,7 +88,7 @@ public class DeployerFakePlayer extends FakePlayer {
 	}
 
 	@Override
-	public ItemStack onFoodEaten(World world, ItemStack stack) {
+	public ItemStack eat(World world, ItemStack stack) {
 		stack.shrink(1);
 		return stack;
 	}
@@ -104,11 +104,11 @@ public class DeployerFakePlayer extends FakePlayer {
 		if (!(event.getSource() instanceof EntityDamageSource))
 			return;
 		EntityDamageSource source = (EntityDamageSource) event.getSource();
-		Entity trueSource = source.getTrueSource();
+		Entity trueSource = source.getEntity();
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
 			event.getDrops()
-				.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.world, stack.getItem()));
+				.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.level, stack.getItem()));
 			event.setCanceled(true);
 		}
 	}
@@ -118,8 +118,8 @@ public class DeployerFakePlayer extends FakePlayer {
 
 	@Override
 	public void remove(boolean keepData) {
-		if (blockBreakingProgress != null && !world.isRemote)
-			world.sendBlockBreakProgress(getEntityId(), blockBreakingProgress.getKey(), -1);
+		if (blockBreakingProgress != null && !level.isClientSide)
+			level.destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
 		super.remove(keepData);
 	}
 
@@ -142,11 +142,11 @@ public class DeployerFakePlayer extends FakePlayer {
 
 		switch (setting) {
 		case ALL:
-			mob.setAttackTarget(null);
+			mob.setTarget(null);
 			break;
 		case CREEPERS:
 			if (mob instanceof CreeperEntity)
-				mob.setAttackTarget(null);
+				mob.setTarget(null);
 			break;
 		case NONE:
 		default:
@@ -159,10 +159,10 @@ public class DeployerFakePlayer extends FakePlayer {
 		}
 
 		@Override
-		public void sendPacket(IPacket<?> packetIn) {}
+		public void send(IPacket<?> packetIn) {}
 
 		@Override
-		public void sendPacket(IPacket<?> packetIn,
+		public void send(IPacket<?> packetIn,
 			GenericFutureListener<? extends Future<? super Void>> futureListeners) {}
 	}
 

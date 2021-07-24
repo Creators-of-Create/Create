@@ -11,14 +11,14 @@ public class RefinedRadianceItem extends NoGravMagicalDohickyItem {
 	}
 
 	@Override
-	public boolean hasEffect(ItemStack stack) {
+	public boolean isFoil(ItemStack stack) {
 		return true;
 	}
 
 	@Override
 	protected void onCreated(ItemEntity entity, CompoundNBT persistentData) {
 		super.onCreated(entity, persistentData);
-		entity.setMotion(entity.getMotion()
+		entity.setDeltaMovement(entity.getDeltaMovement()
 			.add(0, .15f, 0));
 	}
 

@@ -29,7 +29,7 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedMo
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
+	public boolean isCustomRenderer() {
 		return true;
 	}
 
@@ -68,7 +68,7 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedMo
 
 	@SuppressWarnings("deprecation")
 	private IBakedModel loadModel(ModelBakeEvent event, String name) {
-		return event.getModelLoader().func_217845_a(getPartialModelLocation(name), ModelRotation.X0_Y0);
+		return event.getModelLoader().bake(getPartialModelLocation(name), ModelRotation.X0_Y0);
 	}
 
 	private ResourceLocation getPartialModelLocation(String name) {

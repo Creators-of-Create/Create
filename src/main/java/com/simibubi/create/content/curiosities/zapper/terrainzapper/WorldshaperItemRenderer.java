@@ -31,9 +31,9 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		renderer.renderSolid(model.getOriginalModel(), light);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
-		boolean mainHand = player.getHeldItemMainhand() == stack;
-		boolean offHand = player.getHeldItemOffhand() == stack;
+		boolean leftHanded = player.getMainArm() == HandSide.LEFT;
+		boolean mainHand = player.getMainHandItem() == stack;
+		boolean offHand = player.getOffhandItem() == stack;
 		float animation = getAnimationProgress(pt, leftHanded, mainHand);
 
 		// Core glows
@@ -54,7 +54,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		angle %= 360;
 		float offset = -.155f;
 		ms.translate(0, offset, 0);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(model.getPartial("accelerator"), light);
 	}

@@ -44,14 +44,14 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	public SConfigureConfigPacket(PacketBuffer buffer) {
-		this.option = buffer.readString(32767);
-		this.value = buffer.readString(32767);
+		this.option = buffer.readUtf(32767);
+		this.value = buffer.readUtf(32767);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
-		buffer.writeString(option);
-		buffer.writeString(value);
+		buffer.writeUtf(option);
+		buffer.writeUtf(value);
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		try {
 			configPath = ConfigHelper.ConfigPath.parse(option);
 		} catch (IllegalArgumentException e) {
-			player.sendStatusMessage(new StringTextComponent(e.getMessage()), false);
+			player.displayClientMessage(new StringTextComponent(e.getMessage()), false);
 			return;
 		}
 
@@ -96,11 +96,11 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		try {
 			ConfigHelper.setConfigValue(configPath, value);
-			player.sendStatusMessage(new StringTextComponent("Great Success!"), false);
+			player.displayClientMessage(new StringTextComponent("Great Success!"), false);
 		} catch (ConfigHelper.InvalidValueException e) {
-			player.sendStatusMessage(new StringTextComponent("Config could not be set the the specified value!"), false);
+			player.displayClientMessage(new StringTextComponent("Config could not be set the the specified value!"), false);
 		} catch (Exception e) {
-			player.sendStatusMessage(new StringTextComponent("Something went wrong while trying to set config value. Check the client logs for more information"), false);
+			player.displayClientMessage(new StringTextComponent("Something went wrong while trying to set config value. Check the client logs for more information"), false);
 			Create.LOGGER.warn("Exception during client-side config value set:", e);
 		}
 
@@ -140,14 +140,14 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			try {
 				 configPath = ConfigHelper.ConfigPath.parse(value);
 			} catch (IllegalArgumentException e) {
-				player.sendStatusMessage(new StringTextComponent(e.getMessage()), false);
+				player.displayClientMessage(new StringTextComponent(e.getMessage()), false);
 				return;
 			}
 
 			try {
 				ScreenOpener.open(SubMenuConfigScreen.find(configPath));
 			} catch (Exception e) {
-				player.sendStatusMessage(new StringTextComponent("Unable to find the specified config"), false);
+				player.displayClientMessage(new StringTextComponent("Unable to find the specified config"), false);
 			}
 		}
 
@@ -160,14 +160,14 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			if (value.equals("info")) {
 				ITextComponent text = new StringTextComponent("Rainbow Debug Utility is currently: ")
 					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
-				player.sendStatusMessage(text, false);
+				player.displayClientMessage(text, false);
 				return;
 			}
 
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
 			ITextComponent text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
-				.append(new StringTextComponent(" Rainbow Debug Utility").formatted(TextFormatting.WHITE));
-			player.sendStatusMessage(text, false);
+				.append(new StringTextComponent(" Rainbow Debug Utility").withStyle(TextFormatting.WHITE));
+			player.displayClientMessage(text, false);
 		}
 
 		@OnlyIn(Dist.CLIENT)
@@ -184,7 +184,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		@OnlyIn(Dist.CLIENT)
 		private static void experimentalLighting(String value) {
 			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
-			Minecraft.getInstance().worldRenderer.loadRenderers();
+			Minecraft.getInstance().levelRenderer.allChanged();
 		}
 
 		@OnlyIn(Dist.CLIENT)
@@ -195,7 +195,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			}
 
 			ResourceLocation id = new ResourceLocation(value);
-			if (!PonderRegistry.all.containsKey(id)) {
+			if (!PonderRegistry.ALL.containsKey(id)) {
 				Create.LOGGER.error("Could not find ponder scenes for item: " + id);
 				return;
 			}
@@ -207,14 +207,14 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		@OnlyIn(Dist.CLIENT)
 		private static void fabulousWarning(String value) {
 			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
-			Minecraft.getInstance().ingameGUI.addChatMessage(ChatType.CHAT,
+			Minecraft.getInstance().gui.handleChat(ChatType.CHAT,
 				new StringTextComponent("Disabled Fabulous graphics warning"),
-				Minecraft.getInstance().player.getUniqueID());
+				Minecraft.getInstance().player.getUUID());
 		}
 
 		private static IFormattableTextComponent boolToText(boolean b) {
-			return b ? new StringTextComponent("enabled").formatted(TextFormatting.DARK_GREEN)
-				: new StringTextComponent("disabled").formatted(TextFormatting.RED);
+			return b ? new StringTextComponent("enabled").withStyle(TextFormatting.DARK_GREEN)
+				: new StringTextComponent("disabled").withStyle(TextFormatting.RED);
 		}
 	}
 }

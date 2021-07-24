@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "flame_type=regular": {
       "model": "create:block/blaze_burner/block_with_fire"
+    },
+    "flame_type=soul": {
+      "model": "create:block/blaze_burner/block_with_soul_fire"
     }
   }
 }

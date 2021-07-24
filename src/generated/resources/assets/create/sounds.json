@@ -128,17 +128,30 @@
       }
     ]
   },
-  "cursed_bell_convert": {
+  "crushing_1": {
     "sounds": [
-      "create:cursed_bell_convert"
+      {
+        "name": "minecraft:block.netherrack.hit",
+        "type": "event"
+      }
     ],
-    "subtitle": "create.subtitle.cursed_bell_convert"
+    "subtitle": "create.subtitle.crushing_1"
   },
-  "cursed_bell_use": {
+  "crushing_2": {
     "sounds": [
-      "create:cursed_bell_use"
-    ],
-    "subtitle": "create.subtitle.cursed_bell_use"
+      {
+        "name": "minecraft:block.gravel.place",
+        "type": "event"
+      }
+    ]
+  },
+  "crushing_3": {
+    "sounds": [
+      {
+        "name": "minecraft:block.netherite_block.break",
+        "type": "event"
+      }
+    ]
   },
   "deny": {
     "sounds": [
@@ -198,6 +211,18 @@
       "create:fwoomp"
     ],
     "subtitle": "create.subtitle.fwoomp"
+  },
+  "haunted_bell_convert": {
+    "sounds": [
+      "create:haunted_bell_convert"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_convert"
+  },
+  "haunted_bell_use": {
+    "sounds": [
+      "create:haunted_bell_use"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_use"
   },
   "mechanical_press_activation": {
     "sounds": [

@@ -67,8 +67,8 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<IBakedModel> {
 
 		public void putBracket(BlockState state) {
 			this.bracket = Minecraft.getInstance()
-				.getBlockRendererDispatcher()
-				.getModelForState(state);
+				.getBlockRenderer()
+				.getBlockModel(state);
 		}
 
 		public IBakedModel getBracket() {

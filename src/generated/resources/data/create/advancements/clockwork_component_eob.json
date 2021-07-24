@@ -1,5 +1,5 @@
 {
-  "parent": "create:clockwork_component",
+  "parent": "create:precision_mechanism",
   "display": {
     "icon": {
       "item": "minecraft:oak_sapling"
@@ -21,7 +21,7 @@
       "conditions": {
         "items": [
           {
-            "item": "create:clockwork_component"
+            "item": "create:precision_mechanism"
           }
         ]
       }

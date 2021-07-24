@@ -31,14 +31,14 @@ public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 		cogs.matrixStacker()
 			.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()
-				.get(CopperBacktankBlock.HORIZONTAL_FACING)))
+				.getValue(CopperBacktankBlock.HORIZONTAL_FACING)))
 			.unCentre()
 			.translate(0, 6.5f / 16, 11f / 16)
 			.rotate(Direction.EAST,
-				AngleHelper.rad(te.getSpeed() / 4f * AnimationTickHolder.getRenderTime(te.getWorld()) % 360))
+				AngleHelper.rad(te.getSpeed() / 4f * AnimationTickHolder.getRenderTime(te.getLevel()) % 360))
 			.translate(0, -6.5f / 16, -11f / 16);
 		cogs.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class ItemNameAttribute implements ItemAttribute {
     }
 
     private String extractCustomName(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getChildTag("display");
+        CompoundNBT compoundnbt = stack.getTagElement("display");
         if (compoundnbt != null && compoundnbt.contains("Name", 8)) {
             try {
                 ITextComponent itextcomponent = ITextComponent.Serializer.fromJson(compoundnbt.getString("Name"));

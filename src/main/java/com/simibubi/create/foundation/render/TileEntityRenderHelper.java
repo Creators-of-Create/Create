@@ -4,11 +4,11 @@ import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -54,9 +54,9 @@ public class TileEntityRenderHelper {
 				continue;
 			}
 
-			BlockPos pos = tileEntity.getPos();
-			ms.push();
-			MatrixStacker.of(ms)
+			BlockPos pos = tileEntity.getBlockPos();
+			ms.pushPose();
+			MatrixTransformStack.of(ms)
 				.translate(pos);
 
 			try {
@@ -64,12 +64,12 @@ public class TileEntityRenderHelper {
 				if (lightTransform != null) {
 					Vector4f lightVec = new Vector4f(pos.getX() + .5f, pos.getY() + .5f, pos.getZ() + .5f, 1);
 					lightVec.transform(lightTransform);
-					lightPos = new BlockPos(lightVec.getX(), lightVec.getY(), lightVec.getZ());
+					lightPos = new BlockPos(lightVec.x(), lightVec.y(), lightVec.z());
 				} else {
 					lightPos = pos;
 				}
 				int worldLight = getCombinedLight(world, lightPos, renderWorld, pos);
-				renderer.render(tileEntity, pt, ms, buffer, worldLight, OverlayTexture.DEFAULT_UV);
+				renderer.render(tileEntity, pt, ms, buffer, worldLight, OverlayTexture.NO_OVERLAY);
 
 			} catch (Exception e) {
 				iterator.remove();
@@ -83,16 +83,16 @@ public class TileEntityRenderHelper {
 					Create.LOGGER.error(message);
 			}
 
-			ms.pop();
+			ms.popPose();
 		}
 	}
 
 	public static int getCombinedLight(World world, BlockPos worldPos, @Nullable PlacementSimulationWorld renderWorld,
 			BlockPos renderWorldPos) {
-		int worldLight = WorldRenderer.getLightmapCoordinates(world, worldPos);
+		int worldLight = WorldRenderer.getLightColor(world, worldPos);
 
 		if (renderWorld != null) {
-			int renderWorldLight = WorldRenderer.getLightmapCoordinates(renderWorld, renderWorldPos);
+			int renderWorldLight = WorldRenderer.getLightColor(renderWorld, renderWorldPos);
 			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
 		}
 

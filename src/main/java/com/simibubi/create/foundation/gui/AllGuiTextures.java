@@ -132,14 +132,14 @@ public enum AllGuiTextures implements IScreenRenderable {
 	public void bind() {
 		Minecraft.getInstance()
 			.getTextureManager()
-			.bindTexture(location);
+			.bind(location);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
 		bind();
-		screen.drawTexture(ms, x, y, startX, startY, width, height);
+		screen.blit(ms, x, y, startX, startY, width, height);
 	}
 
 	public void draw(MatrixStack ms, int x, int y, Color c) {

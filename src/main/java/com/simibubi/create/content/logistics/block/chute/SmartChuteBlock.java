@@ -21,7 +21,7 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 
 	public SmartChuteBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
-		setDefaultState(getDefaultState().with(POWERED, true));
+		registerDefaultState(defaultBlockState().setValue(POWERED, true));
 	}
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -30,29 +30,29 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
-		if (!worldIn.getPendingBlockTicks()
-			.isTickPending(pos, this))
-			worldIn.getPendingBlockTicks()
+		if (!worldIn.getBlockTicks()
+			.willTickThisTick(pos, this))
+			worldIn.getBlockTicks()
 				.scheduleTick(pos, this, 0);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos))
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+		boolean previouslyPowered = state.getValue(POWERED);
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
+			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
-		return super.getStateForPlacement(p_196258_1_).with(POWERED, p_196258_1_.getWorld()
-			.isBlockPowered(p_196258_1_.getPos()));
+		return super.getStateForPlacement(p_196258_1_).setValue(POWERED, p_196258_1_.getLevel()
+			.hasNeighborSignal(p_196258_1_.getClickedPos()));
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos pos) {
+	public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
 		return true;
 	}
 
@@ -62,8 +62,8 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> p_206840_1_) {
-		super.fillStateContainer(p_206840_1_.add(POWERED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
+		super.createBlockStateDefinition(p_206840_1_.add(POWERED));
 	}
 
 	@Override

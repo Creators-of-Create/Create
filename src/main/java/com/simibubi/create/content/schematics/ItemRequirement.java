@@ -92,17 +92,17 @@ public class ItemRequirement {
 		if (block == Blocks.AIR)
 			return NONE;
 
-		Item item = BlockItem.BLOCK_TO_ITEM.getOrDefault(state.getBlock(), Items.AIR);
+		Item item = BlockItem.BY_BLOCK.getOrDefault(state.getBlock(), Items.AIR);
 
 		// double slab needs two items
-		if (state.contains(BlockStateProperties.SLAB_TYPE) && state.get(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
+		if (state.hasProperty(BlockStateProperties.SLAB_TYPE) && state.getValue(BlockStateProperties.SLAB_TYPE) == SlabType.DOUBLE)
 			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, 2)));
 		if (block instanceof TurtleEggBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.get(TurtleEggBlock.EGGS).intValue())));
+			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(TurtleEggBlock.EGGS).intValue())));
 		if (block instanceof SeaPickleBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.get(SeaPickleBlock.PICKLES).intValue())));
+			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(SeaPickleBlock.PICKLES).intValue())));
 		if (block instanceof SnowBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.get(SnowBlock.LAYERS).intValue())));
+			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(SnowBlock.LAYERS).intValue())));
 		if (block instanceof GrassPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(Items.GRASS_BLOCK)));
 		if (block instanceof FarmlandBlock)
@@ -120,7 +120,7 @@ public class ItemRequirement {
 		if (type == EntityType.ITEM_FRAME) {
 			ItemFrameEntity ife = (ItemFrameEntity) entity;
 			ItemStack frame = new ItemStack(Items.ITEM_FRAME);
-			ItemStack displayedItem = ife.getDisplayedItem();
+			ItemStack displayedItem = ife.getItem();
 			if (displayedItem.isEmpty())
 				return new ItemRequirement(ItemUseType.CONSUME, Items.ITEM_FRAME);
 			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(frame, displayedItem));
@@ -132,7 +132,7 @@ public class ItemRequirement {
 		if (type == EntityType.ARMOR_STAND) {
 			List<ItemStack> requirements = new ArrayList<>();
 			ArmorStandEntity armorStandEntity = (ArmorStandEntity) entity;
-			armorStandEntity.getEquipmentAndArmor().forEach(requirements::add);
+			armorStandEntity.getAllSlots().forEach(requirements::add);
 			requirements.add(new ItemStack(Items.ARMOR_STAND));
 			return new ItemRequirement(ItemUseType.CONSUME, requirements);
 		}
@@ -144,7 +144,7 @@ public class ItemRequirement {
 
 		if (entity instanceof BoatEntity) {
 			BoatEntity boatEntity = (BoatEntity) entity;
-			return new ItemRequirement(ItemUseType.CONSUME, boatEntity.getItemBoat().getItem());
+			return new ItemRequirement(ItemUseType.CONSUME, boatEntity.getDropItem().getItem());
 		}
 
 		if (type == EntityType.END_CRYSTAL)

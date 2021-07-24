@@ -56,7 +56,7 @@ public abstract class AbstractSimiWidget extends Widget {
 	@Override
 	public void render(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
-			hovered = isMouseOver(mouseX, mouseY);
+			isHovered = isMouseOver(mouseX, mouseY);
 			beforeRender(ms, mouseX, mouseY, partialTicks);
 			renderButton(ms, mouseX, mouseY, partialTicks);
 			afterRender(ms, mouseX, mouseY, partialTicks);
@@ -73,11 +73,11 @@ public abstract class AbstractSimiWidget extends Widget {
 	}
 
 	protected void beforeRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		ms.push();
+		ms.pushPose();
 	}
 
 	protected void afterRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void runCallback(double mouseX, double mouseY) {

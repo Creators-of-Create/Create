@@ -42,13 +42,13 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 
 	public static SequencedRecipe<?> fromJson(JsonObject json, SequencedAssemblyRecipe parent, int index) {
 		ResourceLocation parentId = parent.getId();
-		IRecipe<?> recipe = RecipeManager.deserializeRecipe(
+		IRecipe<?> recipe = RecipeManager.fromJson(
 			new ResourceLocation(parentId.getNamespace(), parentId.getPath() + "_step_" + index), json);
 		if (recipe instanceof ProcessingRecipe<?> && recipe instanceof IAssemblyRecipe) {
 			ProcessingRecipe<?> processingRecipe = (ProcessingRecipe<?>) recipe;
 			IAssemblyRecipe assemblyRecipe = (IAssemblyRecipe) recipe;
 			if (assemblyRecipe.supportsAssembly()) {
-				Ingredient transit = Ingredient.fromStacks(parent.getTransitionalItem());
+				Ingredient transit = Ingredient.of(parent.getTransitionalItem());
 				processingRecipe.getIngredients()
 					.set(0, index == 0 ? Ingredient.merge(ImmutableList.of(transit, parent.getIngredient())) : transit);
 				SequencedRecipe<?> sequencedRecipe = new SequencedRecipe<>(processingRecipe);
@@ -63,7 +63,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) wrapped.getSerializer();
 		buffer.writeResourceLocation(ForgeRegistries.RECIPE_SERIALIZERS.getKey(serializer));
 		buffer.writeResourceLocation(wrapped.getId());
-		serializer.write(buffer, wrapped);
+		serializer.toNetwork(buffer, wrapped);
 	}
 
 	public static SequencedRecipe<?> readFromBuffer(PacketBuffer buffer) {
@@ -73,7 +73,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 		if (!(serializer instanceof ProcessingRecipeSerializer))
 			throw new JsonParseException("Not a supported recipe type");
 		@SuppressWarnings("rawtypes")
-		ProcessingRecipe recipe = (ProcessingRecipe) serializer.read(resourcelocation1, buffer);
+		ProcessingRecipe recipe = (ProcessingRecipe) serializer.fromNetwork(resourcelocation1, buffer);
 		return new SequencedRecipe<>(recipe);
 	}
 

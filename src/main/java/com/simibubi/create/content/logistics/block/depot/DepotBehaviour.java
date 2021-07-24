@@ -76,20 +76,20 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	public void tick() {
 		super.tick();
 
-		World world = tileEntity.getWorld();
+		World world = tileEntity.getLevel();
 
 		for (Iterator<TransportedItemStack> iterator = incoming.iterator(); iterator.hasNext();) {
 			TransportedItemStack ts = iterator.next();
 			if (!tick(ts))
 				continue;
-			if (world.isRemote && !tileEntity.isVirtual())
+			if (world.isClientSide && !tileEntity.isVirtual())
 				continue;
 			if (heldItem == null) {
 				heldItem = ts;
 			} else {
 				if (!ItemHelper.canItemStackAmountsStack(heldItem.stack, ts.stack)) {
-					Vector3d vec = VecHelper.getCenterOf(tileEntity.getPos());
-					InventoryHelper.spawnItemStack(tileEntity.getWorld(), vec.x, vec.y + .5f, vec.z, ts.stack);
+					Vector3d vec = VecHelper.getCenterOf(tileEntity.getBlockPos());
+					InventoryHelper.dropItemStack(tileEntity.getLevel(), vec.x, vec.y + .5f, vec.z, ts.stack);
 				} else {
 					heldItem.stack.grow(ts.stack.getCount());
 				}
@@ -103,15 +103,15 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		if (!tick(heldItem))
 			return;
 
-		BlockPos pos = tileEntity.getPos();
+		BlockPos pos = tileEntity.getBlockPos();
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 		if (handleBeltFunnelOutput())
 			return;
 
 		BeltProcessingBehaviour processingBehaviour =
-			TileEntityBehaviour.get(world, pos.up(2), BeltProcessingBehaviour.TYPE);
+			TileEntityBehaviour.get(world, pos.above(2), BeltProcessingBehaviour.TYPE);
 		if (processingBehaviour == null)
 			return;
 		if (!heldItem.locked && BeltProcessingBehaviour.isBlocked(world, pos))
@@ -145,7 +145,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 	}
 
 	private boolean handleBeltFunnelOutput() {
-		BlockState funnel = getWorld().getBlockState(getPos().up());
+		BlockState funnel = getWorld().getBlockState(getPos().above());
 		Direction funnelFacing = AbstractFunnelBlock.getFunnelFacing(funnel);
 		if (funnelFacing == null || !canFunnelsPullFrom.test(funnelFacing.getOpposite()))
 			return false;
@@ -356,8 +356,8 @@ public class DepotBehaviour extends TileEntityBehaviour {
 				continue;
 			}
 			ItemStack remainder = ItemHandlerHelper.insertItemStacked(processingOutputBuffer, added.stack, false);
-			Vector3d vec = VecHelper.getCenterOf(tileEntity.getPos());
-			InventoryHelper.spawnItemStack(tileEntity.getWorld(), vec.x, vec.y + .5f, vec.z, remainder);
+			Vector3d vec = VecHelper.getCenterOf(tileEntity.getBlockPos());
+			InventoryHelper.dropItemStack(tileEntity.getLevel(), vec.x, vec.y + .5f, vec.z, remainder);
 		}
 
 		if (dirty)
@@ -378,7 +378,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 
 	private Vector3d getWorldPositionOf(TransportedItemStack transported) {
 		Vector3d offsetVec = new Vector3d(.5f, 14 / 16f, .5f);
-		return offsetVec.add(Vector3d.of(tileEntity.getPos()));
+		return offsetVec.add(Vector3d.atLowerCornerOf(tileEntity.getBlockPos()));
 	}
 
 	@Override

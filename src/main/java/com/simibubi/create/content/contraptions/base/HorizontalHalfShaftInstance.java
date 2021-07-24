@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
@@ -13,6 +13,6 @@ public class HorizontalHalfShaftInstance extends HalfShaftInstance {
 
     @Override
     protected Direction getShaftDirection() {
-        return blockState.get(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
+        return blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
     }
 }

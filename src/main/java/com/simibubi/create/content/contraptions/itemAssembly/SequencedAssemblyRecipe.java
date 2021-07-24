@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.Create;
@@ -12,6 +13,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.IInventory;
@@ -34,14 +36,14 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 
-	ResourceLocation id;
-	SequencedAssemblyRecipeSerializer serializer;
+	protected ResourceLocation id;
+	protected SequencedAssemblyRecipeSerializer serializer;
 
-	Ingredient ingredient;
-	List<SequencedRecipe<?>> sequence;
-	int loops;
-	ProcessingOutput transitionalItem;
-	List<ProcessingOutput> resultPool;
+	protected Ingredient ingredient;
+	protected List<SequencedRecipe<?>> sequence;
+	protected int loops;
+	protected ProcessingOutput transitionalItem;
+	protected List<ProcessingOutput> resultPool;
 
 	public SequencedAssemblyRecipe(ResourceLocation recipeId, SequencedAssemblyRecipeSerializer serializer) {
 		this.id = recipeId;
@@ -53,13 +55,15 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 
 	public static <C extends IInventory, R extends ProcessingRecipe<C>> Optional<R> getRecipe(World world, C inv,
 		IRecipeType<R> type, Class<R> recipeClass) {
-		return getRecipe(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world));
+		//return getRecipe(world, inv.getStackInSlot(0), type, recipeClass).filter(r -> r.matches(inv, world));
+		return getRecipes(world, inv.getItem(0), type, recipeClass).filter(r -> r.matches(inv, world))
+				.findFirst();
 	}
 
 	public static <R extends ProcessingRecipe<?>> Optional<R> getRecipe(World world, ItemStack item,
 		IRecipeType<R> type, Class<R> recipeClass) {
 		List<SequencedAssemblyRecipe> all = world.getRecipeManager()
-			.<RecipeWrapper, SequencedAssemblyRecipe>listAllOfType(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+			.<RecipeWrapper, SequencedAssemblyRecipe>getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
 		for (SequencedAssemblyRecipe sequencedAssemblyRecipe : all) {
 			if (!sequencedAssemblyRecipe.appliesTo(item))
 				continue;
@@ -71,6 +75,24 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 			return Optional.of(recipeClass.cast(recipe));
 		}
 		return Optional.empty();
+	}
+
+	public static <R extends ProcessingRecipe<?>> Stream<R> getRecipes(World world, ItemStack item,
+		IRecipeType<R> type, Class<R> recipeClass) {
+		List<SequencedAssemblyRecipe> all = world.getRecipeManager()
+			.<RecipeWrapper, SequencedAssemblyRecipe>getAllRecipesFor(AllRecipeTypes.SEQUENCED_ASSEMBLY.getType());
+
+		return all.stream()
+				.filter(it -> it.appliesTo(item))
+				.map(it -> Pair.of(it, it.getNextRecipe(item).getRecipe()))
+				.filter(it -> it.getSecond()
+						.getType() == type && recipeClass.isInstance(it.getSecond()))
+				.map(it -> {
+					it.getSecond()
+							.enforceNextResult(() -> it.getFirst().advance(item));
+					return it.getSecond();
+				})
+				.map(recipeClass::cast);
 	}
 
 	private ItemStack advance(ItemStack input) {
@@ -100,7 +122,7 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		sequence.forEach(sr -> sr.getAsAssemblyRecipe()
 			.addRequiredMachines(machines));
 		machines.stream()
-			.map(Ingredient::fromItems)
+			.map(Ingredient::of)
 			.forEach(list::add);
 	}
 
@@ -154,17 +176,17 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(RecipeWrapper p_77572_1_) {
+	public ItemStack assemble(RecipeWrapper p_77572_1_) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canFit(int p_194133_1_, int p_194133_2_) {
+	public boolean canCraftInDimensions(int p_194133_1_, int p_194133_2_) {
 		return false;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return resultPool.get(0)
 			.getStack();
 	}
@@ -188,6 +210,11 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 	}
 
 	@Override
+	public boolean isSpecial() {
+		return true;
+	}
+	
+	@Override
 	public IRecipeType<?> getType() {
 		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
 	}
@@ -200,8 +227,8 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		CompoundNBT compound = stack.getTag()
 			.getCompound("SequencedAssembly");
 		ResourceLocation resourceLocation = new ResourceLocation(compound.getString("id"));
-		Optional<? extends IRecipe<?>> recipe = Minecraft.getInstance().world.getRecipeManager()
-			.getRecipe(resourceLocation);
+		Optional<? extends IRecipe<?>> recipe = Minecraft.getInstance().level.getRecipeManager()
+			.byKey(resourceLocation);
 		if (!recipe.isPresent())
 			return;
 		IRecipe<?> iRecipe = recipe.get();
@@ -214,9 +241,9 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 		int total = length * sequencedAssemblyRecipe.loops;
 		toolTip.add(new StringTextComponent(""));
 		toolTip.add(Lang.translate("recipe.sequenced_assembly")
-			.formatted(TextFormatting.GRAY));
+			.withStyle(TextFormatting.GRAY));
 		toolTip.add(Lang.translate("recipe.assembly.progress", step, total)
-			.formatted(TextFormatting.DARK_GRAY));
+			.withStyle(TextFormatting.DARK_GRAY));
 
 		int remaining = total - step;
 		for (int i = 0; i < length; i++) {
@@ -227,10 +254,10 @@ public class SequencedAssemblyRecipe implements IRecipe<RecipeWrapper> {
 				.getDescriptionForAssembly();
 			if (i == 0)
 				toolTip.add(Lang.translate("recipe.assembly.next", textComponent)
-					.formatted(TextFormatting.AQUA));
+					.withStyle(TextFormatting.AQUA));
 			else
 				toolTip.add(new StringTextComponent("-> ").append(textComponent)
-					.formatted(TextFormatting.DARK_AQUA));
+					.withStyle(TextFormatting.DARK_AQUA));
 		}
 
 	}

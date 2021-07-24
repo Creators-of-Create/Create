@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public enum AllArmorMaterials implements IArmorMaterial {
 
 	COPPER("copper", 7, new int[] { 1, 3, 4, 2 }, 25, AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
-		() -> Ingredient.fromItems(AllItems.COPPER_INGOT.get()))
+		() -> Ingredient.of(AllItems.COPPER_INGOT.get()))
 
 	;
 
@@ -42,24 +42,24 @@ public enum AllArmorMaterials implements IArmorMaterial {
 		this.repairMaterial = new LazyValue<>(p_i231593_10_);
 	}
 
-	public int getDurability(EquipmentSlotType p_200896_1_) {
+	public int getDurabilityForSlot(EquipmentSlotType p_200896_1_) {
 		return MAX_DAMAGE_ARRAY[p_200896_1_.getIndex()] * this.maxDamageFactor;
 	}
 
-	public int getDamageReductionAmount(EquipmentSlotType p_200902_1_) {
+	public int getDefenseForSlot(EquipmentSlotType p_200902_1_) {
 		return this.damageReductionAmountArray[p_200902_1_.getIndex()];
 	}
 
-	public int getEnchantability() {
+	public int getEnchantmentValue() {
 		return this.enchantability;
 	}
 
-	public SoundEvent getSoundEvent() {
+	public SoundEvent getEquipSound() {
 		return this.soundEvent;
 	}
 
-	public Ingredient getRepairMaterial() {
-		return this.repairMaterial.getValue();
+	public Ingredient getRepairIngredient() {
+		return this.repairMaterial.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)

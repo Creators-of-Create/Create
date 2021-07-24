@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.actors;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
@@ -23,14 +23,14 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(DrillBlock.FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(DrillBlock.FACING)
 			.getOpposite());
 	}
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(DrillBlock.FACING)
-			.getDirectionVec()).scale(.65f);
+		return Vector3d.atLowerCornerOf(context.state.getValue(DrillBlock.FACING)
+			.getNormal()).scale(.65f);
 	}
 
 	@Override

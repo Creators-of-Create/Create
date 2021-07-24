@@ -43,7 +43,7 @@ public class EnchantAttribute implements ItemAttribute {
     public Object[] getTranslationParameters() {
         String parameter = "";
         if(enchantment != null)
-            parameter = new TranslationTextComponent(enchantment.getName()).getString();
+            parameter = new TranslationTextComponent(enchantment.getDescriptionId()).getString();
         return new Object[] { parameter };
     }
 
@@ -59,6 +59,6 @@ public class EnchantAttribute implements ItemAttribute {
 
     @Override
     public ItemAttribute readNBT(CompoundNBT nbt) {
-        return nbt.contains("id") ? new EnchantAttribute(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryCreate(nbt.getString("id")))) : EMPTY;
+        return nbt.contains("id") ? new EnchantAttribute(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
     }
 }

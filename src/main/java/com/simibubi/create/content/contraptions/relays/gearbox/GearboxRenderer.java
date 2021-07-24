@@ -27,11 +27,11 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 			int light, int overlay) {
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		final Axis boxAxis = te.getBlockState().get(BlockStateProperties.AXIS);
-		final BlockPos pos = te.getPos();
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		final Axis boxAxis = te.getBlockState().getValue(BlockStateProperties.AXIS);
+		final BlockPos pos = te.getBlockPos();
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 
 		for (Direction direction : Iterate.directions) {
 			final Axis axis = direction.getAxis();
@@ -43,8 +43,8 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			float angle = (time * te.getSpeed() * 3f / 10) % 360;
 
 			if (te.getSpeed() != 0 && te.hasSource()) {
-				BlockPos source = te.source.subtract(te.getPos());
-				Direction sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
+				BlockPos source = te.source.subtract(te.getBlockPos());
+				Direction sourceFacing = Direction.getNearest(source.getX(), source.getY(), source.getZ());
 				if (sourceFacing.getAxis() == direction.getAxis())
 					angle *= sourceFacing == direction ? 1 : -1;
 				else if (sourceFacing.getAxisDirection() == direction.getAxisDirection())
@@ -55,7 +55,7 @@ public class GearboxRenderer extends KineticTileEntityRenderer {
 			angle = angle / 180f * (float) Math.PI;
 
 			kineticRotationTransform(shaft, te, axis, angle, light);
-			shaft.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			shaft.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 		}
 	}
 

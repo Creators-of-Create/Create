@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.bell;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.block.BellBlock;
@@ -27,42 +28,47 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 
 	@Override
 	@Nullable
-	public TileEntity createNewTileEntity(IBlockReader block) {
+	public TileEntity newBlockEntity(IBlockReader block) {
 		return null;
-	}
-
-	protected VoxelShape getShape(BlockState state) {
-		return VoxelShapes.fullCube();
-	}
-
-	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selection) {
-		return this.getShape(state);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selection) {
-		return this.getShape(state);
+		Direction facing = state.getValue(FACING);
+		switch (state.getValue(ATTACHMENT)) {
+		case CEILING:
+			return AllShapes.BELL_CEILING.get(facing);
+		case DOUBLE_WALL:
+			return AllShapes.BELL_DOUBLE_WALL.get(facing);
+		case FLOOR:
+			return AllShapes.BELL_FLOOR.get(facing);
+		case SINGLE_WALL:
+			return AllShapes.BELL_WALL.get(facing);
+		default:
+			return VoxelShapes.block();
+		}
 	}
 
 	@Override
-	public boolean ring(World world, BlockState state, BlockRayTraceResult hit, @Nullable PlayerEntity player, boolean flag) {
-		BlockPos pos = hit.getPos();
-		Direction direction = hit.getFace();
+	public boolean onHit(World world, BlockState state, BlockRayTraceResult hit, @Nullable PlayerEntity player,
+		boolean flag) {
+		BlockPos pos = hit.getBlockPos();
+		Direction direction = hit.getDirection();
 		if (direction == null)
-			direction = world.getBlockState(pos).get(field_220133_a);
+			direction = world.getBlockState(pos)
+				.getValue(FACING);
 
-		if (!this.canRingFrom(state, direction, hit.getHitVec().y - pos.getY()))
+		if (!this.canRingFrom(state, direction, hit.getLocation().y - pos.getY()))
 			return false;
 
 		TE te = getTileEntity(world, pos);
 		if (te == null || !te.ring(world, pos, direction))
 			return false;
 
-		if (!world.isRemote) {
+		if (!world.isClientSide) {
 			playSound(world, pos);
 			if (player != null)
-				player.addStat(Stats.BELL_RING);
+				player.awardStat(Stats.BELL_RING);
 		}
 
 		return true;
@@ -74,17 +80,17 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		if (heightChange > 0.8124)
 			return false;
 
-		Direction direction = state.get(field_220133_a);
-		BellAttachment bellAttachment = state.get(field_220134_b);
-		switch(bellAttachment) {
-			case FLOOR:
-			case CEILING:
-				return direction.getAxis() == hitDir.getAxis();
-			case SINGLE_WALL:
-			case DOUBLE_WALL:
-				return direction.getAxis() != hitDir.getAxis();
-			default:
-				return false;
+		Direction direction = state.getValue(FACING);
+		BellAttachment bellAttachment = state.getValue(ATTACHMENT);
+		switch (bellAttachment) {
+		case FLOOR:
+		case CEILING:
+			return direction.getAxis() == hitDir.getAxis();
+		case SINGLE_WALL:
+		case DOUBLE_WALL:
+			return direction.getAxis() != hitDir.getAxis();
+		default:
+			return false;
 		}
 	}
 

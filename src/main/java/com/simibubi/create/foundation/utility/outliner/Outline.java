@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -12,7 +13,6 @@ import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -36,15 +36,15 @@ public abstract class Outline {
 	public void renderCuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vector3d start, Vector3d end) {
 		Vector3d diff = end.subtract(start);
 		float hAngle = AngleHelper.deg(MathHelper.atan2(diff.x, diff.z));
-		float hDistance = (float) diff.mul(1, 0, 1)
+		float hDistance = (float) diff.multiply(1, 0, 1)
 			.length();
 		float vAngle = AngleHelper.deg(MathHelper.atan2(hDistance, diff.y)) - 90;
-		ms.push();
-		MatrixStacker.of(ms)
+		ms.pushPose();
+		MatrixTransformStack.of(ms)
 			.translate(start)
 			.rotateY(hAngle).rotateX(vAngle);
 		renderAACuboidLine(ms, buffer, Vector3d.ZERO, new Vector3d(0, 0, diff.length()));
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void renderAACuboidLine(MatrixStack ms, SuperRenderTypeBuffer buffer, Vector3d start, Vector3d end) {
@@ -65,7 +65,7 @@ public abstract class Outline {
 		Vector3d extension = diff.normalize()
 			.scale(lineWidth / 2);
 		Vector3d plane = VecHelper.axisAlingedPlaneOf(diff);
-		Direction face = Direction.getFacingFromVector(diff.x, diff.y, diff.z);
+		Direction face = Direction.getNearest(diff.x, diff.y, diff.z);
 		Axis axis = face.getAxis();
 
 		start = start.subtract(extension);
@@ -98,16 +98,16 @@ public abstract class Outline {
 		putQuad(ms, builder, b4, b3, b2, b1, face);
 		putQuad(ms, builder, a1, a2, a3, a4, face.getOpposite());
 		Vector3d vec = a1.subtract(a4);
-		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		face = Direction.getNearest(vec.x, vec.y, vec.z);
 		putQuad(ms, builder, a1, b1, b2, a2, face);
 		vec = VecHelper.rotate(vec, -90, axis);
-		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		face = Direction.getNearest(vec.x, vec.y, vec.z);
 		putQuad(ms, builder, a2, b2, b3, a3, face);
 		vec = VecHelper.rotate(vec, -90, axis);
-		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		face = Direction.getNearest(vec.x, vec.y, vec.z);
 		putQuad(ms, builder, a3, b3, b4, a4, face);
 		vec = VecHelper.rotate(vec, -90, axis);
-		face = Direction.getFacingFromVector(vec.x, vec.y, vec.z);
+		face = Direction.getNearest(vec.x, vec.y, vec.z);
 		putQuad(ms, builder, a4, b4, b1, a1, face);
 	}
 
@@ -128,27 +128,27 @@ public abstract class Outline {
 		int i = 15 << 20 | 15 << 4;
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
-		Entry peek = ms.peek();
+		Entry peek = ms.last();
 		Vector3d rgb = params.rgb;
 		if (transformNormals == null)
-			transformNormals = peek.getNormal();
+			transformNormals = peek.normal();
 
 		int xOffset = 0;
 		int yOffset = 0;
 		int zOffset = 0;
 
 		if (normal != null) {
-			xOffset = normal.getXOffset();
-			yOffset = normal.getYOffset();
-			zOffset = normal.getZOffset();
+			xOffset = normal.getStepX();
+			yOffset = normal.getStepY();
+			zOffset = normal.getStepZ();
 		}
 
-		builder.vertex(peek.getModel(), (float) pos.x, (float) pos.y, (float) pos.z)
+		builder.vertex(peek.pose(), (float) pos.x, (float) pos.y, (float) pos.z)
 			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, params.alpha)
-			.texture(u, v)
-			.overlay(OverlayTexture.DEFAULT_UV)
-			.light(j, k)
-			.normal(peek.getNormal(), xOffset, yOffset, zOffset)
+			.uv(u, v)
+			.overlayCoords(OverlayTexture.NO_OVERLAY)
+			.uv2(j, k)
+			.normal(peek.normal(), xOffset, yOffset, zOffset)
 			.endVertex();
 
 		transformNormals = null;

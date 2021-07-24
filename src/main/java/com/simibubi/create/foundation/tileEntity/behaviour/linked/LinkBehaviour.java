@@ -102,7 +102,7 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (getWorld().isRemote)
+		if (getWorld().isClientSide)
 			return;
 		getHandler().addToNetwork(getWorld(), this);
 		newPosition = true;
@@ -116,7 +116,7 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 	@Override
 	public void remove() {
 		super.remove();
-		if (getWorld().isRemote)
+		if (getWorld().isClientSide)
 			return;
 		getHandler().removeFromNetwork(getWorld(), this);
 	}
@@ -130,23 +130,23 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		super.write(nbt, clientPacket);
 		nbt.put("FrequencyFirst", frequencyFirst.getStack()
-			.write(new CompoundNBT()));
+			.save(new CompoundNBT()));
 		nbt.put("FrequencyLast", frequencyLast.getStack()
-			.write(new CompoundNBT()));
-		nbt.putLong("LastKnownPosition", tileEntity.getPos()
-			.toLong());
+			.save(new CompoundNBT()));
+		nbt.putLong("LastKnownPosition", tileEntity.getBlockPos()
+			.asLong());
 	}
 
 	@Override
 	public void read(CompoundNBT nbt, boolean clientPacket) {
-		long positionInTag = tileEntity.getPos()
-			.toLong();
+		long positionInTag = tileEntity.getBlockPos()
+			.asLong();
 		long positionKey = nbt.getLong("LastKnownPosition");
 		newPosition = positionInTag != positionKey;
 
 		super.read(nbt, clientPacket);
-		frequencyFirst = Frequency.of(ItemStack.read(nbt.getCompound("FrequencyFirst")));
-		frequencyLast = Frequency.of(ItemStack.read(nbt.getCompound("FrequencyLast")));
+		frequencyFirst = Frequency.of(ItemStack.of(nbt.getCompound("FrequencyFirst")));
+		frequencyLast = Frequency.of(ItemStack.of(nbt.getCompound("FrequencyLast")));
 	}
 
 	public void setFrequency(boolean first, ItemStack stack) {
@@ -154,7 +154,7 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 		stack.setCount(1);
 		ItemStack toCompare = first ? frequencyFirst.getStack() : frequencyLast.getStack();
 		boolean changed =
-			!ItemStack.areItemsEqual(stack, toCompare) || !ItemStack.areItemStackTagsEqual(stack, toCompare);
+			!ItemStack.isSame(stack, toCompare) || !ItemStack.tagMatches(stack, toCompare);
 
 		if (changed)
 			getHandler().removeFromNetwork(getWorld(), this);
@@ -201,13 +201,13 @@ public class LinkBehaviour extends TileEntityBehaviour implements IRedstoneLinka
 
 	public boolean testHit(Boolean first, Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.atLowerCornerOf(tileEntity.getBlockPos()));
 		return (first ? firstSlot : secondSlot).testHit(state, localHit);
 	}
 
 	@Override
 	public boolean isAlive() {
-		return !tileEntity.isRemoved() && getWorld().getTileEntity(getPos()) == tileEntity;
+		return !tileEntity.isRemoved() && getWorld().getBlockEntity(getPos()) == tileEntity;
 	}
 
 	@Override

@@ -26,10 +26,10 @@ public class BeltData extends KineticData {
 	}
 
     public BeltData setRotation(Quaternion q) {
-        this.qX = q.getX();
-        this.qY = q.getY();
-        this.qZ = q.getZ();
-        this.qW = q.getW();
+        this.qX = q.i();
+        this.qY = q.j();
+        this.qZ = q.k();
+        this.qW = q.r();
         markDirty();
         return this;
     }
@@ -38,12 +38,12 @@ public class BeltData extends KineticData {
         TextureAtlasSprite source = spriteShift.getOriginal();
         TextureAtlasSprite target = spriteShift.getTarget();
 
-        this.sourceU = source.getMinU();
-        this.sourceV = source.getMinV();
-        this.minU = target.getMinU();
-        this.minV = target.getMinV();
-        this.maxU = target.getMaxU();
-        this.maxV = target.getMaxV();
+        this.sourceU = source.getU0();
+        this.sourceV = source.getV0();
+        this.minU = target.getU0();
+        this.minV = target.getV0();
+        this.maxU = target.getU1();
+        this.maxV = target.getV1();
         markDirty();
 
 		return this;

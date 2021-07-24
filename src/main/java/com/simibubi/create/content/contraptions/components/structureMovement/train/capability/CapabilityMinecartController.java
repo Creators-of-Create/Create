@@ -80,10 +80,10 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	}
 
 	static {
-		loadedMinecartsByUUID = new WorldAttached<>(HashMap::new);
-		loadedMinecartsWithCoupling = new WorldAttached<>(HashSet::new);
-		queuedAdditions = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
-		queuedUnloads = new WorldAttached<>(() -> ObjectLists.synchronize(new ObjectArrayList<>()));
+		loadedMinecartsByUUID = new WorldAttached<>($ -> new HashMap<>());
+		loadedMinecartsWithCoupling = new WorldAttached<>($ -> new HashSet<>());
+		queuedAdditions = new WorldAttached<>($ -> ObjectLists.synchronize(new ObjectArrayList<>()));
+		queuedUnloads = new WorldAttached<>($ -> ObjectLists.synchronize(new ObjectArrayList<>()));
 	}
 
 	public static void tick(World world) {
@@ -98,17 +98,17 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		cartsWithCoupling.removeAll(queuedRemovals);
 
 		for (AbstractMinecartEntity cart : queued) {
-			UUID uniqueID = cart.getUniqueID();
-			
-			if (world.isRemote && carts.containsKey(uniqueID)) {
+			UUID uniqueID = cart.getUUID();
+
+			if (world.isClientSide && carts.containsKey(uniqueID)) {
 				MinecartController minecartController = carts.get(uniqueID);
 				if (minecartController != null) {
 					AbstractMinecartEntity minecartEntity = minecartController.cart();
-					if (minecartEntity != null && minecartEntity.getEntityId() != cart.getEntityId()) 
+					if (minecartEntity != null && minecartEntity.getId() != cart.getId())
 						continue; // Away with you, Fake Entities!
 				}
 			}
-			
+
 			cartsWithCoupling.remove(uniqueID);
 
 			LazyOptional<MinecartController> capability = cart.getCapability(MINECART_CONTROLLER_CAPABILITY);
@@ -120,7 +120,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 				if (mc.isLeadingCoupling())
 					cartsWithCoupling.add(uniqueID);
 			});
-			if (!world.isRemote && controller != null)
+			if (!world.isClientSide && controller != null)
 				controller.sendData();
 		}
 
@@ -152,21 +152,21 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			if (!minecartController.isPresent())
 				continue;
 			AbstractMinecartEntity cart = minecartController.cart();
-			if (cart.chunkCoordX == chunkPos.x && cart.chunkCoordZ == chunkPos.z)
+			if (cart.xChunk == chunkPos.x && cart.zChunk == chunkPos.z)
 				queuedUnloads.get(event.getWorld())
-					.add(cart.getUniqueID());
+					.add(cart.getUUID());
 		}
 	}
 
 	protected static void onCartRemoved(World world, AbstractMinecartEntity entity) {
 		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(world);
 		List<UUID> unloads = queuedUnloads.get(world);
-		UUID uniqueID = entity.getUniqueID();
+		UUID uniqueID = entity.getUUID();
 		if (!carts.containsKey(uniqueID) || unloads.contains(uniqueID))
 			return;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
-		handleKilledMinecart(world, carts.get(uniqueID), entity.getPositionVec());
+		handleKilledMinecart(world, carts.get(uniqueID), entity.position());
 	}
 
 	protected static void handleKilledMinecart(World world, MinecartController controller, Vector3d removedPos) {
@@ -184,13 +184,13 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			if (cart == null)
 				continue;
 
-			Vector3d itemPos = cart.getPositionVec()
+			Vector3d itemPos = cart.position()
 				.add(removedPos)
 				.scale(.5f);
 			ItemEntity itemEntity =
 				new ItemEntity(world, itemPos.x, itemPos.y, itemPos.z, AllItems.MINECART_COUPLING.asStack());
-			itemEntity.setDefaultPickupDelay();
-			world.addEntity(itemEntity);
+			itemEntity.setDefaultPickUpDelay();
+			world.addFreshEntity(itemEntity);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			if (capability.cap.isPresent())
 				capability.cap.invalidate();
 		});
-		queuedAdditions.get(entity.getEntityWorld())
+		queuedAdditions.get(entity.getCommandSenderWorld())
 			.add((AbstractMinecartEntity) entity);
 	}
 

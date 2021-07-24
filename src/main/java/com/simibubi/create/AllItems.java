@@ -1,10 +1,10 @@
 package com.simibubi.create;
 
+import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
 import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
-import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
 import static com.simibubi.create.content.AllSections.LOGISTICS;
@@ -82,11 +82,21 @@ public class AllItems {
 		PROPELLER = ingredient("propeller"), WHISK = ingredient("whisk"), BRASS_HAND = ingredient("brass_hand"),
 		CRAFTER_SLOT_COVER = ingredient("crafter_slot_cover"), ELECTRON_TUBE = ingredient("electron_tube");
 
-	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_CLOCKWORK_COMPONENT =
-		REGISTRATE.item("incomplete_clockwork_component", SequencedAssemblyItem::new)
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_PRECISION_MECHANISM =
+		REGISTRATE.item("incomplete_precision_mechanism", SequencedAssemblyItem::new)
 			.register();
 
-	public static final ItemEntry<Item> CLOCKWORK_COMPONENT = ingredient("clockwork_component");
+	public static final ItemEntry<Item> PRECISION_MECHANISM = ingredient("precision_mechanism");
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
+			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
+
+	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
+			REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
+					.model(AssetLookup.existingItemModel())
+					.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
 		REGISTRATE.item("blaze_cake_base", HiddenIngredientItem::new)
@@ -95,36 +105,43 @@ public class AllItems {
 
 	public static final ItemEntry<CombustibleItem> BLAZE_CAKE = REGISTRATE.item("blaze_cake", CombustibleItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.onRegister(i -> i.setBurnTime(6400))
+		.register();
+
+	public static final ItemEntry<CombustibleItem> CREATIVE_BLAZE_CAKE = REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
+		.properties(p -> p.rarity(Rarity.EPIC))
+		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
+		.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE))
 		.register();
 
 	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(6)
-			.saturation(0.3F)
+		.properties(p -> p.food(new Food.Builder().nutrition(6)
+			.saturationMod(0.3F)
 			.build()))
 		.lang("Bar of Chocolate")
 		.register();
 
 	public static final ItemEntry<Item> SWEET_ROLL = REGISTRATE.item("sweet_roll", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(6)
-			.saturation(0.8F)
+		.properties(p -> p.food(new Food.Builder().nutrition(6)
+			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<Item> CHOCOLATE_BERRIES = REGISTRATE.item("chocolate_glazed_berries", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(7)
-			.saturation(0.8F)
+		.properties(p -> p.food(new Food.Builder().nutrition(7)
+			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<Item> HONEYED_APPLE = REGISTRATE.item("honeyed_apple", Item::new)
-		.properties(p -> p.food(new Food.Builder().hunger(8)
-			.saturation(0.8F)
+		.properties(p -> p.food(new Food.Builder().nutrition(8)
+			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.properties(p -> p.maxStackSize(16))
+		.properties(p -> p.stacksTo(16))
 		.lang("Builder's Tea")
 		.register();
 
@@ -193,7 +210,7 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
 		.lang("Engineer's Goggles")
 		.register();
@@ -219,7 +236,7 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.transform(CreateRegistrate.customRenderedItem(() -> WrenchModel::new))
 		.model(AssetLookup.itemModelWithPartials())
 		.register();
@@ -242,24 +259,24 @@ public class AllItems {
 		REGISTRATE.startSection(CURIOSITIES);
 	}
 
-	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
-		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
-		.model(AssetLookup.itemModelWithPartials())
-		.register();
-
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> LinkedControllerModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
+	
+	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
+		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
+		.model(AssetLookup.itemModelWithPartials())
+		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
@@ -315,16 +332,16 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.register();
 
 	public static final ItemEntry<SchematicAndQuillItem> SCHEMATIC_AND_QUILL =
 		REGISTRATE.item("schematic_and_quill", SchematicAndQuillItem::new)
-			.properties(p -> p.maxStackSize(1))
+			.properties(p -> p.stacksTo(1))
 			.register();
 
 	public static final ItemEntry<SchematicItem> SCHEMATIC = REGISTRATE.item("schematic", SchematicItem::new)
-		.properties(p -> p.maxStackSize(1))
+		.properties(p -> p.stacksTo(1))
 		.register();
 
 	// Shortcuts
@@ -334,10 +351,10 @@ public class AllItems {
 			.register();
 	}
 
-	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
-		return REGISTRATE.item(name, HiddenIngredientItem::new)
-			.register();
-	}
+//	private static ItemEntry<HiddenIngredientItem> hiddenIngredient(String name) {
+//		return REGISTRATE.item(name, HiddenIngredientItem::new)
+//			.register();
+//	}
 
 	@SafeVarargs
 	private static ItemEntry<Item> taggedIngredient(String name, ITag.INamedTag<Item>... tags) {

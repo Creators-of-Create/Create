@@ -22,9 +22,9 @@ public class EncasedBeltGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		EncasedBeltBlock.Part part = state.get(EncasedBeltBlock.PART);
-		boolean connectedAlongFirst = state.get(EncasedBeltBlock.CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis axis = state.get(EncasedBeltBlock.AXIS);
+		EncasedBeltBlock.Part part = state.getValue(EncasedBeltBlock.PART);
+		boolean connectedAlongFirst = state.getValue(EncasedBeltBlock.CONNECTED_ALONG_FIRST_COORDINATE);
+		Axis axis = state.getValue(EncasedBeltBlock.AXIS);
 
 		if (part == Part.NONE)
 			return axis == Axis.Y ? 90 : 0;
@@ -37,9 +37,9 @@ public class EncasedBeltGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		EncasedBeltBlock.Part part = state.get(EncasedBeltBlock.PART);
-		boolean connectedAlongFirst = state.get(EncasedBeltBlock.CONNECTED_ALONG_FIRST_COORDINATE);
-		Axis axis = state.get(EncasedBeltBlock.AXIS);
+		EncasedBeltBlock.Part part = state.getValue(EncasedBeltBlock.PART);
+		boolean connectedAlongFirst = state.getValue(EncasedBeltBlock.CONNECTED_ALONG_FIRST_COORDINATE);
+		Axis axis = state.getValue(EncasedBeltBlock.AXIS);
 
 		if (part == Part.NONE)
 			return axis == Axis.X ? 90 : 0;
@@ -58,8 +58,8 @@ public class EncasedBeltGenerator extends SpecialBlockStateGen {
 	}
 
 	protected String getModelSuffix(BlockState state) {
-		EncasedBeltBlock.Part part = state.get(EncasedBeltBlock.PART);
-		Axis axis = state.get(EncasedBeltBlock.AXIS);
+		EncasedBeltBlock.Part part = state.getValue(EncasedBeltBlock.PART);
+		Axis axis = state.getValue(EncasedBeltBlock.AXIS);
 
 		if (part == Part.NONE)
 			return "single";

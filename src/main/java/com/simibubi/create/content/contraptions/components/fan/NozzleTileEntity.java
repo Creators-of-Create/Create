@@ -61,7 +61,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 
 	@Override
 	public void initialize() {
-		fanPos = pos.offset(getBlockState().get(NozzleBlock.FACING)
+		fanPos = worldPosition.relative(getBlockState().getValue(NozzleBlock.FACING)
 			.getOpposite());
 		super.initialize();
 	}
@@ -74,28 +74,28 @@ public class NozzleTileEntity extends SmartTileEntity {
 		if (this.range != range)
 			setRange(range);
 
-		Vector3d center = VecHelper.getCenterOf(pos);
-		if (world.isRemote && range != 0) {
-			if (world.rand.nextInt(
+		Vector3d center = VecHelper.getCenterOf(worldPosition);
+		if (level.isClientSide && range != 0) {
+			if (level.random.nextInt(
 				MathHelper.clamp((AllConfigs.SERVER.kinetics.fanPushDistance.get() - (int) range), 1, 10)) == 0) {
-				Vector3d start = VecHelper.offsetRandomly(center, world.rand, pushing ? 1 : range / 2);
+				Vector3d start = VecHelper.offsetRandomly(center, level.random, pushing ? 1 : range / 2);
 				Vector3d motion = center.subtract(start)
 					.normalize()
 					.scale(MathHelper.clamp(range * (pushing ? .025f : 1f), 0, .5f) * (pushing ? -1 : 1));
-				world.addParticle(ParticleTypes.POOF, start.x, start.y, start.z, motion.x, motion.y, motion.z);
+				level.addParticle(ParticleTypes.POOF, start.x, start.y, start.z, motion.x, motion.y, motion.z);
 			}
 		}
 
 		for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
-			Vector3d diff = entity.getPositionVec()
+			Vector3d diff = entity.position()
 					.subtract(center);
 
-			if (!(entity instanceof PlayerEntity) && world.isRemote)
+			if (!(entity instanceof PlayerEntity) && level.isClientSide)
 				continue;
 
 			double distance = diff.length();
-			if (distance > range || entity.isSneaking() || AirCurrent.isPlayerCreativeFlying(entity)) {
+			if (distance > range || entity.isShiftKeyDown() || AirCurrent.isPlayerCreativeFlying(entity)) {
 				iterator.remove();
 				continue;
 			}
@@ -106,10 +106,10 @@ public class NozzleTileEntity extends SmartTileEntity {
 			float factor = (entity instanceof ItemEntity) ? 1 / 128f : 1 / 32f;
 			Vector3d pushVec = diff.normalize()
 					.scale((range - distance) * (pushing ? 1 : -1));
-			entity.setMotion(entity.getMotion()
+			entity.setDeltaMovement(entity.getDeltaMovement()
 				.add(pushVec.scale(factor)));
 			entity.fallDistance = 0;
-			entity.velocityChanged = true;
+			entity.hurtMarked = true;
 		}
 
 	}
@@ -122,7 +122,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 	}
 
 	private float calcRange() {
-		TileEntity te = world.getTileEntity(fanPos);
+		TileEntity te = level.getBlockEntity(fanPos);
 		if (!(te instanceof IAirCurrentSource))
 			return 0;
 
@@ -144,15 +144,15 @@ public class NozzleTileEntity extends SmartTileEntity {
 		if (range == 0)
 			return;
 
-		Vector3d center = VecHelper.getCenterOf(pos);
-		AxisAlignedBB bb = new AxisAlignedBB(center, center).grow(range / 2f);
+		Vector3d center = VecHelper.getCenterOf(worldPosition);
+		AxisAlignedBB bb = new AxisAlignedBB(center, center).inflate(range / 2f);
 
-		for (Entity entity : world.getEntitiesWithinAABB(Entity.class, bb)) {
-			Vector3d diff = entity.getPositionVec()
+		for (Entity entity : level.getEntitiesOfClass(Entity.class, bb)) {
+			Vector3d diff = entity.position()
 					.subtract(center);
 
 			double distance = diff.length();
-			if (distance > range || entity.isSneaking() || AirCurrent.isPlayerCreativeFlying(entity))
+			if (distance > range || entity.isShiftKeyDown() || AirCurrent.isPlayerCreativeFlying(entity))
 				continue;
 
 			boolean canSee = canSee(entity);
@@ -172,8 +172,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 			iterator.remove();
 		}
 
-		if (!pushing && pushingEntities.size() > 256 && !world.isRemote) {
-			world.createExplosion(null, center.x, center.y, center.z, 2, Mode.NONE);
+		if (!pushing && pushingEntities.size() > 256 && !level.isClientSide) {
+			level.explode(null, center.x, center.y, center.z, 2, Mode.NONE);
 			for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
 				Entity entity = iterator.next();
 				entity.remove();
@@ -184,10 +184,10 @@ public class NozzleTileEntity extends SmartTileEntity {
 	}
 
 	private boolean canSee(Entity entity) {
-		RayTraceContext context = new RayTraceContext(entity.getPositionVec(), VecHelper.getCenterOf(pos),
+		RayTraceContext context = new RayTraceContext(entity.position(), VecHelper.getCenterOf(worldPosition),
 			BlockMode.COLLIDER, FluidMode.NONE, entity);
-		return pos.equals(world.rayTraceBlocks(context)
-			.getPos());
+		return worldPosition.equals(level.clip(context)
+			.getBlockPos());
 	}
 
 }

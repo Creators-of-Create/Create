@@ -37,53 +37,53 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 
 	public RedstoneLinkBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false)
-			.with(RECEIVER, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false)
+			.setValue(RECEIVER, false));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
-		Direction blockFacing = state.get(FACING);
-		if (fromPos.equals(pos.offset(blockFacing.getOpposite()))) {
-			if (!isValidPosition(state, worldIn, pos)) {
+		Direction blockFacing = state.getValue(FACING);
+		if (fromPos.equals(pos.relative(blockFacing.getOpposite()))) {
+			if (!canSurvive(state, worldIn, pos)) {
 				worldIn.destroyBlock(pos, true);
 				return;
 			}
 		}
 
-		if (!worldIn.getPendingBlockTicks()
-			.isTickPending(pos, this))
-			worldIn.getPendingBlockTicks()
+		if (!worldIn.getBlockTicks()
+			.willTickThisTick(pos, this))
+			worldIn.getBlockTicks()
 				.scheduleTick(pos, this, 0);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
 		updateTransmittedSignal(state, worldIn, pos);
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (state.getBlock() == oldState.getBlock() || isMoving)
 			return;
 		updateTransmittedSignal(state, worldIn, pos);
 	}
 
 	public void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
-		if (state.get(RECEIVER))
+		if (state.getValue(RECEIVER))
 			return;
 
 		int power = getPower(worldIn, pos);
 
-		boolean previouslyPowered = state.get(POWERED);
+		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != power > 0)
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 
 		int transmit = power;
 		withTileEntityDo(worldIn, pos, te -> te.transmit(transmit));
@@ -92,36 +92,36 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	private int getPower(World worldIn, BlockPos pos) {
 		int power = 0;
 		for (Direction direction : Iterate.directions)
-			power = Math.max(worldIn.getRedstonePower(pos.offset(direction), direction), power);
+			power = Math.max(worldIn.getSignal(pos.relative(direction), direction), power);
 		for (Direction direction : Iterate.directions)
-			power = Math.max(worldIn.getRedstonePower(pos.offset(direction), Direction.UP), power);
+			power = Math.max(worldIn.getSignal(pos.relative(direction), Direction.UP), power);
 		return power;
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
-		return state.get(POWERED) && state.get(RECEIVER);
+	public boolean isSignalSource(BlockState state) {
+		return state.getValue(POWERED) && state.getValue(RECEIVER);
 	}
 
 	@Override
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (side != blockState.get(FACING))
+	public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		if (side != blockState.getValue(FACING))
 			return 0;
-		return getWeakPower(blockState, blockAccess, pos, side);
+		return getSignal(blockState, blockAccess, pos, side);
 	}
 
 	@Override
-	public int getWeakPower(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (!state.get(RECEIVER))
+	public int getSignal(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		if (!state.getValue(RECEIVER))
 			return 0;
 		return getTileEntityOptional(blockAccess, pos).map(RedstoneLinkTileEntity::getReceivedSignal)
 				.orElse(0);
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(POWERED, RECEIVER);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
@@ -135,22 +135,22 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return toggleMode(state, worldIn, pos);
 		return ActionResultType.PASS;
 	}
 
 	public ActionResultType toggleMode(BlockState state, World worldIn, BlockPos pos) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		return onTileEntityUse(worldIn, pos, te -> {
-			Boolean wasReceiver = state.get(RECEIVER);
-			boolean blockPowered = worldIn.isBlockPowered(pos);
-			worldIn.setBlockState(pos, state.cycle(RECEIVER)
-					.with(POWERED, blockPowered), 3);
+			Boolean wasReceiver = state.getValue(RECEIVER);
+			boolean blockPowered = worldIn.hasNeighborSignal(pos);
+			worldIn.setBlock(pos, state.cycle(RECEIVER)
+					.setValue(POWERED, blockPowered), 3);
 			te.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
 			return ActionResultType.SUCCESS;
 		});
@@ -158,7 +158,7 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 
 	@Override
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		if (toggleMode(state, context.getWorld(), context.getPos()) == ActionResultType.SUCCESS)
+		if (toggleMode(state, context.getLevel(), context.getClickedPos()) == ActionResultType.SUCCESS)
 			return ActionResultType.SUCCESS;
 		return super.onWrenched(state, context);
 	}
@@ -174,8 +174,8 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		BlockPos neighbourPos = pos.offset(state.get(FACING)
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		BlockPos neighbourPos = pos.relative(state.getValue(FACING)
 			.getOpposite());
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
 		return !neighbour.getMaterial()
@@ -184,18 +184,18 @@ public class RedstoneLinkBlock extends ProperDirectionalBlock implements ITE<Red
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = getDefaultState();
-		state = state.with(FACING, context.getFace());
+		BlockState state = defaultBlockState();
+		state = state.setValue(FACING, context.getClickedFace());
 		return state;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.REDSTONE_BRIDGE.get(state.get(FACING));
+		return AllShapes.REDSTONE_BRIDGE.get(state.getValue(FACING));
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

@@ -44,16 +44,16 @@ public class CombinedStencilElement extends StencilElement {
 
 	@Override
 	protected void renderStencil(MatrixStack ms) {
-		ms.push();
+		ms.pushPose();
 		element1.transform(ms);
 		element1.withBounds(width, height);
 		element1.renderStencil(ms);
-		ms.pop();
-		ms.push();
+		ms.popPose();
+		ms.pushPose();
 		element2.transform(ms);
 		element2.withBounds(width, height);
 		element2.renderStencil(ms);
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override

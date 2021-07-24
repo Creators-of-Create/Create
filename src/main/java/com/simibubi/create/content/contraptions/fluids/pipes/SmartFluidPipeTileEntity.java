@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.fluids.pipes.StraightPipeTileEntity.StraightPipeFluidTransportBehaviour;
@@ -10,7 +11,6 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -38,9 +38,9 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 	}
 
 	private void onFilterChanged(ItemStack newFilter) {
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
-		FluidPropagator.propagateChangedPipe(world, pos, getBlockState());
+		FluidPropagator.propagateChangedPipe(level, worldPosition, getBlockState());
 	}
 
 	class SmartPipeBehaviour extends StraightPipeFluidTransportBehaviour {
@@ -68,7 +68,7 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 
 		@Override
 		protected Vector3d getLocalOffset(BlockState state) {
-			AttachFace face = state.get(SmartFluidPipeBlock.FACE);
+			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
 			float y = face == AttachFace.CEILING ? 0.3f : face == AttachFace.WALL ? 11.3f : 15.3f;
 			float z = face == AttachFace.CEILING ? 4.6f : face == AttachFace.WALL ? 0.6f : 4.6f;
 			return VecHelper.rotateCentered(VecHelper.voxelSpace(8, y, z), angleY(state), Axis.Y);
@@ -76,15 +76,15 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 
 		@Override
 		protected void rotate(BlockState state, MatrixStack ms) {
-			AttachFace face = state.get(SmartFluidPipeBlock.FACE);
-			MatrixStacker.of(ms)
+			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
+			MatrixTransformStack.of(ms)
 				.rotateY(angleY(state))
 				.rotateX(face == AttachFace.CEILING ? -45 : 45);
 		}
 
 		protected float angleY(BlockState state) {
-			AttachFace face = state.get(SmartFluidPipeBlock.FACE);
-			float horizontalAngle = AngleHelper.horizontalAngle(state.get(SmartFluidPipeBlock.HORIZONTAL_FACING));
+			AttachFace face = state.getValue(SmartFluidPipeBlock.FACE);
+			float horizontalAngle = AngleHelper.horizontalAngle(state.getValue(SmartFluidPipeBlock.FACING));
 			if (face == AttachFace.WALL)
 				horizontalAngle += 180;
 			return horizontalAngle;

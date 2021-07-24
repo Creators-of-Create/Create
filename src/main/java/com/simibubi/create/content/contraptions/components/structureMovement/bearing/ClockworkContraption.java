@@ -31,12 +31,12 @@ public class ClockworkContraption extends Contraption {
 
 	private void ignoreBlocks(Set<BlockPos> blocks, BlockPos anchor) {
 		for (BlockPos blockPos : blocks)
-			ignoreBlocks.add(anchor.add(blockPos));
+			ignoreBlocks.add(anchor.offset(blockPos));
 	}
 
 	@Override
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
-		return pos.equals(anchor.offset(facing.getOpposite(), offset + 1));
+		return pos.equals(anchor.relative(facing.getOpposite(), offset + 1));
 	}
 
 	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
@@ -51,7 +51,7 @@ public class ClockworkContraption extends Contraption {
 		if (!hourArm.assemble(world, pos))
 			return null;
 		for (int i = 0; i < 16; i++) {
-			BlockPos offsetPos = BlockPos.ZERO.offset(direction, i);
+			BlockPos offsetPos = BlockPos.ZERO.relative(direction, i);
 			if (hourArm.getBlocks()
 				.containsKey(offsetPos))
 				continue;
@@ -89,7 +89,7 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) throws AssemblyException {
-		return super.searchMovedStructure(world, pos.offset(direction, offset + 1), null);
+		return super.searchMovedStructure(world, pos.relative(direction, offset + 1), null);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class ClockworkContraption extends Contraption {
 	@Override
 	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT tag = super.writeNBT(spawnPacket);
-		tag.putInt("facing", facing.getIndex());
+		tag.putInt("facing", facing.get3DDataValue());
 		tag.putInt("offset", offset);
 		NBTHelper.writeEnum(tag, "HandType", handType);
 		return tag;
@@ -113,7 +113,7 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
-		facing = Direction.byIndex(tag.getInt("facing"));
+		facing = Direction.from3DDataValue(tag.getInt("facing"));
 		handType = NBTHelper.readEnum(tag, "HandType", HandType.class);
 		offset = tag.getInt("offset");
 		super.readNBT(world, tag, spawnData);
@@ -121,7 +121,7 @@ public class ClockworkContraption extends Contraption {
 
 	@Override
 	public boolean canBeStabilized(Direction facing, BlockPos localPos) {
-		if (BlockPos.ZERO.equals(localPos) || BlockPos.ZERO.equals(localPos.offset(facing)))
+		if (BlockPos.ZERO.equals(localPos) || BlockPos.ZERO.equals(localPos.relative(facing)))
 			return false;
 		return facing.getAxis() == this.facing.getAxis();
 	}

@@ -23,7 +23,7 @@ public class StabilizedContraption extends Contraption {
 
 	@Override
 	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
-		BlockPos offset = pos.offset(facing);
+		BlockPos offset = pos.relative(facing);
 		if (!searchMovedStructure(world, offset, null))
 			return false;
 		startMoving(world);
@@ -45,13 +45,13 @@ public class StabilizedContraption extends Contraption {
 	@Override
 	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT tag = super.writeNBT(spawnPacket);
-		tag.putInt("Facing", facing.getIndex());
+		tag.putInt("Facing", facing.get3DDataValue());
 		return tag;
 	}
 
 	@Override
 	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
-		facing = Direction.byIndex(tag.getInt("Facing"));
+		facing = Direction.from3DDataValue(tag.getInt("Facing"));
 		super.readNBT(world, tag, spawnData);
 	}
 	

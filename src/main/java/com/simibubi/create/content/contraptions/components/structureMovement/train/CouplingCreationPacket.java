@@ -14,8 +14,8 @@ public class CouplingCreationPacket extends SimplePacketBase {
 	int id1, id2;
 
 	public CouplingCreationPacket(AbstractMinecartEntity cart1, AbstractMinecartEntity cart2) {
-		id1 = cart1.getEntityId();
-		id2 = cart2.getEntityId();
+		id1 = cart1.getId();
+		id2 = cart2.getId();
 	}
 
 	public CouplingCreationPacket(PacketBuffer buffer) {
@@ -36,7 +36,7 @@ public class CouplingCreationPacket extends SimplePacketBase {
 				ServerPlayerEntity sender = context.get()
 					.getSender();
 				if (sender != null)
-					CouplingHandler.tryToCoupleCarts(sender, sender.world, id1, id2);
+					CouplingHandler.tryToCoupleCarts(sender, sender.level, id1, id2);
 			});
 		context.get()
 			.setPacketHandled(true);

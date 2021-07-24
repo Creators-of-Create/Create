@@ -28,7 +28,7 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
 		Block block = state.getBlock();
@@ -38,12 +38,12 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 		if (renderedHandle == null)
 			return;
 
-		Direction facing = state.get(FACING);
+		Direction facing = state.getValue(FACING);
 		SuperByteBuffer handle = PartialBufferer.getFacing(renderedHandle, state, facing.getOpposite());
 		HandCrankTileEntity crank = (HandCrankTileEntity) te;
 		kineticRotationTransform(handle, te, facing.getAxis(),
 				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
-		handle.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		handle.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 }

@@ -22,7 +22,7 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 	public ItemStackHandler filterInventory;
 
 	public LinkedControllerContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
-		this(type, id, inv, extraData.readItemStack());
+		this(type, id, inv, extraData.readItem());
 	}
 
 	public LinkedControllerContainer(ContainerType<?> type, int id, PlayerInventory inv, ItemStack filterItem) {
@@ -42,7 +42,7 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 //		readData(mainItem);
 		addPlayerSlots();
 		addLinkSlots();
-		detectAndSendChanges();
+		broadcastChanges();
 	}
 
 	protected void addPlayerSlots() {
@@ -77,28 +77,28 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 	}
 
 	@Override
-	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-		return canDragIntoSlot(slotIn);
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+		return canDragTo(slotIn);
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slotIn) {
-		return slotIn.inventory == playerInventory;
+	public boolean canDragTo(Slot slotIn) {
+		return slotIn.container == playerInventory;
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return playerInventory.getCurrentItem() == mainItem;
+	public boolean stillValid(PlayerEntity playerIn) {
+		return playerInventory.getSelected() == mainItem;
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		if (slotId == playerInventory.currentItem && clickTypeIn != ClickType.THROW)
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+		if (slotId == playerInventory.selected && clickTypeIn != ClickType.THROW)
 			return ItemStack.EMPTY;
 
-		ItemStack held = playerInventory.getItemStack();
+		ItemStack held = playerInventory.getCarried();
 		if (slotId < 36)
-			return super.slotClick(slotId, dragType, clickTypeIn, player);
+			return super.clicked(slotId, dragType, clickTypeIn, player);
 		if (clickTypeIn == ClickType.THROW)
 			return ItemStack.EMPTY;
 
@@ -108,7 +108,7 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 				ItemStack stackInSlot = filterInventory.getStackInSlot(slot)
 					.copy();
 				stackInSlot.setCount(64);
-				playerInventory.setItemStack(stackInSlot);
+				playerInventory.setCarried(stackInSlot);
 				return ItemStack.EMPTY;
 			}
 			return ItemStack.EMPTY;
@@ -130,9 +130,9 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		if (index < 36) {
-			ItemStack stackToInsert = playerInventory.getStackInSlot(index);
+			ItemStack stackToInsert = playerInventory.getItem(index);
 			for (int i = 0; i < filterInventory.getSlots(); i++) {
 				ItemStack stack = filterInventory.getStackInSlot(i);
 				if (stack.isEmpty()) {
@@ -148,8 +148,8 @@ public class LinkedControllerContainer extends Container implements IClearableCo
 	}
 
 	@Override
-	public void onContainerClosed(PlayerEntity playerIn) {
-		super.onContainerClosed(playerIn);
+	public void removed(PlayerEntity playerIn) {
+		super.removed(playerIn);
 		mainItem.getOrCreateTag()
 			.put("Items", filterInventory.serializeNBT());
 //		saveData(filterItem);

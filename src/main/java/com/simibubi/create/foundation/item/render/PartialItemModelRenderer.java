@@ -65,18 +65,18 @@ public class PartialItemModelRenderer {
 		if (stack.isEmpty())
 			return;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(-0.5D, -0.5D, -0.5D);
 
-		if (!model.isBuiltInRenderer())
+		if (!model.isCustomRenderer())
 			renderBakedItemModel(model, light, ms,
-				ItemRenderer.getDirectGlintVertexConsumer(buffer, type, true, stack.hasEffect()));
+				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
 		else
 			stack.getItem()
 				.getItemStackTileEntityRenderer()
-				.render(stack, transformType, ms, buffer, light, overlay);
+				.renderByItem(stack, transformType, ms, buffer, light, overlay);
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	private void renderBakedItemModel(IBakedModel model, int light, MatrixStack ms, IVertexBuilder p_229114_6_) {
@@ -87,12 +87,12 @@ public class PartialItemModelRenderer {
 
 		for (Direction direction : Iterate.directions) {
 			random.setSeed(42L);
-			ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads(null, direction, random, data), stack, light,
+			ir.renderQuadList(ms, p_229114_6_, model.getQuads(null, direction, random, data), stack, light,
 				overlay);
 		}
 
 		random.setSeed(42L);
-		ir.renderBakedItemQuads(ms, p_229114_6_, model.getQuads(null, null, random, data), stack, light, overlay);
+		ir.renderQuadList(ms, p_229114_6_, model.getQuads(null, null, random, data), stack, light, overlay);
 	}
 
 }

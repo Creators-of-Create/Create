@@ -45,27 +45,27 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isRemote)
+		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state != newState && !isMoving)
-			removeBracket(world, pos, true).ifPresent(stack -> Block.spawnAsEntity(world, pos, stack));
+			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult hit) {
-		if (!AllBlocks.COPPER_CASING.isIn(player.getHeldItem(hand)))
+		if (!AllBlocks.COPPER_CASING.isIn(player.getItemInHand(hand)))
 			return ActionResultType.PASS;
-		if (!world.isRemote) {
+		if (!world.isClientSide) {
 			BlockState newState = AllBlocks.ENCASED_FLUID_PIPE.getDefaultState();
 			for (Direction d : Iterate.directionsInAxis(getAxis(state)))
-				newState = newState.with(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
+				newState = newState.setValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(d), true);
 			FluidTransportBehaviour.cacheFlows(world, pos);
-			world.setBlockState(pos, newState);
+			world.setBlockAndUpdate(pos, newState);
 			FluidTransportBehaviour.loadFlows(world, pos);
 		}
 		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
@@ -73,11 +73,11 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.isRemote)
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getPendingBlockTicks()
+			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
@@ -90,43 +90,43 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.func_218806_a(world, pos);
+		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getPendingBlockTicks()
+		world.getBlockTicks()
 			.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction d) {
-		return d.getAxis() == state.get(AXIS);
+		return d.getAxis() == state.getValue(AXIS);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.EIGHT_VOXEL_POLE.get(state.get(AXIS));
+		return AllShapes.EIGHT_VOXEL_POLE.get(state.getValue(AXIS));
 	}
 
 	public BlockState toRegularPipe(IWorld world, BlockPos pos, BlockState state) {
-		Direction side = Direction.getFacingFromAxis(AxisDirection.POSITIVE, state.get(AXIS));
-		Map<Direction, BooleanProperty> facingToPropertyMap = FluidPipeBlock.FACING_TO_PROPERTY_MAP;
+		Direction side = Direction.get(AxisDirection.POSITIVE, state.getValue(AXIS));
+		Map<Direction, BooleanProperty> facingToPropertyMap = FluidPipeBlock.PROPERTY_BY_DIRECTION;
 		return AllBlocks.FLUID_PIPE.get()
 			.updateBlockState(AllBlocks.FLUID_PIPE.getDefaultState()
-				.with(facingToPropertyMap.get(side), true)
-				.with(facingToPropertyMap.get(side.getOpposite()), true), side, null, world, pos);
+				.setValue(facingToPropertyMap.get(side), true)
+				.setValue(facingToPropertyMap.get(side.getOpposite()), true), side, null, world, pos);
 	}
 
 	@Override
 	public Axis getAxis(BlockState state) {
-		return state.get(AXIS);
+		return state.getValue(AXIS);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class AxisPipeBlock extends RotatedPillarBlock implements IWrenchableWith
 			return Optional.empty();
 		BlockState bracket = behaviour.getBracket();
 		behaviour.removeBracket(inOnReplacedContext);
-		if (bracket == Blocks.AIR.getDefaultState())
+		if (bracket == Blocks.AIR.defaultBlockState())
 			return Optional.empty();
 		return Optional.of(new ItemStack(bracket.getBlock()));
 	}

@@ -32,21 +32,21 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		ItemStack heldItem = player.getHeldItem(handIn);
+		ItemStack heldItem = player.getItemInHand(handIn);
 
 		return onTileEntityUse(worldIn, pos, te -> {
 			if (!heldItem.isEmpty()) {
 				te.internalTank.allowInsertion();
 				ActionResultType tryExchange = tryExchange(worldIn, player, handIn, heldItem, te);
 				te.internalTank.forbidInsertion();
-				if (tryExchange.isAccepted())
+				if (tryExchange.consumesAction())
 					return tryExchange;
 			}
 
 			ItemStack heldItemStack = te.getHeldItemStack();
-			if (!worldIn.isRemote && !heldItemStack.isEmpty()) {
+			if (!worldIn.isClientSide && !heldItemStack.isEmpty()) {
 				player.inventory.placeItemBackInInventory(worldIn, heldItemStack);
 				te.heldItem = null;
 				te.notifyUpdate();
@@ -71,15 +71,15 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemStack heldItemStack = te.getHeldItemStack();
 			if (!heldItemStack.isEmpty())
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), heldItemStack);
+				InventoryHelper.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), heldItemStack);
 		});
-		worldIn.removeTileEntity(pos);
+		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
@@ -98,17 +98,17 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
 		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

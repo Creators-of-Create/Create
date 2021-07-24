@@ -22,31 +22,31 @@ public class EjectorItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext ctx) {
+	public ActionResultType useOn(ItemUseContext ctx) {
 		PlayerEntity player = ctx.getPlayer();
-		if (player != null && player.isSneaking())
+		if (player != null && player.isShiftKeyDown())
 			return ActionResultType.SUCCESS;
-		return super.onItemUse(ctx);
+		return super.useOn(ctx);
 	}
 
 	@Override
-	protected BlockState getStateForPlacement(BlockItemUseContext p_195945_1_) {
-		BlockState stateForPlacement = super.getStateForPlacement(p_195945_1_);
+	protected BlockState getPlacementState(BlockItemUseContext p_195945_1_) {
+		BlockState stateForPlacement = super.getPlacementState(p_195945_1_);
 		return stateForPlacement;
 	}
 
 	@Override
-	protected boolean onBlockPlaced(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> EjectorTargetHandler.flushSettings(pos));
-		return super.onBlockPlaced(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
+		return super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
 	}
 
 	@Override
-	public boolean canPlayerBreakBlockWhileHolding(BlockState state, World world, BlockPos pos,
+	public boolean canAttackBlock(BlockState state, World world, BlockPos pos,
 		PlayerEntity p_195938_4_) {
-		return !p_195938_4_.isSneaking();
+		return !p_195938_4_.isShiftKeyDown();
 	}
 
 }

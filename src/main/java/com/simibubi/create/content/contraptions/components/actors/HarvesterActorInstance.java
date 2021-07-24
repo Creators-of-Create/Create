@@ -2,16 +2,17 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
@@ -36,15 +37,16 @@ public class HarvesterActorInstance extends ActorInstance {
     public HarvesterActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
-		InstanceMaterial<ModelData> instanceMaterial = materialManager.getTransformMaterial();
+		InstanceMaterial<ModelData> instanceMaterial = materialManager.defaultCutout()
+				.material(Materials.TRANSFORMED);
 
         BlockState state = context.state;
 
-        facing = state.get(HORIZONTAL_FACING);
+        facing = state.getValue(HORIZONTAL_FACING);
 
         harvester = instanceMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
-        horizontalAngle = facing.getHorizontalAngle() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
+        horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 
         harvester.setBlockLight(localBlockLight());
     }
@@ -74,7 +76,7 @@ public class HarvesterActorInstance extends ActorInstance {
     @Override
     public void beginFrame() {
         MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(context.localPos)
            .centre()

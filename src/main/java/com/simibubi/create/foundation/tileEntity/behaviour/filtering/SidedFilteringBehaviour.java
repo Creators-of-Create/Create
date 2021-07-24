@@ -64,7 +64,7 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 		nbt.put("Filters", NBTHelper.writeCompoundList(sidedFilters.entrySet(), entry -> {
 			CompoundNBT compound = new CompoundNBT();
 			compound.putInt("Side", entry.getKey()
-				.getIndex());
+				.get3DDataValue());
 			entry.getValue()
 				.write(compound, clientPacket);
 			return compound;
@@ -75,7 +75,7 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	@Override
 	public void read(CompoundNBT nbt, boolean clientPacket) {
 		NBTHelper.iterateCompoundList(nbt.getList("Filters", NBT.TAG_COMPOUND), compound -> {
-			Direction face = Direction.byIndex(compound.getInt("Side"));
+			Direction face = Direction.from3DDataValue(compound.getInt("Side"));
 			if (sidedFilters.containsKey(face))
 				sidedFilters.get(face)
 					.read(compound, clientPacket);
@@ -139,7 +139,7 @@ public class SidedFilteringBehaviour extends FilteringBehaviour {
 	public boolean testHit(Direction direction, Vector3d hit) {
 		ValueBoxTransform.Sided sidedPositioning = (Sided) slotPositioning;
 		BlockState state = tileEntity.getBlockState();
-		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.atLowerCornerOf(tileEntity.getBlockPos()));
 		return sidedPositioning.fromSide(direction)
 			.testHit(state, localHit);
 	}

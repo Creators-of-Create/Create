@@ -38,32 +38,32 @@ public class ValveHandleBlock extends HandCrankBlock {
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		ItemStack heldItem = player.getHeldItem(handIn);
+		ItemStack heldItem = player.getItemInHand(handIn);
 		for (DyeColor color : DyeColor.values()) {
 			if (!heldItem.getItem()
-					.isIn(DyeHelper.getTagOfDye(color)))
+					.is(DyeHelper.getTagOfDye(color)))
 				continue;
-			if (worldIn.isRemote)
+			if (worldIn.isClientSide)
 				return ActionResultType.SUCCESS;
 
 			BlockState newState = AllBlocks.DYED_VALVE_HANDLES.get(color)
 					.getDefaultState()
-					.with(FACING, state.get(FACING));
+					.setValue(FACING, state.getValue(FACING));
 			if (newState != state)
-				worldIn.setBlockState(pos, newState);
+				worldIn.setBlockAndUpdate(pos, newState);
 			return ActionResultType.SUCCESS;
 		}
 
-		return super.onUse(state, worldIn, pos, player, handIn, hit);
+		return super.use(state, worldIn, pos, player, handIn, hit);
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> p_149666_2_) {
-		if (group != ItemGroup.SEARCH && !inCreativeTab)
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> p_149666_2_) {
+		if (group != ItemGroup.TAB_SEARCH && !inCreativeTab)
 			return;
-		super.fillItemGroup(group, p_149666_2_);
+		super.fillItemCategory(group, p_149666_2_);
 	}
 
 	@Override

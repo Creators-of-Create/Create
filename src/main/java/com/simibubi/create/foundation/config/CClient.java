@@ -14,6 +14,8 @@ public class CClient extends ConfigBase {
 		b(true, "enableRainbowDebug", "Show colourful debug information while the F3-Menu is open.");
 	public ConfigBool experimentalRendering =
 		b(true, "experimentalRendering", "Use modern OpenGL features to drastically increase performance.");
+	public ConfigInt maxContraptionLightVolume = i(16384, 0, Integer.MAX_VALUE, "maximumContraptionLightVolume",
+			"The maximum amount of blocks for which to try and calculate dynamic contraption lighting. Decrease if large contraption cause too much lag");
 	public ConfigInt overlayOffsetX = i(20, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX",
 		"Offset the overlay from goggle- and hover- information by this many pixels on the X axis; Use /create overlay");
 	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY",
@@ -47,7 +49,7 @@ public class CClient extends ConfigBase {
 	public ConfigGroup ponder = group(1, "ponder", "Ponder settings");
 	public ConfigBool comfyReading =
 		b(false, "comfyReading", "Slow down a ponder scene whenever there is text on screen.");
-	
+
 	public ConfigGroup sound = group(1, "sound", "Sound settings");
 	public ConfigBool enableAmbientSounds = b(true, "enableAmbientSounds", "Make cogs rumble and machines clatter.");
 	public ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap", "Maximum volume modifier of Ambient noise");
