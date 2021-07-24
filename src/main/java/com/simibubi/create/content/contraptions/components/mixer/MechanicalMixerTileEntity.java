@@ -116,6 +116,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		if (runningTicks >= 40) {
 			running = false;
 			runningTicks = 0;
+			basinChecker.scheduleUpdate();
 			return;
 		}
 

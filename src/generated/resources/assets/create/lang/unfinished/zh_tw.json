@@ -468,7 +468,7 @@
 	"item.create.copper_sheet": "銅板",
 	"item.create.crafter_slot_cover": "合成器蓋板",
 	"item.create.crafting_blueprint": "合成藍圖",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "碎狀鋁礦石",
 	"item.create.crushed_brass": "碎狀黃銅",
 	"item.create.crushed_copper_ore": "碎狀銅礦石",
@@ -1413,10 +1413,10 @@
 	"block.create.creative_crate.tooltip.condition1": "當標記了物品時",
 	"block.create.creative_crate.tooltip.behaviour1": "容器將會從虛空中提供_無限量_的標記物品，並且任何放置到容器中的物品都會被_送入虛空_",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "控制鐵軌",
 	"block.create.controller_rail.tooltip.summary": "單向電動導軌，能夠精細控制礦車的移動速度。",

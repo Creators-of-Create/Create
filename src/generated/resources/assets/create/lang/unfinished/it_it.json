@@ -468,7 +468,7 @@
 	"item.create.copper_sheet": "Lamiera di rame",
 	"item.create.crafter_slot_cover": "Rivestimento per slot da costruzione",
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Alluminio grezzo frantumato",
 	"item.create.crushed_brass": "Ottone frantumato",
 	"item.create.crushed_copper_ore": "Rame grezzo frantumato",
@@ -1413,10 +1413,10 @@
 	"block.create.creative_crate.tooltip.condition1": "Quando un oggetto è nel filtro",
 	"block.create.creative_crate.tooltip.behaviour1": "Qualsiasi _estrazione_ da questo contenitore fornisce _provviste infinite_ dell'oggetto in questione. Gli oggetti _inseriti_ in questo baule verranno _svuotati_.",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "BINARIO DI CONTROLLO",
 	"block.create.controller_rail.tooltip.summary": "Un _binario alimentato unidirezionale_ capace di _controllare precisamente_ la _velocità di movimento_ di un carrello da miniera.",

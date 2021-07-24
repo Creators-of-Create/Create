@@ -468,7 +468,7 @@
 	"item.create.copper_sheet": "Медный лист",
 	"item.create.crafter_slot_cover": "Крышка на слот крафтера",
 	"item.create.crafting_blueprint": "Создание чертежа",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Дроблёная алюминиевая руда",
 	"item.create.crushed_brass": "Дроблёная латунь",
 	"item.create.crushed_copper_ore": "Дроблёная медная руда",
@@ -1413,10 +1413,10 @@
 	"block.create.creative_crate.tooltip.condition1": "Когда предмет в слоте фильтра",
 	"block.create.creative_crate.tooltip.behaviour1": "Все, что извлечено из этого контейнера, обеспечит бесконечную поставку указанного предмета. Предметы, _вставленные_ в этот ящик, будут _аннулированы_.",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "КОНТРОЛИРУЮЩАЯ РЕЛЬСА",
 	"block.create.controller_rail.tooltip.summary": "_Все-направленные запитанные рельсы_, позволяющие _точную настройку_ _скорости_ вагонеток.",

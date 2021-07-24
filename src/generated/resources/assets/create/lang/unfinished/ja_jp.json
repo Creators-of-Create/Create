@@ -468,7 +468,7 @@
 	"item.create.copper_sheet": "銅板",
 	"item.create.crafter_slot_cover": "クラフタースロットカバー",
 	"item.create.crafting_blueprint": "クラフトブループリント",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "砕いたアルミニウム鉱石",
 	"item.create.crushed_brass": "砕いた真鍮",
 	"item.create.crushed_copper_ore": "砕いた銅鉱石",
@@ -1413,10 +1413,10 @@
 	"block.create.creative_crate.tooltip.condition1": "フィルタースロットにアイテムが入っているとき",
 	"block.create.creative_crate.tooltip.behaviour1": "このクレートから何かを_搬出_すると、指定されたアイテムが_無限_に_搬出_されます。このクレートに_搬入_されたアイテムは_消滅_します。",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "コントローラーレール",
 	"block.create.controller_rail.tooltip.summary": "トロッコの_移動速度_を_細かく制御_できる_一方通行_の_パワード_レール",

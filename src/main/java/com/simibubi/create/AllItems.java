@@ -108,7 +108,7 @@ public class AllItems {
 		.onRegister(i -> i.setBurnTime(6400))
 		.register();
 
-	public static final ItemEntry<CombustibleItem> CREATIVE_CAKE = REGISTRATE.item("creative_cake", CombustibleItem::new)
+	public static final ItemEntry<CombustibleItem> CREATIVE_BLAZE_CAKE = REGISTRATE.item("creative_blaze_cake", CombustibleItem::new)
 		.properties(p -> p.rarity(Rarity.EPIC))
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
 		.onRegister(i -> i.setBurnTime(Integer.MAX_VALUE))
