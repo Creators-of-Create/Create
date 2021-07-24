@@ -44,6 +44,7 @@ import net.minecraft.item.crafting.SmokingRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -83,6 +84,8 @@ public class InWorldProcessing {
 				}
 				return null;
 			});
+			addCustomTypeHandler((block, pos) -> block.getBlockState(pos).getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false),
+					(block, pos) -> SPLASHING);
 		}
 
 		public static Type byBlock(IBlockReader reader, BlockPos pos) {
