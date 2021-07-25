@@ -74,6 +74,10 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 			.output(.1f, Items.GREEN_DYE, 1)
 			.whenModMissing("quark")),
 
+		SEA_PICKLE = create(() -> Blocks.SEA_PICKLE, b -> b.duration(50)
+			.output(Items.LIME_DYE, 2)
+			.output(.1f, Items.GREEN_DYE)),
+
 		BONE_MEAL = create(() -> Items.BONE_MEAL, b -> b.duration(70)
 			.output(Items.WHITE_DYE, 2)
 			.output(.1f, Items.LIGHT_GRAY_DYE, 1)),
@@ -89,6 +93,10 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 		SUGAR_CANE = create(() -> Items.SUGAR_CANE, b -> b.duration(50)
 			.output(Items.SUGAR, 2)
 			.output(.1f, Items.SUGAR)),
+
+		BEETROOT = create(() -> Items.BEETROOT, b -> b.duration(70)
+			.output(Items.RED_DYE, 2)
+			.output(.1f, Items.PURPLE_DYE)),
 
 		INK_SAC = create(() -> Items.INK_SAC, b -> b.duration(100)
 			.output(Items.BLACK_DYE, 2)
