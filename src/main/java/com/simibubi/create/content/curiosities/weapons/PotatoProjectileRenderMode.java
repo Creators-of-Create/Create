@@ -2,9 +2,9 @@ package com.simibubi.create.content.curiosities.weapons;
 
 import static com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderMode.entityRandom;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -30,7 +30,7 @@ public interface PotatoProjectileRenderMode {
 				.getCenter()
 				.subtract(p1);
 
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateY(AngleHelper.deg(MathHelper.atan2(diff.x, diff.z)))
 				.rotateX(180
 					+ AngleHelper.deg(MathHelper.atan2(diff.y, -MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z))));
@@ -43,7 +43,7 @@ public interface PotatoProjectileRenderMode {
 		@OnlyIn(Dist.CLIENT)
 		public void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt) {
 			super.transform(ms, entity, pt);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateZ((entity.tickCount + pt) * 2 * entityRandom(entity, 16))
 				.rotateX((entity.tickCount + pt) * entityRandom(entity, 32));
 		}
@@ -63,11 +63,11 @@ public interface PotatoProjectileRenderMode {
 		@OnlyIn(Dist.CLIENT)
 		public void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt) {
 			Vector3d diff = entity.getDeltaMovement();
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateY(AngleHelper.deg(MathHelper.atan2(diff.x, diff.z)))
 				.rotateX(270
 					+ AngleHelper.deg(MathHelper.atan2(diff.y, -MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z))));
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateY((entity.tickCount + pt) * 20 * spin + entityRandom(entity, 360))
 				.rotateZ(-spriteAngleOffset);
 		}
@@ -85,7 +85,7 @@ public interface PotatoProjectileRenderMode {
 		@Override
 		@OnlyIn(Dist.CLIENT)
 		public void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt) {
-			MatrixStacker.of(ms).rotateY(AngleHelper.deg(MathHelper.atan2(offset.x, offset.z)));
+			MatrixTransformStack.of(ms).rotateY(AngleHelper.deg(MathHelper.atan2(offset.x, offset.z)));
 		}
 
 	}

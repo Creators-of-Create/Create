@@ -16,6 +16,7 @@ import java.util.function.Supplier;
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
@@ -25,7 +26,6 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -235,7 +235,7 @@ public class PonderScene {
 
 		for (RenderType type : RenderType.chunkBufferLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
-		
+
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
 		info.set(transform.xRotation.getValue(pt) + 90, transform.yRotation.getValue(pt) + 180);
 		world.renderEntities(ms, buffer, info, pt);
@@ -453,14 +453,14 @@ public class PonderScene {
 		public MatrixStack apply(MatrixStack ms, float pt, boolean overlayCompatible) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateX(-35)
 				.rotateY(55);
 			ms.translate(offset, 0, 0);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateY(-55)
 				.rotateX(35);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
 

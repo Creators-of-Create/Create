@@ -6,11 +6,10 @@ import java.util.function.Consumer;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
-import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.fluid.Fluid;
@@ -221,16 +220,16 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 		@SuppressWarnings("unchecked")
 		public DataGenResult(S recipe, List<ICondition> recipeConditions) {
-			this.recipeConditions = recipeConditions;
-			AllRecipeTypes recipeType = recipe.getEnumType();
-			String typeName = Lang.asId(recipeType.name());
 			this.recipe = recipe;
+			this.recipeConditions = recipeConditions;
+			IRecipeTypeInfo recipeType = this.recipe.getTypeInfo();
+			ResourceLocation typeId = recipeType.getId();
 
 			if (!(recipeType.getSerializer() instanceof ProcessingRecipeSerializer))
-				throw new IllegalStateException("Cannot datagen ProcessingRecipe of type: " + typeName);
+				throw new IllegalStateException("Cannot datagen ProcessingRecipe of type: " + typeId);
 
 			this.id = new ResourceLocation(recipe.getId().getNamespace(),
-					typeName + "/" + recipe.getId().getPath());
+					typeId.getPath() + "/" + recipe.getId().getPath());
 			this.serializer = (ProcessingRecipeSerializer<S>) recipe.getSerializer();
 		}
 

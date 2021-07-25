@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;

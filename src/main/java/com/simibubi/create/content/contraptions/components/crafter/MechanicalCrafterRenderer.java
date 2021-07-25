@@ -5,6 +5,7 @@ import static com.simibubi.create.content.contraptions.base.KineticTileEntityRen
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -16,7 +17,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -112,7 +112,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				Integer x = pair.getKey();
 				Integer y = pair.getValue();
 				ms.translate(x * spacing, y * spacing, 0);
-				MatrixStacker.of(ms)
+				MatrixTransformStack.of(ms)
 					.nudge(x * 13 + y + te.getBlockPos()
 						.hashCode());
 				Minecraft.getInstance()

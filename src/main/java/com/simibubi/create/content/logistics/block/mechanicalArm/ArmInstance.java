@@ -5,10 +5,11 @@ import java.util.ArrayList;
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -16,7 +17,6 @@ import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -122,7 +122,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		}
 
 		MatrixStack msLocal = new MatrixStack();
-		MatrixStacker msr = MatrixStacker.of(msLocal);
+		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
 		msr.translate(getInstancePosition());
 		msr.centre();
 

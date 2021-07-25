@@ -442,7 +442,6 @@
 	"entity.create.stationary_contraption": "Artefacto Estacionario",
 	"entity.create.super_glue": "Super Pegamento",
 
-	"fluid.create.milk": "Leche",
 	"fluid.create.potion": "Poción",
 	"fluid.create.tea": "Té del Constructor",
 
@@ -468,7 +467,7 @@
 	"item.create.copper_sheet": "Lámina de Cobre",
 	"item.create.crafter_slot_cover": "Cubierta de Ranura del Crafter",
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Mineral de Aluminio Molido",
 	"item.create.crushed_brass": "Latón Molido",
 	"item.create.crushed_copper_ore": "Mineral de Cobre Molido",
@@ -1413,10 +1412,10 @@
 	"block.create.creative_crate.tooltip.condition1": "UNLOCALIZED: When Item in Filter Slot",
 	"block.create.creative_crate.tooltip.behaviour1": "UNLOCALIZED: Anything _extracting_ from this container will provide an _endless supply_ of the item specified. Items _inserted_ into this crate will be _voided._",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "UNLOCALIZED: CONTROLLER RAIL",
 	"block.create.controller_rail.tooltip.summary": "UNLOCALIZED: A _uni-directional powered rail_ capable of _fine control_ over a minecarts' _movement speed_.",

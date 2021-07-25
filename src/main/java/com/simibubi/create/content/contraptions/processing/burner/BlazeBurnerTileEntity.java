@@ -238,7 +238,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	public boolean isCreativeFuel(ItemStack stack) {
-		return AllItems.CREATIVE_CAKE.isIn(stack);
+		return AllItems.CREATIVE_BLAZE_CAKE.isIn(stack);
 	}
 
 	protected void playSound() {

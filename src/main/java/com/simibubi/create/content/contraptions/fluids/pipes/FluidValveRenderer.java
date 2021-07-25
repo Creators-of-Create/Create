@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -8,7 +9,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -46,7 +46,7 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.Z || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
 
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)

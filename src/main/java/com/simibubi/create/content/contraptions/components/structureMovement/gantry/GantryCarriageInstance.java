@@ -1,8 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -10,7 +11,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -64,7 +64,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
     private void animateCogs(float cogAngle) {
         MatrixStack ms = new MatrixStack();
-        MatrixStacker.of(ms)
+        MatrixTransformStack.of(ms)
                      .translate(getInstancePosition())
                      .centre()
                      .rotateY(AngleHelper.horizontalAngle(facing))

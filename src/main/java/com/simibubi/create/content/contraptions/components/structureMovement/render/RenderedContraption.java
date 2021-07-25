@@ -13,7 +13,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialGroup;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
@@ -60,7 +61,10 @@ public class RenderedContraption extends ContraptionWorldHolder {
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = new ContraptionMaterialManager(CreateContexts.CWORLD);
+		this.materialManager = MaterialManager.builder(CreateContexts.CWORLD)
+				.setGroupFactory(ContraptionGroup.forContraption(this))
+				.setIgnoreOriginCoordinate(true)
+				.build();
 		this.kinetics = new ContraptionInstanceManager(this, materialManager);
 
 		buildLayers();

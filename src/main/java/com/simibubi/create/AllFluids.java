@@ -19,9 +19,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 public class AllFluids {
 
@@ -35,11 +40,6 @@ public class AllFluids {
 	public static final FluidEntry<VirtualFluid> TEA = REGISTRATE.virtualFluid("tea")
 			.lang(f -> "fluid.create.tea", "Builder's Tea")
 			.tag(AllTags.forgeFluidTag("tea"))
-			.register();
-
-	public static final FluidEntry<VirtualFluid> MILK = REGISTRATE.virtualFluid("milk")
-			.lang(f -> "fluid.create.milk", "Milk")
-			.tag(Tags.Fluids.MILK)
 			.register();
 
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
@@ -116,5 +116,5 @@ public class AllFluids {
 		}
 
 	}
-
+	
 }

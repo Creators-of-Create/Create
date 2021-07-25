@@ -2,13 +2,13 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.Vector;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler.Mode;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -63,7 +63,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
   		int light, Boolean active, Boolean usedByMe) {
 
 		float pt = AnimationTickHolder.getPartialTicks();
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
 		ms.pushPose();
 
@@ -103,11 +103,6 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 		renderer.render(active ? model.getPartial("powered") : model.getOriginalModel(), light);
 
-		if (!usedByMe) {
-			ms.popPose();
-			return;
-		}
-
 		IBakedModel button = model.getPartial("button");
 		float s = 1 / 16f;
 		float b = s * -.75f;
@@ -120,28 +115,28 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 		ms.pushPose();
 		msr.translate(2 * s, 0, 8 * s);
-		button(renderer, ms, light, pt, button, b, index++);
+		button(renderer, ms, light, pt, button, b, index++, usedByMe);
 		msr.translate(4 * s, 0, 0);
-		button(renderer, ms, light, pt, button, b, index++);
+		button(renderer, ms, light, pt, button, b, index++, usedByMe);
 		msr.translate(-2 * s, 0, 2 * s);
-		button(renderer, ms, light, pt, button, b, index++);
+		button(renderer, ms, light, pt, button, b, index++, usedByMe);
 		msr.translate(0, 0, -4 * s);
-		button(renderer, ms, light, pt, button, b, index++);
+		button(renderer, ms, light, pt, button, b, index++, usedByMe);
 		ms.popPose();
 
 		msr.translate(3 * s, 0, 3 * s);
-		button(renderer, ms, light, pt, button, b, index++);
+		button(renderer, ms, light, pt, button, b, index++, usedByMe);
 		msr.translate(2 * s, 0, 0);
-		button(renderer, ms, light, pt, button, b, index++);
+		button(renderer, ms, light, pt, button, b, index++, usedByMe);
 
 		ms.popPose();
 	}
 
 	protected static void button(PartialItemModelRenderer renderer, MatrixStack ms, int light, float pt, IBakedModel button,
-		float b, int index) {
+		float b, int index, boolean usedByMe) {
 		ms.pushPose();
-		ms.translate(0, b * buttons.get(index)
-			.getValue(pt), 0);
+		float depression = usedByMe ? b * buttons.get(index).getValue(pt) : 0;
+		ms.translate(0, depression, 0);
 		renderer.renderSolid(button, light);
 		ms.popPose();
 	}

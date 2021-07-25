@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -45,7 +45,7 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 		float yRot = facing.getAxis()
 			.isVertical() ? 0 : AngleHelper.horizontalAngle(facing) + 180;
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateY(yRot)
 			.rotateX(xRot);
 	}

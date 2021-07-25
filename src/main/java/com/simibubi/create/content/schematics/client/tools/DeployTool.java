@@ -1,11 +1,11 @@
 package com.simibubi.create.content.schematics.client.tools;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.SchematicTransformation;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.item.ItemStack;
@@ -59,7 +59,7 @@ public class DeployTool extends PlacementToolBase {
 		Vector3d origin = new Vector3d(xOrigin, 0, zOrigin);
 
 		ms.translate(x - centerX, y, z - centerZ);
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.translate(origin)
 			.translate(rotationOffset)
 			.rotateY(transformation.getCurrentRotation())

@@ -1,6 +1,8 @@
 package com.simibubi.create.content.logistics.block.depot;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -10,7 +12,6 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -52,7 +53,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 					.renderInto(ms, vertexBuilder);
 		}
 
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
 		float maxTime =
 				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
@@ -89,11 +90,11 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		ms.popPose();
 	}
 
-	static void applyLidAngle(KineticTileEntity te, float angle, MatrixStacker matrixStacker) {
+	static void applyLidAngle(KineticTileEntity te, float angle, TransformStack matrixStacker) {
 		applyLidAngle(te, pivot, angle, matrixStacker);
 	}
 
-	static void applyLidAngle(KineticTileEntity te, Vector3d rotationOffset, float angle, MatrixStacker matrixStacker) {
+	static void applyLidAngle(KineticTileEntity te, Vector3d rotationOffset, float angle, TransformStack matrixStacker) {
 		matrixStacker.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()
 				.getValue(EjectorBlock.HORIZONTAL_FACING)))

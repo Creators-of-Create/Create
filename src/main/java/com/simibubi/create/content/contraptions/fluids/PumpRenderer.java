@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -7,7 +8,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -37,7 +37,7 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 			ms.pushPose();
 			SuperByteBuffer arrow = PartialBufferer.get(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
 			Direction direction = blockState.getValue(PumpBlock.FACING);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 					.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
 					.rotateX(-AngleHelper.verticalAngle(direction) - 90)

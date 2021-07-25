@@ -15,12 +15,12 @@ public class AnimatedMillstone extends AnimatedKinetics {
 		matrixStack.translate(-2, 18, 0);
 		int scale = 22;
 
-		defaultBlockElement(AllBlockPartials.MILLSTONE_COG)
+		blockElement(AllBlockPartials.MILLSTONE_COG)
 			.rotateBlock(22.5, getCurrentAngle() * 2, 0)
 			.scale(scale)
 			.render(matrixStack);
 
-		defaultBlockElement(AllBlocks.MILLSTONE.getDefaultState())
+		blockElement(AllBlocks.MILLSTONE.getDefaultState())
 			.rotateBlock(22.5, 22.5, 0)
 			.scale(scale)
 			.render(matrixStack);

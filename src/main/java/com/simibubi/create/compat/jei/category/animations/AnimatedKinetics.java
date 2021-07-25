@@ -22,6 +22,24 @@ public abstract class AnimatedKinetics implements IDrawable {
 			.secondLightRotation(-20.0f, 50.0f)
 			.build();
 
+	/**
+	 * <b>Only use this method outside of subclasses.</b>
+	 * Use {@link #blockElement(BlockState)} if calling from inside a subclass.
+	 */
+	public static GuiGameElement.GuiRenderBuilder defaultBlockElement(BlockState state) {
+		return GuiGameElement.of(state)
+				.lighting(DEFAULT_LIGHTING);
+	}
+
+	/**
+	 * <b>Only use this method outside of subclasses.</b>
+	 * Use {@link #blockElement(PartialModel)} if calling from inside a subclass.
+	 */
+	public static GuiGameElement.GuiRenderBuilder defaultBlockElement(PartialModel partial) {
+		return GuiGameElement.of(partial)
+				.lighting(DEFAULT_LIGHTING);
+	}
+
 	public static float getCurrentAngle() {
 		return (AnimationTickHolder.getRenderTime() * 4f) % 360;
 	}
@@ -34,14 +52,12 @@ public abstract class AnimatedKinetics implements IDrawable {
 		return AllBlockPartials.SHAFTLESS_COGWHEEL;
 	}
 
-	protected GuiGameElement.GuiRenderBuilder defaultBlockElement(BlockState state) {
-		return GuiGameElement.of(state)
-				.lighting(DEFAULT_LIGHTING);
+	protected GuiGameElement.GuiRenderBuilder blockElement(BlockState state) {
+		return defaultBlockElement(state);
 	}
 
-	protected GuiGameElement.GuiRenderBuilder defaultBlockElement(PartialModel partial) {
-		return GuiGameElement.of(partial)
-				.lighting(DEFAULT_LIGHTING);
+	protected GuiGameElement.GuiRenderBuilder blockElement(PartialModel partial) {
+		return defaultBlockElement(partial);
 	}
 
 	@Override

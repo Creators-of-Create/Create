@@ -1,14 +1,14 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.util.Direction;
 
@@ -40,7 +40,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         double recoil = SchematicannonRenderer.getRecoil(tile, partialTicks);
 
         MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(getInstancePosition());
 

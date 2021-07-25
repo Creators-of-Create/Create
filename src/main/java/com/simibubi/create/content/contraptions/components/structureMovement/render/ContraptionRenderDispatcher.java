@@ -5,9 +5,6 @@ import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_3D;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE4;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
 import java.util.List;
@@ -16,10 +13,13 @@ import java.util.Random;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.GlTextureUnit;
+import com.jozufozu.flywheel.backend.state.RenderLayer;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
 import com.jozufozu.flywheel.event.RenderLayerEvent;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.CreateClient;
@@ -35,7 +35,6 @@ import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -115,7 +114,7 @@ public class ContraptionRenderDispatcher {
 
 		layer.setupRenderState();
 		glEnable(GL_TEXTURE_3D);
-		glActiveTexture(GL_TEXTURE4); // the shaders expect light volumes to be in texture 4
+		GlTextureUnit.T4.makeActive(); // the shaders expect light volumes to be in texture 4
 
 		if (Backend.getInstance().canUseVBOs()) {
 			ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
@@ -130,15 +129,18 @@ public class ContraptionRenderDispatcher {
 		}
 
 		if (Backend.getInstance().canUseInstancing()) {
-			for (RenderedContraption renderer : RENDERERS.values()) {
-				renderer.materialManager.render(layer, event.viewProjection, event.camX, event.camY, event.camZ, renderer::setup);
+			RenderLayer renderLayer = RenderLayer.fromRenderType(layer);
+			if (renderLayer != null) {
+				for (RenderedContraption renderer : RENDERERS.values()) {
+					renderer.materialManager.render(renderLayer, event.viewProjection, event.camX, event.camY, event.camZ);
+				}
 			}
 		}
 
 		glBindTexture(GL_TEXTURE_3D, 0);
 		layer.clearRenderState();
 		glDisable(GL_TEXTURE_3D);
-		glActiveTexture(GL_TEXTURE0);
+		GlTextureUnit.T0.makeActive();
 		glUseProgram(0);
 	}
 
@@ -236,7 +238,7 @@ public class ContraptionRenderDispatcher {
 
 			MatrixStack m = matrices.contraptionStack;
 			m.pushPose();
-			MatrixStacker.of(m)
+			MatrixTransformStack.of(m)
 					.translate(blockInfo.pos);
 
 			MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);

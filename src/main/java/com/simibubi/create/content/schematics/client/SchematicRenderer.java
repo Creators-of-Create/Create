@@ -9,12 +9,12 @@ import java.util.Set;
 
 import org.lwjgl.opengl.GL11;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -95,7 +95,7 @@ public class SchematicRenderer {
 		BlockPos.betweenClosedStream(blockAccess.getBounds())
 			.forEach(localPos -> {
 				ms.pushPose();
-				MatrixStacker.of(ms)
+				MatrixTransformStack.of(ms)
 					.translate(localPos);
 				BlockPos pos = localPos.offset(anchor);
 				BlockState state = blockAccess.getBlockState(pos);

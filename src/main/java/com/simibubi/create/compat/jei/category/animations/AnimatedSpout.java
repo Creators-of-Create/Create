@@ -32,7 +32,7 @@ public class AnimatedSpout extends AnimatedKinetics {
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
-		defaultBlockElement(AllBlocks.SPOUT.getDefaultState())
+		blockElement(AllBlocks.SPOUT.getDefaultState())
 			.scale(scale)
 			.render(matrixStack);
 
@@ -42,22 +42,22 @@ public class AnimatedSpout extends AnimatedKinetics {
 
 		matrixStack.pushPose();
 
-		defaultBlockElement(AllBlockPartials.SPOUT_TOP)
+		blockElement(AllBlockPartials.SPOUT_TOP)
 			.scale(scale)
 			.render(matrixStack);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
-		defaultBlockElement(AllBlockPartials.SPOUT_MIDDLE)
+		blockElement(AllBlockPartials.SPOUT_MIDDLE)
 			.scale(scale)
 			.render(matrixStack);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
-		defaultBlockElement(AllBlockPartials.SPOUT_BOTTOM)
+		blockElement(AllBlockPartials.SPOUT_BOTTOM)
 			.scale(scale)
 			.render(matrixStack);
 		matrixStack.translate(0, -3 * squeeze / 32f, 0);
 
 		matrixStack.popPose();
 
-		defaultBlockElement(AllBlocks.DEPOT.getDefaultState())
+		blockElement(AllBlocks.DEPOT.getDefaultState())
 			.atLocal(0, 2, 0)
 			.scale(scale)
 			.render(matrixStack);

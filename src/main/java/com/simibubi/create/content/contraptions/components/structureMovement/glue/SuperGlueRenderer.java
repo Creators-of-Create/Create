@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -69,7 +69,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		Direction face = entity.getFacingDirection();
 
 		ms.pushPose();
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateY(AngleHelper.horizontalAngleNew(face))
 			.rotateX(AngleHelper.verticalAngle(face));
 		Entry peek = ms.last();

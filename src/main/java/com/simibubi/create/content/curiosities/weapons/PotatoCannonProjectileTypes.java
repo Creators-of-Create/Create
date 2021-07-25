@@ -46,6 +46,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.living.EntityTeleportEvent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileTypes {
@@ -447,14 +449,10 @@ public class PotatoCannonProjectileTypes {
 				double teleportY = MathHelper.clamp(entityY + (livingEntity.getRandom().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
 				double teleportZ = entityZ + (livingEntity.getRandom().nextDouble() - 0.5D) * teleportDiameter;
 
-				/* Usable as soon as lowest supported forge > 36.1.3 */
-
-//				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
-//				if (event.isCanceled())
-//					return;
-//				if (livingEntity.attemptTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
-
-				if (livingEntity.randomTeleport(teleportX, teleportY, teleportZ, true)) {
+				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
+				if (event.isCanceled())
+					return false;
+				if (livingEntity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
 

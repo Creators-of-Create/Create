@@ -20,12 +20,12 @@ public class AnimatedDeployer extends AnimatedKinetics {
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
-		defaultBlockElement(shaft(Axis.Z))
+		blockElement(shaft(Axis.Z))
 			.rotateBlock(0, 0, getCurrentAngle())
 			.scale(scale)
 			.render(matrixStack);
 
-		defaultBlockElement(AllBlocks.DEPLOYER.getDefaultState()
+		blockElement(AllBlocks.DEPLOYER.getDefaultState()
 			.setValue(DeployerBlock.FACING, Direction.DOWN)
 			.setValue(DeployerBlock.AXIS_ALONG_FIRST_COORDINATE, false))
 			.scale(scale)
@@ -37,18 +37,18 @@ public class AnimatedDeployer extends AnimatedKinetics {
 		matrixStack.pushPose();
 
 		matrixStack.translate(0, offset * 17, 0);
-		defaultBlockElement(AllBlockPartials.DEPLOYER_POLE)
+		blockElement(AllBlockPartials.DEPLOYER_POLE)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
-		defaultBlockElement(AllBlockPartials.DEPLOYER_HAND_HOLDING)
+		blockElement(AllBlockPartials.DEPLOYER_HAND_HOLDING)
 			.rotateBlock(90, 0, 0)
 			.scale(scale)
 			.render(matrixStack);
 
 		matrixStack.popPose();
 
-		defaultBlockElement(AllBlocks.DEPOT.getDefaultState())
+		blockElement(AllBlocks.DEPOT.getDefaultState())
 			.atLocal(0, 2, 0)
 			.scale(scale)
 			.render(matrixStack);

@@ -442,7 +442,6 @@
 	"entity.create.stationary_contraption": "Maszyna stacjonarna",
 	"entity.create.super_glue": "Super Glue",
 
-	"fluid.create.milk": "Mleko",
 	"fluid.create.potion": "Mikstura",
 	"fluid.create.tea": "Herbatka Budowniczego",
 
@@ -468,7 +467,7 @@
 	"item.create.copper_sheet": "Arkusz miedzi",
 	"item.create.crafter_slot_cover": "Przykrywka na slot stołu rzemieślniczego",
 	"item.create.crafting_blueprint": "UNLOCALIZED: Crafting Blueprint",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "Rozkruszona ruda żelaza",
 	"item.create.crushed_brass": "Rozkruszony mosiądz",
 	"item.create.crushed_copper_ore": "Rozkruszona ruda miedzi",
@@ -1413,10 +1412,10 @@
 	"block.create.creative_crate.tooltip.condition1": "Kiedy przedmiot jest w slocie na filtr",
 	"block.create.creative_crate.tooltip.behaviour1": "Bloki _wyciągające_ przedmioty z tego bloku będą miały _nieskończony zapas_ wybranego przedmiotu. Przedmioty włożone do tej skrzynki będą _usuwane_.",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "TORY STERUJĄCE",
 	"block.create.controller_rail.tooltip.summary": "_Wielokierunkowy_ zasilany tor pozwalający na _dokładną kontrolę_ nad _prędkością wagonika_.",

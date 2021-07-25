@@ -442,7 +442,6 @@
 	"entity.create.stationary_contraption": "고정된 구조물",
 	"entity.create.super_glue": "강력 접착제",
 
-	"fluid.create.milk": "우유",
 	"fluid.create.potion": "포션",
 	"fluid.create.tea": "건축가의 차",
 
@@ -468,7 +467,7 @@
 	"item.create.copper_sheet": "구리 판",
 	"item.create.crafter_slot_cover": "조합기 슬롯 덮개",
 	"item.create.crafting_blueprint": "조합 청사진",
-	"item.create.creative_cake": "UNLOCALIZED: Creative Cake",
+	"item.create.creative_blaze_cake": "UNLOCALIZED: Creative Blaze Cake",
 	"item.create.crushed_aluminum_ore": "UNLOCALIZED: Crushed Aluminum Ore",
 	"item.create.crushed_brass": "분쇄된 황동",
 	"item.create.crushed_copper_ore": "분쇄된 구리 광석",
@@ -1413,10 +1412,10 @@
 	"block.create.creative_crate.tooltip.condition1": "필터에 아이템을 설정할 시",
 	"block.create.creative_crate.tooltip.behaviour1": "선택된 아이템을 _무한정_으로 _빼낼_ 수 있습니다. 대신 _들어간_ 아이템은 _삭제_됩니다.",
 
-	"item.create.creative_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
-	"item.create.creative_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
-	"item.create.creative_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
-	"item.create.creative_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
+	"item.create.creative_blaze_cake.tooltip": "UNLOCALIZED: CREATIVE CAKE",
+	"item.create.creative_blaze_cake.tooltip.summary": "UNLOCALIZED: A very special treat for _Blaze Burners_ that allows _controlling their heat level_. After eating this cake, Blaze Burners will _never run out of fuel_.",
+	"item.create.creative_blaze_cake.tooltip.condition1": "UNLOCALIZED: R-Click on Blaze Burner",
+	"item.create.creative_blaze_cake.tooltip.behaviour1": "UNLOCALIZED: _Locks_ the Blaze Burner's heat level. If used again, _cycles_ the Blaze Burner's heat level.",
 
 	"block.create.controller_rail.tooltip": "CONTROLLER RAIL",
 	"block.create.controller_rail.tooltip.summary": "_광산 수레_의 _이동속도_를 _세밀하게_ _조정_할 수 있는 _양방향_ _전동 레일_입니다.",

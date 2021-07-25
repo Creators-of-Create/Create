@@ -2,10 +2,11 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +26,10 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
 
 		opposite = direction.getOpposite();
 		shaft = getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite).createInstance();
-		fan = getRotatingMaterial().getModel(AllBlockPartials.ENCASED_FAN_INNER, blockState, opposite).createInstance();
+		fan = modelManager.defaultCutout()
+				.material(AllMaterialSpecs.ROTATING)
+				.getModel(AllBlockPartials.ENCASED_FAN_INNER, blockState, opposite)
+				.createInstance();
 
 		setup(shaft);
 		setup(fan, getFanSpeed());

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
@@ -10,7 +11,6 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour.TankSegment;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
@@ -48,7 +48,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 		if (transported == null)
 			return;
 
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		Vector3d itemPosition = VecHelper.getCenterOf(te.getBlockPos());
 
 		Direction insertedFrom = transported.insertedFrom;

@@ -27,7 +27,7 @@ public class AnimatedItemDrain extends AnimatedKinetics {
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
-		defaultBlockElement(AllBlocks.ITEM_DRAIN.getDefaultState())
+		blockElement(AllBlocks.ITEM_DRAIN.getDefaultState())
 			.scale(scale)
 			.render(matrixStack);
 

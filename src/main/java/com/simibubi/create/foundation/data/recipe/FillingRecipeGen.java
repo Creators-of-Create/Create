@@ -54,11 +54,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.NIGHT_VISION, 25))
 			.require(AllItems.CINDER_FLOUR.get())
-			.output(Items.GLOWSTONE_DUST)),
-
-		MILK_BUCKET = create("milk_bucket", b -> b.require(Tags.Fluids.MILK, 1000)
-			.require(Items.BUCKET)
-			.output(Items.MILK_BUCKET))
+			.output(Items.GLOWSTONE_DUST))
 
 	;
 

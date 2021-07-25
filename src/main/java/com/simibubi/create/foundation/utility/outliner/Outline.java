@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -12,7 +13,6 @@ import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.ColorHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -40,7 +40,7 @@ public abstract class Outline {
 			.length();
 		float vAngle = AngleHelper.deg(MathHelper.atan2(hDistance, diff.y)) - 90;
 		ms.pushPose();
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.translate(start)
 			.rotateY(hAngle).rotateX(vAngle);
 		renderAACuboidLine(ms, buffer, Vector3d.ZERO, new Vector3d(0, 0, diff.length()));

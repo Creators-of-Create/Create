@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.ponder;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -140,15 +141,12 @@ public class PonderRegistry {
 		String path = "ponder/" + location.getPath() + ".nbt";
 		ResourceLocation location1 = new ResourceLocation(namespace, path);
 
-		if (!resourceManager.hasResource(location1)) {
-			Create.LOGGER.error("Ponder schematic missing: " + location1);
-			return new Template();
-		}
-		try {
-			IResource resource = resourceManager.getResource(location1);
+		try (IResource resource = resourceManager.getResource(location1)) {
 			return loadSchematic(resource.getInputStream());
+		} catch (FileNotFoundException e) {
+			Create.LOGGER.error("Ponder schematic missing: " + location1, e);
 		} catch (IOException e) {
-			Create.LOGGER.error("Failed to read ponder schematic: " + path, e);
+			Create.LOGGER.error("Failed to read ponder schematic: " + location1, e);
 		}
 		return new Template();
 	}

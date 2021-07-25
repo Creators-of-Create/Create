@@ -1,13 +1,13 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -60,7 +60,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		}
 		int itemLight = MathHelper.floor(sl + .5) << 20 | (MathHelper.floor(bl + .5) & 0xf) << 4;
 
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateY(vertical ? 0 : -yaw)
 			.rotateX(fakeNormalXRotation);
 		Matrix3f copy = ms.last()
@@ -70,7 +70,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		ms.popPose();
 		ms.pushPose();
 
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateY(-yaw)
 			.rotateX(entity.xRot)
 			.translate(0, 0, 1 / 32f + .001);

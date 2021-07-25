@@ -8,17 +8,17 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.instancing.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.instancing.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -95,7 +95,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     private void animate(float angle) {
         MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(getInstancePosition());
 
@@ -163,7 +163,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 		return getRotatingMaterial().getModel(AllBlockPartials.SHAFT_HALF, blockState, opposite);
 	}
 
-    protected void transformConnector(MatrixStacker ms, boolean upper, boolean rotating, float angle, boolean flip) {
+    protected void transformConnector(MatrixTransformStack ms, boolean upper, boolean rotating, float angle, boolean flip) {
         float shift = upper ? 1 / 4f : -1 / 8f;
         float offset = upper ? 1 / 4f : 1 / 4f;
         float radians = (float) (angle / 180 * Math.PI);
@@ -189,7 +189,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
             ms.translate(9 / 16f, 0, 0);
     }
 
-    protected void rotateToFacing(MatrixStacker buffer, Direction facing) {
+    protected void rotateToFacing(MatrixTransformStack buffer, Direction facing) {
         buffer.centre()
               .rotate(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing)))
               .unCentre();

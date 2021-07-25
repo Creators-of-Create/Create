@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.item;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -34,7 +34,7 @@ public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternCon
 		boolean usedByMe = te.isUsedBy(Minecraft.getInstance().player);
 
 		Direction facing = te.getBlockState().getValue(LecternControllerBlock.FACING);
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
 		ms.pushPose();
 		msr.translate(0.5, 1.45, 0.5);

@@ -2,11 +2,11 @@ package com.simibubi.create.content.schematics.client;
 
 import static java.lang.Math.abs;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.util.Direction.Axis;
@@ -63,7 +63,7 @@ public class SchematicTransformation {
 		float lr = getScaleLR().get(pt);
 		float rot = rotation.get(pt) + ((fb < 0 && lr < 0) ? 180 : 0);
 		ms.translate(xOrigin, 0, zOrigin);
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.translate(rotationOffset)
 			.rotateY(rot)
 			.translateBack(rotationOffset);
