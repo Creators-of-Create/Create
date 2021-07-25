@@ -1,7 +1,9 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,9 +32,11 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	protected static final IFormattableTextComponent modComponent = new StringTextComponent("* ").withStyle(TextFormatting.BOLD, TextFormatting.DARK_BLUE).append(StringTextComponent.EMPTY.plainCopy().withStyle(TextFormatting.RESET));
 	protected static final int resetWidth = 28;//including 6px offset on either side
 	public static final Pattern unitPattern = Pattern.compile("\\[(in .*)]");
+	public static final Pattern annotationPattern = Pattern.compile("\\[@cui:([^:]*)(?::(.*))?]");
 
 	protected ForgeConfigSpec.ConfigValue<T> value;
 	protected ForgeConfigSpec.ValueSpec spec;
+	protected Map<String, String> annotations;
 	protected BoxWidget resetButton;
 	protected boolean editable = true;
 	protected String path;
@@ -53,6 +57,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
 		listeners.add(resetButton);
 
+		annotations = new HashMap<>();
 		List<String> path = value.getPath();
 		labelTooltip.add(new StringTextComponent(label).withStyle(TextFormatting.WHITE));
 		String comment = spec.getComment();
@@ -67,16 +72,27 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 				continue;
 			}
 
-			Matcher matcher = unitPattern.matcher(commentLines[i]);
-			if (!matcher.matches())
-				continue;
+			Matcher matcher = annotationPattern.matcher(commentLines[i]);
+			if (matcher.matches()) {
+				String annotation = matcher.group(1);
+				String aValue = matcher.group(2);
+				annotations.putIfAbsent(annotation, aValue);
 
-			String u = matcher.group(1);
-			if (u.equals("in Revolutions per Minute"))
-				u = "in RPM";
-			if (u.equals("in Stress Units"))
-				u = "in SU";
-			unit = u;
+				commentLines = ArrayUtils.remove(commentLines, i);
+				i--;
+				continue;
+			}
+
+			matcher = unitPattern.matcher(commentLines[i]);
+			if (matcher.matches()) {
+				String u = matcher.group(1);
+				if (u.equals("in Revolutions per Minute"))
+					u = "in RPM";
+				if (u.equals("in Stress Units"))
+					u = "in SU";
+				unit = u;
+			}
+
 		}
 		// add comment to tooltip
 		labelTooltip.addAll(Arrays.stream(commentLines)
