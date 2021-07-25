@@ -3,6 +3,7 @@ package com.simibubi.create.content.curiosities.armor;
 import com.simibubi.create.Create;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
@@ -14,10 +15,10 @@ public class CopperArmorItem extends ArmorItem {
 	}
 
 	public boolean isWornBy(Entity entity) {
-		for (ItemStack itemStack : entity.getArmorSlots())
-			if (itemStack.getItem() == this)
-				return true;
-		return false;
+		if (!(entity instanceof LivingEntity))
+			return false;
+		LivingEntity livingEntity = (LivingEntity) entity;
+		return livingEntity.getItemBySlot(slot).getItem() == this;
 	}
 
 	@Override

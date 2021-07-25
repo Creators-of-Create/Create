@@ -35,6 +35,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BlockModelShapes;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.settings.GraphicsFanciness;
@@ -112,7 +113,8 @@ public class CreateClient {
 			((IReloadableResourceManager) resourceManager).registerReloadListener(new ResourceReloadHandler());
 
 		event.enqueueWork(() -> {
-			CopperBacktankArmorLayer.register();
+			registerLayerRenderers(Minecraft.getInstance()
+				.getEntityRenderDispatcher());
 		});
 	}
 
@@ -172,6 +174,10 @@ public class CreateClient {
 	protected static <T extends IBakedModel> void swapModels(Map<ResourceLocation, IBakedModel> modelRegistry,
 		ModelResourceLocation location, Function<IBakedModel, T> factory) {
 		modelRegistry.put(location, factory.apply(modelRegistry.get(location)));
+	}
+
+	protected static void registerLayerRenderers(EntityRendererManager renderManager) {
+		CopperBacktankArmorLayer.registerOnAll(renderManager);
 	}
 
 	public static CustomItemModels getCustomItemModels() {

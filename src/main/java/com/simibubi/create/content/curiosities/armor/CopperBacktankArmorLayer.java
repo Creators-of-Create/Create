@@ -21,7 +21,9 @@ import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.EntityModel;
@@ -35,41 +37,37 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityModel<T>> extends LayerRenderer<T, M> {
 
-	private LivingRenderer<T, M> renderer;
-
-	public CopperBacktankArmorLayer(LivingRenderer<T, M> renderer) {
+	public CopperBacktankArmorLayer(IEntityRenderer<T, M> renderer) {
 		super(renderer);
-		this.renderer = renderer;
-		renderer.addLayer(this);
 	}
 
 	@Override
 	public void render(MatrixStack ms, IRenderTypeBuffer buffer, int light, LivingEntity entity, float yaw, float pitch,
 		float pt, float p_225628_8_, float p_225628_9_, float p_225628_10_) {
-
 		if (entity.getPose() == Pose.SLEEPING)
 			return;
 		if (!AllItems.COPPER_BACKTANK.get()
 			.isWornBy(entity))
 			return;
 
-		M entityModel = renderer.getModel();
+		M entityModel = getParentModel();
 		if (!(entityModel instanceof BipedModel))
 			return;
 
-		ms.pushPose();
 		BipedModel<?> model = (BipedModel<?>) entityModel;
+		RenderType renderType = Atlases.cutoutBlockSheet();
 		BlockState renderedState = AllBlocks.COPPER_BACKTANK.getDefaultState()
 				.setValue(CopperBacktankBlock.HORIZONTAL_FACING, Direction.SOUTH);
-		RenderType renderType = Atlases.cutoutBlockSheet();
-
 		SuperByteBuffer backtank = CreateClient.BUFFER_CACHE.renderBlock(renderedState);
 		SuperByteBuffer cogs =
 				CreateClient.BUFFER_CACHE.renderPartial(AllBlockPartials.COPPER_BACKTANK_COGS, renderedState);
 
+		ms.pushPose();
+
 		model.body.translateAndRotate(ms);
 		ms.translate(-1 / 2f, 10 / 16f, 1f);
 		ms.scale(1, -1, -1);
+
 		backtank.forEntityRender()
 			.light(light)
 			.renderInto(ms, buffer.getBuffer(renderType));
@@ -89,18 +87,22 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 		ms.popPose();
 	}
 
-	public static void register() {
-		EntityRendererManager renderManager = Minecraft.getInstance()
-			.getEntityRenderDispatcher();
-		registerOn(renderManager.defaultPlayerRenderer);
+	public static void registerOnAll(EntityRendererManager renderManager) {
+		for (PlayerRenderer renderer : renderManager.getSkinMap().values())
+			registerOn(renderer);
 		for (EntityRenderer<?> renderer : renderManager.renderers.values())
 			registerOn(renderer);
 	}
 
-	private static void registerOn(EntityRenderer<?> entityRenderer) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void registerOn(EntityRenderer<?> entityRenderer) {
 		if (!(entityRenderer instanceof LivingRenderer))
 			return;
-		new CopperBacktankArmorLayer<>((LivingRenderer<?, ?>) entityRenderer);
+		LivingRenderer<?, ?> livingRenderer = (LivingRenderer<?, ?>) entityRenderer;
+		if (!(livingRenderer.getModel() instanceof BipedModel))
+			return;
+		CopperBacktankArmorLayer<?, ?> layer = new CopperBacktankArmorLayer<>(livingRenderer);
+		livingRenderer.addLayer((CopperBacktankArmorLayer) layer);
 	}
 
 	public static void renderRemainingAirOverlay(MatrixStack ms, Impl buffers, int light, int overlay, float pt) {
