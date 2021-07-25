@@ -242,9 +242,9 @@ public class InWorldProcessing {
 		if (recalculateTime) {
 			processing.putString("Type", type.name());
 			int timeModifierForStackSize = ((entity.getItem()
-					.getCount() - 1) / 16) + 1;
+				.getCount() - 1) / 16) + 1;
 			int processingTime =
-					(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
 		}
 
