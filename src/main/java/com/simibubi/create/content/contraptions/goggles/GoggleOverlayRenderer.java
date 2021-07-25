@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -34,6 +35,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class GoggleOverlayRenderer {
 
@@ -50,7 +52,7 @@ public class GoggleOverlayRenderer {
 			if (!entry.isAlive())
 				continue;
 			Outline outline = entry.getOutline();
-			if (outline instanceof ValueBox && !((ValueBox) outline).isPassive) 
+			if (outline instanceof ValueBox && !((ValueBox) outline).isPassive)
 				return;
 		}
 
@@ -150,11 +152,16 @@ public class GoggleOverlayRenderer {
 
 		int posX = tooltipScreen.width / 2 + AllConfigs.CLIENT.overlayOffsetX.get();
 		int posY = tooltipScreen.height / 2 + AllConfigs.CLIENT.overlayOffsetY.get();
-		
+
 		posX = Math.min(posX, tooltipScreen.width - tooltipTextWidth - 20);
 		posY = Math.min(posY, tooltipScreen.height - tooltipHeight - 20);
-		
-		tooltipScreen.renderComponentTooltip(ms, tooltip, posX, posY);
+
+		Boolean useCustom = AllConfigs.CLIENT.overlayCustomColor.get();
+		int colorBackground = useCustom ? AllConfigs.CLIENT.overlayBackgroundColor.get() : Theme.i(Theme.Key.VANILLA_TOOLTIP_BACKGROUND);
+		int colorBorderTop = useCustom ? AllConfigs.CLIENT.overlayBorderColorTop.get() : Theme.i(Theme.Key.VANILLA_TOOLTIP_BORDER, true);
+		int colorBorderBot = useCustom ? AllConfigs.CLIENT.overlayBorderColorBot.get() : Theme.i(Theme.Key.VANILLA_TOOLTIP_BORDER, false);
+		GuiUtils.drawHoveringText(ms, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,  colorBackground, colorBorderTop, colorBorderBot, mc.font);
+
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)
