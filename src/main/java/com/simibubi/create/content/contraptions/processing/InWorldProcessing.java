@@ -229,18 +229,28 @@ public class InWorldProcessing {
 			createData.put("Processing", new CompoundNBT());
 		CompoundNBT processing = createData.getCompound("Processing");
 
-		if (!processing.contains("Type") || Type.valueOf(processing.getString("Type")) != type) {
+		boolean recalculateTime = false;
+
+		if (processing.contains("Type")) {
+			if (Type.valueOf(processing.getString("Type")) != type || processing.getInt("Time") < 0) {
+				recalculateTime = true;
+			}
+		} else {
+			recalculateTime = true;
+		}
+
+		if (recalculateTime) {
 			processing.putString("Type", type.name());
 			int timeModifierForStackSize = ((entity.getItem()
-				.getCount() - 1) / 16) + 1;
+					.getCount() - 1) / 16) + 1;
 			int processingTime =
-				(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
+					(int) (AllConfigs.SERVER.kinetics.inWorldProcessingTime.get() * timeModifierForStackSize) + 1;
 			processing.putInt("Time", processingTime);
 		}
 
-		int value = processing.getInt("Time") - 1;
-		processing.putInt("Time", value);
-		return value;
+		int timeValue = processing.getInt("Time") - 1;
+		processing.putInt("Time", timeValue);
+		return timeValue;
 	}
 
 	public static void applyRecipeOn(ItemEntity entity, IRecipe<?> recipe) {
