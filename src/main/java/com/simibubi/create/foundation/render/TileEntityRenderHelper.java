@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.Create;
@@ -46,7 +47,8 @@ public class TileEntityRenderHelper {
 		Iterator<TileEntity> iterator = customRenderTEs.iterator();
 		while (iterator.hasNext()) {
 			TileEntity tileEntity = iterator.next();
-			// if (tileEntity instanceof IInstanceRendered) continue; // TODO: some things still need to render
+			if (InstancedRenderRegistry.getInstance()
+					.shouldSkipRender(tileEntity)) continue;
 
 			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
 			if (renderer == null) {

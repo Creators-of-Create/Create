@@ -137,6 +137,7 @@ public class ContraptionRenderDispatcher {
 			}
 		}
 
+		GlTextureUnit.T4.makeActive();
 		glBindTexture(GL_TEXTURE_3D, 0);
 		layer.clearRenderState();
 		glDisable(GL_TEXTURE_3D);

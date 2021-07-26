@@ -13,6 +13,8 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.backend.material.MaterialGroup;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
@@ -151,7 +153,8 @@ public class RenderedContraption extends ContraptionWorldHolder {
 		Collection<TileEntity> tileEntities = contraption.maybeInstancedTileEntities;
 		if (!tileEntities.isEmpty()) {
 			for (TileEntity te : tileEntities) {
-				if (te instanceof IInstanceRendered) {
+				if (InstancedRenderRegistry.getInstance()
+						.canInstance(te.getType())) {
 					World world = te.getLevel();
 					BlockPos pos = te.getBlockPos();
 					te.setLevelAndPosition(renderWorld, pos);

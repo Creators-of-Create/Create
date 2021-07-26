@@ -56,7 +56,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	}
 
 	private Instancer<OrientedData> getInstancer(MaterialManager<?> materialManager, SuperGlueEntity entity) {
-		MaterialGroup<?> group = USE_ATLAS ? materialManager.defaultSolid() : materialManager.solid(TextureRenderState.get(TEXTURE));
+		MaterialGroup<?> group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(TextureRenderState.get(TEXTURE));
 
 		return group.material(Materials.ORIENTED).model(entity.getType(), GlueModel::new);
 	}
