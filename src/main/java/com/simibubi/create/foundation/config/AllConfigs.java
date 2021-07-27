@@ -33,14 +33,15 @@ public class AllConfigs {
 		return config;
 	}
 
-	public static void register() {
+	public static void register(ModLoadingContext context) {
 		CLIENT = register(CClient::new, ModConfig.Type.CLIENT);
 		COMMON = register(CCommon::new, ModConfig.Type.COMMON);
 		SERVER = register(CServer::new, ModConfig.Type.SERVER);
 
 		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			ModLoadingContext.get()
-				.registerConfig(pair.getValue(), pair.getKey().specification);
+			context.registerConfig(pair.getValue(), pair.getKey().specification);
+
+		StressConfigValues.registerProvider(context.getActiveNamespace(), SERVER.kinetics.stressValues);
 	}
 
 	public static void onLoad(ModConfig.Loading event) {

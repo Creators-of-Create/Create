@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simibubi.create.Create;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
@@ -17,10 +16,18 @@ public class StressConfigDefaults {
 	 * Worlds from the previous version will overwrite potentially changed values
 	 * with the new defaults.
 	 */
-	public static final int forcedUpdateVersion = 2;
+	public static final int FORCED_UPDATE_VERSION = 2;
 
-	static Map<ResourceLocation, Double> registeredDefaultImpacts = new HashMap<>();
-	static Map<ResourceLocation, Double> registeredDefaultCapacities = new HashMap<>();
+	public static final Map<ResourceLocation, Double> DEFAULT_IMPACTS = new HashMap<>();
+	public static final Map<ResourceLocation, Double> DEFAULT_CAPACITIES = new HashMap<>();
+
+	public static void setDefaultImpact(ResourceLocation blockId, double impact) {
+		DEFAULT_IMPACTS.put(blockId, impact);
+	}
+
+	public static void setDefaultCapacity(ResourceLocation blockId, double capacity) {
+		DEFAULT_CAPACITIES.put(blockId, capacity);
+	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setNoImpact() {
 		return setImpact(0);
@@ -28,14 +35,14 @@ public class StressConfigDefaults {
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setImpact(double impact) {
 		return b -> {
-			registeredDefaultImpacts.put(Create.asResource(b.getName()), impact);
+			setDefaultImpact(new ResourceLocation(b.getOwner().getModid(), b.getName()), impact);
 			return b;
 		};
 	}
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> setCapacity(double capacity) {
 		return b -> {
-			registeredDefaultCapacities.put(Create.asResource(b.getName()), capacity);
+			setDefaultCapacity(new ResourceLocation(b.getOwner().getModid(), b.getName()), capacity);
 			return b;
 		};
 	}

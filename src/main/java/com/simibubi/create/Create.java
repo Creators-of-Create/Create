@@ -47,6 +47,7 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
@@ -89,8 +90,10 @@ public class Create {
 		AllTileEntities.register();
 		AllMovementBehaviours.register();
 		AllWorldFeatures.register();
-		AllConfigs.register();
 		AllEnchantments.register();
+		AllConfigs.register(ModLoadingContext.get());
+
+		ForgeMod.enableMilkFluid();
 
 		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 			.getModEventBus();
@@ -109,8 +112,6 @@ public class Create {
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
-		
-		ForgeMod.enableMilkFluid();
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {

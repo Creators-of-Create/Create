@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.StressConfigValues;
 
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
@@ -29,7 +29,7 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 		boolean active = state.hasProperty(AbstractFurnaceBlock.LIT) && state.getValue(AbstractFurnaceBlock.LIT);
 		float speed = active ? 16 * modifier : 0;
 		float capacity =
-			(float) (active ? AllConfigs.SERVER.kinetics.stressValues.getCapacityOf(AllBlocks.FURNACE_ENGINE.get())
+			(float) (active ? StressConfigValues.getCapacity(AllBlocks.FURNACE_ENGINE.get())
 				: 0);
 
 		appliedCapacity = capacity;

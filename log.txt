@@ -1,5 +1,6 @@
 
 - Bump minimum required Forge version to 36.2.0
+- Added the Creative Blaze Cake
 - Fixed backtank not rendering on all players
 - Added config options that allow some more customization of the goggle overlay 
 - Fixed crash when simultaneously converting and destroying a Peculiar Bell 
@@ -17,6 +18,7 @@
 - Added support for custom namespaces in ponder
 - Make ponder files use Minecraft's resource system
 - Allow easily registering and generating ponder lang for any namespace
+- Allow registering stress value providers and getting values by namespace
 - Create now partially uses the Official Mappings provided by Mojang
 - Fixed upright items rendered on depots
 - Fixed invalid textures on Potato cannon model 
