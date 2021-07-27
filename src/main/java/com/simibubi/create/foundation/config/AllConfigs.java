@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.foundation.block.BlockStressValues;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -41,7 +43,7 @@ public class AllConfigs {
 		for (Entry<ConfigBase, Type> pair : configs.entrySet())
 			context.registerConfig(pair.getValue(), pair.getKey().specification);
 
-		StressConfigValues.registerProvider(context.getActiveNamespace(), SERVER.kinetics.stressValues);
+		BlockStressValues.registerProvider(context.getActiveNamespace(), SERVER.kinetics.stressValues);
 	}
 
 	public static void onLoad(ModConfig.Loading event) {

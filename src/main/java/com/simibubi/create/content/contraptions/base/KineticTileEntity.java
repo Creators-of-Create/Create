@@ -18,8 +18,8 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
+import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.StressConfigValues;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
@@ -166,13 +166,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	public float calculateStressApplied() {
-		float impact = (float) StressConfigValues.getImpact(getStressConfigKey());
+		float impact = (float) BlockStressValues.getImpact(getStressConfigKey());
 		this.lastStressApplied = impact;
 		return impact;
 	}
 
 	public float calculateAddedStressCapacity() {
-		float capacity = (float) StressConfigValues.getCapacity(getStressConfigKey());
+		float capacity = (float) BlockStressValues.getCapacity(getStressConfigKey());
 		this.lastCapacityProvided = capacity;
 		return capacity;
 	}

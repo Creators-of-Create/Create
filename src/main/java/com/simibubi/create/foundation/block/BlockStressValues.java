@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.config;
+package com.simibubi.create.foundation.block;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
-public class StressConfigValues {
+public class BlockStressValues {
 
 	private static final Map<String, IStressValueProvider> PROVIDERS = new HashMap<>();
 
@@ -23,58 +23,67 @@ public class StressConfigValues {
 
 	@Nullable
 	public static IStressValueProvider getProvider(Block block) {
-		ResourceLocation key = block.getRegistryName();
-		String namespace = key.getNamespace();
-		IStressValueProvider provider = getProvider(namespace);
-		return provider;
+		return getProvider(block.getRegistryName().getNamespace());
 	}
 
 	public static double getImpact(Block block) {
-		IStressValueProvider provider = getProvider(block);
+		ResourceLocation blockId = block.getRegistryName();
+		IStressValueProvider provider = getProvider(blockId.getNamespace());
 		if (provider != null) {
 			return provider.getImpact(block);
+		}
+		Double defaultImpact = BlockStressDefaults.DEFAULT_IMPACTS.get(blockId);
+		if (defaultImpact != null) {
+			return defaultImpact;
 		}
 		return 0;
 	}
 
 	public static double getCapacity(Block block) {
-		IStressValueProvider provider = getProvider(block);
+		ResourceLocation blockId = block.getRegistryName();
+		IStressValueProvider provider = getProvider(blockId.getNamespace());
 		if (provider != null) {
 			return provider.getCapacity(block);
+		}
+		Double defaultCapacity = BlockStressDefaults.DEFAULT_CAPACITIES.get(blockId);
+		if (defaultCapacity != null) {
+			return defaultCapacity;
 		}
 		return 0;
 	}
 
 	public static boolean hasImpact(Block block) {
-		IStressValueProvider provider = getProvider(block);
+		ResourceLocation blockId = block.getRegistryName();
+		IStressValueProvider provider = getProvider(blockId.getNamespace());
 		if (provider != null) {
 			return provider.hasImpact(block);
 		}
-		return false;
+		return BlockStressDefaults.DEFAULT_IMPACTS.containsKey(blockId);
 	}
 
 	public static boolean hasCapacity(Block block) {
-		IStressValueProvider provider = getProvider(block);
+		ResourceLocation blockId = block.getRegistryName();
+		IStressValueProvider provider = getProvider(blockId.getNamespace());
 		if (provider != null) {
 			return provider.hasCapacity(block);
 		}
-		return false;
+		return BlockStressDefaults.DEFAULT_CAPACITIES.containsKey(blockId);
 	}
 
 	public interface IStressValueProvider {
 		/**
-		 * Gets the impact of a block.
+		 * Gets the stress impact of a block.
 		 * 
 		 * @param block The block.
-		 * @return the impact value of the block, or 0 if it does not have one.
+		 * @return the stress impact value of the block, or 0 if it does not have one.
 		 */
 		double getImpact(Block block);
 
 		/**
-		 * Gets the capacity of a block.
+		 * Gets the stress capacity of a block.
 		 * 
 		 * @param block The block.
-		 * @return the capacity value of the block, or 0 if it does not have one.
+		 * @return the stress capacity value of the block, or 0 if it does not have one.
 		 */
 		double getCapacity(Block block);
 

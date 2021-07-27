@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.config;
+package com.simibubi.create.foundation.block;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +9,7 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 
-public class StressConfigDefaults {
+public class BlockStressDefaults {
 
 	/**
 	 * Increment this number if all stress entries should be forced to update in the next release.

@@ -6,7 +6,8 @@ import java.util.Map;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
-import com.simibubi.create.foundation.config.StressConfigValues.IStressValueProvider;
+import com.simibubi.create.foundation.block.BlockStressDefaults;
+import com.simibubi.create.foundation.block.BlockStressValues.IStressValueProvider;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +23,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	protected void registerAll(Builder builder) {
 		builder.comment("", Comments.su, Comments.impact)
 			.push("impact");
-		StressConfigDefaults.DEFAULT_IMPACTS
+		BlockStressDefaults.DEFAULT_IMPACTS
 			.forEach((r, i) -> {
 				if (r.getNamespace().equals(Create.ID))
 					getImpacts().put(r, builder.define(r.getPath(), i));
@@ -31,7 +32,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 
 		builder.comment("", Comments.su, Comments.capacity)
 			.push("capacity");
-		StressConfigDefaults.DEFAULT_CAPACITIES
+		BlockStressDefaults.DEFAULT_CAPACITIES
 			.forEach((r, i) -> {
 				if (r.getNamespace().equals(Create.ID))
 					getCapacities().put(r, builder.define(r.getPath(), i));
@@ -82,7 +83,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 
 	@Override
 	public String getName() {
-		return "stressValues.v" + StressConfigDefaults.FORCED_UPDATE_VERSION;
+		return "stressValues.v" + BlockStressDefaults.FORCED_UPDATE_VERSION;
 	}
 
 	public Map<ResourceLocation, ConfigValue<Double>> getImpacts() {

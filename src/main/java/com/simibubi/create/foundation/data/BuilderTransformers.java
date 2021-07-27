@@ -23,8 +23,8 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelItem;
 import com.simibubi.create.content.logistics.block.inventories.CrateBlock;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
+import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
-import com.simibubi.create.foundation.config.StressConfigDefaults;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
@@ -49,7 +49,7 @@ public class BuilderTransformers {
 			.blockstate((c, p) -> p.horizontalBlock(c.get(), p.models()
 				.getExistingFile(p.modLoc("block/cuckoo_clock/block"))))
 			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(StressConfigDefaults.setImpact(1.0))
+			.transform(BlockStressDefaults.setImpact(1.0))
 			.item()
 			.transform(ModelGen.customItemModel("cuckoo_clock", "item"));
 	}
@@ -63,7 +63,7 @@ public class BuilderTransformers {
 				(block, cc) -> cc.make(block, casingShift, (s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
 			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
 				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
-			.transform(StressConfigDefaults.setNoImpact())
+			.transform(BlockStressDefaults.setNoImpact())
 			.loot((p, b) -> p.dropOther(b, AllBlocks.SHAFT.get()))
 			.item()
 			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
@@ -133,7 +133,7 @@ public class BuilderTransformers {
 			.properties(p -> p.noOcclusion())
 			.blockstate(new MechanicalPistonGenerator(type)::generate)
 			.addLayer(() -> RenderType::cutoutMipped)
-			.transform(StressConfigDefaults.setImpact(4.0))
+			.transform(BlockStressDefaults.setImpact(4.0))
 			.item()
 			.transform(ModelGen.customItemModel("mechanical_piston", type.getSerializedName(), "item"));
 	}

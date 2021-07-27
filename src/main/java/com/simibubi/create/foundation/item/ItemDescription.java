@@ -29,9 +29,9 @@ import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.components.fan.EncasedFanBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.content.contraptions.components.waterwheel.WaterWheelBlock;
+import com.simibubi.create.foundation.block.BlockStressValues;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
-import com.simibubi.create.foundation.config.StressConfigValues;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.Block;
@@ -106,8 +106,8 @@ public class ItemDescription {
 		}
 
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
-		boolean hasStressImpact = StressImpact.isEnabled() && showStressImpact && StressConfigValues.getImpact(block) > 0;
-		boolean hasStressCapacity = StressImpact.isEnabled() && StressConfigValues.hasCapacity(block);
+		boolean hasStressImpact = StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
+		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
 		if (hasSpeedRequirement) {
 			List<ITextComponent> speedLevels =
@@ -130,7 +130,7 @@ public class ItemDescription {
 
 		if (hasStressImpact) {
 			List<ITextComponent> stressLevels = Lang.translatedOptions("tooltip.stressImpact", "low", "medium", "high");
-			double impact = StressConfigValues.getImpact(block);
+			double impact = BlockStressValues.getImpact(block);
 			StressImpact impactId = impact >= config.highStressImpact.get() ? StressImpact.HIGH
 				: (impact >= config.mediumStressImpact.get() ? StressImpact.MEDIUM : StressImpact.LOW);
 			int index = impactId.ordinal();
@@ -151,7 +151,7 @@ public class ItemDescription {
 		if (hasStressCapacity) {
 			List<ITextComponent> stressCapacityLevels =
 				Lang.translatedOptions("tooltip.capacityProvided", "low", "medium", "high");
-			double capacity = StressConfigValues.getCapacity(block);
+			double capacity = BlockStressValues.getCapacity(block);
 			StressImpact impactId = capacity >= config.highCapacity.get() ? StressImpact.LOW
 				: (capacity >= config.mediumCapacity.get() ? StressImpact.MEDIUM : StressImpact.HIGH);
 			int index = StressImpact.values().length - 2 - impactId.ordinal();
