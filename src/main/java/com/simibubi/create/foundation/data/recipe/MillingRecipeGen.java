@@ -96,7 +96,7 @@ public class MillingRecipeGen extends ProcessingRecipeGen {
 
 		BEETROOT = create(() -> Items.BEETROOT, b -> b.duration(70)
 			.output(Items.RED_DYE, 2)
-			.output(.1f, Items.PURPLE_DYE)),
+			.output(.1f, Items.BEETROOT_SEEDS)),
 
 		INK_SAC = create(() -> Items.INK_SAC, b -> b.duration(100)
 			.output(Items.BLACK_DYE, 2)
