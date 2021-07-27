@@ -1,6 +1,8 @@
 package com.simibubi.create.content.contraptions.components;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,7 +27,7 @@ public class AssemblyOperatorBlockItem extends BlockItem {
 				.getOpposite());
 		BlockState placedOnState = context.getLevel()
 			.getBlockState(placedOnPos);
-		if (operatesOn(placedOnState)) {
+		if (operatesOn(placedOnState) && context.getClickedFace() == Direction.UP) {
 			if (context.getLevel()
 				.getBlockState(placedOnPos.above(2))
 				.getMaterial()
@@ -44,7 +46,9 @@ public class AssemblyOperatorBlockItem extends BlockItem {
 	}
 
 	protected boolean operatesOn(BlockState placedOnState) {
-		return AllBlocks.BASIN.has(placedOnState) || AllBlocks.BELT.has(placedOnState) || AllBlocks.DEPOT.has(placedOnState) || AllBlocks.WEIGHTED_EJECTOR.has(placedOnState);
+		if (AllBlocks.BELT.has(placedOnState))
+			return placedOnState.getValue(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
+		return AllBlocks.BASIN.has(placedOnState) || AllBlocks.DEPOT.has(placedOnState) || AllBlocks.WEIGHTED_EJECTOR.has(placedOnState);
 	}
 
 }
