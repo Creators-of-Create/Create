@@ -202,14 +202,13 @@ public class ContraptionRenderDispatcher {
 							  ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
 		World world = entity.level;
 
-		ContraptionWorldHolder holder = getWorldHolder(world, contraption);
-		PlacementSimulationWorld renderWorld = holder.renderWorld;
-
-		ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, matrices, buffers);
-
 		if (Backend.getInstance().available()) {
 			getRenderer(world, contraption); // hack to create the RenderedContraption when using Flywheel
 		}
+
+		PlacementSimulationWorld renderWorld = getWorldHolder(world, contraption).renderWorld;
+
+		ContraptionRenderDispatcher.renderDynamic(world, renderWorld, contraption, matrices, buffers);
 	}
 
 	private static RenderedContraption getRenderer(World world, Contraption c) {
