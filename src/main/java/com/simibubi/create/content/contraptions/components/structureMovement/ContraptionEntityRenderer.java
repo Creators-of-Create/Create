@@ -37,10 +37,9 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 		int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
-		ContraptionMatrices matrices = new ContraptionMatrices(ms, entity);
 		Contraption contraption = entity.getContraption();
 		if (contraption != null) {
-			ContraptionRenderDispatcher.render(entity, contraption, matrices, buffers);
+			ContraptionRenderDispatcher.render(entity, contraption, buffers);
 		}
 	}
 

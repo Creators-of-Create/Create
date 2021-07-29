@@ -12,10 +12,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
 import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
-import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
-import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.material.MaterialGroup;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
@@ -41,7 +38,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.world.World;
 
-public class RenderedContraption extends ContraptionWorldHolder {
+public class RenderedContraption extends ContraptionRenderInfo {
 	public static final VertexFormat FORMAT = VertexFormat.builder()
 			.addAttributes(CommonAttributes.VEC3,
 					CommonAttributes.NORMAL,

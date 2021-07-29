@@ -141,7 +141,7 @@ public class ClientEvents {
 		PlacementHelpers.tick();
 		CreateClient.OUTLINER.tickOutlines();
 		CreateClient.GHOST_BLOCKS.tickGhosts();
-		ContraptionRenderDispatcher.tick();
+		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
 	}
 

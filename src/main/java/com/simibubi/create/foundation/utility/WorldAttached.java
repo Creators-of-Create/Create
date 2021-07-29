@@ -6,17 +6,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import net.minecraft.world.IWorld;
+import net.minecraftforge.common.util.NonNullFunction;
 
 public class WorldAttached<T> {
 
 	static List<Map<IWorld, ?>> allMaps = new ArrayList<>();
 	Map<IWorld, T> attached;
-	private Function<IWorld, T> factory;
+	private final NonNullFunction<IWorld, T> factory;
 
-	public WorldAttached(Function<IWorld, T> factory) {
+	public WorldAttached(NonNullFunction<IWorld, T> factory) {
 		this.factory = factory;
 		attached = new HashMap<>();
 		allMaps.add(attached);
@@ -26,7 +28,7 @@ public class WorldAttached<T> {
 		allMaps.forEach(m -> m.remove(world));
 	}
 
-	@Nullable
+	@Nonnull
 	public T get(IWorld world) {
 		T t = attached.get(world);
 		if (t != null)

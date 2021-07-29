@@ -10,41 +10,52 @@ import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 
 public class ContraptionMatrices {
+
+	public static final ContraptionMatrices IDENTITY = new ContraptionMatrices();
+
 	public final MatrixStack entityStack;
 	public final MatrixStack contraptionStack;
+	public final MatrixStack finalStack;
 	public final Matrix4f entityMatrix;
+	public final Matrix4f lightMatrix;
+
+	private ContraptionMatrices() {
+		this.entityStack = new MatrixStack();
+		this.contraptionStack = new MatrixStack();
+		this.finalStack = new MatrixStack();
+		this.entityMatrix = new Matrix4f();
+		this.lightMatrix = new Matrix4f();
+	}
 
 	public ContraptionMatrices(MatrixStack entityStack, AbstractContraptionEntity entity) {
-		this.entityStack = entityStack;
+		this.entityStack = copyStack(entityStack);
 		this.contraptionStack = new MatrixStack();
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 		entity.doLocalTransforms(partialTicks, new MatrixStack[] { this.contraptionStack });
+
 		entityMatrix = translateTo(entity, partialTicks);
+
+		lightMatrix = entityMatrix.copy();
+		lightMatrix.multiply(contraptionStack.last().pose());
+
+		finalStack = copyStack(entityStack);
+		transform(finalStack, contraptionStack);
 	}
 
 	public MatrixStack getFinalStack() {
-		MatrixStack finalStack = new MatrixStack();
-		transform(finalStack, entityStack);
-		transform(finalStack, contraptionStack);
 		return finalStack;
 	}
 
 	public Matrix4f getFinalModel() {
-		Matrix4f finalModel = entityStack.last().pose().copy();
-		finalModel.multiply(contraptionStack.last().pose());
-		return finalModel;
+		return finalStack.last().pose();
 	}
 
 	public Matrix3f getFinalNormal() {
-		Matrix3f finalNormal = entityStack.last().normal().copy();
-		finalNormal.mul(contraptionStack.last().normal());
-		return finalNormal;
+		return finalStack.last().normal();
 	}
 
 	public Matrix4f getFinalLight() {
-		Matrix4f lightTransform = entityMatrix.copy();
-		lightTransform.multiply(contraptionStack.last().pose());
-		return lightTransform;
+		return lightMatrix;
 	}
 
 	public static Matrix4f translateTo(Entity entity, float partialTicks) {
@@ -61,5 +72,13 @@ public class ContraptionMatrices {
 		ms.last().normal()
 			.mul(transform.last()
 			.normal());
+	}
+
+	public static MatrixStack copyStack(MatrixStack ms) {
+		MatrixStack cms = new MatrixStack();
+
+		transform(cms, ms);
+
+		return cms;
 	}
 }
