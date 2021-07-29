@@ -1,12 +1,11 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-
-import java.util.Random;
+import java.util.Collection;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
@@ -24,36 +23,24 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ContraptionRenderDispatcher {
-	private static final Lazy<BlockModelRenderer> MODEL_RENDERER = Lazy.of(() -> new BlockModelRenderer(Minecraft.getInstance().getBlockColors()));
-	private static final Lazy<BlockModelShapes> BLOCK_MODELS = Lazy.of(() -> Minecraft.getInstance().getModelManager().getBlockModelShaper());
 
 	private static WorldAttached<ContraptionRenderManager<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 
@@ -147,40 +134,10 @@ public class ContraptionRenderDispatcher {
 	}
 
 	public static SuperByteBuffer buildStructureBuffer(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
-		BufferBuilder builder = buildStructure(renderWorld, c, layer);
+		Collection<Template.BlockInfo> values = c.getBlocks()
+				.values();
+		BufferBuilder builder = ModelUtil.getBufferBuilderFromTemplate(renderWorld, layer, values);
 		return new SuperByteBuffer(builder);
-	}
-
-	public static BufferBuilder buildStructure(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
-		MatrixStack ms = new MatrixStack();
-		Random random = new Random();
-		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
-		builder.begin(GL_QUADS, DefaultVertexFormats.BLOCK);
-
-		ForgeHooksClient.setRenderLayer(layer);
-		BlockModelRenderer.enableCaching();
-		for (Template.BlockInfo info : c.getBlocks()
-				.values()) {
-			BlockState state = info.state;
-
-			if (state.getRenderShape() != BlockRenderType.MODEL)
-				continue;
-			if (!RenderTypeLookup.canRenderInLayer(state, layer))
-				continue;
-
-			BlockPos pos = info.pos;
-
-			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			MODEL_RENDERER.get().renderModel(renderWorld, BLOCK_MODELS.get().getBlockModel(state), state, pos, ms, builder, true,
-					random, 42, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
-			ms.popPose();
-		}
-		BlockModelRenderer.clearCache();
-		ForgeHooksClient.setRenderLayer(null);
-
-		builder.end();
-		return builder;
 	}
 
 	public static int getLight(World world, float lx, float ly, float lz) {

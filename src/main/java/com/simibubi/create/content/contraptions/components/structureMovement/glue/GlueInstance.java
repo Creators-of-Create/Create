@@ -164,11 +164,5 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 		public VertexFormat format() {
 			return Formats.UNLIT_MODEL;
 		}
-
-		@Override
-		public ElementBuffer createEBO() {
-			return QuadConverter.getInstance()
-					.quads2Tris(2);
-		}
 	}
 }

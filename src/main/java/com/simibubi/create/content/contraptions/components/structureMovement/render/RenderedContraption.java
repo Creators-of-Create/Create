@@ -1,26 +1,20 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.gl.attrib.CommonAttributes;
-import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
-import com.jozufozu.flywheel.backend.model.BufferedModel;
-import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
+import com.jozufozu.flywheel.core.model.IModel;
+import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -28,7 +22,6 @@ import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -39,13 +32,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class RenderedContraption extends ContraptionRenderInfo {
-	public static final VertexFormat FORMAT = VertexFormat.builder()
-			.addAttributes(CommonAttributes.VEC3,
-					CommonAttributes.NORMAL,
-					CommonAttributes.UV,
-					CommonAttributes.RGBA,
-					CommonAttributes.LIGHT)
-			.build();
 
 	private final ContraptionLighter<?> lighter;
 
@@ -137,14 +123,12 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
 
 		for (RenderType layer : blockLayers) {
-			BufferedModel layerModel = buildStructureModel(renderWorld, contraption, layer);
+			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values());
 
-			if (layerModel != null) {
-				if (Backend.getInstance().compat.vertexArrayObjectsSupported())
-					renderLayers.put(layer, new ArrayModelRenderer(layerModel));
-				else
-					renderLayers.put(layer, new ModelRenderer(layerModel));
-			}
+			if (Backend.getInstance().compat.vertexArrayObjectsSupported())
+				renderLayers.put(layer, new ArrayModelRenderer(layerModel));
+			else
+				renderLayers.put(layer, new ModelRenderer(layerModel));
 		}
 	}
 
@@ -166,48 +150,5 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private void buildActors() {
 		contraption.getActors().forEach(kinetics::createActor);
-	}
-
-	@Nullable
-	private static BufferedModel buildStructureModel(PlacementSimulationWorld renderWorld, Contraption c, RenderType layer) {
-		BufferBuilderReader reader = new BufferBuilderReader(ContraptionRenderDispatcher.buildStructure(renderWorld, c, layer));
-
-		int vertexCount = reader.getVertexCount();
-		if (vertexCount == 0) return null;
-
-		VertexFormat format = FORMAT;
-
-		ByteBuffer vertices = ByteBuffer.allocate(format.getStride() * vertexCount);
-		vertices.order(ByteOrder.nativeOrder());
-
-		for (int i = 0; i < vertexCount; i++) {
-			vertices.putFloat(reader.getX(i));
-			vertices.putFloat(reader.getY(i));
-			vertices.putFloat(reader.getZ(i));
-
-			vertices.put(reader.getNX(i));
-			vertices.put(reader.getNY(i));
-			vertices.put(reader.getNZ(i));
-
-			vertices.putFloat(reader.getU(i));
-			vertices.putFloat(reader.getV(i));
-
-			vertices.put(reader.getR(i));
-			vertices.put(reader.getG(i));
-			vertices.put(reader.getB(i));
-			vertices.put(reader.getA(i));
-
-			int light = reader.getLight(i);
-
-			byte block = (byte) (LightTexture.block(light) << 4);
-			byte sky = (byte) (LightTexture.sky(light) << 4);
-
-			vertices.put(block);
-			vertices.put(sky);
-		}
-
-		vertices.rewind();
-
-		return IndexedModel.fromSequentialQuads(format, vertices, vertexCount);
 	}
 }
