@@ -86,7 +86,7 @@ public class CreateClient {
 		modEventBus.addListener(ClientEvents::loadCompleted);
 		modEventBus.addListener(CreateContexts::flwInit);
 		modEventBus.addListener(AllMaterialSpecs::flwInit);
-		modEventBus.addListener(ContraptionRenderDispatcher::invalidateOnGatherContext);
+		modEventBus.addListener(ContraptionRenderDispatcher::gatherContext);
 
 		ZAPPER_RENDER_HANDLER.register(forgeEventBus);
 		POTATO_CANNON_RENDER_HANDLER.register(forgeEventBus);
@@ -207,7 +207,7 @@ public class CreateClient {
 	public static void invalidateRenderers() {
 		BUFFER_CACHE.invalidate();
 
-		ContraptionRenderDispatcher.invalidateAll();
+		ContraptionRenderDispatcher.reset();
 	}
 
 	public static void checkGraphicsFanciness() {

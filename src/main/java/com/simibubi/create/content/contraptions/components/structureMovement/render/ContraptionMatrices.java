@@ -11,7 +11,10 @@ import net.minecraft.util.math.vector.Matrix4f;
 
 public class ContraptionMatrices {
 
-	public static final ContraptionMatrices IDENTITY = new ContraptionMatrices();
+	/**
+	 * The results from using this are undefined.
+	 */
+	public static final ContraptionMatrices EMPTY = new ContraptionMatrices();
 
 	public final MatrixStack entityStack;
 	public final MatrixStack contraptionStack;
@@ -20,9 +23,7 @@ public class ContraptionMatrices {
 	public final Matrix4f lightMatrix;
 
 	private ContraptionMatrices() {
-		this.entityStack = new MatrixStack();
-		this.contraptionStack = new MatrixStack();
-		this.finalStack = new MatrixStack();
+		this.entityStack = this.contraptionStack = this.finalStack = new MatrixStack();
 		this.entityMatrix = new Matrix4f();
 		this.lightMatrix = new Matrix4f();
 	}
@@ -80,5 +81,10 @@ public class ContraptionMatrices {
 		transform(cms, ms);
 
 		return cms;
+	}
+
+	public Matrix4f contraptionPose() {
+		return contraptionStack.last()
+				.pose();
 	}
 }

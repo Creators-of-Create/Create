@@ -1,19 +1,19 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.client.renderer.culling.ClippingHelper;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class ContraptionRenderInfo {
 	public final Contraption contraption;
 	public final PlacementSimulationWorld renderWorld;
 
-	private ContraptionMatrices matrices = ContraptionMatrices.IDENTITY;
+	private ContraptionMatrices matrices = ContraptionMatrices.EMPTY;
 	private boolean visible;
 
 	public ContraptionRenderInfo(Contraption contraption, PlacementSimulationWorld renderWorld) {
@@ -29,22 +29,24 @@ public class ContraptionRenderInfo {
         return !contraption.entity.isAlive();
     }
 
-    public void beginFrame(ClippingHelper clippingHelper, MatrixStack mainStack, double camX, double camY, double camZ) {
+    public void beginFrame(BeginFrameEvent event) {
 		AbstractContraptionEntity entity = contraption.entity;
 
-		visible = clippingHelper.isVisible(entity.getBoundingBoxForCulling().inflate(2));
+		visible = event.getClippingHelper().isVisible(entity.getBoundingBoxForCulling().inflate(2));
 
-		mainStack.pushPose();
+		event.getStack().pushPose();
 
-		double x = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), entity.xOld, entity.getX()) - camX;
-		double y = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), entity.yOld, entity.getY()) - camY;
-		double z = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), entity.zOld, entity.getZ()) - camZ;
+		Vector3d cameraPos = event.getInfo()
+				.getPosition();
+		double x = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), entity.xOld, entity.getX()) - cameraPos.x;
+		double y = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), entity.yOld, entity.getY()) - cameraPos.y;
+		double z = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), entity.zOld, entity.getZ()) - cameraPos.z;
 
-		mainStack.translate(x, y, z);
+		event.getStack().translate(x, y, z);
 
-		matrices = new ContraptionMatrices(mainStack, entity);
+		matrices = new ContraptionMatrices(event.getStack(), entity);
 
-		mainStack.popPose();
+		event.getStack().popPose();
 	}
 
 	public boolean isVisible() {

@@ -18,9 +18,9 @@ import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.BufferedModel;
 import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
+import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.util.BufferBuilderReader;
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -28,7 +28,6 @@ import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
@@ -36,6 +35,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class RenderedContraption extends ContraptionRenderInfo {
@@ -85,26 +85,28 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		}
 	}
 
-	public void beginFrame(ActiveRenderInfo info, double camX, double camY, double camZ) {
-		kinetics.beginFrame(info);
+	public void beginFrame(BeginFrameEvent event) {
+		super.beginFrame(event);
+
+		if (!isVisible()) return;
+
+		kinetics.beginFrame(event.getInfo());
 
 		AbstractContraptionEntity entity = contraption.entity;
 		float pt = AnimationTickHolder.getPartialTicks();
-
-		MatrixStack stack = new MatrixStack();
-
-		double x = MathHelper.lerp(pt, entity.xOld, entity.getX()) - camX;
-		double y = MathHelper.lerp(pt, entity.yOld, entity.getY()) - camY;
-		double z = MathHelper.lerp(pt, entity.zOld, entity.getZ()) - camZ;
-		stack.translate(x, y, z);
-
-		entity.doLocalTransforms(pt, new MatrixStack[] { stack });
-
-		model = stack.last().pose();
-
 		AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
 
-		this.lightBox = lightBox.move(-camX, -camY, -camZ);
+		Vector3d cameraPos = event.getInfo()
+				.getPosition();
+
+		float x = (float) (MathHelper.lerp(pt, entity.xOld, entity.getX()) - cameraPos.x);
+		float y = (float) (MathHelper.lerp(pt, entity.yOld, entity.getY()) - cameraPos.y);
+		float z = (float) (MathHelper.lerp(pt, entity.zOld, entity.getZ()) - cameraPos.z);
+		model = Matrix4f.createTranslateMatrix(x, y, z);
+
+		model.multiply(getMatrices().contraptionPose());
+
+		this.lightBox = lightBox.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 
 	void setup(ContraptionProgram shader) {

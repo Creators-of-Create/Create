@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.event.ReloadRenderersEvent;
@@ -54,7 +55,7 @@ public class ContraptionRenderDispatcher {
 	private static final Lazy<BlockModelRenderer> MODEL_RENDERER = Lazy.of(() -> new BlockModelRenderer(Minecraft.getInstance().getBlockColors()));
 	private static final Lazy<BlockModelShapes> BLOCK_MODELS = Lazy.of(() -> Minecraft.getInstance().getModelManager().getBlockModelShaper());
 
-	private static final WorldAttached<WorldContraptions> WORLDS = new WorldAttached<>(WorldContraptions::new);
+	private static WorldAttached<ContraptionRenderManager<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 
 	public static final Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new Compartment<>();
 
@@ -76,11 +77,11 @@ public class ContraptionRenderDispatcher {
 
 	@SubscribeEvent
 	public static void onRendererReload(ReloadRenderersEvent event) {
-		invalidateAll();
+		reset();
 	}
 
-	public static void invalidateOnGatherContext(GatherContextEvent e) {
-		invalidateAll();
+	public static void gatherContext(GatherContextEvent e) {
+		reset();
 	}
 
 	public static void render(AbstractContraptionEntity entity, Contraption contraption, IRenderTypeBuffer buffers) {
@@ -202,7 +203,13 @@ public class ContraptionRenderDispatcher {
 		return WorldRenderer.getLightColor(renderWorld, context.localPos);
 	}
 
-	public static void invalidateAll() {
-		WORLDS.empty(WorldContraptions::invalidate);
+	public static void reset() {
+		WORLDS.empty(ContraptionRenderManager::delete);
+
+		if (Backend.getInstance().available()) {
+			WORLDS = new WorldAttached<>(FlwContraptionManager::new);
+		} else {
+			WORLDS = new WorldAttached<>(SBBContraptionManager::new);
+		}
 	}
 }
