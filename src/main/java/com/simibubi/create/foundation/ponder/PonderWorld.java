@@ -76,7 +76,7 @@ public class PonderWorld extends SchematicWorld {
 
 		// ParticleManager.factories - ATs don't seem to like this one
 		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleManager.class,
-			Minecraft.getInstance().particleEngine, "providers");
+			Minecraft.getInstance().particleEngine, "field_178932_g");
 	}
 
 	public void createBackup() {

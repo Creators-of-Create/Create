@@ -51,7 +51,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		returnOnClose = true;
 		if (parent instanceof MainMenuScreen)
 			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen) parent,
-				"panorama");
+				"field_209101_K");
 	}
 
 	@Override
