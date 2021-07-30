@@ -19,14 +19,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.RegistryEvent.MissingMappings.Mapping;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 public class AllFluids {
 
@@ -45,32 +39,26 @@ public class AllFluids {
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
 			REGISTRATE.standardFluid("honey", NoColorFluidAttributes::new)
 					.lang(f -> "fluid.create.honey", "Honey")
-					.attributes(b -> b.viscosity(500)
+					.attributes(b -> b.viscosity(2000)
 							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.slopeFindDistance(3)
 							.explosionResistance(100f))
 					.tag(AllFluidTags.HONEY.tag)
-					.bucket()
-					.properties(p -> p.stacksTo(1))
-					.build()
 					.register();
 
 	public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
 			REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
 					.lang(f -> "fluid.create.chocolate", "Chocolate")
 					.tag(AllTags.forgeFluidTag("chocolate"))
-					.attributes(b -> b.viscosity(500)
+					.attributes(b -> b.viscosity(1500)
 							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
 							.slopeFindDistance(3)
 							.explosionResistance(100f))
-					.bucket()
-			.properties(p -> p.stacksTo(1))
-			.build()
-			.register();
+					.register();
 
 	// Load this class
 
