@@ -152,7 +152,7 @@ public class BlueprintEntity extends HangingEntity
 		if (this.verticalOrientation == null)
 			return;
 
-		Vector3d pos = Vector3d.atLowerCornerOf(blockPosition())
+		Vector3d pos = Vector3d.atLowerCornerOf(getPos())
 			.add(.5, .5, .5)
 			.subtract(Vector3d.atLowerCornerOf(direction.getNormal())
 				.scale(0.46875));
