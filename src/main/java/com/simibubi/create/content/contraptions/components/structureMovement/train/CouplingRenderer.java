@@ -12,7 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -225,7 +225,7 @@ public class CouplingRenderer {
 				.position()
 				.add(0, yOffset, 0);
 
-		int color = ColorHelper.mixColors(0xabf0e9, 0xee8572, (float) MathHelper
+		int color = Color.mixColors(0xabf0e9, 0xee8572, (float) MathHelper
 				.clamp(Math.abs(first.getCouplingLength(true) - connectedCenter.distanceTo(mainCenter)) * 8, 0, 1));
 
 		CreateClient.OUTLINER.showLine(mainCart.getId() + "", mainCenter, connectedCenter)

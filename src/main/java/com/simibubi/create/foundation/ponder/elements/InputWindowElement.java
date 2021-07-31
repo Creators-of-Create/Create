@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
-import com.simibubi.create.foundation.utility.ColorHelper;
 import com.simibubi.create.foundation.utility.Pointing;
 
 import net.minecraft.client.gui.FontRenderer;
@@ -59,7 +58,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		icon = AllIcons.I_RMB;
 		return this;
 	}
-	
+
 	public InputWindowElement showing(AllIcons icon) {
 		this.icon = icon;
 		return this;
@@ -126,7 +125,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 
 		if (hasText)
 			font.draw(ms, text, 2, (height - font.lineHeight) / 2f + 2,
-				ColorHelper.applyAlpha(PonderPalette.WHITE.getColor(), fade));
+				PonderPalette.WHITE.getColorObject().scaleAlpha(fade).getRGB());
 
 		if (hasIcon) {
 			ms.pushPose();

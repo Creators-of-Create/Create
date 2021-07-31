@@ -12,7 +12,7 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -129,7 +129,7 @@ public abstract class Outline {
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
 		Entry peek = ms.last();
-		Vector3d rgb = params.rgb;
+		Color rgb = params.rgb;
 		if (transformNormals == null)
 			transformNormals = peek.normal();
 
@@ -144,7 +144,7 @@ public abstract class Outline {
 		}
 
 		builder.vertex(peek.pose(), (float) pos.x, (float) pos.y, (float) pos.z)
-			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, params.alpha)
+			.color(rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(), rgb.getAlphaAsFloat() * params.alpha)
 			.uv(u, v)
 			.overlayCoords(OverlayTexture.NO_OVERLAY)
 			.uv2(j, k)
@@ -169,7 +169,7 @@ public abstract class Outline {
 		protected boolean disableNormals;
 		protected float alpha;
 		protected int lightMapU, lightMapV;
-		protected Vector3d rgb;
+		protected Color rgb;
 		private float lineWidth;
 
 		public OutlineParams() {
@@ -177,7 +177,7 @@ public abstract class Outline {
 			alpha = 1;
 			lineWidth = 1 / 32f;
 			fadeLineWidth = true;
-			rgb = ColorHelper.getRGB(0xFFFFFF);
+			rgb = Color.WHITE;
 
 			int i = 15 << 20 | 15 << 4;
 			lightMapU = i >> 16 & '\uffff';
@@ -187,7 +187,12 @@ public abstract class Outline {
 		// builder
 
 		public OutlineParams colored(int color) {
-			rgb = ColorHelper.getRGB(color);
+			rgb = new Color(color, false);
+			return this;
+		}
+
+		public OutlineParams colored(Color c) {
+			rgb = c.copy();
 			return this;
 		}
 

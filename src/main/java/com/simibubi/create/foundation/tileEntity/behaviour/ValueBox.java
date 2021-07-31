@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
 
@@ -143,7 +143,7 @@ public class ValueBox extends ChasingAABBOutline {
 			boolean isEmpty = stack.isEmpty();
 			float scale = 1.5f;
 			ms.translate(-font.width(countString), 0, 0);
-			
+
 			if (isFilter)
 				ms.translate(3, 8, 7.25f);
 			else if (isEmpty) {
@@ -215,7 +215,7 @@ public class ValueBox extends ChasingAABBOutline {
 	// util
 
 	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text) {
-		renderHoveringText(ms, buffer, text, highlightColor, ColorHelper.mixColors(passiveColor, 0, 0.75f));
+		renderHoveringText(ms, buffer, text, highlightColor, Color.mixColors(passiveColor, 0, 0.75f));
 	}
 
 	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text, int color,

@@ -1,16 +1,16 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
@@ -53,7 +53,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
 
         float state = tile.clientState.get(AnimationTickHolder.getPartialTicks());
 
-        int color = ColorHelper.mixColors(0x2C0300, 0xCD0000, state / 15f);
+        int color = Color.mixColors(0x2C0300, 0xCD0000, state / 15f);
         indicator.setTransform(ms)
                  .setColor(color);
 

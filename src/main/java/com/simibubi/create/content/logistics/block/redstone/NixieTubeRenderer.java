@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.block.BlockState;
@@ -92,7 +92,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		Couple<Integer> couple = DYE_TABLE.get(color);
 		int brightColor = couple.getFirst();
 		int darkColor = couple.getSecond();
-		int flickeringBrightColor = ColorHelper.mixColors(brightColor, darkColor, flicker / 4);
+		int flickeringBrightColor = Color.mixColors(brightColor, darkColor, flicker / 4);
 
 		ms.pushPose();
 		ms.translate((charWidth - shadowOffset) / -2f, -height, 0);
@@ -109,7 +109,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		drawChar(ms, buffer, c, darkColor);
 		ms.pushPose();
 		ms.translate(-shadowOffset, shadowOffset, -1 / 16f);
-		drawChar(ms, buffer, c, ColorHelper.mixColors(darkColor, 0, .35f));
+		drawChar(ms, buffer, c, Color.mixColors(darkColor, 0, .35f));
 		ms.popPose();
 		ms.popPose();
 	}

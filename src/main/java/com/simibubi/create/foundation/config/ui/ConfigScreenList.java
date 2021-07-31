@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -40,10 +41,11 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		UIRenderHelper.angledGradient(ms, 90, x0 + width / 2, y0, width, 5, 0x60_000000, 0x0);
-		UIRenderHelper.angledGradient(ms, -90, x0 + width / 2, y1, width, 5, 0x60_000000, 0x0);
-		UIRenderHelper.angledGradient(ms, 0, x0, y0 + height / 2, height, 5, 0x60_000000, 0x0);
-		UIRenderHelper.angledGradient(ms, 180, x1, y0 + height / 2, height, 5, 0x60_000000, 0x0);
+		Color c = new Color(0x60_000000);
+		UIRenderHelper.angledGradient(ms, 90, x0 + width / 2, y0, width, 5, c, Color.TRANSPARENT_BLACK);
+		UIRenderHelper.angledGradient(ms, -90, x0 + width / 2, y1, width, 5, c, Color.TRANSPARENT_BLACK);
+		UIRenderHelper.angledGradient(ms, 0, x0, y0 + height / 2, height, 5, c, Color.TRANSPARENT_BLACK);
+		UIRenderHelper.angledGradient(ms, 180, x1, y0 + height / 2, height, 5, c, Color.TRANSPARENT_BLACK);
 
 		super.render(ms, mouseX, mouseY, partialTicks);
 	}

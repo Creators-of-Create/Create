@@ -23,7 +23,7 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class ConfigHelper {
 
-	private static final LoadingCache<String, EnumMap<ModConfig.Type, ModConfig>> configCache = CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.SECONDS).build(
+	private static final LoadingCache<String, EnumMap<ModConfig.Type, ModConfig>> configCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build(
 			new CacheLoader<String, EnumMap<ModConfig.Type, ModConfig>>() {
 				@Override
 				public EnumMap<ModConfig.Type, ModConfig> load(@Nonnull String key) {

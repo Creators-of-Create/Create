@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -77,19 +77,18 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		buffer.light(light);
 		buffer.rotateCentered(Direction.get(AxisDirection.POSITIVE, axis), angle);
 
-		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
-			buffer.color(te.hasNetwork() ? ColorHelper.colorFromLong(te.network) : white);
+			buffer.color(te.hasNetwork() ? Color.generateFromLong(te.network) : Color.WHITE);
 		} else {
 			float overStressedEffect = te.effects.overStressedEffect;
 			if (overStressedEffect != 0)
 				if (overStressedEffect > 0)
-					buffer.color(ColorHelper.mixColors(white, 0xFF0000, overStressedEffect));
+					buffer.color(Color.WHITE.mixWith(Color.RED, overStressedEffect));
 				else
-					buffer.color(ColorHelper.mixColors(white, 0x00FFBB, -overStressedEffect));
+					buffer.color(Color.WHITE.mixWith(Color.SPRING_GREEN, -overStressedEffect));
 			else
-				buffer.color(white);
+				buffer.color(Color.WHITE);
 		}
 
 		return buffer;

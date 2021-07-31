@@ -5,7 +5,7 @@ import java.util.List;
 import com.simibubi.create.content.contraptions.base.IRotate.StressImpact;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.ItemDescription;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.tileentity.TileEntityType;
@@ -35,9 +35,9 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 
 		if (dialTarget > 0) {
 			if (dialTarget < .5f)
-				color = ColorHelper.mixColors(0x00FF00, 0xFFFF00, dialTarget * 2);
+				color = Color.mixColors(0x00FF00, 0xFFFF00, dialTarget * 2);
 			else if (dialTarget < 1)
-				color = ColorHelper.mixColors(0xFFFF00, 0xFF0000, (dialTarget) * 2 - 1);
+				color = Color.mixColors(0xFFFF00, 0xFF0000, (dialTarget) * 2 - 1);
 			else
 				color = 0xFF0000;
 		}

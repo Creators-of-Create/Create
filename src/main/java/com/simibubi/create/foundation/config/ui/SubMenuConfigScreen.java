@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.config.ui;
 
-import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +31,7 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.Minecraft;

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.particle;
 
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleRenderType;
@@ -43,7 +43,7 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		this.multiplyColor(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
-		
+
 		this.xd = vx;
 		this.yd = vy;
 		this.zd = vz;
@@ -98,12 +98,12 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		if (!onGround && level.random.nextFloat() < 1 / 8f)
 			return;
 
-		Vector3d rgb = ColorHelper.getRGB(fluid.getFluid()
+		Vector3d rgb = Color.vectorFromRGB(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
 		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, rgb.x, rgb.y, rgb.z);
 	}
-	
+
 	protected boolean canEvaporate() {
 		return fluid.getFluid() instanceof PotionFluid;
 	}

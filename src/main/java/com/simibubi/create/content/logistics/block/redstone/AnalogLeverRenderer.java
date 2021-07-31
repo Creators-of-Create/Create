@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -46,7 +46,7 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 				.renderInto(ms, vb);
 
 		// Indicator
-		int color = ColorHelper.mixColors(0x2C0300, 0xCD0000, state / 15f);
+		int color = Color.mixColors(0x2C0300, 0xCD0000, state / 15f);
 		SuperByteBuffer indicator = transform(PartialBufferer.get(AllBlockPartials.ANALOG_LEVER_INDICATOR, leverState), leverState);
 		indicator.light(lightCoords)
 				.color(color)

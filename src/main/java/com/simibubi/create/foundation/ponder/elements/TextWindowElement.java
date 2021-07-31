@@ -10,7 +10,7 @@ import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -126,7 +126,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 
 		//PonderUI.renderBox(ms, targetX - 10, 3, boxWidth, boxHeight - 1, 0xaa000000, 0x30eebb00, 0x10eebb00);
 
-		int brighterColor = ColorHelper.mixAlphaColors(color, 0xFFffffdd, 1 / 2f);
+		int brighterColor = Color.mixColors(color, 0xFFffffdd, 1 / 2f);
 		if (vec != null) {
 			ms.pushPose();
 			ms.translate(sceneToScreen.x, 0, 0);
@@ -142,7 +142,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 		for (int i = 0; i < lines.size(); i++) {
 			screen.getFontRenderer()
 				.draw(ms, lines.get(i)
-					.getString(), targetX - 10, 3 + 9 * i, ColorHelper.applyAlpha(brighterColor, fade));
+					.getString(), targetX - 10, 3 + 9 * i, new Color(brighterColor).scaleAlpha(fade).getRGB());
 		}
 		ms.popPose();
 	}

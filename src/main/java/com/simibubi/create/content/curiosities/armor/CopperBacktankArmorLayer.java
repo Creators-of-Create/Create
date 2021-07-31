@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
@@ -132,7 +132,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			.render(ms);
 		int color = 0xFF_FFFFFF;
 		if (timeLeft < 60 && timeLeft % 2 == 0) {
-			color = ColorHelper.mixColors(0xFF_FF0000, color, Math.max(timeLeft / 60f, .25f));
+			color = Color.mixColors(0xFF_FF0000, color, Math.max(timeLeft / 60f, .25f));
 		}
 		Minecraft.getInstance().font.drawShadow(ms, text, 16, 5, color);
 		buffers.endBatch();

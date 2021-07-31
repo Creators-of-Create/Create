@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.base.Strings;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
@@ -133,8 +133,8 @@ public class PonderTooltipHandler {
 
 	private static int getSmoothColorForProgress(float progress) {
 		if (progress < .5f)
-			return ColorHelper.mixColors(0x5000FF, 5592575, progress * 2);
-		return ColorHelper.mixColors(5592575, 0xffffff, (progress - .5f) * 2);
+			return Color.mixColors(0x5000FF, 5592575, progress * 2);
+		return Color.mixColors(5592575, 0xffffff, (progress - .5f) * 2);
 	}
 
 	private static ITextComponent makeProgressBar(float progress) {

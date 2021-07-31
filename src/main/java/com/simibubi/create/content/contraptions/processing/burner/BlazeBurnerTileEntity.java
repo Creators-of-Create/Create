@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
@@ -22,34 +22,25 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.common.ForgeHooks;
 
 public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	public static final int MAX_HEAT_CAPACITY = 10000;
 
-	private static final Vector3d EMPTY_COLOR = new Vector3d(0, 0, 0);
-	private final static Vector3d[][] PARTICLE_COLORS;
-	private final static Vector3d[] CREATIVE_PARTICLE_COLORS;
-	static {
-		int[][] colors = {
+	private final static Color[][] PARTICLE_COLORS = {
 			{ },
-			{ 0x3B141A, 0x47141A, 0x7A3B24, 0x854D26 },
-			{ 0x2A0103, 0x741B0A, 0xC38246, 0xCCBD78 },
-			{ 0x630B03, 0x8B3503, 0xBC8200, 0xCCC849 },
-			{ 0x1C6378, 0x4798B5, 0x4DA6C0, 0xBAC8CE }
-		};
-
-		int[] creativeColors = { 0x54295D, 0x6E3C76, 0xA5479F, 0x85157C };
-
-		PARTICLE_COLORS = new Vector3d[colors.length][];
-		for (int i = 0; i < colors.length; i++) {
-			PARTICLE_COLORS[i] = ColorHelper.toVectors(colors[i]);
-		}
-
-		CREATIVE_PARTICLE_COLORS = ColorHelper.toVectors(creativeColors);
-	}
+			{ new Color(0x3B141A), new Color(0x47141A), new Color(0x7A3B24), new Color(0x854D26) },
+			{ new Color(0x2A0103), new Color(0x741B0A), new Color(0xC38246), new Color(0xCCBD78) },
+			{ new Color(0x630B03), new Color(0x8B3503), new Color(0xBC8200), new Color(0xCCC849) },
+			{ new Color(0x1C6378), new Color(0x4798B5), new Color(0x4DA6C0), new Color(0xBAC8CE) }
+	};
+	private final static Color[] CREATIVE_PARTICLE_COLORS =  {
+			new Color(0x54295D),
+			new Color(0x6E3C76),
+			new Color(0xA5479F),
+			new Color(0x85157C)
+	};
 
 	protected FuelType activeFuel;
 	protected int remainingBurnTime;
@@ -296,23 +287,20 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		}
 	}
 
-	protected void spawnParticle(Vector3d color, float scale, int avgAge, boolean hot, double speed, double spread) {
+	protected void spawnParticle(Color color, float scale, int avgAge, boolean hot, double speed, double spread) {
 		Random random = level.getRandom();
 		level.addAlwaysVisibleParticle(
-			new CubeParticleData((float) color.x, (float) color.y, (float) color.z, scale, avgAge, hot),
+			new CubeParticleData(color.getRedAsFloat(), color.getGreenAsFloat(), color.getBlueAsFloat(), scale, avgAge, hot),
 			(double) worldPosition.getX() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread,
 			(double) worldPosition.getY() + 0.6D + (random.nextDouble() / 4.0),
 			(double) worldPosition.getZ() + 0.5D + (random.nextDouble() * 2.0 - 1D) * spread, 0.0D, speed, 0.0D);
 	}
 
-	protected void spawnParticle(Vector3d[] colors, float scale, int avgAge, boolean hot, double speed, double spread) {
-		Vector3d color;
-		if (colors.length == 0) {
-			color = EMPTY_COLOR;
-		} else {
-			color = colors[(int) (Math.random() * colors.length)];
-		}
-		spawnParticle(color, scale, avgAge, hot, speed, spread);
+	protected void spawnParticle(Color[] colors, float scale, int avgAge, boolean hot, double speed, double spread) {
+		if (colors.length == 0)
+			return;
+
+		spawnParticle(colors[(int) (Math.random() * colors.length)], scale, avgAge, hot, speed, spread);
 	}
 
 	protected void spawnParticle(HeatLevel heatLevel, float scale, int avgAge, boolean hot, double speed, double spread) {
