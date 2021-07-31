@@ -188,9 +188,13 @@ public class GoggleOverlayRenderer {
 
 		if (fade < 1) {
 			ms.translate((1 - fade) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 4, 0, 0);
-			colorBackground = ColorHelper.applyAlpha(colorBackground, fade);
-			colorBorderTop = ColorHelper.applyAlpha(colorBorderTop, fade);
-			colorBorderBot = ColorHelper.applyAlpha(colorBorderBot, fade);
+			int alphaMask = 0xFF000000;
+			if ((alphaMask & colorBackground) != 0)
+				colorBackground = ColorHelper.applyAlpha(colorBackground, fade);
+			if ((alphaMask & colorBorderTop) != 0)
+				colorBorderTop = ColorHelper.applyAlpha(colorBorderTop, fade);
+			if ((alphaMask & colorBorderBot) != 0)
+				colorBorderBot = ColorHelper.applyAlpha(colorBorderBot, fade);
 		}
 			
 		GuiUtils.drawHoveringText(ms, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,

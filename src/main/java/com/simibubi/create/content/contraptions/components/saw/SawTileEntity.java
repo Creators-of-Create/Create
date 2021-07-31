@@ -125,9 +125,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	protected AxisAlignedBB makeRenderBoundingBox() {
-		Direction facing = getBlockState().getValue(SawBlock.FACING);
-		AxisAlignedBB box = RENDER_BOX.expandTowards(facing.getStepX() * 0.125f, facing.getStepY() * 0.125f, facing.getStepZ() * 0.125f);
-		return box.move(worldPosition);
+		return RENDER_BOX.inflate(.125f)
+			.move(worldPosition);
 	}
 
 	@Override

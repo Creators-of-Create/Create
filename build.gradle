@@ -25,7 +25,7 @@ boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equal
 ext.buildnumber = 0
 project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : "custom"
 
-version = "mc${minecraft_version}_v${mod_version}" + (dev ? "+${buildnumber}" : '')
+version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals("custom") ? "+${buildnumber}" : '')
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
