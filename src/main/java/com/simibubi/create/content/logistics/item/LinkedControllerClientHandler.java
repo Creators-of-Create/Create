@@ -35,10 +35,6 @@ import net.minecraft.util.text.TextFormatting;
 
 public class LinkedControllerClientHandler {
 
-	enum Mode {
-		IDLE, ACTIVE, BIND
-	}
-
 	public static Mode MODE = Mode.IDLE;
 	public static int PACKET_RATE = 5;
 	public static Collection<Integer> currentlyPressed = new HashSet<>();
@@ -112,6 +108,8 @@ public class LinkedControllerClientHandler {
 		if (!currentlyPressed.isEmpty())
 			AllPackets.channel.sendToServer(new LinkedControllerInputPacket(currentlyPressed, false));
 		currentlyPressed.clear();
+
+		LinkedControllerItemRenderer.resetButtons();
 	}
 
 	protected static boolean isActuallyPressed(KeyBinding kb) {
@@ -124,6 +122,7 @@ public class LinkedControllerClientHandler {
 
 	public static void tick() {
 		LinkedControllerItemRenderer.tick();
+
 		if (MODE == Mode.IDLE)
 			return;
 		if (packetCooldown > 0)
@@ -267,6 +266,10 @@ public class LinkedControllerClientHandler {
 
 		ms.popPose();
 
+	}
+
+	public enum Mode {
+		IDLE, ACTIVE, BIND
 	}
 
 }
