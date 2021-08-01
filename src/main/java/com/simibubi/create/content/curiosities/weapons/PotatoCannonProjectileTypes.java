@@ -253,11 +253,15 @@ public class PotatoCannonProjectileTypes {
 	;
 
 	public static void registerType(ResourceLocation resLoc, PotatoCannonProjectileTypes type) {
-		ALL.put(resLoc, type);
+		synchronized (ALL) {
+			ALL.put(resLoc, type);
+		}
 	}
 
 	public static void assignType(IRegistryDelegate<Item> item, PotatoCannonProjectileTypes type) {
-		ITEM_MAP.put(item, type);
+		synchronized (ITEM_MAP) {
+			ITEM_MAP.put(item, type);
+		}
 	}
 
 	public static Optional<PotatoCannonProjectileTypes> getProjectileTypeOf(ItemStack item) {

@@ -41,23 +41,32 @@ public class PonderRegistry {
 	// Map from item ids to all storyboards
 	public static final Map<ResourceLocation, List<PonderStoryBoardEntry>> ALL = new HashMap<>();
 
-	private static String currentNamespace;
+	private static final ThreadLocal<String> CURRENT_NAMESPACE = new ThreadLocal<>();
+
+	private static String getCurrentNamespace() {
+		return CURRENT_NAMESPACE.get();
+	}
+
+	private static void setCurrentNamespace(String namespace) {
+		CURRENT_NAMESPACE.set(namespace);
+	}
 
 	public static void startRegistration(String namespace) {
-		if (currentNamespace != null) {
+		if (getCurrentNamespace() != null) {
 			throw new IllegalStateException("Cannot start registration when already started!");
 		}
-		currentNamespace = namespace;
+		setCurrentNamespace(namespace);
 	}
 
 	public static void endRegistration() {
-		if (currentNamespace == null) {
+		if (getCurrentNamespace() == null) {
 			throw new IllegalStateException("Cannot end registration when not started!");
 		}
-		currentNamespace = null;
+		setCurrentNamespace(null);
 	}
 
 	private static String getNamespaceOrThrow() {
+		String currentNamespace = getCurrentNamespace();
 		if (currentNamespace == null) {
 			throw new IllegalStateException("Cannot register storyboard without starting registration!");
 		}
@@ -71,8 +80,10 @@ public class PonderRegistry {
 		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
 		if (tags.length > 0)
 			builder.highlightTags(tags);
-		ALL.computeIfAbsent(id, _$ -> new ArrayList<>())
-			.add(entry);
+		synchronized (ALL) {
+			ALL.computeIfAbsent(id, _$ -> new ArrayList<>())
+				.add(entry);
+		}
 		return builder;
 	}
 

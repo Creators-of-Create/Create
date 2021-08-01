@@ -22,11 +22,16 @@ public class PonderChapterRegistry {
 	}
 
 	public void addStoriesToChapter(@Nonnull PonderChapter chapter, PonderStoryBoardEntry... entries) {
-		chapters.get(chapter.getId()).getSecond().addAll(Arrays.asList(entries));
+		List<PonderStoryBoardEntry> entryList = chapters.get(chapter.getId()).getSecond();
+		synchronized (entryList) {
+			entryList.addAll(Arrays.asList(entries));
+		}
 	}
 
 	PonderChapter addChapter(@Nonnull PonderChapter chapter) {
-		chapters.put(chapter.getId(), Pair.of(chapter, new ArrayList<>()));
+		synchronized (chapters) {
+			chapters.put(chapter.getId(), Pair.of(chapter, new ArrayList<>()));
+		}
 		return chapter;
 	}
 
