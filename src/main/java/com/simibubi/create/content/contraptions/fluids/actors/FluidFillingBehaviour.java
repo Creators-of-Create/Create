@@ -127,7 +127,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		boolean evaporate = world.dimensionType()
 			.ultraWarm() && fluid.is(FluidTags.WATER);
 
-		if (infinite || evaporate) {
+		if ((!fillInfinite() && infinite) || evaporate) {
 			FluidState fluidState = world.getFluidState(rootPos);
 			boolean equivalentTo = fluidState.getType()
 				.isSame(fluid);
