@@ -80,13 +80,17 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 
 	@Override
 	public void removeDeadRenderers() {
-		renderInfos.values().removeIf(renderer -> {
-			if (renderer.isDead()) {
-				renderer.invalidate();
-				return true;
-			}
-			return false;
-		});
+		boolean removed = renderInfos.values()
+				.removeIf(renderer -> {
+					if (renderer.isDead()) {
+						renderer.invalidate();
+						return true;
+					}
+					return false;
+				});
+
+		// we use visible in #tick() so we have to re-evaluate it if any were removed
+		if (removed) collectVisible();
 	}
 
 	@Override

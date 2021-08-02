@@ -50,13 +50,17 @@ public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> 
 	}
 
 	public void beginFrame(BeginFrameEvent event) {
-		visible.clear();
 
 		renderInfos.int2ObjectEntrySet()
 				.stream()
 				.map(Map.Entry::getValue)
 				.forEach(renderInfo -> renderInfo.beginFrame(event));
 
+		collectVisible();
+	}
+
+	protected void collectVisible() {
+		visible.clear();
 		renderInfos.int2ObjectEntrySet()
 				.stream()
 				.map(Map.Entry::getValue)
@@ -80,6 +84,9 @@ public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> 
 		renderInfos.clear();
 	}
 
+	/**
+	 * Remove all render infos associated with dead/removed contraptions.
+	 */
 	public void removeDeadRenderers() {
 		renderInfos.values().removeIf(ContraptionRenderInfo::isDead);
 	}
