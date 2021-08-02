@@ -1,0 +1,39 @@
+name: Suggestion
+description: For new Content, Config Options, etc.
+title: "[SUGGESTION] *Replace with brief description of suggestion*"
+labels: "[suggestion]"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For feedback and help with using the mod, check out the Create Discord! https://discord.gg/hmaD7Se
+  - type: textarea
+    id: suggestion-desc
+    attributes:
+      label: Description of Suggestion
+      description: Description of the effects of the suggestion
+      placeholder: |
+        Makes X do Y instead. 
+        Improves X by adjusting Y.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion-info
+    attributes:
+      label: How does this improve the experience?
+      description: Description of how the suggestion improves the Mod.
+      placeholder: |
+        Examples
+        Helps performance.
+        Makes X stronger, because it takes a lot more effort to achieve than Y.
+        Lets X and Y be used for Z, because it makes sense.
+        Allows X to be made into Y in Z.
+    validations:
+      required: true
+  - type: textarea
+    id: image
+    attributes:
+      label: Images
+      description: Images of the potential effects of the suggestion, such as mockups.
+    validations:
+      required: false
