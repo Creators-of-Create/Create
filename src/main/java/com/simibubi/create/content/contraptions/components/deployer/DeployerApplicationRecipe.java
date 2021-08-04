@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -69,7 +70,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, Create.asResource(r.getId()
 				.getPath() + "_using_deployer")).require(r.getIngredients()
 					.get(0))
-					.require(Ingredient.of(AllItems.SAND_PAPER.get(), AllItems.RED_SAND_PAPER.get()))
+					.require(ItemTags.createOptional(Create.asResource("sandpaper")))
 					.output(r.getResultItem())
 					.build())
 			.collect(Collectors.toList());
