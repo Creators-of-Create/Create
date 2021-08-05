@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
+import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineModifiers;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
@@ -92,6 +93,7 @@ public class Create {
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		AllConfigs.register(ModLoadingContext.get());
+		FurnaceEngineModifiers.register();
 
 		ForgeMod.enableMilkFluid();
 

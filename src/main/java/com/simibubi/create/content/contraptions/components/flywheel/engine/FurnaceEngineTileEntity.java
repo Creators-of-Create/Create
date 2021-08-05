@@ -25,7 +25,7 @@ public class FurnaceEngineTileEntity extends EngineTileEntity {
 		if (!(state.getBlock() instanceof AbstractFurnaceBlock))
 			return;
 
-		float modifier = state.getBlock() == Blocks.BLAST_FURNACE ? 2 : 1;
+		float modifier = FurnaceEngineModifiers.INSTANCE.getModifier(state);
 		boolean active = state.hasProperty(AbstractFurnaceBlock.LIT) && state.getValue(AbstractFurnaceBlock.LIT);
 		float speed = active ? 16 * modifier : 0;
 		float capacity =
