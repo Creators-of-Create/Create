@@ -190,6 +190,8 @@ public class PotatoProjectileEntity extends DamagingProjectileEntity implements 
 
 		if (target instanceof WitherEntity && ((WitherEntity) target).isPowered())
 			return;
+		if (projectileType.preEntityHit(ray))
+			return;
 
 		boolean targetIsEnderman = target.getType() == EntityType.ENDERMAN;
 		int k = target.getRemainingFireTicks();

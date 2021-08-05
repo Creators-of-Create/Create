@@ -77,7 +77,7 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.25f)
 			.knockback(0.5f)
 			.renderTumbling()
-			.onEntityHit(setFire(3))
+			.preEntityHit(setFire(3))
 			.registerAndAssign(Items.BAKED_POTATO),
 
 		CARROT = create("carrot").damage(4)
@@ -247,7 +247,7 @@ public class PotatoCannonProjectileTypes {
 			.velocity(1.1f)
 			.renderTumbling()
 			.sticky()
-			.onEntityHit(setFire(12))
+			.preEntityHit(setFire(12))
 			.soundPitch(1.0f)
 			.registerAndAssign(AllItems.BLAZE_CAKE.get())
 	;
@@ -286,7 +286,8 @@ public class PotatoCannonProjectileTypes {
 	private float fwoompPitch = 1;
 	private boolean sticky = false;
 	private PotatoProjectileRenderMode renderMode = new PotatoProjectileRenderMode.Billboard();
-	private Predicate<EntityRayTraceResult> onEntityHit = e -> false;
+	private Predicate<EntityRayTraceResult> preEntityHit = e -> false; // True if hit should be canceled
+	private Predicate<EntityRayTraceResult> onEntityHit = e -> false; // True if shouldn't recover projectile
 	private BiPredicate<IWorld, BlockRayTraceResult> onBlockHit = (w, ray) -> false;
 
 	public float getGravityMultiplier() {
@@ -327,6 +328,10 @@ public class PotatoCannonProjectileTypes {
 
 	public boolean isSticky() { return sticky; }
 
+	public boolean preEntityHit(EntityRayTraceResult ray) {
+		return preEntityHit.test(ray);
+	}
+	
 	public boolean onEntityHit(EntityRayTraceResult ray) {
 		return onEntityHit.test(ray);
 	}
@@ -542,6 +547,11 @@ public class PotatoCannonProjectileTypes {
 			return this;
 		}
 
+		public Builder preEntityHit(Predicate<EntityRayTraceResult> callback) {
+			result.preEntityHit = callback;
+			return this;
+		}
+		
 		public Builder onEntityHit(Predicate<EntityRayTraceResult> callback) {
 			result.onEntityHit = callback;
 			return this;
