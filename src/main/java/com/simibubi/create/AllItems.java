@@ -228,11 +228,13 @@ public class AllItems {
 
 	public static final ItemEntry<SandPaperItem> SAND_PAPER = REGISTRATE.item("sand_paper", SandPaperItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
+		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.register();
 
 	public static final ItemEntry<SandPaperItem> RED_SAND_PAPER = REGISTRATE.item("red_sand_paper", SandPaperItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> SandPaperModel::new))
 		.onRegister(s -> TooltipHelper.referTo(s, SAND_PAPER))
+		.tag(AllTags.AllItemTags.SANDPAPER.tag)
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
