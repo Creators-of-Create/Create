@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.google.common.collect.ImmutableList;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllSoundEvents;
@@ -31,12 +32,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -339,7 +342,19 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		return AllRecipeTypes.PRESSING.find(pressingInv, level);
 	}
 
-	public static boolean canCompress(NonNullList<Ingredient> ingredients) {
+	private static final List<ResourceLocation> RECIPE_DENY_LIST =
+		ImmutableList.of(new ResourceLocation("occultism", "spirit_trade"));
+
+	public static <C extends IInventory> boolean canCompress(IRecipe<C> recipe) {
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		if (!(recipe instanceof ICraftingRecipe))
+			return false;
+		
+		IRecipeSerializer<?> serializer = recipe.getSerializer();
+		for (ResourceLocation denied : RECIPE_DENY_LIST) 
+			if (serializer != null && denied.equals(serializer.getRegistryName()))
+				return false;
+		
 		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()
 			&& (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
 				.size() == 1;
@@ -347,7 +362,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 	@Override
 	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe) {
-		return (recipe instanceof ICraftingRecipe && canCompress(recipe.getIngredients()))
+		return (recipe instanceof ICraftingRecipe && canCompress(recipe))
 			|| recipe.getType() == AllRecipeTypes.COMPACTING.getType();
 	}
 

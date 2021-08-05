@@ -123,7 +123,7 @@ public class CreateJEI implements IModPlugin {
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
 			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
-				.size() > 1 && !MechanicalPressTileEntity.canCompress(r.getIngredients()),
+				.size() > 1 && !MechanicalPressTileEntity.canCompress(r),
 				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
@@ -160,7 +160,7 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoSquare = register("automatic_packing", PackingCategory::autoSquare)
-			.recipes(r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r.getIngredients()),
+			.recipes(r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r),
 				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.catalyst(AllBlocks.BASIN::get)
