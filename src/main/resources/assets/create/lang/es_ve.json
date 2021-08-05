@@ -655,7 +655,7 @@
 	"advancement.create.mechanical_arm": "¡Manos ocupadas!",
 	"advancement.create.mechanical_arm.desc": "Crea un brazo mecánico, selecciona las entradas y salidas, colócalo en el suelo y dale energía; luego observa cómo hace todo el trabajo por ti.",
 	"advancement.create.musical_arm": "¡Tócame la melodía!",
-	"advancement.create.musical_arm.desc": "Vea cómo un brazo mecánico maneja su Jukebox.",
+	"advancement.create.musical_arm.desc": "Vea cómo un brazo mecánico maneja su tocadiscos.",
 	"advancement.create.arm_many_targets": "Organize-o-Tron",
 	"advancement.create.arm_many_targets.desc": "Programa un brazo mecánico con diez o más posiciones de salida.",
 	"advancement.create.arm_blaze_burner": "Combust-o-Tron",
@@ -1270,7 +1270,7 @@
 	"block.create.wooden_bracket.tooltip.summary": "Decora tus _ejes_, _engranajes_ y _ductos_ con un acogedor refuerzo de madera.",
 
 	"block.create.metal_bracket.tooltip": "SOPORTE DE METAL PARA EJES",
-	"block.create.metal_bracket.tooltip.summary": "Decora tus _ejes_, _engranajes_ y _ductos_ con un poco de refuerzo industrial robusto.",
+	"block.create.metal_bracket.tooltip.summary": "Decora tus _ejes_, _engranajes_ y _ductos_ con un poco de robusto refuerzo industrial.",
 
 	"block.create.seat.tooltip": "ASIENTO",
 	"block.create.seat.tooltip.summary": "¡Siéntate y disfruta del viaje! Anclará a un jugador en un artilugio en movimiento. También es ideal para muebles estáticos. Viene en una variedad de colores.",
@@ -1440,7 +1440,7 @@
 	"item.create.shadow_steel.tooltip.behaviour1": "Los usos de este material estarán disponibles en una futura versión.",
 
 	"item.create.linked_controller.tooltip": "CONTROLADOR ENLAZADO",
-	"item.create.linked_controller.tooltip.summary": "Permite el control manual de las frecuencias de _enlaces de redstone_ asignadas a sus seis botones..",
+	"item.create.linked_controller.tooltip.summary": "Permite el control manual de las frecuencias de _enlaces de redstone_ asignadas a sus seis botones.",
 	"item.create.linked_controller.tooltip.condition1": "Al hacer clic derecho",
 	"item.create.linked_controller.tooltip.behaviour1": "Activa el _controlador_. Los _controles de movimiento_ se adquieren mientras está activo.",
 	"item.create.linked_controller.tooltip.condition2": "Al usar Mayús izdo + clic derecho",
@@ -2207,7 +2207,7 @@
 	"create.ponder.smart_pipe.text_1": "Las tuberías inteligentes pueden ayudar a controlar los flujos por tipo de fluido",
 	"create.ponder.smart_pipe.text_2": "Cuando se colocan directamente en la fuente, pueden especificar el tipo de fluido a extraer",
 	"create.ponder.smart_pipe.text_3": "Simplemente haga clic derecho en su ranura de filtro con cualquier elemento que contenga el fluido deseado",
-	"create.ponder.smart_pipe.text_4": "Cuando se colocan debajo de una red de tuberías, las tuberías inteligentes sólo dejan que los fluidos coincidentes continúen",
+	"create.ponder.smart_pipe.text_4": "Cuando se colocan detrás de una red de tuberías, las tuberías inteligentes sólo dejan que los fluidos coincidentes continúen",
 
 	"create.ponder.speedometer.header": "Controlar la información cinética mediante el velocímetro",
 	"create.ponder.speedometer.text_1": "El velocímetro muestra la velocidad actual de los componentes conectados",
