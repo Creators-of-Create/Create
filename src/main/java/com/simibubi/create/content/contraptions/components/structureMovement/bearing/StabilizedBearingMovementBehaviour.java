@@ -53,14 +53,14 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 		orientation = rotation;
 
-		superBuffer.transform(matrices.contraptionStack);
+		superBuffer.transform(matrices.getModel());
 		superBuffer.rotateCentered(orientation);
 
 		// render
 		superBuffer
-			.light(matrices.entityMatrix,
+			.light(matrices.getWorld(),
 				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.solid()));
+			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override

@@ -52,13 +52,13 @@ public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntit
 		if (context.contraption.stalled)
 			speed = 0;
 
-		superBuffer.transform(matrices.contraptionStack);
+		superBuffer.transform(matrices.getModel());
 		transform(context.world, facing, superBuffer, speed);
 
 		superBuffer
-			.light(matrices.entityMatrix,
+			.light(matrices.getWorld(),
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, buffers.getBuffer(RenderType.cutoutMipped()));
+			.renderInto(matrices.getViewProjection(), buffers.getBuffer(RenderType.cutoutMipped()));
 	}
 
 	public static void transform(World world, Direction facing, SuperByteBuffer superBuffer, float speed) {

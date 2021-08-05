@@ -181,7 +181,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		Vector3d offset = Vector3d.atLowerCornerOf(blockState.getValue(FACING)
 			.getNormal()).scale(factor);
 
-		MatrixStack m = matrices.contraptionStack;
+		MatrixStack m = matrices.getModel();
 		m.pushPose();
 		m.translate(offset.x, offset.y, offset.z);
 
@@ -190,10 +190,10 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		pole = transform(world, pole, blockState, pos, true);
 		hand = transform(world, hand, blockState, pos, false);
 
-		pole.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, builder);
-		hand.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, builder);
+		pole.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.getViewProjection(), builder);
+		hand.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.getViewProjection(), builder);
 
 		m.popPose();
 	}

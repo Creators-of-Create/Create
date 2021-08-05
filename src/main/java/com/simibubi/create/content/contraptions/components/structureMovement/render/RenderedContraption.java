@@ -26,7 +26,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -40,7 +39,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
 
-	private Matrix4f model;
+	private Matrix4f modelViewPartial;
 	private AxisAlignedBB lightBox;
 
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
@@ -78,26 +77,17 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		kinetics.beginFrame(event.getInfo());
 
-		AbstractContraptionEntity entity = contraption.entity;
-		float pt = AnimationTickHolder.getPartialTicks();
-		AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
+		Vector3d cameraPos = event.getCameraPos();
 
-		Vector3d cameraPos = event.getInfo()
-				.getPosition();
+		modelViewPartial = ContraptionMatrices.createModelViewPartial(contraption.entity, AnimationTickHolder.getPartialTicks(), cameraPos);
 
-		float x = (float) (MathHelper.lerp(pt, entity.xOld, entity.getX()) - cameraPos.x);
-		float y = (float) (MathHelper.lerp(pt, entity.yOld, entity.getY()) - cameraPos.y);
-		float z = (float) (MathHelper.lerp(pt, entity.zOld, entity.getZ()) - cameraPos.z);
-		model = Matrix4f.createTranslateMatrix(x, y, z);
-
-		model.multiply(getMatrices().contraptionPose());
-
-		this.lightBox = lightBox.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume())
+				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 
 	void setup(ContraptionProgram shader) {
-		if (model == null || lightBox == null) return;
-		shader.bind(model, lightBox);
+		if (modelViewPartial == null || lightBox == null) return;
+		shader.bind(modelViewPartial, lightBox);
 		lighter.lightVolume.bind();
 	}
 

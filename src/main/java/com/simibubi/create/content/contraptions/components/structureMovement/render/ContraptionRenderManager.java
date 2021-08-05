@@ -29,7 +29,11 @@ public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> 
 		this.world = (World) world;
 	}
 
-	public abstract void renderLayer(RenderLayerEvent event);
+	public void renderLayer(RenderLayerEvent event) {
+		for (C c : visible) {
+			c.setupMatrices(event.stack, event.camX, event.camY, event.camZ);
+		}
+	}
 
 	protected abstract C create(Contraption c);
 

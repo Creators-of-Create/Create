@@ -6,9 +6,16 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3d;
 
+/**
+ * LIFETIME: one frame
+ *
+ * <p>
+ *     ContraptionMatrices must be re-created per-contraption per-frame
+ * </p>
+ */
 public class ContraptionMatrices {
 
 	/**
@@ -16,47 +23,68 @@ public class ContraptionMatrices {
 	 */
 	public static final ContraptionMatrices EMPTY = new ContraptionMatrices();
 
-	public final MatrixStack entityStack;
-	public final MatrixStack contraptionStack;
-	public final MatrixStack finalStack;
-	public final Matrix4f entityMatrix;
-	public final Matrix4f lightMatrix;
+	private final MatrixStack modelViewProjection;
+	private final MatrixStack viewProjection;
+	private final MatrixStack model;
+	private final Matrix4f world;
+	private final Matrix4f light;
 
 	private ContraptionMatrices() {
-		this.entityStack = this.contraptionStack = this.finalStack = new MatrixStack();
-		this.entityMatrix = new Matrix4f();
-		this.lightMatrix = new Matrix4f();
+		this.viewProjection = this.model = this.modelViewProjection = new MatrixStack();
+		this.world = new Matrix4f();
+		this.light = new Matrix4f();
 	}
 
-	public ContraptionMatrices(MatrixStack entityStack, AbstractContraptionEntity entity) {
-		this.entityStack = copyStack(entityStack);
-		this.contraptionStack = new MatrixStack();
+	public ContraptionMatrices(MatrixStack viewProjection, AbstractContraptionEntity entity) {
+		this.viewProjection = copyStack(viewProjection);
 		float partialTicks = AnimationTickHolder.getPartialTicks();
-		entity.doLocalTransforms(partialTicks, new MatrixStack[] { this.contraptionStack });
+		this.model = creatModelMatrix(entity, partialTicks);
 
-		entityMatrix = translateTo(entity, partialTicks);
+		world = translateTo(entity, partialTicks);
 
-		lightMatrix = entityMatrix.copy();
-		lightMatrix.multiply(contraptionStack.last().pose());
+		light = getWorld().copy();
+		getLight().multiply(this.getModel()
+				.last().pose());
 
-		finalStack = copyStack(entityStack);
-		transform(finalStack, contraptionStack);
+		modelViewProjection = copyStack(viewProjection);
+		transform(getModelViewProjection(), this.getModel());
 	}
 
-	public MatrixStack getFinalStack() {
-		return finalStack;
+	public MatrixStack getModelViewProjection() {
+		return modelViewProjection;
 	}
 
-	public Matrix4f getFinalModel() {
-		return finalStack.last().pose();
+	public MatrixStack getViewProjection() {
+		return viewProjection;
 	}
 
-	public Matrix3f getFinalNormal() {
-		return finalStack.last().normal();
+	public MatrixStack getModel() {
+		return model;
 	}
 
-	public Matrix4f getFinalLight() {
-		return lightMatrix;
+	public Matrix4f getWorld() {
+		return world;
+	}
+
+	public Matrix4f getLight() {
+		return light;
+	}
+
+	public static Matrix4f createModelViewPartial(AbstractContraptionEntity entity, float pt, Vector3d cameraPos) {
+		float x = (float) (MathHelper.lerp(pt, entity.xOld, entity.getX()) - cameraPos.x);
+		float y = (float) (MathHelper.lerp(pt, entity.yOld, entity.getY()) - cameraPos.y);
+		float z = (float) (MathHelper.lerp(pt, entity.zOld, entity.getZ()) - cameraPos.z);
+		Matrix4f mat = Matrix4f.createTranslateMatrix(x, y, z);
+		Matrix4f modelMatrix = creatModelMatrix(entity, pt).last().pose();
+
+		mat.multiply(modelMatrix);
+		return mat;
+	}
+
+	public static MatrixStack creatModelMatrix(AbstractContraptionEntity entity, float partialTicks) {
+		MatrixStack model = new MatrixStack();
+		entity.doLocalTransforms(partialTicks, new MatrixStack[] { model});
+		return model;
 	}
 
 	public static Matrix4f translateTo(Entity entity, float partialTicks) {
@@ -81,10 +109,5 @@ public class ContraptionMatrices {
 		transform(cms, ms);
 
 		return cms;
-	}
-
-	public Matrix4f contraptionPose() {
-		return contraptionStack.last()
-				.pose();
 	}
 }

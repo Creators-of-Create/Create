@@ -38,6 +38,8 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 
 	@Override
 	public void renderLayer(RenderLayerEvent event) {
+		super.renderLayer(event);
+
 		if (visible.isEmpty()) return;
 
 		RenderType layer = event.getType();
