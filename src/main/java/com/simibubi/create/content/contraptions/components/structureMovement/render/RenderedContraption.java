@@ -125,10 +125,13 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		for (RenderType layer : blockLayers) {
 			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values());
 
+			ModelRenderer renderer;
 			if (Backend.getInstance().compat.vertexArrayObjectsSupported())
-				renderLayers.put(layer, new ArrayModelRenderer(layerModel));
+				renderer = new ArrayModelRenderer(layerModel);
 			else
-				renderLayers.put(layer, new ModelRenderer(layerModel));
+				renderer = new ModelRenderer(layerModel);
+
+			renderLayers.put(layer, renderer);
 		}
 	}
 
