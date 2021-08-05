@@ -6,9 +6,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.Create;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
@@ -19,8 +18,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -67,10 +66,10 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 
 	public static List<DeployerApplicationRecipe> convert(List<IRecipe<?>> sandpaperRecipes) {
 		return sandpaperRecipes.stream()
-			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, Create.asResource(r.getId()
+			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, new ResourceLocation(r.getId().getNamespace(), r.getId()
 				.getPath() + "_using_deployer")).require(r.getIngredients()
 					.get(0))
-					.require(ItemTags.createOptional(Create.asResource("sandpaper")))
+					.require(AllItemTags.SANDPAPER.tag)
 					.output(r.getResultItem())
 					.build())
 			.collect(Collectors.toList());
@@ -80,7 +79,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	public void addAssemblyIngredients(List<Ingredient> list) {
 		list.add(ingredients.get(1));
 	}
-	
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ITextComponent getDescriptionForAssembly() {
@@ -96,7 +95,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	public void addRequiredMachines(Set<IItemProvider> list) {
 		list.add(AllBlocks.DEPLOYER.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblyDeploying::new;
