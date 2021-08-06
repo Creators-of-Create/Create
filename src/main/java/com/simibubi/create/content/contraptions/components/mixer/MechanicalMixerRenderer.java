@@ -13,10 +13,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 
 public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
@@ -37,14 +35,12 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		BlockState blockState = te.getBlockState();
 		MechanicalMixerTileEntity mixer = (MechanicalMixerTileEntity) te;
-		BlockPos pos = te.getBlockPos();
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 
 		SuperByteBuffer superBuffer = PartialBufferer.get(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState);
 		standardKineticRotationTransform(superBuffer, te, light).renderInto(ms, vb);
 
-		int packedLightmapCoords = WorldRenderer.getLightColor(te.getLevel(), blockState, pos);
 		float renderedHeadOffset = mixer.getRenderedHeadOffset(partialTicks);
 		float speed = mixer.getRenderedHeadRotationSpeed(partialTicks);
 		float time = AnimationTickHolder.getRenderTime(te.getLevel());
@@ -52,13 +48,13 @@ public class MechanicalMixerRenderer extends KineticTileEntityRenderer {
 
 		SuperByteBuffer poleRender = PartialBufferer.get(AllBlockPartials.MECHANICAL_MIXER_POLE, blockState);
 		poleRender.translate(0, -renderedHeadOffset, 0)
-				.light(packedLightmapCoords)
+				.light(light)
 				.renderInto(ms, vb);
 
 		SuperByteBuffer headRender = PartialBufferer.get(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState);
 		headRender.rotateCentered(Direction.UP, angle)
 				.translate(0, -renderedHeadOffset, 0)
-				.light(packedLightmapCoords)
+				.light(light)
 				.renderInto(ms, vb);
 	}
 

@@ -13,7 +13,6 @@ import com.simibubi.create.foundation.utility.ColorHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
@@ -31,7 +30,6 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		BlockState leverState = te.getBlockState();
-		int lightCoords = WorldRenderer.getLightColor(te.getLevel(), leverState, te.getBlockPos());
 		float state = te.clientState.get(partialTicks);
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
@@ -42,13 +40,13 @@ public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileE
 		transform(handle, leverState).translate(1 / 2f, 1 / 16f, 1 / 2f)
 				.rotate(Direction.EAST, angle)
 				.translate(-1 / 2f, -1 / 16f, -1 / 2f);
-		handle.light(lightCoords)
+		handle.light(light)
 				.renderInto(ms, vb);
 
 		// Indicator
 		int color = ColorHelper.mixColors(0x2C0300, 0xCD0000, state / 15f);
 		SuperByteBuffer indicator = transform(PartialBufferer.get(AllBlockPartials.ANALOG_LEVER_INDICATOR, leverState), leverState);
-		indicator.light(lightCoords)
+		indicator.light(light)
 				.color(color)
 				.renderInto(ms, vb);
 	}

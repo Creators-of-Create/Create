@@ -13,7 +13,7 @@ public class ContraptionRenderInfo {
 	public final Contraption contraption;
 	public final PlacementSimulationWorld renderWorld;
 
-	private ContraptionMatrices matrices = new ContraptionMatrices();
+	private final ContraptionMatrices matrices = new ContraptionMatrices();
 	private boolean visible;
 
 	public ContraptionRenderInfo(Contraption contraption, PlacementSimulationWorld renderWorld) {

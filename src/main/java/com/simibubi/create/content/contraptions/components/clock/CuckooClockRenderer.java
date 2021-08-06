@@ -14,7 +14,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -34,7 +33,6 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
 		CuckooClockTileEntity clock = (CuckooClockTileEntity) te;
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords = WorldRenderer.getLightColor(te.getLevel(), blockState, te.getBlockPos());
 		Direction direction = blockState.getValue(CuckooClockBlock.HORIZONTAL_FACING);
 
 		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
@@ -44,9 +42,9 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		SuperByteBuffer minuteHand = PartialBufferer.get(AllBlockPartials.CUCKOO_MINUTE_HAND, blockState);
 		float hourAngle = clock.hourHand.get(partialTicks);
 		float minuteAngle = clock.minuteHand.get(partialTicks);
-		rotateHand(hourHand, hourAngle, direction).light(packedLightmapCoords)
+		rotateHand(hourHand, hourAngle, direction).light(light)
 				.renderInto(ms, vb);
-		rotateHand(minuteHand, minuteAngle, direction).light(packedLightmapCoords)
+		rotateHand(minuteHand, minuteAngle, direction).light(light)
 				.renderInto(ms, vb);
 
 		// Doors
@@ -72,9 +70,9 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 			}
 		}
 
-		rotateDoor(leftDoor, angle, true, direction).light(packedLightmapCoords)
+		rotateDoor(leftDoor, angle, true, direction).light(light)
 			.renderInto(ms, vb);
-		rotateDoor(rightDoor, angle, false, direction).light(packedLightmapCoords)
+		rotateDoor(rightDoor, angle, false, direction).light(light)
 			.renderInto(ms, vb);
 
 		// Figure
@@ -85,7 +83,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 					PartialBufferer.get(partialModel, blockState);
 			figure.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction.getCounterClockWise())));
 			figure.translate(offset, 0, 0);
-			figure.light(packedLightmapCoords)
+			figure.light(light)
 					.renderInto(ms, vb);
 		}
 
