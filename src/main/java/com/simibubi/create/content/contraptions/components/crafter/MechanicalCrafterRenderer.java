@@ -22,7 +22,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
@@ -169,41 +168,39 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 
 		if ((te.covered || te.phase != Phase.IDLE) && te.phase != Phase.CRAFTING && te.phase != Phase.INSERTING) {
 			SuperByteBuffer lidBuffer =
-				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_LID, blockState, pos);
-			lidBuffer.renderInto(ms, vb);
+				renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_LID, blockState);
+			lidBuffer.light(light).renderInto(ms, vb);
 		}
 
 		if (MechanicalCrafterBlock.isValidTarget(te.getLevel(), pos.relative(targetDirection), blockState)) {
 			SuperByteBuffer beltBuffer =
-				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_BELT, blockState, pos);
+				renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT, blockState);
 			SuperByteBuffer beltFrameBuffer =
-				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState, pos);
+				renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_BELT_FRAME, blockState);
 
 			if (te.phase == Phase.EXPORTING) {
 				int textureIndex = (int) ((te.getCountDownSpeed() / 128f * AnimationTickHolder.getTicks()));
 				beltBuffer.shiftUVtoSheet(AllSpriteShifts.CRAFTER_THINGIES, (textureIndex % 4) / 4f, 0, 1);
 			}
 
-			beltBuffer.renderInto(ms, vb);
-			beltFrameBuffer.renderInto(ms, vb);
+			beltBuffer.light(light).renderInto(ms, vb);
+			beltFrameBuffer.light(light).renderInto(ms, vb);
 
 		} else {
 			SuperByteBuffer arrowBuffer =
-				renderAndTransform(te, AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState, pos);
-			arrowBuffer.renderInto(ms, vb);
+				renderAndTransform(AllBlockPartials.MECHANICAL_CRAFTER_ARROW, blockState);
+			arrowBuffer.light(light).renderInto(ms, vb);
 		}
 
 	}
 
-	private SuperByteBuffer renderAndTransform(MechanicalCrafterTileEntity te, PartialModel renderBlock,
-		BlockState crafterState, BlockPos pos) {
+	private SuperByteBuffer renderAndTransform(PartialModel renderBlock, BlockState crafterState) {
 		SuperByteBuffer buffer = PartialBufferer.get(renderBlock, crafterState);
 		float xRot = crafterState.getValue(MechanicalCrafterBlock.POINTING)
 				.getXRotation();
 		float yRot = AngleHelper.horizontalAngle(crafterState.getValue(HORIZONTAL_FACING));
 		buffer.rotateCentered(Direction.UP, (float) ((yRot + 90) / 180 * Math.PI));
 		buffer.rotateCentered(Direction.EAST, (float) ((xRot) / 180 * Math.PI));
-		buffer.light(WorldRenderer.getLightColor(te.getLevel(), crafterState, pos));
 		return buffer;
 	}
 
