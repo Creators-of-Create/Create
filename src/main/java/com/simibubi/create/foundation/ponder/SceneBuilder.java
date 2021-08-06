@@ -165,7 +165,7 @@ public class SceneBuilder {
 	 * Use this in case you are not happy with the scale of the scene relative to
 	 * the overlay
 	 *
-	 * @param factor >1 will make the scene appear larger, smaller otherwise
+	 * @param factor {@literal >}1 will make the scene appear larger, smaller otherwise
 	 */
 	public void scaleSceneView(float factor) {
 		scene.scaleFactor = factor;
@@ -175,7 +175,7 @@ public class SceneBuilder {
 	 * Use this in case you are not happy with the vertical alignment of the scene
 	 * relative to the overlay
 	 *
-	 * @param yOffset >0 moves the scene up, down otherwise
+	 * @param yOffset {@literal >}0 moves the scene up, down otherwise
 	 */
 	public void setSceneOffsetY(float yOffset) {
 		scene.yOffset = yOffset;

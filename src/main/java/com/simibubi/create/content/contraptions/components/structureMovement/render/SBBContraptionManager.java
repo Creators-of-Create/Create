@@ -21,6 +21,7 @@ public class SBBContraptionManager extends ContraptionRenderManager<ContraptionR
 
 	@Override
 	public void renderLayer(RenderLayerEvent event) {
+		super.renderLayer(event);
 		visible.forEach(info -> renderContraptionLayerSBB(event, info));
 	}
 
@@ -38,12 +39,12 @@ public class SBBContraptionManager extends ContraptionRenderManager<ContraptionR
 		SuperByteBuffer contraptionBuffer = CreateClient.BUFFER_CACHE.get(CONTRAPTION, Pair.of(renderInfo.contraption, layer), () -> buildStructureBuffer(renderInfo.renderWorld, renderInfo.contraption, layer));
 
 		if (!contraptionBuffer.isEmpty()) {
-
 			ContraptionMatrices matrices = renderInfo.getMatrices();
-			contraptionBuffer.transform(matrices.contraptionStack)
-					.light(matrices.entityMatrix)
+
+			contraptionBuffer.transform(matrices.getModel())
+					.light(matrices.getWorld())
 					.hybridLight()
-					.renderInto(matrices.entityStack, event.buffers.bufferSource()
+					.renderInto(matrices.getViewProjection(), event.buffers.bufferSource()
 							.getBuffer(layer));
 		}
 

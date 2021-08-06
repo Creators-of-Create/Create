@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -39,7 +38,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 
 		Contraption contraption = entity.getContraption();
 		if (contraption != null) {
-			ContraptionRenderDispatcher.render(entity, contraption, buffers);
+			ContraptionRenderDispatcher.renderFromEntity(entity, contraption, buffers);
 		}
 	}
 

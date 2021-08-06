@@ -58,7 +58,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.3.2c";
+	public static final String VERSION = "0.3.2d";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -109,6 +109,7 @@ public class Create {
 		modEventBus.addListener(AllConfigs::onReload);
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
+		forgeEventBus.register(CHUNK_UTIL);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
@@ -116,16 +117,14 @@ public class Create {
 
 	public static void init(final FMLCommonSetupEvent event) {
 		CapabilityMinecartController.register();
-		SchematicInstances.register();
-
-		CHUNK_UTIL.init();
-		MinecraftForge.EVENT_BUS.register(CHUNK_UTIL);
-
 		AllPackets.registerPackets();
-		AllTriggers.register();
+		SchematicInstances.register();
 		PotatoCannonProjectileTypes.register();
 
+		CHUNK_UTIL.init();
+
 		event.enqueueWork(() -> {
+			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
 		});

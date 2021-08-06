@@ -107,12 +107,12 @@ public class CreateClient {
 
 		UIRenderHelper.init();
 
-		IResourceManager resourceManager = Minecraft.getInstance()
-			.getResourceManager();
-		if (resourceManager instanceof IReloadableResourceManager)
-			((IReloadableResourceManager) resourceManager).registerReloadListener(new ResourceReloadHandler());
-
 		event.enqueueWork(() -> {
+			IResourceManager resourceManager = Minecraft.getInstance()
+				.getResourceManager();
+			if (resourceManager instanceof IReloadableResourceManager)
+				((IReloadableResourceManager) resourceManager).registerReloadListener(new ResourceReloadHandler());
+
 			registerLayerRenderers(Minecraft.getInstance()
 				.getEntityRenderDispatcher());
 		});

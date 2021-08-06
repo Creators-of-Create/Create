@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.config;
 
 public class CSchematics extends ConfigBase {
 
+	public ConfigBool creativePrintIncludesAir = b(false, "creativePrintIncludesAir", Comments.creativePrintIncludesAir);
 	public ConfigInt maxSchematics = i(10, 1, "maxSchematics", Comments.maxSchematics);
 	public ConfigInt maxTotalSchematicSize = i(256, 16, "maxSchematics", Comments.kb, Comments.maxSize);
 	public ConfigInt maxSchematicPacketSize =
@@ -33,6 +34,8 @@ public class CSchematics extends ConfigBase {
 		static String skips = "Amount of block positions per tick scanned by a running cannon. Higher => Faster";
 		static String gunpowderWorth = "% of Schematicannon's Fuel filled by 1 Gunpowder.";
 		static String fuelUsage = "% of Schematicannon's Fuel used for each fired block.";
+		static String creativePrintIncludesAir =
+			"Whether placing a Schematic directly in Creative Mode should replace world blocks with Air";
 	}
 
 }

@@ -6,64 +6,80 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
 import net.minecraft.util.math.vector.Matrix4f;
 
+/**
+ * <p>
+ *     ContraptionMatrices must be cleared and setup per-contraption per-frame
+ * </p>
+ */
 public class ContraptionMatrices {
 
-	/**
-	 * The results from using this are undefined.
-	 */
-	public static final ContraptionMatrices EMPTY = new ContraptionMatrices();
+	private final MatrixStack modelViewProjection = new MatrixStack();
+	private final MatrixStack viewProjection = new MatrixStack();
+	private final MatrixStack model = new MatrixStack();
+	private final Matrix4f world = new Matrix4f();
+	private final Matrix4f light = new Matrix4f();
 
-	public final MatrixStack entityStack;
-	public final MatrixStack contraptionStack;
-	public final MatrixStack finalStack;
-	public final Matrix4f entityMatrix;
-	public final Matrix4f lightMatrix;
+	private boolean ready;
 
-	private ContraptionMatrices() {
-		this.entityStack = this.contraptionStack = this.finalStack = new MatrixStack();
-		this.entityMatrix = new Matrix4f();
-		this.lightMatrix = new Matrix4f();
+	public ContraptionMatrices() {
+		world.setIdentity();
+		light.setIdentity();
 	}
 
-	public ContraptionMatrices(MatrixStack entityStack, AbstractContraptionEntity entity) {
-		this.entityStack = copyStack(entityStack);
-		this.contraptionStack = new MatrixStack();
+	public void setup(MatrixStack viewProjection, AbstractContraptionEntity entity) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
-		entity.doLocalTransforms(partialTicks, new MatrixStack[] { this.contraptionStack });
 
-		entityMatrix = translateTo(entity, partialTicks);
+		this.viewProjection.pushPose();
+		transform(this.viewProjection, viewProjection);
+		model.pushPose();
+		entity.doLocalTransforms(partialTicks, new MatrixStack[] { model });
 
-		lightMatrix = entityMatrix.copy();
-		lightMatrix.multiply(contraptionStack.last().pose());
+		modelViewProjection.pushPose();
+		transform(modelViewProjection, viewProjection);
+		transform(modelViewProjection, model);
 
-		finalStack = copyStack(entityStack);
-		transform(finalStack, contraptionStack);
+		translateToEntity(world, entity, partialTicks);
+
+		light.set(world);
+		light.multiply(model
+				.last().pose());
+
+		ready = true;
 	}
 
-	public MatrixStack getFinalStack() {
-		return finalStack;
+	public void clear() {
+		clearStack(modelViewProjection);
+		clearStack(viewProjection);
+		clearStack(model);
+		world.setIdentity();
+		light.setIdentity();
+		ready = false;
 	}
 
-	public Matrix4f getFinalModel() {
-		return finalStack.last().pose();
+	public MatrixStack getModelViewProjection() {
+		return modelViewProjection;
 	}
 
-	public Matrix3f getFinalNormal() {
-		return finalStack.last().normal();
+	public MatrixStack getViewProjection() {
+		return viewProjection;
 	}
 
-	public Matrix4f getFinalLight() {
-		return lightMatrix;
+	public MatrixStack getModel() {
+		return model;
 	}
 
-	public static Matrix4f translateTo(Entity entity, float partialTicks) {
-		double x = MathHelper.lerp(partialTicks, entity.xOld, entity.getX());
-		double y = MathHelper.lerp(partialTicks, entity.yOld, entity.getY());
-		double z = MathHelper.lerp(partialTicks, entity.zOld, entity.getZ());
-		return Matrix4f.createTranslateMatrix((float) x, (float) y, (float) z);
+	public Matrix4f getWorld() {
+		return world;
+	}
+
+	public Matrix4f getLight() {
+		return light;
+	}
+
+	public boolean isReady() {
+		return ready;
 	}
 
 	public static void transform(MatrixStack ms, MatrixStack transform) {
@@ -75,16 +91,17 @@ public class ContraptionMatrices {
 			.normal());
 	}
 
-	public static MatrixStack copyStack(MatrixStack ms) {
-		MatrixStack cms = new MatrixStack();
-
-		transform(cms, ms);
-
-		return cms;
+	public static void translateToEntity(Matrix4f matrix, Entity entity, float partialTicks) {
+		double x = MathHelper.lerp(partialTicks, entity.xOld, entity.getX());
+		double y = MathHelper.lerp(partialTicks, entity.yOld, entity.getY());
+		double z = MathHelper.lerp(partialTicks, entity.zOld, entity.getZ());
+		matrix.setTranslation((float) x, (float) y, (float) z);
 	}
 
-	public Matrix4f contraptionPose() {
-		return contraptionStack.last()
-				.pose();
+	public static void clearStack(MatrixStack ms) {
+		while (!ms.clear()) {
+			ms.popPose();
+		}
 	}
+
 }
