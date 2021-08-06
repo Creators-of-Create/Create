@@ -1,6 +1,5 @@
 name: Suggestion
 description: For new Content, Config Options, etc.
-title: "[SUGGESTION] *Replace with brief description of suggestion*"
 labels: "[suggestion]"
 body:
   - type: markdown

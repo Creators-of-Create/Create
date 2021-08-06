@@ -1,6 +1,5 @@
 name: Bug Report
 description: For issues such as "X happens instead of Y"
-title: "[BUG] *Replace with brief description of the issue*"
 labels: "[bug]"
 body:
   - type: markdown
@@ -54,7 +53,7 @@ body:
   - type: textarea
     id: other-mods
     attributes:
-      label: Extra Info
+      label: Other Mods
       description: What other mods do you have installed? For longer lists, use a Paste service, such as Github Gist.
       placeholder: |
         somerandommod-1.12.2-1.6.3
