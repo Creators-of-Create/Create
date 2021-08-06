@@ -79,7 +79,7 @@ public class ContraptionRenderDispatcher {
 		ContraptionMatrices matrices = renderInfo.getMatrices();
 
 		// something went wrong with the other rendering
-		if (matrices == null) return;
+		if (!matrices.isReady()) return;
 
 		PlacementSimulationWorld renderWorld = renderInfo.renderWorld;
 

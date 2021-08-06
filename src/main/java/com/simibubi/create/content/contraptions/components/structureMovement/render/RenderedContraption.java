@@ -15,6 +15,7 @@ import com.jozufozu.flywheel.core.model.IModel;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -26,6 +27,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -39,7 +41,8 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
 
-	private Matrix4f modelViewPartial;
+	private final Matrix4f modelViewPartial = new Matrix4f();
+	private boolean modelViewPartialReady;
 	private AxisAlignedBB lightBox;
 
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
@@ -73,20 +76,31 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public void beginFrame(BeginFrameEvent event) {
 		super.beginFrame(event);
 
+		modelViewPartial.setIdentity();
+		modelViewPartialReady = false;
+
 		if (!isVisible()) return;
 
 		kinetics.beginFrame(event.getInfo());
 
 		Vector3d cameraPos = event.getCameraPos();
 
-		modelViewPartial = ContraptionMatrices.createModelViewPartial(contraption.entity, AnimationTickHolder.getPartialTicks(), cameraPos);
-
 		lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume())
 				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 
+	@Override
+	public void setupMatrices(MatrixStack viewProjection, double camX, double camY, double camZ) {
+		super.setupMatrices(viewProjection, camX, camY, camZ);
+
+		if (!modelViewPartialReady) {
+			setupModelViewPartial(modelViewPartial, getMatrices().getModel().last().pose(), contraption.entity, camX, camY, camZ, AnimationTickHolder.getPartialTicks());
+			modelViewPartialReady = true;
+		}
+	}
+
 	void setup(ContraptionProgram shader) {
-		if (modelViewPartial == null || lightBox == null) return;
+		if (!modelViewPartialReady || lightBox == null) return;
 		shader.bind(modelViewPartial, lightBox);
 		lighter.lightVolume.bind();
 	}
@@ -144,4 +158,13 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	private void buildActors() {
 		contraption.getActors().forEach(kinetics::createActor);
 	}
+
+	public static void setupModelViewPartial(Matrix4f matrix, Matrix4f modelMatrix, AbstractContraptionEntity entity, double camX, double camY, double camZ, float pt) {
+		float x = (float) (MathHelper.lerp(pt, entity.xOld, entity.getX()) - camX);
+		float y = (float) (MathHelper.lerp(pt, entity.yOld, entity.getY()) - camY);
+		float z = (float) (MathHelper.lerp(pt, entity.zOld, entity.getZ()) - camZ);
+		matrix.setTranslation(x, y, z);
+		matrix.multiply(modelMatrix);
+	}
+
 }
