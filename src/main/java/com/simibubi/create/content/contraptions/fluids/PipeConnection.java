@@ -87,7 +87,7 @@ public class PipeConnection {
 		FlowSource flowSource = source.get();
 		flowSource.manageSource(world);
 	}
-		
+
 	public boolean manageFlows(World world, BlockPos pos, FluidStack internalFluid,
 		Predicate<FluidStack> extractionPredicate) {
 
@@ -193,7 +193,7 @@ public class PipeConnection {
 		if (world.isClientSide) {
 			if (!source.isPresent())
 				determineSource(world, pos);
-			
+
 			spawnParticles(world, pos, flow.fluid);
 			if (particleSplashNextTick)
 				spawnSplashOnRim(world, pos, flow.fluid);
@@ -282,8 +282,8 @@ public class PipeConnection {
 
 	/**
 	 * @return zero if outward == inbound <br>
-	 *         positive if outward > inbound <br>
-	 *         negative if outward < inbound
+	 *         positive if outward {@literal >} inbound <br>
+	 *         negative if outward {@literal <} inbound
 	 */
 	public float comparePressure() {
 		return getOutwardPressure() - getInboundPressure();

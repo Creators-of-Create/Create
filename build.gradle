@@ -201,7 +201,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives shadowJar, sourcesJar, javadocJar
+    archives jar, shadowJar, sourcesJar, javadocJar
 }
 
 publishing {
