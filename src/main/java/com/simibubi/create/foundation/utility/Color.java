@@ -199,8 +199,13 @@ public class Color {
 	}
 
 	public Color darker() {
-		//todo
-		return ensureMutable();
+		int a = getAlpha();
+		return ensureMutable().mixWith(BLACK, .25f).setAlphaUnchecked(a);
+	}
+
+	public Color brighter() {
+		int a = getAlpha();
+		return ensureMutable().mixWith(WHITE, .25f).setAlphaUnchecked(a);
 	}
 
 	public Color setValue(int value) {

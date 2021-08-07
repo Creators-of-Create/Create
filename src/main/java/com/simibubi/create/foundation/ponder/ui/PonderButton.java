@@ -83,8 +83,8 @@ public class PonderButton extends BoxWidget {
 			sin *= flashValue;
 			Color nc1 = new Color(255, 255, 255, MathHelper.clamp(gradientColor1.getAlpha() + 150, 0, 255));
 			Color nc2 = new Color(155, 155, 155, MathHelper.clamp(gradientColor2.getAlpha() + 150, 0, 255));
-			gradientColor1.mixWith(nc1, sin);
-			gradientColor2.mixWith(nc2, sin);
+			gradientColor1 = gradientColor1.mixWith(nc1, sin);
+			gradientColor2 = gradientColor2.mixWith(nc2, sin);
 		}
 	}
 
