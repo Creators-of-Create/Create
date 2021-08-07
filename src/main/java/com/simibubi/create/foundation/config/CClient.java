@@ -13,6 +13,7 @@ public class CClient extends ConfigBase {
 	public ConfigBool explainRenderErrors =
 		b(false, "explainRenderErrors", "Log a stack-trace when rendering issues happen within a moving contraption.");
 	public ConfigFloat fanParticleDensity = f(.5f, 0, 1, "fanParticleDensity");
+	public ConfigFloat filterItemRenderDistance = f(10f, 1, "filterItemRenderDistance", "[in Blocks]", "Maximum Distance to the player at which items in Blocks' filter slots will be displayed");
 	public ConfigBool rainbowDebug =
 		b(true, "enableRainbowDebug", "Show colourful debug information while the F3-Menu is open.");
 	public ConfigBool experimentalRendering =
