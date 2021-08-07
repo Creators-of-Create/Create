@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.config.ui.entries;
 import java.util.Locale;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
@@ -103,10 +104,6 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	@Override
 	public void onValueChange(Enum<?> newValue) {
 		super.onValueChange(newValue);
-		valueText.withText(newValue.name()
-				.substring(0, 1)
-				+ newValue.name()
-				.substring(1)
-				.toLowerCase(Locale.ROOT));
+		valueText.withText(ConfigScreen.toHumanReadable(newValue.name().toLowerCase(Locale.ROOT)));
 	}
 }

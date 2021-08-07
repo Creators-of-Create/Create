@@ -102,6 +102,22 @@ public class UIRenderHelper {
 		ms.popPose();
 	}
 
+	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length, Color c) {
+		Color color = c.copy().setImmutable();
+		int c1 = color.scaleAlpha(0.625f).getRGB();
+		int c2 = color.scaleAlpha(0.5f).getRGB();
+		int c3 = color.scaleAlpha(0.0625f).getRGB();
+		int c4 = color.scaleAlpha(0f).getRGB();
+
+		ms.pushPose();
+		ms.translate(x, y, 0);
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle - 90));
+
+		streak(ms, breadth / 2, length, c1, c2, c3, c4);
+
+		ms.popPose();
+	}
+
 	private static void streak(MatrixStack ms, int width, int height, int c1, int c2, int c3, int c4) {
 		double split1 = .5;
 		double split2 = .75;

@@ -2,18 +2,25 @@ package com.simibubi.create.foundation.config.ui;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModContainer;
@@ -23,6 +30,10 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class ConfigHelper {
 
+	public static final Pattern unitPattern = Pattern.compile("\\[(in .*)]");
+	public static final Pattern annotationPattern = Pattern.compile("\\[@cui:([^:]*)(?::(.*))?]");
+
+	public static final Map<String, ConfigChange> changes = new HashMap<>();
 	private static final LoadingCache<String, EnumMap<ModConfig.Type, ModConfig>> configCache = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build(
 			new CacheLoader<String, EnumMap<ModConfig.Type, ModConfig>>() {
 				@Override
@@ -54,6 +65,11 @@ public class ConfigHelper {
 		return null;
 	}
 
+	public static boolean hasAnyConfig(String modID) {
+		EnumMap<ModConfig.Type, ModConfig> map = configCache.getUnchecked(modID);
+		return map.entrySet().size() > 0;
+	}
+
 	//Directly set a value
 	public static <T> void setConfigValue(ConfigPath path, String value) throws InvalidValueException {
 		ForgeConfigSpec spec = findConfigSpecFor(path.getType(), path.getModID());
@@ -68,18 +84,51 @@ public class ConfigHelper {
 	}
 
 	//Add a value to the current UI's changes list
-	public static <T> void setValue(String path, ForgeConfigSpec.ConfigValue<T> configValue, T value) {
+	public static <T> void setValue(String path, ForgeConfigSpec.ConfigValue<T> configValue, T value, @Nullable Map<String, String> annotations) {
 		if (value.equals(configValue.get())) {
-			ConfigScreen.changes.remove(path);
+			changes.remove(path);
 		} else {
-			ConfigScreen.changes.put(path, value);
+			changes.put(path, annotations == null ? new ConfigChange(value) : new ConfigChange(value, annotations));
 		}
 	}
 
 	//Get a value from the current UI's changes list or the config value, if its unchanged
 	public static <T> T getValue(String path, ForgeConfigSpec.ConfigValue<T> configValue) {
-		//noinspection unchecked
-		return (T) ConfigScreen.changes.getOrDefault(path, configValue.get());
+		ConfigChange configChange = changes.get(path);
+		if (configChange != null)
+			//noinspection unchecked
+			return (T) configChange.value;
+		else
+			return configValue.get();
+	}
+
+	public static Pair<String, Map<String, String>> readMetadataFromComment(List<String> commentLines) {
+		AtomicReference<String> unit = new AtomicReference<>();
+		Map<String, String> annotations = new HashMap<>();
+
+		commentLines.removeIf(line -> {
+			if (line.trim().isEmpty()) {
+				return true;
+			}
+
+			Matcher matcher = annotationPattern.matcher(line);
+			if (matcher.matches()) {
+				String annotation = matcher.group(1);
+				String aValue = matcher.group(2);
+				annotations.putIfAbsent(annotation, aValue);
+
+				return true;
+			}
+
+			matcher = unitPattern.matcher(line);
+			if (matcher.matches()) {
+				unit.set(matcher.group(1));
+			}
+
+			return false;
+		});
+
+		return Pair.of(unit.get(), annotations);
 	}
 
 	public static class ConfigPath {
@@ -135,6 +184,21 @@ public class ConfigHelper {
 
 		public String[] getPath() {
 			return path;
+		}
+	}
+
+	public static class ConfigChange {
+		Object value;
+		Map<String, String> annotations;
+
+		ConfigChange(Object value) {
+			this.value = value;
+		}
+
+		ConfigChange(Object value, Map<String, String> annotations) {
+			this(value);
+			this.annotations = new HashMap<>();
+			this.annotations.putAll(annotations);
 		}
 	}
 

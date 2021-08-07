@@ -1,7 +1,11 @@
 package com.simibubi.create.foundation.config.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import org.lwjgl.opengl.GL11;
 
@@ -12,6 +16,7 @@ import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -27,8 +32,6 @@ import net.minecraftforge.fml.client.gui.GuiUtils;
 public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	public static TextFieldWidget currentText;
-
-	public boolean isForServer = false;
 
 	public ConfigScreenList(Minecraft client, int width, int height, int top, int bottom, int elementHeight) {
 		super(client, width, height, top, bottom, elementHeight);
@@ -77,13 +80,41 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	public void tick() {
-		for(int i = 0; i < getItemCount(); ++i) {
+		/*for(int i = 0; i < getItemCount(); ++i) {
 			int top = this.getRowTop(i);
 			int bot = top + itemHeight;
 			if (bot >= this.y0 && top <= this.y1)
 				this.getEntry(i).tick();
+		}*/
+		children().forEach(Entry::tick);
+
+	}
+
+	public boolean search(String query) {
+		if (query == null || query.isEmpty()) {
+			setScrollAmount(0);
+			return true;
 		}
 
+		String q = query.toLowerCase(Locale.ROOT);
+		Optional<Entry> first = children().stream().filter(entry -> {
+			if (entry.path == null)
+				return false;
+
+			String[] split = entry.path.split("\\.");
+			String key = split[split.length - 1].toLowerCase(Locale.ROOT);
+			return key.contains(q);
+		}).findFirst();
+
+		if (!first.isPresent()) {
+			setScrollAmount(0);
+			return false;
+		}
+
+		Entry e = first.get();
+		e.annotations.put("highlight", "(:");
+		centerScrollOn(e);
+		return true;
 	}
 
 	public void bumpCog(float force) {
@@ -92,9 +123,12 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 	public static abstract class Entry extends ExtendedList.AbstractListEntry<Entry> {
 		protected List<IGuiEventListener> listeners;
+		protected Map<String, String> annotations;
+		protected String path;
 
 		protected Entry() {
 			listeners = new ArrayList<>();
+			annotations = new HashMap<>();
 		}
 
 		@Override
@@ -119,6 +153,13 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		}
 
 		protected void setEditable(boolean b) {}
+
+		protected boolean isCurrentValueChanged() {
+			if (path == null) {
+				return false;
+			}
+			return ConfigHelper.changes.containsKey(path);
+		}
 	}
 
 	public static class LabeledEntry extends Entry {
@@ -128,6 +169,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		protected TextStencilElement label;
 		protected List<ITextComponent> labelTooltip;
 		protected String unit = null;
+		protected LerpedFloat differenceAnimation = LerpedFloat.linear().startWithValue(0);
+		protected LerpedFloat highlightAnimation = LerpedFloat.linear().startWithValue(0);
 
 		public LabeledEntry(String label) {
 			this.label = new TextStencilElement(Minecraft.getInstance().font, label);
@@ -135,8 +178,41 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 			labelTooltip = new ArrayList<>();
 		}
 
+		public LabeledEntry(String label, String path) {
+			this(label);
+			this.path = path;
+		}
+
+		@Override
+		public void tick() {
+			differenceAnimation.tickChaser();
+			highlightAnimation.tickChaser();
+			super.tick();
+		}
+
 		@Override
 		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+			if (isCurrentValueChanged()) {
+				if (differenceAnimation.getChaseTarget() != 1)
+					differenceAnimation.chase(1, .5f, LerpedFloat.Chaser.EXP);
+			} else {
+				if (differenceAnimation.getChaseTarget() != 0)
+					differenceAnimation.chase(0, .6f, LerpedFloat.Chaser.EXP);
+			}
+
+			float animation = differenceAnimation.getValue(partialTicks);
+			if (animation > .1f) {
+				int offset = (int) (30 * (1 - animation));
+
+				if (annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName())) {
+					UIRenderHelper.streak(ms, 180, x + width + 10 + offset, y + height / 2, height - 6, 110, new Color(0x50_601010));
+				} else if (annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName())) {
+					UIRenderHelper.streak(ms, 180, x + width + 10 + offset, y + height / 2, height - 6, 110, new Color(0x40_eefb17));
+				}
+
+				UIRenderHelper.breadcrumbArrow(ms, x - 10 - offset, y + 6, 0, -20, 24, -18, new Color(0x70_ffffff), Color.TRANSPARENT_BLACK);
+			}
+
 			UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
 			UIRenderHelper.streak(ms, 180, x + (int) (width * 1.35f) + 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
 			IFormattableTextComponent component = label.getComponent();
@@ -150,6 +226,20 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 				label.at(x + 10, y + height / 2 - 10, 0).render(ms);
 			} else {
 				label.at(x + 10, y + height / 2 - 4, 0).render(ms);
+			}
+
+			if (annotations.containsKey("highlight")) {
+				highlightAnimation.startWithValue(1).chase(0, 0.1f, LerpedFloat.Chaser.LINEAR);
+				annotations.remove("highlight");
+			}
+
+			animation = highlightAnimation.getValue(partialTicks);
+			if (animation > .01f) {
+				Color highlight = new Color(0xa0_ffffff).scaleAlpha(animation);
+				UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, 5, highlight);
+				UIRenderHelper.streak(ms, 180, x + width, y + height / 2, height - 6, 5, highlight);
+				UIRenderHelper.streak(ms, 90, x + width / 2 - 5, y + 3, width + 10, 5, highlight);
+				UIRenderHelper.streak(ms, -90, x + width / 2 - 5, y + height - 3, width + 10, 5, highlight);
 			}
 
 

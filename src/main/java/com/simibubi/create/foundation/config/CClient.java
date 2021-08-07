@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.config;
 
+import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
+
 public class CClient extends ConfigBase {
 
 	public ConfigGroup client = group(0, "client",
@@ -42,11 +44,11 @@ public class CClient extends ConfigBase {
 		"Offset the overlay from goggle- and hover- information by this many pixels on the Y axis; Use /create overlay");
 	public ConfigBool overlayCustomColor = b(false, "customColorsOverlay", "Enable this to use your custom colors for the Goggle- and Hover- Overlay");
 	public ConfigInt overlayBackgroundColor = i(0xf0_100010, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBackgroundOverlay",
-		"The custom background color to use for the Goggle- and Hover- Overlays, if enabled", "[in Hex: #AaRrGgBb]", "[@cui:IntDisplay:#]");
+		"The custom background color to use for the Goggle- and Hover- Overlays, if enabled", "[in Hex: #AaRrGgBb]", ConfigAnnotations.IntDisplay.HEX.asComment());
 	public ConfigInt overlayBorderColorTop = i(0x50_5000ff, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderTopOverlay",
-			"The custom top color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled", "[in Hex: #AaRrGgBb]", "[@cui:IntDisplay:#]");
+			"The custom top color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled", "[in Hex: #AaRrGgBb]", ConfigAnnotations.IntDisplay.HEX.asComment());
 	public ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
-			"The custom bot color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled", "[in Hex: #AaRrGgBb]", "[@cui:IntDisplay:#]");
+			"The custom bot color of the border gradient to use for the Goggle- and Hover- Overlays, if enabled", "[in Hex: #AaRrGgBb]", ConfigAnnotations.IntDisplay.HEX.asComment());
 
 	//placement assist group
 	public ConfigGroup placementAssist = group(1, "placementAssist", "Settings for the Placement Assist");

@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.config.ui;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -26,43 +29,65 @@ import net.minecraftforge.fml.config.ModConfig;
 
 public class BaseConfigScreen extends ConfigScreen {
 
-	private static final DelegatedStencilElement.ElementRenderer DISABLED_RENDERER = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_DISABLE));
+	public static final DelegatedStencilElement.ElementRenderer DISABLED_RENDERER = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_DISABLE));
+	private static final Map<String, UnaryOperator<BaseConfigScreen>> defaults = new HashMap<>();
+
+	static {
+		defaults.put("create", (base) -> base
+				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
+				.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification)
+		);
+	}
+
+	/**
+	 * If you are a Create Addon dev and want to change the config labels,
+	 * add a default action here.
+	 *
+	 * Make sure you call either {@link #withSpecs(ForgeConfigSpec, ForgeConfigSpec, ForgeConfigSpec)}
+	 * or {@link #searchForSpecsInModContainer()}
+	 *
+	 * @param modID     the modID of your addon/mod
+	 */
+	public static void setDefaultActionFor(String modID, UnaryOperator<BaseConfigScreen> transform) {
+		if (modID.equalsIgnoreCase("create"))
+			return;
+
+		defaults.put(modID, transform);
+	}
 
 	public static BaseConfigScreen forCreate(Screen parent) {
-		return new BaseConfigScreen(parent)
-				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
-				.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification);
+		return new BaseConfigScreen(parent);
 	}
 
 	BoxWidget clientConfigWidget;
 	BoxWidget commonConfigWidget;
 	BoxWidget serverConfigWidget;
 	BoxWidget goBack;
+	BoxWidget others;
 	BoxWidget title;
 
 	ForgeConfigSpec clientSpec;
 	ForgeConfigSpec commonSpec;
 	ForgeConfigSpec serverSpec;
-	String clientTile = "CLIENT CONFIG";
-	String commonTile = "COMMON CONFIG";
-	String serverTile = "SERVER CONFIG";
-	String modID = Create.ID;
+	String clientTile = "Client Config";
+	String commonTile = "Common Config";
+	String serverTile = "Server Config";
+	String modID;
 	protected boolean returnOnClose;
 
-	/**
-	 * If you are a Create Addon dev and want to make use of the same GUI
-	 * for your mod's config, use this Constructor to create a entry point
-	 *
-	 * @param parent the previously opened screen
-	 * @param modID  the modID of your addon/mod
-	 */
 	public BaseConfigScreen(Screen parent, @Nonnull String modID) {
-		this(parent);
+		super(parent);
 		this.modID = modID;
+
+		if (defaults.containsKey(modID))
+			defaults.get(modID).apply(this);
+		else {
+			this.searchForSpecsInModContainer();
+		}
 	}
 
 	private BaseConfigScreen(Screen parent) {
-		super(parent);
+		this(parent, Create.ID);
 	}
 
 	/**
@@ -70,22 +95,26 @@ public class BaseConfigScreen extends ConfigScreen {
 	 * please use {@link #withSpecs(ForgeConfigSpec, ForgeConfigSpec, ForgeConfigSpec)} instead
 	 */
 	public BaseConfigScreen searchForSpecsInModContainer() {
+		if (!ConfigHelper.hasAnyConfig(this.modID)){
+			return this;
+		}
+
 		try {
 			clientSpec = ConfigHelper.findConfigSpecFor(ModConfig.Type.CLIENT, this.modID);
 		} catch (Exception e) {
-			Create.LOGGER.warn("Unable to find ClientConfigSpec for mod: " + this.modID);
+			Create.LOGGER.debug("Unable to find ClientConfigSpec for mod: " + this.modID);
 		}
 
 		try {
 			commonSpec = ConfigHelper.findConfigSpecFor(ModConfig.Type.COMMON, this.modID);
 		} catch (Exception e) {
-			Create.LOGGER.warn("Unable to find CommonConfigSpec for mod: " + this.modID, e);
+			Create.LOGGER.debug("Unable to find CommonConfigSpec for mod: " + this.modID);
 		}
 
 		try {
 			serverSpec = ConfigHelper.findConfigSpecFor(ModConfig.Type.SERVER, this.modID);
 		} catch (Exception e) {
-			Create.LOGGER.warn("Unable to find ServerConfigSpec for mod: " + this.modID, e);
+			Create.LOGGER.debug("Unable to find ServerConfigSpec for mod: " + this.modID);
 		}
 
 		return this;
@@ -191,6 +220,13 @@ public class BaseConfigScreen extends ConfigScreen {
 		goBack.getToolTip()
 				.add(new StringTextComponent("Go Back"));
 		widgets.add(goBack);
+
+		TextStencilElement othersText = new TextStencilElement(minecraft.font, new StringTextComponent("Access Configs of other Mods")).centered(true, true);
+		others = new BoxWidget(width / 2 - 100, height / 2 - 15 + 90, 200, 16).showingElement(othersText);
+		othersText.withElementRenderer(BoxWidget.gradientFactory.apply(others));
+		others.withCallback(() -> linkTo(new ConfigModListScreen(this)));
+		widgets.add(others);
+
 	}
 
 	@Override
