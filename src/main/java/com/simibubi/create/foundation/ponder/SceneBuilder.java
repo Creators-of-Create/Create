@@ -193,6 +193,24 @@ public class SceneBuilder {
 	}
 
 	/**
+	 * Adds an instruction to the scene. It is recommended to only use this method
+	 * if another method in this class or its subclasses does not already allow
+	 * adding a certain instruction.
+	 */
+	public void addInstruction(PonderInstruction instruction) {
+		scene.schedule.add(instruction);
+	}
+
+	/**
+	 * Adds a simple instruction to the scene. It is recommended to only use this
+	 * method if another method in this class or its subclasses does not already
+	 * allow adding a certain instruction.
+	 */
+	public void addInstruction(Consumer<PonderScene> callback) {
+		addInstruction(PonderInstruction.simple(callback));
+	}
+
+	/**
 	 * Before running the upcoming instructions, wait for a duration to let previous
 	 * actions play out. <br>
 	 * Idle does not stall any animations, only schedules a time gap between
@@ -814,14 +832,6 @@ public class SceneBuilder {
 			addInstruction(callback);
 		}
 
-	}
-
-	private void addInstruction(PonderInstruction instruction) {
-		scene.schedule.add(instruction);
-	}
-
-	private void addInstruction(Consumer<PonderScene> callback) {
-		scene.schedule.add(PonderInstruction.simple(callback));
 	}
 
 }
