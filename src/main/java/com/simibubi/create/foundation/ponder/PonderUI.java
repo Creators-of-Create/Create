@@ -591,8 +591,7 @@ public class PonderUI extends NavigatableSimiScreen {
 				UIRenderHelper.streak(ms, 180, 4, 10, 26, (int) (150 * fade));
 
 				drawRightAlignedString(font, ms, Lang.translate(IN_CHAPTER).getString(), 0, 0, tooltipColor);
-				drawRightAlignedString(font, ms,
-					Lang.translate(LANG_PREFIX + "chapter." + chapter.getId()).getString(), 0, 12, Theme.i(Theme.Key.TEXT));
+				drawRightAlignedString(font, ms, chapter.getTitle(), 0, 12, Theme.i(Theme.Key.TEXT));
 
 				ms.popPose();
 			}
@@ -821,8 +820,7 @@ public class PonderUI extends NavigatableSimiScreen {
 	@Override
 	protected String getBreadcrumbTitle() {
 		if (chapter != null)
-			return Lang.translate(LANG_PREFIX + "chapter." + chapter.getId())
-				.getString();
+			return chapter.getTitle();
 
 		return stack.getItem()
 				.getDescription()

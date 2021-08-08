@@ -1,8 +1,10 @@
 package com.simibubi.create.foundation.ponder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import com.simibubi.create.foundation.ponder.content.PonderChapter;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 
 import net.minecraft.util.ResourceLocation;
@@ -11,16 +13,20 @@ public class PonderStoryBoardEntry {
 
 	private final PonderStoryBoard board;
 	private final String namespace;
-	private final String schematicPath;
+	private final ResourceLocation schematicLocation;
 	private final ResourceLocation component;
 	private final List<PonderTag> tags;
 
-	public PonderStoryBoardEntry(PonderStoryBoard board, String namespace, String schematicPath, ResourceLocation component) {
+	public PonderStoryBoardEntry(PonderStoryBoard board, String namespace, ResourceLocation schematicLocation, ResourceLocation component) {
 		this.board = board;
 		this.namespace = namespace;
-		this.schematicPath = schematicPath;
+		this.schematicLocation = schematicLocation;
 		this.component = component;
 		this.tags = new ArrayList<>();
+	}
+
+	public PonderStoryBoardEntry(PonderStoryBoard board, String namespace, String schematicPath, ResourceLocation component) {
+		this(board, namespace, new ResourceLocation(namespace, schematicPath), component);
 	}
 
 	public PonderStoryBoard getBoard() {
@@ -31,8 +37,8 @@ public class PonderStoryBoardEntry {
 		return namespace;
 	}
 
-	public String getSchematicPath() {
-		return schematicPath;
+	public ResourceLocation getSchematicLocation() {
+		return schematicLocation;
 	}
 
 	public ResourceLocation getComponent() {
@@ -43,9 +49,35 @@ public class PonderStoryBoardEntry {
 		return tags;
 	}
 
-	public ResourceLocation getSchematicLocation() {
-		return new ResourceLocation(namespace, schematicPath);
+	// Builder start
+
+	public PonderStoryBoardEntry highlightTag(PonderTag tag) {
+		tags.add(tag);
+		return this;
 	}
+
+	public PonderStoryBoardEntry highlightTags(PonderTag... tags) {
+		Collections.addAll(this.tags, tags);
+		return this;
+	}
+
+	public PonderStoryBoardEntry highlightAllTags() {
+		tags.add(PonderTag.Highlight.ALL);
+		return this;
+	}
+
+	public PonderStoryBoardEntry chapter(PonderChapter chapter) {
+		PonderRegistry.CHAPTERS.addStoriesToChapter(chapter, this);
+		return this;
+	}
+
+	public PonderStoryBoardEntry chapters(PonderChapter... chapters) {
+		for (PonderChapter c : chapters)
+			chapter(c);
+		return this;
+	}
+
+	// Builder end
 
 	@FunctionalInterface
 	public interface PonderStoryBoard {
