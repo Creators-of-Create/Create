@@ -89,6 +89,7 @@ public class Create {
 		AllEntityTypes.register();
 		AllTileEntities.register();
 		AllMovementBehaviours.register();
+		AllInteractionBehaviours.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		AllConfigs.register(ModLoadingContext.get());

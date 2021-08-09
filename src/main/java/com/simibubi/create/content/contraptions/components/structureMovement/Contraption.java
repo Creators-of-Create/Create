@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllInteractionBehaviours;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -132,6 +134,7 @@ public abstract class Contraption {
 	protected Map<BlockPos, MountedStorage> storage;
 	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 	protected List<MutablePair<BlockInfo, MovementContext>> actors;
+	protected Map<BlockPos, MovingInteractionBehaviour> interactors;
 	protected Set<Pair<BlockPos, Direction>> superglue;
 	protected List<BlockPos> seats;
 	protected Map<UUID, Integer> seatMapping;
@@ -155,6 +158,7 @@ public abstract class Contraption {
 		storage = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		interactors = new HashMap<>();
 		superglue = new HashSet<>();
 		seatMapping = new HashMap<>();
 		fluidStorage = new HashMap<>();
@@ -630,6 +634,8 @@ public abstract class Contraption {
 			fluidStorage.put(localPos, new MountedFluidStorage(te));
 		if (AllMovementBehaviours.contains(captured.state.getBlock()))
 			actors.add(MutablePair.of(blockInfo, null));
+		if (AllInteractionBehaviours.contains(captured.state.getBlock()))
+			interactors.put(localPos, AllInteractionBehaviours.of(captured.state.getBlock()));
 		if (te instanceof CreativeCrateTileEntity
 			&& ((CreativeCrateTileEntity) te).getBehaviour(FilteringBehaviour.TYPE)
 				.getFilter()
@@ -716,6 +722,12 @@ public abstract class Contraption {
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", NBT.TAG_COMPOUND), c -> fluidStorage
 			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
 
+		interactors.clear();
+		NBTHelper.iterateCompoundList(nbt.getList("Interactors", NBT.TAG_COMPOUND), c -> {
+			BlockPos pos = NBTUtil.readBlockPos(c.getCompound("Pos"));
+			interactors.put(pos, AllInteractionBehaviours.of(getBlocks().get(pos).state.getBlock()));
+		});
+
 		if (spawnData)
 			fluidStorage.forEach((pos, mfs) -> {
 				TileEntity tileEntity = presentTileEntities.get(pos);
@@ -800,6 +812,13 @@ public abstract class Contraption {
 			fluidStorageNBT.add(c);
 		}
 
+		ListNBT interactorNBT = new ListNBT();
+		for (BlockPos pos : interactors.keySet()) {
+			CompoundNBT c = new CompoundNBT();
+			c.put("Pos", NBTUtil.writeBlockPos(pos));
+			interactorNBT.add(c);
+		}
+
 		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), NBTUtil::writeBlockPos));
 		nbt.put("Passengers", NBTHelper.writeCompoundList(getSeatMapping().entrySet(), e -> {
 			CompoundNBT tag = new CompoundNBT();
@@ -818,6 +837,7 @@ public abstract class Contraption {
 
 		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
+		nbt.put("Interactors", interactorNBT);
 		nbt.put("Superglue", superglueNBT);
 		nbt.put("Storage", storageNBT);
 		nbt.put("FluidStorage", fluidStorageNBT);
@@ -1194,6 +1214,8 @@ public abstract class Contraption {
 	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
 		return actors;
 	}
+
+	public Map<BlockPos, MovingInteractionBehaviour> getInteractors () { return interactors; }
 
 	public void updateContainedFluid(BlockPos localPos, FluidStack containedFluid) {
 		MountedFluidStorage mountedFluidStorage = fluidStorage.get(localPos);
