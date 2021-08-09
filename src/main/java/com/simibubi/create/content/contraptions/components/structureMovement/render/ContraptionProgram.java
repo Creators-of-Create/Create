@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL20;
 
-import com.jozufozu.flywheel.backend.loading.Program;
 import com.jozufozu.flywheel.core.shader.WorldProgram;
 import com.jozufozu.flywheel.core.shader.extension.IProgramExtension;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Matrix4f;
 
@@ -18,8 +18,8 @@ public class ContraptionProgram extends WorldProgram {
 
 	protected int uLightVolume;
 
-	public ContraptionProgram(Program program, List<IProgramExtension> extensions) {
-		super(program, extensions);
+	public ContraptionProgram(ResourceLocation name, int handle, List<IProgramExtension> extensions) {
+		super(name, handle, extensions);
 		uLightBoxSize = getUniformLocation("uLightBoxSize");
 		uLightBoxMin = getUniformLocation("uLightBoxMin");
 		uModel = getUniformLocation("uModel");

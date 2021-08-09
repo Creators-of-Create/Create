@@ -1,10 +1,8 @@
 #define PI 3.1415926538
 
-#flwbuiltins
-#flwinclude <"flywheel:core/matutils.glsl">
-#flwinclude <"flywheel:core/diffuse.glsl">
+#use "flywheel:core/matutils.glsl"
+#use "flywheel:core/diffuse.glsl"
 
-#[InstanceData]
 struct Rotating {
     vec2 light;
     vec4 color;
@@ -14,8 +12,8 @@ struct Rotating {
     vec3 axis;
 };
 
-#flwinclude <"flywheel:data/modelvertex.glsl">
-#flwinclude <"flywheel:data/blockfragment.glsl">
+#use "flywheel:data/modelvertex.glsl"
+#use "flywheel:block.frag"
 
 mat4 kineticRotation(float offset, float speed, vec3 axis) {
     float degrees = offset + uTime * speed * 3./10.;
@@ -24,7 +22,8 @@ mat4 kineticRotation(float offset, float speed, vec3 axis) {
     return rotate(axis, angle);
 }
 
-BlockFrag FLWMain(Vertex v, Rotating instance) {
+#if defined(VERTEX_SHADER)
+BlockFrag vertex(Vertex v, Rotating instance) {
     mat4 spin = kineticRotation(instance.offset, instance.speed, instance.axis);
 
     vec4 worldPos = spin * vec4(v.pos - .5, 1.);
@@ -50,3 +49,4 @@ BlockFrag FLWMain(Vertex v, Rotating instance) {
 
     return b;
 }
+#endif

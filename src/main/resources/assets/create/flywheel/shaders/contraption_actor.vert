@@ -1,11 +1,9 @@
 #define PI 3.1415926538
 
-#flwbuiltins
-#flwinclude <"flywheel:core/matutils.glsl">
-#flwinclude <"flywheel:core/quaternion.glsl">
-#flwinclude <"flywheel:core/diffuse.glsl">
+#use "flywheel:core/matutils.glsl"
+#use "flywheel:core/quaternion.glsl"
+#use "flywheel:core/diffuse.glsl"
 
-#[InstanceData]
 struct Actor {
     vec3 pos;
     vec2 light;
@@ -16,10 +14,11 @@ struct Actor {
     float speed;
 };
 
-#flwinclude <"flywheel:data/modelvertex.glsl">
-#flwinclude <"flywheel:data/blockfragment.glsl">
+#use "flywheel:data/modelvertex.glsl"
+#use "flywheel:block.frag"
 
-BlockFrag FLWMain(Vertex v, Actor instance) {
+#if defined(VERTEX_SHADER)
+BlockFrag vertex(Vertex v, Actor instance) {
     float degrees = instance.offset + uTime * instance.speed / 20.;
     //float angle = fract(degrees / 360.) * PI * 2.;
 
@@ -45,3 +44,4 @@ BlockFrag FLWMain(Vertex v, Actor instance) {
 
     return b;
 }
+#endif
