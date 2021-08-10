@@ -1,6 +1,5 @@
 {
-  "vert": "create:rotating.vert",
-  "frag": "flywheel:block.frag",
+  "source": "create:rotating.vert",
   "states": [
     {
       "when": "create:rainbow_debug",

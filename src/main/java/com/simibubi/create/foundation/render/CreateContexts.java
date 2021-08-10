@@ -2,14 +2,11 @@ package com.simibubi.create.foundation.render;
 
 import java.util.stream.Stream;
 
-import org.lwjgl.opengl.GL46;
-
 import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.FileResolution;
+import com.jozufozu.flywheel.backend.source.FileResolution;
 import com.jozufozu.flywheel.backend.ResourceUtil;
 import com.jozufozu.flywheel.backend.SpecMetaRegistry;
 import com.jozufozu.flywheel.backend.pipeline.IShaderPipeline;
-import com.jozufozu.flywheel.backend.pipeline.ITemplate;
 import com.jozufozu.flywheel.backend.pipeline.InstancingTemplate;
 import com.jozufozu.flywheel.backend.pipeline.OneShotTemplate;
 import com.jozufozu.flywheel.backend.pipeline.WorldShaderPipeline;
@@ -32,19 +29,17 @@ public class CreateContexts {
 		Backend backend = event.getBackend();
 
 		SpecMetaRegistry.register(RainbowDebugStateProvider.INSTANCE);
-
-		CWORLD = backend.register(contraptionContext(backend, InstancingTemplate.INSTANCE));
-		STRUCTURE = backend.register(contraptionContext(backend, OneShotTemplate.INSTANCE)
-				.withSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE)));
-	}
-
-	private static WorldContext<ContraptionProgram> contraptionContext(Backend backend, ITemplate template) {
-
 		FileResolution header = backend.sources.resolveFile(ResourceUtil.subPath(CONTRAPTION, ".glsl"));
 
-		IShaderPipeline<ContraptionProgram> worldPipeline = new WorldShaderPipeline<>(backend.sources, ContraptionProgram::new, template, header);
+		IShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(backend.sources, ContraptionProgram::new, InstancingTemplate.INSTANCE, header);
+		IShaderPipeline<ContraptionProgram> structure = new WorldShaderPipeline<>(backend.sources, ContraptionProgram::new, OneShotTemplate.INSTANCE, header);
 
-		return new WorldContext<>(backend, worldPipeline)
-				.withName(CONTRAPTION);
+		CWORLD = backend.register(WorldContext.builder(backend, CONTRAPTION)
+				.build(instancing));
+
+		STRUCTURE = backend.register(WorldContext.builder(backend, CONTRAPTION)
+				.setSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
+				.build(structure));
 	}
+
 }

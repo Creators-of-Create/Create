@@ -1,6 +1,5 @@
 {
-  "vert": "create:contraption_actor.vert",
-  "frag": "flywheel:block.frag",
+  "source": "create:contraption_actor.vert",
   "states": [
     {
       "when": {

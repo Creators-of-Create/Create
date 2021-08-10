@@ -1,6 +1,5 @@
 {
-  "vert": "create:contraption_structure.vert",
-  "frag": "flywheel:block.frag",
+  "source": "create:contraption_structure.vert",
   "states": [
     {
       "when": {
