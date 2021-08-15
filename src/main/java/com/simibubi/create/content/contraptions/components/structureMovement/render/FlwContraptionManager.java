@@ -94,12 +94,4 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 		// we use visible in #tick() so we have to re-evaluate it if any were removed
 		if (removed) collectVisible();
 	}
-
-	@Override
-	public void delete() {
-		for (RenderedContraption renderer : renderInfos.values()) {
-			renderer.invalidate();
-		}
-		renderInfos.clear();
-	}
 }
