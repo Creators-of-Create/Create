@@ -29,6 +29,20 @@ public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> 
 		this.world = (World) world;
 	}
 
+	public boolean invalidate(Contraption contraption) {
+		int entityId = contraption.entity.getId();
+
+		C removed = renderInfos.remove(entityId);
+
+		if (removed != null) {
+			removed.invalidate();
+			visible.remove(removed);
+			return true;
+		}
+
+		return false;
+	}
+
 	public void renderLayer(RenderLayerEvent event) {
 		for (C c : visible) {
 			c.setupMatrices(event.stack, event.camX, event.camY, event.camZ);
@@ -85,6 +99,9 @@ public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> 
 	}
 
 	public void delete() {
+		for (C renderer : renderInfos.values()) {
+			renderer.invalidate();
+		}
 		renderInfos.clear();
 	}
 
