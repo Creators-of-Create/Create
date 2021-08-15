@@ -44,7 +44,16 @@ public class ContraptionRenderDispatcher {
 
 	private static WorldAttached<ContraptionRenderManager<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 
-	public static final Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new Compartment<>();
+	/**
+	 * Reset a contraption's renderer.
+	 * @param contraption The contraption to invalidate.
+	 * @return true if there was a renderer associated with the given contraption.
+	 */
+	public static boolean invalidate(Contraption contraption) {
+		World level = contraption.entity.level;
+
+		return WORLDS.get(level).invalidate(contraption);
+	}
 
 	public static void tick(World world) {
 		if (Minecraft.getInstance().isPaused()) return;

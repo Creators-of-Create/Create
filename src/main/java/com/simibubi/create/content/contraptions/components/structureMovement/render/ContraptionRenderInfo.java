@@ -68,4 +68,8 @@ public class ContraptionRenderInfo {
 	public ContraptionMatrices getMatrices() {
 		return matrices;
 	}
+
+	public void invalidate() {
+
+	}
 }
