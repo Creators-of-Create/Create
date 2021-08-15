@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.CreateClient;
 
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -21,7 +23,8 @@ public class LeverMovingInteraction extends MovingInteractionBehaviour {
 			null, player.blockPosition(), SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.3f,
 			newState.getValue(BlockStateProperties.POWERED) ? 0.6f : 0.5f
 		);
-		CreateClient.invalidateRenderers();
+		// mark contraption to re-render
+		ContraptionRenderDispatcher.invalidate(contraptionEntity.contraption);
 		return true;
 	}
 }
