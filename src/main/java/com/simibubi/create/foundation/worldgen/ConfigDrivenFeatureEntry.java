@@ -34,7 +34,9 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 		public String[] getBlacklistDescritpion() {
 			return new String[]{"Whether or not this filter is a blacklist instead of a whitelist"};
 		}
-		public abstract String[] getListDescription();
+		public String[] getListDescription() {
+			return new String[]{"The list for this filter"};
+		}
 		public abstract List<String> getDefaultList();
 		public boolean validateEntry(Object e) {
 			return e instanceof String;
@@ -93,11 +95,6 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 			}
 
 			@Override
-			public String[] getListDescription() {
-				return new String[0];
-			}
-
-			@Override
 			public List<String> getDefaultList() {
 				return Collections.emptyList();
 			}
@@ -113,11 +110,6 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 			}
 
 			@Override
-			public String[] getListDescription() {
-				return new String[0];
-			}
-
-			@Override
 			public List<String> getDefaultList() {
 				return Collections.singletonList("#" + BlockTags.BASE_STONE_OVERWORLD.getName());
 			}
@@ -130,11 +122,6 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 			@Override
 			public boolean isBlacklistByDefault() {
 				return true;
-			}
-
-			@Override
-			public String[] getListDescription() {
-				return new String[0];
 			}
 
 			@Override
@@ -183,7 +170,7 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	private ConfiguredFeature<?, ?> createFeature() {
 		ConfigDrivenOreFeatureConfig config =
-			new ConfigDrivenOreFeatureConfig(FillerBlockType.NATURAL_STONE, block.get()
+			new ConfigDrivenOreFeatureConfig(createTest(), block.get()
 				.defaultBlockState(), id);
 
 		return ConfigDrivenOreFeature.INSTANCE.configured(config)
@@ -203,11 +190,8 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 	protected void registerAll(ForgeConfigSpec.Builder builder) {
 		biomes = addFilter(builder, biomeFilter, "The biomes this ore spawns in");
 		blocks = addFilter(builder, blockFilter, "The blocks this ore can generate in, start with # if it is a tag");
-		Biome.Category[] categoryList = Biome.Category.values();
-		String[] categoryComments = new String[categoryList.length + 1];
-		categoryComments[0] = "The biome categories this ore can spawn in. Options: ";
-		System.arraycopy(Arrays.stream(categoryList).map(Biome.Category::getName).toArray(String[]::new), 0, categoryComments, 1, categoryList.length);
-		categories = addFilter(builder, categoryFilter, categoryComments);
+		categories = addFilter(builder, categoryFilter, "The biome categories this ore can spawn in", "Options:",
+				Arrays.stream(Biome.Category.values()).map(Biome.Category::getName).collect(Collectors.joining(", ")));
 		super.registerAll(builder);
 	}
 
