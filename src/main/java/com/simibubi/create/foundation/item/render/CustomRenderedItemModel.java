@@ -22,8 +22,9 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedMo
 	protected Map<String, IBakedModel> partials = new HashMap<>();
 	protected ItemStackTileEntityRenderer renderer;
 
-	public CustomRenderedItemModel(IBakedModel template, String basePath) {
+	public CustomRenderedItemModel(IBakedModel template, String namespace, String basePath) {
 		super(template);
+		this.namespace = namespace;
 		this.basePath = basePath;
 		this.renderer = createRenderer();
 	}
@@ -72,7 +73,7 @@ public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedMo
 	}
 
 	private ResourceLocation getPartialModelLocation(String name) {
-		return new ResourceLocation(Create.ID, "item/" + basePath + "/" + name);
+		return new ResourceLocation(namespace, "item/" + basePath + "/" + name);
 	}
 
 	public IBakedModel getPartial(String name) {

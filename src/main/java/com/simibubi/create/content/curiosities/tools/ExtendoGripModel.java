@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class ExtendoGripModel extends CustomRenderedItemModel {
 
 	public ExtendoGripModel(IBakedModel template) {
-		super(template, "extendo_grip");
+		super(template, "create", "extendo_grip");
 		addPartials("cog", "thin_short", "wide_short", "thin_long", "wide_long");
 	}
 

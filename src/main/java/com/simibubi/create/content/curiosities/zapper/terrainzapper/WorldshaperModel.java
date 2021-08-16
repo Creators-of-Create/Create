@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class WorldshaperModel extends CustomRenderedItemModel {
 
 	public WorldshaperModel(IBakedModel template) {
-		super(template, "handheld_worldshaper");
+		super(template, "create", "handheld_worldshaper");
 		addPartials("core", "core_glow", "accelerator");
 	}
 

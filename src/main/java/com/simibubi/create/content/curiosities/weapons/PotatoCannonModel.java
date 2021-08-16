@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class PotatoCannonModel extends CustomRenderedItemModel {
 
 	public PotatoCannonModel(IBakedModel template) {
-		super(template, "potato_cannon");
+		super(template, "create", "potato_cannon");
 		addPartials("cog");
 	}
 
