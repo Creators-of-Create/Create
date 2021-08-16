@@ -72,12 +72,10 @@ public class AllWorldFeatures {
 	public static void reload(BiomeLoadingEvent event) {
 		entries.values()
 			.forEach(entry -> {
-				if (event.getName() == Biomes.THE_VOID.getRegistryName())
-					return;
-				if (event.getCategory() == Category.NETHER)
-					return;
-				event.getGeneration()
-					.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, entry.getFeature());
+				if(entry.biomeMatches(event.getName()) && entry.categoryMatches(event.getCategory().getName())) {
+					event.getGeneration()
+							.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, entry.getFeature());
+				}
 			});
 	}
 
