@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class LinkedControllerModel extends CustomRenderedItemModel {
 
 	public LinkedControllerModel(IBakedModel template) {
-		super(template, "linked_controller");
+		super(template, "create", "linked_controller");
 		addPartials("powered", "button");
 	}
 

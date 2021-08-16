@@ -18,6 +18,7 @@ import net.minecraftforge.client.model.BakedModelWrapper;
 
 public abstract class CustomRenderedItemModel extends BakedModelWrapper<IBakedModel> {
 
+	protected String namespace;
 	protected String basePath;
 	protected Map<String, IBakedModel> partials = new HashMap<>();
 	protected ItemStackTileEntityRenderer renderer;

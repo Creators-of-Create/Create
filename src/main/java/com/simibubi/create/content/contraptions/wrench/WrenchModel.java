@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 public class WrenchModel extends CustomRenderedItemModel {
 
 	public WrenchModel(IBakedModel template) {
-		super(template, "wrench");
+		super(template, "create", "wrench");
 		addPartials("gear");
 	}
 

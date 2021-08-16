@@ -82,7 +82,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 	public static class SandPaperModel extends CustomRenderedItemModel {
 
 		public SandPaperModel(IBakedModel template) {
-			super(template, "");
+			super(template, "create","");
 		}
 
 		@Override
