@@ -35,8 +35,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxPistonPoles = i(64, 1, "maxPistonPoles", Comments.maxPistonPoles);
 	public ConfigInt maxRopeLength = i(128, 1, "maxRopeLength", Comments.maxRopeLength);
 	public ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
-	public ConfigEnum<SpawnerMovementSetting> spawnerMovement =
-			e(SpawnerMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
+	public ConfigEnum<ContraptionMovementSetting> spawnerMovement =
+			e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
 
 	public CStress stressValues = nested(1, CStress::new, Comments.stress);
 
@@ -101,10 +101,6 @@ public class CKinetics extends ConfigBase {
 
 	public enum DeployerAggroSetting {
 		ALL, CREEPERS, NONE
-	}
-
-	public enum SpawnerMovementSetting {
-		MOVABLE, NO_PICKUP, UNMOVABLE
 	}
 
 }

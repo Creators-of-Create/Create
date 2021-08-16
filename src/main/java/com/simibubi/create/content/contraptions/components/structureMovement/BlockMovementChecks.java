@@ -29,8 +29,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankConnectivityHandler;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CKinetics;
+
+import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
 import net.minecraft.block.AbstractPressurePlateBlock;
 import net.minecraft.block.AbstractRailBlock;
@@ -50,7 +50,6 @@ import net.minecraft.block.LadderBlock;
 import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.block.RedstoneWallTorchBlock;
 import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.block.SpawnerBlock;
 import net.minecraft.block.StandingSignBlock;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.WallSignBlock;
@@ -195,8 +194,7 @@ public class BlockMovementChecks {
 			return false;
 		if (state.getBlock().getTags().contains(NON_MOVABLE))
 			return false;
-		if (AllConfigs.SERVER.kinetics.spawnerMovement.get() == CKinetics.SpawnerMovementSetting.UNMOVABLE
-			&& block instanceof SpawnerBlock)
+		if (ContraptionMovementSetting.get(state.getBlock()) == ContraptionMovementSetting.UNMOVABLE)
 			return false;
 
 		// Move controllers only when they aren't moving
