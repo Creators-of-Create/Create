@@ -57,6 +57,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			if (ctx.data.contains("HeldItem")) {
 				player.setItemInHand(activeHand, ItemStack.of(ctx.data.getCompound("HeldItem")));
 				fake.setItemInHand(Hand.MAIN_HAND, heldStack);
+				ctx.tileData.put("HeldItem", heldStack.serializeNBT());
+				ctx.data.put("HeldItem", heldStack.serializeNBT());
 			}
 			ctx.tileData.remove("Inventory");
 			ctx.temporaryData = fake;
