@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
 import com.simibubi.create.AllItems;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
@@ -9,6 +10,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
@@ -43,13 +45,10 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			);
 		//	Create.LOGGER.info("Changed mode");
 		} else {
-			// this part isn't quite working yet due to being unable to get the fake player from ctx.temporaryData
+			if (ctx.world.isClientSide) return true; // we'll try again on the server side
 			DeployerFakePlayer fake = null;
-			if ( !(ctx.temporaryData instanceof DeployerFakePlayer)) {
-				if (ctx.world instanceof ServerWorld) {
-					ctx.temporaryData = new DeployerFakePlayer((ServerWorld) ctx.world);
-				}
-				else return false;
+			if ( !(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerWorld) {
+				ctx.temporaryData = new DeployerFakePlayer((ServerWorld) ctx.world);
 			} else {
 				fake = (DeployerFakePlayer)ctx.temporaryData;
 			}
