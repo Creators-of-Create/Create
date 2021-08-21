@@ -62,7 +62,7 @@ public class WrenchItem extends Item {
 		BlockState state = world.getBlockState(pos);
 		if (!(world instanceof ServerWorld))
 			return ActionResultType.SUCCESS;
-		if (player != null && !player.isCreative())
+		if (player != null && !player.isCreative() && state.isAir(world, pos))
 			Block.getDrops(state, (ServerWorld) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 				.forEach(itemStack -> player.inventory.placeItemBackInInventory(world, itemStack));
 		state.spawnAfterBreak((ServerWorld) world, pos, ItemStack.EMPTY);
