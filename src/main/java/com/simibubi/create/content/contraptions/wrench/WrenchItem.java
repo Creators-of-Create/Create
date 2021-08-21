@@ -22,6 +22,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
+import java.util.List;
+
 public class WrenchItem extends Item {
 
 	public WrenchItem(Properties properties) {
@@ -62,11 +64,12 @@ public class WrenchItem extends Item {
 		BlockState state = world.getBlockState(pos);
 		if (!(world instanceof ServerWorld))
 			return ActionResultType.SUCCESS;
-		if (player != null && !player.isCreative() && state.isAir(world, pos))
-			Block.getDrops(state, (ServerWorld) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
-				.forEach(itemStack -> player.inventory.placeItemBackInInventory(world, itemStack));
+		if (player != null && !player.isCreative())
+			List<ItemStack> drops = Block.getDrops(state, (ServerWorld) world, pos, world.getBlockEntity(pos), player, context.getItemInHand());
 		state.spawnAfterBreak((ServerWorld) world, pos, ItemStack.EMPTY);
 		world.destroyBlock(pos, false);
+		if (drops != null && state.isAir(world, pos))
+			drops.forEach(itemStack -> player.inventory.placeItemBackInInventory(world, itemStack));
 		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() * .5f + .5f);
 		return ActionResultType.SUCCESS;
 	}
