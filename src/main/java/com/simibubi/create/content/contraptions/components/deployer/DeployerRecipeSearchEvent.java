@@ -5,20 +5,19 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.simibubi.create.foundation.utility.recipe.TileEntityAwareRecipeWrapper;
-
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class DeployerRecipeSearchEvent extends Event {
 	private final DeployerTileEntity tileEntity;
-	private final TileEntityAwareRecipeWrapper inventory;
+	private final RecipeWrapper inventory;
 	@Nullable
 	IRecipe<? extends IInventory> recipe = null;
 	private int maxPriority = 0;
 
-	public DeployerRecipeSearchEvent(DeployerTileEntity tileEntity, TileEntityAwareRecipeWrapper inventory) {
+	public DeployerRecipeSearchEvent(DeployerTileEntity tileEntity, RecipeWrapper inventory) {
 		this.tileEntity = tileEntity;
 		this.inventory = inventory;
 	}
@@ -32,7 +31,7 @@ public class DeployerRecipeSearchEvent extends Event {
 		return tileEntity;
 	}
 
-	public TileEntityAwareRecipeWrapper getInventory() {
+	public RecipeWrapper getInventory() {
 		return inventory;
 	}
 

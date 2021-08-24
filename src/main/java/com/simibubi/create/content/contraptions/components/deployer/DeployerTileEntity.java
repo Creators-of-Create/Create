@@ -25,8 +25,6 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
-import com.simibubi.create.foundation.utility.recipe.TileEntityAwareRecipeWrapper;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -48,7 +46,6 @@ import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -441,7 +438,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		animatedOffset.setValue(offset);
 	}
 
-	TileEntityAwareRecipeWrapper recipeInv = new TileEntityAwareRecipeWrapper(new ItemStackHandler(2), this);
+	RecipeWrapper recipeInv = new RecipeWrapper(new ItemStackHandler(2));
 	SandPaperInv sandpaperInv = new SandPaperInv(ItemStack.EMPTY);
 
 	@Nullable
@@ -466,9 +463,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		DeployerRecipeSearchEvent event = new DeployerRecipeSearchEvent(this, recipeInv);
 
 		// creates deployer recipes
-		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, recipeInv,
+		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
 				AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
-		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(recipeInv, level), 50);
+		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
 
 		// post the event, get result
 		MinecraftForge.EVENT_BUS.post(event);
