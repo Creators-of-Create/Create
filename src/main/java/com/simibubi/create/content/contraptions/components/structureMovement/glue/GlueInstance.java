@@ -7,13 +7,9 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialGroup;
-import com.jozufozu.flywheel.backend.model.BufferedModel;
-import com.jozufozu.flywheel.backend.model.ElementBuffer;
-import com.jozufozu.flywheel.backend.model.IndexedModel;
 import com.jozufozu.flywheel.backend.state.TextureRenderState;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
@@ -41,7 +37,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	private final Quaternion rotation;
 	protected ConditionalInstance<OrientedData> model;
 
-	public GlueInstance(MaterialManager<?> materialManager, SuperGlueEntity entity) {
+	public GlueInstance(MaterialManager materialManager, SuperGlueEntity entity) {
 		super(materialManager, entity);
 
 		Instancer<OrientedData> instancer = getInstancer(materialManager, entity);
@@ -55,8 +51,8 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				.update();
 	}
 
-	private Instancer<OrientedData> getInstancer(MaterialManager<?> materialManager, SuperGlueEntity entity) {
-		MaterialGroup<?> group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(TextureRenderState.get(TEXTURE));
+	private Instancer<OrientedData> getInstancer(MaterialManager materialManager, SuperGlueEntity entity) {
+		MaterialGroup group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(TextureRenderState.get(TEXTURE));
 
 		return group.material(Materials.ORIENTED).model(entity.getType(), GlueModel::new);
 	}

@@ -4,8 +4,8 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -22,7 +22,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected final EnumMap<Direction, RotatingData> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(MaterialManager<?> modelManager, GearboxTileEntity tile) {
+    public GearboxInstance(MaterialManager modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
 
         keys = new EnumMap<>(Direction.class);

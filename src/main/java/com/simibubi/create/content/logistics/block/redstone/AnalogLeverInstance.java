@@ -23,7 +23,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     final float rX;
     final float rY;
 
-    public AnalogLeverInstance(MaterialManager<?> modelManager, AnalogLeverTileEntity tile) {
+    public AnalogLeverInstance(MaterialManager modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
 
         InstanceMaterial<ModelData> mat = getTransformMaterial();

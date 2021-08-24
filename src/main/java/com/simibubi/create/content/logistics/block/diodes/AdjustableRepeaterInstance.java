@@ -16,7 +16,7 @@ public class AdjustableRepeaterInstance extends TileEntityInstance<AdjustableRep
 
     protected int previousState;
 
-    public AdjustableRepeaterInstance(MaterialManager<?> modelManager, AdjustableRepeaterTileEntity tile) {
+    public AdjustableRepeaterInstance(MaterialManager modelManager, AdjustableRepeaterTileEntity tile) {
         super(modelManager, tile);
 
         indicator = modelManager.defaultSolid()

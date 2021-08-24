@@ -20,7 +20,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
     private ModelData crank;
     private Direction facing;
 
-    public HandCrankInstance(MaterialManager<?> modelManager, HandCrankTileEntity tile) {
+    public HandCrankInstance(MaterialManager modelManager, HandCrankTileEntity tile) {
         super(modelManager, tile);
 		this.tile = tile;
 

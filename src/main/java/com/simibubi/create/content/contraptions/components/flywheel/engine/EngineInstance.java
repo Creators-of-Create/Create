@@ -16,7 +16,7 @@ public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     protected ModelData frame;
 
-    public EngineInstance(MaterialManager<?> modelManager, EngineTileEntity tile) {
+    public EngineInstance(MaterialManager modelManager, EngineTileEntity tile) {
         super(modelManager, tile);
 
         Block block = blockState

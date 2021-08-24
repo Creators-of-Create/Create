@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 public class HosePulleyInstance extends AbstractPulleyInstance {
 	final HosePulleyTileEntity tile = (HosePulleyTileEntity) super.tile;
 
-	public HosePulleyInstance(MaterialManager<?> dispatcher, HosePulleyTileEntity tile) {
+	public HosePulleyInstance(MaterialManager dispatcher, HosePulleyTileEntity tile) {
 		super(dispatcher, tile);
 		beginFrame();
 	}

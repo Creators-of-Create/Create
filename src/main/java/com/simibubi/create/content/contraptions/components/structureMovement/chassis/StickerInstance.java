@@ -23,7 +23,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
     private final ModelData head;
 
-    public StickerInstance(MaterialManager<?> modelManager, StickerTileEntity tile) {
+    public StickerInstance(MaterialManager modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
 
         head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();

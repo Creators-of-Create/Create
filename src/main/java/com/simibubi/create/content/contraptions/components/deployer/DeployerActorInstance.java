@@ -42,7 +42,7 @@ public class DeployerActorInstance extends ActorInstance {
     ModelData hand;
     RotatingData shaft;
 
-    public DeployerActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+    public DeployerActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
 		InstanceMaterial<ModelData> mat = materialManager.defaultSolid()

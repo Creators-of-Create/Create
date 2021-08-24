@@ -17,7 +17,7 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
     private final OrientedData pressHead;
     private final MechanicalPressTileEntity press;
 
-    public PressInstance(MaterialManager<?> dispatcher, MechanicalPressTileEntity tile) {
+    public PressInstance(MaterialManager dispatcher, MechanicalPressTileEntity tile) {
         super(dispatcher, tile);
         press = tile;
 

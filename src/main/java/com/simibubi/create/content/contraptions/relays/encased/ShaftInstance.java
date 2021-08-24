@@ -8,7 +8,7 @@ import net.minecraft.block.BlockState;
 
 public class ShaftInstance extends SingleRotatingInstance {
 
-	public ShaftInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+	public ShaftInstance(MaterialManager dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 	}
 

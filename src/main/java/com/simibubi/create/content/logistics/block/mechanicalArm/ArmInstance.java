@@ -44,7 +44,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	private float upperArmAngle = Float.NaN;
 	private float headAngle = Float.NaN;
 
-	public ArmInstance(MaterialManager<?> modelManager, ArmTileEntity tile) {
+	public ArmInstance(MaterialManager modelManager, ArmTileEntity tile) {
 		super(modelManager, tile);
 
 		InstanceMaterial<ModelData> mat = getTransformMaterial();

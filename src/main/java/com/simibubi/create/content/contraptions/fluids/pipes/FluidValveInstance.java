@@ -24,7 +24,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
     protected final double yRot;
     protected final int pointerRotationOffset;
 
-    public FluidValveInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+    public FluidValveInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         Direction facing = blockState.getValue(FluidValveBlock.FACING);

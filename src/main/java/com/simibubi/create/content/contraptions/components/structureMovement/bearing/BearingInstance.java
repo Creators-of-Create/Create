@@ -23,7 +23,7 @@ public class BearingInstance<B extends KineticTileEntity & IBearingTileEntity> e
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public BearingInstance(MaterialManager<?> modelManager, B tile) {
+	public BearingInstance(MaterialManager modelManager, B tile) {
 		super(modelManager, tile);
 		this.bearing = tile;
 

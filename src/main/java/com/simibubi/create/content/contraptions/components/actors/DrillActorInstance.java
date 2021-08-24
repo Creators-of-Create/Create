@@ -19,7 +19,7 @@ public class DrillActorInstance extends ActorInstance {
     ActorData drillHead;
     private final Direction facing;
 
-    public DrillActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld contraption, MovementContext context) {
+    public DrillActorInstance(MaterialManager materialManager, PlacementSimulationWorld contraption, MovementContext context) {
         super(materialManager, contraption, context);
 
         InstanceMaterial<ActorData> instanceMaterial = materialManager.defaultSolid()

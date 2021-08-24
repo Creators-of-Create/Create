@@ -36,7 +36,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     float progress;
     private boolean newHand = false;
 
-    public DeployerInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+    public DeployerInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         this.tile = (DeployerTileEntity) super.tile;

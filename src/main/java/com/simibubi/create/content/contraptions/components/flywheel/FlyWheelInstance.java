@@ -8,8 +8,8 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
@@ -45,7 +45,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     protected float lastAngle = Float.NaN;
 
-    public FlyWheelInstance(MaterialManager<?> modelManager, FlywheelTileEntity tile) {
+    public FlyWheelInstance(MaterialManager modelManager, FlywheelTileEntity tile) {
 		super(modelManager, tile);
 
 		facing = blockState.getValue(HORIZONTAL_FACING);

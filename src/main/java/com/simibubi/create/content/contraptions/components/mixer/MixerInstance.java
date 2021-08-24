@@ -16,7 +16,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 	private final OrientedData mixerPole;
 	private final MechanicalMixerTileEntity mixer;
 
-	public MixerInstance(MaterialManager<?> dispatcher, MechanicalMixerTileEntity tile) {
+	public MixerInstance(MaterialManager dispatcher, MechanicalMixerTileEntity tile) {
 		super(dispatcher, tile);
 		this.mixer = tile;
 

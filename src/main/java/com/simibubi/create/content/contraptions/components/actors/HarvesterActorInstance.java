@@ -34,7 +34,7 @@ public class HarvesterActorInstance extends ActorInstance {
     private double rotation;
     private double previousRotation;
 
-    public HarvesterActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+    public HarvesterActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
 		InstanceMaterial<ModelData> instanceMaterial = materialManager.defaultCutout()

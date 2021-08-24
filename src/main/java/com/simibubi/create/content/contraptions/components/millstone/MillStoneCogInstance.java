@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 
 public class MillStoneCogInstance extends SingleRotatingInstance {
 
-    public MillStoneCogInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public MillStoneCogInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

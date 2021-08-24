@@ -6,7 +6,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 
 public class BackHalfShaftInstance extends HalfShaftInstance {
-    public BackHalfShaftInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public BackHalfShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

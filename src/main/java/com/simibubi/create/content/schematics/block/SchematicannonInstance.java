@@ -17,7 +17,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     private final ModelData connector;
     private final ModelData pipe;
 
-    public SchematicannonInstance(MaterialManager<?> modelManager, SchematicannonTileEntity tile) {
+    public SchematicannonInstance(MaterialManager modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
 
         InstanceMaterial<ModelData> mat = getTransformMaterial();

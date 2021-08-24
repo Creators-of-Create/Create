@@ -23,7 +23,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public StabilizedBearingInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public StabilizedBearingInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		super(materialManager, simulationWorld, context);
 
 		BlockState blockState = context.state;

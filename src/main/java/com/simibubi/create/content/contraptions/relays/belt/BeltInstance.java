@@ -35,7 +35,7 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
     protected ArrayList<BeltData> keys;
     protected RotatingData pulleyKey;
 
-    public BeltInstance(MaterialManager<?> materialManager, BeltTileEntity tile) {
+    public BeltInstance(MaterialManager materialManager, BeltTileEntity tile) {
         super(materialManager, tile);
 
         if (!AllBlocks.BELT.has(blockState))

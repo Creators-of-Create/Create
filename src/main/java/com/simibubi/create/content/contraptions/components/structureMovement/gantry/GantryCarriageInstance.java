@@ -29,7 +29,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
 
     private float lastAngle = Float.NaN;
 
-    public GantryCarriageInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+    public GantryCarriageInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         gantryCogs = getTransformMaterial()

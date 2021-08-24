@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.IModel;
@@ -36,7 +36,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
 
-	public final MaterialManager<ContraptionProgram> materialManager;
+	public final MaterialManagerImpl<ContraptionProgram> materialManager;
 	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
@@ -48,7 +48,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = MaterialManager.builder(CreateContexts.CWORLD)
+		this.materialManager = MaterialManagerImpl.builder(CreateContexts.CWORLD)
 				.setGroupFactory(ContraptionGroup.forContraption(this))
 				.setIgnoreOriginCoordinate(true)
 				.build();

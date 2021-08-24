@@ -19,7 +19,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 	private float lastProgress = Float.NaN;
 
-	public EjectorInstance(MaterialManager<?> dispatcher, EjectorTileEntity tile) {
+	public EjectorInstance(MaterialManager dispatcher, EjectorTileEntity tile) {
 		super(dispatcher, tile);
 		this.tile = tile;
 

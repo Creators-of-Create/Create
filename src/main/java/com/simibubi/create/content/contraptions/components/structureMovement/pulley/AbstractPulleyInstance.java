@@ -37,7 +37,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	private byte[] sLight = new byte[1];
 	private GridAlignedBB volume;
 
-	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+	public AbstractPulleyInstance(MaterialManager dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);

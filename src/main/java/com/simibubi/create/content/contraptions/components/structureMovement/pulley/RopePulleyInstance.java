@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 public class RopePulleyInstance extends AbstractPulleyInstance {
 	final PulleyTileEntity tile = (PulleyTileEntity) super.tile;
 
-	public RopePulleyInstance(MaterialManager<?> dispatcher, PulleyTileEntity tile) {
+	public RopePulleyInstance(MaterialManager dispatcher, PulleyTileEntity tile) {
 		super(dispatcher, tile);
 		beginFrame();
 	}
