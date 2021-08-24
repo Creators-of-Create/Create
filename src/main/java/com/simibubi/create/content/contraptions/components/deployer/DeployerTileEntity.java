@@ -474,4 +474,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		MinecraftForge.EVENT_BUS.post(event);
 		return event.getRecipe();
 	}
+
+	public DeployerFakePlayer getPlayer() {
+		return player;
+	}
 }
