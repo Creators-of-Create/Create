@@ -12,6 +12,7 @@ public class CRecipes extends ConfigBase {
 		b(false, "allowBiggerFireworksInCrafter", Comments.allowBiggerFireworksInCrafter);
 	public ConfigBool allowStonecuttingOnSaw = b(true, "allowStonecuttingOnSaw", Comments.allowStonecuttingOnSaw);
 	public ConfigBool allowWoodcuttingOnSaw = b(true, "allowWoodcuttingOnSaw", Comments.allowWoodcuttingOnSaw);
+	public ConfigBool allowCastingBySpout = b(true, "allowCastingBySpout", Comments.allowCastingBySpout);
 	public ConfigInt lightSourceCountForRefinedRadiance =
 		i(10, 1, "lightSourceCountForRefinedRadiance", Comments.refinedRadiance);
 	public ConfigBool enableRefinedRadianceRecipe =
@@ -24,20 +25,22 @@ public class CRecipes extends ConfigBase {
 	}
 
 	private static class Comments {
-		static String bulkPressing = "When true, allows the Mechanical Press to process entire stacks at a time.";
-		static String bulkCutting = "When true, allows the Mechanical Saw to process entire stacks at a time.";
+		static String bulkPressing = "Allow the Mechanical Press to process entire stacks at a time.";
+		static String bulkCutting = "Allow the Mechanical Saw to process entire stacks at a time.";
 		static String allowShapelessInMixer =
-			"When true, allows any shapeless crafting recipes to be processed by a Mechanical Mixer + Basin.";
+			"Allow allows any shapeless crafting recipes to be processed by a Mechanical Mixer + Basin.";
 		static String allowShapedSquareInPress =
-			"When true, allows any single-ingredient 2x2 or 3x3 crafting recipes to be processed by a Mechanical Press + Basin.";
+			"Allow any single-ingredient 2x2 or 3x3 crafting recipes to be processed by a Mechanical Press + Basin.";
 		static String allowRegularCraftingInCrafter =
-			"When true, allows any standard crafting recipes to be processed by Mechanical Crafters.";
+			"Allow any standard crafting recipes to be processed by Mechanical Crafters.";
 		static String allowBiggerFireworksInCrafter =
-			"When true, allows Firework Rockets with more than 9 ingredients to be crafted using Mechanical Crafters.";
+			"Allow Firework Rockets with more than 9 ingredients to be crafted using Mechanical Crafters.";
 		static String allowStonecuttingOnSaw =
-			"When true, allows any stonecutting recipes to be processed by a Mechanical Saw.";
+			"Allow any stonecutting recipes to be processed by a Mechanical Saw.";
 		static String allowWoodcuttingOnSaw =
-			"When true, allows any Druidcraft woodcutter recipes to be processed by a Mechanical Saw.";
+			"Allow any Druidcraft woodcutter recipes to be processed by a Mechanical Saw.";
+		static String allowCastingBySpout =
+			"Allow Spouts to interact with Casting Tables and Basins from Tinkers' Construct.";
 		static String refinedRadiance =
 			"The amount of Light sources destroyed before Chromatic Compound turns into Refined Radiance.";
 		static String refinedRadianceRecipe = "Allow the standard in-world Refined Radiance recipes.";

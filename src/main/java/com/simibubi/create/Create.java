@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
+import com.simibubi.create.content.contraptions.fluids.actors.BlockSpoutingBehaviour;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -58,7 +59,7 @@ public class Create {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
-	public static final String VERSION = "0.3.2d";
+	public static final String VERSION = "0.3.2e";
 
 	public static final Logger LOGGER = LogManager.getLogger();
 
@@ -92,6 +93,7 @@ public class Create {
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		AllConfigs.register(ModLoadingContext.get());
+		BlockSpoutingBehaviour.register();
 
 		ForgeMod.enableMilkFluid();
 
