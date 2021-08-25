@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.simibubi.create.compat.event.TileEntityBehaviourEvent;
+import com.simibubi.create.api.event.TileEntityBehaviourEvent;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;

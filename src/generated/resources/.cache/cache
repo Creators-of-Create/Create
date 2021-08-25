@@ -428,8 +428,7 @@ b7181bcd8182b2f17088e5aa881f374c9c65470c assets/create/blockstates/zinc_ore.json
 fb760b12b4bc8114744d3acc6a597b2fad88d988 assets/create/lang/en_ud.json
 66e8ae18a98d86c66393c908ab51eae5060b8e04 assets/create/lang/en_us.json
 9e94c2420840c516e24dfd7968aaad61da24b5a2 assets/create/lang/unfinished/de_de.json
-f5c05d84c11e6db204c42169228329c8d361ca51 assets/create/lang/unfinished/es_es.json
-edf3dab78e95aa442c3c667d8d1d574bfc69d5d7 assets/create/lang/unfinished/es_mx.json
+f1a6ed9a5812c89e7c7152c9abf2b64c133fd27d assets/create/lang/unfinished/es_es.json
 23a46ae0bc7b2181f26eeed70801714a254d2587 assets/create/lang/unfinished/fr_fr.json
 5e95153e640edc367b963489df8c92c459badcd3 assets/create/lang/unfinished/it_it.json
 a951315b2591051dad6c53739fe554fe78595250 assets/create/lang/unfinished/ja_jp.json
@@ -3754,6 +3753,7 @@ eac71740fb12bdb38b5dfaa2268613d7ba82b809 data/create/tags/blocks/windmill_sails.
 893a01e6004d6d8272bd1658e98da88bb572ee57 data/create/tags/blocks/wrench_pickup.json
 081f5aa35602fc27af2ca01ea9f2fd5e7eb284dc data/create/tags/items/create_ingots.json
 94c62bf22678ef55b2b8a5398a7960e5b00682dc data/create/tags/items/crushed_ores.json
+bce28787b0271382842823d04a977912a88b01c2 data/create/tags/items/sandpaper.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/items/seats.json
 f1092005b5d01e1f29457e90f75e5750f7f0226b data/create/tags/items/upright_on_belt.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/items/valve_handles.json

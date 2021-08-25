@@ -1,4 +1,4 @@
-package com.simibubi.create.compat.event;
+package com.simibubi.create.api.event;
 
 import java.lang.reflect.Type;
 import java.util.Map;

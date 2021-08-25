@@ -1,10 +1,11 @@
-package com.simibubi.create.content.contraptions.fluids.actors;
+package com.simibubi.create.api.behaviour;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.tconstruct.SpoutCasting;
+import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;

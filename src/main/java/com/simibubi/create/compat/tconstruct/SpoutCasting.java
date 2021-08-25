@@ -1,7 +1,7 @@
 package com.simibubi.create.compat.tconstruct;
 
+import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.compat.Mods;
-import com.simibubi.create.content.contraptions.fluids.actors.BlockSpoutingBehaviour;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
