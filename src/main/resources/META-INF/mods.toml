@@ -34,4 +34,4 @@ Technology that empowers the player.'''
     mandatory=true
     versionRange="[1.16-0.2.3,1.16-0.3)"
     ordering="AFTER"
-    side="CLIENT"
+    side="BOTH"
