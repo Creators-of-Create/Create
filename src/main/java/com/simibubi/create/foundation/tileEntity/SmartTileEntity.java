@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.simibubi.create.api.event.TileEntityBehaviourEvent;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -17,6 +18,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -73,6 +75,12 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 	}
 
 	public void initialize() {
+		if (firstNbtRead) {
+			firstNbtRead = false;
+			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(getBlockState(), this, behaviours));
+			updateBehaviorList();
+		}
+
 		behaviourList.forEach(TileEntityBehaviour::initialize);
 		lazyTick();
 	}
@@ -108,7 +116,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements ITicka
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
-
+			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(state, this, behaviours));
 			updateBehaviorList();
 		}
 		super.load(state, compound);
