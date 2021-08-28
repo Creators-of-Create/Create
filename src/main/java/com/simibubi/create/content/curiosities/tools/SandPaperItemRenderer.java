@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
@@ -79,10 +79,10 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		ms.popPose();
 	}
 
-	public static class SandPaperModel extends CustomRenderedItemModel {
+	public static class SandPaperModel extends CreateCustomRenderedItemModel {
 
 		public SandPaperModel(IBakedModel template) {
-			super(template, "create","");
+			super(template, "");
 		}
 
 		@Override

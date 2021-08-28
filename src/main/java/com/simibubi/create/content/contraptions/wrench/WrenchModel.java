@@ -1,14 +1,14 @@
 package com.simibubi.create.content.contraptions.wrench;
 
-import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 
-public class WrenchModel extends CustomRenderedItemModel {
+public class WrenchModel extends CreateCustomRenderedItemModel {
 
 	public WrenchModel(IBakedModel template) {
-		super(template, "create", "wrench");
+		super(template, "wrench");
 		addPartials("gear");
 	}
 

@@ -1,14 +1,14 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
-import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 
-public class WorldshaperModel extends CustomRenderedItemModel {
+public class WorldshaperModel extends CreateCustomRenderedItemModel {
 
 	public WorldshaperModel(IBakedModel template) {
-		super(template, "create", "handheld_worldshaper");
+		super(template, "handheld_worldshaper");
 		addPartials("core", "core_glow", "accelerator");
 	}
 
