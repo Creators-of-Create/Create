@@ -120,6 +120,7 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	public static <T extends IRecipe<?>> IRecipeType<T> simpleType(ResourceLocation id) {
 		String stringId = id.toString();
 		return Registry.register(Registry.RECIPE_TYPE, id, new IRecipeType<T>() {
+			@Override
 			public String toString() {
 				return stringId;
 			}
