@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -205,7 +206,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {
-		return maxBlocks() != -1; //  && !AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
+		return maxBlocks() != -1 && !AllTags.AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
 	}
 
 	@Override
