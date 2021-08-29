@@ -16,6 +16,8 @@ import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.ILightUpdateListener;
 import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.ListenerStatus;
+import com.jozufozu.flywheel.light.Volume;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -118,7 +120,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		if (light == null && level.isClientSide) {
 			initializeLight();
 			LightUpdater.getInstance()
-				.startListening(getBeltVolume(), this);
+				.addListener(this);
 		}
 
 		getInventory().tick();
@@ -526,30 +528,30 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 	}
 
 	@Override
-	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
-		if (this.remove) {
-			return true;
-		}
+	public Volume.Box getVolume() {
+		BlockPos endPos = BeltHelper.getPositionForOffset(this, beltLength - 1);
 
-		GridAlignedBB beltVolume = getBeltVolume();
+		GridAlignedBB bb = GridAlignedBB.from(worldPosition, endPos);
+		bb.fixMinMax();
+		return new Volume.Box(bb);
+	}
 
-		if (beltVolume.intersects(changed)) {
+	@Override
+	public ListenerStatus status() {
+		return remove ? ListenerStatus.REMOVE : ListenerStatus.OKAY;
+	}
+
+	@Override
+	public void onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
+		Volume.Box beltVolume = getVolume();
+
+		if (beltVolume.box.intersects(changed)) {
 			if (type == LightType.BLOCK)
 				updateBlockLight();
 
 			if (type == LightType.SKY)
 				updateSkyLight();
 		}
-
-		return false;
-	}
-
-	private GridAlignedBB getBeltVolume() {
-		BlockPos endPos = BeltHelper.getPositionForOffset(this, beltLength - 1);
-
-		GridAlignedBB bb = GridAlignedBB.from(worldPosition, endPos);
-		bb.fixMinMax();
-		return bb;
 	}
 
 	private void initializeLight() {

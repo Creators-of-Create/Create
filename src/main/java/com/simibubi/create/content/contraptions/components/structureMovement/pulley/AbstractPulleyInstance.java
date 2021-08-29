@@ -10,8 +10,8 @@ import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ILightUpdateListener;
 import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.ListenerStatus;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
@@ -22,7 +22,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
@@ -145,7 +145,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 
 			initLight(world, volume);
 
-			LightUpdater.getInstance().startListening(volume, this);
+			needsUpdate = true;
 		}
 	}
 
@@ -175,13 +175,17 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		return false;
 	}
 
+	boolean needsUpdate;
 	@Override
-	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
+	public ListenerStatus status() {
+		return needsUpdate ? ListenerStatus.UPDATE : super.status();
+	}
+
+	@Override
+	public void onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
 		changed.intersectAssign(volume);
 
 		initLight(world, changed);
-
-		return false;
 	}
 
 	private void initLight(IBlockDisplayReader world, GridAlignedBB changed) {

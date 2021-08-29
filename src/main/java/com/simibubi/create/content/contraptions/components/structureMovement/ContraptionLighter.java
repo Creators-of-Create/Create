@@ -1,9 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ILightUpdateListener;
-import com.jozufozu.flywheel.light.LightUpdater;
-import com.jozufozu.flywheel.light.LightVolume;
+import com.jozufozu.flywheel.light.*;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 
 import net.minecraft.world.IBlockDisplayReader;
@@ -39,20 +36,19 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 
     public abstract GridAlignedBB getContraptionBounds();
 
-    @Override
-    public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
+	@Override
+	public ListenerStatus status() {
+		return ListenerStatus.OKAY;
+	}
+
+	@Override
+    public void onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
         lightVolume.notifyLightUpdate(world, type, changed);
-        return false;
     }
 
     @Override
-    public boolean onLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
+    public void onLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
         lightVolume.notifyLightPacket(world, chunkX, chunkZ);
-        return false;
-    }
-
-    protected void startListening() {
-        LightUpdater.getInstance().startListening(bounds, this);
     }
 
     protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
@@ -65,5 +61,10 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 
 	public GridAlignedBB getBounds() {
 		return bounds;
+	}
+
+	@Override
+	public Volume.Box getVolume() {
+		return new Volume.Box(getBounds());
 	}
 }
