@@ -18,6 +18,7 @@ public class CKinetics extends ConfigBase {
 		i(60, 5, "kineticValidationFrequency", Comments.kineticValidationFrequency);
 	public ConfigFloat crankHungerMultiplier = f(.01f, 0, 1, "crankHungerMultiplier", Comments.crankHungerMultiplier);
 	public ConfigInt minimumWindmillSails = i(8, 0, "minimumWindmillSails", Comments.minimumWindmillSails);
+	public ConfigInt windmillSailsPerRPM = i(8, 1, "windmillSailsPerRPM", Comments.windmillSailsPerRPM);
 	public ConfigInt maxEjectorDistance = i(32, 0, "maxEjectorDistance", Comments.maxEjectorDistance);
 	public ConfigInt ejectorScanInterval = i(120, 10, "ejectorScanInterval", Comments.ejectorScanInterval);
 
@@ -93,6 +94,7 @@ public class CKinetics extends ConfigBase {
 			"Game ticks between Kinetic Blocks checking whether their source is still valid.";
 		static String minimumWindmillSails =
 			"Amount of sail-type blocks required for a windmill to assemble successfully.";
+		static String windmillSailsPerRPM = "Number of sail-type blocks required to increase windmill speed by 1RPM.";
 		static String maxEjectorDistance = "Max Distance in blocks a Weighted Ejector can throw";
 		static String ejectorScanInterval =
 			"Time in ticks until the next item launched by an ejector scans blocks for potential collisions";
