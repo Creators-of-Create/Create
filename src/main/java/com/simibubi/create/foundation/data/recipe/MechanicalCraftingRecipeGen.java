@@ -27,7 +27,8 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 			.patternLine("AAPAA")
 			.patternLine("APSPA")
 			.patternLine("AAPAA")
-			.patternLine(" AAA ")),
+			.patternLine(" AAA ")
+			.disallowMirrored()),
 
 		EXTENDO_GRIP = create(AllItems.EXTENDO_GRIP::get).returns(1)
 			.recipe(b -> b.key('L', Ingredient.of(I.brass()))
@@ -38,7 +39,8 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 				.patternLine(" R ")
 				.patternLine("SSS")
 				.patternLine("SSS")
-				.patternLine(" H ")),
+				.patternLine(" H ")
+				.disallowMirrored()),
 
 		POTATO_CANNON = create(AllItems.POTATO_CANNON::get).returns(1)
 			.recipe(b -> b.key('L', I.andesite())
