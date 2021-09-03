@@ -52,6 +52,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.math.vector.Vector4f;
 
+import javax.annotation.Nullable;
+
 public class PonderScene {
 
 	public static final String TITLE_KEY = "header";
@@ -79,6 +81,7 @@ public class PonderScene {
 	Vector3d pointOfInterest;
 	Vector3d chasingPointOfInterest;
 	WorldSectionElement baseWorldSection;
+	@Nullable
 	Entity renderViewEntity;
 
 	int basePlateOffsetX;
@@ -112,7 +115,7 @@ public class PonderScene {
 		basePlateSize = getBounds().getXSpan();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
-		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
+		renderViewEntity = world != null ? new ArmorStandEntity(world, 0, 0, 0) : null;
 		keyframeTimes = new IntArrayList(4);
 		scaleFactor = 1;
 		yOffset = 0;
@@ -486,7 +489,8 @@ public class PonderScene {
 
 		public void updateSceneRVE(float pt) {
 			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);
-			renderViewEntity.setPos(v.x, v.y, v.z);
+			if (renderViewEntity != null)
+				renderViewEntity.setPos(v.x, v.y, v.z);
 		}
 
 		public Vector3d screenToScene(double x, double y, int depth, float pt) {

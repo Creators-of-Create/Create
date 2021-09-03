@@ -24,6 +24,7 @@ import com.simibubi.create.content.contraptions.components.turntable.TurntableHa
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlicer;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
@@ -125,6 +126,7 @@ public class ClientEvents {
 		// ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
+		BeltSlicer.tickHoveringInformation();
 		FilteringRenderer.tick();
 		LinkRenderer.tick();
 		ScrollValueRenderer.tick();

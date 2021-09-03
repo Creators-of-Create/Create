@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -75,7 +76,8 @@ public class BeltHelper {
 		verticalMovement = verticalMovement * (Math.min(offset, controller.beltLength - .5f) - .5f);
 		Vector3d vec = VecHelper.getCenterOf(controller.getBlockPos());
 		Vector3d horizontalMovement = Vector3d.atLowerCornerOf(controller.getBeltFacing()
-			.getNormal()).scale(offset - .5f);
+			.getNormal())
+			.scale(offset - .5f);
 
 		if (slope == BeltSlope.VERTICAL)
 			horizontalMovement = Vector3d.ZERO;
@@ -83,6 +85,18 @@ public class BeltHelper {
 		vec = vec.add(horizontalMovement)
 			.add(0, verticalMovement, 0);
 		return vec;
+	}
+
+	public static Vector3d getBeltVector(BlockState state) {
+		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
+		int verticality = slope == BeltSlope.DOWNWARD ? -1 : slope == BeltSlope.UPWARD ? 1 : 0;
+		Vector3d horizontalMovement = Vector3d.atLowerCornerOf(state.getValue(BeltBlock.HORIZONTAL_FACING)
+			.getNormal());
+		if (slope == BeltSlope.VERTICAL)
+			return new Vector3d(0, state.getValue(BeltBlock.HORIZONTAL_FACING)
+				.getAxisDirection()
+				.getStep(), 0);
+		return new Vector3d(0, verticality, 0).add(horizontalMovement);
 	}
 
 }
