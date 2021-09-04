@@ -1,40 +1,35 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.jozufozu.flywheel.light.*;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
 
-import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
 public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
     public final LightVolume lightVolume;
+	protected final LightUpdater lightUpdater;
 
-    protected GridAlignedBB bounds;
+	protected GridAlignedBB bounds;
 
     protected boolean scheduleRebuild;
 
     protected ContraptionLighter(C contraption) {
         this.contraption = contraption;
+		lightUpdater = LightUpdater.get(contraption.entity.level);
 
-        bounds = getContraptionBounds();
+		bounds = getContraptionBounds();
 
-        lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
+		lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
 
-        lightVolume.initialize(contraption.entity.level);
-        scheduleRebuild = true;
+		lightVolume.initialize(contraption.entity.level);
+		scheduleRebuild = true;
 
-        startListening();
-    }
+		lightUpdater.addListener(this);
 
-    public void tick(RenderedContraption owner) {
-        if (scheduleRebuild) {
-            lightVolume.initialize(owner.contraption.entity.level);
-            scheduleRebuild = false;
-        }
-    }
+		lightVolume.initialize(this.contraption.entity.level);
+	}
 
-    public abstract GridAlignedBB getContraptionBounds();
+	public abstract GridAlignedBB getContraptionBounds();
 
 	@Override
 	public ListenerStatus status() {
@@ -42,12 +37,12 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 	}
 
 	@Override
-    public void onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
+    public void onLightUpdate(LightProvider world, LightType type, GridAlignedBB changed) {
         lightVolume.notifyLightUpdate(world, type, changed);
     }
 
     @Override
-    public void onLightPacket(IBlockDisplayReader world, int chunkX, int chunkZ) {
+    public void onLightPacket(LightProvider world, int chunkX, int chunkZ) {
         lightVolume.notifyLightPacket(world, chunkX, chunkZ);
     }
 
@@ -59,12 +54,8 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
         return bounds;
     }
 
-	public GridAlignedBB getBounds() {
-		return bounds;
-	}
-
 	@Override
-	public Volume.Box getVolume() {
-		return new Volume.Box(getBounds());
+	public GridAlignedBB getVolume() {
+		return bounds;
 	}
 }

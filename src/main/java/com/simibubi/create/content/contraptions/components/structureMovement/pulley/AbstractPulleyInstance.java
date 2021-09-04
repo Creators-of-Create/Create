@@ -9,8 +9,10 @@ import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.light.BasicProvider;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.IMovingListener;
+import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.ListenerStatus;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -143,7 +145,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 			bLight = Arrays.copyOf(bLight, length + 1);
 			sLight = Arrays.copyOf(sLight, length + 1);
 
-			initLight(world, volume);
+			initLight(BasicProvider.get(world), volume);
 
 			needsUpdate = true;
 		}
@@ -176,25 +178,21 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	boolean needsUpdate;
-	@Override
-	public ListenerStatus status() {
-		return needsUpdate ? ListenerStatus.UPDATE : super.status();
-	}
 
 	@Override
-	public void onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
+	public void onLightUpdate(LightProvider world, LightType type, GridAlignedBB changed) {
 		changed.intersectAssign(volume);
 
 		initLight(world, changed);
 	}
 
-	private void initLight(IBlockDisplayReader world, GridAlignedBB changed) {
+	private void initLight(LightProvider world, GridAlignedBB changed) {
 		int top = this.pos.getY();
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 		changed.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
-			byte block = (byte) world.getBrightness(LightType.BLOCK, pos);
-			byte sky = (byte) world.getBrightness(LightType.SKY, pos);
+			byte block = (byte) world.getLight(LightType.BLOCK, x, y, z);
+			byte sky = (byte) world.getLight(LightType.SKY, x, y, z);
 
 			int i = top - y;
 
