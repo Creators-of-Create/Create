@@ -1,11 +1,11 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity.CasingType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +38,7 @@ public class BeltTunnelItem extends BlockItem {
 		BlockState state) {
 		boolean flag = super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, state);
 		if (!world.isClientSide) {
-			BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos.below());
+			BeltTileEntity belt = WorldHelper.getTileAt(world, pos.below());
 			if (belt != null) {
 				AllTriggers.triggerFor(AllTriggers.PLACE_TUNNEL, p_195943_3_);
 				if (belt.casing == CasingType.NONE)

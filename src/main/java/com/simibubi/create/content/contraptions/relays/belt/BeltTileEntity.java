@@ -32,6 +32,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -268,7 +269,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			return;
 
 		for (BlockPos blockPos : BeltBlock.getBeltChain(level, getController())) {
-			BeltTileEntity belt = BeltHelper.getSegmentTE(level, blockPos);
+			BeltTileEntity belt = WorldHelper.getTileAt(level, blockPos);
 			if (belt == null)
 				continue;
 			belt.color = Optional.ofNullable(colorIn);
@@ -523,7 +524,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			return getController().equals(((BeltTileEntity) target).getController()) ? 1 : 0;
 		return 0;
 	}
-	
+
 	public void invalidateItemHandler() {
 		itemHandler.invalidate();
 	}
@@ -535,7 +536,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		BlockState state = getBlockState();
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
 	}
-	
+
 	@Override
 	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
 		if (this.remove) {

@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.*;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -26,11 +28,6 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.SidedFilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
-import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.Couple;
-import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -111,7 +108,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	@Override
 	public void tick() {
 		super.tick();
-		BeltTileEntity beltBelow = BeltHelper.getSegmentTE(level, worldPosition.below());
+		BeltTileEntity beltBelow = WorldHelper.getTileAt(level, worldPosition.below());
 
 		if (distributionProgress > 0)
 			distributionProgress--;
@@ -361,7 +358,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		if (!tunnel.testFlapFilter(side, stack))
 			return null;
 
-		BeltTileEntity below = BeltHelper.getSegmentTE(level, tunnel.worldPosition.below());
+		BeltTileEntity below = WorldHelper.getTileAt(level, tunnel.worldPosition.below());
 		if (below == null)
 			return null;
 		BlockPos offset = tunnel.getBlockPos()
@@ -495,7 +492,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	private void addValidOutputsOf(BrassTunnelTileEntity tunnelTE,
 		List<Pair<BrassTunnelTileEntity, Direction>> validOutputs) {
 		syncSet.add(tunnelTE);
-		BeltTileEntity below = BeltHelper.getSegmentTE(level, tunnelTE.worldPosition.below());
+		BeltTileEntity below = WorldHelper.getTileAt(level, tunnelTE.worldPosition.below());
 		if (below == null)
 			return;
 		Direction movementFacing = below.getMovementFacing();
@@ -748,7 +745,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
 		if (allStacks.isEmpty())
 			return false;
-		
+
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("tooltip.brass_tunnel.contains"))
 			.withStyle(TextFormatting.WHITE));
@@ -761,7 +758,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("tooltip.brass_tunnel.retrieve"))
 			.withStyle(TextFormatting.DARK_GRAY));
-		
+
 		return true;
 	}
 

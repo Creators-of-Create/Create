@@ -8,7 +8,6 @@ import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.goggles.IHaveHoveringInformation;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
@@ -24,6 +23,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -72,7 +72,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			if (shape == Shape.PUSHING)
 				return Mode.PUSHING_TO_BELT;
 
-			BeltTileEntity belt = BeltHelper.getSegmentTE(level, worldPosition.below());
+			BeltTileEntity belt = WorldHelper.getTileAt(level, worldPosition.below());
 			if (belt != null)
 				return belt.getMovementFacing() == state.getValue(BeltFunnelBlock.HORIZONTAL_FACING) ? Mode.PUSHING_TO_BELT
 					: Mode.TAKING_FROM_BELT;
@@ -246,7 +246,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			if (shape == Shape.PUSHING)
 				beltFunnelsupportsAmount = true;
 			else
-				beltFunnelsupportsAmount = BeltHelper.getSegmentTE(level, worldPosition.below()) != null;
+				beltFunnelsupportsAmount = WorldHelper.<BeltTileEntity>getTileAt(level, worldPosition.below()) != null;
 		}
 		boolean extractor = blockState.getBlock() instanceof FunnelBlock && blockState.getValue(FunnelBlock.EXTRACTING);
 		return beltFunnelsupportsAmount || extractor;

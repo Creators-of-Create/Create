@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -19,7 +20,6 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerBloc
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.chute.AbstractChuteBlock;
@@ -459,7 +459,7 @@ public abstract class ArmInteractionPoint {
 		@Override
 		protected void keepAlive(IWorld world) {
 			super.keepAlive(world);
-			BeltTileEntity beltTE = BeltHelper.getSegmentTE(world, pos);
+			BeltTileEntity beltTE = WorldHelper.getTileAt(world, pos);
 			if (beltTE == null)
 				return;
 			TransportedItemStackHandlerBehaviour transport =

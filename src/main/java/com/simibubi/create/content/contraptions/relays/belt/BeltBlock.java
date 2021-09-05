@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -182,7 +183,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			.isWornBy(entityIn))
 			return;
 
-		BeltTileEntity belt = BeltHelper.getSegmentTE(worldIn, pos);
+		BeltTileEntity belt = WorldHelper.getTileAt(worldIn, pos);
 		if (belt == null)
 			return;
 		if (entityIn instanceof ItemEntity && entityIn.isAlive()) {
@@ -256,7 +257,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		if (isWrench)
 			return BeltSlicer.useWrench(state, world, pos, player, handIn, hit, new Feedback());
 
-		BeltTileEntity belt = BeltHelper.getSegmentTE(world, pos);
+		BeltTileEntity belt = WorldHelper.getTileAt(world, pos);
 		if (belt == null)
 			return ActionResultType.PASS;
 

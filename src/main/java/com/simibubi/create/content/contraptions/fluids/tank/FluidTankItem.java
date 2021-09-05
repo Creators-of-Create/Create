@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,7 +73,7 @@ public class FluidTankItem extends BlockItem {
 
 		if (!FluidTankBlock.isTank(placedOnState))
 			return;
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
+		FluidTankTileEntity tankAt = WorldHelper.getTileAt(world, placedOnPos);
 		if (tankAt == null)
 			return;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
