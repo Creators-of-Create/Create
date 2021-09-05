@@ -19,7 +19,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 
 		bounds = getContraptionBounds();
 
-		lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
+		lightVolume = new LightVolume(contraptionBoundsToVolume(bounds));
 
 		lightVolume.initialize(contraption.entity.level);
 		scheduleRebuild = true;
@@ -37,7 +37,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 	}
 
 	@Override
-    public void onLightUpdate(LightProvider world, LightType type, GridAlignedBB changed) {
+    public void onLightUpdate(LightProvider world, LightType type, ReadOnlyBox changed) {
         lightVolume.notifyLightUpdate(world, type, changed);
     }
 
@@ -46,16 +46,17 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
         lightVolume.notifyLightPacket(world, chunkX, chunkZ);
     }
 
-    protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
+    protected GridAlignedBB contraptionBoundsToVolume(ReadOnlyBox box) {
+		GridAlignedBB bounds = box.copy();
         bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
-        bounds.minY = Math.max(bounds.minY, 0);
-        bounds.maxY = Math.min(bounds.maxY, 255);
+        bounds.setMinY(Math.max(bounds.getMinY(), 0));
+        bounds.setMaxY(Math.min(bounds.getMaxY(), 255));
 
         return bounds;
     }
 
 	@Override
-	public GridAlignedBB getVolume() {
+	public ReadOnlyBox getVolume() {
 		return bounds;
 	}
 }

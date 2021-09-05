@@ -14,6 +14,7 @@ import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.IMovingListener;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.ListenerStatus;
+import com.jozufozu.flywheel.light.ReadOnlyBox;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
@@ -180,13 +181,11 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	boolean needsUpdate;
 
 	@Override
-	public void onLightUpdate(LightProvider world, LightType type, GridAlignedBB changed) {
-		changed.intersectAssign(volume);
-
-		initLight(world, changed);
+	public void onLightUpdate(LightProvider world, LightType type, ReadOnlyBox changed) {
+		initLight(world, changed.intersect(volume));
 	}
 
-	private void initLight(LightProvider world, GridAlignedBB changed) {
+	private void initLight(LightProvider world, ReadOnlyBox changed) {
 		int top = this.pos.getY();
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 		changed.forEachContained((x, y, z) -> {

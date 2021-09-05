@@ -85,7 +85,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		Vector3d cameraPos = event.getCameraPos();
 
-		lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume())
+		lightBox = lighter.lightVolume.getTextureVolume().toAABB()
 				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 

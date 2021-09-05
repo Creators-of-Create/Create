@@ -27,6 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.IFlywheelWorld;
 import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ReadOnlyBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -1142,16 +1143,16 @@ public abstract class Contraption {
 
 		GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
 
-		GridAlignedBB contraptionBounds = GridAlignedBB.from(bounds);
+		ReadOnlyBox contraptionBounds = GridAlignedBB.from(bounds);
 		if (axis == Direction.Axis.X) {
-			betterBounds.maxX = contraptionBounds.maxX;
-			betterBounds.minX = contraptionBounds.minX;
+			betterBounds.setMaxX(contraptionBounds.getMaxX());
+			betterBounds.setMinX(contraptionBounds.getMinX());
 		} else if (axis == Direction.Axis.Y) {
-			betterBounds.maxY = contraptionBounds.maxY;
-			betterBounds.minY = contraptionBounds.minY;
+			betterBounds.setMaxY(contraptionBounds.getMaxY());
+			betterBounds.setMinY(contraptionBounds.getMinY());
 		} else if (axis == Direction.Axis.Z) {
-			betterBounds.maxZ = contraptionBounds.maxZ;
-			betterBounds.minZ = contraptionBounds.minZ;
+			betterBounds.setMaxZ(contraptionBounds.getMaxZ());
+			betterBounds.setMinZ(contraptionBounds.getMinZ());
 		}
 
 		bounds = betterBounds.toAABB();
