@@ -6,10 +6,10 @@ import net.minecraft.world.LightType;
 
 public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
-    public final LightVolume lightVolume;
+    public final GPULightVolume lightVolume;
 	protected final LightUpdater lightUpdater;
 
-	protected GridAlignedBB bounds;
+	protected final GridAlignedBB bounds;
 
     protected boolean scheduleRebuild;
 
@@ -18,15 +18,14 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 		lightUpdater = LightUpdater.get(contraption.entity.level);
 
 		bounds = getContraptionBounds();
+		growBoundsForEdgeData();
 
-		lightVolume = new LightVolume(contraptionBoundsToVolume(bounds));
+		lightVolume = new GPULightVolume(bounds);
 
-		lightVolume.initialize(contraption.entity.level);
+		lightVolume.initialize(lightUpdater.getProvider());
 		scheduleRebuild = true;
 
 		lightUpdater.addListener(this);
-
-		lightVolume.initialize(this.contraption.entity.level);
 	}
 
 	public abstract GridAlignedBB getContraptionBounds();
@@ -37,26 +36,28 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 	}
 
 	@Override
-    public void onLightUpdate(LightProvider world, LightType type, ReadOnlyBox changed) {
-        lightVolume.notifyLightUpdate(world, type, changed);
+    public void onLightUpdate(LightProvider world, LightType type, ImmutableBox changed) {
+        lightVolume.onLightUpdate(world, type, changed);
     }
 
     @Override
     public void onLightPacket(LightProvider world, int chunkX, int chunkZ) {
-        lightVolume.notifyLightPacket(world, chunkX, chunkZ);
+        lightVolume.onLightPacket(world, chunkX, chunkZ);
     }
 
-    protected GridAlignedBB contraptionBoundsToVolume(ReadOnlyBox box) {
-		GridAlignedBB bounds = box.copy();
+    protected void growBoundsForEdgeData() {
         bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
         bounds.setMinY(Math.max(bounds.getMinY(), 0));
         bounds.setMaxY(Math.min(bounds.getMaxY(), 255));
-
-        return bounds;
-    }
+	}
 
 	@Override
-	public ReadOnlyBox getVolume() {
+	public ImmutableBox getVolume() {
 		return bounds;
+	}
+
+	public void delete() {
+		lightUpdater.removeListener(this);
+		lightVolume.delete();
 	}
 }

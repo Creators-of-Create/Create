@@ -14,7 +14,6 @@ import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.IModel;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
-import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -85,7 +84,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		Vector3d cameraPos = event.getCameraPos();
 
-		lightBox = lighter.lightVolume.getTextureVolume().toAABB()
+		lightBox = lighter.lightVolume.toAABB()
 				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 
@@ -111,7 +110,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		}
 		renderLayers.clear();
 
-		lighter.lightVolume.delete();
+		lighter.delete();
 
 		materialManager.delete();
 		kinetics.invalidate();

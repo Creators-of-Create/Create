@@ -27,7 +27,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.IFlywheelWorld;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ReadOnlyBox;
+import com.jozufozu.flywheel.light.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -1143,7 +1143,7 @@ public abstract class Contraption {
 
 		GridAlignedBB betterBounds = GridAlignedBB.ofRadius(radius);
 
-		ReadOnlyBox contraptionBounds = GridAlignedBB.from(bounds);
+		ImmutableBox contraptionBounds = GridAlignedBB.from(bounds);
 		if (axis == Direction.Axis.X) {
 			betterBounds.setMaxX(contraptionBounds.getMaxX());
 			betterBounds.setMinX(contraptionBounds.getMinX());

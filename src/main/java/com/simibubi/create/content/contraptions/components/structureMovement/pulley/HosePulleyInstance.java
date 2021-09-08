@@ -9,11 +9,9 @@ import com.simibubi.create.content.contraptions.fluids.actors.HosePulleyTileEnti
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class HosePulleyInstance extends AbstractPulleyInstance {
-	final HosePulleyTileEntity tile = (HosePulleyTileEntity) super.tile;
 
 	public HosePulleyInstance(MaterialManager dispatcher, HosePulleyTileEntity tile) {
 		super(dispatcher, tile);
-		beginFrame();
 	}
 
 	protected Instancer<OrientedData> getRopeModel() {
@@ -41,7 +39,7 @@ public class HosePulleyInstance extends AbstractPulleyInstance {
 	}
 
 	protected float getOffset() {
-		return tile.getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
+		return ((HosePulleyTileEntity) tile).getInterpolatedOffset(AnimationTickHolder.getPartialTicks());
 	}
 
 	protected boolean isRunning() {

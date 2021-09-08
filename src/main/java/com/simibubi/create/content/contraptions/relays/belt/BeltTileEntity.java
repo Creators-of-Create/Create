@@ -18,7 +18,7 @@ import com.jozufozu.flywheel.light.ILightUpdateListener;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.ListenerStatus;
-import com.jozufozu.flywheel.light.ReadOnlyBox;
+import com.jozufozu.flywheel.light.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -553,7 +553,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 	}
 
 	@Override
-	public void onLightUpdate(LightProvider world, LightType type, ReadOnlyBox changed) {
+	public void onLightUpdate(LightProvider world, LightType type, ImmutableBox changed) {
 		GridAlignedBB beltVolume = getVolume();
 
 		if (beltVolume.intersects(changed)) {
