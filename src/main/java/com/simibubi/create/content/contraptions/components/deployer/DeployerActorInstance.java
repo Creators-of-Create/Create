@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;

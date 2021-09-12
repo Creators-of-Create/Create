@@ -11,7 +11,7 @@ import com.jozufozu.flywheel.backend.state.TextureRenderState;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllStitchedTextures;

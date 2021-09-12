@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;

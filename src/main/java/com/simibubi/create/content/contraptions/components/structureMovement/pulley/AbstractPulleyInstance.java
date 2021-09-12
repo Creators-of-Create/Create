@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.IMovingListener;
 import com.jozufozu.flywheel.light.LightProvider;

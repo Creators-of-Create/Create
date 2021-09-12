@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.BackHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;

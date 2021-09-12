@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
