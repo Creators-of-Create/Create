@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -22,7 +22,7 @@ public class DrillActorInstance extends ActorInstance {
     public DrillActorInstance(MaterialManager materialManager, PlacementSimulationWorld contraption, MovementContext context) {
         super(materialManager, contraption, context);
 
-        InstanceMaterial<ActorData> instanceMaterial = materialManager.defaultSolid()
+        Material<ActorData> material = materialManager.defaultSolid()
                 .material(AllMaterialSpecs.ACTORS);
 
         BlockState state = context.state;
@@ -38,7 +38,7 @@ public class DrillActorInstance extends ActorInstance {
         else
             eulerY = facing.toYRot() + ((axis == Direction.Axis.X) ? 180 : 0);
 
-        drillHead = instanceMaterial.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
+        drillHead = material.getModel(AllBlockPartials.DRILL_HEAD, state).createInstance();
 
         drillHead.setPosition(context.localPos)
                  .setBlockLight(localBlockLight())

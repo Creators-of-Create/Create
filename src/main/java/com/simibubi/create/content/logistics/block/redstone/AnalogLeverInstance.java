@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
@@ -26,7 +26,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     public AnalogLeverInstance(MaterialManager modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
 
-        InstanceMaterial<ModelData> mat = getTransformMaterial();
+        Material<ModelData> mat = getTransformMaterial();
 
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();

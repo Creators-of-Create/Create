@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.simibubi.create.AllBlocks;
@@ -84,7 +84,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return shaft(getRotationAxis());
     }
 
-    protected InstanceMaterial<RotatingData> getRotatingMaterial() {
+    protected Material<RotatingData> getRotatingMaterial() {
 		return materialManager.defaultSolid()
 				.material(AllMaterialSpecs.ROTATING);
 	}

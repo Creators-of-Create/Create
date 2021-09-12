@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -26,7 +26,7 @@ public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity
 
         float speed = tile.getSpeed();
 
-        InstanceMaterial<RotatingData> rotatingMaterial = getRotatingMaterial();
+        Material<RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 

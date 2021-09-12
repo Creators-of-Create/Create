@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
@@ -9,7 +9,7 @@ public class CutoutRotatingInstance extends SingleRotatingInstance {
 		super(modelManager, tile);
 	}
 
-	protected InstanceMaterial<RotatingData> getRotatingMaterial() {
+	protected Material<RotatingData> getRotatingMaterial() {
 		return materialManager.defaultCutout()
 				.material(AllMaterialSpecs.ROTATING);
 	}
