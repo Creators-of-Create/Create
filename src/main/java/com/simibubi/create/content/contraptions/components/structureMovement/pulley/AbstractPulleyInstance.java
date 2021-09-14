@@ -9,6 +9,7 @@ import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.IMovingListener;
+import com.jozufozu.flywheel.light.LightPacking;
 import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightUpdater;
@@ -75,8 +76,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 					short packed = light.getPackedLight(pos.getX(), pos.getY() - i, pos.getZ());
 					data.setPosition(getInstancePosition())
 							.nudge(0, -offset, 0)
-							.setBlockLight(LightVolume.unpackBlock(packed))
-							.setSkyLight(LightVolume.unpackSky(packed));
+							.setBlockLight(LightPacking.getBlock(packed))
+							.setSkyLight(LightPacking.getSky(packed));
 				});
 
 		halfRope.update()
@@ -88,8 +89,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 					short packed = light.getPackedLight(pos.getX(), pos.getY(), pos.getZ());
 					rope1.setPosition(getInstancePosition())
 							.nudge(0, -halfRopeNudge, 0)
-							.setBlockLight(LightVolume.unpackBlock(packed))
-							.setSkyLight(LightVolume.unpackSky(packed));
+							.setBlockLight(LightPacking.getBlock(packed))
+							.setSkyLight(LightPacking.getSky(packed));
 				});
 
 		if (isRunning()) {
@@ -101,8 +102,8 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 				rope.get(i)
 						.setPosition(getInstancePosition())
 						.nudge(0, -offset + i + 1, 0)
-						.setBlockLight(LightVolume.unpackBlock(packed))
-						.setSkyLight(LightVolume.unpackSky(packed));
+						.setBlockLight(LightPacking.getBlock(packed))
+						.setSkyLight(LightPacking.getSky(packed));
 			}
 		} else {
 			rope.clear();
