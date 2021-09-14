@@ -90,7 +90,11 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected int maxBlocks() {
 		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
 	}
-
+	
+	protected boolean fillInfinite() {
+		return AllConfigs.SERVER.fluids.fillInfinite.get();
+	}
+	
 	public void reset() {
 		if (affectedArea != null)
 			scheduleUpdatesInAffectedArea();

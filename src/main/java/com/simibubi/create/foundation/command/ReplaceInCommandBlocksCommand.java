@@ -21,7 +21,7 @@ public class ReplaceInCommandBlocksCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("replaceInCommandBlocks")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.argument("begin", BlockPosArgument.blockPos())
 				.then(Commands.argument("end", BlockPosArgument.blockPos())
 					.then(Commands.argument("toReplace", StringArgumentType.string())
