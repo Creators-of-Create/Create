@@ -54,10 +54,14 @@ body:
     id: other-mods
     attributes:
       label: Other Mods
-      description: What other mods do you have installed? For longer lists, use a Paste service, such as Github Gist.
-      placeholder: |
-        somerandommod-1.12.2-1.6.3
-        someotherrandommod-1.3.4-1.56
+      description: What other mods do you have installed? Please insert into Fold.
+      value: |
+        <details>
+          <summary>Modlist:</summary>
+            
+            INSERT MODLIST STARTING HERE
+            
+        </details>
     validations:
       required: true
   - type: textarea
