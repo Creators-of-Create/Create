@@ -1,7 +1,5 @@
 {
-	"_": "Missing Localizations: 256",
-
-	"_": "->------------------------]  Game Elements  [------------------------<-",
+	"_": "->------------------------]  Elementy Gry  [------------------------<-",
 
 	"block.create.acacia_window": "Akacjowe okno",
 	"block.create.acacia_window_pane": "Akacjowa szyba okienna",
@@ -527,7 +525,7 @@
 	"item.create.zinc_nugget": "Bryłka cynku",
 
 
-	"_": "->------------------------]  Advancements  [------------------------<-",
+	"_": "->------------------------]  Postępy  [------------------------<-",
 
 	"advancement.create.root": "Witaj w Create",
 	"advancement.create.root.desc": "Czas, aby zacząć tworzyć wspaniałe Maszyny!",
@@ -687,7 +685,7 @@
 	"advancement.create.eob.desc": "Bądź gotowy na więcej treści w przyszłości. <3",
 
 
-	"_": "->------------------------]  UI & Messages  [------------------------<-",
+	"_": "->------------------------]  Interfejs i wiadomości  [------------------------<-",
 
 	"itemGroup.create.base": "Create",
 	"itemGroup.create.palettes": "Palety Create",
@@ -1217,7 +1215,7 @@
 	"create.contraption.minecart_contraption_illegal_pickup": "Mistyczna siła jednoczy tą maszynę w wagoniku ze światem",
 
 
-	"_": "->------------------------]  Subtitles  [------------------------<-",
+	"_": "->------------------------]  Napisy dla niesłyszących  [------------------------<-",
 
 	"create.subtitle.contraption_disassemble": "Maszyna staje",
 	"create.subtitle.peculiar_bell_use": "Dziwny dzwon dzwoni",
@@ -1256,7 +1254,7 @@
 	"create.subtitle.confirm": "Dźwięk potwierdzenia",
 
 
-	"_": "->------------------------]  Item Descriptions  [------------------------<-",
+	"_": "->------------------------]  Opisy przedmiotów  [------------------------<-",
 
 	"item.create.example_item.tooltip": "PRZYKŁADOWY PRZEDMIOT (jedynie znacznik, że ten dymek istnieje)",
 	"item.create.example_item.tooltip.summary": "Krótki opis przedmiotu. _Podkreślenia_, ha, podkreślają termin.",
@@ -1489,7 +1487,7 @@
 	"block.create.haunted_bell.tooltip.behaviour1": "Oznacza _pobliskie_ _bloki_, na których mogą pojawiać się _agresywne_ _moby_.",
 
 
-	"_": "->------------------------]  Ponder Content  [------------------------<-",
+	"_": "->------------------------]  Analizowanie  [------------------------<-",
 
 	"create.ponder.hold_to_ponder": "Przytrzymaj [%1$s], aby przeanalizować",
 	"create.ponder.subject": "Temat tej sceny",
@@ -1769,10 +1767,6 @@
 	"create.ponder.depot.text_4": "…jak i również dla mechanicznych ramion",
 
 	"create.ponder.empty_blaze_burner.header": "Używanie pustych płomiennych palników",
-	"create.ponder.empty_blaze_burner.text_4": "For Aesthetic purposes, Empty Blaze Burners can also be lit using Flint and Steel",
-	"create.ponder.empty_blaze_burner.text_5": "The flame can be transformed using a soul-infused item",
-	"create.ponder.empty_blaze_burner.text_6": "However, without a blaze they are not suitable for industrial heating",
-
 	"create.ponder.empty_blaze_burner.text_1": "Kliknij PPM na Płomyka trzymają w ręce pusty palnik, aby uwięzić go w środku",
 	"create.ponder.empty_blaze_burner.text_2": "Ewentualnie, Płomyk może być zabrany prosto z jego Spawnera",
 	"create.ponder.empty_blaze_burner.text_3": "Masz teraz idealne źródło ciepła dla przeróżnych maszyn",
