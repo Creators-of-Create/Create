@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 9",
+	"_": "Missing Localizations: 11",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -796,6 +796,8 @@
 	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
 	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
 	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+	"create.toolbox.depositAll": "UNLOCALIZED: Return items to nearby Toolboxes",
+	"create.toolbox.depositBox": "UNLOCALIZED: Return items to Toolbox",
 
 	"create.gui.symmetryWand.mirrorType": "Зеркало",
 	"create.gui.symmetryWand.orientation": "Ориентация",

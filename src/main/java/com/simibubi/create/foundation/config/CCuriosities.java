@@ -4,6 +4,7 @@ public class CCuriosities extends ConfigBase {
 
 	public ConfigInt maxSymmetryWandRange = i(50, 10, "maxSymmetryWandRange", Comments.symmetryRange);
 	public ConfigInt placementAssistRange = i(12, 3, "placementAssistRange", Comments.placementRange);
+	public ConfigInt toolboxRange = i(10, 1, "toolboxRange", Comments.toolboxRange);
 	public ConfigInt airInBacktank = i(900, 1, "airInBacktank", Comments.maxAirInBacktank);
 	public ConfigInt enchantedBacktankCapacity = i(300, 1, "enchantedBacktankCapacity", Comments.enchantedBacktankCapacity);
 
@@ -25,6 +26,8 @@ public class CCuriosities extends ConfigBase {
 			"The volume of Air added by each level of the backtanks Capacity Enchantment";
 		static String placementRange =
 			"The Maximum Distance a Block placed by Create's placement assist will have to its interaction point.";
+		static String toolboxRange =
+			"The Maximum Distance at which a Toolbox can interact with Players' Inventories.";
 		static String maxExtendoGripActions =
 			"Amount of free Extendo Grip actions provided by one filled Copper Backtank. Set to 0 makes Extendo Grips unbreakable";
 		static String maxPotatoCannonShots =

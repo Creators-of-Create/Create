@@ -1,14 +1,14 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.WeakHashMap;
 
-import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -34,7 +34,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -93,6 +92,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	}
 
 	private void tickPlayers() {
+		boolean update = false;
+
 		for (Iterator<Entry<Integer, WeakHashMap<PlayerEntity, Integer>>> toolboxSlots = connectedPlayers.entrySet()
 			.iterator(); toolboxSlots.hasNext();) {
 
@@ -115,15 +116,14 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 				ItemStack playerStack = player.inventory.getItem(hotbarSlot);
 
-				if (clear
-					|| !playerStack.isEmpty() && !ItemHandlerHelper.canItemStacksStack(playerStack, referenceItem)) {
+				if (clear || !playerStack.isEmpty()
+					&& !ToolboxInventory.canItemsShareCompartment(playerStack, referenceItem)) {
 					player.getPersistentData()
 						.getCompound("CreateToolboxData")
 						.remove(String.valueOf(hotbarSlot));
 					playerEntries.remove();
 					if (player instanceof ServerPlayerEntity)
-						AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player),
-							new ISyncPersistentData.Packet(player));
+						ToolboxHandler.syncData(player);
 					continue;
 				}
 
@@ -132,34 +132,99 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 				if (count < targetAmount) {
 					int amountToReplenish = targetAmount - count;
+
+					if (isOpenInContainer(player)) {
+						ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, true);
+						if (!extracted.isEmpty()) {
+							ToolboxHandler.unequip(player, hotbarSlot, false);
+							ToolboxHandler.syncData(player);
+							continue;
+						}
+					}
+
 					ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, false);
-					if (!extracted.isEmpty())
+					if (!extracted.isEmpty()) {
+						update = true;
 						player.inventory.setItem(hotbarSlot,
 							ItemHandlerHelper.copyStackWithSize(extracted, count + extracted.getCount()));
+					}
 				}
 
 				if (count > targetAmount) {
 					int amountToDeposit = count - targetAmount;
 					ItemStack toDistribute = ItemHandlerHelper.copyStackWithSize(playerStack, amountToDeposit);
+
+					if (isOpenInContainer(player)) {
+						int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, true)
+							.getCount();
+						if (deposited > 0) {
+							ToolboxHandler.unequip(player, hotbarSlot, true);
+							ToolboxHandler.syncData(player);
+							continue;
+						}
+					}
+
 					int deposited = amountToDeposit - inventory.distributeToCompartment(toDistribute, slot, false)
 						.getCount();
-					if (deposited > 0)
+					if (deposited > 0) {
+						update = true;
 						player.inventory.setItem(hotbarSlot,
 							ItemHandlerHelper.copyStackWithSize(playerStack, count - deposited));
+					}
 				}
 			}
 
 			if (clear)
 				toolboxSlots.remove();
 		}
+
+		if (update)
+
+			sendData();
+
 	}
 
-	public void unequip(int slot, PlayerEntity player, int hotbarSlot) {
+	private boolean isOpenInContainer(PlayerEntity player) {
+		return player.containerMenu instanceof ToolboxContainer
+			&& ((ToolboxContainer) player.containerMenu).contentHolder == this;
+	}
+
+	public void unequipTracked() {
+		if (level.isClientSide)
+			return;
+
+		Set<ServerPlayerEntity> affected = new HashSet<>();
+
+		for (Iterator<Entry<Integer, WeakHashMap<PlayerEntity, Integer>>> toolboxSlots = connectedPlayers.entrySet()
+			.iterator(); toolboxSlots.hasNext();) {
+
+			Entry<Integer, WeakHashMap<PlayerEntity, Integer>> toolboxSlotEntry = toolboxSlots.next();
+			WeakHashMap<PlayerEntity, Integer> set = toolboxSlotEntry.getValue();
+
+			for (Iterator<Entry<PlayerEntity, Integer>> playerEntries = set.entrySet()
+				.iterator(); playerEntries.hasNext();) {
+				Entry<PlayerEntity, Integer> playerEntry = playerEntries.next();
+
+				PlayerEntity player = playerEntry.getKey();
+				int hotbarSlot = playerEntry.getValue();
+
+				ToolboxHandler.unequip(player, hotbarSlot, false);
+				if (player instanceof ServerPlayerEntity)
+					affected.add((ServerPlayerEntity) player);
+			}
+		}
+
+		for (ServerPlayerEntity player : affected)
+			ToolboxHandler.syncData(player);
+		connectedPlayers.clear();
+	}
+
+	public void unequip(int slot, PlayerEntity player, int hotbarSlot, boolean keepItems) {
 		if (!connectedPlayers.containsKey(slot))
 			return;
 		connectedPlayers.get(slot)
 			.remove(player);
-		if (!ToolboxHandler.withinRange(player, this))
+		if (keepItems)
 			return;
 
 		ItemStack playerStack = player.inventory.getItem(hotbarSlot);
@@ -221,11 +286,6 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return customName != null ? customName : new TranslationTextComponent("block.create.toolbox");
-	}
-
-	@Override
 	public void lazyTick() {
 		updateOpenCount();
 		// keep re-advertising active TEs
@@ -272,6 +332,12 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		if (level.isClientSide)
 			return;
 		WeakHashMap<PlayerEntity, Integer> map = connectedPlayers.computeIfAbsent(slot, WeakHashMap::new);
+		Integer previous = map.get(player);
+		if (previous != null) {
+			if (previous == hotbarSlot)
+				return;
+			ToolboxHandler.unequip(player, previous, false);
+		}
 		map.put(player, hotbarSlot);
 	}
 
@@ -281,6 +347,21 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	public void setCustomName(ITextComponent customName) {
 		this.customName = customName;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return customName != null ? customName : new TranslationTextComponent("block.create.toolbox");
+	}
+
+	@Override
+	public ITextComponent getCustomName() {
+		return customName;
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return customName != null;
 	}
 
 	@Override

@@ -17,7 +17,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
@@ -84,15 +83,12 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 			ItemStack carried = playerInv.getCarried();
 
 			if (type == ClickType.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()
-				&& ItemHandlerHelper.canItemStacksStack(itemInClickedSlot, carried)) {
+				&& ToolboxInventory.canItemsShareCompartment(itemInClickedSlot, carried)) {
 				int subIndex = index % STACKS_PER_COMPARTMENT;
 				if (subIndex != STACKS_PER_COMPARTMENT - 1)
 					return clicked(index - subIndex + STACKS_PER_COMPARTMENT - 1, flags, type, player);
 			}
 
-			if (type == ClickType.PICKUP && !carried.isEmpty() && itemInClickedSlot.isEmpty())
-				contentHolder.inventory.filters.set(index / STACKS_PER_COMPARTMENT, carried);
-				
 			if (type == ClickType.PICKUP && carried.isEmpty() && itemInClickedSlot.isEmpty())
 				if (!player.level.isClientSide) {
 					contentHolder.inventory.filters.set(index / STACKS_PER_COMPARTMENT, ItemStack.EMPTY);

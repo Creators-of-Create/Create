@@ -2,9 +2,11 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.item.ItemStack;
@@ -19,14 +21,23 @@ public class ToolboxInventory extends ItemStackHandler {
 	List<ItemStack> filters;
 	boolean settling;
 	private ToolboxTileEntity te;
+	
+	private boolean limitedMode;
 
 	public ToolboxInventory(ToolboxTileEntity te) {
 		super(8 * STACKS_PER_COMPARTMENT);
 		this.te = te;
+		limitedMode = false;
 		filters = new ArrayList<>();
 		settling = false;
 		for (int i = 0; i < 8; i++)
 			filters.add(ItemStack.EMPTY);
+	}
+	
+	public void inLimitedMode(Consumer<ToolboxInventory> action) {
+		limitedMode = true;
+		action.accept(this);
+		limitedMode = false;
 	}
 
 	public void settle(int compartment) {
@@ -50,11 +61,26 @@ public class ToolboxInventory extends ItemStackHandler {
 			return;
 
 		settling = true;
-		for (int i = 0; i < STACKS_PER_COMPARTMENT; i++) {
-			ItemStack copy = totalCount <= 0 ? ItemStack.EMPTY
-				: ItemHandlerHelper.copyStackWithSize(sample, Math.min(totalCount, sample.getMaxStackSize()));
-			setStackInSlot(compartment * STACKS_PER_COMPARTMENT + i, copy);
-			totalCount -= copy.getCount();
+		if (!sample.isStackable()) {
+			for (int i = 0; i < STACKS_PER_COMPARTMENT; i++) {
+				if (!getStackInSlot(compartment * STACKS_PER_COMPARTMENT + i).isEmpty())
+					continue;
+				for (int j = i + 1; j < STACKS_PER_COMPARTMENT; j++) {
+					ItemStack stackInSlot = getStackInSlot(compartment * STACKS_PER_COMPARTMENT + j);
+					if (stackInSlot.isEmpty())
+						continue;
+					setStackInSlot(compartment * STACKS_PER_COMPARTMENT + i, stackInSlot);
+					setStackInSlot(compartment * STACKS_PER_COMPARTMENT + j, ItemStack.EMPTY);
+					break;
+				}
+			}
+		} else {
+			for (int i = 0; i < STACKS_PER_COMPARTMENT; i++) {
+				ItemStack copy = totalCount <= 0 ? ItemStack.EMPTY
+					: ItemHandlerHelper.copyStackWithSize(sample, Math.min(totalCount, sample.getMaxStackSize()));
+				setStackInSlot(compartment * STACKS_PER_COMPARTMENT + i, copy);
+				totalCount -= copy.getCount();
+			}
 		}
 		settling = false;
 		te.sendData();
@@ -62,11 +88,15 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
+		if (AllBlocks.TOOLBOX.isIn(stack))
+			return false;
 		if (slot < 0 || slot >= getSlots())
 			return false;
 		int compartment = slot / STACKS_PER_COMPARTMENT;
 		ItemStack filter = filters.get(compartment);
-		if (!filter.isEmpty() && ItemHandlerHelper.canItemStacksStack(filter, stack))
+		if (limitedMode && filter.isEmpty())
+			return false;
+		if (filter.isEmpty() || ToolboxInventory.canItemsShareCompartment(filter, stack))
 			return super.isItemValid(slot, stack);
 		return false;
 	}
@@ -76,8 +106,24 @@ public class ToolboxInventory extends ItemStackHandler {
 		super.setStackInSlot(slot, stack);
 		int compartment = slot / STACKS_PER_COMPARTMENT;
 		if (!stack.isEmpty() && filters.get(compartment)
-			.isEmpty())
+			.isEmpty()) {
 			filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
+			te.sendData();
+		}
+	}
+
+	@Override
+	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+		ItemStack insertItem = super.insertItem(slot, stack, simulate);
+		if (insertItem.getCount() != stack.getCount()) {
+			int compartment = slot / STACKS_PER_COMPARTMENT;
+			if (!stack.isEmpty() && filters.get(compartment)
+				.isEmpty()) {
+				filters.set(compartment, ItemHandlerHelper.copyStackWithSize(stack, 1));
+				te.sendData();
+			}
+		}
+		return insertItem;
 	}
 
 	@Override
@@ -128,7 +174,7 @@ public class ToolboxInventory extends ItemStackHandler {
 
 		for (int i = STACKS_PER_COMPARTMENT - 1; i >= 0; i--) {
 			int slot = compartment * STACKS_PER_COMPARTMENT + i;
-			ItemStack extracted = extractItem(slot, amount, simulate);
+			ItemStack extracted = extractItem(slot, remaining, simulate);
 			remaining -= extracted.getCount();
 			if (!extracted.isEmpty())
 				lastValid = extracted;
@@ -140,6 +186,12 @@ public class ToolboxInventory extends ItemStackHandler {
 			return ItemStack.EMPTY;
 
 		return ItemHandlerHelper.copyStackWithSize(lastValid, amount - remaining);
+	}
+
+	public static boolean canItemsShareCompartment(ItemStack stack1, ItemStack stack2) {
+		if (!stack1.isStackable() && !stack2.isStackable() && stack1.isDamageableItem() && stack2.isDamageableItem())
+			return stack1.getItem() == stack2.getItem();
+		return ItemHandlerHelper.canItemStacksStack(stack1, stack2);
 	}
 
 }

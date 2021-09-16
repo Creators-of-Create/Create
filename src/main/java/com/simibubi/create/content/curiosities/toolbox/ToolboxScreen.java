@@ -14,7 +14,9 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
+import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,6 +30,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	AllGuiTextures PLAYER = AllGuiTextures.PLAYER_INVENTORY;
 	protected Slot hoveredToolboxSlot;
 	private IconButton confirmButton;
+	private IconButton disposeButton;
 
 	private List<Rectangle2d> extraAreas = Collections.emptyList();
 
@@ -42,7 +45,10 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		widgets.clear();
 		setWindowSize(BG.width, 256);
 		confirmButton = new IconButton(getGuiLeft() + BG.width - 23, getGuiTop() + BG.height - 24, AllIcons.I_CONFIRM);
+		disposeButton = new IconButton(getGuiLeft() + 91, getGuiTop() + 69, AllIcons.I_TOOLBOX);
+		disposeButton.setToolTip(Lang.translate("toolbox.depositBox"));
 		widgets.add(confirmButton);
+		widgets.add(disposeButton);
 
 		extraAreas = ImmutableList.of(new Rectangle2d(118, 155, 80, 100), new Rectangle2d(308, 125, 100, 70));
 	}
@@ -125,7 +131,8 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 		for (int offset : Iterate.zeroAndOne) {
 			ms.pushPose();
-			ms.translate(0, -offset * 1 / 8f, menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
+			ms.translate(0, -offset * 1 / 8f,
+				menu.contentHolder.drawers.getValue(partialTicks) * -.175f * (2 - offset));
 			GuiGameElement.of(AllBlockPartials.TOOLBOX_DRAWER)
 				.render(ms);
 			ms.popPose();
@@ -147,6 +154,10 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		if (button == 0) {
 			if (confirmButton.isHovered()) {
 				minecraft.player.closeContainer();
+				return true;
+			}
+			if (disposeButton.isHovered()) {
+				AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
 				return true;
 			}
 		}

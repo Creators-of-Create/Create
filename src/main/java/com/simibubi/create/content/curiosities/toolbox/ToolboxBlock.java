@@ -2,6 +2,9 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
+import java.util.Optional;
+
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
@@ -17,6 +20,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -26,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -67,16 +72,41 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 	}
 
 	@Override
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean moving) {
+		if (state.hasTileEntity() && (!state.is(newState.getBlock()) || !newState.hasTileEntity()))
+			world.removeBlockEntity(pos);
+	}
+
+	@Override
 	public void attack(BlockState state, World world, BlockPos pos, PlayerEntity player) {
 		if (player instanceof FakePlayer)
 			return;
 		if (world.isClientSide)
 			return;
+		withTileEntityDo(world, pos, ToolboxTileEntity::unequipTracked);
 		if (world instanceof ServerWorld) {
-			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, world.getBlockEntity(pos)))
-				player.inventory.placeItemBackInInventory(world, itemStack);
+			ItemStack cloneItemStack = getCloneItemStack(world, pos, state);
 			world.destroyBlock(pos, false);
+			if (world.getBlockState(pos) != state)
+				player.inventory.placeItemBackInInventory(world, cloneItemStack);
 		}
+	}
+
+	@Override
+	public ItemStack getCloneItemStack(IBlockReader world, BlockPos pos, BlockState state) {
+		ItemStack item = AllBlocks.TOOLBOX.asStack();
+		Optional<ToolboxTileEntity> tileEntityOptional = getTileEntityOptional(world, pos);
+
+		CompoundNBT tag = item.getOrCreateTag();
+		CompoundNBT inv = tileEntityOptional.map(tb -> tb.inventory.serializeNBT())
+			.orElse(new CompoundNBT());
+		tag.put("Inventory", inv);
+
+		ITextComponent customName = tileEntityOptional.map(ToolboxTileEntity::getCustomName)
+			.orElse(null);
+		if (customName != null)
+			item.setHoverName(customName);
+		return item;
 	}
 
 	@Override

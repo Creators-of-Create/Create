@@ -33,11 +33,11 @@ public class ToolboxHandlerClient {
 		if (COOLDOWN > 0 && !AllKeys.TOOLBELT.isPressed())
 			COOLDOWN--;
 	}
-	
+
 	public static void onKeyInput(int key, boolean pressed) {
 		if (key != AllKeys.TOOLBELT.getBoundCode())
 			return;
-		if (COOLDOWN > 0) 
+		if (COOLDOWN > 0)
 			return;
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		if (player == null)
@@ -60,8 +60,11 @@ public class ToolboxHandlerClient {
 			if (canReachToolbox) {
 				TileEntity blockEntity = level.getBlockEntity(pos);
 				if (blockEntity instanceof ToolboxTileEntity) {
-					ScreenOpener.open(new RadialToolboxMenu(ImmutableList.of((ToolboxTileEntity) blockEntity),
-						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP));
+					RadialToolboxMenu screen = new RadialToolboxMenu(ImmutableList.of((ToolboxTileEntity) blockEntity),
+						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP);
+					screen.prevSlot(compound.getCompound(slotKey)
+						.getInt("Slot"));
+					ScreenOpener.open(screen);
 					return;
 				}
 			}
@@ -72,10 +75,6 @@ public class ToolboxHandlerClient {
 
 		if (toolboxes.isEmpty())
 			return;
-
-//		ItemStack itemStackFromSlot = player.getItemStackFromSlot(EquipmentSlotType.LEGS);
-//		if (!AllItems.TOOLBELT.isIn(itemStackFromSlot))
-//			return;
 
 		if (toolboxes.size() == 1)
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_ITEM));

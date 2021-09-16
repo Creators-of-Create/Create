@@ -33,10 +33,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	private State state;
 	private int ticksOpen;
 	private int hoveredSlot;
-
+	private boolean scrollMode;
+	private int scrollSlot = 0;
 	private List<ToolboxTileEntity> toolboxes;
 	private ToolboxTileEntity selectedBox;
-	final int UNEQUIP = -5;
+
+	private static final int DEPOSIT = -7;
+	private static final int UNEQUIP = -5;
 
 	public RadialToolboxMenu(List<ToolboxTileEntity> toolboxes, State state) {
 		this.toolboxes = toolboxes;
@@ -45,6 +48,10 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 		if (state == State.SELECT_ITEM_UNEQUIP || state == State.SELECT_ITEM)
 			selectedBox = toolboxes.get(0);
+	}
+
+	public void prevSlot(int slot) {
+		scrollSlot = slot;
 	}
 
 	@Override
@@ -57,11 +64,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		float hoveredY = mouseY - window.getGuiScaledHeight() / 2;
 
 		float distance = hoveredX * hoveredX + hoveredY * hoveredY;
-		if (distance > 25 && distance < 20000)
+		if (distance > 25 && distance < 10000)
 			hoveredSlot =
 				(MathHelper.floor((AngleHelper.deg(MathHelper.atan2(hoveredY, hoveredX)) + 360 + 180 - 22.5f)) % 360)
 					/ 45;
 		boolean renderCenterSlot = state == State.SELECT_ITEM_UNEQUIP;
+		if (scrollMode && distance > 150)
+			scrollMode = false;
 		if (renderCenterSlot && distance <= 150)
 			hoveredSlot = UNEQUIP;
 
@@ -86,7 +95,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			ms.translate(-0.5, 0.5, 0);
 			AllIcons.I_DISABLE.draw(ms, this, -9, -9);
 			ms.translate(0.5, -0.5, 0);
-			if (hoveredSlot == UNEQUIP) {
+			if (!scrollMode && hoveredSlot == UNEQUIP) {
 				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -13, -13);
 				tip = Lang.translate("toolbox.detach")
 					.withStyle(TextFormatting.GOLD);
@@ -94,6 +103,23 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			ms.popPose();
 
 		} else {
+
+			if (hoveredX > 60 && hoveredX < 100 && hoveredY > -20 && hoveredY < 20)
+				hoveredSlot = DEPOSIT;
+
+			ms.pushPose();
+			ms.translate(80 + (-5 * (1 - fade) * (1 - fade)), 0, 0);
+			AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, -12, -12);
+			ms.translate(-0.5, 0.5, 0);
+			AllIcons.I_TOOLBOX.draw(ms, this, -9, -9);
+			ms.translate(0.5, -0.5, 0);
+			if (!scrollMode && hoveredSlot == DEPOSIT) {
+				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -13, -13);
+				tip = Lang.translate(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
+					.withStyle(TextFormatting.GOLD);
+			}
+			ms.popPose();
+
 			for (int slot = 0; slot < 8; slot++) {
 				ms.pushPose();
 				MatrixTransformStack.of(ms)
@@ -116,7 +142,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 							.at(3, 3)
 							.render(ms);
 
-						if (slot == hoveredSlot && !empty) {
+						if (slot == (scrollMode ? scrollSlot : hoveredSlot) && !empty) {
 							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -1, -1);
 							tip = stackInSlot.getHoverName();
 						}
@@ -131,7 +157,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 							.at(3, 3)
 							.render(ms);
 
-						if (slot == hoveredSlot) {
+						if (slot == (scrollMode ? scrollSlot : hoveredSlot)) {
 							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -1, -1);
 							tip = toolboxes.get(slot)
 								.getDisplayName();
@@ -147,8 +173,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			if (renderCenterSlot) {
 				ms.pushPose();
 				AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, -12, -12);
-				AllIcons.I_TRASH.draw(ms, this, -9, -9);
-				if (UNEQUIP == hoveredSlot) {
+				(scrollMode ? AllIcons.I_REFRESH : AllIcons.I_FLIP).draw(ms, this, -9, -9);
+				if (!scrollMode && UNEQUIP == hoveredSlot) {
 					AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -13, -13);
 					tip = Lang.translate("toolbox.unequip", minecraft.player.getMainHandItem()
 						.getHoverName())
@@ -172,7 +198,6 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				int k1 = 16777215;
 				int k = i1 << 24 & -16777216;
 				int l = font.width(tip);
-//				this.drawBackdrop(ms, font, -4, l, 16777215 | k);
 				font.draw(ms, tip, (float) (-l / 2), -4.0F, k1 | k);
 				RenderSystem.disableBlend();
 				ms.popPose();
@@ -197,46 +222,103 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 	public void removed() {
 		super.removed();
 
+		int selected = (scrollMode ? scrollSlot : hoveredSlot);
+
+		if (selected == DEPOSIT) {
+			if (state == State.DETACH)
+				return;
+			else if (state == State.SELECT_BOX)
+				toolboxes.forEach(te -> AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(te.getBlockPos())));
+			else
+				AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(selectedBox.getBlockPos()));
+			return;
+		}
+
 		if (state == State.SELECT_BOX)
 			return;
 
 		if (state == State.DETACH) {
-			if (hoveredSlot == UNEQUIP)
+			if (selected == UNEQUIP)
 				AllPackets.channel.sendToServer(
-					new ToolboxEquipPacket(null, hoveredSlot, Minecraft.getInstance().player.inventory.selected));
+					new ToolboxEquipPacket(null, selected, Minecraft.getInstance().player.inventory.selected));
 			return;
 		}
 
-		if (hoveredSlot == UNEQUIP)
-			AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), hoveredSlot,
+		if (selected == UNEQUIP)
+			AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 				Minecraft.getInstance().player.inventory.selected));
 
-		if (hoveredSlot < 0)
+		if (selected < 0)
 			return;
 		ToolboxInventory inv = selectedBox.inventory;
-		ItemStack stackInSlot = inv.filters.get(hoveredSlot);
+		ItemStack stackInSlot = inv.filters.get(selected);
 		if (stackInSlot.isEmpty())
 			return;
-		if (inv.getStackInSlot(hoveredSlot * ToolboxInventory.STACKS_PER_COMPARTMENT)
+		if (inv.getStackInSlot(selected * ToolboxInventory.STACKS_PER_COMPARTMENT)
 			.isEmpty())
 			return;
 
-		AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), hoveredSlot,
+		AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
 			Minecraft.getInstance().player.inventory.selected));
 	}
 
 	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		if (state == State.SELECT_BOX && hoveredSlot >= 0 && hoveredSlot < toolboxes.size()) {
-			state = State.SELECT_ITEM;
-			selectedBox = toolboxes.get(hoveredSlot);
+	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+		MainWindow window = getMinecraft().getWindow();
+		double hoveredX = mouseX - window.getGuiScaledWidth() / 2;
+		double hoveredY = mouseY - window.getGuiScaledHeight() / 2;
+		double distance = hoveredX * hoveredX + hoveredY * hoveredY;
+		if (distance <= 150) {
+			scrollMode = true;
+			scrollSlot = (((int) (scrollSlot - delta)) + 8) % 8;
+			for (int i = 0; i < 10; i++) {
+
+				if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
+					ToolboxInventory inv = selectedBox.inventory;
+					ItemStack stackInSlot = inv.filters.get(scrollSlot);
+					if (!stackInSlot.isEmpty()
+						&& !inv.getStackInSlot(scrollSlot * ToolboxInventory.STACKS_PER_COMPARTMENT)
+							.isEmpty())
+						break;
+				}
+
+				if (state == State.SELECT_BOX)
+					if (scrollSlot < toolboxes.size())
+						break;
+
+				if (state == State.DETACH)
+					break;
+
+				scrollSlot -= MathHelper.sign(delta);
+				scrollSlot = (scrollSlot + 8) % 8;
+			}
 			return true;
 		}
 
-		if (state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
-			if (hoveredSlot == UNEQUIP || hoveredSlot >= 0) {
+		return super.mouseScrolled(mouseX, mouseY, delta);
+	}
+
+	@Override
+	public boolean mouseClicked(double x, double y, int button) {
+		int selected = (scrollMode ? scrollSlot : hoveredSlot);
+
+		if (selected == DEPOSIT) {
+			onClose();
+			ToolboxHandlerClient.COOLDOWN = 2;
+			return true;
+		}
+
+		if (state == State.SELECT_BOX && selected >= 0 && selected < toolboxes.size()) {
+			state = State.SELECT_ITEM;
+			selectedBox = toolboxes.get(selected);
+			return true;
+		}
+
+		if (state == State.DETACH || state == State.SELECT_ITEM || state == State.SELECT_ITEM_UNEQUIP) {
+			if (selected == UNEQUIP || selected >= 0) {
 				onClose();
-				ToolboxHandlerClient.COOLDOWN = 10;
+				ToolboxHandlerClient.COOLDOWN = 2;
+				return true;
 			}
 		}
 

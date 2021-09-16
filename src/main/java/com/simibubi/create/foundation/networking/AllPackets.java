@@ -23,6 +23,7 @@ import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxDisposeAllPacket;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxEquipPacket;
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
@@ -98,6 +99,7 @@ public enum AllPackets {
 	SUBMIT_GHOST_ITEM(GhostItemSubmitPacket.class, GhostItemSubmitPacket::new, PLAY_TO_SERVER),
 	BLUEPRINT_COMPLETE_RECIPE(BlueprintAssignCompleteRecipePacket.class, BlueprintAssignCompleteRecipePacket::new, PLAY_TO_SERVER),
 	TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket::new, PLAY_TO_SERVER),
+	TOOLBOX_DISPOSE_ALL(ToolboxDisposeAllPacket.class, ToolboxDisposeAllPacket::new, PLAY_TO_SERVER),
 
 	// Server to Client
 	SYMMETRY_EFFECT(SymmetryEffectPacket.class, SymmetryEffectPacket::new, PLAY_TO_CLIENT),
