@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 4",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "Estresómetro",
 	"block.create.tiled_glass": "Vidrio esmaltado",
 	"block.create.tiled_glass_pane": "Panel de vidrio esmaltado",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "Plataforma giratoria mecánica",
 	"block.create.vertical_framed_glass": "Vidrio esmaltado vertical",
 	"block.create.vertical_framed_glass_pane": "Panel de vidrio esmaltado vertical",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Mayús izdo para usar la rueda del ratón más rápido",
 	"create.gui.toolmenu.focusKey": "Mantén [%1$s] para enfocar",
 	"create.gui.toolmenu.cycle": "[RUEDA DEL RATÓN] para el ciclo",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "Espejado",
 	"create.gui.symmetryWand.orientation": "Orientación",
 

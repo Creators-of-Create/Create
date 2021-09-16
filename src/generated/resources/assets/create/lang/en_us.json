@@ -400,6 +400,7 @@
 	"block.create.stressometer": "Stressometer",
 	"block.create.tiled_glass": "Tiled Glass",
 	"block.create.tiled_glass_pane": "Tiled Glass Pane",
+	"block.create.toolbox": "Toolbox",
 	"block.create.turntable": "Turntable",
 	"block.create.vertical_framed_glass": "Vertical Framed Glass",
 	"block.create.vertical_framed_glass_pane": "Vertical Framed Glass Pane",
@@ -790,6 +791,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Shift to Scroll Faster",
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] to Focus",
 	"create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
+
+	"create.toolbox.unequip": "Unequip: %1$s",
+	"create.toolbox.outOfRange": "Toolbox of held item not in Range",
+	"create.toolbox.detach": "Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "Mirror",
 	"create.gui.symmetryWand.orientation": "Orientation",
 

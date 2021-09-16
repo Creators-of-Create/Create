@@ -52,7 +52,8 @@ public class FilterContainer extends AbstractFilterContainer {
 	}
 	
 	@Override
-	protected void readData(ItemStack filterItem) {
+	protected void initAndReadInventory(ItemStack filterItem) {
+		super.initAndReadInventory(filterItem);
 		CompoundNBT tag = filterItem.getOrCreateTag();
 		respectNBT = tag.getBoolean("RespectNBT");
 		blacklist = tag.getBoolean("Blacklist");

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 24",
+	"_": "Missing Localizations: 28",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "피로도 계측기",
 	"block.create.tiled_glass": "타일 유리",
 	"block.create.tiled_glass_pane": "타일 유리판",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "돌림판",
 	"block.create.vertical_framed_glass": "수직 유리",
 	"block.create.vertical_framed_glass_pane": "수직 유리판",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "쉬프트-스크롤로 빨리 수정하기",
 	"create.gui.toolmenu.focusKey": "[%1$s]를 눌러 세부정보 보기",
 	"create.gui.toolmenu.cycle": "스크롤로 순환",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "거울의 형태",
 	"create.gui.symmetryWand.orientation": "거울의 방향",
 

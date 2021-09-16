@@ -53,7 +53,7 @@ public class NBTHelper {
 		listNBT.forEach(inbt -> consumer.accept((CompoundNBT) inbt));
 	}
 
-	public static ListNBT writeItemList(List<ItemStack> stacks) {
+	public static ListNBT writeItemList(Iterable<ItemStack> stacks) {
 		return writeCompoundList(stacks, ItemStack::serializeNBT);
 	}
 

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 5",
+	"_": "Missing Localizations: 9",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "Стрессометр",
 	"block.create.tiled_glass": "Плиточное стекло",
 	"block.create.tiled_glass_pane": "Плиточная стеклянная панель",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "Поворотный стол",
 	"block.create.vertical_framed_glass": "Вертикальное обрамлённое стекло",
 	"block.create.vertical_framed_glass_pane": "Вертикальная обрамлённая стеклянная панель",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Нажмите Shift для быстрой прокрутки",
 	"create.gui.toolmenu.focusKey": "Удерживайте [%1$s] для смены задач",
 	"create.gui.toolmenu.cycle": "[Прокрутка] для переключения",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "Зеркало",
 	"create.gui.symmetryWand.orientation": "Ориентация",
 

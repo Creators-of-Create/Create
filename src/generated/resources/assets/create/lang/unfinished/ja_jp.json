@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 9",
+	"_": "Missing Localizations: 13",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "応力メーター",
 	"block.create.tiled_glass": "タイルガラス",
 	"block.create.tiled_glass_pane": "タイルガラス板",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "ターンテーブル",
 	"block.create.vertical_framed_glass": "縦型ガラス窓",
 	"block.create.vertical_framed_glass_pane": "縦型ガラス窓板",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "シフトを押してスクロールを加速",
 	"create.gui.toolmenu.focusKey": "[%1$s] 長押しでフォーカスする",
 	"create.gui.toolmenu.cycle": "[スクロール] で循環",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "ミラーの種類",
 	"create.gui.symmetryWand.orientation": "方向",
 

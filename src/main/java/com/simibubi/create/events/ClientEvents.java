@@ -27,6 +27,7 @@ import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRe
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlicer;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
@@ -145,6 +146,7 @@ public class ClientEvents {
 		CreateClient.GHOST_BLOCKS.tickGhosts();
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
+		ToolboxHandlerClient.clientTick();
 	}
 
 	@SubscribeEvent
@@ -225,6 +227,7 @@ public class ClientEvents {
 		LinkedControllerClientHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
 		BlueprintOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
 		GoggleOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
+		ToolboxHandlerClient.renderOverlay(ms, buffer, light, overlay, partialTicks);
 	}
 
 	@SubscribeEvent

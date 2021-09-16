@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 256",
+	"_": "Missing Localizations: 260",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "Miernik obciążenia",
 	"block.create.tiled_glass": "Kafelkowane szkło",
 	"block.create.tiled_glass_pane": "Kafelkowana szyba",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "Talerz obrotowy",
 	"block.create.vertical_framed_glass": "Pionowe oprawione szkło",
 	"block.create.vertical_framed_glass_pane": "Pionowa oprawiona szyba",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Naciśnij Shift, aby przewijać szybciej",
 	"create.gui.toolmenu.focusKey": "Przytrzymaj [%1$s], aby skupić",
 	"create.gui.toolmenu.cycle": "[SCROLL] przewijać",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "Odbicie lustrzane",
 	"create.gui.symmetryWand.orientation": "Orientacja",
 

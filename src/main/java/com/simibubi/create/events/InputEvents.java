@@ -1,6 +1,7 @@
 package com.simibubi.create.events;
 
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
@@ -26,6 +27,7 @@ public class InputEvents {
 			return;
 
 		CreateClient.SCHEMATIC_HANDLER.onKeyInput(key, pressed);
+		ToolboxHandlerClient.onKeyInput(key, pressed);
 	}
 
 	@SubscribeEvent

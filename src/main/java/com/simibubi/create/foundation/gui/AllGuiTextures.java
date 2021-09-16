@@ -52,6 +52,18 @@ public enum AllGuiTextures implements IScreenRenderable {
 	FILTER("filters.png", 214, 97),
 	ATTRIBUTE_FILTER("filters.png", 0, 97, 241, 83),
 
+	TOOLBOX("toolbox.png", 188, 171),
+	TOOLBELT_SLOT("minecraft", "widgets.png", 24, 23, 22, 22),
+	TOOLBELT_SLOT_HIGHLIGHT("minecraft", "widgets.png", 0, 22, 24, 24),
+	TOOLBELT_MAIN_SLOT("widgets.png", 0, 97, 24, 24),
+	TOOLBELT_EMPTY_SLOT("widgets.png", 27, 98, 22, 22),
+	TOOLBELT_INACTIVE_SLOT("widgets.png", 52, 98, 22, 22),
+	
+	TOOLBELT_HOTBAR_OFF("widgets.png", 0, 130, 20, 24),
+	TOOLBELT_HOTBAR_ON("widgets.png", 20, 130, 20, 24),
+	TOOLBELT_SELECTED_OFF("widgets.png", 0, 155, 22, 22),
+	TOOLBELT_SELECTED_ON("widgets.png", 22, 155, 22, 22),
+
 	SEQUENCER("sequencer.png", 173, 159),
 	SEQUENCER_INSTRUCTION("sequencer.png", 0, 14, 162, 22),
 	SEQUENCER_DELAY("sequencer.png", 0, 58, 162, 22),
@@ -120,7 +132,11 @@ public enum AllGuiTextures implements IScreenRenderable {
 	}
 
 	private AllGuiTextures(String location, int startX, int startY, int width, int height) {
-		this.location = new ResourceLocation(Create.ID, "textures/gui/" + location);
+		this(Create.ID, location, startX, startY, width, height);
+	}
+
+	private AllGuiTextures(String namespace, String location, int startX, int startY, int width, int height) {
+		this.location = new ResourceLocation(namespace, "textures/gui/" + location);
 		this.width = width;
 		this.height = height;
 		this.startX = startX;

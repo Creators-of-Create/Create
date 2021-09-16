@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1766",
+	"_": "Missing Localizations: 1770",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "Stressmeter",
 	"block.create.tiled_glass": "Getegeld Glas",
 	"block.create.tiled_glass_pane": "Getegeld Glazen Paneel",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "Draaischijf",
 	"block.create.vertical_framed_glass": "UNLOCALIZED: Vertical Framed Glass",
 	"block.create.vertical_framed_glass_pane": "UNLOCALIZED: Vertical Framed Glass Pane",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "Shift om sneller te Scrollen",
 	"create.gui.toolmenu.focusKey": "Hou [%1$s] ingedrukt om te Focusen",
 	"create.gui.toolmenu.cycle": "[SCROLL] om te Cycleën",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "Spiegelen",
 	"create.gui.symmetryWand.orientation": "Orientatie",
 

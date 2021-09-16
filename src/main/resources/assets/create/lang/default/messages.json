@@ -104,6 +104,10 @@
 
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] to Focus",
 	"create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
+	
+	"create.toolbox.unequip": "Unequip: %1$s",
+	"create.toolbox.outOfRange": "Toolbox of held item not in Range",
+	"create.toolbox.detach": "Stop tracking and keep item",
 
 	"create.gui.symmetryWand.mirrorType": "Mirror",
 	"create.gui.symmetryWand.orientation": "Orientation",

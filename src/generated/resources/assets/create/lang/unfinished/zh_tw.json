@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 19",
+	"_": "Missing Localizations: 23",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -401,6 +401,7 @@
 	"block.create.stressometer": "動能錶",
 	"block.create.tiled_glass": "十字玻璃窗",
 	"block.create.tiled_glass_pane": "十字玻璃窗戶片",
+	"block.create.toolbox": "UNLOCALIZED: Toolbox",
 	"block.create.turntable": "轉盤",
 	"block.create.vertical_framed_glass": "豎直邊框玻璃",
 	"block.create.vertical_framed_glass_pane": "豎直邊框玻璃片",
@@ -791,6 +792,11 @@
 	"create.gui.scrollInput.shiftScrollsFaster": "按住Shift滾動更快",
 	"create.gui.toolmenu.focusKey": "按住 [%1$s] 滑鼠滾輪選擇",
 	"create.gui.toolmenu.cycle": "[SCROLL] 循環",
+
+	"create.toolbox.unequip": "UNLOCALIZED: Unequip: %1$s",
+	"create.toolbox.outOfRange": "UNLOCALIZED: Toolbox of held item not in Range",
+	"create.toolbox.detach": "UNLOCALIZED: Stop tracking and keep item",
+
 	"create.gui.symmetryWand.mirrorType": "鏡子類型",
 	"create.gui.symmetryWand.orientation": "方向",
 
