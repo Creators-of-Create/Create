@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.networking;
 
-import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
-import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
+import static net.minecraftforge.fmllegacy.network.NetworkDirection.PLAY_TO_CLIENT;
+import static net.minecraftforge.fmllegacy.network.NetworkDirection.PLAY_TO_SERVER;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -53,16 +53,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCo
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 public enum AllPackets {
 
@@ -126,7 +125,7 @@ public enum AllPackets {
 
 	private LoadedPacket<?> packet;
 
-	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory,
+	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
 		NetworkDirection direction) {
 		packet = new LoadedPacket<>(type, factory, direction);
 	}
@@ -141,20 +140,20 @@ public enum AllPackets {
 			packet.packet.register();
 	}
 
-	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
+	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
 		channel.send(PacketDistributor.NEAR
-			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())), message);
+			.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())), message);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {
 		private static int index = 0;
-		BiConsumer<T, PacketBuffer> encoder;
-		Function<PacketBuffer, T> decoder;
-		BiConsumer<T, Supplier<Context>> handler;
+		BiConsumer<T, FriendlyByteBuf> encoder;
+		Function<FriendlyByteBuf, T> decoder;
+		BiConsumer<T, Supplier<NetworkEvent.Context>> handler;
 		Class<T> type;
 		NetworkDirection direction;
 
-		private LoadedPacket(Class<T> type, Function<PacketBuffer, T> factory, NetworkDirection direction) {
+		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
 			encoder = T::write;
 			decoder = factory;
 			handler = T::handle;

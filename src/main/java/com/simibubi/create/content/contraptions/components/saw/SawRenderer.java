@@ -1,11 +1,10 @@
 package com.simibubi.create.content.contraptions.components.saw;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -21,29 +20,29 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 
 public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
-	public SawRenderer(TileEntityRendererDispatcher dispatcher) {
+	public SawRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
+	protected void renderSafe(SawTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		renderBlade(te, ms, buffer, light);
 		renderItems(te, partialTicks, ms, buffer, light, overlay);
@@ -56,7 +55,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 		renderShaft(te, ms, buffer, light, overlay);
 	}
 
-	protected void renderBlade(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light) {
+	protected void renderBlade(SawTileEntity te, PoseStack ms, MultiBufferSource buffer, int light) {
 		BlockState blockState = te.getBlockState();
 		PartialModel partial;
 		float speed = te.getSpeed();
@@ -92,12 +91,12 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			.renderInto(ms, buffer.getBuffer(RenderType.cutoutMipped()));
 	}
 
-	protected void renderShaft(SawTileEntity te, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void renderShaft(SawTileEntity te, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		KineticTileEntityRenderer.renderRotatingBuffer(te, getRotatedModel(te), ms,
 			buffer.getBuffer(RenderType.solid()), light);
 	}
 
-	protected void renderItems(SawTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderItems(SawTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		boolean processingMode = te.getBlockState()
 			.getValue(SawBlock.FACING) == Direction.UP;
@@ -108,9 +107,9 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 			boolean moving = te.inventory.recipeDuration != 0;
 			float offset = moving ? (float) (te.inventory.remainingTime) / te.inventory.recipeDuration : 0;
-			float processingSpeed = MathHelper.clamp(Math.abs(te.getSpeed()) / 32, 1, 128);
+			float processingSpeed = Mth.clamp(Math.abs(te.getSpeed()) / 32, 1, 128);
 			if (moving) {
-				offset = MathHelper
+				offset = Mth
 					.clamp(offset + ((-partialTicks + .5f) * processingSpeed) / te.inventory.recipeDuration, 0.125f, 1f);
 				if (!te.inventory.appliedRecipe)
 					offset += 1;
@@ -129,7 +128,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 				ItemRenderer itemRenderer = Minecraft.getInstance()
 					.getItemRenderer();
-				IBakedModel modelWithOverrides = itemRenderer.getModel(stack, te.getLevel(), null);
+				BakedModel modelWithOverrides = itemRenderer.getModel(stack, te.getLevel(), null, 1); // FIXME: if the saw breaks, blame p_174268
 				boolean blockItem = modelWithOverrides.isGui3d();
 
 				ms.translate(alongZ ? offset : .5, blockItem ? .925f : 13f / 16f, alongZ ? .5 : offset);
@@ -138,7 +137,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				if (alongZ)
 					ms.mulPose(Vector3f.YP.rotationDegrees(90));
 				ms.mulPose(Vector3f.XP.rotationDegrees(90));
-				itemRenderer.renderStatic(stack, ItemCameraTransforms.TransformType.FIXED, light, overlay, ms, buffer);
+				itemRenderer.renderStatic(stack, ItemTransforms.TransformType.FIXED, light, overlay, ms, buffer, 1); // I think this is the scale.
 				break;
 			}
 
@@ -148,7 +147,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
 		BlockState state = te.getBlockState();
-		if (state.getValue(FACING)
+		if (state.getValue(BlockStateProperties.FACING)
 			.getAxis()
 			.isHorizontal())
 			return PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF,
@@ -162,11 +161,11 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		BlockState state = context.state;
 		Direction facing = state.getValue(SawBlock.FACING);
 
-		Vector3d facingVec = Vector3d.atLowerCornerOf(context.state.getValue(SawBlock.FACING)
+		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING)
 			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
 
@@ -192,7 +191,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
-		MatrixStack m = matrices.getModel();
+		PoseStack m = matrices.getModel();
 		m.pushPose();
 		MatrixTransformStack.of(m)
 			.centre()

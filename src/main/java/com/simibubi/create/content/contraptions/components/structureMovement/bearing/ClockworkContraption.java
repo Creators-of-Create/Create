@@ -12,10 +12,10 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class ClockworkContraption extends Contraption {
 
@@ -39,7 +39,7 @@ public class ClockworkContraption extends Contraption {
 		return pos.equals(anchor.relative(facing.getOpposite(), offset + 1));
 	}
 
-	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(World world, BlockPos pos,
+	public static Pair<ClockworkContraption, ClockworkContraption> assembleClockworkAt(Level world, BlockPos pos,
 		Direction direction) throws AssemblyException {
 		int hourArmBlocks = 0;
 
@@ -83,17 +83,17 @@ public class ClockworkContraption extends Contraption {
 	}
 	
 	@Override
-	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
+	public boolean assemble(Level world, BlockPos pos) throws AssemblyException {
 		return searchMovedStructure(world, pos, facing);
 	}
 
 	@Override
-	public boolean searchMovedStructure(World world, BlockPos pos, Direction direction) throws AssemblyException {
+	public boolean searchMovedStructure(Level world, BlockPos pos, Direction direction) throws AssemblyException {
 		return super.searchMovedStructure(world, pos.relative(direction, offset + 1), null);
 	}
 
 	@Override
-	protected boolean moveBlock(World world, Direction direction, Queue<BlockPos> frontier,
+	protected boolean moveBlock(Level world, Direction direction, Queue<BlockPos> frontier,
 		Set<BlockPos> visited) throws AssemblyException {
 		if (ignoreBlocks.contains(frontier.peek())) {
 			frontier.poll();
@@ -103,8 +103,8 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	@Override
-	public CompoundNBT writeNBT(boolean spawnPacket) {
-		CompoundNBT tag = super.writeNBT(spawnPacket);
+	public CompoundTag writeNBT(boolean spawnPacket) {
+		CompoundTag tag = super.writeNBT(spawnPacket);
 		tag.putInt("facing", facing.get3DDataValue());
 		tag.putInt("offset", offset);
 		NBTHelper.writeEnum(tag, "HandType", handType);
@@ -112,7 +112,7 @@ public class ClockworkContraption extends Contraption {
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
+	public void readNBT(Level world, CompoundTag tag, boolean spawnData) {
 		facing = Direction.from3DDataValue(tag.getInt("facing"));
 		handType = NBTHelper.readEnum(tag, "HandType", HandType.class);
 		offset = tag.getInt("offset");

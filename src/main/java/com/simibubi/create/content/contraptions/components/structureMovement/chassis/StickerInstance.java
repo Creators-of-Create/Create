@@ -5,14 +5,14 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.core.materials.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
 public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements IDynamicInstance {
 
@@ -42,7 +42,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
         if (fakeWorld)
             offset = this.offset;
 
-        if (MathHelper.equal(offset, lastOffset))
+        if (Mth.equal(offset, lastOffset))
             return;
 
         animateHead(offset);
@@ -51,7 +51,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
     }
 
     private void animateHead(float offset) {
-        MatrixStack stack = new MatrixStack();
+        PoseStack stack = new PoseStack();
         MatrixTransformStack.of(stack)
                      .translate(getInstancePosition())
                      .nudge(tile.hashCode())

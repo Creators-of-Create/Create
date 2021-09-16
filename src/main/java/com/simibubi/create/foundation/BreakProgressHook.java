@@ -4,13 +4,13 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 
 public class BreakProgressHook {
 
-	public static void whenBreaking(ClientWorld world, WorldRenderer renderer, int playerEntityId, BlockPos pos, int progress) {
+	public static void whenBreaking(ClientLevel world, LevelRenderer renderer, int playerEntityId, BlockPos pos, int progress) {
 		if (AllBlocks.BELT.has(world.getBlockState(pos))) {
 			BeltTileEntity belt = (BeltTileEntity) world.getBlockEntity(pos);
 

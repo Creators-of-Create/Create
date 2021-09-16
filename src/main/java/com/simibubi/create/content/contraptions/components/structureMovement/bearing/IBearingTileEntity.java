@@ -4,7 +4,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Dir
 import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.core.Direction.Axis;
 
 public interface IBearingTileEntity extends IControlContraption {
 

@@ -6,17 +6,17 @@ import java.util.function.BiConsumer;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
-public abstract class AbstractSimiWidget extends Widget {
+public abstract class AbstractSimiWidget extends AbstractWidget {
 
 	protected float z;
 	protected boolean wasHovered = false;
-	protected List<ITextComponent> toolTip = new LinkedList<>();
+	protected List<Component> toolTip = new LinkedList<>();
 	protected BiConsumer<Integer, Integer> onClick = (_$, _$$) -> {};
 
 	protected AbstractSimiWidget() {
@@ -28,7 +28,7 @@ public abstract class AbstractSimiWidget extends Widget {
 	}
 
 	protected AbstractSimiWidget(int x, int y, int width, int height) {
-		super(x, y, width, height, StringTextComponent.EMPTY);
+		super(x, y, width, height, TextComponent.EMPTY);
 	}
 
 	public <T extends AbstractSimiWidget> T withCallback(BiConsumer<Integer, Integer> cb) {
@@ -47,14 +47,14 @@ public abstract class AbstractSimiWidget extends Widget {
 		return (T) this;
 	}
 
-	public List<ITextComponent> getToolTip() {
+	public List<Component> getToolTip() {
 		return toolTip;
 	}
 
 	public void tick() {}
 
 	@Override
-	public void render(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
 			isHovered = isMouseOver(mouseX, mouseY);
 			beforeRender(ms, mouseX, mouseY, partialTicks);
@@ -65,18 +65,18 @@ public abstract class AbstractSimiWidget extends Widget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {}
+	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {}
 
 	@Override
 	protected boolean clicked(double mouseX, double mouseY) {
 		return active && visible && isMouseOver(mouseX, mouseY);
 	}
 
-	protected void beforeRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
 	}
 
-	protected void afterRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void afterRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.popPose();
 	}
 

@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.advancement;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 
 public interface ITriggerable {
 
-	public void trigger(ServerPlayerEntity player);
+	public void trigger(ServerPlayer player);
 
 }

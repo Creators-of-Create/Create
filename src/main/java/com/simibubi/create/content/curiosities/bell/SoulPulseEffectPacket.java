@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class SoulPulseEffectPacket extends SimplePacketBase {
@@ -21,14 +21,14 @@ public class SoulPulseEffectPacket extends SimplePacketBase {
 		this.canOverlap = overlaps;
 	}
 
-	public SoulPulseEffectPacket(PacketBuffer buffer) {
+	public SoulPulseEffectPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
 		distance = buffer.readInt();
 		canOverlap = buffer.readBoolean();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeInt(distance);
 		buffer.writeBoolean(canOverlap);

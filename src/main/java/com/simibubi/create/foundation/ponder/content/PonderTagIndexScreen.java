@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import java.util.List;
 import java.util.Optional;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -22,13 +22,13 @@ import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.MainWindow;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 
 public class PonderTagIndexScreen extends NavigatableSimiScreen {
 
@@ -39,8 +39,8 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 	public static final String DESCRIPTION = PonderLocalization.LANG_PREFIX + "index_description";
 
 	private final double itemXmult = 0.5;
-	protected Rectangle2d itemArea;
-	protected Rectangle2d chapterArea;
+	protected Rect2i itemArea;
+	protected Rect2i chapterArea;
 	private final double mainYmult = 0.15;
 
 	private PonderTag hoveredItem = null;
@@ -55,7 +55,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		super.init();
 
 		List<PonderTag> tags = PonderRegistry.TAGS.getListedTags();
-		int rowCount = MathHelper.clamp((int) Math.ceil(tags.size() / 11d), 1, 3);
+		int rowCount = Mth.clamp((int) Math.ceil(tags.size() / 11d), 1, 3);
 		LayoutHelper layout = LayoutHelper.centeredHorizontal(tags.size(), rowCount, 28, 28, 8);
 		itemArea = layout.getArea();
 		int itemCenterX = (int) (width * itemXmult);
@@ -84,10 +84,10 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		PonderUI.ponderTicks++;
 
 		hoveredItem = null;
-		MainWindow w = minecraft.getWindow();
+		Window w = minecraft.getWindow();
 		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
 		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget == backTrack)
 				continue;
 			if (widget instanceof PonderButton)
@@ -102,7 +102,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		renderItems(ms, mouseX, mouseY, partialTicks);
 
 		ms.pushPose();
@@ -164,7 +164,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		ms.popPose();
 	}
 
-	protected void renderItems(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderItems(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		List<PonderTag> tags = PonderRegistry.TAGS.getListedTags();
 		if (tags.isEmpty())
 			return;
@@ -205,16 +205,16 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowForeground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
 		RenderSystem.disableRescaleNormal();
 		RenderSystem.disableDepthTest();
 
 		ms.translate(0, 0, 200);
 		if (hoveredItem != null) {
-			List<ITextComponent> list = TooltipHelper.cutStringTextComponent(hoveredItem.getDescription(),
-				TextFormatting.GRAY, TextFormatting.GRAY);
-			list.add(0, new StringTextComponent(hoveredItem.getTitle()));
+			List<Component> list = TooltipHelper.cutStringTextComponent(hoveredItem.getDescription(),
+				ChatFormatting.GRAY, ChatFormatting.GRAY);
+			list.add(0, new TextComponent(hoveredItem.getTitle()));
 			renderComponentTooltip(ms, list, mouseX, mouseY);
 		}
 		RenderSystem.enableDepthTest();

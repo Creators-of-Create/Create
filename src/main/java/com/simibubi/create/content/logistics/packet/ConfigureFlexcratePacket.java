@@ -3,14 +3,14 @@ package com.simibubi.create.content.logistics.packet;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateTileEntity;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 
 public class ConfigureFlexcratePacket extends TileEntityConfigurationPacket<AdjustableCrateTileEntity> {
 
 	private int maxItems;
 	
-	public ConfigureFlexcratePacket(PacketBuffer buffer) {
+	public ConfigureFlexcratePacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
 	
@@ -20,12 +20,12 @@ public class ConfigureFlexcratePacket extends TileEntityConfigurationPacket<Adju
 	}
 
 	@Override
-	protected void writeSettings(PacketBuffer buffer) {
+	protected void writeSettings(FriendlyByteBuf buffer) {
 		buffer.writeInt(maxItems);
 	}
 
 	@Override
-	protected void readSettings(PacketBuffer buffer) {
+	protected void readSettings(FriendlyByteBuf buffer) {
 		maxItems = buffer.readInt();
 	}
 

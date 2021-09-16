@@ -9,51 +9,51 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.MobSpawnerTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.util.Constants;
 
 public final class NBTProcessors {
 
-	private static final Map<TileEntityType<?>, UnaryOperator<CompoundNBT>> processors = new HashMap<>();
-	private static final Map<TileEntityType<?>, UnaryOperator<CompoundNBT>> survivalProcessors = new HashMap<>();
+	private static final Map<BlockEntityType<?>, UnaryOperator<CompoundTag>> processors = new HashMap<>();
+	private static final Map<BlockEntityType<?>, UnaryOperator<CompoundTag>> survivalProcessors = new HashMap<>();
 
-	public static synchronized void addProcessor(TileEntityType<?> type, UnaryOperator<CompoundNBT> processor) {
+	public static synchronized void addProcessor(BlockEntityType<?> type, UnaryOperator<CompoundTag> processor) {
 		processors.put(type, processor);
 	}
 
-	public static synchronized void addSurvivalProcessor(TileEntityType<?> type, UnaryOperator<CompoundNBT> processor) {
+	public static synchronized void addSurvivalProcessor(BlockEntityType<?> type, UnaryOperator<CompoundTag> processor) {
 		survivalProcessors.put(type, processor);
 	}
 
 	static {
-		addProcessor(TileEntityType.SIGN, data -> {
+		addProcessor(BlockEntityType.SIGN, data -> {
 			for (int i = 0; i < 4; ++i) {
 				if (textComponentHasClickEvent(data.getString("Text" + (i + 1))))
 					return null;
 			}
 			return data;
 		});
-		addProcessor(TileEntityType.LECTERN, data -> {
+		addProcessor(BlockEntityType.LECTERN, data -> {
 			if (!data.contains("Book", Constants.NBT.TAG_COMPOUND))
 				return data;
-			CompoundNBT book = data.getCompound("Book");
+			CompoundTag book = data.getCompound("Book");
 
 			if (!book.contains("tag", Constants.NBT.TAG_COMPOUND))
 				return data;
-			CompoundNBT tag = book.getCompound("tag");
+			CompoundTag tag = book.getCompound("tag");
 
 			if (!tag.contains("pages", Constants.NBT.TAG_LIST))
 				return data;
-			ListNBT pages = tag.getList("pages", Constants.NBT.TAG_STRING);
+			ListTag pages = tag.getList("pages", Constants.NBT.TAG_STRING);
 
-			for (INBT inbt : pages) {
+			for (Tag inbt : pages) {
 				if (textComponentHasClickEvent(inbt.getAsString()))
 					return null;
 			}
@@ -70,7 +70,7 @@ public final class NBTProcessors {
 	}
 
 	public static boolean textComponentHasClickEvent(String json) {
-		ITextComponent component = ITextComponent.Serializer.fromJson(json.isEmpty() ? "\"\"" : json);
+		Component component = Component.Serializer.fromJson(json.isEmpty() ? "\"\"" : json);
 		return component != null && component.getStyle() != null && component.getStyle().getClickEvent() != null;
 	}
 
@@ -78,17 +78,17 @@ public final class NBTProcessors {
 	}
 
 	@Nullable
-	public static CompoundNBT process(TileEntity tileEntity, CompoundNBT compound, boolean survival) {
+	public static CompoundTag process(BlockEntity tileEntity, CompoundTag compound, boolean survival) {
 		if (compound == null)
 			return null;
-		TileEntityType<?> type = tileEntity.getType();
+		BlockEntityType<?> type = tileEntity.getType();
 		if (survival && survivalProcessors.containsKey(type))
 			compound = survivalProcessors.get(type)
 				.apply(compound);
 		if (compound != null && processors.containsKey(type))
 			return processors.get(type)
 				.apply(compound);
-		if (tileEntity instanceof MobSpawnerTileEntity)
+		if (tileEntity instanceof SpawnerBlockEntity)
 			return compound;
 		if (tileEntity.onlyOpCanSetNbt())
 			return null;

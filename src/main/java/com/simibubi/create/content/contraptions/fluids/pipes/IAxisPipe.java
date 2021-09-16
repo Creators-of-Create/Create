@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction.Axis;
 
 public interface IAxisPipe {
 

@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.utility.animation;
 
 import com.simibubi.create.foundation.utility.AngleHelper;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 
 // Can replace all Interpolated value classes
 // InterpolatedChasingValue, InterpolatedValue, InterpolatedChasingAngle, InterpolatedAngle
@@ -26,7 +26,7 @@ public class LerpedFloat {
 	}
 
 	public static LerpedFloat linear() {
-		return new LerpedFloat((p, c, t) -> (float) MathHelper.lerp(p, c, t));
+		return new LerpedFloat((p, c, t) -> (float) Mth.lerp(p, c, t));
 	}
 
 	public static LerpedFloat angular() {
@@ -55,14 +55,14 @@ public class LerpedFloat {
 	public boolean updateChaseSpeed(double speed) {
 		float prevSpeed = this.chaseSpeed;
 		this.chaseSpeed = (float) speed;
-		return !MathHelper.equal(prevSpeed, speed);
+		return !Mth.equal(prevSpeed, speed);
 	}
 
 	public void tickChaser() {
 		previousValue = value;
 		if (chaseFunction == null)
 			return;
-		if (MathHelper.equal((double) value, chaseTarget)) {
+		if (Mth.equal((double) value, chaseTarget)) {
 			value = chaseTarget;
 			return;
 		}
@@ -79,11 +79,11 @@ public class LerpedFloat {
 	}
 
 	public float getValue(float partialTicks) {
-		return MathHelper.lerp(partialTicks, previousValue, value);
+		return Mth.lerp(partialTicks, previousValue, value);
 	}
 
 	public boolean settled() {
-		return MathHelper.equal((double) previousValue, value);
+		return Mth.equal((double) previousValue, value);
 	}
 
 	public float getChaseTarget() {
@@ -94,8 +94,8 @@ public class LerpedFloat {
 		forcedSync = true;
 	}
 
-	public CompoundNBT writeNBT() {
-		CompoundNBT compoundNBT = new CompoundNBT();
+	public CompoundTag writeNBT() {
+		CompoundTag compoundNBT = new CompoundTag();
 		compoundNBT.putFloat("Speed", chaseSpeed);
 		compoundNBT.putFloat("Target", chaseTarget);
 		compoundNBT.putFloat("Value", value);
@@ -105,13 +105,13 @@ public class LerpedFloat {
 		return compoundNBT;
 	}
 
-	public void readNBT(CompoundNBT compoundNBT, boolean clientPacket) {
+	public void readNBT(CompoundTag compoundNBT, boolean clientPacket) {
 		if (!clientPacket || compoundNBT.contains("Force"))
 			startWithValue(compoundNBT.getFloat("Value"));
 		readChaser(compoundNBT);
 	}
 
-	private void readChaser(CompoundNBT compoundNBT) {
+	private void readChaser(CompoundTag compoundNBT) {
 		chaseSpeed = compoundNBT.getFloat("Speed");
 		chaseTarget = compoundNBT.getFloat("Target");
 	}
@@ -126,10 +126,10 @@ public class LerpedFloat {
 
 		public static final Chaser IDLE = (c, s, t) -> (float) c;
 		public static final Chaser EXP = exp(Double.MAX_VALUE);
-		public static final Chaser LINEAR = (c, s, t) -> (float) (c + MathHelper.clamp(t - c, -s, s));
+		public static final Chaser LINEAR = (c, s, t) -> (float) (c + Mth.clamp(t - c, -s, s));
 
 		public static Chaser exp(double maxEffectiveSpeed) {
-			return (c, s, t) -> (float) (c + MathHelper.clamp((t - c) * s, -maxEffectiveSpeed, maxEffectiveSpeed));
+			return (c, s, t) -> (float) (c + Mth.clamp((t - c) * s, -maxEffectiveSpeed, maxEffectiveSpeed));
 		}
 
 		float chase(double current, double speed, double target);

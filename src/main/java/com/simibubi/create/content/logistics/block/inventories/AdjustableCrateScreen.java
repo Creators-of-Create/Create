@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
@@ -19,16 +19,16 @@ import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class AdjustableCrateScreen extends AbstractSimiContainerScreen<AdjustableCrateContainer> {
 
 	protected AllGuiTextures background;
-	private List<Rectangle2d> extraAreas = Collections.emptyList();
+	private List<Rect2i> extraAreas = Collections.emptyList();
 
 	private AdjustableCrateTileEntity te;
 	private Label allowedItemsLabel;
@@ -40,9 +40,9 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	private int itemYShift;
 
 	private final ItemStack renderedItem = AllBlocks.ADJUSTABLE_CRATE.asStack();
-	private final ITextComponent storageSpace = Lang.translate("gui.adjustable_crate.storageSpace");
+	private final Component storageSpace = Lang.translate("gui.adjustable_crate.storageSpace");
 
-	public AdjustableCrateScreen(AdjustableCrateContainer container, PlayerInventory inv, ITextComponent title) {
+	public AdjustableCrateScreen(AdjustableCrateContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
 		te = container.te;
 		lastModification = -1;
@@ -63,7 +63,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		int x = leftPos + textureXShift;
 		int y = topPos;
 
-		allowedItemsLabel = new Label(x + itemLabelOffset + 4, y + 108, StringTextComponent.EMPTY).colored(0xFFFFFF)
+		allowedItemsLabel = new Label(x + itemLabelOffset + 4, y + 108, TextComponent.EMPTY).colored(0xFFFFFF)
 			.withShadow();
 		allowedItems = new ScrollInput(x + itemLabelOffset, y + 104, 41, 16).titled(storageSpace.plainCopy())
 			.withRange(1, (menu.doubleCrate ? 2049 : 1025))
@@ -76,12 +76,12 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		widgets.add(allowedItems);
 
 		extraAreas = ImmutableList.of(
-			new Rectangle2d(x + background.width, y + background.height - 56 + itemYShift, 80, 80)
+			new Rect2i(x + background.width, y + background.height - 56 + itemYShift, 80, 80)
 		);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -135,7 +135,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	}
 
 	@Override
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 

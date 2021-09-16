@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
@@ -58,7 +58,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	}
 
 	@Override
-	public void draw(DeployerApplicationRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(DeployerApplicationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 50, 4);
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 50);
 		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 50);

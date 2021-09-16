@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 public class BookAuthorAttribute implements ItemAttribute {
     String author;
@@ -42,17 +42,17 @@ public class BookAuthorAttribute implements ItemAttribute {
     }
 
     @Override
-    public void writeNBT(CompoundNBT nbt) {
+    public void writeNBT(CompoundTag nbt) {
         nbt.putString("author", this.author);
     }
 
     @Override
-    public ItemAttribute readNBT(CompoundNBT nbt) {
+    public ItemAttribute readNBT(CompoundTag nbt) {
         return new BookAuthorAttribute(nbt.getString("author"));
     }
 
     private String extractAuthor(ItemStack stack) {
-        CompoundNBT nbt = stack.getTag();
+        CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("author")) {
             return nbt.getString("author");
         }

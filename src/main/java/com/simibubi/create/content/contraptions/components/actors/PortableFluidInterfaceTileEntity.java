@@ -2,19 +2,21 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTileEntity {
 
 	protected LazyOptional<IFluidHandler> capability;
 
-	public PortableFluidInterfaceTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public PortableFluidInterfaceTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		capability = createEmptyHandler();
 	}

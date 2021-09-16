@@ -8,15 +8,15 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
-	public StressGaugeTileEntity(TileEntityType<? extends StressGaugeTileEntity> type) {
+	public StressGaugeTileEntity(BlockEntityType<? extends StressGaugeTileEntity> type) {
 		super(type);
 	}
 
@@ -59,7 +59,7 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		if (!StressImpact.isEnabled())
 			return false;
 
@@ -68,30 +68,30 @@ public class StressGaugeTileEntity extends GaugeTileEntity {
 		double capacity = getNetworkCapacity();
 		double stressFraction = getNetworkStress() / (capacity == 0 ? 1 : capacity);
 
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.title").withStyle(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.title").withStyle(ChatFormatting.GRAY)));
 
 		if (getTheoreticalSpeed() == 0)
-			tooltip.add(new StringTextComponent(spacing + ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).withStyle(TextFormatting.DARK_GRAY));
+			tooltip.add(new TextComponent(spacing + ItemDescription.makeProgressBar(3, -1)).append(Lang.translate("gui.stressometer.no_rotation")).withStyle(ChatFormatting.DARK_GRAY));
 		//	tooltip.add(new StringTextComponent(TextFormatting.DARK_GRAY + ItemDescription.makeProgressBar(3, -1)
 		//			+ Lang.translate("gui.stressometer.no_rotation")));
 		else {
 			tooltip.add(componentSpacing.plainCopy().append(StressImpact.getFormattedStressText(stressFraction)));
 
-			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.capacity").withStyle(TextFormatting.GRAY)));
+			tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.stressometer.capacity").withStyle(ChatFormatting.GRAY)));
 
 			double remainingCapacity = capacity - getNetworkStress();
 
-			ITextComponent su = Lang.translate("generic.unit.stress");
-			IFormattableTextComponent stressTooltip = componentSpacing.plainCopy()
-					.append(new StringTextComponent(" " + IHaveGoggleInformation.format(remainingCapacity))
+			Component su = Lang.translate("generic.unit.stress");
+			MutableComponent stressTooltip = componentSpacing.plainCopy()
+					.append(new TextComponent(" " + IHaveGoggleInformation.format(remainingCapacity))
 							.append(su.plainCopy())
 							.withStyle(StressImpact.of(stressFraction).getRelativeColor()));
 			if (remainingCapacity != capacity) {
 				stressTooltip
-						.append(new StringTextComponent(" / ").withStyle(TextFormatting.GRAY))
-						.append(new StringTextComponent(IHaveGoggleInformation.format(capacity))
+						.append(new TextComponent(" / ").withStyle(ChatFormatting.GRAY))
+						.append(new TextComponent(IHaveGoggleInformation.format(capacity))
 								.append(su.plainCopy())
-								.withStyle(TextFormatting.DARK_GRAY));
+								.withStyle(ChatFormatting.DARK_GRAY));
 			}
 			tooltip.add(stressTooltip);
 		}

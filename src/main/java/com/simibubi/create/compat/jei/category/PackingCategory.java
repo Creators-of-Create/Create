@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei.category;
 
 import java.util.Arrays;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
@@ -13,10 +13,10 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.core.NonNullList;
 
 public class PackingCategory extends BasinCategory {
 
@@ -36,7 +36,7 @@ public class PackingCategory extends BasinCategory {
 		return new PackingCategory(PackingType.AUTO_SQUARE, Blocks.CRAFTING_TABLE, 85);
 	}
 
-	protected PackingCategory(PackingType type, IItemProvider icon, int height) {
+	protected PackingCategory(PackingType type, ItemLike icon, int height) {
 		super(type != PackingType.AUTO_SQUARE, doubleItemIcon(AllBlocks.MECHANICAL_PRESS.get(), icon),
 			emptyBackground(177, height));
 		this.type = type;
@@ -67,7 +67,7 @@ public class PackingCategory extends BasinCategory {
 	}
 
 	@Override
-	public void draw(BasinRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(BasinRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		if (type == PackingType.COMPACTING) {
 			super.draw(recipe, matrixStack, mouseX, mouseY);
 

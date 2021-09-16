@@ -1,17 +1,19 @@
 package com.simibubi.create.content.logistics.block.mechanicalArm;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import net.minecraft.world.item.Item.Properties;
 
 @EventBusSubscriber
 public class ArmItem extends BlockItem {
@@ -21,16 +23,16 @@ public class ArmItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext ctx) {
-		World world = ctx.getLevel();
+	public InteractionResult useOn(UseOnContext ctx) {
+		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
 		if (ArmInteractionPoint.isInteractable(world, pos, world.getBlockState(pos)))
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		return super.useOn(ctx);
 	}
 
 	@Override
-	protected boolean updateCustomBlockEntityTag(BlockPos pos, World world, PlayerEntity p_195943_3_, ItemStack p_195943_4_,
+	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player p_195943_3_, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
 		if (world.isClientSide)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ArmInteractionPointHandler.flushSettings(pos));
@@ -38,8 +40,8 @@ public class ArmItem extends BlockItem {
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, World world, BlockPos pos,
-		PlayerEntity p_195938_4_) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos,
+		Player p_195938_4_) {
 		return !ArmInteractionPoint.isInteractable(world, pos, state);
 	}
 

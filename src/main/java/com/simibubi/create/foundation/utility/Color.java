@@ -6,8 +6,8 @@ import javax.annotation.Nonnull;
 
 import com.google.common.hash.Hashing;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 @SuppressWarnings("PointlessBitwiseExpression")
 public class Color {
@@ -34,10 +34,10 @@ public class Color {
 
 	public Color(float r, float g, float b, float a) {
 		this(
-				(int) (0.5 + 0xff * MathHelper.clamp(r, 0, 1)),
-				(int) (0.5 + 0xff * MathHelper.clamp(g, 0, 1)),
-				(int) (0.5 + 0xff * MathHelper.clamp(b, 0, 1)),
-				(int) (0.5 + 0xff * MathHelper.clamp(a, 0, 1))
+				(int) (0.5 + 0xff * Mth.clamp(r, 0, 1)),
+				(int) (0.5 + 0xff * Mth.clamp(g, 0, 1)),
+				(int) (0.5 + 0xff * Mth.clamp(b, 0, 1)),
+				(int) (0.5 + 0xff * Mth.clamp(a, 0, 1))
 		);
 	}
 
@@ -142,8 +142,8 @@ public class Color {
 		return value;
 	}
 
-	public Vector3d asVector() {
-		return new Vector3d(getRedAsFloat(), getGreenAsFloat(), getBlueAsFloat());
+	public Vec3 asVector() {
+		return new Vec3(getRedAsFloat(), getGreenAsFloat(), getBlueAsFloat());
 	}
 
 	public Color setRed(int r) {
@@ -163,23 +163,23 @@ public class Color {
 	}
 
 	public Color setRed(float r) {
-		return ensureMutable().setRedUnchecked((int) (0xff * MathHelper.clamp(r, 0, 1)));
+		return ensureMutable().setRedUnchecked((int) (0xff * Mth.clamp(r, 0, 1)));
 	}
 
 	public Color setGreen(float g) {
-		return ensureMutable().setGreenUnchecked((int) (0xff * MathHelper.clamp(g, 0, 1)));
+		return ensureMutable().setGreenUnchecked((int) (0xff * Mth.clamp(g, 0, 1)));
 	}
 
 	public Color setBlue(float b) {
-		return ensureMutable().setBlueUnchecked((int) (0xff * MathHelper.clamp(b, 0, 1)));
+		return ensureMutable().setBlueUnchecked((int) (0xff * Mth.clamp(b, 0, 1)));
 	}
 
 	public Color setAlpha(float a) {
-		return ensureMutable().setAlphaUnchecked((int) (0xff * MathHelper.clamp(a, 0, 1)));
+		return ensureMutable().setAlphaUnchecked((int) (0xff * Mth.clamp(a, 0, 1)));
 	}
 
 	public Color scaleAlpha(float factor) {
-		return ensureMutable().setAlphaUnchecked((int) (getAlpha() * MathHelper.clamp(factor, 0, 1)));
+		return ensureMutable().setAlphaUnchecked((int) (getAlpha() * Mth.clamp(factor, 0, 1)));
 	}
 
 	@Deprecated
@@ -317,11 +317,11 @@ public class Color {
 	 * Try not to introduce new usages of this method and instead use Color instances directly
 	 */
 	@Deprecated
-	public static Vector3d vectorFromRGB(int color) {
+	public static Vec3 vectorFromRGB(int color) {
 		int r = (color >> 16) & 0xFF;
 		int g = (color >> 8) & 0xFF;
 		int b = color & 0xFF;
-		return new Vector3d(r, g, b).scale(1 / 255d);
+		return new Vec3(r, g, b).scale(1 / 255d);
 	}
 
 }

@@ -11,18 +11,18 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class MaterialChecklist {
 
@@ -73,30 +73,30 @@ public class MaterialChecklist {
 	public ItemStack createItem() {
 		ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
 
-		CompoundNBT tag = book.getOrCreateTag();
-		ListNBT pages = new ListNBT();
+		CompoundTag tag = book.getOrCreateTag();
+		ListTag pages = new ListTag();
 
 		int itemsWritten = 0;
-		IFormattableTextComponent textComponent;
+		MutableComponent textComponent;
 
 		if (blocksNotLoaded) {
-			textComponent = new StringTextComponent("\n" + TextFormatting.RED);
+			textComponent = new TextComponent("\n" + ChatFormatting.RED);
 			textComponent =
 				textComponent.append(Lang.createTranslationTextComponent("materialChecklist.blocksNotLoaded"));
-			pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(textComponent)));
+			pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
 		}
 
 		List<Item> keys = new ArrayList<>(Sets.union(required.keySet(), damageRequired.keySet()));
 		Collections.sort(keys, (item1, item2) -> {
 			Locale locale = Locale.ENGLISH;
-			String name1 = new TranslationTextComponent(item1.getDescriptionId()).getString()
+			String name1 = new TranslatableComponent(item1.getDescriptionId()).getString()
 				.toLowerCase(locale);
-			String name2 = new TranslationTextComponent(item2.getDescriptionId()).getString()
+			String name2 = new TranslatableComponent(item2.getDescriptionId()).getString()
 				.toLowerCase(locale);
 			return name1.compareTo(name2);
 		});
 
-		textComponent = new StringTextComponent("");
+		textComponent = new TextComponent("");
 		List<Item> completed = new ArrayList<>();
 		for (Item item : keys) {
 			int amount = getRequiredAmount(item);
@@ -110,9 +110,9 @@ public class MaterialChecklist {
 
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				textComponent.append(new StringTextComponent("\n >>>").withStyle(TextFormatting.BLUE));
-				pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(textComponent)));
-				textComponent = new StringTextComponent("");
+				textComponent.append(new TextComponent("\n >>>").withStyle(ChatFormatting.BLUE));
+				pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
+				textComponent = new TextComponent("");
 			}
 
 			itemsWritten++;
@@ -122,25 +122,25 @@ public class MaterialChecklist {
 		for (Item item : completed) {
 			if (itemsWritten == MAX_ENTRIES_PER_PAGE) {
 				itemsWritten = 0;
-				textComponent.append(new StringTextComponent("\n >>>").withStyle(TextFormatting.DARK_GREEN));
-				pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(textComponent)));
-				textComponent = new StringTextComponent("");
+				textComponent.append(new TextComponent("\n >>>").withStyle(ChatFormatting.DARK_GREEN));
+				pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
+				textComponent = new TextComponent("");
 			}
 
 			itemsWritten++;
 			textComponent.append(entry(new ItemStack(item), getRequiredAmount(item), false));
 		}
 
-		pages.add(StringNBT.valueOf(ITextComponent.Serializer.toJson(textComponent)));
+		pages.add(StringTag.valueOf(Component.Serializer.toJson(textComponent)));
 
 		tag.put("pages", pages);
 		tag.putString("author", "Schematicannon");
-		tag.putString("title", TextFormatting.BLUE + "Material Checklist");
+		tag.putString("title", ChatFormatting.BLUE + "Material Checklist");
 		textComponent = Lang.createTranslationTextComponent("materialChecklist")
-			.setStyle(Style.EMPTY.withColor(TextFormatting.BLUE)
+			.setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)
 				.withItalic(Boolean.FALSE));
 		book.getOrCreateTagElement("display")
-			.putString("Name", ITextComponent.Serializer.toJson(textComponent));
+			.putString("Name", Component.Serializer.toJson(textComponent));
 		book.setTag(tag);
 
 		return book;
@@ -153,16 +153,16 @@ public class MaterialChecklist {
 		return amount;
 	}
 
-	private ITextComponent entry(ItemStack item, int amount, boolean unfinished) {
+	private Component entry(ItemStack item, int amount, boolean unfinished) {
 		int stacks = amount / 64;
 		int remainder = amount % 64;
-		IFormattableTextComponent tc = new TranslationTextComponent(item.getDescriptionId());
+		MutableComponent tc = new TranslatableComponent(item.getDescriptionId());
 		if (!unfinished)
 			tc.append(" \u2714");
-		tc.withStyle(unfinished ? TextFormatting.BLUE : TextFormatting.DARK_GREEN);
-		return tc.append(new StringTextComponent("\n" + " x" + amount).withStyle(TextFormatting.BLACK))
+		tc.withStyle(unfinished ? ChatFormatting.BLUE : ChatFormatting.DARK_GREEN);
+		return tc.append(new TextComponent("\n" + " x" + amount).withStyle(ChatFormatting.BLACK))
 			.append(
-				new StringTextComponent(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(TextFormatting.GRAY));
+				new TextComponent(" | " + stacks + "\u25A4 +" + remainder + "\n").withStyle(ChatFormatting.GRAY));
 	}
 
 }

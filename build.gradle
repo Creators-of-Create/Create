@@ -29,7 +29,8 @@ version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+// Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
     mappings channel: 'official', version: "${minecraft_version}"
@@ -107,7 +108,7 @@ repositories {
     maven {
         // Location of the maven for vazkii's mods
         name = "blamejared"
-        url = "http://maven.blamejared.com/"
+        url = "https://maven.blamejared.com/"
     }
     maven {
         // Location of the maven for mixed mappings, Registrate, and Flywheel
@@ -122,7 +123,10 @@ repositories {
     }
     maven {
         //location of the maven for dynamic trees
-        url "http://harleyoconnor.com/maven"
+        url "https://harleyoconnor.com/maven"
+    }
+    flatDir {
+        dirs 'libraries'
     }
 }
 
@@ -133,14 +137,14 @@ configurations {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    def registrate = "com.tterrag.registrate:Registrate:MC1.16.5-${registrate_version}"
+    def registrate = "tterrag:registrate:1.17"
     implementation fg.deobf(registrate)
     shade registrate
 
     if (findProject(':Flywheel') != null) {
         implementation project(':Flywheel') // jozu: I use a gradle workspace with both projects
     } else {
-        implementation fg.deobf("com.jozufozu.flywheel:Flywheel:${flywheel_version}")
+        implementation fg.deobf("com.jozufozu:flywheel:1.17")
     }
 
     // Compile against the JEI API but do not include it at runtime
@@ -257,21 +261,22 @@ String getChangelogText() {
 
 tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
 
-curseforge {
-    if (project.hasProperty('simi_curseforge_key')) {
-        apiKey = project.simi_curseforge_key
-    }
-
-    project {
-        id = project.projectId
-        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-        changelogType = 'html'
-        releaseType = project.curse_type
-        mainArtifact(shadowJar) {
-            displayName = "Create - ${version}"
-        }
-        relations {
-            optionalDependency 'jei'
-        }
-    }
-}
+// FIXME: Curseforge wants some form of version now. need to comment it out for now
+//curseforge {
+//    if (project.hasProperty('simi_curseforge_key')) {
+//        apiKey = project.simi_curseforge_key
+//    }
+//
+//    project {
+//        id = project.projectId
+//        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
+//        changelogType = 'html'
+//        releaseType = project.curse_type
+//        mainArtifact(shadowJar) {
+//            displayName = "Create - ${version}"
+//        }
+//        relations {
+//            optionalDependency 'jei'
+//        }
+//    }
+//}

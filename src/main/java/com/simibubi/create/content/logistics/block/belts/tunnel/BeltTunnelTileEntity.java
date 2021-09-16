@@ -21,17 +21,17 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -48,7 +48,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
 	protected List<Pair<Direction, Boolean>> flapsToSend;
 
-	public BeltTunnelTileEntity(TileEntityType<? extends BeltTunnelTileEntity> type) {
+	public BeltTunnelTileEntity(BlockEntityType<? extends BeltTunnelTileEntity> type) {
 		super(type);
 		flaps = new EnumMap<>(Direction.class);
 		sides = new HashSet<>();
@@ -62,33 +62,33 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
-		ListNBT flapsNBT = new ListNBT();
+	public void write(CompoundTag compound, boolean clientPacket) {
+		ListTag flapsNBT = new ListTag();
 		for (Direction direction : flaps.keySet())
-			flapsNBT.add(IntNBT.valueOf(direction.get3DDataValue()));
+			flapsNBT.add(IntTag.valueOf(direction.get3DDataValue()));
 		compound.put("Flaps", flapsNBT);
 
-		ListNBT sidesNBT = new ListNBT();
+		ListTag sidesNBT = new ListTag();
 		for (Direction direction : sides)
-			sidesNBT.add(IntNBT.valueOf(direction.get3DDataValue()));
+			sidesNBT.add(IntTag.valueOf(direction.get3DDataValue()));
 		compound.put("Sides", sidesNBT);
 
 		super.write(compound, clientPacket);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
-		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
-		for (INBT inbt : flapsNBT)
-			if (inbt instanceof IntNBT)
-				newFlaps.add(Direction.from3DDataValue(((IntNBT) inbt).getAsInt()));
+		ListTag flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
+		for (Tag inbt : flapsNBT)
+			if (inbt instanceof IntTag)
+				newFlaps.add(Direction.from3DDataValue(((IntTag) inbt).getAsInt()));
 
 		sides.clear();
-		ListNBT sidesNBT = compound.getList("Sides", NBT.TAG_INT);
-		for (INBT inbt : sidesNBT)
-			if (inbt instanceof IntNBT)
-				sides.add(Direction.from3DDataValue(((IntNBT) inbt).getAsInt()));
+		ListTag sidesNBT = compound.getList("Sides", NBT.TAG_INT);
+		for (Tag inbt : sidesNBT)
+			if (inbt instanceof IntTag)
+				sides.add(Direction.from3DDataValue(((IntTag) inbt).getAsInt()));
 
 		for (Direction d : Iterate.directions)
 			if (!newFlaps.contains(d))
@@ -190,7 +190,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 
 		if (!this.cap.isPresent()) {
 			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
-				TileEntity teBelow = level.getBlockEntity(worldPosition.below());
+				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
 				if (teBelow != null) {
 					T capBelow = teBelow.getCapability(capability, Direction.UP)
 						.orElse(null);

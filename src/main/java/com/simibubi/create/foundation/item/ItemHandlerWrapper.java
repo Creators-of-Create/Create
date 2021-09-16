@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.item;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class ItemHandlerWrapper implements IItemHandlerModifiable {

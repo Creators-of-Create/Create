@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
@@ -18,14 +16,14 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	implements IBearingTileEntity, IDisplayAssemblyExceptions {
@@ -40,7 +38,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 	private float prevAngle;
 
-	public MechanicalBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
+	public MechanicalBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
 		super(type);
 		setLazyTickRate(3);
 	}
@@ -67,7 +65,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("Angle", angle);
 		AssemblyException.write(compound, lastException);
@@ -75,7 +73,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		if (wasMoved) {
 			super.fromTag(state, compound, clientPacket);
 			return;
@@ -98,10 +96,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
 		if (isVirtual())
-			return MathHelper.lerp(partialTicks + .5f, prevAngle, angle);
+			return Mth.lerp(partialTicks + .5f, prevAngle, angle);
 		if (movedContraption == null || movedContraption.isStalled() || !running)
 			partialTicks = 0;
-		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
+		return Mth.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}
 
 	@Override
@@ -145,7 +143,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			.getBlock() instanceof BearingBlock))
 			return;
 
-		Direction direction = getBlockState().getValue(FACING);
+		Direction direction = getBlockState().getValue(BlockStateProperties.FACING);
 		BearingContraption contraption = new BearingContraption(isWindmill(), direction);
 		try {
 			if (!contraption.assemble(level, worldPosition))
@@ -263,12 +261,12 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		BlockState blockState = getBlockState();
 		if (!(contraption.getContraption() instanceof BearingContraption))
 			return;
-		if (!blockState.hasProperty(FACING))
+		if (!blockState.hasProperty(BlockStateProperties.FACING))
 			return;
 
 		this.movedContraption = contraption;
 		setChanged();
-		BlockPos anchor = worldPosition.relative(blockState.getValue(FACING));
+		BlockPos anchor = worldPosition.relative(blockState.getValue(BlockStateProperties.FACING));
 		movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 		if (!level.isClientSide) {
 			this.running = true;
@@ -300,7 +298,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (isPlayerSneaking)

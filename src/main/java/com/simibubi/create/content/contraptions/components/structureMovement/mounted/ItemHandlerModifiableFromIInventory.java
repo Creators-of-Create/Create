@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -13,9 +13,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class ItemHandlerModifiableFromIInventory implements IItemHandlerModifiable {
-	private final IInventory inventory;
+	private final Container inventory;
 
-	public ItemHandlerModifiableFromIInventory(IInventory inventory) {
+	public ItemHandlerModifiableFromIInventory(Container inventory) {
 		this.inventory = inventory;
 	}
 

@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -15,7 +15,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 
 	protected LazyOptional<IItemHandlerModifiable> capability;
 
-	public PortableItemInterfaceTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public PortableItemInterfaceTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		capability = LazyOptional.empty();
 	}

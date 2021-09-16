@@ -3,13 +3,13 @@ package com.simibubi.create.foundation.ponder.instructions;
 import com.simibubi.create.foundation.ponder.PonderInstruction;
 import com.simibubi.create.foundation.ponder.PonderScene;
 
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public class MovePoiInstruction extends PonderInstruction {
 
-	private Vector3d poi;
+	private Vec3 poi;
 
-	public MovePoiInstruction(Vector3d poi) {
+	public MovePoiInstruction(Vec3 poi) {
 		this.poi = poi;
 	}
 	

@@ -2,19 +2,19 @@ package com.simibubi.create.foundation.item.render;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -24,9 +24,9 @@ public class PartialItemModelRenderer {
 
 	ItemStack stack;
 	int overlay;
-	MatrixStack ms;
-	ItemCameraTransforms.TransformType transformType;
-	IRenderTypeBuffer buffer;
+	PoseStack ms;
+	ItemTransforms.TransformType transformType;
+	MultiBufferSource buffer;
 
 	static PartialItemModelRenderer get() {
 		if (instance == null)
@@ -34,8 +34,8 @@ public class PartialItemModelRenderer {
 		return instance;
 	}
 
-	public static PartialItemModelRenderer of(ItemStack stack, ItemCameraTransforms.TransformType transformType,
-		MatrixStack ms, IRenderTypeBuffer buffer, int overlay) {
+	public static PartialItemModelRenderer of(ItemStack stack, ItemTransforms.TransformType transformType,
+		PoseStack ms, MultiBufferSource buffer, int overlay) {
 		PartialItemModelRenderer instance = get();
 		instance.stack = stack;
 		instance.buffer = buffer;
@@ -45,23 +45,23 @@ public class PartialItemModelRenderer {
 		return instance;
 	}
 
-	public void render(IBakedModel model, int light) {
+	public void render(BakedModel model, int light) {
 		render(model, RenderTypes.getItemPartialTranslucent(), light);
 	}
 
-	public void renderSolid(IBakedModel model, int light) {
+	public void renderSolid(BakedModel model, int light) {
 		render(model, RenderTypes.getItemPartialSolid(), light);
 	}
 
-	public void renderSolidGlowing(IBakedModel model, int light) {
+	public void renderSolidGlowing(BakedModel model, int light) {
 		render(model, RenderTypes.getGlowingSolid(), light);
 	}
 
-	public void renderGlowing(IBakedModel model, int light) {
+	public void renderGlowing(BakedModel model, int light) {
 		render(model, RenderTypes.getGlowingTranslucent(), light);
 	}
 
-	public void render(IBakedModel model, RenderType type, int light) {
+	public void render(BakedModel model, RenderType type, int light) {
 		if (stack.isEmpty())
 			return;
 
@@ -79,7 +79,7 @@ public class PartialItemModelRenderer {
 		ms.popPose();
 	}
 
-	private void renderBakedItemModel(IBakedModel model, int light, MatrixStack ms, IVertexBuilder p_229114_6_) {
+	private void renderBakedItemModel(BakedModel model, int light, PoseStack ms, VertexConsumer p_229114_6_) {
 		ItemRenderer ir = Minecraft.getInstance()
 			.getItemRenderer();
 		Random random = new Random();

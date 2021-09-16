@@ -7,11 +7,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.ren
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -28,8 +28,8 @@ public abstract class MovementBehaviour {
 
 	public void visitNewPosition(MovementContext context, BlockPos pos) {}
 
-	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.ZERO;
+	public Vec3 getActiveAreaOffset(MovementContext context) {
+		return Vec3.ZERO;
 	}
 
 	public void dropItem(MovementContext context, ItemStack stack) {
@@ -37,7 +37,7 @@ public abstract class MovementBehaviour {
 		if (remainder.isEmpty())
 			return;
 
-		Vector3d vec = context.position;
+		Vec3 vec = context.position;
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
 		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
 			.scale(context.world.random.nextFloat() * .3f));
@@ -62,14 +62,14 @@ public abstract class MovementBehaviour {
 
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {}
+		ContraptionMatrices matrices, MultiBufferSource buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		return null;
 	}
 
-	public void onSpeedChanged(MovementContext context, Vector3d oldMotion, Vector3d motion) {
+	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
 	}
 }

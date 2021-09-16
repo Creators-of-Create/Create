@@ -3,7 +3,7 @@ package com.simibubi.create.content.schematics.client;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -16,31 +16,31 @@ import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
 public class SchematicEditScreen extends AbstractSimiScreen {
 
 	private AllGuiTextures background;
 
-	private TextFieldWidget xInput;
-	private TextFieldWidget yInput;
-	private TextFieldWidget zInput;
+	private EditBox xInput;
+	private EditBox yInput;
+	private EditBox zInput;
 	private IconButton confirmButton;
 
-	private final List<ITextComponent> rotationOptions =
+	private final List<Component> rotationOptions =
 		Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180", "cw270");
-	private final List<ITextComponent> mirrorOptions =
+	private final List<Component> mirrorOptions =
 		Lang.translatedOptions("schematic.mirror", "none", "leftRight", "frontBack");
-	private final ITextComponent rotationLabel = Lang.translate("schematic.rotation");
-	private final ITextComponent mirrorLabel = Lang.translate("schematic.mirror");
+	private final Component rotationLabel = Lang.translate("schematic.rotation");
+	private final Component mirrorLabel = Lang.translate("schematic.mirror");
 
 	private ScrollInput rotationArea;
 	private ScrollInput mirrorArea;
@@ -62,9 +62,9 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		xInput = new TextFieldWidget(font, x + 50, y + 26, 34, 10, StringTextComponent.EMPTY);
-		yInput = new TextFieldWidget(font, x + 90, y + 26, 34, 10, StringTextComponent.EMPTY);
-		zInput = new TextFieldWidget(font, x + 130, y + 26, 34, 10, StringTextComponent.EMPTY);
+		xInput = new EditBox(font, x + 50, y + 26, 34, 10, TextComponent.EMPTY);
+		yInput = new EditBox(font, x + 90, y + 26, 34, 10, TextComponent.EMPTY);
+		zInput = new EditBox(font, x + 130, y + 26, 34, 10, TextComponent.EMPTY);
 
 		BlockPos anchor = handler.getTransformation()
 				.getAnchor();
@@ -79,7 +79,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			zInput.setValue("" + alt.getZ());
 		}
 
-		for (TextFieldWidget widget : new TextFieldWidget[] { xInput, yInput, zInput }) {
+		for (EditBox widget : new EditBox[] { xInput, yInput, zInput }) {
 			widget.setMaxLength(6);
 			widget.setBordered(false);
 			widget.setTextColor(0xFFFFFF);
@@ -97,16 +97,16 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			});
 		}
 
-		PlacementSettings settings = handler.getTransformation()
+		StructurePlaceSettings settings = handler.getTransformation()
 			.toSettings();
-		Label labelR = new Label(x + 50, y + 48, StringTextComponent.EMPTY).withShadow();
+		Label labelR = new Label(x + 50, y + 48, TextComponent.EMPTY).withShadow();
 		rotationArea = new SelectionScrollInput(x + 45, y + 43, 118, 18).forOptions(rotationOptions)
 			.titled(rotationLabel.plainCopy())
 			.setState(settings.getRotation()
 				.ordinal())
 			.writingTo(labelR);
 
-		Label labelM = new Label(x + 50, y + 70, StringTextComponent.EMPTY).withShadow();
+		Label labelM = new Label(x + 50, y + 70, TextComponent.EMPTY).withShadow();
 		mirrorArea = new SelectionScrollInput(x + 45, y + 65, 118, 18).forOptions(mirrorOptions)
 			.titled(mirrorLabel.plainCopy())
 			.setState(settings.getMirror()
@@ -151,7 +151,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
@@ -176,7 +176,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			validCoords = false;
 		}
 
-		PlacementSettings settings = new PlacementSettings();
+		StructurePlaceSettings settings = new StructurePlaceSettings();
 		settings.setRotation(Rotation.values()[rotationArea.getState()]);
 		settings.setMirror(Mirror.values()[mirrorArea.getState()]);
 
@@ -186,7 +186,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 				item.getTag()
 					.putBoolean("Deployed", true);
 				item.getTag()
-					.put("Anchor", NBTUtil.writeBlockPos(newLocation));
+					.put("Anchor", NbtUtils.writeBlockPos(newLocation));
 			}
 
 			handler.getTransformation()

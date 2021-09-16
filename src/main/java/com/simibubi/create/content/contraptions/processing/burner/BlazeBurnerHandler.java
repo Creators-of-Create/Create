@@ -4,23 +4,23 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity.FuelType;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.projectile.EggEntity;
-import net.minecraft.entity.projectile.PotionEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.projectile.ThrownEgg;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,14 +35,14 @@ public class BlazeBurnerHandler {
 	}
 
 	public static void thrownEggsGetEatenByBurner(ProjectileImpactEvent.Throwable event) {
-		if (!(event.getThrowable() instanceof EggEntity))
+		if (!(event.getThrowable() instanceof ThrownEgg))
 			return;
 
 		if (event.getRayTraceResult()
-			.getType() != RayTraceResult.Type.BLOCK)
+			.getType() != HitResult.Type.BLOCK)
 			return;
 
-		TileEntity tile = event.getThrowable().level.getBlockEntity(new BlockPos(event.getRayTraceResult()
+		BlockEntity tile = event.getThrowable().level.getBlockEntity(new BlockPos(event.getRayTraceResult()
 			.getLocation()));
 		if (!(tile instanceof BlazeBurnerTileEntity)) {
 			return;
@@ -50,11 +50,11 @@ public class BlazeBurnerHandler {
 
 		event.setCanceled(true);
 		event.getThrowable()
-			.setDeltaMovement(Vector3d.ZERO);
+			.setDeltaMovement(Vec3.ZERO);
 		event.getThrowable()
 			.remove();
 
-		World world = event.getThrowable().level;
+		Level world = event.getThrowable().level;
 		if (world.isClientSide)
 			return;
 
@@ -63,7 +63,7 @@ public class BlazeBurnerHandler {
 			if (heater.activeFuel != FuelType.SPECIAL) {
 				heater.activeFuel = FuelType.NORMAL;
 				heater.remainingBurnTime =
-					MathHelper.clamp(heater.remainingBurnTime + 80, 0, BlazeBurnerTileEntity.MAX_HEAT_CAPACITY);
+					Mth.clamp(heater.remainingBurnTime + 80, 0, BlazeBurnerTileEntity.MAX_HEAT_CAPACITY);
 				heater.updateBlockState();
 				heater.notifyUpdate();
 			}
@@ -76,19 +76,19 @@ public class BlazeBurnerHandler {
 		if (event.getThrowable().level.isClientSide)
 			return;
 
-		if (!(event.getThrowable() instanceof PotionEntity))
+		if (!(event.getThrowable() instanceof ThrownPotion))
 			return;
-		PotionEntity entity = (PotionEntity) event.getThrowable();
+		ThrownPotion entity = (ThrownPotion) event.getThrowable();
 
 		if (event.getRayTraceResult()
-			.getType() != RayTraceResult.Type.BLOCK)
+			.getType() != HitResult.Type.BLOCK)
 			return;
 
 		ItemStack stack = entity.getItem();
 		Potion potion = PotionUtils.getPotion(stack);
 		if (potion == Potions.WATER && PotionUtils.getMobEffects(stack).isEmpty()) {
-			BlockRayTraceResult result = (BlockRayTraceResult) event.getRayTraceResult();
-			World world = entity.level;
+			BlockHitResult result = (BlockHitResult) event.getRayTraceResult();
+			Level world = entity.level;
 			Direction face = result.getDirection();
 			BlockPos pos = result.getBlockPos().relative(face);
 
@@ -101,10 +101,10 @@ public class BlazeBurnerHandler {
 		}
 	}
 
-	private static void extinguishLitBurners(World world, BlockPos pos, Direction direction) {
+	private static void extinguishLitBurners(Level world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
 		if (AllBlocks.LIT_BLAZE_BURNER.has(state)) {
-			world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+			world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
 		}
 	}

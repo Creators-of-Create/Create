@@ -12,11 +12,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
 
 public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IInstanceRendered {
 
@@ -24,7 +24,7 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	public boolean charging;
 	ScrollValueBehaviour maxState;
 
-	public AdjustableRepeaterTileEntity(TileEntityType<?> type) {
+	public AdjustableRepeaterTileEntity(BlockEntityType<?> type) {
 		super(type);
 	}
 
@@ -41,19 +41,19 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	}
 
 	private void onMaxDelayChanged(int newMax) {
-		state = MathHelper.clamp(state, 0, newMax);
+		state = Mth.clamp(state, 0, newMax);
 		sendData();
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		charging = compound.getBoolean("Charging");
 		super.fromTag(blockState, compound, clientPacket);
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("State", state);
 		compound.putBoolean("Charging", charging);
 		super.write(compound, clientPacket);
@@ -79,7 +79,7 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 		return (value / 20 / 60) + "m";
 	}
 
-	private ITextComponent getUnit(int value) {
+	private Component getUnit(int value) {
 		if (value < 20)
 			return Lang.translate("generic.unit.ticks");
 		if (value < 20 * 60)

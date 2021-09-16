@@ -12,29 +12,29 @@ import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 public interface IWrenchable {
 
-	default ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getLevel();
+	default InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		Level world = context.getLevel();
 		BlockState rotated = getRotatedBlockState(state, context.getClickedFace());
 		if (!rotated.canSurvive(world, context.getClickedPos()))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		KineticTileEntity.switchToBlockState(world, context.getClickedPos(), updateAfterWrenched(rotated, context));
 
-		TileEntity te = context.getLevel()
+		BlockEntity te = context.getLevel()
 			.getBlockEntity(context.getClickedPos());
 		if (te != null)
 			te.clearCache();
@@ -45,36 +45,36 @@ public interface IWrenchable {
 		if (world.getBlockState(context.getClickedPos()) != state)
 			playRotateSound(world, context.getClickedPos());
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
-	default BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
+	default BlockState updateAfterWrenched(BlockState newState, UseOnContext context) {
 //		return newState;
 		return Block.updateFromNeighbourShapes(newState, context.getLevel(), context.getClickedPos());
 	}
 
-	default ActionResultType onSneakWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getLevel();
+	default InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
-		PlayerEntity player = context.getPlayer();
-		if (world instanceof ServerWorld) {
+		Player player = context.getPlayer();
+		if (world instanceof ServerLevel) {
 			if (player != null && !player.isCreative())
-				Block.getDrops(state, (ServerWorld) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
+				Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 					.forEach(itemStack -> {
 						player.inventory.placeItemBackInInventory(world, itemStack);
 					});
-			state.spawnAfterBreak((ServerWorld) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
 			world.destroyBlock(pos, false);
 			playRemoveSound(world, pos);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
-	default void playRemoveSound(World world, BlockPos pos) {
+	default void playRemoveSound(Level world, BlockPos pos) {
 		AllSoundEvents.WRENCH_REMOVE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() * .5f + .5f);
 	}
 
-	default void playRotateSound(World world, BlockPos pos) {
+	default void playRotateSound(Level world, BlockPos pos) {
 		AllSoundEvents.WRENCH_ROTATE.playOnServer(world, pos, 1, Create.RANDOM.nextFloat() + .5f);
 	}
 

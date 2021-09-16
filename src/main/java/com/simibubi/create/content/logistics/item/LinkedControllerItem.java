@@ -6,43 +6,45 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 import com.simibubi.create.foundation.utility.Couple;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LecternBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class LinkedControllerItem extends Item implements INamedContainerProvider {
+import net.minecraft.world.item.Item.Properties;
+
+public class LinkedControllerItem extends Item implements MenuProvider {
 
 	public LinkedControllerItem(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext ctx) {
-		PlayerEntity player = ctx.getPlayer();
+	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext ctx) {
+		Player player = ctx.getPlayer();
 		if (player == null)
-			return ActionResultType.PASS;
-		World world = ctx.getLevel();
+			return InteractionResult.PASS;
+		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
 		BlockState hitState = world.getBlockState(pos);
 
@@ -52,7 +54,7 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 					if (!world.isClientSide)
 						AllBlocks.LECTERN_CONTROLLER.get().withTileEntityDo(world, pos, te ->
 								te.swapControllers(stack, player, ctx.getHand(), hitState));
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			} else {
 				if (AllBlocks.REDSTONE_LINK.has(hitState)) {
@@ -60,7 +62,7 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.toggleBindMode(ctx.getClickedPos()));
 					player.getCooldowns()
 							.addCooldown(this, 2);
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 
 				if (hitState.is(Blocks.LECTERN) && !hitState.getValue(LecternBlock.HAS_BOOK)) {
@@ -68,11 +70,11 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 						ItemStack lecternStack = player.isCreative() ? stack.copy() : stack.split(1);
 						AllBlocks.LECTERN_CONTROLLER.get().replaceLectern(hitState, world, pos, lecternStack);
 					}
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 
 				if (AllBlocks.LECTERN_CONTROLLER.has(hitState))
-					return ActionResultType.PASS;
+					return InteractionResult.PASS;
 			}
 		}
 
@@ -80,15 +82,15 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (player.isShiftKeyDown() && hand == Hand.MAIN_HAND) {
-			if (!world.isClientSide && player instanceof ServerPlayerEntity && player.mayBuild())
-				NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {
+		if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+			if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
+				NetworkHooks.openGui((ServerPlayer) player, this, buf -> {
 					buf.writeItem(heldItem);
 				});
-			return ActionResult.success(heldItem);
+			return InteractionResultHolder.success(heldItem);
 		}
 
 		if (!player.isShiftKeyDown()) {
@@ -98,7 +100,7 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 				.addCooldown(this, 2);
 		}
 
-		return ActionResult.pass(heldItem);
+		return InteractionResultHolder.pass(heldItem);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -115,7 +117,7 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 		ItemStackHandler newInv = new ItemStackHandler(12);
 		if (AllItems.LINKED_CONTROLLER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get frequency items from non-controller: " + stack);
-		CompoundNBT invNBT = stack.getOrCreateTagElement("Items");
+		CompoundTag invNBT = stack.getOrCreateTagElement("Items");
 		if (!invNBT.isEmpty())
 			newInv.deserializeNBT(invNBT);
 		return newInv;
@@ -128,14 +130,14 @@ public class LinkedControllerItem extends Item implements INamedContainerProvide
 	}
 
 	@Override
-	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		ItemStack heldItem = player.getMainHandItem();
 		return LinkedControllerContainer.create(id, inv, heldItem);
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(getDescriptionId());
+	public Component getDisplayName() {
+		return new TranslatableComponent(getDescriptionId());
 	}
 
 }

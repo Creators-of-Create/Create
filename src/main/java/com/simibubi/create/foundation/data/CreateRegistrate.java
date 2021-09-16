@@ -24,6 +24,7 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.builders.TileEntityBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
@@ -32,23 +33,23 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
@@ -112,25 +113,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.collect(Collectors.toList());
 	}
 
-	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
-		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
-		return this.tileEntity(this.self(), name, factory);
+	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
+		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+		return this.tileEntity(this.self(), name, (blockPos, blockState, blockEntityType) -> factory.apply(blockEntityType));
 	}
 
 	@Override
-	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
-		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
-		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
-			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
-		});
+	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name, TileEntityBuilder.BlockEntityFactory<T> factory) {
+		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory)); // PORT: this is horrible. I'm so sorry for writing this.
 	}
 
 	@Override
-	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name, EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return this.entity(self(), name, factory, classification);
 	}
 
-	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});
@@ -193,21 +191,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
-			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+			Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
 	public static <T extends Item> NonNullConsumer<? super T> itemModel(
-			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+			Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
-		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
-		return b -> b.properties(p -> p.setISTER(() -> () -> func.get()
-			.apply(null)
-			.createRenderer()))
-			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry, func)));
+		Supplier<NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> func) {
+		throw new RuntimeException("// PORT: this is really annoying to fix. ISTER");
+//		return b -> b.properties(p -> p.setISTER(() -> () -> func.get()
+//			.apply(null)
+//			.createRenderer()))
+//			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry, func)));
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
@@ -234,21 +233,21 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockModel(Block entry,
-										   Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+										   Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.getCustomBlockModels()
 				.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerItemModel(Item entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.getCustomItemModels()
 			.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerCustomRenderedItem(Item entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> func) {
+		Supplier<NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> func) {
 		CreateClient.getCustomRenderedItems()
 			.register(entry.delegate, func.get());
 	}

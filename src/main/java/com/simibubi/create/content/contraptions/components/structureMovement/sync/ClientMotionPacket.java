@@ -5,32 +5,33 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class ClientMotionPacket extends SimplePacketBase {
 
-	private Vector3d motion;
+	private Vec3 motion;
 	private boolean onGround;
 	private float limbSwing;
 
-	public ClientMotionPacket(Vector3d motion, boolean onGround, float limbSwing) {
+	public ClientMotionPacket(Vec3 motion, boolean onGround, float limbSwing) {
 		this.motion = motion;
 		this.onGround = onGround;
 		this.limbSwing = limbSwing;
 	}
 
-	public ClientMotionPacket(PacketBuffer buffer) {
-		motion = new Vector3d(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+	public ClientMotionPacket(FriendlyByteBuf buffer) {
+		motion = new Vec3(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		onGround = buffer.readBoolean();
 		limbSwing = buffer.readFloat();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeFloat((float) motion.x);
 		buffer.writeFloat((float) motion.y);
 		buffer.writeFloat((float) motion.z);
@@ -39,17 +40,17 @@ public class ClientMotionPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(Supplier<NetworkEvent.Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity sender = context.get()
+				ServerPlayer sender = context.get()
 					.getSender();
 				if (sender == null)
 					return;
 				sender.setDeltaMovement(motion);
 				sender.setOnGround(onGround);
 				if (onGround) {
-					sender.causeFallDamage(sender.fallDistance, 1);
+					sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
 					sender.fallDistance = 0;
 					sender.connection.aboveGroundTickCount = 0;
 				}

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.gui.Theme;
@@ -46,7 +46,7 @@ public class BooleanEntry extends ValueEntry<Boolean> {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
 		boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 

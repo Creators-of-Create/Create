@@ -7,12 +7,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
@@ -72,17 +72,17 @@ public class MechanicalCraftingRecipeGen extends CreateRecipeProvider {
 		super(p_i48262_1_);
 	}
 
-	GeneratedRecipeBuilder create(Supplier<IItemProvider> result) {
+	GeneratedRecipeBuilder create(Supplier<ItemLike> result) {
 		return new GeneratedRecipeBuilder(result);
 	}
 
 	class GeneratedRecipeBuilder {
 
 		private String suffix;
-		private Supplier<IItemProvider> result;
+		private Supplier<ItemLike> result;
 		private int amount;
 
-		public GeneratedRecipeBuilder(Supplier<IItemProvider> result) {
+		public GeneratedRecipeBuilder(Supplier<ItemLike> result) {
 			this.suffix = "";
 			this.result = result;
 			this.amount = 1;

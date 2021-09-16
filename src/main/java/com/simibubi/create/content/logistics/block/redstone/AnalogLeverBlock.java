@@ -5,31 +5,33 @@ import java.util.Random;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalFaceBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogLeverTileEntity> {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements ITE<AnalogLeverTileEntity> {
 
 	public AnalogLeverBlock(Properties p_i48402_1_) {
 		super(p_i48402_1_);
@@ -41,29 +43,29 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.ANALOG_LEVER.create();
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-								  BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+								  BlockHitResult hit) {
 		if (worldIn.isClientSide) {
 			addParticles(state, worldIn, pos, 1.0F);
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		return onTileEntityUse(worldIn, pos, te -> {
 			boolean sneak = player.isShiftKeyDown();
 			te.changeState(sneak);
 			float f = .25f + ((te.state + 5) / 15f) * .5f;
-			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundCategory.BLOCKS, 0.2F, f);
-			return ActionResultType.SUCCESS;
+			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.2F, f);
+			return InteractionResult.SUCCESS;
 		});
 	}
 
 	@Override
-	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return getTileEntityOptional(blockAccess, pos).map(al -> al.state)
 				.orElse(0);
 	}
@@ -74,13 +76,13 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return getConnectedDirection(blockState) == side ? getSignal(blockState, blockAccess, pos, side) : 0;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.state != 0 && rand.nextFloat() < 0.25F)
 				addParticles(stateIn, worldIn, pos, 0.5F);
@@ -88,7 +90,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (isMoving || state.getBlock() == newState.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
@@ -98,7 +100,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 		});
 	}
 
-	private static void addParticles(BlockState state, IWorld worldIn, BlockPos pos, float alpha) {
+	private static void addParticles(BlockState state, LevelAccessor worldIn, BlockPos pos, float alpha) {
 		Direction direction = state.getValue(FACING)
 				.getOpposite();
 		Direction direction1 = getConnectedDirection(state).getOpposite();
@@ -108,17 +110,17 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 				+ 0.2D * (double) direction1.getStepY();
 		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ()
 				+ 0.2D * (double) direction1.getStepZ();
-		worldIn.addParticle(new RedstoneParticleData(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+		worldIn.addParticle(new DustParticleOptions(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	}
 
-	static void updateNeighbors(BlockState state, World world, BlockPos pos) {
+	static void updateNeighbors(BlockState state, Level world, BlockPos pos) {
 		world.updateNeighborsAt(pos, state.getBlock());
 		world.updateNeighborsAt(pos.relative(getConnectedDirection(state).getOpposite()), state.getBlock());
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return Blocks.LEVER.getShape(state, worldIn, pos, context);
 	}
 
@@ -133,7 +135,7 @@ public class AnalogLeverBlock extends HorizontalFaceBlock implements ITE<AnalogL
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

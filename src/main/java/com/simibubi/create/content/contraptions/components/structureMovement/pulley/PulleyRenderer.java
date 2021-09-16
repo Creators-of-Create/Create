@@ -8,13 +8,13 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.Mth;
 
 public class PulleyRenderer extends AbstractPulleyRenderer {
 
-	public PulleyRenderer(TileEntityRendererDispatcher dispatcher) {
+	public PulleyRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher, AllBlockPartials.ROPE_HALF, AllBlockPartials.ROPE_HALF_MAGNET);
 	}
 
@@ -57,7 +57,7 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 		if (tile.movedContraption != null) {
 			AbstractContraptionEntity e = tile.movedContraption;
 			PulleyContraption c = (PulleyContraption) tile.movedContraption.getContraption();
-			double entityPos = MathHelper.lerp(partialTicks, e.yOld, e.getY());
+			double entityPos = Mth.lerp(partialTicks, e.yOld, e.getY());
 			offset = (float) -(entityPos - c.anchor.getY() - c.initialOffset);
 		}
 

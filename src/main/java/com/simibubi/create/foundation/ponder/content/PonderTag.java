@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -9,13 +9,13 @@ import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -132,7 +132,7 @@ public class PonderTag implements IScreenRenderable {
 		return icon(id);
 	}
 
-	public PonderTag item(IItemProvider item, boolean useAsIcon, boolean useAsMainItem) {
+	public PonderTag item(ItemLike item, boolean useAsIcon, boolean useAsMainItem) {
 		if (useAsIcon)
 			this.itemIcon = new ItemStack(item);
 		if (useAsMainItem)
@@ -140,13 +140,13 @@ public class PonderTag implements IScreenRenderable {
 		return this;
 	}
 
-	public PonderTag item(IItemProvider item) {
+	public PonderTag item(ItemLike item) {
 		return this.item(item, true, true);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
+	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
 		ms.pushPose();
 		ms.translate(x, y, 0);
 		if (icon != null) {
@@ -156,7 +156,7 @@ public class PonderTag implements IScreenRenderable {
 			ms.scale(0.25f, 0.25f, 1);
 			// x and y offset, blit z offset, tex x and y, tex width and height, entire tex
 			// sheet width and height
-			AbstractGui.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
+			GuiComponent.blit(ms, 0, 0, 0, 0, 0, 64, 64, 64, 64);
 		} else if (!itemIcon.isEmpty()) {
 			ms.translate(-4, -4, 0);
 			ms.scale(1.5f, 1.5f, 1.5f);

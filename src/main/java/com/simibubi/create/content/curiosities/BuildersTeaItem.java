@@ -1,19 +1,21 @@
 package com.simibubi.create.content.curiosities;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.UseAction;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class BuildersTeaItem extends Item {
 
@@ -21,13 +23,13 @@ public class BuildersTeaItem extends Item {
 		super(p_i48487_1_);
 	}
 
-	public ItemStack finishUsingItem(ItemStack stack, World world, LivingEntity entity) {
-		PlayerEntity playerentity = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
-		if (playerentity instanceof ServerPlayerEntity)
-			CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity) playerentity, stack);
+	public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
+		Player playerentity = entity instanceof Player ? (Player) entity : null;
+		if (playerentity instanceof ServerPlayer)
+			CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer) playerentity, stack);
 
 		if (!world.isClientSide) 
-			entity.addEffect(new EffectInstance(Effects.DIG_SPEED, 3 * 60 * 20, 0, false, false, false));
+			entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 3 * 60 * 20, 0, false, false, false));
 
 		if (playerentity != null) {
 			playerentity.awardStat(Stats.ITEM_USED.get(this));
@@ -50,13 +52,13 @@ public class BuildersTeaItem extends Item {
 		return 42;
 	}
 
-	public UseAction getUseAnimation(ItemStack p_77661_1_) {
-		return UseAction.DRINK;
+	public UseAnim getUseAnimation(ItemStack p_77661_1_) {
+		return UseAnim.DRINK;
 	}
 
-	public ActionResult<ItemStack> use(World p_77659_1_, PlayerEntity p_77659_2_, Hand p_77659_3_) {
+	public InteractionResultHolder<ItemStack> use(Level p_77659_1_, Player p_77659_2_, InteractionHand p_77659_3_) {
 		p_77659_2_.startUsingItem(p_77659_3_);
-		return ActionResult.success(p_77659_2_.getItemInHand(p_77659_3_));
+		return InteractionResultHolder.success(p_77659_2_.getItemInHand(p_77659_3_));
 	}
 
 }

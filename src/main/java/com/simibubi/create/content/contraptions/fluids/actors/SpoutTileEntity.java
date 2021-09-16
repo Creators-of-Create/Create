@@ -21,17 +21,17 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.PotionItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -50,16 +50,16 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	SmartFluidTankBehaviour tank;
 
-	public SpoutTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public SpoutTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		processingTicks = -1;
 	}
 
-	protected AxisAlignedBB cachedBoundingBox;
+	protected AABB cachedBoundingBox;
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null)
 			cachedBoundingBox = super.getRenderBoundingBox().expandTowards(0, -2, 0);
 		return cachedBoundingBox;
@@ -139,7 +139,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	protected void write(CompoundNBT compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 
 		compound.putInt("ProcessingTicks", processingTicks);
@@ -150,7 +150,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (!clientPacket)
@@ -207,9 +207,9 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected void spawnProcessingParticles(FluidStack fluid) {
 		if (isVirtual())
 			return;
-		Vector3d vec = VecHelper.getCenterOf(worldPosition);
+		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 8 / 16f, 0);
-		IParticleData particle = FluidFX.getFluidParticle(fluid);
+		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
 		level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
 	}
 
@@ -218,18 +218,18 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	protected void spawnSplash(FluidStack fluid) {
 		if (isVirtual())
 			return;
-		Vector3d vec = VecHelper.getCenterOf(worldPosition);
+		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
-		IParticleData particle = FluidFX.getFluidParticle(fluid);
+		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
 		for (int i = 0; i < SPLASH_PARTICLE_COUNT; i++) {
-			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, level.random, 0.125f);
-			m = new Vector3d(m.x, Math.abs(m.y), m.z);
+			Vec3 m = VecHelper.offsetRandomly(Vec3.ZERO, level.random, 0.125f);
+			m = new Vec3(m.x, Math.abs(m.y), m.z);
 			level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
 			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}

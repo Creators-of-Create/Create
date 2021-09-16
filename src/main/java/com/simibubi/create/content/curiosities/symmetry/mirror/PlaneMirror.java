@@ -7,19 +7,19 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 
 public class PlaneMirror extends SymmetryMirror {
 
-	public static enum Align implements IStringSerializable {
+	public static enum Align implements StringRepresentable {
 		XY("xy"), YZ("yz");
 
 		private final String name;
@@ -39,7 +39,7 @@ public class PlaneMirror extends SymmetryMirror {
 		}
 	}
 
-	public PlaneMirror(Vector3d pos) {
+	public PlaneMirror(Vec3 pos) {
 		super(pos);
 		orientation = Align.XY;
 	}
@@ -88,7 +88,7 @@ public class PlaneMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public void applyModelTransform(MatrixStack ms) {
+	public void applyModelTransform(PoseStack ms) {
 		super.applyModelTransform(ms);
 		MatrixTransformStack.of(ms)
 			.centre()
@@ -97,7 +97,7 @@ public class PlaneMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public List<ITextComponent> getAlignToolTips() {
+	public List<Component> getAlignToolTips() {
 		return ImmutableList.of(Lang.translate("orientation.alongZ"), Lang.translate("orientation.alongX"));
 	}
 

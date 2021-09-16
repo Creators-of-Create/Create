@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.gui.mainMenu;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
@@ -18,17 +18,17 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.gui.screen.ConfirmOpenLinkScreen;
-import net.minecraft.client.gui.screen.MainMenuScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderSkybox;
-import net.minecraft.client.renderer.RenderSkyboxCube;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.client.renderer.CubeMap;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
@@ -36,37 +36,37 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	protected final Screen parent;
 	protected boolean returnOnClose;
 
-	public static final RenderSkyboxCube PANORAMA_RESOURCES =
-		new RenderSkyboxCube(Create.asResource("textures/gui/title/background/panorama"));
+	public static final CubeMap PANORAMA_RESOURCES =
+		new CubeMap(Create.asResource("textures/gui/title/background/panorama"));
 	public static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
-	private RenderSkybox vanillaPanorama = new RenderSkybox(MainMenuScreen.CUBE_MAP);
-	public static RenderSkybox panorama = new RenderSkybox(PANORAMA_RESOURCES);
+	private PanoramaRenderer vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
+	public static PanoramaRenderer panorama = new PanoramaRenderer(PANORAMA_RESOURCES);
 	private long firstRenderTime;
 	private Button gettingStarted;
 
 	public CreateMainMenuScreen(Screen parent) {
 		this.parent = parent;
 		returnOnClose = true;
-		if (parent instanceof MainMenuScreen)
-			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(MainMenuScreen.class, (MainMenuScreen) parent,
+		if (parent instanceof TitleScreen)
+			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, (TitleScreen) parent,
 				"field_209101_K");
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (firstRenderTime == 0L)
 			this.firstRenderTime = Util.getMillis();
 		super.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		float f = (float) (Util.getMillis() - this.firstRenderTime) / 1000.0F;
-		float alpha = MathHelper.clamp(f, 0.0F, 1.0F);
+		float alpha = Mth.clamp(f, 0.0F, 1.0F);
 		float elapsedPartials = minecraft.getDeltaFrameTime();
 
-		if (parent instanceof MainMenuScreen) {
+		if (parent instanceof TitleScreen) {
 			if (alpha < 1)
 				vanillaPanorama.render(elapsedPartials, 1);
 			panorama.render(elapsedPartials, alpha);
@@ -113,9 +113,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 		ms.pushPose();
 		ms.translate(0, 0, 200);
-		drawCenteredString(ms, font, new StringTextComponent(Create.NAME).withStyle(TextFormatting.BOLD)
+		drawCenteredString(ms, font, new TextComponent(Create.NAME).withStyle(ChatFormatting.BOLD)
 			.append(
-				new StringTextComponent(" v" + Create.VERSION).withStyle(TextFormatting.BOLD, TextFormatting.WHITE)),
+				new TextComponent(" v" + Create.VERSION).withStyle(ChatFormatting.BOLD, ChatFormatting.WHITE)),
 			width / 2, 89, 0xff_E4BB67);
 		ms.popPose();
 
@@ -131,7 +131,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	private void addButtons() {
 		buttons.clear();
 
-		int yStart = height / 4 + (parent instanceof MainMenuScreen ? 40 : 40);
+		int yStart = height / 4 + (parent instanceof TitleScreen ? 40 : 40);
 		int center = width / 2;
 		int bHeight = 20;
 		int bShortWidth = 98;
@@ -144,7 +144,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
 			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
-		gettingStarted.active = !(parent instanceof MainMenuScreen);
+		gettingStarted.active = !(parent instanceof TitleScreen);
 		addButton(gettingStarted);
 
 		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
@@ -160,17 +160,17 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowForeground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
 		buttons.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
-		if (parent instanceof MainMenuScreen) {
+		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)
 				return;
 			if (mouseY < gettingStarted.y || mouseY > gettingStarted.y + 20)
 				return;
-			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), TextFormatting.GRAY,
-				TextFormatting.GRAY), mouseX, mouseY);
+			renderComponentTooltip(ms, TooltipHelper.cutTextComponent(Lang.translate("menu.only_ingame"), ChatFormatting.GRAY,
+				ChatFormatting.GRAY), mouseX, mouseY);
 		}
 	}
 
@@ -185,7 +185,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 
 	private void linkTo(String url) {
 		returnOnClose = false;
-		ScreenOpener.open(new ConfirmOpenLinkScreen((p_213069_2_) -> {
+		ScreenOpener.open(new ConfirmLinkScreen((p_213069_2_) -> {
 			if (p_213069_2_)
 				Util.getPlatform()
 					.openUri(url);

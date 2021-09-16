@@ -7,17 +7,17 @@ import javax.annotation.Nullable;
 import com.mojang.serialization.Codec;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.IStructureProcessorType;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.StructureProcessor;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicProcessor extends StructureProcessor {
 	
@@ -26,22 +26,22 @@ public class SchematicProcessor extends StructureProcessor {
 		return INSTANCE;
 	});
 	
-	public static IStructureProcessorType<SchematicProcessor> TYPE;
+	public static StructureProcessorType<SchematicProcessor> TYPE;
 	
 	public static void register() {
-		TYPE = IStructureProcessorType.register("schematic", CODEC);
+		TYPE = StructureProcessorType.register("schematic", CODEC);
 	}
 	
 	@Nullable
 	@Override
-	public Template.BlockInfo process(IWorldReader world, BlockPos pos, BlockPos anotherPos, Template.BlockInfo rawInfo,
-			Template.BlockInfo info, PlacementSettings settings, @Nullable Template template) {
+	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
+			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
 		if (info.nbt != null) {
-			TileEntity te = info.state.createTileEntity(world);
+			BlockEntity te = info.state.createTileEntity(world);
 			if (te != null) {
-				CompoundNBT nbt = NBTProcessors.process(te, info.nbt, false);
+				CompoundTag nbt = NBTProcessors.process(te, info.nbt, false);
 				if (nbt != info.nbt)
-					return new Template.BlockInfo(info.pos, info.state, nbt);
+					return new StructureTemplate.StructureBlockInfo(info.pos, info.state, nbt);
 			}
 		}
 		return info;
@@ -49,11 +49,11 @@ public class SchematicProcessor extends StructureProcessor {
 
 	@Nullable
 	@Override
-	public Template.EntityInfo processEntity(IWorldReader world, BlockPos pos, Template.EntityInfo rawInfo,
-			Template.EntityInfo info, PlacementSettings settings, Template template) {
+	public StructureTemplate.StructureEntityInfo processEntity(LevelReader world, BlockPos pos, StructureTemplate.StructureEntityInfo rawInfo,
+			StructureTemplate.StructureEntityInfo info, StructurePlaceSettings settings, StructureTemplate template) {
 		return EntityType.by(info.nbt).flatMap(type -> {
-			if (world instanceof World) {
-				Entity e = type.create((World) world);
+			if (world instanceof Level) {
+				Entity e = type.create((Level) world);
 				if (e != null && !e.onlyOpCanSetNbt()) {
 					return Optional.of(info);
 				}
@@ -63,7 +63,7 @@ public class SchematicProcessor extends StructureProcessor {
 	}
 
 	@Override
-	protected IStructureProcessorType<?> getType() {
+	protected StructureProcessorType<?> getType() {
 		return TYPE;
 	}
 

@@ -3,23 +3,23 @@ package com.simibubi.create.foundation.utility.placement;
 import java.util.function.Function;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.event.world.BlockEvent;
@@ -27,7 +27,7 @@ import net.minecraftforge.event.world.BlockEvent;
 public class PlacementOffset {
 
 	private final boolean success;
-	private Vector3i pos;
+	private Vec3i pos;
 	private Function<BlockState, BlockState> stateTransform;
 	private BlockState ghostState;
 
@@ -46,15 +46,15 @@ public class PlacementOffset {
 		return new PlacementOffset(true);
 	}
 
-	public static PlacementOffset success(Vector3i pos) {
+	public static PlacementOffset success(Vec3i pos) {
 		return success().at(pos);
 	}
 
-	public static PlacementOffset success(Vector3i pos, Function<BlockState, BlockState> transform) {
+	public static PlacementOffset success(Vec3i pos, Function<BlockState, BlockState> transform) {
 		return success().at(pos).withTransform(transform);
 	}
 
-	public PlacementOffset at(Vector3i pos) {
+	public PlacementOffset at(Vec3i pos) {
 		this.pos = pos;
 		return this;
 	}
@@ -73,7 +73,7 @@ public class PlacementOffset {
 		return success;
 	}
 
-	public Vector3i getPos() {
+	public Vec3i getPos() {
 		return pos;
 	}
 
@@ -96,26 +96,26 @@ public class PlacementOffset {
 		return ghostState;
 	}
 
-	public boolean isReplaceable(World world) {
+	public boolean isReplaceable(Level world) {
 		if (!success)
 			return false;
 
 		return world.getBlockState(new BlockPos(pos)).getMaterial().isReplaceable();
 	}
 
-	public ActionResultType placeInWorld(World world, BlockItem blockItem, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
+	public InteractionResult placeInWorld(Level world, BlockItem blockItem, Player player, InteractionHand hand, BlockHitResult ray) {
 
 		if (!isReplaceable(world))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		if (world.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 
-		ItemUseContext context = new ItemUseContext(player, hand, ray);
+		UseOnContext context = new UseOnContext(player, hand, ray);
 		BlockPos newPos = new BlockPos(pos);
 
 		if (!world.mayInteract(player, newPos))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		BlockState state = stateTransform.apply(blockItem.getBlock().defaultBlockState());
 		if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
@@ -129,21 +129,21 @@ public class PlacementOffset {
 		BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(snapshot, IPlacementHelper.ID, player);
 		if (MinecraftForge.EVENT_BUS.post(event)) {
 			snapshot.restore(true, false);
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		BlockState newState = world.getBlockState(newPos);
 		SoundType soundtype = newState.getSoundType(world, newPos, player);
-		world.playSound(null, newPos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+		world.playSound(null, newPos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 		player.awardStat(Stats.ITEM_USED.get(blockItem));
 
-		if (player instanceof ServerPlayerEntity)
-			CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayerEntity) player, newPos, context.getItemInHand());
+		if (player instanceof ServerPlayer)
+			CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) player, newPos, context.getItemInHand());
 
 		if (!player.isCreative())
 			context.getItemInHand().shrink(1);
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

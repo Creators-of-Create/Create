@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.simibubi.create.content.schematics.SchematicWorld;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelDataManager;
@@ -25,9 +25,9 @@ public class ModelDataRefreshMixin {
 	 * worlds, so in those cases just do nothing instead.
 	 */
 	@Inject(at = @At("HEAD"), method = "requestModelDataRefresh", cancellable = true, remap = false)
-	private static void requestModelDataRefresh(TileEntity te, CallbackInfo ci) {
+	private static void requestModelDataRefresh(BlockEntity te, CallbackInfo ci) {
 		if (te != null) {
-			World world = te.getLevel();
+			Level world = te.getLevel();
 			if (world != Minecraft.getInstance().level && world instanceof SchematicWorld)
 				ci.cancel();
 		}

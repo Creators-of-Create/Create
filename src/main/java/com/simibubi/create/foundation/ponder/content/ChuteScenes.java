@@ -16,14 +16,14 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class ChuteScenes {
 
@@ -121,7 +121,7 @@ public class ChuteScenes {
 		for (int i = 0; i < 3; i++) {
 			remove = scene.world.createItemEntity(util.vector.centerOf(util.grid.at(2, 6, 3)
 				.relative(offset)), util.vector.of(0, 0.1, 0)
-					.add(Vector3d.atLowerCornerOf(offset.getNormal()).scale(-.1)),
+					.add(Vec3.atLowerCornerOf(offset.getNormal()).scale(-.1)),
 				stack);
 			scene.idle(12);
 			scene.world.createItemOnBeltLike(util.grid.at(2, 4, 3), Direction.UP, stack);
@@ -151,7 +151,7 @@ public class ChuteScenes {
 		scene.world.showSection(chute, Direction.DOWN);
 		scene.idle(20);
 		scene.world.setKineticSpeed(util.select.position(1, 1, 2), 0);
-		Vector3d surface = util.vector.blockSurface(util.grid.at(1, 2, 2), Direction.WEST);
+		Vec3 surface = util.vector.blockSurface(util.grid.at(1, 2, 2), Direction.WEST);
 		scene.overlay.showText(70)
 			.text("Using Encased Fans at the top or bottom, a Chute can move items upward")
 			.attachKeyFrame()
@@ -210,7 +210,7 @@ public class ChuteScenes {
 			.placeNearTarget();
 		scene.idle(70);
 
-		Vector3d filter = util.vector.blockSurface(smarty, Direction.NORTH)
+		Vec3 filter = util.vector.blockSurface(smarty, Direction.NORTH)
 			.add(0, 0.25, 0);
 		scene.overlay.showFilterSlotInput(filter, 60);
 		ItemStack copper = new ItemStack(Items.IRON_INGOT);

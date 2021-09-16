@@ -23,18 +23,18 @@ import com.simibubi.create.foundation.ponder.elements.ParrotElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class RedstoneScenes {
 
@@ -249,7 +249,7 @@ public class RedstoneScenes {
 		scene.world.showSection(util.select.position(circuitPos), Direction.DOWN);
 		scene.idle(20);
 
-		Vector3d circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
+		Vec3 circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
 			.add(0, 3 / 16f, 0);
 		scene.overlay.showText(70)
 			.text("Adjustable Repeaters behave similarly to regular Repeaters")
@@ -326,7 +326,7 @@ public class RedstoneScenes {
 		scene.world.showSection(util.select.position(circuitPos), Direction.DOWN);
 		scene.idle(20);
 
-		Vector3d circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
+		Vec3 circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
 			.add(0, 3 / 16f, 0);
 
 		scene.effects.indicateRedstone(leverPos);
@@ -380,7 +380,7 @@ public class RedstoneScenes {
 
 		BlockPos circuitPos = util.grid.at(2, 1, 2);
 		BlockPos buttonPos = util.grid.at(4, 1, 2);
-		Vector3d circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
+		Vec3 circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
 			.add(0, 3 / 16f, 0);
 
 		scene.world.showSection(util.select.layersFrom(1)
@@ -402,7 +402,7 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 3, 1, 2));
 
-		AxisAlignedBB bb = new AxisAlignedBB(circuitPos).inflate(-.48f, -.45f, -.05f)
+		AABB bb = new AABB(circuitPos).inflate(-.48f, -.45f, -.05f)
 			.move(.575, -.45, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 40);
 		scene.overlay.showText(40)
@@ -419,9 +419,9 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.toggleRedstonePower(util.select.fromTo(2, 1, 0, 2, 1, 1));
 
-		bb = new AxisAlignedBB(circuitPos).inflate(-.05f, -.45f, -.48f)
+		bb = new AABB(circuitPos).inflate(-.05f, -.45f, -.48f)
 			.move(0, -.45, .575);
-		AxisAlignedBB bb2 = new AxisAlignedBB(circuitPos).inflate(-.05f, -.45f, -.48f)
+		AABB bb2 = new AABB(circuitPos).inflate(-.05f, -.45f, -.48f)
 			.move(0, -.45, -.575);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb, bb, 40);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.RED, bb2, bb2, 40);
@@ -460,7 +460,7 @@ public class RedstoneScenes {
 
 		BlockPos circuitPos = util.grid.at(2, 1, 2);
 		BlockPos buttonPos = util.grid.at(4, 1, 2);
-		Vector3d circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
+		Vec3 circuitTop = util.vector.blockSurface(circuitPos, Direction.DOWN)
 			.add(0, 3 / 16f, 0);
 
 		scene.world.showSection(util.select.layersFrom(1)
@@ -482,7 +482,7 @@ public class RedstoneScenes {
 		scene.idle(30);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 3, 1, 2));
 
-		AxisAlignedBB bb = new AxisAlignedBB(circuitPos).inflate(-.48f, -.45f, -.05f)
+		AABB bb = new AABB(circuitPos).inflate(-.48f, -.45f, -.05f)
 			.move(.575, -.45, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 40);
 		scene.overlay.showText(40)
@@ -538,7 +538,7 @@ public class RedstoneScenes {
 		Selection leverSelection = util.select.fromTo(2, 1, 2, 2, 2, 2);
 		Selection lamp = util.select.position(4, 1, 0);
 		BlockPos leverPos = util.grid.at(2, 2, 2);
-		Vector3d leverVec = util.vector.centerOf(leverPos)
+		Vec3 leverVec = util.vector.centerOf(leverPos)
 			.add(0, -.25, 0);
 
 		scene.world.showSection(util.select.layersFrom(0)
@@ -558,7 +558,7 @@ public class RedstoneScenes {
 			.pointAt(leverVec);
 		scene.idle(70);
 
-		IntegerProperty power = RedstoneWireBlock.POWER;
+		IntegerProperty power = RedStoneWireBlock.POWER;
 		scene.overlay.showControls(new InputWindowElement(leverVec, Pointing.DOWN).rightClick(), 40);
 		scene.idle(7);
 		for (int i = 0; i < 7; i++) {
@@ -633,11 +633,11 @@ public class RedstoneScenes {
 		scene.effects.indicateRedstone(util.grid.at(2, 1, 1));
 		scene.world.modifyTileNBT(util.select.position(2, 1, 1), AnalogLeverTileEntity.class,
 			nbt -> nbt.putInt("State", 11));
-		scene.world.modifyBlock(util.grid.at(2, 1, 2), s -> s.setValue(RedstoneWireBlock.POWER, 11), false);
+		scene.world.modifyBlock(util.grid.at(2, 1, 2), s -> s.setValue(RedStoneWireBlock.POWER, 11), false);
 		scene.world.modifyTileNBT(tubes, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 11));
 		scene.idle(20);
 
-		Vector3d centerTube = util.vector.centerOf(2, 1, 3);
+		Vec3 centerTube = util.vector.centerOf(2, 1, 3);
 
 		scene.overlay.showText(60)
 			.attachKeyFrame()
@@ -658,12 +658,12 @@ public class RedstoneScenes {
 			.withItem(new ItemStack(Items.NAME_TAG)), 40);
 		scene.idle(7);
 
-		ITextComponent component = new StringTextComponent("CREATE");
+		Component component = new TextComponent("CREATE");
 		for (int i = 0; i < 3; i++) {
 			final int index = i;
 			scene.world.modifyTileNBT(util.select.position(3 - i, 1, 3), NixieTubeTileEntity.class, nbt -> {
 				nbt.putString("RawCustomText", component.getString());
-				nbt.putString("CustomText", ITextComponent.Serializer.toJson(component));
+				nbt.putString("CustomText", Component.Serializer.toJson(component));
 				nbt.putInt("CustomTextIndex", index);
 			});
 		}
@@ -718,11 +718,11 @@ public class RedstoneScenes {
 		Selection link1Select = util.select.position(link1Pos);
 		Selection link2Select = util.select.position(link2Pos);
 		Selection link3Select = util.select.position(link3Pos);
-		Vector3d link1Vec = util.vector.blockSurface(link1Pos, Direction.DOWN)
+		Vec3 link1Vec = util.vector.blockSurface(link1Pos, Direction.DOWN)
 			.add(0, 3 / 16f, 0);
-		Vector3d link2Vec = util.vector.blockSurface(link2Pos, Direction.SOUTH)
+		Vec3 link2Vec = util.vector.blockSurface(link2Pos, Direction.SOUTH)
 			.add(0, 0, -3 / 16f);
-		Vector3d link3Vec = util.vector.blockSurface(link3Pos, Direction.SOUTH)
+		Vec3 link3Vec = util.vector.blockSurface(link3Pos, Direction.SOUTH)
 			.add(0, 0, -3 / 16f);
 
 		scene.world.showSection(link1Select, Direction.DOWN);
@@ -782,12 +782,12 @@ public class RedstoneScenes {
 		scene.world.toggleRedstonePower(util.select.fromTo(3, 2, 3, 1, 2, 2));
 		scene.idle(20);
 
-		Vector3d frontSlot = link1Vec.add(.18, -.05, -.15);
-		Vector3d backSlot = link1Vec.add(.18, -.05, .15);
-		Vector3d top2Slot = link2Vec.add(-.09, .15, 0);
-		Vector3d bottom2Slot = link2Vec.add(-.09, -.2, 0);
-		Vector3d top3Slot = link3Vec.add(-.09, .15, 0);
-		Vector3d bottom3Slot = link3Vec.add(-.09, -.2, 0);
+		Vec3 frontSlot = link1Vec.add(.18, -.05, -.15);
+		Vec3 backSlot = link1Vec.add(.18, -.05, .15);
+		Vec3 top2Slot = link2Vec.add(-.09, .15, 0);
+		Vec3 bottom2Slot = link2Vec.add(-.09, -.2, 0);
+		Vec3 top3Slot = link3Vec.add(-.09, .15, 0);
+		Vec3 bottom3Slot = link3Vec.add(-.09, -.2, 0);
 
 		scene.addKeyframe();
 		scene.idle(10);
@@ -809,30 +809,30 @@ public class RedstoneScenes {
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(frontSlot, Pointing.UP).withItem(sapling), 40);
 		scene.world.modifyTileNBT(link1Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundTag())));
 		scene.idle(7);
 		scene.world.modifyTileNBT(link1Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(top2Slot, Pointing.DOWN).withItem(iron), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(bottom2Slot, Pointing.UP).withItem(sapling), 40);
 		scene.world.modifyTileNBT(link2Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyLast", iron.save(new CompoundTag())));
 		scene.idle(7);
 		scene.world.modifyTileNBT(link2Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
 		scene.overlay.showControls(new InputWindowElement(top3Slot, Pointing.DOWN).withItem(gold), 40);
 		scene.idle(7);
 		scene.overlay.showControls(new InputWindowElement(bottom3Slot, Pointing.UP).withItem(sapling), 40);
 		scene.world.modifyTileNBT(link3Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyLast", gold.save(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyLast", gold.save(new CompoundTag())));
 		scene.idle(7);
 		scene.world.modifyTileNBT(link3Select, RedstoneLinkTileEntity.class,
-			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundNBT())));
+			nbt -> nbt.put("FrequencyFirst", sapling.save(new CompoundTag())));
 		scene.idle(20);
 
 		scene.world.toggleRedstonePower(redstone);

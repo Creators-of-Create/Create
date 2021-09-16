@@ -1,14 +1,14 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.level.Level;
 
 public abstract class ProperProjectileEntity extends Entity {
 
-	public ProperProjectileEntity(EntityType<?> p_i48580_1_, World p_i48580_2_) {
+	public ProperProjectileEntity(EntityType<?> p_i48580_1_, Level p_i48580_2_) {
 		super(p_i48580_1_, p_i48580_2_);
 		// TODO Auto-generated constructor stub
 	}
@@ -20,19 +20,19 @@ public abstract class ProperProjectileEntity extends Entity {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(CompoundNBT p_70037_1_) {
+	protected void readAdditionalSaveData(CompoundTag p_70037_1_) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void addAdditionalSaveData(CompoundNBT p_213281_1_) {
+	protected void addAdditionalSaveData(CompoundTag p_213281_1_) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket() {
+	public Packet<?> getAddEntityPacket() {
 		// TODO Auto-generated method stub
 		return null;
 	}

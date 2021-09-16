@@ -14,22 +14,22 @@ import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonnullType;
 
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.block.WallBlock;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public abstract class PaletteBlockPartial<B extends Block> {
 
-	public static final PaletteBlockPartial<StairsBlock> STAIR = new Stairs();
+	public static final PaletteBlockPartial<StairBlock> STAIR = new Stairs();
 	public static final PaletteBlockPartial<SlabBlock> SLAB = new Slab(false);
 	public static final PaletteBlockPartial<SlabBlock> UNIQUE_SLAB = new Slab(true);
 	public static final PaletteBlockPartial<WallBlock> WALL = new Wall();
@@ -74,9 +74,9 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		return builder;
 	}
 
-	protected abstract Iterable<ITag.INamedTag<Block>> getBlockTags();
+	protected abstract Iterable<Tag.Named<Block>> getBlockTags();
 
-	protected abstract Iterable<ITag.INamedTag<Item>> getItemTags();
+	protected abstract Iterable<Tag.Named<Item>> getItemTags();
 
 	protected abstract B createBlock(Supplier<? extends Block> block);
 
@@ -86,31 +86,31 @@ public abstract class PaletteBlockPartial<B extends Block> {
 	protected abstract void generateBlockState(DataGenContext<Block, B> ctx, RegistrateBlockstateProvider prov,
 		String variantName, PaletteBlockPattern pattern, Supplier<? extends Block> block);
 
-	private static class Stairs extends PaletteBlockPartial<StairsBlock> {
+	private static class Stairs extends PaletteBlockPartial<StairBlock> {
 
 		public Stairs() {
 			super("stairs");
 		}
 
 		@Override
-		protected StairsBlock createBlock(Supplier<? extends Block> block) {
-			return new StairsBlock(() -> block.get()
+		protected StairBlock createBlock(Supplier<? extends Block> block) {
+			return new StairBlock(() -> block.get()
 				.defaultBlockState(), Properties.copy(block.get()));
 		}
 
 		@Override
-		protected void generateBlockState(DataGenContext<Block, StairsBlock> ctx, RegistrateBlockstateProvider prov,
+		protected void generateBlockState(DataGenContext<Block, StairBlock> ctx, RegistrateBlockstateProvider prov,
 			String variantName, PaletteBlockPattern pattern, Supplier<? extends Block> block) {
 			prov.stairsBlock(ctx.get(), getMainTexture(variantName, pattern));
 		}
 
 		@Override
-		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
+		protected Iterable<Tag.Named<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.STAIRS);
 		}
 
 		@Override
-		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
+		protected Iterable<Tag.Named<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.STAIRS);
 		}
 
@@ -165,12 +165,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
+		protected Iterable<Tag.Named<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.SLABS);
 		}
 
 		@Override
-		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
+		protected Iterable<Tag.Named<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.SLABS);
 		}
 
@@ -218,12 +218,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		}
 
 		@Override
-		protected Iterable<ITag.INamedTag<Block>> getBlockTags() {
+		protected Iterable<Tag.Named<Block>> getBlockTags() {
 			return Arrays.asList(BlockTags.WALLS);
 		}
 
 		@Override
-		protected Iterable<ITag.INamedTag<Item>> getItemTags() {
+		protected Iterable<Tag.Named<Item>> getItemTags() {
 			return Arrays.asList(ItemTags.WALLS);
 		}
 

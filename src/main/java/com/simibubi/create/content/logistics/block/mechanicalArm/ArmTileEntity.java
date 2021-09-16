@@ -25,20 +25,20 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.JukeboxBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.JukeboxBlock;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -48,7 +48,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	// Server
 	List<ArmInteractionPoint> inputs;
 	List<ArmInteractionPoint> outputs;
-	ListNBT interactionPointTag;
+	ListTag interactionPointTag;
 
 	// Both
 	float chasedPointProgress;
@@ -76,11 +76,11 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
 	}
 
-	public ArmTileEntity(TileEntityType<?> typeIn) {
+	public ArmTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 		inputs = new ArrayList<>();
 		outputs = new ArrayList<>();
-		interactionPointTag = new ListNBT();
+		interactionPointTag = new ListTag();
 		heldItem = ItemStack.EMPTY;
 		phase = Phase.SEARCH_INPUTS;
 		previousTarget = ArmAngleTarget.NO_TARGET;
@@ -161,7 +161,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB makeRenderBoundingBox() {
+	public AABB makeRenderBoundingBox() {
 		return super.makeRenderBoundingBox().inflate(3);
 	}
 
@@ -199,8 +199,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 			previousTarget = ArmAngleTarget.NO_TARGET;
 		float progress = chasedPointProgress == 1 ? 1 : (chasedPointProgress % .5f) * 2;
 
-		lowerArmAngle.set(MathHelper.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
-		upperArmAngle.set(MathHelper.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
+		lowerArmAngle.set(Mth.lerp(progress, previousTarget.lowerArmAngle, target.lowerArmAngle));
+		upperArmAngle.set(Mth.lerp(progress, previousTarget.upperArmAngle, target.upperArmAngle));
 
 		headAngle.set(AngleHelper.angleLerp(progress, previousTarget.headAngle % 360, target.headAngle % 360));
 		return false;
@@ -353,7 +353,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 				setChanged();
 
 				if (!prevHeld.sameItem(heldItem))
-					level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, .125f,
+					level.playSound(null, worldPosition, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .125f,
 							.5f + Create.RANDOM.nextFloat() * .25f);
 				return;
 			}
@@ -391,8 +391,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		if (interactionPointTag == null)
 			return;
 
-		for (INBT inbt : interactionPointTag) {
-			ArmInteractionPoint.transformPos(transform, (CompoundNBT) inbt);
+		for (Tag inbt : interactionPointTag) {
+			ArmInteractionPoint.transformPos(transform, (CompoundTag) inbt);
 		}
 
 		sendData();
@@ -408,8 +408,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		outputs.clear();
 
 		boolean hasBlazeBurner = false;
-		for (INBT inbt : interactionPointTag) {
-			ArmInteractionPoint point = ArmInteractionPoint.deserialize(level, worldPosition, (CompoundNBT) inbt);
+		for (Tag inbt : interactionPointTag) {
+			ArmInteractionPoint point = ArmInteractionPoint.deserialize(level, worldPosition, (CompoundTag) inbt);
 			if (point == null)
 				continue;
 			if (point.mode == Mode.DEPOSIT)
@@ -431,11 +431,11 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		setChanged();
 	}
 
-	public void writeInteractionPoints(CompoundNBT compound) {
+	public void writeInteractionPoints(CompoundTag compound) {
 		if (updateInteractionPoints) {
 			compound.put("InteractionPoints", interactionPointTag);
 		} else {
-			ListNBT pointsNBT = new ListNBT();
+			ListTag pointsNBT = new ListTag();
 			inputs.stream()
 					.map(aip -> aip.serialize(worldPosition))
 					.forEach(pointsNBT::add);
@@ -447,7 +447,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 
 		writeInteractionPoints(compound);
@@ -460,17 +460,17 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void writeSafe(CompoundNBT compound, boolean clientPacket) {
+	public void writeSafe(CompoundTag compound, boolean clientPacket) {
 		super.writeSafe(compound, clientPacket);
 
 		writeInteractionPoints(compound);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		int previousIndex = chasedPointIndex;
 		Phase previousPhase = phase;
-		ListNBT interactionPointTagBefore = interactionPointTag;
+		ListTag interactionPointTagBefore = interactionPointTag;
 
 		super.fromTag(state, compound, clientPacket);
 		heldItem = ItemStack.of(compound.getCompound("HeldItem"));
@@ -504,7 +504,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (isPlayerSneaking)
@@ -530,9 +530,9 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		}
 
 		@Override
-		protected Vector3d getLocalOffset(BlockState state) {
+		protected Vec3 getLocalOffset(BlockState state) {
 			int yPos = state.getValue(ArmBlock.CEILING) ? 16 - 3 : 3;
-			Vector3d location = VecHelper.voxelSpace(8, yPos, 15.95);
+			Vec3 location = VecHelper.voxelSpace(8, yPos, 15.95);
 			location = VecHelper.rotateCentered(location, AngleHelper.horizontalAngle(getSide()), Direction.Axis.Y);
 			return location;
 		}

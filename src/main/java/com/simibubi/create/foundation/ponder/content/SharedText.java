@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class SharedText {
 

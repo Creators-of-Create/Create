@@ -11,26 +11,26 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox.TextValueBox
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class ScrollValueRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult target = mc.hitResult;
-		if (target == null || !(target instanceof BlockRayTraceResult))
+		HitResult target = mc.hitResult;
+		if (target == null || !(target instanceof BlockHitResult))
 			return;
 
-		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = mc.level;
+		BlockHitResult result = (BlockHitResult) target;
+		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
 		Direction face = result.getDirection();
 
@@ -54,23 +54,23 @@ public class ScrollValueRenderer {
 			addBox(world, pos, face, behaviour, highlight);
 	}
 
-	protected static void addBox(ClientWorld world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,
+	protected static void addBox(ClientLevel world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,
 		boolean highlight) {
-		AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.5f)
+		AABB bb = new AABB(Vec3.ZERO, Vec3.ZERO).inflate(.5f)
 			.contract(0, 0, -.5f)
 			.move(0, 0, -.125f);
-		ITextComponent label = behaviour.label;
+		Component label = behaviour.label;
 		ValueBox box;
 
 		if (behaviour instanceof ScrollOptionBehaviour) {
 			box = new IconValueBox(label, ((ScrollOptionBehaviour<?>) behaviour).getIconForSelected(), bb, pos);
 		} else {
-			box = new TextValueBox(label, bb, pos, new StringTextComponent(behaviour.formatValue()));
+			box = new TextValueBox(label, bb, pos, new TextComponent(behaviour.formatValue()));
 			if (behaviour.unit != null)
-				box.subLabel(new StringTextComponent("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
+				box.subLabel(new TextComponent("(").append(behaviour.unit.apply(behaviour.scrollableValue)).append(")"));
 		}
 
-		box.scrollTooltip(new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]"));
+		box.scrollTooltip(new TextComponent("[").append(Lang.translate("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
 				.withColors(0x5A5D5A, 0xB5B7B6)
 				.passive(!highlight);

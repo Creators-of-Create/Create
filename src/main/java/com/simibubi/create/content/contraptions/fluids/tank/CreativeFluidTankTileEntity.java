@@ -5,13 +5,15 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 
-	public CreativeFluidTankTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public CreativeFluidTankTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 
@@ -21,7 +23,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 	}
 	
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;
 	}
 

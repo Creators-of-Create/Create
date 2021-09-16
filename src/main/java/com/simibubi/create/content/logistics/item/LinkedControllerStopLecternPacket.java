@@ -1,13 +1,13 @@
 package com.simibubi.create.content.logistics.item;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 
 public class LinkedControllerStopLecternPacket extends LinkedControllerPacketBase {
 
-	public LinkedControllerStopLecternPacket(PacketBuffer buffer) {
+	public LinkedControllerStopLecternPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
 
@@ -16,11 +16,11 @@ public class LinkedControllerStopLecternPacket extends LinkedControllerPacketBas
 	}
 
 	@Override
-	protected void handleLectern(ServerPlayerEntity player, LecternControllerTileEntity lectern) {
+	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) {
 		lectern.tryStopUsing(player);
 	}
 
 	@Override
-	protected void handleItem(ServerPlayerEntity player, ItemStack heldItem) { }
+	protected void handleItem(ServerPlayer player, ItemStack heldItem) { }
 
 }

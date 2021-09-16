@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.command;
 
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class ToggleDebugCommand extends ConfigureConfigCommand {
 
@@ -12,7 +12,7 @@ public class ToggleDebugCommand extends ConfigureConfigCommand {
 	}
 
 	@Override
-	protected void sendPacket(ServerPlayerEntity player, String option) {
+	protected void sendPacket(ServerPlayer player, String option) {
 		AllPackets.channel.send(
 				PacketDistributor.PLAYER.with(() -> player),
 				new SConfigureConfigPacket(SConfigureConfigPacket.Actions.rainbowDebug.name(), option)

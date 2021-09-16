@@ -12,35 +12,37 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.UseAction;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.DistExecutor;
+
+import net.minecraft.world.item.Item.Properties;
 
 public abstract class ZapperItem extends Item {
 
@@ -50,17 +52,17 @@ public abstract class ZapperItem extends Item {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag() && stack.getTag()
 			.contains("BlockUsed")) {
-			String usedblock = NBTUtil.readBlockState(stack.getTag()
+			String usedblock = NbtUtils.readBlockState(stack.getTag()
 				.getCompound("BlockUsed"))
 				.getBlock()
 				.getDescriptionId();
 			ItemDescription.add(tooltip,
 				Lang.translate("terrainzapper.usingBlock",
-					new TranslationTextComponent(usedblock).withStyle(TextFormatting.GRAY))
-					.withStyle(TextFormatting.DARK_GRAY));
+					new TranslatableComponent(usedblock).withStyle(ChatFormatting.GRAY))
+					.withStyle(ChatFormatting.DARK_GRAY));
 		}
 	}
 
@@ -71,8 +73,8 @@ public abstract class ZapperItem extends Item {
 			.contains("BlockUsed")
 			&& newStack.getTag()
 				.contains("BlockUsed"))
-			differentBlock = NBTUtil.readBlockState(oldStack.getTag()
-				.getCompound("BlockUsed")) != NBTUtil.readBlockState(
+			differentBlock = NbtUtils.readBlockState(oldStack.getTag()
+				.getCompound("BlockUsed")) != NbtUtils.readBlockState(
 					newStack.getTag()
 						.getCompound("BlockUsed"));
 		return slotChanged || !isZapper(newStack) || differentBlock;
@@ -84,86 +86,86 @@ public abstract class ZapperItem extends Item {
 
 	@Nonnull
 	@Override
-	public ActionResultType useOn(ItemUseContext context) {
+	public InteractionResult useOn(UseOnContext context) {
 		// Shift -> open GUI
 		if (context.getPlayer() != null && context.getPlayer()
 			.isShiftKeyDown()) {
 			if (context.getLevel().isClientSide) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					openHandgunGUI(context.getItemInHand(), context.getHand() == Hand.OFF_HAND);
+					openHandgunGUI(context.getItemInHand(), context.getHand() == InteractionHand.OFF_HAND);
 				});
 				context.getPlayer()
 					.getCooldowns()
 					.addCooldown(context.getItemInHand()
 						.getItem(), 10);
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 		return super.useOn(context);
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		ItemStack item = player.getItemInHand(hand);
-		CompoundNBT nbt = item.getOrCreateTag();
-		boolean mainHand = hand == Hand.MAIN_HAND;
+		CompoundTag nbt = item.getOrCreateTag();
+		boolean mainHand = hand == InteractionHand.MAIN_HAND;
 
 		// Shift -> Open GUI
 		if (player.isShiftKeyDown()) {
 			if (world.isClientSide) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					openHandgunGUI(item, hand == Hand.OFF_HAND);
+					openHandgunGUI(item, hand == InteractionHand.OFF_HAND);
 				});
 				player.getCooldowns()
 					.addCooldown(item.getItem(), 10);
 			}
-			return new ActionResult<>(ActionResultType.SUCCESS, item);
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
 		}
 
 		if (ShootableGadgetItemMethods.shouldSwap(player, item, hand, this::isZapper))
-			return new ActionResult<>(ActionResultType.FAIL, item);
+			return new InteractionResultHolder<>(InteractionResult.FAIL, item);
 
 		// Check if can be used
-		ITextComponent msg = validateUsage(item);
+		Component msg = validateUsage(item);
 		if (msg != null) {
 			AllSoundEvents.DENY.play(world, player, player.blockPosition());
 			player.displayClientMessage(msg.plainCopy()
-				.withStyle(TextFormatting.RED), true);
-			return new ActionResult<>(ActionResultType.FAIL, item);
+				.withStyle(ChatFormatting.RED), true);
+			return new InteractionResultHolder<>(InteractionResult.FAIL, item);
 		}
 
 		BlockState stateToUse = Blocks.AIR.defaultBlockState();
 		if (nbt.contains("BlockUsed"))
-			stateToUse = NBTUtil.readBlockState(nbt.getCompound("BlockUsed"));
+			stateToUse = NbtUtils.readBlockState(nbt.getCompound("BlockUsed"));
 		stateToUse = BlockHelper.setZeroAge(stateToUse);
-		CompoundNBT data = null;
+		CompoundTag data = null;
 		if (AllBlockTags.SAFE_NBT.matches(stateToUse) && nbt.contains("BlockData", NBT.TAG_COMPOUND)) {
 			data = nbt.getCompound("BlockData");
 		}
 
 		// Raytrace - Find the target
-		Vector3d start = player.position()
+		Vec3 start = player.position()
 			.add(0, player.getEyeHeight(), 0);
-		Vector3d range = player.getLookAngle()
+		Vec3 range = player.getLookAngle()
 			.scale(getZappingRange(item));
-		BlockRayTraceResult raytrace = world
-			.clip(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		BlockHitResult raytrace = world
+			.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
 		BlockPos pos = raytrace.getBlockPos();
 		BlockState stateReplaced = world.getBlockState(pos);
 
 		// No target
 		if (pos == null || stateReplaced.getBlock() == Blocks.AIR) {
 			ShootableGadgetItemMethods.applyCooldown(player, item, hand, this::isZapper, getCooldownDelay(item));
-			return new ActionResult<>(ActionResultType.SUCCESS, item);
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
 		}
 
 		// Find exact position of gun barrel for VFX
-		Vector3d barrelPos = ShootableGadgetItemMethods.getGunBarrelVec(player, mainHand, new Vector3d(.35f, -0.1f, 1));
+		Vec3 barrelPos = ShootableGadgetItemMethods.getGunBarrelVec(player, mainHand, new Vec3(.35f, -0.1f, 1));
 
 		// Client side
 		if (world.isClientSide) {
 			CreateClient.ZAPPER_RENDER_HANDLER.dontAnimateItem(hand);
-			return new ActionResult<>(ActionResultType.SUCCESS, item);
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
 		}
 
 		// Server side
@@ -173,18 +175,18 @@ public abstract class ZapperItem extends Item {
 				b -> new ZapperBeamPacket(barrelPos, raytrace.getLocation(), hand, b));
 		}
 
-		return new ActionResult<>(ActionResultType.SUCCESS, item);
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, item);
 	}
 
-	public ITextComponent validateUsage(ItemStack item) {
-		CompoundNBT tag = item.getOrCreateTag();
+	public Component validateUsage(ItemStack item) {
+		CompoundTag tag = item.getOrCreateTag();
 		if (!canActivateWithoutSelectedBlock(item) && !tag.contains("BlockUsed"))
 			return Lang.createTranslationTextComponent("terrainzapper.leftClickToSet");
 		return null;
 	}
 
-	protected abstract boolean activate(World world, PlayerEntity player, ItemStack item, BlockState stateToUse,
-		BlockRayTraceResult raytrace, CompoundNBT data);
+	protected abstract boolean activate(Level world, Player player, ItemStack item, BlockState stateToUse,
+		BlockHitResult raytrace, CompoundTag data);
 
 	@OnlyIn(Dist.CLIENT)
 	protected abstract void openHandgunGUI(ItemStack item, boolean b);
@@ -203,18 +205,18 @@ public abstract class ZapperItem extends Item {
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+	public boolean canAttackBlock(BlockState state, Level worldIn, BlockPos pos, Player player) {
 		return false;
 	}
 
 	@Override
-	public UseAction getUseAnimation(ItemStack stack) {
-		return UseAction.NONE;
+	public UseAnim getUseAnimation(ItemStack stack) {
+		return UseAnim.NONE;
 	}
 
-	public static void setTileData(World world, BlockPos pos, BlockState state, CompoundNBT data, PlayerEntity player) {
+	public static void setTileData(Level world, BlockPos pos, BlockState state, CompoundTag data, Player player) {
 		if (data != null && AllBlockTags.SAFE_NBT.matches(state)) {
-			TileEntity tile = world.getBlockEntity(pos);
+			BlockEntity tile = world.getBlockEntity(pos);
 			if (tile != null) {
 				data = NBTProcessors.process(tile, data, !player.isCreative());
 				if (data == null)

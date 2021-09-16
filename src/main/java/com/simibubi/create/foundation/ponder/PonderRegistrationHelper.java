@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.ponder.content.PonderChapter;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class PonderRegistrationHelper {
 

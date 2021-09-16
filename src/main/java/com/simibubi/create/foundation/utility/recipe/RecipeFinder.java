@@ -12,8 +12,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.world.World;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 
 /**
  * Utility for searching through a world's recipe collection. Non-dynamic
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
  */
 public class RecipeFinder {
 	
-	private static Cache<Object, List<IRecipe<?>>> cachedSearches = CacheBuilder.newBuilder().build();
+	private static Cache<Object, List<Recipe<?>>> cachedSearches = CacheBuilder.newBuilder().build();
 
 	/**
 	 * Find all IRecipes matching the condition predicate. If this search is made
@@ -37,7 +37,7 @@ public class RecipeFinder {
 	 * @param conditions
 	 * @return A started search to continue with more specific conditions.
 	 */
-	public static List<IRecipe<?>> get(@Nullable Object cacheKey, World world, Predicate<IRecipe<?>> conditions) {
+	public static List<Recipe<?>> get(@Nullable Object cacheKey, Level world, Predicate<Recipe<?>> conditions) {
 		if (cacheKey == null)
 			return startSearch(world, conditions);
 
@@ -50,8 +50,8 @@ public class RecipeFinder {
 		return Collections.emptyList();
 	}
 
-	private static List<IRecipe<?>> startSearch(World world, Predicate<? super IRecipe<?>> conditions) {
-		List<IRecipe<?>> list = world.getRecipeManager().getRecipes().stream().filter(conditions)
+	private static List<Recipe<?>> startSearch(Level world, Predicate<? super Recipe<?>> conditions) {
+		List<Recipe<?>> list = world.getRecipeManager().getRecipes().stream().filter(conditions)
 				.collect(Collectors.toList());
 		return list;
 	}

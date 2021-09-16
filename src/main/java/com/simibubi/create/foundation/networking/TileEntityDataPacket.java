@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
@@ -20,7 +20,7 @@ public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends 
 
 	protected BlockPos tilePos;
 
-	public TileEntityDataPacket(PacketBuffer buffer) {
+	public TileEntityDataPacket(FriendlyByteBuf buffer) {
 		tilePos = buffer.readBlockPos();
 	}
 
@@ -29,7 +29,7 @@ public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends 
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(tilePos);
 		writeData(buffer);
 	}
@@ -38,12 +38,12 @@ public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends 
 	public void handle(Supplier<NetworkEvent.Context> context) {
 		NetworkEvent.Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ClientWorld world = Minecraft.getInstance().level;
+			ClientLevel world = Minecraft.getInstance().level;
 
 			if (world == null)
 				return;
 
-			TileEntity tile = world.getBlockEntity(tilePos);
+			BlockEntity tile = world.getBlockEntity(tilePos);
 
 			if (tile instanceof SyncedTileEntity) {
 				handlePacket((TE) tile);
@@ -52,7 +52,7 @@ public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends 
 		ctx.setPacketHandled(true);
 	}
 
-	protected abstract void writeData(PacketBuffer buffer);
+	protected abstract void writeData(FriendlyByteBuf buffer);
 
 	protected abstract void handlePacket(TE tile);
 }

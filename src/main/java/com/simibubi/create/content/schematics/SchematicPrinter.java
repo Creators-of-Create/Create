@@ -10,22 +10,22 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Str
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.state.properties.BedPart;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicPrinter {
 
@@ -48,13 +48,13 @@ public class SchematicPrinter {
 		deferredBlocks = new LinkedList<>();
 	}
 
-	public void fromTag(CompoundNBT compound, boolean clientPacket) {
+	public void fromTag(CompoundTag compound, boolean clientPacket) {
 		if (compound.contains("CurrentPos"))
-			currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
+			currentPos = NbtUtils.readBlockPos(compound.getCompound("CurrentPos"));
 		if (clientPacket) {
 			schematicLoaded = false;
 			if (compound.contains("Anchor")) {
-				schematicAnchor = NBTUtil.readBlockPos(compound.getCompound("Anchor"));
+				schematicAnchor = NbtUtils.readBlockPos(compound.getCompound("Anchor"));
 				schematicLoaded = true;
 			}
 		}
@@ -62,49 +62,49 @@ public class SchematicPrinter {
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		compound.getList("DeferredBlocks", 10).stream()
-			.map(p -> NBTUtil.readBlockPos((CompoundNBT) p))
+			.map(p -> NbtUtils.readBlockPos((CompoundTag) p))
 			.collect(Collectors.toCollection(() -> deferredBlocks));
 	}
 
-	public void write(CompoundNBT compound) {
+	public void write(CompoundTag compound) {
 		if (currentPos != null)
-			compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
+			compound.put("CurrentPos", NbtUtils.writeBlockPos(currentPos));
 		if (schematicAnchor != null)
-			compound.put("Anchor", NBTUtil.writeBlockPos(schematicAnchor));
+			compound.put("Anchor", NbtUtils.writeBlockPos(schematicAnchor));
 		
 		compound.putInt("EntityProgress", printingEntityIndex);
 		compound.putString("PrintStage", printStage.name());
-		ListNBT tagDeferredBlocks = new ListNBT();
+		ListTag tagDeferredBlocks = new ListTag();
 		for (BlockPos p : deferredBlocks)
-			tagDeferredBlocks.add(NBTUtil.writeBlockPos(p));
+			tagDeferredBlocks.add(NbtUtils.writeBlockPos(p));
 		compound.put("DeferredBlocks", tagDeferredBlocks);
 	}
 
-	public void loadSchematic(ItemStack blueprint, World originalWorld, boolean processNBT) {
+	public void loadSchematic(ItemStack blueprint, Level originalWorld, boolean processNBT) {
 		if (!blueprint.hasTag() || !blueprint.getTag().getBoolean("Deployed"))
 			return;
 
-		Template activeTemplate = SchematicItem.loadSchematic(blueprint);
-		PlacementSettings settings = SchematicItem.getSettings(blueprint, processNBT);
+		StructureTemplate activeTemplate = SchematicItem.loadSchematic(blueprint);
+		StructurePlaceSettings settings = SchematicItem.getSettings(blueprint, processNBT);
 
-		schematicAnchor = NBTUtil.readBlockPos(blueprint.getTag()
+		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
 			.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
 		activeTemplate.placeInWorldChunk(blockReader, schematicAnchor, settings, blockReader.getRandom());
 
-		BlockPos extraBounds = Template.calculateRelativePosition(settings, activeTemplate.getSize()
+		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, activeTemplate.getSize()
 			.offset(-1, -1, -1));
-		blockReader.bounds.expand(new MutableBoundingBox(extraBounds, extraBounds));
+		blockReader.bounds.expand(new BoundingBox(extraBounds, extraBounds));
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
-		for (TileEntity te : blockReader.tileEntities.values())
+		for (BlockEntity te : blockReader.tileEntities.values())
 			transform.apply(te);
 
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;
 		deferredBlocks.clear();
-		MutableBoundingBox bounds = blockReader.getBounds();
+		BoundingBox bounds = blockReader.getBounds();
 		currentPos = new BlockPos(bounds.x0 - 1, bounds.y0, bounds.z0);
 		schematicLoaded = true;
 	}
@@ -144,7 +144,7 @@ public class SchematicPrinter {
 
 	@FunctionalInterface
 	public interface BlockTargetHandler {
-		void handle(BlockPos target, BlockState blockState, TileEntity tileEntity);
+		void handle(BlockPos target, BlockState blockState, BlockEntity tileEntity);
 	}
 	@FunctionalInterface
 	public interface EntityTargetHandler {
@@ -161,20 +161,20 @@ public class SchematicPrinter {
 			entityHandler.handle(target, entity);
 		} else {
 			BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-			TileEntity tileEntity = blockReader.getBlockEntity(target);
+			BlockEntity tileEntity = blockReader.getBlockEntity(target);
 			blockHandler.handle(target, blockState, tileEntity);
 		}
 	}
 
 	@FunctionalInterface
 	public interface PlacementPredicate {
-		boolean shouldPlace(BlockPos target, BlockState blockState, TileEntity tileEntity,
+		boolean shouldPlace(BlockPos target, BlockState blockState, BlockEntity tileEntity,
 							BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube);
 	}
 
-	public boolean shouldPlaceCurrent(World world) { return shouldPlaceCurrent(world, (a,b,c,d,e,f) -> true); }
+	public boolean shouldPlaceCurrent(Level world) { return shouldPlaceCurrent(world, (a,b,c,d,e,f) -> true); }
 
-	public boolean shouldPlaceCurrent(World world, PlacementPredicate predicate) {
+	public boolean shouldPlaceCurrent(Level world, PlacementPredicate predicate) {
 		if (world == null)
 			return false;
 
@@ -184,9 +184,9 @@ public class SchematicPrinter {
 		return shouldPlaceBlock(world, predicate, getCurrentTarget());
 	}
 
-	public boolean shouldPlaceBlock(World world, PlacementPredicate predicate, BlockPos pos) {
+	public boolean shouldPlaceBlock(Level world, PlacementPredicate predicate, BlockPos pos) {
 		BlockState state = BlockHelper.setZeroAge(blockReader.getBlockState(pos));
-		TileEntity tileEntity = blockReader.getBlockEntity(pos);
+		BlockEntity tileEntity = blockReader.getBlockEntity(pos);
 
 		BlockState toReplace = world.getBlockState(pos);
 		BlockState toReplaceOther = null;
@@ -219,16 +219,16 @@ public class SchematicPrinter {
 
 		BlockPos target = getCurrentTarget();
 		BlockState blockState = BlockHelper.setZeroAge(blockReader.getBlockState(target));
-		TileEntity tileEntity = blockReader.getBlockEntity(target);
+		BlockEntity tileEntity = blockReader.getBlockEntity(target);
 		return ItemRequirement.of(blockState, tileEntity);
 	}
 
-	public int markAllBlockRequirements(MaterialChecklist checklist, World world, PlacementPredicate predicate) {
+	public int markAllBlockRequirements(MaterialChecklist checklist, Level world, PlacementPredicate predicate) {
 		int blocksToPlace = 0;
 		for (BlockPos pos : blockReader.getAllPositions()) {
 			BlockPos relPos = pos.offset(schematicAnchor);
 			BlockState required = blockReader.getBlockState(relPos);
-			TileEntity requiredTE = blockReader.getBlockEntity(relPos);
+			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
 
 			if (!world.isAreaLoaded(pos.offset(schematicAnchor), 0)) {
 				checklist.warnBlockNotLoaded();
@@ -294,7 +294,7 @@ public class SchematicPrinter {
 
 	public boolean tryAdvanceCurrentPos() {
 		currentPos = currentPos.relative(Direction.EAST);
-		MutableBoundingBox bounds = blockReader.getBounds();
+		BoundingBox bounds = blockReader.getBounds();
 		BlockPos posInBounds = currentPos.offset(-bounds.x0, -bounds.y0, -bounds.z0);
 
 		if (posInBounds.getX() > bounds.getXSpan())

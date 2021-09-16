@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.bell;
 import com.simibubi.create.content.contraptions.components.actors.BellMovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public class HauntedBellMovementBehaviour extends BellMovementBehaviour {
 

@@ -3,11 +3,13 @@ package com.simibubi.create.content.curiosities.bell;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 
@@ -16,7 +18,7 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.HAUNTED_BELL.create();
 	}
 
@@ -26,12 +28,12 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	}
 
 	@Override
-	public void playSound(World world, BlockPos pos) {
+	public void playSound(Level world, BlockPos pos) {
 		AllSoundEvents.HAUNTED_BELL_USE.playOnServer(world, pos, 4f, 1f);
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (oldState.getBlock() != this)
 			withTileEntityDo(world, pos, HauntedBellTileEntity::startEffect);
 	}

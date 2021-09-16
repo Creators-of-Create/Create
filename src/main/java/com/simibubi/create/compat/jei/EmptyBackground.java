@@ -1,6 +1,6 @@
 package com.simibubi.create.compat.jei;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 
@@ -25,6 +25,6 @@ public class EmptyBackground implements IDrawable {
 	}
 
 	@Override
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {}
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {}
 
 }

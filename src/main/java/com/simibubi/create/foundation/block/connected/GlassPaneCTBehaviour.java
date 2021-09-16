@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.block.connected;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 public class GlassPaneCTBehaviour extends StandardCTBehaviour {
 
@@ -18,13 +18,13 @@ public class GlassPaneCTBehaviour extends StandardCTBehaviour {
 	}
 
 	@Override
-	public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
+	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 		return state.getBlock() == other.getBlock();
 	}
 
 	@Override
-	protected boolean reverseUVsHorizontally(BlockState state, net.minecraft.util.Direction face) {
+	protected boolean reverseUVsHorizontally(BlockState state, net.minecraft.core.Direction face) {
 		if (face.getAxisDirection() == AxisDirection.NEGATIVE)
 			return true;
 		return super.reverseUVsHorizontally(state, face);

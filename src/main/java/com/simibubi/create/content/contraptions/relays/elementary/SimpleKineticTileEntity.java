@@ -7,14 +7,14 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 
 public class SimpleKineticTileEntity extends KineticTileEntity {
 
-	public SimpleKineticTileEntity(TileEntityType<? extends SimpleKineticTileEntity> type) {
+	public SimpleKineticTileEntity(BlockEntityType<? extends SimpleKineticTileEntity> type) {
 		super(type);
 	}
 
@@ -26,8 +26,8 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(worldPosition).inflate(1);
+	public AABB makeRenderBoundingBox() {
+		return new AABB(worldPosition).inflate(1);
 	}
 
 	@Override

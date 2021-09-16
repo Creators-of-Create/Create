@@ -14,10 +14,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class SpeedControllerTileEntity extends KineticTileEntity {
 
@@ -26,7 +26,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	boolean hasBracket;
 
-	public SpeedControllerTileEntity(TileEntityType<? extends SpeedControllerTileEntity> type) {
+	public SpeedControllerTileEntity(BlockEntityType<? extends SpeedControllerTileEntity> type) {
 		super(type);
 		hasBracket = false;
 	}
@@ -46,7 +46,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 			new ScrollValueBehaviour(Lang.translate("generic.speed"), this, new ControllerValueBoxTransform());
 		targetSpeed.between(-max, max);
 		targetSpeed.value = DEFAULT_SPEED;
-		targetSpeed.moveText(new Vector3d(9, 0, 10));
+		targetSpeed.moveText(new Vec3(9, 0, 10));
 		targetSpeed.withUnit(i -> Lang.translate("generic.unit.rpm"));
 		targetSpeed.withCallback(i -> this.updateTargetRotation());
 		targetSpeed.withStepFunction(CreativeMotorTileEntity::step);
@@ -125,7 +125,7 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 	private class ControllerValueBoxTransform extends ValueBoxTransform.Sided {
 
 		@Override
-		protected Vector3d getSouthLocation() {
+		protected Vec3 getSouthLocation() {
 			return VecHelper.voxelSpace(8, 11f, 16);
 		}
 

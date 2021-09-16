@@ -10,8 +10,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 
 public class AnimateTileEntityInstruction extends TickingInstruction {
 
@@ -74,7 +74,7 @@ public class AnimateTileEntityInstruction extends TickingInstruction {
 	}
 
 	private static <T> Optional<T> castIfPresent(PonderWorld world, BlockPos pos, Class<T> teType) {
-		TileEntity tileEntity = world.getBlockEntity(pos);
+		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (teType.isInstance(tileEntity))
 			return Optional.of(teType.cast(tileEntity));
 		return Optional.empty();

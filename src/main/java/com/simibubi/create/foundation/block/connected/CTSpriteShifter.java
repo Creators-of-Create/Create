@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.block.connected;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class CTSpriteShifter extends SpriteShifter {
 

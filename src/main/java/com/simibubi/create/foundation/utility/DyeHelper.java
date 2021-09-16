@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
 public class DyeHelper {
 
-	public static IItemProvider getWoolOfDye(DyeColor color) {
+	public static ItemLike getWoolOfDye(DyeColor color) {
 		switch (color) {
 		case BLACK:
 			return Blocks.BLACK_WOOL;

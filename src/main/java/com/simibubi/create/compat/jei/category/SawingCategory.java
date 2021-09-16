@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
@@ -14,7 +14,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 
 public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 
@@ -57,7 +57,7 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 	}
 
 	@Override
-	public void draw(CuttingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CuttingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 43, 4);
 		int size = recipe.getRollableResults()
 			.size();

@@ -7,15 +7,15 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class HauntedBellTileEntity extends AbstractBellTileEntity {
 
@@ -25,7 +25,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 
 	public int effectTicks = 0;
 
-	public HauntedBellTileEntity(TileEntityType<?> type) {
+	public HauntedBellTileEntity(BlockEntityType<?> type) {
 		super(type);
 	}
 
@@ -38,7 +38,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	public boolean ring(World world, BlockPos pos, Direction direction) {
+	public boolean ring(Level world, BlockPos pos, Direction direction) {
 		if (isRinging && ringingTicks < RECHARGE_TICKS)
 			return false;
 
@@ -59,13 +59,13 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	protected void write(CompoundNBT compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 		compound.putInt("EffectTicks", effectTicks);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		effectTicks = compound.getInt("EffectTicks");
 	}
@@ -102,7 +102,7 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	protected void playSound(Random rand) {
 		float vol = rand.nextFloat() * 0.4F + rand.nextFloat() > 0.9F ? 0.6F : 0.0F;
 		float pitch = 0.6F + rand.nextFloat() * 0.4F;
-		level.playSound(null, worldPosition, SoundEvents.SOUL_ESCAPE, SoundCategory.BLOCKS, vol, pitch);
+		level.playSound(null, worldPosition, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, vol, pitch);
 	}
 
 }

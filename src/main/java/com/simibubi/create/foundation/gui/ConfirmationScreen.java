@@ -12,22 +12,22 @@ import org.lwjgl.opengl.GL30;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.shader.Framebuffer;
-import net.minecraft.client.shader.FramebufferConstants;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.Style;
+import net.minecraft.client.gui.screens.Screen;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.platform.GlConst;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 
 public class ConfirmationScreen extends AbstractSimiScreen {
 
 	private Screen source;
 	private Consumer<Response> action = _success -> {
 	};
-	private List<ITextProperties> text = new ArrayList<>();
+	private List<FormattedText> text = new ArrayList<>();
 	private boolean centered = false;
 	private int x;
 	private int y;
@@ -60,12 +60,12 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		return this;
 	}
 
-	public ConfirmationScreen addText(ITextProperties text) {
+	public ConfirmationScreen addText(FormattedText text) {
 		this.text.add(text);
 		return this;
 	}
 
-	public ConfirmationScreen withText(ITextProperties text) {
+	public ConfirmationScreen withText(FormattedText text) {
 		return clearText().addText(text);
 	}
 
@@ -110,7 +110,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	protected void init() {
 		widgets.clear();
 
-		ArrayList<ITextProperties> copy = new ArrayList<>(text);
+		ArrayList<FormattedText> copy = new ArrayList<>(text);
 		text.clear();
 		copy.forEach(t -> text.addAll(minecraft.font.getSplitter().splitLines(t, 300, Style.EMPTY)));
 
@@ -178,7 +178,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		textBackground.render(ms);
 		int offset = minecraft.font.lineHeight + 1;
@@ -187,7 +187,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		ms.translate(0, 0, 200);
 
-		for (ITextProperties line : text) {
+		for (FormattedText line : text) {
 			lineY = lineY + offset;
 			if (line == null)
 				continue;
@@ -202,7 +202,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		endFrame();
 
 		source.render(ms, 0, 0, 10); // zero mouse coords to prevent further tooltips
@@ -214,15 +214,15 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void prepareFrame() {
-		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
-		Framebuffer mainBuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
+		RenderTarget mainBuffer = Minecraft.getInstance().getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
 		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.frameBufferId);
 		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, thisBuffer.frameBufferId);
 		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		functions.fbo.bindFramebuffer(FramebufferConstants.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
+		functions.fbo.bindFramebuffer(GlConst.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
 		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
 
 	}
@@ -230,15 +230,15 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	@Override
 	protected void endFrame() {
 
-		Framebuffer thisBuffer = UIRenderHelper.framebuffer;
-		Framebuffer mainBuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
+		RenderTarget mainBuffer = Minecraft.getInstance().getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
 		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.frameBufferId);
 		functions.fbo.bindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, mainBuffer.frameBufferId);
 		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
-		functions.fbo.bindFramebuffer(FramebufferConstants.GL_FRAMEBUFFER, mainBuffer.frameBufferId);
+		functions.fbo.bindFramebuffer(GlConst.GL_FRAMEBUFFER, mainBuffer.frameBufferId);
 	}
 
 	@Override

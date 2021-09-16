@@ -4,18 +4,18 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.Vec3;
 
 public class SmartChuteFilterSlotPositioning extends ValueBoxTransform.Sided {
 
 	@Override
-	protected Vector3d getLocalOffset(BlockState state) {
+	protected Vec3 getLocalOffset(BlockState state) {
 		Direction side = getSide();
 		float horizontalAngle = AngleHelper.horizontalAngle(side);
-		Vector3d southLocation = VecHelper.voxelSpace(8, 12, 15.5f);
+		Vec3 southLocation = VecHelper.voxelSpace(8, 12, 15.5f);
 		return VecHelper.rotateCentered(southLocation, horizontalAngle, Axis.Y);
 	}
 
@@ -26,8 +26,8 @@ public class SmartChuteFilterSlotPositioning extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected Vector3d getSouthLocation() {
-		return Vector3d.ZERO;
+	protected Vec3 getSouthLocation() {
+		return Vec3.ZERO;
 	}
 
 }

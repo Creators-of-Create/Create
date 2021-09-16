@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
@@ -10,8 +10,8 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.client.gui.Font;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class PonderProgressBar extends AbstractSimiWidget {
@@ -88,7 +88,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		isHovered = clicked(mouseX, mouseY);
 
@@ -115,7 +115,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		ms.popPose();
 	}
 
-	private void renderKeyframes(MatrixStack ms, int mouseX, float partialTicks) {
+	private void renderKeyframes(PoseStack ms, int mouseX, float partialTicks) {
 		PonderScene activeScene = ponder.getActiveScene();
 
 		int hoverStartColor = Theme.i(Theme.Key.PONDER_HOVER, true) | 0xa0_000000;
@@ -150,9 +150,9 @@ public class PonderProgressBar extends AbstractSimiWidget {
 		}
 	}
 
-	private void drawKeyframe(MatrixStack ms, PonderScene activeScene, boolean selected, int keyframeTime, int keyframePos, int startColor, int endColor, int height) {
+	private void drawKeyframe(PoseStack ms, PonderScene activeScene, boolean selected, int keyframeTime, int keyframePos, int startColor, int endColor, int height) {
 		if (selected) {
-			FontRenderer font = Minecraft.getInstance().font;
+			Font font = Minecraft.getInstance().font;
 			GuiUtils.drawGradientRect(ms.last()
 					.pose(), 100, keyframePos, 10, keyframePos + 1, 10 + height, endColor, startColor);
 			ms.pushPose();
@@ -175,7 +175,7 @@ public class PonderProgressBar extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void playDownSound(SoundHandler handler) {
+	public void playDownSound(SoundManager handler) {
 
 	}
 }

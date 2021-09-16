@@ -17,24 +17,24 @@ import com.simibubi.create.AllTags;
 import com.simibubi.create.compat.Mods;
 import com.simibubi.create.compat.dynamictrees.DynamicTree;
 
-import net.minecraft.block.BambooBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CactusBlock;
-import net.minecraft.block.ChorusFlowerBlock;
-import net.minecraft.block.ChorusPlantBlock;
-import net.minecraft.block.KelpBlock;
-import net.minecraft.block.KelpTopBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.SugarCaneBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.BambooBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CactusBlock;
+import net.minecraft.world.level.block.ChorusFlowerBlock;
+import net.minecraft.world.level.block.ChorusPlantBlock;
+import net.minecraft.world.level.block.KelpPlantBlock;
+import net.minecraft.world.level.block.KelpBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 public class TreeCutter {
 	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
@@ -58,7 +58,7 @@ public class TreeCutter {
 	 * @return null if not found or not fully cut
 	 */
 	@Nonnull
-	public static Tree findTree(@Nullable IBlockReader reader, BlockPos pos) {
+	public static Tree findTree(@Nullable BlockGetter reader, BlockPos pos) {
 		if (reader == null)
 			return NO_TREE;
 
@@ -172,9 +172,9 @@ public class TreeCutter {
 			return true;
 		if (block instanceof SugarCaneBlock)
 			return true;
-		if (block instanceof KelpBlock)
+		if (block instanceof KelpPlantBlock)
 			return true;
-		return block instanceof KelpTopBlock;
+		return block instanceof KelpBlock;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class TreeCutter {
 	 * @param pos
 	 * @return
 	 */
-	private static boolean validateCut(IBlockReader reader, BlockPos pos) {
+	private static boolean validateCut(BlockGetter reader, BlockPos pos) {
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 		frontier.add(pos);
@@ -246,7 +246,7 @@ public class TreeCutter {
 		}
 
 		@Override
-		public void destroyBlocks(World world, ItemStack toDamage, @Nullable PlayerEntity playerEntity,
+		public void destroyBlocks(Level world, ItemStack toDamage, @Nullable Player playerEntity,
 			BiConsumer<BlockPos, ItemStack> drop) {
 			logs.forEach(makeCallbackFor(world, 1 / 2f, toDamage, playerEntity, drop));
 			leaves.forEach(makeCallbackFor(world, 1 / 8f, toDamage, playerEntity, drop));

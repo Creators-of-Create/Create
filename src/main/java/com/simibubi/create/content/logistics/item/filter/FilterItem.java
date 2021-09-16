@@ -13,26 +13,26 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -41,7 +41,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class FilterItem extends Item implements INamedContainerProvider {
+import net.minecraft.world.item.Item.Properties;
+
+public class FilterItem extends Item implements MenuProvider {
 
 	private FilterType type;
 
@@ -64,44 +66,44 @@ public class FilterItem extends Item implements INamedContainerProvider {
 
 	@Nonnull
 	@Override
-	public ActionResultType useOn(ItemUseContext context) {
+	public InteractionResult useOn(UseOnContext context) {
 		if (context.getPlayer() == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		return use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (!AllKeys.shiftDown()) {
-			List<ITextComponent> makeSummary = makeSummary(stack);
+			List<Component> makeSummary = makeSummary(stack);
 			if (makeSummary.isEmpty())
 				return;
-			ItemDescription.add(tooltip, new StringTextComponent(" "));
+			ItemDescription.add(tooltip, new TextComponent(" "));
 			ItemDescription.add(tooltip, makeSummary);
 		}
 	}
 
-	private List<ITextComponent> makeSummary(ItemStack filter) {
-		List<ITextComponent> list = new ArrayList<>();
+	private List<Component> makeSummary(ItemStack filter) {
+		List<Component> list = new ArrayList<>();
 
 		if (type == FilterType.REGULAR) {
 			ItemStackHandler filterItems = getFilterItems(filter);
 			boolean blacklist = filter.getOrCreateTag()
 				.getBoolean("Blacklist");
 
-			list.add((blacklist ? Lang.translate("gui.filter.deny_list") : Lang.translate("gui.filter.allow_list")).withStyle(TextFormatting.GOLD));
+			list.add((blacklist ? Lang.translate("gui.filter.deny_list") : Lang.translate("gui.filter.allow_list")).withStyle(ChatFormatting.GOLD));
 			int count = 0;
 			for (int i = 0; i < filterItems.getSlots(); i++) {
 				if (count > 3) {
-					list.add(new StringTextComponent("- ...").withStyle(TextFormatting.DARK_GRAY));
+					list.add(new TextComponent("- ...").withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
 
 				ItemStack filterStack = filterItems.getStackInSlot(i);
 				if (filterStack.isEmpty())
 					continue;
-				list.add(new StringTextComponent("- ").append(filterStack.getHoverName()).withStyle(TextFormatting.GRAY));
+				list.add(new TextComponent("- ").append(filterStack.getHoverName()).withStyle(ChatFormatting.GRAY));
 				count++;
 			}
 
@@ -116,20 +118,20 @@ public class FilterItem extends Item implements INamedContainerProvider {
 				? Lang.translate("gui.attribute_filter.allow_list_conjunctive")
 				: whitelistMode == WhitelistMode.WHITELIST_DISJ
 					? Lang.translate("gui.attribute_filter.allow_list_disjunctive")
-					: Lang.translate("gui.attribute_filter.deny_list")).withStyle(TextFormatting.GOLD));
+					: Lang.translate("gui.attribute_filter.deny_list")).withStyle(ChatFormatting.GOLD));
 
 			int count = 0;
-			ListNBT attributes = filter.getOrCreateTag()
+			ListTag attributes = filter.getOrCreateTag()
 				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
-			for (INBT inbt : attributes) {
-				CompoundNBT compound = (CompoundNBT) inbt;
+			for (Tag inbt : attributes) {
+				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
 				boolean inverted = compound.getBoolean("Inverted");
 				if (count > 3) {
-					list.add(new StringTextComponent("- ...").withStyle(TextFormatting.DARK_GRAY));
+					list.add(new TextComponent("- ...").withStyle(ChatFormatting.DARK_GRAY));
 					break;
 				}
-				list.add(new StringTextComponent("- ").append(attribute.format(inverted)));
+				list.add(new TextComponent("- ").append(attribute.format(inverted)));
 				count++;
 			}
 
@@ -141,21 +143,21 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (!player.isShiftKeyDown() && hand == Hand.MAIN_HAND) {
-			if (!world.isClientSide && player instanceof ServerPlayerEntity)
-				NetworkHooks.openGui((ServerPlayerEntity) player, this, buf -> {
+		if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+			if (!world.isClientSide && player instanceof ServerPlayer)
+				NetworkHooks.openGui((ServerPlayer) player, this, buf -> {
 					buf.writeItem(heldItem);
 				});
-			return ActionResult.success(heldItem);
+			return InteractionResultHolder.success(heldItem);
 		}
-		return ActionResult.pass(heldItem);
+		return InteractionResultHolder.pass(heldItem);
 	}
 
 	@Override
-	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		ItemStack heldItem = player.getMainHandItem();
 		if (type == FilterType.REGULAR)
 			return FilterContainer.create(id, inv, heldItem);
@@ -165,29 +167,29 @@ public class FilterItem extends Item implements INamedContainerProvider {
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(getDescriptionId());
+	public Component getDisplayName() {
+		return new TranslatableComponent(getDescriptionId());
 	}
 
 	public static ItemStackHandler getFilterItems(ItemStack stack) {
 		ItemStackHandler newInv = new ItemStackHandler(18);
 		if (AllItems.FILTER.get() != stack.getItem())
 			throw new IllegalArgumentException("Cannot get filter items from non-filter: " + stack);
-		CompoundNBT invNBT = stack.getOrCreateTagElement("Items");
+		CompoundTag invNBT = stack.getOrCreateTagElement("Items");
 		if (!invNBT.isEmpty())
 			newInv.deserializeNBT(invNBT);
 		return newInv;
 	}
 
-	public static boolean test(World world, ItemStack stack, ItemStack filter) {
+	public static boolean test(Level world, ItemStack stack, ItemStack filter) {
 		return test(world, stack, filter, false);
 	}
 
-	public static boolean test(World world, FluidStack stack, ItemStack filter) {
+	public static boolean test(Level world, FluidStack stack, ItemStack filter) {
 		return test(world, stack, filter, true);
 	}
 
-	private static boolean test(World world, ItemStack stack, ItemStack filter, boolean matchNBT) {
+	private static boolean test(Level world, ItemStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
 
@@ -215,10 +217,10 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		if (AllItems.ATTRIBUTE_FILTER.get() == filter.getItem()) {
 			WhitelistMode whitelistMode = WhitelistMode.values()[filter.getOrCreateTag()
 				.getInt("WhitelistMode")];
-			ListNBT attributes = filter.getOrCreateTag()
+			ListTag attributes = filter.getOrCreateTag()
 				.getList("MatchedAttributes", NBT.TAG_COMPOUND);
-			for (INBT inbt : attributes) {
-				CompoundNBT compound = (CompoundNBT) inbt;
+			for (Tag inbt : attributes) {
+				CompoundTag compound = (CompoundTag) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
 				if (attribute == null)
 					continue;
@@ -258,7 +260,7 @@ public class FilterItem extends Item implements INamedContainerProvider {
 		return false;
 	}
 
-	private static boolean test(World world, FluidStack stack, ItemStack filter, boolean matchNBT) {
+	private static boolean test(Level world, FluidStack stack, ItemStack filter, boolean matchNBT) {
 		if (filter.isEmpty())
 			return true;
 		if (stack.isEmpty())

@@ -3,7 +3,7 @@ package com.simibubi.create.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
@@ -55,20 +55,20 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
+import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -97,7 +97,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
-		World world = Minecraft.getInstance().level;
+		Level world = Minecraft.getInstance().level;
 		if (!isGameActive())
 			return;
 
@@ -154,8 +154,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
-		IWorld world = event.getWorld();
-		if (world.isClientSide() && world instanceof ClientWorld && !(world instanceof WrappedClientWorld)) {
+		LevelAccessor world = event.getWorld();
+		if (world.isClientSide() && world instanceof ClientLevel && !(world instanceof WrappedClientWorld)) {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
 		}
@@ -180,11 +180,11 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderWorld(RenderWorldLastEvent event) {
-		Vector3d cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
+		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera()
 			.getPosition();
 		float pt = AnimationTickHolder.getPartialTicks();
 
-		MatrixStack ms = event.getMatrixStack();
+		PoseStack ms = event.getMatrixStack();
 		ms.pushPose();
 		ms.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
 		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
@@ -203,8 +203,8 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
-		MatrixStack ms = event.getMatrixStack();
-		Impl buffers = Minecraft.getInstance()
+		PoseStack ms = event.getMatrixStack();
+		BufferSource buffers = Minecraft.getInstance()
 			.renderBuffers()
 			.bufferSource();
 		int light = 0xF000F0;
@@ -219,7 +219,7 @@ public class ClientEvents {
 		onRenderHotbar(ms, buffers, light, overlay, pt);
 	}
 
-	public static void onRenderHotbar(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
+	public static void onRenderHotbar(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		float partialTicks) {
 		CreateClient.SCHEMATIC_HANDLER.renderOverlay(ms, buffer, light, overlay, partialTicks);
 		LinkedControllerClientHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
@@ -245,8 +245,8 @@ public class ClientEvents {
 
 		if (translationKey.startsWith(itemPrefix) || translationKey.startsWith(blockPrefix))
 			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
-				List<ITextComponent> itemTooltip = event.getToolTip();
-				List<ITextComponent> toolTip = new ArrayList<>();
+				List<Component> itemTooltip = event.getToolTip();
+				List<Component> toolTip = new ArrayList<>();
 				toolTip.add(itemTooltip.remove(0));
 				TooltipHelper.getTooltip(stack)
 					.addInformation(toolTip);
@@ -256,10 +256,10 @@ public class ClientEvents {
 		if (stack.getItem() instanceof BlockItem) {
 			BlockItem item = (BlockItem) stack.getItem();
 			if (item.getBlock() instanceof IRotate || item.getBlock() instanceof EngineBlock) {
-				List<ITextComponent> kineticStats = ItemDescription.getKineticStats(item.getBlock());
+				List<Component> kineticStats = ItemDescription.getKineticStats(item.getBlock());
 				if (!kineticStats.isEmpty()) {
 					event.getToolTip()
-						.add(new StringTextComponent(""));
+						.add(new TextComponent(""));
 					event.getToolTip()
 						.addAll(kineticStats);
 				}
@@ -283,7 +283,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
-		ActiveRenderInfo info = event.getInfo();
+		Camera info = event.getInfo();
 		FluidState fluidState = info.getFluidInCamera();
 		if (fluidState.isEmpty())
 			return;
@@ -311,7 +311,7 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
-		ActiveRenderInfo info = event.getInfo();
+		Camera info = event.getInfo();
 		FluidState fluidState = info.getFluidInCamera();
 		if (fluidState.isEmpty())
 			return;

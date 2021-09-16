@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.block.connected;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
 
 public class HorizontalCTBehaviour extends ConnectedTextureBehaviour {
 

@@ -12,19 +12,19 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Couple;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ICommandSource;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponentUtils;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class NixieTubeTileEntity extends SmartTileEntity {
@@ -35,10 +35,10 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	private int redstoneStrength;
 	private JsonElement rawCustomText;
 	private int customTextIndex;
-	private ITextComponent parsedCustomText;
+	private Component parsedCustomText;
 	private Couple<String> displayedStrings;
 
-	public NixieTubeTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public NixieTubeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		hasCustomText = false;
 		redstoneStrength = 0;
@@ -49,7 +49,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 		super.tick();
 
 		// Dynamic text components have to be ticked manually and re-sent to the client
-		if (level instanceof ServerWorld && hasCustomText) {
+		if (level instanceof ServerLevel && hasCustomText) {
 			Couple<String> currentStrings = displayedStrings;
 			parsedCustomText = parseCustomText();
 			updateDisplayedStrings();
@@ -83,7 +83,7 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	public void displayCustomNameOf(ItemStack stack, int nixiePositionInRow) {
-		CompoundNBT compoundnbt = stack.getTagElement("display");
+		CompoundTag compoundnbt = stack.getTagElement("display");
 		if (compoundnbt != null && compoundnbt.contains("Name", NBT.TAG_STRING)) {
 			hasCustomText = true;
 			rawCustomText = getJsonFromString(compoundnbt.getString("Name"));
@@ -113,19 +113,19 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	//
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT nbt, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag nbt, boolean clientPacket) {
 		super.fromTag(state, nbt, clientPacket);
 
 		if (nbt.contains("RawCustomText", NBT.TAG_STRING)) {
 			rawCustomText = getJsonFromString(nbt.getString("RawCustomText"));
 			// Check if string forms valid JSON
 			if (rawCustomText != null && !rawCustomText.isJsonNull()) {
-				ITextComponent deserializedComponent = parseCustomText();
+				Component deserializedComponent = parseCustomText();
 				// Check if JSON forms valid component
 				if (deserializedComponent != null) {
 					try {
 						// Try to deserialize previously parsed component
-						parsedCustomText = ITextComponent.Serializer.fromJson(nbt.getString("CustomText"));
+						parsedCustomText = Component.Serializer.fromJson(nbt.getString("CustomText"));
 					} catch (JsonParseException e) {
 						//
 					}
@@ -149,13 +149,13 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void write(CompoundNBT nbt, boolean clientPacket) {
+	protected void write(CompoundTag nbt, boolean clientPacket) {
 		super.write(nbt, clientPacket);
 
 		if (hasCustomText) {
 			nbt.putString("RawCustomText", rawCustomText.toString());
 			nbt.putInt("CustomTextIndex", customTextIndex);
-			nbt.putString("CustomText", ITextComponent.Serializer.toJson(parsedCustomText));
+			nbt.putString("CustomText", Component.Serializer.toJson(parsedCustomText));
 		} else {
 			nbt.putInt("RedstoneStrength", redstoneStrength);
 		}
@@ -173,18 +173,18 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 		return string.length() <= index ? " " : string.substring(index, index + 1);
 	}
 
-	protected ITextComponent parseCustomText() {
+	protected Component parseCustomText() {
 		try {
-			return parseDynamicComponent(ITextComponent.Serializer.fromJson(rawCustomText));
+			return parseDynamicComponent(Component.Serializer.fromJson(rawCustomText));
 		} catch (JsonParseException e) {
 			return null;
 		}
 	}
 
-	protected ITextComponent parseDynamicComponent(ITextComponent customText) {
-		if (level instanceof ServerWorld) {
+	protected Component parseDynamicComponent(Component customText) {
+		if (level instanceof ServerLevel) {
 			try {
-				return TextComponentUtils.updateForEntity(getCommandSource(null), customText, null, 0);
+				return ComponentUtils.updateForEntity(getCommandSource(null), customText, null, 0);
 			} catch (CommandSyntaxException e) {
 				//
 			}
@@ -193,10 +193,10 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	}
 
 	// From SignTileEntity
-	public CommandSource getCommandSource(@Nullable ServerPlayerEntity p_195539_1_) {
+	public CommandSourceStack getCommandSource(@Nullable ServerPlayer p_195539_1_) {
 		String s = p_195539_1_ == null ? "Nixie Tube" : p_195539_1_.getName().getString();
-		ITextComponent itextcomponent = (ITextComponent)(p_195539_1_ == null ? new StringTextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
-		return new CommandSource(ICommandSource.NULL, Vector3d.atCenterOf(this.worldPosition), Vector2f.ZERO, (ServerWorld)this.level, 2, s, itextcomponent, this.level.getServer(), p_195539_1_);
+		Component itextcomponent = (Component)(p_195539_1_ == null ? new TextComponent("Nixie Tube") : p_195539_1_.getDisplayName());
+		return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(this.worldPosition), Vec2.ZERO, (ServerLevel)this.level, 2, s, itextcomponent, this.level.getServer(), p_195539_1_);
 	}
 
 	@Override

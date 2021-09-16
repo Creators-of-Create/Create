@@ -9,19 +9,21 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.particle.ICustomParticleData;
 
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class FluidParticleData implements IParticleData, ICustomParticleData<FluidParticleData> {
+import net.minecraft.core.particles.ParticleOptions.Deserializer;
+
+public class FluidParticleData implements ParticleOptions, ICustomParticleData<FluidParticleData> {
 
 	private ParticleType<FluidParticleData> type;
 	private FluidStack fluid;
@@ -36,7 +38,7 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleFactory<FluidParticleData> getFactory() {
+	public ParticleProvider<FluidParticleData> getFactory() {
 		return (data, world, x, y, z, vx, vy, vz) -> FluidStackParticle.create(data.type, world, data.fluid, x, y, z,
 			vx, vy, vz);
 	}
@@ -47,7 +49,7 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 	}
 
 	@Override
-	public void writeToNetwork(PacketBuffer buffer) {
+	public void writeToNetwork(FriendlyByteBuf buffer) {
 		buffer.writeFluidStack(fluid);
 	}
 
@@ -62,7 +64,7 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 			.forGetter(FluidStack::getFluid),
 		Codec.INT.fieldOf("Amount")
 			.forGetter(FluidStack::getAmount),
-		CompoundNBT.CODEC.optionalFieldOf("tag")
+		CompoundTag.CODEC.optionalFieldOf("tag")
 			.forGetter((fs) -> {
 				return Optional.ofNullable(fs.getTag());
 			}))
@@ -83,8 +85,8 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 			.forGetter(p -> p.fluid))
 		.apply(i, fs -> new FluidParticleData(AllParticleTypes.FLUID_DRIP.get(), fs)));
 
-	public static final IParticleData.IDeserializer<FluidParticleData> DESERIALIZER =
-		new IParticleData.IDeserializer<FluidParticleData>() {
+	public static final ParticleOptions.Deserializer<FluidParticleData> DESERIALIZER =
+		new ParticleOptions.Deserializer<FluidParticleData>() {
 
 			// TODO Fluid particles on command
 			public FluidParticleData fromCommand(ParticleType<FluidParticleData> particleTypeIn, StringReader reader)
@@ -92,13 +94,13 @@ public class FluidParticleData implements IParticleData, ICustomParticleData<Flu
 				return new FluidParticleData(particleTypeIn, new FluidStack(Fluids.WATER, 1));
 			}
 
-			public FluidParticleData fromNetwork(ParticleType<FluidParticleData> particleTypeIn, PacketBuffer buffer) {
+			public FluidParticleData fromNetwork(ParticleType<FluidParticleData> particleTypeIn, FriendlyByteBuf buffer) {
 				return new FluidParticleData(particleTypeIn, buffer.readFluidStack());
 			}
 		};
 
 	@Override
-	public IDeserializer<FluidParticleData> getDeserializer() {
+	public Deserializer<FluidParticleData> getDeserializer() {
 		return DESERIALIZER;
 	}
 

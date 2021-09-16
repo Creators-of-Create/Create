@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 
 import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
 
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class GearboxTileEntity extends DirectionalShaftHalvesTileEntity {
 
-	public GearboxTileEntity(TileEntityType<? extends GearboxTileEntity> type) {
+	public GearboxTileEntity(BlockEntityType<? extends GearboxTileEntity> type) {
 		super(type);
 	}
 	

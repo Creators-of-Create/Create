@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -14,11 +14,11 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
@@ -26,7 +26,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	private final AllGuiTextures background = AllGuiTextures.SEQUENCER;
 	private IconButton confirmButton;
 
-	private ListNBT compareTag;
+	private ListTag compareTag;
 	private Vector<Instruction> instructions;
 	private BlockPos pos;
 
@@ -126,7 +126,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
@@ -148,7 +148,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			if (def.hasValueParameter) {
 				String text = def.formatValue(instruction.value);
 				int stringWidth = font.width(text);
-				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, new StringTextComponent(text));
+				label(ms, 90 + (12 - stringWidth / 2), yOffset - 3, new TextComponent(text));
 			}
 			if (def.hasSpeedParameter)
 				label(ms, 127, yOffset - 3, instruction.speedModifier.label);
@@ -162,12 +162,12 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			.render(ms);
 	}
 
-	private void label(MatrixStack ms, int x, int y, ITextComponent text) {
+	private void label(PoseStack ms, int x, int y, Component text) {
 		font.drawShadow(ms, text, guiLeft + x, guiTop + 26 + y, 0xFFFFEE);
 	}
 
 	public void sendPacket() {
-		ListNBT serialized = Instruction.serializeAll(instructions);
+		ListTag serialized = Instruction.serializeAll(instructions);
 		if (serialized.equals(compareTag))
 			return;
 		AllPackets.channel.sendToServer(new ConfigureSequencedGearshiftPacket(pos, serialized));

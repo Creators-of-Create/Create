@@ -10,11 +10,11 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ProcessingOutput {
@@ -79,16 +79,16 @@ public class ProcessingOutput {
 			throw new JsonSyntaxException("ProcessingOutput must be a json object");
 
 		JsonObject json = je.getAsJsonObject();
-		String itemId = JSONUtils.getAsString(json, "item");
-		int count = JSONUtils.getAsInt(json, "count", 1);
-		float chance = JSONUtils.isValidNode(json, "chance") ? JSONUtils.getAsFloat(json, "chance") : 1;
+		String itemId = GsonHelper.getAsString(json, "item");
+		int count = GsonHelper.getAsInt(json, "count", 1);
+		float chance = GsonHelper.isValidNode(json, "chance") ? GsonHelper.getAsFloat(json, "chance") : 1;
 		ItemStack itemstack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
 
-		if (JSONUtils.isValidNode(json, "nbt")) {
+		if (GsonHelper.isValidNode(json, "nbt")) {
 			try {
 				JsonElement element = json.get("nbt");
-				itemstack.setTag(JsonToNBT.parseTag(
-					element.isJsonObject() ? Create.GSON.toJson(element) : JSONUtils.convertToString(element, "nbt")));
+				itemstack.setTag(TagParser.parseTag(
+					element.isJsonObject() ? Create.GSON.toJson(element) : GsonHelper.convertToString(element, "nbt")));
 			} catch (CommandSyntaxException e) {
 				e.printStackTrace();
 			}
@@ -97,12 +97,12 @@ public class ProcessingOutput {
 		return new ProcessingOutput(itemstack, chance);
 	}
 
-	public void write(PacketBuffer buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeItem(getStack());
 		buf.writeFloat(getChance());
 	}
 
-	public static ProcessingOutput read(PacketBuffer buf) {
+	public static ProcessingOutput read(FriendlyByteBuf buf) {
 		return new ProcessingOutput(buf.readItem(), buf.readFloat());
 	}
 

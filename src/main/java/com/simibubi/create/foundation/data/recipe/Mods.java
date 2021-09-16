@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.data.recipe;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public enum Mods {
 

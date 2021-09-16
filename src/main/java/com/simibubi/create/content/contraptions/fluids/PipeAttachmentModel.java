@@ -13,13 +13,13 @@ import com.simibubi.create.foundation.block.connected.BakedModelWrapperWithData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelDataMap.Builder;
@@ -29,12 +29,12 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 
 	private static ModelProperty<PipeModelData> PIPE_PROPERTY = new ModelProperty<>();
 
-	public PipeAttachmentModel(IBakedModel template) {
+	public PipeAttachmentModel(BakedModel template) {
 		super(template);
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
+	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		PipeModelData data = new PipeModelData();
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
@@ -73,7 +73,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 		if (pipeData.isEncased())
 			quads.addAll(AllBlockPartials.FLUID_PIPE_CASING.get()
 				.getQuads(state, side, rand, data));
-		IBakedModel bracket = pipeData.getBracket();
+		BakedModel bracket = pipeData.getBracket();
 		if (bracket != null)
 			quads.addAll(bracket.getQuads(state, side, rand, data));
 	}
@@ -81,7 +81,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 	private class PipeModelData {
 		AttachmentTypes[] rims;
 		boolean encased;
-		IBakedModel bracket;
+		BakedModel bracket;
 
 		public PipeModelData() {
 			rims = new AttachmentTypes[6];
@@ -94,7 +94,7 @@ public class PipeAttachmentModel extends BakedModelWrapperWithData {
 				.getBlockModel(state);
 		}
 
-		public IBakedModel getBracket() {
+		public BakedModel getBracket() {
 			return bracket;
 		}
 

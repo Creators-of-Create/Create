@@ -5,40 +5,40 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tags.ITagCollectionSupplier;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ITickList;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.server.ServerChunkProvider;
-import net.minecraft.world.server.ServerTickList;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.IServerWorldInfo;
-import net.minecraft.world.storage.MapData;
-import net.minecraft.world.storage.SaveFormat;
+import net.minecraft.tags.TagContainer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.TickList;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.server.level.ServerChunkCache;
+import net.minecraft.world.level.ServerTickList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class WrappedServerWorld extends ServerWorld {
+public class WrappedServerWorld extends ServerLevel {
 
-	protected World world;
+	protected Level world;
 
-	public WrappedServerWorld(World world) {
+	public WrappedServerWorld(Level world) {
 		// Replace null with world.getChunkProvider().chunkManager.progressListener ? We had null in 1.15
-		super(world.getServer(), Util.backgroundExecutor(), getLevelSaveFromWorld(world), (IServerWorldInfo) world.getLevelData(), world.dimension(), world.dimensionType(), null, ((ServerChunkProvider) world.getChunkSource()).getGenerator(), world.isDebug(), world.getBiomeManager().biomeZoomSeed, Collections.EMPTY_LIST, false); //, world.field_25143);
+		super(world.getServer(), Util.backgroundExecutor(), getLevelSaveFromWorld(world), (ServerLevelData) world.getLevelData(), world.dimension(), world.dimensionType(), null, ((ServerChunkCache) world.getChunkSource()).getGenerator(), world.isDebug(), world.getBiomeManager().biomeZoomSeed, Collections.EMPTY_LIST, false); //, world.field_25143);
 		this.world = world;
 	}
 
@@ -59,7 +59,7 @@ public class WrappedServerWorld extends ServerWorld {
 
 	@Override
 	public ServerTickList<Block> getBlockTicks() {
-		ITickList<Block> tl =  world.getBlockTicks();
+		TickList<Block> tl =  world.getBlockTicks();
 		if (tl instanceof ServerTickList)
 			return (ServerTickList<Block>) tl;
 		return super.getBlockTicks();
@@ -67,29 +67,29 @@ public class WrappedServerWorld extends ServerWorld {
 
 	@Override
 	public ServerTickList<Fluid> getLiquidTicks() {
-		ITickList<Fluid> tl =  world.getLiquidTicks();
+		TickList<Fluid> tl =  world.getLiquidTicks();
 		if (tl instanceof ServerTickList)
 			return (ServerTickList<Fluid>) tl;
 		return super.getLiquidTicks();
 	}
 
 	@Override
-	public void levelEvent(PlayerEntity player, int type, BlockPos pos, int data) {
+	public void levelEvent(Player player, int type, BlockPos pos, int data) {
 	}
 
 	@Override
-	public List<ServerPlayerEntity> players() {
+	public List<ServerPlayer> players() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public void playSound(PlayerEntity player, double x, double y, double z, SoundEvent soundIn, SoundCategory category,
+	public void playSound(Player player, double x, double y, double z, SoundEvent soundIn, SoundSource category,
 			float volume, float pitch) {
 	}
 
 	@Override
-	public void playSound(PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-			SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {
+	public void playSound(Player p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
+			SoundSource p_217384_4_, float p_217384_5_, float p_217384_6_) {
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public MapData getMapData(String mapName) {
+	public MapItemSavedData getMapData(String mapName) {
 		return null;
 	}
 
@@ -109,7 +109,7 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public void setMapData(MapData mapDataIn) {
+	public void setMapData(MapItemSavedData mapDataIn) {
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class WrappedServerWorld extends ServerWorld {
 	}
 
 	@Override
-	public ITagCollectionSupplier getTagManager() {
+	public TagContainer getTagManager() {
 		return world.getTagManager();
 	}
 
@@ -136,7 +136,7 @@ public class WrappedServerWorld extends ServerWorld {
 		return world.getUncachedNoiseBiome(p_225604_1_, p_225604_2_, p_225604_3_);
 	}
 
-	private static SaveFormat.LevelSave getLevelSaveFromWorld(World world) {
+	private static LevelStorageSource.LevelStorageAccess getLevelSaveFromWorld(Level world) {
 		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "field_71310_m"); // storageSource
 	}
 }

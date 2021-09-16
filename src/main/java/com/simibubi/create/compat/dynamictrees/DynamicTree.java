@@ -10,13 +10,13 @@ import com.ferreusveritas.dynamictrees.blocks.branches.TrunkShellBlock;
 import com.ferreusveritas.dynamictrees.util.BranchDestructionData;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class DynamicTree extends AbstractBlockBreakQueue {
 	private BlockPos startCutPos;
@@ -26,7 +26,7 @@ public class DynamicTree extends AbstractBlockBreakQueue {
 	}
 
 	@Override
-	public void destroyBlocks(World world, ItemStack toDamage, @Nullable PlayerEntity playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
+	public void destroyBlocks(Level world, ItemStack toDamage, @Nullable Player playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
 		BranchBlock start = TreeHelper.getBranch(world.getBlockState(startCutPos));
 		if (start == null) //if start is null, it was not a branch
 			start = setBranchToShellMuse(world, world.getBlockState(startCutPos)); //we check for a trunk shell instead
@@ -45,7 +45,7 @@ public class DynamicTree extends AbstractBlockBreakQueue {
 		start.getLogDrops(world, startCutPos, data.species, data.woodVolume).forEach(stack -> drop.accept(startCutPos, stack));
 	}
 
-	private BranchBlock setBranchToShellMuse(World world, BlockState state){
+	private BranchBlock setBranchToShellMuse(Level world, BlockState state){
 		Block block = state.getBlock();
 		if (block instanceof TrunkShellBlock){
 			TrunkShellBlock.ShellMuse muse = ((TrunkShellBlock)block).getMuse(world, startCutPos);

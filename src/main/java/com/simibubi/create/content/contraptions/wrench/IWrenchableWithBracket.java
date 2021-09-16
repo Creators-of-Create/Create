@@ -5,36 +5,36 @@ import java.util.Optional;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 public interface IWrenchableWithBracket extends IWrenchable {
 
-	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos, boolean inOnReplacedContext);
+	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext);
 
 	@Override
-	default ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	default InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (tryRemoveBracket(context))
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		return IWrenchable.super.onWrenched(state, context);
 	}
 
-	default boolean tryRemoveBracket(ItemUseContext context) {
-		World world = context.getLevel();
+	default boolean tryRemoveBracket(UseOnContext context) {
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		Optional<ItemStack> bracket = removeBracket(world, pos, false);
 		BlockState blockState = world.getBlockState(pos);
 		if (bracket.isPresent()) {
-			PlayerEntity player = context.getPlayer();
+			Player player = context.getPlayer();
 			if (!world.isClientSide && !player.isCreative())
 				player.inventory.placeItemBackInInventory(world, bracket.get());
 			if (!world.isClientSide && AllBlocks.FLUID_PIPE.has(blockState)) {

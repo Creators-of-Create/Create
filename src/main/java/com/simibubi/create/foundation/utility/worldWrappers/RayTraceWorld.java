@@ -2,25 +2,25 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 
 import java.util.function.BiFunction;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 
-public class RayTraceWorld implements IBlockReader {
+public class RayTraceWorld implements BlockGetter {
 
-	private IWorld template;
+	private LevelAccessor template;
 	private BiFunction<BlockPos, BlockState, BlockState> stateGetter;
 
-	public RayTraceWorld(IWorld template, BiFunction<BlockPos, BlockState, BlockState> stateGetter) {
+	public RayTraceWorld(LevelAccessor template, BiFunction<BlockPos, BlockState, BlockState> stateGetter) {
 		this.template = template;
 		this.stateGetter = stateGetter;
 	}
 
 	@Override
-	public TileEntity getBlockEntity(BlockPos pos) {
+	public BlockEntity getBlockEntity(BlockPos pos) {
 		return template.getBlockEntity(pos);
 	}
 

@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.chute;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class ChuteItemHandler implements IItemHandler {

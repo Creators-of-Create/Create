@@ -13,12 +13,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -185,13 +185,13 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 		BlockFace targetBlockFace = target.getTarget(getWorld(), tileEntity.getBlockPos(), tileEntity.getBlockState())
 			.getOpposite();
 		BlockPos pos = targetBlockFace.getPos();
-		World world = getWorld();
+		Level world = getWorld();
 
 		targetCapability = LazyOptional.empty();
 
 		if (!world.isLoaded(pos))
 			return;
-		TileEntity invTE = world.getBlockEntity(pos);
+		BlockEntity invTE = world.getBlockEntity(pos);
 		if (invTE == null)
 			return;
 		targetCapability = bypassSided ? invTE.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
@@ -219,7 +219,7 @@ public class InvManipulationBehaviour extends TileEntityBehaviour {
 					: s.getValue(BlockStateProperties.HORIZONTAL_FACING)).getOpposite());
 		}
 
-		public BlockFace getTarget(World world, BlockPos pos, BlockState blockState);
+		public BlockFace getTarget(Level world, BlockPos pos, BlockState blockState);
 	}
 
 }

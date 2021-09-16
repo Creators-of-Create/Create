@@ -1,47 +1,47 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.jozufozu.flywheel.backend.OptifineHandler;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.particle.IAnimatedSprite;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 public class CustomRotationParticle extends SimpleAnimatedParticle {
 
 	protected boolean mirror;
 	protected int loopLength;
 
-	public CustomRotationParticle(ClientWorld worldIn, double x, double y, double z, IAnimatedSprite spriteSet, float yAccel) {
+	public CustomRotationParticle(ClientLevel worldIn, double x, double y, double z, SpriteSet spriteSet, float yAccel) {
 		super(worldIn, x, y, z, spriteSet, yAccel);
 	}
 
-	public void selectSpriteLoopingWithAge(IAnimatedSprite sprite) {
+	public void selectSpriteLoopingWithAge(SpriteSet sprite) {
 		int loopFrame = age % loopLength;
 		this.setSprite(sprite.get(loopFrame, loopLength));
 	}
 
-	public Quaternion getCustomRotation(ActiveRenderInfo camera, float partialTicks) {
+	public Quaternion getCustomRotation(Camera camera, float partialTicks) {
 		Quaternion quaternion = new Quaternion(camera.rotation());
 		if (roll != 0.0F) {
-			float angle = MathHelper.lerp(partialTicks, oRoll, roll);
+			float angle = Mth.lerp(partialTicks, oRoll, roll);
 			quaternion.mul(Vector3f.ZP.rotation(angle));
 		}
 		return quaternion;
 	}
 
 	@Override
-	public void render(IVertexBuilder builder, ActiveRenderInfo camera, float partialTicks) {
-		Vector3d cameraPos = camera.getPosition();
-		float originX = (float) (MathHelper.lerp(partialTicks, xo, x) - cameraPos.x());
-		float originY = (float) (MathHelper.lerp(partialTicks, yo, y) - cameraPos.y());
-		float originZ = (float) (MathHelper.lerp(partialTicks, zo, z) - cameraPos.z());
+	public void render(VertexConsumer builder, Camera camera, float partialTicks) {
+		Vec3 cameraPos = camera.getPosition();
+		float originX = (float) (Mth.lerp(partialTicks, xo, x) - cameraPos.x());
+		float originY = (float) (Mth.lerp(partialTicks, yo, y) - cameraPos.y());
+		float originZ = (float) (Mth.lerp(partialTicks, zo, z) - cameraPos.z());
 
 		Vector3f[] vertices = new Vector3f[] {
 				new Vector3f(-1.0F, -1.0F, 0.0F),

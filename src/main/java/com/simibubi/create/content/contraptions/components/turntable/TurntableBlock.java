@@ -7,23 +7,25 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEntity> {
 
@@ -32,22 +34,22 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.TURNTABLE.create();
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state) {
-		return BlockRenderType.ENTITYBLOCK_ANIMATED;
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.TURNTABLE_SHAPE;
 	}
 
 	@Override
-	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity e) {
+	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity e) {
 		if (!e.isOnGround())
 			return;
 		if (e.getDeltaMovement().y > 0)
@@ -60,14 +62,14 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 			if (speed == 0)
 				return;
 
-			World world = e.getCommandSenderWorld();
-			if (world.isClientSide && (e instanceof PlayerEntity)) {
+			Level world = e.getCommandSenderWorld();
+			if (world.isClientSide && (e instanceof Player)) {
 				if (worldIn.getBlockState(e.blockPosition()) != state) {
-					Vector3d origin = VecHelper.getCenterOf(pos);
-					Vector3d offset = e.position()
+					Vec3 origin = VecHelper.getCenterOf(pos);
+					Vec3 offset = e.position()
 						.subtract(origin);
-					offset = VecHelper.rotate(offset, MathHelper.clamp(speed, -16, 16) / 1f, Axis.Y);
-					Vector3d movement = origin.add(offset)
+					offset = VecHelper.rotate(offset, Mth.clamp(speed, -16, 16) / 1f, Axis.Y);
+					Vec3 movement = origin.add(offset)
 						.subtract(e.position());
 					e.setDeltaMovement(e.getDeltaMovement()
 						.add(movement));
@@ -75,7 +77,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 				}
 			}
 
-			if ((e instanceof PlayerEntity))
+			if ((e instanceof Player))
 				return;
 			if (world.isClientSide)
 				return;
@@ -94,7 +96,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == Direction.DOWN;
 	}
 
@@ -109,7 +111,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	}
 	
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

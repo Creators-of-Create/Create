@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.clock;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -11,21 +11,21 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
 public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
-	public CuckooClockRenderer(TileEntityRendererDispatcher dispatcher) {
+	public CuckooClockRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		if (!(te instanceof CuckooClockTileEntity))
@@ -35,7 +35,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		BlockState blockState = te.getBlockState();
 		Direction direction = blockState.getValue(CuckooClockBlock.HORIZONTAL_FACING);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		// Render Hands
 		SuperByteBuffer hourHand = PartialBufferer.get(AllBlockPartials.CUCKOO_HOUR_HAND, blockState);
@@ -61,11 +61,11 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 				if (local < -step / 3)
 					continue;
 				else if (local < 0)
-					angle = MathHelper.lerp(((value - (phase - 5)) / 5), 0, 135);
+					angle = Mth.lerp(((value - (phase - 5)) / 5), 0, 135);
 				else if (local < step / 3)
 					angle = 135;
 				else if (local < 2 * step / 3)
-					angle = MathHelper.lerp(((value - (phase + 5)) / 5), 135, 0);
+					angle = Mth.lerp(((value - (phase + 5)) / 5), 135, 0);
 
 			}
 		}

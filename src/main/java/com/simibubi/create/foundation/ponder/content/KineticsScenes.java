@@ -22,20 +22,20 @@ import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstructi
 import com.simibubi.create.foundation.utility.Pointing;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FurnaceBlock;
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FurnaceBlock;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
 
 public class KineticsScenes {
 
@@ -76,7 +76,7 @@ public class KineticsScenes {
 		scene.configureBasePlate(0, 0, 5);
 		scene.showBasePlate();
 
-		Selection shaft = util.select.cuboid(new BlockPos(0, 1, 2), new Vector3i(5, 0, 2));
+		Selection shaft = util.select.cuboid(new BlockPos(0, 1, 2), new Vec3i(5, 0, 2));
 		Selection andesite = util.select.position(3, 1, 2);
 		Selection brass = util.select.position(1, 1, 2);
 
@@ -496,9 +496,9 @@ public class KineticsScenes {
 		scene.rotateCameraY(90);
 		scene.idle(20);
 
-		Vector3d blockSurface = util.vector.blockSurface(motor, Direction.EAST);
-		AxisAlignedBB point = new AxisAlignedBB(blockSurface, blockSurface);
-		AxisAlignedBB expanded = point.inflate(1 / 16f, 1 / 5f, 1 / 5f);
+		Vec3 blockSurface = util.vector.blockSurface(motor, Direction.EAST);
+		AABB point = new AABB(blockSurface, blockSurface);
+		AABB expanded = point.inflate(1 / 16f, 1 / 5f, 1 / 5f);
 
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.WHITE, blockSurface, point, 1);
 		scene.idle(1);
@@ -557,7 +557,7 @@ public class KineticsScenes {
 			.pointAt(util.vector.topOf(wheel));
 		scene.idle(50);
 
-		AxisAlignedBB bb = new AxisAlignedBB(wheel).inflate(.125f, 0, 0);
+		AABB bb = new AABB(wheel).inflate(.125f, 0, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, new Object(), bb.move(0, 1.2, 0)
 			.contract(0, .75, 0), 80);
 		scene.idle(5);
@@ -636,7 +636,7 @@ public class KineticsScenes {
 		manualSource(scene, util, false);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0);
 		scene.idle(20);
-		Vector3d centerOf = util.vector.centerOf(2, 2, 2);
+		Vec3 centerOf = util.vector.centerOf(2, 2, 2);
 		scene.overlay.showControls(new InputWindowElement(centerOf, Pointing.DOWN).rightClick()
 				.withItem(new ItemStack(Items.BLUE_DYE)), 40);
 		scene.idle(7);
@@ -666,7 +666,7 @@ public class KineticsScenes {
 		scene.world.showSection(handleSelect, Direction.DOWN);
 		scene.idle(20);
 
-		Vector3d centerOf = util.vector.centerOf(handlePos);
+		Vec3 centerOf = util.vector.centerOf(handlePos);
 		scene.overlay.showText(70)
 			.text(name + " can be used by players to apply rotational force manually")
 			.placeNearTarget()
@@ -739,7 +739,7 @@ public class KineticsScenes {
 		scene.world.showSection(util.select.fromTo(2, 1, 2, 1, 1, 2), Direction.EAST);
 		scene.idle(10);
 
-		Vector3d top = util.vector.topOf(gearshiftPos);
+		Vec3 top = util.vector.topOf(gearshiftPos);
 		scene.overlay.showText(60)
 			.text("Seq. Gearshifts relay rotation by following a timed list of instructions")
 			.attachKeyFrame()
@@ -830,7 +830,7 @@ public class KineticsScenes {
 			scene.world.showIndependentSection(util.select.fromTo(5, 1, 1, 4, 1, 0), Direction.SOUTH);
 		scene.world.moveSection(comparator, util.vector.of(-2, 0, 0), 0);
 		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
-		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 1));
 
 		scene.idle(5);
@@ -840,13 +840,13 @@ public class KineticsScenes {
 		scene.world.rotateBearing(bearingPos, -180, 40);
 		scene.world.rotateSection(contraption, -180, 0, 0, 40);
 		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
-		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 2));
 		scene.idle(40);
 
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
 		scene.world.setKineticSpeed(outputKinetics, 0);
-		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 3));
 		scene.idle(20);
 
@@ -855,13 +855,13 @@ public class KineticsScenes {
 		scene.world.rotateBearing(bearingPos, 90, 40);
 		scene.world.rotateSection(contraption, 90, 0, 0, 40);
 		scene.effects.rotationDirectionIndicator(gearshiftPos.west());
-		scene.world.cycleBlockProperty(wire, RedstoneWireBlock.POWER);
+		scene.world.cycleBlockProperty(wire, RedStoneWireBlock.POWER);
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 4));
 		scene.idle(40);
 
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
 		scene.world.cycleBlockProperty(gearshiftPos, SequencedGearshiftBlock.STATE);
-		scene.world.modifyBlock(wire, s -> s.setValue(RedstoneWireBlock.POWER, 0), false);
+		scene.world.modifyBlock(wire, s -> s.setValue(RedStoneWireBlock.POWER, 0), false);
 		scene.world.toggleRedstonePower(util.select.position(5, 1, 1));
 		scene.world.modifyTileNBT(nixie, NixieTubeTileEntity.class, nbt -> nbt.putInt("RedstoneStrength", 0));
 		scene.world.setKineticSpeed(outputKinetics, 0);
@@ -912,7 +912,7 @@ public class KineticsScenes {
 				.withItem(new ItemStack(Items.COAL)), 30);
 		scene.idle(7);
 		scene.world.cycleBlockProperty(furnacePos, FurnaceBlock.LIT);
-		scene.effects.emitParticles(util.vector.of(4.5, 1.2, 2.9), Emitter.simple(ParticleTypes.LAVA, Vector3d.ZERO), 4,
+		scene.effects.emitParticles(util.vector.of(4.5, 1.2, 2.9), Emitter.simple(ParticleTypes.LAVA, Vec3.ZERO), 4,
 			1);
 		scene.world.setKineticSpeed(util.select.fromTo(1, 1, 3, 1, 1, 1), 16);
 		scene.idle(40);
@@ -995,7 +995,7 @@ public class KineticsScenes {
 			.text("Rot. Speed Controllers relay rotation from their axis to a Large Cogwheel above them");
 		scene.idle(100);
 
-		Vector3d inputVec = util.vector.of(1.5, 1.75, 1);
+		Vec3 inputVec = util.vector.of(1.5, 1.75, 1);
 		scene.overlay.showFilterSlotInput(inputVec, 60);
 
 		scene.overlay.showText(70)
@@ -1089,7 +1089,7 @@ public class KineticsScenes {
 
 		scene.idle(30);
 
-		Vector3d blockSurface = util.vector.blockSurface(gaugePos, Direction.NORTH);
+		Vec3 blockSurface = util.vector.blockSurface(gaugePos, Direction.NORTH);
 		scene.overlay.showControls(
 			new InputWindowElement(blockSurface, Pointing.RIGHT).withItem(AllItems.GOGGLES.asStack()), 40);
 		scene.idle(7);

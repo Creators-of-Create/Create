@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
@@ -17,11 +17,11 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import com.mojang.math.Vector3f;
 
-public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends CreateRecipeCategory<T> {
+public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends CreateRecipeCategory<T> {
 
 	public ProcessingViaFanCategory(IDrawable icon) {
 		this(177, icon);
@@ -54,7 +54,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 		itemStacks.set(1, recipe.getResultItem());
 	}
 
-	protected void renderWidgets(MatrixStack matrixStack, T recipe, double mouseX, double mouseY) {
+	protected void renderWidgets(PoseStack matrixStack, T recipe, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 20, 47);
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 139, 47);
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 47, 29);
@@ -63,7 +63,7 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 	}
 
 	@Override
-	public void draw(@Nullable T recipe, @Nullable MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(@Nullable T recipe, @Nullable PoseStack matrixStack, double mouseX, double mouseY) {
 		if (matrixStack == null)
 			return;
 		renderWidgets(matrixStack, recipe, mouseX, mouseY);
@@ -89,10 +89,10 @@ public abstract class ProcessingViaFanCategory<T extends IRecipe<?>> extends Cre
 		matrixStack.popPose();
 	}
 
-	protected void translateFan(MatrixStack matrixStack) {
+	protected void translateFan(PoseStack matrixStack) {
 		matrixStack.translate(56, 33, 0);
 	}
 
-	public abstract void renderAttachedBlock(MatrixStack matrixStack);
+	public abstract void renderAttachedBlock(PoseStack matrixStack);
 
 }

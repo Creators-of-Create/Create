@@ -1,28 +1,28 @@
 package com.simibubi.create.foundation.tileEntity.renderer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public abstract class SafeTileEntityRenderer<T extends TileEntity> extends TileEntityRenderer<T> {
+public abstract class SafeTileEntityRenderer<T extends BlockEntity> extends BlockEntityRenderer<T> {
 
-	public SafeTileEntityRenderer(TileEntityRendererDispatcher dispatcher) {
+	public SafeTileEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	public final void render(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
+	public final void render(T te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		if (isInvalid(te))
 			return;
 		renderSafe(te, partialTicks, ms, buffer, light, overlay);
 	}
 
-	protected abstract void renderSafe(T te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer, int light,
+	protected abstract void renderSafe(T te, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay);
 
 	public boolean isInvalid(T te) {

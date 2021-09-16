@@ -9,43 +9,45 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class CopperBacktankBlock extends HorizontalKineticBlock
-	implements ITE<CopperBacktankTileEntity>, IWaterLoggable {
+	implements ITE<CopperBacktankTileEntity>, SimpleWaterloggedBlock {
 
 	public CopperBacktankBlock(Properties properties) {
 		super(properties);
@@ -70,14 +72,14 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 	
 	@Override
-	public int getAnalogOutputSignal(BlockState p_180641_1_, World world, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState p_180641_1_, Level world, BlockPos pos) {
 		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
 			.orElse(0);
 	}
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-		IWorld world, BlockPos pos, BlockPos neighbourPos) {
+		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
 			world.getLiquidTicks()
 				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
@@ -86,7 +88,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState ifluidstate = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
@@ -94,7 +96,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == Direction.UP;
 	}
 
@@ -104,7 +106,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(worldIn, pos, state, placer, stack);
 		if (worldIn.isClientSide)
 			return;
@@ -122,47 +124,47 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand p_225533_5_,
-		BlockRayTraceResult p_225533_6_) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand p_225533_5_,
+		BlockHitResult p_225533_6_) {
 		if (player == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (player instanceof FakePlayer)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (player.getMainHandItem()
 			.getItem() instanceof BlockItem)
-			return ActionResultType.PASS;
-		if (!player.getItemBySlot(EquipmentSlotType.CHEST)
+			return InteractionResult.PASS;
+		if (!player.getItemBySlot(EquipmentSlot.CHEST)
 			.isEmpty())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (!world.isClientSide) {
-			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, .75f, 1);
-			player.setItemSlot(EquipmentSlotType.CHEST, getCloneItemStack(world, pos, state));
+			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .75f, 1);
+			player.setItemSlot(EquipmentSlot.CHEST, getCloneItemStack(world, pos, state));
 			world.destroyBlock(pos, false);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		ItemStack item = AllItems.COPPER_BACKTANK.asStack();
 		Optional<CopperBacktankTileEntity> tileEntityOptional = getTileEntityOptional(p_185473_1_, p_185473_2_);
 
 		int air = tileEntityOptional.map(CopperBacktankTileEntity::getAirLevel)
 			.orElse(0);
-		CompoundNBT tag = item.getOrCreateTag();
+		CompoundTag tag = item.getOrCreateTag();
 		tag.putInt("Air", air);
 
-		ListNBT enchants = tileEntityOptional.map(CopperBacktankTileEntity::getEnchantmentTag)
-			.orElse(new ListNBT());
+		ListTag enchants = tileEntityOptional.map(CopperBacktankTileEntity::getEnchantmentTag)
+			.orElse(new ListTag());
 		if (!enchants.isEmpty()) {
-			ListNBT enchantmentTagList = item.getEnchantmentTags();
+			ListTag enchantmentTagList = item.getEnchantmentTags();
 			enchantmentTagList.addAll(enchants);
 			tag.put("Enchantments", enchantmentTagList);
 		}
 
-		ITextComponent customName = tileEntityOptional.map(CopperBacktankTileEntity::getCustomName)
+		Component customName = tileEntityOptional.map(CopperBacktankTileEntity::getCustomName)
 			.orElse(null);
 		if (customName != null)
 			item.setHoverName(customName);
@@ -170,13 +172,13 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.BACKTANK;
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.COPPER_BACKTANK.create();
 	}
 
@@ -186,7 +188,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class SpriteShifter {
 

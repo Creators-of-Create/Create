@@ -8,16 +8,16 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.particles.BlockParticleData;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidFX {
@@ -34,22 +34,22 @@ public class FluidFX {
 			return;
 		}
 
-		BlockParticleData blockParticleData = new BlockParticleData(ParticleTypes.BLOCK, defaultState.createLegacyBlock());
-		Vector3d center = VecHelper.getCenterOf(pos);
+		BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, defaultState.createLegacyBlock());
+		Vec3 center = VecHelper.getCenterOf(pos);
 
 		for (int i = 0; i < 20; i++) {
-			Vector3d v = VecHelper.offsetRandomly(Vector3d.ZERO, r, .25f);
+			Vec3 v = VecHelper.offsetRandomly(Vec3.ZERO, r, .25f);
 			particle(blockParticleData, center.add(v), v);
 		}
 
 	}
 
-	public static IParticleData getFluidParticle(FluidStack fluid) {
+	public static ParticleOptions getFluidParticle(FluidStack fluid) {
 		return new FluidParticleData(AllParticleTypes.FLUID_PARTICLE.get(), fluid);
 	}
 
-	public static IParticleData getDrippingParticle(FluidStack fluid) {
-		IParticleData particle = null;
+	public static ParticleOptions getDrippingParticle(FluidStack fluid) {
+		ParticleOptions particle = null;
 		if (FluidHelper.isWater(fluid.getFluid()))
 			particle = ParticleTypes.DRIPPING_WATER;
 		if (FluidHelper.isLava(fluid.getFluid()))
@@ -59,30 +59,30 @@ public class FluidFX {
 		return particle;
 	}
 
-	public static void spawnRimParticles(World world, BlockPos pos, Direction side, int amount, IParticleData particle,
+	public static void spawnRimParticles(Level world, BlockPos pos, Direction side, int amount, ParticleOptions particle,
 		float rimRadius) {
-		Vector3d directionVec = Vector3d.atLowerCornerOf(side.getNormal());
+		Vec3 directionVec = Vec3.atLowerCornerOf(side.getNormal());
 		for (int i = 0; i < amount; i++) {
-			Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1)
+			Vec3 vec = VecHelper.offsetRandomly(Vec3.ZERO, r, 1)
 				.normalize();
 			vec = VecHelper.clampComponentWise(vec, rimRadius)
 				.multiply(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.45 + r.nextFloat() / 16f));
-			Vector3d m = vec.scale(.05f);
+			Vec3 m = vec.scale(.05f);
 			vec = vec.add(VecHelper.getCenterOf(pos));
 
 			world.addAlwaysVisibleParticle(particle, vec.x, vec.y - 1 / 16f, vec.z, m.x, m.y, m.z);
 		}
 	}
 
-	public static void spawnPouringLiquid(World world, BlockPos pos, int amount, IParticleData particle,
-		float rimRadius, Vector3d directionVec, boolean inbound) {
+	public static void spawnPouringLiquid(Level world, BlockPos pos, int amount, ParticleOptions particle,
+		float rimRadius, Vec3 directionVec, boolean inbound) {
 		for (int i = 0; i < amount; i++) {
-			Vector3d vec = VecHelper.offsetRandomly(Vector3d.ZERO, r, rimRadius * .75f);
+			Vec3 vec = VecHelper.offsetRandomly(Vec3.ZERO, r, rimRadius * .75f);
 			vec = vec.multiply(VecHelper.axisAlingedPlaneOf(directionVec))
 				.add(directionVec.scale(.5 + r.nextFloat() / 4f));
-			Vector3d m = vec.scale(1 / 4f);
-			Vector3d centerOf = VecHelper.getCenterOf(pos);
+			Vec3 m = vec.scale(1 / 4f);
+			Vec3 centerOf = VecHelper.getCenterOf(pos);
 			vec = vec.add(centerOf);
 			if (inbound) {
 				vec = vec.add(m);
@@ -94,11 +94,11 @@ public class FluidFX {
 		}
 	}
 
-	private static void particle(IParticleData data, Vector3d pos, Vector3d motion) {
+	private static void particle(ParticleOptions data, Vec3 pos, Vec3 motion) {
 		world().addParticle(data, pos.x, pos.y, pos.z, motion.x, motion.y, motion.z);
 	}
 
-	private static World world() {
+	private static Level world() {
 		return Minecraft.getInstance().level;
 	}
 

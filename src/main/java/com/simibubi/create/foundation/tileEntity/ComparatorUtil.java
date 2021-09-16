@@ -3,17 +3,17 @@ package com.simibubi.create.foundation.tileEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
 
 public class ComparatorUtil {
 
 	public static int fractionToRedstoneLevel(double frac) {
-		return MathHelper.floor(MathHelper.clamp(frac * 14 + (frac > 0 ? 1 : 0), 0, 15));
+		return Mth.floor(Mth.clamp(frac * 14 + (frac > 0 ? 1 : 0), 0, 15));
 	}
 
-	public static int levelOfSmartFluidTank(IBlockReader world, BlockPos pos) {
+	public static int levelOfSmartFluidTank(BlockGetter world, BlockPos pos) {
 		SmartFluidTankBehaviour fluidBehaviour = TileEntityBehaviour.get(world, pos, SmartFluidTankBehaviour.TYPE);
 		if (fluidBehaviour == null)
 			return 0;

@@ -5,15 +5,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>>
-	implements IRecipeSerializer<SequencedAssemblyRecipe> {
+public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>>
+	implements RecipeSerializer<SequencedAssemblyRecipe> {
 
 	public SequencedAssemblyRecipeSerializer() {}
 
@@ -32,18 +32,18 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 	protected SequencedAssemblyRecipe readFromJson(ResourceLocation recipeId, JsonObject json) {
 		SequencedAssemblyRecipe recipe = new SequencedAssemblyRecipe(recipeId, this);
 		recipe.ingredient = Ingredient.fromJson(json.get("ingredient"));
-		recipe.transitionalItem = ProcessingOutput.deserialize(JSONUtils.getAsJsonObject(json, "transitionalItem"));
+		recipe.transitionalItem = ProcessingOutput.deserialize(GsonHelper.getAsJsonObject(json, "transitionalItem"));
 		int i = 0;
-		for (JsonElement je : JSONUtils.getAsJsonArray(json, "sequence"))
+		for (JsonElement je : GsonHelper.getAsJsonArray(json, "sequence"))
 			recipe.getSequence().add(SequencedRecipe.fromJson(je.getAsJsonObject(), recipe, i++));
-		for (JsonElement je : JSONUtils.getAsJsonArray(json, "results"))
+		for (JsonElement je : GsonHelper.getAsJsonArray(json, "results"))
 			recipe.resultPool.add(ProcessingOutput.deserialize(je));
-		if (JSONUtils.isValidNode(json, "loops")) 
-			recipe.loops = JSONUtils.getAsInt(json, "loops");
+		if (GsonHelper.isValidNode(json, "loops")) 
+			recipe.loops = GsonHelper.getAsInt(json, "loops");
 		return recipe;
 	}
 
-	protected void writeToBuffer(PacketBuffer buffer, SequencedAssemblyRecipe recipe) {
+	protected void writeToBuffer(FriendlyByteBuf buffer, SequencedAssemblyRecipe recipe) {
 		recipe.getIngredient().toNetwork(buffer);
 		buffer.writeVarInt(recipe.getSequence().size());
 		recipe.getSequence().forEach(sr -> sr.writeToBuffer(buffer));
@@ -53,7 +53,7 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 		buffer.writeInt(recipe.loops);
 	}
 
-	protected SequencedAssemblyRecipe readFromBuffer(ResourceLocation recipeId, PacketBuffer buffer) {
+	protected SequencedAssemblyRecipe readFromBuffer(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		SequencedAssemblyRecipe recipe = new SequencedAssemblyRecipe(recipeId, this);
 		recipe.ingredient = Ingredient.fromNetwork(buffer);
 		int size = buffer.readVarInt();
@@ -77,12 +77,12 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<IRecip
 	}
 
 	@Override
-	public final void toNetwork(PacketBuffer buffer, SequencedAssemblyRecipe recipe) {
+	public final void toNetwork(FriendlyByteBuf buffer, SequencedAssemblyRecipe recipe) {
 		writeToBuffer(buffer, recipe);
 	}
 
 	@Override
-	public final SequencedAssemblyRecipe fromNetwork(ResourceLocation id, PacketBuffer buffer) {
+	public final SequencedAssemblyRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
 		return readFromBuffer(id, buffer);
 	}
 

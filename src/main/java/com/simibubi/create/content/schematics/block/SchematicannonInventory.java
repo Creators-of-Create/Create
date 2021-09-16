@@ -2,8 +2,8 @@ package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.AllItems;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class SchematicannonInventory extends ItemStackHandler {

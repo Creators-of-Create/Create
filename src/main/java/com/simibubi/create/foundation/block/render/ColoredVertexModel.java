@@ -4,32 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
+public class ColoredVertexModel extends BakedModelWrapper<BakedModel> {
 
 	private static final ModelProperty<BlockPos> POSITION_PROPERTY = new ModelProperty<>();
 	private IBlockVertexColor color;
 
-	public ColoredVertexModel(IBakedModel originalModel, IBlockVertexColor color) {
+	public ColoredVertexModel(BakedModel originalModel, IBlockVertexColor color) {
 		super(originalModel);
 		this.color = color;
 	}
 
 	@Override
-	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
 		return new ModelDataMap.Builder().withInitial(POSITION_PROPERTY, pos).build();
 	}
 
@@ -44,7 +44,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 		quads = new ArrayList<>(quads);
 
 		// Optifine might've rejigged vertex data
-		VertexFormat format = DefaultVertexFormats.BLOCK;
+		VertexFormat format = DefaultVertexFormat.BLOCK;
 		int colorIndex = 0;
 		for (int elementId = 0; elementId < format.getElements().size(); elementId++) {
 			VertexFormatElement element = format.getElements().get(elementId);

@@ -8,11 +8,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
 
 public class DropperMovementBehaviour extends MovementBehaviour {
 	protected static final MovedDefaultDispenseItemBehaviour defaultBehaviour = new MovedDefaultDispenseItemBehaviour();
@@ -43,7 +43,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 	private void updateTemporaryData(MovementContext context) {
 		if (!(context.temporaryData instanceof NonNullList) && context.world != null) {
 			NonNullList<ItemStack> stacks = NonNullList.withSize(getInvSize(), ItemStack.EMPTY);
-			ItemStackHelper.loadAllItems(context.tileData, stacks);
+			ContainerHelper.loadAllItems(context.tileData, stacks);
 			context.temporaryData = stacks;
 		}
 	}
@@ -76,7 +76,7 @@ public class DropperMovementBehaviour extends MovementBehaviour {
 		NonNullList<ItemStack> stacks = getStacks(context);
 		if (stacks == null)
 			return;
-		ItemStackHelper.saveAllItems(context.tileData, stacks);
+		ContainerHelper.saveAllItems(context.tileData, stacks);
 	}
 
 	@Override

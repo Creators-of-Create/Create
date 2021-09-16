@@ -2,22 +2,22 @@ package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.FirstPersonRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -33,7 +33,7 @@ public class ExtendoGripRenderHandler {
 
 	public static void tick() {
 		lastMainHandAnimation = mainHandAnimation;
-		mainHandAnimation *= MathHelper.clamp(mainHandAnimation, 0.8f, 0.99f);
+		mainHandAnimation *= Mth.clamp(mainHandAnimation, 0.8f, 0.99f);
 
 		pose = AllBlockPartials.DEPLOYER_HAND_PUNCHING;
 		if (!AllItems.EXTENDO_GRIP.isIn(getRenderedOffHandStack()))
@@ -55,17 +55,17 @@ public class ExtendoGripRenderHandler {
 	public static void onRenderPlayerHand(RenderHandEvent event) {
 		ItemStack heldItem = event.getItemStack();
 		Minecraft mc = Minecraft.getInstance();
-		ClientPlayerEntity player = mc.player;
-		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ player.getMainArm() == HandSide.LEFT;
+		LocalPlayer player = mc.player;
+		boolean rightHand = event.getHand() == InteractionHand.MAIN_HAND ^ player.getMainArm() == HumanoidArm.LEFT;
 
 		ItemStack offhandItem = getRenderedOffHandStack();
 		boolean notInOffhand = !AllItems.EXTENDO_GRIP.isIn(offhandItem);
 		if (notInOffhand && !AllItems.EXTENDO_GRIP.isIn(heldItem))
 			return;
 
-		MatrixStack ms = event.getMatrixStack();
+		PoseStack ms = event.getMatrixStack();
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
-		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
+		AbstractClientPlayer abstractclientplayerentity = mc.player;
 		mc.getTextureManager()
 			.bind(abstractclientplayerentity.getSkinTextureLocation());
 
@@ -75,11 +75,11 @@ public class ExtendoGripRenderHandler {
 		float equipProgress = blockItem ? 0 : event.getEquipProgress() / 4;
 
 		ms.pushPose();
-		if (event.getHand() == Hand.MAIN_HAND) {
+		if (event.getHand() == InteractionHand.MAIN_HAND) {
 
 			if (1 - swingProgress > mainHandAnimation && swingProgress > 0)
 				mainHandAnimation = 0.95f;
-			float animation = MathHelper.lerp(AnimationTickHolder.getPartialTicks(),
+			float animation = Mth.lerp(AnimationTickHolder.getPartialTicks(),
 											  ExtendoGripRenderHandler.lastMainHandAnimation,
 											  ExtendoGripRenderHandler.mainHandAnimation);
 			animation = animation * animation * animation;
@@ -107,7 +107,7 @@ public class ExtendoGripRenderHandler {
 			// Render gun
 			ms.pushPose();
 			ms.translate(flip * -0.1f, 0, -0.3f);
-			FirstPersonRenderer firstPersonRenderer = mc.getItemInHandRenderer();
+			ItemInHandRenderer firstPersonRenderer = mc.getItemInHandRenderer();
 			TransformType transform =
 				rightHand ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 			firstPersonRenderer.renderItem(mc.player, notInOffhand ? heldItem : offhandItem, transform, !rightHand,

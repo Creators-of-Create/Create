@@ -9,14 +9,14 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class MechanicalDrillScenes {
 
@@ -141,7 +141,7 @@ public class MechanicalDrillScenes {
 			}
 		}
 
-		Vector3d m = util.vector.of(-.1, 0, 0);
+		Vec3 m = util.vector.of(-.1, 0, 0);
 		ItemStack item = new ItemStack(Items.OAK_PLANKS);
 		scene.world.createItemEntity(util.vector.centerOf(p1), m, item);
 		scene.world.createItemEntity(util.vector.centerOf(p2), m, item);

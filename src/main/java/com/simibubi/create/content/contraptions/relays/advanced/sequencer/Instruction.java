@@ -5,8 +5,8 @@ import java.util.Vector;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 
 public class Instruction {
 
@@ -99,17 +99,17 @@ public class Instruction {
 		return instruction == SequencerInstructions.AWAIT ? OnIsPoweredResult.CONTINUE : OnIsPoweredResult.NOTHING;
 	}
 
-	public static ListNBT serializeAll(Vector<Instruction> instructions) {
-		ListNBT list = new ListNBT();
+	public static ListTag serializeAll(Vector<Instruction> instructions) {
+		ListTag list = new ListTag();
 		instructions.forEach(i -> list.add(i.serialize()));
 		return list;
 	}
 
-	public static Vector<Instruction> deserializeAll(ListNBT list) {
+	public static Vector<Instruction> deserializeAll(ListTag list) {
 		if (list.isEmpty())
 			return createDefault();
 		Vector<Instruction> instructions = new Vector<>(5);
-		list.forEach(inbt -> instructions.add(deserialize((CompoundNBT) inbt)));
+		list.forEach(inbt -> instructions.add(deserialize((CompoundTag) inbt)));
 		return instructions;
 	}
 
@@ -120,15 +120,15 @@ public class Instruction {
 		return instructions;
 	}
 
-	CompoundNBT serialize() {
-		CompoundNBT tag = new CompoundNBT();
+	CompoundTag serialize() {
+		CompoundTag tag = new CompoundTag();
 		NBTHelper.writeEnum(tag, "Type", instruction);
 		NBTHelper.writeEnum(tag, "Modifier", speedModifier);
 		tag.putInt("Value", value);
 		return tag;
 	}
 
-	static Instruction deserialize(CompoundNBT tag) {
+	static Instruction deserialize(CompoundTag tag) {
 		Instruction instruction = new Instruction(NBTHelper.readEnum(tag, "Type", SequencerInstructions.class));
 		instruction.speedModifier = NBTHelper.readEnum(tag, "Modifier", InstructionSpeedModifiers.class);
 		instruction.value = tag.getInt("Value");

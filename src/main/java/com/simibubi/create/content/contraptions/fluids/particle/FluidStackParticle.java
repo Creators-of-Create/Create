@@ -5,33 +5,33 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
-public class FluidStackParticle extends SpriteTexturedParticle {
+public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
 	private final float vo;
 	private FluidStack fluid;
 
-	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientWorld world, FluidStack fluid, double x,
+	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid, double x,
 		double y, double z, double vx, double vy, double vz) {
 		if (type == AllParticleTypes.BASIN_FLUID.get())
 			return new BasinFluidParticle(world, fluid, x, y, z, vx, vy, vz);
 		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
 	}
 
-	public FluidStackParticle(ClientWorld world, FluidStack fluid, double x, double y, double z, double vx, double vy,
+	public FluidStackParticle(ClientLevel world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
 		super(world, x, y, z, vx, vy, vz);
 		this.fluid = fluid;
 		this.setSprite(Minecraft.getInstance()
-			.getTextureAtlas(PlayerContainer.BLOCK_ATLAS)
+			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
 			.apply(fluid.getFluid()
 				.getAttributes()
 				.getStillTexture()));
@@ -98,7 +98,7 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		if (!onGround && level.random.nextFloat() < 1 / 8f)
 			return;
 
-		Vector3d rgb = Color.vectorFromRGB(fluid.getFluid()
+		Vec3 rgb = Color.vectorFromRGB(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
 		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, rgb.x, rgb.y, rgb.z);
@@ -109,8 +109,8 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 	}
 
 	@Override
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.TERRAIN_SHEET;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.TERRAIN_SHEET;
 	}
 
 }

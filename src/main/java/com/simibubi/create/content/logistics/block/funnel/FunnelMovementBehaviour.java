@@ -8,15 +8,15 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FunnelMovementBehaviour extends MovementBehaviour {
@@ -36,9 +36,9 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public Vector3d getActiveAreaOffset(MovementContext context) {
+	public Vec3 getActiveAreaOffset(MovementContext context) {
 		Direction facing = FunnelBlock.getFunnelFacing(context.state);
-		Vector3d vec = Vector3d.atLowerCornerOf(facing.getNormal());
+		Vec3 vec = Vec3.atLowerCornerOf(facing.getNormal());
 		if (facing != Direction.UP)
 			return vec.scale(context.state.getValue(FunnelBlock.EXTRACTING) ? .15 : .65);
 
@@ -58,16 +58,16 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 	}
 
 	private void extract(MovementContext context, BlockPos pos) {
-		World world = context.world;
+		Level world = context.world;
 
-		Vector3d entityPos = context.position;
+		Vec3 entityPos = context.position;
 		if (context.state.getValue(FunnelBlock.FACING) != Direction.DOWN)
 			entityPos = entityPos.add(0, -.5f, 0);
 
 		if (!world.getBlockState(pos).getCollisionShape(world, pos).isEmpty())
 			return;//only drop items if the target block is a empty space
 
-		if (!world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(new BlockPos(entityPos))).isEmpty())
+		if (!world.getEntitiesOfClass(ItemEntity.class, new AABB(new BlockPos(entityPos))).isEmpty())
 			return;//don't drop items if there already are any in the target block space
 
 		ItemStack filter = getFilter(context);
@@ -91,15 +91,15 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 
 
 		ItemEntity entity = new ItemEntity(world, entityPos.x, entityPos.y, entityPos.z, extract);
-		entity.setDeltaMovement(Vector3d.ZERO);
+		entity.setDeltaMovement(Vec3.ZERO);
 		entity.setPickUpDelay(5);
-		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 1/16f, .1f);
+		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1/16f, .1f);
 		world.addFreshEntity(entity);
 	}
 
 	private void succ(MovementContext context, BlockPos pos) {
-		World world = context.world;
-		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos));
+		Level world = context.world;
+		List<ItemEntity> items = world.getEntitiesOfClass(ItemEntity.class, new AABB(pos));
 		ItemStack filter = getFilter(context);
 
 		for (ItemEntity item : items) {

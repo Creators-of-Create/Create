@@ -2,12 +2,12 @@ package com.simibubi.create.foundation.gui.widgets;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public class IconButton extends AbstractSimiWidget {
 
@@ -20,7 +20,7 @@ public class IconButton extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (this.visible) {
 			this.isHovered =
 				mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -47,7 +47,7 @@ public class IconButton extends AbstractSimiWidget {
 		this.pressed = false;
 	}
 
-	public void setToolTip(ITextComponent text) {
+	public void setToolTip(Component text) {
 		toolTip.clear();
 		toolTip.add(text);
 	}

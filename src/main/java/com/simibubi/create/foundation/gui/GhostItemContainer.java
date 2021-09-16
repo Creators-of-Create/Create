@@ -1,37 +1,37 @@
 package com.simibubi.create.foundation.gui;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class GhostItemContainer<T> extends Container implements IClearableContainer {
+public abstract class GhostItemContainer<T> extends AbstractContainerMenu implements IClearableContainer {
 
-	public PlayerEntity player;
-	public PlayerInventory playerInventory;
+	public Player player;
+	public Inventory playerInventory;
 	public ItemStackHandler ghostInventory;
 	public T contentHolder;
 
-	protected GhostItemContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	protected GhostItemContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id);
 		init(inv, createOnClient(extraData));
 	}
 
-	protected GhostItemContainer(ContainerType<?> type, int id, PlayerInventory inv, T contentHolder) {
+	protected GhostItemContainer(MenuType<?> type, int id, Inventory inv, T contentHolder) {
 		super(type, id);
 		init(inv, contentHolder);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected abstract T createOnClient(PacketBuffer extraData);
+	protected abstract T createOnClient(FriendlyByteBuf extraData);
 
 	protected abstract void addSlots();
 
@@ -43,7 +43,7 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 
 	protected abstract boolean allowRepeats();
 
-	protected void init(PlayerInventory inv, T contentHolder) {
+	protected void init(Inventory inv, T contentHolder) {
 		player = inv.player;
 		playerInventory = inv;
 		this.contentHolder = contentHolder;
@@ -80,7 +80,7 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 	}
 
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		ItemStack held = playerInventory.getCarried();
 		if (slotId < 36)
 			return super.clicked(slotId, dragType, clickTypeIn, player);
@@ -113,7 +113,7 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(Player playerIn, int index) {
 		if (index < 36) {
 			ItemStack stackToInsert = playerInventory.getItem(index);
 			for (int i = 0; i < ghostInventory.getSlots(); i++) {
@@ -136,7 +136,7 @@ public abstract class GhostItemContainer<T> extends Container implements ICleara
 	}
 
 	@Override
-	public void removed(PlayerEntity playerIn) {
+	public void removed(Player playerIn) {
 		super.removed(playerIn);
 		saveData(contentHolder);
 	}

@@ -6,26 +6,26 @@ import java.util.Locale;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class Lang {
 
-	public static TranslationTextComponent translate(String key, Object... args) {
+	public static TranslatableComponent translate(String key, Object... args) {
 		return createTranslationTextComponent(key, args);
 	}
 
-	public static TranslationTextComponent createTranslationTextComponent(String key, Object... args) {
-		return new TranslationTextComponent(Create.ID + "." + key, args);
+	public static TranslatableComponent createTranslationTextComponent(String key, Object... args) {
+		return new TranslatableComponent(Create.ID + "." + key, args);
 	}
 
-	public static void sendStatus(PlayerEntity player, String key, Object... args) {
+	public static void sendStatus(Player player, String key, Object... args) {
 		player.displayClientMessage(createTranslationTextComponent(key, args), true);
 	}
 
-	public static List<ITextComponent> translatedOptions(String prefix, String... keys) {
-		List<ITextComponent> result = new ArrayList<>(keys.length);
+	public static List<Component> translatedOptions(String prefix, String... keys) {
+		List<Component> result = new ArrayList<>(keys.length);
 		for (String key : keys)
 			result.add(translate(prefix + "." + key));
 

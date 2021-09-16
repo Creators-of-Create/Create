@@ -8,14 +8,14 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.foundation.networking.TileEntityDataPacket;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
 
 public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity> {
 
     private List<Pair<Direction, Boolean>> flaps;
 
-    public TunnelFlapPacket(PacketBuffer buffer) {
+    public TunnelFlapPacket(FriendlyByteBuf buffer) {
         super(buffer);
 
         byte size = buffer.readByte();
@@ -37,7 +37,7 @@ public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity>
     }
 
     @Override
-    protected void writeData(PacketBuffer buffer) {
+    protected void writeData(FriendlyByteBuf buffer) {
         buffer.writeByte(flaps.size());
 
         for (Pair<Direction, Boolean> flap : flaps) {

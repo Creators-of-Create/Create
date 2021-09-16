@@ -2,7 +2,7 @@ package com.simibubi.create.content.curiosities.zapper;
 
 import java.util.Vector;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -12,15 +12,15 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
+import com.mojang.math.Vector3f;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class ZapperScreen extends AbstractSimiScreen {
 
@@ -30,9 +30,9 @@ public class ZapperScreen extends AbstractSimiScreen {
 	protected AllGuiTextures background;
 	private IconButton confirmButton;
 
-	protected final ITextComponent patternSection = Lang.translate("gui.terrainzapper.patternSection");
+	protected final Component patternSection = Lang.translate("gui.terrainzapper.patternSection");
 
-	protected ITextComponent title;
+	protected Component title;
 	protected Vector<IconButton> patternButtons;
 	protected int brightColor;
 	protected int fontColor;
@@ -42,7 +42,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		this.background = background;
 		this.zapper = zapper;
 		this.offhand = offhand;
-		title = StringTextComponent.EMPTY;
+		title = TextComponent.EMPTY;
 		brightColor = 0xFEFEFE;
 		fontColor = AllGuiTextures.FONT_COLOR;
 	}
@@ -63,7 +63,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
 
-		CompoundNBT nbt = zapper.getOrCreateTag();
+		CompoundTag nbt = zapper.getOrCreateTag();
 
 		patternButtons = new Vector<>(6);
 		for (int row = 0; row <= 1; row++) {
@@ -85,7 +85,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int x = guiLeft;
 		int y = guiTop;
 
@@ -96,7 +96,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		renderZapper(ms, x, y);
 	}
 
-	protected void drawOnBackground(MatrixStack ms, int x, int y) {
+	protected void drawOnBackground(PoseStack ms, int x, int y) {
 		font.draw(ms, title, x + 11, y + 4, 0x54214F);
 	}
 
@@ -108,14 +108,14 @@ public class ZapperScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		CompoundNBT nbt = zapper.getTag();
+		CompoundTag nbt = zapper.getTag();
 		writeAdditionalOptions(nbt);
-		AllPackets.channel.sendToServer(new NbtPacket(zapper, offhand ? Hand.OFF_HAND : Hand.MAIN_HAND));
+		AllPackets.channel.sendToServer(new NbtPacket(zapper, offhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND));
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		CompoundNBT nbt = zapper.getTag();
+		CompoundTag nbt = zapper.getTag();
 
 		for (IconButton patternButton : patternButtons) {
 			if (patternButton.isHovered()) {
@@ -134,14 +134,14 @@ public class ZapperScreen extends AbstractSimiScreen {
 		return super.mouseClicked(x, y, button);
 	}
 
-	protected void renderZapper(MatrixStack ms, int x, int y) {
+	protected void renderZapper(PoseStack ms, int x, int y) {
 		GuiGameElement.of(zapper)
 				.scale(4)
 				.at(x + background.width, y + background.height - 48, -200)
 				.render(ms);
 	}
 
-	protected void renderBlock(MatrixStack ms, int x, int y) {
+	protected void renderBlock(PoseStack ms, int x, int y) {
 		ms.pushPose();
 		ms.translate(x + 32, y + 42, 120);
 		ms.mulPose(new Vector3f(1f, 0, 0).rotationDegrees(-25f));
@@ -151,7 +151,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 		BlockState state = Blocks.AIR.defaultBlockState();
 		if (zapper.hasTag() && zapper.getTag()
 			.contains("BlockUsed"))
-			state = NBTUtil.readBlockState(zapper.getTag()
+			state = NbtUtils.readBlockState(zapper.getTag()
 				.getCompound("BlockUsed"));
 
 		GuiGameElement.of(state)
@@ -159,6 +159,6 @@ public class ZapperScreen extends AbstractSimiScreen {
 		ms.popPose();
 	}
 
-	protected void writeAdditionalOptions(CompoundNBT nbt) {}
+	protected void writeAdditionalOptions(CompoundTag nbt) {}
 
 }

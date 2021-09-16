@@ -13,14 +13,14 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class BearingScenes {
 
@@ -122,7 +122,7 @@ public class BearingScenes {
 			.text("The Amount of Sail Blocks determine its Rotation Speed");
 		scene.idle(90);
 
-		Vector3d surface = util.vector.blockSurface(windmill, Direction.WEST);
+		Vec3 surface = util.vector.blockSurface(windmill, Direction.WEST);
 		scene.overlay.showControls(new InputWindowElement(surface, Pointing.DOWN).scroll()
 			.withWrench(), 60);
 		scene.overlay.showCenteredScrollInput(windmill, Direction.WEST, 50);
@@ -329,7 +329,7 @@ public class BearingScenes {
 		scene.world.rotateSection(contraption, 0, 35, 0, 0);
 		scene.world.rotateBearing(bearingPos, 35, 0);
 
-		Vector3d target = util.vector.topOf(bearingPos.below());
+		Vec3 target = util.vector.topOf(bearingPos.below());
 		scene.overlay.showLine(PonderPalette.RED, target.add(-2.5, 0, 3.5), target, 50);
 		scene.overlay.showLine(PonderPalette.GREEN, target.add(0, 0, 4.5), target, 50);
 

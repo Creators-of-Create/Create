@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -14,7 +14,7 @@ public class DeployerRecipeSearchEvent extends Event {
 	private final DeployerTileEntity tileEntity;
 	private final RecipeWrapper inventory;
 	@Nullable
-	IRecipe<? extends IInventory> recipe = null;
+	Recipe<? extends Container> recipe = null;
 	private int maxPriority = 0;
 
 	public DeployerRecipeSearchEvent(DeployerTileEntity tileEntity, RecipeWrapper inventory) {
@@ -41,13 +41,13 @@ public class DeployerRecipeSearchEvent extends Event {
 	}
 
 	@Nullable
-	public IRecipe<? extends IInventory> getRecipe() {
+	public Recipe<? extends Container> getRecipe() {
 		if (isCanceled())
 			return null;
 		return recipe;
 	}
 
-	public void addRecipe(Supplier<Optional<? extends IRecipe<? extends IInventory>>> recipeSupplier, int priority) {
+	public void addRecipe(Supplier<Optional<? extends Recipe<? extends Container>>> recipeSupplier, int priority) {
 		if (!shouldAddRecipeWithPriority(priority))
 			return;
 		recipeSupplier.get().ifPresent(newRecipe -> {

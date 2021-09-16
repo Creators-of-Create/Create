@@ -6,10 +6,10 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.item.Item;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class EdgeInteractionBehaviour extends TileEntityBehaviour {
 
@@ -43,12 +43,12 @@ public class EdgeInteractionBehaviour extends TileEntityBehaviour {
 	
 	@FunctionalInterface
 	public interface ConnectionCallback {
-		public void apply(World world, BlockPos clicked, BlockPos neighbour);
+		public void apply(Level world, BlockPos clicked, BlockPos neighbour);
 	}
 	
 	@FunctionalInterface
 	public interface ConnectivityPredicate {
-		public boolean test(World world, BlockPos pos, Direction selectedFace, Direction connectedFace);
+		public boolean test(Level world, BlockPos pos, Direction selectedFace, Direction connectedFace);
 	}
 
 }

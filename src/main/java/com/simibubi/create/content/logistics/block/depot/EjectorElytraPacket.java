@@ -4,12 +4,12 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class EjectorElytraPacket extends SimplePacketBase {
 
@@ -19,27 +19,27 @@ public class EjectorElytraPacket extends SimplePacketBase {
 		this.pos = pos;
 	}
 
-	public EjectorElytraPacket(PacketBuffer buffer) {
+	public EjectorElytraPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(Supplier<NetworkEvent.Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
+				ServerPlayer player = context.get()
 					.getSender();
 				if (player == null)
 					return;
-				World world = player.level;
+				Level world = player.level;
 				if (world == null || !world.isLoaded(pos))
 					return;
-				TileEntity tileEntity = world.getBlockEntity(pos);
+				BlockEntity tileEntity = world.getBlockEntity(pos);
 				if (tileEntity instanceof EjectorTileEntity)
 					((EjectorTileEntity) tileEntity).deployElytra(player);
 			});

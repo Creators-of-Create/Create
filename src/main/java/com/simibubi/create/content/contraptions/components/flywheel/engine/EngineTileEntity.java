@@ -9,12 +9,12 @@ import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTile
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -24,7 +24,7 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	public float appliedSpeed;
 	protected FlywheelTileEntity poweredWheel;
 
-	public EngineTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public EngineTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 
@@ -32,10 +32,10 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 	}
 
-	protected AxisAlignedBB cachedBoundingBox;
+	protected AABB cachedBoundingBox;
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
 			cachedBoundingBox = super.getRenderBoundingBox().inflate(1.5f);
 		}
@@ -65,7 +65,7 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 		if (FlywheelBlock.isConnected(wheelState)
 				&& FlywheelBlock.getConnection(wheelState) != engineFacing.getOpposite())
 			return;
-		TileEntity te = level.getBlockEntity(wheelPos);
+		BlockEntity te = level.getBlockEntity(wheelPos);
 		if (te.isRemoved())
 			return;
 		if (te instanceof FlywheelTileEntity) {

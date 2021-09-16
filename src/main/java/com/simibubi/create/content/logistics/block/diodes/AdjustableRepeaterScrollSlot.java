@@ -1,24 +1,24 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 
 public class AdjustableRepeaterScrollSlot extends ValueBoxTransform {
 
 	@Override
-	protected Vector3d getLocalOffset(BlockState state) {
+	protected Vec3 getLocalOffset(BlockState state) {
 		return VecHelper.voxelSpace(8, 3f, 8);
 	}
 
 	@Override
-	protected void rotate(BlockState state, MatrixStack ms) {
+	protected void rotate(BlockState state, PoseStack ms) {
 		float yRot = AngleHelper.horizontalAngle(state.getValue(BlockStateProperties.HORIZONTAL_FACING)) + 180;
 		MatrixTransformStack.of(ms)
 			.rotateY(yRot)

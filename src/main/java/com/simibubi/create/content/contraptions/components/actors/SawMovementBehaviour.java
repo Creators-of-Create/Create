@@ -12,16 +12,16 @@ import com.simibubi.create.foundation.utility.TreeCutter;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -35,14 +35,14 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.atLowerCornerOf(context.state.getValue(SawBlock.FACING).getNormal()).scale(.65f);
+	public Vec3 getActiveAreaOffset(MovementContext context) {
+		return Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING).getNormal()).scale(.65f);
 	}
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
 		super.visitNewPosition(context, pos);
-		Vector3d facingVec = Vector3d.atLowerCornerOf(context.state.getValue(SawBlock.FACING).getNormal());
+		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(SawBlock.FACING).getNormal());
 		facingVec = context.rotation.apply(facingVec);
 
 		Direction closestToFacing = Direction.getNearest(facingVec.x, facingVec.y, facingVec.z);
@@ -53,7 +53,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	}
 
 	@Override
-	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
+	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
 		return super.canBreak(world, breakingPos, state) && SawTileEntity.isSawable(state);
 	}
 
@@ -76,8 +76,8 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (remainder.isEmpty())
 			return;
 
-		World world = context.world;
-		Vector3d dropPos = VecHelper.getCenterOf(pos);
+		Level world = context.world;
+		Vec3 dropPos = VecHelper.getCenterOf(pos);
 		float distance = (float) dropPos.distanceTo(context.position);
 		ItemEntity entity = new ItemEntity(world, dropPos.x, dropPos.y, dropPos.z, remainder);
 		entity.setDeltaMovement(context.relativeMotion.scale(distance / 20f));
@@ -87,7 +87,7 @@ public class SawMovementBehaviour extends BlockBreakingMovementBehaviour {
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-									ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+									ContraptionMatrices matrices, MultiBufferSource buffer) {
 		SawRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 

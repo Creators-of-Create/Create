@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.ui;
 
-import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.client.renderer.Rect2i;
 
 public interface LayoutHelper {
 
@@ -18,10 +18,10 @@ public interface LayoutHelper {
 
 	int getTotalHeight();
 
-	default Rectangle2d getArea() {
+	default Rect2i getArea() {
 		int lWidth = getTotalWidth();
 		int lHeight = getTotalHeight();
-		return new Rectangle2d(-lWidth / 2, -lHeight / 2, lWidth, lHeight);
+		return new Rect2i(-lWidth / 2, -lHeight / 2, lWidth, lHeight);
 	}
 
 	class CenteredHorizontalLayoutHelper implements LayoutHelper {

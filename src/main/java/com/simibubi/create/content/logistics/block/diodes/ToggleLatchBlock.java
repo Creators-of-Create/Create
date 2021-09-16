@@ -4,19 +4,21 @@ import java.util.Random;
 
 import com.simibubi.create.AllItems;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ToggleLatchBlock extends AbstractDiodeBlock {
 
@@ -34,7 +36,7 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 	}
 
 	@Override
-	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return blockState.getValue(FACING) == side ? this.getOutputSignal(blockAccess, pos, blockState) : 0;
 	}
 
@@ -44,24 +46,24 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-		BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+		BlockHitResult hit) {
 		if (!player.mayBuild())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		return activated(worldIn, pos, state);
 	}
 
 	@Override
-	protected int getOutputSignal(IBlockReader worldIn, BlockPos pos, BlockState state) {
+	protected int getOutputSignal(BlockGetter worldIn, BlockPos pos, BlockState state) {
 		return state.getValue(POWERING) ? 15 : 0;
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		boolean poweredPreviously = state.getValue(POWERED);
 		super.tick(state, worldIn, pos, random);
 		BlockState newState = worldIn.getBlockState(pos);
@@ -69,14 +71,14 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 			worldIn.setBlock(pos, newState.cycle(POWERING), 2);
 	}
 
-	protected ActionResultType activated(World worldIn, BlockPos pos, BlockState state) {
+	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
 		if (!worldIn.isClientSide)
 			worldIn.setBlock(pos, state.cycle(POWERING), 2);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
 		return side.getAxis() == state.getValue(FACING)

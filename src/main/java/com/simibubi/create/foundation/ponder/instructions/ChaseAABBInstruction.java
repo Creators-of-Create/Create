@@ -3,15 +3,15 @@ package com.simibubi.create.foundation.ponder.instructions;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.phys.AABB;
 
 public class ChaseAABBInstruction extends TickingInstruction {
 
-	private AxisAlignedBB bb;
+	private AABB bb;
 	private Object slot;
 	private PonderPalette color;
 
-	public ChaseAABBInstruction(PonderPalette color, Object slot, AxisAlignedBB bb, int ticks) {
+	public ChaseAABBInstruction(PonderPalette color, Object slot, AABB bb, int ticks) {
 		super(false, ticks);
 		this.color = color;
 		this.slot = slot;

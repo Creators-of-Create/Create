@@ -2,22 +2,22 @@ package com.simibubi.create.foundation.config.ui;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.chat.TextComponent;
 
-public class HintableTextFieldWidget extends TextFieldWidget {
+public class HintableTextFieldWidget extends EditBox {
 
-	protected FontRenderer font;
+	protected Font font;
 	protected String hint;
 
-	public HintableTextFieldWidget(FontRenderer font, int x, int y, int width, int height) {
-		super(font, x, y, width, height, StringTextComponent.EMPTY);
+	public HintableTextFieldWidget(Font font, int x, int y, int width, int height) {
+		super(font, x, y, width, height, TextComponent.EMPTY);
 		this.font = font;
 	}
 
@@ -26,7 +26,7 @@ public class HintableTextFieldWidget extends TextFieldWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
 		if (hint == null || hint.isEmpty())
@@ -52,7 +52,7 @@ public class HintableTextFieldWidget extends TextFieldWidget {
 
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-		InputMappings.Input mouseKey = InputMappings.getKey(code, p_keyPressed_2_);
+		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
 		if (Minecraft.getInstance().options.keyInventory.isActiveAndMatches(mouseKey)) {
 			return true;
 		}

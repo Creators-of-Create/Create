@@ -12,20 +12,20 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmInteractionP
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,10 +44,10 @@ public class ArmInteractionPointHandler {
 		if (currentItem == null)
 			return;
 		BlockPos pos = event.getPos();
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		if (!world.isClientSide)
 			return;
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		if (player != null && player.isSpectator())
 			return;
 
@@ -64,15 +64,15 @@ public class ArmInteractionPointHandler {
 		selected.cycleMode();
 		if (player != null) {
 			String key = selected.mode == Mode.DEPOSIT ? "mechanical_arm.deposit_to" : "mechanical_arm.extract_from";
-			TextFormatting colour = selected.mode == Mode.DEPOSIT ? TextFormatting.GOLD : TextFormatting.AQUA;
-			TranslationTextComponent translatedBlock = new TranslationTextComponent(selected.state.getBlock()
+			ChatFormatting colour = selected.mode == Mode.DEPOSIT ? ChatFormatting.GOLD : ChatFormatting.AQUA;
+			TranslatableComponent translatedBlock = new TranslatableComponent(selected.state.getBlock()
 				.getDescriptionId());
-			player.displayClientMessage((Lang.translate(key, translatedBlock.withStyle(TextFormatting.WHITE, colour)).withStyle(colour)),
+			player.displayClientMessage((Lang.translate(key, translatedBlock.withStyle(ChatFormatting.WHITE, colour)).withStyle(colour)),
 				true);
 		}
 
 		event.setCanceled(true);
-		event.setCancellationResult(ActionResultType.SUCCESS);
+		event.setCancellationResult(InteractionResult.SUCCESS);
 	}
 
 	@SubscribeEvent
@@ -84,7 +84,7 @@ public class ArmInteractionPointHandler {
 		BlockPos pos = event.getPos();
 		if (remove(pos) != null) {
 			event.setCanceled(true);
-			event.setCancellationResult(ActionResultType.SUCCESS);
+			event.setCancellationResult(InteractionResult.SUCCESS);
 		}
 	}
 
@@ -101,10 +101,10 @@ public class ArmInteractionPointHandler {
 			removed++;
 		}
 
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (removed > 0) {
 			player.displayClientMessage(Lang.createTranslationTextComponent("mechanical_arm.points_outside_range", removed)
-				.withStyle(TextFormatting.RED), true);
+				.withStyle(ChatFormatting.RED), true);
 		} else {
 			int inputs = 0;
 			int outputs = 0;
@@ -116,7 +116,7 @@ public class ArmInteractionPointHandler {
 			}
 			if (inputs + outputs > 0)
 				player.displayClientMessage(Lang.createTranslationTextComponent("mechanical_arm.summary", inputs, outputs)
-					.withStyle(TextFormatting.WHITE), true);
+					.withStyle(ChatFormatting.WHITE), true);
 		}
 
 		AllPackets.channel.sendToServer(new ArmPlacementPacket(currentSelection, pos));
@@ -125,7 +125,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	public static void tick() {
-		PlayerEntity player = Minecraft.getInstance().player;
+		Player player = Minecraft.getInstance().player;
 
 		if (player == null)
 			return;
@@ -150,15 +150,15 @@ public class ArmInteractionPointHandler {
 			return;
 		}
 
-		RayTraceResult objectMouseOver = Minecraft.getInstance().hitResult;
-		if (!(objectMouseOver instanceof BlockRayTraceResult)) {
+		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
+		if (!(objectMouseOver instanceof BlockHitResult)) {
 			return;
 		}
 
-		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
+		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		BlockPos pos = result.getBlockPos();
 
-		TileEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
+		BlockEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
 		if (!(te instanceof ArmTileEntity)) {
 			lastBlockPos = -1;
 			currentSelection.clear();
@@ -179,7 +179,7 @@ public class ArmInteractionPointHandler {
 	}
 
 	private static void drawOutlines(Collection<ArmInteractionPoint> selection) {
-		World world = Minecraft.getInstance().level;
+		Level world = Minecraft.getInstance().level;
 		for (Iterator<ArmInteractionPoint> iterator = selection.iterator(); iterator.hasNext();) {
 			ArmInteractionPoint point = iterator.next();
 			BlockPos pos = point.pos;

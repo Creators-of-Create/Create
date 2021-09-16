@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder.instructions;
 
 import com.simibubi.create.foundation.ponder.elements.MinecartElement;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class CreateMinecartInstruction extends FadeIntoSceneInstruction<MinecartElement> {
 

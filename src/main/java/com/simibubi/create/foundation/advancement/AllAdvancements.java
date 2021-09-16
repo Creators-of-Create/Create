@@ -21,24 +21,24 @@ import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.Advancement.Builder;
 import net.minecraft.advancements.FrameType;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
-import net.minecraft.advancements.criterion.PlacedBlockTrigger;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.PlacedBlockTrigger;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 @SuppressWarnings("unused") // dont warn about unused avancements
-public class AllAdvancements implements IDataProvider {
+public class AllAdvancements implements DataProvider {
 
 	static final String LANG = "advancement." + Create.ID + ".";
 
@@ -46,11 +46,11 @@ public class AllAdvancements implements IDataProvider {
 		String id = Create.ID;
 
 		Advancement root = Advancement.Builder.advancement()
-			.display(AllItems.BRASS_HAND.asStack(), new TranslationTextComponent(LANG + "root"),
-				new TranslationTextComponent(LANG + "root.desc"),
+			.display(AllItems.BRASS_HAND.asStack(), new TranslatableComponent(LANG + "root"),
+				new TranslatableComponent(LANG + "root.desc"),
 				new ResourceLocation(Create.ID, "textures/block/palettes/gabbro/bricks.png"), FrameType.TASK, false,
 				false, false)
-			.addCriterion("0", InventoryChangeTrigger.Instance.hasItems(new IItemProvider[] {}))
+			.addCriterion("0", InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[] {}))
 			.save(t, id + ":root");
 
 		Advancement andesite_alloy =
@@ -446,7 +446,7 @@ public class AllAdvancements implements IDataProvider {
 	}
 
 	@Override
-	public void run(DirectoryCache cache) throws IOException {
+	public void run(HashCache cache) throws IOException {
 		Path path = this.generator.getOutputFolder();
 		Set<ResourceLocation> set = Sets.newHashSet();
 		Consumer<Advancement> consumer = (p_204017_3_) -> {
@@ -456,7 +456,7 @@ public class AllAdvancements implements IDataProvider {
 			Path path1 = getPath(path, p_204017_3_);
 
 			try {
-				IDataProvider.save(GSON, cache, p_204017_3_.deconstruct()
+				DataProvider.save(GSON, cache, p_204017_3_.deconstruct()
 					.serializeToJson(), path1);
 			} catch (IOException ioexception) {
 				LOGGER.error("Couldn't save advancement {}", path1, ioexception);
@@ -479,16 +479,16 @@ public class AllAdvancements implements IDataProvider {
 		return "Create's Advancements";
 	}
 
-	public PlacedBlockTrigger.Instance placeBlock(Block block) {
-		return PlacedBlockTrigger.Instance.placedBlock(block);
+	public PlacedBlockTrigger.TriggerInstance placeBlock(Block block) {
+		return PlacedBlockTrigger.TriggerInstance.placedBlock(block);
 	}
 
 	public RegistryTrigger.Instance<Fluid> isInfinite(FlowingFluid fluid) {
 		return AllTriggers.INFINITE_FLUID.forEntries(fluid.getSource());
 	}
 
-	public InventoryChangeTrigger.Instance itemGathered(IItemProvider itemprovider) {
-		return InventoryChangeTrigger.Instance.hasItems(itemprovider);
+	public InventoryChangeTrigger.TriggerInstance itemGathered(ItemLike itemprovider) {
+		return InventoryChangeTrigger.TriggerInstance.hasItems(itemprovider);
 	}
 
 	static enum TaskType {
@@ -520,7 +520,7 @@ public class AllAdvancements implements IDataProvider {
 //			.withCriterion("1", isPowered(block)); Duplicate toast
 	}
 
-	public Builder advancement(String name, IItemProvider icon, TaskType type) {
+	public Builder advancement(String name, ItemLike icon, TaskType type) {
 		return advancement(name, new ItemStack(icon), type);
 	}
 
@@ -530,12 +530,12 @@ public class AllAdvancements implements IDataProvider {
 
 	public Builder advancement(String name, ItemStack icon, TaskType type) {
 		return Advancement.Builder.advancement()
-			.display(icon, new TranslationTextComponent(LANG + name),
-				new TranslationTextComponent(LANG + name + ".desc"), null, type.frame, type.toast, type.announce,
+			.display(icon, new TranslatableComponent(LANG + name),
+				new TranslatableComponent(LANG + name + ".desc"), null, type.frame, type.toast, type.announce,
 				type.hide);
 	}
 
-	public Builder itemAdvancement(String name, Supplier<? extends IItemProvider> item, TaskType type) {
+	public Builder itemAdvancement(String name, Supplier<? extends ItemLike> item, TaskType type) {
 		return advancement(name, item.get(), type).addCriterion("0", itemGathered(item.get()));
 	}
 

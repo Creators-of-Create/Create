@@ -15,11 +15,11 @@ import com.simibubi.create.foundation.render.CreateContexts;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.LevelAccessor;
 
 public class FlwContraptionManager extends ContraptionRenderManager<RenderedContraption> {
 
-	public FlwContraptionManager(IWorld world) {
+	public FlwContraptionManager(LevelAccessor world) {
 		super(world);
 	}
 

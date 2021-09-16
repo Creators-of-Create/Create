@@ -6,7 +6,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class DeferralBehaviour extends TileEntityBehaviour {
 
@@ -24,13 +24,13 @@ public class DeferralBehaviour extends TileEntityBehaviour {
 	public boolean isSafeNBT() { return true; }
 
 	@Override
-	public void write(CompoundNBT nbt, boolean clientPacket) {
+	public void write(CompoundTag nbt, boolean clientPacket) {
 		nbt.putBoolean("NeedsUpdate", needsUpdate);
 		super.write(nbt, clientPacket);
 	}
 
 	@Override
-	public void read(CompoundNBT nbt, boolean clientPacket) {
+	public void read(CompoundTag nbt, boolean clientPacket) {
 		needsUpdate = nbt.getBoolean("NeedsUpdate");
 		super.read(nbt, clientPacket);
 	}

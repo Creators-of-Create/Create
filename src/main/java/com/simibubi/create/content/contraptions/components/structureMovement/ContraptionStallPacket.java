@@ -4,10 +4,10 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class ContraptionStallPacket extends SimplePacketBase {
 
@@ -25,7 +25,7 @@ public class ContraptionStallPacket extends SimplePacketBase {
 		this.angle = angle;
 	}
 
-	public ContraptionStallPacket(PacketBuffer buffer) {
+	public ContraptionStallPacket(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		x = buffer.readFloat();
 		y = buffer.readFloat();
@@ -34,19 +34,19 @@ public class ContraptionStallPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		writeAll(buffer, x, y, z, angle);
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(
 				() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> AbstractContraptionEntity.handleStallPacket(this)));
 		context.get().setPacketHandled(true);
 	}
 
-	private void writeAll(PacketBuffer buffer, float... floats) {
+	private void writeAll(FriendlyByteBuf buffer, float... floats) {
 		for (float f : floats)
 			buffer.writeFloat(f);
 	}

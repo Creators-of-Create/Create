@@ -8,24 +8,26 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ChuteBlock extends AbstractChuteBlock {
 	
@@ -38,7 +40,7 @@ public class ChuteBlock extends AbstractChuteBlock {
 			.setValue(FACING, Direction.DOWN));
 	}
 
-	public enum Shape implements IStringSerializable {
+	public enum Shape implements StringRepresentable {
 		INTERSECTION, WINDOW, NORMAL;
 
 		@Override
@@ -48,7 +50,7 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.CHUTE.create();
 	}
 
@@ -68,7 +70,7 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		Shape shape = state.getValue(SHAPE);
 		boolean down = state.getValue(FACING) == Direction.DOWN;
 		if (!context.getLevel().isClientSide && down && shape != Shape.INTERSECTION) {
@@ -76,16 +78,16 @@ public class ChuteBlock extends AbstractChuteBlock {
 				.setBlockAndUpdate(context.getClickedPos(),
 					state.setValue(SHAPE, shape == Shape.WINDOW ? Shape.NORMAL : Shape.WINDOW));
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
 		BlockState state = super.getStateForPlacement(ctx);
 		Direction face = ctx.getClickedFace();
 		if (face.getAxis()
 			.isHorizontal() && !ctx.isSecondaryUseActive()) {
-			World world = ctx.getLevel();
+			Level world = ctx.getLevel();
 			BlockPos pos = ctx.getClickedPos();
 			return updateChuteState(state.setValue(FACING, face), world.getBlockState(pos.above()), world, pos);
 		}
@@ -98,13 +100,13 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		BlockState above = world.getBlockState(pos.above());
 		return !isChute(above) || getChuteFacing(above) == Direction.DOWN;
 	}
 
 	@Override
-	public BlockState updateChuteState(BlockState state, BlockState above, IBlockReader world, BlockPos pos) {
+	public BlockState updateChuteState(BlockState state, BlockState above, BlockGetter world, BlockPos pos) {
 		if (!(state.getBlock() instanceof ChuteBlock))
 			return state;
 
@@ -148,7 +150,7 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 	
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

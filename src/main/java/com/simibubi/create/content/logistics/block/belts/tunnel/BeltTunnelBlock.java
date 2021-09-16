@@ -12,28 +12,30 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>, IWrenchable {
 
@@ -45,7 +47,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		registerDefaultState(defaultBlockState().setValue(SHAPE, Shape.STRAIGHT));
 	}
 
-	public enum Shape implements IStringSerializable {
+	public enum Shape implements StringRepresentable {
 		STRAIGHT, WINDOW, CLOSED, T_LEFT, T_RIGHT, CROSS;
 
 		@Override
@@ -60,17 +62,17 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return BeltTunnelShapes.getShape(state);
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.ANDESITE_TUNNEL.create();
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		BlockState blockState = worldIn.getBlockState(pos.below());
 		if (!isValidPositionForPlacement(state, worldIn, pos))
 			return false;
@@ -79,7 +81,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return true;
 	}
 
-	public boolean isValidPositionForPlacement(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean isValidPositionForPlacement(BlockState state, LevelReader worldIn, BlockPos pos) {
 		BlockState blockState = worldIn.getBlockState(pos.below());
 		if (!AllBlocks.BELT.has(blockState))
 			return false;
@@ -102,18 +104,18 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return getTunnelState(context.getLevel(), context.getClickedPos());
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		if (!(world instanceof WrappedWorld) && !world.isClientSide())
 			withTileEntityDo(world, pos, BeltTunnelTileEntity::updateTunnelConnections);
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 		if (facing.getAxis()
 			.isVertical())
@@ -129,18 +131,18 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return tunnelState;
 	}
 
-	public void updateTunnel(IWorld world, BlockPos pos) {
+	public void updateTunnel(LevelAccessor world, BlockPos pos) {
 		BlockState tunnel = world.getBlockState(pos);
 		BlockState newTunnel = getTunnelState(world, pos);
 		if (tunnel != newTunnel && !world.isClientSide()) {
 			world.setBlock(pos, newTunnel, 3);
-			TileEntity te = world.getBlockEntity(pos);
+			BlockEntity te = world.getBlockEntity(pos);
 			if (te != null && (te instanceof BeltTunnelTileEntity))
 				((BeltTunnelTileEntity) te).updateTunnelConnections();
 		}
 	}
 
-	private BlockState getTunnelState(IBlockReader reader, BlockPos pos) {
+	private BlockState getTunnelState(BlockGetter reader, BlockPos pos) {
 		BlockState state = defaultBlockState();
 		BlockState belt = reader.getBlockState(pos.below());
 		if (AllBlocks.BELT.has(belt))
@@ -170,7 +172,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return state;
 	}
 
-	protected boolean canHaveWindow(IBlockReader reader, BlockPos pos, Axis axis) {
+	protected boolean canHaveWindow(BlockGetter reader, BlockPos pos, Axis axis) {
 		Direction fw = Direction.get(AxisDirection.POSITIVE, axis);
 		BlockState blockState1 = reader.getBlockState(pos.relative(fw));
 		BlockState blockState2 = reader.getBlockState(pos.relative(fw.getOpposite()));
@@ -188,7 +190,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 		return canHaveWindow;
 	}
 
-	private boolean hasValidOutput(IBlockReader world, BlockPos pos, Direction side) {
+	private boolean hasValidOutput(BlockGetter world, BlockPos pos, Direction side) {
 		BlockState blockState = world.getBlockState(pos.relative(side));
 		if (AllBlocks.BELT.has(blockState))
 			return blockState.getValue(BeltBlock.HORIZONTAL_FACING)
@@ -199,17 +201,17 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (!hasWindow(state))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		// Toggle windows
 		Shape shape = state.getValue(SHAPE);
 		shape = shape == Shape.CLOSED ? Shape.WINDOW : Shape.CLOSED;
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		if (!world.isClientSide)
 			world.setBlock(context.getClickedPos(), state.setValue(SHAPE, shape), 2);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -221,7 +223,7 @@ public class BeltTunnelBlock extends Block implements ITE<BeltTunnelTileEntity>,
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
 		if (worldIn.isClientSide)
 			return;

@@ -7,12 +7,12 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 
 public class ChuteShapes {
 
@@ -31,12 +31,12 @@ public class ChuteShapes {
 
 		boolean intersection = shape == Shape.INTERSECTION;
 		if (direction == Direction.DOWN)
-			return intersection ? VoxelShapes.block() : AllShapes.CHUTE;
+			return intersection ? Shapes.block() : AllShapes.CHUTE;
 
-		VoxelShape combineWith = intersection ? VoxelShapes.block() : VoxelShapes.empty();
-		VoxelShape result = VoxelShapes.or(combineWith, AllShapes.CHUTE_SLOPE.get(direction));
+		VoxelShape combineWith = intersection ? Shapes.block() : Shapes.empty();
+		VoxelShape result = Shapes.or(combineWith, AllShapes.CHUTE_SLOPE.get(direction));
 		if (intersection)
-			result = VoxelShapes.joinUnoptimized(INTERSECTION_MASK, result, IBooleanFunction.AND);
+			result = Shapes.joinUnoptimized(INTERSECTION_MASK, result, BooleanOp.AND);
 		return result;
 	}
 
@@ -51,7 +51,7 @@ public class ChuteShapes {
 	public static VoxelShape getCollisionShape(BlockState state) {
 		if (collisionCache.containsKey(state))
 			return collisionCache.get(state);
-		VoxelShape createdShape = VoxelShapes.joinUnoptimized(COLLISION_MASK, getShape(state), IBooleanFunction.AND);
+		VoxelShape createdShape = Shapes.joinUnoptimized(COLLISION_MASK, getShape(state), BooleanOp.AND);
 		collisionCache.put(state, createdShape);
 		return createdShape;
 	}
@@ -59,10 +59,10 @@ public class ChuteShapes {
 	public static final VoxelShape PANEL = Block.box(1, -15, 0, 15, 4, 1);
 
 	public static VoxelShape createSlope() {
-		VoxelShape shape = VoxelShapes.empty();
+		VoxelShape shape = Shapes.empty();
 		for (int i = 0; i < 16; i++) {
 			float offset = i / 16f;
-			shape = VoxelShapes.join(shape, PANEL.move(0, offset, offset), IBooleanFunction.OR);
+			shape = Shapes.join(shape, PANEL.move(0, offset, offset), BooleanOp.OR);
 		}
 		return shape;
 	}

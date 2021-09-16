@@ -3,15 +3,15 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 import java.util.HashMap;
 import java.util.function.Predicate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 public class PlacementSimulationServerWorld extends WrappedServerWorld {
 	public HashMap<BlockPos, BlockState> blocksAdded;
 
-	public PlacementSimulationServerWorld(ServerWorld wrapped) {
+	public PlacementSimulationServerWorld(ServerLevel wrapped) {
 		super(wrapped);
 		blocksAdded = new HashMap<>();
 	}

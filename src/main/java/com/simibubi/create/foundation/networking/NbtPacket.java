@@ -5,20 +5,20 @@ import java.util.function.Supplier;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryWandItem;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 @Deprecated
 public class NbtPacket extends SimplePacketBase {
 
 	public ItemStack stack;
 	public int slot;
-	public Hand hand;
+	public InteractionHand hand;
 
-	public NbtPacket(ItemStack stack, Hand hand) {
+	public NbtPacket(ItemStack stack, InteractionHand hand) {
 		this(stack, -1);
 		this.hand = hand;
 	}
@@ -26,25 +26,25 @@ public class NbtPacket extends SimplePacketBase {
 	public NbtPacket(ItemStack stack, int slot) {
 		this.stack = stack;
 		this.slot = slot;
-		this.hand = Hand.MAIN_HAND;
+		this.hand = InteractionHand.MAIN_HAND;
 	}
 
-	public NbtPacket(PacketBuffer buffer) {
+	public NbtPacket(FriendlyByteBuf buffer) {
 		stack = buffer.readItem();
 		slot = buffer.readInt();
-		hand = Hand.values()[buffer.readInt()];
+		hand = InteractionHand.values()[buffer.readInt()];
 	}
 
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeItem(stack);
 		buffer.writeInt(slot);
 		buffer.writeInt(hand.ordinal());
 	}
 
-	public void handle(Supplier<Context> context) {
+	public void handle(Supplier<NetworkEvent.Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
+				ServerPlayer player = context.get()
 					.getSender();
 				if (player == null)
 					return;

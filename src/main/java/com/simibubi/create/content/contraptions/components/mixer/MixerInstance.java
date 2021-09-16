@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class MixerInstance extends ShaftlessCogInstance implements IDynamicInstance {
 

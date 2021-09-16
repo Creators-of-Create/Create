@@ -16,16 +16,16 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstruction.Emitter;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class FanScenes {
 
@@ -118,11 +118,11 @@ public class FanScenes {
 			.above(2)), util.vector.of(0, 0.1, 0), stack);
 		scene.idle(15);
 		scene.world.modifyEntity(entityLink, e -> e.setDeltaMovement(-0.2f, 0, 0));
-		Vector3d itemVec = util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.EAST)
+		Vec3 itemVec = util.vector.blockSurface(util.grid.at(1, 1, 2), Direction.EAST)
 			.add(0.1, 0, 0);
 		scene.overlay.showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(stack), 20);
 		scene.idle(20);
-		scene.effects.emitParticles(itemVec.add(0, 0.2f, 0), Emitter.simple(ParticleTypes.LARGE_SMOKE, Vector3d.ZERO), 1,
+		scene.effects.emitParticles(itemVec.add(0, 0.2f, 0), Emitter.simple(ParticleTypes.LARGE_SMOKE, Vec3.ZERO), 1,
 			60);
 
 		scene.overlay.showText(80)
@@ -190,7 +190,7 @@ public class FanScenes {
 		scene.world.modifyEntity(entityLink, e -> e.setDeltaMovement(-0.2f, 0, 0));
 		scene.overlay.showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(stack), 20);
 		scene.idle(20);
-		scene.effects.emitParticles(itemVec.add(0, 0.2f, 0), Emitter.simple(ParticleTypes.SPIT, Vector3d.ZERO), 1, 60);
+		scene.effects.emitParticles(itemVec.add(0, 0.2f, 0), Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), 1, 60);
 
 		scene.overlay.showText(50)
 			.colored(PonderPalette.WHITE)
@@ -234,13 +234,13 @@ public class FanScenes {
 		scene.world.moveSection(depot, util.vector.of(-1, -3, 0), 0);
 		scene.world.createItemOnBeltLike(depos, Direction.NORTH, sand);
 		scene.idle(10);
-		Vector3d depotTop = util.vector.topOf(2, 1, 2)
+		Vec3 depotTop = util.vector.topOf(2, 1, 2)
 			.add(0, 0.25, 0);
-		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vector3d.ZERO), .5f, 30);
+		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
 		scene.idle(30);
 		scene.world.modifyTileNBT(util.select.position(depos), DepotTileEntity.class,
 			nbt -> nbt.put("HeldItem", new TransportedItemStack(clay).serializeNBT()));
-		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vector3d.ZERO), .5f, 30);
+		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 30);
 		scene.overlay.showText(90)
 			.pointAt(depotTop)
 			.attachKeyFrame()
@@ -258,10 +258,10 @@ public class FanScenes {
 		ElementLink<BeltItemElement> transported =
 			scene.world.createItemOnBelt(util.grid.at(3, 3, 3), Direction.SOUTH, sand);
 		scene.idle(60);
-		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vector3d.ZERO), .5f, 25);
+		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 25);
 		scene.idle(25);
 		scene.world.changeBeltItemTo(transported, new ItemStack(Items.CLAY_BALL));
-		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vector3d.ZERO), .5f, 25);
+		scene.effects.emitParticles(depotTop, Emitter.simple(ParticleTypes.SPIT, Vec3.ZERO), .5f, 25);
 		scene.idle(60);
 
 		scene.world.setKineticSpeed(util.select.position(1, 2, 4)

@@ -1,21 +1,21 @@
 package com.simibubi.create.content.contraptions.particle;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.Vec3;
 
 public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 
@@ -24,17 +24,17 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	protected float radius2;
 	protected float speed;
 	protected Axis axis;
-	protected Vector3d origin;
-	protected Vector3d offset;
+	protected Vec3 origin;
+	protected Vec3 offset;
 	protected boolean isVisible;
 
-	private RotationIndicatorParticle(ClientWorld world, double x, double y, double z, int color, float radius1,
-									  float radius2, float speed, Axis axis, int lifeSpan, boolean isVisible, IAnimatedSprite sprite) {
+	private RotationIndicatorParticle(ClientLevel world, double x, double y, double z, int color, float radius1,
+									  float radius2, float speed, Axis axis, int lifeSpan, boolean isVisible, SpriteSet sprite) {
 		super(world, x, y, z, sprite, 0);
 		this.xd = 0;
 		this.yd = 0;
 		this.zd = 0;
-		this.origin = new Vector3d(x, y, z);
+		this.origin = new Vec3(x, y, z);
 		this.quadSize *= 0.75F;
 		this.lifetime = lifeSpan + this.random.nextInt(32);
 		this.setFadeColor(color);
@@ -46,7 +46,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		this.speed = speed;
 		this.axis = axis;
 		this.isVisible = isVisible;
-		this.offset = axis.isHorizontal() ? new Vector3d(0, 1, 0) : new Vector3d(1, 0, 0);
+		this.offset = axis.isHorizontal() ? new Vec3(0, 1, 0) : new Vec3(1, 0, 0);
 		move(0, 0, 0);
 		this.xo = this.x;
 		this.yo = this.y;
@@ -60,7 +60,7 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 	}
 
 	@Override
-	public void render(IVertexBuilder buffer, ActiveRenderInfo renderInfo, float partialTicks) {
+	public void render(VertexConsumer buffer, Camera renderInfo, float partialTicks) {
 		if (!isVisible)
 			return;
 		super.render(buffer, renderInfo, partialTicks);
@@ -71,23 +71,23 @@ public class RotationIndicatorParticle extends SimpleAnimatedParticle {
 		float angle = (float) ((time * speed) % 360) - (speed / 2 * age * (((float) age) / lifetime));
 		if (speed < 0 && axis.isVertical())
 			angle += 180;
-		Vector3d position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
+		Vec3 position = VecHelper.rotate(this.offset.scale(radius), angle, axis).add(origin);
 		x = position.x;
 		y = position.y;
 		z = position.z;
 	}
 
-	public static class Factory implements IParticleFactory<RotationIndicatorParticleData> {
-		private final IAnimatedSprite spriteSet;
+	public static class Factory implements ParticleProvider<RotationIndicatorParticleData> {
+		private final SpriteSet spriteSet;
 
-		public Factory(IAnimatedSprite animatedSprite) {
+		public Factory(SpriteSet animatedSprite) {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle createParticle(RotationIndicatorParticleData data, ClientWorld worldIn, double x, double y, double z,
+		public Particle createParticle(RotationIndicatorParticleData data, ClientLevel worldIn, double x, double y, double z,
 				double xSpeed, double ySpeed, double zSpeed) {
 			Minecraft mc = Minecraft.getInstance();
-			ClientPlayerEntity player = mc.player;
+			LocalPlayer player = mc.player;
 			boolean visible = worldIn != mc.level || player != null && GogglesItem.canSeeParticles(player);
 			return new RotationIndicatorParticle(worldIn, x, y, z, data.color, data.radius1, data.radius2, data.speed,
 				data.getAxis(), data.lifeSpan, visible, this.spriteSet);

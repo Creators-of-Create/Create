@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 
 public abstract class SplitShaftTileEntity extends DirectionalShaftHalvesTileEntity {
 
-	public SplitShaftTileEntity(TileEntityType<?> typeIn) {
+	public SplitShaftTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 	}
 

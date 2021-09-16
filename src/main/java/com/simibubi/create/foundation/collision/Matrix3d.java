@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.collision;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.Mth;
+import com.mojang.math.Matrix4f;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,8 +23,8 @@ public class Matrix3d {
 		if (radians == 0)
 			return this;
 
-		double s = MathHelper.sin(radians);
-		double c = MathHelper.cos(radians);
+		double s = Mth.sin(radians);
+		double c = Mth.cos(radians);
 		m22 = m11 = c;
 		m21 = s;
 		m12 = -s;
@@ -36,8 +36,8 @@ public class Matrix3d {
 		if (radians == 0)
 			return this;
 
-		double s = MathHelper.sin(radians);
-		double c = MathHelper.cos(radians);
+		double s = Mth.sin(radians);
+		double c = Mth.cos(radians);
 		m00 = m22 = c;
 		m20 = s;
 		m02 = -s;
@@ -49,8 +49,8 @@ public class Matrix3d {
 		if (radians == 0)
 			return this;
 
-		double s = MathHelper.sin(radians);
-		double c = MathHelper.cos(radians);
+		double s = Mth.sin(radians);
+		double c = Mth.cos(radians);
 		m00 = m11 = c;
 		m01 = -s;
 		m10 = s;
@@ -112,11 +112,11 @@ public class Matrix3d {
 		return this;
 	}
 
-	public Vector3d transform(Vector3d vec) {
+	public Vec3 transform(Vec3 vec) {
 		double x = vec.x * m00 + vec.y * m01 + vec.z * m02;
 		double y = vec.x * m10 + vec.y * m11 + vec.z * m12;
 		double z = vec.x * m20 + vec.y * m21 + vec.z * m22;
-		return new Vector3d(x, y, z);
+		return new Vec3(x, y, z);
 	}
 
 	public Matrix3d copy() {

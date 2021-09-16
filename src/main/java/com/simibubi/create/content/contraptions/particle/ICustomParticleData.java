@@ -2,17 +2,17 @@ package com.simibubi.create.content.contraptions.particle;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.IParticleData.IDeserializer;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleOptions.Deserializer;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface ICustomParticleData<T extends IParticleData> {
+public interface ICustomParticleData<T extends ParticleOptions> {
 
-	IDeserializer<T> getDeserializer();
+	Deserializer<T> getDeserializer();
 
 	Codec<T> getCodec(ParticleType<T> type); 
 	
@@ -27,10 +27,10 @@ public interface ICustomParticleData<T extends IParticleData> {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public IParticleFactory<T> getFactory();
+	public ParticleProvider<T> getFactory();
 	
 	@OnlyIn(Dist.CLIENT)
-	public default void register(ParticleType<T> type, ParticleManager particles) {
+	public default void register(ParticleType<T> type, ParticleEngine particles) {
 		particles.register(type, getFactory());
 	}
 	

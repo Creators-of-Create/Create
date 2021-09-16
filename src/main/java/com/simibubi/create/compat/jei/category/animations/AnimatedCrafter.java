@@ -1,14 +1,14 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 public class AnimatedCrafter extends AnimatedKinetics {
 
 	@Override
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, -16, 13);

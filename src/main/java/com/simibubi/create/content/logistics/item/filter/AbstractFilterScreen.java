@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -20,21 +20,21 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 
 public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
 
 	protected AllGuiTextures background;
-    private List<Rectangle2d> extraAreas = Collections.emptyList();
+    private List<Rect2i> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	protected AbstractFilterScreen(F container, PlayerInventory inv, ITextComponent title, AllGuiTextures background) {
+	protected AbstractFilterScreen(F container, Inventory inv, Component title, AllGuiTextures background) {
 		super(container, inv, title);
 		this.background = background;
 	}
@@ -55,12 +55,12 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		widgets.add(confirmButton);
 
 		extraAreas = ImmutableList.of(
-			new Rectangle2d(x + background.width, y + background.height - 40, 80, 48)
+			new Rect2i(x + background.width, y + background.height - 40, 80, 48)
 		);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -92,7 +92,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		List<IconButton> tooltipButtons = getTooltipButtons();
 		for (IconButton button : tooltipButtons)
 			button.active = isButtonEnabled(button);
-		for (Widget w : widgets)
+		for (AbstractWidget w : widgets)
 			if (w instanceof Indicator)
 				((Indicator) w).state = isIndicatorOn((Indicator) w) ? State.ON : State.OFF;
 	}
@@ -115,7 +115,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		}
 
 		if (hasShiftDown()) {
-			List<IFormattableTextComponent> tooltipDescriptions = getTooltipDescriptions();
+			List<MutableComponent> tooltipDescriptions = getTooltipDescriptions();
 			for (int i = 0; i < tooltipButtons.size(); i++)
 				fillToolTip(tooltipButtons.get(i), tooltipDescriptions.get(i));
 		}
@@ -125,14 +125,14 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		return Collections.emptyList();
 	}
 
-	protected List<IFormattableTextComponent> getTooltipDescriptions() {
+	protected List<MutableComponent> getTooltipDescriptions() {
 		return Collections.emptyList();
 	}
 
-	private void fillToolTip(IconButton button, ITextComponent tooltip) {
+	private void fillToolTip(IconButton button, Component tooltip) {
 		if (!button.isHovered())
 			return;
-		List<ITextComponent> tip = button.getToolTip();
+		List<Component> tip = button.getToolTip();
 		tip.addAll(TooltipHelper.cutTextComponent(tooltip, GRAY, GRAY));
 	}
 
@@ -163,7 +163,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	}
 
 	@Override
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.elements;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
@@ -12,11 +12,11 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 
 public class InputWindowElement extends AnimatedOverlayElement {
 
@@ -24,7 +24,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 	ResourceLocation key;
 	AllIcons icon;
 	ItemStack item = ItemStack.EMPTY;
-	private Vector3d sceneSpace;
+	private Vec3 sceneSpace;
 
 	public InputWindowElement clone() {
 		InputWindowElement inputWindowElement = new InputWindowElement(sceneSpace, direction);
@@ -34,7 +34,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 		return inputWindowElement;
 	}
 
-	public InputWindowElement(Vector3d sceneSpace, Pointing direction) {
+	public InputWindowElement(Vec3 sceneSpace, Pointing direction) {
 		this.sceneSpace = sceneSpace;
 		this.direction = direction;
 	}
@@ -80,8 +80,8 @@ public class InputWindowElement extends AnimatedOverlayElement {
 	}
 
 	@Override
-	protected void render(PonderScene scene, PonderUI screen, MatrixStack ms, float partialTicks, float fade) {
-		FontRenderer font = screen.getFontRenderer();
+	protected void render(PonderScene scene, PonderUI screen, PoseStack ms, float partialTicks, float fade) {
+		Font font = screen.getFontRenderer();
 		int width = 0;
 		int height = 0;
 
@@ -98,7 +98,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 
 		if (fade < 1 / 16f)
 			return;
-		Vector2f sceneToScreen = scene.getTransform()
+		Vec2 sceneToScreen = scene.getTransform()
 			.sceneToScreen(sceneSpace, partialTicks);
 
 		if (hasIcon) {

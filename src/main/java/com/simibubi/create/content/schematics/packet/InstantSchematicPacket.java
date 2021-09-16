@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class InstantSchematicPacket extends SimplePacketBase {
 
@@ -22,24 +22,24 @@ public class InstantSchematicPacket extends SimplePacketBase {
 		this.bounds = bounds;
 	}
 
-	public InstantSchematicPacket(PacketBuffer buffer) {
+	public InstantSchematicPacket(FriendlyByteBuf buffer) {
 		name = buffer.readUtf(32767);
 		origin = buffer.readBlockPos();
 		bounds = buffer.readBlockPos();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUtf(name);
 		buffer.writeBlockPos(origin);
 		buffer.writeBlockPos(bounds);
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
+	public void handle(Supplier<NetworkEvent.Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
+				ServerPlayer player = context.get()
 						.getSender();
 				if (player == null)
 					return;

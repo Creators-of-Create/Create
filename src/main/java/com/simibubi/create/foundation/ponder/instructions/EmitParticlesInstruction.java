@@ -5,30 +5,30 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.world.phys.Vec3;
 
 public class EmitParticlesInstruction extends TickingInstruction {
 
-	private Vector3d anchor;
+	private Vec3 anchor;
 	private Emitter emitter;
 	private float runsPerTick;
 
 	@FunctionalInterface
 	public static interface Emitter {
 
-		public static <T extends IParticleData> Emitter simple(T data, Vector3d motion) {
+		public static <T extends ParticleOptions> Emitter simple(T data, Vec3 motion) {
 			return (w, x, y, z) -> w.addParticle(data, x, y, z, motion.x, motion.y, motion.z);
 		}
 
-		public static <T extends IParticleData> Emitter withinBlockSpace(T data, Vector3d motion) {
+		public static <T extends ParticleOptions> Emitter withinBlockSpace(T data, Vec3 motion) {
 			return (w, x, y, z) -> w.addParticle(data, Math.floor(x) + Create.RANDOM.nextFloat(),
 					Math.floor(y) + Create.RANDOM.nextFloat(), Math.floor(z) + Create.RANDOM.nextFloat(), motion.x,
 					motion.y, motion.z);
 		}
 
-		static ParticleManager paticleManager() {
+		static ParticleEngine paticleManager() {
 			return Minecraft.getInstance().particleEngine;
 		}
 
@@ -36,7 +36,7 @@ public class EmitParticlesInstruction extends TickingInstruction {
 
 	}
 
-	public EmitParticlesInstruction(Vector3d anchor, Emitter emitter, float runsPerTick, int ticks) {
+	public EmitParticlesInstruction(Vec3 anchor, Emitter emitter, float runsPerTick, int ticks) {
 		super(false, ticks);
 		this.anchor = anchor;
 		this.emitter = emitter;

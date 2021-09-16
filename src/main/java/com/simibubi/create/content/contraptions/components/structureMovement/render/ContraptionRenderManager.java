@@ -14,19 +14,19 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> {
-	protected final World world;
+	protected final Level world;
 
 	private int removalTimer;
 
 	protected final Int2ObjectMap<C> renderInfos = new Int2ObjectOpenHashMap<>();
 	protected final List<C> visible = new ObjectArrayList<>();
 
-	public ContraptionRenderManager(IWorld world) {
-		this.world = (World) world;
+	public ContraptionRenderManager(LevelAccessor world) {
+		this.world = (Level) world;
 	}
 
 	public boolean invalidate(Contraption contraption) {

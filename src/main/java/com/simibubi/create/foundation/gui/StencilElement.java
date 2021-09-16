@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 public abstract class StencilElement extends RenderElement {
 
 	@Override
-	public void render(MatrixStack ms) {
+	public void render(PoseStack ms) {
 		ms.pushPose();
 		transform(ms);
 		prepareStencil(ms);
@@ -21,15 +21,15 @@ public abstract class StencilElement extends RenderElement {
 		ms.popPose();
 	}
 
-	protected abstract void renderStencil(MatrixStack ms);
+	protected abstract void renderStencil(PoseStack ms);
 
-	protected abstract void renderElement(MatrixStack ms);
+	protected abstract void renderElement(PoseStack ms);
 
-	protected void transform(MatrixStack ms) {
+	protected void transform(PoseStack ms) {
 		ms.translate(x, y, z);
 	}
 
-	protected void prepareStencil(MatrixStack ms) {
+	protected void prepareStencil(PoseStack ms) {
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 		RenderSystem.stencilMask(~0);
 		RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
@@ -39,13 +39,13 @@ public abstract class StencilElement extends RenderElement {
 		RenderSystem.stencilFunc(GL11.GL_NEVER, 1, 0xFF);
 	}
 
-	protected void prepareElement(MatrixStack ms) {
+	protected void prepareElement(PoseStack ms) {
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
 		RenderSystem.stencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 		RenderSystem.stencilFunc(GL11.GL_EQUAL, 1, 0xFF);
 	}
 
-	protected void cleanUp(MatrixStack ms) {
+	protected void cleanUp(PoseStack ms) {
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 
 	}

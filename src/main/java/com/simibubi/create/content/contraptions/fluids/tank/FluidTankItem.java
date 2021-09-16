@@ -1,18 +1,20 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class FluidTankItem extends BlockItem {
 
@@ -21,8 +23,8 @@ public class FluidTankItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType place(BlockItemUseContext ctx) {
-		ActionResultType initialResult = super.place(ctx);
+	public InteractionResult place(BlockPlaceContext ctx) {
+		InteractionResult initialResult = super.place(ctx);
 		if (!initialResult.consumesAction())
 			return initialResult;
 		tryMultiPlace(ctx);
@@ -30,12 +32,12 @@ public class FluidTankItem extends BlockItem {
 	}
 
 	@Override
-	protected boolean updateCustomBlockEntityTag(BlockPos p_195943_1_, World p_195943_2_, PlayerEntity p_195943_3_,
+	protected boolean updateCustomBlockEntityTag(BlockPos p_195943_1_, Level p_195943_2_, Player p_195943_3_,
 		ItemStack p_195943_4_, BlockState p_195943_5_) {
 		MinecraftServer minecraftserver = p_195943_2_.getServer();
 		if (minecraftserver == null)
 			return false;
-		CompoundNBT nbt = p_195943_4_.getTagElement("BlockEntityTag");
+		CompoundTag nbt = p_195943_4_.getTagElement("BlockEntityTag");
 		if (nbt != null) {
 			nbt.remove("Luminosity");
 			nbt.remove("Size");
@@ -46,15 +48,15 @@ public class FluidTankItem extends BlockItem {
 				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("TankContent"));
 				if (!fluid.isEmpty()) {
 					fluid.setAmount(Math.min(FluidTankTileEntity.getCapacityMultiplier(), fluid.getAmount()));
-					nbt.put("TankContent", fluid.writeToNBT(new CompoundNBT()));
+					nbt.put("TankContent", fluid.writeToNBT(new CompoundTag()));
 				}
 			}
 		}
 		return super.updateCustomBlockEntityTag(p_195943_1_, p_195943_2_, p_195943_3_, p_195943_4_, p_195943_5_);
 	}
 
-	private void tryMultiPlace(BlockItemUseContext ctx) {
-		PlayerEntity player = ctx.getPlayer();
+	private void tryMultiPlace(BlockPlaceContext ctx) {
+		Player player = ctx.getPlayer();
 		if (player == null)
 			return;
 		if (player.isShiftKeyDown())
@@ -64,7 +66,7 @@ public class FluidTankItem extends BlockItem {
 			.isVertical())
 			return;
 		ItemStack stack = ctx.getItemInHand();
-		World world = ctx.getLevel();
+		Level world = ctx.getLevel();
 		BlockPos pos = ctx.getClickedPos();
 		BlockPos placedOnPos = pos.relative(face.getOpposite());
 		BlockState placedOnState = world.getBlockState(placedOnPos);
@@ -113,7 +115,7 @@ public class FluidTankItem extends BlockItem {
 				BlockState blockState = world.getBlockState(offsetPos);
 				if (FluidTankBlock.isTank(blockState))
 					continue;
-				BlockItemUseContext context = BlockItemUseContext.at(ctx, offsetPos, face);
+				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
 				player.getPersistentData()
 					.putBoolean("SilenceTankSound", true);
 				super.place(context);

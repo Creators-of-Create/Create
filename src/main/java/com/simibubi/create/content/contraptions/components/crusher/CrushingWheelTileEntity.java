@@ -3,12 +3,12 @@ package com.simibubi.create.content.contraptions.components.crusher;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LootingLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,7 +20,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	public static DamageSource damageSource = new DamageSource("create.crush").bypassArmor()
 			.setScalesWithDifficulty();
 
-	public CrushingWheelTileEntity(TileEntityType<? extends CrushingWheelTileEntity> type) {
+	public CrushingWheelTileEntity(BlockEntityType<? extends CrushingWheelTileEntity> type) {
 		super(type);
 		setLazyTickRate(20);
 	}
@@ -38,8 +38,8 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(worldPosition).inflate(1);
+	public AABB makeRenderBoundingBox() {
+		return new AABB(worldPosition).inflate(1);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	public static void handleCrushedMobDrops(LivingDropsEvent event) {
 		if (event.getSource() != CrushingWheelTileEntity.damageSource)
 			return;
-		Vector3d outSpeed = Vector3d.ZERO;
+		Vec3 outSpeed = Vec3.ZERO;
 		for (ItemEntity outputItem : event.getDrops()) {
 			outputItem.setDeltaMovement(outSpeed);
 		}

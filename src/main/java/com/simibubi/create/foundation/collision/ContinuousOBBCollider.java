@@ -3,19 +3,19 @@ package com.simibubi.create.foundation.collision;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public class ContinuousOBBCollider extends OBBCollider {
 
-	public static ContinuousSeparationManifold separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB,
-		Matrix3d m, Vector3d motion) {
+	public static ContinuousSeparationManifold separateBBs(Vec3 cA, Vec3 cB, Vec3 eA, Vec3 eB,
+		Matrix3d m, Vec3 motion) {
 		ContinuousSeparationManifold mf = new ContinuousSeparationManifold();
 
-		Vector3d diff = cB.subtract(cA);
+		Vec3 diff = cB.subtract(cA);
 
 		m.transpose();
-		Vector3d diff2 = m.transform(diff);
-		Vector3d motion2 = m.transform(motion);
+		Vec3 diff2 = m.transform(diff);
+		Vec3 motion2 = m.transform(motion);
 		m.transpose();
 
 		double a00 = abs(m.m00);
@@ -28,9 +28,9 @@ public class ContinuousOBBCollider extends OBBCollider {
 		double a21 = abs(m.m21);
 		double a22 = abs(m.m22);
 
-		Vector3d uB0 = new Vector3d(m.m00, m.m10, m.m20);
-		Vector3d uB1 = new Vector3d(m.m01, m.m11, m.m21);
-		Vector3d uB2 = new Vector3d(m.m02, m.m12, m.m22);
+		Vec3 uB0 = new Vec3(m.m00, m.m10, m.m20);
+		Vec3 uB1 = new Vec3(m.m01, m.m11, m.m21);
+		Vec3 uB2 = new Vec3(m.m02, m.m12, m.m22);
 
 		checkCount = 0;
 		mf.stepSeparationAxis = uB1;
@@ -52,7 +52,7 @@ public class ContinuousOBBCollider extends OBBCollider {
 		return null;
 	}
 
-	static boolean separate(ContinuousSeparationManifold mf, Vector3d axis, double TL, double rA, double rB,
+	static boolean separate(ContinuousSeparationManifold mf, Vec3 axis, double TL, double rA, double rB,
 		double projectedMotion, boolean axisOfObjA) {
 		checkCount++;
 		double distance = abs(TL);
@@ -79,7 +79,7 @@ public class ContinuousOBBCollider extends OBBCollider {
 			mf.earliestCollisionExitTime = Math.min(exitTime, mf.earliestCollisionExitTime);
 		}
 
-		Vector3d normalizedAxis = axis.normalize();
+		Vec3 normalizedAxis = axis.normalize();
 
 		boolean isBestSeperation = distance != 0 && -(diff) <= abs(mf.separation);
 		// boolean isBestSeperation = discreteCollision && checkCount == 5; // Debug specific separations
@@ -91,15 +91,15 @@ public class ContinuousOBBCollider extends OBBCollider {
 
 		double dot = mf.stepSeparationAxis.dot(axis);
 		if (dot != 0 && discreteCollision) {
-			Vector3d cross = axis.cross(mf.stepSeparationAxis);
+			Vec3 cross = axis.cross(mf.stepSeparationAxis);
 			double dotSeparation = signum(dot) * TL - (rA + rB);
 			double stepSeparation = -dotSeparation;
-			Vector3d stepSeparationVec = axis;
+			Vec3 stepSeparationVec = axis;
 
-			if (!cross.equals(Vector3d.ZERO)) {
-				Vector3d sepVec = normalizedAxis.scale(dotSeparation);
-				Vector3d axisPlane = axis.cross(cross);
-				Vector3d stepPlane = mf.stepSeparationAxis.cross(cross);
+			if (!cross.equals(Vec3.ZERO)) {
+				Vec3 sepVec = normalizedAxis.scale(dotSeparation);
+				Vec3 axisPlane = axis.cross(cross);
+				Vec3 stepPlane = mf.stepSeparationAxis.cross(cross);
 				stepSeparationVec =
 					sepVec.subtract(axisPlane.scale(sepVec.dot(stepPlane) / axisPlane.dot(stepPlane)));
 				stepSeparation = stepSeparationVec.length();
@@ -128,12 +128,12 @@ public class ContinuousOBBCollider extends OBBCollider {
 		double latestCollisionEntryTime = UNDEFINED;
 		double earliestCollisionExitTime = Double.MAX_VALUE;
 		boolean isDiscreteCollision = true;
-		Vector3d collisionPosition;
+		Vec3 collisionPosition;
 
-		Vector3d stepSeparationAxis;
+		Vec3 stepSeparationAxis;
 		double stepSeparation;
 
-		Vector3d normalAxis;
+		Vec3 normalAxis;
 		double normalSeparation;
 
 		public double getTimeOfImpact() {
@@ -148,15 +148,15 @@ public class ContinuousOBBCollider extends OBBCollider {
 			return true;
 		}
 
-		public Vector3d getCollisionNormal() {
+		public Vec3 getCollisionNormal() {
 			return normalAxis == null ? null : createSeparationVec(normalSeparation, normalAxis);
 		}
 
-		public Vector3d getCollisionPosition() {
+		public Vec3 getCollisionPosition() {
 			return collisionPosition;
 		}
 
-		public Vector3d asSeparationVec(double obbStepHeight) {
+		public Vec3 asSeparationVec(double obbStepHeight) {
 			if (isDiscreteCollision) {
 				if (stepSeparation <= obbStepHeight)
 					return createSeparationVec(stepSeparation, stepSeparationAxis);
@@ -165,11 +165,11 @@ public class ContinuousOBBCollider extends OBBCollider {
 			double t = getTimeOfImpact();
 			if (t == UNDEFINED)
 				return null;
-			return Vector3d.ZERO;
+			return Vec3.ZERO;
 		}
 
 		@Override
-		public Vector3d asSeparationVec() {
+		public Vec3 asSeparationVec() {
 			return asSeparationVec(0);
 		}
 

@@ -3,17 +3,17 @@ package com.simibubi.create.foundation.gui;
 import java.util.List;
 import java.util.function.Consumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.content.schematics.client.tools.Tools;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class ToolSelectionScreen extends Screen {
 
@@ -32,7 +32,7 @@ public class ToolSelectionScreen extends Screen {
 	protected int h;
 
 	public ToolSelectionScreen(List<Tools> tools, Consumer<Tools> callback) {
-		super(new StringTextComponent("Tool Selection"));
+		super(new TextComponent("Tool Selection"));
 		this.minecraft = Minecraft.getInstance();
 		this.tools = tools;
 		this.callback = callback;
@@ -58,9 +58,9 @@ public class ToolSelectionScreen extends Screen {
 		selection = (selection + tools.size()) % tools.size();
 	}
 
-	private void draw(MatrixStack matrixStack, float partialTicks) {
+	private void draw(PoseStack matrixStack, float partialTicks) {
 		Minecraft mc = Minecraft.getInstance();
-		MainWindow mainWindow = mc.getWindow();
+		Window mainWindow = mc.getWindow();
 		if (!initialized)
 			init(mc, mainWindow.getGuiScaledWidth(), mainWindow.getGuiScaledHeight());
 
@@ -80,7 +80,7 @@ public class ToolSelectionScreen extends Screen {
 		blit(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
-		List<ITextComponent> toolTip = tools.get(selection)
+		List<Component> toolTip = tools.get(selection)
 			.getDescription();
 		int stringAlphaComponent = ((int) (toolTipAlpha * 0xFF)) << 24;
 
@@ -147,7 +147,7 @@ public class ToolSelectionScreen extends Screen {
 			yOffset *= .9f;
 	}
 
-	public void renderPassive(MatrixStack matrixStack, float partialTicks) {
+	public void renderPassive(PoseStack matrixStack, float partialTicks) {
 		draw(matrixStack, partialTicks);
 	}
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.BoxElement;
@@ -21,14 +21,14 @@ import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.MainWindow;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.Block;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderTagScreen extends NavigatableSimiScreen {
@@ -38,11 +38,11 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 	private final PonderTag tag;
 	protected final List<Item> items;
 	private final double itemXmult = 0.5;
-	protected Rectangle2d itemArea;
+	protected Rect2i itemArea;
 	protected final List<PonderChapter> chapters;
 	private final double chapterXmult = 0.5;
 	private final double chapterYmult = 0.75;
-	protected Rectangle2d chapterArea;
+	protected Rect2i chapterArea;
 	private final double mainYmult = 0.15;
 
 	private ItemStack hoveredItem = ItemStack.EMPTY;
@@ -77,7 +77,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		if (!tag.getMainItem().isEmpty())
 			items.remove(tag.getMainItem().getItem());
 
-		int rowCount = MathHelper.clamp((int) Math.ceil(items.size() / 11d), 1, 3);
+		int rowCount = Mth.clamp((int) Math.ceil(items.size() / 11d), 1, 3);
 		LayoutHelper layout = LayoutHelper.centeredHorizontal(items.size(), rowCount, 28, 28, 8);
 		itemArea = layout.getArea();
 		int itemCenterX = (int) (width * itemXmult);
@@ -137,7 +137,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		chapters.clear();
 		chapters.addAll(PonderRegistry.TAGS.getChapters(tag));
 
-		rowCount = MathHelper.clamp((int) Math.ceil(chapters.size() / 3f), 1, 3);
+		rowCount = Mth.clamp((int) Math.ceil(chapters.size() / 3f), 1, 3);
 		layout = LayoutHelper.centeredHorizontal(chapters.size(), rowCount, 200, 38, 16);
 		chapterArea = layout.getArea();
 		int chapterCenterX = (int) (width * chapterXmult);
@@ -162,10 +162,10 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		PonderUI.ponderTicks++;
 
 		hoveredItem = ItemStack.EMPTY;
-		MainWindow w = minecraft.getWindow();
+		Window w = minecraft.getWindow();
 		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
 		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget == backTrack)
 				continue;
 			if (widget instanceof PonderButton)
@@ -176,7 +176,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		renderItems(ms, mouseX, mouseY, partialTicks);
 
 		renderChapters(ms, mouseX, mouseY, partialTicks);
@@ -238,7 +238,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.popPose();
 	}
 
-	protected void renderItems(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderItems(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (items.isEmpty())
 			return;
 
@@ -276,7 +276,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		return (int) (mainYmult * height + 85);
 	}
 
-	protected void renderChapters(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderChapters(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (chapters.isEmpty())
 			return;
 
@@ -293,7 +293,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowForeground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
 		RenderSystem.disableRescaleNormal();
 		RenderSystem.disableDepthTest();

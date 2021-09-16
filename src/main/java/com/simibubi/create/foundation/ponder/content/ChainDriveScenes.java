@@ -11,11 +11,11 @@ import com.simibubi.create.foundation.ponder.elements.TextWindowElement.Builder;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 
 public class ChainDriveScenes {
 
@@ -149,7 +149,7 @@ public class ChainDriveScenes {
 
 		scene.idle(10);
 
-		AxisAlignedBB bb = new AxisAlignedBB(eastDrive);
+		AABB bb = new AABB(eastDrive);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, eastDrive, bb, 160);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.FAST, eastDrive.west(), bb.move(-2, 0, 0)
 			.expandTowards(15 / 16f, 0, 0), 160);
@@ -195,7 +195,7 @@ public class ChainDriveScenes {
 
 		scene.idle(10);
 
-		bb = new AxisAlignedBB(eastDrive);
+		bb = new AABB(eastDrive);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, eastDrive, bb.expandTowards(-15 / 16f, 0, 0), 160);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.SLOW, eastDrive.west(), bb.move(-2, 0, 0), 160);
 		scene.idle(20);
@@ -238,7 +238,7 @@ public class ChainDriveScenes {
 		scene.world.modifyTileNBT(util.select.position(analogPos), AnalogLeverTileEntity.class, nbt -> {
 			nbt.putInt("State", 8);
 		});
-		scene.world.modifyBlock(analogPos.south(), s -> s.setValue(RedstoneWireBlock.POWER, 8), false);
+		scene.world.modifyBlock(analogPos.south(), s -> s.setValue(RedStoneWireBlock.POWER, 8), false);
 		scene.world.toggleRedstonePower(util.select.position(1, 1, 4));
 		scene.world.modifyKineticSpeed(util.select.position(westGauge), f -> .75f * f);
 		scene.effects.indicateRedstone(analogPos);

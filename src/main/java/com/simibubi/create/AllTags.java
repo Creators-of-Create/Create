@@ -14,19 +14,19 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ITag;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 
 public class AllTags {
@@ -40,23 +40,23 @@ public class AllTags {
 			.tag(forgeItemTag(tagName));
 	}
 
-	public static ITag.INamedTag<Block> forgeBlockTag(String name) {
+	public static Tag.Named<Block> forgeBlockTag(String name) {
 		return forgeTag(BlockTags::bind, name);
 	}
 
-	public static ITag.INamedTag<Item> forgeItemTag(String name) {
+	public static Tag.Named<Item> forgeItemTag(String name) {
 		return forgeTag(ItemTags::bind, name);
 	}
 
-	public static ITag.INamedTag<Fluid> forgeFluidTag(String name) {
+	public static Tag.Named<Fluid> forgeFluidTag(String name) {
 		return forgeTag(FluidTags::bind, name);
 	}
 
-	public static <T> ITag.INamedTag<T> forgeTag(Function<String, ITag.INamedTag<T>> wrapperFactory, String name) {
+	public static <T> Tag.Named<T> forgeTag(Function<String, Tag.Named<T>> wrapperFactory, String name) {
 		return tag(wrapperFactory, "forge", name);
 	}
 
-	public static <T> ITag.INamedTag<T> tag(Function<String, ITag.INamedTag<T>> wrapperFactory, String domain,
+	public static <T> Tag.Named<T> tag(Function<String, Tag.Named<T>> wrapperFactory, String domain,
 		String name) {
 		return wrapperFactory.apply(new ResourceLocation(domain, name).toString());
 	}
@@ -89,7 +89,7 @@ public class AllTags {
 
 		;
 
-		public ITag.INamedTag<Item> tag;
+		public Tag.Named<Item> tag;
 
 		private AllItemTags(NameSpace namespace) {
 			this(namespace, "");
@@ -122,7 +122,7 @@ public class AllTags {
 
 		;
 
-		public ITag.INamedTag<Fluid> tag;
+		public Tag.Named<Fluid> tag;
 
 		private AllFluidTags() {
 			this(MOD, "");
@@ -159,7 +159,7 @@ public class AllTags {
 
 		;
 
-		public ITag.INamedTag<Block> tag;
+		public Tag.Named<Block> tag;
 
 		private AllBlockTags() {
 			this(MOD, "");
@@ -191,7 +191,7 @@ public class AllTags {
 				.addTag(tag));
 		}
 
-		public void includeAll(ITag.INamedTag<Block> child) {
+		public void includeAll(Tag.Named<Block> child) {
 			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
 				.addTag(child));
 		}

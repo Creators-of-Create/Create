@@ -25,27 +25,27 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -67,7 +67,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	protected FilteringBehaviour filtering;
 	protected boolean redstoneLocked;
 	private LazyOptional<IItemHandlerModifiable> invHandler;
-	private ListNBT deferredInventoryList;
+	private ListTag deferredInventoryList;
 
 	private LerpedFloat animatedOffset;
 
@@ -81,7 +81,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		PUNCH, USE
 	}
 
-	public DeployerTileEntity(TileEntityType<? extends DeployerTileEntity> type) {
+	public DeployerTileEntity(BlockEntityType<? extends DeployerTileEntity> type) {
 		super(type);
 		state = State.WAITING;
 		mode = Mode.USE;
@@ -106,27 +106,27 @@ public class DeployerTileEntity extends KineticTileEntity {
 	public void initialize() {
 		super.initialize();
 		if (!level.isClientSide) {
-			player = new DeployerFakePlayer((ServerWorld) level);
+			player = new DeployerFakePlayer((ServerLevel) level);
 			if (deferredInventoryList != null) {
 				player.inventory.load(deferredInventoryList);
 				deferredInventoryList = null;
 				heldItem = player.getMainHandItem();
 				sendData();
 			}
-			Vector3d initialPos = VecHelper.getCenterOf(worldPosition.relative(getBlockState().getValue(FACING)));
+			Vec3 initialPos = VecHelper.getCenterOf(worldPosition.relative(getBlockState().getValue(FACING)));
 			player.setPos(initialPos.x, initialPos.y, initialPos.z);
 		}
 		invHandler = LazyOptional.of(this::createHandler);
 	}
 
 	protected void onExtract(ItemStack stack) {
-		player.setItemInHand(Hand.MAIN_HAND, stack.copy());
+		player.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
 		sendData();
 		setChanged();
 	}
 
 	protected int getTimerSpeed() {
-		return (int) (getSpeed() == 0 ? 0 : MathHelper.clamp(Math.abs(getSpeed() * 2), 8, 512));
+		return (int) (getSpeed() == 0 ? 0 : Mth.clamp(Math.abs(getSpeed() * 2), 8, 512));
 	}
 
 	@Override
@@ -213,14 +213,14 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 	protected void start() {
 		state = State.EXPANDING;
-		Vector3d movementVector = getMovementVector();
-		Vector3d rayOrigin = VecHelper.getCenterOf(worldPosition)
+		Vec3 movementVector = getMovementVector();
+		Vec3 rayOrigin = VecHelper.getCenterOf(worldPosition)
 			.add(movementVector.scale(3 / 2f));
-		Vector3d rayTarget = VecHelper.getCenterOf(worldPosition)
+		Vec3 rayTarget = VecHelper.getCenterOf(worldPosition)
 			.add(movementVector.scale(5 / 2f));
-		RayTraceContext rayTraceContext =
-			new RayTraceContext(rayOrigin, rayTarget, BlockMode.OUTLINE, FluidMode.NONE, player);
-		BlockRayTraceResult result = level.clip(rayTraceContext);
+		ClipContext rayTraceContext =
+			new ClipContext(rayOrigin, rayTarget, Block.OUTLINE, Fluid.NONE, player);
+		BlockHitResult result = level.clip(rayTraceContext);
 		reach = (float) (.5f + Math.min(result.getLocation()
 			.subtract(rayOrigin)
 			.length(), .75f));
@@ -234,7 +234,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		BlockPos otherDeployer = worldPosition.relative(facing, 4);
 		if (!level.isLoaded(otherDeployer))
 			return false;
-		TileEntity otherTile = level.getBlockEntity(otherDeployer);
+		BlockEntity otherTile = level.getBlockEntity(otherDeployer);
 		if (!(otherTile instanceof DeployerTileEntity))
 			return false;
 		DeployerTileEntity deployerTile = (DeployerTileEntity) otherTile;
@@ -252,7 +252,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	public void triggerBoop() {
-		TileEntity otherTile = level.getBlockEntity(worldPosition.relative(getBlockState().getValue(FACING), 4));
+		BlockEntity otherTile = level.getBlockEntity(worldPosition.relative(getBlockState().getValue(FACING), 4));
 		if (!(otherTile instanceof DeployerTileEntity))
 			return;
 
@@ -270,15 +270,15 @@ public class DeployerTileEntity extends KineticTileEntity {
 		deployerTile.sendData();
 
 		// award nearby players
-		List<ServerPlayerEntity> players =
-			level.getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(worldPosition).inflate(9));
+		List<ServerPlayer> players =
+			level.getEntitiesOfClass(ServerPlayer.class, new AABB(worldPosition).inflate(9));
 		players.forEach(AllTriggers.DEPLOYER_BOOP::trigger);
 	}
 
 	protected void activate() {
-		Vector3d movementVector = getMovementVector();
+		Vec3 movementVector = getMovementVector();
 		Direction direction = getBlockState().getValue(FACING);
-		Vector3d center = VecHelper.getCenterOf(worldPosition);
+		Vec3 center = VecHelper.getCenterOf(worldPosition);
 		BlockPos clickedPos = worldPosition.relative(direction, 2);
 		player.yRot = direction.toYRot();
 		player.xRot = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
@@ -292,15 +292,15 @@ public class DeployerTileEntity extends KineticTileEntity {
 			heldItem = player.getMainHandItem();
 	}
 
-	protected Vector3d getMovementVector() {
+	protected Vec3 getMovementVector() {
 		if (!AllBlocks.DEPLOYER.has(getBlockState()))
-			return Vector3d.ZERO;
-		return Vector3d.atLowerCornerOf(getBlockState().getValue(FACING)
+			return Vec3.ZERO;
+		return Vec3.atLowerCornerOf(getBlockState().getValue(FACING)
 			.getNormal());
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
@@ -323,14 +323,14 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		NBTHelper.writeEnum(compound, "Mode", mode);
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.putInt("Timer", timer);
 		compound.putBoolean("Powered", redstoneLocked);
 
 		if (player != null) {
-			ListNBT invNBT = new ListNBT();
+			ListTag invNBT = new ListTag();
 			player.inventory.save(invNBT);
 			compound.put("Inventory", invNBT);
 			compound.put("HeldItem", player.getMainHandItem().serializeNBT());
@@ -374,7 +374,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB makeRenderBoundingBox() {
+	public AABB makeRenderBoundingBox() {
 		return super.makeRenderBoundingBox().inflate(3);
 	}
 
@@ -399,7 +399,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (getSpeed() == 0)
@@ -429,7 +429,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			progress = (timer - partialTicks * timerSpeed) / 1000f;
 		float handLength = handPose == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
 			: handPose == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-		float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (reach + handLength), 21 / 16f);
+		float distance = Math.min(Mth.clamp(progress, 0, 1) * (reach + handLength), 21 / 16f);
 
 		return distance;
 	}
@@ -442,7 +442,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	SandPaperInv sandpaperInv = new SandPaperInv(ItemStack.EMPTY);
 
 	@Nullable
-	public IRecipe<? extends IInventory> getRecipe(ItemStack stack) {
+	public Recipe<? extends Container> getRecipe(ItemStack stack) {
 		// safety checks
 		if (player == null || level == null)
 			return null;

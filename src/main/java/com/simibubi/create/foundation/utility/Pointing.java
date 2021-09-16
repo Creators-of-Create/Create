@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.StringRepresentable;
 
-public enum Pointing implements IStringSerializable {
+public enum Pointing implements StringRepresentable {
 	UP(0), LEFT(270), DOWN(180), RIGHT(90);
 
 	private int xRotation;

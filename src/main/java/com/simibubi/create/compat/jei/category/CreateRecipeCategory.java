@@ -20,18 +20,18 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
+public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IRecipeCategory<T> {
 
-	public final List<Supplier<List<? extends IRecipe<?>>>> recipes = new ArrayList<>();
+	public final List<Supplier<List<? extends Recipe<?>>>> recipes = new ArrayList<>();
 	public final List<Supplier<? extends Object>> recipeCatalysts = new ArrayList<>();
 
 	protected ResourceLocation uid;
@@ -70,7 +70,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return icon;
 	}
 
-	public static AllGuiTextures getRenderedSlot(IRecipe<?> recipe, int index) {
+	public static AllGuiTextures getRenderedSlot(Recipe<?> recipe, int index) {
 		AllGuiTextures jeiSlot = AllGuiTextures.JEI_SLOT;
 		if (!(recipe instanceof ProcessingRecipe))
 			return jeiSlot;
@@ -89,11 +89,11 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return new EmptyBackground(width, height);
 	}
 
-	public static IDrawable doubleItemIcon(IItemProvider item1, IItemProvider item2) {
+	public static IDrawable doubleItemIcon(ItemLike item1, ItemLike item2) {
 		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
 	}
 
-	public static IDrawable itemIcon(IItemProvider item) {
+	public static IDrawable itemIcon(ItemLike item) {
 		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
 	}
 
@@ -111,7 +111,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			float chance = output.getChance();
 			if (chance != 1)
 				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
-					.withStyle(TextFormatting.GOLD));
+					.withStyle(ChatFormatting.GOLD));
 		});
 	}
 
@@ -145,26 +145,26 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 			
 			if (fluid.getFluid()
 				.isSame(AllFluids.POTION.get())) {
-				ITextComponent name = fluid.getDisplayName();
+				Component name = fluid.getDisplayName();
 				if (tooltip.isEmpty())
 					tooltip.add(0, name);
 				else
 					tooltip.set(0, name);
 
-				ArrayList<ITextComponent> potionTooltip = new ArrayList<>();
+				ArrayList<Component> potionTooltip = new ArrayList<>();
 				PotionFluidHandler.addPotionTooltip(fluid, potionTooltip, 1);
 				tooltip.addAll(1, potionTooltip.stream()
 					.collect(Collectors.toList()));
 			}
 
 			int amount = amounts.get(index != -1 ? 0 : slotIndex);
-			ITextComponent text = (Lang.translate("generic.unit.millibuckets", amount)).withStyle(TextFormatting.GOLD);
+			Component text = (Lang.translate("generic.unit.millibuckets", amount)).withStyle(ChatFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {
-				List<ITextComponent> siblings = tooltip.get(0)
+				List<Component> siblings = tooltip.get(0)
 					.getSiblings();
-				siblings.add(new StringTextComponent(" "));
+				siblings.add(new TextComponent(" "));
 				siblings.add(text);
 			}
 		});

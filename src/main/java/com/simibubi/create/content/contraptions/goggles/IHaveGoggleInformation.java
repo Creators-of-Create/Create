@@ -8,10 +8,10 @@ import java.util.Optional;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -23,7 +23,7 @@ public interface IHaveGoggleInformation {
 
 	Format numberFormat = new Format();
 	String spacing = "    ";
-	ITextComponent componentSpacing = new StringTextComponent(spacing);
+	Component componentSpacing = new TextComponent(spacing);
 
 	/**
 	 * this method will be called when looking at a TileEntity that implemented this
@@ -32,7 +32,7 @@ public interface IHaveGoggleInformation {
 	 * @return {@code true} if the tooltip creation was successful and should be displayed,
 	 * or {@code false} if the overlay should not be displayed
 	* */
-	default boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking){
+	default boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking){
 		return false;
 	}
 
@@ -41,9 +41,9 @@ public interface IHaveGoggleInformation {
 			.format(d).replace("\u00A0", " ");
 	}
 
-	default boolean containedFluidTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking, LazyOptional<IFluidHandler> handler) {
+	default boolean containedFluidTooltip(List<Component> tooltip, boolean isPlayerSneaking, LazyOptional<IFluidHandler> handler) {
 		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.goggles.fluid_container")));
-		TranslationTextComponent mb = Lang.translate("generic.unit.millibuckets");
+		TranslatableComponent mb = Lang.translate("generic.unit.millibuckets");
 		Optional<IFluidHandler> resolve = handler.resolve();
 		if (!resolve.isPresent())
 			return false;
@@ -52,7 +52,7 @@ public interface IHaveGoggleInformation {
 		if (tank.getTanks() == 0)
 			return false;
 
-		ITextComponent indent = new StringTextComponent(spacing + " ");
+		Component indent = new TextComponent(spacing + " ");
 
 		boolean isEmpty = true;
 		for (int i = 0; i < tank.getTanks(); i++) {
@@ -60,10 +60,10 @@ public interface IHaveGoggleInformation {
 			if (fluidStack.isEmpty())
 				continue;
 
-			ITextComponent fluidName = new TranslationTextComponent(fluidStack.getTranslationKey()).withStyle(TextFormatting.GRAY);
-			ITextComponent contained = new StringTextComponent(format(fluidStack.getAmount())).append(mb).withStyle(TextFormatting.GOLD);
-			ITextComponent slash = new StringTextComponent(" / ").withStyle(TextFormatting.GRAY);
-			ITextComponent capacity = new StringTextComponent(format(tank.getTankCapacity(i))).append(mb).withStyle(TextFormatting.DARK_GRAY);
+			Component fluidName = new TranslatableComponent(fluidStack.getTranslationKey()).withStyle(ChatFormatting.GRAY);
+			Component contained = new TextComponent(format(fluidStack.getAmount())).append(mb).withStyle(ChatFormatting.GOLD);
+			Component slash = new TextComponent(" / ").withStyle(ChatFormatting.GRAY);
+			Component capacity = new TextComponent(format(tank.getTankCapacity(i))).append(mb).withStyle(ChatFormatting.DARK_GRAY);
 
 			tooltip.add(indent.plainCopy()
 					.append(fluidName));
@@ -84,8 +84,8 @@ public interface IHaveGoggleInformation {
 		if (!isEmpty)
 			return true;
 
-		ITextComponent capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(TextFormatting.GRAY);
-		ITextComponent amount = new StringTextComponent(format(tank.getTankCapacity(0))).append(mb).withStyle(TextFormatting.GOLD);
+		Component capacity = Lang.translate("gui.goggles.fluid_container.capacity").withStyle(ChatFormatting.GRAY);
+		Component amount = new TextComponent(format(tank.getTankCapacity(0))).append(mb).withStyle(ChatFormatting.GOLD);
 
 		tooltip.add(indent.plainCopy()
 			.append(capacity)

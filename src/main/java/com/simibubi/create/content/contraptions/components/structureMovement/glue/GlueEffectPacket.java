@@ -5,13 +5,13 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class GlueEffectPacket extends SimplePacketBase {
 
@@ -25,20 +25,20 @@ public class GlueEffectPacket extends SimplePacketBase {
 		this.fullBlock = fullBlock;
 	}
 
-	public GlueEffectPacket(PacketBuffer buffer) {
+	public GlueEffectPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
 		direction = Direction.from3DDataValue(buffer.readByte());
 		fullBlock = buffer.readBoolean();
 	}
 
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeByte(direction.get3DDataValue());
 		buffer.writeBoolean(fullBlock);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void handle(Supplier<Context> context) {
+	public void handle(Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			Minecraft mc = Minecraft.getInstance();
 			if (!mc.player.blockPosition().closerThan(pos, 100))

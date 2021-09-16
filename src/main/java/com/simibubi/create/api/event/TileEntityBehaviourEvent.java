@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.eventbus.api.GenericEvent;
 
 /**
@@ -21,13 +21,11 @@ import net.minecraftforge.eventbus.api.GenericEvent;
  */
 public class TileEntityBehaviourEvent<T extends SmartTileEntity> extends GenericEvent<T> {
 
-	private BlockState state;
 	private T smartTileEntity;
 	private Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 
-	public TileEntityBehaviourEvent(BlockState state, T tileEntity,
+	public TileEntityBehaviourEvent(T tileEntity,
 		Map<BehaviourType<?>, TileEntityBehaviour> behaviours) {
-		this.state = state;
 		smartTileEntity = tileEntity;
 		this.behaviours = behaviours;
 	}
@@ -48,9 +46,4 @@ public class TileEntityBehaviourEvent<T extends SmartTileEntity> extends Generic
 	public T getTileEntity() {
 		return smartTileEntity;
 	}
-
-	public BlockState getBlockState() {
-		return state;
-	}
-
 }

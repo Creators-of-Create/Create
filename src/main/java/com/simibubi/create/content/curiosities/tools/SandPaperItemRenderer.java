@@ -1,27 +1,27 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 
-public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
+public class SandPaperItemRenderer extends BlockEntityWithoutLevelRenderer {
 
 	@Override
-	public void renderByItem(ItemStack stack, TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderByItem(ItemStack stack, TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getModel(stack, Minecraft.getInstance().level, null);
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
@@ -31,7 +31,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 		ms.pushPose();
 		ms.translate(.5f, .5f, .5f);
 
-		CompoundNBT tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrCreateTag();
 		boolean jeiMode = tag.contains("JEI");
 
 		if (tag.contains("Polishing")) {
@@ -49,7 +49,7 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 			float time = (float) (!jeiMode ? player.getUseItemRemainingTicks()
 					: (-AnimationTickHolder.getTicks()) % stack.getUseDuration()) - partialTicks + 1.0F;
 			if (time / (float) stack.getUseDuration() < 0.8F) {
-				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
+				float bobbing = -Mth.abs(Mth.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
 				if (transformType == TransformType.GUI)
 					ms.translate(bobbing, bobbing, 0.0F);
@@ -81,12 +81,12 @@ public class SandPaperItemRenderer extends ItemStackTileEntityRenderer {
 
 	public static class SandPaperModel extends CreateCustomRenderedItemModel {
 
-		public SandPaperModel(IBakedModel template) {
+		public SandPaperModel(BakedModel template) {
 			super(template, "");
 		}
 
 		@Override
-		public ItemStackTileEntityRenderer createRenderer() {
+		public BlockEntityWithoutLevelRenderer createRenderer() {
 			return new SandPaperItemRenderer();
 		}
 

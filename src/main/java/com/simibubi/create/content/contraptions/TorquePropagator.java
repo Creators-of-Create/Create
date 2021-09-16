@@ -7,18 +7,18 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.WorldHelper;
 
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.LevelAccessor;
 
 public class TorquePropagator {
 
-	static Map<IWorld, Map<Long, KineticNetwork>> networks = new HashMap<>();
+	static Map<LevelAccessor, Map<Long, KineticNetwork>> networks = new HashMap<>();
 
-	public void onLoadWorld(IWorld world) {
+	public void onLoadWorld(LevelAccessor world) {
 		networks.put(world, new HashMap<>());
 		Create.LOGGER.debug("Prepared Kinetic Network Space for " + WorldHelper.getDimensionID(world));
 	}
 
-	public void onUnloadWorld(IWorld world) {
+	public void onUnloadWorld(LevelAccessor world) {
 		networks.remove(world);
 		Create.LOGGER.debug("Removed Kinetic Network Space for " + WorldHelper.getDimensionID(world));
 	}

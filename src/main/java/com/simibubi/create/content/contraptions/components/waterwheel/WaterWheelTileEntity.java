@@ -8,17 +8,17 @@ import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	private Map<Direction, Float> flows;
 
-	public WaterWheelTileEntity(TileEntityType<? extends WaterWheelTileEntity> type) {
+	public WaterWheelTileEntity(BlockEntityType<? extends WaterWheelTileEntity> type) {
 		super(type);
 		flows = new HashMap<>();
 		for (Direction d : Iterate.directions)
@@ -27,7 +27,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		if (compound.contains("Flows")) {
 			for (Direction d : Iterate.directions)
@@ -37,13 +37,13 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(worldPosition).inflate(1);
+	public AABB makeRenderBoundingBox() {
+		return new AABB(worldPosition).inflate(1);
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
-		CompoundNBT flows = new CompoundNBT();
+	public void write(CompoundTag compound, boolean clientPacket) {
+		CompoundTag flows = new CompoundTag();
 		for (Direction d : Iterate.directions)
 			flows.putFloat(d.getSerializedName(), this.flows.get(d));
 		compound.put("Flows", flows);

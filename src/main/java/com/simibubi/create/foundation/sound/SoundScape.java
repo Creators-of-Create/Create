@@ -10,18 +10,18 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 class SoundScape {
 	List<ContinuousSound> continuous;
 	List<RepeatingSound> repeating;
 	private float pitch;
 	private AmbienceGroup group;
-	private Vector3d meanPos;
+	private Vec3 meanPos;
 	private PitchGroup pitchGroup;
 
 	public SoundScape(float pitch, AmbienceGroup group) {
@@ -65,12 +65,12 @@ class SoundScape {
 		continuous.forEach(ContinuousSound::remove);
 	}
 
-	public Vector3d getMeanPos() {
+	public Vec3 getMeanPos() {
 		return meanPos == null ? meanPos = determineMeanPos() : meanPos;
 	}
 
-	private Vector3d determineMeanPos() {
-		meanPos = Vector3d.ZERO;
+	private Vec3 determineMeanPos() {
+		meanPos = Vec3.ZERO;
 		int amount = 0;
 		for (BlockPos blockPos : SoundScapes.getAllLocations(group, pitchGroup)) {
 			meanPos = meanPos.add(VecHelper.getCenterOf(blockPos));
@@ -87,12 +87,12 @@ class SoundScape {
 		if (renderViewEntity != null) {
 			double distanceTo = renderViewEntity.position()
 				.distanceTo(getMeanPos());
-			distanceMultiplier = (float) MathHelper.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
+			distanceMultiplier = (float) Mth.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
 		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
 		float max = AllConfigs.CLIENT.ambientVolumeCap.getF();
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
-		return MathHelper.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
+		return Mth.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
 	}
 
 }

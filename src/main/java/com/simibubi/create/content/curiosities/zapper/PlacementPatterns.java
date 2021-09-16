@@ -8,9 +8,9 @@ import com.google.common.base.Predicates;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 
 public enum PlacementPatterns {
 
@@ -30,7 +30,7 @@ public enum PlacementPatterns {
 	}
 
 	public static void applyPattern(List<BlockPos> blocksIn, ItemStack stack) {
-		CompoundNBT tag = stack.getTag();
+		CompoundTag tag = stack.getTag();
 		PlacementPatterns pattern =
 			!tag.contains("Pattern") ? Solid : valueOf(tag.getString("Pattern"));
 		Random r = new Random();

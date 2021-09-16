@@ -9,38 +9,38 @@ import java.util.function.Predicate;
 
 import com.jozufozu.flywheel.backend.IFlywheelWorld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.SectionPos;
-import net.minecraft.world.World;
-import net.minecraft.world.lighting.WorldLightManager;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.lighting.LevelLightEngine;
 
 public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelWorld {
 	public Map<BlockPos, BlockState> blocksAdded;
-	public Map<BlockPos, TileEntity> tesAdded;
+	public Map<BlockPos, BlockEntity> tesAdded;
 
 	public Set<SectionPos> spannedSections;
-	public WorldLightManager lighter;
+	public LevelLightEngine lighter;
 	public WrappedChunkProvider chunkProvider;
-	private final BlockPos.Mutable scratch = new BlockPos.Mutable();
+	private final BlockPos.MutableBlockPos scratch = new BlockPos.MutableBlockPos();
 
-	public PlacementSimulationWorld(World wrapped) {
+	public PlacementSimulationWorld(Level wrapped) {
 		this(wrapped, new WrappedChunkProvider());
 	}
 
-	public PlacementSimulationWorld(World wrapped, WrappedChunkProvider chunkProvider) {
+	public PlacementSimulationWorld(Level wrapped, WrappedChunkProvider chunkProvider) {
 		super(wrapped, chunkProvider);
 		this.chunkProvider = chunkProvider.setWorld(this);
 		spannedSections = new HashSet<>();
-		lighter = new WorldLightManager(chunkProvider, true, false); // blockLight, skyLight
+		lighter = new LevelLightEngine(chunkProvider, true, false); // blockLight, skyLight
 		blocksAdded = new HashMap<>();
 		tesAdded = new HashMap<>();
 	}
 
 	@Override
-	public WorldLightManager getLightEngine() {
+	public LevelLightEngine getLightEngine() {
 		return lighter;
 	}
 
@@ -55,7 +55,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 		}
 	}
 
-	public void setTileEntities(Collection<TileEntity> tileEntities) {
+	public void setTileEntities(Collection<BlockEntity> tileEntities) {
 		tesAdded.clear();
 		tileEntities.forEach(te -> tesAdded.put(te.getBlockPos(), te));
 	}
@@ -86,7 +86,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	@Override
-	public TileEntity getBlockEntity(BlockPos pos) {
+	public BlockEntity getBlockEntity(BlockPos pos) {
 		return tesAdded.get(pos);
 	}
 

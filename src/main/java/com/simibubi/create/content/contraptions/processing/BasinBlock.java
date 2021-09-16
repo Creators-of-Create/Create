@@ -16,37 +16,39 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
@@ -68,49 +70,49 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
-		TileEntity tileEntity = world.getBlockEntity(pos.above());
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+		BlockEntity tileEntity = world.getBlockEntity(pos.above());
 		if (tileEntity instanceof BasinOperatingTileEntity)
 			return false;
 		return true;
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.BASIN.create();
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (!context.getLevel().isClientSide)
 			withTileEntityDo(context.getLevel(), context.getClickedPos(), bte -> bte.onWrenched(context.getClickedFace()));
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-		BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+		BlockHitResult hit) {
 		ItemStack heldItem = player.getItemInHand(handIn);
 
 		return onTileEntityUse(worldIn, pos, te -> {
 			if (!heldItem.isEmpty()) {
 				if (FluidHelper.tryEmptyItemIntoTE(worldIn, player, handIn, heldItem, te))
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				if (FluidHelper.tryFillItemFromTE(worldIn, player, handIn, heldItem, te))
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 
 				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
 						|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
 					.equals(Items.SPONGE)
 					&& !te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
 						.orElse(FluidStack.EMPTY)
 						.isEmpty()) {
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			}
 
 			IItemHandlerModifiable inv = te.itemCapability.orElse(new ItemStackHandler(1));
@@ -124,15 +126,15 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				success = true;
 			}
 			if (success)
-				worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
+				worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 						1f + Create.RANDOM.nextFloat());
 			te.onEmptied();
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		});
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
 		super.updateEntityAfterFallOn(worldIn, entityIn);
 		if (!AllBlocks.BASIN.has(worldIn.getBlockState(entityIn.blockPosition())))
 			return;
@@ -162,24 +164,24 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public VoxelShape getInteractionShape(BlockState p_199600_1_, IBlockReader p_199600_2_, BlockPos p_199600_3_) {
+	public VoxelShape getInteractionShape(BlockState p_199600_1_, BlockGetter p_199600_2_, BlockPos p_199600_3_) {
 		return AllShapes.BASIN_RAYTRACE_SHAPE;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.BASIN_BLOCK_SHAPE;
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext ctx) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext ctx) {
 		if (ctx.getEntity() instanceof ItemEntity)
 			return AllShapes.BASIN_COLLISION_SHAPE;
 		return getShape(state, reader, pos, ctx);
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
@@ -197,7 +199,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return getTileEntityOptional(worldIn, pos).map(BasinTileEntity::getInputInventory)
 			.map(ItemHelper::calcRedstoneFromInventory)
 			.orElse(0);
@@ -208,7 +210,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 		return BasinTileEntity.class;
 	}
 
-	public static boolean canOutputTo(IBlockReader world, BlockPos basinPos, Direction direction) {
+	public static boolean canOutputTo(BlockGetter world, BlockPos basinPos, Direction direction) {
 		BlockPos neighbour = basinPos.relative(direction);
 		BlockPos output = neighbour.below();
 		BlockState blockState = world.getBlockState(neighbour);
@@ -220,7 +222,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			.isEmpty()) {
 			return false;
 		} else {
-			TileEntity tileEntity = world.getBlockEntity(output);
+			BlockEntity tileEntity = world.getBlockEntity(output);
 			if (tileEntity instanceof BeltTileEntity) {
 				BeltTileEntity belt = (BeltTileEntity) tileEntity;
 				return belt.getSpeed() == 0 || belt.getMovementFacing() != direction.getOpposite();
@@ -235,7 +237,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

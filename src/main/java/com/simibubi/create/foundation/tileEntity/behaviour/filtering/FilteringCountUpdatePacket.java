@@ -3,14 +3,14 @@ package com.simibubi.create.foundation.tileEntity.behaviour.filtering;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 
 public class FilteringCountUpdatePacket extends TileEntityConfigurationPacket<SmartTileEntity> {
 
 	int amount;
 	
-	public FilteringCountUpdatePacket(PacketBuffer buffer) {
+	public FilteringCountUpdatePacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
 	
@@ -20,12 +20,12 @@ public class FilteringCountUpdatePacket extends TileEntityConfigurationPacket<Sm
 	}
 
 	@Override
-	protected void writeSettings(PacketBuffer buffer) {
+	protected void writeSettings(FriendlyByteBuf buffer) {
 		buffer.writeInt(amount);
 	}
 
 	@Override
-	protected void readSettings(PacketBuffer buffer) {
+	protected void readSettings(FriendlyByteBuf buffer) {
 		amount = buffer.readInt();
 	}
 

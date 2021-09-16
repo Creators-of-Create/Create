@@ -15,12 +15,12 @@ import com.jozufozu.flywheel.light.LightUpdater;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.LightType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LightLayer;
 
 public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
 
@@ -69,7 +69,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		coil.setRotation(rotationAxis.rotationDegrees(offset * 180));
 		magnet.update().get().ifPresent(data ->
 				{
-					int index = Math.max(0, MathHelper.floor(offset));
+					int index = Math.max(0, Mth.floor(offset));
 					data.setPosition(getInstancePosition())
 							.nudge(0, -offset, 0)
 							.setBlockLight(bLight[index])
@@ -134,7 +134,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		int neededRopeCount = getNeededRopeCount();
 		rope.resize(neededRopeCount);
 
-		int length = MathHelper.ceil(offset);
+		int length = Mth.ceil(offset);
 
 		if (volume == null || bLight.length < length + 1) {
 			volume = GridAlignedBB.from(pos.below(length), pos);
@@ -154,7 +154,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	private int getNeededRopeCount() {
-		return Math.max(0, MathHelper.ceil(offset - 1.25f));
+		return Math.max(0, Mth.ceil(offset - 1.25f));
 	}
 
 	private boolean shouldRenderHalfRope() {
@@ -176,7 +176,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	@Override
-	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
+	public boolean onLightUpdate(BlockAndTintGetter world, LightLayer type, GridAlignedBB changed) {
 		changed.intersectAssign(volume);
 
 		initLight(world, changed);
@@ -184,13 +184,13 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		return false;
 	}
 
-	private void initLight(IBlockDisplayReader world, GridAlignedBB changed) {
+	private void initLight(BlockAndTintGetter world, GridAlignedBB changed) {
 		int top = this.pos.getY();
-		BlockPos.Mutable pos = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		changed.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
-			byte block = (byte) world.getBrightness(LightType.BLOCK, pos);
-			byte sky = (byte) world.getBrightness(LightType.SKY, pos);
+			byte block = (byte) world.getBrightness(LightLayer.BLOCK, pos);
+			byte sky = (byte) world.getBrightness(LightLayer.SKY, pos);
 
 			int i = top - y;
 

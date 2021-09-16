@@ -10,17 +10,17 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
 
 public class WorldshaperRenderHandler {
 
@@ -39,14 +39,14 @@ public class WorldshaperRenderHandler {
 	}
 
 	protected static void gatherSelectedBlocks() {
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		ItemStack heldMain = player.getMainHandItem();
 		ItemStack heldOff = player.getOffhandItem();
 		boolean zapperInMain = AllItems.WORLDSHAPER.isIn(heldMain);
 		boolean zapperInOff = AllItems.WORLDSHAPER.isIn(heldOff);
 
 		if (zapperInMain) {
-			CompoundNBT tag = heldMain.getOrCreateTag();
+			CompoundTag tag = heldMain.getOrCreateTag();
 			if (!tag.contains("_Swap") || !zapperInOff) {
 				createBrushOutline(tag, player, heldMain);
 				return;
@@ -54,7 +54,7 @@ public class WorldshaperRenderHandler {
 		}
 
 		if (zapperInOff) {
-			CompoundNBT tag = heldOff.getOrCreateTag();
+			CompoundTag tag = heldOff.getOrCreateTag();
 			createBrushOutline(tag, player, heldOff);
 			return;
 		}
@@ -62,7 +62,7 @@ public class WorldshaperRenderHandler {
 		renderedPositions = null;
 	}
 
-	public static void createBrushOutline(CompoundNBT tag, ClientPlayerEntity player, ItemStack zapper) {
+	public static void createBrushOutline(CompoundTag tag, LocalPlayer player, ItemStack zapper) {
 		if (!tag.contains("BrushParams")) {
 			renderedPositions = null;
 			return;
@@ -72,15 +72,15 @@ public class WorldshaperRenderHandler {
 			.get();
 		PlacementOptions placement = NBTHelper.readEnum(tag, "Placement", PlacementOptions.class);
 		TerrainTools tool = NBTHelper.readEnum(tag, "Tool", TerrainTools.class);
-		BlockPos params = NBTUtil.readBlockPos(tag.getCompound("BrushParams"));
+		BlockPos params = NbtUtils.readBlockPos(tag.getCompound("BrushParams"));
 		brush.set(params.getX(), params.getY(), params.getZ());
 
-		Vector3d start = player.position()
+		Vec3 start = player.position()
 			.add(0, player.getEyeHeight(), 0);
-		Vector3d range = player.getLookAngle()
+		Vec3 range = player.getLookAngle()
 			.scale(128);
-		BlockRayTraceResult raytrace = player.level
-			.clip(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		BlockHitResult raytrace = player.level
+			.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
 		if (raytrace == null || raytrace.getType() == Type.MISS) {
 			renderedPositions = null;
 			return;

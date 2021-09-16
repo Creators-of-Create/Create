@@ -5,33 +5,33 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
 
 public abstract class AbstractBlockBreakQueue {
-	protected Consumer<BlockPos> makeCallbackFor(World world, float effectChance, ItemStack toDamage,
-		@Nullable PlayerEntity playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
+	protected Consumer<BlockPos> makeCallbackFor(Level world, float effectChance, ItemStack toDamage,
+		@Nullable Player playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
 		return pos -> {
 			ItemStack usedTool = toDamage.copy();
 			BlockHelper.destroyBlockAs(world, pos, playerEntity, toDamage, effectChance,
 				stack -> drop.accept(pos, stack));
 			if (toDamage.isEmpty() && !usedTool.isEmpty())
-				ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, Hand.MAIN_HAND);
+				ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, InteractionHand.MAIN_HAND);
 		};
 	}
 
-	public void destroyBlocks(World world, @Nullable LivingEntity entity, BiConsumer<BlockPos, ItemStack> drop) {
-		PlayerEntity playerEntity = entity instanceof PlayerEntity ? ((PlayerEntity) entity) : null;
+	public void destroyBlocks(Level world, @Nullable LivingEntity entity, BiConsumer<BlockPos, ItemStack> drop) {
+		Player playerEntity = entity instanceof Player ? ((Player) entity) : null;
 		ItemStack toDamage =
 			playerEntity != null && !playerEntity.isCreative() ? playerEntity.getMainHandItem() : ItemStack.EMPTY;
 		destroyBlocks(world, toDamage, playerEntity, drop);
 	}
 
-	public abstract void destroyBlocks(World world, ItemStack toDamage, @Nullable PlayerEntity playerEntity,
+	public abstract void destroyBlocks(Level world, ItemStack toDamage, @Nullable Player playerEntity,
 		BiConsumer<BlockPos, ItemStack> drop);
 }

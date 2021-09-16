@@ -1,13 +1,11 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -16,14 +14,15 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 
 public class HarvesterActorInstance extends ActorInstance {
     static double oneOverRadius = 16.0 / 6.5;
     static float originOffset = 1 / 16f;
-    static Vector3d rotOffset = new Vector3d(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
+    static Vec3 rotOffset = new Vec3(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 
 
     ModelData harvester;
@@ -34,15 +33,15 @@ public class HarvesterActorInstance extends ActorInstance {
     private double rotation;
     private double previousRotation;
 
-    public HarvesterActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+    public HarvesterActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
-		InstanceMaterial<ModelData> instanceMaterial = materialManager.defaultCutout()
+		Material<ModelData> instanceMaterial = materialManager.defaultCutout()
 				.material(Materials.TRANSFORMED);
 
         BlockState state = context.state;
 
-        facing = state.getValue(HORIZONTAL_FACING);
+        facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         harvester = instanceMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
@@ -75,7 +74,7 @@ public class HarvesterActorInstance extends ActorInstance {
 
     @Override
     public void beginFrame() {
-        MatrixStack ms = new MatrixStack();
+        PoseStack ms = new PoseStack();
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(context.localPos)

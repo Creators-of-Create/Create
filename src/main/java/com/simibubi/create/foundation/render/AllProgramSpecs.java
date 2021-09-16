@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.render;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class AllProgramSpecs {
 

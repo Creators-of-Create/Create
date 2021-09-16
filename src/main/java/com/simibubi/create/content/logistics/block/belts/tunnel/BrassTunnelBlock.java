@@ -7,62 +7,62 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
 public class BrassTunnelBlock extends BeltTunnelBlock {
 
-	public BrassTunnelBlock(AbstractBlock.Properties properties) {
+	public BrassTunnelBlock(BlockBehaviour.Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player,
-		Hand p_225533_5_, BlockRayTraceResult p_225533_6_) {
+	public InteractionResult use(BlockState p_225533_1_, Level world, BlockPos pos, Player player,
+		InteractionHand p_225533_5_, BlockHitResult p_225533_6_) {
 		return onTileEntityUse(world, pos, te -> {
 			if (!(te instanceof BrassTunnelTileEntity))
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			BrassTunnelTileEntity bte = (BrassTunnelTileEntity) te;
 			List<ItemStack> stacksOfGroup = bte.grabAllStacksOfGroup(world.isClientSide);
 			if (stacksOfGroup.isEmpty())
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			if (world.isClientSide)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			for (ItemStack itemStack : stacksOfGroup) 
 				player.inventory.placeItemBackInInventory(world, itemStack.copy());
-			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
+			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 				1f + Create.RANDOM.nextFloat());
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		});
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.BRASS_TUNNEL.create();
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 		return super.updateShape(state, facing, facingState, worldIn, currentPos, facingPos);
 	}
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
 		if (p_196243_1_.hasTileEntity()
 			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {

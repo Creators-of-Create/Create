@@ -2,13 +2,13 @@ package com.simibubi.create.compat.jei;
 
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.world.item.ItemStack;
 
 public class DoubleItemIcon implements IDrawable {
 
@@ -33,13 +33,13 @@ public class DoubleItemIcon implements IDrawable {
 	}
 
 	@Override
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		if (primaryStack == null) {
 			primaryStack = primarySupplier.get();
 			secondaryStack = secondarySupplier.get();
 		}
 
-		RenderHelper.turnBackOn();
+		Lighting.turnBackOn();
 		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();

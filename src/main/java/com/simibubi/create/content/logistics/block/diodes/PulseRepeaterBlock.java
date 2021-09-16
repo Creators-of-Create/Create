@@ -2,15 +2,17 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.TickPriority;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PulseRepeaterBlock extends AbstractDiodeBlock {
 
@@ -27,14 +29,14 @@ public class PulseRepeaterBlock extends AbstractDiodeBlock {
 	}
 	
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
 		return side.getAxis() == state.getValue(FACING).getAxis();
 	}
 	
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		boolean powered = state.getValue(POWERED);
 		boolean pulsing = state.getValue(PULSING);
 		boolean shouldPower = shouldTurnOn(worldIn, pos, state);
@@ -51,7 +53,7 @@ public class PulseRepeaterBlock extends AbstractDiodeBlock {
 	}
 
 	@Override
-	protected int getOutputSignal(IBlockReader worldIn, BlockPos pos, BlockState state) {
+	protected int getOutputSignal(BlockGetter worldIn, BlockPos pos, BlockState state) {
 		return state.getValue(PULSING) ? 15 : 0;
 	}
 

@@ -5,8 +5,8 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -24,29 +24,29 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.BlockItem;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
-	public DeployerRenderer(TileEntityRendererDispatcher dispatcher) {
+	public DeployerRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(DeployerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		renderItem(te, partialTicks, ms, buffer, light, overlay);
 		FilteringRenderer.renderOnTileEntity(te, partialTicks, ms, buffer, light, overlay);
@@ -56,13 +56,13 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		renderComponents(te, partialTicks, ms, buffer, light, overlay);
 	}
 
-	protected void renderItem(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderItem(DeployerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
 		if (te.heldItem.isEmpty()) return;
 
 		BlockState deployerState = te.getBlockState();
-		Vector3d offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
+		Vec3 offset = getHandOffset(te, partialTicks, deployerState).add(VecHelper.getCenterOf(BlockPos.ZERO));
 		ms.pushPose();
 		ms.translate(offset.x, offset.y, offset.z);
 
@@ -107,15 +107,15 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 		ms.popPose();
 	}
 
-	protected void renderComponents(DeployerTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderComponents(DeployerTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
-		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
 			KineticTileEntityRenderer.renderRotatingKineticBlock(te, getRenderedBlockState(te), ms, vb, light);
 		}
 
 		BlockState blockState = te.getBlockState();
-		Vector3d offset = getHandOffset(te, partialTicks, blockState);
+		Vec3 offset = getHandOffset(te, partialTicks, blockState);
 
 		SuperByteBuffer pole = PartialBufferer.get(AllBlockPartials.DEPLOYER_POLE, blockState);
 		SuperByteBuffer hand = PartialBufferer.get(te.getHandPose(), blockState);
@@ -128,9 +128,9 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			.renderInto(ms, vb);
 	}
 
-	protected Vector3d getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
+	protected Vec3 getHandOffset(DeployerTileEntity te, float partialTicks, BlockState blockState) {
 		float distance = te.getHandOffset(partialTicks);
-		return Vector3d.atLowerCornerOf(blockState.getValue(FACING).getNormal()).scale(distance);
+		return Vec3.atLowerCornerOf(blockState.getValue(FACING).getNormal()).scale(distance);
 	}
 
 	protected BlockState getRenderedBlockState(KineticTileEntity te) {
@@ -153,8 +153,8 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 	}
 
 	public static void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		BlockState blockState = context.state;
 		Mode mode = NBTHelper.readEnum(context.tileData, "Mode", Mode.class);
 		PartialModel handPose = getHandPose(mode);
@@ -164,19 +164,19 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		double factor;
 		if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
-			factor = MathHelper.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
+			factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
 		} else {
-			Vector3d center = VecHelper.getCenterOf(new BlockPos(context.position));
+			Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));
 			double distance = context.position.distanceTo(center);
 			double nextDistance = context.position.add(context.motion)
 				.distanceTo(center);
-			factor = .5f - MathHelper.clamp(MathHelper.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
+			factor = .5f - Mth.clamp(Mth.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
 		}
 
-		Vector3d offset = Vector3d.atLowerCornerOf(blockState.getValue(FACING)
+		Vec3 offset = Vec3.atLowerCornerOf(blockState.getValue(FACING)
 			.getNormal()).scale(factor);
 
-		MatrixStack m = matrices.getModel();
+		PoseStack m = matrices.getModel();
 		m.pushPose();
 		m.translate(offset.x, offset.y, offset.z);
 

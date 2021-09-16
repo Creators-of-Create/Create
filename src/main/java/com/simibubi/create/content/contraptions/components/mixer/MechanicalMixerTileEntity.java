@@ -20,22 +20,22 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -49,7 +49,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public int processingTicks;
 	public boolean running;
 
-	public MechanicalMixerTileEntity(TileEntityType<? extends MechanicalMixerTileEntity> type) {
+	public MechanicalMixerTileEntity(BlockEntityType<? extends MechanicalMixerTileEntity> type) {
 		super(type);
 	}
 
@@ -60,14 +60,14 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 			if (runningTicks < 20) {
 				localTick = runningTicks;
 				float num = (localTick + partialTicks) / 20f;
-				num = ((2 - MathHelper.cos((float) (num * Math.PI))) / 2);
+				num = ((2 - Mth.cos((float) (num * Math.PI))) / 2);
 				offset = num - .5f;
 			} else if (runningTicks <= 20) {
 				offset = 1;
 			} else {
 				localTick = 40 - runningTicks;
 				float num = (localTick - partialTicks) / 20f;
-				num = ((2 - MathHelper.cos((float) (num * Math.PI))) / 2);
+				num = ((2 - Mth.cos((float) (num * Math.PI))) / 2);
 				offset = num - .5f;
 			}
 		}
@@ -89,12 +89,12 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(worldPosition).expandTowards(0, -1.5, 0);
+	public AABB makeRenderBoundingBox() {
+		return new AABB(worldPosition).expandTowards(0, -1.5, 0);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		runningTicks = compound.getInt("Ticks");
 		super.fromTag(state, compound, clientPacket);
@@ -104,7 +104,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putInt("Ticks", runningTicks);
 		super.write(compound, clientPacket);
@@ -128,7 +128,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 			if ((!level.isClientSide || isVirtual()) && runningTicks == 20) {
 				if (processingTicks < 0) {
-					processingTicks = MathHelper.clamp((MathHelper.log2((int) (512 / speed))) * 15 + 1, 1, 512);
+					processingTicks = Mth.clamp((Mth.log2((int) (512 / speed))) * 15 + 1, 1, 512);
 
 					Optional<BasinTileEntity> basin = getBasin();
 					if (basin.isPresent()) {
@@ -139,7 +139,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 							|| !tanks.getSecond()
 								.isEmpty())
 							level.playSound(null, worldPosition, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_AMBIENT,
-								SoundCategory.BLOCKS, .75f, speed < 65 ? .75f : 1.5f);
+								SoundSource.BLOCKS, .75f, speed < 65 ? .75f : 1.5f);
 					}
 
 				} else {
@@ -169,7 +169,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 				ItemStack stackInSlot = inv.getItem(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
+				ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, stackInSlot);
 				spillParticle(data);
 			}
 		}
@@ -186,20 +186,20 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		}
 	}
 
-	protected void spillParticle(IParticleData data) {
+	protected void spillParticle(ParticleOptions data) {
 		float angle = level.random.nextFloat() * 360;
-		Vector3d offset = new Vector3d(0, 0, 0.25f);
+		Vec3 offset = new Vec3(0, 0, 0.25f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
-		Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
+		Vec3 target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y)
 			.add(0, .25f, 0);
-		Vector3d center = offset.add(VecHelper.getCenterOf(worldPosition));
+		Vec3 center = offset.add(VecHelper.getCenterOf(worldPosition));
 		target = VecHelper.offsetRandomly(target.subtract(offset), level.random, 1 / 128f);
 		level.addParticle(data, center.x, center.y - 1.75f, center.z, target.x, target.y, target.z);
 	}
 
 	@Override
-	protected List<IRecipe<?>> getMatchingRecipes() {
-		List<IRecipe<?>> matchingRecipes = super.getMatchingRecipes();
+	protected List<Recipe<?>> getMatchingRecipes() {
+		List<Recipe<?>> matchingRecipes = super.getMatchingRecipes();
 
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
@@ -227,8 +227,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected <C extends IInventory> boolean matchStaticFilters(IRecipe<C> r) {
-		return ((r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE
+	protected <C extends Container> boolean matchStaticFilters(Recipe<C> r) {
+		return ((r.getSerializer() == RecipeSerializer.SHAPELESS_RECIPE
 			&& AllConfigs.SERVER.recipes.allowShapelessInMixer.get() && r.getIngredients()
 				.size() > 1
 			&& !MechanicalPressTileEntity.canCompress(r)) || r.getType() == AllRecipeTypes.MIXING.getType());

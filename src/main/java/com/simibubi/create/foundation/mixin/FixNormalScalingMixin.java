@@ -7,9 +7,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-@Mixin(MatrixStack.class)
+@Mixin(PoseStack.class)
 public class FixNormalScalingMixin {
 	/**
 	 * Minecraft negates the normal matrix if all scales are equal and negative, but

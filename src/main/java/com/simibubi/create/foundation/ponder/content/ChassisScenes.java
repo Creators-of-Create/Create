@@ -14,13 +14,13 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class ChassisScenes {
 
@@ -179,7 +179,7 @@ public class ChassisScenes {
 		scene.world.rotateSection(topGlassSection, 0, 180, 0, 40);
 		scene.idle(50);
 
-		Vector3d blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
+		Vec3 blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
 		scene.overlay.showCenteredScrollInput(chassisPos, Direction.NORTH, 50);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.UP).scroll()
 			.withWrench(), 50);
@@ -242,7 +242,7 @@ public class ChassisScenes {
 		scene.world.rotateSection(topGlassSection, 0, 180, 0, 40);
 		scene.idle(50);
 
-		Vector3d glueSurface = util.vector.blockSurface(chassisPos.west(), Direction.NORTH);
+		Vec3 glueSurface = util.vector.blockSurface(chassisPos.west(), Direction.NORTH);
 		scene.overlay.showText(80)
 			.attachKeyFrame()
 			.pointAt(glueSurface)
@@ -406,8 +406,8 @@ public class ChassisScenes {
 			.substract(r1), Direction.DOWN);
 		scene.world.showSection(util.select.fromTo(0, 3, 3, 1, 3, 4), Direction.DOWN);
 		scene.idle(10);
-		Vector3d blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
-		AxisAlignedBB bb = new AxisAlignedBB(blockSurface, blockSurface).inflate(.501, .501, 0);
+		Vec3 blockSurface = util.vector.blockSurface(chassisPos, Direction.NORTH);
+		AABB bb = new AABB(blockSurface, blockSurface).inflate(.501, .501, 0);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.GREEN, bb, bb, 60);
 		scene.overlay.showOutline(PonderPalette.WHITE, s, s, 80);
 		scene.overlay.showText(40)
@@ -494,7 +494,7 @@ public class ChassisScenes {
 		ElementLink<WorldSectionElement> plank =
 			scene.world.showIndependentSection(util.select.position(central), Direction.DOWN);
 		scene.idle(15);
-		Vector3d blockSurface = util.vector.blockSurface(central, Direction.NORTH);
+		Vec3 blockSurface = util.vector.blockSurface(central, Direction.NORTH);
 		scene.overlay.showControls(new InputWindowElement(blockSurface, Pointing.DOWN).rightClick()
 			.withItem(AllItems.SUPER_GLUE.asStack()), 40);
 		scene.idle(7);

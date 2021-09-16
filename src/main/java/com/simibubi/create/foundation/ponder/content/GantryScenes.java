@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class GantryScenes {
 
@@ -54,7 +54,7 @@ public class GantryScenes {
 		scene.world.hideIndependentSection(gantry, Direction.UP);
 		scene.idle(10);
 		gantry = scene.world.showIndependentSection(util.select.layer(2), Direction.DOWN);
-		Vector3d gantryTop = util.vector.topOf(4, 2, 2);
+		Vec3 gantryTop = util.vector.topOf(4, 2, 2);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> 0f);
 		scene.overlay.showText(40)
 			.attachKeyFrame()
@@ -210,7 +210,7 @@ public class GantryScenes {
 
 		BlockPos leverPos = util.grid.at(4, 1, 0);
 		scene.world.modifyBlocks(util.select.fromTo(1, 1, 0, 3, 1, 1),
-			s -> s.hasProperty(RedstoneWireBlock.POWER) ? s.setValue(RedstoneWireBlock.POWER, 15) : s, false);
+			s -> s.hasProperty(RedStoneWireBlock.POWER) ? s.setValue(RedStoneWireBlock.POWER, 15) : s, false);
 		scene.world.toggleRedstonePower(util.select.position(leverPos));
 		scene.world.toggleRedstonePower(shafts);
 		scene.effects.indicateRedstone(leverPos);

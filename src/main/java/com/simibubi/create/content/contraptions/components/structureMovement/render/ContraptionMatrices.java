@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.util.Mth;
+import com.mojang.math.Matrix4f;
 
 /**
  * <p>
@@ -15,9 +15,9 @@ import net.minecraft.util.math.vector.Matrix4f;
  */
 public class ContraptionMatrices {
 
-	private final MatrixStack modelViewProjection = new MatrixStack();
-	private final MatrixStack viewProjection = new MatrixStack();
-	private final MatrixStack model = new MatrixStack();
+	private final PoseStack modelViewProjection = new PoseStack();
+	private final PoseStack viewProjection = new PoseStack();
+	private final PoseStack model = new PoseStack();
 	private final Matrix4f world = new Matrix4f();
 	private final Matrix4f light = new Matrix4f();
 
@@ -28,13 +28,13 @@ public class ContraptionMatrices {
 		light.setIdentity();
 	}
 
-	public void setup(MatrixStack viewProjection, AbstractContraptionEntity entity) {
+	public void setup(PoseStack viewProjection, AbstractContraptionEntity entity) {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		this.viewProjection.pushPose();
 		transform(this.viewProjection, viewProjection);
 		model.pushPose();
-		entity.doLocalTransforms(partialTicks, new MatrixStack[] { model });
+		entity.doLocalTransforms(partialTicks, new PoseStack[] { model });
 
 		modelViewProjection.pushPose();
 		transform(modelViewProjection, viewProjection);
@@ -58,15 +58,15 @@ public class ContraptionMatrices {
 		ready = false;
 	}
 
-	public MatrixStack getModelViewProjection() {
+	public PoseStack getModelViewProjection() {
 		return modelViewProjection;
 	}
 
-	public MatrixStack getViewProjection() {
+	public PoseStack getViewProjection() {
 		return viewProjection;
 	}
 
-	public MatrixStack getModel() {
+	public PoseStack getModel() {
 		return model;
 	}
 
@@ -82,7 +82,7 @@ public class ContraptionMatrices {
 		return ready;
 	}
 
-	public static void transform(MatrixStack ms, MatrixStack transform) {
+	public static void transform(PoseStack ms, PoseStack transform) {
 		ms.last().pose()
 			.multiply(transform.last()
 			.pose());
@@ -92,13 +92,13 @@ public class ContraptionMatrices {
 	}
 
 	public static void translateToEntity(Matrix4f matrix, Entity entity, float partialTicks) {
-		double x = MathHelper.lerp(partialTicks, entity.xOld, entity.getX());
-		double y = MathHelper.lerp(partialTicks, entity.yOld, entity.getY());
-		double z = MathHelper.lerp(partialTicks, entity.zOld, entity.getZ());
+		double x = Mth.lerp(partialTicks, entity.xOld, entity.getX());
+		double y = Mth.lerp(partialTicks, entity.yOld, entity.getY());
+		double z = Mth.lerp(partialTicks, entity.zOld, entity.getZ());
 		matrix.setTranslation((float) x, (float) y, (float) z);
 	}
 
-	public static void clearStack(MatrixStack ms) {
+	public static void clearStack(PoseStack ms) {
 		while (!ms.clear()) {
 			ms.popPose();
 		}

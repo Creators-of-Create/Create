@@ -1,15 +1,15 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
 
-public class AirCurrentSound extends TickableSound {
+public class AirCurrentSound extends AbstractTickableSoundInstance {
 
 	private float pitch;
 
 	protected AirCurrentSound(SoundEvent p_i46532_1_, float pitch) {
-		super(p_i46532_1_, SoundCategory.BLOCKS);
+		super(p_i46532_1_, SoundSource.BLOCKS);
 		this.pitch = pitch;
 		volume = 0.01f;
 		looping = true;
