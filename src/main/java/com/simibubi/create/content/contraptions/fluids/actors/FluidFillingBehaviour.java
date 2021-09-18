@@ -137,7 +137,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				return false;
 			if (simulate)
 				return true;
-			playEffect(world, null, fluid, false);
+			playEffect(world, root, fluid, false);
 			if (evaporate) {
 				int i = root.getX();
 				int j = root.getY();
