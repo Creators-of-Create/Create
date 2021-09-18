@@ -38,6 +38,8 @@ public class CKinetics extends ConfigBase {
 	public ConfigInt maxCartCouplingLength = i(32, 1, "maxCartCouplingLength", Comments.maxCartCouplingLength);
 	public ConfigEnum<SpawnerMovementSetting> spawnerMovement =
 			e(SpawnerMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
+	public ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
+	public ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
 
 	public CStress stressValues = nested(1, CStress::new, Comments.stress);
 
@@ -74,6 +76,8 @@ public class CKinetics extends ConfigBase {
 		static String maxPistonPoles = "Maximum amount of extension poles behind a Mechanical Piston.";
 		static String maxRopeLength = "Max length of rope available off a Rope Pulley.";
 		static String maxCartCouplingLength = "Maximum allowed distance of two coupled minecarts.";
+		static String harvestPartiallyGrown = "Whether harvesters should break crops that aren't fully grown.";
+		static String harvesterReplants = "Whether harvesters should replant crops after harvesting.";
 		static String stats = "Configure speed/capacity levels for requirements and indicators.";
 		static String rpm = "[in Revolutions per Minute]";
 		static String su = "[in Stress Units]";

@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
@@ -95,7 +96,9 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
-			if (!seedSubtracted.getValue() && stack.sameItem(new ItemStack(state.getBlock()))) {
+			if (AllConfigs.SERVER.kinetics.harvesterReplants.get()
+					&& !seedSubtracted.getValue()
+					&& stack.sameItem(new ItemStack(state.getBlock()))) {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
 			}
@@ -108,7 +111,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	private boolean isValidCrop(World world, BlockPos pos, BlockState state) {
 		if (state.getBlock() instanceof CropsBlock) {
 			CropsBlock crop = (CropsBlock) state.getBlock();
-			if (!crop.isMaxAge(state))
+			if (!crop.isMaxAge(state) && !AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get())
 				return false;
 			return true;
 		}
@@ -120,9 +123,10 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				if (!property.getName()
 					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
-				if (((IntegerProperty) property).getPossibleValues()
-					.size() - 1 != state.getValue((IntegerProperty) property)
-						.intValue())
+				if (!AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get()
+						&& (((IntegerProperty) property).getPossibleValues().size() - 1
+								!= state.getValue((IntegerProperty) property)
+								.intValue()))
 					continue;
 				return true;
 			}
@@ -161,6 +165,14 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	private BlockState cutCrop(World world, BlockPos pos, BlockState state) {
+		if (!AllConfigs.SERVER.kinetics.harvesterReplants.get()) {
+			if (state.getFluidState()
+					.isEmpty())
+				return Blocks.AIR.defaultBlockState();
+			return state.getFluidState()
+					.createLegacyBlock();
+		}
+
 		Block block = state.getBlock();
 		if (block instanceof CropsBlock) {
 			CropsBlock crop = (CropsBlock) block;
