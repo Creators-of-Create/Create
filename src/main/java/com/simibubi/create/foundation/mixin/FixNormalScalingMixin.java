@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-@Mixin(PoseStack.class)
+@Mixin(value = PoseStack.class, remap = false)
 public class FixNormalScalingMixin {
 	/**
 	 * Minecraft negates the normal matrix if all scales are equal and negative, but
@@ -17,7 +17,7 @@ public class FixNormalScalingMixin {
 	 * applied, which negates the matrix again, resulting in the matrix being the
 	 * same as in the beginning.
 	 */
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/vector/Matrix3f;mul(F)V", shift = Shift.AFTER), method = "scale(FFF)V", cancellable = true)
+	@Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/math/Matrix3f;mul(Lcom/mojang/math/Matrix3f;)V", shift = Shift.AFTER), method = "scale(FFF)V", cancellable = true)
 	private void returnAfterNegate(float x, float y, float z, CallbackInfo ci) {
 		ci.cancel();
 	}
@@ -29,7 +29,7 @@ public class FixNormalScalingMixin {
 	 * that would invert all normals. Additionally, Minecraft's fastInverseCbrt method
 	 * does not work for negative numbers.
 	 */
-	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;fastInvCubeRoot(F)F"), method = "scale(FFF)V")
+	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;fastInvCubeRoot(F)F"), method = "scale(FFF)V")
 	private float absInvCbrtInput(float input) {
 		return Math.abs(input);
 	}

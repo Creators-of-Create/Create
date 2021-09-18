@@ -21,7 +21,7 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 
 public class StraightPipeTileEntity extends SmartTileEntity {
 
-	public StraightPipeTileEntity(BlockPos pos, BlockState state, BlockEntityType<BlockEntity> tileEntityTypeIn) {
+	public StraightPipeTileEntity(BlockPos pos, BlockState state, BlockEntityType<StraightPipeTileEntity> tileEntityTypeIn) {
 		super(tileEntityTypeIn, pos, state);
 	}
 

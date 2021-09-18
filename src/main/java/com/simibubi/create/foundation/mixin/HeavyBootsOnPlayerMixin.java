@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(LocalPlayer.class)
+@Mixin(value = LocalPlayer.class, remap = false)
 public abstract class HeavyBootsOnPlayerMixin extends AbstractClientPlayer {
 
 	public HeavyBootsOnPlayerMixin(ClientLevel p_i50991_1_, GameProfile p_i50991_2_) {

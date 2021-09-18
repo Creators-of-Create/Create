@@ -48,13 +48,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 			@Override
 			public void run(HashCache dc) throws IOException {
-				GENERATORS.forEach(g -> {
-					try {
-						g.run(dc);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				});
+				GENERATORS.forEach(g -> g.run(dc));
 			}
 		});
 	}

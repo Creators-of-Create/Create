@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+
+import net.minecraft.client.gui.screens.Overlay;
+
+import net.minecraft.client.renderer.texture.OverlayTexture;
+
 import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
@@ -109,15 +115,12 @@ public class SchematicRenderer {
 
 					BufferBuilder bufferBuilder = buffers.get(blockRenderLayer);
 					if (startedBufferBuilders.add(blockRenderLayer))
-						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
+						bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 
 					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
 
-					if (blockRendererDispatcher.renderModel(state, pos, blockAccess, ms, bufferBuilder, true,
-						minecraft.level.random,
-						tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE)) {
-						usedBlockRenderLayers.add(blockRenderLayer);
-					}
+					blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true, minecraft.level.random, tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+					usedBlockRenderLayers.add(blockRenderLayer);
 					blockstates.add(state);
 				}
 

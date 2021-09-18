@@ -42,7 +42,8 @@ public class ContraptionMatrices {
 
 		translateToEntity(world, entity, partialTicks);
 
-		light.set(world);
+		light.setIdentity();
+		light.multiply(world);
 		light.multiply(model
 				.last().pose());
 

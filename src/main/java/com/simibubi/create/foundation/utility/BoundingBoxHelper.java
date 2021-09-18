@@ -17,4 +17,8 @@ public class BoundingBoxHelper {
 	public static BoundingBox of(BlockPos from, BlockPos to) {
 		return new BoundingBox(from.getX(), from.getY(), from.getZ(), to.getX(), to.getY(), to.getZ());
 	}
+
+    public static BoundingBox clone(BoundingBox bb) {
+		return new BoundingBox(bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ());
+    }
 }

@@ -60,45 +60,46 @@ public class PonderWorldParticles {
 	}
 
 	public void renderParticles(PoseStack ms, MultiBufferSource buffer, Camera renderInfo, float pt) {
-		Minecraft mc = Minecraft.getInstance();
-		LightTexture lightTexture = mc.gameRenderer.lightTexture();
-
-		lightTexture.turnOnLightLayer();
-		Runnable enable = () -> {
-			RenderSystem.enableAlphaTest();
-			RenderSystem.defaultAlphaFunc();
-			RenderSystem.enableDepthTest();
-			RenderSystem.enableFog();
-		};
-		RenderSystem.pushMatrix();
-		RenderSystem.multMatrix(ms.last()
-			.pose());
-
-		for (ParticleRenderType iparticlerendertype : this.byType.keySet()) {
-			if (iparticlerendertype == ParticleRenderType.NO_RENDER)
-				continue;
-			enable.run(); 
-			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
-			if (iterable != null) {
-				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-				Tesselator tessellator = Tesselator.getInstance();
-				BufferBuilder bufferbuilder = tessellator.getBuilder();
-				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
-
-				for (Particle particle : iterable)
-					particle.render(bufferbuilder, renderInfo, pt);
-
-				iparticlerendertype.end(tessellator);
-			}
-		}
-
-		RenderSystem.popMatrix();
-		RenderSystem.depthMask(true);
-		RenderSystem.depthFunc(515);
-		RenderSystem.disableBlend();
-		RenderSystem.defaultAlphaFunc();
-		lightTexture.turnOffLightLayer();
-		RenderSystem.disableFog();
+		throw new RuntimeException("// PORT: legacy gl");
+//		Minecraft mc = Minecraft.getInstance();
+//		LightTexture lightTexture = mc.gameRenderer.lightTexture();
+//
+//		lightTexture.turnOnLightLayer();
+//		Runnable enable = () -> {
+//			RenderSystem.enableAlphaTest();
+//			RenderSystem.defaultAlphaFunc();
+//			RenderSystem.enableDepthTest();
+//			RenderSystem.enableFog();
+//		};
+//		RenderSystem.pushMatrix();
+//		RenderSystem.multMatrix(ms.last()
+//			.pose());
+//
+//		for (ParticleRenderType iparticlerendertype : this.byType.keySet()) {
+//			if (iparticlerendertype == ParticleRenderType.NO_RENDER)
+//				continue;
+//			enable.run();
+//			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
+//			if (iterable != null) {
+//				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+//				Tesselator tessellator = Tesselator.getInstance();
+//				BufferBuilder bufferbuilder = tessellator.getBuilder();
+//				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
+//
+//				for (Particle particle : iterable)
+//					particle.render(bufferbuilder, renderInfo, pt);
+//
+//				iparticlerendertype.end(tessellator);
+//			}
+//		}
+//
+//		RenderSystem.popMatrix();
+//		RenderSystem.depthMask(true);
+//		RenderSystem.depthFunc(515);
+//		RenderSystem.disableBlend();
+//		RenderSystem.defaultAlphaFunc();
+//		lightTexture.turnOffLightLayer();
+//		RenderSystem.disableFog();
 	}
 
 	public void clearEffects() {

@@ -60,7 +60,7 @@ public class LinkedControllerContainer extends AbstractContainerMenu implements 
 		int x = 12;
 		int y = 34;
 		int slot = 0;
-		
+
 		for (int column = 0; column < 6; column++) {
 			for (int row = 0; row < 2; ++row)
 				addSlot(new SlotItemHandler(filterInventory, slot++, x, y + row * 18));
@@ -92,15 +92,15 @@ public class LinkedControllerContainer extends AbstractContainerMenu implements 
 	}
 
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		if (slotId == playerInventory.selected && clickTypeIn != ClickType.THROW)
-			return ItemStack.EMPTY;
+			playerInventory.setPickedItem(ItemStack.EMPTY);
 
-		ItemStack held = playerInventory.getCarried();
+		ItemStack held = playerInventory.getSelected();
 		if (slotId < 36)
-			return super.clicked(slotId, dragType, clickTypeIn, player);
+			super.clicked(slotId, dragType, clickTypeIn, player);
 		if (clickTypeIn == ClickType.THROW)
-			return ItemStack.EMPTY;
+			playerInventory.setPickedItem(ItemStack.EMPTY);
 
 		int slot = slotId - 36;
 		if (clickTypeIn == ClickType.CLONE) {
@@ -108,21 +108,21 @@ public class LinkedControllerContainer extends AbstractContainerMenu implements 
 				ItemStack stackInSlot = filterInventory.getStackInSlot(slot)
 					.copy();
 				stackInSlot.setCount(64);
-				playerInventory.setCarried(stackInSlot);
-				return ItemStack.EMPTY;
+				playerInventory.setPickedItem(stackInSlot);
+				playerInventory.setPickedItem(ItemStack.EMPTY);
 			}
-			return ItemStack.EMPTY;
+			playerInventory.setPickedItem(ItemStack.EMPTY);
 		}
 
 		if (held.isEmpty()) {
 			filterInventory.setStackInSlot(slot, ItemStack.EMPTY);
-			return ItemStack.EMPTY;
+			playerInventory.setPickedItem(ItemStack.EMPTY);
 		}
 
 		ItemStack insert = held.copy();
 		insert.setCount(1);
 		filterInventory.setStackInSlot(slot, insert);
-		return held;
+		playerInventory.setPickedItem(held);
 	}
 
 	protected ItemStackHandler createFilterInventory() {

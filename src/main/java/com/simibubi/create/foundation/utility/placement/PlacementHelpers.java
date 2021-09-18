@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -146,7 +148,7 @@ public class PlacementHelpers {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onRender(RenderGameOverlayEvent.Post event) {
-		if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+		if (event.getType() != RenderGameOverlayEvent.ElementType.CHAT || event.getType() != RenderGameOverlayEvent.ElementType.PLAYER_LIST)
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
@@ -210,81 +212,83 @@ public class PlacementHelpers {
 	}
 
 	private static void fadedArrow(PoseStack ms, float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
-		ms.pushPose();
-		RenderSystem.disableTexture();
-		RenderSystem.enableBlend();
-		RenderSystem.disableAlphaTest();
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
-
-		ms.translate(centerX, centerY, 5);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.get(0)));
-		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
-		double scale = AllConfigs.CLIENT.indicatorScale.get();
-		RenderSystem.scaled(scale, scale, 1);
-
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(GL11.GL_POLYGON, DefaultVertexFormat.POSITION_COLOR);
-
-		Matrix4f mat = ms.last().pose();
-
-		bufferbuilder.vertex(mat, 0, - (10 + length), 0).color(r, g, b, a).endVertex();
-
-		bufferbuilder.vertex(mat, -9, -3, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, -6, -6, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, -3, -8, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 0, -8.5f, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 3, -8, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 6, -6, 0).color(r, g, b, 0f).endVertex();
-		bufferbuilder.vertex(mat, 9, -3, 0).color(r, g, b, 0f).endVertex();
-
-		tessellator.end();
-		RenderSystem.shadeModel(GL11.GL_FLAT);
-		RenderSystem.disableBlend();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.enableTexture();
-		ms.popPose();
+		throw new RuntimeException("//PORT: No.");
+//		ms.pushPose();
+//		RenderSystem.disableTexture();
+//		RenderSystem.enableBlend();
+//		RenderSystem.disableAlphaTest();
+//		RenderSystem.defaultBlendFunc();
+//		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+//
+//		ms.translate(centerX, centerY, 5);
+//		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.get(0)));
+//		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
+//		double scale = AllConfigs.CLIENT.indicatorScale.get();
+//		RenderSystem.scaled(scale, scale, 1);
+//
+//		Tesselator tessellator = Tesselator.getInstance();
+//		BufferBuilder bufferbuilder = tessellator.getBuilder();
+//		bufferbuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+//
+//		Matrix4f mat = ms.last().pose();
+//
+//		bufferbuilder.vertex(mat, 0, - (10 + length), 0).color(r, g, b, a).endVertex();
+//
+//		bufferbuilder.vertex(mat, -9, -3, 0).color(r, g, b, 0f).endVertex();
+//		bufferbuilder.vertex(mat, -6, -6, 0).color(r, g, b, 0f).endVertex();
+//		bufferbuilder.vertex(mat, -3, -8, 0).color(r, g, b, 0f).endVertex();
+//		bufferbuilder.vertex(mat, 0, -8.5f, 0).color(r, g, b, 0f).endVertex();
+//		bufferbuilder.vertex(mat, 3, -8, 0).color(r, g, b, 0f).endVertex();
+//		bufferbuilder.vertex(mat, 6, -6, 0).color(r, g, b, 0f).endVertex();
+//		bufferbuilder.vertex(mat, 9, -3, 0).color(r, g, b, 0f).endVertex();
+//
+//		tessellator.end();
+//		RenderSystem.shadeModel(GL11.GL_FLAT);
+//		RenderSystem.disableBlend();
+//		RenderSystem.enableAlphaTest();
+//		RenderSystem.enableTexture();
+//		ms.popPose();
 	}
 
 	private static void textured(PoseStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
-		ms.pushPose();
-		RenderSystem.enableTexture();
-		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
-		RenderSystem.enableBlend();
-		RenderSystem.enableDepthTest();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
-
-		ms.translate(centerX, centerY, 50);
-		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue() * .75f;
-		ms.scale(scale, scale, 1);
-		ms.scale(12, 12, 1);
-
-		float index = snappedAngle / 22.5f;
-		float tex_size = 16f/256f;
-
-		float tx = 0;
-		float ty = index * tex_size;
-		float tw = 1f;
-		float th = tex_size;
-
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder buffer = tessellator.getBuilder();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-
-		Matrix4f mat = ms.last().pose();
-		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty).endVertex();
-		buffer.vertex(mat, -1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty + th).endVertex();
-		buffer.vertex(mat, 1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty + th).endVertex();
-		buffer.vertex(mat, 1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty).endVertex();
-
-		tessellator.end();
-
-		RenderSystem.shadeModel(GL11.GL_FLAT);
-		RenderSystem.disableBlend();
-		ms.popPose();
+		throw new RuntimeException("//PORT: No.");
+//		ms.pushPose();
+//		RenderSystem.enableTexture();
+//		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
+//		RenderSystem.enableBlend();
+//		RenderSystem.enableDepthTest();
+//		RenderSystem.enableAlphaTest();
+//		RenderSystem.defaultBlendFunc();
+//		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+//
+//		ms.translate(centerX, centerY, 50);
+//		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue() * .75f;
+//		ms.scale(scale, scale, 1);
+//		ms.scale(12, 12, 1);
+//
+//		float index = snappedAngle / 22.5f;
+//		float tex_size = 16f/256f;
+//
+//		float tx = 0;
+//		float ty = index * tex_size;
+//		float tw = 1f;
+//		float th = tex_size;
+//
+//		Tesselator tessellator = Tesselator.getInstance();
+//		BufferBuilder buffer = tessellator.getBuilder();
+//		buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+//
+//		Matrix4f mat = ms.last().pose();
+//		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty).endVertex();
+//		buffer.vertex(mat, -1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty + th).endVertex();
+//		buffer.vertex(mat, 1, 1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty + th).endVertex();
+//		buffer.vertex(mat, 1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx + tw, ty).endVertex();
+//
+//		tessellator.end();
+//
+//		RenderSystem.shadeModel(GL11.GL_FLAT);
+//		RenderSystem.disableBlend();
+//		ms.popPose();
 	}
 
 }

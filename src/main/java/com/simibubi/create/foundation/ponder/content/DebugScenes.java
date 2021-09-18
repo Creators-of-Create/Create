@@ -431,19 +431,19 @@ public class DebugScenes {
 
 		scene.idle(27);
 
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, e -> e.remove(Entity.RemovalReason.DISCARDED));
 	}
-	
+
 	public static void pipeScene(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("debug_pipes", "Manipulating Items");
 		scene.configureBasePlate(0, 0, 5);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(10);
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
-	
-		
-		
-		
+
+
+
+
 	}
 
 }

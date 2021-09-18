@@ -19,11 +19,16 @@ import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+
+import net.minecraftforge.fmlclient.gui.GuiUtils;
+
+import org.apache.logging.log4j.core.pattern.TextRenderer;
 
 public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContainer> {
 

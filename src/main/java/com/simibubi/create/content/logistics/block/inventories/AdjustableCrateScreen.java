@@ -52,7 +52,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	@Override
 	protected void init() {
 		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width), background.height + 4 + PLAYER_INVENTORY.height);
-		setWindowOffset(menu.cast.doubleCrate ? -2 : 0, 0);
+		setWindowOffset(menu.doubleCrate ? -2 : 0, 0);
 		super.init();
 		widgets.clear();
 

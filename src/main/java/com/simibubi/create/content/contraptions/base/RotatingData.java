@@ -12,11 +12,7 @@ public class RotatingData extends KineticData {
     private byte rotationAxisY;
     private byte rotationAxisZ;
 
-    public RotatingData(Instancer<?> owner) {
-		super(owner);
-	}
-
-    public RotatingData setRotationAxis(Direction.Axis axis) {
+	public RotatingData setRotationAxis(Direction.Axis axis) {
         Direction orientation = Direction.get(Direction.AxisDirection.POSITIVE, axis);
         setRotationAxis(orientation.step());
         return this;

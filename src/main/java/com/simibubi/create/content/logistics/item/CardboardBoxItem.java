@@ -43,7 +43,7 @@ public class CardboardBoxItem extends Item {
 
 		ItemStack box = playerIn.getItemInHand(handIn);
 		for (ItemStack stack : getContents(box))
-			playerIn.inventory.placeItemBackInInventory(worldIn, stack);
+			playerIn.getInventory().placeItemBackInInventory(stack);
 
 		if (!playerIn.isCreative()) {
 			box.shrink(1);
@@ -66,7 +66,7 @@ public class CardboardBoxItem extends Item {
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 	}
-	
+
 	public static void addAddress(ItemStack box, String address) {
 		box.getOrCreateTag().putString("Address", address);
 	}

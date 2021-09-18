@@ -13,7 +13,9 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -33,6 +35,10 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		for (int i = 0; i < 6; i++)
 			buttons.add(LerpedFloat.linear()
 				.startWithValue(0));
+	}
+
+	public LinkedControllerItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
 	}
 
 	static void tick() {

@@ -93,7 +93,8 @@ public class SandPaperItemRenderer extends BlockEntityWithoutLevelRenderer {
 
 		@Override
 		public BlockEntityWithoutLevelRenderer createRenderer() {
-			return new SandPaperItemRenderer();
+			Minecraft minecraft = Minecraft.getInstance();
+			return new SandPaperItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
 		}
 
 	}

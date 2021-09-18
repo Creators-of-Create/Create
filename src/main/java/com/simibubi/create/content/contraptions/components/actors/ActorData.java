@@ -29,10 +29,6 @@ public class ActorData extends InstanceData {
 
     private float speed;
 
-    public ActorData(Instancer<?> owner) {
-		super();
-	}
-
 
     public ActorData setPosition(BlockPos pos) {
         this.x = pos.getX();

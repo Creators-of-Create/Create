@@ -294,7 +294,8 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		ms.pushPose();
+		throw new RuntimeException("// PORT: rendersystem + legacy gl = 0 sanity");
+/*		ms.pushPose();
 		RenderSystem.disableRescaleNormal();
 		RenderSystem.disableDepthTest();
 
@@ -304,7 +305,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		}
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableRescaleNormal();
-		ms.popPose();
+		ms.popPose();*/
 	}
 
 	@Override
@@ -352,7 +353,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 	public PonderTag getTag() {
 		return tag;
 	}
-	
+
 	@Override
 	public void removed() {
 		super.removed();

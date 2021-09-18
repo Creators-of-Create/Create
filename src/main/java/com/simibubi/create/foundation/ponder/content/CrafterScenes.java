@@ -165,7 +165,7 @@ public class CrafterScenes {
 		ItemStack log = new ItemStack(Items.OAK_LOG);
 
 		scene.world.setCraftingResult(util.grid.at(1, 1, 2), AllBlocks.ANDESITE_CASING.asStack(4));
-		
+
 		scene.world.modifyTileEntity(util.grid.at(2, 3, 2), type, mct -> mct.getInventory()
 			.insertItem(0, planks.copy(), false));
 		scene.idle(5);
@@ -201,7 +201,7 @@ public class CrafterScenes {
 
 		ItemStack stick = new ItemStack(Items.STICK);
 		ItemStack iron = new ItemStack(Items.IRON_INGOT);
-		
+
 		scene.world.setCraftingResult(util.grid.at(1, 1, 2), new ItemStack(Items.IRON_PICKAXE));
 
 		scene.world.modifyTileEntity(util.grid.at(1, 3, 2), type, mct -> mct.getInventory()
@@ -434,17 +434,17 @@ public class CrafterScenes {
 		ElementLink<EntityElement> ingot =
 			scene.world.createItemEntity(util.vector.centerOf(4, 4, 2), util.vector.of(0, 0.2, 0), iron);
 		scene.idle(17);
-		scene.world.modifyEntity(ingot, Entity::remove);
+		scene.world.modifyEntity(ingot, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.world.modifyTileEntity(util.grid.at(3, 2, 2), type, mct -> mct.getInventory()
 			.insertItem(0, iron.copy(), false));
 		ingot = scene.world.createItemEntity(util.vector.centerOf(4, 4, 2), util.vector.of(0, 0.2, 0), iron);
 		scene.idle(17);
-		scene.world.modifyEntity(ingot, Entity::remove);
+		scene.world.modifyEntity(ingot, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.world.modifyTileEntity(util.grid.at(2, 1, 2), type, mct -> mct.getInventory()
 			.insertItem(0, iron.copy(), false));
 		ingot = scene.world.createItemEntity(util.vector.centerOf(4, 4, 2), util.vector.of(0, 0.2, 0), iron);
 		scene.idle(17);
-		scene.world.modifyEntity(ingot, Entity::remove);
+		scene.world.modifyEntity(ingot, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.world.modifyTileEntity(util.grid.at(1, 2, 2), type, mct -> mct.getInventory()
 			.insertItem(0, iron.copy(), false));
 

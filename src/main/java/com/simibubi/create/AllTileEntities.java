@@ -162,11 +162,8 @@ import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
-import com.simibubi.create.foundation.data.CreateTileEntityBuilder;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
-
-import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class AllTileEntities {
 

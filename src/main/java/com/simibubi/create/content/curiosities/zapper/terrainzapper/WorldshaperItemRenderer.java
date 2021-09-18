@@ -9,16 +9,22 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 
 public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel> {
+
+	public WorldshaperItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
+	}
 
 	@Override
 	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,

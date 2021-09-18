@@ -74,7 +74,7 @@ public class PonderRegistry {
 			PonderStoryBoardEntry sb = entries.get(i);
 			StructureTemplate activeTemplate = loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, new StructurePlaceSettings(), world.random);
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), world.random, 0);
 			world.createBackup();
 			PonderScene scene = compileScene(i, sb, world);
 			scene.begin();

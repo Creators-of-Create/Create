@@ -6,13 +6,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
@@ -25,7 +24,9 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,6 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.BlockPos;
@@ -260,8 +260,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		tickableTileEntities.removeIf(te -> scene.getWorld()
 			.getBlockEntity(te.getBlockPos()) != te);
 		tickableTileEntities.forEach(te -> {
-			if (te instanceof TickableBlockEntity)
-				((TickableBlockEntity) te).tick();
+			Level level = te.getLevel();
+			BlockPos pos = te.getBlockPos();
+			BlockState state = level.getBlockState(pos);
+			((BlockEntityTicker<BlockEntity>) state.getTicker(level, te.getType())).tick(level, pos, state, te); // PORT: may cause problems
 		});
 	}
 
@@ -285,7 +287,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				return;
 			tickableTileEntities.add(tileEntity);
 			renderedTileEntities.add(tileEntity);
-			tileEntity.clearCache();
+//			tileEntity.clearCache();
 		});
 	}
 
@@ -331,7 +333,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					overlayMS.last().normal());
 			Minecraft.getInstance()
 				.getBlockRenderer()
-				.renderModel(world.getBlockState(pos), pos, world, ms, builder, true, world.random, EmptyModelData.INSTANCE);
+				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random, EmptyModelData.INSTANCE);
 			ms.popPose();
 		}
 	}
@@ -389,7 +391,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		ModelBlockRenderer blockRenderer = dispatcher.getModelRenderer();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize());
-		builder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		world.setMask(this.section);
 
 		section.forEach(pos -> {
@@ -402,9 +404,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			if (state.getRenderShape() != RenderShape.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
 				&& ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
 				BlockEntity tileEntity = world.getBlockEntity(pos);
-				blockRenderer.renderModel(world, dispatcher.getBlockModel(state), state, pos, ms, builder, true,
-					random, 42, OverlayTexture.NO_OVERLAY,
-					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
+				blockRenderer.renderModel(ms.last(), builder, state, dispatcher.getBlockModel(state), 1, 1, 1, 1, 42, tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
 			}
 
 			if (!ifluidstate.isEmpty() && ItemBlockRenderTypes.canRenderInLayer(ifluidstate, layer))

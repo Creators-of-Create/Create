@@ -586,7 +586,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (shouldIgnoreBlockState(state, te))
 			return false;
 
-		boolean placingAir = state.getBlock().isAir(state, level, pos);
+		boolean placingAir = state.isAir();
 
 		if (replaceMode == 3)
 			return true;
@@ -756,7 +756,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundTag data) {
-		if (!state.getBlock().isAir(state, level, target))
+		if (!state.isAir())
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getBlockPos(), target, stack, state, data));
 		playFiringSound();

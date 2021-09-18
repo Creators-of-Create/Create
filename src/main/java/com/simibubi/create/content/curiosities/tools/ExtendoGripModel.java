@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 
@@ -14,7 +15,8 @@ public class ExtendoGripModel extends CreateCustomRenderedItemModel {
 
 	@Override
 	public BlockEntityWithoutLevelRenderer createRenderer() {
-		return new ExtendoGripItemRenderer();
+		Minecraft minecraft = Minecraft.getInstance();
+		return new ExtendoGripItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
 	}
 
 }

@@ -278,12 +278,13 @@ public class BlueprintOverlayRenderer {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {
 						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						Tag<Item> itag = SerializationTags.getInstance()
-							.getItems()
-							.getTag(inTag.tagName);
-						if (itag != null)
-							return Ingredient.of(itag)
-								.getItems();
+						throw new RuntimeException("// PORT: tag fuckery");
+//						Tag<Item> itag = SerializationTags.getInstance()
+//							.getItems()
+//							.getTag(inTag.tagName);
+//						if (itag != null)
+//							return Ingredient.of(itag)
+//								.getItems();
 					}
 				}
 			}

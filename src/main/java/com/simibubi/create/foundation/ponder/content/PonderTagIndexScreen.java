@@ -95,7 +95,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 					hoveredItem = ((PonderButton) widget).getTag();
 		}
 	}
-	
+
 	@Override
 	protected String backTrackingLangKey() {
 		return EXIT;
@@ -206,7 +206,8 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		ms.pushPose();
+		throw new RuntimeException("// PORT: rendersystem + legacy gl = 0 sanity");
+		/*ms.pushPose();
 		RenderSystem.disableRescaleNormal();
 		RenderSystem.disableDepthTest();
 
@@ -219,7 +220,7 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		}
 		RenderSystem.enableDepthTest();
 		RenderSystem.enableRescaleNormal();
-		ms.popPose();
+		ms.popPose();*/
 	}
 
 	@Override

@@ -77,7 +77,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 				return;
 
 			ghostInventory.setStackInSlot(9, ItemStack.EMPTY);
-			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, ItemStack.EMPTY));
+			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 0, 36 + 9, ItemStack.EMPTY));
 			contentHolder.inferredIcon = false;
 			return;
 		}
@@ -89,21 +89,21 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 		ItemStack toSend = itemstack.copy();
 		toSend.getOrCreateTag()
 				.putBoolean("InferredFromRecipe", true);
-		serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, toSend));
+		serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 0, 36 + 9, toSend));
 	}
 
 	@Override
-	public void setItem(int p_75141_1_, ItemStack p_75141_2_) {
-		if (p_75141_1_ == 36 + 9) {
-			if (p_75141_2_.hasTag()) {
-				contentHolder.inferredIcon = p_75141_2_.getTag()
+	public void setItem(int pSlotId, int pStateId, ItemStack pStack) {
+		if (pSlotId == 36 + 9) {
+			if (pStack.hasTag()) {
+				contentHolder.inferredIcon = pStack.getTag()
 						.getBoolean("InferredFromRecipe");
-				p_75141_2_.getTag()
+				pStack.getTag()
 						.remove("InferredFromRecipe");
 			} else
 				contentHolder.inferredIcon = false;
 		}
-		super.setItem(p_75141_1_, p_75141_2_);
+		super.setItem(pSlotId, pStateId, pStack);
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 			if (index == 9 && hasItem() && !contentHolder.getBlueprintWorld().isClientSide) {
 				contentHolder.inferredIcon = false;
 				ServerPlayer serverplayerentity = (ServerPlayer) player;
-				serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, getItem()));
+				serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 0, 36 + 9, getItem()));
 			}
 			if (index < 9)
 				onCraftMatrixChanged();

@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.item;
 
 import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 
@@ -14,7 +15,8 @@ public class LinkedControllerModel extends CreateCustomRenderedItemModel {
 
 	@Override
 	public BlockEntityWithoutLevelRenderer createRenderer() {
-		return new LinkedControllerItemRenderer();
+		Minecraft minecraft = Minecraft.getInstance();
+		return new LinkedControllerItemRenderer(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels());
 	}
 
 }

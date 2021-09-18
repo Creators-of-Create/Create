@@ -169,7 +169,8 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 				dpy = ((NavigatableSimiScreen) lastScreen).depthPointY;
 			}
 
-			ms.translate(dpx, dpy, 0);
+			throw new RuntimeException("//PORT: fuck");
+/*			ms.translate(dpx, dpy, 0);
 			ms.scale(scale, scale, 1);
 			ms.translate(-dpx, -dpy, 0);
 			RenderSystem.enableBlend();
@@ -178,7 +179,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
 			RenderSystem.disableBlend();
 			RenderSystem.enableAlphaTest();
-			ms.popPose();
+			ms.popPose();*/
 		}
 
 		// modify current screen as well

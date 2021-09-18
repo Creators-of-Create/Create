@@ -261,7 +261,7 @@ public class ChassisScenes {
 		scene.effects.superGlue(chassisPos.west(), Direction.NORTH, true);
 		scene.idle(20);
 
-		scene.world.modifyEntity(glueEntity, Entity::remove);
+		scene.world.modifyEntity(glueEntity, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.world.hideIndependentSection(glassSection, Direction.UP);
 		scene.world.hideIndependentSection(gluedPlank, Direction.UP);
 		scene.world.hideIndependentSection(topGlassSection, Direction.UP);
@@ -462,7 +462,7 @@ public class ChassisScenes {
 		scene.world.rotateBearing(bearingPos, 360, 80);
 		scene.world.rotateSection(contraption, 0, 360, 0, 80);
 		scene.idle(90);
-		
+
 		scene.world.destroyBlock(util.grid.at(1, 2, 0));
 		scene.idle(1);
 		scene.world.destroyBlock(util.grid.at(1, 2, 1));
@@ -509,7 +509,7 @@ public class ChassisScenes {
 
 		scene.world.glueBlockOnto(central.north(), Direction.SOUTH, plank);
 		scene.idle(20);
-		scene.world.modifyEntity(glueEntity, Entity::remove);
+		scene.world.modifyEntity(glueEntity, e -> e.remove(Entity.RemovalReason.DISCARDED));
 
 		BlockPos bearingPos = util.grid.at(2, 1, 2);
 		scene.world.configureCenterOfRotation(plank, util.vector.centerOf(bearingPos));
@@ -558,7 +558,7 @@ public class ChassisScenes {
 		scene.addKeyframe();
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(central), Pointing.DOWN).leftClick(), 40);
 		scene.idle(7);
-		scene.world.modifyEntity(glueEntity, Entity::remove);
+		scene.world.modifyEntity(glueEntity, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.effects.superGlue(central, Direction.UP, false);
 		scene.idle(10);
 		scene.overlay.showText(60)

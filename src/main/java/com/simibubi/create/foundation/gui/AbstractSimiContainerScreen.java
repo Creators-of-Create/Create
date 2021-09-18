@@ -13,6 +13,8 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 
 import net.minecraft.world.inventory.ChestMenu;
 
+import net.minecraftforge.fmlclient.gui.GuiUtils;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -57,6 +59,10 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	protected void setWindowOffset(int xOffset, int yOffset) {
 		windowXOffset = xOffset;
 		windowYOffset = yOffset;
+	}
+
+	public final void renderWrappedToolTip(PoseStack matrixStack, List<? extends Component> tooltips, int mouseX, int mouseY, Font font) {
+		GuiUtils.drawHoveringText(matrixStack, tooltips, mouseX, mouseY, width, height, -1, font);
 	}
 
 	@Override

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -417,7 +420,8 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	protected void renderScene(PoseStack ms, int mouseX, int mouseY, int i, float partialTicks) {
-		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
+		throw new RuntimeException("// PORT: legacy gl");
+/*		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		PonderScene story = scenes.get(i);
 		double value = lazyIndex.getValue(minecraft.getFrameTime());
 		double diff = i - value;
@@ -531,7 +535,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		ms.popPose();
 		ms.popPose();
-		RenderSystem.popMatrix();
+		RenderSystem.popMatrix();*/
 	}
 
 	protected void renderWidgets(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
@@ -615,7 +619,8 @@ public class PonderUI extends NavigatableSimiScreen {
 					).withStyle(ChatFormatting.GRAY);
 
 					//renderOrderedTooltip(ms, textRenderer.wrapLines(text, width / 3), 0, 0);
-					renderWrappedToolTip(ms, font.getSplitter().splitLines(text, width / 3, Style.EMPTY), 0, 0, font);
+					throw new RuntimeException("//PORT: tooltip bokre");
+//					renderWrappedToolTip(ms, font.getSplitter().splitLines(text, width / 3, Style.EMPTY), 0, 0, font);
 					/*String tooltip = Lang
 						.createTranslationTextComponent(IDENTIFY_MODE, client.gameSettings.keyBindDrop.getBoundKeyLocalizedText().applyTextStyle(TextFormatting.WHITE))
 						.applyTextStyle(TextFormatting.GRAY)
@@ -749,6 +754,10 @@ public class PonderUI extends NavigatableSimiScreen {
 		PonderScene story = scenes.get(i);
 		story.renderOverlay(this, ms, skipCooling > 0 ? 0 : identifyMode ? ponderPartialTicksPaused : partialTicks);
 		ms.popPose();
+	}
+
+	public final void renderWrappedToolTip(PoseStack matrixStack, List<? extends Component> tooltips, int mouseX, int mouseY, Font font) {
+		GuiUtils.drawHoveringText(matrixStack, tooltips, mouseX, mouseY, width, height, -1, font);
 	}
 
 	@Override

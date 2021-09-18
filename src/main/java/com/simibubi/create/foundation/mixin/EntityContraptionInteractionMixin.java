@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.util.TriConsumer;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -32,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.common.capabilities.CapabilityProvider;
 
-@Mixin(Entity.class)
+@Mixin(value = Entity.class, remap = false)
 public abstract class EntityContraptionInteractionMixin extends CapabilityProvider<Entity> {
 	private EntityContraptionInteractionMixin(Class<Entity> baseClass) {
 		super(baseClass);
@@ -86,7 +87,7 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		});
 	}
 
-	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
+	@Inject(at = @At(value = "JUMP", opcode = Opcodes.IFNE, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
 		ordinal = 4), method = "move")
 	private void movementMixin(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = self.position()

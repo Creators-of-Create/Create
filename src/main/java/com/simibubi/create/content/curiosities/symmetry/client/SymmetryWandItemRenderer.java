@@ -15,8 +15,8 @@ import com.mojang.math.Vector3f;
 
 public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<SymmetryWandModel> {
 
-	public SymmetryWandItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
-		super(p_172550_, p_172551_);
+	public SymmetryWandItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet set) {
+		super(dispatcher, set);
 	}
 
 	@Override
@@ -37,5 +37,4 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 
 		renderer.renderGlowing(model.getPartial("bits"), maxLight);
 	}
-
 }

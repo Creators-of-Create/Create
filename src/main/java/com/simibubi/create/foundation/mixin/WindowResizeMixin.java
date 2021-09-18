@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(Minecraft.class)
+@Mixin(value = Minecraft.class, remap = false)
 public class WindowResizeMixin {
 
 	@Shadow @Final private Window window;

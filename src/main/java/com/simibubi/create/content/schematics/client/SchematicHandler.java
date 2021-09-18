@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -122,7 +123,7 @@ public class SchematicHandler {
 
 	private void setupRenderer() {
 		StructureTemplate schematic = SchematicItem.loadSchematic(activeSchematicItem);
-		BlockPos size = schematic.getSize();
+		Vec3i size = schematic.getSize();
 		if (size.equals(BlockPos.ZERO))
 			return;
 
@@ -132,11 +133,11 @@ public class SchematicHandler {
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		StructurePlaceSettings placementSettings = new StructurePlaceSettings();
 
-		schematic.placeInWorldChunk(w, BlockPos.ZERO, placementSettings, w.getRandom());
+		schematic.placeInWorld(w, BlockPos.ZERO, BlockPos.ZERO, placementSettings, w.getRandom(), 0);
 		placementSettings.setMirror(Mirror.FRONT_BACK);
-		schematic.placeInWorldChunk(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings, wMirroredFB.getRandom());
+		schematic.placeInWorld(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), BlockPos.ZERO.east(size.getX() - 1), placementSettings, wMirroredFB.getRandom(), 0);
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
-		schematic.placeInWorldChunk(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings, wMirroredFB.getRandom());
+		schematic.placeInWorld(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), BlockPos.ZERO.south(size.getZ() - 1), placementSettings, wMirroredFB.getRandom(), 0);
 
 		renderers.get(0)
 			.display(w);
@@ -177,11 +178,11 @@ public class SchematicHandler {
 				renderers.get(0)
 					.render(ms, buffer);
 		}
-		
+
 		if (active)
 			currentTool.getTool()
 			.renderOnSchematic(ms, buffer);
-		
+
 		ms.popPose();
 
 	}
@@ -195,7 +196,7 @@ public class SchematicHandler {
 			.renderOverlay(ms, buffer);
 		selectionScreen.renderPassive(ms, partialTicks);
 	}
-	
+
 	public void onMouseInput(int button, boolean pressed) {
 		if (!active)
 			return;
@@ -252,16 +253,16 @@ public class SchematicHandler {
 			return null;
 
 		activeSchematicItem = stack;
-		activeHotbarSlot = player.inventory.selected;
+		activeHotbarSlot = player.getInventory().selected;
 		return stack;
 	}
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!player.inventory.getItem(i)
+			if (!player.getInventory().getItem(i)
 				.sameItem(activeSchematicItem))
 				continue;
-			if (!ItemStack.tagMatches(player.inventory.getItem(i), activeSchematicItem))
+			if (!ItemStack.tagMatches(player.getInventory().getItem(i), activeSchematicItem))
 				continue;
 			return false;
 		}

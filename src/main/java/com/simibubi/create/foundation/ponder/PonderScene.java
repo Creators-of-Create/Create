@@ -12,6 +12,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.StreamSupport;
+
+import com.simibubi.create.foundation.utility.BoundingBoxHelper;
 
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -157,7 +160,7 @@ public class PonderScene {
 		if (!world.getBounds()
 			.isInside(selectedPos))
 			return Pair.of(ItemStack.EMPTY, null);
-		if (new BoundingBox(origin, origin.offset(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
+		if (BoundingBoxHelper.of(origin, origin.offset(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
 			.isInside(selectedPos)) {
 			if (PonderIndex.EDITOR_MODE)
 				nearestHit.getValue()
@@ -353,7 +356,7 @@ public class PonderScene {
 	}
 
 	public <T extends Entity> void forEachWorldEntity(Class<T> type, Consumer<T> function) {
-		world.getEntities()
+		StreamSupport.stream(world.getEntities().getAll().spliterator(), false)
 			.filter(type::isInstance)
 			.map(type::cast)
 			.forEach(function);
@@ -378,7 +381,7 @@ public class PonderScene {
 	}
 
 	public BoundingBox getBounds() {
-		return world == null ? new BoundingBox() : world.getBounds();
+		return world == null ? new BoundingBox(BlockPos.ZERO) : world.getBounds();
 	}
 
 	public Supplier<String> registerText(String defaultText) {

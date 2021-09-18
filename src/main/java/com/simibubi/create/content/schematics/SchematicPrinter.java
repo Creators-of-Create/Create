@@ -4,11 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.Lists;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.StructureTransform;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
+
+import com.simibubi.create.foundation.utility.BoundingBoxHelper;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
@@ -92,9 +95,9 @@ public class SchematicPrinter {
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
 		activeTemplate.placeInWorld(blockReader, currentPos, schematicAnchor, settings, blockReader.getRandom(), 1); // PORT: what what waht
 
-		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, activeTemplate.getSize()
+		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, (BlockPos) activeTemplate.getSize()
 			.offset(-1, -1, -1));
-		blockReader.bounds.expand(new BoundingBox(extraBounds, extraBounds));
+		BoundingBoxHelper.expand(blockReader.bounds, new BoundingBox(extraBounds));
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
@@ -105,7 +108,7 @@ public class SchematicPrinter {
 		printStage = PrintStage.BLOCKS;
 		deferredBlocks.clear();
 		BoundingBox bounds = blockReader.getBounds();
-		currentPos = new BlockPos(bounds.x0 - 1, bounds.y0, bounds.z0);
+		currentPos = new BlockPos(bounds.minX - 1, bounds.minY, bounds.minZ);
 		schematicLoaded = true;
 	}
 
@@ -156,7 +159,6 @@ public class SchematicPrinter {
 
 		if (printStage == PrintStage.ENTITIES) {
 			Entity entity = blockReader.getEntities()
-				.collect(Collectors.toList())
 				.get(printingEntityIndex);
 			entityHandler.handle(target, entity);
 		} else {
@@ -214,7 +216,6 @@ public class SchematicPrinter {
 	public ItemRequirement getCurrentRequirement() {
 		if (printStage == PrintStage.ENTITIES)
 			return ItemRequirement.of(blockReader.getEntities()
-				.collect(Collectors.toList())
 				.get(printingEntityIndex));
 
 		BlockPos target = getCurrentTarget();
@@ -249,6 +250,7 @@ public class SchematicPrinter {
 
 	public void markAllEntityRequirements(MaterialChecklist checklist) {
 		blockReader.getEntities()
+			.getAll()
 			.forEach(entity -> {
 				ItemRequirement requirement = ItemRequirement.of(entity);
 				if (requirement.isEmpty())
@@ -260,7 +262,7 @@ public class SchematicPrinter {
 	}
 
 	public boolean advanceCurrentPos() {
-		List<Entity> entities = blockReader.getEntities().collect(Collectors.toList());
+		List<Entity> entities = Lists.newArrayList(blockReader.getEntities().getAll());
 
 		do {
 			if (printStage == PrintStage.BLOCKS) {
@@ -295,12 +297,12 @@ public class SchematicPrinter {
 	public boolean tryAdvanceCurrentPos() {
 		currentPos = currentPos.relative(Direction.EAST);
 		BoundingBox bounds = blockReader.getBounds();
-		BlockPos posInBounds = currentPos.offset(-bounds.x0, -bounds.y0, -bounds.z0);
+		BlockPos posInBounds = currentPos.offset(-bounds.minX, -bounds.minY, -bounds.minZ);
 
 		if (posInBounds.getX() > bounds.getXSpan())
-			currentPos = new BlockPos(bounds.x0, currentPos.getY(), currentPos.getZ() + 1).west();
+			currentPos = new BlockPos(bounds.minX, currentPos.getY(), currentPos.getZ() + 1).west();
 		if (posInBounds.getZ() > bounds.getZSpan())
-			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, bounds.z0).west();
+			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, bounds.minZ).west();
 
 		// End of blocks reached
 		if (currentPos.getY() > bounds.getYSpan()) {

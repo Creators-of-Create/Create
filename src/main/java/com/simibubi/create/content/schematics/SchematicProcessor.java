@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.utility.NBTProcessors;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
@@ -20,24 +21,24 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicProcessor extends StructureProcessor {
-	
+
 	public static final SchematicProcessor INSTANCE = new SchematicProcessor();
 	public static final Codec<SchematicProcessor> CODEC = Codec.unit(() -> {
 		return INSTANCE;
 	});
-	
+
 	public static StructureProcessorType<SchematicProcessor> TYPE;
-	
+
 	public static void register() {
 		TYPE = StructureProcessorType.register("schematic", CODEC);
 	}
-	
+
 	@Nullable
 	@Override
 	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
 			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
 		if (info.nbt != null) {
-			BlockEntity te = info.state.createTileEntity(world);
+			BlockEntity te = ((EntityBlock) info.state.getBlock()).newBlockEntity(pos, info.state);
 			if (te != null) {
 				CompoundTag nbt = NBTProcessors.process(te, info.nbt, false);
 				if (nbt != info.nbt)

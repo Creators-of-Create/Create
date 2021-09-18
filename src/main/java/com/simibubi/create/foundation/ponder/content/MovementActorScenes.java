@@ -123,9 +123,9 @@ public class MovementActorScenes {
 		ElementLink<EntityElement> entity2 =
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), itemStack);
 		scene.idle(10);
-		scene.world.modifyEntity(entity1, Entity::remove);
+		scene.world.modifyEntity(entity1, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.idle(10);
-		scene.world.modifyEntity(entity2, Entity::remove);
+		scene.world.modifyEntity(entity2, e -> e.remove(Entity.RemovalReason.DISCARDED));
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(5, 3, 2), Pointing.DOWN).withItem(itemStack), 40);
@@ -146,9 +146,9 @@ public class MovementActorScenes {
 		scene.world.createItemOnBelt(beltPos, Direction.EAST, itemStack);
 
 		scene.idle(20);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.idle(15);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, e -> e.remove(Entity.RemovalReason.DISCARDED));
 
 		scene.overlay.showText(120)
 			.placeNearTarget()
@@ -282,7 +282,7 @@ public class MovementActorScenes {
 		scene.idle(101);
 		scene.world.hideSection(crops, Direction.DOWN);
 		scene.idle(15);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		scene.world.setBlocks(crops, Blocks.WHEAT.defaultBlockState()
 			.setValue(CropBlock.AGE, 7), false);
 		scene.world.showSection(crops, Direction.UP);
@@ -400,7 +400,7 @@ public class MovementActorScenes {
 		scene.world.hideSection(garbage, Direction.UP);
 		scene.idle(40);
 		scene.world.setBlocks(garbage, Blocks.SNOW.defaultBlockState(), false);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, e -> e.remove(Entity.RemovalReason.DISCARDED));
 		ElementLink<WorldSectionElement> chest =
 			scene.world.showIndependentSection(util.select.position(4, 2, 2), Direction.DOWN);
 
@@ -476,10 +476,10 @@ public class MovementActorScenes {
 		scene.idle(15);
 		scene.world.showSectionAndMerge(util.select.fromTo(4, 3, 3, 4, 2, 3), Direction.DOWN, contraption);
 		scene.idle(15);
-		
+
 		BlockPos bearingPos = util.grid.at(4, 3, 4);
 		scene.addKeyframe();
-		
+
 		scene.world.setKineticSpeed(util.select.position(4, 0, 6), 8);
 		scene.world.setKineticSpeed(util.select.position(5, 1, 6), -16);
 		scene.world.setKineticSpeed(util.select.position(4, 3, 5), -16);
