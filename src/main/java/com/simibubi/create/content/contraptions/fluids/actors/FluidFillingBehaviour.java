@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
@@ -126,12 +127,13 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		int maxBlocks = maxBlocks();
 		boolean evaporate = world.dimensionType()
 			.ultraWarm() && fluid.is(FluidTags.WATER);
+		boolean canPlaceSources = AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get();
 
-		if ((!fillInfinite() && infinite) || evaporate) {
+		if ((!fillInfinite() && infinite) || evaporate || !canPlaceSources) {
 			FluidState fluidState = world.getFluidState(rootPos);
 			boolean equivalentTo = fluidState.getType()
 				.isSame(fluid);
-			if (!equivalentTo && !evaporate)
+			if (!equivalentTo && !evaporate && canPlaceSources)
 				return false;
 			if (simulate)
 				return true;
@@ -142,7 +144,8 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 				int k = root.getZ();
 				world.playSound(null, i, j, k, SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
 					2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
-			}
+			} else if (!canPlaceSources)
+				AllTriggers.triggerForNearbyPlayers(AllTriggers.HOSE_PULLEY, world, tileEntity.getBlockPos(), 8);
 			return true;
 		}
 
