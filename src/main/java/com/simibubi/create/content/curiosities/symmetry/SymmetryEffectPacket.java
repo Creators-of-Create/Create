@@ -41,7 +41,7 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 		}
 	}
 
-	public void handle(Supplier<Context> ctx) {
+	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.position().distanceTo(Vec3.atLowerCornerOf(mirror)) > 100)
 				return;

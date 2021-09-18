@@ -24,6 +24,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -50,8 +53,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
 	}
 
-	public FunnelTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FunnelTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn, pos, state);
 		extractionCooldown = 0;
 		flap = new InterpolatedChasingValue().start(.25f)
 			.target(0)
@@ -85,8 +88,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		flap.tick();
 		Mode mode = determineCurrentMode();
 		if (level.isClientSide)
@@ -330,10 +333,10 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
-	@Override
+/*	@Override
 	public double getViewDistance() {
 		return hasFlap() ? super.getViewDistance() : 64;
-	}
+	}*/
 
 	public void onTransfer(ItemStack stack) {
 		AllBlocks.CONTENT_OBSERVER.get()

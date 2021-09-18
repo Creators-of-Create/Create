@@ -4,15 +4,15 @@ import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction;
 
 public class HandCrankInstance extends SingleRotatingInstance implements IDynamicInstance {
 
@@ -20,7 +20,7 @@ public class HandCrankInstance extends SingleRotatingInstance implements IDynami
     private ModelData crank;
     private Direction facing;
 
-    public HandCrankInstance(MaterialManager<?> modelManager, HandCrankTileEntity tile) {
+    public HandCrankInstance(MaterialManager modelManager, HandCrankTileEntity tile) {
         super(modelManager, tile);
 		this.tile = tile;
 

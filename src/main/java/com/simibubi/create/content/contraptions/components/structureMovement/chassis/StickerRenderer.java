@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,7 +19,7 @@ import net.minecraft.core.Direction;
 
 public class StickerRenderer extends SafeTileEntityRenderer<StickerTileEntity> {
 
-	public StickerRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public StickerRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

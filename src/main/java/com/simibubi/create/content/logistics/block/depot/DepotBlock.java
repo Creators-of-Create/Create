@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllShapes;
@@ -9,6 +10,7 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchable {
+public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchable, EntityBlock {
 
 	public DepotBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -39,14 +41,10 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchab
 		return AllShapes.DEPOT;
 	}
 
+	@Nullable
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.DEPOT.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.DEPOT.create(pos, state);
 	}
 
 	@Override

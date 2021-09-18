@@ -8,6 +8,9 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
@@ -25,8 +28,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	protected boolean powered;
 	protected Entity connectedEntity;
 
-	public PortableStorageInterfaceTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public PortableStorageInterfaceTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn, pos, state);
 		transferTimer = 0;
 		connectionAnimation = LerpedFloat.linear()
 			.startWithValue(0);
@@ -53,8 +56,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	protected abstract void invalidateCapability();
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		boolean wasConnected = isConnected();
 		int timeUnit = getTransferTimeout() / 2;
 

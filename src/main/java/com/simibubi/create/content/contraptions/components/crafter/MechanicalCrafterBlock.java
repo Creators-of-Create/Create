@@ -58,8 +58,8 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_CRAFTER.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MECHANICAL_CRAFTER.create(pos, state);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 			}
 		}
 
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.getBlock() != newState.getBlock()) {
 			MechanicalCrafterTileEntity crafter = CrafterHelper.getCrafter(worldIn, pos);
 			if (crafter != null) {
 				if (crafter.covered)
@@ -171,7 +171,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 
 		if (AllBlocks.MECHANICAL_ARM.isIn(heldItem))
 			return InteractionResult.PASS;
-		
+
 		if (hit.getDirection() == state.getValue(HORIZONTAL_FACING)) {
 
 			if (crafter.phase != Phase.IDLE && !wrenched) {
@@ -216,7 +216,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 					crafter.setChanged();
 					crafter.sendData();
 					if (!player.isCreative())
-						player.inventory.placeItemBackInInventory(worldIn, AllItems.CRAFTER_SLOT_COVER.asStack());
+						player.getInventory().placeItemBackInInventory(AllItems.CRAFTER_SLOT_COVER.asStack());
 					return InteractionResult.SUCCESS;
 				}
 				return InteractionResult.PASS;
@@ -225,7 +225,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock implements IT
 				return InteractionResult.PASS;
 			if (worldIn.isClientSide)
 				return InteractionResult.SUCCESS;
-			player.inventory.placeItemBackInInventory(worldIn, inSlot);
+			player.getInventory().placeItemBackInInventory(inSlot);
 			crafter.getInventory().setStackInSlot(0, ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;
 		}

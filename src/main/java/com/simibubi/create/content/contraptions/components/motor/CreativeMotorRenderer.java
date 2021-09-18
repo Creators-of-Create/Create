@@ -7,10 +7,11 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class CreativeMotorRenderer extends KineticTileEntityRenderer {
 
-	public CreativeMotorRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public CreativeMotorRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

@@ -21,6 +21,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -38,8 +40,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 	private float prevAngle;
 
-	public MechanicalBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
-		super(type);
+	public MechanicalBearingTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends MechanicalBearingTileEntity> type) {
+		super(type, pos, state);
 		setLazyTickRate(3);
 	}
 
@@ -195,8 +197,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		prevAngle = angle;
 		if (level.isClientSide)

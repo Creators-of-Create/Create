@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.BoundingBoxHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import it.unimi.dsi.fastutil.PriorityQueue;
@@ -98,7 +99,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			reset();
 			rootPos = root;
 			queue.enqueue(new BlockPosEntry(root, 0));
-			affectedArea = new BoundingBox(rootPos, rootPos);
+			affectedArea = new BoundingBox(rootPos);
 			return false;
 		}
 
@@ -109,7 +110,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (affectedArea == null)
-			affectedArea = new BoundingBox(root, root);
+			affectedArea = new BoundingBox(root);
 
 		if (revalidateIn == 0) {
 			visited.clear();
@@ -204,7 +205,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 						}
 					}
 
-					affectedArea.expand(new BoundingBox(currentPos, currentPos));
+					BoundingBoxHelper.expand(affectedArea, new BoundingBox(currentPos));
 				}
 			}
 
@@ -271,15 +272,14 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	protected void replaceBlock(Level world, BlockPos pos, BlockState state) {
-		BlockEntity tileentity = state.getBlock()
-			.hasTileEntity(state) ? world.getBlockEntity(pos) : null;
+		BlockEntity tileentity = world.getBlockEntity(pos);
 		Block.dropResources(state, world, pos, tileentity);
 	}
 
 	// From FlowingFluidBlock#isBlocked
 	protected boolean canBeReplacedByFluid(BlockGetter world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
-		if (!(block instanceof DoorBlock) && !block.is(BlockTags.SIGNS) && block != Blocks.LADDER
+		if (!(block instanceof DoorBlock) && !block.getTags().contains(BlockTags.SIGNS) && block != Blocks.LADDER // PORT: that tag check is wrong. my bad
 			&& block != Blocks.SUGAR_CANE && block != Blocks.BUBBLE_COLUMN) {
 			Material material = state.getMaterial();
 			if (material != Material.PORTAL && material != Material.STRUCTURAL_AIR && material != Material.WATER_PLANT

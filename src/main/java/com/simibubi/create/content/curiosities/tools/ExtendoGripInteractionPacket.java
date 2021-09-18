@@ -61,8 +61,8 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 			Entity entityByID = sender.getLevel().getEntity(target);
 			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
 				double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
-				if (!sender.canSee(entityByID))
-					d -= 3;
+//				if (!sender.canSee(entityByID))
+//					d -= 3; // PORT: maybe raycast?
 				d *= d;
 				if (sender.distanceToSqr(entityByID) > d) {
 					// TODO log?

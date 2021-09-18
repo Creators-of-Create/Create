@@ -45,8 +45,8 @@ public class TreeCutter {
 
 	@Nonnull
 	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
-		if (canDynamicTreeCutFrom(startBlock)) 
-			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
+//		if (canDynamicTreeCutFrom(startBlock)) PORT: mod is not on 1.17.
+//			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
 		return Optional.empty();
 	}
 

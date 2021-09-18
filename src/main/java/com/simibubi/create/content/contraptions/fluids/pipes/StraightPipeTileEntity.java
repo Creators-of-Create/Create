@@ -3,10 +3,12 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import java.util.List;
 
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedTileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -19,8 +21,8 @@ import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour.A
 
 public class StraightPipeTileEntity extends SmartTileEntity {
 
-	public StraightPipeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public StraightPipeTileEntity(BlockPos pos, BlockState state, BlockEntityType<BlockEntity> tileEntityTypeIn) {
+		super(tileEntityTypeIn, pos, state);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import static java.lang.Math.max;
-import static net.minecraft.util.math.MathHelper.clamp;
+import static net.minecraft.util.Mth.clamp;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
@@ -38,7 +38,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 
 		// Core glows
 		float multiplier = Mth.sin(worldTime * 5);
-		if (mainHand || offHand) 
+		if (mainHand || offHand)
 			multiplier = animation;
 
 		int lightItensity = (int) (15 * clamp(multiplier, 0, 1));

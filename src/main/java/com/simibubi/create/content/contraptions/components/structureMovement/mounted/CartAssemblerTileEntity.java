@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -49,14 +50,14 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	protected AssemblyException lastException;
 	protected AbstractMinecart cartToAssemble;
 
-	public CartAssemblerTileEntity(BlockEntityType<? extends CartAssemblerTileEntity> type) {
-		super(type);
+	public CartAssemblerTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends CartAssemblerTileEntity> type) {
+		super(type, pos, state);
 		ticksSinceMinecartUpdate = assemblyCooldown;
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (ticksSinceMinecartUpdate < assemblyCooldown) {
 			ticksSinceMinecartUpdate++;
 		}

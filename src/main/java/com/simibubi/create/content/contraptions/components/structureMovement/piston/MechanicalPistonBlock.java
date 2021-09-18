@@ -71,7 +71,6 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
 		if (!player.getItemInHand(handIn)
-			.getItem()
 			.is(Tags.Items.SLIMEBALLS)) {
 			if (player.getItemInHand(handIn)
 				.isEmpty()) {
@@ -132,8 +131,8 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_PISTON.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MECHANICAL_PISTON.create(pos, state);
 	}
 
 	@Override

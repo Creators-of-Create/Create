@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -29,7 +30,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
-	public SchematicannonRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public SchematicannonRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -100,7 +101,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			yaw = Mth.atan2(diffX, diffZ);
 			yaw = yaw / Math.PI * 180;
 
-			float distance = Mth.sqrt(diffX * diffX + diffZ * diffZ);
+			float distance = Mth.sqrt((float) (diffX * diffX + diffZ * diffZ));
 			double yOffset = 0 + distance * 2f;
 			pitch = Mth.atan2(distance, diff.y() * 3 + yOffset);
 			pitch = pitch / Math.PI * 180 + 10;
@@ -168,7 +169,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			if (launched instanceof ForEntity) {
 				float scale = 1.2f;
 				ms.scale(scale, scale, scale);
-				Minecraft.getInstance().getItemRenderer().renderStatic(launched.stack, TransformType.GROUND, light, overlay, ms, buffer);
+				Minecraft.getInstance().getItemRenderer().renderStatic(launched.stack, TransformType.GROUND, light, overlay, ms, buffer, 1); // PORT: scvale
 			}
 
 			ms.popPose();

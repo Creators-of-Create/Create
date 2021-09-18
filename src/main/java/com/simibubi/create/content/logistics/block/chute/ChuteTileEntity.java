@@ -31,7 +31,10 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.Containers;
@@ -84,8 +87,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	LazyOptional<IItemHandler> capAbove;
 	LazyOptional<IItemHandler> capBelow;
 
-	public ChuteTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public ChuteTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+		super(tileEntityTypeIn, pos, state);
 		item = ItemStack.EMPTY;
 		itemPosition = new InterpolatedValue();
 		itemHandler = new ChuteItemHandler(this);
@@ -96,6 +99,10 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		bottomPullDistance = 0;
 		//		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;
+	}
+
+	public ChuteTileEntity(BlockPos pos, BlockState state, BlockEntityType<ChuteTileEntity> type) {
+		this(type, pos, state);
 	}
 
 	@Override
@@ -132,8 +139,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (!level.isClientSide)
 			canPickUpItems = canDirectlyInsert();
@@ -232,7 +239,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				continue;
 			setItem(entityItem.copy(), (float) (itemEntity.getBoundingBox()
 				.getCenter().y - worldPosition.getY()));
-			itemEntity.remove();
+			itemEntity.remove(Entity.RemovalReason.DISCARDED);
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.UPWARD_CHUTE, level, worldPosition, 5);
 			break;
 		}
@@ -565,7 +572,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	public void onAdded() {
-		clearCache();
+//		clearCache(); // PORT: maybe important
 		updatePull();
 		ChuteTileEntity targetChute = getTargetChute(getBlockState());
 		if (targetChute != null)

@@ -37,7 +37,7 @@ public interface IWrenchable {
 		BlockEntity te = context.getLevel()
 			.getBlockEntity(context.getClickedPos());
 		if (te != null)
-			te.clearCache();
+//			te.clearCache(); // PORT: hm...
 		if (te instanceof GeneratingKineticTileEntity) {
 			((GeneratingKineticTileEntity) te).reActivateSource = true;
 		}
@@ -61,7 +61,7 @@ public interface IWrenchable {
 			if (player != null && !player.isCreative())
 				Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
 					.forEach(itemStack -> {
-						player.inventory.placeItemBackInInventory(world, itemStack);
+						player.getInventory().placeItemBackInInventory(itemStack);
 					});
 			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
 			world.destroyBlock(pos, false);

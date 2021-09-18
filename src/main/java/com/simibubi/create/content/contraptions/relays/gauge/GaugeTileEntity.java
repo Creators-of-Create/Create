@@ -6,6 +6,9 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,8 +21,8 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 	public float prevDialState;
 	public int color;
 
-	public GaugeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public GaugeTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn, pos, state);
 	}
 
 	@Override
@@ -37,8 +40,8 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		prevDialState = dialState;
 		dialState += (dialTarget - dialState) * .125f;
 		if (dialState > 1 && level.random.nextFloat() < 1 / 2f)

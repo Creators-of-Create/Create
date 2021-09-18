@@ -18,7 +18,7 @@ public interface PotatoProjectileRenderMode {
 	@OnlyIn(Dist.CLIENT)
 	void transform(PoseStack ms, PotatoProjectileEntity entity, float pt);
 
-	public static class Billboard implements PotatoProjectileRenderMode {
+	class Billboard implements PotatoProjectileRenderMode {
 
 		@Override
 		@OnlyIn(Dist.CLIENT)
@@ -33,7 +33,7 @@ public interface PotatoProjectileRenderMode {
 			MatrixTransformStack.of(ms)
 				.rotateY(AngleHelper.deg(Mth.atan2(diff.x, diff.z)))
 				.rotateX(180
-					+ AngleHelper.deg(Mth.atan2(diff.y, -Mth.sqrt(diff.x * diff.x + diff.z * diff.z))));
+					+ AngleHelper.deg(Mth.atan2(diff.y, -Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
 		}
 	}
 
@@ -66,7 +66,7 @@ public interface PotatoProjectileRenderMode {
 			MatrixTransformStack.of(ms)
 				.rotateY(AngleHelper.deg(Mth.atan2(diff.x, diff.z)))
 				.rotateX(270
-					+ AngleHelper.deg(Mth.atan2(diff.y, -Mth.sqrt(diff.x * diff.x + diff.z * diff.z))));
+					+ AngleHelper.deg(Mth.atan2(diff.y, -Mth.sqrt((float) (diff.x * diff.x + diff.z * diff.z)))));
 			MatrixTransformStack.of(ms)
 				.rotateY((entity.tickCount + pt) * 20 * spin + entityRandom(entity, 360))
 				.rotateZ(-spriteAngleOffset);

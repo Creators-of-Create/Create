@@ -27,8 +27,8 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	protected boolean hadCollisionWithOtherPiston;
 	protected int extensionLength;
 
-	public MechanicalPistonTileEntity(BlockEntityType<? extends MechanicalPistonTileEntity> type) {
-		super(type);
+	public MechanicalPistonTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends MechanicalPistonTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class BeltTunnelRenderer extends SmartTileEntityRenderer<BeltTunnelTileEntity> {
 
-	public BeltTunnelRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public BeltTunnelRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

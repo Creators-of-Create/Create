@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
-import static net.minecraft.util.text.TextFormatting.GRAY;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +19,7 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.entity.player.Inventory;
@@ -133,7 +133,7 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		if (!button.isHovered())
 			return;
 		List<Component> tip = button.getToolTip();
-		tip.addAll(TooltipHelper.cutTextComponent(tooltip, GRAY, GRAY));
+		tip.addAll(TooltipHelper.cutTextComponent(tooltip, ChatFormatting.GRAY, ChatFormatting.GRAY));
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.entity.Entity;
@@ -49,6 +50,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.Vec3;
@@ -60,7 +62,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CartAssemblerBlock extends BaseRailBlock
-	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
+	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement, EntityBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
@@ -103,14 +105,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 		super.createBlockStateDefinition(builder);
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CART_ASSEMBLER.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CART_ASSEMBLER.create(pos, state);
 	}
 
 	@Override
@@ -187,7 +186,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 			if (!player.isCreative()) {
 				itemStack.shrink(1);
-				player.inventory.placeItemBackInInventory(world, new ItemStack(previousItem));
+				player.getInventory().placeItemBackInInventory(new ItemStack(previousItem));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -227,11 +226,13 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@Nonnull
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos,
 		CollisionContext context) {
-		Entity entity = context.getEntity();
-		if (entity instanceof AbstractMinecart)
-			return Shapes.empty();
-		if (entity instanceof Player)
-			return AllShapes.CART_ASSEMBLER_PLAYER_COLLISION.get(getRailAxis(state));
+		if (context instanceof EntityCollisionContext ecc) {
+			Entity entity = ecc.getEntity().orElse(null);
+			if (entity instanceof AbstractMinecart)
+				return Shapes.empty();
+			if (entity instanceof Player)
+				return AllShapes.CART_ASSEMBLER_PLAYER_COLLISION.get(getRailAxis(state));
+		}
 		return Shapes.block();
 	}
 
@@ -288,7 +289,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 			return InteractionResult.SUCCESS;
 		if (player != null && !player.isCreative())
 			getDropsNoRail(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
-				.forEach(itemStack -> player.inventory.placeItemBackInInventory(world, itemStack));
+				.forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
 		if (world instanceof ServerLevel)
 			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
 		world.setBlockAndUpdate(pos, getRailBlock(state));

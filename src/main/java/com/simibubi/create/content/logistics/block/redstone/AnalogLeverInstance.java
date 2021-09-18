@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
@@ -12,8 +12,8 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 
@@ -23,10 +23,10 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     final float rX;
     final float rY;
 
-    public AnalogLeverInstance(MaterialManager<?> modelManager, AnalogLeverTileEntity tile) {
+    public AnalogLeverInstance(MaterialManager modelManager, AnalogLeverTileEntity tile) {
         super(modelManager, tile);
 
-        InstanceMaterial<ModelData> mat = getTransformMaterial();
+        Material<ModelData> mat = getTransformMaterial();
 
         handle = mat.getModel(AllBlockPartials.ANALOG_LEVER_HANDLE, blockState).createInstance();
         indicator = mat.getModel(AllBlockPartials.ANALOG_LEVER_INDICATOR, blockState).createInstance();

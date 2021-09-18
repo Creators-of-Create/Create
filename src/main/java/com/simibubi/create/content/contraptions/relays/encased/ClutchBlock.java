@@ -18,8 +18,8 @@ public class ClutchBlock extends GearshiftBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CLUTCH.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CLUTCH.create(pos, state);
 	}
 
 	@Override

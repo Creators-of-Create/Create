@@ -141,7 +141,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return;
 		IControlContraption controller = getController();
 		if (controller == null) {
-			remove();
+			remove(RemovalReason.DISCARDED);
 			return;
 		}
 		if (!controller.isAttachedTo(this)) {

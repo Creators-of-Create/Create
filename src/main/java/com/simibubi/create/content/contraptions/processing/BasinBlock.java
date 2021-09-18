@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -37,6 +38,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -50,18 +52,13 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
+public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable, EntityBlock {
 
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
 	public BasinBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 		registerDefaultState(defaultBlockState().setValue(FACING, Direction.DOWN));
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 
 	@Override
@@ -78,8 +75,8 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.BASIN.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.BASIN.create(pos, state);
 	}
 
 	@Override
@@ -121,7 +118,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				player.inventory.placeItemBackInInventory(worldIn, stackInSlot);
+				player.getInventory().placeItemBackInInventory(stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 				success = true;
 			}
@@ -152,7 +149,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			te.inputInventory.withMaxStackSize(16);
 
 			if (insertItem.isEmpty()) {
-				itemEntity.remove();
+				itemEntity.remove(Entity.RemovalReason.DISCARDED);
 				if (!itemEntity.level.isClientSide)
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.level,
 						itemEntity.blockPosition(), 3);
@@ -175,14 +172,16 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext ctx) {
-		if (ctx.getEntity() instanceof ItemEntity)
-			return AllShapes.BASIN_COLLISION_SHAPE;
+		if(ctx instanceof EntityCollisionContext ecc) {
+			if (ecc.getEntity().orElse(null) instanceof ItemEntity)
+				return AllShapes.BASIN_COLLISION_SHAPE;
+		}
 		return getShape(state, reader, pos, ctx);
 	}
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (state.getBlock() == newState.getBlock())
 			return;
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 		withTileEntityDo(worldIn, pos, te -> {

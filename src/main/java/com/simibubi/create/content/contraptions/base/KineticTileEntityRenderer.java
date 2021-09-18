@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -32,7 +33,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
 	public static boolean rainbowMode = false;
 
-	public KineticTileEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public KineticTileEntityRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

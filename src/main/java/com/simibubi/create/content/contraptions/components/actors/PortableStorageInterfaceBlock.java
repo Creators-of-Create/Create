@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
-	implements ITE<PortableStorageInterfaceTileEntity> {
+	implements ITE<PortableStorageInterfaceTileEntity>, EntityBlock {
 
 	boolean fluids;
 
@@ -40,15 +41,12 @@ public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
 		this.fluids = fluids;
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return (fluids ? AllTileEntities.PORTABLE_FLUID_INTERFACE : AllTileEntities.PORTABLE_STORAGE_INTERFACE)
-			.create();
+			.create(pos, state);
 	}
 
 	@Override

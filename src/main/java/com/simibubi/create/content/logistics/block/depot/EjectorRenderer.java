@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,7 +28,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 
 	static final Vec3 pivot = VecHelper.voxelSpace(0, 11.25, 0.75);
 
-	public EjectorRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public EjectorRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -72,7 +73,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
-				.renderStatic(intAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer);
+				.renderStatic(intAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer, 1); // PORT: scale
 			ms.popPose();
 		}
 

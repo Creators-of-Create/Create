@@ -60,7 +60,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderUI extends NavigatableSimiScreen {
@@ -369,7 +368,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			PonderStoryBoardEntry sb = list.get(index);
 			StructureTemplate activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, new StructurePlaceSettings(), new Random());
+			activeTemplate.placeInWorld(world, BlockPos.ZERO,BlockPos.ZERO, new StructurePlaceSettings(), new Random(), 0); // PORT: I traced the last var to flags.
 			world.createBackup();
 			scene = PonderRegistry.compileScene(index, sb, world);
 			scene.begin();

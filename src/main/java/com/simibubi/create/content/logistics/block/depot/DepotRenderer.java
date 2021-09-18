@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -24,7 +25,7 @@ import com.mojang.math.Vector3f;
 
 public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 
-	public DepotRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public DepotRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -105,7 +106,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
-		boolean blockItem = itemRenderer.getModel(itemStack, null, null)
+		boolean blockItem = itemRenderer.getModel(itemStack, null, null, 1) // PORT: scale
 			.isGui3d();
 
 		ms.pushPose();
@@ -132,7 +133,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 				ms.translate(0, -3 / 16f, 0);
 				msr.rotateX(90);
 			}
-			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
+			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 1); // PORT: scale
 			ms.popPose();
 
 			if (!renderUpright) {

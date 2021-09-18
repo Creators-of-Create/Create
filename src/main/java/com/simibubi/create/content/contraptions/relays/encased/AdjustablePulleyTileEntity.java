@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -11,8 +14,8 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	int signal;
 	boolean signalChanged;
 
-	public AdjustablePulleyTileEntity(BlockEntityType<? extends AdjustablePulleyTileEntity> type) {
-		super(type);
+	public AdjustablePulleyTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends AdjustablePulleyTileEntity> type) {
+		super(type, pos, state);
 		signal = 0;
 		setLazyTickRate(40);
 	}
@@ -37,7 +40,7 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 		if (!hasLevel())
 			return;
 		int power = level.getBestNeighborSignal(worldPosition);
-		if (power != signal) 
+		if (power != signal)
 			signalChanged = true;
 	}
 
@@ -48,8 +51,8 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (level.isClientSide)
 			return;
 		if (signalChanged) {

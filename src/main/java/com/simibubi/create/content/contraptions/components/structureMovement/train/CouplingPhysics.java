@@ -64,10 +64,10 @@ public class CouplingPhysics {
 			Vec3 link = otherCart.position()
 				.subtract(pos);
 			float correctionMagnitude = firstLoop ? -stress / 2f : -stress;
-			
+
 			if (!MinecartSim2020.canAddMotion(cart))
 				correctionMagnitude /= 2;
-			
+
 			correction = shape != null
 				? followLinkOnRail(link, pos, correctionMagnitude, MinecartSim2020.getRailVec(shape)).subtract(pos)
 				: link.normalize()
@@ -93,20 +93,19 @@ public class CouplingPhysics {
 	public static void softCollisionStep(Level world, Couple<AbstractMinecart> carts, double couplingLength) {
 		Couple<Float> maxSpeed = carts.map(AbstractMinecart::getMaxCartSpeedOnRail);
 		Couple<Boolean> canAddmotion = carts.map(MinecartSim2020::canAddMotion);
-		
+
 		// Assuming Minecarts will never move faster than 1 block/tick
 		Couple<Vec3> motions = carts.map(Entity::getDeltaMovement);
 		motions.replaceWithParams(VecHelper::clamp, Couple.create(1f, 1f));
 		Couple<Vec3> nextPositions = carts.map(MinecartSim2020::predictNextPositionOf);
 
 		Couple<RailShape> shapes = carts.mapWithContext((cart, current) -> {
-			AbstractMinecart minecart = cart.getMinecart();
 			Vec3 vec = nextPositions.get(current);
 			int x = Mth.floor(vec.x());
 	        int y = Mth.floor(vec.y());
 	        int z = Mth.floor(vec.z());
 	        BlockPos pos = new BlockPos(x, y - 1, z);
-	        if (minecart.level.getBlockState(pos).is(BlockTags.RAILS)) pos = pos.below();
+	        if (cart.level.getBlockState(pos).is(BlockTags.RAILS)) pos = pos.below();
 			BlockPos railPosition = pos;
 			BlockState railState = world.getBlockState(railPosition.above());
 			if (!(railState.getBlock() instanceof BaseRailBlock))
@@ -141,7 +140,7 @@ public class CouplingPhysics {
 					.scale(correctionMagnitude);
 
 			correction = VecHelper.clamp(correction, maxSpeed.get(current));
-			
+
 			motions.set(current, motions.get(current)
 				.add(correction));
 		}

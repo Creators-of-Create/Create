@@ -22,10 +22,10 @@ public class WindmillBearingBlock extends BearingBlock implements ITE<WindmillBe
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.WINDMILL_BEARING.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.WINDMILL_BEARING.create(pos, state);
 	}
-	
+
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {

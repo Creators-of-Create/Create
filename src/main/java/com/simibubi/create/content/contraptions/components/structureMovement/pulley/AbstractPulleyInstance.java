@@ -8,18 +8,19 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
+import com.jozufozu.flywheel.light.BasicProvider;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.ILightUpdateListener;
-import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.light.LightProvider;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.LightLayer;
 
 public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
@@ -37,7 +38,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	private byte[] sLight = new byte[1];
 	private GridAlignedBB volume;
 
-	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+	public AbstractPulleyInstance(MaterialManager dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
@@ -143,9 +144,9 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 			bLight = Arrays.copyOf(bLight, length + 1);
 			sLight = Arrays.copyOf(sLight, length + 1);
 
-			initLight(world, volume);
+			initLight(BasicProvider.get(world), volume);
 
-			LightUpdater.getInstance().startListening(volume, this);
+			throw new RuntimeException("LightUpdater.getInstance().startListening(volume, this);");
 		}
 	}
 
@@ -176,21 +177,19 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	@Override
-	public boolean onLightUpdate(BlockAndTintGetter world, LightLayer type, GridAlignedBB changed) {
-		changed.intersectAssign(volume);
+	public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
+		changed.intersect(volume);
 
 		initLight(world, changed);
-
-		return false;
 	}
 
-	private void initLight(BlockAndTintGetter world, GridAlignedBB changed) {
+	private void initLight(LightProvider world, ImmutableBox changed) {
 		int top = this.pos.getY();
 		BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 		changed.forEachContained((x, y, z) -> {
 			pos.set(x, y, z);
-			byte block = (byte) world.getBrightness(LightLayer.BLOCK, pos);
-			byte sky = (byte) world.getBrightness(LightLayer.SKY, pos);
+			byte block = (byte) world.getLight(LightLayer.BLOCK, pos.getX(), pos.getY(), pos.getZ());
+			byte sky = (byte) world.getLight(LightLayer.SKY, pos.getX(), pos.getY(), pos.getZ());
 
 			int i = top - y;
 

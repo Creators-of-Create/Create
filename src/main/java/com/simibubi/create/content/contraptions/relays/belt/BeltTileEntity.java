@@ -92,6 +92,10 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		color = Optional.empty();
 	}
 
+	public BeltTileEntity(BlockPos pos, BlockState state, BlockEntityType<BeltTileEntity> type) {
+		this(type, pos, state);
+	}
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		super.addBehaviours(behaviours);

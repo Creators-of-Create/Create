@@ -152,7 +152,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			if (!minecartController.isPresent())
 				continue;
 			AbstractMinecart cart = minecartController.cart();
-			if (cart.xChunk == chunkPos.x && cart.zChunk == chunkPos.z)
+			if (cart.getBlockX() / 16 == chunkPos.x && cart.getBlockZ() / 16 == chunkPos.z) // PORT: this might cause problems
 				queuedUnloads.get(event.getWorld())
 					.add(cart.getUUID());
 		}
@@ -234,7 +234,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	}
 
 	public static void register() {
-		CapabilityManager.INSTANCE.register(MinecartController.class, new Capability.IStorage<MinecartController>() {
+		throw new RuntimeException("// PORT: missing capabilities");
+		/*CapabilityManager.INSTANCE.register(MinecartController.class, new Capability.IStorage<MinecartController>() {
 
 			@Override
 			public Tag writeNBT(Capability<MinecartController> capability, MinecartController instance,
@@ -248,7 +249,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 				instance.deserializeNBT((CompoundTag) base);
 			}
 
-		}, MinecartController::empty);
+		}, MinecartController::empty);*/
 	}
 
 	/* Capability provider */

@@ -1,5 +1,7 @@
 package com.simibubi.create.content.contraptions.particle;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -54,7 +56,8 @@ public class CubeParticle extends Particle {
 	private static final ParticleRenderType renderType = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder builder, TextureManager textureManager) {
-			RenderSystem.disableTexture();
+			throw new RuntimeException("// PORT: legacy gl");
+/*			RenderSystem.disableTexture();
 
 			// transparent, additive blending
 			RenderSystem.depthMask(false);
@@ -68,16 +71,16 @@ public class CubeParticle extends Particle {
 //			RenderSystem.disableBlend();
 //			RenderSystem.enableLighting();
 
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
+			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);*/
 		}
 
 		@Override
 		public void end(Tesselator tessellator) {
-			tessellator.end();
+/*			tessellator.end();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.disableLighting();
-			RenderSystem.enableTexture();
+			RenderSystem.enableTexture();*/
 		}
 	};
 
@@ -101,13 +104,13 @@ public class CubeParticle extends Particle {
 	public void averageAge(int age) {
 		this.lifetime = (int) (age + (random.nextDouble() * 2D - 1D) * 8);
 	}
-	
+
 	public void setHot(boolean hot) {
 		this.hot = hot;
 	}
-	
+
 	private boolean billowing = false;
-	
+
 	@Override
 	public void tick() {
 		if (this.hot && this.age > 0) {

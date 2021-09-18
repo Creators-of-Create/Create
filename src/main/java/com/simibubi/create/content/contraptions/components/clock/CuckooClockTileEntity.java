@@ -12,6 +12,9 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
@@ -37,8 +40,8 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		PIG, CREEPER, SURPRISE, NONE;
 	}
 
-	public CuckooClockTileEntity(BlockEntityType<? extends CuckooClockTileEntity> type) {
-		super(type);
+	public CuckooClockTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends CuckooClockTileEntity> type) {
+		super(type, pos, state);
 		animationType = Animation.NONE;
 	}
 
@@ -61,8 +64,8 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (getSpeed() == 0)
 			return;
 
@@ -130,8 +133,8 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 					playSound(SoundEvents.NOTE_BLOCK_CHIME, 2, 0.793701f);
 
 				if (value > 30 && isSurprise) {
-					Vec3 pos = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.worldPosition), level.random, .5f);
-					level.addParticle(ParticleTypes.LARGE_SMOKE, pos.x, pos.y, pos.z, 0, 0, 0);
+					Vec3 pos2 = VecHelper.offsetRandomly(VecHelper.getCenterOf(this.worldPosition), level.random, .5f);
+					level.addParticle(ParticleTypes.LARGE_SMOKE, pos2.x, pos2.y, pos2.z, 0, 0, 0);
 				}
 				if (value == 40 && isSurprise)
 					playSound(SoundEvents.TNT_PRIMED, 1f, 1f);

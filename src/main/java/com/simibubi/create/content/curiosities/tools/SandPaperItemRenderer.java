@@ -5,8 +5,10 @@ import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
@@ -18,11 +20,15 @@ import com.mojang.math.Vector3f;
 
 public class SandPaperItemRenderer extends BlockEntityWithoutLevelRenderer {
 
+	public SandPaperItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
+	}
+
 	@Override
 	public void renderByItem(ItemStack stack, TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		LocalPlayer player = Minecraft.getInstance().player;
-		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getModel(stack, Minecraft.getInstance().level, null);
+		SandPaperModel mainModel = (SandPaperModel) itemRenderer.getModel(stack, Minecraft.getInstance().level, null, 1); // PORT: scale
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
@@ -58,7 +64,7 @@ public class SandPaperItemRenderer extends BlockEntityWithoutLevelRenderer {
 			}
 
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
-			itemRenderer.renderStatic(toPolish, TransformType.NONE, light, overlay, ms, buffer);
+			itemRenderer.renderStatic(toPolish, TransformType.NONE, light, overlay, ms, buffer, 1); // PORT: scale
 
 			ms.popPose();
 		}

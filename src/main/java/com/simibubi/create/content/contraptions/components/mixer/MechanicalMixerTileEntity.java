@@ -20,6 +20,9 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -49,8 +52,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public int processingTicks;
 	public boolean running;
 
-	public MechanicalMixerTileEntity(BlockEntityType<? extends MechanicalMixerTileEntity> type) {
-		super(type);
+	public MechanicalMixerTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends MechanicalMixerTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
@@ -111,8 +114,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (runningTicks >= 40) {
 			running = false;
@@ -279,9 +282,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		// SoundEvents.BLOCK_STONE_BREAK
 		boolean slow = Math.abs(getSpeed()) < 65;
-		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
+		if (slow && AnimationTickHolder.getTicks() % 2 == 0)
 			return;
-		if (runningTicks == 20) 
+		if (runningTicks == 20)
 			AllSoundEvents.MIXING.playAt(level, worldPosition, .75f, 1, true);
 	}
 

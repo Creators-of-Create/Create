@@ -6,6 +6,8 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CrossCollisionBlock;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,10 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 
 public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> extends CustomRenderedItemModelRenderer<M> {
+
+	public ZapperItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
+	}
 
 	@Override
 	protected void render(ItemStack stack, M model, PartialItemModelRenderer renderer, TransformType transformType,
@@ -41,7 +47,7 @@ public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> exte
 		if (state.getBlock() instanceof CrossCollisionBlock)
 			modelForState = Minecraft.getInstance()
 				.getItemRenderer()
-				.getModel(new ItemStack(state.getBlock()), Minecraft.getInstance().level, null);
+				.getModel(new ItemStack(state.getBlock()), Minecraft.getInstance().level, null, 1); // PORT: scale
 
 		Minecraft.getInstance()
 			.getItemRenderer()

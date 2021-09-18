@@ -13,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,8 +24,8 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 	boolean assembleNextTick;
 	protected AssemblyException lastException;
 
-	public GantryCarriageTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public GantryCarriageTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -49,8 +50,8 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (level.isClientSide)
 			return;

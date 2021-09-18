@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -23,15 +24,15 @@ public class GaugeRenderer extends KineticTileEntityRenderer {
 
 	protected GaugeBlock.Type type;
 
-	public static GaugeRenderer speed(BlockEntityRenderDispatcher dispatcher) {
+	public static GaugeRenderer speed(BlockEntityRendererProvider.Context dispatcher) {
 		return new GaugeRenderer(dispatcher, Type.SPEED);
 	}
 
-	public static GaugeRenderer stress(BlockEntityRenderDispatcher dispatcher) {
+	public static GaugeRenderer stress(BlockEntityRendererProvider.Context dispatcher) {
 		return new GaugeRenderer(dispatcher, Type.STRESS);
 	}
 
-	protected GaugeRenderer(BlockEntityRenderDispatcher dispatcher, GaugeBlock.Type type) {
+	protected GaugeRenderer(BlockEntityRendererProvider.Context dispatcher, GaugeBlock.Type type) {
 		super(dispatcher);
 		this.type = type;
 	}

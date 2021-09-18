@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -44,7 +45,7 @@ import net.minecraft.core.Vec3i;
 
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
-	public BeltRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public BeltRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -239,7 +240,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			ItemRenderer itemRenderer = Minecraft.getInstance()
 				.getItemRenderer();
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
-			boolean blockItem = itemRenderer.getModel(transported.stack, te.getLevel(), null)
+			boolean blockItem = itemRenderer.getModel(transported.stack, te.getLevel(), null, 1) // PORT: is everything just scale?
 				.isGui3d();
 			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
 			Random r = new Random(transported.angle);
@@ -282,7 +283,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				}
 
 				ms.scale(.5f, .5f, .5f);
-				itemRenderer.renderStatic(transported.stack, TransformType.FIXED, stackLight, overlay, ms, buffer);
+				itemRenderer.renderStatic(transported.stack, TransformType.FIXED, stackLight, overlay, ms, buffer, 1); // PORT: scale?
 				ms.popPose();
 
 				if (!renderUpright) {

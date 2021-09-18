@@ -3,6 +3,9 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,8 +21,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	InterpolatedChasingValue visualSpeed = new InterpolatedChasingValue();
 	float angle;
 
-	public FlywheelTileEntity(BlockEntityType<? extends FlywheelTileEntity> type) {
-		super(type);
+	public FlywheelTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends FlywheelTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	public void setRotation(float speed, float capacity) {
@@ -73,8 +76,8 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (level.isClientSide) {
 			float targetSpeed = isVirtual() ? speed : getGeneratedSpeed();

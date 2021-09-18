@@ -11,12 +11,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 
 public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternControllerTileEntity> {
 
-	public LecternControllerRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public LecternControllerRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -28,7 +29,7 @@ public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternCon
 		TransformType transformType = TransformType.NONE;
 		LinkedControllerModel mainModel = (LinkedControllerModel) Minecraft.getInstance()
 			.getItemRenderer()
-			.getModel(stack, null, null);
+			.getModel(stack, null, null, 1); // PORT: scale?
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);
 		boolean active = te.hasUser();
 		boolean renderDepression = te.isUsedBy(Minecraft.getInstance().player);

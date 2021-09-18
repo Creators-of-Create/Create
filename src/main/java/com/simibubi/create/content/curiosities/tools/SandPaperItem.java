@@ -5,6 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -104,7 +105,7 @@ public class SandPaperItem extends Item {
 			itemstack.getOrCreateTag()
 				.put("Polishing", toPolish.serializeNBT());
 			if (item.isEmpty())
-				pickUp.remove();
+				pickUp.remove(Entity.RemovalReason.DISCARDED);
 			else
 				pickUp.setItem(item);
 		}
@@ -145,7 +146,7 @@ public class SandPaperItem extends Item {
 				if (player instanceof FakePlayer) {
 					player.drop(polished, false, false);
 				} else {
-					player.inventory.placeItemBackInInventory(worldIn, polished);
+					player.getInventory().placeItemBackInInventory(polished);
 				}
 			}
 			tag.remove("Polishing");
@@ -171,7 +172,7 @@ public class SandPaperItem extends Item {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
-			player.inventory.placeItemBackInInventory(worldIn, toPolish);
+			player.getInventory().placeItemBackInInventory(toPolish);
 			tag.remove("Polishing");
 		}
 	}

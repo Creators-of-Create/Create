@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.BlockGetter;
@@ -120,7 +121,7 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		ItemStack remainder = tryInsert(worldIn, pos, toInsert, false);
 
 		if (remainder.isEmpty())
-			itemEntity.remove();
+			itemEntity.remove(Entity.RemovalReason.DISCARDED);
 		if (remainder.getCount() < toInsert.getCount())
 			itemEntity.setItem(remainder);
 	}
@@ -138,9 +139,11 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		if (context.getEntity() instanceof ItemEntity && getFacing(state).getAxis()
-			.isHorizontal())
-			return AllShapes.FUNNEL_COLLISION.get(getFacing(state));
+		if(context instanceof EntityCollisionContext ecc) {
+			if (ecc.getEntity().orElse(null) instanceof ItemEntity && getFacing(state).getAxis()
+					.isHorizontal())
+				return AllShapes.FUNNEL_COLLISION.get(getFacing(state));
+		}
 		return getShape(state, world, pos, context);
 	}
 

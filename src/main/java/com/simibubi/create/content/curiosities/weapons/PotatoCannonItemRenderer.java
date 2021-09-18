@@ -8,8 +8,10 @@ import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,6 +21,10 @@ import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 
 public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<PotatoCannonModel> {
+
+	public PotatoCannonItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
+	}
 
 	@Override
 	protected void render(ItemStack stack, PotatoCannonModel model, PartialItemModelRenderer renderer,
@@ -56,7 +62,7 @@ public class PotatoCannonItemRenderer extends CustomRenderedItemModelRenderer<Po
 					localMs.scale(.5f, .5f, .5f);
 					MatrixTransformStack.of(localMs)
 						.rotateY(-34);
-					itemRenderer.renderStatic(ammo, TransformType.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer);
+					itemRenderer.renderStatic(ammo, TransformType.GUI, light, OverlayTexture.NO_OVERLAY, localMs, buffer, 1); // PORT: scale
 				});
 		}
 

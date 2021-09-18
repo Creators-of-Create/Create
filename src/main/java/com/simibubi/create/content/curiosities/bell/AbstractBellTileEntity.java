@@ -6,10 +6,12 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class AbstractBellTileEntity extends SmartTileEntity {
 
@@ -19,8 +21,12 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 	public int ringingTicks;
 	public Direction ringDirection;
 
-	public AbstractBellTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public AbstractBellTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
+	}
+
+	public AbstractBellTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -34,8 +40,8 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 	};
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (isRinging) {
 			++ringingTicks;

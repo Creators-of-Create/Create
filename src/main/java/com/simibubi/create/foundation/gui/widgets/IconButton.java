@@ -28,10 +28,11 @@ public class IconButton extends AbstractSimiWidget {
 			AllGuiTextures button = (pressed || !active) ? button = AllGuiTextures.BUTTON_DOWN
 				: (isHovered) ? AllGuiTextures.BUTTON_HOVER : AllGuiTextures.BUTTON;
 
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			AllGuiTextures.BUTTON.bind();
-			blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
-			icon.draw(matrixStack, this, x + 1, y + 1);
+			throw new RuntimeException("// PORT: Legacy GL Pipeline");
+//			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+//			AllGuiTextures.BUTTON.bind();
+//			blit(matrixStack, x, y, button.startX, button.startY, button.width, button.height);
+//			icon.draw(matrixStack, this, x + 1, y + 1);
 		}
 	}
 

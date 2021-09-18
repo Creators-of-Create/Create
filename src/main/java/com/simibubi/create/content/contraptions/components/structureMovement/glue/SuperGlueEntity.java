@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
+
 import org.apache.commons.lang3.Validate;
 
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
@@ -65,8 +67,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
@@ -75,7 +75,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	protected BlockPos hangingPosition;
 	protected Direction facingDirection = Direction.SOUTH;
 
-	public SuperGlueEntity(EntityType<?> type, Level world) {
+	public <T extends Entity> SuperGlueEntity(EntityType<T> type, Level world) {
 		super(type, world);
 	}
 
@@ -114,16 +114,15 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		Validate.notNull(getFacingDirection());
 		if (getFacingDirection().getAxis()
 			.isHorizontal()) {
-			this.xRot = 0.0F;
-			this.yRot = getFacingDirection().get2DDataValue() * 90;
+			this.setXRot(0.0F);
+			this.setYRot(getFacingDirection().get2DDataValue() * 90);
 		} else {
-			this.xRot = -90 * getFacingDirection().getAxisDirection()
-				.getStep();
-			this.yRot = 0.0F;
+			this.setXRot(-90 * getFacingDirection().getAxisDirection().getStep());
+			this.setYRot(0.0F);
 		}
 
-		this.xRotO = this.xRot;
-		this.yRotO = this.yRot;
+		this.xRotO = this.getXRot();
+		this.yRotO = this.getYRot();
 		this.updateBoundingBox();
 	}
 
@@ -164,7 +163,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (this.validationTimer++ == 10 && !this.level.isClientSide) {
 			this.validationTimer = 0;
 			if (isAlive() && !this.onValidSurface()) {
-				remove();
+				remove(RemovalReason.DISCARDED);
 				onBroken(null);
 			}
 		}
@@ -278,7 +277,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		}
 
 		if (isAlive() && !level.isClientSide) {
-			remove();
+			remove(RemovalReason.DISCARDED);
 			markHurt();
 			onBroken(source.getEntity());
 		}
@@ -289,7 +288,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void move(MoverType typeIn, Vec3 pos) {
 		if (!level.isClientSide && isAlive() && pos.lengthSqr() > 0.0D) {
-			remove();
+			remove(RemovalReason.DISCARDED);
 			onBroken(null);
 		}
 	}
@@ -297,7 +296,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void push(double x, double y, double z) {
 		if (!level.isClientSide && isAlive() && x * x + y * y + z * z > 0.0D) {
-			remove();
+			remove(RemovalReason.DISCARDED);
 			onBroken(null);
 		}
 	}
@@ -425,17 +424,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			}
 		}
 
-		float f = Mth.wrapDegrees(this.yRot);
-		switch (transformRotation) {
-		case CLOCKWISE_180:
-			return f + 180.0F;
-		case COUNTERCLOCKWISE_90:
-			return f + 90.0F;
-		case CLOCKWISE_90:
-			return f + 270.0F;
-		default:
-			return f;
-		}
+		float f = Mth.wrapDegrees(this.getYRot());
+		return switch (transformRotation) {
+			case CLOCKWISE_180 -> f + 180.0F;
+			case COUNTERCLOCKWISE_90 -> f + 90.0F;
+			case CLOCKWISE_90 -> f + 270.0F;
+			default -> f;
+		};
 	}
 
 	public BlockPos getHangingPosition() {

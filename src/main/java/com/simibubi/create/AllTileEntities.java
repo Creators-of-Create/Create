@@ -162,8 +162,11 @@ import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
+import com.simibubi.create.foundation.data.CreateTileEntityBuilder;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
+
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class AllTileEntities {
 
@@ -176,7 +179,7 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<SchematicTableTileEntity> SCHEMATIC_TABLE = Create.registrate()
-		.tileEntity("schematic_table", SchematicTableTileEntity::new)
+		.<SchematicTableTileEntity>tileEntity("schematic_table", (blockPos, blockState, blockEntityType) -> new SchematicTableTileEntity(blockEntityType, blockPos, blockState))
 		.validBlocks(AllBlocks.SCHEMATIC_TABLE)
 		.register();
 
@@ -347,14 +350,14 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<BeltTileEntity> BELT = Create.registrate()
-		.tileEntity("belt", BeltTileEntity::new)
+		.<BeltTileEntity>tileEntity("belt", BeltTileEntity::new)
 		.instance(() -> BeltInstance::new)
 		.validBlocks(AllBlocks.BELT)
 		.renderer(() -> BeltRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<ChuteTileEntity> CHUTE = Create.registrate()
-		.tileEntity("chute", ChuteTileEntity::new)
+		.<ChuteTileEntity>tileEntity("chute", ChuteTileEntity::new)
 		.validBlocks(AllBlocks.CHUTE)
 		.renderer(() -> ChuteRenderer::new)
 		.register();
@@ -650,7 +653,7 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER = Create.registrate()
-		.tileEntity("adjustable_repeater", AdjustableRepeaterTileEntity::new)
+		.<AdjustableRepeaterTileEntity>tileEntity("adjustable_repeater", AdjustableRepeaterTileEntity::new)
 		.instance(() -> AdjustableRepeaterInstance::new)
 		.validBlocks(AllBlocks.ADJUSTABLE_REPEATER)
 		.renderer(() -> AdjustableRepeaterRenderer::new)

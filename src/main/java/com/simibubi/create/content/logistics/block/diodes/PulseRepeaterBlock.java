@@ -27,14 +27,14 @@ public class PulseRepeaterBlock extends AbstractDiodeBlock {
 	protected int getDelay(BlockState state) {
 		return 1;
 	}
-	
-	@Override
+
+/*	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
 		return side.getAxis() == state.getValue(FACING).getAxis();
-	}
-	
+	}*/
+
 	@Override
 	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		boolean powered = state.getValue(POWERED);

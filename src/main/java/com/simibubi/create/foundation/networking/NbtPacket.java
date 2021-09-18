@@ -60,7 +60,7 @@ public class NbtPacket extends SimplePacketBase {
 					return;
 				}
 
-				ItemStack heldInSlot = player.inventory.getItem(slot);
+				ItemStack heldInSlot = player.getInventory().getItem(slot);
 				if (heldInSlot.getItem() == stack.getItem()) {
 					heldInSlot.setTag(stack.getTag());
 				}

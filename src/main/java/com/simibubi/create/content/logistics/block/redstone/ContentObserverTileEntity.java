@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
 
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -24,8 +26,8 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 	private InvManipulationBehaviour observedInventory;
 	public int turnOffTicks = 0;
 
-	public ContentObserverTileEntity(BlockEntityType<? extends ContentObserverTileEntity> type) {
-		super(type);
+	public ContentObserverTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends ContentObserverTileEntity> type) {
+		super(type, pos, state);
 		setLazyTickRate(20);
 	}
 
@@ -39,8 +41,8 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state2, BlockEntity blockEntity) {
+		super.tick(level, pos, state2, blockEntity);
 		BlockState state = getBlockState();
 		if (turnOffTicks > 0) {
 			turnOffTicks--;
@@ -67,7 +69,7 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 			});
 			return;
 		}
-		
+
 		if (!observedInventory.simulate()
 			.extract()
 			.isEmpty()) {
@@ -79,7 +81,7 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 	public void activate() {
 		activate(DEFAULT_DELAY);
 	}
-	
+
 	public void activate(int ticks) {
 		BlockState state = getBlockState();
 		turnOffTicks = ticks;

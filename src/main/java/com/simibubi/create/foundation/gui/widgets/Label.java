@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -45,12 +46,12 @@ public class Label extends AbstractSimiWidget {
 
 	public void setTextAndTrim(Component newText, boolean trimFront, int maxWidthPx) {
 		Font fontRenderer = Minecraft.getInstance().font;
-		
+
 		if (fontRenderer.width(newText) <= maxWidthPx) {
 			text = newText;
 			return;
 		}
-		
+
 		String trim = "...";
 		int trimWidth = fontRenderer.width(trim);
 
@@ -77,15 +78,20 @@ public class Label extends AbstractSimiWidget {
 		if (text == null || text.getString().isEmpty())
 			return;
 
-		RenderSystem.color4f(1, 1, 1, 1);
-		MutableComponent copy = text.plainCopy();
-		if (suffix != null && !suffix.isEmpty())
-			copy.append(suffix);
-		
-		if (hasShadow)
-			font.drawShadow(matrixStack, copy, x, y, color);
-		else
-			font.draw(matrixStack, copy, x, y, color);
+		throw new RuntimeException("// PORT: Legacy GL Pipeline");
+//		RenderSystem.color4f(1, 1, 1, 1);
+//		MutableComponent copy = text.plainCopy();
+//		if (suffix != null && !suffix.isEmpty())
+//			copy.append(suffix);
+//
+//		if (hasShadow)
+//			font.drawShadow(matrixStack, copy, x, y, color);
+//		else
+//			font.draw(matrixStack, copy, x, y, color);
 	}
 
+	@Override
+	public void updateNarration(NarrationElementOutput p_169152_) {
+
+	}
 }

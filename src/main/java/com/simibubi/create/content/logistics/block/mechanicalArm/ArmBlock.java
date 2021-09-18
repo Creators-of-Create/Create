@@ -55,13 +55,13 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 		CollisionContext p_220053_4_) {
 		return state.getValue(CEILING) ? AllShapes.MECHANICAL_ARM_CEILING : AllShapes.MECHANICAL_ARM;
 	}
-	
+
 	@Override
 	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
 		withTileEntityDo(world, pos, ArmTileEntity::redstoneUpdate);
 	}
-	
+
 	@Override
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_,
 		BlockPos p_220069_5_, boolean p_220069_6_) {
@@ -74,8 +74,8 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_ARM.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MECHANICAL_ARM.create(pos, state);
 	}
 
 	@Override
@@ -86,8 +86,7 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 	@Override
 	public void onRemove(BlockState p_196243_1_, Level world, BlockPos pos, BlockState p_196243_4_,
 		boolean p_196243_5_) {
-		if (p_196243_1_.hasTileEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
+		if (p_196243_1_.getBlock() != p_196243_4_.getBlock()) {
 			withTileEntityDo(world, pos, te -> {
 				if (!te.heldItem.isEmpty())
 					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), te.heldItem);
@@ -106,13 +105,13 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 			success.setTrue();
 			if (world.isClientSide)
 				return;
-			player.inventory.placeItemBackInInventory(world, te.heldItem);
+			player.getInventory().placeItemBackInInventory(te.heldItem);
 			te.heldItem = ItemStack.EMPTY;
 			te.phase = Phase.SEARCH_INPUTS;
 			te.setChanged();
 			te.sendData();
 		});
-		
+
 		return success.booleanValue() ? InteractionResult.SUCCESS : InteractionResult.PASS;
 	}
 

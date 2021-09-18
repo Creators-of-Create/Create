@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -23,7 +24,7 @@ import com.mojang.math.Vector3f;
 
 public class GantryCarriageRenderer extends KineticTileEntityRenderer {
 
-	public GantryCarriageRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public GantryCarriageRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

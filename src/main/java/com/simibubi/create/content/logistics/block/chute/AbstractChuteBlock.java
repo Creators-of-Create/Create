@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.world.entity.Entity;
@@ -34,16 +35,13 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
+public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity>, EntityBlock {
 
 	public AbstractChuteBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	public static boolean isChute(BlockState state) {
 		return state.getBlock() instanceof AbstractChuteBlock;
@@ -75,7 +73,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	}
 
 	@Override
-	public abstract BlockEntity createTileEntity(BlockState state, BlockGetter world);
+	public abstract BlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
@@ -98,7 +96,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		ItemStack remainder = input.handleInsertion(toInsert, Direction.UP, false);
 
 		if (remainder.isEmpty())
-			itemEntity.remove();
+			itemEntity.remove(Entity.RemovalReason.DISCARDED);
 		if (remainder.getCount() < toInsert.getCount())
 			itemEntity.setItem(remainder);
 	}
@@ -130,7 +128,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
 		boolean differentBlock = state.getBlock() != p_196243_4_.getBlock();
-		if (state.hasTileEntity() && (differentBlock || !p_196243_4_.hasTileEntity())) {
+		if (differentBlock) {
 			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
 			withTileEntityDo(world, pos, c -> c.onRemoved(state));
 			world.removeBlockEntity(pos);
@@ -174,12 +172,12 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 
 	public abstract BlockState updateChuteState(BlockState state, BlockState above, BlockGetter world, BlockPos pos);
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
-		return true;
-	}
+//	@Override
+//	@OnlyIn(Dist.CLIENT)
+//	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
+//		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
+//		return true;
+//	}
 
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
@@ -210,7 +208,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		return onTileEntityUse(world, pos, te -> {
 			if (te.item.isEmpty())
 				return InteractionResult.PASS;
-			player.inventory.placeItemBackInInventory(world, te.item);
+			player.getInventory().placeItemBackInInventory(te.item);
 			te.setItem(ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;
 		});

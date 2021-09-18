@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -29,8 +30,10 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (context.getEntity() instanceof Player)
-			return AllShapes.CASING_14PX.get(Direction.DOWN);
+		if(context instanceof EntityCollisionContext ecc) {
+			if (ecc.getEntity().orElseThrow() instanceof Player)
+				return AllShapes.CASING_14PX.get(Direction.DOWN);
+		}
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}
 
@@ -40,8 +43,8 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_PRESS.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MECHANICAL_PRESS.create(pos, state);
 	}
 
 	@Override
@@ -68,7 +71,7 @@ public class MechanicalPressBlock extends HorizontalKineticBlock implements ITE<
 	public Class<MechanicalPressTileEntity> getTileEntityClass() {
 		return MechanicalPressTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

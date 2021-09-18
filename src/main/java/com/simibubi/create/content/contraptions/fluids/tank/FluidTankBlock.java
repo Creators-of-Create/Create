@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.entity.Entity;
@@ -49,7 +50,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity> {
+public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, EntityBlock {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
 	public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
@@ -92,7 +93,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+	public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
 		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
 		if (tankAt == null)
 			return 0;
@@ -224,13 +225,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && (state.getBlock() != newState.getBlock() || !newState.hasTileEntity())) {
+		if (state.getBlock() != newState.getBlock()) {
 			BlockEntity te = world.getBlockEntity(pos);
 			if (!(te instanceof FluidTankTileEntity))
 				return;
@@ -241,8 +237,8 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return creative ? AllTileEntities.CREATIVE_FLUID_TANK.create() : AllTileEntities.FLUID_TANK.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return creative ? AllTileEntities.CREATIVE_FLUID_TANK.create(pos, state) : AllTileEntities.FLUID_TANK.create(pos, state);
 	}
 
 	@Override

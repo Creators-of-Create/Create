@@ -2,12 +2,14 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import static com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock.POWERING;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class AdjustablePulseRepeaterTileEntity extends AdjustableRepeaterTileEntity {
 
-	public AdjustablePulseRepeaterTileEntity(BlockEntityType<? extends AdjustablePulseRepeaterTileEntity> type) {
-		super(type);
+	public AdjustablePulseRepeaterTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends AdjustablePulseRepeaterTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -25,7 +27,7 @@ public class AdjustablePulseRepeaterTileEntity extends AdjustableRepeaterTileEnt
 				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, true));
 			return;
 		}
-		
+
 		if (!charging && powered)
 			return;
 
@@ -38,5 +40,5 @@ public class AdjustablePulseRepeaterTileEntity extends AdjustableRepeaterTileEnt
 
 		state += charging ? 1 : 0;
 	}
-	
+
 }

@@ -6,6 +6,7 @@ import java.util.Random;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.particle.CubeParticleData;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -13,6 +14,12 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -47,8 +54,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	protected LerpedFloat headAngle;
 	protected boolean isCreative;
 
-	public BlazeBurnerTileEntity(BlockEntityType<? extends BlazeBurnerTileEntity> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public BlazeBurnerTileEntity(BlockPos pos, BlockState state, BlockEntityType<BlazeBurnerTileEntity> type) {
+		super(type, pos, state);
 		activeFuel = FuelType.NONE;
 		remainingBurnTime = 0;
 		headAngle = LerpedFloat.angular();
@@ -68,9 +75,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (level.isClientSide) {
 			tickRotation();
 			spawnParticles(getHeatLevelFromBlock(), 1);
@@ -172,7 +178,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = ForgeHooks.getBurnTime(itemStack);
+			newBurnTime = ForgeHooks.getBurnTime(itemStack, RecipeType.SMELTING);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 		}

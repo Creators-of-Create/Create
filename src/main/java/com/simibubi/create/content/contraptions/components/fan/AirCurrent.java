@@ -391,7 +391,7 @@ public class AirCurrent {
 	public static boolean isPlayerCreativeFlying(Entity entity) {
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
-			return player.isCreative() && player.abilities.flying;
+			return player.isCreative() && player.getAbilities().flying;
 		}
 		return false;
 	}

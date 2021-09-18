@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
 
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.foundation.block.BlockStressValues;
@@ -46,19 +48,11 @@ public class AllConfigs {
 		BlockStressValues.registerProvider(context.getActiveNamespace(), SERVER.kinetics.stressValues);
 	}
 
-	public static void onLoad(ModConfig.Loading event) {
+	public static void onLoad(ModConfigEvent event) {
 		for (Entry<ConfigBase, Type> pair : configs.entrySet())
 			if (pair.getKey().specification == event.getConfig()
 				.getSpec())
 				pair.getKey()
 					.onLoad();
-	}
-
-	public static void onReload(ModConfig.Reloading event) {
-		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			if (pair.getKey().specification == event.getConfig()
-				.getSpec())
-				pair.getKey()
-					.onReload();
 	}
 }

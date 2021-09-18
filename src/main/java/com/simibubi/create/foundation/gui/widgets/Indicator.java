@@ -6,23 +6,29 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class Indicator extends AbstractSimiWidget {
-	
+
+	@Override
+	public void updateNarration(NarrationElementOutput p_169152_) {
+
+	}
+
 	public enum State {
 		OFF, ON,
 		RED, YELLOW, GREEN;
 	}
-	
+
 	public State state;
-	
+
 	public Indicator(int x, int y, Component tooltip) {
 		super(x, y, AllGuiTextures.INDICATOR.width, AllGuiTextures.INDICATOR.height);
 		this.toolTip = ImmutableList.of(tooltip);
 		this.state = State.OFF;
 	}
-	
+
 	@Override
 	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks ) {
 		AllGuiTextures toDraw;
@@ -36,5 +42,5 @@ public class Indicator extends AbstractSimiWidget {
 		}
 		toDraw.draw(matrixStack, this, x, y);
 	}
-	
+
 }

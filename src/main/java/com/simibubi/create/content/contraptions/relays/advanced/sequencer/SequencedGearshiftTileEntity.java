@@ -4,6 +4,9 @@ import java.util.Vector;
 
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,8 +22,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	int timer;
 	boolean poweredPreviously;
 
-	public SequencedGearshiftTileEntity(BlockEntityType<? extends SequencedGearshiftTileEntity> type) {
-		super(type);
+	public SequencedGearshiftTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends SequencedGearshiftTileEntity> type) {
+		super(type, pos, state);
 		instructions = Instruction.createDefault();
 		currentInstruction = -1;
 		currentInstructionDuration = -1;
@@ -30,8 +33,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (isIdle())
 			return;

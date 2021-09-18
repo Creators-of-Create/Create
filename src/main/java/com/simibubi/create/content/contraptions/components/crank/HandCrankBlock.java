@@ -100,8 +100,8 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.HAND_CRANK.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.HAND_CRANK.create(pos, state);
 	}
 
 	@Override

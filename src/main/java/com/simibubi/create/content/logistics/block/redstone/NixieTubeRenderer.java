@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -50,7 +51,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 		.build();
 
-	public NixieTubeRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public NixieTubeRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -121,7 +122,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		if (buffer instanceof BufferSource) {
 			BakedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
 				.whiteGlyph();
-			((BufferSource) buffer).endBatch(texturedglyph.renderType(false));
+			((BufferSource) buffer).endBatch(texturedglyph.renderType(Font.DisplayMode.NORMAL));
 		}
 	}
 

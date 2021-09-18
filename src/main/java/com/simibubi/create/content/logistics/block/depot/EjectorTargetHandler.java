@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
@@ -206,7 +207,7 @@ public class EjectorTargetHandler {
 		boolean valid = xDiff == validX && zDiff == validZ;
 		int intColor = valid ? 0x9ede73 : 0xff7171;
 		Vec3 color = Color.vectorFromRGB(intColor);
-		DustParticleOptions data = new DustParticleOptions((float) color.x, (float) color.y, (float) color.z, 1);
+		DustParticleOptions data = new DustParticleOptions(new Vector3f((float) color.x, (float) color.y, (float) color.z), 1);
 		ClientLevel world = mc.level;
 
 		AABB bb = new AABB(0, 0, 0, 1, 0, 1).move(currentSelection.offset(-validX, -yDiff, -validZ));

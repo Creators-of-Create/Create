@@ -47,7 +47,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.EntityTeleportEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileTypes {
@@ -331,7 +331,7 @@ public class PotatoCannonProjectileTypes {
 	public boolean preEntityHit(EntityHitResult ray) {
 		return preEntityHit.test(ray);
 	}
-	
+
 	public boolean onEntityHit(EntityHitResult ray) {
 		return onEntityHit.test(ray);
 	}
@@ -551,7 +551,7 @@ public class PotatoCannonProjectileTypes {
 			result.preEntityHit = callback;
 			return this;
 		}
-		
+
 		public Builder onEntityHit(Predicate<EntityHitResult> callback) {
 			result.onEntityHit = callback;
 			return this;

@@ -5,16 +5,20 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
@@ -22,8 +26,12 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	public boolean basinRemoved;
 	protected Recipe<?> currentRecipe;
 
-	public BasinOperatingTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public BasinOperatingTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends BasinOperatingTileEntity> type) {
+		super(type, pos, state);
+	}
+
+	public BasinOperatingTileEntity(BlockEntityType<? extends BasinOperatingTileEntity> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -43,7 +51,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
 		if (basinRemoved) {
 			basinRemoved = false;
 			onBasinRemoved();
@@ -51,7 +59,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return;
 		}
 
-		super.tick();
+		super.tick(level, pos, state, blockEntity);
 	}
 
 	protected boolean updateBasin() {

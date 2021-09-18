@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -34,7 +35,7 @@ import com.mojang.math.Vector3f;
 
 public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
-	public MechanicalCrafterRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public MechanicalCrafterRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -77,7 +78,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				ms.mulPose(Vector3f.YP.rotationDegrees(180));
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer);
+					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 1); // PORT: scale?
 				ms.popPose();
 			}
 		} else {
@@ -116,19 +117,19 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				Integer x = pair.getKey();
 				Integer y = pair.getValue();
 				ms.translate(x * spacing, y * spacing, 0);
-				
+
 				int offset = 0;
 				if (te.phase == Phase.EXPORTING && te.getBlockState().hasProperty(MechanicalCrafterBlock.POINTING)) {
 					Pointing value = te.getBlockState().getValue(MechanicalCrafterBlock.POINTING);
 					offset = value == Pointing.UP ? -1 : value == Pointing.LEFT ? 2 : value == Pointing.RIGHT ? -2 : 1;
 				}
-				
+
 				MatrixTransformStack.of(ms)
 					.rotateY(180)
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer);
+					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 1); // PORT: scale
 				ms.popPose();
 			});
 
@@ -157,7 +158,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 					ms.mulPose(Vector3f.YP.rotationDegrees(180));
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer);
+						.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 1); // PORT: scale
 					ms.popPose();
 				});
 			}

@@ -74,7 +74,7 @@ public class FilteringHandler {
 			return;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return;
-		
+
 		if (event.getSide() != LogicalSide.CLIENT) {
 			if (!player.isCreative()) {
 				if (toApply.getItem() instanceof FilterItem)
@@ -82,7 +82,7 @@ public class FilteringHandler {
 						.shrink(1);
 				if (behaviour.getFilter()
 					.getItem() instanceof FilterItem)
-					player.inventory.placeItemBackInInventory(world, behaviour.getFilter());
+					player.getInventory().placeItemBackInInventory(behaviour.getFilter(), true); // PORT: i think the true means send to server. test this
 			}
 			if (toApply.getItem() instanceof FilterItem)
 				toApply.setCount(1);
@@ -134,14 +134,14 @@ public class FilteringHandler {
 			((Sided) filtering.slotPositioning).fromSide(result.getDirection());
 		if (!filtering.testHit(objectMouseOver.getLocation()))
 			return false;
-		
+
 		ItemStack filterItem = filtering.getFilter();
 		filtering.ticksUntilScrollPacket = 10;
 		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
 		int prev = filtering.scrollableValue;
 		filtering.scrollableValue =
 			(int) Mth.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
-		
+
 		if (prev != filtering.scrollableValue) {
 			float pitch = (filtering.scrollableValue) / (float) (maxAmount);
 			pitch = Mth.lerp(pitch, 1.5f, 2f);

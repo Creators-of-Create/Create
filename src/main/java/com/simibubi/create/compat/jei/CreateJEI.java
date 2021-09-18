@@ -240,7 +240,7 @@ public class CreateJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registration.addRecipeCatalyst(s.get(), c.getUid())));
+		allCategories.forEach(c -> c.recipeCatalysts.forEach(s -> registration.addRecipeCatalyst((ItemStack) s.get(), c.getUid())));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

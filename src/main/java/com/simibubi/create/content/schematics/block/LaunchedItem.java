@@ -33,7 +33,7 @@ public abstract class LaunchedItem {
 	}
 
 	private static int ticksForDistance(BlockPos start, BlockPos target) {
-		return (int) (Math.max(10, Mth.sqrt(Mth.sqrt(target.distSqr(start))) * 4f));
+		return (int) (Math.max(10, Mth.sqrt(Mth.sqrt((float) target.distSqr(start))) * 4f));
 	}
 
 	LaunchedItem() {}

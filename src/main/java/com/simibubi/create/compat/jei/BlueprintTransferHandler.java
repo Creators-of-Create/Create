@@ -8,9 +8,12 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 
-public class BlueprintTransferHandler implements IRecipeTransferHandler<BlueprintContainer> {
+import javax.annotation.Nullable;
+
+public class BlueprintTransferHandler implements IRecipeTransferHandler<BlueprintContainer, Recipe> {
 
 	@Override
 	public Class<BlueprintContainer> getContainerClass() {
@@ -18,10 +21,13 @@ public class BlueprintTransferHandler implements IRecipeTransferHandler<Blueprin
 	}
 
 	@Override
-	public IRecipeTransferError transferRecipe(BlueprintContainer container, Object recipe, IRecipeLayout recipeLayout,
+	public Class<Recipe> getRecipeClass() {
+		return Recipe.class;
+	}
+
+	@Override
+	public IRecipeTransferError transferRecipe(BlueprintContainer container, Recipe recipe, IRecipeLayout recipeLayout,
 											   Player player, boolean maxTransfer, boolean doTransfer) {
-		if (!(recipe instanceof Recipe))
-			return null;
 		if (!doTransfer)
 			return null;
 		Recipe<?> iRecipe = (Recipe<?>) recipe;

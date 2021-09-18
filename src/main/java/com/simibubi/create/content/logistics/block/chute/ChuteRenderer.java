@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,7 +16,7 @@ import net.minecraft.core.Direction;
 
 public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 
-	public ChuteRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public ChuteRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -47,7 +48,7 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		ms.scale(itemScale, itemScale, itemScale);
 		msr.rotateX(itemPosition * 180);
 		msr.rotateY(itemPosition * 180);
-		itemRenderer.renderStatic(te.item, TransformType.FIXED, light, overlay, ms, buffer);
+		itemRenderer.renderStatic(te.item, TransformType.FIXED, light, overlay, ms, buffer, 1); // PORT: scale?
 		ms.popPose();
 	}
 

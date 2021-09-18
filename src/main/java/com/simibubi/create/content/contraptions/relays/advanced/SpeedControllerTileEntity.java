@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.Direction;
@@ -26,8 +27,8 @@ public class SpeedControllerTileEntity extends KineticTileEntity {
 
 	boolean hasBracket;
 
-	public SpeedControllerTileEntity(BlockEntityType<? extends SpeedControllerTileEntity> type) {
-		super(type);
+	public SpeedControllerTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends SpeedControllerTileEntity> type) {
+		super(type, pos, state);
 		hasBracket = false;
 	}
 

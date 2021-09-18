@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,15 +18,10 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class SpoutBlock extends Block implements IWrenchable {
+public class SpoutBlock extends Block implements IWrenchable, EntityBlock {
 
 	public SpoutBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 
 	@Override
@@ -35,8 +31,8 @@ public class SpoutBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SPOUT.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.SPOUT.create(pos, state);
 	}
 
 	@Override
@@ -48,7 +44,7 @@ public class SpoutBlock extends Block implements IWrenchable {
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

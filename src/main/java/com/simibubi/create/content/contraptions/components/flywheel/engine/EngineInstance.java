@@ -1,22 +1,22 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
-import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction;
 
 public class EngineInstance extends TileEntityInstance<EngineTileEntity> {
 
     protected ModelData frame;
 
-    public EngineInstance(MaterialManager<?> modelManager, EngineTileEntity tile) {
+    public EngineInstance(MaterialManager modelManager, EngineTileEntity tile) {
         super(modelManager, tile);
 
         Block block = blockState

@@ -31,6 +31,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
@@ -117,20 +118,20 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		return INFINITE_EXTENT_AABB;
 	}
 
-	@Override
+/*	@Override
 	@OnlyIn(Dist.CLIENT)
 	public double getViewDistance() {
 		return super.getViewDistance() * 16;
-	}
+	}*/
 
-	public SchematicannonTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SchematicannonTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> tileEntityTypeIn) {
+		super(tileEntityTypeIn, pos, state);
 		setLazyTickRate(30);
 		attachedInventories = new LinkedHashSet<>();
 		flyingBlocks = new LinkedList<>();
 		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
-		state = State.STOPPED;
+		this.state = State.STOPPED;
 		replaceMode = 2;
 		checklist = new MaterialChecklist();
 		printer = new SchematicPrinter();
@@ -269,10 +270,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
-		if (state != State.STOPPED && neighbourCheckCooldown-- <= 0) {
+		if (this.state != State.STOPPED && neighbourCheckCooldown-- <= 0) {
 			neighbourCheckCooldown = NEIGHBOUR_CHECKING;
 			findInventories();
 		}
@@ -579,8 +580,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 								  BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube) {
 		if (pos.closerThan(getBlockPos(), 2f))
 			return false;
-		if (!replaceTileEntities
-				&& (toReplace.hasTileEntity() || (toReplaceOther != null && toReplaceOther.hasTileEntity())))
+		if (!replaceTileEntities && toReplaceOther != null)
 			return false;
 
 		if (shouldIgnoreBlockState(state, te))

@@ -7,10 +7,11 @@ import com.simibubi.create.foundation.tileEntity.renderer.ColoredOverlayTileEnti
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class AdjustableRepeaterRenderer extends ColoredOverlayTileEntityRenderer<AdjustableRepeaterTileEntity> {
 
-	public AdjustableRepeaterRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public AdjustableRepeaterRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

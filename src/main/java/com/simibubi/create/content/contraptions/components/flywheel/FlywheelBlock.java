@@ -40,8 +40,8 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.FLYWHEEL.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.FLYWHEEL.create(pos, state);
 	}
 
 	@Override

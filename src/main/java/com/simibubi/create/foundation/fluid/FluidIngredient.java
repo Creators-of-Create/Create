@@ -230,15 +230,16 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void readInternal(JsonObject json) {
-			ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
-			Optional<? extends Tag.Named<Fluid>> optionalINamedTag = FluidTags.getWrappers()
-				.stream()
-				.filter(fluidINamedTag -> fluidINamedTag.getName()
-					.equals(id))
-				.findFirst(); // fixme
-			if (!optionalINamedTag.isPresent())
-				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");
-			tag = optionalINamedTag.get();
+			throw new RuntimeException("// PORT: nope nope.");
+//			ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
+//			Optional<? extends Tag.Named<Fluid>> optionalINamedTag = FluidTags.getWrappers()
+//				.stream()
+//				.filter(fluidINamedTag -> fluidINamedTag.getName()
+//					.equals(id))
+//				.findFirst(); // fixme
+//			if (!optionalINamedTag.isPresent())
+//				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");
+//			tag = optionalINamedTag.get();
 		}
 
 		@Override

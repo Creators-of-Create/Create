@@ -65,12 +65,12 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		builder.add(BlockStateProperties.WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
-	
+
 	@Override
 	public int getAnalogOutputSignal(BlockState p_180641_1_, Level world, BlockPos pos) {
 		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
@@ -178,8 +178,8 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.COPPER_BACKTANK.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.COPPER_BACKTANK.create(pos, state);
 	}
 
 	@Override

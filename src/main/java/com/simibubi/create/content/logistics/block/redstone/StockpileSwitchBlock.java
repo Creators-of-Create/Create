@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.client.player.LocalPlayer;
@@ -37,7 +38,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable {
+public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, EntityBlock {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -73,10 +74,10 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 		return observing.equals(pos.relative(state.getValue(FACING)));
 	}
 
-	@Override
+/*	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != null && side.getOpposite() != state.getValue(FACING);
-	}
+	}*/
 
 	@Override
 	public boolean isSignalSource(BlockState state) {
@@ -152,14 +153,11 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 		return state;
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.STOCKPILE_SWITCH.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.STOCKPILE_SWITCH.create(pos, state);
 	}
 
 	@Override

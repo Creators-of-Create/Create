@@ -72,9 +72,10 @@ public class PartialItemModelRenderer {
 			renderBakedItemModel(model, light, ms,
 				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
 		else
-			stack.getItem()
-				.getItemStackTileEntityRenderer()
-				.renderByItem(stack, transformType, ms, buffer, light, overlay);
+			throw new RuntimeException("// PORT: ISTER are broken. help");
+//			stack.getItem()
+//				.getItemStackTileEntityRenderer()
+//				.renderByItem(stack, transformType, ms, buffer, light, overlay);
 
 		ms.popPose();
 	}

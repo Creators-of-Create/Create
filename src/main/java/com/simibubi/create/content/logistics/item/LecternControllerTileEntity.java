@@ -7,6 +7,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -33,8 +34,8 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	private UUID prevUser;	// used only on client
 	private boolean deactivatedThisTick;	// used only on server
 
-	public LecternControllerTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public LecternControllerTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -100,8 +101,8 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (level.isClientSide) {
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::tryToggleActive);

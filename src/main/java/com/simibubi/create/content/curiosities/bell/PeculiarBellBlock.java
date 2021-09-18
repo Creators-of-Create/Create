@@ -28,8 +28,8 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.PECULIAR_BELL.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.PECULIAR_BELL.create(pos, state);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 			return state;
 
 		Block underBlock = underState.getBlock();
-		if (!(Blocks.SOUL_FIRE.is(underBlock) || Blocks.SOUL_CAMPFIRE.is(underBlock)))
+		if (!(Blocks.SOUL_FIRE.getTags().contains(underBlock) || Blocks.SOUL_CAMPFIRE.getTags().contains(underBlock))) // PORT: tag
 			return state;
 
 		if (world.isClientSide()) {

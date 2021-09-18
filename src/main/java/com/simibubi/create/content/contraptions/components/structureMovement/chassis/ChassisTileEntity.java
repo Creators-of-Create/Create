@@ -34,8 +34,8 @@ public class ChassisTileEntity extends SmartTileEntity {
 
 	ScrollValueBehaviour range;
 
-	public ChassisTileEntity(BlockEntityType<? extends ChassisTileEntity> type) {
-		super(type);
+	public ChassisTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends ChassisTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	@Override

@@ -29,8 +29,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	protected boolean updateAirFlow;
 	protected boolean updateGenerator;
 
-	public EncasedFanTileEntity(BlockEntityType<? extends EncasedFanTileEntity> type) {
-		super(type);
+	public EncasedFanTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends EncasedFanTileEntity> type) {
+		super(type, pos, state);
 		isGenerator = false;
 		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;
@@ -172,8 +172,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		boolean server = !level.isClientSide || isVirtual();
 

@@ -8,6 +8,7 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.context.UseOnContext;
@@ -35,8 +36,8 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ISpe
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ENCASED_SHAFT.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.ENCASED_SHAFT.create(pos, state);
 	}
 
 	public BlockEntry<CasingBlock> getCasing() {

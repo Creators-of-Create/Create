@@ -89,9 +89,9 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, fluidStacks, x, fluidIndex);
 			x += subCategory.getWidth() + margin;
 		}
-		
+
 		// In case machines should be displayed as ingredients
-		
+
 //		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
 //		int catalystX = -2;
 //		int catalystY = 14;
@@ -126,7 +126,8 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 	@Override
 	public void draw(SequencedAssemblyRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		Font font = Minecraft.getInstance().font;
+		throw new RuntimeException("// PORT: legacy gl");
+		/*Font font = Minecraft.getInstance().font;
 
 		matrixStack.pushPose();
 		matrixStack.translate(0, 15, 0);
@@ -173,7 +174,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			subCategory.draw(sequencedRecipe, matrixStack, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
-		matrixStack.popPose();
+		matrixStack.popPose();*/
 	}
 
 	@Override

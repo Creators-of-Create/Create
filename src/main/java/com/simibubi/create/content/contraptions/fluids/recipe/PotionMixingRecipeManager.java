@@ -33,7 +33,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class PotionMixingRecipeManager {
 
 	public static Map<Item, List<MixingRecipe>> ALL = new HashMap<>();
-	
+
 	public static List<MixingRecipe> getAllBrewingRecipes() {
 		List<MixingRecipe> mixingRecipes = new ArrayList<>();
 
@@ -51,7 +51,7 @@ public class PotionMixingRecipeManager {
 			Collection<ItemStack> reagents = getAllReagents(iBrewingRecipe);
 
 			Set<ItemStack> basicPotions = new HashSet<>();
-			for (Potion potion : ForgeRegistries.POTION_TYPES.getValues()) {
+			for (Potion potion : ForgeRegistries.POTIONS.getValues()) {
 				if (potion == Potions.EMPTY)
 					continue;
 				for (ItemStack stack : bottles)

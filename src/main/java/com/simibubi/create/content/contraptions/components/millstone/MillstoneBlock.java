@@ -41,8 +41,8 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MILLSTONE.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MILLSTONE.create(pos, state);
 	}
 
 	@Override
@@ -70,14 +70,14 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (!stackInSlot.isEmpty())
 					emptyOutput = false;
-				player.inventory.placeItemBackInInventory(worldIn, stackInSlot);
+				player.getInventory().placeItemBackInInventory(stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 			}
 
 			if (emptyOutput) {
 				inv = millstone.inputInv;
 				for (int slot = 0; slot < inv.getSlots(); slot++) {
-					player.inventory.placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+					player.getInventory().placeItemBackInInventory(inv.getStackInSlot(slot));
 					inv.setStackInSlot(slot, ItemStack.EMPTY);
 				}
 			}
@@ -115,14 +115,14 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 
 		ItemStack remainder = capability.orElse(new ItemStackHandler()).insertItem(0, itemEntity.getItem(), false);
 		if (remainder.isEmpty())
-			itemEntity.remove();
+			itemEntity.remove(Entity.RemovalReason.DISCARDED);
 		if (remainder.getCount() < itemEntity.getItem().getCount())
 			itemEntity.setItem(remainder);
 	}
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemHelper.dropContents(worldIn, pos, te.inputInv);
 				ItemHelper.dropContents(worldIn, pos, te.outputInv);

@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -81,9 +82,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		PUNCH, USE
 	}
 
-	public DeployerTileEntity(BlockEntityType<? extends DeployerTileEntity> type) {
-		super(type);
-		state = State.WAITING;
+	public DeployerTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends DeployerTileEntity> type) {
+		super(type, pos, state);
+		this.state = State.WAITING;
 		mode = Mode.USE;
 		heldItem = ItemStack.EMPTY;
 		redstoneLocked = false;
@@ -108,7 +109,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (!level.isClientSide) {
 			player = new DeployerFakePlayer((ServerLevel) level);
 			if (deferredInventoryList != null) {
-				player.inventory.load(deferredInventoryList);
+				player.getInventory().load(deferredInventoryList);
 				deferredInventoryList = null;
 				heldItem = player.getMainHandItem();
 				sendData();
@@ -130,8 +131,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (getSpeed() == 0)
 			return;
@@ -149,22 +150,22 @@ public class DeployerTileEntity extends KineticTileEntity {
 			return;
 
 		ItemStack stack = player.getMainHandItem();
-		if (state == State.WAITING) {
+		if (this.state == State.WAITING) {
 			if (!overflowItems.isEmpty()) {
 				timer = getTimerSpeed() * 10;
 				return;
 			}
 
 			boolean changed = false;
-			for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+			for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 				if (overflowItems.size() > 10)
 					break;
-				ItemStack item = player.inventory.getItem(i);
+				ItemStack item = player.getInventory().getItem(i);
 				if (item.isEmpty())
 					continue;
 				if (item != stack || !filtering.test(item)) {
 					overflowItems.add(item);
-					player.inventory.setItem(i, ItemStack.EMPTY);
+					player.getInventory().setItem(i, ItemStack.EMPTY);
 					changed = true;
 				}
 			}
@@ -191,19 +192,19 @@ public class DeployerTileEntity extends KineticTileEntity {
 			return;
 		}
 
-		if (state == State.EXPANDING) {
+		if (this.state == State.EXPANDING) {
 			if (boop)
 				triggerBoop();
 			activate();
 
-			state = State.RETRACTING;
+			this.state = State.RETRACTING;
 			timer = 1000;
 			sendData();
 			return;
 		}
 
-		if (state == State.RETRACTING) {
-			state = State.WAITING;
+		if (this.state == State.RETRACTING) {
+			this.state = State.WAITING;
 			timer = 500;
 			sendData();
 			return;
@@ -280,8 +281,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		Direction direction = getBlockState().getValue(FACING);
 		Vec3 center = VecHelper.getCenterOf(worldPosition);
 		BlockPos clickedPos = worldPosition.relative(direction, 2);
-		player.yRot = direction.toYRot();
-		player.xRot = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
+		player.setXRot(direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0);
+		player.setYRot(direction.toYRot());
 
 		if (direction == Direction.DOWN
 			&& TileEntityBehaviour.get(level, clickedPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
@@ -331,7 +332,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (player != null) {
 			ListTag invNBT = new ListTag();
-			player.inventory.save(invNBT);
+			player.getInventory().save(invNBT);
 			compound.put("Inventory", invNBT);
 			compound.put("HeldItem", player.getMainHandItem().serializeNBT());
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));

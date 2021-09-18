@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Containers;
@@ -29,7 +30,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity> {
+public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity>, EntityBlock {
 
 	public ItemDrainBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -56,7 +57,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 
 			ItemStack heldItemStack = te.getHeldItemStack();
 			if (!worldIn.isClientSide && !heldItemStack.isEmpty()) {
-				player.inventory.placeItemBackInInventory(worldIn, heldItemStack);
+				player.getInventory().placeItemBackInInventory(heldItemStack);
 				te.heldItem = null;
 				te.notifyUpdate();
 			}
@@ -81,7 +82,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (state.getBlock() == newState.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemStack heldItemStack = te.getHeldItemStack();
@@ -92,13 +93,8 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ITEM_DRAIN.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.ITEM_DRAIN.create(pos, state);
 	}
 
 	@Override

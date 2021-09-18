@@ -192,7 +192,7 @@ public class VecHelper {
 		double delta = lineDotDiff * lineDotDiff - (diff.lengthSqr() - radius * radius);
 		if (delta < 0)
 			return null;
-		double t = -lineDotDiff + Mth.sqrt(delta);
+		double t = -lineDotDiff + Mth.sqrt((float) delta);
 		return origin.add(lineDirection.scale(t));
 	}
 

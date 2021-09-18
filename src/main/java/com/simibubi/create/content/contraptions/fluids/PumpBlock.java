@@ -42,13 +42,8 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_PUMP.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MECHANICAL_PUMP.create(pos, state);
 	}
 
 	@Override
@@ -172,13 +167,13 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (blockTypeChanged)
 			world.removeBlockEntity(pos);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
 }

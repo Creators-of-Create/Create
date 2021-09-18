@@ -55,9 +55,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	}
 
 	@Override
-	public String getTitle() {
-		return Lang.translate("recipe." + name)
-			.getString();
+	public Component getTitle() {
+		return Lang.translate("recipe." + name);
 	}
 
 	@Override
@@ -100,7 +99,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
 		addStochasticTooltip(itemStacks, results, 1);
 	}
-	
+
 	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results, int startIndex) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (input)
@@ -142,7 +141,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
 			if (index != -1 && slotIndex != index)
 				return;
-			
+
 			if (fluid.getFluid()
 				.isSame(AllFluids.POTION.get())) {
 				Component name = fluid.getDisplayName();

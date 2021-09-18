@@ -29,6 +29,7 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
@@ -80,11 +81,13 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
-		CollisionContext p_220071_4_) {
-		if (p_220071_4_.getEntity() instanceof ItemEntity
-			&& (p_220071_1_.getValue(SHAPE) == Shape.PULLING || p_220071_1_.getValue(SHAPE) == Shape.PUSHING))
-			return AllShapes.FUNNEL_COLLISION.get(getFacing(p_220071_1_));
-		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
+		CollisionContext context) {
+		if(context instanceof EntityCollisionContext ecc) {
+			if (ecc.getEntity().orElse(null) instanceof ItemEntity
+					&& (p_220071_1_.getValue(SHAPE) == Shape.PULLING || p_220071_1_.getValue(SHAPE) == Shape.PUSHING))
+				return AllShapes.FUNNEL_COLLISION.get(getFacing(p_220071_1_));
+		}
+		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, context);
 	}
 
 	@Override

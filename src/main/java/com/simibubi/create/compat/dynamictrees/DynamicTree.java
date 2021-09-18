@@ -1,24 +1,12 @@
 package com.simibubi.create.compat.dynamictrees;
 
-import java.util.function.BiConsumer;
-
-import javax.annotation.Nullable;
-
-import com.ferreusveritas.dynamictrees.api.TreeHelper;
-import com.ferreusveritas.dynamictrees.blocks.branches.BranchBlock;
-import com.ferreusveritas.dynamictrees.blocks.branches.TrunkShellBlock;
-import com.ferreusveritas.dynamictrees.util.BranchDestructionData;
-import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
-
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 
-public class DynamicTree extends AbstractBlockBreakQueue {
+public class DynamicTree {
+	public static boolean isDynamicBranch(Block startBlock) {
+		return false;
+	}
+	/* extends AbstractBlockBreakQueue {
 	private BlockPos startCutPos;
 
 	public DynamicTree(BlockPos startCutPos) {
@@ -59,5 +47,5 @@ public class DynamicTree extends AbstractBlockBreakQueue {
 
 	public static boolean isDynamicBranch(Block block) {
 		return TreeHelper.isBranch(block) || block instanceof TrunkShellBlock;
-	}
+	}*/
 }

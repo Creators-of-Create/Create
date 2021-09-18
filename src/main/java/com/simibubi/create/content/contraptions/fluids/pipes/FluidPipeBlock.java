@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -48,7 +49,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket {
+public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket, EntityBlock {
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -99,20 +100,15 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 			defaultState = defaultState.setValue(PROPERTY_BY_DIRECTION.get(d), d.getAxis() == axis);
 		return defaultState;
 	}
-	
+
 	@Nullable
 	private Axis getAxis(BlockGetter world, BlockPos pos, BlockState state) {
 		return FluidPropagator.getStraightPipeAxis(state);
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.FLUID_PIPE.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.FLUID_PIPE.create(pos, state);
 	}
 
 	@Override
@@ -122,7 +118,7 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state != newState && !isMoving)
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (blockTypeChanged)
 			world.removeBlockEntity(pos);
 	}
 

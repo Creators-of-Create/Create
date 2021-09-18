@@ -7,6 +7,7 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -48,7 +49,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		this.onScroll = onScroll;
 		return this;
 	}
-	
+
 	public ScrollInput removeCallback() {
 		this.onScroll = null;
 		return this;
@@ -142,4 +143,8 @@ public class ScrollInput extends AbstractSimiWidget {
 		toolTip.add(shiftScrollsFaster.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 	}
 
+	@Override
+	public void updateNarration(NarrationElementOutput p_169152_) {
+
+	}
 }

@@ -21,6 +21,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -50,8 +53,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	SmartFluidTankBehaviour tank;
 
-	public SpoutTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SpoutTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		processingTicks = -1;
 	}
 
@@ -168,8 +171,9 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return super.getCapability(cap, side);
 	}
 
-	public void tick() {
-		super.tick();
+	@Override
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		FluidStack currentFluidInTank = getCurrentFluidInTank();
 		if (processingTicks == -1 && (isVirtual() || !level.isClientSide()) && !currentFluidInTank.isEmpty()) {

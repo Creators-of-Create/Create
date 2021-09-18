@@ -1,7 +1,8 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
 import static com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock.POWERING;
-import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
+import static net.minecraft.world.level.block.Block.stateById;
+import static net.minecraft.world.level.block.DiodeBlock.POWERED;
 
 import java.util.List;
 
@@ -12,11 +13,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IInstanceRendered {
 
@@ -24,8 +28,12 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	public boolean charging;
 	ScrollValueBehaviour maxState;
 
-	public AdjustableRepeaterTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public AdjustableRepeaterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+	}
+
+	public AdjustableRepeaterTileEntity(BlockPos pos, BlockState state, BlockEntityType<AdjustableRepeaterTileEntity> type) {
+		this(type, pos, state);
 	}
 
 	@Override
@@ -88,12 +96,12 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		boolean powered = getBlockState().getValue(POWERED);
 		boolean powering = getBlockState().getValue(POWERING);
-		boolean atMax = state >= maxState.getValue();
-		boolean atMin = state <= 0;
+		boolean atMax = this.state >= maxState.getValue();
+		boolean atMin = this.state <= 0;
 		updateState(powered, powering, atMax, atMin);
 	}
 

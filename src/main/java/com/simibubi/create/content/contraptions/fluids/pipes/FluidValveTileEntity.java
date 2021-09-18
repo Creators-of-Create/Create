@@ -9,6 +9,9 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,8 +23,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 
 	LerpedFloat pointer;
 
-	public FluidValveTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FluidValveTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		pointer = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(0, 0, Chaser.LINEAR);
@@ -36,8 +39,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		pointer.tickChaser();
 
 		if (level.isClientSide)

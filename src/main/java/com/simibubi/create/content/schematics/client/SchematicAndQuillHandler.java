@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import com.simibubi.create.foundation.utility.BoundingBoxHelper;
+
 import org.apache.commons.io.IOUtils;
 
 import com.simibubi.create.AllItems;
@@ -126,7 +128,7 @@ public class SchematicAndQuillHandler {
 		firstPos = selectedPos;
 		Lang.sendStatus(player, "schematicAndQuill.firstPos");
 	}
-	
+
 	public void discard() {
 		LocalPlayer player = Minecraft.getInstance().player;
 		firstPos = null;
@@ -206,8 +208,8 @@ public class SchematicAndQuillHandler {
 
 	public void saveSchematic(String string, boolean convertImmediately) {
 		StructureTemplate t = new StructureTemplate();
-		BoundingBox bb = new BoundingBox(firstPos, secondPos);
-		BlockPos origin = new BlockPos(bb.x0, bb.y0, bb.z0);
+		BoundingBox bb = BoundingBoxHelper.of(firstPos, secondPos);
+		BlockPos origin = new BlockPos(bb.minX, bb.minY, bb.minZ);
 		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());
 
 		t.fillFromWorld(Minecraft.getInstance().level, origin, bounds, true, Blocks.AIR);

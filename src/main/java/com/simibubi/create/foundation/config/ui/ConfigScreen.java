@@ -164,7 +164,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		float elapsedPartials = minecraft.getDeltaFrameTime();
 		CreateMainMenuScreen.panorama.render(elapsedPartials, 1);
 
-		minecraft.getTextureManager().bind(CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
+		RenderSystem.setShaderTexture(0, CreateMainMenuScreen.PANORAMA_OVERLAY_TEXTURES);
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		blit(ms, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);

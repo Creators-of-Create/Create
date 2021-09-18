@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,8 +31,8 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	protected int breakerId = -NEXT_BREAKER_ID.incrementAndGet();
 	protected BlockPos breakingPos;
 
-	public BlockBreakingKineticTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public BlockBreakingKineticTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (destroyProgress == -1)
 			destroyNextTick();
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -84,8 +85,8 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (level.isClientSide)
 			return;
@@ -93,9 +94,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			return;
 		if (getSpeed() == 0)
 			return;
-		
+
 		breakingPos = getBreakingPos();
-		
+
 		if (ticksUntilNextProgress < 0)
 			return;
 		if (ticksUntilNextProgress-- > 0)
@@ -140,7 +141,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	public void onBlockBroken(BlockState stateToBreak) {
 		FluidState FluidState = level.getFluidState(breakingPos);
 		level.levelEvent(2001, breakingPos, Block.getId(stateToBreak));
-		BlockEntity tileentity = stateToBreak.hasTileEntity() ? level.getBlockEntity(breakingPos) : null;
+		BlockEntity tileentity = level.getBlockEntity(breakingPos);
 		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
 
 		Block.getDrops(stateToBreak, (ServerLevel) level, breakingPos, tileentity).forEach((stack) -> {

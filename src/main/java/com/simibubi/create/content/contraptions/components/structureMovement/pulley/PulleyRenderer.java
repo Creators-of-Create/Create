@@ -9,12 +9,13 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 
 public class PulleyRenderer extends AbstractPulleyRenderer {
 
-	public PulleyRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public PulleyRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher, AllBlockPartials.ROPE_HALF, AllBlockPartials.ROPE_HALF_MAGNET);
 	}
 

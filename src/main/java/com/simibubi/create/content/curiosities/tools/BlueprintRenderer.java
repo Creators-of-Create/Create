@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.Couple;
 
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
@@ -24,8 +25,8 @@ import com.mojang.math.Matrix3f;
 
 public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
-	public BlueprintRenderer(EntityRenderDispatcher manager) {
-		super(manager);
+	public BlueprintRenderer(EntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		SuperByteBuffer sbb = PartialBufferer.get(partialModel, Blocks.AIR.defaultBlockState());
 		sbb.matrixStacker()
 			.rotateY(-yaw)
-			.rotateX(90.0F + entity.xRot)
+			.rotateX(90.0F + entity.getXRot())
 			.translate(-.5, -1 / 32f, -.5);
 		if (entity.size == 2)
 			sbb.translate(.5, 0, -.5);
@@ -51,10 +52,10 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		float fakeNormalXRotation = -15;
 		int bl = light >> 4 & 0xf;
 		int sl = light >> 20 & 0xf;
-		boolean vertical = entity.xRot != 0;
-		if (entity.xRot == -90)
+		boolean vertical = entity.getXRot() != 0;
+		if (entity.getXRot() == -90)
 			fakeNormalXRotation = -45;
-		else if (entity.xRot == 90 || yaw % 180 != 0) {
+		else if (entity.getXRot() == 90 || yaw % 180 != 0) {
 			bl /= 1.35;
 			sl /= 1.35;
 		}
@@ -72,7 +73,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
 		MatrixTransformStack.of(ms)
 			.rotateY(-yaw)
-			.rotateX(entity.xRot)
+			.rotateX(entity.getXRot())
 			.translate(0, 0, 1 / 32f + .001);
 
 		if (entity.size == 3)
@@ -115,7 +116,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, TransformType.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer);
+						.renderStatic(stack, TransformType.GUI, itemLight, OverlayTexture.NO_OVERLAY, squashedMS, buffer, 1); // PORT: the number 1 here might be wrong.
 					squashedMS.popPose();
 				});
 				squashedMS.popPose();

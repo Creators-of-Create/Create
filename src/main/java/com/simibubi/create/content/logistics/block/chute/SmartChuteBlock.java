@@ -59,8 +59,8 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SMART_CHUTE.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state){
+		return AllTileEntities.SMART_CHUTE.create(pos, state);
 	}
 
 	@Override

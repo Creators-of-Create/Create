@@ -304,7 +304,7 @@ public abstract class Contraption {
 			return false;
 		visited.add(pos);
 
-		if (Level.isOutsideBuildHeight(pos))
+		if (world.isOutsideBuildHeight(pos))
 			return true;
 		if (!world.isLoaded(pos))
 			throw AssemblyException.unloadedChunk(pos);
@@ -892,10 +892,11 @@ public abstract class Contraption {
 				tag.putInt("y", info.pos.getY());
 				tag.putInt("z", info.pos.getZ());
 
-				BlockEntity te = BlockEntity.loadStatic(info.state, tag);
+				BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
 				if (te == null)
 					return;
-				te.setLevelAndPosition(new ContraptionTileWorld(world, te, info), te.getBlockPos());
+				throw new RuntimeException("// PORT: setLevelAndPosition doesnt exist.");
+				/*te.setLevelAndPosition(new ContraptionTileWorld(world, te, info), te.getBlockPos());
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
@@ -907,7 +908,7 @@ public abstract class Contraption {
 					return;
 
 				presentTileEntities.put(info.pos, te);
-				specialRenderedTileEntities.add(te);
+				specialRenderedTileEntities.add(te);*/
 			}
 
 		});
@@ -930,7 +931,7 @@ public abstract class Contraption {
 			.forEach(MountedStorage::removeStorageFromWorld);
 		fluidStorage.values()
 			.forEach(MountedFluidStorage::removeStorageFromWorld);
-		glueToRemove.forEach(SuperGlueEntity::remove);
+		glueToRemove.forEach(superGlueEntity -> superGlueEntity.remove(Entity.RemovalReason.DISCARDED));
 
 		for (boolean brittles : Iterate.trueAndFalse) {
 			for (Iterator<StructureBlockInfo> iterator = blocks.values()
@@ -1043,7 +1044,7 @@ public abstract class Contraption {
 					if (tileEntity instanceof FluidTankTileEntity && tag.contains("LastKnownPos"))
 						tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below()));
 
-					tileEntity.load(block.state, tag);
+					tileEntity.load(tag);
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);
@@ -1144,14 +1145,14 @@ public abstract class Contraption {
 
 		GridAlignedBB contraptionBounds = GridAlignedBB.from(bounds);
 		if (axis == Direction.Axis.X) {
-			betterBounds.maxX = contraptionBounds.maxX;
-			betterBounds.minX = contraptionBounds.minX;
+			betterBounds.setMaxX(contraptionBounds.getMaxX());
+			betterBounds.setMinX(contraptionBounds.getMinX());
 		} else if (axis == Direction.Axis.Y) {
-			betterBounds.maxY = contraptionBounds.maxY;
-			betterBounds.minY = contraptionBounds.minY;
+			betterBounds.setMaxY(contraptionBounds.getMaxY());
+			betterBounds.setMinY(contraptionBounds.getMinY());
 		} else if (axis == Direction.Axis.Z) {
-			betterBounds.maxZ = contraptionBounds.maxZ;
-			betterBounds.minZ = contraptionBounds.minZ;
+			betterBounds.setMaxZ(contraptionBounds.getMaxZ());
+			betterBounds.setMinZ(contraptionBounds.getMinZ());
 		}
 
 		bounds = betterBounds.toAABB();

@@ -86,8 +86,7 @@ public class SailBlock extends ProperDirectionalBlock {
 			return InteractionResult.PASS;
 
 		for (DyeColor color : DyeColor.values()) {
-			if (!heldItem.getItem()
-					.is(DyeHelper.getTagOfDye(color)))
+			if (!heldItem.is(DyeHelper.getTagOfDye(color)))
 				continue;
 			if (!world.isClientSide)
 				applyDye(state, world, pos, color);
@@ -176,10 +175,11 @@ public class SailBlock extends ProperDirectionalBlock {
 		return pickBlock;
 	}
 
-	public void fallOn(Level p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	@Override
+	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
 		if (frame)
-			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
-		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, 0);
+			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_);
+		super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, 0);
 	}
 
 	public void updateEntityAfterFallOn(BlockGetter p_176216_1_, Entity p_176216_2_) {

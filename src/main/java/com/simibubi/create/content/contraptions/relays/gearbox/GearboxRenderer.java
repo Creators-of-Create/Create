@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -20,7 +21,7 @@ import net.minecraft.core.BlockPos;
 
 public class GearboxRenderer extends KineticTileEntityRenderer {
 
-	public GearboxRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public GearboxRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -30,7 +31,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEntity> {
 
-	public ItemDrainRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public ItemDrainRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -78,7 +79,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			.getItemRenderer();
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
-		boolean blockItem = itemRenderer.getModel(itemStack, null, null)
+		boolean blockItem = itemRenderer.getModel(itemStack, null, null, 1)// PORT: scale?
 			.isGui3d();
 
 		if (renderUpright)
@@ -117,7 +118,7 @@ public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEnti
 			ms.scale(.5f, .5f, .5f);
 			if (!blockItem && !renderUpright)
 				msr.rotateX(90);
-			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
+			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 1); // PORT: scale?
 			ms.popPose();
 
 			if (!renderUpright) {

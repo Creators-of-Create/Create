@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.Random;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -59,15 +60,12 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		switch (type) {
-		case SPEED:
-			return AllTileEntities.SPEEDOMETER.create();
-		case STRESS:
-			return AllTileEntities.STRESSOMETER.create();
-		default:
-			return null;
-		}
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return switch (type) {
+			case SPEED -> AllTileEntities.SPEEDOMETER.create(pos, state);
+			case STRESS -> AllTileEntities.STRESSOMETER.create(pos, state);
+			default -> null;
+		};
 	}
 
 	/*
@@ -135,7 +133,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			return false;
 		if (getRotationAxis(state) == Axis.Y && face != state.getValue(FACING))
 			return false;
-		if (!Block.shouldRenderFace(state, world, pos, face) && !(world instanceof WrappedWorld))
+		if (!Block.shouldRenderFace(state, world, pos, face, pos) && !(world instanceof WrappedWorld))
 			return false;
 		return true;
 	}
@@ -171,7 +169,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 				Vec3 offset = VecHelper.getCenterOf(pos)
 					.add(faceVec.scale(.55))
 					.add(mul);
-				worldIn.addParticle(new DustParticleOptions((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
+				worldIn.addParticle(new DustParticleOptions(new Vector3f((float) rgb.x, (float) rgb.y, (float) rgb.z), 1), offset.x,
 					offset.y, offset.z, mul.x, mul.y, mul.z);
 			}
 

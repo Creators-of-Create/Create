@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.Level;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -77,8 +79,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	private LazyOptional<IItemHandler> beltCapability;
 	private LazyOptional<IItemHandler> tunnelCapability;
 
-	public BrassTunnelTileEntity(BlockEntityType<? extends BeltTunnelTileEntity> type) {
-		super(type);
+	public BrassTunnelTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends BeltTunnelTileEntity> type) {
+		super(pos, state, type);
 		distributionTargets = Couple.create(ArrayList::new);
 		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
@@ -109,8 +111,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		BeltTileEntity beltBelow = BeltHelper.getSegmentTE(level, worldPosition.below());
 
 		if (distributionProgress > 0)
@@ -748,7 +750,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
 		if (allStacks.isEmpty())
 			return false;
-		
+
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
@@ -761,7 +763,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
-		
+
 		return true;
 	}
 

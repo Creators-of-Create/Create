@@ -5,7 +5,9 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.ProperDirectionalBlock;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
@@ -27,7 +29,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerTileEntity> {
+public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerTileEntity>, EntityBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
@@ -70,10 +72,7 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 		}
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	@Override
 	public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
@@ -81,8 +80,8 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.STICKER.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.STICKER.create(pos, state);
 	}
 
 	@Override
@@ -98,11 +97,11 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 	}
 
 	@Override
-	public void fallOn(Level p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
-		if (!isUprightSticker(p_180658_1_, p_180658_2_) || p_180658_3_.isSuppressingBounce()) {
-			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
+	public void fallOn(Level world, BlockState state, BlockPos pos, Entity entity, float height) {
+		if (!isUprightSticker(world, pos) || entity.isSuppressingBounce()) {
+			super.fallOn(world, state, pos, entity, height);
 		} else {
-			p_180658_3_.causeFallDamage(p_180658_4_, 0.0F);
+			entity.causeFallDamage(pos.getY(), height, DamageSource.FALL);
 		}
 	}
 
@@ -125,14 +124,14 @@ public class StickerBlock extends ProperDirectionalBlock implements ITE<StickerT
 	}
 
 	@Override
-	public void stepOn(Level p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
-		double d0 = Math.abs(p_176199_3_.getDeltaMovement().y);
-		if (d0 < 0.1D && !p_176199_3_.isSteppingCarefully() && isUprightSticker(p_176199_1_, p_176199_2_)) {
+	public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+		double d0 = Math.abs(entity.getDeltaMovement().y);
+		if (d0 < 0.1D && !entity.isSteppingCarefully() && isUprightSticker(level, pos)) {
 			double d1 = 0.4D + d0 * 0.2D;
-			p_176199_3_.setDeltaMovement(p_176199_3_.getDeltaMovement()
+			entity.setDeltaMovement(entity.getDeltaMovement()
 				.multiply(d1, 1.0D, d1));
 		}
-		super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
+		super.stepOn(level, pos, state, entity);
 	}
 
 	@Override

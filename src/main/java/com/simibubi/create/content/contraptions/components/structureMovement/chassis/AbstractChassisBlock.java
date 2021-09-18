@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.entity.player.Player;
@@ -27,20 +28,15 @@ import net.minecraftforge.common.Tags;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable {
+public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, EntityBlock {
 
 	public AbstractChassisBlock(Properties properties) {
 		super(properties);
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CHASSIS.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CHASSIS.create(pos, state);
 	}
 
 	@Override
@@ -50,7 +46,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(handIn);
-		boolean isSlimeBall = heldItem.getItem()
+		boolean isSlimeBall = heldItem
 			.is(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
 
 		BooleanProperty affectedSide = getGlueableSide(state, hit.getDirection());

@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -96,8 +98,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	private ItemStack scriptedResult = ItemStack.EMPTY;
 
-	public MechanicalCrafterTileEntity(BlockEntityType<? extends MechanicalCrafterTileEntity> type) {
-		super(type);
+	public MechanicalCrafterTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends MechanicalCrafterTileEntity> type) {
+		super(type, pos, state);
 		setLazyTickRate(20);
 		phase = Phase.IDLE;
 		groupedItemsBeforeCraft = new GroupedItems();
@@ -204,8 +206,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (phase == Phase.ACCEPTING)
 			return;

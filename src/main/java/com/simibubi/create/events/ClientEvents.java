@@ -64,6 +64,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -83,7 +84,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -211,12 +211,13 @@ public class ClientEvents {
 		int overlay = OverlayTexture.NO_OVERLAY;
 		float pt = event.getPartialTicks();
 
-		if (event.getType() == ElementType.AIR)
-			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
-		if (event.getType() != ElementType.HOTBAR)
-			return;
+		throw new RuntimeException("// PORT: event types changed.");
+//		if (event.getType() == ElementType.AIR)
+//			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
+//		if (event.getType() != ElementType.HOTBAR)
+//			return;
 
-		onRenderHotbar(ms, buffers, light, overlay, pt);
+//		onRenderHotbar(ms, buffers, light, overlay, pt);
 	}
 
 	public static void onRenderHotbar(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
@@ -284,10 +285,11 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
 		Camera info = event.getInfo();
-		FluidState fluidState = info.getFluidInCamera();
-		if (fluidState.isEmpty())
+		FogType fluidState = info.getFluidInCamera();
+		if (fluidState == FogType.NONE)
 			return;
-		Fluid fluid = fluidState.getType();
+		throw new RuntimeException("// PORT: Enums.");
+/*		Fluid fluid = fluidState.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setDensity(5f);
@@ -306,16 +308,17 @@ public class ClientEvents {
 			event.setDensity(0.010f);
 			event.setCanceled(true);
 			return;
-		}
+		}*/
 	}
 
 	@SubscribeEvent
 	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
 		Camera info = event.getInfo();
-		FluidState fluidState = info.getFluidInCamera();
-		if (fluidState.isEmpty())
+		FogType fluidState = info.getFluidInCamera();
+		if (fluidState == FogType.NONE)
 			return;
-		Fluid fluid = fluidState.getType();
+		throw new RuntimeException("// PORT: Enums.");
+/*		Fluid fluid = fluidState.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setRed(98 / 256f);
@@ -327,7 +330,7 @@ public class ClientEvents {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);
-		}
+		}*/
 	}
 
 	@SubscribeEvent
@@ -342,8 +345,9 @@ public class ClientEvents {
 		ModContainer createContainer = ModList.get()
 			.getModContainerById(Create.ID)
 			.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
-			() -> (mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen));
+//		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
+//			() -> (mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen));
+		// PORT: forge momento (removed)
 	}
 
 }

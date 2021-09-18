@@ -25,7 +25,7 @@ public class ArmAngleTarget {
 	}
 
 	public ArmAngleTarget(BlockPos armPos, Vec3 pointTarget, Direction clawFacing, boolean ceiling) {
-//		if (ceiling) 
+//		if (ceiling)
 //			clawFacing = clawFacing.getOpposite();
 
 		Vec3 target = pointTarget;
@@ -52,7 +52,7 @@ public class ArmAngleTarget {
 		float b = 17 / 16f; // upper arm length
 		float b2 = b * b;
 		float diffLength =
-			Mth.clamp(Mth.sqrt(diff.y * diff.y + horizontalDistance * horizontalDistance), 1 / 8f, a + b);
+			Mth.clamp(Mth.sqrt((float) (diff.y * diff.y + horizontalDistance * horizontalDistance)), 1 / 8f, a + b);
 		float diffLength2 = diffLength * diffLength;
 
 		float alphaRatio = (-b2 + a2 + diffLength2) / (2 * a * diffLength);

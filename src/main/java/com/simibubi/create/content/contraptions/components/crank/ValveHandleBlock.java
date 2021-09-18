@@ -44,8 +44,7 @@ public class ValveHandleBlock extends HandCrankBlock {
 		BlockHitResult hit) {
 		ItemStack heldItem = player.getItemInHand(handIn);
 		for (DyeColor color : DyeColor.values()) {
-			if (!heldItem.getItem()
-					.is(DyeHelper.getTagOfDye(color)))
+			if (!heldItem.is(DyeHelper.getTagOfDye(color)))
 				continue;
 			if (worldIn.isClientSide)
 				return InteractionResult.SUCCESS;

@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -33,8 +34,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 	private boolean pushing;
 	private BlockPos fanPos;
 
-	public NozzleTileEntity(BlockEntityType<? extends NozzleTileEntity> type) {
-		super(type);
+	public NozzleTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends NozzleTileEntity> type) {
+		super(type, pos, state);
 		setLazyTickRate(5);
 	}
 
@@ -67,8 +68,8 @@ public class NozzleTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		float range = calcRange();
 		if (this.range != range)
@@ -176,7 +177,7 @@ public class NozzleTileEntity extends SmartTileEntity {
 			level.explode(null, center.x, center.y, center.z, 2, BlockInteraction.NONE);
 			for (Iterator<Entity> iterator = pushingEntities.iterator(); iterator.hasNext();) {
 				Entity entity = iterator.next();
-				entity.remove();
+				entity.remove(Entity.RemovalReason.DISCARDED);
 				iterator.remove();
 			}
 		}

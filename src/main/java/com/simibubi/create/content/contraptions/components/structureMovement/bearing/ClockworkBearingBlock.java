@@ -23,8 +23,8 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CLOCKWORK_BEARING.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CLOCKWORK_BEARING.create(pos, state);
 	}
 
 	@Override

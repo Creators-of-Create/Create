@@ -10,6 +10,9 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -29,8 +32,8 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	protected int initialOffset;
 	private float prevAnimatedOffset;
 
-	public PulleyTileEntity(BlockEntityType<? extends PulleyTileEntity> type) {
-		super(type);
+	public PulleyTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends PulleyTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -38,14 +41,14 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		return super.makeRenderBoundingBox().expandTowards(0, -offset, 0);
 	}
 
-	@Override
-	public double getViewDistance() {
-		return super.getViewDistance() + offset * offset;
-	}
+//	@Override
+//	public double getViewDistance() {
+//		return super.getViewDistance() + offset * offset;
+//	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (isVirtual())
 			prevAnimatedOffset = offset;
 	}
@@ -157,7 +160,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		}
 
 		if (movedContraption != null)
-			movedContraption.remove();
+			movedContraption.remove(Entity.RemovalReason.DISCARDED);
 		movedContraption = null;
 		initialOffset = 0;
 		running = false;

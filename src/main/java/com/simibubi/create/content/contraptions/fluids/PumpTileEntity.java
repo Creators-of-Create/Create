@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.level.Level;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -41,8 +43,8 @@ public class PumpTileEntity extends KineticTileEntity {
 	Couple<MutableBoolean> sidesToUpdate;
 	boolean reversed;
 
-	public PumpTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public PumpTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> typeIn) {
+		super(typeIn, pos, state);
 		arrowDirection = LerpedFloat.linear()
 			.startWithValue(1);
 		sidesToUpdate = Couple.create(MutableBoolean::new);
@@ -61,8 +63,8 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		float speed = getSpeed();
 
 		if (level.isClientSide) {

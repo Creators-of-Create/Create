@@ -2,6 +2,8 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -26,8 +28,8 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	private LinkBehaviour link;
 	private boolean transmitter;
 
-	public RedstoneLinkTileEntity(BlockEntityType<? extends RedstoneLinkTileEntity> type) {
-		super(type);
+	public RedstoneLinkTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends RedstoneLinkTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -84,8 +86,8 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (isTransmitterBlock() != transmitter) {
 			transmitter = isTransmitterBlock();

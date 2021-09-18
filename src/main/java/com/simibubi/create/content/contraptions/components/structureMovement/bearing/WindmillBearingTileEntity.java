@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIco
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,8 +20,8 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	protected ScrollOptionBehaviour<RotationDirection> movementDirection;
 	protected float lastGeneratedSpeed;
 
-	public WindmillBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
-		super(type);
+	public WindmillBearingTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends MechanicalBearingTileEntity> type) {
+		super(pos, state, type);
 	}
 
 	@Override

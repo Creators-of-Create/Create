@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -24,7 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public abstract class EngineBlock extends HorizontalDirectionalBlock implements IWrenchable {
+public abstract class EngineBlock extends HorizontalDirectionalBlock implements IWrenchable, EntityBlock {
 
 	protected EngineBlock(Properties builder) {
 		super(builder);
@@ -35,10 +36,7 @@ public abstract class EngineBlock extends HorizontalDirectionalBlock implements 
 		return isValidPosition(state, worldIn, pos, state.getValue(FACING));
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
@@ -46,7 +44,7 @@ public abstract class EngineBlock extends HorizontalDirectionalBlock implements 
 	}
 
 	@Override
-	public abstract BlockEntity createTileEntity(BlockState state, BlockGetter world);
+	public abstract BlockEntity newBlockEntity(BlockPos pos, BlockState state);
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {

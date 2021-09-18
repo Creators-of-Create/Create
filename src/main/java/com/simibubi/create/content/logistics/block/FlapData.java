@@ -1,13 +1,12 @@
 package com.simibubi.create.content.logistics.block;
 
-import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.core.materials.IFlatLight;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
-import net.minecraft.util.math.vector.Vector3i;
 
 public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 
@@ -32,7 +31,7 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 	private float flapness;
 
 	public FlapData(Instancer<?> owner) {
-		super(owner);
+		super();
 	}
 
 	public FlapData setPosition(BlockPos pos) {
@@ -106,7 +105,7 @@ public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 	}
 
 	@Override
-	public void write(MappedBuffer buf) {
+	public void write(VecBuffer buf) {
 		buf.putVec3(x, y, z);
 		buf.putVec2(blockLight, skyLight);
 

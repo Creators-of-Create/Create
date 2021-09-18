@@ -8,6 +8,9 @@ import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -32,14 +35,14 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	private int capacityEnchantLevel;
 	private ListTag enchantmentTag;
 
-	public CopperBacktankTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public CopperBacktankTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		enchantmentTag = new ListTag();
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState superState, BlockEntity blockEntity) {
+		super.tick(level, pos, superState, blockEntity);
 		if (getSpeed() == 0)
 			return;
 

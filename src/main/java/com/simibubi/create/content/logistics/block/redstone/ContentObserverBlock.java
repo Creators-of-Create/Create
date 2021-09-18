@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,7 +35,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
+public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable, EntityBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -50,13 +51,8 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CONTENT_OBSERVER.create();
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CONTENT_OBSERVER.create(pos, state);
 	}
 
 	@Override
@@ -118,15 +114,15 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 		worldIn.updateNeighborsAt(pos, this);
 	}
 
-	@Override
+/*	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != state.getValue(FACING)
 			.getOpposite();
-	}
+	}*/
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.getBlock() != newState.getBlock()) {
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeBlockEntity(pos);
 		}

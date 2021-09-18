@@ -108,19 +108,20 @@ public class DeployerFakePlayer extends FakePlayer {
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
 			event.getDrops()
-				.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.level, stack.getItem()));
+				.forEach(stack -> fakePlayer.getInventory().placeItemBackInInventory(stack.getItem()));
 			event.setCanceled(true);
 		}
 	}
 
 	@Override
-	protected void playEquipSound(ItemStack p_184606_1_) {}
-
-	@Override
-	public void remove(boolean keepData) {
+	public void remove(RemovalReason p_150097_) {
 		if (blockBreakingProgress != null && !level.isClientSide)
 			level.destroyBlockProgress(getId(), blockBreakingProgress.getKey(), -1);
-		super.remove(keepData);
+		super.remove(RemovalReason.DISCARDED);
+	}
+
+	@Override
+	protected void equipEventAndSound(ItemStack p_147219_) {
 	}
 
 	@SubscribeEvent

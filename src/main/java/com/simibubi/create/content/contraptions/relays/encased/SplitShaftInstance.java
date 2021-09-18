@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import java.util.ArrayList;
 
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -12,21 +12,21 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
 
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
 
     protected final ArrayList<RotatingData> keys;
 
-    public SplitShaftInstance(MaterialManager<?> modelManager, SplitShaftTileEntity tile) {
+    public SplitShaftInstance(MaterialManager modelManager, SplitShaftTileEntity tile) {
         super(modelManager, tile);
 
         keys = new ArrayList<>(2);
 
         float speed = tile.getSpeed();
 
-        InstanceMaterial<RotatingData> rotatingMaterial = getRotatingMaterial();
+        Material<RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction dir : Iterate.directionsInAxis(getRotationAxis())) {
 

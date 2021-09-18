@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.entity.Entity;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -83,8 +85,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
 		Vec3 vec = context.position.subtract(facingVec.scale(2));
-		player.yRot = AbstractContraptionEntity.yawFromVector(facingVec);
-		player.xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
+		player.setYRot(AbstractContraptionEntity.yawFromVector(facingVec));
+		player.setXRot(AbstractContraptionEntity.pitchFromVector(facingVec) - 90);
 
 		DeployerHandler.activate(player, vec, pos, facingVec, mode);
 	}
@@ -183,8 +185,8 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (player == null)
 			return;
 
-		context.tileData.put("Inventory", player.inventory.save(new ListTag()));
-		player.remove();
+		context.tileData.put("Inventory", player.getInventory().save(new ListTag()));
+		player.remove(Entity.RemovalReason.DISCARDED);
 	}
 
 	private void tryGrabbingItem(MovementContext context) {
@@ -206,7 +208,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		Inventory inv = player.inventory;
+		Inventory inv = player.getInventory();
 		ItemStack filter = getFilter(context);
 
 		for (List<ItemStack> list : Arrays.asList(inv.armor, inv.offhand, inv.items)) {
@@ -237,7 +239,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	private DeployerFakePlayer getPlayer(MovementContext context) {
 		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerLevel) {
 			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world);
-			deployerFakePlayer.inventory.load(context.tileData.getList("Inventory", NBT.TAG_COMPOUND));
+			deployerFakePlayer.getInventory().load(context.tileData.getList("Inventory", NBT.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
 				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.of(context.data.getCompound("HeldItem")));
 			context.tileData.remove("Inventory");
@@ -268,7 +270,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		return new DeployerActorInstance(materialManager, simulationWorld, context);
 	}
 }

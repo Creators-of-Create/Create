@@ -33,8 +33,8 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Gea
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.GEARSHIFT.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.GEARSHIFT.create(pos, state);
 	}
 
 	@Override

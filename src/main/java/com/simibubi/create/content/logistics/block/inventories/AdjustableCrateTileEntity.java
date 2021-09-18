@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.inventories;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -62,8 +63,8 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuPr
 	public int itemCount;
 	protected LazyOptional<IItemHandler> invHandler;
 
-	public AdjustableCrateTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public AdjustableCrateTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		allowedAmount = 512;
 		itemCount = 10;
 		inventory = new Inv();

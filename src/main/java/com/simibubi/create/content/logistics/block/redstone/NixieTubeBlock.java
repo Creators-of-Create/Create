@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +42,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class NixieTubeBlock extends HorizontalDirectionalBlock
-	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
+	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement, EntityBlock {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 	private DyeColor color;
@@ -74,7 +75,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
 		DyeColor dye = null;
 		for (DyeColor color : DyeColor.values())
-			if (heldItem.getItem()
+			if (heldItem
 				.is(DyeHelper.getTagOfDye(color)))
 				dye = color;
 
@@ -132,7 +133,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
-	
+
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.ORANGE_NIXIE_TUBE.get()
@@ -192,13 +193,8 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new NixieTubeTileEntity(AllTileEntities.NIXIE_TUBE.get());
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.NIXIE_TUBE.create(pos, state);
 	}
 
 	private void updateDisplayedRedstoneValue(BlockState state, Level worldIn, BlockPos pos) {
@@ -230,10 +226,10 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		return false;
 	}
 
-	@Override
+/*	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != null;
-	}
+	}*/
 
 	@Override
 	public Class<NixieTubeTileEntity> getTileEntityClass() {

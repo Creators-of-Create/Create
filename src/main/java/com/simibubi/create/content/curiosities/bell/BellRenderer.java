@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +18,7 @@ import net.minecraft.util.Mth;
 
 public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEntityRenderer<TE> {
 
-	public BellRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public BellRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

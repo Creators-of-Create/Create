@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.re
 
 import com.jozufozu.flywheel.backend.material.MaterialGroup;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
 import com.jozufozu.flywheel.backend.state.IRenderState;
 
 public class ContraptionGroup<P extends ContraptionProgram> extends MaterialGroup<P> {
@@ -19,7 +20,7 @@ public class ContraptionGroup<P extends ContraptionProgram> extends MaterialGrou
 		contraption.setup(program);
 	}
 
-	public static <P extends ContraptionProgram> MaterialManager.GroupFactory<P> forContraption(RenderedContraption c) {
+	public static <P extends ContraptionProgram> MaterialManagerImpl.GroupFactory<P> forContraption(RenderedContraption c) {
 		return (materialManager, state) -> new ContraptionGroup<>(c, materialManager, state);
 	}
 }

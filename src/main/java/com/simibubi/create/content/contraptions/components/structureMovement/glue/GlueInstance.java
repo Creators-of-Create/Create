@@ -4,19 +4,16 @@ import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialGroup;
-import com.jozufozu.flywheel.backend.model.BufferedModel;
-import com.jozufozu.flywheel.backend.model.ElementBuffer;
-import com.jozufozu.flywheel.backend.model.IndexedModel;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.state.TextureRenderState;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
+import com.mojang.math.Quaternion;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllStitchedTextures;
 import com.simibubi.create.Create;
@@ -25,13 +22,12 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import com.mojang.math.Quaternion;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 
 public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {
 
@@ -41,7 +37,7 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	private final Quaternion rotation;
 	protected ConditionalInstance<OrientedData> model;
 
-	public GlueInstance(MaterialManager<?> materialManager, SuperGlueEntity entity) {
+	public GlueInstance(MaterialManager materialManager, SuperGlueEntity entity) {
 		super(materialManager, entity);
 
 		Instancer<OrientedData> instancer = getInstancer(materialManager, entity);
@@ -55,8 +51,8 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 				.update();
 	}
 
-	private Instancer<OrientedData> getInstancer(MaterialManager<?> materialManager, SuperGlueEntity entity) {
-		MaterialGroup<?> group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(TextureRenderState.get(TEXTURE));
+	private Instancer<OrientedData> getInstancer(MaterialManager materialManager, SuperGlueEntity entity) {
+		MaterialGroup group = USE_ATLAS ? materialManager.defaultCutout() : materialManager.cutout(TextureRenderState.get(TEXTURE));
 
 		return group.material(Materials.ORIENTED).model(entity.getType(), GlueModel::new);
 	}

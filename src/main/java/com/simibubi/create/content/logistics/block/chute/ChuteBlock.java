@@ -30,7 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ChuteBlock extends AbstractChuteBlock {
-	
+
 	public static final Property<Shape> SHAPE = EnumProperty.create("shape", Shape.class);
 	public static final DirectionProperty FACING = BlockStateProperties.FACING_HOPPER;
 
@@ -50,8 +50,8 @@ public class ChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CHUTE.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CHUTE.create(pos, state);
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class ChuteBlock extends AbstractChuteBlock {
 			return state.setValue(SHAPE, Shape.NORMAL);
 		return state.setValue(SHAPE, Shape.INTERSECTION);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

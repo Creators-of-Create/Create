@@ -2,23 +2,22 @@ package com.simibubi.create.foundation.gui;
 
 import javax.annotation.Nonnull;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.pipeline.RenderTarget;
+import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
-import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class UIRenderHelper {
 
@@ -42,8 +41,7 @@ public class UIRenderHelper {
 	}
 
 	private static RenderTarget createFramebuffer(Window mainWindow) {
-		RenderTarget framebuffer = new RenderTarget(mainWindow.getWidth(), mainWindow.getHeight(), true,
-				Minecraft.ON_OSX);
+		RenderTarget framebuffer = new TextureTarget(mainWindow.getWidth(), mainWindow.getHeight(), true, Minecraft.ON_OSX);
 		framebuffer.setClearColor(0, 0, 0, 0);
 		framebuffer.enableStencil();
 		return framebuffer;
@@ -65,7 +63,7 @@ public class UIRenderHelper {
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
 		bufferbuilder.vertex(0, vy, 0).color(1, 1, 1, alpha).uv(0, 0).endVertex();
 		bufferbuilder.vertex(vx, vy, 0).color(1, 1, 1, alpha).uv(tx, 0).endVertex();
@@ -122,29 +120,30 @@ public class UIRenderHelper {
 		double split1 = .5;
 		double split2 = .75;
 		Matrix4f model = ms.last().pose();
-		RenderSystem.disableAlphaTest();
-		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
-		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
-		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
-		RenderSystem.enableAlphaTest();
+		throw new RuntimeException("// PORT: Legacy GL Pipeline");
+//		RenderSystem.disableAlphaTest();
+//		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
+//		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
+//		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
+//		RenderSystem.enableAlphaTest();
 	}
 
 	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
+	 * @see #angledGradient(PoseStack, float, int, int, int, int, int, Color, Color)
 	 */
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int breadth, int length, Couple<Color> c) {
 		angledGradient(ms, angle, x, y, 0, breadth, length, c);
 	}
 
 	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
+	 * @see #angledGradient(PoseStack, float, int, int, int, int, int, Color, Color)
 	 */
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int z, int breadth, int length, Couple<Color> c) {
 		angledGradient(ms, angle, x, y, z, breadth, length, c.getFirst(), c.getSecond());
 	}
 
 	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
+	 * @see #angledGradient(PoseStack, float, int, int, int, int, int, Color, Color)
 	 */
 	public static void angledGradient(@Nonnull PoseStack ms, float angle, int x, int y, int breadth, int length, Color color1, Color color2) {
 		angledGradient(ms, angle, x, y, 0, breadth, length, color1, color2);
@@ -183,8 +182,9 @@ public class UIRenderHelper {
 	}
 
 	private static void breadcrumbArrow(PoseStack ms, int width, int height, int indent, Color c1, Color c2) {
-
-		/*
+		throw new RuntimeException("// PORT: Legacy GL Pipeline");
+/*
+		*//*
 		 * 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
 		 *       ****                                     ****
 		 *   ****                                     ****
@@ -193,7 +193,7 @@ public class UIRenderHelper {
 		 *       ****                                     ****
 		 *           x3,y3 ********************* x6,y6 ***** x8,y8
 		 *
-		 */
+		 *//*
 
 		float x0 = 0, y0 = height / 2f;
 		float x1 = indent, y1 = 0;
@@ -222,7 +222,7 @@ public class UIRenderHelper {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		Matrix4f model = ms.last().pose();
-		bufferbuilder.begin(GL11.GL_TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+		bufferbuilder.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
 
 		bufferbuilder.vertex(model, x0, y0, 0).color(fc1.getRed(), fc1.getGreen(), fc1.getBlue(), fc1.getAlpha()).endVertex();
 		bufferbuilder.vertex(model, x1, y1, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
@@ -253,7 +253,7 @@ public class UIRenderHelper {
 		RenderSystem.disableBlend();
 		RenderSystem.enableCull();
 		RenderSystem.enableAlphaTest();
-		RenderSystem.enableTexture();
+		RenderSystem.enableTexture();*/
 	}
 
 	//just like AbstractGui#drawTexture, but with a color at every vertex
@@ -272,14 +272,15 @@ public class UIRenderHelper {
 	private static void drawTexturedQuad(Matrix4f m, Color c, int left, int right, int top, int bot, int z, float u1, float u2, float v1, float v2) {
 		RenderSystem.enableBlend();
 		BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-		bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		bufferbuilder.vertex(m, (float) left , (float) bot, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u1, v2).endVertex();
 		bufferbuilder.vertex(m, (float) right, (float) bot, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u2, v2).endVertex();
 		bufferbuilder.vertex(m, (float) right, (float) top, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u2, v1).endVertex();
 		bufferbuilder.vertex(m, (float) left , (float) top, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u1, v1).endVertex();
 		bufferbuilder.end();
-		RenderSystem.enableAlphaTest();
-		BufferUploader.end(bufferbuilder);
+		throw new RuntimeException("// PORT: Legacy GL Pipeline");
+//		RenderSystem.enableAlphaTest();
+//		BufferUploader.end(bufferbuilder);
 	}
 
 }

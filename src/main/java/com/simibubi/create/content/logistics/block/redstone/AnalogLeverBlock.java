@@ -2,10 +2,12 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.Random;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
@@ -31,20 +33,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements ITE<AnalogLeverTileEntity> {
+public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock implements ITE<AnalogLeverTileEntity>, EntityBlock {
 
 	public AnalogLeverBlock(Properties p_i48402_1_) {
 		super(p_i48402_1_);
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ANALOG_LEVER.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.ANALOG_LEVER.create(pos, state);
 	}
 
 	@Override
@@ -110,7 +107,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 				+ 0.2D * (double) direction1.getStepY();
 		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ()
 				+ 0.2D * (double) direction1.getStepZ();
-		worldIn.addParticle(new DustParticleOptions(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+		worldIn.addParticle(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
 	}
 
 	static void updateNeighbors(BlockState state, Level world, BlockPos pos) {

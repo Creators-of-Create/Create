@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
@@ -88,7 +89,7 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 	}
 
 	public static void registerOnAll(EntityRenderDispatcher renderManager) {
-		for (PlayerRenderer renderer : renderManager.getSkinMap().values())
+		for (EntityRenderer<? extends Player> renderer : renderManager.getSkinMap().values())
 			registerOn(renderer);
 		for (EntityRenderer<?> renderer : renderManager.renderers.values())
 			registerOn(renderer);

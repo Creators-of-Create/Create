@@ -97,12 +97,12 @@ public class RedstoneContactBlock extends ProperDirectionalBlock {
 		return state.getValue(POWERED);
 	}
 
-	@Override
+/*	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side) {
 		if (side == null)
 			return true;
 		return state.getValue(FACING) != side.getOpposite();
-	}
+	}*/
 
 	@Override
 	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {

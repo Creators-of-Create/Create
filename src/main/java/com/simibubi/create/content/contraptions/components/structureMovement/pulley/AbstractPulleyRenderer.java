@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -28,8 +29,7 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	private PartialModel halfRope;
 	private PartialModel halfMagnet;
 
-	public AbstractPulleyRenderer(BlockEntityRenderDispatcher dispatcher, PartialModel halfRope,
-		PartialModel halfMagnet) {
+	public AbstractPulleyRenderer(BlockEntityRendererProvider.Context dispatcher, PartialModel halfRope, PartialModel halfMagnet) {
 		super(dispatcher);
 		this.halfRope = halfRope;
 		this.halfMagnet = halfMagnet;

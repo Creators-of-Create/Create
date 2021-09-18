@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -30,7 +31,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock implements IAxisPipe {
+public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock implements IAxisPipe, EntityBlock {
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -86,7 +87,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (blockTypeChanged)
 			world.removeBlockEntity(pos);
 	}
 
@@ -120,7 +121,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 	public static boolean isOpenAt(BlockState state, Direction d) {
 		return d.getAxis() == getPipeAxis(state);
 	}
-	
+
 	@Override
 	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
@@ -133,13 +134,8 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SMART_FLUID_PIPE.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.SMART_FLUID_PIPE.create(pos, state);
 	}
 
 	@Override
@@ -155,7 +151,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 	public Axis getAxis(BlockState state) {
 		return getPipeAxis(state);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

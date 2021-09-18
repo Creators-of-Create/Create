@@ -157,7 +157,7 @@ public class AllPaletteBlocks {
 		.initialProperties(() -> Blocks.ANDESITE)
 		.tag(BlockTags.BASE_STONE_OVERWORLD)
 		.onRegister(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
-		.loot((p, g) -> p.add(g, RegistrateBlockLootTables.droppingWithSilkTouch(g, SCORIA.get())))
+		.loot((p, g) -> p.add(g, RegistrateBlockLootTables.createSingleItemTableWithSilkTouch(g, SCORIA.get())))
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();
@@ -174,7 +174,7 @@ public class AllPaletteBlocks {
 		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE, DARK_SCORIA);
 
 	private static <T extends Block> NonNullBiConsumer<RegistrateBlockLootTables, T> cobblestoneLoot(PaletteStoneVariants variant) {
-		return (loot, block) -> loot.add(block, RegistrateBlockLootTables.droppingWithSilkTouch(block,
+		return (loot, block) -> loot.add(block, RegistrateBlockLootTables.createSingleItemTableWithSilkTouch(block,
 			variant.getVariants().registeredBlocks.get(0).get()));
 	}
 

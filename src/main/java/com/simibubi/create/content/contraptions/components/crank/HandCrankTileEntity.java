@@ -5,7 +5,10 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,8 +22,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	public float independentAngle;
 	public float chasingVelocity;
 
-	public HandCrankTileEntity(BlockEntityType<? extends HandCrankTileEntity> type) {
-		super(type);
+	public HandCrankTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends HandCrankTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	public void turn(boolean back) {
@@ -58,8 +61,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		float actualSpeed = getSpeed();
 		chasingVelocity += ((actualSpeed * 10 / 3f) - chasingVelocity) * .25f;

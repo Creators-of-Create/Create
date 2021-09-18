@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.gui.mainMenu;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
@@ -18,18 +18,18 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
-import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.PanoramaRenderer;
-import net.minecraft.client.renderer.CubeMap;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.Util;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.renderer.CubeMap;
+import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
@@ -71,8 +71,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				vanillaPanorama.render(elapsedPartials, 1);
 			panorama.render(elapsedPartials, alpha);
 
-			minecraft.getTextureManager()
-				.bind(PANORAMA_OVERLAY_TEXTURES);
+			RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -129,7 +128,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	private void addButtons() {
-		buttons.clear();
+		getWidgets().clear();
 
 		int yStart = height / 4 + (parent instanceof TitleScreen ? 40 : 40);
 		int center = width / 2;
@@ -137,32 +136,32 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
-		addButton(
+		addWidget(
 			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"), $ -> onClose()));
-		addButton(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
+		addWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
 			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
 		gettingStarted.active = !(parent instanceof TitleScreen);
-		addButton(gettingStarted);
+		addWidget(gettingStarted);
 
 		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
 		String issueTrackerLink = "https://github.com/Creators-of-Create/Create/issues";
 		String supportLink = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
-		addButton(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
+		addWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
 			$ -> linkTo(projectLink)));
-		addButton(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
+		addWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
 			$ -> linkTo(issueTrackerLink)));
-		addButton(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
+		addWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
 			$ -> linkTo(supportLink)));
 	}
 
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		buttons.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+		getWidgets().forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)

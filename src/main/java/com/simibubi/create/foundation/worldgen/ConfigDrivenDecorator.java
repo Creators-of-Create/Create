@@ -6,9 +6,10 @@ import java.util.stream.Stream;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.levelgen.placement.SimpleFeatureDecorator;
+import net.minecraft.world.level.levelgen.placement.DecorationContext;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 
-public class ConfigDrivenDecorator extends SimpleFeatureDecorator<ConfigDrivenOreFeatureConfig> {
+public class ConfigDrivenDecorator extends FeatureDecorator<ConfigDrivenOreFeatureConfig> {
 
 	public static final ConfigDrivenDecorator INSTANCE = new ConfigDrivenDecorator();
 
@@ -18,7 +19,7 @@ public class ConfigDrivenDecorator extends SimpleFeatureDecorator<ConfigDrivenOr
 	}
 
 	@Override
-	protected Stream<BlockPos> place(Random r, ConfigDrivenOreFeatureConfig config, BlockPos pos) {
+	public Stream<BlockPos> getPositions(DecorationContext context, Random r, ConfigDrivenOreFeatureConfig config, BlockPos pos) {
 		float frequency = config.getFrequency();
 
 		int floored = Mth.floor(frequency);
@@ -30,13 +31,12 @@ public class ConfigDrivenDecorator extends SimpleFeatureDecorator<ConfigDrivenOr
 		int minY = config.getMinY();
 
 		return IntStream.range(0, count)
-			.mapToObj($ -> pos)
-			.map(p -> {
-				int i = p.getX();
-				int j = p.getZ();
-				int k = r.nextInt(maxY - minY) + minY;
-				return new BlockPos(i, k, j);
-			});
+				.mapToObj($ -> pos)
+				.map(p -> {
+					int i = p.getX();
+					int j = p.getZ();
+					int k = r.nextInt(maxY - minY) + minY;
+					return new BlockPos(i, k, j);
+				});
 	}
-
 }

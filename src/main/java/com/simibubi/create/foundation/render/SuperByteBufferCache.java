@@ -6,6 +6,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
@@ -123,9 +125,10 @@ public class SuperByteBufferCache {
 		ModelBlockRenderer blockRenderer = dispatcher.getModelRenderer();
 		BufferBuilder builder = new BufferBuilder(512);
 
-		builder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
-		blockRenderer.renderModel(mc.level, model, referenceState, BlockPos.ZERO.above(255), ms, builder, true,
-			mc.level.random, 42, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+		BlockPos pos = BlockPos.ZERO.above(255);
+		// PORT: rendering may break because of the line below
+		blockRenderer.renderModel(ms.last(), builder, referenceState, model, pos.getX(), pos.getY(), pos.getZ(), 42, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
 		builder.end();
 		return builder;
 	}

@@ -14,8 +14,8 @@ import net.minecraft.core.BlockPos;
 
 public class SimpleKineticTileEntity extends KineticTileEntity {
 
-	public SimpleKineticTileEntity(BlockEntityType<? extends SimpleKineticTileEntity> type) {
-		super(type);
+	public SimpleKineticTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends SimpleKineticTileEntity> type) {
+		super(type, pos, state);
 	}
 
 	@Override

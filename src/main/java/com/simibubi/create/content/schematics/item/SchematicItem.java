@@ -12,6 +12,8 @@ import java.util.zip.GZIPInputStream;
 
 import javax.annotation.Nonnull;
 
+import net.minecraftforge.fml.util.thread.SidedThreadGroups;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,7 +50,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 
 import net.minecraft.world.item.Item.Properties;
 
@@ -96,7 +97,7 @@ public class SchematicItem extends Item {
 	public static void writeSize(ItemStack blueprint) {
 		CompoundTag tag = blueprint.getTag();
 		StructureTemplate t = loadSchematic(blueprint);
-		tag.put("Bounds", NbtUtils.writeBlockPos(t.getSize()));
+		tag.put("Bounds", NbtUtils.writeBlockPos(new BlockPos(t.getSize())));
 		blueprint.setTag(tag);
 		SchematicInstances.clearHash(blueprint);
 	}

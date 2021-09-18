@@ -16,6 +16,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -25,7 +26,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class HarvesterRenderer extends SafeTileEntityRenderer<HarvesterTileEntity> {
 
-	public HarvesterRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public HarvesterRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

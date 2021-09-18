@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllBlocks;
@@ -176,7 +178,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			Player player = (Player) entityIn;
 			if (player.isShiftKeyDown())
 				return;
-			if (player.abilities.flying)
+			if (player.getAbilities().flying)
 				return;
 		}
 
@@ -205,7 +207,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				ItemStack remainder = handler.insertItem(0, itemEntity.getItem()
 					.copy(), false);
 				if (remainder.isEmpty())
-					itemEntity.remove();
+					itemEntity.remove(Entity.RemovalReason.DISCARDED);
 			});
 			return;
 		}
@@ -271,7 +273,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			MutableBoolean success = new MutableBoolean(false);
 			controllerBelt.getInventory()
 				.applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
-					player.inventory.placeItemBackInInventory(world, transportedItemStack.stack);
+					player.getInventory().placeItemBackInInventory(transportedItemStack.stack);
 					success.setTrue();
 					return TransportedResult.removeItem();
 				});
@@ -328,7 +330,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return InteractionResult.SUCCESS;
 			KineticTileEntity.switchToBlockState(world, pos, state.setValue(PART, BeltPart.MIDDLE));
 			if (player != null && !player.isCreative())
-				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack());
+				player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack());
 			return InteractionResult.SUCCESS;
 		}
 
@@ -342,21 +344,16 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, Mob entity) {
 		return BlockPathTypes.RAIL;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
-		return true;
-	}
+//	@Override
+//	@OnlyIn(Dist.CLIENT)
+//	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
+//		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
+//		return true;
+//	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
@@ -364,30 +361,31 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos,
-		CollisionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		if (state.getBlock() != this)
 			return Shapes.empty();
 
 		VoxelShape shape = getShape(state, worldIn, pos, context);
 		return getTileEntityOptional(worldIn, pos).map(te -> {
-			if (context.getEntity() == null)
-				return shape;
+			if(context instanceof EntityCollisionContext ecc) {
+				if (ecc.getEntity().isEmpty())
+					return shape;
 
-			BeltTileEntity controller = te.getControllerTE();
-			if (controller == null)
+				BeltTileEntity controller = te.getControllerTE();
+				if (controller == null)
+					return shape;
+				if (controller.passengers == null || !controller.passengers.containsKey(ecc.getEntity().orElseThrow()))
+					return BeltShapes.getCollisionShape(state);
 				return shape;
-			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity()))
-				return BeltShapes.getCollisionShape(state);
+			}
 			return shape;
-
 		})
 			.orElse(shape);
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.BELT.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.BELT.create(pos, state);
 	}
 
 	@Override

@@ -17,6 +17,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -42,8 +44,8 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	protected int processingTicks;
 	Map<Direction, LazyOptional<ItemDrainItemHandler>> itemHandlers;
 
-	public ItemDrainTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public ItemDrainTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		itemHandlers = new IdentityHashMap<>();
 		for (Direction d : Iterate.horizontalDirections) {
 			ItemDrainItemHandler itemDrainItemHandler = new ItemDrainItemHandler(this, d);
@@ -92,9 +94,8 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (heldItem == null) {
 			processingTicks = 0;
 			return;
@@ -277,7 +278,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
 		super.fromTag(state, compound, clientPacket);
 	}
-	
+
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (side != null && side.getAxis()

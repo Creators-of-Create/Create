@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities;
 
 import java.util.Random;
 
+import net.minecraft.world.entity.Entity;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -37,6 +39,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.item.Item.Properties;
 
 public class ChromaticCompoundItem extends Item {
+
+	public Random random = new Random();
 
 	public ChromaticCompoundItem(Properties properties) {
 		super(properties);
@@ -118,7 +122,7 @@ public class ChromaticCompoundItem extends Item {
 			stack.split(1);
 			entity.setItem(stack);
 			if (stack.isEmpty())
-				entity.remove();
+				entity.remove(Entity.RemovalReason.DISCARDED);
 			return false;
 		}
 
@@ -144,7 +148,7 @@ public class ChromaticCompoundItem extends Item {
 
 				BeaconBlockEntity bte = (BeaconBlockEntity) te;
 
-				if (bte.getLevels() != 0 && !bte.beamSections.isEmpty())
+				if (bte.levels != 0 && !bte.beamSections.isEmpty())
 					isOverBeacon = true;
 
 				break;
@@ -212,7 +216,7 @@ public class ChromaticCompoundItem extends Item {
 
 	public boolean checkLight(ItemStack stack, ItemEntity entity, Level world, CompoundTag itemData,
 		Vec3 positionVec, BlockPos randomOffset, BlockState state) {
-		if (state.getLightValue(world, randomOffset) == 0)
+		if (state.getLightBlock(world, randomOffset) == 0)
 			return false;
 		if (state.getDestroySpeed(world, randomOffset) == -1)
 			return false;
@@ -234,7 +238,7 @@ public class ChromaticCompoundItem extends Item {
 		world.addFreshEntity(newEntity);
 		entity.lifespan = 6000;
 		if (stack.isEmpty())
-			entity.remove();
+			entity.remove(Entity.RemovalReason.DISCARDED);
 		return true;
 	}
 

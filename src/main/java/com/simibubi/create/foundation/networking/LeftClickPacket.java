@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.events.CommonEvents;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class LeftClickPacket extends SimplePacketBase {
@@ -19,7 +19,7 @@ public class LeftClickPacket extends SimplePacketBase {
 
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> context) {
-		Context ctx = context.get();
+		NetworkEvent.Context ctx = context.get();
 		if (ctx.getDirection() != NetworkDirection.PLAY_TO_SERVER)
 			return;
 		ctx.enqueueWork(() -> CommonEvents.leftClickEmpty(ctx.getSender()));

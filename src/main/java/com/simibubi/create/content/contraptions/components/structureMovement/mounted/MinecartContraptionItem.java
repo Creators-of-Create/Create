@@ -253,9 +253,9 @@ public class MinecartContraptionItem extends Item {
 			return;
 		}
 
-		player.inventory.placeItemBackInInventory(event.getWorld(), generatedStack);
-		contraption.remove();
-		entity.remove();
+		player.getInventory().placeItemBackInInventory(generatedStack);
+		contraption.remove(Entity.RemovalReason.DISCARDED);
+		entity.remove(Entity.RemovalReason.DISCARDED);
 		event.setCancellationResult(InteractionResult.SUCCESS);
 		event.setCanceled(true);
 	}

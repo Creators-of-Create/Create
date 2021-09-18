@@ -34,7 +34,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -59,8 +61,8 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	private RecipeWrapper wrapper;
 	public float crushingspeed;
 
-	public CrushingWheelControllerTileEntity(BlockEntityType<? extends CrushingWheelControllerTileEntity> type) {
-		super(type);
+	public CrushingWheelControllerTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends CrushingWheelControllerTileEntity> type) {
+		super(type, pos, state);
 		inventory = new ProcessingInventory(this::itemInserted) {
 
 			@Override
@@ -86,8 +88,8 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (searchForEntity) {
 			searchForEntity = false;
 			List<Entity> search = level.getEntities((Entity) null, new AABB(getBlockPos()),

@@ -77,12 +77,12 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 		return InteractionResult.SUCCESS;
 	}
 
-	@Override
+/*	@Override
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
 		return side.getAxis() == state.getValue(FACING)
 			.getAxis();
-	}
+	}*/
 
 }

@@ -42,9 +42,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ToolType;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable, SimpleWaterloggedBlock {
 
@@ -54,26 +51,6 @@ public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements 
         super(properties);
         registerDefaultState(defaultBlockState().setValue(FACING, Direction.UP).setValue(BlockStateProperties.WATERLOGGED, false));
     }
-
-    @Override
-	public ToolType getHarvestTool(BlockState state) {
-		return null;
-	}
-
-	@Override
-	public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
-		for (ToolType toolType : player.getMainHandItem()
-			.getToolTypes()) {
-			if (isToolEffective(state, toolType))
-				return true;
-		}
-		return super.canHarvestBlock(state, world, pos, player);
-	}
-
-	@Override
-	public boolean isToolEffective(BlockState state, ToolType tool) {
-		return tool == ToolType.AXE || tool == ToolType.PICKAXE;
-	}
 
 	@Override
 	public PushReaction getPistonPushReaction(BlockState state) {

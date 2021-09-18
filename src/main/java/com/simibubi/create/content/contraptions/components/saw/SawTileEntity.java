@@ -30,8 +30,10 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BambooBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.ChorusPlantBlock;
@@ -86,8 +88,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private ItemStack playEvent;
 
-	public SawTileEntity(BlockEntityType<? extends SawTileEntity> type) {
-		super(type);
+	public SawTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends SawTileEntity> type) {
+		super(pos, state, type);
 		inventory = new ProcessingInventory(this::start).withSlotLimit(!AllConfigs.SERVER.recipes.bulkCutting.get());
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
@@ -155,10 +157,10 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
 		if (shouldRun() && ticksUntilNextProgress < 0)
 			destroyNextTick();
-		super.tick();
+		super.tick(level, pos, state, blockEntity);
 
 		if (!canProcess())
 			return;

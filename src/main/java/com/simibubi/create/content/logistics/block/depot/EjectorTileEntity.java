@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.ObserverBlock;
 import net.minecraft.world.entity.Entity;
@@ -85,12 +86,12 @@ public class EjectorTileEntity extends KineticTileEntity {
 		CHARGED, LAUNCHING, RETRACTING;
 	}
 
-	public EjectorTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public EjectorTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		launcher = new EntityLauncher(1, 0);
 		lidProgress = LerpedFloat.linear()
 			.startWithValue(1);
-		state = State.RETRACTING;
+		this.state = State.RETRACTING;
 		launchedItems = new ArrayList<>();
 		powered = false;
 	}
@@ -164,8 +165,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 				.getItem() instanceof ElytraItem))
 				continue;
 
-			playerEntity.yRot = facing.toYRot();
-			playerEntity.xRot = -35;
+			playerEntity.setYRot(facing.toYRot());
+			playerEntity.setXRot(-35);
 			playerEntity.setDeltaMovement(playerEntity.getDeltaMovement()
 				.scale(.75f));
 			deployElytra(playerEntity);
@@ -269,11 +270,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		boolean doLogic = !level.isClientSide || isVirtual();
-		State prevState = state;
+		State prevState = this.state;
 		float totalTime = Math.max(3, (float) launcher.getTotalFlyingTicks());
 
 		if (scanCooldown > 0)
@@ -297,30 +298,30 @@ public class EjectorTileEntity extends KineticTileEntity {
 			intAttached.increment();
 		}
 
-		if (state == State.LAUNCHING) {
+		if (this.state == State.LAUNCHING) {
 			lidProgress.chase(1, .8f, Chaser.EXP);
 			lidProgress.tickChaser();
 			if (lidProgress.getValue() > 1 - 1 / 16f && doLogic) {
-				state = State.RETRACTING;
+				this.state = State.RETRACTING;
 				lidProgress.setValue(1);
 			}
 		}
 
-		if (state == State.CHARGED) {
+		if (this.state == State.CHARGED) {
 			lidProgress.setValue(0);
 			lidProgress.updateChaseSpeed(0);
 			if (doLogic)
 				ejectIfTriggered();
 		}
 
-		if (state == State.RETRACTING) {
+		if (this.state == State.RETRACTING) {
 			if (lidProgress.getChaseTarget() == 1 && !lidProgress.settled()) {
 				lidProgress.tickChaser();
 			} else {
 				lidProgress.updateChaseTarget(0);
 				lidProgress.updateChaseSpeed(0);
 				if (lidProgress.getValue() == 0 && doLogic) {
-					state = State.CHARGED;
+					this.state = State.CHARGED;
 					lidProgress.setValue(0);
 					sendData();
 				}
@@ -337,7 +338,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 			}
 		}
 
-		if (state != prevState)
+		if (this.state != prevState)
 			notifyUpdate();
 	}
 
@@ -469,7 +470,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		if (hd == 0 && vd == 0)
 			distanceFactor = 1;
 		else
-			distanceFactor = 1 * Mth.sqrt(Math.pow(hd, 2) + Math.pow(vd, 2));
+			distanceFactor = 1 * Mth.sqrt((float) (Math.pow(hd, 2) + Math.pow(vd, 2)));
 		return speedFactor / distanceFactor;
 	}
 
@@ -576,11 +577,11 @@ public class EjectorTileEntity extends KineticTileEntity {
 		return INFINITE_EXTENT_AABB;
 	}
 
-	@Override
+/*	@Override
 	@OnlyIn(Dist.CLIENT)
 	public double getViewDistance() {
 		return super.getViewDistance() * 16;
-	}
+	}*/
 
 	private static abstract class EntityHack extends Entity {
 

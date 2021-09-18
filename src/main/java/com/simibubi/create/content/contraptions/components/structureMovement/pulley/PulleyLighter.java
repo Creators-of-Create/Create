@@ -25,7 +25,7 @@ public class PulleyLighter extends ContraptionLighter<PulleyContraption> {
         }
 
         bounds.translate(pos);
-        bounds.minY = 1; // the super constructor will take care of making this 0
+        bounds.setMinY(1); // the super constructor will take care of making this 0
 
         return bounds;
     }

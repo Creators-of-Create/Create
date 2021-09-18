@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,8 +26,8 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 
 	public int effectTicks = 0;
 
-	public HauntedBellTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public HauntedBellTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -71,8 +72,8 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (effectTicks <= 0)
 			return;

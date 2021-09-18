@@ -110,10 +110,10 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		int outSize = fluidOutputs.size() + recipe.getRollableResults()
 			.size();
 		int outputIndex = 0;
-		
+
 		if (!itemOutputs.isEmpty())
 			addStochasticTooltip(itemStacks, recipe.getRollableResults(), i);
-		
+
 		for (; outputIndex < outSize; outputIndex++) {
 			int xPosition = 141 - (outSize % 2 != 0 && outputIndex == outSize - 1 ? 0 : outputIndex % 2 == 0 ? 10 : -9);
 			int yPosition = -19 * (outputIndex / 2) + 50 + yOffset;
@@ -127,7 +127,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 				fluidStacks.set(j, withImprovedVisibility(fluidOutputs.get(outputIndex - itemOutputs.size())));
 				j++;
 			}
-			
+
 		}
 
 		addFluidTooltip(fluidStacks, fluidIngredients, fluidOutputs);
@@ -152,7 +152,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		int size = actualIngredients.size() + recipe.getFluidIngredients()
 			.size();
 		int outSize = recipe.getFluidResults().size() + recipe.getRollableResults().size();
-		
+
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		int yOffset = 0;
@@ -174,7 +174,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		if (!needsHeating)
 			return;
-		
+
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.draw(matrixStack, 4, 80);
 		Minecraft.getInstance().font.draw(matrixStack, Lang.translate(requiredHeat.getTranslationKey()), 9,

@@ -8,16 +8,18 @@ import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class StressGaugeTileEntity extends GaugeTileEntity {
 
-	public StressGaugeTileEntity(BlockEntityType<? extends StressGaugeTileEntity> type) {
-		super(type);
+	public StressGaugeTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends StressGaugeTileEntity> type) {
+		super(pos, state, type);
 	}
 
 	@Override

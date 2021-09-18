@@ -42,8 +42,8 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 				return InteractionResult.PASS;
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			for (ItemStack itemStack : stacksOfGroup) 
-				player.inventory.placeItemBackInInventory(world, itemStack.copy());
+			for (ItemStack itemStack : stacksOfGroup)
+				player.getInventory().placeItemBackInInventory(itemStack.copy());
 			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 				1f + Create.RANDOM.nextFloat());
 			return InteractionResult.SUCCESS;
@@ -51,8 +51,8 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.BRASS_TUNNEL.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.BRASS_TUNNEL.create(pos, state);
 	}
 
 	@Override
@@ -64,8 +64,7 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 	@Override
 	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
-		if (p_196243_1_.hasTileEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
+		if (p_196243_1_.getBlock() != p_196243_4_.getBlock()) {
 			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
 			withTileEntityDo(p_196243_2_, p_196243_3_, te -> {
 				if (te instanceof BrassTunnelTileEntity)

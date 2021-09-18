@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
+
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -21,50 +23,48 @@ import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.DiodeBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.NonNullList;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DiodeBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.hooks.BasicEventHooks;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -92,14 +92,14 @@ public class BlueprintEntity extends HangingEntity
 		}
 	}
 
-	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
+	public static EntityType.Builder<BlueprintEntity> build(EntityType.Builder<?> builder) {
 		@SuppressWarnings("unchecked")
 		EntityType.Builder<BlueprintEntity> entityBuilder = (EntityType.Builder<BlueprintEntity>) builder;
 		return entityBuilder;
 	}
 
 	@Override
-	public Packet<?> getAddEntityPacket() {
+	public net.minecraft.network.protocol.Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -126,17 +126,15 @@ public class BlueprintEntity extends HangingEntity
 		this.verticalOrientation = verticalOrientation;
 		if (facing.getAxis()
 			.isHorizontal()) {
-			this.xRot = 0.0F;
-			this.yRot = (float) (this.direction.get2DDataValue() * 90);
+			this.setXRot(0.0F);
+			this.setYRot((float) (this.direction.get2DDataValue() * 90));
 		} else {
-			this.xRot = (float) (-90 * facing.getAxisDirection()
-				.getStep());
-			this.yRot = verticalOrientation.getAxis()
-				.isHorizontal() ? 180 + verticalOrientation.toYRot() : 0;
+			this.setXRot((float) (-90 * facing.getAxisDirection().getStep()));
+			this.setYRot(verticalOrientation.getAxis().isHorizontal() ? 180 + verticalOrientation.toYRot() : 0);
 		}
 
-		this.xRotO = this.xRot;
-		this.yRotO = this.yRot;
+		this.xRotO = this.getXRot();
+		this.yRotO = this.getYRot();
 		this.recalculateBoundingBox();
 	}
 
@@ -285,7 +283,7 @@ public class BlueprintEntity extends HangingEntity
 		playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
 		if (p_110128_1_ instanceof Player) {
 			Player playerentity = (Player) p_110128_1_;
-			if (playerentity.abilities.instabuild) {
+			if (playerentity.getAbilities().instabuild) {
 				return;
 			}
 		}
@@ -349,7 +347,7 @@ public class BlueprintEntity extends HangingEntity
 		if (!holdingWrench && !level.isClientSide && !items.getStackInSlot(9)
 			.isEmpty()) {
 
-			IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
+			IItemHandlerModifiable playerInv = new InvWrapper(player.getInventory());
 			boolean firstPass = true;
 			int amountCrafted = 0;
 			ForgeHooks.setCraftingPlayer(player);
@@ -408,9 +406,9 @@ public class BlueprintEntity extends HangingEntity
 						if (firstPass)
 							level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP,
 								SoundSource.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
-						player.inventory.placeItemBackInInventory(level, result);
+						player.getInventory().placeItemBackInInventory(result, true); // PORT: i think the true means send to client/server
 						for (ItemStack itemStack : nonnulllist)
-							player.inventory.placeItemBackInInventory(level, itemStack);
+							player.getInventory().placeItemBackInInventory(itemStack, true);
 						firstPass = false;
 					}
 				}
@@ -440,8 +438,8 @@ public class BlueprintEntity extends HangingEntity
 	public BlueprintSection getSectionAt(Vec3 vec) {
 		int index = 0;
 		if (size > 1) {
-			vec = VecHelper.rotate(vec, yRot, Axis.Y);
-			vec = VecHelper.rotate(vec, -xRot, Axis.X);
+			vec = VecHelper.rotate(vec, getYRot(), Axis.Y);
+			vec = VecHelper.rotate(vec, -getXRot(), Axis.X);
 			vec = vec.add(0.5, 0.5, 0);
 			if (size == 3)
 				vec = vec.add(1, 1, 0);

@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,8 +19,8 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	private Map<Direction, Float> flows;
 
-	public WaterWheelTileEntity(BlockEntityType<? extends WaterWheelTileEntity> type) {
-		super(type);
+	public WaterWheelTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends WaterWheelTileEntity> type) {
+		super(type, pos, state);
 		flows = new HashMap<>();
 		for (Direction d : Iterate.directions)
 			setFlow(d, 0);

@@ -104,9 +104,9 @@ public class BlueprintOverlayRenderer {
 		boolean firstPass = true;
 		boolean success = true;
 		Minecraft mc = Minecraft.getInstance();
-		ItemStackHandler playerInv = new ItemStackHandler(mc.player.inventory.getContainerSize());
+		ItemStackHandler playerInv = new ItemStackHandler(mc.player.getInventory().getContainerSize());
 		for (int i = 0; i < playerInv.getSlots(); i++)
-			playerInv.setStackInSlot(i, mc.player.inventory.getItem(i)
+			playerInv.setStackInSlot(i, mc.player.getInventory().getItem(i)
 				.copy());
 
 		int amountCrafted = 0;

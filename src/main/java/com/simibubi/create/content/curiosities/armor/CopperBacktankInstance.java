@@ -9,7 +9,7 @@ import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 
 public class CopperBacktankInstance extends SingleRotatingInstance {
 
-	public CopperBacktankInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+	public CopperBacktankInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);
 	}
 

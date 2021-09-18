@@ -30,8 +30,8 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MOTOR.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MOTOR.create(pos, state);
 	}
 
 	@Override
@@ -60,10 +60,10 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	public boolean hideStressImpact() {
 		return true;
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
-	
+
 }

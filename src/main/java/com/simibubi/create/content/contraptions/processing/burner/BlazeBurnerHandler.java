@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerTileEntity.FuelType;
 
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.entity.projectile.ThrownPotion;
@@ -29,32 +30,32 @@ import net.minecraftforge.fml.common.Mod;
 public class BlazeBurnerHandler {
 
 	@SubscribeEvent
-	public static void onThrowableImpact(ProjectileImpactEvent.Throwable event) {
+	public static void onThrowableImpact(ProjectileImpactEvent event) {
 		thrownEggsGetEatenByBurner(event);
 		splashExtinguishesBurner(event);
 	}
 
-	public static void thrownEggsGetEatenByBurner(ProjectileImpactEvent.Throwable event) {
-		if (!(event.getThrowable() instanceof ThrownEgg))
+	public static void thrownEggsGetEatenByBurner(ProjectileImpactEvent event) {
+		if (!(event.getProjectile() instanceof ThrownEgg))
 			return;
 
 		if (event.getRayTraceResult()
 			.getType() != HitResult.Type.BLOCK)
 			return;
 
-		BlockEntity tile = event.getThrowable().level.getBlockEntity(new BlockPos(event.getRayTraceResult()
+		BlockEntity tile = event.getProjectile().level.getBlockEntity(new BlockPos(event.getRayTraceResult()
 			.getLocation()));
 		if (!(tile instanceof BlazeBurnerTileEntity)) {
 			return;
 		}
 
 		event.setCanceled(true);
-		event.getThrowable()
+		event.getProjectile()
 			.setDeltaMovement(Vec3.ZERO);
-		event.getThrowable()
-			.remove();
+		event.getProjectile()
+			.remove(Entity.RemovalReason.DISCARDED);
 
-		Level world = event.getThrowable().level;
+		Level world = event.getProjectile().level;
 		if (world.isClientSide)
 			return;
 
@@ -72,13 +73,12 @@ public class BlazeBurnerHandler {
 		AllSoundEvents.BLAZE_MUNCH.playOnServer(world, heater.getBlockPos());
 	}
 
-	public static void splashExtinguishesBurner(ProjectileImpactEvent.Throwable event) {
-		if (event.getThrowable().level.isClientSide)
+	public static void splashExtinguishesBurner(ProjectileImpactEvent event) {
+		if (event.getProjectile().level.isClientSide)
 			return;
 
-		if (!(event.getThrowable() instanceof ThrownPotion))
+		if (!(event.getProjectile() instanceof ThrownPotion entity))
 			return;
-		ThrownPotion entity = (ThrownPotion) event.getThrowable();
 
 		if (event.getRayTraceResult()
 			.getType() != HitResult.Type.BLOCK)

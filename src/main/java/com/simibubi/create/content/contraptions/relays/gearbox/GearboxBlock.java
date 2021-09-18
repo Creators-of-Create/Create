@@ -32,8 +32,8 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.GEARBOX.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.GEARBOX.create(pos, state);
 	}
 
 	@Override
@@ -52,9 +52,9 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		if (state.getValue(AXIS).isVertical())
 			return super.getDrops(state, builder);
-		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
+		return List.of(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
 	}
-	
+
 	@Override
 	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
 			Player player) {

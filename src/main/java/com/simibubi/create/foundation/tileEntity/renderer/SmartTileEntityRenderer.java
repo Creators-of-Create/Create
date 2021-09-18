@@ -7,13 +7,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class SmartTileEntityRenderer<T extends SmartTileEntity> extends SafeTileEntityRenderer<T> {
 
-	public SmartTileEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public SmartTileEntityRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
-	
+
 	@Override
 	protected void renderSafe(T tileEntityIn, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light,
 			int overlay) {

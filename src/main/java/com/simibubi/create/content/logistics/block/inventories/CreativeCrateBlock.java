@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.inventories;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
@@ -11,22 +12,17 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public class CreativeCrateBlock extends CrateBlock implements ITE<CreativeCrateTileEntity> {
+public class CreativeCrateBlock extends CrateBlock implements ITE<CreativeCrateTileEntity>, EntityBlock {
 
 	public CreativeCrateBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CREATIVE_CRATE.create(pos, state);
 	}
 
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CREATIVE_CRATE.create();
-	}
-	
 	@Override
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		withTileEntityDo(worldIn, pos, CreativeCrateTileEntity::onPlaced);

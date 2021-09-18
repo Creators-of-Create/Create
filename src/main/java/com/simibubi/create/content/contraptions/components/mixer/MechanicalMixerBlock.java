@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
@@ -29,8 +30,8 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_MIXER.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.MECHANICAL_MIXER.create(pos, state);
 	}
 
 	@Override
@@ -40,9 +41,10 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (context.getEntity() instanceof Player)
-			return AllShapes.CASING_14PX.get(Direction.DOWN);
-
+		if (context instanceof EntityCollisionContext ecc) {
+			if (ecc.getEntity().orElseThrow() instanceof Player)
+				return AllShapes.CASING_14PX.get(Direction.DOWN);
+		}
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
 	}
 
@@ -75,7 +77,7 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	public Class<MechanicalMixerTileEntity> getTileEntityClass() {
 		return MechanicalMixerTileEntity.class;
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

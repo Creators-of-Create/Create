@@ -52,8 +52,8 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 				CompoundTag data = entity.getPersistentData();
 				data.putInt("LastOverrideLimbSwingUpdate", 0);
 				data.putFloat("OverrideLimbSwing", limbSwing);
-				entity.lerpTo(position.x, position.y, position.z, entity.yRot,
-					entity.xRot, 2, false);
+				entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),
+					entity.getXRot(), 2, false);
 			});
 		context.get()
 			.setPacketHandled(true);

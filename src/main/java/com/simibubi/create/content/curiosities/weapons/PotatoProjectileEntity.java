@@ -33,8 +33,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PotatoProjectileEntity extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData {
@@ -134,7 +134,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (stuckEntity != null) {
 			if (getY() < stuckEntity.getY() - 0.1) {
 				pop(position());
-				remove();
+				remove(RemovalReason.DISCARDED);
 			} else {
 				stuckFallSpeed += 0.007 * projectileType.getGravityMultiplier();
 				stuckOffset = stuckOffset.add(0, -stuckFallSpeed, 0);
@@ -201,7 +201,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		boolean onServer = !level.isClientSide;
 		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
 			target.setRemainingFireTicks(k);
-			remove();
+			remove(RemovalReason.DISCARDED);
 			return;
 		}
 
@@ -214,7 +214,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		if (!(target instanceof LivingEntity)) {
 			playHitSound(level, position());
-			remove();
+			remove(RemovalReason.DISCARDED);
 			return;
 		}
 
@@ -254,7 +254,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (type.isSticky() && target.isAlive()) {
 			setStuckEntity(target);
 		} else {
-			remove();
+			remove(RemovalReason.DISCARDED);
 		}
 
 	}
@@ -280,7 +280,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			if (random.nextDouble() <= recoveryChance)
 				recoverItem();
 		super.onHitBlock(ray);
-		remove();
+		remove(RemovalReason.DISCARDED);
 	}
 
 	@Override
@@ -290,7 +290,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (this.isInvulnerableTo(source))
 			return false;
 		pop(position());
-		remove();
+		remove(RemovalReason.DISCARDED);
 		return true;
 	}
 

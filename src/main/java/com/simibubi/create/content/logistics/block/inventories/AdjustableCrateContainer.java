@@ -27,7 +27,7 @@ public class AdjustableCrateContainer extends AbstractContainerMenu {
 		this.playerInventory = inv;
 		if (tileEntity instanceof AdjustableCrateTileEntity) {
 			this.te = (AdjustableCrateTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), extraData.readNbt());
+			this.te.handleUpdateTag(extraData.readNbt());
 			init();
 		}
 	}

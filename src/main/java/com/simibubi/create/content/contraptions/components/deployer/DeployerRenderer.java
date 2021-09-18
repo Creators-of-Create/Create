@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -41,7 +42,7 @@ import com.mojang.math.Vector3f;
 
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
-	public DeployerRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public DeployerRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -87,7 +88,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		TransformType transform = TransformType.NONE;
 		boolean isBlockItem = (te.heldItem.getItem() instanceof BlockItem)
-			&& itemRenderer.getModel(te.heldItem, Minecraft.getInstance().level, null)
+			&& itemRenderer.getModel(te.heldItem, Minecraft.getInstance().level, null, 1) // PORT: scale?
 				.isGui3d();
 
 		if (displayMode) {
@@ -103,7 +104,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
 		}
 
-		itemRenderer.renderStatic(te.heldItem, transform, light, overlay, ms, buffer);
+		itemRenderer.renderStatic(te.heldItem, transform, light, overlay, ms, buffer, 1); // PORT: scale?
 		ms.popPose();
 	}
 

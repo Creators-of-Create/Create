@@ -19,6 +19,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
@@ -92,10 +93,12 @@ public class ReinforcedRailBlock extends BaseRailBlock {
     @Nonnull
     public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos,
                                         CollisionContext context) {    //FIXME
-        if (context.getEntity() instanceof AbstractMinecart)
-            return Shapes.empty();
-        return getShape(state, worldIn, pos, null);
-    }
+		if(context instanceof EntityCollisionContext ecc) {
+			if (ecc.getEntity().orElseThrow() instanceof AbstractMinecart)
+				return Shapes.empty();
+		}
+		return getShape(state, worldIn, pos, null);
+	}
 
     @Override
     @Nonnull

@@ -10,6 +10,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig> {
 
@@ -22,28 +23,32 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 
 	// From OreFeature, slight adjustments
 
-	public boolean place(WorldGenLevel p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_,
-		BlockPos p_241855_4_, ConfigDrivenOreFeatureConfig p_241855_5_) {
-		float f = p_241855_3_.nextFloat() * (float) Math.PI;
-		float size = p_241855_5_.getSize();
+	@Override
+	public boolean place(FeaturePlaceContext<ConfigDrivenOreFeatureConfig> context) {
+		Random r = context.random();
+		ConfigDrivenOreFeatureConfig config = context.config();
+		BlockPos origin = context.origin();
+		WorldGenLevel world = context.level();
+		float f = r.nextFloat() * (float) Math.PI;
+		float size = config.getSize();
 		float f1 = size / 8.0F;
 		int i = Mth.ceil((size / 16.0F * 2.0F + 1.0F) / 2.0F);
-		double d0 = (double) p_241855_4_.getX() + Math.sin((double) f) * (double) f1;
-		double d1 = (double) p_241855_4_.getX() - Math.sin((double) f) * (double) f1;
-		double d2 = (double) p_241855_4_.getZ() + Math.cos((double) f) * (double) f1;
-		double d3 = (double) p_241855_4_.getZ() - Math.cos((double) f) * (double) f1;
-		double d4 = (double) (p_241855_4_.getY() + p_241855_3_.nextInt(3) - 2);
-		double d5 = (double) (p_241855_4_.getY() + p_241855_3_.nextInt(3) - 2);
-		int k = p_241855_4_.getX() - Mth.ceil(f1) - i;
-		int l = p_241855_4_.getY() - 2 - i;
-		int i1 = p_241855_4_.getZ() - Mth.ceil(f1) - i;
+		double d0 = (double) origin.getX() + Math.sin(f) * (double) f1;
+		double d1 = (double) origin.getX() - Math.sin(f) * (double) f1;
+		double d2 = (double) origin.getZ() + Math.cos(f) * (double) f1;
+		double d3 = (double) origin.getZ() - Math.cos(f) * (double) f1;
+		double d4 = origin.getY() + r.nextInt(3) - 2;
+		double d5 = origin.getY() + r.nextInt(3) - 2;
+		int k = origin.getX() - Mth.ceil(f1) - i;
+		int l = origin.getY() - 2 - i;
+		int i1 = origin.getZ() - Mth.ceil(f1) - i;
 		int j1 = 2 * (Mth.ceil(f1) + i);
 		int k1 = 2 * (2 + i);
 
 		for (int l1 = k; l1 <= k + j1; ++l1) {
 			for (int i2 = i1; i2 <= i1 + j1; ++i2) {
-				if (l <= p_241855_1_.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, l1, i2)) {
-					return this.doPlace(p_241855_1_, p_241855_3_, p_241855_5_, d0, d1, d2, d3, d4, d5, k, l, i1,
+				if (l <= world.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, l1, i2)) {
+					return this.doPlace(world, r, config, d0, d1, d2, d3, d4, d5, k, l, i1,
 						j1, k1);
 				}
 			}
@@ -63,9 +68,9 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 
 		for (int k = 0; k < j; ++k) {
 			float f = (float) k / (float) j;
-			double d0 = Mth.lerp((double) f, p_207803_4_, p_207803_6_);
-			double d2 = Mth.lerp((double) f, p_207803_12_, p_207803_14_);
-			double d4 = Mth.lerp((double) f, p_207803_8_, p_207803_10_);
+			double d0 = Mth.lerp(f, p_207803_4_, p_207803_6_);
+			double d2 = Mth.lerp(f, p_207803_12_, p_207803_14_);
+			double d4 = Mth.lerp(f, p_207803_8_, p_207803_10_);
 			double d6 = p_207803_2_.nextDouble() * (double) j / 16.0D;
 			double d7 = ((double) (Mth.sin((float) Math.PI * f) + 1.0F) * d6 + 1.0D) / 2.0D;
 			adouble[k * 4 + 0] = d0;

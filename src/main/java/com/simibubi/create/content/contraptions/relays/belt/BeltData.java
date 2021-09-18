@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
@@ -56,7 +57,7 @@ public class BeltData extends KineticData {
 	}
 
 	@Override
-	public void write(MappedBuffer buf) {
+	public void write(VecBuffer buf) {
 		super.write(buf);
 
 		buf.putVec4(qX, qY, qZ, qW);

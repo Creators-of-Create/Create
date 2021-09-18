@@ -24,6 +24,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.entity.Entity;
@@ -64,8 +67,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public Mode mode;
 	public boolean finished;
 
-	public MechanicalPressTileEntity(BlockEntityType<? extends MechanicalPressTileEntity> type) {
-		super(type);
+	public MechanicalPressTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends MechanicalPressTileEntity> type) {
+		super(type, pos, state);
 		mode = Mode.WORLD;
 		entityScanCooldown = ENTITY_SCAN;
 	}
@@ -142,8 +145,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (!running || level == null) {
 			if (hasLevel() && !level.isClientSide) {
@@ -349,12 +352,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		if (!(recipe instanceof CraftingRecipe))
 			return false;
-		
+
 		RecipeSerializer<?> serializer = recipe.getSerializer();
-		for (ResourceLocation denied : RECIPE_DENY_LIST) 
+		for (ResourceLocation denied : RECIPE_DENY_LIST)
 			if (serializer != null && denied.equals(serializer.getRegistryName()))
 				return false;
-		
+
 		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()
 			&& (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
 				.size() == 1;

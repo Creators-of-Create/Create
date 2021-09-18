@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.IModel;
@@ -36,7 +37,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
 
-	public final MaterialManager<ContraptionProgram> materialManager;
+	public final MaterialManager materialManager;
 	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
@@ -48,7 +49,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = MaterialManager.builder(CreateContexts.CWORLD)
+		this.materialManager = new MaterialManagerImpl.Builder<>(CreateContexts.CWORLD)
 				.setGroupFactory(ContraptionGroup.forContraption(this))
 				.setIgnoreOriginCoordinate(true)
 				.build();
@@ -85,7 +86,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		Vec3 cameraPos = event.getCameraPos();
 
-		lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume())
+		lightBox = lighter.lightVolume.getVolume().toAABB()
 				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 
@@ -102,7 +103,8 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	void setup(ContraptionProgram shader) {
 		if (!modelViewPartialReady || lightBox == null) return;
 		shader.bind(modelViewPartial, lightBox);
-		lighter.lightVolume.bind();
+		throw new RuntimeException("// PORT: Flywheel updates");
+//		lighter.lightVolume.bind();
 	}
 
 	public void invalidate() {
@@ -113,8 +115,9 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		lighter.lightVolume.delete();
 
-		materialManager.delete();
-		kinetics.invalidate();
+		throw new RuntimeException("// PORT: Flywheel updates");
+//		materialManager.delete();
+//		kinetics.invalidate();
 	}
 
 	private void buildLayers() {
@@ -147,9 +150,10 @@ public class RenderedContraption extends ContraptionRenderInfo {
 						.canInstance(te.getType())) {
 					Level world = te.getLevel();
 					BlockPos pos = te.getBlockPos();
-					te.setLevelAndPosition(renderWorld, pos);
-					kinetics.add(te);
-					te.setLevelAndPosition(world, pos);
+					throw new RuntimeException("// PORT: BlockEntity issues");
+//					te.setLevelAndPosition(renderWorld, pos);
+//					kinetics.add(te);
+//					te.setLevelAndPosition(world, pos);
 				}
 			}
 		}

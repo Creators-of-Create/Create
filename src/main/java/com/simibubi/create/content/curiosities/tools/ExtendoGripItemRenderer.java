@@ -7,8 +7,10 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRendere
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -17,6 +19,10 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 
 	private static final Vec3 rotationOffset = new Vec3(0, 1 / 2f, 1 / 2f);
 	private static final Vec3 cogRotationOffset = new Vec3(0, 1 / 16f, 0);
+
+	public ExtendoGripItemRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
+	}
 
 	@Override
 	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, TransformType transformType,

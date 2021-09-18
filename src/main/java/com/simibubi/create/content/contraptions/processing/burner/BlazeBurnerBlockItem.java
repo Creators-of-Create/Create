@@ -10,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,7 +35,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.BaseSpawner;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import net.minecraft.world.item.Item.Properties;
 
@@ -129,7 +130,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return InteractionResult.FAIL;
 
 		giveBurnerItemTo(player, heldItem, hand);
-		entity.remove();
+		entity.remove(Entity.RemovalReason.DISCARDED);
 		return InteractionResult.FAIL;
 	}
 
@@ -141,7 +142,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			player.setItemInHand(hand, filled);
 			return;
 		}
-		player.inventory.placeItemBackInInventory(player.level, filled);
+		player.getInventory().placeItemBackInInventory(filled);
 	}
 
 	private void spawnCaptureEffects(Level world, Vec3 vec) {

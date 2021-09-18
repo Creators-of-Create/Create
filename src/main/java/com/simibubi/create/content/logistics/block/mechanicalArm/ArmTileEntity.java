@@ -25,6 +25,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.item.ItemStack;
@@ -76,8 +79,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
 	}
 
-	public ArmTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public ArmTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		inputs = new ArrayList<>();
 		outputs = new ArrayList<>();
 		interactionPointTag = new ListTag();
@@ -109,8 +112,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		initInteractionPoints();
 		boolean targetReached = tickMovementProgress();
 

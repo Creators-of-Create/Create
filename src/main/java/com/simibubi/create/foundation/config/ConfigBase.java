@@ -31,11 +31,6 @@ public abstract class ConfigBase {
 			children.forEach(ConfigBase::onLoad);
 	}
 
-	public void onReload() {
-		if (children != null)
-			children.forEach(ConfigBase::onReload);
-	}
-
 	public abstract String getName();
 
 	@FunctionalInterface

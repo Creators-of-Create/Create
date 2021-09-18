@@ -29,7 +29,7 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 
 	protected CreateTileEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback,
 		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
-		super(owner, parent, name, callback, factory);
+		super(owner, parent, name, callback, (blockPos, blockState, blockEntityType) -> (T) factory);
 	}
 
 	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory) {

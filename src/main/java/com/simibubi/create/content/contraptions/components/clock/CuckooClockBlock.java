@@ -29,21 +29,21 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	public static CuckooClockBlock regular(Properties properties) {
 		return new CuckooClockBlock(false, properties);
 	}
-	
+
 	public static CuckooClockBlock mysterious(Properties properties) {
 		return new CuckooClockBlock(true, properties);
 	}
-	
+
 	protected CuckooClockBlock(boolean mysterious, Properties properties) {
 		super(properties);
 		this.mysterious = mysterious;
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CUCKOO_CLOCK.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.CUCKOO_CLOCK.create(pos, state);
 	}
-	
+
 	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
@@ -55,7 +55,7 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 		if (!mysterious)
 			super.fillItemCategory(group, items);
 	}
-	
+
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
@@ -78,7 +78,7 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(HORIZONTAL_FACING).getAxis();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

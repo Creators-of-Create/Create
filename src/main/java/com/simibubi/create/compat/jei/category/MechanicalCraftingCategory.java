@@ -50,8 +50,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 
 		itemStacks.init(0, false, 133, 80);
-		itemStacks.set(0, recipe.getResultItem()
-			.getStack());
+		itemStacks.set(0, recipe.getResultItem());
 
 		int x = getXPadding(recipe);
 		int y = getYPadding(recipe);
@@ -97,7 +96,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 	@Override
 	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		matrixStack.pushPose();
+		throw new RuntimeException("// PORT: legacy gl");
+		/*matrixStack.pushPose();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
 
@@ -131,7 +131,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		}
 
 		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
-		matrixStack.popPose();
+		matrixStack.popPose();*/
 	}
 
 	@Override
@@ -149,7 +149,8 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 		@Override
 		public void render(PoseStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
-			matrixStack.pushPose();
+			throw new RuntimeException("// PORT: legacy gl");
+			/*matrixStack.pushPose();
 			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
 			matrixStack.scale(scale, scale, scale);
@@ -169,7 +170,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 				RenderSystem.popMatrix();
 			}
 
-			matrixStack.popPose();
+			matrixStack.popPose();*/
 		}
 
 		@Override

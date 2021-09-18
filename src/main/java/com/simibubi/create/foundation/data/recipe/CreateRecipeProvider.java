@@ -26,11 +26,12 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		super(generator);
 	}
 
-	@Override
-	protected void buildShapelessRecipes(Consumer<FinishedRecipe> p_200404_1_) {
-		all.forEach(c -> c.register(p_200404_1_));
-		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
-	}
+//	PORT: i dont know about this...
+//	@Override
+//	protected void buildShapelessRecipes(Consumer<FinishedRecipe> p_200404_1_) {
+//		all.forEach(c -> c.register(p_200404_1_));
+//		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
+//	}
 
 	protected GeneratedRecipe register(GeneratedRecipe recipe) {
 		all.add(recipe);

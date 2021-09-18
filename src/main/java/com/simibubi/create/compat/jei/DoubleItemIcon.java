@@ -39,7 +39,8 @@ public class DoubleItemIcon implements IDrawable {
 			secondaryStack = secondarySupplier.get();
 		}
 
-		Lighting.turnBackOn();
+		throw new RuntimeException("// PORT: legacy gl");
+		/*Lighting.turnBackOn();
 		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
@@ -59,7 +60,6 @@ public class DoubleItemIcon implements IDrawable {
 		matrixStack.popPose();
 
 		matrixStack.popPose();
-		RenderSystem.enableBlend();
+		RenderSystem.enableBlend();*/
 	}
-
 }

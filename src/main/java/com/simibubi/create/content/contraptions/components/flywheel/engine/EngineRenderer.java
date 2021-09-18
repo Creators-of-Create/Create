@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,7 +16,7 @@ import net.minecraft.core.Direction;
 
 public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRenderer<T> {
 
-	public EngineRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public EngineRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

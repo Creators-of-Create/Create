@@ -120,7 +120,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Override
 	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name, TileEntityBuilder.BlockEntityFactory<T> factory) {
-		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory)); // PORT: this is horrible. I'm so sorry for writing this.
+		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> CreateTileEntityBuilder.create(this, parent, name, callback, factory));
+	}
+
+	@Override
+	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name, TileEntityBuilder.BlockEntityFactory<T> factory) {
+		return this.tileEntity(this.self(), name, factory);
 	}
 
 	@Override
@@ -251,5 +256,4 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		CreateClient.getCustomRenderedItems()
 			.register(entry.delegate, func.get());
 	}
-
 }

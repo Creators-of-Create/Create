@@ -9,12 +9,14 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock.Shape;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -59,8 +61,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	private InterpolatedChasingValue fluidLevel;
 	private AABB renderBoundingBox;
 
-	public FluidTankTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FluidTankTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends FluidTankTileEntity> type) {
+		super(type, pos, state);
 		tankInventory = createInventory();
 		fluidCapability = LazyOptional.of(() -> tankInventory);
 		forceFluidLevelUpdate = true;
@@ -85,8 +87,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (syncCooldown > 0) {
 			syncCooldown--;
 			if (syncCooldown == 0 && queuedSync)
@@ -105,7 +107,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (fluidLevel != null)
 			fluidLevel.tick();
 	}
-	
+
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
 	}
@@ -161,7 +163,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			setChanged();
 			sendData();
 		}
-		
+
 		if (isVirtual()) {
 			if (fluidLevel == null)
 				fluidLevel = new InterpolatedChasingValue().start(getFillState());
@@ -315,12 +317,12 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		return renderBoundingBox;
 	}
 
-	@Override
+/*	@Override
 	@OnlyIn(Dist.CLIENT)
 	public double getViewDistance() {
 		int dist = 64 + getMaxHeight() * 2;
 		return dist * dist;
-	}
+	}*/
 
 	@Nullable
 	public FluidTankTileEntity getOtherFluidTankTileEntity(Direction direction) {

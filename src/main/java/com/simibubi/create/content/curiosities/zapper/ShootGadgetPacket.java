@@ -53,7 +53,7 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public final void handle(Supplier<Context> context) {
+	public final void handle(Supplier<NetworkEvent.Context> context) {
 		context.get()
 			.enqueueWork(() -> {
 				Entity renderViewEntity = Minecraft.getInstance()

@@ -108,7 +108,6 @@ public class Create {
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 		modEventBus.addListener(AllConfigs::onLoad);
-		modEventBus.addListener(AllConfigs::onReload);
 		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 		forgeEventBus.register(CHUNK_UTIL);

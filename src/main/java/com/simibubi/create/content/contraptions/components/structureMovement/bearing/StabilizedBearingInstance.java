@@ -2,18 +2,18 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 
 public class StabilizedBearingInstance extends ActorInstance {
 
@@ -23,7 +23,7 @@ public class StabilizedBearingInstance extends ActorInstance {
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public StabilizedBearingInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public StabilizedBearingInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		super(materialManager, simulationWorld, context);
 
 		BlockState blockState = context.state;

@@ -34,7 +34,7 @@ public class OpenCreateMenuButton extends Button {
 	@Override
 	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
-		if (!visible) 
+		if (!visible)
 			return;
 		Minecraft.getInstance().getItemRenderer().renderGuiItem(icon, x + 2, y + 2);
 	}
@@ -102,12 +102,13 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				event.getWidgetList().stream()
-					.filter(w -> w.getMessage().getString().equals(target))
-					.findFirst()
-					.ifPresent(w -> event.addWidget(
-							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
-					));
+				throw new RuntimeException("// PORT: screen fuckery");
+//				event.getWidgetList().stream()
+//					.filter(w -> w.getMessage().getString().equals(target))
+//					.findFirst()
+//					.ifPresent(w -> event.addWidget(
+//							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
+//					));
 			}
 		}
 

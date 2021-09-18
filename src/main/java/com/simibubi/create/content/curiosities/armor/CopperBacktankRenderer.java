@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -18,7 +19,7 @@ import net.minecraft.core.Direction;
 
 public class CopperBacktankRenderer extends KineticTileEntityRenderer {
 
-	public CopperBacktankRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public CopperBacktankRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -33,7 +34,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable {
+public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable, EntityBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -58,12 +59,12 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		super.createBlockStateDefinition(builder.add(POWERED));
 	}
 
-	@Override
+/*	@Override
 	@OnlyIn(Dist.CLIENT)
 	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
 		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
 		return true;
-	}
+	}*/
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
@@ -109,14 +110,11 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		return insert;
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.FUNNEL.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.FUNNEL.create(pos, state);
 	}
 
 	@Override
@@ -143,8 +141,7 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	@Override
 	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
-		if (p_196243_1_.hasTileEntity() && (p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_)
-			|| !p_196243_4_.hasTileEntity())) {
+		if ((p_196243_1_.getBlock() != p_196243_4_.getBlock() && !isFunnel(p_196243_4_))) {
 			TileEntityBehaviour.destroy(p_196243_2_, p_196243_3_, FilteringBehaviour.TYPE);
 			p_196243_2_.removeBlockEntity(p_196243_3_);
 		}

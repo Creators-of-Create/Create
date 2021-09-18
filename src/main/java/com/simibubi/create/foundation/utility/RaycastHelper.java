@@ -30,8 +30,8 @@ public class RaycastHelper {
 	}
 
 	public static Vec3 getTraceTarget(Player playerIn, double range, Vec3 origin) {
-		float f = playerIn.xRot;
-		float f1 = playerIn.yRot;
+		float f = playerIn.getXRot();
+		float f1 = playerIn.getYRot();
 		float f2 = Mth.cos(-f1 * 0.017453292F - (float) Math.PI);
 		float f3 = Mth.sin(-f1 * 0.017453292F - (float) Math.PI);
 		float f4 = -Mth.cos(-f * 0.017453292F);

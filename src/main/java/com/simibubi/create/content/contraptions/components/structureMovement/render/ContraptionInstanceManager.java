@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.material.MaterialManager;
@@ -23,8 +25,8 @@ public class ContraptionInstanceManager extends TileInstanceManager {
 
     private final WeakReference<RenderedContraption> contraption;
 
-    ContraptionInstanceManager(RenderedContraption contraption, MaterialManager<?> materialManager) {
-		super(materialManager);
+    ContraptionInstanceManager(RenderedContraption contraption, MaterialManager materialManager) {
+		super((MaterialManagerImpl<?>) materialManager);
 		this.contraption = new WeakReference<>(contraption);
 	}
 

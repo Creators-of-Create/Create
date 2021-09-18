@@ -58,7 +58,7 @@ public class SchematicPrinter {
 				schematicLoaded = true;
 			}
 		}
-		
+
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		compound.getList("DeferredBlocks", 10).stream()
@@ -71,7 +71,7 @@ public class SchematicPrinter {
 			compound.put("CurrentPos", NbtUtils.writeBlockPos(currentPos));
 		if (schematicAnchor != null)
 			compound.put("Anchor", NbtUtils.writeBlockPos(schematicAnchor));
-		
+
 		compound.putInt("EntityProgress", printingEntityIndex);
 		compound.putString("PrintStage", printStage.name());
 		ListTag tagDeferredBlocks = new ListTag();
@@ -90,7 +90,7 @@ public class SchematicPrinter {
 		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
 			.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
-		activeTemplate.placeInWorldChunk(blockReader, schematicAnchor, settings, blockReader.getRandom());
+		activeTemplate.placeInWorld(blockReader, currentPos, schematicAnchor, settings, blockReader.getRandom(), 1); // PORT: what what waht
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, activeTemplate.getSize()
 			.offset(-1, -1, -1));

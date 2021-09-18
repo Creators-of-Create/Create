@@ -2,6 +2,10 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import java.util.List;
 
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.entity.BlockEntity;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -45,8 +49,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 
 	private float prevForcedAngle;
 
-	public ClockworkBearingTileEntity(BlockEntityType<? extends ClockworkBearingTileEntity> type) {
-		super(type);
+	public ClockworkBearingTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends ClockworkBearingTileEntity> type) {
+		super(type, pos, state);
 		setLazyTickRate(3);
 	}
 
@@ -65,8 +69,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (level.isClientSide) {
 			prevForcedAngle = hourAngle;

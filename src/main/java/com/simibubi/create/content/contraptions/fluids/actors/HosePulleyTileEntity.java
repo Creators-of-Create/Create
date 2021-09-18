@@ -9,6 +9,9 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,8 +37,8 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	private HosePulleyFluidHandler handler;
 	private boolean infinite;
 
-	public HosePulleyTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public HosePulleyTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 		offset = LerpedFloat.linear()
 			.startWithValue(0);
 		isMoving = true;
@@ -103,15 +106,15 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 		return super.getRenderBoundingBox().expandTowards(0, -offset.getValue(), 0);
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance() {
-		return super.getViewDistance() + offset.getValue() * offset.getValue();
-	}
+//	@Override
+//	@OnlyIn(Dist.CLIENT)
+//	public double getViewDistance() {
+//		return super.getViewDistance() + offset.getValue() * offset.getValue();
+//	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		float newOffset = offset.getValue() + getMovementSpeed();
 		if (newOffset < 0) {
 			newOffset = 0;

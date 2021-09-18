@@ -25,7 +25,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.config.ModConfig;
 
 public class ConfigHelper {
@@ -51,18 +51,14 @@ public class ConfigHelper {
 
 	public static ForgeConfigSpec findConfigSpecFor(ModConfig.Type type, String modID) {
 		if (!modID.equals(Create.ID))
-			return configCache.getUnchecked(modID).get(type).getSpec();
+			return (ForgeConfigSpec) configCache.getUnchecked(modID).get(type).getSpec();
 
-		switch (type) {
-			case COMMON:
-				return AllConfigs.COMMON.specification;
-			case CLIENT:
-				return AllConfigs.CLIENT.specification;
-			case SERVER:
-				return AllConfigs.SERVER.specification;
-		}
+		return switch (type) {
+			case COMMON -> AllConfigs.COMMON.specification;
+			case CLIENT -> AllConfigs.CLIENT.specification;
+			case SERVER -> AllConfigs.SERVER.specification;
+		};
 
-		return null;
 	}
 
 	public static boolean hasAnyConfig(String modID) {

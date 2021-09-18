@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
@@ -315,7 +316,7 @@ public class SymmetryWandItem extends Item {
 						.isEmpty())
 						player.getMainHandItem()
 							.mineBlock(world, blockstate, position, player);
-					BlockEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(position) : null;
+					BlockEntity tileentity = blockstate.getBlock() instanceof EntityBlock ? world.getBlockEntity(position) : null;
 					Block.dropResources(blockstate, world, pos, tileentity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
 				}
 			}

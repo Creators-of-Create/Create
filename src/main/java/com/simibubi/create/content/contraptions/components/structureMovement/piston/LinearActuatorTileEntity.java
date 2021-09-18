@@ -14,6 +14,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOpt
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,8 +40,14 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	// Custom position sync
 	protected float clientOffsetDiff;
 
-	public LinearActuatorTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public LinearActuatorTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
+		setLazyTickRate(3);
+		forceMove = true;
+	}
+
+	public LinearActuatorTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(3);
 		forceMove = true;
 	}
@@ -55,8 +63,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 
 		if (movedContraption != null) {
 			if (!movedContraption.isAlive())

@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,8 +23,8 @@ import net.minecraftforge.items.IItemHandler;
 
 public class CreativeCrateTileEntity extends CrateTileEntity {
 
-	public CreativeCrateTileEntity(BlockEntityType<? extends CreativeCrateTileEntity> type) {
-		super(type);
+	public CreativeCrateTileEntity(BlockPos pos, BlockState state, BlockEntityType<? extends CreativeCrateTileEntity> type) {
+		super(type, pos, state);
 		inv = new BottomlessItemHandler(filtering::getFilter);
 		itemHandler = LazyOptional.of(() -> inv);
 	}

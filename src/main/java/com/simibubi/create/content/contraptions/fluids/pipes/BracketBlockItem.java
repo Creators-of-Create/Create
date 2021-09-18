@@ -51,10 +51,10 @@ public class BracketBlockItem extends BlockItem {
 
 		BlockState bracket = behaviour.getBracket();
 		behaviour.applyBracket(suitableBracket.get());
-		
+
 		if (!world.isClientSide && player != null)
 			behaviour.triggerAdvancements(world, player, state);
-		
+
 		if (player == null || !player.isCreative()) {
 			context.getItemInHand()
 				.shrink(1);
@@ -63,7 +63,7 @@ public class BracketBlockItem extends BlockItem {
 				if (player == null)
 					Block.popResource(world, pos, returnedStack);
 				else
-					player.inventory.placeItemBackInInventory(world, returnedStack);
+					player.getInventory().placeItemBackInInventory(returnedStack);
 			}
 		}
 		return InteractionResult.SUCCESS;

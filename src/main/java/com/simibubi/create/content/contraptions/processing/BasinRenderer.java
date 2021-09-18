@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -30,7 +31,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
-	public BasinRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public BasinRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
@@ -136,7 +137,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 	protected void renderItem(PoseStack ms, MultiBufferSource buffer, int light, int overlay, ItemStack stack) {
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderStatic(stack, TransformType.GROUND, light, overlay, ms, buffer);
+			.renderStatic(stack, TransformType.GROUND, light, overlay, ms, buffer, 1); // PORT: scale
 	}
 
 	protected float renderFluids(BasinTileEntity basin, float partialTicks, PoseStack ms, MultiBufferSource buffer,

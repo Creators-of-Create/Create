@@ -7,19 +7,21 @@ import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 
 	public boolean reActivateSource;
 
-	public GeneratingKineticTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public GeneratingKineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
 	protected void notifyStressCapacityChange(float capacity) {
@@ -45,8 +47,8 @@ public abstract class GeneratingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (reActivateSource) {
 			updateGeneratedRotation();
 			reActivateSource = false;

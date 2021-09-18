@@ -84,8 +84,8 @@ public class BlockHelper {
 						double d8 = d5 * d2 + y1;
 						double d9 = d6 * d3 + z1;
 						manager
-							.add((new TerrainParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
-								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
+							.add(new TerrainParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
+								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state));
 					}
 				}
 			}
@@ -141,27 +141,27 @@ public class BlockHelper {
 
 		{
 			// Try held Item first
-			int preferredSlot = player.inventory.selected;
-			ItemStack itemstack = player.inventory.getItem(preferredSlot);
+			int preferredSlot = player.getInventory().selected;
+			ItemStack itemstack = player.getInventory().getItem(preferredSlot);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.inventory.setItem(preferredSlot,
+				player.getInventory().setItem(preferredSlot,
 					new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
 
 		// Search inventory
-		for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+		for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
 			if (amountFound == amount)
 				break;
 
-			ItemStack itemstack = player.inventory.getItem(i);
+			ItemStack itemstack = player.getInventory().getItem(i);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.inventory.setItem(i, new ItemStack(itemstack.getItem(), count - taken));
+				player.getInventory().setItem(i, new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
@@ -169,7 +169,7 @@ public class BlockHelper {
 		if (needsTwo) {
 			// Give back 1 if uneven amount was removed
 			if (amountFound % 2 != 0)
-				player.inventory.add(new ItemStack(required));
+				player.getInventory().add(new ItemStack(required));
 			amountFound /= 2;
 		}
 
@@ -180,7 +180,7 @@ public class BlockHelper {
 		ItemStack itemStack = new ItemStack(state.getBlock());
 		if (itemStack.getItem() == Items.FARMLAND)
 			itemStack = new ItemStack(Items.DIRT);
-		else if (itemStack.getItem() == Items.GRASS_PATH)
+		else if (itemStack.getItem() == Items.DIRT_PATH)
 			itemStack = new ItemStack(Items.GRASS_BLOCK);
 		return itemStack;
 	}
@@ -200,7 +200,7 @@ public class BlockHelper {
 		BlockState state = world.getBlockState(pos);
 		if (world.random.nextFloat() < effectChance)
 			world.levelEvent(2001, pos, Block.getId(state));
-		BlockEntity tileentity = state.hasTileEntity() ? world.getBlockEntity(pos) : null;
+		BlockEntity tileentity = world.getBlockEntity(pos);
 		if (player != null) {
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
 			MinecraftForge.EVENT_BUS.post(event);
@@ -304,7 +304,7 @@ public class BlockHelper {
 				data.putInt("z", target.getZ());
 				if (tile instanceof KineticTileEntity)
 					((KineticTileEntity) tile).warnOfMovement();
-				tile.load(tile.getBlockState(), data);
+				tile.load(data);
 			}
 		}
 

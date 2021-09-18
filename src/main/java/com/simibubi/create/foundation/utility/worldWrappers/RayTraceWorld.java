@@ -34,4 +34,13 @@ public class RayTraceWorld implements BlockGetter {
 		return template.getFluidState(pos);
 	}
 
+	@Override
+	public int getHeight() {
+		return 256; // TODO: in 1.18, this number will need to change
+	}
+
+	@Override
+	public int getMinBuildHeight() {
+		return 0;
+	}
 }

@@ -7,11 +7,12 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class ColoredOverlayTileEntityRenderer<T extends BlockEntity> extends SafeTileEntityRenderer<T> {
 
-	public ColoredOverlayTileEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public ColoredOverlayTileEntityRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 

@@ -17,12 +17,14 @@ import com.simibubi.create.foundation.block.connected.GlassPaneCTBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
+import net.minecraft.data.loot.BlockLoot;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -92,11 +94,11 @@ public class WindowGen {
 				.pattern("#X#")
 				.define('#', ingredient.get())
 				.define('X', DataIngredient.tag(Tags.Items.GLASS_COLORLESS))
-				.unlockedBy("has_ingredient", p.hasItem(ingredient.get()))
-				.save(p::accept))
+				.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(ingredient.get()))
+				.save(p))
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
-			.loot((t, g) -> t.dropWhenSilkTouch(g))
+			.loot(BlockLoot::dropWhenSilkTouch)
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), sideTexture.apply(c.getName()), endTexture.apply(c.getName()))))
 			.tag(BlockTags.IMPERMEABLE)
@@ -207,7 +209,7 @@ public class WindowGen {
 				.pattern("###")
 				.pattern("###")
 				.define('#', parent.get())
-				.unlockedBy("has_ingredient", p.hasItem(parent.get()))
+				.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(parent.get()))
 				.save(p::accept))
 			.tag(Tags.Blocks.GLASS_PANES)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))

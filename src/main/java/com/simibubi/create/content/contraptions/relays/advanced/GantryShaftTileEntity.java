@@ -15,8 +15,8 @@ import net.minecraft.util.Mth;
 
 public class GantryShaftTileEntity extends KineticTileEntity {
 
-	public GantryShaftTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public GantryShaftTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type) {
+		super(type, pos, state);
 	}
 
 	public void checkAttachedCarriageBlocks() {

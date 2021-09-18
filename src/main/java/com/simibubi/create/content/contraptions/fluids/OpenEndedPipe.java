@@ -1,8 +1,5 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import static net.minecraft.state.properties.BlockStateProperties.LEVEL_HONEY;
-import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.WATERLOGGED;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +36,9 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_HONEY;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 public class OpenEndedPipe extends FlowSource {
 

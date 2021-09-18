@@ -7,6 +7,12 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+
+import net.minecraft.world.inventory.ChestMenu;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -68,7 +74,8 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		partialTicks = Minecraft.getInstance()
+		throw new RuntimeException("// PORT: Legacy GL Pipeline");
+/*		partialTicks = Minecraft.getInstance()
 			.getFrameTime();
 		renderBackground(matrixStack);
 		renderWindow(matrixStack, mouseX, mouseY, partialTicks);
@@ -84,7 +91,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 		Lighting.turnOff();
 		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
-		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
+		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);*/
 	}
 
 	@Override
@@ -168,24 +175,13 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	public double getItemCountTextScale() {
 		int guiScaleFactor = (int) minecraft.getWindow()
 			.getGuiScale();
-		double scale = 1;
-		switch (guiScaleFactor) {
-		case 1:
-			scale = 2060 / 2048d;
-			break;
-		case 2:
-			scale = .5;
-			break;
-		case 3:
-			scale = .675;
-			break;
-		case 4:
-			scale = .75;
-			break;
-		default:
-			scale = ((float) guiScaleFactor - 1) / guiScaleFactor;
-		}
-		return scale;
+		return switch (guiScaleFactor) {
+			case 1 -> 2060 / 2048d;
+			case 2 -> .5;
+			case 3 -> .675;
+			case 4 -> .75;
+			default -> ((float) guiScaleFactor - 1) / guiScaleFactor;
+		};
 	}
 
 	public int getLeftOfCentered(int textureWidth) {
@@ -194,7 +190,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	public void renderPlayerInventory(PoseStack ms, int x, int y) {
 		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, x, y);
-		font.draw(ms, inventory.getDisplayName(), x + 8, y + 6, 0x404040);
+		font.draw(ms, playerInventoryTitle, x + 8, y + 6, 0x404040);
 	}
 
 	/**
@@ -212,7 +208,8 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	@Deprecated
 	protected void renderItemOverlayIntoGUI(PoseStack matrixStack, Font fr, ItemStack stack, int xPosition,
 		int yPosition, @Nullable String text, int textColor) {
-		if (!stack.isEmpty()) {
+		throw new RuntimeException("// PORT: Legacy GL Pipeline");
+/*		if (!stack.isEmpty()) {
 			if (stack.getItem()
 				.showDurabilityBar(stack)) {
 				RenderSystem.disableLighting();
@@ -260,13 +257,13 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 				RenderSystem.enableDepthTest();
 				RenderSystem.enableBlend();
 			}
-		}
+		}*/
 	}
 
 	@Deprecated
 	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
 		int alpha) {
-		renderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+		renderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D)
 			.color(red, green, blue, alpha)
 			.endVertex();

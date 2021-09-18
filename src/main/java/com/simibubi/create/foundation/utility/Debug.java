@@ -9,7 +9,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
 
 /** Deprecated so simi doensn't forget to remove debug calls **/
 @OnlyIn(value = Dist.CLIENT)
@@ -33,7 +33,7 @@ public class Debug {
 		if (Minecraft.getInstance().player != null)
 			Minecraft.getInstance().player.displayClientMessage(new TextComponent(message), true);
 	}
-	
+
 	@Deprecated
 	public static void log(String message) {
 		Create.LOGGER.info(message);

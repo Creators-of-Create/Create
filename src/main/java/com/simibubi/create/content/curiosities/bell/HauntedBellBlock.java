@@ -18,8 +18,8 @@ public class HauntedBellBlock extends AbstractBellBlock<HauntedBellTileEntity> {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.HAUNTED_BELL.create();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return AllTileEntities.HAUNTED_BELL.create(pos, state);
 	}
 
 	@Override

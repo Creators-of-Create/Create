@@ -214,7 +214,7 @@ public class ParrotElement extends AnimatedSceneElement {
 			double d0 = p_200602_2_.x - Vector3d.x;
 			double d1 = p_200602_2_.y - Vector3d.y;
 			double d2 = p_200602_2_.z - Vector3d.z;
-			double d3 = (double) Mth.sqrt(d0 * d0 + d2 * d2);
+			double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
 			float targetPitch =
 				Mth.wrapDegrees((float) -(Mth.atan2(d1, d3) * (double) (180F / (float) Math.PI)));
 			float targetYaw =

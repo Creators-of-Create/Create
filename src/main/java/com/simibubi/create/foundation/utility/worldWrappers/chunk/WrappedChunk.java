@@ -62,7 +62,7 @@ public class WrappedChunk implements ChunkAccess {
                 .filter(it -> {
                     BlockPos blockPos = it.getKey();
                     boolean chunkContains = blockPos.getX() >> 4 == x && blockPos.getZ() >> 4 == z;
-                    return chunkContains && it.getValue().getLightValue(world, blockPos) != 0;
+                    return chunkContains && it.getValue().getLightBlock(world, blockPos) != 0;
                 })
                 .map(Map.Entry::getKey);
     }
@@ -83,10 +83,11 @@ public class WrappedChunk implements ChunkAccess {
         return null;
     }
 
-    @Override
-    public void setBlockEntity(BlockPos p_177426_1_, BlockEntity p_177426_2_) {
+	@Override
+	public void setBlockEntity(BlockEntity p_156114_) {
 
-    }
+	}
+
 
     @Override
     public void addEntity(Entity p_76612_1_) {
@@ -118,14 +119,14 @@ public class WrappedChunk implements ChunkAccess {
         return 0;
     }
 
-    @Override
+	@Override
+	public BlockPos getHeighestPosition(Heightmap.Types p_156117_) {
+		return null;
+	}
+
+	@Override
     public ChunkPos getPos() {
         return pos;
-    }
-
-    @Override
-    public void setLastSaveTime(long p_177432_1_) {
-
     }
 
     @Nullable
@@ -257,4 +258,13 @@ public class WrappedChunk implements ChunkAccess {
 		return null;
 	}
 
+	@Override
+	public int getHeight() {
+		return 0;
+	}
+
+	@Override
+	public int getMinBuildHeight() {
+		return 0;
+	}
 }

@@ -12,13 +12,14 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.util.Mth;
 import net.minecraftforge.fluids.FluidStack;
 
 public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 
-	public SpoutRenderer(BlockEntityRenderDispatcher dispatcher) {
+	public SpoutRenderer(BlockEntityRendererProvider.Context dispatcher) {
 		super(dispatcher);
 	}
 
