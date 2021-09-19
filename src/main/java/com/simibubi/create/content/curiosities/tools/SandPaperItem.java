@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.foundation.item.ISTERItem;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -10,7 +11,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.UseAnim;
@@ -28,11 +28,9 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
 
-import net.minecraft.world.item.Item.Properties;
-
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SandPaperItem extends Item {
+public class SandPaperItem extends ISTERItem {
 
 	public SandPaperItem(Properties properties) {
 		super(properties.durability(8));

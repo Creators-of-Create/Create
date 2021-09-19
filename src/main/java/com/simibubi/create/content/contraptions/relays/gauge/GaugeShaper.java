@@ -9,13 +9,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.Vec3;
 
+import static com.simibubi.create.AllShapes.shape;
+
 public class GaugeShaper extends VoxelShaper {
 
 	private VoxelShaper axisFalse, axisTrue;
 
 	static GaugeShaper make(){
 		GaugeShaper shaper = new GaugeShaper();
-		shaper.axisFalse = forDirectional(AllShapes.GAUGE_SHAPE_UP, Direction.UP);
+		VoxelShape GAUGE_SHAPE_UP = shape(1, 0, 0, 15, 2, 16).add(2, 2, 1, 14, 14, 15).build();
+		shaper.axisFalse = forDirectional(GAUGE_SHAPE_UP, Direction.UP);
 		shaper.axisTrue = forDirectional(rotatedCopy(AllShapes.GAUGE_SHAPE_UP, new Vec3(0, 90, 0)), Direction.UP);
 		//shapes for X axis need to be swapped
 		Arrays.asList(Direction.EAST, Direction.WEST).forEach(direction -> {

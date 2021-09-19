@@ -22,13 +22,11 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 	@Nullable
 	private NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory;
 
-	public static <T extends BlockEntity, P> TileEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
-		String name, BuilderCallback callback, NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+	public static <T extends BlockEntity, P> TileEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, BlockEntityFactory<T> factory) {
 		return new CreateTileEntityBuilder<>(owner, parent, name, callback, factory);
 	}
 
-	protected CreateTileEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback,
-		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+	protected CreateTileEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback, BlockEntityFactory<T> factory) {
 		super(owner, parent, name, callback, (blockPos, blockState, blockEntityType) -> (T) factory);
 	}
 

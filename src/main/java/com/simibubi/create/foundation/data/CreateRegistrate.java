@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
 import com.simibubi.create.foundation.block.render.IBlockVertexColor;
+import com.simibubi.create.foundation.item.ISTERItem;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
@@ -33,6 +34,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.resources.model.BakedModel;
@@ -45,6 +47,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
@@ -207,11 +210,19 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
 		Supplier<NonNullFunction<BakedModel, ? extends CustomRenderedItemModel>> func) {
-		throw new RuntimeException("// PORT: this is really annoying to fix. ISTER");
-//		return b -> b.properties(p -> p.setISTER(() -> () -> func.get()
-//			.apply(null)
-//			.createRenderer()))
-//			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry, func)));
+
+		return b -> b.onRegister(entry -> onClient(() -> () -> {
+			registerCustomRenderedItem(entry, func);
+			ISTERItem item = (ISTERItem) entry;
+			item.setRenderProperties(new IItemRenderProperties() {
+				@Override
+				public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+					return func.get()
+							.apply(null)
+							.createRenderer();
+				}
+			});
+		}));
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {

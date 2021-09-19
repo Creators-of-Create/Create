@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[37,)"
 issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
 license="MIT"
 
@@ -32,6 +32,6 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[1.16-0.2.3,1.16-0.3)"
+    versionRange="[1.17-0.3.0.custom,)"
     ordering="AFTER"
     side="BOTH"
