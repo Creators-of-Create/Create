@@ -1,11 +1,9 @@
 #define PI 3.1415926538
 
-#flwbuiltins
-#flwinclude <"flywheel:core/matutils.glsl">
-#flwinclude <"flywheel:core/quaternion.glsl">
-#flwinclude <"flywheel:core/diffuse.glsl">
+#use "flywheel:core/matutils.glsl"
+#use "flywheel:core/quaternion.glsl"
+#use "flywheel:core/diffuse.glsl"
 
-#[InstanceData]
 struct Flap {
     vec3 instancePos;
     vec2 light;
@@ -17,9 +15,10 @@ struct Flap {
     float flapness;
 };
 
-#flwinclude <"flywheel:data/modelvertex.glsl">
-#flwinclude <"flywheel:data/blockfragment.glsl">
+#use "flywheel:data/modelvertex.glsl"
+#use "flywheel:block.frag"
 
+#if defined(VERTEX_SHADER)
 
 float toRad(float degrees) {
     return fract(degrees / 360.) * PI * 2.;
@@ -38,7 +37,7 @@ float getFlapAngle(float flapness, float intensity, float scale) {
     return degrees;
 }
 
-BlockFrag FLWMain(Vertex v, Flap flap) {
+BlockFrag vertex(Vertex v, Flap flap) {
     float flapAngle = getFlapAngle(flap.flapness, flap.intensity, flap.flapScale);
 
     vec4 orientation = quat(vec3(0., 1., 0.), -flap.horizontalAngle);
@@ -64,3 +63,4 @@ BlockFrag FLWMain(Vertex v, Flap flap) {
     #endif
     return b;
 }
+#endif

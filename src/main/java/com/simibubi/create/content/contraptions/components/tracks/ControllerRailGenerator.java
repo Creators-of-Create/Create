@@ -29,17 +29,12 @@ public class ControllerRailGenerator extends SpecialBlockStateGen {
 		boolean backwards = ControllerRailBlock.isStateBackwards(state);
 		int rotation = backwards ? 180 : 0;
 
-		switch (shape) {
-		case EAST_WEST:
-		case ASCENDING_WEST:
-			return rotation + 270;
-		case ASCENDING_EAST:
-			return rotation + 90;
-		case ASCENDING_SOUTH:
-			return rotation + 180;
-		default:
-			return rotation;
-		}
+		return switch (shape) {
+			case EAST_WEST, ASCENDING_WEST -> rotation + 270;
+			case ASCENDING_EAST -> rotation + 90;
+			case ASCENDING_SOUTH -> rotation + 180;
+			default -> rotation;
+		};
 	}
 
 	@Override

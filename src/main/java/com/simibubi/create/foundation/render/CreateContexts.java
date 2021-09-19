@@ -20,7 +20,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-@OnlyIn(Dist.CLIENT)
 public class CreateContexts {
 	private static final ResourceLocation CONTRAPTION = new ResourceLocation("create", "context/contraption");
 

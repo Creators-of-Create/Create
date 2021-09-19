@@ -9,7 +9,7 @@ import net.minecraftforge.client.IItemRenderProperties;
 /**
  * Allow's us to register ISTER's in a way which makes registrate not die
  */
-public class ISTERItem extends Item {
+public class ISTERItem extends Item implements ISTERCapableItem {
 
 	private IItemRenderProperties itemRenderProperties;
 
@@ -19,6 +19,11 @@ public class ISTERItem extends Item {
 
 	public void setRenderProperties(IItemRenderProperties itemRenderProperties) {
 		this.itemRenderProperties = itemRenderProperties;
+	}
+
+	@Override
+	public IItemRenderProperties getRenderProperties() {
+		return this.itemRenderProperties;
 	}
 
 	@Override

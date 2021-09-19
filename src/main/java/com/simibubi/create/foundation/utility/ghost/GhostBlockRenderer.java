@@ -8,6 +8,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
+import net.minecraft.client.renderer.GameRenderer;
+
 import org.lwjgl.system.MemoryStack;
 
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
@@ -66,6 +70,7 @@ public abstract class GhostBlockRenderer {
 			BlockPos pos = params.pos;
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
+			RenderSystem.setShader(GameRenderer::getRendertypeTranslucentMovingBlockShader);
 			dispatcher.getModelRenderer()
 				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.NO_OVERLAY,
 					VirtualEmptyModelData.INSTANCE);
@@ -100,6 +105,7 @@ public abstract class GhostBlockRenderer {
 			ms.scale(.85f, .85f, .85f);
 			ms.translate(-.5, -.5, -.5);
 
+			RenderSystem.setShader(GameRenderer::getRendertypeTranslucentMovingBlockShader);
 			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 			renderModel(params, ms.last(), vb, params.state, model, 1f, 1f, 1f,
 				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY,

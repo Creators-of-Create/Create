@@ -420,21 +420,20 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	protected void renderScene(PoseStack ms, int mouseX, int mouseY, int i, float partialTicks) {
-		throw new RuntimeException("// PORT: legacy gl");
-/*		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
+		SuperRenderTypeBuffer buffer = SuperRenderTypeBuffer.getInstance();
 		PonderScene story = scenes.get(i);
 		double value = lazyIndex.getValue(minecraft.getFrameTime());
 		double diff = i - value;
 		double slide = Mth.lerp(diff * diff, 200, 600) * diff;
 
-		RenderSystem.enableAlphaTest();
+//		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
 
-		RenderSystem.pushMatrix();
+		ms.pushPose();
 
-		// has to be outside of MS transforms, important for vertex sorting
-		RenderSystem.translated(0, 0, 800);
+		// PORT: this cannot be done anymore -> has to be outside of MS transforms, important for vertex sorting
+		ms.translate(0, 0, 800);
 
 		ms.pushPose();
 		ms.translate(0, 0, -800);
@@ -535,7 +534,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		ms.popPose();
 		ms.popPose();
-		RenderSystem.popMatrix();*/
+		ms.popPose();
 	}
 
 	protected void renderWidgets(PoseStack ms, int mouseX, int mouseY, float partialTicks) {

@@ -66,6 +66,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	public static final Property<RailShape> RAIL_SHAPE =
 		EnumProperty.create("shape", RailShape.class, RailShape.EAST_WEST, RailShape.NORTH_SOUTH);
 	public static final Property<CartAssembleRailType> RAIL_TYPE =
@@ -75,6 +76,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 		super(true, properties);
 		registerDefaultState(defaultBlockState().setValue(POWERED, false)
 			.setValue(BACKWARDS, false)
+			.setValue(WATERLOGGED, false)
 			.setValue(RAIL_TYPE, CartAssembleRailType.POWERED_RAIL));
 	}
 
@@ -101,11 +103,9 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(RAIL_SHAPE, POWERED, RAIL_TYPE, BACKWARDS);
+		builder.add(RAIL_SHAPE, POWERED, WATERLOGGED, RAIL_TYPE, BACKWARDS);
 		super.createBlockStateDefinition(builder);
 	}
-
-
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

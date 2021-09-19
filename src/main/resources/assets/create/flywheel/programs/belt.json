@@ -1,6 +1,5 @@
 {
-  "vert": "create:belt.vert",
-  "frag": "flywheel:block.frag",
+  "source": "create:belt.vert",
   "states": [
     {
       "when": "create:rainbow_debug",
@@ -15,19 +14,13 @@
     },
     {
       "when": {
-        "provider": "flywheel:fog_mode",
         "value": "linear"
-      },
-      "define": ["USE_FOG", "USE_FOG_LINEAR"],
-      "extend": "flywheel:fog_linear"
+      }
     },
     {
       "when": {
-        "provider": "flywheel:fog_mode",
         "value": "exp2"
-      },
-      "define": ["USE_FOG", "USE_FOG_EXP2"],
-      "extend": "flywheel:fog_exp2"
+      }
     }
   ]
 }

@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.weapons;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import com.simibubi.create.AllEnchantments;
@@ -11,6 +12,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetItemMethods;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ISTERCapableItem;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -45,14 +47,37 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import net.minecraft.world.item.Item.Properties;
+import net.minecraftforge.client.IItemRenderProperties;
 
-public class PotatoCannonItem extends ProjectileWeaponItem {
+public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapableItem {
 
+	private IItemRenderProperties itemRenderProperties;
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
 	public PotatoCannonItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
+	}
+
+	@Override
+	public void setRenderProperties(IItemRenderProperties itemRenderProperties) {
+		this.itemRenderProperties = itemRenderProperties;
+	}
+
+	@Override
+	public IItemRenderProperties getRenderProperties() {
+		return this.itemRenderProperties;
+	}
+
+	@Override
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		if (Minecraft.getInstance() == null) return;
+		if (itemRenderProperties == null) {
+			super.initializeClient(consumer);
+			return;
+		}
+
+		consumer.accept(itemRenderProperties);
 	}
 
 	@Override
@@ -294,5 +319,4 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 	public int getDefaultProjectileRange() {
 		return 15;
 	}
-
 }

@@ -53,7 +53,7 @@ public class ReinforcedRailBlock extends BaseRailBlock {
 
     @Override
     protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-        builder.add(RAIL_SHAPE, CONNECTS_N, CONNECTS_S);
+        builder.add(RAIL_SHAPE, WATERLOGGED, CONNECTS_N, CONNECTS_S);
         super.createBlockStateDefinition(builder);
     }
 
@@ -94,7 +94,7 @@ public class ReinforcedRailBlock extends BaseRailBlock {
     public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos,
                                         CollisionContext context) {    //FIXME
 		if(context instanceof EntityCollisionContext ecc) {
-			if (ecc.getEntity().orElseThrow() instanceof AbstractMinecart)
+			if (ecc.getEntity().orElse(null) instanceof AbstractMinecart)
 				return Shapes.empty();
 		}
 		return getShape(state, worldIn, pos, null);

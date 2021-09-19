@@ -8,11 +8,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import com.simibubi.create.Create;
+import com.simibubi.create.foundation.utility.BoundingBoxHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedChunkProvider;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
@@ -85,27 +88,28 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public BlockEntity getBlockEntity(BlockPos pos) {
-		throw new RuntimeException("// PORT: this is very annoying. uncool minecraft. why");
-//		if (isOutsideBuildHeight(pos))
-//			return null;
-//		if (tileEntities.containsKey(pos))
-//			return tileEntities.get(pos);
-//		if (!blocks.containsKey(pos.subtract(anchor)))
-//			return null;
-//
-//		BlockState blockState = getBlockState(pos);
-//		try {
-//			BlockEntity tileEntity = blockState.createTileEntity(this);
-//			if (tileEntity != null) {
-//				onTEadded(tileEntity, pos);
-//				tileEntities.put(pos, tileEntity);
-//				renderedTileEntities.add(tileEntity);
-//			}
-//			return tileEntity;
-//		} catch (Exception e) {
-//			Create.LOGGER.debug("Could not create TE of block " + blockState + ": " + e);
-//		}
-//		return null;
+		if (isOutsideBuildHeight(pos))
+			return null;
+		if (tileEntities.containsKey(pos))
+			return tileEntities.get(pos);
+		if (!blocks.containsKey(pos.subtract(anchor)))
+			return null;
+
+		BlockState blockState = getBlockState(pos);
+		try {
+			if(blockState.getBlock() instanceof EntityBlock blockWithBlockEntity) {
+				BlockEntity tileEntity = blockWithBlockEntity.newBlockEntity(pos, blockState);
+
+				onTEadded(tileEntity, pos);
+				tileEntities.put(pos, tileEntity);
+				renderedTileEntities.add(tileEntity);
+				return tileEntity;
+			}
+			return null;
+		} catch (Exception e) {
+			Create.LOGGER.debug("Could not create TE of block " + blockState + ": " + e);
+		}
+		return null;
 	}
 
 	protected void onTEadded(BlockEntity tileEntity, BlockPos pos) {
@@ -115,15 +119,13 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public BlockState getBlockState(BlockPos globalPos) {
-		throw new RuntimeException("// PORT: no.");
-//
-//		BlockPos pos = globalPos.subtract(anchor);
-//
-//		if (pos.getY() - bounds.minY == -1 && !renderMode)
-//			return Blocks.GRASS_BLOCK.defaultBlockState();
-//		if (getBounds().isInside(pos) && blocks.containsKey(pos))
-//			return processBlockStateForPrinting(blocks.get(pos));
-//		return Blocks.AIR.defaultBlockState();
+		BlockPos pos = globalPos.subtract(anchor);
+
+		if (pos.getY() - bounds.minY == -1 && !renderMode)
+			return Blocks.GRASS_BLOCK.defaultBlockState();
+		if (getBounds().isInside(pos) && blocks.containsKey(pos))
+			return processBlockStateForPrinting(blocks.get(pos));
+		return Blocks.AIR.defaultBlockState();
 	}
 
 	public Map<BlockPos, BlockState> getBlockMap() {
@@ -182,25 +184,23 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 
 	@Override
 	public boolean setBlock(BlockPos pos, BlockState arg1, int arg2) {
-		throw new RuntimeException("// PORT: no.");
-//		pos = pos.immutable()
-//			.subtract(anchor);
-//		bounds.expand(new BoundingBox(pos, pos));
-//		blocks.put(pos, arg1);
-//		if (tileEntities.containsKey(pos)) {
-//			BlockEntity tileEntity = tileEntities.get(pos);
-//			if (!tileEntity.getType()
-//				.isValid(arg1.getBlock())) {
-//				tileEntities.remove(pos);
-//				renderedTileEntities.remove(tileEntity);
-//			}
-//		}
-//
-//		BlockEntity tileEntity = getBlockEntity(pos);
-//		if (tileEntity != null)
-//			tileEntities.put(pos, tileEntity);
-//
-//		return true;
+		pos = pos.immutable()
+			.subtract(anchor);
+		BoundingBoxHelper.expand(bounds, new BoundingBox(pos));
+		blocks.put(pos, arg1);
+		if (tileEntities.containsKey(pos)) {
+			BlockEntity tileEntity = tileEntities.get(pos);
+			if (!tileEntity.getType().isValid(arg1.getBlock().defaultBlockState())) {
+				tileEntities.remove(pos);
+				renderedTileEntities.remove(tileEntity);
+			}
+		}
+
+		BlockEntity tileEntity = getBlockEntity(pos);
+		if (tileEntity != null)
+			tileEntities.put(pos, tileEntity);
+
+		return true;
 	}
 
 	@Override

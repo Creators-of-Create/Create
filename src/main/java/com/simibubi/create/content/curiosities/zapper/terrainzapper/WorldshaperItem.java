@@ -2,13 +2,16 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.ISTERCapableItem;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +25,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import net.minecraft.world.item.Item.Properties;
+import net.minecraftforge.client.IItemRenderProperties;
 
-public class WorldshaperItem extends ZapperItem {
+public class WorldshaperItem extends ZapperItem implements ISTERCapableItem {
+
+	private IItemRenderProperties itemRenderProperties;
 
 	public WorldshaperItem(Properties properties) {
 		super(properties);
@@ -84,4 +90,24 @@ public class WorldshaperItem extends ZapperItem {
 		return true;
 	}
 
+	@Override
+	public void setRenderProperties(IItemRenderProperties itemRenderProperties) {
+		this.itemRenderProperties = itemRenderProperties;
+	}
+
+	@Override
+	public IItemRenderProperties getRenderProperties() {
+		return itemRenderProperties;
+	}
+
+	@Override
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		if (Minecraft.getInstance() == null) return;
+		if (itemRenderProperties == null) {
+			super.initializeClient(consumer);
+			return;
+		}
+
+		consumer.accept(itemRenderProperties);
+	}
 }

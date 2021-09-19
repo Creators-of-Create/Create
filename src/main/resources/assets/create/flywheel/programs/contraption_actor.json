@@ -1,6 +1,5 @@
 {
-  "vert": "create:contraption_actor.vert",
-  "frag": "flywheel:block.frag",
+  "source": "create:contraption_actor.vert",
   "states": [
     {
       "when": {
@@ -11,19 +10,13 @@
     },
     {
       "when": {
-        "provider": "flywheel:fog_mode",
         "value": "linear"
-      },
-      "define": ["USE_FOG", "USE_FOG_LINEAR"],
-      "extend": "flywheel:fog_linear"
+      }
     },
     {
       "when": {
-        "provider": "flywheel:fog_mode",
         "value": "exp2"
-      },
-      "define": ["USE_FOG", "USE_FOG_EXP2"],
-      "extend": "flywheel:fog_exp2"
+      }
     }
   ]
 }

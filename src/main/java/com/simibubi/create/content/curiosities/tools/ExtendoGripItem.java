@@ -8,6 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.item.ISTERItem;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -52,7 +53,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraft.world.item.Item.Properties;
 
 @EventBusSubscriber
-public class ExtendoGripItem extends Item {
+public class ExtendoGripItem extends ISTERItem {
 	private static DamageSource lastActiveDamageSource;
 
 	public static final int MAX_DAMAGE = 200;
@@ -246,7 +247,7 @@ public class ExtendoGripItem extends Item {
 	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
 		// Workaround for removed patch to get the attacking entity.
 		lastActiveDamageSource = event.getSource();
-		
+
 		DamageSource source = event.getSource();
 		if (source == null)
 			return;

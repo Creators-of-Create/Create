@@ -60,45 +60,42 @@ public class PonderWorldParticles {
 	}
 
 	public void renderParticles(PoseStack ms, MultiBufferSource buffer, Camera renderInfo, float pt) {
-		throw new RuntimeException("// PORT: legacy gl");
-//		Minecraft mc = Minecraft.getInstance();
-//		LightTexture lightTexture = mc.gameRenderer.lightTexture();
-//
-//		lightTexture.turnOnLightLayer();
-//		Runnable enable = () -> {
+		Minecraft mc = Minecraft.getInstance();
+		LightTexture lightTexture = mc.gameRenderer.lightTexture();
+
+		lightTexture.turnOnLightLayer();
+		Runnable enable = () -> {
 //			RenderSystem.enableAlphaTest();
 //			RenderSystem.defaultAlphaFunc();
-//			RenderSystem.enableDepthTest();
+			RenderSystem.enableDepthTest();
 //			RenderSystem.enableFog();
-//		};
-//		RenderSystem.pushMatrix();
-//		RenderSystem.multMatrix(ms.last()
-//			.pose());
-//
-//		for (ParticleRenderType iparticlerendertype : this.byType.keySet()) {
-//			if (iparticlerendertype == ParticleRenderType.NO_RENDER)
-//				continue;
-//			enable.run();
-//			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
-//			if (iterable != null) {
-//				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//				Tesselator tessellator = Tesselator.getInstance();
-//				BufferBuilder bufferbuilder = tessellator.getBuilder();
-//				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
-//
-//				for (Particle particle : iterable)
-//					particle.render(bufferbuilder, renderInfo, pt);
-//
-//				iparticlerendertype.end(tessellator);
-//			}
-//		}
-//
-//		RenderSystem.popMatrix();
-//		RenderSystem.depthMask(true);
-//		RenderSystem.depthFunc(515);
-//		RenderSystem.disableBlend();
+		};
+		ms.pushPose();
+
+		for (ParticleRenderType iparticlerendertype : this.byType.keySet()) {
+			if (iparticlerendertype == ParticleRenderType.NO_RENDER)
+				continue;
+			enable.run();
+			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
+			if (iterable != null) {
+				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+				Tesselator tessellator = Tesselator.getInstance();
+				BufferBuilder bufferbuilder = tessellator.getBuilder();
+				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
+
+				for (Particle particle : iterable)
+					particle.render(bufferbuilder, renderInfo, pt);
+
+				iparticlerendertype.end(tessellator);
+			}
+		}
+
+		ms.popPose();
+		RenderSystem.depthMask(true);
+		RenderSystem.depthFunc(515);
+		RenderSystem.disableBlend();
 //		RenderSystem.defaultAlphaFunc();
-//		lightTexture.turnOffLightLayer();
+		lightTexture.turnOffLightLayer();
 //		RenderSystem.disableFog();
 	}
 

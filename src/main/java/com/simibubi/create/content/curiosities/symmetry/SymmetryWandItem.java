@@ -15,6 +15,7 @@ import com.simibubi.create.content.curiosities.symmetry.mirror.PlaneMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.ISTERItem;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -51,7 +52,7 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import net.minecraft.world.item.Item.Properties;
 
-public class SymmetryWandItem extends Item {
+public class SymmetryWandItem extends ISTERItem {
 
 	public static final String SYMMETRY = "symmetry";
 	private static final String ENABLE = "enable";

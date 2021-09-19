@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
 import com.simibubi.create.foundation.block.render.IBlockVertexColor;
+import com.simibubi.create.foundation.item.ISTERCapableItem;
 import com.simibubi.create.foundation.item.ISTERItem;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
 import com.tterrag.registrate.AbstractRegistrate;
@@ -213,7 +214,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 		return b -> b.onRegister(entry -> onClient(() -> () -> {
 			registerCustomRenderedItem(entry, func);
-			ISTERItem item = (ISTERItem) entry;
+			ISTERCapableItem item = (ISTERCapableItem) entry;
 			item.setRenderProperties(new IItemRenderProperties() {
 				@Override
 				public BlockEntityWithoutLevelRenderer getItemStackRenderer() {

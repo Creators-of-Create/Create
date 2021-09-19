@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.mainMenu.CreateMainMenuScreen;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -102,13 +104,13 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				throw new RuntimeException("// PORT: screen fuckery");
-//				event.getWidgetList().stream()
-//					.filter(w -> w.getMessage().getString().equals(target))
-//					.findFirst()
-//					.ifPresent(w -> event.addWidget(
-//							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
-//					));
+				event.getWidgetList().stream()
+					.map(guiEventListener -> ((AbstractWidget) guiEventListener))
+					.filter(w -> w.getMessage().getString().equals(target))
+					.findFirst()
+					.ifPresent(w -> event.addWidget(
+							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
+					));
 			}
 		}
 

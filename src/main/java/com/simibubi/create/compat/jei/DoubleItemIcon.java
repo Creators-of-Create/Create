@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
 import com.mojang.blaze3d.platform.Lighting;
+
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.item.ItemStack;
 
 public class DoubleItemIcon implements IDrawable {
@@ -39,9 +41,8 @@ public class DoubleItemIcon implements IDrawable {
 			secondaryStack = secondarySupplier.get();
 		}
 
-		throw new RuntimeException("// PORT: legacy gl");
-		/*Lighting.turnBackOn();
-		RenderSystem.color4f(1, 1, 1, 1);
+//		Lighting.turnBackOn();
+		RenderSystem.setShaderColor(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
@@ -60,6 +61,6 @@ public class DoubleItemIcon implements IDrawable {
 		matrixStack.popPose();
 
 		matrixStack.popPose();
-		RenderSystem.enableBlend();*/
+		RenderSystem.enableBlend();
 	}
 }

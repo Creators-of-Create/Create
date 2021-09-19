@@ -78,16 +78,15 @@ public class Label extends AbstractSimiWidget {
 		if (text == null || text.getString().isEmpty())
 			return;
 
-		throw new RuntimeException("// PORT: Legacy GL Pipeline");
-//		RenderSystem.color4f(1, 1, 1, 1);
-//		MutableComponent copy = text.plainCopy();
-//		if (suffix != null && !suffix.isEmpty())
-//			copy.append(suffix);
-//
-//		if (hasShadow)
-//			font.drawShadow(matrixStack, copy, x, y, color);
-//		else
-//			font.draw(matrixStack, copy, x, y, color);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+		MutableComponent copy = text.plainCopy();
+		if (suffix != null && !suffix.isEmpty())
+			copy.append(suffix);
+
+		if (hasShadow)
+			font.drawShadow(matrixStack, copy, x, y, color);
+		else
+			font.draw(matrixStack, copy, x, y, color);
 	}
 
 	@Override

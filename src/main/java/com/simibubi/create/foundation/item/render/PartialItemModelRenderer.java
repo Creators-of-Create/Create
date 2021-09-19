@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.simibubi.create.foundation.item.ISTERCapableItem;
 import com.simibubi.create.foundation.renderState.RenderTypes;
 import com.simibubi.create.foundation.utility.Iterate;
 
@@ -72,10 +73,10 @@ public class PartialItemModelRenderer {
 			renderBakedItemModel(model, light, ms,
 				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
 		else
-			throw new RuntimeException("// PORT: ISTER are broken. help");
-//			stack.getItem()
-//				.getItemStackTileEntityRenderer()
-//				.renderByItem(stack, transformType, ms, buffer, light, overlay);
+			((ISTERCapableItem) stack.getItem())
+				.getRenderProperties()
+				.getItemStackRenderer()
+				.renderByItem(stack, transformType, ms, buffer, light, overlay);
 
 		ms.popPose();
 	}

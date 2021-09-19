@@ -96,8 +96,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 	@Override
 	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		throw new RuntimeException("// PORT: legacy gl");
-		/*matrixStack.pushPose();
+		matrixStack.pushPose();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
 
@@ -122,7 +121,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 300);
 
-		Lighting.turnOff();
+//		Lighting.turnOff();
 		int amount = 0;
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			if (Ingredient.EMPTY == ingredient)
@@ -131,7 +130,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		}
 
 		Minecraft.getInstance().font.drawShadow(matrixStack, amount + "", 142, 39, 0xFFFFFF);
-		matrixStack.popPose();*/
+		matrixStack.popPose();
 	}
 
 	@Override

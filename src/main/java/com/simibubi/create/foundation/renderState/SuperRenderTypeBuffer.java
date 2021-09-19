@@ -2,9 +2,11 @@ package com.simibubi.create.foundation.renderState;
 
 import java.util.SortedMap;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.Sheets;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,8 +49,14 @@ public class SuperRenderTypeBuffer implements MultiBufferSource {
 	}
 
 	public void draw() {
+		RenderSystem.setShader(GameRenderer::getRendertypeTranslucentMovingBlockShader);
+		RenderSystem.getShader();
 		earlyBuffer.endBatch();
+		RenderSystem.getShader();
+		RenderSystem.setShader(GameRenderer::getRendertypeTranslucentMovingBlockShader);
+		RenderSystem.getShader();
 		defaultBuffer.endBatch();
+		RenderSystem.setShader(GameRenderer::getRendertypeTranslucentMovingBlockShader);
 		lateBuffer.endBatch();
 	}
 

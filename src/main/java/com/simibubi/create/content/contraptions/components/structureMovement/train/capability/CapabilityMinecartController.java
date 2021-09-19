@@ -234,22 +234,24 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 	}
 
 	public static void register() {
-		throw new RuntimeException("// PORT: missing capabilities");
-		/*CapabilityManager.INSTANCE.register(MinecartController.class, new Capability.IStorage<MinecartController>() {
+		//TODO: RegisterCapabilitiesEvent
+		// PORT: what https://discord.com/channels/313125603924639766/867851603468615740/889015152291217419
+
+/*		new IStorage<MinecartController>() {
 
 			@Override
 			public Tag writeNBT(Capability<MinecartController> capability, MinecartController instance,
-				Direction side) {
+								Direction side) {
 				return instance.serializeNBT();
 			}
 
 			@Override
 			public void readNBT(Capability<MinecartController> capability, MinecartController instance, Direction side,
-				Tag base) {
+								Tag base) {
 				instance.deserializeNBT((CompoundTag) base);
 			}
 
-		}, MinecartController::empty);*/
+		}*/
 	}
 
 	/* Capability provider */

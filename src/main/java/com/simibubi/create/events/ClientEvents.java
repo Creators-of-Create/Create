@@ -56,6 +56,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -195,6 +196,8 @@ public class ClientEvents {
 
 		CreateClient.OUTLINER.renderOutlines(ms, buffer, pt);
 		// LightVolumeDebugger.render(ms, buffer);
+
+		RenderSystem.setShader(GameRenderer::getRendertypeTranslucentMovingBlockShader);
 		buffer.draw();
 		RenderSystem.enableCull();
 
@@ -211,13 +214,12 @@ public class ClientEvents {
 		int overlay = OverlayTexture.NO_OVERLAY;
 		float pt = event.getPartialTicks();
 
-		throw new RuntimeException("// PORT: event types changed.");
-//		if (event.getType() == ElementType.AIR)
-//			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
-//		if (event.getType() != ElementType.HOTBAR)
-//			return;
+		if (event.getType() == ElementType.LAYER) // PORT: may break.
+			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
+		if (event.getType() != ElementType.LAYER)
+			return;
 
-//		onRenderHotbar(ms, buffers, light, overlay, pt);
+		onRenderHotbar(ms, buffers, light, overlay, pt);
 	}
 
 	public static void onRenderHotbar(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
@@ -285,11 +287,12 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
 		Camera info = event.getInfo();
-		FogType fluidState = info.getFluidInCamera();
-		if (fluidState == FogType.NONE)
+		FogType fogType = info.getFluidInCamera();
+
+		FluidState fluidState = info.getEntity().level.getFluidState(info.getBlockPosition());
+		if (fogType == FogType.NONE)
 			return;
-		throw new RuntimeException("// PORT: Enums.");
-/*		Fluid fluid = fluidState.getType();
+		Fluid fluid = fluidState.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setDensity(5f);
@@ -308,17 +311,18 @@ public class ClientEvents {
 			event.setDensity(0.010f);
 			event.setCanceled(true);
 			return;
-		}*/
+		}
 	}
 
 	@SubscribeEvent
 	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
 		Camera info = event.getInfo();
-		FogType fluidState = info.getFluidInCamera();
-		if (fluidState == FogType.NONE)
+		FogType fogType = info.getFluidInCamera();
+
+		FluidState fluidState = info.getEntity().level.getFluidState(info.getBlockPosition());
+		if (fogType == FogType.NONE)
 			return;
-		throw new RuntimeException("// PORT: Enums.");
-/*		Fluid fluid = fluidState.getType();
+		Fluid fluid = fluidState.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setRed(98 / 256f);
@@ -330,7 +334,7 @@ public class ClientEvents {
 			event.setRed(234 / 256f);
 			event.setGreen(174 / 256f);
 			event.setBlue(47 / 256f);
-		}*/
+		}
 	}
 
 	@SubscribeEvent

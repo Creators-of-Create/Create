@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
+import com.simibubi.create.foundation.item.ISTERItem;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,7 +32,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class LinkedControllerItem extends Item implements MenuProvider {
+public class LinkedControllerItem extends ISTERItem implements MenuProvider {
 
 	public LinkedControllerItem(Properties properties) {
 		super(properties);

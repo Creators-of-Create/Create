@@ -39,6 +39,8 @@ import net.minecraft.world.phys.Vec3;
 import com.mojang.math.Vector3f;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.lwjgl.opengl.GL11;
+
 public class GuiGameElement {
 
 	public static GuiRenderBuilder of(ItemStack stack) {
@@ -111,16 +113,14 @@ public class GuiGameElement {
 		}
 
 		protected void prepareMatrix(PoseStack matrixStack) {
-			throw new RuntimeException("// PORT: Legacy GL Pipeline");
-			/*matrixStack.pushPose();
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.alphaFunc(516, 0.1F);
-			RenderSystem.enableAlphaTest();
+			matrixStack.pushPose();
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+//			RenderSystem.alphaFunc(516, 0.1F);
+//			RenderSystem.enableAlphaTest();
 			RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.enableBlend();
 			RenderSystem.enableDepthTest();
-			RenderSystem.enableRescaleNormal();
-			prepareLighting(matrixStack);*/
+			prepareLighting(matrixStack);
 		}
 
 		protected void transformMatrix(PoseStack matrixStack) {
@@ -136,10 +136,10 @@ public class GuiGameElement {
 		}
 
 		protected void cleanUpMatrix(PoseStack matrixStack) {
-/*			matrixStack.popPose();
-			RenderSystem.disableRescaleNormal();
-			RenderSystem.disableAlphaTest();
-			cleanUpLighting(matrixStack);*/
+			matrixStack.popPose();
+//			RenderSystem.disableRescaleNormal();
+//			RenderSystem.disableAlphaTest();
+			cleanUpLighting(matrixStack);
 		}
 
 		protected void prepareLighting(PoseStack matrixStack) {
@@ -181,8 +181,10 @@ public class GuiGameElement {
 
 			transformMatrix(matrixStack);
 
+			RenderSystem.enableDepthTest();
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 			renderModel(blockRenderer, buffer, renderType, vb, matrixStack);
+			RenderSystem.disableDepthTest();
 
 			cleanUpMatrix(matrixStack);
 		}
@@ -267,40 +269,39 @@ public class GuiGameElement {
 
 			matrixStack.pushPose();
 			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-			throw new RuntimeException("// PORT: Legacy GL Pipeline");
-//
-//			renderer.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+
+			renderer.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
 //			RenderSystem.enableRescaleNormal();
 //			RenderSystem.enableAlphaTest();
-//			RenderSystem.enableCull();
+			RenderSystem.enableCull();
 //			RenderSystem.defaultAlphaFunc();
-//			RenderSystem.enableBlend();
-//			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 //			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//			matrixStack.translate(0, 0, 100.0F + renderer.blitOffset);
-//			matrixStack.translate(8.0F, -8.0F, 0.0F);
-//			matrixStack.scale(16.0F, 16.0F, 16.0F);
-//			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-//			boolean flatLighting = !bakedModel.usesBlockLight();
-//			if (useDefaultLighting) {
-//				if (flatLighting) {
-//					Lighting.setupForFlatItems();
-//				}
-//			}
-//
-//			renderer.render(stack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
-//			buffer.endBatch();
-//			RenderSystem.enableDepthTest();
-//			if (useDefaultLighting) {
-//				if (flatLighting) {
-//					Lighting.setupFor3DItems();
-//				}
-//			}
-//
+			matrixStack.translate(0, 0, 100.0F + renderer.blitOffset);
+			matrixStack.translate(8.0F, -8.0F, 0.0F);
+			matrixStack.scale(16.0F, 16.0F, 16.0F);
+			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+			boolean flatLighting = !bakedModel.usesBlockLight();
+			if (useDefaultLighting) {
+				if (flatLighting) {
+					Lighting.setupForFlatItems();
+				}
+			}
+
+			renderer.render(stack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
+			buffer.endBatch();
+			RenderSystem.enableDepthTest();
+			if (useDefaultLighting) {
+				if (flatLighting) {
+					Lighting.setupFor3DItems();
+				}
+			}
+
 //			RenderSystem.disableAlphaTest();
 //			RenderSystem.disableRescaleNormal();
-//			RenderSystem.enableCull();
-//			matrixStack.popPose();
+			RenderSystem.enableCull();
+			matrixStack.popPose();
 		}
 
 	}

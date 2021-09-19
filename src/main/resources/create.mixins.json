@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
+    "ShapesMixin"
   ],
   "client": [
     "BreakProgressMixin",
@@ -12,6 +13,7 @@
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
     "ModelDataRefreshMixin",
+    "RenderSystemMixin",
     "WindowResizeMixin"
   ],
   "injectors": {

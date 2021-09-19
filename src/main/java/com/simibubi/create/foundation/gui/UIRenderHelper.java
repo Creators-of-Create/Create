@@ -120,11 +120,10 @@ public class UIRenderHelper {
 		double split1 = .5;
 		double split2 = .75;
 		Matrix4f model = ms.last().pose();
-		throw new RuntimeException("// PORT: Legacy GL Pipeline");
 //		RenderSystem.disableAlphaTest();
-//		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
-//		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
-//		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
+		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
+		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
+		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
 //		RenderSystem.enableAlphaTest();
 	}
 
@@ -182,18 +181,15 @@ public class UIRenderHelper {
 	}
 
 	private static void breadcrumbArrow(PoseStack ms, int width, int height, int indent, Color c1, Color c2) {
-		throw new RuntimeException("// PORT: Legacy GL Pipeline");
-/*
-		*//*
-		 * 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
+/*		 * 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
 		 *       ****                                     ****
 		 *   ****                                     ****
 		 * x0,y0     x2,y2                       x5,y5
 		 *   ****                                     ****
 		 *       ****                                     ****
 		 *           x3,y3 ********************* x6,y6 ***** x8,y8
-		 *
-		 *//*
+		 **/
+
 
 		float x0 = 0, y0 = height / 2f;
 		float x1 = indent, y1 = 0;
@@ -215,9 +211,9 @@ public class UIRenderHelper {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.disableCull();
-		RenderSystem.disableAlphaTest();
+//		RenderSystem.disableAlphaTest();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+//		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
@@ -249,11 +245,11 @@ public class UIRenderHelper {
 		bufferbuilder.vertex(model, x8, y8, 0).color(fc4.getRed(), fc4.getGreen(), fc4.getBlue(), fc4.getAlpha()).endVertex();
 
 		tessellator.end();
-		RenderSystem.shadeModel(GL11.GL_FLAT);
+//		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		RenderSystem.enableCull();
-		RenderSystem.enableAlphaTest();
-		RenderSystem.enableTexture();*/
+//		RenderSystem.enableAlphaTest();
+		RenderSystem.enableTexture();
 	}
 
 	//just like AbstractGui#drawTexture, but with a color at every vertex

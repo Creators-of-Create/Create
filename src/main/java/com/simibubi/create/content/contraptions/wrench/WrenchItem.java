@@ -7,6 +7,8 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 
+import com.simibubi.create.foundation.item.ISTERItem;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +26,7 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 import net.minecraft.world.item.Item.Properties;
 
-public class WrenchItem extends Item {
+public class WrenchItem extends ISTERItem {
 
 	public WrenchItem(Properties properties) {
 		super(properties);
