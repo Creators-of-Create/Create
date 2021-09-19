@@ -11,7 +11,7 @@ import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
-import com.simibubi.create.content.curiosities.weapons.PotatoCannonProjectileTypes;
+import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.content.palettes.PalettesItemGroup;
@@ -121,7 +121,7 @@ public class Create {
 		CapabilityMinecartController.register();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
-		PotatoCannonProjectileTypes.register();
+		BuiltinPotatoProjectileTypes.register();
 
 		CHUNK_UTIL.init();
 
