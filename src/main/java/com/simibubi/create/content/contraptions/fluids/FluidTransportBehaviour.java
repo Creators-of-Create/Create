@@ -29,14 +29,14 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<FluidTransportBehaviour> TYPE = new BehaviourType<>();
 
-	enum UpdatePhase {
+	public enum UpdatePhase {
 		WAIT_FOR_PUMPS, // Do not run Layer II logic while pumps could still be distributing pressure
 		FLIP_FLOWS, // Do not cut any flows until all pipes had a chance to reverse them
 		IDLE; // Operate normally
 	}
 
-	Map<Direction, PipeConnection> interfaces;
-	UpdatePhase phase;
+	public Map<Direction, PipeConnection> interfaces;
+	public UpdatePhase phase;
 
 	public FluidTransportBehaviour(SmartTileEntity te) {
 		super(te);
