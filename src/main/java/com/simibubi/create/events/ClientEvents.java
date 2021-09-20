@@ -214,9 +214,9 @@ public class ClientEvents {
 		int overlay = OverlayTexture.NO_OVERLAY;
 		float pt = event.getPartialTicks();
 
-		if (event.getType() == ElementType.LAYER) // PORT: may break.
+		if (event.getType() == ElementType.CHAT) // PORT: may break.
 			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
-		if (event.getType() != ElementType.LAYER)
+		if (event.getType() != ElementType.CHAT)
 			return;
 
 		onRenderHotbar(ms, buffers, light, overlay, pt);

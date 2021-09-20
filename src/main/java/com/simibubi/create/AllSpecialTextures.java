@@ -25,9 +25,6 @@ public enum AllSpecialTextures {
 
 	public void bind() {
 		RenderSystem.setShaderTexture(0, location);
-//		Minecraft.getInstance()
-//			.getTextureManager()
-//				.bindForSetup(location); // PORT: i dont know which one fits best here.
 	}
 
 	public ResourceLocation getLocation() {

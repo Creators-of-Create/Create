@@ -148,28 +148,26 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 
 		@Override
 		public void render(PoseStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
-			throw new RuntimeException("// PORT: legacy gl");
-			/*matrixStack.pushPose();
+			matrixStack.pushPose();
 			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
 			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
-				RenderSystem.pushMatrix();
-				RenderSystem.multMatrix(matrixStack.last().pose());
+				matrixStack.pushPose();
 				RenderSystem.enableDepthTest();
-				Lighting.turnBackOn();
+//				Lighting.turnBackOn();
 				Minecraft minecraft = Minecraft.getInstance();
 				Font font = getFontRenderer(minecraft, ingredient);
 				ItemRenderer itemRenderer = minecraft.getItemRenderer();
-				itemRenderer.renderAndDecorateItem(null, ingredient, 0, 0);
+				itemRenderer.renderAndDecorateItem(ingredient, 0, 0);
 				itemRenderer.renderGuiItemDecorations(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
-				Lighting.turnOff();
-				RenderSystem.popMatrix();
+//				Lighting.turnOff();
+				matrixStack.popPose();
 			}
 
-			matrixStack.popPose();*/
+			matrixStack.popPose();
 		}
 
 		@Override

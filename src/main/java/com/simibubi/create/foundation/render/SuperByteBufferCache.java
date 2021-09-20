@@ -127,7 +127,6 @@ public class SuperByteBufferCache {
 
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		BlockPos pos = BlockPos.ZERO.above(255);
-		// PORT: rendering may break because of the line below
 		blockRenderer.renderModel(ms.last(), builder, referenceState, model, pos.getX(), pos.getY(), pos.getZ(), 42, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
 		builder.end();
 		return builder;

@@ -233,8 +233,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn,
-		BlockHitResult hit) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
 			return InteractionResult.PASS;
 		ItemStack heldItem = player.getItemInHand(handIn);
@@ -380,7 +379,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			}
 			return shape;
 		})
-			.orElse(shape);
+		.orElse(shape);
 	}
 
 	@Override

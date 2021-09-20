@@ -66,7 +66,6 @@ public class MountedStorage {
 				te.getLevel()
 					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
 						.setValue(ChestBlock.TYPE, ChestType.SINGLE));
-//			te.clearCache(); // PORT: doesn't exist?
 		}
 
 		// Split double flexcrates
@@ -76,7 +75,6 @@ public class MountedStorage {
 				te.getLevel()
 					.setBlockAndUpdate(te.getBlockPos(), te.getBlockState()
 						.setValue(AdjustableCrateBlock.DOUBLE, false));
-//			te.clearCache(); // PORT: doesn't exist?
 		}
 
 		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)

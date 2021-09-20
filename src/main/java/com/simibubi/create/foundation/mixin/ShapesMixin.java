@@ -38,33 +38,41 @@ public abstract class ShapesMixin {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	@Inject(method = "box", at = @At("HEAD"), cancellable = true)
-	private static void allowSpecialShapes(double pMinX, double pMinY, double pMinZ, double pMaxX, double pMaxY, double pMaxZ, CallbackInfoReturnable<VoxelShape> cir) {
+	private static void specialShapes(double pMinX, double pMinY, double pMinZ, double pMaxX, double pMaxY, double pMaxZ, CallbackInfoReturnable<VoxelShape> cir) {
 		cir.setReturnValue(Shapes.create(pMinX, pMinY, pMinZ, pMaxX, pMaxY, pMaxZ));
 	}
 
 	@Inject(method = "create(DDDDDD)Lnet/minecraft/world/phys/shapes/VoxelShape;", at = @At("HEAD"), cancellable = true)
 	private static void allowLargerBoxes(double pMinX, double pMinY, double pMinZ, double pMaxX, double pMaxY, double pMaxZ, CallbackInfoReturnable<VoxelShape> cir) {
+		cir.setReturnValue(inner_allowLargerBoxes(Math.min(pMinX, pMaxX), Math.min(pMinY, pMaxY), Math.min(pMinZ, pMaxZ), Math.max(pMaxX, pMinX), Math.max(pMaxY, pMinY), Math.max(pMaxZ, pMinZ)));
+	}
+
+	private static VoxelShape inner_allowLargerBoxes(double pMinX, double pMinY, double pMinZ, double pMaxX, double pMaxY, double pMaxZ) {
+		if ((pMaxX - pMinX < 1.0E-7D) && (pMaxY - pMinY < 1.0E-7D) && (pMaxZ - pMinZ < 1.0E-7D)) {
+			return new ArrayVoxelShape(BLOCK.shape, DoubleArrayList.wrap(new double[]{pMinX, pMaxX}), DoubleArrayList.wrap(new double[]{pMinY, pMaxY}), DoubleArrayList.wrap(new double[]{pMinZ, pMaxZ}));
+		}
+
 		int i = findBits(pMinX, pMaxX);
 		int j = findBits(pMinY, pMaxY);
 		int k = findBits(pMinZ, pMaxZ);
 		if (i >= 0 && j >= 0 && k >= 0) {
 			if (i == 0 && j == 0 && k == 0) {
-				cir.setReturnValue(block());
+				return block();
 			} else {
 				int l = 1 << i;
 				int i1 = 1 << j;
 				int j1 = 1 << k;
-				BitSetDiscreteVoxelShape bitsetdiscretevoxelshape = BitSetDiscreteVoxelShape.withFilledBounds(l, i1, j1, (int)Math.round(pMinX * (double)l), (int)Math.round(pMinY * (double)i1), (int)Math.round(pMinZ * (double)j1), (int)Math.round(pMaxX * (double)l), (int)Math.round(pMaxY * (double)i1), (int)Math.round(pMaxZ * (double)j1));
-				cir.setReturnValue(new CubeVoxelShape(bitsetdiscretevoxelshape));
+				BitSetDiscreteVoxelShape bitsetdiscretevoxelshape = BitSetDiscreteVoxelShape.withFilledBounds(l, i1, j1, (int) Math.round(pMinX * (double) l), (int) Math.round(pMinY * (double) i1), (int) Math.round(pMinZ * (double) j1), (int) Math.round(pMaxX * (double) l), (int) Math.round(pMaxY * (double) i1), (int) Math.round(pMaxZ * (double) j1));
+				return new CubeVoxelShape(bitsetdiscretevoxelshape);
 			}
 		} else {
-			cir.setReturnValue(new ArrayVoxelShape(BLOCK.shape, DoubleArrayList.wrap(new double[]{pMinX, pMaxX}), DoubleArrayList.wrap(new double[]{pMinY, pMaxY}), DoubleArrayList.wrap(new double[]{pMinZ, pMaxZ})));
+			return new ArrayVoxelShape(BLOCK.shape, DoubleArrayList.wrap(new double[]{pMinX, pMaxX}), DoubleArrayList.wrap(new double[]{pMinY, pMaxY}), DoubleArrayList.wrap(new double[]{pMinZ, pMaxZ}));
 		}
 	}
 
 	@Inject(method = "empty", at = @At("RETURN"), cancellable = true)
 	private static void nullSafety(CallbackInfoReturnable<VoxelShape> cir) {
-		if(cir.getReturnValue() == null) {
+		if (cir.getReturnValue() == null) {
 			LOGGER.warn("Shapes.EMPTY was null. Creating new empty shape");
 			cir.setReturnValue(new ArrayVoxelShape(new BitSetDiscreteVoxelShape(0, 0, 0), new DoubleArrayList(new double[]{0.0D}), new DoubleArrayList(new double[]{0.0D}), new DoubleArrayList(new double[]{0.0D})));
 		}

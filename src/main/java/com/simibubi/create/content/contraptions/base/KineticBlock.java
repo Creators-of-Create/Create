@@ -12,7 +12,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 public abstract class KineticBlock extends Block implements IRotate, EntityBlock {
 
@@ -21,6 +25,15 @@ public abstract class KineticBlock extends Block implements IRotate, EntityBlock
 	public KineticBlock(Properties properties) {
 		super(properties);
 		System.out.println("This is mostly a warning for me, i need to make all Kinetic based blocks use the tools axe and pickaxe for mining"); // PORT: will get my attention hopefully
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
 	}
 
 	@Override

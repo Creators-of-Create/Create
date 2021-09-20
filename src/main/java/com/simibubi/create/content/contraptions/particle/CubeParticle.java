@@ -56,31 +56,30 @@ public class CubeParticle extends Particle {
 	private static final ParticleRenderType renderType = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder builder, TextureManager textureManager) {
-			throw new RuntimeException("// PORT: legacy gl");
-/*			RenderSystem.disableTexture();
+			RenderSystem.disableTexture();
 
 			// transparent, additive blending
 			RenderSystem.depthMask(false);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
-			RenderSystem.enableLighting();
-			RenderSystem.enableColorMaterial();
+//			RenderSystem.enableLighting();
+//			RenderSystem.enableColorMaterial();
 
 			// opaque
-//			RenderSystem.depthMask(true);
-//			RenderSystem.disableBlend();
+			RenderSystem.depthMask(true);
+			RenderSystem.disableBlend();
 //			RenderSystem.enableLighting();
 
-			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);*/
+			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		}
 
 		@Override
 		public void end(Tesselator tessellator) {
-/*			tessellator.end();
+			tessellator.end();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.disableLighting();
-			RenderSystem.enableTexture();*/
+//			RenderSystem.disableLighting();
+			RenderSystem.enableTexture();
 		}
 	};
 

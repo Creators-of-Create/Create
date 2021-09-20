@@ -48,7 +48,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderWorld extends SchematicWorld {
@@ -86,12 +85,12 @@ public class PonderWorld extends SchematicWorld {
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
 		tileEntities.forEach(
 			(k, v) -> originalTileEntities.put(k, BlockEntity.loadStatic(k, blocks.get(k), v.save(new CompoundTag()))));
-		entities.forEach(e -> EntityType.create(e.serializeNBT(), this)
+		entityGetter.entities.forEach(e -> EntityType.create(e.serializeNBT(), this)
 			.ifPresent(originalEntities::add));
 	}
 
 	public void restore() {
-		entities.clear();
+		entityGetter.entities.clear();
 		blocks.clear();
 		tileEntities.clear();
 		blockBreakingProgressions.clear();
@@ -104,7 +103,7 @@ public class PonderWorld extends SchematicWorld {
 			renderedTileEntities.add(te);
 		});
 		originalEntities.forEach(e -> EntityType.create(e.serializeNBT(), this)
-			.ifPresent(entities::add));
+			.ifPresent(entityGetter.entities::add));
 		particles.clearEffects();
 		fixControllerTileEntities();
 	}
@@ -167,7 +166,7 @@ public class PonderWorld extends SchematicWorld {
 		double d1 = Vector3d.y();
 		double d2 = Vector3d.z();
 
-		for (Entity entity : entities) {
+		for (Entity entity : entityGetter.entities) {
 			if (entity.tickCount == 0) {
 				entity.xOld = entity.getX();
 				entity.yOld = entity.getY();
@@ -202,7 +201,7 @@ public class PonderWorld extends SchematicWorld {
 	public void tick() {
 		particles.tick();
 
-		for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext();) {
+		for (Iterator<Entity> iterator = entityGetter.getAll().iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
 
 			entity.tickCount++;

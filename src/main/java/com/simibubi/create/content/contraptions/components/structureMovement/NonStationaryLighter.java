@@ -1,33 +1,39 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.jozufozu.flywheel.light.BasicProvider;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
+import com.jozufozu.flywheel.light.IMovingListener;
+import com.jozufozu.flywheel.light.LightProvider;
 
-public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> {
-    public NonStationaryLighter(C contraption) {
-        super(contraption);
-    }
+public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> implements IMovingListener {
+	public NonStationaryLighter(C contraption) {
+		super(contraption);
+	}
 
-    @Override
-    public void tick(RenderedContraption owner) {
-        super.tick(owner);
-        GridAlignedBB contraptionBounds = getContraptionBounds();
+	@Override
+	public boolean update(LightProvider provider) {
+		GridAlignedBB contraptionBounds = getContraptionBounds();
 
-        if (!contraptionBounds.sameAs(bounds)) {
-            lightVolume.move(BasicProvider.get(contraption.entity.level), contraptionBoundsToVolume(contraptionBounds));
-            bounds = contraptionBounds;
+		if (!contraptionBounds.sameAs(bounds)) {
+			return false;
+		}
+		bounds.assign(contraptionBounds);
+		growBoundsForEdgeData();
 
-            startListening();
-        }
-    }
+		lightVolume.move(provider, bounds);
+		return true;
+	}
 
-    @Override
-    public GridAlignedBB getContraptionBounds() {
-        GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
+	@Override
+	public GridAlignedBB getContraptionBounds() {
+		GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
+		bb.translate(contraption.entity.blockPosition());
 
-        bb.translate(contraption.entity.blockPosition());
+		return bb;
+	}
 
-        return bb;
-    }
+	protected void growBoundsForEdgeData() {
+		bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting
+		bounds.setMinY(Math.max(bounds.getMinY(), 0));
+		bounds.setMaxY(Math.min(bounds.getMaxY(), 255));
+	}
 }

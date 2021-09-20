@@ -895,8 +895,7 @@ public abstract class Contraption {
 				BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
 				if (te == null)
 					return;
-				throw new RuntimeException("// PORT: setLevelAndPosition doesnt exist.");
-				/*te.setLevelAndPosition(new ContraptionTileWorld(world, te, info), te.getBlockPos());
+				te.setLevel(new ContraptionTileWorld(world, te, info));
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
@@ -908,7 +907,7 @@ public abstract class Contraption {
 					return;
 
 				presentTileEntities.put(info.pos, te);
-				specialRenderedTileEntities.add(te);*/
+				specialRenderedTileEntities.add(te);
 			}
 
 		});

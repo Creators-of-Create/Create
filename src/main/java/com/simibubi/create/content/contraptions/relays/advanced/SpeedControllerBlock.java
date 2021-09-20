@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.advanced;
 
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
@@ -17,6 +18,8 @@ import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;

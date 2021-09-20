@@ -242,8 +242,7 @@ public class ContraptionCollider {
 					BlockState blockState = contraption.getBlocks()
 						.get(pos).state;
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
-					// PORT: slipperiness appears to of been removed?
-//					slide = Math.max(0, blockState.getSlipperiness(contraption.world, pos, entity) - .6f);
+					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
 				}
 			}
 

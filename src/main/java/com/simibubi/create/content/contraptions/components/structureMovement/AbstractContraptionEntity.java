@@ -556,21 +556,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		List<Entity> passengers = getPassengers();
 
 		for (Entity entity : passengers) {
-			// setPos has world accessing side-effects when removed == false
-			throw new RuntimeException("// PORT: this will fail horribly without this");
-//			entity.removed = true;
-//
-//			// Gather passengers into same chunk when saving
-//			Vec3 prevVec = entity.position();
-//			entity.setPosRaw(vec.x, prevVec.y, vec.z);
-//
-//			// Super requires all passengers to not be removed in order to write them to the
-//			// tag
-//			entity.removed = false;
+			// Gather passengers into same chunk when saving
+			Vec3 prevVec = entity.position();
+			entity.setPosRaw(vec.x, prevVec.y, vec.z);
+
+			// Super requires all passengers to not be removed in order to write them to the
+			// tag
 		}
 
-		CompoundTag tag = super.saveWithoutId(nbt);
-		return tag;
+		return super.saveWithoutId(nbt);
 	}
 
 	@Override

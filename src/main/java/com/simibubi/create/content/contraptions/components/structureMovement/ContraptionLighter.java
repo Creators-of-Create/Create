@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.jozufozu.flywheel.light.BasicProvider;
+import com.jozufozu.flywheel.light.GPULightVolume;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.ILightUpdateListener;
 import com.jozufozu.flywheel.light.ImmutableBox;
@@ -15,23 +16,25 @@ import net.minecraft.world.level.LightLayer;
 
 public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
-    public final LightVolume lightVolume;
+    public final GPULightVolume lightVolume;
+	protected final LightUpdater lightUpdater;
 
-    protected GridAlignedBB bounds;
+	protected GridAlignedBB bounds;
 
     protected boolean scheduleRebuild;
 
     protected ContraptionLighter(C contraption) {
         this.contraption = contraption;
+		this.lightUpdater = LightUpdater.get(contraption.entity.level);
 
         bounds = getContraptionBounds();
 
-        lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
+        lightVolume = new GPULightVolume(bounds);
 
         lightVolume.initialize(BasicProvider.get(contraption.entity.level));
         scheduleRebuild = true;
 
-        startListening();
+		lightUpdater.addListener(this);
     }
 
     public void tick(RenderedContraption owner) {
@@ -60,14 +63,8 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 
 	@Override
 	public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
-		throw new RuntimeException("// PORT: lighting is a mess.");
-//		lightVolume.notifyLightUpdate(world, type, changed);
+		lightVolume.onLightUpdate(world, type, changed);
 	}
-
-    protected void startListening() {
-		throw new RuntimeException("// PORT: lighting is a mess.");
-//        LightUpdater.getInstance().startListening(bounds, this);
-    }
 
     protected GridAlignedBB contraptionBoundsToVolume(GridAlignedBB bounds) {
         bounds.grow(2); // so we have at least enough data on the edges to avoid artifacts and have smooth lighting

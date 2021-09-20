@@ -103,8 +103,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	void setup(ContraptionProgram shader) {
 		if (!modelViewPartialReady || lightBox == null) return;
 		shader.bind(modelViewPartial, lightBox);
-		throw new RuntimeException("// PORT: Flywheel updates");
-//		lighter.lightVolume.bind();
+		lighter.lightVolume.bind();
 	}
 
 	public void invalidate() {
@@ -115,9 +114,8 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		lighter.lightVolume.delete();
 
-		throw new RuntimeException("// PORT: Flywheel updates");
-//		materialManager.delete();
-//		kinetics.invalidate();
+		materialManager.delete();
+		kinetics.invalidate();
 	}
 
 	private void buildLayers() {
@@ -149,11 +147,8 @@ public class RenderedContraption extends ContraptionRenderInfo {
 				if (InstancedRenderRegistry.getInstance()
 						.canInstance(te.getType())) {
 					Level world = te.getLevel();
-					BlockPos pos = te.getBlockPos();
-					throw new RuntimeException("// PORT: BlockEntity issues");
-//					te.setLevelAndPosition(renderWorld, pos);
-//					kinetics.add(te);
-//					te.setLevelAndPosition(world, pos);
+					kinetics.add(te);
+					te.setLevel(world);
 				}
 			}
 		}

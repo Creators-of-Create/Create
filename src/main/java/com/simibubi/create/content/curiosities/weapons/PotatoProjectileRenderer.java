@@ -40,5 +40,4 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 	public ResourceLocation getTextureLocation(PotatoProjectileEntity p_110775_1_) {
 		return null;
 	}
-
 }

@@ -76,14 +76,13 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 		public void accept(I ingredient) {
 			ItemStack stack = ((ItemStack) ingredient).copy();
 			stack.setCount(1);
-			throw new RuntimeException("// PORT: missing fields?");
-//			gui.getMenu().ghostInventory.setStackInSlot(slotIndex, stack);
-//
-//			if (isAttributeFilter)
-//				return;
-//
-//			// sync new filter contents with server
-//			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
+			gui.getMenu().ghostInventory.setStackInSlot(slotIndex, stack);
+
+			if (isAttributeFilter)
+				return;
+
+			// sync new filter contents with server
+			AllPackets.channel.sendToServer(new GhostItemSubmitPacket(stack, slotIndex));
 		}
 	}
 }

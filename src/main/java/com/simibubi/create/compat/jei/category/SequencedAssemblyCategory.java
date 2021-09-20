@@ -126,8 +126,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 
 	@Override
 	public void draw(SequencedAssemblyRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		throw new RuntimeException("// PORT: legacy gl");
-		/*Font font = Minecraft.getInstance().font;
+		Font font = Minecraft.getInstance().font;
 
 		matrixStack.pushPose();
 		matrixStack.translate(0, 15, 0);
@@ -146,9 +145,9 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		if (recipe.getLoops() > 1) {
 			matrixStack.pushPose();
 			matrixStack.translate(15, 9, 0);
-			RenderSystem.color4f(.65f, .65f, .65f, 1);
+			RenderSystem.setShaderColor(.65f, .65f, .65f, 1);
 			AllIcons.I_REFRESH.draw(matrixStack, 50 + xOffset, 75);
-			RenderSystem.color4f(1, 1, 1, 1);
+			RenderSystem.setShaderColor(1, 1, 1, 1);
 			Component repeat = new TextComponent("x" + recipe.getLoops());
 			font.draw(matrixStack, repeat, 66 + xOffset, 80, 0x888888);
 			matrixStack.popPose();
@@ -174,7 +173,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			subCategory.draw(sequencedRecipe, matrixStack, mouseX, mouseY, i);
 			matrixStack.translate(subWidth + margin, 0, 0);
 		}
-		matrixStack.popPose();*/
+		matrixStack.popPose();
 	}
 
 	@Override

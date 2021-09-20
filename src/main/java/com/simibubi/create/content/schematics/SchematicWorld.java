@@ -44,7 +44,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	protected Map<BlockPos, BlockState> blocks;
 	protected Map<BlockPos, BlockEntity> tileEntities;
 	protected List<BlockEntity> renderedTileEntities;
-	protected List<Entity> entities;
+	protected SchematicWorldEntityGetter entityGetter;
 	protected BoundingBox bounds;
 
 	public BlockPos anchor;
@@ -60,7 +60,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		this.tileEntities = new HashMap<>();
 		this.bounds = new BoundingBox(BlockPos.ZERO);
 		this.anchor = anchor;
-		this.entities = new ArrayList<>();
+		this.entityGetter = new SchematicWorldEntityGetter();
 		this.renderedTileEntities = new ArrayList<>();
 	}
 
@@ -79,11 +79,11 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 				.forEach(stack -> stack.setTag(null));
 		}
 
-		return entities.add(entityIn);
+		return entityGetter.entities.add(entityIn);
 	}
 
 	public LevelEntityGetter<Entity> getEntities() {
-		throw new RuntimeException("// PORT: this is very annoying. uncool minecraft.");
+		return entityGetter;
 	}
 
 	@Override
@@ -113,8 +113,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	protected void onTEadded(BlockEntity tileEntity, BlockPos pos) {
-		throw new RuntimeException("// PORT: no.");
-//		tileEntity.setLevelAndPosition(this, pos);
+		tileEntity.setLevel(this);
 	}
 
 	@Override

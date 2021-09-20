@@ -58,6 +58,11 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	@Override
+	public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+		return getShape(pState, pLevel, pPos, pContext);
+	}
+
+	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		return isValidCogwheelPosition(ICogWheel.isLargeCog(state), worldIn, pos, state.getValue(AXIS));
 	}

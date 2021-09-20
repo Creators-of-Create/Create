@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -263,7 +264,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			Level level = te.getLevel();
 			BlockPos pos = te.getBlockPos();
 			BlockState state = level.getBlockState(pos);
-			((BlockEntityTicker<BlockEntity>) state.getTicker(level, te.getType())).tick(level, pos, state, te); // PORT: may cause problems
+			BlockEntityTicker<BlockEntity> ticker = state.getTicker(level, (BlockEntityType<BlockEntity>) te.getType());
+			if(ticker != null) {
+				ticker.tick(level, pos, state, te);
+			}
 		});
 	}
 
@@ -287,7 +291,6 @@ public class WorldSectionElement extends AnimatedSceneElement {
 				return;
 			tickableTileEntities.add(tileEntity);
 			renderedTileEntities.add(tileEntity);
-//			tileEntity.clearCache();
 		});
 	}
 
