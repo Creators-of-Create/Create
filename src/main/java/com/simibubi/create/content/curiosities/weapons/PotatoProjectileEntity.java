@@ -39,7 +39,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PotatoProjectileEntity extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData {
 
-	PotatoCannonProjectileTypes type;
+	PotatoCannonProjectileType type;
 	ItemStack stack = ItemStack.EMPTY;
 
 	Entity stuckEntity;
@@ -63,10 +63,10 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		this.stack = stack;
 	}
 
-	public PotatoCannonProjectileTypes getProjectileType() {
+	public PotatoCannonProjectileType getProjectileType() {
 		if (type == null)
-			type = PotatoCannonProjectileTypes.getProjectileTypeOf(stack)
-				.orElse(PotatoCannonProjectileTypes.FALLBACK);
+			type = PotatoProjectileTypeManager.getTypeForStack(stack)
+				.orElse(BuiltinPotatoProjectileTypes.FALLBACK);
 		return type;
 	}
 
@@ -128,7 +128,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 	}
 
 	public void tick() {
-		PotatoCannonProjectileTypes projectileType = getProjectileType();
+		PotatoCannonProjectileType projectileType = getProjectileType();
 
 		Entity stuckEntity = getStuckEntity();
 		if (stuckEntity != null) {
@@ -174,7 +174,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		Vec3 hit = ray.getLocation();
 		Entity target = ray.getEntity();
-		PotatoCannonProjectileTypes projectileType = getProjectileType();
+		PotatoCannonProjectileType projectileType = getProjectileType();
 		float damage = projectileType.getDamage() * additionalDamageMult;
 		float knockback = projectileType.getKnockback() + additionalKnockback;
 		Entity owner = this.getOwner();

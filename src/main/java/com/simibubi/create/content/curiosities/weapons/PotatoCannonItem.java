@@ -55,8 +55,8 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
-	public PotatoCannonItem(Properties p_i48487_1_) {
-		super(p_i48487_1_);
+	public PotatoCannonItem(Properties properties) {
+		super(properties);
 	}
 
 	@Override
@@ -164,8 +164,8 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 					.subtract(player.position()
 						.add(0, player.getEyeHeight(), 0));
 
-			PotatoCannonProjectileTypes projectileType = PotatoCannonProjectileTypes.getProjectileTypeOf(itemStack)
-				.orElse(PotatoCannonProjectileTypes.FALLBACK);
+			PotatoCannonProjectileType projectileType = PotatoProjectileTypeManager.getTypeForStack(itemStack)
+				.orElse(BuiltinPotatoProjectileTypes.FALLBACK);
 			Vec3 lookVec = player.getLookAngle();
 			Vec3 motion = lookVec.add(correction)
 				.normalize()
@@ -208,8 +208,8 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 
 			Integer cooldown =
-				findAmmoInInventory(world, player, stack).flatMap(PotatoCannonProjectileTypes::getProjectileTypeOf)
-					.map(PotatoCannonProjectileTypes::getReloadTicks)
+				findAmmoInInventory(world, player, stack).flatMap(PotatoProjectileTypeManager::getTypeForStack)
+					.map(PotatoCannonProjectileType::getReloadTicks)
 					.orElse(10);
 
 			ShootableGadgetItemMethods.applyCooldown(player, stack, hand, this::isCannon, cooldown);
@@ -227,7 +227,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 
 	private Optional<ItemStack> findAmmoInInventory(Level world, Player player, ItemStack held) {
 		ItemStack findAmmo = player.getProjectile(held);
-		return PotatoCannonProjectileTypes.getProjectileTypeOf(findAmmo)
+		return PotatoProjectileTypeManager.getTypeForStack(findAmmo)
 			.map($ -> findAmmo);
 	}
 
@@ -242,7 +242,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 		if (player == null)
 			return Optional.empty();
 		ItemStack findAmmo = player.getProjectile(cannon);
-		Optional<ItemStack> found = PotatoCannonProjectileTypes.getProjectileTypeOf(findAmmo)
+		Optional<ItemStack> found = PotatoProjectileTypeManager.getTypeForStack(findAmmo)
 			.map($ -> findAmmo);
 		found.ifPresent(stack -> CLIENT_CURRENT_AMMO = stack);
 		return found;
@@ -264,7 +264,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 			tooltip.add(new TextComponent(""));
 			tooltip.add(new TranslatableComponent(ammo.getDescriptionId()).append(new TextComponent(":"))
 				.withStyle(ChatFormatting.GRAY));
-			PotatoCannonProjectileTypes type = PotatoCannonProjectileTypes.getProjectileTypeOf(ammo)
+			PotatoCannonProjectileType type = PotatoProjectileTypeManager.getTypeForStack(ammo)
 				.get();
 			TextComponent spacing = new TextComponent(" ");
 			ChatFormatting green = ChatFormatting.GREEN;
@@ -296,7 +296,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem implements ISTERCapab
 
 	@Override
 	public Predicate<ItemStack> getAllSupportedProjectiles() {
-		return stack -> PotatoCannonProjectileTypes.getProjectileTypeOf(stack)
+		return stack -> PotatoProjectileTypeManager.getTypeForStack(stack)
 			.isPresent();
 	}
 

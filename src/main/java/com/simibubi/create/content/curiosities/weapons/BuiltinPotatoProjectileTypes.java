@@ -1,8 +1,5 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -50,16 +47,14 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.registries.IRegistryDelegate;
 
-public class PotatoCannonProjectileTypes {
+public class BuiltinPotatoProjectileTypes {
 
 	private static final GameProfile ZOMBIE_CONVERTER_NAME =
 		new GameProfile(UUID.fromString("be12d3dc-27d3-4992-8c97-66be53fd49c5"), "Converter");
 	private static final WorldAttached<FakePlayer> ZOMBIE_CONVERTERS =
 		new WorldAttached<>(w -> new FakePlayer((ServerLevel) w, ZOMBIE_CONVERTER_NAME));
 
-	public static final Map<ResourceLocation, PotatoCannonProjectileTypes> ALL = new HashMap<>();
-	public static final Map<IRegistryDelegate<Item>, PotatoCannonProjectileTypes> ITEM_MAP = new HashMap<>();
-	public static final PotatoCannonProjectileTypes
+	public static final PotatoCannonProjectileType
 
 	FALLBACK = create("fallback").damage(0)
 		.register(),
@@ -250,94 +245,11 @@ public class PotatoCannonProjectileTypes {
 			.preEntityHit(setFire(12))
 			.soundPitch(1.0f)
 			.registerAndAssign(AllItems.BLAZE_CAKE.get())
+
 	;
 
-	public static void registerType(ResourceLocation resLoc, PotatoCannonProjectileTypes type) {
-		synchronized (ALL) {
-			ALL.put(resLoc, type);
-		}
-	}
-
-	public static void assignType(IRegistryDelegate<Item> item, PotatoCannonProjectileTypes type) {
-		synchronized (ITEM_MAP) {
-			ITEM_MAP.put(item, type);
-		}
-	}
-
-	public static Optional<PotatoCannonProjectileTypes> getProjectileTypeOf(ItemStack item) {
-		if (item.isEmpty())
-			return Optional.empty();
-		return Optional.ofNullable(ITEM_MAP.get(item.getItem().delegate));
-	}
-
-	public static void register() {}
-
-	private static PotatoCannonProjectileTypes.Builder create(String name) {
-		return new PotatoCannonProjectileTypes.Builder(Create.asResource(name));
-	}
-
-	private float gravityMultiplier = 1;
-	private float velocityMultiplier = 1;
-	private float drag = 0.99f;
-	private float knockback = 1;
-	private int reloadTicks = 10;
-	private int damage = 1;
-	private int split = 1;
-	private float fwoompPitch = 1;
-	private boolean sticky = false;
-	private PotatoProjectileRenderMode renderMode = new PotatoProjectileRenderMode.Billboard();
-	private Predicate<EntityHitResult> preEntityHit = e -> false; // True if hit should be canceled
-	private Predicate<EntityHitResult> onEntityHit = e -> false; // True if shouldn't recover projectile
-	private BiPredicate<LevelAccessor, BlockHitResult> onBlockHit = (w, ray) -> false;
-
-	public float getGravityMultiplier() {
-		return gravityMultiplier;
-	}
-
-	public float getDrag() {
-		return drag;
-	}
-
-	public int getSplit() {
-		return split;
-	}
-
-	public float getVelocityMultiplier() {
-		return velocityMultiplier;
-	}
-
-	public float getKnockback() {
-		return knockback;
-	}
-
-	public int getReloadTicks() {
-		return reloadTicks;
-	}
-
-	public float getSoundPitch() {
-		return fwoompPitch;
-	}
-
-	public PotatoProjectileRenderMode getRenderMode() {
-		return renderMode;
-	}
-
-	public int getDamage() {
-		return damage;
-	}
-
-	public boolean isSticky() { return sticky; }
-
-	public boolean preEntityHit(EntityHitResult ray) {
-		return preEntityHit.test(ray);
-	}
-
-	public boolean onEntityHit(EntityHitResult ray) {
-		return onEntityHit.test(ray);
-	}
-
-	public boolean onBlockHit(LevelAccessor world, BlockHitResult ray) {
-		return onBlockHit.test(world, ray);
+	private static PotatoCannonProjectileType.Builder create(String name) {
+		return new PotatoCannonProjectileType.Builder(Create.asResource(name));
 	}
 
 	private static Predicate<EntityHitResult> setFire(int seconds) {
@@ -477,103 +389,6 @@ public class PotatoCannonProjectileTypes {
 		};
 	}
 
-	public static class Builder {
-
-		protected ResourceLocation loc;
-		protected PotatoCannonProjectileTypes result;
-
-		public Builder(ResourceLocation loc) {
-			this.result = new PotatoCannonProjectileTypes();
-			this.loc = loc;
-		}
-
-		public Builder damage(int damage) {
-			result.damage = damage;
-			return this;
-		}
-
-		public Builder gravity(float modifier) {
-			result.gravityMultiplier = modifier;
-			return this;
-		}
-
-		public Builder knockback(float knockback) {
-			result.knockback = knockback;
-			return this;
-		}
-
-		public Builder drag(float drag) {
-			result.drag = drag;
-			return this;
-		}
-
-		public Builder reloadTicks(int reload) {
-			result.reloadTicks = reload;
-			return this;
-		}
-
-		public Builder splitInto(int split) {
-			result.split = split;
-			return this;
-		}
-
-		public Builder soundPitch(float pitch) {
-			result.fwoompPitch = pitch;
-			return this;
-		}
-
-		public Builder velocity(float velocity) {
-			result.velocityMultiplier = velocity;
-			return this;
-		}
-
-		public Builder renderTumbling() {
-			result.renderMode = new PotatoProjectileRenderMode.Tumble();
-			return this;
-		}
-
-		public Builder renderBillboard() {
-			result.renderMode = new PotatoProjectileRenderMode.Billboard();
-			return this;
-		}
-
-		public Builder renderTowardMotion(int spriteAngle, float spin) {
-			result.renderMode = new PotatoProjectileRenderMode.TowardMotion(spriteAngle, spin);
-			return this;
-		}
-
-		public Builder sticky() {
-			result.sticky = true;
-			return this;
-		}
-
-		public Builder preEntityHit(Predicate<EntityHitResult> callback) {
-			result.preEntityHit = callback;
-			return this;
-		}
-
-		public Builder onEntityHit(Predicate<EntityHitResult> callback) {
-			result.onEntityHit = callback;
-			return this;
-		}
-
-		public Builder onBlockHit(BiPredicate<LevelAccessor, BlockHitResult> callback) {
-			result.onBlockHit = callback;
-			return this;
-		}
-
-		public PotatoCannonProjectileTypes register() {
-			registerType(loc, result);
-			return result;
-		}
-
-		public PotatoCannonProjectileTypes registerAndAssign(ItemLike... items) {
-			registerType(loc, result);
-			for (ItemLike provider : items)
-				assignType(provider.asItem().delegate, result);
-			return result;
-		}
-
-	}
+	public static void register() {}
 
 }

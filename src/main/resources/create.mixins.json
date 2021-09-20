@@ -6,7 +6,8 @@
   "refmap": "create.refmap.json",
   "mixins": [
     "LevelChunkMixin",
-    "ShapesMixin"
+    "ShapesMixin",
+    "PlayerListMixin"
   ],
   "client": [
     "BreakProgressMixin",
