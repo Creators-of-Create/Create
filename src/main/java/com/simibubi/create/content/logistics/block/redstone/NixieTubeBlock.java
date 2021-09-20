@@ -15,6 +15,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.entity.player.Player;
@@ -41,6 +43,8 @@ import net.minecraft.server.level.ServerLevel;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import javax.annotation.Nullable;
+
 public class NixieTubeBlock extends HorizontalDirectionalBlock
 	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement, EntityBlock {
 
@@ -51,6 +55,15 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		super(properties);
 		this.color = color;
 		registerDefaultState(defaultBlockState().setValue(CEILING, false));
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
 	}
 
 	@Override

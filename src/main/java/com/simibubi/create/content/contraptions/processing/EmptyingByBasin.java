@@ -26,7 +26,7 @@ public class EmptyingByBasin {
 	public static boolean canItemBeEmptied(Level world, ItemStack stack) {
 		if (stack.getItem() instanceof PotionItem)
 			return true;
-		
+
 		wrapper.setItem(0, stack);
 		if (AllRecipeTypes.EMPTYING.find(wrapper, world)
 			.isPresent())
@@ -51,7 +51,7 @@ public class EmptyingByBasin {
 
 		if (stack.getItem() instanceof PotionItem)
 			return PotionFluidHandler.emptyPotion(stack, simulate);
-		
+
 		wrapper.setItem(0, stack);
 		Optional<Recipe<RecipeWrapper>> recipe = AllRecipeTypes.EMPTYING.find(wrapper, world);
 		if (recipe.isPresent()) {
@@ -66,8 +66,7 @@ public class EmptyingByBasin {
 
 		ItemStack split = stack.copy();
 		split.setCount(1);
-		LazyOptional<IFluidHandlerItem> capability =
-			split.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+		LazyOptional<IFluidHandlerItem> capability = split.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);

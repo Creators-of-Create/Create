@@ -18,6 +18,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -54,6 +56,15 @@ public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock,
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
 		this.registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
 	}
 
 	@Override

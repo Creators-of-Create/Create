@@ -36,4 +36,6 @@ public class ISTERItem extends Item implements ISTERCapableItem {
 
 		consumer.accept(itemRenderProperties);
 	}
+
+
 }

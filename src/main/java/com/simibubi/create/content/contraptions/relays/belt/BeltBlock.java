@@ -242,13 +242,14 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		boolean isConnector = AllItems.BELT_CONNECTOR.isIn(heldItem);
 		boolean isShaft = AllBlocks.SHAFT.isIn(heldItem);
 		boolean isDye = Tags.Items.DYES.contains(heldItem.getItem());
-		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
-			.getFirst()
-			.getFluid()
-			.isSame(Fluids.WATER);
+		// PORT: this capability throws an exception. possible forge bug.
+//		boolean hasWater = EmptyingByBasin.emptyItem(world, heldItem, true)
+//			.getFirst()
+//			.getFluid()
+//			.isSame(Fluids.WATER);
 		boolean isHand = heldItem.isEmpty() && handIn == InteractionHand.MAIN_HAND;
 
-		if (isDye || hasWater) {
+		if (isDye ) { //PORT: see above.  || hasWater) {
 			if (!world.isClientSide)
 				withTileEntityDo(world, pos, te -> te.applyColor(DyeColor.getColor(heldItem)));
 			return InteractionResult.SUCCESS;
@@ -354,7 +355,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 //		return true;
 //	}
 
-	@Override
+/*	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return BeltShapes.getShape(state);
 	}
@@ -380,7 +381,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			return shape;
 		})
 		.orElse(shape);
-	}
+	}*/
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

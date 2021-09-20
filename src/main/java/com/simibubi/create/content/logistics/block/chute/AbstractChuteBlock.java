@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.world.entity.Entity;
@@ -41,10 +43,17 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		super(p_i48440_1_);
 	}
 
-
-
 	public static boolean isChute(BlockState state) {
 		return state.getBlock() instanceof AbstractChuteBlock;
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
 	}
 
 	public static boolean isOpenChute(BlockState state) {

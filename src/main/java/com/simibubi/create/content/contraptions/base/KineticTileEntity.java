@@ -88,6 +88,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 
 	@Override
 	public void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		super.tick(level, pos, state, blockEntity);
 		if (!level.isClientSide && needsSpeedUpdate())
 			attachKinetics();
 

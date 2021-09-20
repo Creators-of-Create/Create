@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.entity.Entity;
@@ -50,6 +52,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import javax.annotation.Nullable;
+
 public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, EntityBlock {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
@@ -72,6 +76,15 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		registerDefaultState(defaultBlockState().setValue(TOP, true)
 			.setValue(BOTTOM, true)
 			.setValue(SHAPE, Shape.WINDOW));
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
 	}
 
 	public static boolean isTank(BlockState state) {
