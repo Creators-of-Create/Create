@@ -109,6 +109,8 @@ public class SeatBlock extends Block {
 		}
 
 		List<SeatEntity> seats = world.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
+		if(!world.isClientSide)
+			System.out.println(seats.isEmpty());
 		if (!seats.isEmpty()) {
 			SeatEntity seatEntity = seats.get(0);
 			List<Entity> passengers = seatEntity.getPassengers();

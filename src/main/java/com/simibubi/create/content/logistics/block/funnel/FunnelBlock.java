@@ -6,6 +6,9 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -31,6 +34,8 @@ import net.minecraft.world.level.Level;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
+import javax.annotation.Nullable;
+
 public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
 	public static final BooleanProperty EXTRACTING = BooleanProperty.create("extracting");
@@ -41,6 +46,15 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 	}
 
 	public abstract BlockState getEquivalentBeltFunnel(BlockGetter world, BlockPos pos, BlockState state);
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
+	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {

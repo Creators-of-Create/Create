@@ -201,8 +201,6 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		}
 
 		handleTooltips();
-
-		super.tick();
 	}
 
 	protected void handleTooltips() {

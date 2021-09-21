@@ -147,8 +147,8 @@ public class RenderedContraption extends ContraptionRenderInfo {
 				if (InstancedRenderRegistry.getInstance()
 						.canInstance(te.getType())) {
 					Level world = te.getLevel();
-					kinetics.add(te);
-					te.setLevel(world);
+//					kinetics.add(te);
+//					te.setLevel(world);
 				}
 			}
 		}

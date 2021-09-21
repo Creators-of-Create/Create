@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,7 +38,14 @@ public abstract class EngineBlock extends HorizontalDirectionalBlock implements 
 		return isValidPosition(state, worldIn, pos, state.getValue(FACING));
 	}
 
-
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+		return (level, pos, state, blockEntity) -> {
+			if(blockEntity instanceof BlockEntityTicker ticker)
+				ticker.tick(level, pos, state, blockEntity);
+		};
+	}
 
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {

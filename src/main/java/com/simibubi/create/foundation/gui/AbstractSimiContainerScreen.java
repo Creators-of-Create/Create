@@ -80,8 +80,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	@Override
 	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		throw new RuntimeException("// PORT: Legacy GL Pipeline");
-/*		partialTicks = Minecraft.getInstance()
+		partialTicks = Minecraft.getInstance()
 			.getFrameTime();
 		renderBackground(matrixStack);
 		renderWindow(matrixStack, mouseX, mouseY, partialTicks);
@@ -91,13 +90,13 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-		RenderSystem.enableAlphaTest();
+//		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
-		RenderSystem.disableRescaleNormal();
-		Lighting.turnOff();
-		RenderSystem.disableLighting();
+//		RenderSystem.disableRescaleNormal();
+//		Lighting.turnOff();
+//		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
-		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);*/
+		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
