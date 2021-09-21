@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.fluid.FluidHelper.FluidExchange;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
+
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -107,7 +109,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	@Override
 	public int getLightBlock(BlockState state, BlockGetter world, BlockPos pos) {
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
+		FluidTankTileEntity tankAt = WorldHelper.getTileAt(world, pos);
 		if (tankAt == null)
 			return 0;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();
@@ -134,7 +136,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			return InteractionResult.PASS;
 
 		FluidExchange exchange = null;
-		FluidTankTileEntity te = FluidTankConnectivityHandler.anyTankAt(world, pos);
+		FluidTankTileEntity te = WorldHelper.getTileAt(world, pos);
 		if (te == null)
 			return InteractionResult.FAIL;
 
