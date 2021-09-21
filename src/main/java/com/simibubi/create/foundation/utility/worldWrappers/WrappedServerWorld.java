@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import mcp.MethodsReturnNonnullByDefault;
@@ -19,9 +20,12 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.listener.IChunkStatusListener;
 import net.minecraft.world.server.ServerChunkProvider;
 import net.minecraft.world.server.ServerTickList;
 import net.minecraft.world.server.ServerWorld;
@@ -38,7 +42,19 @@ public class WrappedServerWorld extends ServerWorld {
 
 	public WrappedServerWorld(World world) {
 		// Replace null with world.getChunkProvider().chunkManager.progressListener ? We had null in 1.15
-		super(world.getServer(), Util.backgroundExecutor(), getLevelSaveFromWorld(world), (IServerWorldInfo) world.getLevelData(), world.dimension(), world.dimensionType(), null, ((ServerChunkProvider) world.getChunkSource()).getGenerator(), world.isDebug(), world.getBiomeManager().biomeZoomSeed, Collections.EMPTY_LIST, false); //, world.field_25143);
+		super(world.getServer(), Util.backgroundExecutor(), getLevelSaveFromWorld(world), (IServerWorldInfo) world.getLevelData(), world.dimension(), world.dimensionType(), new IChunkStatusListener() {
+			@Override
+			public void updateSpawnPos(ChunkPos p_219509_1_) {
+			}
+
+			@Override
+			public void onStatusChange(ChunkPos p_219508_1_, @Nullable ChunkStatus p_219508_2_) {
+			}
+
+			@Override
+			public void stop() {
+			}
+		}, ((ServerChunkProvider) world.getChunkSource()).getGenerator(), world.isDebug(), world.getBiomeManager().biomeZoomSeed, Collections.EMPTY_LIST, false); //, world.field_25143);
 		this.world = world;
 	}
 
