@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids.tank;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -307,26 +306,13 @@ public class FluidTankConnectivityHandler {
 	}
 
 	private static PriorityQueue<Pair<Integer, FluidTankTileEntity>> makeCreationQueue() {
-		return new PriorityQueue<>(new Comparator<Pair<Integer, FluidTankTileEntity>>() {
-			@Override
-			public int compare(Pair<Integer, FluidTankTileEntity> o1, Pair<Integer, FluidTankTileEntity> o2) {
-				return o2.getKey() - o1.getKey();
-			}
-		});
+		return new PriorityQueue<>((o1, o2) -> o2.getKey() - o1.getKey());
 	}
 
 	@Nullable
 	public static FluidTankTileEntity tankAt(BlockEntityType<?> type, BlockGetter world, BlockPos pos) {
 		BlockEntity te = world.getBlockEntity(pos);
 		if (te instanceof FluidTankTileEntity && te.getType() == type)
-			return (FluidTankTileEntity) te;
-		return null;
-	}
-
-	@Nullable
-	public static FluidTankTileEntity anyTankAt(BlockGetter world, BlockPos pos) {
-		BlockEntity te = world.getBlockEntity(pos);
-		if (te instanceof FluidTankTileEntity)
 			return (FluidTankTileEntity) te;
 		return null;
 	}

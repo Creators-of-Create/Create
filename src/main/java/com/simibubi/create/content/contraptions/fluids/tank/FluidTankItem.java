@@ -7,6 +7,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import com.simibubi.create.foundation.utility.WorldHelper;
+
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.core.Direction;
@@ -73,7 +75,7 @@ public class FluidTankItem extends BlockItem {
 
 		if (!FluidTankBlock.isTank(placedOnState))
 			return;
-		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, placedOnPos);
+		FluidTankTileEntity tankAt = WorldHelper.getTileAt(world, placedOnPos);
 		if (tankAt == null)
 			return;
 		FluidTankTileEntity controllerTE = tankAt.getControllerTE();

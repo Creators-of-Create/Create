@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
+
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
@@ -147,7 +149,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			for (int xOffset = 0; xOffset < width; xOffset++) {
 				for (int zOffset = 0; zOffset < width; zOffset++) {
 					BlockPos pos = this.worldPosition.offset(xOffset, yOffset, zOffset);
-					FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(level, pos);
+					FluidTankTileEntity tankAt = WorldHelper.getTileAt(level, pos);
 					if (tankAt == null)
 						continue;
 					level.updateNeighbourForOutputSignal(pos, tankAt.getBlockState()

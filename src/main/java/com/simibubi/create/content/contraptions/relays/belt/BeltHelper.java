@@ -3,6 +3,8 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
+
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -31,13 +33,13 @@ public class BeltHelper {
 	}
 
 	public static BeltTileEntity getControllerTE(LevelAccessor world, BlockPos pos) {
-		BeltTileEntity segment = getSegmentTE(world, pos);
+		BeltTileEntity segment = WorldHelper.getTileAt(world, pos);
 		if (segment == null)
 			return null;
 		BlockPos controllerPos = segment.controller;
 		if (controllerPos == null)
 			return null;
-		return getSegmentTE(world, controllerPos);
+		return WorldHelper.getTileAt(world, controllerPos);
 	}
 
 	public static BeltTileEntity getBeltForOffset(BeltTileEntity controller, float offset) {

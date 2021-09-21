@@ -34,6 +34,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import com.simibubi.create.foundation.utility.WorldHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -272,7 +273,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			return;
 
 		for (BlockPos blockPos : BeltBlock.getBeltChain(level, getController())) {
-			BeltTileEntity belt = BeltHelper.getSegmentTE(level, blockPos);
+			BeltTileEntity belt = WorldHelper.getTileAt(level, blockPos);
 			if (belt == null)
 				continue;
 			belt.color = Optional.ofNullable(colorIn);
