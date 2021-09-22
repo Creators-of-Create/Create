@@ -1,7 +1,5 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import static com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderMode.entityRandom;
-
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;
@@ -20,6 +18,8 @@ public interface PotatoProjectileRenderMode {
 
 	public static class Billboard implements PotatoProjectileRenderMode {
 
+		public static final Billboard INSTANCE = new Billboard();
+
 		@Override
 		@OnlyIn(Dist.CLIENT)
 		public void transform(MatrixStack ms, PotatoProjectileEntity entity, float pt) {
@@ -35,9 +35,12 @@ public interface PotatoProjectileRenderMode {
 				.rotateX(180
 					+ AngleHelper.deg(MathHelper.atan2(diff.y, -MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z))));
 		}
+
 	}
 
 	public static class Tumble extends Billboard {
+
+		public static final Tumble INSTANCE = new Tumble();
 
 		@Override
 		@OnlyIn(Dist.CLIENT)
@@ -47,6 +50,7 @@ public interface PotatoProjectileRenderMode {
 				.rotateZ((entity.tickCount + pt) * 2 * entityRandom(entity, 16))
 				.rotateX((entity.tickCount + pt) * entityRandom(entity, 32));
 		}
+
 	}
 
 	public static class TowardMotion implements PotatoProjectileRenderMode {
