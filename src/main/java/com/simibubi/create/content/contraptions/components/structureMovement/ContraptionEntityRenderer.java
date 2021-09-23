@@ -22,8 +22,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	}
 
 	@Override
-	public boolean shouldRender(C entity, Frustum clippingHelper, double cameraX, double cameraY,
-		double cameraZ) {
+	public boolean shouldRender(C entity, Frustum clippingHelper, double cameraX, double cameraY, double cameraZ) {
 		if (entity.getContraption() == null)
 			return false;
 		if (!entity.isAlive())
@@ -33,8 +32,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	}
 
 	@Override
-	public void render(C entity, float yaw, float partialTicks, PoseStack ms, MultiBufferSource buffers,
-		int overlay) {
+	public void render(C entity, float yaw, float partialTicks, PoseStack ms, MultiBufferSource buffers, int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 
 		Contraption contraption = entity.getContraption();

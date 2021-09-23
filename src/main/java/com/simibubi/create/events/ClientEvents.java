@@ -2,6 +2,8 @@ package com.simibubi.create.events;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -56,6 +58,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Camera;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
@@ -89,6 +92,8 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
@@ -346,12 +351,11 @@ public class ClientEvents {
 	}
 
 	public static void loadCompleted(FMLLoadCompleteEvent event) {
-		ModContainer createContainer = ModList.get()
+		ModContainer modContainer = ModList.get()
 			.getModContainerById(Create.ID)
 			.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-//		createContainer.registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY,
-//			() -> (mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen));
-		// PORT: forge momento (removed)
-	}
 
+		modContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
+			() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+	}
 }

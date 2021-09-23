@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "block/block",
+  "parent": "builtin/entity",
 	"textures": {
 		"5": "create:item/wrench",
 		"particle": "create:item/wrench"
