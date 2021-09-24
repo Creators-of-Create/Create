@@ -201,9 +201,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			: fluid.getAttributes()
 				.getEmptySound();
 		if (soundevent == null)
-			soundevent = fluid.is(FluidTags.LAVA)
-				? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
-				: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
+			soundevent =
+				fluid.is(FluidTags.LAVA) ? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
+					: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
 
 		world.playSound(null, splooshPos, soundevent, SoundSource.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerLevel)
