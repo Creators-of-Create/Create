@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 0",
+	"_": "Missing Localizations: 1",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -753,6 +753,7 @@
 	"create.recipe.assembly.repeat": "Repetir la secuencia %1$s veces",
 	"create.recipe.assembly.junk": "Basura aleatoria",
 	"create.recipe.processing.chance": "%1$s%% Chance",
+	"create.recipe.deploying.not_consumed": "UNLOCALIZED: Not Consumed",
 	"create.recipe.heat_requirement.none": "No es necesario calentar",
 	"create.recipe.heat_requirement.heated": "Calentado",
 	"create.recipe.heat_requirement.superheated": "Súper-Calentado",

@@ -104,10 +104,13 @@ public class BeltDeployerCallbacks {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 
 		ItemStack heldItem = deployerTileEntity.player.getMainHandItem();
-		if (heldItem.isDamageableItem())
-			heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
-		else
-			heldItem.shrink(1);
+		if (!(recipe instanceof DeployerApplicationRecipe)
+			|| !((DeployerApplicationRecipe) recipe).shouldKeepHeldItem()) {
+			if (heldItem.isDamageableItem())
+				heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
+			else
+				heldItem.shrink(1);
+		}
 
 		BlockPos pos = deployerTileEntity.getBlockPos();
 		World world = deployerTileEntity.getLevel();

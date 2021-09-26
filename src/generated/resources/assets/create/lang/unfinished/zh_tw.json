@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 19",
+	"_": "Missing Localizations: 20",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -753,6 +753,7 @@
 	"create.recipe.assembly.repeat": "重複 %1$s 次",
 	"create.recipe.assembly.junk": "有機率得到垃圾",
 	"create.recipe.processing.chance": "%1$s%%概率",
+	"create.recipe.deploying.not_consumed": "UNLOCALIZED: Not Consumed",
 	"create.recipe.heat_requirement.none": "不需要加熱",
 	"create.recipe.heat_requirement.heated": "普通加熱",
 	"create.recipe.heat_requirement.superheated": "超級加熱",

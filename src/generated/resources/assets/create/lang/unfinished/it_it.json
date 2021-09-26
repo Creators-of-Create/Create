@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 914",
+	"_": "Missing Localizations: 915",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -753,6 +753,7 @@
 	"create.recipe.assembly.repeat": "UNLOCALIZED: Repeat Sequence %1$s Times",
 	"create.recipe.assembly.junk": "UNLOCALIZED: Random salvage",
 	"create.recipe.processing.chance": "%1$s%% di probabilità",
+	"create.recipe.deploying.not_consumed": "UNLOCALIZED: Not Consumed",
 	"create.recipe.heat_requirement.none": "Nessun riscaldamento",
 	"create.recipe.heat_requirement.heated": "Riscaldamento",
 	"create.recipe.heat_requirement.superheated": "Super riscaldamento",

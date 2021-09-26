@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 24",
+	"_": "Missing Localizations: 25",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -753,6 +753,7 @@
 	"create.recipe.assembly.repeat": "%1$s번 반복하기",
 	"create.recipe.assembly.junk": "조립 실패한 조각들",
 	"create.recipe.processing.chance": "%1$s%% 확률",
+	"create.recipe.deploying.not_consumed": "UNLOCALIZED: Not Consumed",
 	"create.recipe.heat_requirement.none": "열이 필요하지 않음",
 	"create.recipe.heat_requirement.heated": "가열됨",
 	"create.recipe.heat_requirement.superheated": "초고온 가열됨",
