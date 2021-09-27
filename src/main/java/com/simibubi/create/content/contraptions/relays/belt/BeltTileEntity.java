@@ -227,10 +227,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			int length = compound.getInt("Length");
 			if (beltLength != length) {
 				beltLength = length;
-				if (level != null)
-					initializeLight();
-				else
-					light = null;
+				light = null;
 			}
 		}
 
@@ -523,7 +520,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			return getController().equals(((BeltTileEntity) target).getController()) ? 1 : 0;
 		return 0;
 	}
-	
+
 	public void invalidateItemHandler() {
 		itemHandler.invalidate();
 	}
@@ -535,7 +532,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		BlockState state = getBlockState();
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
 	}
-	
+
 	@Override
 	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
 		if (this.remove) {
