@@ -535,9 +535,10 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 	@Override
 	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
-		if (this.remove) {
+		if (this.remove) 
 			return true;
-		}
+		if (this.level == null || this.light == null)
+			return false;
 
 		GridAlignedBB beltVolume = getBeltVolume();
 
