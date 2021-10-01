@@ -274,7 +274,7 @@ public class AllItems {
 			.transform(CreateRegistrate.customRenderedItem(() -> PotatoCannonModel::new))
 			.model(AssetLookup.itemModelWithPartials())
 			.register();
-	
+
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
 		.transform(CreateRegistrate.customRenderedItem(() -> ExtendoGripModel::new))
 		.model(AssetLookup.itemModelWithPartials())
@@ -300,6 +300,7 @@ public class AllItems {
 		REGISTRATE
 			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
 			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+			.tag(AllItemTags.PRESSURIZED_AIR_SOURCE.tag)
 			.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
