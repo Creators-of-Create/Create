@@ -7,31 +7,23 @@ import net.minecraft.util.ResourceLocation;
 
 public class CTSpriteShifter extends SpriteShifter {
 
-	public enum CTType {
-		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS;
+	public static CTSpriteShiftEntry getCT(CTType type, ResourceLocation blockTexture, ResourceLocation connectedTexture) {
+		String key = type.name() + ":" + blockTexture + "->" + connectedTexture;
+		if (ENTRY_CACHE.containsKey(key))
+			return (CTSpriteShiftEntry) ENTRY_CACHE.get(key);
+
+		CTSpriteShiftEntry entry = create(type);
+		entry.set(blockTexture, connectedTexture);
+		ENTRY_CACHE.put(key, entry);
+		return entry;
+	}
+
+	public static CTSpriteShiftEntry getCT(CTType type, String blockTextureName, String connectedTextureName) {
+		return getCT(type, Create.asResource("block/" + blockTextureName), Create.asResource("block/" + connectedTextureName + "_connected"));
 	}
 
 	public static CTSpriteShiftEntry getCT(CTType type, String blockTextureName) {
 		return getCT(type, blockTextureName, blockTextureName);
-	}
-
-	public static CTSpriteShiftEntry getCT(CTType type, String blockTextureName, String connectedTextureName) {
-		return getCT(type, new ResourceLocation(Create.ID, "block/" + blockTextureName), connectedTextureName);
-	}
-
-	public static CTSpriteShiftEntry getCT(CTType type, ResourceLocation blockTexture, String connectedTextureName) {
-		String targetLocation = "block/" + connectedTextureName + "_connected";
-		String key =
-			type.name() + ":" + blockTexture.getNamespace() + ":" + blockTexture.getPath() + "->" + targetLocation;
-		if (textures.containsKey(key))
-			return (CTSpriteShiftEntry) textures.get(key);
-
-		CTSpriteShiftEntry entry = create(type);
-		ResourceLocation targetTextureLocation = new ResourceLocation(Create.ID, targetLocation);
-		entry.set(blockTexture, targetTextureLocation);
-
-		textures.put(key, entry);
-		return entry;
 	}
 
 	private static CTSpriteShiftEntry create(CTType type) {
@@ -47,6 +39,10 @@ public class CTSpriteShifter extends SpriteShifter {
 		default:
 			return null;
 		}
+	}
+
+	public enum CTType {
+		OMNIDIRECTIONAL, HORIZONTAL, VERTICAL, CROSS;
 	}
 
 }

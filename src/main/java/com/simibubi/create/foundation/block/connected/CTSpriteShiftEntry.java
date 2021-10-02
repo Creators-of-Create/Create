@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 
 public abstract class CTSpriteShiftEntry extends SpriteShiftEntry {
 
-	int textureSheetSize;
+	protected int textureSheetSize;
 
 	public CTSpriteShiftEntry(int sheetSize) {
 		this.textureSheetSize = sheetSize;

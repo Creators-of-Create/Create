@@ -3757,6 +3757,7 @@ bce28787b0271382842823d04a977912a88b01c2 data/create/tags/items/sandpaper.json
 6cdeeac1689f7b5bfd9bc40b462143d8eaf3ad0b data/create/tags/items/seats.json
 2f4044c2989b9a8aa394c88617d67a6a310e6b1b data/create/tags/items/upright_on_belt.json
 50936b211d94167a35ec78c89954082a336b6269 data/create/tags/items/valve_handles.json
+05ca51cdc60a5e109b5a0e3b782de13d34ebcb24 data/forge/tags/blocks/cobblestone.json
 16bcb8fcbe9170c2c11f1ca8d99d8b36cd812bbd data/forge/tags/blocks/glass/colorless.json
 81d3eb40b048160fcc2d6bb7ff12b49276297efd data/forge/tags/blocks/glass_panes.json
 4b700ee8aa748c2ec70c29ef1589844879c0deae data/forge/tags/blocks/ores.json

@@ -39,17 +39,17 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PotatoProjectileEntity extends DamagingProjectileEntity implements IEntityAdditionalSpawnData {
 
-	PotatoCannonProjectileType type;
-	ItemStack stack = ItemStack.EMPTY;
+	protected PotatoCannonProjectileType type;
+	protected ItemStack stack = ItemStack.EMPTY;
 
-	Entity stuckEntity;
-	Vector3d stuckOffset;
-	PotatoProjectileRenderMode stuckRenderer;
-	double stuckFallSpeed;
+	protected Entity stuckEntity;
+	protected Vector3d stuckOffset;
+	protected PotatoProjectileRenderMode stuckRenderer;
+	protected double stuckFallSpeed;
 
-	float additionalDamageMult = 1;
-	float additionalKnockback = 0;
-	float recoveryChance = 0;
+	protected float additionalDamageMult = 1;
+	protected float additionalKnockback = 0;
+	protected float recoveryChance = 0;
 
 	public PotatoProjectileEntity(EntityType<? extends DamagingProjectileEntity> type, World world) {
 		super(type, world);

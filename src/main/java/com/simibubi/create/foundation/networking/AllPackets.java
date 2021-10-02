@@ -25,8 +25,8 @@ import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
-import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonPacket;
+import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperBeamPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorElytraPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorPlacementPacket;
@@ -122,8 +122,8 @@ public enum AllPackets {
 
 	;
 
-	public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Create.ID, "network");
-	public static final String NETWORK_VERSION = new ResourceLocation(Create.ID, "1").toString();
+	public static final ResourceLocation CHANNEL_NAME = Create.asResource("network");
+	public static final String NETWORK_VERSION = Create.asResource("1").toString();
 	public static SimpleChannel channel;
 
 	private LoadedPacket<?> packet;

@@ -96,13 +96,13 @@ public class AllPaletteBlocks {
 	// Vanilla stone variant patterns
 
 	public static final PalettesVariantEntry GRANITE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.GRANITE, PaletteBlockPattern.VANILLA_RANGE, () -> Blocks.GRANITE);
+		new PalettesVariantEntry(PaletteStoneVariants.GRANITE, PaletteBlockPattern.VANILLA_RANGE);
 
 	public static final PalettesVariantEntry DIORITE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.DIORITE, PaletteBlockPattern.VANILLA_RANGE, () -> Blocks.DIORITE);
+		new PalettesVariantEntry(PaletteStoneVariants.DIORITE, PaletteBlockPattern.VANILLA_RANGE);
 
 	public static final PalettesVariantEntry ANDESITE_VARIANTS = new PalettesVariantEntry(PaletteStoneVariants.ANDESITE,
-		PaletteBlockPattern.VANILLA_RANGE, () -> Blocks.ANDESITE);
+		PaletteBlockPattern.VANILLA_RANGE);
 
 	// Create stone variants
 
@@ -119,7 +119,7 @@ public class AllPaletteBlocks {
 			.register();
 
 	public static final PalettesVariantEntry LIMESTONE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.LIMESTONE, PaletteBlockPattern.STANDARD_RANGE, LIMESTONE);
+		new PalettesVariantEntry(PaletteStoneVariants.LIMESTONE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> WEATHERED_LIMESTONE =
 		REGISTRATE.baseBlock("weathered_limestone", Block::new, () -> Blocks.SANDSTONE, true)
@@ -128,7 +128,7 @@ public class AllPaletteBlocks {
 			.register();
 
 	public static final PalettesVariantEntry WEATHERED_LIMESTONE_VARIANTS = new PalettesVariantEntry(
-		PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPattern.STANDARD_RANGE, WEATHERED_LIMESTONE);
+		PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> DOLOMITE =
 		REGISTRATE.baseBlock("dolomite", Block::new, () -> Blocks.QUARTZ_BLOCK, true)
@@ -137,7 +137,7 @@ public class AllPaletteBlocks {
 			.register();
 
 	public static final PalettesVariantEntry DOLOMITE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.DOLOMITE, PaletteBlockPattern.STANDARD_RANGE, DOLOMITE);
+		new PalettesVariantEntry(PaletteStoneVariants.DOLOMITE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> GABBRO =
 		REGISTRATE.baseBlock("gabbro", Block::new, () -> Blocks.ANDESITE, true)
@@ -146,7 +146,7 @@ public class AllPaletteBlocks {
 			.register();
 
 	public static final PalettesVariantEntry GABBRO_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPattern.STANDARD_RANGE, GABBRO);
+		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> SCORIA =
 		REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE, true)
@@ -163,7 +163,7 @@ public class AllPaletteBlocks {
 		.register();
 
 	public static final PalettesVariantEntry SCORIA_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.SCORIA, PaletteBlockPattern.STANDARD_RANGE, SCORIA);
+		new PalettesVariantEntry(PaletteStoneVariants.SCORIA, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> DARK_SCORIA =
 		REGISTRATE.baseBlock("dark_scoria", Block::new, () -> Blocks.ANDESITE, false)
@@ -171,7 +171,7 @@ public class AllPaletteBlocks {
 			.register();
 
 	public static final PalettesVariantEntry DARK_SCORIA_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE, DARK_SCORIA);
+		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE);
 
 	private static <T extends Block> NonNullBiConsumer<RegistrateBlockLootTables, T> cobblestoneLoot(PaletteStoneVariants variant) {
 		return (loot, block) -> loot.add(block, RegistrateBlockLootTables.droppingWithSilkTouch(block,

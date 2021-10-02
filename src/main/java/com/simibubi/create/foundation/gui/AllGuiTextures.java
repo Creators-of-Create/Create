@@ -120,7 +120,7 @@ public enum AllGuiTextures implements IScreenRenderable {
 	}
 
 	private AllGuiTextures(String location, int startX, int startY, int width, int height) {
-		this.location = new ResourceLocation(Create.ID, "textures/gui/" + location);
+		this.location = Create.asResource("textures/gui/" + location);
 		this.width = width;
 		this.height = height;
 		this.startX = startX;

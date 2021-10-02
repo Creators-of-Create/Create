@@ -27,9 +27,11 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.ModList;
 
 public class AllTags {
+
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
 			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
 
@@ -61,105 +63,38 @@ public class AllTags {
 		return wrapperFactory.apply(new ResourceLocation(domain, name).toString());
 	}
 
-	public static enum NameSpace {
+	public enum NameSpace {
 
-		MOD(Create.ID), FORGE("forge"), MC("minecraft"), TIC("tconstruct")
+		MOD(Create.ID), FORGE("forge"), TIC("tconstruct")
 
 		;
 
-		String id;
+		public final String id;
 
 		private NameSpace(String id) {
 			this.id = id;
 		}
+
 	}
 
-	public static enum AllItemTags {
-		CRUSHED_ORES(MOD),
-		SEATS(MOD),
-		VALVE_HANDLES(MOD),
-		UPRIGHT_ON_BELT(MOD),
-		SANDPAPER(MOD),
-		CREATE_INGOTS(MOD),
-		BEACON_PAYMENT(FORGE),
-		INGOTS(FORGE),
-		NUGGETS(FORGE),
-		PLATES(FORGE),
-		COBBLESTONE(FORGE)
+	public enum AllBlockTags {
 
-		;
-
-		public ITag.INamedTag<Item> tag;
-
-		private AllItemTags(NameSpace namespace) {
-			this(namespace, "");
-		}
-
-		private AllItemTags(NameSpace namespace, String path) {
-			tag = ItemTags.bind(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
-		}
-
-		public boolean matches(ItemStack stack) {
-			return tag.contains(stack.getItem());
-		}
-
-		public void add(Item... values) {
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
-				.add(values));
-		}
-
-		public void includeIn(AllItemTags parent) {
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(parent.tag)
-				.addTag(tag));
-		}
-	}
-
-	public static enum AllFluidTags {
-		NO_INFINITE_DRAINING,
-		HONEY(FORGE)
-
-		;
-
-		public ITag.INamedTag<Fluid> tag;
-
-		private AllFluidTags() {
-			this(MOD, "");
-		}
-
-		private AllFluidTags(NameSpace namespace) {
-			this(namespace, "");
-		}
-
-		private AllFluidTags(NameSpace namespace, String path) {
-			tag = FluidTags.createOptional(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
-		}
-
-		public boolean matches(Fluid fluid) {
-			return fluid != null && fluid.is(tag);
-		}
-
-		static void loadClass() {}
-	}
-
-	public static enum AllBlockTags {
-		WINDMILL_SAILS,
-		FAN_HEATERS,
-		WINDOWABLE,
 		BRITTLE,
-		SEATS,
-		SAILS,
-		VALVE_HANDLES,
+		FAN_HEATERS,
 		FAN_TRANSPARENT,
 		SAFE_NBT,
-		SLIMY_LOGS(TIC),
+		SAILS,
+		SEATS,
+		VALVE_HANDLES,
+		WINDMILL_SAILS,
+		WINDOWABLE,
 		WRENCH_PICKUP,
+
+		SLIMY_LOGS(TIC),
 
 		;
 
-		public ITag.INamedTag<Block> tag;
+		public final ITag.INamedTag<Block> tag;
 
 		private AllBlockTags() {
 			this(MOD, "");
@@ -186,9 +121,18 @@ public class AllTags {
 			return tag.contains(block.getBlock());
 		}
 
-		public void includeIn(AllBlockTags parent) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(parent.tag)
+		public void add(Block... values) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
+				.add(values));
+		}
+
+		public void includeIn(ITag.INamedTag<Block> parent) {
+			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(parent)
 				.addTag(tag));
+		}
+
+		public void includeIn(AllBlockTags parent) {
+			includeIn(parent.tag);
 		}
 
 		public void includeAll(ITag.INamedTag<Block> child) {
@@ -196,15 +140,92 @@ public class AllTags {
 				.addTag(child));
 		}
 
-		public void add(Block... values) {
-			REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag)
+	}
+
+	public enum AllItemTags {
+
+		CREATE_INGOTS(),
+		CRUSHED_ORES(),
+		SANDPAPER(),
+		SEATS(),
+		UPRIGHT_ON_BELT(),
+		VALVE_HANDLES(),
+
+		BEACON_PAYMENT(FORGE),
+		PLATES(FORGE)
+
+		;
+
+		public final ITag.INamedTag<Item> tag;
+
+		private AllItemTags() {
+			this(MOD, "");
+		}
+
+		private AllItemTags(NameSpace namespace) {
+			this(namespace, "");
+		}
+
+		private AllItemTags(NameSpace namespace, String path) {
+			tag = ItemTags.bind(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
+		}
+
+		public boolean matches(ItemStack stack) {
+			return tag.contains(stack.getItem());
+		}
+
+		public void add(Item... values) {
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
 				.add(values));
 		}
+
+		public void includeIn(ITag.INamedTag<Item> parent) {
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(parent)
+				.addTag(tag));
+		}
+
+		public void includeIn(AllItemTags parent) {
+			includeIn(parent.tag);
+		}
+
+	}
+
+	public enum AllFluidTags {
+
+		NO_INFINITE_DRAINING,
+
+		HONEY(FORGE)
+
+		;
+
+		public final ITag.INamedTag<Fluid> tag;
+
+		private AllFluidTags() {
+			this(MOD, "");
+		}
+
+		private AllFluidTags(NameSpace namespace) {
+			this(namespace, "");
+		}
+
+		private AllFluidTags(NameSpace namespace, String path) {
+			tag = FluidTags.createOptional(
+				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+		}
+
+		public boolean matches(Fluid fluid) {
+			return fluid != null && fluid.is(tag);
+		}
+
+		private static void loadClass() {}
+
 	}
 
 	public static void register() {
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
-		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.INGOTS);
+		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
 
 		AllItemTags.UPRIGHT_ON_BELT.add(Items.GLASS_BOTTLE, Items.POTION, Items.SPLASH_POTION, Items.LINGERING_POTION,
 			Items.HONEY_BOTTLE, Items.CAKE);
@@ -231,4 +252,5 @@ public class AllTags {
 
 		AllFluidTags.loadClass();
 	}
+
 }

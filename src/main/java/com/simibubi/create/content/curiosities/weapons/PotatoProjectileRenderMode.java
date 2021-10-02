@@ -1,5 +1,7 @@
 package com.simibubi.create.content.curiosities.weapons;
 
+import static com.simibubi.create.content.curiosities.weapons.PotatoProjectileRenderMode.entityRandom;
+
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.utility.AngleHelper;

@@ -11,26 +11,29 @@ import net.minecraft.util.ResourceLocation;
 
 public class SpriteShifter {
 
-	protected static Map<String, SpriteShiftEntry> textures = new HashMap<>();
+	protected static final Map<String, SpriteShiftEntry> ENTRY_CACHE = new HashMap<>();
 
-	public static SpriteShiftEntry get(String originalLocation, String targetLocation) {
+	public static SpriteShiftEntry get(ResourceLocation originalLocation, ResourceLocation targetLocation) {
 		String key = originalLocation + "->" + targetLocation;
-		if (textures.containsKey(key))
-			return textures.get(key);
+		if (ENTRY_CACHE.containsKey(key))
+			return ENTRY_CACHE.get(key);
 
 		SpriteShiftEntry entry = new SpriteShiftEntry();
-		entry.originalTextureLocation = new ResourceLocation(Create.ID, originalLocation);
-		entry.targetTextureLocation = new ResourceLocation(Create.ID, targetLocation);
-		textures.put(key, entry);
+		entry.set(originalLocation, targetLocation);
+		ENTRY_CACHE.put(key, entry);
 		return entry;
 	}
 
+	public static SpriteShiftEntry get(String originalLocation, String targetLocation) {
+		return get(Create.asResource(originalLocation), Create.asResource(targetLocation));
+	}
+
 	public static void reloadUVs() {
-		textures.values().forEach(SpriteShiftEntry::loadTextures);
+		ENTRY_CACHE.values().forEach(SpriteShiftEntry::loadTextures);
 	}
 
 	public static List<ResourceLocation> getAllTargetSprites() {
-		return textures.values().stream().map(SpriteShiftEntry::getTargetResourceLocation).collect(Collectors.toList());
+		return ENTRY_CACHE.values().stream().map(SpriteShiftEntry::getTargetResourceLocation).collect(Collectors.toList());
 	}
 
 }
