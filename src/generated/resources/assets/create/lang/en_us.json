@@ -1081,7 +1081,7 @@
 	"create.item_attributes.has_name": "has the custom name %1$s",
 	"create.item_attributes.has_name.inverted": "does not have the custom name %1$s",
   "create.item_attributes.renamed": "has a custom name",
-  "create.item_attributes.renamed.inverted":"does not have a custom name"
+  "create.item_attributes.renamed.inverted": "does not have a custom name"
 	"create.item_attributes.book_author": "was authored by %1$s",
 	"create.item_attributes.book_author.inverted": "was not authored by %1$s",
 	"create.item_attributes.book_copy_original": "is an original",
