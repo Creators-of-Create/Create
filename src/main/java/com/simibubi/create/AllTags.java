@@ -7,7 +7,6 @@ import static com.simibubi.create.AllTags.NameSpace.TIC;
 import java.util.function.Function;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.simibubi.create.foundation.utility.EmptyNamedTag;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -28,51 +27,60 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.fml.ModList;
 
 public class AllTags {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-			.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+		.itemGroup(() -> Create.BASE_CREATIVE_TAB);
+
+	public static <T> ITag.INamedTag<T> tag(Function<ResourceLocation, ITag.INamedTag<T>> wrapperFactory, String namespace,
+		String path) {
+		return wrapperFactory.apply(new ResourceLocation(namespace, path));
+	}
+
+	public static <T> ITag.INamedTag<T> forgeTag(Function<ResourceLocation, ITag.INamedTag<T>> wrapperFactory, String path) {
+		return tag(wrapperFactory, "forge", path);
+	}
+
+	public static ITag.INamedTag<Block> forgeBlockTag(String path) {
+		return forgeTag(BlockTags::createOptional, path);
+	}
+
+	public static ITag.INamedTag<Item> forgeItemTag(String path) {
+		return forgeTag(ItemTags::createOptional, path);
+	}
+
+	public static ITag.INamedTag<Fluid> forgeFluidTag(String path) {
+		return forgeTag(FluidTags::createOptional, path);
+	}
 
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
-		String tagName) {
-		return b -> b.tag(forgeBlockTag(tagName))
+		String path) {
+		return b -> b.tag(forgeBlockTag(path))
 			.item()
-			.tag(forgeItemTag(tagName));
-	}
-
-	public static ITag.INamedTag<Block> forgeBlockTag(String name) {
-		return forgeTag(BlockTags::bind, name);
-	}
-
-	public static ITag.INamedTag<Item> forgeItemTag(String name) {
-		return forgeTag(ItemTags::bind, name);
-	}
-
-	public static ITag.INamedTag<Fluid> forgeFluidTag(String name) {
-		return forgeTag(FluidTags::bind, name);
-	}
-
-	public static <T> ITag.INamedTag<T> forgeTag(Function<String, ITag.INamedTag<T>> wrapperFactory, String name) {
-		return tag(wrapperFactory, "forge", name);
-	}
-
-	public static <T> ITag.INamedTag<T> tag(Function<String, ITag.INamedTag<T>> wrapperFactory, String domain,
-		String name) {
-		return wrapperFactory.apply(new ResourceLocation(domain, name).toString());
+			.tag(forgeItemTag(path));
 	}
 
 	public enum NameSpace {
 
-		MOD(Create.ID), FORGE("forge"), TIC("tconstruct")
+		MOD(Create.ID, false, true),
+		FORGE("forge"),
+		TIC("tconstruct")
 
 		;
 
 		public final String id;
+		public final boolean optionalDefault;
+		public final boolean alwaysDatagenDefault;
 
-		private NameSpace(String id) {
+		NameSpace(String id) {
+			this(id, true, false);
+		}
+
+		NameSpace(String id, boolean optionalDefault, boolean alwaysDatagenDefault) {
 			this.id = id;
+			this.optionalDefault = optionalDefault;
+			this.alwaysDatagenDefault = alwaysDatagenDefault;
 		}
 
 	}
@@ -90,35 +98,48 @@ public class AllTags {
 		WINDOWABLE,
 		WRENCH_PICKUP,
 
+		WG_STONE(FORGE),
+
 		SLIMY_LOGS(TIC),
 
 		;
 
 		public final ITag.INamedTag<Block> tag;
 
-		private AllBlockTags() {
-			this(MOD, "");
+		AllBlockTags() {
+			this(MOD);
 		}
 
-		private AllBlockTags(NameSpace namespace) {
-			this(namespace, "");
+		AllBlockTags(NameSpace namespace) {
+			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
 		}
 
-		private AllBlockTags(NameSpace namespace, String path) {
-			ResourceLocation id =
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name()));
-			if (ModList.get()
-				.isLoaded(namespace.id)) {
-				tag = BlockTags.bind(id.toString());
-				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
+		AllBlockTags(NameSpace namespace, String path) {
+			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllBlockTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
+			this(namespace, null, optional, alwaysDatagen);
+		}
+
+		AllBlockTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
+			if (optional) {
+				tag = BlockTags.createOptional(id);
 			} else {
-				tag = new EmptyNamedTag<>(id);
+				tag = BlockTags.bind(id.toString());
+			}
+			if (alwaysDatagen) {
+				REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, prov -> prov.tag(tag));
 			}
 		}
 
-
-		public boolean matches(BlockState block) {
+		public boolean matches(Block block) {
 			return tag.contains(block.getBlock());
+		}
+
+		public boolean matches(BlockState state) {
+			return matches(state.getBlock());
 		}
 
 		public void add(Block... values) {
@@ -144,12 +165,12 @@ public class AllTags {
 
 	public enum AllItemTags {
 
-		CREATE_INGOTS(),
-		CRUSHED_ORES(),
-		SANDPAPER(),
-		SEATS(),
-		UPRIGHT_ON_BELT(),
-		VALVE_HANDLES(),
+		CREATE_INGOTS,
+		CRUSHED_ORES,
+		SANDPAPER,
+		SEATS,
+		UPRIGHT_ON_BELT,
+		VALVE_HANDLES,
 
 		BEACON_PAYMENT(FORGE),
 		PLATES(FORGE)
@@ -158,18 +179,32 @@ public class AllTags {
 
 		public final ITag.INamedTag<Item> tag;
 
-		private AllItemTags() {
-			this(MOD, "");
+		AllItemTags() {
+			this(MOD);
 		}
 
-		private AllItemTags(NameSpace namespace) {
-			this(namespace, "");
+		AllItemTags(NameSpace namespace) {
+			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
 		}
 
-		private AllItemTags(NameSpace namespace, String path) {
-			tag = ItemTags.bind(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())).toString());
-			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
+		AllItemTags(NameSpace namespace, String path) {
+			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllItemTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
+			this(namespace, null, optional, alwaysDatagen);
+		}
+
+		AllItemTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
+			if (optional) {
+				tag = ItemTags.createOptional(id);
+			} else {
+				tag = ItemTags.bind(id.toString());
+			}
+			if (alwaysDatagen) {
+				REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag));
+			}
 		}
 
 		public boolean matches(ItemStack stack) {
@@ -190,11 +225,16 @@ public class AllTags {
 			includeIn(parent.tag);
 		}
 
+		public void includeAll(ITag.INamedTag<Item> child) {
+			REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, prov -> prov.tag(tag)
+				.addTag(child));
+		}
+
 	}
 
 	public enum AllFluidTags {
 
-		NO_INFINITE_DRAINING,
+		NO_INFINITE_DRAINING(MOD, true, false),
 
 		HONEY(FORGE)
 
@@ -202,21 +242,55 @@ public class AllTags {
 
 		public final ITag.INamedTag<Fluid> tag;
 
-		private AllFluidTags() {
-			this(MOD, "");
+		AllFluidTags() {
+			this(MOD);
 		}
 
-		private AllFluidTags(NameSpace namespace) {
-			this(namespace, "");
+		AllFluidTags(NameSpace namespace) {
+			this(namespace, namespace.optionalDefault, namespace.alwaysDatagenDefault);
 		}
 
-		private AllFluidTags(NameSpace namespace, String path) {
-			tag = FluidTags.createOptional(
-				new ResourceLocation(namespace.id, (path.isEmpty() ? "" : path + "/") + Lang.asId(name())));
+		AllFluidTags(NameSpace namespace, String path) {
+			this(namespace, path, namespace.optionalDefault, namespace.alwaysDatagenDefault);
+		}
+
+		AllFluidTags(NameSpace namespace, boolean optional, boolean alwaysDatagen) {
+			this(namespace, null, optional, alwaysDatagen);
+		}
+
+		AllFluidTags(NameSpace namespace, String path, boolean optional, boolean alwaysDatagen) {
+			ResourceLocation id = new ResourceLocation(namespace.id, path == null ? Lang.asId(name()) : path);
+			if (optional) {
+				tag = FluidTags.createOptional(id);
+			} else {
+				tag = FluidTags.bind(id.toString());
+			}
+			if (alwaysDatagen) {
+				REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag));
+			}
 		}
 
 		public boolean matches(Fluid fluid) {
 			return fluid != null && fluid.is(tag);
+		}
+
+		public void add(Fluid... values) {
+			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
+				.add(values));
+		}
+
+		public void includeIn(ITag.INamedTag<Fluid> parent) {
+			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(parent)
+				.addTag(tag));
+		}
+
+		public void includeIn(AllFluidTags parent) {
+			includeIn(parent.tag);
+		}
+
+		public void includeAll(ITag.INamedTag<Fluid> child) {
+			REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, prov -> prov.tag(tag)
+				.addTag(child));
 		}
 
 		private static void loadClass() {}
@@ -224,6 +298,8 @@ public class AllTags {
 	}
 
 	public static void register() {
+		AllFluidTags.loadClass();
+
 		AllItemTags.CREATE_INGOTS.includeIn(AllItemTags.BEACON_PAYMENT);
 		AllItemTags.CREATE_INGOTS.includeIn(Tags.Items.INGOTS);
 
@@ -249,8 +325,6 @@ public class AllTags {
 		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
 				Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
 				Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
-
-		AllFluidTags.loadClass();
 	}
 
 }

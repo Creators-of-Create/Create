@@ -54,6 +54,8 @@ public class PaletteBlockPattern {
 			}),
 
 		POLISHED = create("polished", PREFIX, FOR_POLISHED)
+			.blockTags(Tags.Blocks.STONE)
+			.itemTags(Tags.Items.STONE)
 			.addRecipes(v -> (c, p) -> {
 				DataIngredient ingredient = DataIngredient.items(v.getBaseBlock().get());
 				ShapedRecipeBuilder.shaped(c.get(), 4)

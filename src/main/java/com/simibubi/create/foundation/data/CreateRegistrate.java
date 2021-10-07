@@ -9,6 +9,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.AllSections;
@@ -40,10 +41,12 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.DistExecutor;
@@ -138,17 +141,27 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Palettes */
 
-	public <T extends Block> BlockBuilder<T, CreateRegistrate> baseBlock(String name,
-		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean TFworldGen) {
-		return super.block(name, factory).initialProperties(propertiesFrom)
+	public <T extends Block> BlockBuilder<T, CreateRegistrate> paletteStoneBlock(String name,
+		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 			.blockstate((c, p) -> {
 				final String location = "block/palettes/" + c.getName() + "/plain";
 				p.simpleBlock(c.get(), p.models()
 					.cubeAll(c.getName(), p.modLoc(location)));
-				// TODO tag with forge:stone; if TFWorldGen == true tag with forge:wg_stone
-				// aswell
 			})
-			.simpleItem();
+			.tag(Tags.Blocks.STONE)
+			.item()
+			.tag(Tags.Items.STONE)
+			.build();
+		if (worldGenStone) {
+			builder.tag(BlockTags.BASE_STONE_OVERWORLD, AllTags.AllBlockTags.WG_STONE.tag);
+		}
+		return builder;
+	}
+
+	public BlockBuilder<Block, CreateRegistrate> paletteStoneBlock(String name,
+			NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		return paletteStoneBlock(name, Block::new, propertiesFrom, worldGenStone);
 	}
 
 	/* Fluids */
