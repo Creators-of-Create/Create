@@ -695,7 +695,7 @@ public class AllTileEntities {
 	
 	public static final TileEntityEntry<ToolboxTileEntity> TOOLBOX = Create.registrate()
 		.tileEntity("toolbox", ToolboxTileEntity::new)
-		.validBlocks(AllBlocks.TOOLBOX)
+		.validBlocks(AllBlocks.TOOLBOXES.toArray())
 		.renderer(() -> ToolboxRenderer::new)
 		.register();
 

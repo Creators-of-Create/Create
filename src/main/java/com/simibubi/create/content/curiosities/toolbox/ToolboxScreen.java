@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.renderer.Rectangle2d;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
@@ -31,6 +32,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	protected Slot hoveredToolboxSlot;
 	private IconButton confirmButton;
 	private IconButton disposeButton;
+	private DyeColor color;
 
 	private List<Rectangle2d> extraAreas = Collections.emptyList();
 
@@ -49,6 +51,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		disposeButton.setToolTip(Lang.translate("toolbox.depositBox"));
 		widgets.add(confirmButton);
 		widgets.add(disposeButton);
+		color = menu.contentHolder.getColor();
 
 		extraAreas = ImmutableList.of(new Rectangle2d(118, 155, 80, 100), new Rectangle2d(308, 125, 100, 70));
 	}
@@ -117,7 +120,8 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 			.rotateX(-22)
 			.rotateY(-202);
 
-		GuiGameElement.of(AllBlocks.TOOLBOX.getDefaultState())
+		GuiGameElement.of(AllBlocks.TOOLBOXES.get(color)
+			.getDefaultState())
 			.render(ms);
 
 		ms.pushPose();
@@ -125,7 +129,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 			.translate(0, -6 / 16f, 12 / 16f)
 			.rotateX(-105 * menu.contentHolder.lid.getValue(partialTicks))
 			.translate(0, 6 / 16f, -12 / 16f);
-		GuiGameElement.of(AllBlockPartials.TOOLBOX_LID)
+		GuiGameElement.of(AllBlockPartials.TOOLBOX_LIDS.get(color))
 			.render(ms);
 		ms.popPose();
 

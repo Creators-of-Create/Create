@@ -93,6 +93,7 @@ public class AllTags {
 		SAFE_NBT,
 		SAILS,
 		SEATS,
+		TOOLBOXES,
 		VALVE_HANDLES,
 		WINDMILL_SAILS,
 		WINDOWABLE,
@@ -169,6 +170,7 @@ public class AllTags {
 		CRUSHED_ORES,
 		SANDPAPER,
 		SEATS,
+		TOOLBOXES,
 		UPRIGHT_ON_BELT,
 		VALVE_HANDLES,
 

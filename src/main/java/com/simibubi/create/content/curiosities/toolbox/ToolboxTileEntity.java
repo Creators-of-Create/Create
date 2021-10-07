@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -21,6 +22,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -31,7 +33,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -47,6 +48,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	ToolboxInventory inventory;
 	LazyOptional<IItemHandler> inventoryProvider;
+	LazyOptional<DyeColor> colorProvider;
 	protected int openCount;
 
 	Map<Integer, WeakHashMap<PlayerEntity, Integer>> connectedPlayers;
@@ -58,7 +60,17 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		connectedPlayers = new HashMap<>();
 		inventory = new ToolboxInventory(this);
 		inventoryProvider = LazyOptional.of(() -> inventory);
+		colorProvider = LazyOptional.of(() -> {
+			BlockState blockState = getBlockState();
+			if (blockState != null && blockState.getBlock() instanceof ToolboxBlock)
+				return ((ToolboxBlock) blockState.getBlock()).getColor();
+			return DyeColor.BROWN;
+		});
 		setLazyTickRate(10);
+	}
+
+	public DyeColor getColor() {
+		return colorProvider.orElse(DyeColor.BROWN);
 	}
 
 	@Override
@@ -351,7 +363,10 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return customName != null ? customName : new TranslationTextComponent("block.create.toolbox");
+		return customName != null ? customName
+			: AllBlocks.TOOLBOXES.get(getColor())
+				.get()
+				.getName();
 	}
 
 	@Override

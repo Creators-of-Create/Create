@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.item.ItemStack;
@@ -21,7 +21,7 @@ public class ToolboxInventory extends ItemStackHandler {
 	List<ItemStack> filters;
 	boolean settling;
 	private ToolboxTileEntity te;
-	
+
 	private boolean limitedMode;
 
 	public ToolboxInventory(ToolboxTileEntity te) {
@@ -33,7 +33,7 @@ public class ToolboxInventory extends ItemStackHandler {
 		for (int i = 0; i < 8; i++)
 			filters.add(ItemStack.EMPTY);
 	}
-	
+
 	public void inLimitedMode(Consumer<ToolboxInventory> action) {
 		limitedMode = true;
 		action.accept(this);
@@ -88,7 +88,7 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		if (AllBlocks.TOOLBOX.isIn(stack))
+		if (AllItemTags.TOOLBOXES.matches(stack))
 			return false;
 		if (slot < 0 || slot >= getSlots())
 			return false;
@@ -153,6 +153,9 @@ public class ToolboxInventory extends ItemStackHandler {
 
 	public ItemStack distributeToCompartment(@Nonnull ItemStack stack, int compartment, boolean simulate) {
 		if (stack.isEmpty())
+			return stack;
+		if (filters.get(compartment)
+			.isEmpty())
 			return stack;
 
 		for (int i = STACKS_PER_COMPARTMENT - 1; i >= 0; i--) {

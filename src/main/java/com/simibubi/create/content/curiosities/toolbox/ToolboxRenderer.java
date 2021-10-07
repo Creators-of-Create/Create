@@ -27,7 +27,8 @@ public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> 
 		BlockState blockState = tileEntityIn.getBlockState();
 		Direction facing = blockState.getValue(ToolboxBlock.FACING)
 			.getOpposite();
-		SuperByteBuffer lid = PartialBufferer.get(AllBlockPartials.TOOLBOX_LID, blockState);
+		SuperByteBuffer lid =
+			PartialBufferer.get(AllBlockPartials.TOOLBOX_LIDS.get(tileEntityIn.getColor()), blockState);
 		SuperByteBuffer drawer = PartialBufferer.get(AllBlockPartials.TOOLBOX_DRAWER, blockState);
 
 		float lidAngle = tileEntityIn.lid.getValue(partialTicks);
@@ -38,9 +39,9 @@ public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> 
 			.centre()
 			.rotateY(-facing.toYRot())
 			.unCentre()
-			.translate(0, 6/16f, 12/16f)
+			.translate(0, 6 / 16f, 12 / 16f)
 			.rotateX(135 * lidAngle)
-			.translate(0, -6/16f, -12/16f);
+			.translate(0, -6 / 16f, -12 / 16f);
 		lid.light(light)
 			.renderInto(ms, layer);
 

@@ -4,7 +4,6 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.Optional;
 
-import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
@@ -19,6 +18,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer.Builder;
@@ -26,6 +27,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -40,11 +42,21 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE<ToolboxTileEntity> {
 
-	public ToolboxBlock(Properties p_i48377_1_) {
-		super(p_i48377_1_);
+	private final DyeColor color;
+
+	public ToolboxBlock(Properties p_i48440_1_, DyeColor color) {
+		super(p_i48440_1_);
+		this.color = color;
 		registerDefaultState(super.defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
+	@Override
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> p_149666_2_) {
+		if (group != ItemGroup.TAB_SEARCH && color != DyeColor.BROWN)
+			return;
+		super.fillItemCategory(group, p_149666_2_);
+	}
+	
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
@@ -94,7 +106,7 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 
 	@Override
 	public ItemStack getCloneItemStack(IBlockReader world, BlockPos pos, BlockState state) {
-		ItemStack item = AllBlocks.TOOLBOX.asStack();
+		ItemStack item = new ItemStack(this);
 		Optional<ToolboxTileEntity> tileEntityOptional = getTileEntityOptional(world, pos);
 
 		CompoundNBT tag = item.getOrCreateTag();
@@ -162,6 +174,10 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 	@Override
 	public Class<ToolboxTileEntity> getTileEntityClass() {
 		return ToolboxTileEntity.class;
+	}
+
+	public DyeColor getColor() {
+		return color;
 	}
 
 }

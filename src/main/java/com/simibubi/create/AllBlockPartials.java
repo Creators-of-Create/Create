@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
@@ -95,7 +96,7 @@ public class AllBlockPartials {
 
 		PECULIAR_BELL = get("peculiar_bell"), HAUNTED_BELL = get("haunted_bell"),
 
-		TOOLBOX_LID = get("toolbox/lid"), TOOLBOX_DRAWER = get("toolbox/drawer"),
+		TOOLBOX_DRAWER = get("toolbox/drawer"),
 
 		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
 
@@ -116,6 +117,7 @@ public class AllBlockPartials {
 
 	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
 		new HashMap<>();
+	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new HashMap<>();
 	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES = new HashMap<>();
 
 	static {
@@ -138,6 +140,8 @@ public class AllBlockPartials {
 				continue;
 			BLAZES.put(heat, get("blaze_burner/blaze/" + heat.getSerializedName()));
 		}
+		for (DyeColor color : DyeColor.values())
+			TOOLBOX_LIDS.put(color, get("toolbox/lid/" + Lang.asId(color.name())));
 	}
 
 	private static PartialModel getEntity(String path) {

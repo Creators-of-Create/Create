@@ -13,16 +13,24 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.networking.AllPackets;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class ToolboxHandlerClient {
@@ -32,6 +40,61 @@ public class ToolboxHandlerClient {
 	public static void clientTick() {
 		if (COOLDOWN > 0 && !AllKeys.TOOLBELT.isPressed())
 			COOLDOWN--;
+	}
+
+	public static boolean onPickItem() {
+		Minecraft mc = Minecraft.getInstance();
+		ClientPlayerEntity player = mc.player;
+		if (player == null)
+			return false;
+		World level = player.level;
+		RayTraceResult hitResult = mc.hitResult;
+
+		if (hitResult == null || hitResult.getType() == RayTraceResult.Type.MISS)
+			return false;
+		if (player.isCreative())
+			return false;
+
+		ItemStack result = ItemStack.EMPTY;
+		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
+
+		if (toolboxes.isEmpty())
+			return false;
+
+		if (hitResult.getType() == RayTraceResult.Type.BLOCK) {
+			BlockPos pos = ((BlockRayTraceResult) hitResult).getBlockPos();
+			BlockState state = level.getBlockState(pos);
+			if (state.getMaterial() == Material.AIR)
+				return false;
+			result = state.getPickBlock(hitResult, level, pos, player);
+
+		} else if (hitResult.getType() == RayTraceResult.Type.ENTITY) {
+			Entity entity = ((EntityRayTraceResult) hitResult).getEntity();
+			result = entity.getPickedResult(hitResult);
+		}
+
+		if (result.isEmpty())
+			return false;
+
+		for (ToolboxTileEntity toolboxTileEntity : toolboxes) {
+			ToolboxInventory inventory = toolboxTileEntity.inventory;
+			for (int comp = 0; comp < 8; comp++) {
+				ItemStack inSlot = inventory.takeFromCompartment(1, comp, true);
+				if (inSlot.isEmpty())
+					continue;
+				if (inSlot.getItem() != result.getItem())
+					continue;
+				if (!ItemStack.tagMatches(inSlot, result))
+					continue;
+
+				AllPackets.channel.sendToServer(
+					new ToolboxEquipPacket(toolboxTileEntity.getBlockPos(), comp, player.inventory.selected));
+				return true;
+			}
+
+		}
+
+		return false;
 	}
 
 	public static void onKeyInput(int key, boolean pressed) {

@@ -59,6 +59,12 @@ public class InputEvents {
 	public static void onClickInput(ClickInputEvent event) {
 		if (Minecraft.getInstance().screen != null)
 			return;
+		
+		if (event.getKeyBinding() == Minecraft.getInstance().options.keyPickItem) {
+			if (ToolboxHandlerClient.onPickItem())
+				event.setCanceled(true);
+			return;
+		}
 
 		if (event.isUseItem())
 			LinkedControllerClientHandler.deactivateInLectern();

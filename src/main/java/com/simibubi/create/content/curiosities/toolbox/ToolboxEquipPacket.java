@@ -77,13 +77,14 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			ItemStack playerStack = player.inventory.getItem(hotbarSlot);
 			if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
 				toolboxTileEntity.inventory.filters.get(slot))) {
-				ItemStack remainder =
-					ItemHandlerHelper.insertItemStacked(toolboxTileEntity.inventory, playerStack, false);
-				if (!remainder.isEmpty())
-					remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.inventory),
-						remainder, false);
-				if (remainder.getCount() != playerStack.getCount())
-					player.inventory.setItem(hotbarSlot, remainder);
+				toolboxTileEntity.inventory.inLimitedMode(inventory -> {
+					ItemStack remainder = ItemHandlerHelper.insertItemStacked(inventory, playerStack, false);
+					if (!remainder.isEmpty())
+						remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.inventory),
+							remainder, false);
+					if (remainder.getCount() != playerStack.getCount())
+						player.inventory.setItem(hotbarSlot, remainder);
+				});
 			}
 
 			CompoundNBT compound = player.getPersistentData()

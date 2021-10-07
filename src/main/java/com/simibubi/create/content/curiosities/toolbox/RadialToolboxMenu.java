@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
@@ -86,7 +87,8 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			ms.pushPose();
 			AllGuiTextures.TOOLBELT_INACTIVE_SLOT.draw(ms, this, -12, -12);
-			GuiGameElement.of(AllBlocks.TOOLBOX.asStack())
+			GuiGameElement.of(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)
+				.asStack())
 				.at(-9, -9)
 				.render(ms);
 
@@ -153,14 +155,15 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 					if (slot < toolboxes.size()) {
 						AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, 0, 0);
-						GuiGameElement.of(AllBlocks.TOOLBOX.asStack())
+						ToolboxTileEntity toolboxTileEntity = toolboxes.get(slot);
+						GuiGameElement.of(AllBlocks.TOOLBOXES.get(toolboxTileEntity.getColor())
+							.asStack())
 							.at(3, 3)
 							.render(ms);
 
 						if (slot == (scrollMode ? scrollSlot : hoveredSlot)) {
 							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -1, -1);
-							tip = toolboxes.get(slot)
-								.getDisplayName();
+							tip = toolboxTileEntity.getDisplayName();
 						}
 					} else
 						AllGuiTextures.TOOLBELT_EMPTY_SLOT.draw(ms, this, 0, 0);

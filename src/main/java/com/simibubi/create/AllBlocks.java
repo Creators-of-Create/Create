@@ -1000,7 +1000,7 @@ public class AllBlocks {
 					.unlockedBy("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
-			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.seat"))
+			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
 			.tag(AllBlockTags.SEATS.tag)
 			.item()
 			.tag(AllItemTags.SEATS.tag)
@@ -1350,25 +1350,46 @@ public class AllBlocks {
 			.onRegister(addMovementBehaviour(new HauntedBellMovementBehaviour()))
 			.register();
 
-	public static final BlockEntry<ToolboxBlock> TOOLBOX = REGISTRATE.block("toolbox", ToolboxBlock::new)
-		.blockstate((c, p) -> p.horizontalBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
-		.initialProperties(SharedProperties::wooden)
-		.properties(p -> p.sound(SoundType.WOOD))
-		.addLayer(() -> RenderType::cutoutMipped)
-		.loot((lt, block) -> {
-			Builder builder = LootTable.lootTable();
-			IBuilder survivesExplosion = SurvivesExplosion.survivesExplosion();
-			lt.add(block, builder.withPool(LootPool.lootPool()
-				.when(survivesExplosion)
-				.setRolls(ConstantRange.exactly(1))
-				.add(ItemLootEntry.lootTableItem(AllBlocks.TOOLBOX.get())
-					.apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
-					.apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
-						.copy("Inventory", "Inventory")))));
-		})
-		.item()
-		.transform(customItemModel())
-		.register();
+	public static final DyedBlockList<ToolboxBlock> TOOLBOXES = new DyedBlockList<>(colour -> {
+		String colourName = colour.getSerializedName();
+		return REGISTRATE.block(colourName + "_toolbox", p -> new ToolboxBlock(p, colour))
+			.initialProperties(SharedProperties::wooden)
+			.properties(p -> p.sound(SoundType.WOOD))
+			.addLayer(() -> RenderType::cutoutMipped)
+			.loot((lt, block) -> {
+				Builder builder = LootTable.lootTable();
+				IBuilder survivesExplosion = SurvivesExplosion.survivesExplosion();
+				lt.add(block, builder.withPool(LootPool.lootPool()
+					.when(survivesExplosion)
+					.setRolls(ConstantRange.exactly(1))
+					.add(ItemLootEntry.lootTableItem(block)
+						.apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+						.apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+							.copy("Inventory", "Inventory")))));
+			})
+			.blockstate((c, p) -> {
+				p.horizontalBlock(c.get(), p.models()
+					.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/block"))
+					.texture("0", p.modLoc("block/toolbox/" + colourName)));
+			})
+			.recipe((c, p) -> {
+				ShapedRecipeBuilder.shaped(c.get())
+					.pattern("#")
+					.pattern("-")
+					.define('#', DyeHelper.getTagOfDye(colour))
+					.define('-', AllItemTags.TOOLBOXES.tag)
+					.unlockedBy("has_toolbox", RegistrateRecipeProvider.hasItem(AllItemTags.TOOLBOXES.tag))
+					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_toolbox"));
+			})
+			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
+			.tag(AllBlockTags.TOOLBOXES.tag)
+			.item()
+			.model((c, p) -> p.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/item"))
+				.texture("0", p.modLoc("block/toolbox/" + colourName)))
+			.tag(AllItemTags.TOOLBOXES.tag)
+			.build()
+			.register();
+	});
 
 	// Materials
 

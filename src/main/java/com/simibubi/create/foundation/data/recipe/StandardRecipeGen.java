@@ -23,6 +23,7 @@ import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
+import com.simibubi.create.foundation.data.recipe.CreateRecipeProvider.I;
 import com.simibubi.create.foundation.utility.Lang;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -36,6 +37,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.CookingRecipeSerializer;
@@ -166,6 +168,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.pattern(" GE")
 			.pattern("LEG")
 			.pattern("OL ")),
+
+		TOOLBOX = create(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)).unlockedByTag(I::goldSheet)
+			.viaShaped(b -> b.define('S', I.goldSheet())
+				.define('C', I.cog())
+				.define('W', Tags.Items.CHESTS_WOODEN)
+				.define('L', Tags.Items.LEATHER)
+				.pattern(" C ")
+				.pattern("SWS")
+				.pattern(" L ")),
 
 		MINECART_COUPLING = create(AllItems.MINECART_COUPLING).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('E', I.andesite())
@@ -993,8 +1004,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		TREE_FERTILIZER = create(AllItems.TREE_FERTILIZER).returns(2)
 			.unlockedBy(() -> Items.BONE_MEAL)
 			.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
-				.requires(Ingredient.of(Items.HORN_CORAL, Items.BRAIN_CORAL, Items.TUBE_CORAL,
-					Items.BUBBLE_CORAL, Items.FIRE_CORAL))
+				.requires(Ingredient.of(Items.HORN_CORAL, Items.BRAIN_CORAL, Items.TUBE_CORAL, Items.BUBBLE_CORAL,
+					Items.FIRE_CORAL))
 				.requires(Items.BONE_MEAL))
 
 	;
@@ -1322,8 +1333,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return register(consumer -> {
 					boolean isOtherMod = compatDatagenOutput != null;
 
-					CookingRecipeBuilder b = builder.apply(
-						CookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
+					CookingRecipeBuilder b = builder
+						.apply(CookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
 							exp, (int) (cookingTime * cookingTimeModifier), serializer));
 					if (unlockedBy != null)
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
