@@ -15,17 +15,14 @@ import com.simibubi.create.foundation.gui.widgets.Label;
 import com.simibubi.create.foundation.gui.widgets.ScrollInput;
 import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.network.PacketDistributor;
 
 public class SymmetryWandScreen extends AbstractSimiScreen {
 
@@ -45,8 +42,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	private Hand hand;
 
 	public SymmetryWandScreen(ItemStack wand, Hand hand) {
-		super();
-
 		background = AllGuiTextures.WAND_OF_SYMMETRY;
 
 		currentElement = SymmetryWandItem.getMirror(wand);
@@ -150,19 +145,14 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		ItemStack heldItem = minecraft.player.getItemInHand(hand);
-		CompoundNBT compound = heldItem.getTag();
-		compound.put(SymmetryWandItem.SYMMETRY, currentElement.writeToNbt());
-		heldItem.setTag(compound);
-		AllPackets.channel.send(PacketDistributor.SERVER.noArg(), new NbtPacket(heldItem, hand));
-		minecraft.player.setItemInHand(hand, heldItem);
-		super.removed();
+		SymmetryWandItem.configureSettings(wand, currentElement);
+		AllPackets.channel.sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		if (confirmButton.isHovered()) {
-			minecraft.player.closeContainer();
+			onClose();
 			return true;
 		}
 

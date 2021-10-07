@@ -30,7 +30,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 
-	private ResourceLocation regular = new ResourceLocation(Create.ID, "textures/entity/super_glue/slime.png");
+	private ResourceLocation regular = Create.asResource("textures/entity/super_glue/slime.png");
 
 	private float[] insideQuad;
 	private float[] outsideQuad;

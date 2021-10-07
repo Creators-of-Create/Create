@@ -148,6 +148,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 
 	@Override
 	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, world, pos, oldState, isMoving);
 		if (world.isClientSide)
 			return;
 		if (state != oldState)

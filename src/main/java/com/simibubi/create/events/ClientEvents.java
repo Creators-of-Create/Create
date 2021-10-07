@@ -93,8 +93,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
 
-	private static final String itemPrefix = "item." + Create.ID;
-	private static final String blockPrefix = "block." + Create.ID;
+	private static final String ITEM_PREFIX = "item." + Create.ID;
+	private static final String BLOCK_PREFIX = "block." + Create.ID;
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
@@ -246,7 +246,7 @@ public class ClientEvents {
 		String translationKey = stack.getItem()
 			.getDescriptionId(stack);
 
-		if (translationKey.startsWith(itemPrefix) || translationKey.startsWith(blockPrefix))
+		if (translationKey.startsWith(ITEM_PREFIX) || translationKey.startsWith(BLOCK_PREFIX))
 			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
 				List<ITextComponent> itemTooltip = event.getToolTip();
 				List<ITextComponent> toolTip = new ArrayList<>();

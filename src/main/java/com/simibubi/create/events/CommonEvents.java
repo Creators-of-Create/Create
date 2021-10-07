@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecip
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxHandler;
+import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
@@ -45,7 +46,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -129,7 +129,7 @@ public class CommonEvents {
 		WrenchItem.wrenchInstaKillsMinecarts(event);
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent
 	public static void registerCommands(RegisterCommandsEvent event) {
 		AllCommands.register(event.getDispatcher());
 	}
@@ -139,6 +139,7 @@ public class CommonEvents {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotionMixingRecipeManager.LISTENER);
 		event.addListener(FluidTransferRecipes.LISTENER);
+		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 	}
 
 	@SubscribeEvent

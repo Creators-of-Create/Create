@@ -101,11 +101,12 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 	@Override
 	public void tick() {
-		super.tick();
-
 		// Init belt
 		if (beltLength == 0)
 			BeltBlock.initBelt(level, worldPosition);
+		
+		super.tick();
+
 		if (!AllBlocks.BELT.has(level.getBlockState(worldPosition)))
 			return;
 
@@ -211,6 +212,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		int prevBeltLength = beltLength;
 		super.fromTag(state, compound, clientPacket);
 
 		if (compound.getBoolean("IsController"))
@@ -224,14 +226,9 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 				controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 			trackerUpdateTag = compound;
 			index = compound.getInt("Index");
-			int length = compound.getInt("Length");
-			if (beltLength != length) {
-				beltLength = length;
-				if (level != null)
-					initializeLight();
-				else
-					light = null;
-			}
+			beltLength = compound.getInt("Length");
+			if (prevBeltLength != beltLength) 
+				light = null;
 		}
 
 		if (isController())
@@ -523,7 +520,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			return getController().equals(((BeltTileEntity) target).getController()) ? 1 : 0;
 		return 0;
 	}
-	
+
 	public void invalidateItemHandler() {
 		itemHandler.invalidate();
 	}
@@ -535,12 +532,13 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		BlockState state = getBlockState();
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
 	}
-	
+
 	@Override
 	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
-		if (this.remove) {
+		if (this.remove) 
 			return true;
-		}
+		if (this.level == null || this.light == null)
+			return false;
 
 		GridAlignedBB beltVolume = getBeltVolume();
 

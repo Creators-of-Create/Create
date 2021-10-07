@@ -9,6 +9,7 @@ import static com.simibubi.create.foundation.data.WindowGen.woodenWindowPane;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSpriteShifts;
+import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
@@ -96,13 +97,13 @@ public class AllPaletteBlocks {
 	// Vanilla stone variant patterns
 
 	public static final PalettesVariantEntry GRANITE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.GRANITE, PaletteBlockPattern.VANILLA_RANGE, () -> Blocks.GRANITE);
+		new PalettesVariantEntry(PaletteStoneVariants.GRANITE, PaletteBlockPattern.VANILLA_RANGE);
 
 	public static final PalettesVariantEntry DIORITE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.DIORITE, PaletteBlockPattern.VANILLA_RANGE, () -> Blocks.DIORITE);
+		new PalettesVariantEntry(PaletteStoneVariants.DIORITE, PaletteBlockPattern.VANILLA_RANGE);
 
 	public static final PalettesVariantEntry ANDESITE_VARIANTS = new PalettesVariantEntry(PaletteStoneVariants.ANDESITE,
-		PaletteBlockPattern.VANILLA_RANGE, () -> Blocks.ANDESITE);
+		PaletteBlockPattern.VANILLA_RANGE);
 
 	// Create stone variants
 
@@ -113,65 +114,61 @@ public class AllPaletteBlocks {
 		.register();
 
 	public static final BlockEntry<Block> LIMESTONE =
-		REGISTRATE.baseBlock("limestone", Block::new, () -> Blocks.SANDSTONE, true)
-			.tag(BlockTags.BASE_STONE_OVERWORLD)
+		REGISTRATE.paletteStoneBlock("limestone", () -> Blocks.SANDSTONE, true)
 			.loot(cobblestoneLoot(PaletteStoneVariants.LIMESTONE))
 			.register();
 
 	public static final PalettesVariantEntry LIMESTONE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.LIMESTONE, PaletteBlockPattern.STANDARD_RANGE, LIMESTONE);
+		new PalettesVariantEntry(PaletteStoneVariants.LIMESTONE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> WEATHERED_LIMESTONE =
-		REGISTRATE.baseBlock("weathered_limestone", Block::new, () -> Blocks.SANDSTONE, true)
-			.tag(BlockTags.BASE_STONE_OVERWORLD)
+		REGISTRATE.paletteStoneBlock("weathered_limestone", () -> Blocks.SANDSTONE, true)
 			.loot(cobblestoneLoot(PaletteStoneVariants.WEATHERED_LIMESTONE))
 			.register();
 
 	public static final PalettesVariantEntry WEATHERED_LIMESTONE_VARIANTS = new PalettesVariantEntry(
-		PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPattern.STANDARD_RANGE, WEATHERED_LIMESTONE);
+		PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> DOLOMITE =
-		REGISTRATE.baseBlock("dolomite", Block::new, () -> Blocks.QUARTZ_BLOCK, true)
-			.tag(BlockTags.BASE_STONE_OVERWORLD)
+		REGISTRATE.paletteStoneBlock("dolomite", () -> Blocks.QUARTZ_BLOCK, true)
 			.loot(cobblestoneLoot(PaletteStoneVariants.DOLOMITE))
 			.register();
 
 	public static final PalettesVariantEntry DOLOMITE_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.DOLOMITE, PaletteBlockPattern.STANDARD_RANGE, DOLOMITE);
+		new PalettesVariantEntry(PaletteStoneVariants.DOLOMITE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> GABBRO =
-		REGISTRATE.baseBlock("gabbro", Block::new, () -> Blocks.ANDESITE, true)
-			.tag(BlockTags.BASE_STONE_OVERWORLD)
+		REGISTRATE.paletteStoneBlock("gabbro", () -> Blocks.ANDESITE, true)
 			.loot(cobblestoneLoot(PaletteStoneVariants.GABBRO))
 			.register();
 
 	public static final PalettesVariantEntry GABBRO_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPattern.STANDARD_RANGE, GABBRO);
+		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> SCORIA =
-		REGISTRATE.baseBlock("scoria", Block::new, () -> Blocks.ANDESITE, true)
+		REGISTRATE.paletteStoneBlock("scoria", () -> Blocks.ANDESITE, false)
 			.loot(cobblestoneLoot(PaletteStoneVariants.SCORIA))
 			.register();
 
 	public static final BlockEntry<Block> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
-		.tag(BlockTags.BASE_STONE_OVERWORLD)
-		.onRegister(CreateRegistrate.blockVertexColors(new ScoriaVertexColor()))
+		.tag(BlockTags.BASE_STONE_OVERWORLD, AllTags.AllBlockTags.WG_STONE.tag)
+		.onRegister(CreateRegistrate.blockVertexColors(ScoriaVertexColor.INSTANCE))
 		.loot((p, g) -> p.add(g, RegistrateBlockLootTables.droppingWithSilkTouch(g, SCORIA.get())))
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();
 
 	public static final PalettesVariantEntry SCORIA_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.SCORIA, PaletteBlockPattern.STANDARD_RANGE, SCORIA);
+		new PalettesVariantEntry(PaletteStoneVariants.SCORIA, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> DARK_SCORIA =
-		REGISTRATE.baseBlock("dark_scoria", Block::new, () -> Blocks.ANDESITE, false)
+		REGISTRATE.paletteStoneBlock("dark_scoria", () -> Blocks.ANDESITE, false)
 			.loot(cobblestoneLoot(PaletteStoneVariants.DARK_SCORIA))
 			.register();
 
 	public static final PalettesVariantEntry DARK_SCORIA_VARIANTS =
-		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE, DARK_SCORIA);
+		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE);
 
 	private static <T extends Block> NonNullBiConsumer<RegistrateBlockLootTables, T> cobblestoneLoot(PaletteStoneVariants variant) {
 		return (loot, block) -> loot.add(block, RegistrateBlockLootTables.droppingWithSilkTouch(block,

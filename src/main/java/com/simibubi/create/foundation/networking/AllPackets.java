@@ -22,13 +22,16 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.actors.FluidSplashPacket;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.ConfigureSequencedGearshiftPacket;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectPacket;
+import com.simibubi.create.content.curiosities.symmetry.ConfigureSymmetryWandPacket;
 import com.simibubi.create.content.curiosities.symmetry.SymmetryEffectPacket;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxDisposeAllPacket;
 import com.simibubi.create.content.curiosities.toolbox.ToolboxEquipPacket;
 import com.simibubi.create.content.curiosities.tools.BlueprintAssignCompleteRecipePacket;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripInteractionPacket;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonPacket;
+import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperBeamPacket;
+import com.simibubi.create.content.curiosities.zapper.terrainzapper.ConfigureWorldshaperPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorElytraPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorPlacementPacket;
 import com.simibubi.create.content.logistics.block.depot.EjectorTriggerPacket;
@@ -69,7 +72,6 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public enum AllPackets {
 
 	// Client to Server
-	NBT(NbtPacket.class, NbtPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_SCHEMATICANNON(ConfigureSchematicannonPacket.class, ConfigureSchematicannonPacket::new, PLAY_TO_SERVER),
 	CONFIGURE_FLEXCRATE(ConfigureFlexcratePacket.class, ConfigureFlexcratePacket::new, PLAY_TO_SERVER),
 	CONFIGURE_STOCKSWITCH(ConfigureStockswitchPacket.class, ConfigureStockswitchPacket::new, PLAY_TO_SERVER),
@@ -98,6 +100,8 @@ public enum AllPackets {
 	C_CONFIGURE_CONFIG(CConfigureConfigPacket.class, CConfigureConfigPacket::new, PLAY_TO_SERVER),
 	SUBMIT_GHOST_ITEM(GhostItemSubmitPacket.class, GhostItemSubmitPacket::new, PLAY_TO_SERVER),
 	BLUEPRINT_COMPLETE_RECIPE(BlueprintAssignCompleteRecipePacket.class, BlueprintAssignCompleteRecipePacket::new, PLAY_TO_SERVER),
+	CONFIGURE_SYMMETRY_WAND(ConfigureSymmetryWandPacket.class, ConfigureSymmetryWandPacket::new, PLAY_TO_SERVER),
+	CONFIGURE_WORLDSHAPER(ConfigureWorldshaperPacket.class, ConfigureWorldshaperPacket::new, PLAY_TO_SERVER),
 	TOOLBOX_EQUIP(ToolboxEquipPacket.class, ToolboxEquipPacket::new, PLAY_TO_SERVER),
 	TOOLBOX_DISPOSE_ALL(ToolboxDisposeAllPacket.class, ToolboxDisposeAllPacket::new, PLAY_TO_SERVER),
 
@@ -121,11 +125,12 @@ public enum AllPackets {
 	POTATO_CANNON(PotatoCannonPacket.class, PotatoCannonPacket::new, PLAY_TO_CLIENT),
 	SOUL_PULSE(SoulPulseEffectPacket.class, SoulPulseEffectPacket::new, PLAY_TO_CLIENT),
 	PERSISTENT_DATA(ISyncPersistentData.Packet.class, ISyncPersistentData.Packet::new, PLAY_TO_CLIENT),
+	SYNC_POTATO_PROJECTILE_TYPES(PotatoProjectileTypeManager.SyncPacket.class, PotatoProjectileTypeManager.SyncPacket::new, PLAY_TO_CLIENT),
 
 	;
 
-	public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(Create.ID, "network");
-	public static final String NETWORK_VERSION = new ResourceLocation(Create.ID, "1").toString();
+	public static final ResourceLocation CHANNEL_NAME = Create.asResource("network");
+	public static final String NETWORK_VERSION = Create.asResource("1").toString();
 	public static SimpleChannel channel;
 
 	private LoadedPacket<?> packet;

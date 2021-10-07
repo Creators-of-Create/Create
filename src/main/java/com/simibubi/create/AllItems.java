@@ -3,7 +3,6 @@ package com.simibubi.create;
 import static com.simibubi.create.AllTags.forgeItemTag;
 import static com.simibubi.create.AllTags.AllItemTags.CREATE_INGOTS;
 import static com.simibubi.create.AllTags.AllItemTags.CRUSHED_ORES;
-import static com.simibubi.create.AllTags.AllItemTags.NUGGETS;
 import static com.simibubi.create.AllTags.AllItemTags.PLATES;
 import static com.simibubi.create.content.AllSections.CURIOSITIES;
 import static com.simibubi.create.content.AllSections.KINETICS;
@@ -64,6 +63,7 @@ import net.minecraft.item.Rarity;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 
 public class AllItems {
 
@@ -167,9 +167,9 @@ public class AllItems {
 			.register();
 
 	public static final ItemEntry<Item> COPPER_NUGGET =
-		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), NUGGETS.tag),
-		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), NUGGETS.tag),
-		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), NUGGETS.tag),
+		taggedIngredient("copper_nugget", forgeItemTag("nuggets/copper"), Tags.Items.NUGGETS),
+		ZINC_NUGGET = taggedIngredient("zinc_nugget", forgeItemTag("nuggets/zinc"), Tags.Items.NUGGETS),
+		BRASS_NUGGET = taggedIngredient("brass_nugget", forgeItemTag("nuggets/brass"), Tags.Items.NUGGETS),
 
 		COPPER_SHEET = taggedIngredient("copper_sheet", forgeItemTag("plates/copper"), PLATES.tag),
 		BRASS_SHEET = taggedIngredient("brass_sheet", forgeItemTag("plates/brass"), PLATES.tag),

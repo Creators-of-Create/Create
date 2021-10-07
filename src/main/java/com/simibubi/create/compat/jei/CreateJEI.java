@@ -79,7 +79,7 @@ import net.minecraftforge.fml.ModList;
 @SuppressWarnings("unused")
 public class CreateJEI implements IModPlugin {
 
-	private static final ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
+	private static final ResourceLocation ID = Create.asResource("jei_plugin");
 
 	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
