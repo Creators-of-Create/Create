@@ -4,6 +4,7 @@ import static net.minecraft.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.Optional;
 
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
@@ -21,6 +22,7 @@ import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
@@ -56,7 +58,7 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 			return;
 		super.fillItemCategory(group, p_149666_2_);
 	}
-	
+
 	@Override
 	public FluidState getFluidState(BlockState state) {
 		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : Fluids.EMPTY.defaultFluidState();
@@ -178,6 +180,11 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 
 	public DyeColor getColor() {
 		return color;
+	}
+
+	public static Ingredient getMainBox() {
+		return Ingredient.of(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)
+			.get());
 	}
 
 }

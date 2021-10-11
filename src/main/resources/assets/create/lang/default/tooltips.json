@@ -136,6 +136,15 @@
 	"block.create.turntable.tooltip": "TURNTABLE",
 	"block.create.turntable.tooltip.summary": "Turns _Rotational Force_ into refined Motion Sickness.",
 
+	"block.create.toolbox.tooltip": "TOOLBOX",
+	"block.create.toolbox.tooltip.summary": "Every Inventors' dearest Companion. Conveniently _holds_ a large amount of _8 Different_ item types.",
+	"block.create.toolbox.tooltip.condition1": "When Picked Up",
+	"block.create.toolbox.tooltip.behaviour1": "_Retains_ Inventory _Contents_.",
+	"block.create.toolbox.tooltip.condition2": "When placed in Range",
+	"block.create.toolbox.tooltip.behaviour2": "_Nearby_ _Players_ can hold the _Toolbox_ _Keybind_ to access its contents _Remotely_.",
+	"block.create.toolbox.tooltip.condition3": "When R-Clicked",
+	"block.create.toolbox.tooltip.behaviour3": "Opens the _Container Interface_.",
+
 	"block.create.stockpile_switch.tooltip": "STOCKPILE SWITCH",
 	"block.create.stockpile_switch.tooltip.summary": "Toggles a Redstone signal based on the amount of _Stored Items_ or _Fluids_ in the attached Container. Comes with a handy filter. As opposed to a _Comparator,_ the _Stockpile Switch_ allows configuration of _thresholds,_ at which signals are inverted.",
 	"block.create.stockpile_switch.tooltip.condition1": "When R-Clicked",

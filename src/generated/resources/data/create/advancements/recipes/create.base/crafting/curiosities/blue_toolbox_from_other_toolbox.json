@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/kinetics/white_toolbox_from_other_toolbox"
+      "create:crafting/curiosities/blue_toolbox_from_other_toolbox"
     ]
   },
   "criteria": {
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/kinetics/white_toolbox_from_other_toolbox"
+        "recipe": "create:crafting/curiosities/blue_toolbox_from_other_toolbox"
       }
     }
   },

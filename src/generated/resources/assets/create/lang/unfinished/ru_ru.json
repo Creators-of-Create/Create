@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 35",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -798,6 +798,7 @@
 	"create.action.discard": "Отказаться",
 
 	"create.keyinfo.toolmenu": "Меню инструмента фокусировки",
+	"create.keyinfo.toolbelt": "UNLOCALIZED: Access Nearby Toolboxes",
 	"create.keyinfo.scrollup": "Имитация движения мыши вверх (в мире)",
 	"create.keyinfo.scrolldown": "Имитация движения мыши вниз (в мире)",
 
@@ -1421,6 +1422,15 @@
 
 	"block.create.turntable.tooltip": "ПОВОРОТНЫЙ СТОЛ",
 	"block.create.turntable.tooltip.summary": "Преобразует _силу_ _вращения_ прямиком в морскую болезнь.",
+
+	"block.create.toolbox.tooltip": "UNLOCALIZED: TOOLBOX",
+	"block.create.toolbox.tooltip.summary": "UNLOCALIZED: Every Inventors' dearest Companion. Conveniently _holds_ a large amount of _8 Different_ item types.",
+	"block.create.toolbox.tooltip.condition1": "UNLOCALIZED: When Picked Up",
+	"block.create.toolbox.tooltip.behaviour1": "UNLOCALIZED: _Retains_ Inventory _Contents_.",
+	"block.create.toolbox.tooltip.condition2": "UNLOCALIZED: When placed in Range",
+	"block.create.toolbox.tooltip.behaviour2": "UNLOCALIZED: _Nearby_ _Players_ can hold the _Toolbox_ _Keybind_ to access its contents _Remotely_.",
+	"block.create.toolbox.tooltip.condition3": "UNLOCALIZED: When R-Clicked",
+	"block.create.toolbox.tooltip.behaviour3": "UNLOCALIZED: Opens the _Container Interface_.",
 
 	"block.create.stockpile_switch.tooltip": "НАСТРАИВАЕМЫЙ КОМПАРАТОР",
 	"block.create.stockpile_switch.tooltip.summary": "Подаёт сигнал красного камня в зависимости от _заполненности_ _прикреплённого_ _ящика_.",

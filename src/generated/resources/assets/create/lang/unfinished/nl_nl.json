@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1796",
+	"_": "Missing Localizations: 1805",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -798,6 +798,7 @@
 	"create.action.discard": "Weggooien",
 
 	"create.keyinfo.toolmenu": "Focus Gereedschap Menu",
+	"create.keyinfo.toolbelt": "UNLOCALIZED: Access Nearby Toolboxes",
 	"create.keyinfo.scrollup": "UNLOCALIZED: Simulate Mousewheel Up (inworld)",
 	"create.keyinfo.scrolldown": "UNLOCALIZED: Simulate Mousewheel Down (inworld)",
 
@@ -1421,6 +1422,15 @@
 
 	"block.create.turntable.tooltip": "DRAAISCHIJF",
 	"block.create.turntable.tooltip.summary": "Verandert _Rotatiekracht_ in verfijnde bewegingsziekte.",
+
+	"block.create.toolbox.tooltip": "UNLOCALIZED: TOOLBOX",
+	"block.create.toolbox.tooltip.summary": "UNLOCALIZED: Every Inventors' dearest Companion. Conveniently _holds_ a large amount of _8 Different_ item types.",
+	"block.create.toolbox.tooltip.condition1": "UNLOCALIZED: When Picked Up",
+	"block.create.toolbox.tooltip.behaviour1": "UNLOCALIZED: _Retains_ Inventory _Contents_.",
+	"block.create.toolbox.tooltip.condition2": "UNLOCALIZED: When placed in Range",
+	"block.create.toolbox.tooltip.behaviour2": "UNLOCALIZED: _Nearby_ _Players_ can hold the _Toolbox_ _Keybind_ to access its contents _Remotely_.",
+	"block.create.toolbox.tooltip.condition3": "UNLOCALIZED: When R-Clicked",
+	"block.create.toolbox.tooltip.behaviour3": "UNLOCALIZED: Opens the _Container Interface_.",
 
 	"block.create.stockpile_switch.tooltip": "VOORRAAD SCHAKELAAR",
 	"block.create.stockpile_switch.tooltip.summary": "Schakelt een Redstone signaal op basis van de _Opslagruimte_ in de aangesloten Container.",

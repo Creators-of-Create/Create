@@ -93,7 +93,8 @@
 	"create.action.saveToFile": "Save",
 	"create.action.discard": "Discard",
 
-	"create.keyinfo.toolmenu": "Focus Tool Menu",
+	"create.keyinfo.toolmenu": "Focus Schematic Overlay",
+	"create.keyinfo.toolbelt": "Access Nearby Toolboxes",
 	"create.keyinfo.scrollup": "Simulate Mousewheel Up (inworld)",
 	"create.keyinfo.scrolldown": "Simulate Mousewheel Down (inworld)",
 

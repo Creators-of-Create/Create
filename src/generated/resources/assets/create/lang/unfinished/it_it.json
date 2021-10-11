@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 944",
+	"_": "Missing Localizations: 953",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -798,6 +798,7 @@
 	"create.action.discard": "Scarta",
 
 	"create.keyinfo.toolmenu": "Focalizzazione sul menù degli strumenti",
+	"create.keyinfo.toolbelt": "UNLOCALIZED: Access Nearby Toolboxes",
 	"create.keyinfo.scrollup": "Simula rotellina del mouse verso su (nel mondo)",
 	"create.keyinfo.scrolldown": "Simula rotellina del mouse verso giù (nel mondo)",
 
@@ -1421,6 +1422,15 @@
 
 	"block.create.turntable.tooltip": "PIATTO",
 	"block.create.turntable.tooltip.summary": "Assorbe la _forza_ _di_ _rotazione_, girando.",
+
+	"block.create.toolbox.tooltip": "UNLOCALIZED: TOOLBOX",
+	"block.create.toolbox.tooltip.summary": "UNLOCALIZED: Every Inventors' dearest Companion. Conveniently _holds_ a large amount of _8 Different_ item types.",
+	"block.create.toolbox.tooltip.condition1": "UNLOCALIZED: When Picked Up",
+	"block.create.toolbox.tooltip.behaviour1": "UNLOCALIZED: _Retains_ Inventory _Contents_.",
+	"block.create.toolbox.tooltip.condition2": "UNLOCALIZED: When placed in Range",
+	"block.create.toolbox.tooltip.behaviour2": "UNLOCALIZED: _Nearby_ _Players_ can hold the _Toolbox_ _Keybind_ to access its contents _Remotely_.",
+	"block.create.toolbox.tooltip.condition3": "UNLOCALIZED: When R-Clicked",
+	"block.create.toolbox.tooltip.behaviour3": "UNLOCALIZED: Opens the _Container Interface_.",
 
 	"block.create.stockpile_switch.tooltip": "INTERRUTTORE ACCUMULATORE",
 	"block.create.stockpile_switch.tooltip.summary": "Attiva/disattiva un segnale redstone in base allo _spazio_ _di_ _stoccaggio_ nel contenitore collegato.",
