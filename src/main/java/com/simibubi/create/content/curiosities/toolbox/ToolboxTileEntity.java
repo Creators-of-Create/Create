@@ -157,8 +157,9 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 					ItemStack extracted = inventory.takeFromCompartment(amountToReplenish, slot, false);
 					if (!extracted.isEmpty()) {
 						update = true;
+						ItemStack template = playerStack.isEmpty() ? extracted : playerStack;
 						player.inventory.setItem(hotbarSlot,
-							ItemHandlerHelper.copyStackWithSize(extracted, count + extracted.getCount()));
+							ItemHandlerHelper.copyStackWithSize(template, count + extracted.getCount()));
 					}
 				}
 
@@ -240,9 +241,10 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 			return;
 
 		ItemStack playerStack = player.inventory.getItem(hotbarSlot);
-		ItemStack remainder = inventory.distributeToCompartment(playerStack, slot, false);
+		ItemStack toInsert = ToolboxInventory.cleanItemNBT(playerStack.copy());
+		ItemStack remainder = inventory.distributeToCompartment(toInsert, slot, false);
 
-		if (remainder.getCount() != playerStack.getCount())
+		if (remainder.getCount() != toInsert.getCount())
 			player.inventory.setItem(hotbarSlot, remainder);
 	}
 

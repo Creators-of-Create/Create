@@ -119,8 +119,12 @@ public class BeltDeployerCallbacks {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 
 		ItemStack heldItem = deployerTileEntity.player.getMainHandItem();
-		if (!(recipe instanceof DeployerApplicationRecipe)
-			|| !((DeployerApplicationRecipe) recipe).shouldKeepHeldItem()) {
+		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
+			.getBoolean("Unbreakable");
+		boolean keepHeld =
+			recipe instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) recipe).shouldKeepHeldItem();
+
+		if (!unbreakable && !keepHeld) {
 			if (heldItem.isDamageableItem())
 				heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
 			else

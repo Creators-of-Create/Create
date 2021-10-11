@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -191,9 +192,17 @@ public class ToolboxInventory extends ItemStackHandler {
 		return ItemHandlerHelper.copyStackWithSize(lastValid, amount - remaining);
 	}
 
+	public static ItemStack cleanItemNBT(ItemStack stack) {
+		if (AllItems.BELT_CONNECTOR.isIn(stack))
+			stack.removeTagKey("FirstPulley");
+		return stack;
+	}
+
 	public static boolean canItemsShareCompartment(ItemStack stack1, ItemStack stack2) {
 		if (!stack1.isStackable() && !stack2.isStackable() && stack1.isDamageableItem() && stack2.isDamageableItem())
 			return stack1.getItem() == stack2.getItem();
+		if (AllItems.BELT_CONNECTOR.isIn(stack1) && AllItems.BELT_CONNECTOR.isIn(stack2))
+			return true;
 		return ItemHandlerHelper.canItemStacksStack(stack1, stack2);
 	}
 
