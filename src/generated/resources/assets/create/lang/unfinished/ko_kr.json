@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 50",
+	"_": "Missing Localizations: 54",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1429,6 +1429,10 @@
 
 	"block.create.content_observer.tooltip": "CONTENT OBSERVER",
 	"block.create.content_observer.tooltip.summary": "보관함이나 벨트의 아이템을 등록된 _필터_를 이용해 _탐지_합니다. _보관함, 벨트, 슈트_ 안에 해당 아이템을 탐지하는 동안, 레드스톤 신호를 보냅니다. _퍼널_가 해당 아이템을 수송하면, _1틱_의 레드스톤 신호를 보냅니다.",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "ADJUSTABLE CRATE",
 	"block.create.adjustable_crate.tooltip.summary": "이 보관함는 용량을 _직접_ _정할_ 수 있습니다. 아무아이템이나 최대 16스택씩 담을 수 있습니다. 레드스톤 비교기와 호환됩니다.",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 31",
+	"_": "Missing Localizations: 35",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1429,6 +1429,10 @@
 
 	"block.create.content_observer.tooltip": "НАБЛЮДАТЕЛЬ ЗА СОДЕРЖИМЫМ",
 	"block.create.content_observer.tooltip.summary": "_Обнаруживает элементы_ внутри _контейнеров_ и _конвейеров_, соответствующие настроенному _фильтру_. Если наблюдаемый инвентарь, ремень или шланг содержит совпадающий элемент, этот компонент излучает сигнал красного камня. Когда наблюдаемая _ воронка передает_ соответствующий предмет, этот компонент испускает _импульс_.",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "РЕГУЛИРУЕМЫЙ ЯЩИК",
 	"block.create.adjustable_crate.tooltip.summary": "Этот контейнер для хранения позволяет вручную контролировать его емкость. Он может вместить до 16 стаков любого предмета. Поддерживает компараторы.",

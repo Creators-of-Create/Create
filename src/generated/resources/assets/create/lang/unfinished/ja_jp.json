@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 35",
+	"_": "Missing Localizations: 39",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1429,6 +1429,10 @@
 
 	"block.create.content_observer.tooltip": "コンテンツオブザーバー",
 	"block.create.content_observer.tooltip.summary": "設定された_フィルター_に一致する_コンテナ_や_メカニカルベルト_内の_アイテム_を_検出_します。観察している_収納ブロック_、_ベルト_、または_シュート_に一致するアイテムが含まれている場合、このは_レッドストーン信号_を発します。観察している_ファンネル_が一致するアイテムを_運搬_すると、このコンポーネントは_レッドストーンパルス_を発します。",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "可変クレート",
 	"block.create.adjustable_crate.tooltip.summary": "この_収納ブロック_は、容量を手動で調整できます。任意のアイテムを_16スタック_まで収納できます。_レッドストーンコンパレーター_に対応しています。",

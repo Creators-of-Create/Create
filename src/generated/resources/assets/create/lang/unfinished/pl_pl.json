@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 282",
+	"_": "Missing Localizations: 286",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1429,6 +1429,10 @@
 
 	"block.create.content_observer.tooltip": "DETEKTOR ZAWARTOŚCI",
 	"block.create.content_observer.tooltip.summary": "_Wykrywa przedmioty_ zawarte w sąsiadującym _bloku_ lub _taśmociągu_, które pasują do ustalonego filtra. Kiedy obserwowany blok _zawiera_ ten przedmiot, detektor wyśle _sygnał Redstone_.",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "REGULOWANA SKRZYNKA",
 	"block.create.adjustable_crate.tooltip.summary": "Ta skrzynia pozwala na _ręczną kontrolę_ jej pojemności. Może pomieścić do _16 stosów_ dowolnego przedmiotu. Działa z _komparatorami_.",

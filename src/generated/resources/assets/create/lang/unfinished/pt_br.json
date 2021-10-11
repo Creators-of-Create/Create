@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1833",
+	"_": "Missing Localizations: 1837",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1428,7 +1428,11 @@
 	"block.create.stockpile_switch.tooltip.behaviour1": "Para de enviar _Sinal_ de _Redstone_",
 
 	"block.create.content_observer.tooltip": "UNLOCALIZED: CONTENT OBSERVER",
-	"block.create.content_observer.tooltip.summary": "UNLOCALIZED: _Detects Items_ inside _containers_ and _conveyors_ matching a configured _filter_. While the observed _inventory_, _belt_ or _chute contains_ a matching item, this component will emit a _Redstone Signal_. When an observed _funnel transfers_ a matching item, this component will emit a _Redstone Pulse_.",
+	"block.create.content_observer.tooltip.summary": "UNLOCALIZED: _Detects Items_ or _Fluids_ inside _containers_, _pipes_ or _conveyors_ matching a configured _filter_.",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "adjustable_crate",
 	"block.create.adjustable_crate.tooltip.summary": "Este _Recipiente_ de _Armazenamento_ permite controle Manual da sua capacidade. Pode conter até _16_ _Pilhas_ de qualquer Item",

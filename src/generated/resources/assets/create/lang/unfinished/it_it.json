@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 940",
+	"_": "Missing Localizations: 944",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1429,6 +1429,10 @@
 
 	"block.create.content_observer.tooltip": "OSSERVATORE DEI CONTENUTI",
 	"block.create.content_observer.tooltip.summary": "_Rileva oggetti_ dentro i _contenitori_ ed i _nastri_ corrispondenti ad un _filtro_. Quando l'_inventario_ del blocco, _nastro_ or _scivolo_ contiene un oggetto corrispondente, questo componente emetterà un _segnale redstone_. Quando un _imbuto_ osservato _trasferisce_ un oggetto corrispondente, questo componente emetterà un _segnale redstone_ temporaneo.",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "BAULE REGOLABILE",
 	"block.create.adjustable_crate.tooltip.summary": "Questo _contenitore_ _di_ _stoccaggio_ consente il controllo manuale sulla sua capacità. Può contenere fino a _16_ _pile_ di qualsiasi oggetto. Supporta _comparatori_ _redstone_.",

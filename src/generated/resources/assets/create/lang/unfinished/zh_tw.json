@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 45",
+	"_": "Missing Localizations: 49",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1429,6 +1429,10 @@
 
 	"block.create.content_observer.tooltip": "物品偵測器",
 	"block.create.content_observer.tooltip.summary": "偵測_容器_和_輸送帶_中過濾器匹配的物品。當觀察到包含匹配的物品時，此組件將發出_紅石訊號_。當觀察到的漏斗_轉移匹配的物品_時，此組件將發出_紅石脈沖_。",
+	"block.create.content_observer.tooltip.condition1": "UNLOCALIZED: When observing a Container",
+	"block.create.content_observer.tooltip.behaviour1": "UNLOCALIZED: Emits a _Redstone Signal_ while the observed container has _matching_ _content_.",
+	"block.create.content_observer.tooltip.condition2": "UNLOCALIZED: When observing a Funnel",
+	"block.create.content_observer.tooltip.behaviour2": "UNLOCALIZED: Emits a _Redstone Pulse_ when a _matching_ Item is _transferred_.",
 
 	"block.create.adjustable_crate.tooltip": "可調節板條箱",
 	"block.create.adjustable_crate.tooltip.summary": "這個箱子可以調整容量，最大可以收納_16組_物品。",
