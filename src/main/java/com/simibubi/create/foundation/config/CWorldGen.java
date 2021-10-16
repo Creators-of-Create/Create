@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 
 public class CWorldGen extends ConfigBase {
 
-	public ConfigBool disable = b(false, "disableWorldGen", Comments.disable);
+	public final ConfigBool disable = b(false, "disableWorldGen", Comments.disable);
 
 	@Override
 	protected void registerAll(Builder builder) {

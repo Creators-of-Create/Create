@@ -10,7 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
-import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
@@ -44,7 +44,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-public class PistonExtensionPoleBlock extends ProperDirectionalBlock implements IWrenchable, IWaterLoggable {
+public class PistonExtensionPoleBlock extends WrenchableDirectionalBlock implements IWrenchable, IWaterLoggable {
 
     private static final int placementHelperId = PlacementHelpers.register(PlacementHelper.get());
 

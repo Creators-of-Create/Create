@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation;
+package com.simibubi.create.foundation.block;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;

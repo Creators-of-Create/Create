@@ -5,7 +5,7 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
-import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,7 +30,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class MechanicalPistonHeadBlock extends ProperDirectionalBlock implements IWaterLoggable {
+public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implements IWaterLoggable {
 
     public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 

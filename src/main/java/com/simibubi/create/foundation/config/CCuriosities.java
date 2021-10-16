@@ -2,14 +2,14 @@ package com.simibubi.create.foundation.config;
 
 public class CCuriosities extends ConfigBase {
 
-	public ConfigInt maxSymmetryWandRange = i(50, 10, "maxSymmetryWandRange", Comments.symmetryRange);
-	public ConfigInt placementAssistRange = i(12, 3, "placementAssistRange", Comments.placementRange);
-	public ConfigInt toolboxRange = i(10, 1, "toolboxRange", Comments.toolboxRange);
-	public ConfigInt airInBacktank = i(900, 1, "airInBacktank", Comments.maxAirInBacktank);
-	public ConfigInt enchantedBacktankCapacity = i(300, 1, "enchantedBacktankCapacity", Comments.enchantedBacktankCapacity);
+	public final ConfigInt maxSymmetryWandRange = i(50, 10, "maxSymmetryWandRange", Comments.symmetryRange);
+	public final ConfigInt placementAssistRange = i(12, 3, "placementAssistRange", Comments.placementRange);
+	public final ConfigInt toolboxRange = i(10, 1, "toolboxRange", Comments.toolboxRange);
+	public final ConfigInt airInBacktank = i(900, 1, "airInBacktank", Comments.maxAirInBacktank);
+	public final ConfigInt enchantedBacktankCapacity = i(300, 1, "enchantedBacktankCapacity", Comments.enchantedBacktankCapacity);
 
-	public ConfigInt maxExtendoGripActions = i(1000, 0, "maxExtendoGripActions", Comments.maxExtendoGripActions);
-	public ConfigInt maxPotatoCannonShots = i(200, 0, "maxPotatoCannonShots", Comments.maxPotatoCannonShots);
+	public final ConfigInt maxExtendoGripActions = i(1000, 0, "maxExtendoGripActions", Comments.maxExtendoGripActions);
+	public final ConfigInt maxPotatoCannonShots = i(200, 0, "maxPotatoCannonShots", Comments.maxPotatoCannonShots);
 
 //	public ConfigInt zapperUndoLogLength = i(10, 0, "zapperUndoLogLength", Comments.zapperUndoLogLength); NYI
 
@@ -32,7 +32,7 @@ public class CCuriosities extends ConfigBase {
 			"Amount of free Extendo Grip actions provided by one filled Copper Backtank. Set to 0 makes Extendo Grips unbreakable";
 		static String maxPotatoCannonShots =
 			"Amount of free Potato Cannon shots provided by one filled Copper Backtank. Set to 0 makes Potato Cannons unbreakable";
-//		static String zapperUndoLogLength = "The maximum amount of operations, a blockzapper can remember for undoing. (0 to disable undo)";
+//		static String zapperUndoLogLength = "The maximum amount of operations a blockzapper can remember for undoing. (0 to disable undo)";
 	}
 
 }

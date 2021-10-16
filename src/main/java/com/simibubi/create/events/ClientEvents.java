@@ -22,7 +22,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlicer;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
@@ -43,7 +42,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -98,10 +97,10 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
-		World world = Minecraft.getInstance().level;
 		if (!isGameActive())
 			return;
 
+		World world = Minecraft.getInstance().level;
 		if (event.phase == Phase.START) {
 			LinkedControllerClientHandler.tick();
 			AirCurrent.tickClientPlayerSounds();
@@ -161,13 +160,6 @@ public class ClientEvents {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
 		}
-
-		/*
-		 * i was getting nullPointers when trying to call this during client setup,
-		 * so i assume minecraft's language manager isn't yet fully loaded at that time.
-		 * not sure where else to call this tho :S
-		 */
-		IHaveGoggleInformation.numberFormat.update();
 	}
 
 	@SubscribeEvent

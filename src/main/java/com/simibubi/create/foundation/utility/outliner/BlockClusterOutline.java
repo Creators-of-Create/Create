@@ -9,8 +9,8 @@ import java.util.Set;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllSpecialTextures;
-import com.simibubi.create.foundation.renderState.RenderTypes;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.RenderTypes;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.RenderType;

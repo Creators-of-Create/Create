@@ -4,73 +4,73 @@ import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
 
 public class CClient extends ConfigBase {
 
-	public ConfigGroup client = group(0, "client",
+	public final ConfigGroup client = group(0, "client",
 			Comments.client);
 
 	//no group
-	public ConfigBool tooltips = b(true, "enableTooltips",
+	public final ConfigBool tooltips = b(true, "enableTooltips",
 			Comments.tooltips);
-	public ConfigBool enableOverstressedTooltip = b(true, "enableOverstressedTooltip",
+	public final ConfigBool enableOverstressedTooltip = b(true, "enableOverstressedTooltip",
 			Comments.enableOverstressedTooltip);
-	public ConfigBool explainRenderErrors = b(false, "explainRenderErrors",
+	public final ConfigBool explainRenderErrors = b(false, "explainRenderErrors",
 			Comments.explainRenderErrors);
-	public ConfigFloat fanParticleDensity = f(.5f, 0, 1, "fanParticleDensity",
+	public final ConfigFloat fanParticleDensity = f(.5f, 0, 1, "fanParticleDensity",
 			Comments.fanParticleDensity);
-	public ConfigFloat filterItemRenderDistance = f(10f, 1, "filterItemRenderDistance", Comments.filterItemRenderDistance);
-	public ConfigBool rainbowDebug = b(true, "enableRainbowDebug",
+	public final ConfigFloat filterItemRenderDistance = f(10f, 1, "filterItemRenderDistance", Comments.filterItemRenderDistance);
+	public final ConfigBool rainbowDebug = b(true, "enableRainbowDebug",
 			Comments.rainbowDebug);
-	public ConfigBool experimentalRendering = b(true, "experimentalRendering",
+	public final ConfigBool experimentalRendering = b(true, "experimentalRendering",
 			Comments.experimentalRendering);
-	public ConfigInt maxContraptionLightVolume = i(16384, 0, Integer.MAX_VALUE, "maximumContraptionLightVolume",
+	public final ConfigInt maxContraptionLightVolume = i(16384, 0, Integer.MAX_VALUE, "maximumContraptionLightVolume",
 			Comments.maxContraptionLightVolume);
 	// no group
-	public ConfigInt mainMenuConfigButtonRow = i(2, 0, 4, "mainMenuConfigButtonRow",
+	public final ConfigInt mainMenuConfigButtonRow = i(2, 0, 4, "mainMenuConfigButtonRow",
 			Comments.mainMenuConfigButtonRow);
-	public ConfigInt mainMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "mainMenuConfigButtonOffsetX",
+	public final ConfigInt mainMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "mainMenuConfigButtonOffsetX",
 			Comments.mainMenuConfigButtonOffsetX);
-	public ConfigInt ingameMenuConfigButtonRow = i(3, 0, 5, "ingameMenuConfigButtonRow",
+	public final ConfigInt ingameMenuConfigButtonRow = i(3, 0, 5, "ingameMenuConfigButtonRow",
 			Comments.ingameMenuConfigButtonRow);
-	public ConfigInt ingameMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "ingameMenuConfigButtonOffsetX",
+	public final ConfigInt ingameMenuConfigButtonOffsetX = i(-4, Integer.MIN_VALUE, Integer.MAX_VALUE, "ingameMenuConfigButtonOffsetX",
 			Comments.ingameMenuConfigButtonOffsetX);
-	public ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
+	public final ConfigBool ignoreFabulousWarning = b(false, "ignoreFabulousWarning",
 			Comments.ignoreFabulousWarning);
 
 	//overlay group
-	public ConfigGroup overlay = group(1, "goggleOverlay",
+	public final ConfigGroup overlay = group(1, "goggleOverlay",
 			Comments.overlay);
-	public ConfigInt overlayOffsetX = i(20, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX",
+	public final ConfigInt overlayOffsetX = i(20, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetX",
 			Comments.overlayOffset);
-	public ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY",
+	public final ConfigInt overlayOffsetY = i(0, Integer.MIN_VALUE, Integer.MAX_VALUE, "overlayOffsetY",
 			Comments.overlayOffset);
-	public ConfigBool overlayCustomColor = b(false, "customColorsOverlay",
+	public final ConfigBool overlayCustomColor = b(false, "customColorsOverlay",
 			Comments.overlayCustomColor);
-	public ConfigInt overlayBackgroundColor = i(0xf0_100010, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBackgroundOverlay",
+	public final ConfigInt overlayBackgroundColor = i(0xf0_100010, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBackgroundOverlay",
 			Comments.overlayBackgroundColor);
-	public ConfigInt overlayBorderColorTop = i(0x50_5000ff, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderTopOverlay",
+	public final ConfigInt overlayBorderColorTop = i(0x50_5000ff, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderTopOverlay",
 			Comments.overlayBorderColorTop);
-	public ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
+	public final ConfigInt overlayBorderColorBot = i(0x50_28007f, Integer.MIN_VALUE, Integer.MAX_VALUE, "customBorderBotOverlay",
 			Comments.overlayBorderColorBot);
 
 	//placement assist group
-	public ConfigGroup placementAssist = group(1, "placementAssist",
+	public final ConfigGroup placementAssist = group(1, "placementAssist",
 			Comments.placementAssist);
-	public ConfigEnum<PlacementIndicatorSetting> placementIndicator = e(PlacementIndicatorSetting.TEXTURE, "indicatorType",
+	public final ConfigEnum<PlacementIndicatorSetting> placementIndicator = e(PlacementIndicatorSetting.TEXTURE, "indicatorType",
 			Comments.placementIndicator);
-	public ConfigFloat indicatorScale = f(1.0f, 0f, "indicatorScale",
+	public final ConfigFloat indicatorScale = f(1.0f, 0f, "indicatorScale",
 			Comments.indicatorScale);
 
 	//ponder group
-	public ConfigGroup ponder = group(1, "ponder",
+	public final ConfigGroup ponder = group(1, "ponder",
 			Comments.ponder);
-	public ConfigBool comfyReading = b(false, "comfyReading",
+	public final ConfigBool comfyReading = b(false, "comfyReading",
 			Comments.comfyReading);
 
 	//sound group
-	public ConfigGroup sound = group(1, "sound",
+	public final ConfigGroup sound = group(1, "sound",
 			Comments.sound);
-	public ConfigBool enableAmbientSounds = b(true, "enableAmbientSounds",
+	public final ConfigBool enableAmbientSounds = b(true, "enableAmbientSounds",
 			Comments.enableAmbientSounds);
-	public ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap",
+	public final ConfigFloat ambientVolumeCap = f(.1f, 0, 1, "ambientVolumeCap",
 			Comments.ambientVolumeCap);
 
 	@Override
@@ -139,4 +139,5 @@ public class CClient extends ConfigBase {
 		static String enableAmbientSounds = "Make cogs rumble and machines clatter.";
 		static String ambientVolumeCap = "Maximum volume modifier of Ambient noise";
 	}
+
 }

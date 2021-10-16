@@ -26,7 +26,7 @@ import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;

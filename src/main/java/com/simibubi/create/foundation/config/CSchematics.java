@@ -2,19 +2,19 @@ package com.simibubi.create.foundation.config;
 
 public class CSchematics extends ConfigBase {
 
-	public ConfigBool creativePrintIncludesAir = b(false, "creativePrintIncludesAir", Comments.creativePrintIncludesAir);
-	public ConfigInt maxSchematics = i(10, 1, "maxSchematics", Comments.maxSchematics);
-	public ConfigInt maxTotalSchematicSize = i(256, 16, "maxSchematics", Comments.kb, Comments.maxSize);
-	public ConfigInt maxSchematicPacketSize =
+	public final ConfigBool creativePrintIncludesAir = b(false, "creativePrintIncludesAir", Comments.creativePrintIncludesAir);
+	public final ConfigInt maxSchematics = i(10, 1, "maxSchematics", Comments.maxSchematics);
+	public final ConfigInt maxTotalSchematicSize = i(256, 16, "maxSchematics", Comments.kb, Comments.maxSize);
+	public final ConfigInt maxSchematicPacketSize =
 		i(1024, 256, 32767, "maxSchematicPacketSize", Comments.b, Comments.maxPacketSize);
-	public ConfigInt schematicIdleTimeout = i(600, 100, "schematicIdleTimeout", Comments.idleTimeout);
+	public final ConfigInt schematicIdleTimeout = i(600, 100, "schematicIdleTimeout", Comments.idleTimeout);
 
-	public ConfigGroup schematicannon = group(0, "schematicannon", "Schematicannon");
-	public ConfigInt schematicannonDelay = i(10, 1, "schematicannonDelay", Comments.delay);
-	public ConfigInt schematicannonSkips = i(10, 1, "schematicannonSkips", Comments.skips);
-	public ConfigFloat schematicannonGunpowderWorth =
+	public final ConfigGroup schematicannon = group(0, "schematicannon", "Schematicannon");
+	public final ConfigInt schematicannonDelay = i(10, 1, "schematicannonDelay", Comments.delay);
+	public final ConfigInt schematicannonSkips = i(10, 1, "schematicannonSkips", Comments.skips);
+	public final ConfigFloat schematicannonGunpowderWorth =
 		f(20, 0, 100, "schematicannonGunpowderWorth", Comments.gunpowderWorth);
-	public ConfigFloat schematicannonFuelUsage = f(0.05f, 0, 100, "schematicannonFuelUsage", Comments.fuelUsage);
+	public final ConfigFloat schematicannonFuelUsage = f(0.05f, 0, 100, "schematicannonFuelUsage", Comments.fuelUsage);
 
 	@Override
 	public String getName() {

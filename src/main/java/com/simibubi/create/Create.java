@@ -80,6 +80,12 @@ public class Create {
 	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
 	public Create() {
+		onCtor();
+	}
+
+	public static void onCtor() {
+		ModLoadingContext modLoadingContext = ModLoadingContext.get();
+
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
@@ -92,7 +98,7 @@ public class Create {
 		AllMovementBehaviours.register();
 		AllWorldFeatures.register();
 		AllEnchantments.register();
-		AllConfigs.register(ModLoadingContext.get());
+		AllConfigs.register(modLoadingContext);
 		BlockSpoutingBehaviour.register();
 
 		ForgeMod.enableMilkFluid();
@@ -109,12 +115,13 @@ public class Create {
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
 		modEventBus.addListener(AllConfigs::onLoad);
 		modEventBus.addListener(AllConfigs::onReload);
-		modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
+		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
+
 		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 		forgeEventBus.register(CHUNK_UTIL);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
-			() -> () -> CreateClient.addClientListeners(forgeEventBus, modEventBus));
+			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
@@ -132,7 +139,7 @@ public class Create {
 		});
 	}
 
-	public void gatherData(GatherDataEvent event) {
+	public static void gatherData(GatherDataEvent event) {
 		DataGenerator gen = event.getGenerator();
 		gen.addProvider(new AllAdvancements(gen));
 		gen.addProvider(new LangMerger(gen));

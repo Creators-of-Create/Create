@@ -2,15 +2,15 @@ package com.simibubi.create.foundation.config;
 
 public class CFluids extends ConfigBase {
 
-	public ConfigInt fluidTankCapacity = i(8, 1, "fluidTankCapacity", Comments.buckets, Comments.fluidTankCapacity);
-	public ConfigInt fluidTankMaxHeight = i(32, 1, "fluidTankMaxHeight", Comments.blocks, Comments.fluidTankMaxHeight);
-	public ConfigInt mechanicalPumpRange =
+	public final ConfigInt fluidTankCapacity = i(8, 1, "fluidTankCapacity", Comments.buckets, Comments.fluidTankCapacity);
+	public final ConfigInt fluidTankMaxHeight = i(32, 1, "fluidTankMaxHeight", Comments.blocks, Comments.fluidTankMaxHeight);
+	public final ConfigInt mechanicalPumpRange =
 		i(16, 1, "mechanicalPumpRange", Comments.blocks, Comments.mechanicalPumpRange);
 
-	public ConfigInt hosePulleyBlockThreshold = i(10000, -1, "hosePulleyBlockThreshold", Comments.blocks,
+	public final ConfigInt hosePulleyBlockThreshold = i(10000, -1, "hosePulleyBlockThreshold", Comments.blocks,
 		Comments.toDisable, Comments.hosePulleyBlockThreshold);
-	public ConfigBool fillInfinite = b(false, "fillInfinite", Comments.fillInfinite);
-	public ConfigInt hosePulleyRange = i(128, 1, "hosePulleyRange", Comments.blocks, Comments.hosePulleyRange);
+	public final ConfigBool fillInfinite = b(false, "fillInfinite", Comments.fillInfinite);
+	public final ConfigInt hosePulleyRange = i(128, 1, "hosePulleyRange", Comments.blocks, Comments.hosePulleyRange);
 
 	@Override
 	public String getName() {

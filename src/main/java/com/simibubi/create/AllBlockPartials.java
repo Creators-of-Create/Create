@@ -11,7 +11,6 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 
 public class AllBlockPartials {
 
@@ -145,14 +144,15 @@ public class AllBlockPartials {
 	}
 
 	private static PartialModel getEntity(String path) {
-		return new PartialModel(new ResourceLocation(Create.ID, "entity/" + path));
+		return new PartialModel(Create.asResource("entity/" + path));
 	}
 
 	private static PartialModel get(String path) {
-		return new PartialModel(new ResourceLocation(Create.ID, "block/" + path));
+		return new PartialModel(Create.asResource("block/" + path));
 	}
 
-	public static void clientInit() {
+	public static void init() {
 		// init static fields
 	}
+
 }

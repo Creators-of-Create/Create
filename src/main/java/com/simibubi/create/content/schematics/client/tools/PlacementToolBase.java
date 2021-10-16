@@ -1,7 +1,7 @@
 package com.simibubi.create.content.schematics.client.tools;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 

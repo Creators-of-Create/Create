@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 public class LightVolumeDebugger {
 	public static void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.renderState;
+package com.simibubi.create.foundation.render;
 
 import org.lwjgl.opengl.GL11;
 
