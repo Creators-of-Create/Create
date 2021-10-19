@@ -75,8 +75,12 @@ public class CreateClient {
 		ZAPPER_RENDER_HANDLER.registerListeners(forgeEventBus);
 		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
 
-		IResourceManager resourceManager = Minecraft.getInstance()
-			.getResourceManager();
+		Minecraft mc = Minecraft.getInstance();
+
+		// null during datagen
+		if (mc == null) return;
+
+		IResourceManager resourceManager = mc.getResourceManager();
 		if (resourceManager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) resourceManager).registerReloadListener(RESOURCE_RELOAD_LISTENER);
 	}
