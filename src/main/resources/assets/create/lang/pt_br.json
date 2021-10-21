@@ -1,8 +1,5 @@
-
-
+{
 	"_": "->------------------------]  Game Elements  [------------------------<-",
-
-	
 	"block.create.adjustable_chain_gearshift": "Correia Ajustável",
 	"block.create.adjustable_crate": "Caixa Ajustável",
 	"block.create.adjustable_pulse_repeater": "Repetidor de Pulso Ajustável",
@@ -142,18 +139,18 @@
 	"block.create.weathered_limestone_pillar": "Pilar de Calcário Resistido",
 	"block.create.zinc_block": "Bloco de Zinco",
 	"block.create.zinc_ore": "Minério de Zinco",
-  "enchantment.create.capacity": "Capacidade",
+	"enchantment.create.capacity": "Capacidade",
 	"enchantment.create.potato_recovery": "Recuperação de Batata",
-  "entity.create.contraption": "Engenhoca",
+	"entity.create.contraption": "Engenhoca",
 	"entity.create.crafting_blueprint": "Esquema de Fabricação",
 	"entity.create.gantry_contraption": "Engenhoca de Pórticolo",
 	"entity.create.potato_projectile": "Projétil deBatata",
 	"entity.create.seat": "Assento",
 	"entity.create.stationary_contraption": "Engenhoca estacionária",
 	"entity.create.super_glue": "Super Cola",
-  "fluid.create.potion": "Poção",
+	"fluid.create.potion": "Poção",
 	"fluid.create.tea": "Chá do Construtor",
-  "item.create.andesite_alloy": "Liga de Andesito",
+	"item.create.andesite_alloy": "Liga de Andesito",
 	"item.create.attribute_filter": "Filtro de Atributo",
 	"item.create.bar_of_chocolate": "Barra de Chocolate",
 	"item.create.belt_connector": "Esteira Mecânica",
@@ -232,10 +229,7 @@
 	"item.create.wrench": "Chave Inglesa",
 	"item.create.zinc_ingot": "Barra de Zinco",
 	"item.create.zinc_nugget": "Pepita de Zinco",
-
-
 	"_": "->------------------------]  Advancements  [------------------------<-",
-
 	"advancement.create.root": "Bem vindo a Create",
 	"advancement.create.root.desc": "É hora de construir engenhocas maravilhosas",
 	"advancement.create.andesite_alloy.desc": "Materiais do Create tem nomes estranhos, a liga de andesito é um deles.",
@@ -253,7 +247,6 @@
 	"advancement.create.upward_chute": "Abdução aéria",
 	"advancement.create.upward_chute.desc": "Assista um item voar para cima numa calha com ventilador.",
 	"_": "->------------------------]  UI & Messages  [------------------------<-",
-
 	"death.attack.create.crush": "%1$s foi processado pelas Rodas de Moer",
 	"death.attack.create.crush.player": "%1$s foi jogando numa Roda de moer por %2$s",
 	"death.attack.create.fan_fire": "%1$s foi queimado por ar quente",
@@ -262,7 +255,6 @@
 	"death.attack.create.fan_lava.player": "U%1$s foi jogado numa fundidora por %2$s",
 	"death.attack.create.mechanical_drill": "%1$s foi empalado pela Broca Mecânica",
 	"death.attack.create.mechanical_drill.player": "%1$s foi jogado na frente de uma broca por %2$s",
-
 	"create.recipe.crushing": "Moendo",
 	"create.recipe.fan_washing": "Lavagem em massa",
 	"create.recipe.fan_washing.fan": "Ventilador atrás de água",
@@ -290,13 +282,11 @@
 	"create.generic.unit.millibuckets": "%1$smB",
 	"create.generic.clockwise": "Sentido horário",
 	"create.generic.counter_clockwise": "Sentido anti-horário",
-
 	"create.action.scroll": "Rolar",
 	"create.action.confirm": "Confirmar",
 	"create.action.abort": "Abortar",
 	"create.action.saveToFile": "Salvar",
 	"create.action.discard": "Descartar",
-
 	"create.keyinfo.toolmenu": "Menu Focal da Ferramenta",
 	"create.gui.scrollInput.defaultTitle": "Escolha uma Opção:",
 	"create.gui.scrollInput.scrollToModify": "Role o mouse para Modificar",
@@ -305,24 +295,20 @@
 	"create.gui.toolmenu.cycle": "[SCROLL] para Circular",
 	"create.gui.symmetryWand.mirrorType": "Espelhar",
 	"create.gui.symmetryWand.orientation": "Orientação",
-
 	"create.symmetry.mirror.plane": "Espelhar uma vez",
 	"create.symmetry.mirror.doublePlane": "Retangular",
 	"create.symmetry.mirror.triplePlane": "Octagonal",
-
 	"create.orientation.orthogonal": "Ortogonal",
 	"create.orientation.diagonal": "Diagonal",
 	"create.orientation.horizontal": "Horizontal",
 	"create.orientation.alongZ": "Através de Z",
 	"create.orientation.alongX": "Através de X",
-
 	"create.gui.goggles.generator_stats": "Estatísticas do gerador:",
 	"create.gui.goggles.kinetic_stats": "Estatísticas cinéticas:",
 	"create.gui.goggles.at_current_speed": "Na velocidade atual",
 	"create.gui.goggles.pole_length": "Comprimento da vara:",
 	"create.gui.adjustable_crate.storageSpace": "Espaço de Armazenamento",
 	"create.gui.stockpile_switch.title": "Disjuntor de Armazenamento",
-
 	"create.schematicAndQuill.dimensions": "Tamanho Esquema: %1$sx%2$sx%3$s",
 	"create.schematicAndQuill.firstPos": "Primeira posição feita.",
 	"create.schematicAndQuill.secondPos": "Segunda posição feita.",
@@ -330,7 +316,6 @@
 	"create.schematicAndQuill.abort": "Seleção removida.",
 	"create.schematicAndQuill.fallbackName": "Meu Esquema",
 	"create.schematicAndQuill.saved": "Salvo como %1$s",
-
 	"create.schematic.invalid": "[!] Item Inválido - Use a Mesa de Desenho no lugar",
 	"create.schematic.position": "Posição",
 	"create.schematic.rotation": "Rotação",
@@ -372,7 +357,6 @@
 	"create.schematic.tool.flip.description.1": "Aponte para o Esquema e [CTRL]-Rolar para virá-lo.",
 	"create.schematic.tool.flip.description.2": "",
 	"create.schematic.tool.flip.description.3": "",
-
 	"create.schematics.synchronizing": "Sincronizando...",
 	"create.schematics.uploadTooLarge": "Seu esquema é muito grande",
 	"create.schematics.maxAllowedSize": "O tamanho máximo permitido para o esquema é:",
@@ -398,7 +382,6 @@
 	"create.gui.schematicannon.option.replaceWithSolid.description": "O Canhão de esquema irá apenas substituir Blocos sólidos na área de trabalho, se o Esquema conter um bloco Sólido naquela posição.",
 	"create.gui.schematicannon.option.replaceWithAny.description": "O Canhão de esquema irá substituir Blocos sólidos na área de trabalho, se o Esquema conter qualquer Bloco naquela posição.",
 	"create.gui.schematicannon.option.replaceWithEmpty.description": "O Canhão de esquema irá limpar todos os blocos na área de trabalho, incluindo os substituídos por Ar.",
-
 	"create.schematicannon.status.idle": "Ocioso",
 	"create.schematicannon.status.ready": "Pronto",
 	"create.schematicannon.status.running": "Trabalhando",
@@ -418,13 +401,8 @@
 	"create.schematicannon.status.schematicExpired": "Arquivo de Esquema Expirado",
 	"create.tooltip.keyShift": "Shift",
 	"create.tooltip.keyCtrl": "Ctrl",
-
-
 	"_": "->------------------------]  Subtitles  [------------------------<-",
-
-
 	"_": "->------------------------]  Item Descriptions  [------------------------<-",
-
 	"item.create.example_item.tooltip": "EXAMPLE ITEM (just a marker that this tooltip exists)",
 	"item.create.example_item.tooltip.summary": "A brief description of the item. _Underscores_ highlight a term.",
 	"item.create.example_item.tooltip.condition1": "Quando this",
@@ -433,7 +411,6 @@
 	"item.create.example_item.tooltip.behaviour2": "You can add as many behaviours as you like",
 	"item.create.example_item.tooltip.control1": "Quando Ctrl pressed",
 	"item.create.example_item.tooltip.action1": "These controls are displayed.",
-
 	"item.create.wand_of_symmetry.tooltip": "VARINHA DE SIMETRIA",
 	"item.create.wand_of_symmetry.tooltip.summary": "Espelhar perfeitamente a colocação de blocos nos planos configurados.",
 	"item.create.wand_of_symmetry.tooltip.condition1": "Quando na Hotbar",
@@ -448,17 +425,14 @@
 	"item.create.tree_fertilizer.tooltip.summary": "Uma combinação poderosa de minerais para tipos comuns de arvores",
 	"item.create.tree_fertilizer.tooltip.condition1": "Quando usada em Mudas",
 	"item.create.tree_fertilizer.tooltip.behaviour1": "Cresce Arvores independentemente das suas Regras de espaço",
-
 	"item.create.empty_schematic.tooltip": "ESQUEMA VAZIO",
 	"item.create.empty_schematic.tooltip.summary": "Usado como ingrediente em receitas e para escrever na _Mesa_ _de_ _Esquematizar_",
-
 	"item.create.schematic.tooltip": "ESQUEMA",
 	"item.create.schematic.tooltip.summary": "Contem uma estrutura para ser posicionada e colocada no mundo. Posicione o Holograma como desejar e use um _Esquemaannon_ para construí-lo.",
 	"item.create.schematic.tooltip.condition1": "Quando Em mãos",
 	"item.create.schematic.tooltip.behaviour1": "Pode ser posicionado usando as Ferramentas em Tela",
 	"item.create.schematic.tooltip.control1": "B-Direito enquanto Abaixado",
 	"item.create.schematic.tooltip.action1": "Abre uma _Interface_ para informar as _Coordenadas_ exatas.",
-
 	"item.create.schematic_and_quill.tooltip": "ESQUEMA E PENA",
 	"item.create.schematic_and_quill.tooltip.summary": "Usado para salvar uma Estrutura no mundo para um arquivo .nbt.",
 	"item.create.schematic_and_quill.tooltip.condition1": "Passo 1",
@@ -471,25 +445,20 @@
 	"item.create.schematic_and_quill.tooltip.action2": "Selecione pontos no _meio_ _do_ _ar_. _Rolar_ para ajustar a distância.",
 	"item.create.schematic_and_quill.tooltip.control3": "B-Direito enquanto Abaixado",
 	"item.create.schematic_and_quill.tooltip.action3": "_Cancela_ e remove a seleção.",
-
 	"block.create.schematicannon.tooltip": "Canhão de esquema",
 	"block.create.schematicannon.tooltip.summary": "Dispara blocos para recriar um _Esquema_ no Mundo. Usa itens de Inventários adjacentes e _Pólvora_ como combustível.",
-
 	"block.create.schematic_table.tooltip": "MESA DE ESQUEMATIZAR",
 	"block.create.schematic_table.tooltip.summary": "Escreve Esquemas salvos into um _Esquema_ _Vazio_",
 	"block.create.schematic_table.tooltip.condition1": "Quando recebe um Esquema Vazio",
 	"block.create.schematic_table.tooltip.behaviour1": "Importa um Arquivo escolhido da sua Pasta de Esquemas",
 	"block.create.turntable.tooltip": "MESA GIRATÓRIA",
 	"block.create.turntable.tooltip.summary": "Muda a _Força_ _Rotacional_ em uma forma refinada de Enjoo.",
-
 	"block.create.stockpile_switch.tooltip": "DISJUNTOR DE ARMAZENAMENTO",
 	"block.create.stockpile_switch.tooltip.summary": "Alterna um sinal de Redstone com base no _Espaço_ de _Armazenamento_ do Reciente conectado.",
 	"block.create.stockpile_switch.tooltip.condition1": "Quando abaixo do Limite Mínimo",
 	"block.create.stockpile_switch.tooltip.behaviour1": "Para de enviar _Sinal_ de _Redstone_",
 	"block.create.adjustable_crate.tooltip": "adjustable_crate",
 	"block.create.adjustable_crate.tooltip.summary": "Este _Recipiente_ de _Armazenamento_ permite controle Manual da sua capacidade. Pode conter até _16_ _Pilhas_ de qualquer Item",
-
 	"block.create.creative_crate.tooltip": "Caixa Criativa",
-	"block.create.creative_crate.tooltip.summary": "Provê um suprimento infinito de blocos para Canho~es de Esquema próximos",
-
-	"_": "->------------------------]  Ponder Content  [------------------------<-",
+	"block.create.creative_crate.tooltip.summary": "Provê um suprimento infinito de blocos para Canho~es de Esquema próximos"
+}
