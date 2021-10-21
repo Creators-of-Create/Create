@@ -19,13 +19,13 @@ public class NoGravMagicalDohickyItem extends Item {
 
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-		World world = entity.world;
-		Vector3d pos = entity.getPositionVec();
+		World world = entity.level;
+		Vector3d pos = entity.position();
 		CompoundNBT persistentData = entity.getPersistentData();
 
-		if (world.isRemote) {
-			if (world.rand.nextFloat() < getIdleParticleChance(entity)) {
-				Vector3d ppos = VecHelper.offsetRandomly(pos, world.rand, .5f);
+		if (world.isClientSide) {
+			if (world.random.nextFloat() < getIdleParticleChance(entity)) {
+				Vector3d ppos = VecHelper.offsetRandomly(pos, world.random, .5f);
 				world.addParticle(ParticleTypes.END_ROD, ppos.x, pos.y, ppos.z, 0, -.1f, 0);
 			}
 
@@ -33,7 +33,7 @@ public class NoGravMagicalDohickyItem extends Item {
 				Vector3d basemotion = new Vector3d(0, 1, 0);
 				world.addParticle(ParticleTypes.FLASH, pos.x, pos.y, pos.z, 0, 0, 0);
 				for (int i = 0; i < 20; i++) {
-					Vector3d motion = VecHelper.offsetRandomly(basemotion, world.rand, 1);
+					Vector3d motion = VecHelper.offsetRandomly(basemotion, world.random, 1);
 					world.addParticle(ParticleTypes.WITCH, pos.x, pos.y, pos.z, motion.x, motion.y, motion.z);
 					world.addParticle(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, motion.x, motion.y, motion.z);
 				}

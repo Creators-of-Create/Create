@@ -61,9 +61,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void init() {
+		setWindowOffset(-11 + (width % 2 == 0 ? 1 : 0), 7);
 		super.init();
-		int x = guiLeft - 50;
-		int y = guiTop;
+
+		int x = leftPos;
+		int y = topPos;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
 		whitelistDis.setToolTip(allowDisN);
@@ -91,19 +93,18 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelector = new SelectionScrollInput(x + 39, y + 21, 137, 18);
 		attributeSelector.forOptions(Arrays.asList(StringTextComponent.EMPTY));
 		attributeSelector.removeCallback();
-		referenceItemChanged(container.filterInventory.getStackInSlot(0));
+		referenceItemChanged(menu.ghostInventory.getStackInSlot(0));
 
 		widgets.add(attributeSelector);
 		widgets.add(attributeSelectorLabel);
 
 		selectedAttributes.clear();
-		selectedAttributes.add((container.selectedAttributes.isEmpty() ? noSelectedT : selectedT).copy()
-			.formatted(TextFormatting.YELLOW));
-		container.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ")
+		selectedAttributes.add((menu.selectedAttributes.isEmpty() ? noSelectedT : selectedT).plainCopy()
+			.withStyle(TextFormatting.YELLOW));
+		menu.selectedAttributes.forEach(at -> selectedAttributes.add(new StringTextComponent("- ")
 			.append(at.getFirst()
 				.format(at.getSecond()))
-			.formatted(TextFormatting.GRAY)));
-
+			.withStyle(TextFormatting.GRAY)));
 	}
 
 	private void referenceItemChanged(ItemStack stack) {
@@ -112,8 +113,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		if (stack.isEmpty()) {
 			attributeSelector.active = false;
 			attributeSelector.visible = false;
-			attributeSelectorLabel.text = referenceH.copy()
-				.formatted(TextFormatting.ITALIC);
+			attributeSelectorLabel.text = referenceH.plainCopy()
+				.withStyle(TextFormatting.ITALIC);
 			add.active = false;
 			addInverted.active = false;
 			attributeSelector.calling(s -> {
@@ -124,12 +125,12 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		add.active = true;
 
 		addInverted.active = true;
-		attributeSelector.titled(stack.getDisplayName()
-			.copy()
+		attributeSelector.titled(stack.getHoverName()
+			.plainCopy()
 			.append("..."));
 		attributesOfItem.clear();
 		for (ItemAttribute itemAttribute : ItemAttribute.types)
-			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, client.world));
+			attributesOfItem.addAll(itemAttribute.listAttributesOf(stack, minecraft.level));
 		List<ITextComponent> options = attributesOfItem.stream()
 			.map(a -> a.format(false))
 			.collect(Collectors.toList());
@@ -140,7 +141,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelector.calling(i -> {
 			attributeSelectorLabel.setTextAndTrim(options.get(i), true, 112);
 			ItemAttribute selected = attributesOfItem.get(i);
-			for (Pair<ItemAttribute, Boolean> existing : container.selectedAttributes) {
+			for (Pair<ItemAttribute, Boolean> existing : menu.selectedAttributes) {
 				CompoundNBT testTag = new CompoundNBT();
 				CompoundNBT testTag2 = new CompoundNBT();
 				existing.getFirst()
@@ -160,16 +161,16 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	public void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		ItemStack stack = container.filterInventory.getStackInSlot(1);
-		matrixStack.push();
+		ItemStack stack = menu.ghostInventory.getStackInSlot(1);
+		matrixStack.pushPose();
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
-		this.setZOffset(200);
-		this.itemRenderer.zLevel = 200.0F;
-		this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, stack, guiLeft - 27, guiTop + 57,
+		this.setBlitOffset(150);
+		this.itemRenderer.blitOffset = 150.0F;
+		this.itemRenderer.renderGuiItemDecorations(font, stack, leftPos + 22, topPos + 57,
 			String.valueOf(selectedAttributes.size() - 1));
-		this.setZOffset(0);
-		this.itemRenderer.zLevel = 0.0F;
-		matrixStack.pop();
+		this.setBlitOffset(0);
+		this.itemRenderer.blitOffset = 0.0F;
+		matrixStack.popPose();
 
 		super.renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
 	}
@@ -177,22 +178,22 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	public void tick() {
 		super.tick();
-		ItemStack stackInSlot = container.filterInventory.getStackInSlot(0);
+		ItemStack stackInSlot = menu.ghostInventory.getStackInSlot(0);
 		if (!stackInSlot.equals(lastItemScanned, false))
 			referenceItemChanged(stackInSlot);
 	}
 
 	@Override
-	protected void drawMouseoverTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
-		if (this.client.player.inventory.getItemStack()
-			.isEmpty() && this.hoveredSlot != null && this.hoveredSlot.getHasStack()) {
-			if (this.hoveredSlot.slotNumber == 37) {
-				renderTooltip(matrixStack, selectedAttributes, mouseX, mouseY);
+	protected void renderTooltip(MatrixStack matrixStack, int mouseX, int mouseY) {
+		if (this.minecraft.player.inventory.getCarried()
+			.isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+			if (this.hoveredSlot.index == 37) {
+				renderComponentTooltip(matrixStack, selectedAttributes, mouseX, mouseY);
 				return;
 			}
-			this.renderTooltip(matrixStack, this.hoveredSlot.getStack(), mouseX, mouseY);
+			this.renderTooltip(matrixStack, this.hoveredSlot.getItem(), mouseX, mouseY);
 		}
-		super.drawMouseoverTooltip(matrixStack, mouseX, mouseY);
+		super.renderTooltip(matrixStack, mouseX, mouseY);
 	}
 
 	@Override
@@ -202,7 +203,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected List<IFormattableTextComponent> getTooltipDescriptions() {
-		return Arrays.asList(denyDESC.copy(), allowConDESC.copy(), allowDisDESC.copy());
+		return Arrays.asList(denyDESC.plainCopy(), allowConDESC.plainCopy(), allowDisDESC.plainCopy());
 	}
 
 	@Override
@@ -213,19 +214,19 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 			return mouseClicked;
 
 		if (blacklist.isHovered()) {
-			container.whitelistMode = WhitelistMode.BLACKLIST;
+			menu.whitelistMode = WhitelistMode.BLACKLIST;
 			sendOptionUpdate(Option.BLACKLIST);
 			return true;
 		}
 
 		if (whitelistCon.isHovered()) {
-			container.whitelistMode = WhitelistMode.WHITELIST_CONJ;
+			menu.whitelistMode = WhitelistMode.WHITELIST_CONJ;
 			sendOptionUpdate(Option.WHITELIST2);
 			return true;
 		}
 
 		if (whitelistDis.isHovered()) {
-			container.whitelistMode = WhitelistMode.WHITELIST_DISJ;
+			menu.whitelistMode = WhitelistMode.WHITELIST_DISJ;
 			sendOptionUpdate(Option.WHITELIST);
 			return true;
 		}
@@ -249,20 +250,20 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		itemAttribute.serializeNBT(tag);
 		AllPackets.channel
 			.sendToServer(new FilterScreenPacket(inverted ? Option.ADD_INVERTED_TAG : Option.ADD_TAG, tag));
-		container.appendSelectedAttribute(itemAttribute, inverted);
-		if (container.selectedAttributes.size() == 1)
-			selectedAttributes.set(0, selectedT.copy()
-				.formatted(TextFormatting.YELLOW));
+		menu.appendSelectedAttribute(itemAttribute, inverted);
+		if (menu.selectedAttributes.size() == 1)
+			selectedAttributes.set(0, selectedT.plainCopy()
+				.withStyle(TextFormatting.YELLOW));
 		selectedAttributes.add(new StringTextComponent("- ").append(itemAttribute.format(inverted))
-			.formatted(TextFormatting.GRAY));
+			.withStyle(TextFormatting.GRAY));
 		return true;
 	}
 
 	@Override
 	protected void contentsCleared() {
 		selectedAttributes.clear();
-		selectedAttributes.add(noSelectedT.copy()
-			.formatted(TextFormatting.YELLOW));
+		selectedAttributes.add(noSelectedT.plainCopy()
+			.withStyle(TextFormatting.YELLOW));
 		if (!lastItemScanned.isEmpty()) {
 			add.active = true;
 			addInverted.active = true;
@@ -272,22 +273,22 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	@Override
 	protected boolean isButtonEnabled(IconButton button) {
 		if (button == blacklist)
-			return container.whitelistMode != WhitelistMode.BLACKLIST;
+			return menu.whitelistMode != WhitelistMode.BLACKLIST;
 		if (button == whitelistCon)
-			return container.whitelistMode != WhitelistMode.WHITELIST_CONJ;
+			return menu.whitelistMode != WhitelistMode.WHITELIST_CONJ;
 		if (button == whitelistDis)
-			return container.whitelistMode != WhitelistMode.WHITELIST_DISJ;
+			return menu.whitelistMode != WhitelistMode.WHITELIST_DISJ;
 		return true;
 	}
 
 	@Override
 	protected boolean isIndicatorOn(Indicator indicator) {
 		if (indicator == blacklistIndicator)
-			return container.whitelistMode == WhitelistMode.BLACKLIST;
+			return menu.whitelistMode == WhitelistMode.BLACKLIST;
 		if (indicator == whitelistConIndicator)
-			return container.whitelistMode == WhitelistMode.WHITELIST_CONJ;
+			return menu.whitelistMode == WhitelistMode.WHITELIST_CONJ;
 		if (indicator == whitelistDisIndicator)
-			return container.whitelistMode == WhitelistMode.WHITELIST_DISJ;
+			return menu.whitelistMode == WhitelistMode.WHITELIST_DISJ;
 		return false;
 	}
 

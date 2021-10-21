@@ -5,7 +5,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
@@ -45,14 +44,15 @@ public class DebugScenes {
 		add(DebugScenes::birbScene);
 		add(DebugScenes::sectionsScene);
 		add(DebugScenes::itemScene);
+		add(DebugScenes::pipeScene);
 	}
 
 	private static void add(PonderStoryBoard sb) {
 		ItemEntry<Item> item = AllItems.BRASS_HAND;
 		String schematicPath = "debug/scene_" + index;
-		PonderRegistry.addStoryBoard(item, schematicPath, sb)
+		PonderIndex.HELPER.addStoryBoard(item, schematicPath, sb)
 			.highlightAllTags()
-			.chapter(PonderChapter.of("debug"));
+			.chapter(PonderIndex.HELPER.getOrCreateChapter("debug"));
 		index++;
 	}
 
@@ -99,7 +99,7 @@ public class DebugScenes {
 		scene.world.replaceBlocks(util.select.fromTo(1, 1, 3, 2, 2, 4),
 			AllBlocks.REFINED_RADIANCE_CASING.getDefaultState(), true);
 		scene.idle(10);
-		scene.world.replaceBlocks(util.select.position(3, 1, 1), Blocks.GOLD_BLOCK.getDefaultState(), true);
+		scene.world.replaceBlocks(util.select.position(3, 1, 1), Blocks.GOLD_BLOCK.defaultBlockState(), true);
 		scene.rotateCameraY(180);
 		scene.markAsFinished();
 	}
@@ -120,10 +120,10 @@ public class DebugScenes {
 
 		Vector3d vec1 = util.vector.topOf(1, 0, 0);
 		Vector3d vec2 = util.vector.topOf(0, 0, 1);
-		AxisAlignedBB boundingBox1 = new AxisAlignedBB(vec1, vec1).expand(0, 2.5, 0)
-			.grow(.15, 0, .15);
-		AxisAlignedBB boundingBox2 = new AxisAlignedBB(vec2, vec2).expand(0, .125, 0)
-			.grow(.45, 0, .45);
+		AxisAlignedBB boundingBox1 = new AxisAlignedBB(vec1, vec1).expandTowards(0, 2.5, 0)
+			.inflate(.15, 0, .15);
+		AxisAlignedBB boundingBox2 = new AxisAlignedBB(vec2, vec2).expandTowards(0, .125, 0)
+			.inflate(.45, 0, .45);
 		Vector3d poi1 = boundingBox1.getCenter();
 		Vector3d poi2 = boundingBox2.getCenter();
 
@@ -228,7 +228,7 @@ public class DebugScenes {
 		Object chassisEffectHighlight = new Object();
 
 		AxisAlignedBB point = new AxisAlignedBB(chassisSurface, chassisSurface);
-		AxisAlignedBB expanded = point.grow(1 / 4f, 1 / 4f, 1 / 16f);
+		AxisAlignedBB expanded = point.inflate(1 / 4f, 1 / 4f, 1 / 16f);
 
 		Selection singleBlock = util.select.position(1, 2, 3);
 		Selection twoBlocks = util.select.fromTo(1, 2, 3, 1, 3, 3);
@@ -301,11 +301,11 @@ public class DebugScenes {
 		BlockPos poi1 = util.grid.at(4, 1, 0);
 		BlockPos poi2 = util.grid.at(0, 1, 4);
 
-		scene.world.setBlock(poi1, Blocks.GOLD_BLOCK.getDefaultState(), true);
+		scene.world.setBlock(poi1, Blocks.GOLD_BLOCK.defaultBlockState(), true);
 		scene.special.movePointOfInterest(poi1);
 		scene.idle(20);
 
-		scene.world.setBlock(poi2, Blocks.GOLD_BLOCK.getDefaultState(), true);
+		scene.world.setBlock(poi2, Blocks.GOLD_BLOCK.defaultBlockState(), true);
 		scene.special.movePointOfInterest(poi2);
 		scene.overlay.showText(20)
 			.text("Point of Interest")
@@ -418,20 +418,32 @@ public class DebugScenes {
 		scene.idle(20);
 
 		scene.world.modifyEntities(ItemEntity.class, entity -> {
-			if (copperItem.isItemEqual(entity.getItem()))
+			if (copperItem.sameItem(entity.getItem()))
 				entity.setNoGravity(true);
 		});
 
 		scene.idle(20);
 
 		scene.world.modifyEntities(ItemEntity.class, entity -> {
-			if (brassItem.isItemEqual(entity.getItem()))
-				entity.setMotion(util.vector.of(-.15f, .5f, 0));
+			if (brassItem.sameItem(entity.getItem()))
+				entity.setDeltaMovement(util.vector.of(-.15f, .5f, 0));
 		});
 
 		scene.idle(27);
 
 		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+	}
+	
+	public static void pipeScene(SceneBuilder scene, SceneBuildingUtil util) {
+		scene.title("debug_pipes", "Manipulating Items");
+		scene.configureBasePlate(0, 0, 5);
+		scene.world.showSection(util.select.layer(0), Direction.UP);
+		scene.idle(10);
+		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
+	
+		
+		
+		
 	}
 
 }

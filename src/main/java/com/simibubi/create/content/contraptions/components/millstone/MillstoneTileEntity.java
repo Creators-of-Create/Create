@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.sound.SoundScapes;
+import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -19,6 +21,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
@@ -41,11 +45,26 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		outputInv = new ItemStackHandler(9);
 		capability = LazyOptional.of(MillstoneInventoryHandler::new);
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		behaviours.add(new DirectBeltInputBehaviour(this));
 		super.addBehaviours(behaviours);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void tickAudio() {
+		super.tickAudio();
+
+		if (getSpeed() == 0)
+			return;
+		if (inputInv.getStackInSlot(0)
+			.isEmpty())
+			return;
+
+		float pitch = MathHelper.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
+		SoundScapes.play(AmbienceGroup.MILLING, worldPosition, pitch);
 	}
 
 	@Override
@@ -62,7 +81,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		if (timer > 0) {
 			timer -= getProcessingSpeed();
 
-			if (world.isRemote) {
+			if (level.isClientSide) {
 				spawnParticles();
 				return;
 			}
@@ -76,8 +95,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 			return;
 
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
-		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
-			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, world);
+		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, level)) {
+			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, level);
 			if (!recipe.isPresent()) {
 				timer = 100;
 				sendData();
@@ -94,16 +113,16 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		capability.invalidate();
 	}
-	
+
 	private void process() {
 		RecipeWrapper inventoryIn = new RecipeWrapper(inputInv);
 
-		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, world)) {
-			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, world);
+		if (lastRecipe == null || !lastRecipe.matches(inventoryIn, level)) {
+			Optional<MillingRecipe> recipe = AllRecipeTypes.MILLING.find(inventoryIn, level);
 			if (!recipe.isPresent())
 				return;
 			lastRecipe = recipe.get();
@@ -115,7 +134,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		lastRecipe.rollResults()
 			.forEach(stack -> ItemHandlerHelper.insertItemStacked(outputInv, stack, false));
 		sendData();
-		markDirty();
+		setChanged();
 	}
 
 	public void spawnParticles() {
@@ -124,14 +143,14 @@ public class MillstoneTileEntity extends KineticTileEntity {
 			return;
 
 		ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
-		float angle = world.rand.nextFloat() * 360;
+		float angle = level.random.nextFloat() * 360;
 		Vector3d offset = new Vector3d(0, 0, 0.5f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
 		Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y);
 
-		Vector3d center = offset.add(VecHelper.getCenterOf(pos));
-		target = VecHelper.offsetRandomly(target.subtract(offset), world.rand, 1 / 128f);
-		world.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
+		Vector3d center = offset.add(VecHelper.getCenterOf(worldPosition));
+		target = VecHelper.offsetRandomly(target.subtract(offset), level.random, 1 / 128f);
+		level.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
 	}
 
 	@Override
@@ -166,9 +185,9 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		tester.setStackInSlot(0, stack);
 		RecipeWrapper inventoryIn = new RecipeWrapper(tester);
 
-		if (lastRecipe != null && lastRecipe.matches(inventoryIn, world))
+		if (lastRecipe != null && lastRecipe.matches(inventoryIn, level))
 			return true;
-		return AllRecipeTypes.MILLING.find(inventoryIn, world)
+		return AllRecipeTypes.MILLING.find(inventoryIn, level)
 			.isPresent();
 	}
 

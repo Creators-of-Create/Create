@@ -32,20 +32,20 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 		if (compound.contains("Flows")) {
 			for (Direction d : Iterate.directions)
 				setFlow(d, compound.getCompound("Flows")
-					.getFloat(d.getString()));
+					.getFloat(d.getSerializedName()));
 		}
 	}
 
 	@Override
 	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(pos).grow(1);
+		return new AxisAlignedBB(worldPosition).inflate(1);
 	}
 
 	@Override
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		CompoundNBT flows = new CompoundNBT();
 		for (Direction d : Iterate.directions)
-			flows.putFloat(d.getString(), this.flows.get(d));
+			flows.putFloat(d.getSerializedName(), this.flows.get(d));
 		compound.put("Flows", flows);
 
 		super.write(compound, clientPacket);
@@ -53,7 +53,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 
 	public void setFlow(Direction direction, float speed) {
 		flows.put(direction, speed);
-		markDirty();
+		setChanged();
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class WaterWheelTileEntity extends GeneratingKineticTileEntity {
 	public void lazyTick() {
 		super.lazyTick();
 		AllBlocks.WATER_WHEEL.get()
-			.updateAllSides(getBlockState(), world, pos);
+			.updateAllSides(getBlockState(), level, worldPosition);
 	}
 
 }

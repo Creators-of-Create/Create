@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.fluids;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -7,7 +8,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -34,10 +34,10 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 		BlockState blockState = te.getBlockState();
 		float angle = MathHelper.lerp(pump.arrowDirection.getValue(partialTicks), 0, 90) - 90;
 		for (float yRot : new float[] { 0, 90 }) {
-			ms.push();
+			ms.pushPose();
 			SuperByteBuffer arrow = PartialBufferer.get(AllBlockPartials.MECHANICAL_PUMP_ARROW, blockState);
-			Direction direction = blockState.get(PumpBlock.FACING);
-			MatrixStacker.of(ms)
+			Direction direction = blockState.getValue(PumpBlock.FACING);
+			MatrixTransformStack.of(ms)
 					.centre()
 					.rotateY(AngleHelper.horizontalAngle(direction) + 180)
 					.rotateX(-AngleHelper.verticalAngle(direction) - 90)
@@ -46,8 +46,8 @@ public class PumpRenderer extends KineticTileEntityRenderer {
 					.rotateY(yRot)
 					.rotateZ(angle)
 					.translateBack(rotationOffset);
-			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
-			ms.pop();
+			arrow.light(light).renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			ms.popPose();
 		}
 	}
 

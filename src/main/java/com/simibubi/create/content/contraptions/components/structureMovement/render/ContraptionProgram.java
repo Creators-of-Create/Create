@@ -1,33 +1,35 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL20;
 
-import com.simibubi.create.foundation.render.backend.gl.BasicProgram;
-import com.simibubi.create.foundation.render.backend.gl.shader.ProgramFogMode;
+import com.jozufozu.flywheel.backend.loading.Program;
+import com.jozufozu.flywheel.core.shader.WorldProgram;
+import com.jozufozu.flywheel.core.shader.extension.IProgramExtension;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Matrix4f;
 
-public class ContraptionProgram extends BasicProgram {
-    protected final int uLightBoxSize;
-    protected final int uLightBoxMin;
-    protected final int uModel;
+public class ContraptionProgram extends WorldProgram {
+	protected final int uLightBoxSize;
+	protected final int uLightBoxMin;
+	protected final int uModel;
 
-    protected int uLightVolume;
+	protected int uLightVolume;
 
-    public ContraptionProgram(ResourceLocation name, int handle, ProgramFogMode.Factory fogFactory) {
-        super(name, handle, fogFactory);
-        uLightBoxSize = getUniformLocation("uLightBoxSize");
-        uLightBoxMin = getUniformLocation("uLightBoxMin");
-        uModel = getUniformLocation("uModel");
-    }
+	public ContraptionProgram(Program program, List<IProgramExtension> extensions) {
+		super(program, extensions);
+		uLightBoxSize = getUniformLocation("uLightBoxSize");
+		uLightBoxMin = getUniformLocation("uLightBoxMin");
+		uModel = getUniformLocation("uModel");
+	}
 
-    @Override
-    protected void registerSamplers() {
-        super.registerSamplers();
-        uLightVolume = setSamplerBinding("uLightVolume", 4);
-    }
+	@Override
+	protected void registerSamplers() {
+		super.registerSamplers();
+		uLightVolume = setSamplerBinding("uLightVolume", 4);
+	}
 
     public void bind(Matrix4f model, AxisAlignedBB lightVolume) {
         double sizeX = lightVolume.maxX - lightVolume.minX;

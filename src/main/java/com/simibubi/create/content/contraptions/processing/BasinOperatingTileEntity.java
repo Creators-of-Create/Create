@@ -60,8 +60,11 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		if (getSpeed() == 0)
 			return true;
 		if (isRunning())
-			return false;
-		if (world == null || world.isRemote)
+			return true;
+		if (level == null || level.isClientSide)
+			return true;
+		if (!getBasin().filter(BasinTileEntity::canContinueProcessing)
+			.isPresent())
 			return true;
 
 		List<IRecipe<?>> recipes = getMatchingRecipes();
@@ -89,24 +92,25 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			return false;
 		return BasinRecipe.match(basin.get(), recipe);
 	}
-	
+
 	protected void applyBasinRecipe() {
 		if (currentRecipe == null)
 			return;
-		
+
 		Optional<BasinTileEntity> optionalBasin = getBasin();
 		if (!optionalBasin.isPresent())
 			return;
 		BasinTileEntity basin = optionalBasin.get();
+		boolean wasEmpty = basin.canContinueProcessing();
 		if (!BasinRecipe.apply(basin, currentRecipe))
 			return;
 		Optional<ITriggerable> processedRecipeTrigger = getProcessedRecipeTrigger();
-		if (world != null && !world.isRemote && processedRecipeTrigger.isPresent()) 
-			AllTriggers.triggerForNearbyPlayers(processedRecipeTrigger.get(), world, pos, 4);
+		if (level != null && !level.isClientSide && processedRecipeTrigger.isPresent())
+			AllTriggers.triggerForNearbyPlayers(processedRecipeTrigger.get(), level, worldPosition, 4);
 		basin.inputTank.sendDataImmediately();
-	
+
 		// Continue mixing
-		if (matchBasinRecipe(currentRecipe)) {
+		if (wasEmpty && matchBasinRecipe(currentRecipe)) {
 			continueWithPreviousRecipe();
 			sendData();
 		}
@@ -115,7 +119,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	}
 
 	protected List<IRecipe<?>> getMatchingRecipes() {
-		List<IRecipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), world, this::matchStaticFilters);
+		List<IRecipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
 		return list.stream()
 			.filter(this::matchBasinRecipe)
 			.sorted((r1, r2) -> r2.getIngredients()
@@ -128,14 +132,14 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	protected abstract void onBasinRemoved();
 
 	protected Optional<BasinTileEntity> getBasin() {
-		if (world == null)
+		if (level == null)
 			return Optional.empty();
-		TileEntity basinTE = world.getTileEntity(pos.down(2));
+		TileEntity basinTE = level.getBlockEntity(worldPosition.below(2));
 		if (!(basinTE instanceof BasinTileEntity))
 			return Optional.empty();
 		return Optional.of((BasinTileEntity) basinTE);
 	}
-	
+
 	protected Optional<ITriggerable> getProcessedRecipeTrigger() {
 		return Optional.empty();
 	}
@@ -145,7 +149,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	protected abstract Object getRecipeCacheKey();
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

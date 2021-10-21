@@ -25,30 +25,30 @@ public class ScrollValueRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult target = mc.objectMouseOver;
+		RayTraceResult target = mc.hitResult;
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = mc.world;
-		BlockPos pos = result.getPos();
-		Direction face = result.getFace();
+		ClientWorld world = mc.level;
+		BlockPos pos = result.getBlockPos();
+		Direction face = result.getDirection();
 
 		ScrollValueBehaviour behaviour = TileEntityBehaviour.get(world, pos, ScrollValueBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		if (!behaviour.isActive())
 			return;
-		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand()))
+		if (behaviour.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return;
-		boolean highlight = behaviour.testHit(target.getHitVec());
+		boolean highlight = behaviour.testHit(target.getLocation());
 
 		if (behaviour instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
 			BulkScrollValueBehaviour bulkScrolling = (BulkScrollValueBehaviour) behaviour;
 			for (SmartTileEntity smartTileEntity : bulkScrolling.getBulk()) {
 				ScrollValueBehaviour other = smartTileEntity.getBehaviour(ScrollValueBehaviour.TYPE);
 				if (other != null)
-					addBox(world, smartTileEntity.getPos(), face, other, highlight);
+					addBox(world, smartTileEntity.getBlockPos(), face, other, highlight);
 			}
 		} else
 			addBox(world, pos, face, behaviour, highlight);
@@ -56,9 +56,9 @@ public class ScrollValueRenderer {
 
 	protected static void addBox(ClientWorld world, BlockPos pos, Direction face, ScrollValueBehaviour behaviour,
 		boolean highlight) {
-		AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).grow(.5f)
+		AxisAlignedBB bb = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.5f)
 			.contract(0, 0, -.5f)
-			.offset(0, 0, -.125f);
+			.move(0, 0, -.125f);
 		ITextComponent label = behaviour.label;
 		ValueBox box;
 
@@ -72,12 +72,12 @@ public class ScrollValueRenderer {
 
 		box.scrollTooltip(new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]"));
 		box.offsetLabel(behaviour.textShift.add(20, -10, 0))
-			.withColors(0x5A5D5A, 0xB5B7B6)
-			.passive(!highlight);
+				.withColors(0x5A5D5A, 0xB5B7B6)
+				.passive(!highlight);
 
-		CreateClient.outliner.showValueBox(pos, box.transform(behaviour.slotPositioning))
-			.lineWidth(1 / 64f)
-			.highlightFace(face);
+		CreateClient.OUTLINER.showValueBox(pos, box.transform(behaviour.slotPositioning))
+				.lineWidth(1 / 64f)
+				.highlightFace(face);
 	}
 
 }

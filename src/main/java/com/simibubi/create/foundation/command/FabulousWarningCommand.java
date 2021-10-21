@@ -13,10 +13,10 @@ public class FabulousWarningCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("dismissFabulousWarning")
-				.requires(AllCommands.sourceIsPlayer)
+				.requires(AllCommands.SOURCE_IS_PLAYER)
 				.executes(ctx -> {
 					ServerPlayerEntity player = ctx.getSource()
-							.asPlayer();
+							.getPlayerOrException();
 
 					AllPackets.channel.send(
 							PacketDistributor.PLAYER.with(() -> player),

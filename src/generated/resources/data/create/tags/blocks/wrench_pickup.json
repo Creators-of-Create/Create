@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:rails",
+    "#minecraft:buttons",
+    "#minecraft:pressure_plates",
+    "minecraft:redstone_wire",
+    "minecraft:redstone_torch",
+    "minecraft:repeater",
+    "minecraft:lever",
+    "minecraft:comparator",
+    "minecraft:observer",
+    "minecraft:redstone_wall_torch",
+    "minecraft:piston",
+    "minecraft:sticky_piston",
+    "minecraft:tripwire",
+    "minecraft:tripwire_hook",
+    "minecraft:daylight_detector",
+    "minecraft:target"
+  ]
+}

@@ -17,18 +17,18 @@ public class FlySpeedCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("flySpeed")
-			.requires(cs -> cs.hasPermissionLevel(2))
+			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.argument("speed", FloatArgumentType.floatArg(0))
 				.then(Commands.argument("target", EntityArgument.player())
 					.executes(ctx -> sendFlySpeedUpdate(ctx, EntityArgument.getPlayer(ctx, "target"),
 						FloatArgumentType.getFloat(ctx, "speed"))))
 				.executes(ctx -> sendFlySpeedUpdate(ctx, ctx.getSource()
-					.asPlayer(), FloatArgumentType.getFloat(ctx, "speed"))))
+					.getPlayerOrException(), FloatArgumentType.getFloat(ctx, "speed"))))
 			.then(Commands.literal("reset")
 				.then(Commands.argument("target", EntityArgument.player())
 					.executes(ctx -> sendFlySpeedUpdate(ctx, EntityArgument.getPlayer(ctx, "target"), 0.05f)))
 				.executes(ctx -> sendFlySpeedUpdate(ctx, ctx.getSource()
-					.asPlayer(), 0.05f))
+					.getPlayerOrException(), 0.05f))
 
 			);
 	}
@@ -36,11 +36,11 @@ public class FlySpeedCommand {
 	private static int sendFlySpeedUpdate(CommandContext<CommandSource> ctx, ServerPlayerEntity player, float speed) {
 		SPlayerAbilitiesPacket packet = new SPlayerAbilitiesPacket(player.abilities);
 		// packet.setFlySpeed(speed);
-		ObfuscationReflectionHelper.setPrivateValue(SPlayerAbilitiesPacket.class, packet, speed, "field_149116_e");
-		player.connection.sendPacket(packet);
+		ObfuscationReflectionHelper.setPrivateValue(SPlayerAbilitiesPacket.class, packet, speed, "field_149116_e"); // flyingSpeed
+		player.connection.send(packet);
 
 		ctx.getSource()
-			.sendFeedback(new StringTextComponent("Temporarily set " + player.getName()
+			.sendSuccess(new StringTextComponent("Temporarily set " + player.getName()
 				.getString() + "'s Flying Speed to: " + speed), true);
 
 		return Command.SINGLE_SUCCESS;

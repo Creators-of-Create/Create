@@ -17,9 +17,9 @@ public class ConnectedGlassBlock extends GlassBlock {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public boolean isSideInvisible(BlockState state, BlockState adjacentBlockState, Direction side) {
+	public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
 		return adjacentBlockState.getBlock() instanceof ConnectedGlassBlock ? true
-			: super.isSideInvisible(state, adjacentBlockState, side);
+			: super.skipRendering(state, adjacentBlockState, side);
 	}
 
 	@Override

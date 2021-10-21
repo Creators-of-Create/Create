@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 
 public class NonStationaryLighter<C extends Contraption> extends ContraptionLighter<C> {
     public NonStationaryLighter(C contraption) {
@@ -14,7 +14,7 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
         GridAlignedBB contraptionBounds = getContraptionBounds();
 
         if (!contraptionBounds.sameAs(bounds)) {
-            lightVolume.move(contraption.entity.world, contraptionBoundsToVolume(contraptionBounds));
+            lightVolume.move(contraption.entity.level, contraptionBoundsToVolume(contraptionBounds));
             bounds = contraptionBounds;
 
             startListening();
@@ -25,7 +25,7 @@ public class NonStationaryLighter<C extends Contraption> extends ContraptionLigh
     public GridAlignedBB getContraptionBounds() {
         GridAlignedBB bb = GridAlignedBB.from(contraption.bounds);
 
-        bb.translate(contraption.entity.getBlockPos());
+        bb.translate(contraption.entity.blockPosition());
 
         return bb;
     }

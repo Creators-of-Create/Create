@@ -4,8 +4,10 @@ import java.util.Arrays;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.compat.jei.category.animations.AnimatedBlazeBurner;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.contraptions.processing.HeatCondition;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
 import mezz.jei.api.gui.IRecipeLayout;
@@ -19,6 +21,7 @@ import net.minecraft.util.NonNullList;
 public class PackingCategory extends BasinCategory {
 
 	private AnimatedPress press = new AnimatedPress(true);
+	private final AnimatedBlazeBurner heater = new AnimatedBlazeBurner();
 	private PackingType type;
 
 	enum PackingType {
@@ -55,12 +58,12 @@ public class PackingCategory extends BasinCategory {
 		while (i < size) {
 			Ingredient ingredient = ingredients2.get(i);
 			itemStacks.init(i, true, (rows == 2 ? 26 : 17) + (i % rows) * 19, 50 - (i / rows) * 19);
-			itemStacks.set(i, Arrays.asList(ingredient.getMatchingStacks()));
+			itemStacks.set(i, Arrays.asList(ingredient.getItems()));
 			i++;
 		}
 
 		itemStacks.init(i, false, 141, 50);
-		itemStacks.set(i, recipe.getRecipeOutput());
+		itemStacks.set(i, recipe.getResultItem());
 	}
 
 	@Override
@@ -80,7 +83,11 @@ public class PackingCategory extends BasinCategory {
 			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 68);
 		}
 
-		press.draw(matrixStack, getBackground().getWidth() / 2 + 6, 40);
+		HeatCondition requiredHeat = recipe.getRequiredHeat();
+		if (requiredHeat != HeatCondition.NONE)
+			heater.withHeat(requiredHeat.visualizeAsBlazeBurner())
+				.draw(matrixStack, getBackground().getWidth() / 2 + 3, 55);
+		press.draw(matrixStack, getBackground().getWidth() / 2 + 3, 34);
 	}
 
 }

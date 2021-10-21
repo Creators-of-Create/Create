@@ -30,7 +30,7 @@ public class PulseRepeaterGenerator extends AbstractDiodeGenerator {
 
 	@Override
 	int getModelIndex(BlockState state) {
-		return state.get(PulseRepeaterBlock.PULSING) ? 2 : state.get(PulseRepeaterBlock.POWERED) ? 1 : 0;
+		return state.getValue(PulseRepeaterBlock.PULSING) ? 2 : state.getValue(PulseRepeaterBlock.POWERED) ? 1 : 0;
 	}
 
 }

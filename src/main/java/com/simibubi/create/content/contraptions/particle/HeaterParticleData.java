@@ -32,7 +32,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticleDataWit
 	public static final IParticleData.IDeserializer<HeaterParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<HeaterParticleData>() {
 			@Override
-			public HeaterParticleData deserialize(ParticleType<HeaterParticleData> arg0, StringReader reader)
+			public HeaterParticleData fromCommand(ParticleType<HeaterParticleData> arg0, StringReader reader)
 				throws CommandSyntaxException {
 				reader.expect(' ');
 				float r = reader.readFloat();
@@ -44,7 +44,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticleDataWit
 			}
 
 			@Override
-			public HeaterParticleData read(ParticleType<HeaterParticleData> type, PacketBuffer buffer) {
+			public HeaterParticleData fromNetwork(ParticleType<HeaterParticleData> type, PacketBuffer buffer) {
 				return new HeaterParticleData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 			}
 		};
@@ -80,7 +80,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticleDataWit
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return String.format(Locale.ROOT, "%s %f %f %f", AllParticleTypes.HEATER_PARTICLE.parameter(), r, g, b);
 	}
 
@@ -90,7 +90,7 @@ public class HeaterParticleData implements IParticleData, ICustomParticleDataWit
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void writeToNetwork(PacketBuffer buffer) {
 		buffer.writeFloat(r);
 		buffer.writeFloat(g);
 		buffer.writeFloat(b);

@@ -18,23 +18,23 @@ public class AbstractDirectionalFunnelBlock extends AbstractFunnelBlock {
 	}
 	
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(FACING));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(FACING));
 	}
 	
 	@Override
 	protected Direction getFacing(BlockState state) {
-		return state.get(FACING);
+		return state.getValue(FACING);
 	}
 	
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
+		return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
 	}
 
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+		return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
 	}
 
 }

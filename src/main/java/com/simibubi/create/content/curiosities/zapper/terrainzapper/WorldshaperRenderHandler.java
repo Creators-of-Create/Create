@@ -31,17 +31,17 @@ public class WorldshaperRenderHandler {
 		if (renderedPositions == null)
 			return;
 
-		CreateClient.outliner.showCluster("terrainZapper", renderedPositions.get())
-			.colored(0xbfbfbf)
-			.disableNormals()
-			.lineWidth(1 / 32f)
-			.withFaceTexture(AllSpecialTextures.CHECKERED);
+		CreateClient.OUTLINER.showCluster("terrainZapper", renderedPositions.get())
+				.colored(0xbfbfbf)
+				.disableNormals()
+				.lineWidth(1 / 32f)
+				.withFaceTexture(AllSpecialTextures.CHECKERED);
 	}
 
 	protected static void gatherSelectedBlocks() {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		ItemStack heldMain = player.getHeldItemMainhand();
-		ItemStack heldOff = player.getHeldItemOffhand();
+		ItemStack heldMain = player.getMainHandItem();
+		ItemStack heldOff = player.getOffhandItem();
 		boolean zapperInMain = AllItems.WORLDSHAPER.isIn(heldMain);
 		boolean zapperInOff = AllItems.WORLDSHAPER.isIn(heldOff);
 
@@ -75,21 +75,21 @@ public class WorldshaperRenderHandler {
 		BlockPos params = NBTUtil.readBlockPos(tag.getCompound("BrushParams"));
 		brush.set(params.getX(), params.getY(), params.getZ());
 
-		Vector3d start = player.getPositionVec()
+		Vector3d start = player.position()
 			.add(0, player.getEyeHeight(), 0);
-		Vector3d range = player.getLookVec()
+		Vector3d range = player.getLookAngle()
 			.scale(128);
-		BlockRayTraceResult raytrace = player.world
-			.rayTraceBlocks(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		BlockRayTraceResult raytrace = player.level
+			.clip(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
 		if (raytrace == null || raytrace.getType() == Type.MISS) {
 			renderedPositions = null;
 			return;
 		}
 
-		BlockPos pos = raytrace.getPos()
-			.add(brush.getOffset(player.getLookVec(), raytrace.getFace(), placement));
+		BlockPos pos = raytrace.getBlockPos()
+			.offset(brush.getOffset(player.getLookAngle(), raytrace.getDirection(), placement));
 		renderedPositions =
-			() -> brush.addToGlobalPositions(player.world, pos, raytrace.getFace(), new ArrayList<>(), tool);
+			() -> brush.addToGlobalPositions(player.level, pos, raytrace.getDirection(), new ArrayList<>(), tool);
 	}
 
 }

@@ -3,10 +3,10 @@ package com.simibubi.create.foundation.tileEntity.behaviour;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sided;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
 
@@ -40,7 +40,7 @@ public class ValueBox extends ChasingAABBOutline {
 		super(bb);
 		this.label = label;
 		this.pos = pos;
-		this.blockState = Minecraft.getInstance().world.getBlockState(pos);
+		this.blockState = Minecraft.getInstance().level.getBlockState(pos);
 	}
 
 	public ValueBox transform(ValueBoxTransform transform) {
@@ -82,12 +82,12 @@ public class ValueBox extends ChasingAABBOutline {
 		if (hasTransform && !transform.shouldRender(blockState))
 			return;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(pos.getX(), pos.getY(), pos.getZ());
 		if (hasTransform)
 			transform.transform(blockState, ms);
-		transformNormals = ms.peek()
-			.getNormal()
+		transformNormals = ms.last()
+			.normal()
 			.copy();
 		params.colored(isPassive ? passiveColor : highlightColor);
 		super.render(ms, buffer, pt);
@@ -95,12 +95,12 @@ public class ValueBox extends ChasingAABBOutline {
 		float fontScale = hasTransform ? -transform.getFontScale() : -1 / 64f;
 		ms.scale(fontScale, fontScale, fontScale);
 
-		ms.push();
+		ms.pushPose();
 		renderContents(ms, buffer);
-		ms.pop();
+		ms.popPose();
 
 		if (!isPassive) {
-			ms.push();
+			ms.pushPose();
 			ms.translate(17.5, -.5, 7);
 			ms.translate(labelOffset.x, labelOffset.y, labelOffset.z);
 
@@ -109,15 +109,15 @@ public class ValueBox extends ChasingAABBOutline {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, sublabel);
 			}
-			if (!scrollTooltip.getUnformattedComponentText().isEmpty()) {
+			if (!scrollTooltip.getContents().isEmpty()) {
 				ms.translate(0, 10, 0);
 				renderHoveringText(ms, buffer, scrollTooltip, 0x998899, 0x111111);
 			}
 
-			ms.pop();
+			ms.popPose();
 		}
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void renderContents(MatrixStack ms, IRenderTypeBuffer buffer) {}
@@ -135,15 +135,15 @@ public class ValueBox extends ChasingAABBOutline {
 		@Override
 		public void renderContents(MatrixStack ms, IRenderTypeBuffer buffer) {
 			super.renderContents(ms, buffer);
-			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			FontRenderer font = Minecraft.getInstance().font;
 			ITextComponent countString = new StringTextComponent(count == 0 ? "*" : count + "");
 			ms.translate(17.5f, -5f, 7f);
 
 			boolean isFilter = stack.getItem() instanceof FilterItem;
 			boolean isEmpty = stack.isEmpty();
 			float scale = 1.5f;
-			ms.translate(-font.getWidth(countString), 0, 0);
-			
+			ms.translate(-font.width(countString), 0, 0);
+
 			if (isFilter)
 				ms.translate(3, 8, 7.25f);
 			else if (isEmpty) {
@@ -172,17 +172,17 @@ public class ValueBox extends ChasingAABBOutline {
 		@Override
 		public void renderContents(MatrixStack ms, IRenderTypeBuffer buffer) {
 			super.renderContents(ms, buffer);
-			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			FontRenderer font = Minecraft.getInstance().font;
 			float scale = 4;
 			ms.scale(scale, scale, 1);
 			ms.translate(-4, -4, 5);
 
-			int stringWidth = font.getWidth(text);
-			float numberScale = (float) font.FONT_HEIGHT / stringWidth;
+			int stringWidth = font.width(text);
+			float numberScale = (float) font.lineHeight / stringWidth;
 			boolean singleDigit = stringWidth < 10;
 			if (singleDigit)
 				numberScale = numberScale / 2;
-			float verticalMargin = (stringWidth - font.FONT_HEIGHT) / 2f;
+			float verticalMargin = (stringWidth - font.lineHeight) / 2f;
 
 			ms.scale(numberScale, numberScale, numberScale);
 			ms.translate(singleDigit ? stringWidth / 2 : 0, singleDigit ? -verticalMargin : verticalMargin, 0);
@@ -215,21 +215,21 @@ public class ValueBox extends ChasingAABBOutline {
 	// util
 
 	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text) {
-		renderHoveringText(ms, buffer, text, highlightColor, ColorHelper.mixColors(passiveColor, 0, 0.75f));
+		renderHoveringText(ms, buffer, text, highlightColor, Color.mixColors(passiveColor, 0, 0.75f));
 	}
 
 	protected void renderHoveringText(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text, int color,
 		int shadowColor) {
-		ms.push();
+		ms.pushPose();
 		drawString(ms, buffer, text, 0, 0, color);
 		ms.translate(0, 0, -.25);
 		drawString(ms, buffer, text, 1, 1, shadowColor);
-		ms.pop();
+		ms.popPose();
 	}
 
 	private static void drawString(MatrixStack ms, IRenderTypeBuffer buffer, ITextComponent text, float x, float y, int color) {
-		Minecraft.getInstance().fontRenderer.draw(text, x, y, color, false, ms.peek()
-			.getModel(), buffer, false, 0, 15728880);
+		Minecraft.getInstance().font.drawInBatch(text, x, y, color, false, ms.last()
+			.pose(), buffer, false, 0, 15728880);
 	}
 
 }

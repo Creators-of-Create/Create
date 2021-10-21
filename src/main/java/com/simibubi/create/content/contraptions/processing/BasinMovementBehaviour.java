@@ -31,9 +31,9 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 	public void tick(MovementContext context) {
 		super.tick(context);
 		if (context.temporaryData == null || (boolean) context.temporaryData) {
-			Vector3d facingVec = context.rotation.apply(Vector3d.of(Direction.UP.getDirectionVec()));
+			Vector3d facingVec = context.rotation.apply(Vector3d.atLowerCornerOf(Direction.UP.getNormal()));
 			facingVec.normalize();
-			if (Direction.getFacingFromVector(facingVec.x, facingVec.y, facingVec.z) == Direction.DOWN)
+			if (Direction.getNearest(facingVec.x, facingVec.y, facingVec.z) == Direction.DOWN)
 				dump(context, facingVec);
 		}
 	}
@@ -46,8 +46,8 @@ public class BasinMovementBehaviour extends MovementBehaviour {
 					continue;
 				ItemEntity itemEntity = new ItemEntity(context.world, context.position.x, context.position.y,
 					context.position.z, itemStackHandler.getStackInSlot(i));
-				itemEntity.setMotion(facingVec.scale(.05));
-				context.world.addEntity(itemEntity);
+				itemEntity.setDeltaMovement(facingVec.scale(.05));
+				context.world.addFreshEntity(itemEntity);
 				itemStackHandler.setStackInSlot(i, ItemStack.EMPTY);
 			}
 			context.tileData.put(key, itemStackHandler.serializeNBT());

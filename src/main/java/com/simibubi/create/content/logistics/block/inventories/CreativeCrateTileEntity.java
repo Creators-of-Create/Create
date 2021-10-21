@@ -2,12 +2,12 @@ package com.simibubi.create.content.logistics.block.inventories;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -39,7 +39,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 	}
 
 	private boolean filterVisible() {
-		if (!hasWorld() || isDoubleCrate() && !isSecondaryCrate())
+		if (!hasLevel() || isDoubleCrate() && !isSecondaryCrate())
 			return false;
 		return true;
 	}
@@ -50,14 +50,14 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		CreativeCrateTileEntity otherCrate = getOtherCrate();
 		if (otherCrate == null)
 			return;
-		if (ItemStack.areItemsEqual(filter, otherCrate.filtering.getFilter()))
+		if (ItemStack.isSame(filter, otherCrate.filtering.getFilter()))
 			return;
 		otherCrate.filtering.setFilter(filter);
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		if (itemHandler != null)
 			itemHandler.invalidate();
 	}
@@ -65,7 +65,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 	private CreativeCrateTileEntity getOtherCrate() {
 		if (!AllBlocks.CREATIVE_CRATE.has(getBlockState()))
 			return null;
-		TileEntity tileEntity = world.getTileEntity(pos.offset(getFacing()));
+		TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(getFacing()));
 		if (tileEntity instanceof CreativeCrateTileEntity)
 			return (CreativeCrateTileEntity) tileEntity;
 		return null;
@@ -96,7 +96,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 
 			@Override
 			protected void rotate(BlockState state, MatrixStack ms) {
-				MatrixStacker.of(ms)
+				MatrixTransformStack.of(ms)
 					.rotateX(90);
 			}
 

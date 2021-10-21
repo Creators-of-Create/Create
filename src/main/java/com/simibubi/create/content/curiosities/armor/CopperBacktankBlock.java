@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.armor;
 
 import java.util.Optional;
 
+import com.simibubi.create.AllEnchantments;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -11,6 +12,7 @@ import com.simibubi.create.foundation.block.ITE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -19,6 +21,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -45,37 +49,48 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 
 	public CopperBacktankBlock(Properties properties) {
 		super(properties);
-		setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+		registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
 	}
 
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
-			: Fluids.EMPTY.getDefaultState();
+		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false)
+			: Fluids.EMPTY.defaultFluidState();
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(BlockStateProperties.WATERLOGGED);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
+	}
+	
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
+		return true;
+	}
+	
+	@Override
+	public int getAnalogOutputSignal(BlockState p_180641_1_, World world, BlockPos pos) {
+		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
+			.orElse(0);
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
 		IWorld world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.get(BlockStateProperties.WATERLOGGED)) {
-			world.getPendingFluidTicks()
-				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+			world.getLiquidTicks()
+				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		return state;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		FluidState ifluidstate = context.getWorld()
-			.getFluidState(context.getPos());
-		return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(ifluidstate.getFluid() == Fluids.WATER));
+		FluidState ifluidstate = context.getLevel()
+			.getFluidState(context.getClickedPos());
+		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
+			Boolean.valueOf(ifluidstate.getType() == Fluids.WATER));
 	}
 
 	@Override
@@ -89,55 +104,68 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-		if (worldIn.isRemote)
+	public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(worldIn, pos, state, placer, stack);
+		if (worldIn.isClientSide)
 			return;
 		if (stack == null)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
+			te.setCapacityEnchantLevel(EnchantmentHelper.getItemEnchantmentLevel(AllEnchantments.CAPACITY.get(), stack));
 			te.setAirLevel(stack.getOrCreateTag()
 				.getInt("Air"));
-			if (stack.hasDisplayName())
-				te.setCustomName(stack.getDisplayName());
+			if (stack.isEnchanted())
+				te.setEnchantmentTag(stack.getEnchantmentTags());
+			if (stack.hasCustomHoverName())
+				te.setCustomName(stack.getHoverName());
 		});
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand p_225533_5_,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand p_225533_5_,
 		BlockRayTraceResult p_225533_6_) {
 		if (player == null)
 			return ActionResultType.PASS;
 		if (player instanceof FakePlayer)
 			return ActionResultType.PASS;
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return ActionResultType.PASS;
-		if (player.getHeldItemMainhand()
+		if (player.getMainHandItem()
 			.getItem() instanceof BlockItem)
 			return ActionResultType.PASS;
-		if (!player.getItemStackFromSlot(EquipmentSlotType.CHEST)
+		if (!player.getItemBySlot(EquipmentSlotType.CHEST)
 			.isEmpty())
 			return ActionResultType.PASS;
-		if (!world.isRemote) {
-			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .75f, 1);
-			player.setItemStackToSlot(EquipmentSlotType.CHEST, getItem(world, pos, state));
+		if (!world.isClientSide) {
+			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, .75f, 1);
+			player.setItemSlot(EquipmentSlotType.CHEST, getCloneItemStack(world, pos, state));
 			world.destroyBlock(pos, false);
 		}
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public ItemStack getItem(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		ItemStack item = AllItems.COPPER_BACKTANK.asStack();
 		Optional<CopperBacktankTileEntity> tileEntityOptional = getTileEntityOptional(p_185473_1_, p_185473_2_);
+
 		int air = tileEntityOptional.map(CopperBacktankTileEntity::getAirLevel)
 			.orElse(0);
+		CompoundNBT tag = item.getOrCreateTag();
+		tag.putInt("Air", air);
+
+		ListNBT enchants = tileEntityOptional.map(CopperBacktankTileEntity::getEnchantmentTag)
+			.orElse(new ListNBT());
+		if (!enchants.isEmpty()) {
+			ListNBT enchantmentTagList = item.getEnchantmentTags();
+			enchantmentTagList.addAll(enchants);
+			tag.put("Enchantments", enchantmentTagList);
+		}
+
 		ITextComponent customName = tileEntityOptional.map(CopperBacktankTileEntity::getCustomName)
 			.orElse(null);
-		item.getOrCreateTag()
-			.putInt("Air", air);
 		if (customName != null)
-			item.setDisplayName(customName);
+			item.setHoverName(customName);
 		return item;
 	}
 
@@ -158,7 +186,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	}
 
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

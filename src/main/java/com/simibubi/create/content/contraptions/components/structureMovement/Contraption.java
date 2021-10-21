@@ -22,9 +22,13 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.AllInteractionBehaviours;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.jozufozu.flywheel.backend.IFlywheelWorld;
+import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.base.IRotate;
@@ -48,6 +52,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.MagnetBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyBlock.RopeBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.pulley.PulleyTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.EmptyLighter;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
@@ -56,12 +61,9 @@ import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTile
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
-import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
-import com.simibubi.create.foundation.render.backend.light.EmptyLighter;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
-import com.simibubi.create.foundation.utility.Coordinate;
+import com.simibubi.create.foundation.utility.ICoordinate;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
@@ -73,7 +75,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
-import net.minecraft.block.DoorBlock;
 import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.block.material.PushReaction;
@@ -85,9 +86,9 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.ChestType;
-import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.state.properties.PistonType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -104,6 +105,7 @@ import net.minecraft.village.PointOfInterestType;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.BlockFlags;
@@ -121,7 +123,7 @@ public abstract class Contraption {
 
 	public Optional<List<AxisAlignedBB>> simplifiedEntityColliders;
 	public AbstractContraptionEntity entity;
-	public CombinedInvWrapper inventory;
+	public ContraptionInvWrapper inventory;
 	public CombinedTankWrapper fluidInventory;
 	public AxisAlignedBB bounds;
 	public BlockPos anchor;
@@ -132,6 +134,7 @@ public abstract class Contraption {
 	protected Map<BlockPos, MountedStorage> storage;
 	protected Map<BlockPos, MountedFluidStorage> fluidStorage;
 	protected List<MutablePair<BlockInfo, MovementContext>> actors;
+	protected Map<BlockPos, MovingInteractionBehaviour> interactors;
 	protected Set<Pair<BlockPos, Direction>> superglue;
 	protected List<BlockPos> seats;
 	protected Map<UUID, Integer> seatMapping;
@@ -155,6 +158,7 @@ public abstract class Contraption {
 		storage = new HashMap<>();
 		seats = new ArrayList<>();
 		actors = new ArrayList<>();
+		interactors = new HashMap<>();
 		superglue = new HashSet<>();
 		seatMapping = new HashMap<>();
 		fluidStorage = new HashMap<>();
@@ -170,7 +174,7 @@ public abstract class Contraption {
 
 	public ContraptionWorld getContraptionWorld() {
 		if (world == null)
-			world = new ContraptionWorld(entity.world, this);
+			world = new ContraptionWorld(entity.level, this);
 		return world;
 	}
 
@@ -212,7 +216,7 @@ public abstract class Contraption {
 		if (bounds == null)
 			bounds = new AxisAlignedBB(BlockPos.ZERO);
 
-		if (!BlockMovementTraits.isBrittle(world.getBlockState(pos)))
+		if (!BlockMovementChecks.isBrittle(world.getBlockState(pos)))
 			frontier.add(pos);
 		if (!addToInitialFrontier(world, pos, forcedDirection, frontier))
 			return false;
@@ -232,7 +236,7 @@ public abstract class Contraption {
 		for (BlockFace blockFace : pendingSubContraptions) {
 			Direction face = blockFace.getFace();
 			StabilizedContraption subContraption = new StabilizedContraption(face);
-			World world = entity.world;
+			World world = entity.level;
 			BlockPos pos = blockFace.getPos();
 			try {
 				if (!subContraption.assemble(world, pos))
@@ -241,12 +245,11 @@ public abstract class Contraption {
 				continue;
 			}
 			subContraption.removeBlocksFromWorld(world, BlockPos.ZERO);
-			OrientedContraptionEntity movedContraption =
-				OrientedContraptionEntity.create(world, subContraption, Optional.of(face));
+			OrientedContraptionEntity movedContraption = OrientedContraptionEntity.create(world, subContraption, face);
 			BlockPos anchor = blockFace.getConnectedPos();
-			movedContraption.setPosition(anchor.getX() + .5f, anchor.getY(), anchor.getZ() + .5f);
-			world.addEntity(movedContraption);
-			stabilizedSubContraptions.put(movedContraption.getUniqueID(), new BlockFace(toLocalPos(pos), face));
+			movedContraption.setPos(anchor.getX() + .5f, anchor.getY(), anchor.getZ() + .5f);
+			world.addFreshEntity(movedContraption);
+			stabilizedSubContraptions.put(movedContraption.getUUID(), new BlockFace(toLocalPos(pos), face));
 		}
 
 		// Gather itemhandlers of mounted storage
@@ -254,7 +257,8 @@ public abstract class Contraption {
 			.stream()
 			.map(MountedStorage::getItemHandler)
 			.collect(Collectors.toList());
-		inventory = new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
+		inventory =
+			new ContraptionInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 
 		List<IFluidHandler> fluidHandlers = fluidStorage.values()
 			.stream()
@@ -273,13 +277,13 @@ public abstract class Contraption {
 	}
 
 	public void onEntityInitialize(World world, AbstractContraptionEntity contraptionEntity) {
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
-		for (OrientedContraptionEntity orientedCE : world.getEntitiesWithinAABB(OrientedContraptionEntity.class,
+		for (OrientedContraptionEntity orientedCE : world.getEntitiesOfClass(OrientedContraptionEntity.class,
 			contraptionEntity.getBoundingBox()
-				.grow(1)))
-			if (stabilizedSubContraptions.containsKey(orientedCE.getUniqueID()))
+				.inflate(1)))
+			if (stabilizedSubContraptions.containsKey(orientedCE.getUUID()))
 				orientedCE.startRiding(contraptionEntity);
 
 		for (BlockPos seatPos : getSeats()) {
@@ -294,7 +298,7 @@ public abstract class Contraption {
 	}
 
 	public void onEntityTick(World world) {
-		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isRemote));
+		fluidStorage.forEach((pos, mfs) -> mfs.tick(entity, pos, world.isClientSide));
 	}
 
 	/** move the first block in frontier queue */
@@ -307,12 +311,12 @@ public abstract class Contraption {
 
 		if (World.isOutsideBuildHeight(pos))
 			return true;
-		if (!world.isBlockPresent(pos))
+		if (!world.isLoaded(pos))
 			throw AssemblyException.unloadedChunk(pos);
 		if (isAnchoringBlockAt(pos))
 			return true;
 		BlockState state = world.getBlockState(pos);
-		if (!BlockMovementTraits.movementNecessary(state, world, pos))
+		if (!BlockMovementChecks.isMovementNecessary(state, world, pos))
 			return true;
 		if (!movementAllowed(state, world, pos))
 			throw AssemblyException.unmovableBlock(pos, state);
@@ -332,18 +336,18 @@ public abstract class Contraption {
 		if (AllBlocks.GANTRY_SHAFT.has(state))
 			moveGantryShaft(world, pos, frontier, visited, state);
 
-		if (AllBlocks.STICKER.has(state) && state.get(StickerBlock.EXTENDED)) {
-			Direction offset = state.get(StickerBlock.FACING);
-			BlockPos attached = pos.offset(offset);
+		if (AllBlocks.STICKER.has(state) && state.getValue(StickerBlock.EXTENDED)) {
+			Direction offset = state.getValue(StickerBlock.FACING);
+			BlockPos attached = pos.relative(offset);
 			if (!visited.contains(attached)
-				&& !BlockMovementTraits.notSupportive(world.getBlockState(attached), offset.getOpposite()))
+				&& !BlockMovementChecks.isNotSupportive(world.getBlockState(attached), offset.getOpposite()))
 				frontier.add(attached);
 		}
 
 		// Bearings potentially create stabilized sub-contraptions
 		if (AllBlocks.MECHANICAL_BEARING.has(state))
 			moveBearing(pos, frontier, visited, state);
-		
+
 		// WM Bearings attach their structure when moved
 		if (AllBlocks.WINDMILL_BEARING.has(state))
 			moveWindmillBearing(pos, frontier, visited, state);
@@ -365,15 +369,8 @@ public abstract class Contraption {
 		if (isPistonHead(state))
 			movePistonHead(world, pos, frontier, visited, state);
 
-		// Doors try to stay whole
-		if (state.getBlock() instanceof DoorBlock) {
-			BlockPos otherPartPos = pos.up(state.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 1 : -1);
-			if (!visited.contains(otherPartPos))
-				frontier.add(otherPartPos);
-		}
-
 		// Cart assemblers attach themselves
-		BlockPos posDown = pos.down();
+		BlockPos posDown = pos.below();
 		BlockState stateBelow = world.getBlockState(posDown);
 		if (!visited.contains(posDown) && AllBlocks.CART_ASSEMBLER.has(stateBelow))
 			frontier.add(posDown);
@@ -382,7 +379,7 @@ public abstract class Contraption {
 
 		// Slime blocks and super glue drag adjacent blocks if possible
 		for (Direction offset : Iterate.directions) {
-			BlockPos offsetPos = pos.offset(offset);
+			BlockPos offsetPos = pos.relative(offset);
 			BlockState blockState = world.getBlockState(offsetPos);
 			if (isAnchoringBlockAt(offsetPos))
 				continue;
@@ -395,24 +392,24 @@ public abstract class Contraption {
 			boolean wasVisited = visited.contains(offsetPos);
 			boolean faceHasGlue = superglue.containsKey(offset);
 			boolean blockAttachedTowardsFace =
-				BlockMovementTraits.isBlockAttachedTowards(world, offsetPos, blockState, offset.getOpposite());
-			boolean brittle = BlockMovementTraits.isBrittle(blockState);
+				BlockMovementChecks.isBlockAttachedTowards(blockState, world, offsetPos, offset.getOpposite());
+			boolean brittle = BlockMovementChecks.isBrittle(blockState);
 			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
 			if (canStick) {
-				if (state.getPushReaction() == PushReaction.PUSH_ONLY
-					|| blockState.getPushReaction() == PushReaction.PUSH_ONLY) {
+				if (state.getPistonPushReaction() == PushReaction.PUSH_ONLY
+					|| blockState.getPistonPushReaction() == PushReaction.PUSH_ONLY) {
 					canStick = false;
 				}
-				if (BlockMovementTraits.notSupportive(state, offset)) {
+				if (BlockMovementChecks.isNotSupportive(state, offset)) {
 					canStick = false;
 				}
-				if (BlockMovementTraits.notSupportive(blockState, offset.getOpposite())) {
+				if (BlockMovementChecks.isNotSupportive(blockState, offset.getOpposite())) {
 					canStick = false;
 				}
 			}
 
 			if (!wasVisited && (canStick || blockAttachedTowardsFace || faceHasGlue
-				|| (offset == forcedDirection && !BlockMovementTraits.notSupportive(state, forcedDirection))))
+				|| (offset == forcedDirection && !BlockMovementChecks.isNotSupportive(state, forcedDirection))))
 				frontier.add(offsetPos);
 			if (faceHasGlue)
 				addGlue(superglue.get(offset));
@@ -427,21 +424,22 @@ public abstract class Contraption {
 
 	protected void movePistonHead(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
-		Direction direction = state.get(MechanicalPistonHeadBlock.FACING);
-		BlockPos offset = pos.offset(direction.getOpposite());
+		Direction direction = state.getValue(MechanicalPistonHeadBlock.FACING);
+		BlockPos offset = pos.relative(direction.getOpposite());
 		if (!visited.contains(offset)) {
 			BlockState blockState = world.getBlockState(offset);
-			if (isExtensionPole(blockState) && blockState.get(PistonExtensionPoleBlock.FACING)
+			if (isExtensionPole(blockState) && blockState.getValue(PistonExtensionPoleBlock.FACING)
 				.getAxis() == direction.getAxis())
 				frontier.add(offset);
 			if (blockState.getBlock() instanceof MechanicalPistonBlock) {
-				Direction pistonFacing = blockState.get(MechanicalPistonBlock.FACING);
-				if (pistonFacing == direction && blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED)
+				Direction pistonFacing = blockState.getValue(MechanicalPistonBlock.FACING);
+				if (pistonFacing == direction
+					&& blockState.getValue(MechanicalPistonBlock.STATE) == PistonState.EXTENDED)
 					frontier.add(offset);
 			}
 		}
-		if (state.get(MechanicalPistonHeadBlock.TYPE) == PistonType.STICKY) {
-			BlockPos attached = pos.offset(direction);
+		if (state.getValue(MechanicalPistonHeadBlock.TYPE) == PistonType.STICKY) {
+			BlockPos attached = pos.relative(direction);
 			if (!visited.contains(attached))
 				frontier.add(attached);
 		}
@@ -449,21 +447,21 @@ public abstract class Contraption {
 
 	protected void movePistonPole(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
-		for (Direction d : Iterate.directionsInAxis(state.get(PistonExtensionPoleBlock.FACING)
+		for (Direction d : Iterate.directionsInAxis(state.getValue(PistonExtensionPoleBlock.FACING)
 			.getAxis())) {
-			BlockPos offset = pos.offset(d);
+			BlockPos offset = pos.relative(d);
 			if (!visited.contains(offset)) {
 				BlockState blockState = world.getBlockState(offset);
-				if (isExtensionPole(blockState) && blockState.get(PistonExtensionPoleBlock.FACING)
+				if (isExtensionPole(blockState) && blockState.getValue(PistonExtensionPoleBlock.FACING)
 					.getAxis() == d.getAxis())
 					frontier.add(offset);
-				if (isPistonHead(blockState) && blockState.get(MechanicalPistonHeadBlock.FACING)
+				if (isPistonHead(blockState) && blockState.getValue(MechanicalPistonHeadBlock.FACING)
 					.getAxis() == d.getAxis())
 					frontier.add(offset);
 				if (blockState.getBlock() instanceof MechanicalPistonBlock) {
-					Direction pistonFacing = blockState.get(MechanicalPistonBlock.FACING);
+					Direction pistonFacing = blockState.getValue(MechanicalPistonBlock.FACING);
 					if (pistonFacing == d || pistonFacing == d.getOpposite()
-						&& blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED)
+						&& blockState.getValue(MechanicalPistonBlock.STATE) == PistonState.EXTENDED)
 						frontier.add(offset);
 				}
 			}
@@ -472,14 +470,14 @@ public abstract class Contraption {
 
 	protected void moveGantryPinion(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
-		BlockPos offset = pos.offset(state.get(GantryCarriageBlock.FACING));
+		BlockPos offset = pos.relative(state.getValue(GantryCarriageBlock.FACING));
 		if (!visited.contains(offset))
 			frontier.add(offset);
 		Axis rotationAxis = ((IRotate) state.getBlock()).getRotationAxis(state);
 		for (Direction d : Iterate.directionsInAxis(rotationAxis)) {
-			offset = pos.offset(d);
+			offset = pos.relative(d);
 			BlockState offsetState = world.getBlockState(offset);
-			if (AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.get(GantryShaftBlock.FACING)
+			if (AllBlocks.GANTRY_SHAFT.has(offsetState) && offsetState.getValue(GantryShaftBlock.FACING)
 				.getAxis() == d.getAxis())
 				if (!visited.contains(offset))
 					frontier.add(offset);
@@ -489,30 +487,31 @@ public abstract class Contraption {
 	protected void moveGantryShaft(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) {
 		for (Direction d : Iterate.directions) {
-			BlockPos offset = pos.offset(d);
+			BlockPos offset = pos.relative(d);
 			if (!visited.contains(offset)) {
 				BlockState offsetState = world.getBlockState(offset);
-				Direction facing = state.get(GantryShaftBlock.FACING);
+				Direction facing = state.getValue(GantryShaftBlock.FACING);
 				if (d.getAxis() == facing.getAxis() && AllBlocks.GANTRY_SHAFT.has(offsetState)
-					&& offsetState.get(GantryShaftBlock.FACING) == facing)
+					&& offsetState.getValue(GantryShaftBlock.FACING) == facing)
 					frontier.add(offset);
-				else if (AllBlocks.GANTRY_CARRIAGE.has(offsetState) && offsetState.get(GantryCarriageBlock.FACING) == d)
+				else if (AllBlocks.GANTRY_CARRIAGE.has(offsetState)
+					&& offsetState.getValue(GantryCarriageBlock.FACING) == d)
 					frontier.add(offset);
 			}
 		}
 	}
 
 	private void moveWindmillBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
-		Direction facing = state.get(WindmillBearingBlock.FACING);
-		BlockPos offset = pos.offset(facing);
+		Direction facing = state.getValue(WindmillBearingBlock.FACING);
+		BlockPos offset = pos.relative(facing);
 		if (!visited.contains(offset))
 			frontier.add(offset);
 	}
 
 	private void moveBearing(BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited, BlockState state) {
-		Direction facing = state.get(MechanicalBearingBlock.FACING);
+		Direction facing = state.getValue(MechanicalBearingBlock.FACING);
 		if (!canBeStabilized(facing, pos.subtract(anchor))) {
-			BlockPos offset = pos.offset(facing);
+			BlockPos offset = pos.relative(facing);
 			if (!visited.contains(offset))
 				frontier.add(offset);
 			return;
@@ -532,7 +531,7 @@ public abstract class Contraption {
 	private void moveSeat(World world, BlockPos pos) {
 		BlockPos local = toLocalPos(pos);
 		getSeats().add(local);
-		List<SeatEntity> seatsEntities = world.getEntitiesWithinAABB(SeatEntity.class, new AxisAlignedBB(pos));
+		List<SeatEntity> seatsEntities = world.getEntitiesOfClass(SeatEntity.class, new AxisAlignedBB(pos));
 		if (!seatsEntities.isEmpty()) {
 			SeatEntity seat = seatsEntities.get(0);
 			List<Entity> passengers = seat.getPassengers();
@@ -545,8 +544,8 @@ public abstract class Contraption {
 		int limit = AllConfigs.SERVER.kinetics.maxRopeLength.get();
 		BlockPos ropePos = pos;
 		while (limit-- >= 0) {
-			ropePos = ropePos.down();
-			if (!world.isBlockPresent(ropePos))
+			ropePos = ropePos.below();
+			if (!world.isLoaded(ropePos))
 				break;
 			BlockState ropeState = world.getBlockState(ropePos);
 			Block block = ropeState.getBlock();
@@ -561,21 +560,21 @@ public abstract class Contraption {
 
 	private boolean moveMechanicalPiston(World world, BlockPos pos, Queue<BlockPos> frontier, Set<BlockPos> visited,
 		BlockState state) throws AssemblyException {
-		Direction direction = state.get(MechanicalPistonBlock.FACING);
-		PistonState pistonState = state.get(MechanicalPistonBlock.STATE);
+		Direction direction = state.getValue(MechanicalPistonBlock.FACING);
+		PistonState pistonState = state.getValue(MechanicalPistonBlock.STATE);
 		if (pistonState == PistonState.MOVING)
 			return false;
 
-		BlockPos offset = pos.offset(direction.getOpposite());
+		BlockPos offset = pos.relative(direction.getOpposite());
 		if (!visited.contains(offset)) {
 			BlockState poleState = world.getBlockState(offset);
-			if (AllBlocks.PISTON_EXTENSION_POLE.has(poleState) && poleState.get(PistonExtensionPoleBlock.FACING)
+			if (AllBlocks.PISTON_EXTENSION_POLE.has(poleState) && poleState.getValue(PistonExtensionPoleBlock.FACING)
 				.getAxis() == direction.getAxis())
 				frontier.add(offset);
 		}
 
 		if (pistonState == PistonState.EXTENDED || MechanicalPistonBlock.isStickyPiston(state)) {
-			offset = pos.offset(direction);
+			offset = pos.relative(direction);
 			if (!visited.contains(offset))
 				frontier.add(offset);
 		}
@@ -585,7 +584,7 @@ public abstract class Contraption {
 
 	private boolean moveChassis(World world, BlockPos pos, Direction movementDirection, Queue<BlockPos> frontier,
 		Set<BlockPos> visited) {
-		TileEntity te = world.getTileEntity(pos);
+		TileEntity te = world.getBlockEntity(pos);
 		if (!(te instanceof ChassisTileEntity))
 			return false;
 		ChassisTileEntity chassis = (ChassisTileEntity) te;
@@ -602,23 +601,23 @@ public abstract class Contraption {
 	protected Pair<BlockInfo, TileEntity> capture(World world, BlockPos pos) {
 		BlockState blockstate = world.getBlockState(pos);
 		if (blockstate.getBlock() instanceof ChestBlock)
-			blockstate = blockstate.with(ChestBlock.TYPE, ChestType.SINGLE);
+			blockstate = blockstate.setValue(ChestBlock.TYPE, ChestType.SINGLE);
 		if (AllBlocks.ADJUSTABLE_CRATE.has(blockstate))
-			blockstate = blockstate.with(AdjustableCrateBlock.DOUBLE, false);
+			blockstate = blockstate.setValue(AdjustableCrateBlock.DOUBLE, false);
 		if (AllBlocks.REDSTONE_CONTACT.has(blockstate))
-			blockstate = blockstate.with(RedstoneContactBlock.POWERED, true);
+			blockstate = blockstate.setValue(RedstoneContactBlock.POWERED, true);
 		if (blockstate.getBlock() instanceof AbstractButtonBlock) {
-			blockstate = blockstate.with(AbstractButtonBlock.POWERED, false);
-			world.getPendingBlockTicks()
+			blockstate = blockstate.setValue(AbstractButtonBlock.POWERED, false);
+			world.getBlockTicks()
 				.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
 		if (blockstate.getBlock() instanceof PressurePlateBlock) {
-			blockstate = blockstate.with(PressurePlateBlock.POWERED, false);
-			world.getPendingBlockTicks()
+			blockstate = blockstate.setValue(PressurePlateBlock.POWERED, false);
+			world.getBlockTicks()
 				.scheduleTick(pos, blockstate.getBlock(), -1);
 		}
 		CompoundNBT compoundnbt = getTileEntityNBT(world, pos);
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tileentity = world.getBlockEntity(pos);
 		return Pair.of(new BlockInfo(pos, blockstate, compoundnbt), tileentity);
 	}
 
@@ -629,7 +628,7 @@ public abstract class Contraption {
 
 		if (blocks.put(localPos, blockInfo) != null)
 			return;
-		bounds = bounds.union(new AxisAlignedBB(localPos));
+		bounds = bounds.minmax(new AxisAlignedBB(localPos));
 
 		TileEntity te = pair.getValue();
 		if (te != null && MountedStorage.canUseAsStorage(te))
@@ -638,6 +637,8 @@ public abstract class Contraption {
 			fluidStorage.put(localPos, new MountedFluidStorage(te));
 		if (AllMovementBehaviours.contains(captured.state.getBlock()))
 			actors.add(MutablePair.of(blockInfo, null));
+		if (AllInteractionBehaviours.contains(captured.state.getBlock()))
+			interactors.put(localPos, AllInteractionBehaviours.of(captured.state.getBlock()));
 		if (te instanceof CreativeCrateTileEntity
 			&& ((CreativeCrateTileEntity) te).getBehaviour(FilteringBehaviour.TYPE)
 				.getFilter()
@@ -647,10 +648,10 @@ public abstract class Contraption {
 
 	@Nullable
 	protected CompoundNBT getTileEntityNBT(World world, BlockPos pos) {
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tileentity = world.getBlockEntity(pos);
 		if (tileentity == null)
 			return null;
-		CompoundNBT nbt = tileentity.write(new CompoundNBT());
+		CompoundNBT nbt = tileentity.save(new CompoundNBT());
 		nbt.remove("x");
 		nbt.remove("y");
 		nbt.remove("z");
@@ -674,7 +675,7 @@ public abstract class Contraption {
 	}
 
 	protected boolean movementAllowed(BlockState state, World world, BlockPos pos) {
-		return BlockMovementTraits.movementAllowed(state, world, pos);
+		return BlockMovementChecks.isMovementAllowed(state, world, pos);
 	}
 
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
@@ -702,19 +703,19 @@ public abstract class Contraption {
 			});
 
 		superglue.clear();
-		NBTHelper.iterateCompoundList(nbt.getList("Superglue", NBT.TAG_COMPOUND), c -> superglue
-			.add(Pair.of(NBTUtil.readBlockPos(c.getCompound("Pos")), Direction.byIndex(c.getByte("Direction")))));
+		NBTHelper.iterateCompoundList(nbt.getList("Superglue", NBT.TAG_COMPOUND), c -> superglue.add(
+			Pair.of(NBTUtil.readBlockPos(c.getCompound("Pos")), Direction.from3DDataValue(c.getByte("Direction")))));
 
 		seats.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Seats", NBT.TAG_COMPOUND), c -> seats.add(NBTUtil.readBlockPos(c)));
 
 		seatMapping.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Passengers", NBT.TAG_COMPOUND),
-			c -> seatMapping.put(NBTUtil.readUniqueId(NBTHelper.getINBT(c, "Id")), c.getInt("Seat")));
+			c -> seatMapping.put(NBTUtil.loadUUID(NBTHelper.getINBT(c, "Id")), c.getInt("Seat")));
 
 		stabilizedSubContraptions.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("SubContraptions", NBT.TAG_COMPOUND),
-			c -> stabilizedSubContraptions.put(c.getUniqueId("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
+			c -> stabilizedSubContraptions.put(c.getUUID("Id"), BlockFace.fromNBT(c.getCompound("Location"))));
 
 		storage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("Storage", NBT.TAG_COMPOUND), c -> storage
@@ -723,6 +724,14 @@ public abstract class Contraption {
 		fluidStorage.clear();
 		NBTHelper.iterateCompoundList(nbt.getList("FluidStorage", NBT.TAG_COMPOUND), c -> fluidStorage
 			.put(NBTUtil.readBlockPos(c.getCompound("Pos")), MountedFluidStorage.deserialize(c.getCompound("Data"))));
+
+		interactors.clear();
+		NBTHelper.iterateCompoundList(nbt.getList("Interactors", NBT.TAG_COMPOUND), c -> {
+			BlockPos pos = NBTUtil.readBlockPos(c.getCompound("Pos"));
+			MovingInteractionBehaviour behaviour = AllInteractionBehaviours.of(getBlocks().get(pos).state.getBlock());
+			if (behaviour != null)
+				interactors.put(pos, behaviour);
+		});
 
 		if (spawnData)
 			fluidStorage.forEach((pos, mfs) -> {
@@ -748,7 +757,7 @@ public abstract class Contraption {
 		for (MountedFluidStorage mountedStorage : fluidStorage.values())
 			fluidHandlers[index++] = mountedStorage.getFluidHandler();
 
-		inventory = new CombinedInvWrapper(handlers);
+		inventory = new ContraptionInvWrapper(handlers);
 		fluidInventory = new CombinedTankWrapper(fluidHandlers);
 
 		if (nbt.contains("BoundsFront"))
@@ -782,7 +791,7 @@ public abstract class Contraption {
 				CompoundNBT c = new CompoundNBT();
 				c.put("Pos", NBTUtil.writeBlockPos(glueEntry.getKey()));
 				c.putByte("Direction", (byte) glueEntry.getValue()
-					.getIndex());
+					.get3DDataValue());
 				superglueNBT.add(c);
 			}
 
@@ -808,17 +817,24 @@ public abstract class Contraption {
 			fluidStorageNBT.add(c);
 		}
 
+		ListNBT interactorNBT = new ListNBT();
+		for (BlockPos pos : interactors.keySet()) {
+			CompoundNBT c = new CompoundNBT();
+			c.put("Pos", NBTUtil.writeBlockPos(pos));
+			interactorNBT.add(c);
+		}
+
 		nbt.put("Seats", NBTHelper.writeCompoundList(getSeats(), NBTUtil::writeBlockPos));
 		nbt.put("Passengers", NBTHelper.writeCompoundList(getSeatMapping().entrySet(), e -> {
 			CompoundNBT tag = new CompoundNBT();
-			tag.put("Id", NBTUtil.fromUuid(e.getKey()));
+			tag.put("Id", NBTUtil.createUUID(e.getKey()));
 			tag.putInt("Seat", e.getValue());
 			return tag;
 		}));
 
 		nbt.put("SubContraptions", NBTHelper.writeCompoundList(stabilizedSubContraptions.entrySet(), e -> {
 			CompoundNBT tag = new CompoundNBT();
-			tag.putUniqueId("Id", e.getKey());
+			tag.putUUID("Id", e.getKey());
 			tag.put("Location", e.getValue()
 				.serializeNBT());
 			return tag;
@@ -826,6 +842,7 @@ public abstract class Contraption {
 
 		nbt.put("Blocks", blocksNBT);
 		nbt.put("Actors", actorsNBT);
+		nbt.put("Interactors", interactorNBT);
 		nbt.put("Superglue", superglueNBT);
 		nbt.put("Storage", storageNBT);
 		nbt.put("FluidStorage", fluidStorageNBT);
@@ -851,7 +868,7 @@ public abstract class Contraption {
 		for (BlockInfo block : this.blocks.values()) {
 			int id = palette.idFor(block.state);
 			CompoundNBT c = new CompoundNBT();
-			c.putLong("Pos", block.pos.toLong());
+			c.putLong("Pos", block.pos.asLong());
 			c.putInt("State", id);
 			if (block.nbt != null)
 				c.put("Data", block.nbt);
@@ -859,7 +876,7 @@ public abstract class Contraption {
 		}
 
 		ListNBT paletteNBT = new ListNBT();
-		palette.writePaletteToList(paletteNBT);
+		palette.write(paletteNBT);
 		compound.put("Palette", paletteNBT);
 		compound.put("BlockList", blockList);
 
@@ -889,7 +906,7 @@ public abstract class Contraption {
 
 			this.blocks.put(info.pos, info);
 
-			if (world.isRemote) {
+			if (world.isClientSide) {
 				Block block = info.state.getBlock();
 				CompoundNBT tag = info.nbt;
 				MovementBehaviour movementBehaviour = AllMovementBehaviours.of(block);
@@ -900,10 +917,10 @@ public abstract class Contraption {
 				tag.putInt("y", info.pos.getY());
 				tag.putInt("z", info.pos.getZ());
 
-				TileEntity te = TileEntity.createFromTag(info.state, tag);
+				TileEntity te = TileEntity.loadStatic(info.state, tag);
 				if (te == null)
 					return;
-				te.setLocation(new ContraptionTileWorld(world, te, info), te.getPos());
+				te.setLevelAndPosition(new ContraptionTileWorld(world, te, info), te.getBlockPos());
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
@@ -922,8 +939,8 @@ public abstract class Contraption {
 	}
 
 	private static BlockInfo readBlockInfo(CompoundNBT blockListEntry, HashMapPalette<BlockState> palette) {
-		return new BlockInfo(BlockPos.fromLong(blockListEntry.getLong("Pos")),
-			Objects.requireNonNull(palette.get(blockListEntry.getInt("State"))),
+		return new BlockInfo(BlockPos.of(blockListEntry.getLong("Pos")),
+			Objects.requireNonNull(palette.valueFor(blockListEntry.getInt("State"))),
 			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
@@ -944,47 +961,61 @@ public abstract class Contraption {
 			for (Iterator<BlockInfo> iterator = blocks.values()
 				.iterator(); iterator.hasNext();) {
 				BlockInfo block = iterator.next();
-				if (brittles != BlockMovementTraits.isBrittle(block.state))
+				if (brittles != BlockMovementChecks.isBrittle(block.state))
 					continue;
 
-				BlockPos add = block.pos.add(anchor)
-					.add(offset);
+				BlockPos add = block.pos.offset(anchor)
+					.offset(offset);
 				if (customBlockRemoval(world, add, block.state))
 					continue;
 				BlockState oldState = world.getBlockState(add);
 				Block blockIn = oldState.getBlock();
 				if (block.state.getBlock() != blockIn)
 					iterator.remove();
-				world.removeTileEntity(add);
+				world.removeBlockEntity(add);
 				int flags = BlockFlags.IS_MOVING | BlockFlags.NO_NEIGHBOR_DROPS | BlockFlags.UPDATE_NEIGHBORS
 					| BlockFlags.BLOCK_UPDATE | BlockFlags.RERENDER_MAIN_THREAD;
-				if (blockIn instanceof IWaterLoggable && oldState.contains(BlockStateProperties.WATERLOGGED)
-					&& oldState.get(BlockStateProperties.WATERLOGGED)
-						.booleanValue()) {
-					world.setBlockState(add, Blocks.WATER.getDefaultState(), flags);
+				if (blockIn instanceof IWaterLoggable && oldState.hasProperty(BlockStateProperties.WATERLOGGED)
+					&& oldState.getValue(BlockStateProperties.WATERLOGGED)) {
+					world.setBlock(add, Blocks.WATER.defaultBlockState(), flags);
 					continue;
 				}
-				world.setBlockState(add, Blocks.AIR.getDefaultState(), flags);
+				world.setBlock(add, Blocks.AIR.defaultBlockState(), flags);
 			}
 		}
 		for (BlockInfo block : blocks.values()) {
-			BlockPos add = block.pos.add(anchor)
-				.add(offset);
+			BlockPos add = block.pos.offset(anchor)
+				.offset(offset);
 //			if (!shouldUpdateAfterMovement(block))
 //				continue;
+
 			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
-			world.notifyBlockUpdate(add, block.state, Blocks.AIR.getDefaultState(), flags);
-			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.getDefaultState(), flags, 512);
-			block.state.updateDiagonalNeighbors(world, add, flags & -2);
-//			world.markAndNotifyBlock(add, null, block.state, Blocks.AIR.getDefaultState(),
-//				BlockFlags.IS_MOVING | BlockFlags.DEFAULT); this method did strange logspamming with POI-related blocks
+			world.sendBlockUpdated(add, block.state, Blocks.AIR.defaultBlockState(), flags);
+
+			// when the blockstate is set to air, the block's POI data is removed, but markAndNotifyBlock tries to
+			// remove it again, so to prevent an error from being logged by double-removal we add the POI data back now
+			// (code copied from ServerWorld.onBlockStateChange)
+			ServerWorld serverWorld = (ServerWorld) world;
+			PointOfInterestType.forState(block.state)
+				.ifPresent(poiType -> {
+					world.getServer()
+						.execute(() -> {
+							serverWorld.getPoiManager()
+								.add(add, poiType);
+							DebugPacketSender.sendPoiAddedPacket(serverWorld, add);
+						});
+				});
+
+			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.defaultBlockState(), flags,
+				512);
+			block.state.updateIndirectNeighbourShapes(world, add, flags & -2);
 		}
 	}
 
 	public void addBlocksToWorld(World world, StructureTransform transform) {
 		for (boolean nonBrittles : Iterate.trueAndFalse) {
 			for (BlockInfo block : blocks.values()) {
-				if (nonBrittles == BlockMovementTraits.isBrittle(block.state))
+				if (nonBrittles == BlockMovementChecks.isBrittle(block.state))
 					continue;
 
 				BlockPos targetPos = transform.apply(block.pos);
@@ -995,27 +1026,27 @@ public abstract class Contraption {
 
 				if (nonBrittles)
 					for (Direction face : Iterate.directions)
-						state = state.updatePostPlacement(face, world.getBlockState(targetPos.offset(face)), world,
-							targetPos, targetPos.offset(face));
+						state = state.updateShape(face, world.getBlockState(targetPos.relative(face)), world, targetPos,
+							targetPos.relative(face));
 
 				BlockState blockState = world.getBlockState(targetPos);
-				if (blockState.getBlockHardness(world, targetPos) == -1 || (state.getCollisionShape(world, targetPos)
+				if (blockState.getDestroySpeed(world, targetPos) == -1 || (state.getCollisionShape(world, targetPos)
 					.isEmpty()
 					&& !blockState.getCollisionShape(world, targetPos)
 						.isEmpty())) {
 					if (targetPos.getY() == 0)
-						targetPos = targetPos.up();
-					world.playEvent(2001, targetPos, Block.getStateId(state));
-					Block.spawnDrops(state, world, targetPos, null);
+						targetPos = targetPos.above();
+					world.levelEvent(2001, targetPos, Block.getId(state));
+					Block.dropResources(state, world, targetPos, null);
 					continue;
 				}
-				if (state.getBlock() instanceof IWaterLoggable && state.contains(BlockStateProperties.WATERLOGGED)) {
+				if (state.getBlock() instanceof IWaterLoggable && state.hasProperty(BlockStateProperties.WATERLOGGED)) {
 					FluidState FluidState = world.getFluidState(targetPos);
-					state = state.with(BlockStateProperties.WATERLOGGED, FluidState.getFluid() == Fluids.WATER);
+					state = state.setValue(BlockStateProperties.WATERLOGGED, FluidState.getType() == Fluids.WATER);
 				}
 
 				world.destroyBlock(targetPos, true);
-				world.setBlockState(targetPos, state, 3 | BlockFlags.IS_MOVING);
+				world.setBlock(targetPos, state, 3 | BlockFlags.IS_MOVING);
 
 				boolean verticalRotation = transform.rotationAxis == null || transform.rotationAxis.isHorizontal();
 				verticalRotation = verticalRotation && transform.rotation != Rotation.NONE;
@@ -1024,7 +1055,7 @@ public abstract class Contraption {
 						world.destroyBlock(targetPos, true);
 				}
 
-				TileEntity tileEntity = world.getTileEntity(targetPos);
+				TileEntity tileEntity = world.getBlockEntity(targetPos);
 				CompoundNBT tag = block.nbt;
 				if (tileEntity != null)
 					tag = NBTProcessors.process(tileEntity, tag, false);
@@ -1039,9 +1070,9 @@ public abstract class Contraption {
 					}
 
 					if (tileEntity instanceof FluidTankTileEntity && tag.contains("LastKnownPos"))
-						tag.put("LastKnownPos", NBTUtil.writeBlockPos(BlockPos.ZERO.down()));
+						tag.put("LastKnownPos", NBTUtil.writeBlockPos(BlockPos.ZERO.below()));
 
-					tileEntity.fromTag(block.state, tag);
+					tileEntity.load(block.state, tag);
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);
@@ -1055,6 +1086,8 @@ public abstract class Contraption {
 							mountedStorage.addStorageToWorld(tileEntity);
 					}
 				}
+
+				transform.apply(tileEntity);
 			}
 		}
 		for (BlockInfo block : blocks.values()) {
@@ -1065,8 +1098,10 @@ public abstract class Contraption {
 				BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
 		}
 
-		for (int i = 0; i < inventory.getSlots(); i++)
-			inventory.setStackInSlot(i, ItemStack.EMPTY);
+		for (int i = 0; i < inventory.getSlots(); i++) {
+			if (!inventory.isSlotExternal(i))
+				inventory.setStackInSlot(i, ItemStack.EMPTY);
+		}
 		for (int i = 0; i < fluidInventory.getTanks(); i++)
 			fluidInventory.drain(fluidInventory.getFluidInTank(i), FluidAction.EXECUTE);
 
@@ -1076,8 +1111,8 @@ public abstract class Contraption {
 
 			SuperGlueEntity entity = new SuperGlueEntity(world, targetPos, targetFacing);
 			if (entity.onValidSurface()) {
-				if (!world.isRemote)
-					world.addEntity(entity);
+				if (!world.isClientSide)
+					world.addFreshEntity(entity);
 			}
 		}
 	}
@@ -1086,7 +1121,7 @@ public abstract class Contraption {
 		for (Entity seatedEntity : seatedEntities) {
 			if (getSeatMapping().isEmpty())
 				continue;
-			Integer seatIndex = getSeatMapping().get(seatedEntity.getUniqueID());
+			Integer seatIndex = getSeatMapping().get(seatedEntity.getUUID());
 			BlockPos seatPos = getSeats().get(seatIndex);
 			seatPos = transform.apply(seatPos);
 			if (!(world.getBlockState(seatPos)
@@ -1189,6 +1224,10 @@ public abstract class Contraption {
 		return actors;
 	}
 
+	public Map<BlockPos, MovingInteractionBehaviour> getInteractors() {
+		return interactors;
+	}
+
 	public void updateContainedFluid(BlockPos localPos, FluidStack containedFluid) {
 		MountedFluidStorage mountedFluidStorage = fluidStorage.get(localPos);
 		if (mountedFluidStorage != null)
@@ -1198,6 +1237,11 @@ public abstract class Contraption {
 	@OnlyIn(Dist.CLIENT)
 	public ContraptionLighter<?> makeLighter() {
 		return new EmptyLighter(this);
+	}
+
+	public void invalidateColliders() {
+		simplifiedEntityColliders = Optional.empty();
+		gatherBBsOffThread();
 	}
 
 	private void gatherBBsOffThread() {
@@ -1210,11 +1254,11 @@ public abstract class Contraption {
 				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos);
 				if (collisionShape.isEmpty())
 					continue;
-				combinedShape = VoxelShapes.combine(combinedShape,
-					collisionShape.withOffset(localPos.getX(), localPos.getY(), localPos.getZ()), IBooleanFunction.OR);
+				combinedShape = VoxelShapes.joinUnoptimized(combinedShape,
+					collisionShape.move(localPos.getX(), localPos.getY(), localPos.getZ()), IBooleanFunction.OR);
 			}
-			return combinedShape.simplify()
-				.toBoundingBoxList();
+			return combinedShape.optimize()
+				.toAabbs();
 		})
 			.thenAccept(r -> {
 				simplifiedEntityColliders = Optional.of(r);
@@ -1235,7 +1279,7 @@ public abstract class Contraption {
 		throw new IllegalStateException("Impossible axis");
 	}
 
-	public static float getMaxDistSqr(Set<BlockPos> blocks, Coordinate one, Coordinate other) {
+	public static float getMaxDistSqr(Set<BlockPos> blocks, ICoordinate one, ICoordinate other) {
 		float maxDistSq = -1;
 		for (BlockPos pos : blocks) {
 			float a = one.get(pos);
@@ -1263,14 +1307,34 @@ public abstract class Contraption {
 
 		@Override
 		public BlockState getBlockState(BlockPos pos) {
-			if (!pos.equals(te.getPos()))
-				return Blocks.AIR.getDefaultState();
+			if (!pos.equals(te.getBlockPos()))
+				return Blocks.AIR.defaultBlockState();
 			return info.state;
 		}
 
 		@Override
-		public boolean isBlockPresent(BlockPos pos) {
-			return pos.equals(te.getPos());
+		public boolean isLoaded(BlockPos pos) {
+			return pos.equals(te.getBlockPos());
+		}
+	}
+
+	public static class ContraptionInvWrapper extends CombinedInvWrapper {
+		protected final boolean isExternal;
+
+		public ContraptionInvWrapper(boolean isExternal, IItemHandlerModifiable... itemHandler) {
+			super(itemHandler);
+			this.isExternal = isExternal;
+		}
+
+		public ContraptionInvWrapper(IItemHandlerModifiable... itemHandler) {
+			this(false, itemHandler);
+		}
+
+		public boolean isSlotExternal(int slot) {
+			if (isExternal)
+				return true;
+			IItemHandlerModifiable handler = getHandlerFromIndex(getIndexForSlot(slot));
+			return handler instanceof ContraptionInvWrapper && ((ContraptionInvWrapper) handler).isSlotExternal(slot);
 		}
 	}
 }

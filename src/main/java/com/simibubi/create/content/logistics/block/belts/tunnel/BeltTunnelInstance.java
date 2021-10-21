@@ -5,15 +5,15 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.content.contraptions.base.KineticRenderMaterials;
 import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
@@ -23,22 +23,23 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
     private final Map<Direction, ArrayList<FlapData>> tunnelFlaps;
 
-    public BeltTunnelInstance(InstancedTileRenderer<?> modelManager, BeltTunnelTileEntity tile) {
+    public BeltTunnelInstance(MaterialManager<?> modelManager, BeltTunnelTileEntity tile) {
         super(modelManager, tile);
 
         tunnelFlaps = new EnumMap<>(Direction.class);
 
-        InstancedModel<FlapData> model = modelManager.getMaterial(KineticRenderMaterials.FLAPS)
-                                                     .getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
+        Instancer<FlapData> model = modelManager.defaultSolid()
+                .material(AllMaterialSpecs.FLAPS)
+				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightType.BLOCK, pos);
+        int skyLight = world.getBrightness(LightType.SKY, pos);
 
         tile.flaps.forEach((direction, flapValue) -> {
 
             float flapness = flapValue.get(AnimationTickHolder.getPartialTicks());
 
-            float horizontalAngle = direction.getOpposite().getHorizontalAngle();
+            float horizontalAngle = direction.getOpposite().toYRot();
 
             float flapScale = direction.getAxis() == Direction.Axis.X ? 1 : -1;
 
@@ -50,7 +51,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
                 FlapData key = model.createInstance();
 
-                key.setPosition(pos)
+                key.setPosition(getInstancePosition())
                    .setSegmentOffset(segmentOffset, 0, 0)
                    .setBlockLight(blockLight)
                    .setSkyLight(skyLight)

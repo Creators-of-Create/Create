@@ -33,7 +33,7 @@ public class AdjustableRepeaterGenerator extends AbstractDiodeGenerator {
 
 	@Override
 	int getModelIndex(BlockState state) {
-		return (state.get(AdjustableRepeaterBlock.POWERING) ? 2 : 0) + (state.get(AdjustableRepeaterBlock.POWERED) ? 1 : 0);
+		return (state.getValue(AdjustableRepeaterBlock.POWERING) ? 2 : 0) + (state.getValue(AdjustableRepeaterBlock.POWERED) ? 1 : 0);
 	}
 
 }

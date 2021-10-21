@@ -33,7 +33,7 @@ import net.minecraft.world.World;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
-	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").setDamageBypassesArmor();
+	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").bypassArmor();
 
 	public SawBlock(Properties properties) {
 		super(properties);
@@ -42,10 +42,10 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState stateForPlacement = super.getStateForPlacement(context);
-		Direction facing = stateForPlacement.get(FACING);
+		Direction facing = stateForPlacement.getValue(FACING);
 		if (facing.getAxis().isVertical())
 			return stateForPlacement;
-		return stateForPlacement.with(AXIS_ALONG_FIRST_COORDINATE, facing.getAxis() == Axis.X);
+		return stateForPlacement.setValue(AXIS_ALONG_FIRST_COORDINATE, facing.getAxis() == Axis.X);
 	}
 
 	@Override
@@ -55,32 +55,32 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.CASING_12PX.get(state.get(FACING));
+		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof ItemEntity)
 			return;
-		if (!new AxisAlignedBB(pos).shrink(.1f).intersects(entityIn.getBoundingBox()))
+		if (!new AxisAlignedBB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
-			entityIn.attackEntityFrom(damageSourceSaw, (float) DrillBlock.getDamage(te.getSpeed()));
+			entityIn.hurt(damageSourceSaw, (float) DrillBlock.getDamage(te.getSpeed()));
 		});
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
+	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
 		if (!(entityIn instanceof ItemEntity))
 			return;
-		if (entityIn.world.isRemote)
+		if (entityIn.level.isClientSide)
 			return;
 
-		BlockPos pos = entityIn.getBlockPos();
-		withTileEntityDo(entityIn.world, pos, te -> {
+		BlockPos pos = entityIn.blockPosition();
+		withTileEntityDo(entityIn.level, pos, te -> {
 			if (te.getSpeed() == 0)
 				return;
 			te.insertItem((ItemEntity) entityIn);
@@ -88,33 +88,33 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.NORMAL;
 	}
 
 	public static boolean isHorizontal(BlockState state) {
-		return state.get(FACING).getAxis().isHorizontal();
+		return state.getValue(FACING).getAxis().isHorizontal();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return isHorizontal(state) ? state.get(FACING).getAxis() : super.getRotationAxis(state);
+		return isHorizontal(state) ? state.getValue(FACING).getAxis() : super.getRotationAxis(state);
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return isHorizontal(state) ? face == state.get(FACING).getOpposite()
+		return isHorizontal(state) ? face == state.getValue(FACING).getOpposite()
 				: super.hasShaftTowards(world, pos, state, face);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
-      		worldIn.removeTileEntity(pos);
+      		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

@@ -20,8 +20,8 @@ public class RayTraceWorld implements IBlockReader {
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
-		return template.getTileEntity(pos);
+	public TileEntity getBlockEntity(BlockPos pos) {
+		return template.getBlockEntity(pos);
 	}
 
 	@Override

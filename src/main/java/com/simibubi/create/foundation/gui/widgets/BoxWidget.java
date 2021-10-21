@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.gui.widgets;
 
-import java.awt.Color;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
@@ -9,24 +8,28 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
+import com.simibubi.create.foundation.gui.Theme.Key;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 public class BoxWidget extends ElementWidget {
 
-	public static final Function<BoxWidget, DelegatedStencilElement.ElementRenderer> gradientFactory = (box) -> (ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, w/2, -2, w + 4, h + 4, box.gradientColor1.getRGB(), box.gradientColor2.getRGB());
+	public static final Function<BoxWidget, DelegatedStencilElement.ElementRenderer> gradientFactory = (box) -> (ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, w/2, -2, w + 4, h + 4, box.gradientColor1, box.gradientColor2);
 
 	protected BoxElement box;
 
 	protected Color customBorderTop;
 	protected Color customBorderBot;
+	protected Color customBackground;
 	protected boolean animateColors = true;
 	protected LerpedFloat colorAnimation = LerpedFloat.linear();
+
 	protected Color gradientColor1, gradientColor2;
-	private Color colorTarget1 = Theme.c(Theme.Key.BUTTON_IDLE, true), colorTarget2 = Theme.c(Theme.Key.BUTTON_IDLE, false);
 	private Color previousColor1, previousColor2;
+	private Color colorTarget1 = Theme.c(getIdleTheme(), true).copy();
+	private Color colorTarget2 = Theme.c(getIdleTheme(), false).copy();
 
 	public BoxWidget() {
 		this(0, 0);
@@ -68,6 +71,12 @@ public class BoxWidget extends ElementWidget {
 		return (T) this;
 	}
 
+	public <T extends BoxWidget> T withCustomBackground(Color color) {
+		this.customBackground = color;
+		//noinspection unchecked
+		return (T) this;
+	}
+
 	public <T extends BoxWidget> T animateColors(boolean b) {
 		this.animateColors = b;
 		//noinspection unchecked
@@ -84,8 +93,8 @@ public class BoxWidget extends ElementWidget {
 	public void onClick(double x, double y) {
 		super.onClick(x, y);
 
-		gradientColor1 = Theme.c(Theme.Key.BUTTON_CLICK, true);
-		gradientColor2 = Theme.c(Theme.Key.BUTTON_CLICK, true);
+		gradientColor1 = Theme.c(getClickTheme(), true);
+		gradientColor2 = Theme.c(getClickTheme(), false);
 		startGradientAnimation(getColorForState(true), getColorForState(false), true, 0.15);
 	}
 
@@ -93,11 +102,11 @@ public class BoxWidget extends ElementWidget {
 	protected void beforeRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.beforeRender(ms, mouseX, mouseY, partialTicks);
 
-		if (hovered != wasHovered) {
+		if (isHovered != wasHovered) {
 			startGradientAnimation(
 					getColorForState(true),
 					getColorForState(false),
-					hovered
+					isHovered
 			);
 		}
 
@@ -106,8 +115,8 @@ public class BoxWidget extends ElementWidget {
 			gradientColor2 = colorTarget2;
 		} else {
 			float animationValue = 1 - Math.abs(colorAnimation.getValue(partialTicks));
-			gradientColor1 = ColorHelper.mixColors(previousColor1, colorTarget1, animationValue);
-			gradientColor2 = ColorHelper.mixColors(previousColor2, colorTarget2, animationValue);
+			gradientColor1 = Color.mixColors(previousColor1, colorTarget1, animationValue);
+			gradientColor2 = Color.mixColors(previousColor2, colorTarget2, animationValue);
 		}
 
 	}
@@ -119,7 +128,7 @@ public class BoxWidget extends ElementWidget {
 			return;
 
 		box.withAlpha(fadeValue);
-		box.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_TRANSPARENT))
+		box.withBackground(customBackground != null ? customBackground : Theme.c(Theme.Key.PONDER_BACKGROUND_TRANSPARENT))
 				.gradientBorder(gradientColor1, gradientColor2)
 				.at(x, y, z)
 				.withBounds(width, height)
@@ -127,7 +136,7 @@ public class BoxWidget extends ElementWidget {
 
 		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
-		wasHovered = hovered;
+		wasHovered = isHovered;
 	}
 
 	@Override
@@ -175,23 +184,40 @@ public class BoxWidget extends ElementWidget {
 	}
 
 	private void startGradientAnimation(Color c1, Color c2, boolean positive) {
-		startGradientAnimation(c1, c2, positive, 0.3);
+		startGradientAnimation(c1, c2, positive, 0.6);
 	}
 
 	private Color getColorForState(boolean first) {
 		if (!active)
-			return Theme.p(Theme.Key.BUTTON_DISABLE).get(first);
+			return Theme.p(getDisabledTheme()).get(first);
 
-		if (hovered) {
+		if (isHovered) {
 			if (first)
-				return customBorderTop != null ? customBorderTop.darker() : Theme.c(Theme.Key.BUTTON_HOVER, true);
+				return customBorderTop != null ? customBorderTop.darker() : Theme.c(getHoverTheme(), true);
 			else
-				return customBorderBot != null ? customBorderBot.darker() : Theme.c(Theme.Key.BUTTON_HOVER, false);
+				return customBorderBot != null ? customBorderBot.darker() : Theme.c(getHoverTheme(), false);
 		}
 
 		if (first)
-			return customBorderTop != null ? customBorderTop : Theme.c(Theme.Key.BUTTON_IDLE, true);
+			return customBorderTop != null ? customBorderTop : Theme.c(getIdleTheme(), true);
 		else
-			return customBorderBot != null ? customBorderBot : Theme.c(Theme.Key.BUTTON_IDLE, false);
+			return customBorderBot != null ? customBorderBot : Theme.c(getIdleTheme(), false);
 	}
+
+	public Key getDisabledTheme() {
+		return Theme.Key.BUTTON_DISABLE;
+	}
+
+	public Key getIdleTheme() {
+		return Theme.Key.BUTTON_IDLE;
+	}
+
+	public Key getHoverTheme() {
+		return Theme.Key.BUTTON_HOVER;
+	}
+
+	public Key getClickTheme() {
+		return Theme.Key.BUTTON_CLICK;
+	}
+
 }

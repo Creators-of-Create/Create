@@ -105,8 +105,8 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return super.getStackInSlot(slot);
+	public ItemStack getItem(int slot) {
+		return super.getItem(slot);
 	}
 
 	public int getStackLimit(int slot, @Nonnull ItemStack stack) {
@@ -162,7 +162,7 @@ public class SmartInventory extends RecipeWrapper
 
 	@Override
 	public ItemStack getStackInSlotIntermediate(int slot) {
-		return getStackInSlot(slot);
+		return getItem(slot);
 	}
 
 }

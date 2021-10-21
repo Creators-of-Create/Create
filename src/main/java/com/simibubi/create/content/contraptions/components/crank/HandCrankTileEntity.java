@@ -9,6 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 
@@ -29,7 +31,7 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 
 		inUse = 10;
 		this.backwards = back;
-		if (update && !world.isRemote)
+		if (update && !level.isClientSide)
 			updateGeneratedRotation();
 	}
 
@@ -40,7 +42,7 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 			return 0;
 		HandCrankBlock crank = (HandCrankBlock) block;
 		int speed = (inUse == 0 ? 0 : backwards ? -1 : 1) * crank.getRotationSpeed();
-		return convertToDirection(speed, getBlockState().get(HandCrankBlock.FACING));
+		return convertToDirection(speed, getBlockState().getValue(HandCrankBlock.FACING));
 	}
 
 	@Override
@@ -66,7 +68,7 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 		if (inUse > 0) {
 			inUse--;
 
-			if (inUse == 0 && !world.isRemote)
+			if (inUse == 0 && !level.isClientSide)
 				updateGeneratedRotation();
 		}
 	}
@@ -77,17 +79,18 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void tickAudio() {
 		super.tickAudio();
 		if (inUse > 0 && AnimationTickHolder.getTicks() % 10 == 0) {
 			if (!AllBlocks.HAND_CRANK.has(getBlockState()))
 				return;
-			AllSoundEvents.CRANKING.playAt(world, pos, (inUse) / 2.5f, .65f + (10 - inUse) / 10f, true);
+			AllSoundEvents.CRANKING.playAt(level, worldPosition, (inUse) / 2.5f, .65f + (10 - inUse) / 10f, true);
 		}
 	}
 

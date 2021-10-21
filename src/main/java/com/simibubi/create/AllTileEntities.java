@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.contraptions.base.CutoutRotatingInstance;
 import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -119,6 +120,11 @@ import com.simibubi.create.content.contraptions.relays.gearbox.GearshiftTileEnti
 import com.simibubi.create.content.curiosities.armor.CopperBacktankInstance;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankRenderer;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
+import com.simibubi.create.content.curiosities.bell.BellRenderer;
+import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
+import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
@@ -152,12 +158,13 @@ import com.simibubi.create.content.logistics.block.redstone.NixieTubeRenderer;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchTileEntity;
+import com.simibubi.create.content.logistics.item.LecternControllerRenderer;
+import com.simibubi.create.content.logistics.item.LecternControllerTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicTableTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonInstance;
 import com.simibubi.create.content.schematics.block.SchematicannonRenderer;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
-import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.TileEntityEntry;
 
 public class AllTileEntities {
@@ -246,10 +253,10 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<HandCrankTileEntity> HAND_CRANK = Create.registrate()
-		.tileEntity("hand_crank", HandCrankTileEntity::new)
-		.instance(() -> HandCrankInstance::new)
-		.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
-		.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray(new BlockEntry<?>[AllBlocks.DYED_VALVE_HANDLES.size()]))
+			.tileEntity("hand_crank", HandCrankTileEntity::new)
+			.instance(() -> HandCrankInstance::new)
+			.validBlocks(AllBlocks.HAND_CRANK, AllBlocks.COPPER_VALVE_HANDLE)
+			.validBlocks(AllBlocks.DYED_VALVE_HANDLES.toArray())
 		.renderer(() -> HandCrankRenderer::new)
 		.register();
 
@@ -485,7 +492,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<CrushingWheelTileEntity> CRUSHING_WHEEL = Create.registrate()
 		.tileEntity("crushing_wheel", CrushingWheelTileEntity::new)
-		.instance(() -> SingleRotatingInstance::new)
+		.instance(() -> CutoutRotatingInstance::new)
 		.validBlocks(AllBlocks.CRUSHING_WHEEL)
 		.renderer(() -> KineticTileEntityRenderer::new)
 		.register();
@@ -499,7 +506,7 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<WaterWheelTileEntity> WATER_WHEEL = Create.registrate()
 		.tileEntity("water_wheel", WaterWheelTileEntity::new)
-		.instance(() -> SingleRotatingInstance::new)
+		.instance(() -> CutoutRotatingInstance::new)
 		.validBlocks(AllBlocks.WATER_WHEEL)
 		.renderer(() -> KineticTileEntityRenderer::new)
 		.register();
@@ -594,7 +601,8 @@ public class AllTileEntities {
 
 	public static final TileEntityEntry<NixieTubeTileEntity> NIXIE_TUBE = Create.registrate()
 		.tileEntity("nixie_tube", NixieTubeTileEntity::new)
-		.validBlocks(AllBlocks.NIXIE_TUBE)
+		.validBlocks(AllBlocks.ORANGE_NIXIE_TUBE)
+		.validBlocks(AllBlocks.NIXIE_TUBES.toArray())
 		.renderer(() -> NixieTubeRenderer::new)
 		.register();
 
@@ -657,12 +665,38 @@ public class AllTileEntities {
 			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.renderer(() -> AdjustableRepeaterRenderer::new)
 			.register();
-	
+
+	public static final TileEntityEntry<LecternControllerTileEntity> LECTERN_CONTROLLER =
+		Create.registrate()
+			.tileEntity("lectern_controller", LecternControllerTileEntity::new)
+			.validBlocks(AllBlocks.LECTERN_CONTROLLER)
+			.renderer(() -> LecternControllerRenderer::new)
+			.register();
+
+	// Curiosities
 	public static final TileEntityEntry<CopperBacktankTileEntity> COPPER_BACKTANK = Create.registrate()
 		.tileEntity("copper_backtank", CopperBacktankTileEntity::new)
 		.instance(() -> CopperBacktankInstance::new)
 		.validBlocks(AllBlocks.COPPER_BACKTANK)
 		.renderer(() -> CopperBacktankRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<PeculiarBellTileEntity> PECULIAR_BELL = Create.registrate()
+		.tileEntity("peculiar_bell", PeculiarBellTileEntity::new)
+		.validBlocks(AllBlocks.PECULIAR_BELL)
+		.renderer(() -> BellRenderer::new)
+		.register();
+
+	public static final TileEntityEntry<HauntedBellTileEntity> HAUNTED_BELL = Create.registrate()
+		.tileEntity("cursed_bell", HauntedBellTileEntity::new)
+		.validBlocks(AllBlocks.HAUNTED_BELL)
+		.renderer(() -> BellRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<ToolboxTileEntity> TOOLBOX = Create.registrate()
+		.tileEntity("toolbox", ToolboxTileEntity::new)
+		.validBlocks(AllBlocks.TOOLBOXES.toArray())
+		.renderer(() -> ToolboxRenderer::new)
 		.register();
 
 	public static void register() {}

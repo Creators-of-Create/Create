@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
@@ -94,9 +94,9 @@ public abstract class SymmetryMirror {
 		nbt.putInt($ORIENTATION, orientationIndex);
 
 		ListNBT floatList = new ListNBT();
-		floatList.add(FloatNBT.of((float) position.x));
-		floatList.add(FloatNBT.of((float) position.y));
-		floatList.add(FloatNBT.of((float) position.z));
+		floatList.add(FloatNBT.valueOf((float) position.x));
+		floatList.add(FloatNBT.valueOf((float) position.y));
+		floatList.add(FloatNBT.valueOf((float) position.z));
 		nbt.put($POSITION, floatList);
 		nbt.putString($TYPE, typeName());
 		nbt.putBoolean($ENABLE, enable);
@@ -151,10 +151,10 @@ public abstract class SymmetryMirror {
 				return in.cycle(property);
 			// Directional Blocks
 			if (property instanceof DirectionProperty) {
-				if (in.get(property) == Direction.DOWN) {
-					return in.with((DirectionProperty) property, Direction.UP);
-				} else if (in.get(property) == Direction.UP) {
-					return in.with((DirectionProperty) property, Direction.DOWN);
+				if (in.getValue(property) == Direction.DOWN) {
+					return in.setValue((DirectionProperty) property, Direction.UP);
+				} else if (in.getValue(property) == Direction.UP) {
+					return in.setValue((DirectionProperty) property, Direction.DOWN);
 				}
 			}
 		}

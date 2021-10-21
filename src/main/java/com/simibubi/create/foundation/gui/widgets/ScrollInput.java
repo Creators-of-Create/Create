@@ -91,7 +91,7 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if (!hovered)
+		if (!isHovered)
 			return false;
 
 		StepContext context = new StepContext();
@@ -137,9 +137,9 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.copy().formatted(TextFormatting.BLUE));
-		toolTip.add(scrollToModify.copy().formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
-		toolTip.add(shiftScrollsFaster.copy().formatted(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
+		toolTip.add(title.plainCopy().withStyle(TextFormatting.BLUE));
+		toolTip.add(scrollToModify.plainCopy().withStyle(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
+		toolTip.add(shiftScrollsFaster.plainCopy().withStyle(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
 	}
 
 }

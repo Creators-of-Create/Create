@@ -53,34 +53,34 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchab
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
 		return SharedDepotBlockMethods.onUse(state, world, pos, player, hand, ray);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		SharedDepotBlockMethods.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
-	public void onLanded(IBlockReader worldIn, Entity entityIn) {
-		super.onLanded(worldIn, entityIn);
+	public void updateEntityAfterFallOn(IBlockReader worldIn, Entity entityIn) {
+		super.updateEntityAfterFallOn(worldIn, entityIn);
 		SharedDepotBlockMethods.onLanded(worldIn, entityIn);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
 		return SharedDepotBlockMethods.getComparatorInputOverride(blockState, worldIn, pos);
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

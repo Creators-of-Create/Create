@@ -25,7 +25,7 @@ public class AirParticleData implements IParticleData, ICustomParticleDataWithSp
 	
 	public static final IParticleData.IDeserializer<AirParticleData> DESERIALIZER =
 		new IParticleData.IDeserializer<AirParticleData>() {
-			public AirParticleData deserialize(ParticleType<AirParticleData> particleTypeIn, StringReader reader)
+			public AirParticleData fromCommand(ParticleType<AirParticleData> particleTypeIn, StringReader reader)
 				throws CommandSyntaxException {
 				reader.expect(' ');
 				float drag = reader.readFloat();
@@ -34,7 +34,7 @@ public class AirParticleData implements IParticleData, ICustomParticleDataWithSp
 				return new AirParticleData(drag, speed);
 			}
 
-			public AirParticleData read(ParticleType<AirParticleData> particleTypeIn, PacketBuffer buffer) {
+			public AirParticleData fromNetwork(ParticleType<AirParticleData> particleTypeIn, PacketBuffer buffer) {
 				return new AirParticleData(buffer.readFloat(), buffer.readFloat());
 			}
 		};
@@ -57,13 +57,13 @@ public class AirParticleData implements IParticleData, ICustomParticleDataWithSp
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void writeToNetwork(PacketBuffer buffer) {
 		buffer.writeFloat(drag);
 		buffer.writeFloat(speed);
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return String.format(Locale.ROOT, "%s %f %f", AllParticleTypes.AIR.parameter(), drag, speed);
 	}
 

@@ -24,7 +24,7 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.MOTOR_BLOCK.get(state.get(FACING));
+		return AllShapes.MOTOR_BLOCK.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -36,21 +36,21 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredFacing(context);
 		if ((context.getPlayer() != null && context.getPlayer()
-			.isSneaking()) || preferred == null)
+			.isShiftKeyDown()) || preferred == null)
 			return super.getStateForPlacement(context);
-		return getDefaultState().with(FACING, preferred);
+		return defaultBlockState().setValue(FACING, preferred);
 	}
 
 	// IRotate:
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING);
+		return face == state.getValue(FACING);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis();
 	}
 
@@ -60,7 +60,7 @@ public class CreativeMotorBlock extends DirectionalKineticBlock {
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 	

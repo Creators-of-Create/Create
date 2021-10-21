@@ -66,7 +66,7 @@ public class AssetLookup {
 			p.withExistingParent(c.getName(), p.modLoc(path));
 		};
 	}
-	
+
 	public static <I extends Item> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> customGenericItemModel(
 		String... folders) {
 		return (c, p) -> {
@@ -79,7 +79,7 @@ public class AssetLookup {
 
 	public static Function<BlockState, ModelFile> forPowered(DataGenContext<?, ?> ctx,
 		RegistrateBlockstateProvider prov) {
-		return state -> state.get(BlockStateProperties.POWERED) ? partialBaseModel(ctx, prov, "powered")
+		return state -> state.getValue(BlockStateProperties.POWERED) ? partialBaseModel(ctx, prov, "powered")
 			: partialBaseModel(ctx, prov);
 	}
 
@@ -87,7 +87,7 @@ public class AssetLookup {
 		RegistrateBlockstateProvider prov, String path) {
 		return state -> prov.models()
 			.getExistingFile(
-				prov.modLoc("block/" + path + (state.get(BlockStateProperties.POWERED) ? "_powered" : "")));
+				prov.modLoc("block/" + path + (state.getValue(BlockStateProperties.POWERED) ? "_powered" : "")));
 	}
 
 	public static Function<BlockState, ModelFile> withIndicator(DataGenContext<?, ?> ctx,
@@ -95,7 +95,7 @@ public class AssetLookup {
 		return state -> {
 			ResourceLocation baseModel = baseModelFunc.apply(state)
 				.getLocation();
-			Integer integer = state.get(property);
+			Integer integer = state.getValue(property);
 			return prov.models()
 				.withExistingParent(ctx.getName() + "_" + integer, baseModel)
 				.texture("indicator", "block/indicator/" + integer);
@@ -108,6 +108,10 @@ public class AssetLookup {
 
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> existingItemModel() {
 		return (c, p) -> p.getExistingFile(p.modLoc("item/" + c.getName()));
+	}
+
+	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModel(String name) {
+		return (c, p) -> p.getExistingFile(p.modLoc("item/" + name));
 	}
 
 	public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, RegistrateItemModelProvider> itemModelWithPartials() {

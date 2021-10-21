@@ -15,26 +15,26 @@ public class PavedBlock extends Block {
 
 	public PavedBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(COVERED, false));
+		registerDefaultState(defaultBlockState().setValue(COVERED, false));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(COVERED));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(COVERED));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(COVERED, context.getWorld()
-				.getBlockState(context.getPos().up())
+		return defaultBlockState().setValue(COVERED, context.getLevel()
+				.getBlockState(context.getClickedPos().above())
 				.getBlock() == this);
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState stateIn, Direction face, BlockState neighbour, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction face, BlockState neighbour, IWorld worldIn,
 			BlockPos currentPos, BlockPos facingPos) {
 		if (face == Direction.UP)
-			return stateIn.with(COVERED, worldIn.getBlockState(facingPos).getBlock() == this);
+			return stateIn.setValue(COVERED, worldIn.getBlockState(facingPos).getBlock() == this);
 		return stateIn;
 	}
 

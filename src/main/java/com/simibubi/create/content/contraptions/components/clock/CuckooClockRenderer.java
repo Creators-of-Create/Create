@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.clock;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -8,13 +9,11 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.clock.CuckooClockTileEntity.Animation;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -34,19 +33,18 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
 		CuckooClockTileEntity clock = (CuckooClockTileEntity) te;
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords = WorldRenderer.getLightmapCoordinates(te.getWorld(), blockState, te.getPos());
-		Direction direction = blockState.get(CuckooClockBlock.HORIZONTAL_FACING);
+		Direction direction = blockState.getValue(CuckooClockBlock.HORIZONTAL_FACING);
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
 
 		// Render Hands
 		SuperByteBuffer hourHand = PartialBufferer.get(AllBlockPartials.CUCKOO_HOUR_HAND, blockState);
 		SuperByteBuffer minuteHand = PartialBufferer.get(AllBlockPartials.CUCKOO_MINUTE_HAND, blockState);
 		float hourAngle = clock.hourHand.get(partialTicks);
 		float minuteAngle = clock.minuteHand.get(partialTicks);
-		rotateHand(hourHand, hourAngle, direction).light(packedLightmapCoords)
+		rotateHand(hourHand, hourAngle, direction).light(light)
 				.renderInto(ms, vb);
-		rotateHand(minuteHand, minuteAngle, direction).light(packedLightmapCoords)
+		rotateHand(minuteHand, minuteAngle, direction).light(light)
 				.renderInto(ms, vb);
 
 		// Doors
@@ -72,9 +70,9 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 			}
 		}
 
-		rotateDoor(leftDoor, angle, true, direction).light(packedLightmapCoords)
+		rotateDoor(leftDoor, angle, true, direction).light(light)
 			.renderInto(ms, vb);
-		rotateDoor(rightDoor, angle, false, direction).light(packedLightmapCoords)
+		rotateDoor(rightDoor, angle, false, direction).light(light)
 			.renderInto(ms, vb);
 
 		// Figure
@@ -83,9 +81,9 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 			PartialModel partialModel = (clock.animationType == Animation.PIG ? AllBlockPartials.CUCKOO_PIG : AllBlockPartials.CUCKOO_CREEPER);
 			SuperByteBuffer figure =
 					PartialBufferer.get(partialModel, blockState);
-			figure.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction.rotateYCCW())));
+			figure.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(direction.getCounterClockWise())));
 			figure.translate(offset, 0, 0);
-			figure.light(packedLightmapCoords)
+			figure.light(light)
 					.renderInto(ms, vb);
 		}
 
@@ -98,7 +96,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
 	private SuperByteBuffer transform(PartialModel partial, KineticTileEntity te) {
 		return PartialBufferer.getFacing(partial, te.getBlockState(), te.getBlockState()
-				.get(CuckooClockBlock.HORIZONTAL_FACING)
+				.getValue(CuckooClockBlock.HORIZONTAL_FACING)
 				.getOpposite());
 	}
 
@@ -106,7 +104,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		float pivotX = 2 / 16f;
 		float pivotY = 6 / 16f;
 		float pivotZ = 8 / 16f;
-		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.rotateYCCW())));
+		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
 		buffer.translate(pivotX, pivotY, pivotZ);
 		buffer.rotate(Direction.EAST, angle);
 		buffer.translate(-pivotX, -pivotY, -pivotZ);
@@ -117,7 +115,7 @@ public class CuckooClockRenderer extends KineticTileEntityRenderer {
 		float pivotX = 2 / 16f;
 		float pivotY = 0;
 		float pivotZ = (left ? 6 : 10) / 16f;
-		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.rotateYCCW())));
+		buffer.rotateCentered(Direction.UP, AngleHelper.rad(AngleHelper.horizontalAngle(facing.getCounterClockWise())));
 		buffer.translate(pivotX, pivotY, pivotZ);
 		buffer.rotate(Direction.UP, AngleHelper.rad(angle) * (left ? -1 : 1));
 		buffer.translate(-pivotX, -pivotY, -pivotZ);

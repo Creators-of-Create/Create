@@ -9,11 +9,12 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
@@ -75,7 +76,7 @@ public class PonderWorld extends SchematicWorld {
 
 		// ParticleManager.factories - ATs don't seem to like this one
 		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleManager.class,
-			Minecraft.getInstance().particles, "field_178932_g");
+			Minecraft.getInstance().particleEngine, "field_178932_g");
 	}
 
 	public void createBackup() {
@@ -83,8 +84,8 @@ public class PonderWorld extends SchematicWorld {
 		originalTileEntities.clear();
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
 		tileEntities.forEach(
-			(k, v) -> originalTileEntities.put(k, TileEntity.createFromTag(blocks.get(k), v.write(new CompoundNBT()))));
-		entities.forEach(e -> EntityType.loadEntityUnchecked(e.serializeNBT(), this)
+			(k, v) -> originalTileEntities.put(k, TileEntity.loadStatic(blocks.get(k), v.save(new CompoundNBT()))));
+		entities.forEach(e -> EntityType.create(e.serializeNBT(), this)
 			.ifPresent(originalEntities::add));
 	}
 
@@ -96,23 +97,34 @@ public class PonderWorld extends SchematicWorld {
 		renderedTileEntities.clear();
 		originalBlocks.forEach((k, v) -> blocks.put(k, v));
 		originalTileEntities.forEach((k, v) -> {
-			TileEntity te = TileEntity.createFromTag(originalBlocks.get(k), v.write(new CompoundNBT()));
-			onTEadded(te, te.getPos());
+			TileEntity te = TileEntity.loadStatic(originalBlocks.get(k), v.save(new CompoundNBT()));
+			onTEadded(te, te.getBlockPos());
 			tileEntities.put(k, te);
 			renderedTileEntities.add(te);
 		});
-		originalEntities.forEach(e -> EntityType.loadEntityUnchecked(e.serializeNBT(), this)
+		originalEntities.forEach(e -> EntityType.create(e.serializeNBT(), this)
 			.ifPresent(entities::add));
 		particles.clearEffects();
-		fixBeltTileEntities();
+		fixControllerTileEntities();
 	}
 
 	public void restoreBlocks(Selection selection) {
 		selection.forEach(p -> {
 			if (originalBlocks.containsKey(p))
 				blocks.put(p, originalBlocks.get(p));
+			if (originalTileEntities.containsKey(p)) {
+				TileEntity te = TileEntity.loadStatic(originalBlocks.get(p), originalTileEntities.get(p)
+					.save(new CompoundNBT()));
+				onTEadded(te, te.getBlockPos());
+				tileEntities.put(p, te);
+			}
 		});
-		scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
+		redraw();
+	}
+
+	private void redraw() {
+		if (scene != null)
+			scene.forEach(WorldSectionElement.class, WorldSectionElement::queueRedraw);
 	}
 
 	public void pushFakeLight(int light) {
@@ -124,7 +136,7 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	public int getLightLevel(LightType p_226658_1_, BlockPos p_226658_2_) {
+	public int getBrightness(LightType p_226658_1_, BlockPos p_226658_2_) {
 		return overrideLight == -1 ? 15 : overrideLight;
 	}
 
@@ -139,46 +151,46 @@ public class PonderWorld extends SchematicWorld {
 	@Override
 	public BlockState getBlockState(BlockPos globalPos) {
 		if (mask != null && !mask.test(globalPos.subtract(anchor)))
-			return Blocks.AIR.getDefaultState();
+			return Blocks.AIR.defaultBlockState();
 		return super.getBlockState(globalPos);
 	}
 
 	@Override // For particle collision
-	public IBlockReader getExistingChunk(int p_225522_1_, int p_225522_2_) {
+	public IBlockReader getChunkForCollisions(int p_225522_1_, int p_225522_2_) {
 		return this;
 	}
 
 	public void renderEntities(MatrixStack ms, SuperRenderTypeBuffer buffer, ActiveRenderInfo ari, float pt) {
-		Vector3d Vector3d = ari.getProjectedView();
-		double d0 = Vector3d.getX();
-		double d1 = Vector3d.getY();
-		double d2 = Vector3d.getZ();
+		Vector3d Vector3d = ari.getPosition();
+		double d0 = Vector3d.x();
+		double d1 = Vector3d.y();
+		double d2 = Vector3d.z();
 
 		for (Entity entity : entities) {
-			if (entity.ticksExisted == 0) {
-				entity.lastTickPosX = entity.getX();
-				entity.lastTickPosY = entity.getY();
-				entity.lastTickPosZ = entity.getZ();
+			if (entity.tickCount == 0) {
+				entity.xOld = entity.getX();
+				entity.yOld = entity.getY();
+				entity.zOld = entity.getZ();
 			}
 			renderEntity(entity, d0, d1, d2, pt, ms, buffer);
 		}
 
-		buffer.draw(RenderType.getEntitySolid(PlayerContainer.BLOCK_ATLAS_TEXTURE));
-		buffer.draw(RenderType.getEntityCutout(PlayerContainer.BLOCK_ATLAS_TEXTURE));
-		buffer.draw(RenderType.getEntityCutoutNoCull(PlayerContainer.BLOCK_ATLAS_TEXTURE));
-		buffer.draw(RenderType.getEntitySmoothCutout(PlayerContainer.BLOCK_ATLAS_TEXTURE));
+		buffer.draw(RenderType.entitySolid(PlayerContainer.BLOCK_ATLAS));
+		buffer.draw(RenderType.entityCutout(PlayerContainer.BLOCK_ATLAS));
+		buffer.draw(RenderType.entityCutoutNoCull(PlayerContainer.BLOCK_ATLAS));
+		buffer.draw(RenderType.entitySmoothCutout(PlayerContainer.BLOCK_ATLAS));
 	}
 
 	private void renderEntity(Entity entity, double x, double y, double z, float pt, MatrixStack ms,
 		IRenderTypeBuffer buffer) {
-		double d0 = MathHelper.lerp((double) pt, entity.lastTickPosX, entity.getX());
-		double d1 = MathHelper.lerp((double) pt, entity.lastTickPosY, entity.getY());
-		double d2 = MathHelper.lerp((double) pt, entity.lastTickPosZ, entity.getZ());
-		float f = MathHelper.lerp(pt, entity.prevRotationYaw, entity.rotationYaw);
+		double d0 = MathHelper.lerp((double) pt, entity.xOld, entity.getX());
+		double d1 = MathHelper.lerp((double) pt, entity.yOld, entity.getY());
+		double d2 = MathHelper.lerp((double) pt, entity.zOld, entity.getZ());
+		float f = MathHelper.lerp(pt, entity.yRotO, entity.yRot);
 		EntityRendererManager renderManager = Minecraft.getInstance()
-			.getRenderManager();
+			.getEntityRenderDispatcher();
 		int light = renderManager.getRenderer(entity)
-			.getLight(entity, pt);
+			.getPackedLightCoords(entity, pt);
 		renderManager.render(entity, d0 - x, d1 - y, d2 - z, f, pt, ms, buffer, light);
 	}
 
@@ -192,10 +204,10 @@ public class PonderWorld extends SchematicWorld {
 		for (Iterator<Entity> iterator = entities.iterator(); iterator.hasNext();) {
 			Entity entity = iterator.next();
 
-			entity.ticksExisted++;
-			entity.lastTickPosX = entity.getX();
-			entity.lastTickPosY = entity.getY();
-			entity.lastTickPosZ = entity.getZ();
+			entity.tickCount++;
+			entity.xOld = entity.getX();
+			entity.yOld = entity.getY();
+			entity.zOld = entity.getZ();
 			entity.tick();
 
 			if (entity.getY() <= -.5f)
@@ -212,7 +224,7 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	public void addOptionalParticle(IParticleData data, double x, double y, double z, double mx, double my, double mz) {
+	public void addAlwaysVisibleParticle(IParticleData data, double x, double y, double z, double mx, double my, double mz) {
 		addParticle(data, x, y, z, mx, my, mz);
 	}
 
@@ -223,7 +235,12 @@ public class PonderWorld extends SchematicWorld {
 		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
 		IParticleFactory<T> iparticlefactory = (IParticleFactory<T>) particleFactories.get(key);
 		return iparticlefactory == null ? null
-			: iparticlefactory.makeParticle(data, asClientWorld.getValue(), x, y, z, mx, my, mz);
+			: iparticlefactory.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);
+	}
+
+	@Override
+	public boolean setBlock(BlockPos pos, BlockState arg1, int arg2) {
+		return super.setBlock(pos, arg1, arg2);
 	}
 
 	public void addParticle(Particle p) {
@@ -240,20 +257,34 @@ public class PonderWorld extends SchematicWorld {
 		smartTileEntity.markVirtual();
 	}
 
-	public void fixBeltTileEntities() {
+	public void fixControllerTileEntities() {
 		for (TileEntity tileEntity : tileEntities.values()) {
-			if (!(tileEntity instanceof BeltTileEntity))
-				continue;
-			BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
-			if (!beltTileEntity.isController())
-				continue;
-			BlockPos controllerPos = tileEntity.getPos();
-			for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
-				TileEntity tileEntity2 = getTileEntity(blockPos);
-				if (!(tileEntity2 instanceof BeltTileEntity))
+			if (tileEntity instanceof BeltTileEntity) {
+				BeltTileEntity beltTileEntity = (BeltTileEntity) tileEntity;
+				if (!beltTileEntity.isController())
 					continue;
-				BeltTileEntity belt2 = (BeltTileEntity) tileEntity2;
-				belt2.setController(controllerPos);
+				BlockPos controllerPos = tileEntity.getBlockPos();
+				for (BlockPos blockPos : BeltBlock.getBeltChain(this, controllerPos)) {
+					TileEntity tileEntity2 = getBlockEntity(blockPos);
+					if (!(tileEntity2 instanceof BeltTileEntity))
+						continue;
+					BeltTileEntity belt2 = (BeltTileEntity) tileEntity2;
+					belt2.setController(controllerPos);
+				}
+			}
+			if (tileEntity instanceof FluidTankTileEntity) {
+				FluidTankTileEntity fluidTankTileEntity = (FluidTankTileEntity) tileEntity;
+				BlockPos lastKnown = fluidTankTileEntity.getLastKnownPos();
+				BlockPos current = fluidTankTileEntity.getBlockPos();
+				if (lastKnown == null || current == null)
+					continue;
+				if (fluidTankTileEntity.isController())
+					continue;
+				if (!lastKnown.equals(current)) {
+					BlockPos newControllerPos = fluidTankTileEntity.getController()
+						.offset(current.subtract(lastKnown));
+					fluidTankTileEntity.setController(newControllerPos);
+				}
 			}
 		}
 	}
@@ -274,7 +305,7 @@ public class PonderWorld extends SchematicWorld {
 		if (voxelshape.isEmpty())
 			return;
 
-		AxisAlignedBB bb = voxelshape.getBoundingBox();
+		AxisAlignedBB bb = voxelshape.bounds();
 		double d1 = Math.min(1.0D, bb.maxX - bb.minX);
 		double d2 = Math.min(1.0D, bb.maxY - bb.minY);
 		double d3 = Math.min(1.0D, bb.maxZ - bb.minZ);
@@ -304,17 +335,22 @@ public class PonderWorld extends SchematicWorld {
 	}
 
 	@Override
-	public boolean chunkExists(int x, int y) {
+	public boolean hasChunkAt(BlockPos pos) {
 		return true; // fix particle lighting
 	}
 
 	@Override
-	public boolean isBlockPresent(BlockPos pos) {
+	public boolean hasChunk(int x, int y) {
 		return true; // fix particle lighting
 	}
 
 	@Override
-	public boolean isPlayerWithin(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
+	public boolean isLoaded(BlockPos pos) {
+		return true; // fix particle lighting
+	}
+
+	@Override
+	public boolean hasNearbyAlivePlayer(double p_217358_1_, double p_217358_3_, double p_217358_5_, double p_217358_7_) {
 		return true; // always enable spawner animations
 	}
 }

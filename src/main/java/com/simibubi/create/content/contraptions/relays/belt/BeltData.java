@@ -1,10 +1,9 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import java.nio.ByteBuffer;
-
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.math.vector.Quaternion;
@@ -22,15 +21,15 @@ public class BeltData extends KineticData {
     private float maxV;
     private byte scrollMult;
 
-    protected BeltData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public BeltData(Instancer<?> owner) {
+		super(owner);
+	}
 
     public BeltData setRotation(Quaternion q) {
-        this.qX = q.getX();
-        this.qY = q.getY();
-        this.qZ = q.getZ();
-        this.qW = q.getW();
+        this.qX = q.i();
+        this.qY = q.j();
+        this.qZ = q.k();
+        this.qW = q.r();
         markDirty();
         return this;
     }
@@ -39,32 +38,30 @@ public class BeltData extends KineticData {
         TextureAtlasSprite source = spriteShift.getOriginal();
         TextureAtlasSprite target = spriteShift.getTarget();
 
-        this.sourceU = source.getMinU();
-        this.sourceV = source.getMinV();
-        this.minU = target.getMinU();
-        this.minV = target.getMinV();
-        this.maxU = target.getMaxU();
-        this.maxV = target.getMaxV();
+        this.sourceU = source.getU0();
+        this.sourceV = source.getV0();
+        this.minU = target.getU0();
+        this.minV = target.getV0();
+        this.maxU = target.getU1();
+        this.maxV = target.getV1();
         markDirty();
 
-        return this;
-    }
+		return this;
+	}
 
-    public BeltData setScrollMult(float scrollMult) {
-        this.scrollMult = (byte) (scrollMult * 127);
-        markDirty();
-        return this;
-    }
+	public BeltData setScrollMult(float scrollMult) {
+		this.scrollMult = (byte) (scrollMult * 127);
+		markDirty();
+		return this;
+	}
 
-    @Override
-    public void write(ByteBuffer buf) {
-        super.write(buf);
+	@Override
+	public void write(MappedBuffer buf) {
+		super.write(buf);
 
-        putVec4(buf, qX, qY, qZ, qW);
-
-        putVec2(buf, sourceU, sourceV);
-        putVec4(buf, minU, minV, maxU, maxV);
-
-        put(buf, scrollMult);
-    }
+		buf.putVec4(qX, qY, qZ, qW);
+		buf.putVec2(sourceU, sourceV);
+		buf.putVec4(minU, minV, maxU, maxV);
+		buf.put(scrollMult);
+	}
 }

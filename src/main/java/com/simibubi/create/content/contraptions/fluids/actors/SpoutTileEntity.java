@@ -6,12 +6,12 @@ import static com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProce
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
+import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.contraptions.fluids.FluidFX;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour;
@@ -27,11 +27,9 @@ import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,28 +38,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.ModList;
 
 public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
-	private static final boolean IS_TIC_LOADED = ModList.get().isLoaded("tconstruct");
-	private static final Class<?> CASTING_FLUID_HANDLER_CLASS;
-	static {
-		Class<?> testClass;
-		try {
-			testClass = Class.forName("slimeknights.tconstruct.library.smeltery.CastingFluidHandler");
-		} catch (ClassNotFoundException e) {
-			testClass = null;
-		}
-		CASTING_FLUID_HANDLER_CLASS = testClass;
-	}
 
 	public static final int FILLING_TIME = 20;
-
 	protected BeltProcessingBehaviour beltProcessing;
-	protected int processingTicks;
-	protected boolean sendSplash;
-	private boolean shouldAnimate = true;
+
+	public int processingTicks;
+	public boolean sendSplash;
+	public BlockSpoutingBehaviour customProcess;
 
 	SmartFluidTankBehaviour tank;
 
@@ -76,7 +61,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (cachedBoundingBox == null)
-			cachedBoundingBox = super.getRenderBoundingBox().expand(0, -2, 0);
+			cachedBoundingBox = super.getRenderBoundingBox().expandTowards(0, -2, 0);
 		return cachedBoundingBox;
 	}
 
@@ -93,26 +78,25 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	protected ProcessingResult onItemReceived(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
-		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
+		if (!FillingBySpout.canItemBeFilled(level, transported.stack))
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
-		if (FillingBySpout.getRequiredAmountForItem(world, transported.stack, getCurrentFluidInTank()) == -1)
+		if (FillingBySpout.getRequiredAmountForItem(level, transported.stack, getCurrentFluidInTank()) == -1)
 			return PASS;
 		return HOLD;
 	}
 
 	protected ProcessingResult whenItemHeld(TransportedItemStack transported,
 		TransportedItemStackHandlerBehaviour handler) {
-		shouldAnimate = true;
 		if (processingTicks != -1 && processingTicks != 5)
 			return HOLD;
-		if (!FillingBySpout.canItemBeFilled(world, transported.stack))
+		if (!FillingBySpout.canItemBeFilled(level, transported.stack))
 			return PASS;
 		if (tank.isEmpty())
 			return HOLD;
 		FluidStack fluid = getCurrentFluidInTank();
-		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(world, transported.stack, fluid.copy());
+		int requiredAmountForItem = FillingBySpout.getRequiredAmountForItem(level, transported.stack, fluid.copy());
 		if (requiredAmountForItem == -1)
 			return PASS;
 		if (requiredAmountForItem > fluid.getAmount())
@@ -125,7 +109,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		// Process finished
-		ItemStack out = FillingBySpout.fillItem(world, requiredAmountForItem, transported.stack, fluid);
+		ItemStack out = FillingBySpout.fillItem(level, requiredAmountForItem, transported.stack, fluid);
 		if (!out.isEmpty()) {
 			List<TransportedItemStack> outList = new ArrayList<>();
 			TransportedItemStack held = null;
@@ -137,69 +121,16 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(outList, held));
 		}
 
-		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, world, pos, 5);
-		if (out.getItem() instanceof PotionItem && !PotionUtils.getEffectsFromStack(out)
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT, level, worldPosition, 5);
+		if (out.getItem() instanceof PotionItem && !PotionUtils.getMobEffects(out)
 			.isEmpty())
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, world, pos, 5);
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPOUT_POTION, level, worldPosition, 5);
 
 		tank.getPrimaryHandler()
 			.setFluid(fluid);
 		sendSplash = true;
 		notifyUpdate();
 		return HOLD;
-	}
-
-	private void processTicCastBlock() {
-		if (!IS_TIC_LOADED || CASTING_FLUID_HANDLER_CLASS == null)
-			return;
-		if (world == null)
-			return;
-		IFluidHandler localTank = this.tank.getCapability()
-			.orElse(null);
-		if (localTank == null)
-			return;
-		FluidStack fluid = getCurrentFluidInTank();
-		if (fluid.getAmount() == 0)
-			return;
-		TileEntity te = world.getTileEntity(pos.down(2));
-		if (te == null)
-			return;
-		IFluidHandler handler = getFluidHandler(pos.down(2), Direction.UP);
-		if (!CASTING_FLUID_HANDLER_CLASS.isInstance(handler))
-			return;
-		if (handler.getTanks() != 1)
-			return;
-		if (!handler.isFluidValid(0, this.getCurrentFluidInTank()))
-			return;
-		FluidStack containedFluid = handler.getFluidInTank(0);
-		if (!(containedFluid.isEmpty() || containedFluid.isFluidEqual(fluid)))
-			return;
-		if (processingTicks == -1) {
-			processingTicks = FILLING_TIME;
-			notifyUpdate();
-			return;
-		}
-		FluidStack drained = localTank.drain(144, IFluidHandler.FluidAction.SIMULATE);
-		if (!drained.isEmpty()) {
-			int filled = handler.fill(drained, IFluidHandler.FluidAction.SIMULATE);
-			shouldAnimate = filled > 0;
-			sendSplash = shouldAnimate;
-			if (processingTicks == 5) {
-				if (filled > 0) {
-					drained = localTank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
-					if (!drained.isEmpty()) {
-						FluidStack fillStack = drained.copy();
-						fillStack.setAmount(Math.min(drained.getAmount(), 6));
-						drained.shrink(filled);
-						fillStack.setAmount(filled);
-						handler.fill(fillStack, IFluidHandler.FluidAction.EXECUTE);
-					}
-				}
-				tank.getPrimaryHandler()
-					.setFluid(fluid);
-				this.notifyUpdate();
-			}
-		}
 	}
 
 	private FluidStack getCurrentFluidInTank() {
@@ -239,53 +170,67 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	public void tick() {
 		super.tick();
-		processTicCastBlock();
-		if (processingTicks >= 0)
+
+		FluidStack currentFluidInTank = getCurrentFluidInTank();
+		if (processingTicks == -1 && (isVirtual() || !level.isClientSide()) && !currentFluidInTank.isEmpty()) {
+			BlockSpoutingBehaviour.forEach(behaviour -> {
+				if (customProcess != null)
+					return;
+				if (behaviour.fillBlock(level, worldPosition.below(2), this, currentFluidInTank, true) > 0) {
+					processingTicks = FILLING_TIME;
+					customProcess = behaviour;
+					notifyUpdate();
+				}
+			});
+		}
+
+		if (processingTicks >= 0) {
 			processingTicks--;
-		if (processingTicks >= 8 && world.isRemote && shouldAnimate)
+			if (processingTicks == 5 && customProcess != null) {
+				int fillBlock = customProcess.fillBlock(level, worldPosition.below(2), this, currentFluidInTank, false);
+				customProcess = null;
+				if (fillBlock > 0) {
+					tank.getPrimaryHandler()
+						.setFluid(FluidHelper.copyStackWithAmount(currentFluidInTank,
+							currentFluidInTank.getAmount() - fillBlock));
+					sendSplash = true;
+					notifyUpdate();
+				}
+			}
+		}
+
+		if (processingTicks >= 8 && level.isClientSide)
 			spawnProcessingParticles(tank.getPrimaryTank()
 				.getRenderedFluid());
 	}
 
 	protected void spawnProcessingParticles(FluidStack fluid) {
-		Vector3d vec = VecHelper.getCenterOf(pos);
+		if (isVirtual())
+			return;
+		Vector3d vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 8 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
-		world.addOptionalParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
+		level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, 0, -.1f, 0);
 	}
 
 	protected static int SPLASH_PARTICLE_COUNT = 20;
 
 	protected void spawnSplash(FluidStack fluid) {
-		Vector3d vec = VecHelper.getCenterOf(pos);
+		if (isVirtual())
+			return;
+		Vector3d vec = VecHelper.getCenterOf(worldPosition);
 		vec = vec.subtract(0, 2 - 5 / 16f, 0);
 		IParticleData particle = FluidFX.getFluidParticle(fluid);
 		for (int i = 0; i < SPLASH_PARTICLE_COUNT; i++) {
-			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, world.rand, 0.125f);
+			Vector3d m = VecHelper.offsetRandomly(Vector3d.ZERO, level.random, 0.125f);
 			m = new Vector3d(m.x, Math.abs(m.y), m.z);
-			world.addOptionalParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
+			level.addAlwaysVisibleParticle(particle, vec.x, vec.y, vec.z, m.x, m.y, m.z);
 		}
-	}
-
-	@Nullable
-	private IFluidHandler getFluidHandler(BlockPos pos, Direction direction) {
-		if (this.world == null) {
-			return null;
-		} else {
-			TileEntity te = this.world.getTileEntity(pos);
-			return te != null ? te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction)
-				.orElse(null) : null;
-		}
-	}
-
-	public int getCorrectedProcessingTicks() {
-		if (shouldAnimate)
-			return processingTicks;
-		return -1;
 	}
 
 	@Override
 	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
-		return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+		return containedFluidTooltip(tooltip, isPlayerSneaking,
+			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 }

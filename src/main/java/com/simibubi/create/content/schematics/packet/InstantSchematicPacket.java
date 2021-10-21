@@ -23,14 +23,14 @@ public class InstantSchematicPacket extends SimplePacketBase {
 	}
 
 	public InstantSchematicPacket(PacketBuffer buffer) {
-		name = buffer.readString(32767);
+		name = buffer.readUtf(32767);
 		origin = buffer.readBlockPos();
 		bounds = buffer.readBlockPos();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
-		buffer.writeString(name);
+		buffer.writeUtf(name);
 		buffer.writeBlockPos(origin);
 		buffer.writeBlockPos(bounds);
 	}
@@ -40,10 +40,10 @@ public class InstantSchematicPacket extends SimplePacketBase {
 		context.get()
 			.enqueueWork(() -> {
 				ServerPlayerEntity player = context.get()
-					.getSender();
+						.getSender();
 				if (player == null)
 					return;
-				Create.schematicReceiver.handleInstantSchematic(player, name, player.world, origin, bounds);
+				Create.SCHEMATIC_RECEIVER.handleInstantSchematic(player, name, player.level, origin, bounds);
 			});
 		context.get()
 			.setPacketHandled(true);

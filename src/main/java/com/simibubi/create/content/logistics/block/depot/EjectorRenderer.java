@@ -1,5 +1,8 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -7,10 +10,8 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.IntAttached;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -31,7 +32,7 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	public boolean isGlobalRenderer(KineticTileEntity p_188185_1_) {
+	public boolean shouldRenderOffScreen(KineticTileEntity p_188185_1_) {
 		return true;
 	}
 
@@ -41,29 +42,29 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
 		EjectorTileEntity ejector = (EjectorTileEntity) te;
-		IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.getSolid());
+		IVertexBuilder vertexBuilder = buffer.getBuffer(RenderType.solid());
 		float lidProgress = ((EjectorTileEntity) te).getLidProgress(partialTicks);
 		float angle = lidProgress * 70;
 
-		if (!FastRenderDispatcher.available(te.getWorld())) {
+		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
 			SuperByteBuffer model = PartialBufferer.get(AllBlockPartials.EJECTOR_TOP, te.getBlockState());
 			applyLidAngle(te, angle, model.matrixStacker());
 			model.light(light)
 					.renderInto(ms, vertexBuilder);
 		}
 
-		MatrixStacker msr = MatrixStacker.of(ms);
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
 		float maxTime =
-			(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
+				(float) (ejector.earlyTarget != null ? ejector.earlyTargetTime : ejector.launcher.getTotalFlyingTicks());
 		for (IntAttached<ItemStack> intAttached : ejector.launchedItems) {
 			float time = intAttached.getFirst() + partialTicks;
 			if (time > maxTime)
 				continue;
 
-			ms.push();
+			ms.pushPose();
 			Vector3d launchedItemLocation = ejector.getLaunchedItemLocation(time);
-			msr.translate(launchedItemLocation.subtract(Vector3d.of(te.getPos())));
+			msr.translate(launchedItemLocation.subtract(Vector3d.atLowerCornerOf(te.getBlockPos())));
 			Vector3d itemRotOffset = VecHelper.voxelSpace(0, 3, 0);
 			msr.translate(itemRotOffset);
 			msr.rotateY(AngleHelper.horizontalAngle(ejector.getFacing()));
@@ -71,32 +72,32 @@ public class EjectorRenderer extends KineticTileEntityRenderer {
 			msr.translateBack(itemRotOffset);
 			Minecraft.getInstance()
 				.getItemRenderer()
-				.renderItem(intAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer);
-			ms.pop();
+				.renderStatic(intAttached.getValue(), TransformType.GROUND, light, overlay, ms, buffer);
+			ms.popPose();
 		}
 
 		DepotBehaviour behaviour = te.getBehaviour(DepotBehaviour.TYPE);
 		if (behaviour == null || behaviour.isEmpty())
 			return;
 
-		ms.push();
+		ms.pushPose();
 		applyLidAngle(te, angle, msr);
 		msr.centre()
 			.rotateY(-180 - AngleHelper.horizontalAngle(te.getBlockState()
-				.get(EjectorBlock.HORIZONTAL_FACING)))
+				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.unCentre();
 		DepotRenderer.renderItemsOf(te, partialTicks, ms, buffer, light, overlay, behaviour);
-		ms.pop();
+		ms.popPose();
 	}
 
-	static void applyLidAngle(KineticTileEntity te, float angle, MatrixStacker matrixStacker) {
+	static void applyLidAngle(KineticTileEntity te, float angle, TransformStack matrixStacker) {
 		applyLidAngle(te, pivot, angle, matrixStacker);
 	}
 
-	static void applyLidAngle(KineticTileEntity te, Vector3d rotationOffset, float angle, MatrixStacker matrixStacker) {
+	static void applyLidAngle(KineticTileEntity te, Vector3d rotationOffset, float angle, TransformStack matrixStacker) {
 		matrixStacker.centre()
 			.rotateY(180 + AngleHelper.horizontalAngle(te.getBlockState()
-				.get(EjectorBlock.HORIZONTAL_FACING)))
+				.getValue(EjectorBlock.HORIZONTAL_FACING)))
 			.unCentre()
 			.translate(rotationOffset)
 			.rotateX(-angle)

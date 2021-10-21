@@ -11,14 +11,14 @@ public abstract class StencilElement extends RenderElement {
 
 	@Override
 	public void render(MatrixStack ms) {
-		ms.push();
+		ms.pushPose();
 		transform(ms);
 		prepareStencil(ms);
 		renderStencil(ms);
 		prepareElement(ms);
 		renderElement(ms);
 		cleanUp(ms);
-		ms.pop();
+		ms.popPose();
 	}
 
 	protected abstract void renderStencil(MatrixStack ms);
@@ -32,7 +32,7 @@ public abstract class StencilElement extends RenderElement {
 	protected void prepareStencil(MatrixStack ms) {
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
 		RenderSystem.stencilMask(~0);
-		RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.IS_RUNNING_ON_MAC);
+		RenderSystem.clear(GL11.GL_STENCIL_BUFFER_BIT, Minecraft.ON_OSX);
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
 		RenderSystem.stencilOp(GL11.GL_REPLACE, GL11.GL_KEEP, GL11.GL_KEEP);
 		RenderSystem.stencilMask(0xFF);
@@ -47,5 +47,6 @@ public abstract class StencilElement extends RenderElement {
 
 	protected void cleanUp(MatrixStack ms) {
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
+
 	}
 }

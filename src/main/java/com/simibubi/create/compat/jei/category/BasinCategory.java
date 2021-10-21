@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
@@ -51,9 +50,9 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE))
-			itemIngredients.add(Ingredient.fromItems(AllBlocks.BLAZE_BURNER.get()));
+			itemIngredients.add(Ingredient.of(AllBlocks.BLAZE_BURNER.get()));
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED))
-			itemIngredients.add(Ingredient.fromItems(AllItems.BLAZE_CAKE.get()));
+			itemIngredients.add(Ingredient.of(AllItems.BLAZE_CAKE.get()));
 
 		ingredients.setInputIngredients(itemIngredients);
 		ingredients.setInputLists(VanillaTypes.FLUID, recipe.getFluidIngredients()
@@ -62,7 +61,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			.collect(Collectors.toList()));
 		if (!recipe.getRollableResults()
 			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		if (!recipe.getFluidResults()
 			.isEmpty())
 			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
@@ -73,17 +72,10 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		IGuiFluidStackGroup fluidStacks = recipeLayout.getFluidStacks();
 
-		ItemStack itemOutput = recipe.getRollableResultsAsItemStacks()
-			.isEmpty() ? ItemStack.EMPTY
-				: recipe.getRollableResultsAsItemStacks()
-					.get(0);
-		FluidStack fluidOutput = recipe.getFluidResults()
-			.isEmpty() ? FluidStack.EMPTY
-				: recipe.getFluidResults()
-					.get(0);
-
 		NonNullList<FluidIngredient> fluidIngredients = recipe.getFluidIngredients();
 		List<Pair<Ingredient, MutableInt>> ingredients = ItemHelper.condenseIngredients(recipe.getIngredients());
+		List<ItemStack> itemOutputs = recipe.getRollableResultsAsItemStacks();
+		NonNullList<FluidStack> fluidOutputs = recipe.getFluidResults();
 
 		int size = ingredients.size() + fluidIngredients.size();
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
@@ -97,7 +89,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			Ingredient ingredient = pair.getFirst();
 			MutableInt amount = pair.getSecond();
 
-			for (ItemStack itemStack : ingredient.getMatchingStacks()) {
+			for (ItemStack itemStack : ingredient.getItems()) {
 				ItemStack stack = itemStack.copy();
 				stack.setCount(amount.getValue());
 				stacks.add(stack);
@@ -115,28 +107,41 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			fluidStacks.set(j, withImprovedVisibility(stacks));
 		}
 
-		if (!itemOutput.isEmpty()) {
-			itemStacks.init(i, false, 141, 50 + yOffset);
-			itemStacks.set(i, recipe.getRecipeOutput()
-				.getStack());
-			yOffset -= 19;
+		int outSize = fluidOutputs.size() + recipe.getRollableResults()
+			.size();
+		int outputIndex = 0;
+		
+		if (!itemOutputs.isEmpty())
+			addStochasticTooltip(itemStacks, recipe.getRollableResults(), i);
+		
+		for (; outputIndex < outSize; outputIndex++) {
+			int xPosition = 141 - (outSize % 2 != 0 && outputIndex == outSize - 1 ? 0 : outputIndex % 2 == 0 ? 10 : -9);
+			int yPosition = -19 * (outputIndex / 2) + 50 + yOffset;
+
+			if (itemOutputs.size() > outputIndex) {
+				itemStacks.init(i, false, xPosition, yPosition + yOffset);
+				itemStacks.set(i, itemOutputs.get(outputIndex));
+				i++;
+			} else {
+				fluidStacks.init(j, false, xPosition + 1, yPosition + 1 + yOffset);
+				fluidStacks.set(j, withImprovedVisibility(fluidOutputs.get(outputIndex - itemOutputs.size())));
+				j++;
+			}
+			
 		}
 
-		if (!fluidOutput.isEmpty()) {
-			fluidStacks.init(j, false, 142, 51 + yOffset);
-			fluidStacks.set(j, withImprovedVisibility(fluidOutput));
-		}
-
-		addFluidTooltip(fluidStacks, fluidIngredients, ImmutableList.of(fluidOutput));
+		addFluidTooltip(fluidStacks, fluidIngredients, fluidOutputs);
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		if (!requiredHeat.testBlazeBurner(HeatLevel.NONE)) {
-			itemStacks.init(++i, true, 133, 80);
+			itemStacks.init(i, true, 133, 80);
 			itemStacks.set(i, AllBlocks.BLAZE_BURNER.asStack());
+			i++;
 		}
 		if (!requiredHeat.testBlazeBurner(HeatLevel.KINDLED)) {
-			itemStacks.init(++i, true, 152, 80);
+			itemStacks.init(i, true, 152, 80);
 			itemStacks.set(i, AllItems.BLAZE_CAKE.asStack());
+			i++;
 		}
 	}
 
@@ -146,6 +151,8 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 
 		int size = actualIngredients.size() + recipe.getFluidIngredients()
 			.size();
+		int outSize = recipe.getFluidResults().size() + recipe.getRollableResults().size();
+		
 		int xOffset = size < 3 ? (3 - size) * 19 / 2 : 0;
 		HeatCondition requiredHeat = recipe.getRequiredHeat();
 		int yOffset = 0;
@@ -154,8 +161,13 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 			AllGuiTextures.JEI_SLOT.draw(matrixStack, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 
 		boolean noHeat = requiredHeat == HeatCondition.NONE;
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50 + yOffset);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32 + yOffset);
+
+		int vRows = (1 + outSize) / 2;
+		for (int i = 0; i < outSize; i++)
+			AllGuiTextures.JEI_SLOT.draw(matrixStack,
+				141 - (outSize % 2 != 0 && i == outSize - 1 ? 0 : i % 2 == 0 ? 10 : -9), -19 * (i / 2) + 50 + yOffset);
+		if (vRows <= 2)
+			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, -19 * (vRows - 1) + 32 + yOffset);
 
 		AllGuiTextures shadow = noHeat ? AllGuiTextures.JEI_SHADOW : AllGuiTextures.JEI_LIGHT;
 		shadow.draw(matrixStack, 81, 58 + (noHeat ? 10 : 30));
@@ -165,7 +177,7 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
 		heatBar.draw(matrixStack, 4, 80);
-		Minecraft.getInstance().fontRenderer.draw(matrixStack, Lang.translate(requiredHeat.getTranslationKey()), 9,
+		Minecraft.getInstance().font.draw(matrixStack, Lang.translate(requiredHeat.getTranslationKey()), 9,
 			86, requiredHeat.getColor());
 	}
 

@@ -54,12 +54,12 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return (isLarge ? AllShapes.LARGE_GEAR : AllShapes.SMALL_GEAR).get(state.get(AXIS));
+		return (isLarge ? AllShapes.LARGE_GEAR : AllShapes.SMALL_GEAR).get(state.getValue(AXIS));
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-		return isValidCogwheelPosition(ICogWheel.isLargeCog(state), worldIn, pos, state.get(AXIS));
+	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+		return isValidCogwheelPosition(ICogWheel.isLargeCog(state), worldIn, pos, state.getValue(AXIS));
 	}
 
 	public static boolean isValidCogwheelPosition(boolean large, IWorldReader worldIn, BlockPos pos, Axis cogAxis) {
@@ -67,9 +67,9 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 			if (facing.getAxis() == cogAxis)
 				continue;
 
-			BlockPos offsetPos = pos.offset(facing);
+			BlockPos offsetPos = pos.relative(facing);
 			BlockState blockState = worldIn.getBlockState(offsetPos);
-			if (blockState.contains(AXIS) && facing.getAxis() == blockState.get(AXIS))
+			if (blockState.hasProperty(AXIS) && facing.getAxis() == blockState.getValue(AXIS))
 				continue;
 
 			if (ICogWheel.isLargeCog(blockState) || large && ICogWheel.isSmallCog(blockState))
@@ -79,16 +79,16 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	protected Axis getAxisForPlacement(BlockItemUseContext context) {
-		if (context.getPlayer() != null && context.getPlayer().isSneaking())
-			return context.getFace().getAxis();
+		if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown())
+			return context.getClickedFace().getAxis();
 
-		World world = context.getWorld();
-		BlockState stateBelow = world.getBlockState(context.getPos().down());
+		World world = context.getLevel();
+		BlockState stateBelow = world.getBlockState(context.getClickedPos().below());
 
 		if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLargeCog())
-			return stateBelow.get(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;
+			return stateBelow.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;
 
-		BlockPos placedOnPos = context.getPos().offset(context.getFace().getOpposite());
+		BlockPos placedOnPos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
 		BlockState placedAgainst = world.getBlockState(placedOnPos);
 
 		Block block = placedAgainst.getBlock();
@@ -96,15 +96,15 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 			return ((IRotate) block).getRotationAxis(placedAgainst);
 
 		Axis preferredAxis = getPreferredAxis(context);
-		return preferredAxis != null ? preferredAxis : context.getFace().getAxis();
+		return preferredAxis != null ? preferredAxis : context.getClickedFace().getAxis();
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		boolean shouldWaterlog = context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER;
-		return this.getDefaultState()
-			.with(AXIS, getAxisForPlacement(context))
-			.with(BlockStateProperties.WATERLOGGED, shouldWaterlog);
+		boolean shouldWaterlog = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+		return this.defaultBlockState()
+			.setValue(AXIS, getAxisForPlacement(context))
+			.setValue(BlockStateProperties.WATERLOGGED, shouldWaterlog);
 	}
 
 	@Override

@@ -3,13 +3,13 @@ package com.simibubi.create.content.contraptions.relays.gearbox;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.state.properties.BlockStateProperties;
@@ -22,29 +22,29 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected final EnumMap<Direction, RotatingData> keys;
     protected Direction sourceFacing;
 
-    public GearboxInstance(InstancedTileRenderer<?> modelManager, GearboxTileEntity tile) {
+    public GearboxInstance(MaterialManager<?> modelManager, GearboxTileEntity tile) {
         super(modelManager, tile);
 
         keys = new EnumMap<>(Direction.class);
 
-        final Direction.Axis boxAxis = blockState.get(BlockStateProperties.AXIS);
+        final Direction.Axis boxAxis = blockState.getValue(BlockStateProperties.AXIS);
 
-        int blockLight = world.getLightLevel(LightType.BLOCK, pos);
-        int skyLight = world.getLightLevel(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightType.BLOCK, pos);
+        int skyLight = world.getBrightness(LightType.SKY, pos);
         updateSourceFacing();
 
-        RenderMaterial<?, InstancedModel<RotatingData>> rotatingMaterial = getRotatingMaterial();
+        InstanceMaterial<RotatingData> rotatingMaterial = getRotatingMaterial();
 
         for (Direction direction : Iterate.directions) {
 			final Direction.Axis axis = direction.getAxis();
 			if (boxAxis == axis)
 				continue;
 
-			InstancedModel<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
+			Instancer<RotatingData> shaft = rotatingMaterial.getModel(AllBlockPartials.SHAFT_HALF, blockState, direction);
 
 			RotatingData key = shaft.createInstance();
 
-			key.setRotationAxis(Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, axis).getUnitVector())
+			key.setRotationAxis(Direction.get(Direction.AxisDirection.POSITIVE, axis).step())
 					.setRotationalSpeed(getSpeed(direction))
 					.setRotationOffset(getRotationOffset(axis)).setColor(tile)
 					.setPosition(getInstancePosition())
@@ -70,7 +70,7 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
     protected void updateSourceFacing() {
         if (tile.hasSource()) {
             BlockPos source = tile.source.subtract(pos);
-            sourceFacing = Direction.getFacingFromVector(source.getX(), source.getY(), source.getZ());
+            sourceFacing = Direction.getNearest(source.getX(), source.getY(), source.getZ());
         } else {
             sourceFacing = null;
         }

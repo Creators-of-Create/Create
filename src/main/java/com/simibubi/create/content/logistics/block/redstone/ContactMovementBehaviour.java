@@ -16,7 +16,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(RedstoneContactBlock.FACING).getDirectionVec()).scale(.65f);
+		return Vector3d.atLowerCornerOf(context.state.getValue(RedstoneContactBlock.FACING).getNormal()).scale(.65f);
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		BlockState block = context.state;
 		World world = context.world;
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 		if (context.firstMovement)
 			return;
@@ -34,13 +34,13 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 		if (!AllBlocks.REDSTONE_CONTACT.has(visitedState))
 			return;
 
-		Vector3d contact = Vector3d.of(block.get(RedstoneContactBlock.FACING).getDirectionVec());
+		Vector3d contact = Vector3d.atLowerCornerOf(block.getValue(RedstoneContactBlock.FACING).getNormal());
 		contact = context.rotation.apply(contact);
-		Direction direction = Direction.getFacingFromVector(contact.x, contact.y, contact.z);
+		Direction direction = Direction.getNearest(contact.x, contact.y, contact.z);
 
-		if (!RedstoneContactBlock.hasValidContact(world, pos.offset(direction.getOpposite()), direction))
+		if (!RedstoneContactBlock.hasValidContact(world, pos.relative(direction.getOpposite()), direction))
 			return;
-		world.setBlockState(pos, visitedState.with(RedstoneContactBlock.POWERED, true));
+		world.setBlockAndUpdate(pos, visitedState.setValue(RedstoneContactBlock.POWERED, true));
 		context.data.put("lastContact", NBTUtil.writeBlockPos(pos));
 		return;
 	}
@@ -53,7 +53,7 @@ public class ContactMovementBehaviour extends MovementBehaviour {
 	public void deactivateLastVisitedContact(MovementContext context) {
 		if (context.data.contains("lastContact")) {
 			BlockPos last = NBTUtil.readBlockPos(context.data.getCompound("lastContact"));
-			context.world.getPendingBlockTicks().scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
+			context.world.getBlockTicks().scheduleTick(last, AllBlocks.REDSTONE_CONTACT.get(), 1, TickPriority.NORMAL);
 			context.data.remove("lastContact");
 		}
 	}

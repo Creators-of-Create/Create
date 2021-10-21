@@ -25,7 +25,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		if (!te.window)
 			return;
 
-		InterpolatedChasingValue fluidLevel = te.fluidLevel;
+		InterpolatedChasingValue fluidLevel = te.getFluidLevel();
 		if (fluidLevel == null)
 			return;
 
@@ -62,14 +62,14 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		float zMin = tankHullWidth;
 		float zMax = zMin + te.width - 2 * tankHullWidth;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(0, clampedLevel - totalHeight, 0);
 		FluidRenderer.renderTiledFluidBB(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, buffer, ms, light, false);
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override
-	public boolean isGlobalRenderer(FluidTankTileEntity te) {
+	public boolean shouldRenderOffScreen(FluidTankTileEntity te) {
 		return te.isController();
 	}
 

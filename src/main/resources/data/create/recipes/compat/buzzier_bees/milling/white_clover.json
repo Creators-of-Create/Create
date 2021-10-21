@@ -2,13 +2,13 @@
   "conditions": [
     {
       "type": "forge:mod_loaded",
-      "modid": "buzzierbees"
+      "modid": "buzzier_bees"
     }
   ],
   "type": "create:milling",
   "ingredients": [
     {
-      "item": "buzzierbees:white_clover"
+      "item": "buzzier_bees:white_clover"
     }
   ],
   "results": [

@@ -19,25 +19,25 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 
 	public HeaterParticle(ClientWorld worldIn, float r, float g, float b, double x, double y, double z, double vx, double vy,
 						  double vz, IAnimatedSprite spriteSet) {
-		super(worldIn, x, y, z, spriteSet, worldIn.rand.nextFloat() * .5f);
+		super(worldIn, x, y, z, spriteSet, worldIn.random.nextFloat() * .5f);
 
 		this.animatedSprite = spriteSet;
 
-		this.motionX = this.motionX * (double) 0.01F + vx;
-		this.motionY = this.motionY * (double) 0.01F + vy;
-		this.motionZ = this.motionZ * (double) 0.01F + vz;
+		this.xd = this.xd * (double) 0.01F + vx;
+		this.yd = this.yd * (double) 0.01F + vy;
+		this.zd = this.zd * (double) 0.01F + vz;
 
-		this.particleRed = r;
-		this.particleGreen = g;
-		this.particleBlue = b;
+		this.rCol = r;
+		this.gCol = g;
+		this.bCol = b;
 
-		this.posX += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F;
-		this.posY += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F;
-		this.posZ += (this.rand.nextFloat() - this.rand.nextFloat()) * 0.05F;
+		this.x += (this.random.nextFloat() - this.random.nextFloat()) * 0.05F;
+		this.y += (this.random.nextFloat() - this.random.nextFloat()) * 0.05F;
+		this.z += (this.random.nextFloat() - this.random.nextFloat()) * 0.05F;
 
-		this.maxAge = (int) (8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
-		this.particleScale *= 1.875F;
-		this.selectSpriteWithAge(animatedSprite);
+		this.lifetime = (int) (8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
+		this.quadSize *= 1.875F;
+		this.setSpriteFromAge(animatedSprite);
 
 	}
 
@@ -47,23 +47,23 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 	}
 
 	@Override
-	public float getScale(float p_217561_1_) {
-		float f = ((float) this.age + p_217561_1_) / (float) this.maxAge;
-		return this.particleScale * (1.0F - f * f * 0.5F);
+	public float getQuadSize(float p_217561_1_) {
+		float f = ((float) this.age + p_217561_1_) / (float) this.lifetime;
+		return this.quadSize * (1.0F - f * f * 0.5F);
 	}
 
 	@Override
 	public void move(double x, double y, double z) {
 		this.setBoundingBox(this.getBoundingBox()
-			.offset(x, y, z));
-		this.resetPositionToBB();
+			.move(x, y, z));
+		this.setLocationFromBoundingbox();
 	}
 
 	@Override
-	public int getBrightnessForRender(float p_189214_1_) {
-		float f = ((float) this.age + p_189214_1_) / (float) this.maxAge;
+	public int getLightColor(float p_189214_1_) {
+		float f = ((float) this.age + p_189214_1_) / (float) this.lifetime;
 		f = MathHelper.clamp(f, 0.0F, 1.0F);
-		int i = super.getBrightnessForRender(p_189214_1_);
+		int i = super.getLightColor(p_189214_1_);
 		int j = i & 255;
 		int k = i >> 16 & 255;
 		j = j + (int) (f * 15.0F * 16.0F);
@@ -76,20 +76,20 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 
 	@Override
 	public void tick() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		if (this.age++ >= this.maxAge) {
-			this.setExpired();
+		this.xo = this.x;
+		this.yo = this.y;
+		this.zo = this.z;
+		if (this.age++ >= this.lifetime) {
+			this.remove();
 		} else {
-			this.selectSpriteWithAge(animatedSprite);
-			this.move(this.motionX, this.motionY, this.motionZ);
-			this.motionX *= (double) 0.96F;
-			this.motionY *= (double) 0.96F;
-			this.motionZ *= (double) 0.96F;
+			this.setSpriteFromAge(animatedSprite);
+			this.move(this.xd, this.yd, this.zd);
+			this.xd *= (double) 0.96F;
+			this.yd *= (double) 0.96F;
+			this.zd *= (double) 0.96F;
 			if (this.onGround) {
-				this.motionX *= (double) 0.7F;
-				this.motionZ *= (double) 0.7F;
+				this.xd *= (double) 0.7F;
+				this.zd *= (double) 0.7F;
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 		}
 
 		@Override
-		public Particle makeParticle(HeaterParticleData data, ClientWorld worldIn, double x, double y, double z, double vx,
+		public Particle createParticle(HeaterParticleData data, ClientWorld worldIn, double x, double y, double z, double vx,
 			double vy, double vz) {
 			return new HeaterParticle(worldIn, data.r, data.g, data.b, x, y, z, vx, vy, vz, this.spriteSet);
 		}

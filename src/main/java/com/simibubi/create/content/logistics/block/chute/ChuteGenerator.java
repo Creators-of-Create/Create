@@ -20,14 +20,14 @@ public class ChuteGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(ChuteBlock.FACING));
+		return horizontalAngle(state.getValue(ChuteBlock.FACING));
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		boolean horizontal = state.get(ChuteBlock.FACING) != Direction.DOWN;
-		ChuteBlock.Shape shape = state.get(ChuteBlock.SHAPE);
+		boolean horizontal = state.getValue(ChuteBlock.FACING) != Direction.DOWN;
+		ChuteBlock.Shape shape = state.getValue(ChuteBlock.SHAPE);
 
 		if (!horizontal)
 			return shape == Shape.NORMAL ? AssetLookup.partialBaseModel(ctx, prov)

@@ -15,6 +15,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.actors.SeatEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
@@ -57,7 +58,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final DataParameter<Boolean> STALLED =
-		EntityDataManager.createKey(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
+			EntityDataManager.defineId(AbstractContraptionEntity.class, DataSerializers.BOOLEAN);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -76,7 +77,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		this.contraption = contraption;
 		if (contraption == null)
 			return;
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		contraption.onEntityCreated(this);
 	}
@@ -86,7 +87,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	protected void contraptionInitialize() {
-		contraption.onEntityInitialize(world, this);
+		contraption.onEntityInitialize(level, this);
 		initialized = true;
 	}
 
@@ -96,32 +97,32 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	public void addSittingPassenger(Entity passenger, int seatIndex) {
 		passenger.startRiding(this, true);
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		contraption.getSeatMapping()
-			.put(passenger.getUniqueID(), seatIndex);
+			.put(passenger.getUUID(), seatIndex);
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionSeatMappingPacket(getEntityId(), contraption.getSeatMapping()));
+			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
 	}
 
 	@Override
 	protected void removePassenger(Entity passenger) {
 		Vector3d transformedVector = getPassengerPosition(passenger, 1);
 		super.removePassenger(passenger);
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		if (transformedVector != null)
 			passenger.getPersistentData()
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
-			.remove(passenger.getUniqueID());
+			.remove(passenger.getUUID());
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionSeatMappingPacket(getEntityId(), contraption.getSeatMapping()));
+			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
 	}
 
 	@Override
-	public void updatePassengerPosition(Entity passenger, IMoveCallback callback) {
-		if (!isPassenger(passenger))
+	public void positionRider(Entity passenger, IMoveCallback callback) {
+		if (!hasPassenger(passenger))
 			return;
 		Vector3d transformedVector = getPassengerPosition(passenger, 1);
 		if (transformedVector == null)
@@ -130,7 +131,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	protected Vector3d getPassengerPosition(Entity passenger, float partialTicks) {
-		UUID id = passenger.getUniqueID();
+		UUID id = passenger.getUUID();
 		if (passenger instanceof OrientedContraptionEntity) {
 			BlockPos localPos = contraption.getBearingPosOf(id);
 			if (localPos != null)
@@ -140,18 +141,18 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 
 		AxisAlignedBB bb = passenger.getBoundingBox();
-		double ySize = bb.getYSize();
+		double ySize = bb.getYsize();
 		BlockPos seat = contraption.getSeatOf(id);
 		if (seat == null)
 			return null;
-		Vector3d transformedVector = toGlobalVector(Vector3d.of(seat)
-			.add(.5, passenger.getYOffset() + ySize - .15f, .5), partialTicks).add(VecHelper.getCenterOf(BlockPos.ZERO))
+		Vector3d transformedVector = toGlobalVector(Vector3d.atLowerCornerOf(seat)
+			.add(.5, passenger.getMyRidingOffset() + ySize - .15f, .5), partialTicks).add(VecHelper.getCenterOf(BlockPos.ZERO))
 				.subtract(0.5, ySize, 0.5);
 		return transformedVector;
 	}
 
 	@Override
-	protected boolean canFitPassenger(Entity p_184219_1_) {
+	protected boolean canAddPassenger(Entity p_184219_1_) {
 		if (p_184219_1_ instanceof OrientedContraptionEntity)
 			return true;
 		return contraption.getSeatMapping()
@@ -164,7 +165,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		int indexOfSeat = contraption.getSeats()
 			.indexOf(localPos);
 		if (indexOfSeat == -1)
-			return false;
+			return contraption.interactors.containsKey(localPos)
+				&& contraption.interactors.get(localPos).handlePlayerInteraction(player, interactionHand, localPos, this);
 
 		// Eject potential existing passenger
 		Entity toDismount = null;
@@ -174,7 +176,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				continue;
 			for (Entity entity : getPassengers()) {
 				if (!entry.getKey()
-					.equals(entity.getUniqueID()))
+					.equals(entity.getUUID()))
 					continue;
 				if (entity instanceof PlayerEntity)
 					return false;
@@ -182,14 +184,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			}
 		}
 
-		if (toDismount != null && !world.isRemote) {
+		if (toDismount != null && !level.isClientSide) {
 			Vector3d transformedVector = getPassengerPosition(toDismount, 1);
 			toDismount.stopRiding();
 			if (transformedVector != null)
-				toDismount.setPositionAndUpdate(transformedVector.x, transformedVector.y, transformedVector.z);
+				toDismount.teleportTo(transformedVector.x, transformedVector.y, transformedVector.z);
 		}
 
-		if (world.isRemote)
+		if (level.isClientSide)
 			return true;
 		addSittingPassenger(player, indexOfSeat);
 		return true;
@@ -227,14 +229,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 				.incrementAndGet() > 3)
 				iterator.remove();
 
-		prevPosX = getX();
-		prevPosY = getY();
-		prevPosZ = getZ();
+		xo = getX();
+		yo = getY();
+		zo = getZ();
 		prevPosInvalid = false;
 
 		if (!initialized)
 			contraptionInitialize();
-		contraption.onEntityTick(world);
+		contraption.onEntityTick(level);
 		tickContraption();
 		super.tick();
 	}
@@ -248,7 +250,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public void tickActors() {
 		boolean stalledPreviously = contraption.stalled;
 
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			contraption.stalled = false;
 
 		ticking = true;
@@ -285,7 +287,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			contraption.stalled |= context.stall;
 		}
 		if (!isAlive()) {
-			contraption.stop(world);
+			contraption.stop(level);
 			return;
 		}
 		ticking = false;
@@ -293,7 +295,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
 				continue;
-			if (!contraption.stabilizedSubContraptions.containsKey(entity.getUniqueID()))
+			if (!contraption.stabilizedSubContraptions.containsKey(entity.getUUID()))
 				continue;
 			OrientedContraptionEntity orientedCE = (OrientedContraptionEntity) entity;
 			if (orientedCE.contraption != null && orientedCE.contraption.stalled) {
@@ -302,10 +304,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			}
 		}
 
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			if (!stalledPreviously && contraption.stalled)
 				onContraptionStalled();
-			dataManager.set(STALLED, contraption.stalled);
+			entityData.set(STALLED, contraption.stalled);
 			return;
 		}
 
@@ -314,7 +316,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	protected void onContraptionStalled() {
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionStallPacket(getEntityId(), getX(), getY(), getZ(), getStalledAngle()));
+			new ContraptionStallPacket(getId(), getX(), getY(), getZ(), getStalledAngle()));
 	}
 
 	protected boolean shouldActorTrigger(MovementContext context, BlockInfo blockInfo, MovementBehaviour actor,
@@ -332,11 +334,11 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public void move(double x, double y, double z) {
-		setPosition(getX() + x, getY() + y, getZ() + z);
+		setPos(getX() + x, getY() + y, getZ() + z);
 	}
 
 	public Vector3d getAnchorVec() {
-		return getPositionVec();
+		return position();
 	}
 
 	public float getYawOffset() {
@@ -344,15 +346,15 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	public void setPosition(double x, double y, double z) {
-		super.setPosition(x, y, z);
+	public void setPos(double x, double y, double z) {
+		super.setPos(x, y, z);
 		if (contraption == null)
 			return;
 		AxisAlignedBB cbox = contraption.bounds;
 		if (cbox == null)
 			return;
 		Vector3d actualVec = getAnchorVec();
-		setBoundingBox(cbox.offset(actualVec));
+		setBoundingBox(cbox.move(actualVec));
 	}
 
 	public static float yawFromVector(Vector3d vec) {
@@ -367,16 +369,16 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		@SuppressWarnings("unchecked")
 		EntityType.Builder<AbstractContraptionEntity> entityBuilder =
 			(EntityType.Builder<AbstractContraptionEntity>) builder;
-		return entityBuilder.size(1, 1);
+		return entityBuilder.sized(1, 1);
 	}
 
 	@Override
-	protected void registerData() {
-		this.dataManager.register(STALLED, false);
+	protected void defineSynchedData() {
+		this.entityData.define(STALLED, false);
 	}
 
 	@Override
-	public IPacket<?> createSpawnPacket() {
+	public IPacket<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
@@ -391,23 +393,23 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			byte[] byteArray = dataOutput.toByteArray();
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
-				Create.logger.warn("Could not send Contraption Spawn Data (Packet too big): "
-					+ getContraption().getType().id + " @" + getPositionVec() + " (" + getUniqueID().toString() + ")");
-				buffer.writeCompoundTag(new CompoundNBT());
+				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
+						+ getContraption().getType().id + " @" + position() + " (" + getUUID().toString() + ")");
+				buffer.writeNbt(new CompoundNBT());
 				return;
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			buffer.writeCompoundTag(new CompoundNBT());
+			buffer.writeNbt(new CompoundNBT());
 			return;
 		}
 
-		buffer.writeCompoundTag(compound);
+		buffer.writeNbt(compound);
 	}
 
 	@Override
-	protected final void writeAdditional(CompoundNBT compound) {
+	protected final void addAdditionalSaveData(CompoundNBT compound) {
 		writeAdditional(compound, false);
 	}
 
@@ -420,22 +422,22 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@Override
 	public void readSpawnData(PacketBuffer additionalData) {
-		readAdditional(additionalData.readCompoundTag(), true);
+		readAdditional(additionalData.readNbt(), true);
 	}
 
 	@Override
-	protected final void readAdditional(CompoundNBT compound) {
+	protected final void readAdditionalSaveData(CompoundNBT compound) {
 		readAdditional(compound, false);
 	}
 
 	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
 		if (compound.isEmpty())
 			return;
-		
+
 		initialized = compound.getBoolean("Initialized");
-		contraption = Contraption.fromNBT(world, compound.getCompound("Contraption"), spawnData);
+		contraption = Contraption.fromNBT(level, compound.getCompound("Contraption"), spawnData);
 		contraption.entity = this;
-		dataManager.set(STALLED, compound.getBoolean("Stalled"));
+		entityData.set(STALLED, compound.getBoolean("Stalled"));
 	}
 
 	public void disassemble() {
@@ -448,44 +450,45 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		StructureTransform transform = makeStructureTransform();
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionDisassemblyPacket(this.getEntityId(), transform));
+			new ContraptionDisassemblyPacket(this.getId(), transform));
 
-		contraption.addBlocksToWorld(world, transform);
-		contraption.addPassengersToWorld(world, transform, getPassengers());
+		contraption.addBlocksToWorld(level, transform);
+		contraption.addPassengersToWorld(level, transform, getPassengers());
 
 		for (Entity entity : getPassengers()) {
 			if (!(entity instanceof OrientedContraptionEntity))
 				continue;
-			UUID id = entity.getUniqueID();
+			UUID id = entity.getUUID();
 			if (!contraption.stabilizedSubContraptions.containsKey(id))
 				continue;
 			BlockPos transformed = transform.apply(contraption.stabilizedSubContraptions.get(id)
 				.getConnectedPos());
-			entity.setPosition(transformed.getX(), transformed.getY(), transformed.getZ());
+			entity.setPos(transformed.getX(), transformed.getY(), transformed.getZ());
 			((AbstractContraptionEntity) entity).disassemble();
 		}
 
-		removePassengers();
+		ejectPassengers();
 		moveCollidedEntitiesOnDisassembly(transform);
+		AllSoundEvents.CONTRAPTION_DISASSEMBLE.playOnServer(level, blockPosition());
 	}
 
 	private void moveCollidedEntitiesOnDisassembly(StructureTransform transform) {
 		for (Entity entity : collidingEntities.keySet()) {
-			Vector3d localVec = toLocalVector(entity.getPositionVec(), 0);
+			Vector3d localVec = toLocalVector(entity.position(), 0);
 			Vector3d transformed = transform.apply(localVec);
-			if (world.isRemote)
-				entity.setPosition(transformed.x, transformed.y + 1 / 16f, transformed.z);
+			if (level.isClientSide)
+				entity.setPos(transformed.x, transformed.y + 1 / 16f, transformed.z);
 			else
-				entity.setPositionAndUpdate(transformed.x, transformed.y + 1 / 16f, transformed.z);
+				entity.teleportTo(transformed.x, transformed.y + 1 / 16f, transformed.z);
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void remove(boolean keepData) {
-		if (!world.isRemote && !removed && contraption != null) {
+		if (!level.isClientSide && !removed && contraption != null) {
 			if (!ticking)
-				contraption.stop(world);
+				contraption.stop(level);
 		}
 		if (contraption != null)
 			contraption.onEntityRemoved(this);
@@ -495,21 +498,21 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected abstract StructureTransform makeStructureTransform();
 
 	@Override
-	public void onKillCommand() {
-		removePassengers();
-		super.onKillCommand();
+	public void kill() {
+		ejectPassengers();
+		super.kill();
 	}
 
 	@Override
 	protected void outOfWorld() {
-		removePassengers();
+		ejectPassengers();
 		super.outOfWorld();
 	}
 
 	@Override
 	public void onRemovedFromWorld() {
 		super.onRemovedFromWorld();
-		if (world != null && world.isRemote)
+		if (level != null && level.isClientSide)
 			return;
 		getPassengers().forEach(Entity::remove);
 	}
@@ -522,12 +525,12 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	public boolean isStalled() {
-		return dataManager.get(STALLED);
+		return entityData.get(STALLED);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	static void handleStallPacket(ContraptionStallPacket packet) {
-		Entity entity = Minecraft.getInstance().world.getEntityByID(packet.entityID);
+		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
 		if (!(entity instanceof AbstractContraptionEntity))
 			return;
 		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
@@ -536,7 +539,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@OnlyIn(Dist.CLIENT)
 	static void handleDisassemblyPacket(ContraptionDisassemblyPacket packet) {
-		Entity entity = Minecraft.getInstance().world.getEntityByID(packet.entityID);
+		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
 		if (!(entity instanceof AbstractContraptionEntity))
 			return;
 		AbstractContraptionEntity ce = (AbstractContraptionEntity) entity;
@@ -549,8 +552,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public CompoundNBT writeWithoutTypeId(CompoundNBT nbt) {
-		Vector3d vec = getPositionVec();
+	public CompoundNBT saveWithoutId(CompoundNBT nbt) {
+		Vector3d vec = position();
 		List<Entity> passengers = getPassengers();
 
 		for (Entity entity : passengers) {
@@ -558,43 +561,43 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			entity.removed = true;
 
 			// Gather passengers into same chunk when saving
-			Vector3d prevVec = entity.getPositionVec();
-			entity.setPos(vec.x, prevVec.y, vec.z);
+			Vector3d prevVec = entity.position();
+			entity.setPosRaw(vec.x, prevVec.y, vec.z);
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
 			entity.removed = false;
 		}
 
-		CompoundNBT tag = super.writeWithoutTypeId(nbt);
+		CompoundNBT tag = super.saveWithoutId(nbt);
 		return tag;
 	}
 
 	@Override
 	// Make sure nothing can move contraptions out of the way
-	public void setMotion(Vector3d motionIn) {}
+	public void setDeltaMovement(Vector3d motionIn) {}
 
 	@Override
-	public PushReaction getPushReaction() {
+	public PushReaction getPistonPushReaction() {
 		return PushReaction.IGNORE;
 	}
 
 	public void setContraptionMotion(Vector3d vec) {
-		super.setMotion(vec);
+		super.setDeltaMovement(vec);
 	}
 
 	@Override
-	public boolean canBeCollidedWith() {
+	public boolean isPickable() {
 		return false;
 	}
 
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
+	public boolean hurt(DamageSource source, float amount) {
 		return false;
 	}
 
 	public Vector3d getPrevPositionVec() {
-		return prevPosInvalid ? getPositionVec() : new Vector3d(prevPosX, prevPosY, prevPosZ);
+		return prevPosInvalid ? position() : new Vector3d(xo, yo, zo);
 	}
 
 	public abstract ContraptionRotationState getRotationState();
@@ -604,13 +607,13 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return Vector3d.ZERO;
 		Vector3d contactPoint = toGlobalVector(toLocalVector(globalContactPoint, 0), 1);
 		return contactPoint.subtract(globalContactPoint)
-			.add(getPositionVec().subtract(getPrevPositionVec()));
+			.add(position().subtract(getPrevPositionVec()));
 	}
 
 	public boolean canCollideWith(Entity e) {
 		if (e instanceof PlayerEntity && e.isSpectator())
 			return false;
-		if (e.noClip)
+		if (e.noPhysics)
 			return false;
 		if (e instanceof HangingEntity)
 			return false;
@@ -622,21 +625,21 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			return false;
 		if (e instanceof ProjectileEntity)
 			return false;
-		if (e.getRidingEntity() != null)
+		if (e.getVehicle() != null)
 			return false;
 
-		Entity riding = this.getRidingEntity();
+		Entity riding = this.getVehicle();
 		while (riding != null) {
 			if (riding == e)
 				return false;
-			riding = riding.getRidingEntity();
+			riding = riding.getVehicle();
 		}
 
-		return e.getPushReaction() == PushReaction.NORMAL;
+		return e.getPistonPushReaction() == PushReaction.NORMAL;
 	}
 
 	@Override
-	public boolean isOnePlayerRiding() {
+	public boolean hasOnePlayerPassenger() {
 		return false;
 	}
 
@@ -676,23 +679,24 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	}
 
-	// @Override //TODO find 1.16 replacement
-	// public void updateAquatics() {
-	/*
-	 * Override this with an empty method to reduce enormous calculation time when contraptions are in water
-	 * WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
-	 * - Fluids will not try to change contraption movement direction
-	 * - this.inWater and this.isInWater() will return unreliable data
-	 * - entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
-	 * - fall distance is not reset when the contraption is in water
-	 * - this.eyesInWater and this.canSwim() will always be false
-	 * - swimming state will never be updated
-	 */
-	// extinguish();
-	// }
 
 	@Override
-	public void setFire(int p_70015_1_) {
+	protected boolean updateInWaterStateAndDoFluidPushing() {
+		/*
+		 * Override this with an empty method to reduce enormous calculation time when contraptions are in water
+		 * WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
+		 * - Fluids will not try to change contraption movement direction
+		 * - this.inWater and this.isInWater() will return unreliable data
+		 * - entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
+		 * - fall distance is not reset when the contraption is in water
+		 * - this.eyesInWater and this.canSwim() will always be false
+		 * - swimming state will never be updated
+		 */
+		return false;
+	}
+
+	@Override
+	public void setSecondsOnFire(int p_70015_1_) {
 		// Contraptions no longer catch fire
 	}
 

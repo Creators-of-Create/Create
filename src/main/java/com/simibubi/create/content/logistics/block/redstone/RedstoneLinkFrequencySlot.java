@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -22,18 +22,18 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 
 	@Override
 	protected Vector3d getLocalOffset(BlockState state) {
-		Direction facing = state.get(RedstoneLinkBlock.FACING);
+		Direction facing = state.getValue(RedstoneLinkBlock.FACING);
 		Vector3d location = vertical;
 
 		if (facing.getAxis()
 			.isHorizontal()) {
 			location = horizontal;
-			if (!isFirst())
+			if (isFirst())
 				location = location.add(0, 5 / 16f, 0);
 			return rotateHorizontally(state, location);
 		}
 
-		if (!isFirst())
+		if (isFirst())
 			location = location.add(0, 0, 5 / 16f);
 		location = VecHelper.rotateCentered(location, facing == Direction.DOWN ? 180 : 0, Axis.X);
 		return location;
@@ -41,11 +41,11 @@ public class RedstoneLinkFrequencySlot extends ValueBoxTransform.Dual {
 
 	@Override
 	protected void rotate(BlockState state, MatrixStack ms) {
-		Direction facing = state.get(RedstoneLinkBlock.FACING);
+		Direction facing = state.getValue(RedstoneLinkBlock.FACING);
 		float yRot = facing.getAxis()
 			.isVertical() ? 0 : AngleHelper.horizontalAngle(facing) + 180;
 		float xRot = facing == Direction.UP ? 90 : facing == Direction.DOWN ? 270 : 0;
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.rotateY(yRot)
 			.rotateX(xRot);
 	}

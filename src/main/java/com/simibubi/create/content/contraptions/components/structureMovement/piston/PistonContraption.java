@@ -15,7 +15,7 @@ import java.util.Queue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementTraits;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
 import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
@@ -70,7 +70,7 @@ public class PistonContraption extends TranslatingContraption {
 		if (blocks.size() == count) { // no new blocks added
 			bounds = pistonExtensionCollisionBox;
 		} else {
-			bounds = bounds.union(pistonExtensionCollisionBox);
+			bounds = bounds.minmax(pistonExtensionCollisionBox);
 		}
 		startMoving(world);
 		return true;
@@ -79,7 +79,7 @@ public class PistonContraption extends TranslatingContraption {
 	private boolean collectExtensions(World world, BlockPos pos, Direction direction) throws AssemblyException {
 		List<BlockInfo> poles = new ArrayList<>();
 		BlockPos actualStart = pos;
-		BlockState nextBlock = world.getBlockState(actualStart.offset(direction));
+		BlockState nextBlock = world.getBlockState(actualStart.relative(direction));
 		int extensionsInFront = 0;
 		BlockState blockState = world.getBlockState(pos);
 		boolean sticky = isStickyPiston(blockState);
@@ -87,17 +87,17 @@ public class PistonContraption extends TranslatingContraption {
 		if (!isPiston(blockState))
 			return false;
 
-		if (blockState.get(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
-			while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis()) || isPistonHead(nextBlock) && nextBlock.get(FACING) == direction) {
+		if (blockState.getValue(MechanicalPistonBlock.STATE) == PistonState.EXTENDED) {
+			while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis()) || isPistonHead(nextBlock) && nextBlock.getValue(FACING) == direction) {
 
-				actualStart = actualStart.offset(direction);
-				poles.add(new BlockInfo(actualStart, nextBlock.with(FACING, direction), null));
+				actualStart = actualStart.relative(direction);
+				poles.add(new BlockInfo(actualStart, nextBlock.setValue(FACING, direction), null));
 				extensionsInFront++;
 
 				if (isPistonHead(nextBlock))
 					break;
 
-				nextBlock = world.getBlockState(actualStart.offset(direction));
+				nextBlock = world.getBlockState(actualStart.relative(direction));
 				if (extensionsInFront > MechanicalPistonBlock.maxAllowedPistonPoles())
 					throw AssemblyException.tooManyPistonPoles();
 			}
@@ -105,32 +105,32 @@ public class PistonContraption extends TranslatingContraption {
 
 		if (extensionsInFront == 0)
 			poles.add(new BlockInfo(pos, MECHANICAL_PISTON_HEAD.getDefaultState()
-				.with(FACING, direction)
-				.with(BlockStateProperties.PISTON_TYPE, sticky ? PistonType.STICKY : PistonType.DEFAULT), null));
+				.setValue(FACING, direction)
+				.setValue(BlockStateProperties.PISTON_TYPE, sticky ? PistonType.STICKY : PistonType.DEFAULT), null));
 		else
 			poles.add(new BlockInfo(pos, PISTON_EXTENSION_POLE.getDefaultState()
-				.with(FACING, direction), null));
+				.setValue(FACING, direction), null));
 
 		BlockPos end = pos;
-		nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
+		nextBlock = world.getBlockState(end.relative(direction.getOpposite()));
 		int extensionsInBack = 0;
 
 		while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis())) {
-			end = end.offset(direction.getOpposite());
-			poles.add(new BlockInfo(end, nextBlock.with(FACING, direction), null));
+			end = end.relative(direction.getOpposite());
+			poles.add(new BlockInfo(end, nextBlock.setValue(FACING, direction), null));
 			extensionsInBack++;
-			nextBlock = world.getBlockState(end.offset(direction.getOpposite()));
+			nextBlock = world.getBlockState(end.relative(direction.getOpposite()));
 
 			if (extensionsInFront + extensionsInBack > MechanicalPistonBlock.maxAllowedPistonPoles())
 				throw AssemblyException.tooManyPistonPoles();
 		}
 
-		anchor = pos.offset(direction, initialExtensionProgress + 1);
+		anchor = pos.relative(direction, initialExtensionProgress + 1);
 		extensionLength = extensionsInBack + extensionsInFront;
 		initialExtensionProgress = extensionsInFront;
 		pistonExtensionCollisionBox = new AxisAlignedBB(
-				BlockPos.ZERO.offset(direction, -1),
-				BlockPos.ZERO.offset(direction, -extensionLength - 1)).expand(1,
+				BlockPos.ZERO.relative(direction, -1),
+				BlockPos.ZERO.relative(direction, -extensionLength - 1)).expandTowards(1,
 						1, 1);
 
 		if (extensionLength == 0)
@@ -139,7 +139,7 @@ public class PistonContraption extends TranslatingContraption {
 		bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
 		for (BlockInfo pole : poles) {
-			BlockPos relPos = pole.pos.offset(direction, -extensionsInFront);
+			BlockPos relPos = pole.pos.relative(direction, -extensionsInFront);
 			BlockPos localPos = relPos.subtract(anchor);
 			getBlocks().put(localPos, new BlockInfo(localPos, pole.state, null));
 			//pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
@@ -156,34 +156,34 @@ public class PistonContraption extends TranslatingContraption {
 	@Override
 	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) throws AssemblyException {
 		frontier.clear();
-		boolean sticky = isStickyPiston(world.getBlockState(pos.offset(orientation, -1)));
+		boolean sticky = isStickyPiston(world.getBlockState(pos.relative(orientation, -1)));
 		boolean retracting = direction != orientation;
 		if (retracting && !sticky)
 			return true;
 		for (int offset = 0; offset <= AllConfigs.SERVER.kinetics.maxChassisRange.get(); offset++) {
 			if (offset == 1 && retracting)
 				return true;
-			BlockPos currentPos = pos.offset(orientation, offset + initialExtensionProgress);
+			BlockPos currentPos = pos.relative(orientation, offset + initialExtensionProgress);
 			if (retracting && World.isOutsideBuildHeight(currentPos))
 				return true;
-			if (!world.isBlockPresent(currentPos))
+			if (!world.isLoaded(currentPos))
 				throw AssemblyException.unloadedChunk(currentPos);
 			BlockState state = world.getBlockState(currentPos);
-			if (!BlockMovementTraits.movementNecessary(state, world, currentPos))
+			if (!BlockMovementChecks.isMovementNecessary(state, world, currentPos))
 				return true;
-			if (BlockMovementTraits.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
+			if (BlockMovementChecks.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
 				return true;
-			if (isPistonHead(state) && state.get(FACING) == direction.getOpposite())
+			if (isPistonHead(state) && state.getValue(FACING) == direction.getOpposite())
 				return true;
-			if (!BlockMovementTraits.movementAllowed(state, world, currentPos))
+			if (!BlockMovementChecks.isMovementAllowed(state, world, currentPos))
 				if (retracting)
 					return true;
 				else
 					throw AssemblyException.unmovableBlock(currentPos, state);
-			if (retracting && state.getPushReaction() == PushReaction.PUSH_ONLY)
+			if (retracting && state.getPistonPushReaction() == PushReaction.PUSH_ONLY)
 				return true;
 			frontier.add(currentPos);
-			if (BlockMovementTraits.notSupportive(state, orientation))
+			if (BlockMovementChecks.isNotSupportive(state, orientation))
 				return true;
 		}
 		return true;
@@ -191,25 +191,25 @@ public class PistonContraption extends TranslatingContraption {
 
 	@Override
 	public void addBlock(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
-		super.addBlock(pos.offset(orientation, -initialExtensionProgress), capture);
+		super.addBlock(pos.relative(orientation, -initialExtensionProgress), capture);
 	}
 
 	@Override
 	public BlockPos toLocalPos(BlockPos globalPos) {
 		return globalPos.subtract(anchor)
-			.offset(orientation, -initialExtensionProgress);
+			.relative(orientation, -initialExtensionProgress);
 	}
 
 	@Override
 	protected boolean customBlockPlacement(IWorld world, BlockPos pos, BlockState state) {
-		BlockPos pistonPos = anchor.offset(orientation, -1);
+		BlockPos pistonPos = anchor.relative(orientation, -1);
 		BlockState pistonState = world.getBlockState(pistonPos);
-		TileEntity te = world.getTileEntity(pistonPos);
+		TileEntity te = world.getBlockEntity(pistonPos);
 		if (pos.equals(pistonPos)) {
 			if (te == null || te.isRemoved())
 				return true;
 			if (!isExtensionPole(state) && isPiston(pistonState))
-				world.setBlockState(pistonPos, pistonState.with(MechanicalPistonBlock.STATE, PistonState.RETRACTED),
+				world.setBlock(pistonPos, pistonState.setValue(MechanicalPistonBlock.STATE, PistonState.RETRACTED),
 					3 | 16);
 			return true;
 		}
@@ -218,10 +218,10 @@ public class PistonContraption extends TranslatingContraption {
 
 	@Override
 	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
-		BlockPos pistonPos = anchor.offset(orientation, -1);
+		BlockPos pistonPos = anchor.relative(orientation, -1);
 		BlockState blockState = world.getBlockState(pos);
 		if (pos.equals(pistonPos) && isPiston(blockState)) {
-			world.setBlockState(pos, blockState.with(MechanicalPistonBlock.STATE, PistonState.MOVING), 66 | 16);
+			world.setBlock(pos, blockState.setValue(MechanicalPistonBlock.STATE, PistonState.MOVING), 66 | 16);
 			return true;
 		}
 		return false;
@@ -232,7 +232,7 @@ public class PistonContraption extends TranslatingContraption {
 		super.readNBT(world, nbt, spawnData);
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		extensionLength = nbt.getInt("ExtensionLength");
-		orientation = Direction.byIndex(nbt.getInt("Orientation"));
+		orientation = Direction.from3DDataValue(nbt.getInt("Orientation"));
 	}
 
 	@Override
@@ -240,7 +240,7 @@ public class PistonContraption extends TranslatingContraption {
 		CompoundNBT tag = super.writeNBT(spawnPacket);
 		tag.putInt("InitialLength", initialExtensionProgress);
 		tag.putInt("ExtensionLength", extensionLength);
-		tag.putInt("Orientation", orientation.getIndex());
+		tag.putInt("Orientation", orientation.get3DDataValue());
 		return tag;
 	}
 

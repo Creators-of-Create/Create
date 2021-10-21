@@ -35,7 +35,7 @@ public class ItemDrainItemHandler implements IItemHandler {
 			return stack;
 		
 		ItemStack returned = ItemStack.EMPTY;
-		if (stack.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(te.getWorld(), stack)) {
+		if (stack.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(te.getLevel(), stack)) {
 			returned = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
 			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
 		}

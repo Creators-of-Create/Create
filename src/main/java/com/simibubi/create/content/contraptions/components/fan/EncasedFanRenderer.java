@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlockPartials;
@@ -9,7 +10,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -28,21 +28,21 @@ public class EncasedFanRenderer extends KineticTileEntityRenderer {
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		Direction direction = te.getBlockState()
-				.get(FACING);
-		IVertexBuilder vb = buffer.getBuffer(RenderType.getCutoutMipped());
+				.getValue(FACING);
+		IVertexBuilder vb = buffer.getBuffer(RenderType.cutoutMipped());
 
-		int lightBehind = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction.getOpposite()));
-		int lightInFront = WorldRenderer.getLightmapCoordinates(te.getWorld(), te.getPos().offset(direction));
+		int lightBehind = WorldRenderer.getLightColor(te.getLevel(), te.getBlockPos().relative(direction.getOpposite()));
+		int lightInFront = WorldRenderer.getLightColor(te.getLevel(), te.getBlockPos().relative(direction));
 
 		SuperByteBuffer shaftHalf =
 				PartialBufferer.getFacing(AllBlockPartials.SHAFT_HALF, te.getBlockState(), direction.getOpposite());
 		SuperByteBuffer fanInner =
 				PartialBufferer.getFacing(AllBlockPartials.ENCASED_FAN_INNER, te.getBlockState(), direction.getOpposite());
 
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 		float speed = te.getSpeed() * 5;
 		if (speed > 0)
 			speed = MathHelper.clamp(speed, 80, 64 * 20);

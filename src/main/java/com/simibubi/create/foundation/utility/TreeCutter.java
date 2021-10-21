@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -13,6 +14,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.AllTags;
+import com.simibubi.create.compat.Mods;
+import com.simibubi.create.compat.dynamictrees.DynamicTree;
 
 import net.minecraft.block.BambooBlock;
 import net.minecraft.block.Block;
@@ -36,6 +39,17 @@ import net.minecraft.world.World;
 public class TreeCutter {
 	public static final Tree NO_TREE = new Tree(Collections.emptyList(), Collections.emptyList());
 
+	public static boolean canDynamicTreeCutFrom(Block startBlock) {
+		return Mods.DYNAMICTREES.runIfInstalled(() -> () -> DynamicTree.isDynamicBranch(startBlock)).orElse(false);
+	}
+
+	@Nonnull
+	public static Optional<AbstractBlockBreakQueue> findDynamicTree(Block startBlock, BlockPos pos) {
+		if (canDynamicTreeCutFrom(startBlock)) 
+			return Mods.DYNAMICTREES.runIfInstalled(() -> () -> new DynamicTree(pos));
+		return Optional.empty();
+	}
+
 	/**
 	 * Finds a tree at the given pos. Block at the position should be air
 	 *
@@ -54,11 +68,11 @@ public class TreeCutter {
 		List<BlockPos> frontier = new LinkedList<>();
 
 		// Bamboo, Sugar Cane, Cactus
-		BlockState stateAbove = reader.getBlockState(pos.up());
+		BlockState stateAbove = reader.getBlockState(pos.above());
 		if (isVerticalPlant(stateAbove)) {
-			logs.add(pos.up());
+			logs.add(pos.above());
 			for (int i = 1; i < 256; i++) {
-				BlockPos current = pos.up(i);
+				BlockPos current = pos.above(i);
 				if (!isVerticalPlant(reader.getBlockState(current)))
 					break;
 				logs.add(current);
@@ -69,13 +83,13 @@ public class TreeCutter {
 
 		// Chorus
 		if (isChorus(stateAbove)) {
-			frontier.add(pos.up());
+			frontier.add(pos.above());
 			while (!frontier.isEmpty()) {
 				BlockPos current = frontier.remove(0);
 				visited.add(current);
 				logs.add(current);
 				for (Direction direction : Iterate.directions) {
-					BlockPos offset = current.offset(direction);
+					BlockPos offset = current.relative(direction);
 					if (visited.contains(offset))
 						continue;
 					if (!isChorus(reader.getBlockState(offset)))
@@ -92,7 +106,7 @@ public class TreeCutter {
 			return NO_TREE;
 
 		visited.add(pos);
-		BlockPos.getAllInBox(pos.add(-1, 0, -1), pos.add(1, 1, 1))
+		BlockPos.betweenClosedStream(pos.offset(-1, 0, -1), pos.offset(1, 1, 1))
 			.forEach(p -> frontier.add(new BlockPos(p)));
 
 		// Find all logs
@@ -128,15 +142,15 @@ public class TreeCutter {
 			if (isGenericLeaf)
 				leaves.add(currentPos);
 
-			int distance = !isLeaf ? 0 : blockState.get(LeavesBlock.DISTANCE);
+			int distance = !isLeaf ? 0 : blockState.getValue(LeavesBlock.DISTANCE);
 			for (Direction direction : Iterate.directions) {
-				BlockPos offset = currentPos.offset(direction);
+				BlockPos offset = currentPos.relative(direction);
 				if (visited.contains(offset))
 					continue;
 				BlockState state = reader.getBlockState(offset);
 				BlockPos subtract = offset.subtract(pos);
 				int horizontalDistance = Math.max(Math.abs(subtract.getX()), Math.abs(subtract.getZ()));
-				if (isLeaf(state) && state.get(LeavesBlock.DISTANCE) > distance
+				if (isLeaf(state) && state.getValue(LeavesBlock.DISTANCE) > distance
 					|| isNonDecayingLeaf(state) && horizontalDistance < 4)
 					frontier.add(offset);
 			}
@@ -175,7 +189,7 @@ public class TreeCutter {
 		Set<BlockPos> visited = new HashSet<>();
 		List<BlockPos> frontier = new LinkedList<>();
 		frontier.add(pos);
-		frontier.add(pos.up());
+		frontier.add(pos.above());
 		int posY = pos.getY();
 
 		while (!frontier.isEmpty()) {
@@ -185,7 +199,7 @@ public class TreeCutter {
 
 			if (!isLog(reader.getBlockState(currentPos)))
 				continue;
-			if (!lowerLayer && !pos.equals(currentPos.down()) && isLog(reader.getBlockState(currentPos.down())))
+			if (!lowerLayer && !pos.equals(currentPos.below()) && isLog(reader.getBlockState(currentPos.below())))
 				return false;
 
 			for (Direction direction : Iterate.directions) {
@@ -193,7 +207,7 @@ public class TreeCutter {
 					continue;
 				if (direction == Direction.UP && !lowerLayer)
 					continue;
-				BlockPos offset = currentPos.offset(direction);
+				BlockPos offset = currentPos.relative(direction);
 				if (visited.contains(offset))
 					continue;
 				frontier.add(offset);
@@ -205,21 +219,21 @@ public class TreeCutter {
 	}
 
 	private static void addNeighbours(BlockPos pos, List<BlockPos> frontier, Set<BlockPos> visited) {
-		BlockPos.getAllInBox(pos.add(-1, -1, -1), pos.add(1, 1, 1))
+		BlockPos.betweenClosedStream(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))
 			.filter(((Predicate<BlockPos>) visited::contains).negate())
 			.forEach(p -> frontier.add(new BlockPos(p)));
 	}
 
 	private static boolean isLog(BlockState state) {
-		return state.isIn(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state);
+		return state.is(BlockTags.LOGS) || AllTags.AllBlockTags.SLIMY_LOGS.matches(state);
 	}
 
 	private static boolean isNonDecayingLeaf(BlockState state) {
-		return state.isIn(BlockTags.WART_BLOCKS) || state.getBlock() == Blocks.SHROOMLIGHT;
+		return state.is(BlockTags.WART_BLOCKS) || state.getBlock() == Blocks.SHROOMLIGHT;
 	}
 
 	private static boolean isLeaf(BlockState state) {
-		return state.contains(LeavesBlock.DISTANCE);
+		return state.hasProperty(LeavesBlock.DISTANCE);
 	}
 
 	public static class Tree extends AbstractBlockBreakQueue {

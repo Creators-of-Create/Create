@@ -33,9 +33,9 @@ public class SharedDepotBlockMethods {
 
 	public static ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
-		if (ray.getFace() != Direction.UP)
+		if (ray.getDirection() != Direction.UP)
 			return ActionResultType.PASS;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		DepotBehaviour behaviour = get(world, pos);
@@ -44,7 +44,7 @@ public class SharedDepotBlockMethods {
 		if (!behaviour.canAcceptItems.get())
 			return ActionResultType.SUCCESS;
 
-		ItemStack heldItem = player.getHeldItem(hand);
+		ItemStack heldItem = player.getItemInHand(hand);
 		boolean wasEmptyHanded = heldItem.isEmpty();
 		boolean shouldntPlaceItem = AllBlocks.MECHANICAL_ARM.isIn(heldItem);
 
@@ -52,8 +52,8 @@ public class SharedDepotBlockMethods {
 		if (!mainItemStack.isEmpty()) {
 			player.inventory.placeItemBackInInventory(world, mainItemStack);
 			behaviour.removeHeldItem();
-			world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
-				1f + Create.random.nextFloat());
+			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, .2f,
+					1f + Create.RANDOM.nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)
@@ -61,11 +61,11 @@ public class SharedDepotBlockMethods {
 
 		if (!wasEmptyHanded && !shouldntPlaceItem) {
 			TransportedItemStack transported = new TransportedItemStack(heldItem);
-			transported.insertedFrom = player.getHorizontalFacing();
+			transported.insertedFrom = player.getDirection();
 			transported.prevBeltPosition = .25f;
 			transported.beltPosition = .25f;
 			behaviour.setHeldItem(transported);
-			player.setHeldItem(hand, ItemStack.EMPTY);
+			player.setItemInHand(hand, ItemStack.EMPTY);
 			AllSoundEvents.DEPOT_SLIDE.playOnServer(world, pos);
 		}
 
@@ -82,11 +82,11 @@ public class SharedDepotBlockMethods {
 			return;
 		ItemHelper.dropContents(worldIn, pos, behaviour.processingOutputBuffer);
 		for (TransportedItemStack transportedItemStack : behaviour.incoming)
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), transportedItemStack.stack);
+			InventoryHelper.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), transportedItemStack.stack);
 		if (!behaviour.getHeldItemStack()
 			.isEmpty())
-			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), behaviour.getHeldItemStack());
-		worldIn.removeTileEntity(pos);
+			InventoryHelper.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), behaviour.getHeldItemStack());
+		worldIn.removeBlockEntity(pos);
 	}
 
 	public static void onLanded(IBlockReader worldIn, Entity entityIn) {
@@ -94,12 +94,12 @@ public class SharedDepotBlockMethods {
 			return;
 		if (!entityIn.isAlive())
 			return;
-		if (entityIn.world.isRemote)
+		if (entityIn.level.isClientSide)
 			return;
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		DirectBeltInputBehaviour inputBehaviour =
-			TileEntityBehaviour.get(worldIn, entityIn.getBlockPos(), DirectBeltInputBehaviour.TYPE);
+			TileEntityBehaviour.get(worldIn, entityIn.blockPosition(), DirectBeltInputBehaviour.TYPE);
 		if (inputBehaviour == null)
 			return;
 		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);

@@ -1,9 +1,8 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import java.nio.ByteBuffer;
-
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
+import com.jozufozu.flywheel.backend.gl.buffer.MappedBuffer;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
@@ -29,9 +28,9 @@ public class ActorData extends InstanceData {
 
     private float speed;
 
-    protected ActorData(InstancedModel<?> owner) {
-        super(owner);
-    }
+    public ActorData(Instancer<?> owner) {
+		super(owner);
+	}
 
 
     public ActorData setPosition(BlockPos pos) {
@@ -67,7 +66,7 @@ public class ActorData extends InstanceData {
     }
 
     public ActorData setRotationAxis(Vector3f axis) {
-        setRotationAxis(axis.getX(), axis.getY(), axis.getZ());
+        setRotationAxis(axis.x(), axis.y(), axis.z());
         return this;
     }
 
@@ -80,7 +79,7 @@ public class ActorData extends InstanceData {
     }
 
     public ActorData setRotationCenter(Vector3f axis) {
-        setRotationCenter(axis.getX(), axis.getY(), axis.getZ());
+        setRotationCenter(axis.x(), axis.y(), axis.z());
         return this;
     }
 
@@ -92,24 +91,24 @@ public class ActorData extends InstanceData {
         return this;
     }
 
-    public ActorData setLocalRotation(Quaternion q) {
-        this.qX = q.getX();
-        this.qY = q.getY();
-        this.qZ = q.getZ();
-        this.qW = q.getW();
-        markDirty();
-        return this;
-    }
+	public ActorData setLocalRotation(Quaternion q) {
+		this.qX = q.i();
+		this.qY = q.j();
+		this.qZ = q.k();
+		this.qW = q.r();
+		markDirty();
+		return this;
+	}
 
-    @Override
-    public void write(ByteBuffer buf) {
-        putVec3(buf, x, y, z);
-        putVec2(buf, blockLight, skyLight);
-        put(buf, rotationOffset);
-        putVec3(buf, rotationAxisX, rotationAxisY, rotationAxisZ);
-        putVec4(buf, qX, qY, qZ, qW);
-        putVec3(buf, rotationCenterX, rotationCenterY, rotationCenterZ);
-        put(buf, speed);
+	@Override
+	public void write(MappedBuffer buf) {
+		buf.putVec3(x, y, z);
+		buf.putVec2(blockLight, skyLight);
+		buf.putFloat(rotationOffset);
+		buf.putVec3(rotationAxisX, rotationAxisY, rotationAxisZ);
+		buf.putVec4(qX, qY, qZ, qW);
+		buf.putVec3(rotationCenterX, rotationCenterY, rotationCenterZ);
+		buf.putFloat(speed);
 
-    }
+	}
 }

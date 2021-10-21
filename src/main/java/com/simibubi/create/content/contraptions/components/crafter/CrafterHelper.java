@@ -7,7 +7,7 @@ import net.minecraft.world.IBlockDisplayReader;
 public class CrafterHelper {
 
 	public static MechanicalCrafterTileEntity getCrafter(IBlockDisplayReader reader, BlockPos pos) {
-		TileEntity te = reader.getTileEntity(pos);
+		TileEntity te = reader.getBlockEntity(pos);
 		if (!(te instanceof MechanicalCrafterTileEntity))
 			return null;
 		return (MechanicalCrafterTileEntity) te;

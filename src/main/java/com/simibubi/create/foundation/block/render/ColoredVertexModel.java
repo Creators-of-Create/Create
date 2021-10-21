@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.simibubi.create.foundation.block.IBlockVertexColor;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -59,7 +57,7 @@ public class ColoredVertexModel extends BakedModelWrapper<IBakedModel> {
 			BakedQuad quad = quads.get(i);
 
 			BakedQuad newQuad = QuadHelper.clone(quad);
-			int[] vertexData = newQuad.getVertexData();
+			int[] vertexData = newQuad.getVertices();
 
 			for (int vertex = 0; vertex < vertexData.length; vertex += format.getIntegerSize()) {
 				float x = Float.intBitsToFloat(vertexData[vertex]);

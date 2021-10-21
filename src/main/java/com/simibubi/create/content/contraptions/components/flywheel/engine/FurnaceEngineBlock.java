@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
+import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -38,7 +38,7 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.FURNACE_ENGINE.get(state.get(HORIZONTAL_FACING));
+		return AllShapes.FURNACE_ENGINE.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -57,11 +57,11 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		if (worldIn instanceof WrappedWorld)
 			return;
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
 		if (fromPos.equals(getBaseBlockPos(state, pos)))
-			if (isValidPosition(state, worldIn, pos))
+			if (canSurvive(state, worldIn, pos))
 				withTileEntityDo(worldIn, pos, FurnaceEngineTileEntity::updateFurnace);
 	}
 

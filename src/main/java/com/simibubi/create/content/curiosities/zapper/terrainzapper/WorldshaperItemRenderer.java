@@ -5,13 +5,14 @@ import static net.minecraft.util.math.MathHelper.clamp;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
@@ -31,9 +32,9 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		renderer.renderSolid(model.getOriginalModel(), light);
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean leftHanded = player.getPrimaryHand() == HandSide.LEFT;
-		boolean mainHand = player.getHeldItemMainhand() == stack;
-		boolean offHand = player.getHeldItemOffhand() == stack;
+		boolean leftHanded = player.getMainArm() == HandSide.LEFT;
+		boolean mainHand = player.getMainHandItem() == stack;
+		boolean offHand = player.getOffhandItem() == stack;
 		float animation = getAnimationProgress(pt, leftHanded, mainHand);
 
 		// Core glows
@@ -54,9 +55,14 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		angle %= 360;
 		float offset = -.155f;
 		ms.translate(0, offset, 0);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle));
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(model.getPartial("accelerator"), light);
+	}
+
+	@Override
+	public WorldshaperModel createModel(IBakedModel originalModel) {
+		return new WorldshaperModel(originalModel);
 	}
 
 }

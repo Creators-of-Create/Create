@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "create:granite_cobblestone",
+    "create:diorite_cobblestone",
+    "create:andesite_cobblestone",
+    "create:limestone_cobblestone",
+    "create:weathered_limestone_cobblestone",
+    "create:dolomite_cobblestone",
+    "create:gabbro_cobblestone",
+    "create:scoria_cobblestone",
+    "create:dark_scoria_cobblestone"
+  ]
+}

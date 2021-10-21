@@ -1,88 +1,152 @@
 {
   "variants": {
-    "powered=false,rail_type=regular,shape=north_south": {
+    "backwards=false,powered=false,rail_type=regular,shape=north_south": {
       "model": "create:block/cart_assembler/block_regular"
     },
-    "powered=true,rail_type=regular,shape=north_south": {
+    "backwards=true,powered=false,rail_type=regular,shape=north_south": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 180
+    },
+    "backwards=false,powered=true,rail_type=regular,shape=north_south": {
       "model": "create:block/cart_assembler/block_regular_powered"
     },
-    "powered=false,rail_type=powered_rail,shape=north_south": {
+    "backwards=true,powered=true,rail_type=regular,shape=north_south": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 180
+    },
+    "backwards=false,powered=false,rail_type=powered_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_powered_rail"
     },
-    "powered=true,rail_type=powered_rail,shape=north_south": {
+    "backwards=true,powered=false,rail_type=powered_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 180
+    },
+    "backwards=false,powered=true,rail_type=powered_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_powered_rail_powered"
     },
-    "powered=false,rail_type=detector_rail,shape=north_south": {
+    "backwards=true,powered=true,rail_type=powered_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 180
+    },
+    "backwards=false,powered=false,rail_type=detector_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_detector_rail"
     },
-    "powered=true,rail_type=detector_rail,shape=north_south": {
+    "backwards=true,powered=false,rail_type=detector_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 180
+    },
+    "backwards=false,powered=true,rail_type=detector_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_detector_rail_powered"
     },
-    "powered=false,rail_type=activator_rail,shape=north_south": {
+    "backwards=true,powered=true,rail_type=detector_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 180
+    },
+    "backwards=false,powered=false,rail_type=activator_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_activator_rail"
     },
-    "powered=true,rail_type=activator_rail,shape=north_south": {
+    "backwards=true,powered=false,rail_type=activator_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_activator_rail",
+      "y": 180
+    },
+    "backwards=false,powered=true,rail_type=activator_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_activator_rail_powered"
     },
-    "powered=false,rail_type=controller_rail,shape=north_south": {
+    "backwards=true,powered=true,rail_type=activator_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 180
+    },
+    "backwards=false,powered=false,rail_type=controller_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_controller_rail"
     },
-    "powered=true,rail_type=controller_rail,shape=north_south": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered"
-    },
-    "powered=false,rail_type=controller_rail_backwards,shape=north_south": {
+    "backwards=true,powered=false,rail_type=controller_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_controller_rail",
       "y": 180
     },
-    "powered=true,rail_type=controller_rail_backwards,shape=north_south": {
+    "backwards=false,powered=true,rail_type=controller_rail,shape=north_south": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered"
+    },
+    "backwards=true,powered=true,rail_type=controller_rail,shape=north_south": {
       "model": "create:block/cart_assembler/block_controller_rail_powered",
       "y": 180
     },
-    "powered=false,rail_type=regular,shape=east_west": {
+    "backwards=false,powered=false,rail_type=regular,shape=east_west": {
       "model": "create:block/cart_assembler/block_regular",
       "y": 270
     },
-    "powered=true,rail_type=regular,shape=east_west": {
+    "backwards=true,powered=false,rail_type=regular,shape=east_west": {
+      "model": "create:block/cart_assembler/block_regular",
+      "y": 90
+    },
+    "backwards=false,powered=true,rail_type=regular,shape=east_west": {
       "model": "create:block/cart_assembler/block_regular_powered",
       "y": 270
     },
-    "powered=false,rail_type=powered_rail,shape=east_west": {
+    "backwards=true,powered=true,rail_type=regular,shape=east_west": {
+      "model": "create:block/cart_assembler/block_regular_powered",
+      "y": 90
+    },
+    "backwards=false,powered=false,rail_type=powered_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_powered_rail",
       "y": 270
     },
-    "powered=true,rail_type=powered_rail,shape=east_west": {
+    "backwards=true,powered=false,rail_type=powered_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_rail",
+      "y": 90
+    },
+    "backwards=false,powered=true,rail_type=powered_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_powered_rail_powered",
       "y": 270
     },
-    "powered=false,rail_type=detector_rail,shape=east_west": {
+    "backwards=true,powered=true,rail_type=powered_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_powered_rail_powered",
+      "y": 90
+    },
+    "backwards=false,powered=false,rail_type=detector_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_detector_rail",
       "y": 270
     },
-    "powered=true,rail_type=detector_rail,shape=east_west": {
+    "backwards=true,powered=false,rail_type=detector_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_detector_rail",
+      "y": 90
+    },
+    "backwards=false,powered=true,rail_type=detector_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_detector_rail_powered",
       "y": 270
     },
-    "powered=false,rail_type=activator_rail,shape=east_west": {
+    "backwards=true,powered=true,rail_type=detector_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_detector_rail_powered",
+      "y": 90
+    },
+    "backwards=false,powered=false,rail_type=activator_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_activator_rail",
       "y": 270
     },
-    "powered=true,rail_type=activator_rail,shape=east_west": {
+    "backwards=true,powered=false,rail_type=activator_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_activator_rail",
+      "y": 90
+    },
+    "backwards=false,powered=true,rail_type=activator_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_activator_rail_powered",
       "y": 270
     },
-    "powered=false,rail_type=controller_rail,shape=east_west": {
+    "backwards=true,powered=true,rail_type=activator_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_activator_rail_powered",
+      "y": 90
+    },
+    "backwards=false,powered=false,rail_type=controller_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_controller_rail",
       "y": 270
     },
-    "powered=true,rail_type=controller_rail,shape=east_west": {
-      "model": "create:block/cart_assembler/block_controller_rail_powered",
-      "y": 270
-    },
-    "powered=false,rail_type=controller_rail_backwards,shape=east_west": {
+    "backwards=true,powered=false,rail_type=controller_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_controller_rail",
       "y": 90
     },
-    "powered=true,rail_type=controller_rail_backwards,shape=east_west": {
+    "backwards=false,powered=true,rail_type=controller_rail,shape=east_west": {
+      "model": "create:block/cart_assembler/block_controller_rail_powered",
+      "y": 270
+    },
+    "backwards=true,powered=true,rail_type=controller_rail,shape=east_west": {
       "model": "create:block/cart_assembler/block_controller_rail_powered",
       "y": 90
     }

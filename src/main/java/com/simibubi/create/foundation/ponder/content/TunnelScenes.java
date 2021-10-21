@@ -268,7 +268,7 @@ public class TunnelScenes {
 		ItemStack item3 = new ItemStack(Items.SWEET_BERRIES);
 
 		tunnelFilterVec = getTunnelFilterVec(tunnelPos, Direction.WEST);
-		BlockPos newTunnelPos = tunnelPos.up(2)
+		BlockPos newTunnelPos = tunnelPos.above(2)
 			.south();
 		scene.overlay
 			.showControls(new InputWindowElement(tunnelFilterVec.add(0, 0, -1), Pointing.RIGHT).withItem(item1), 20);
@@ -313,7 +313,7 @@ public class TunnelScenes {
 		scene.world.showSectionAndMerge(util.select.position(3, 5, 2), Direction.DOWN, newBelt);
 
 		scene.overlay.showText(80)
-			.pointAt(util.vector.blockSurface(tunnelPos.up()
+			.pointAt(util.vector.blockSurface(tunnelPos.above()
 				.north(), Direction.WEST))
 			.placeNearTarget()
 			.text("For this, items can also be inserted into the Tunnel block directly");
@@ -339,14 +339,14 @@ public class TunnelScenes {
 
 	protected static Vector3d getTunnelFilterVec(BlockPos pos, Direction d) {
 		return VecHelper.getCenterOf(pos)
-			.add(Vector3d.of(d.getDirectionVec()).scale(.5))
+			.add(Vector3d.atLowerCornerOf(d.getNormal()).scale(.5))
 			.add(0, 0.3, 0);
 	}
 
 	public static void brassModes(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("brass_tunnel_modes", "Distribution Modes of the Brass Tunnel");
 		scene.configureBasePlate(0, 1, 5);
-		BlockState barrier = Blocks.BARRIER.getDefaultState();
+		BlockState barrier = Blocks.BARRIER.defaultBlockState();
 		scene.world.setBlock(util.grid.at(1, 1, 0), barrier, false);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
@@ -419,7 +419,7 @@ public class TunnelScenes {
 					.colored(PonderPalette.RED);
 				scene.idle(60);
 				scene.world.moveSection(blockage, util.vector.of(-1, 0, 0), 10);
-				scene.world.setBlock(util.grid.at(1, 1, 0), Blocks.AIR.getDefaultState(), false);
+				scene.world.setBlock(util.grid.at(1, 1, 0), Blocks.AIR.defaultBlockState(), false);
 				scene.world.multiplyKineticSpeed(util.select.everywhere(), 1.5f);
 			}
 
@@ -466,7 +466,7 @@ public class TunnelScenes {
 					.colored(PonderPalette.RED);
 				scene.idle(30);
 				scene.world.moveSection(blockage, util.vector.of(-1, 0, 0), 10);
-				scene.world.setBlock(util.grid.at(1, 1, 0), Blocks.AIR.getDefaultState(), false);
+				scene.world.setBlock(util.grid.at(1, 1, 0), Blocks.AIR.defaultBlockState(), false);
 			}
 
 			if (i == 19) {
@@ -486,16 +486,16 @@ public class TunnelScenes {
 			}
 
 			if (i == 21) {
-				scene.world.setBlock(util.grid.at(2, 1, 0), Blocks.BARRIER.getDefaultState(), false);
+				scene.world.setBlock(util.grid.at(2, 1, 0), Blocks.BARRIER.defaultBlockState(), false);
 				blockage2 = scene.world.showIndependentSection(util.select.position(4, 1, 0), Direction.UP);
 				scene.world.moveSection(blockage2, util.vector.of(-2, 0, 0), 0);
 			}
 
 			if (i == 25) {
 				scene.world.hideIndependentSection(blockage, Direction.DOWN);
-				scene.world.setBlock(util.grid.at(1, 1, 0), Blocks.AIR.getDefaultState(), false);
+				scene.world.setBlock(util.grid.at(1, 1, 0), Blocks.AIR.defaultBlockState(), false);
 				scene.world.hideIndependentSection(blockage2, Direction.DOWN);
-				scene.world.setBlock(util.grid.at(2, 1, 0), Blocks.AIR.getDefaultState(), false);
+				scene.world.setBlock(util.grid.at(2, 1, 0), Blocks.AIR.defaultBlockState(), false);
 			}
 
 			if (i == 26) {

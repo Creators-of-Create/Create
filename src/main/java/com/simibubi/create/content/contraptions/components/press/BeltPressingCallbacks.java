@@ -9,9 +9,10 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.press.MechanicalPressTileEntity.Mode;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBehaviour.ProcessingResult;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
@@ -62,7 +63,7 @@ public class BeltPressingCallbacks {
 				boolean centered = BeltHelper.isItemUpright(stack);
 				copy.stack = stack;
 				copy.locked = true;
-				copy.angle = centered ? 180 : Create.random.nextInt(360);
+				copy.angle = centered ? 180 : Create.RANDOM.nextInt(360);
 				return copy;
 			})
 			.collect(Collectors.toList());
@@ -83,6 +84,7 @@ public class BeltPressingCallbacks {
 				handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 		}
 
+		AllTriggers.triggerForNearbyPlayers(AllTriggers.BONK, pressTe.getLevel(), pressTe.getBlockPos(), 4);
 		pressTe.sendData();
 		return HOLD;
 	}

@@ -2,12 +2,12 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import java.util.List;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.glue.SuperGlueItem;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -39,26 +39,26 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			return;
 		piston.startWithValue(isBlockStateExtended() ? 1 : 0);
 	}
 
 	public boolean isBlockStateExtended() {
 		BlockState blockState = getBlockState();
-		boolean extended = AllBlocks.STICKER.has(blockState) && blockState.get(StickerBlock.EXTENDED);
+		boolean extended = AllBlocks.STICKER.has(blockState) && blockState.getValue(StickerBlock.EXTENDED);
 		return extended;
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			return;
 		piston.tickChaser();
 
 		if (isAttachedToBlock() && piston.getValue(0) != piston.getValue() && piston.getValue() == 1) {
-			SuperGlueItem.spawnParticles(world, pos, getBlockState().get(StickerBlock.FACING), true);
+			SuperGlueItem.spawnParticles(level, worldPosition, getBlockState().getValue(StickerBlock.FACING), true);
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(true));
 		}
 
@@ -70,15 +70,15 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public boolean isAttachedToBlock() {
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.STICKER.has(blockState))
 			return false;
-		Direction direction = blockState.get(StickerBlock.FACING);
-		return SuperGlueEntity.isValidFace(world, pos.offset(direction), direction.getOpposite());
+		Direction direction = blockState.getValue(StickerBlock.FACING);
+		return SuperGlueEntity.isValidFace(level, worldPosition.relative(direction), direction.getOpposite());
 	}
 
 	@Override
@@ -90,7 +90,8 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 
 	@OnlyIn(Dist.CLIENT)
 	public void playSound(boolean attach) {
-		AllSoundEvents.SLIME_ADDED.play(world, Minecraft.getInstance().player, pos, 0.35f, attach ? 0.75f : 0.2f);
+		AllSoundEvents.SLIME_ADDED.play(level, Minecraft.getInstance().player, worldPosition, 0.35f, attach ? 0.75f : 0.2f);
 	}
+
 
 }

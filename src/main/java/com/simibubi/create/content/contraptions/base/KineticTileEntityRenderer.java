@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.jozufozu.flywheel.backend.Backend;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.AllBlocks;
@@ -8,10 +9,9 @@ import com.simibubi.create.content.contraptions.KineticDebugger;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
@@ -39,16 +39,16 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	@Override
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		for (RenderType type : RenderType.getBlockLayers())
+		for (RenderType type : RenderType.chunkBufferLayers())
 			if (RenderTypeLookup.canRenderInLayer(te.getBlockState(), type))
 				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
 	}
 
 	public static void renderRotatingKineticBlock(KineticTileEntity te, BlockState renderedState, MatrixStack ms,
 		IVertexBuilder buffer, int light) {
-		SuperByteBuffer superByteBuffer = CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, renderedState);
+		SuperByteBuffer superByteBuffer = CreateClient.BUFFER_CACHE.renderBlockIn(KINETIC_TILE, renderedState);
 		renderRotatingBuffer(te, superByteBuffer, ms, buffer, light);
 	}
 
@@ -58,7 +58,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	public static float getAngleForTe(KineticTileEntity te, final BlockPos pos, Axis axis) {
-		float time = AnimationTickHolder.getRenderTime(te.getWorld());
+		float time = AnimationTickHolder.getRenderTime(te.getLevel());
 		float offset = getRotationOffsetForPosition(te, pos, axis);
 		float angle = ((time * te.getSpeed() * 3f / 10 + offset) % 360) / 180 * (float) Math.PI;
 		return angle;
@@ -66,7 +66,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	public static SuperByteBuffer standardKineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te,
 		int light) {
-		final BlockPos pos = te.getPos();
+		final BlockPos pos = te.getBlockPos();
 		Axis axis = ((IRotate) te.getBlockState()
 			.getBlock()).getRotationAxis(te.getBlockState());
 		return kineticRotationTransform(buffer, te, axis, getAngleForTe(te, pos, axis), light);
@@ -75,21 +75,20 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	public static SuperByteBuffer kineticRotationTransform(SuperByteBuffer buffer, KineticTileEntity te, Axis axis,
 		float angle, int light) {
 		buffer.light(light);
-		buffer.rotateCentered(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis), angle);
+		buffer.rotateCentered(Direction.get(AxisDirection.POSITIVE, axis), angle);
 
-		int white = 0xFFFFFF;
 		if (KineticDebugger.isActive()) {
 			rainbowMode = true;
-			buffer.color(te.hasNetwork() ? ColorHelper.colorFromLong(te.network) : white);
+			buffer.color(te.hasNetwork() ? Color.generateFromLong(te.network) : Color.WHITE);
 		} else {
 			float overStressedEffect = te.effects.overStressedEffect;
 			if (overStressedEffect != 0)
 				if (overStressedEffect > 0)
-					buffer.color(ColorHelper.mixColors(white, 0xFF0000, overStressedEffect));
+					buffer.color(Color.WHITE.mixWith(Color.RED, overStressedEffect));
 				else
-					buffer.color(ColorHelper.mixColors(white, 0x00FFBB, -overStressedEffect));
+					buffer.color(Color.WHITE.mixWith(Color.SPRING_GREEN, -overStressedEffect));
 			else
-				buffer.color(white);
+				buffer.color(Color.WHITE);
 		}
 
 		return buffer;
@@ -107,7 +106,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 
 	public static BlockState shaft(Axis axis) {
 		return AllBlocks.SHAFT.getDefaultState()
-			.with(BlockStateProperties.AXIS, axis);
+			.setValue(BlockStateProperties.AXIS, axis);
 	}
 
 	public static Axis getRotationAxisOf(KineticTileEntity te) {
@@ -120,7 +119,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 	}
 
 	protected SuperByteBuffer getRotatedModel(KineticTileEntity te) {
-		return CreateClient.bufferCache.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
+		return CreateClient.BUFFER_CACHE.renderBlockIn(KINETIC_TILE, getRenderedBlockState(te));
 	}
 
 }

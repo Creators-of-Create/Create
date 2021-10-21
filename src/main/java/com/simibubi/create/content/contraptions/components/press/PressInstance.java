@@ -1,10 +1,11 @@
 package com.simibubi.create.content.contraptions.components.press;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.Materials;
+import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
@@ -16,15 +17,16 @@ public class PressInstance extends ShaftInstance implements IDynamicInstance {
     private final OrientedData pressHead;
     private final MechanicalPressTileEntity press;
 
-    public PressInstance(InstancedTileRenderer<?> dispatcher, MechanicalPressTileEntity tile) {
+    public PressInstance(MaterialManager<?> dispatcher, MechanicalPressTileEntity tile) {
         super(dispatcher, tile);
         press = tile;
 
-        pressHead = dispatcher.getOrientedMaterial()
+        pressHead = dispatcher.defaultSolid()
+                .material(Materials.ORIENTED)
                 .getModel(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState)
                 .createInstance();
 
-        Quaternion q = Vector3f.POSITIVE_Y.getDegreesQuaternion(AngleHelper.horizontalAngle(blockState.get(MechanicalPressBlock.HORIZONTAL_FACING)));
+        Quaternion q = Vector3f.YP.rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
 
         pressHead.setRotation(q);
 

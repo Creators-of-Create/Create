@@ -3,12 +3,14 @@ package com.simibubi.create.foundation.sound;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.sound.SoundScapes.PitchGroup;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -50,7 +52,7 @@ class SoundScape {
 
 	public void play() {
 		continuous.forEach(Minecraft.getInstance()
-			.getSoundHandler()::play);
+			.getSoundManager()::play);
 	}
 
 	public void tick() {
@@ -80,9 +82,17 @@ class SoundScape {
 	}
 
 	public float getVolume() {
+		Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
+		float distanceMultiplier = 0;
+		if (renderViewEntity != null) {
+			double distanceTo = renderViewEntity.position()
+				.distanceTo(getMeanPos());
+			distanceMultiplier = (float) MathHelper.lerp(distanceTo / SoundScapes.MAX_AMBIENT_SOURCE_DISTANCE, 2, 0);
+		}
 		int soundCount = SoundScapes.getSoundCount(group, pitchGroup);
+		float max = AllConfigs.CLIENT.ambientVolumeCap.getF();
 		float argMax = (float) SoundScapes.SOUND_VOLUME_ARG_MAX;
-		return MathHelper.clamp(soundCount / (argMax * 10f), 0.075f, .15f);
+		return MathHelper.clamp(soundCount / (argMax * 10f), 0.025f, max) * distanceMultiplier;
 	}
 
 }

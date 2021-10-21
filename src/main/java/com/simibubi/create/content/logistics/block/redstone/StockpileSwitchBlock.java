@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
+import java.util.Random;
+
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
@@ -27,10 +29,15 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchBlock extends HorizontalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable {
 
@@ -41,13 +48,13 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		updateObservedInventory(state, worldIn, pos);
 	}
 
 	@Override
 	public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-		if (world.isRemote())
+		if (world.isClientSide())
 			return;
 		if (!isObserving(state, pos, neighbor))
 			return;
@@ -57,7 +64,7 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.STOCKPILE_SWITCH.get(state.get(HORIZONTAL_FACING));
+		return AllShapes.STOCKPILE_SWITCH.get(state.getValue(FACING));
 	}
 
 	private void updateObservedInventory(BlockState state, IWorldReader world, BlockPos pos) {
@@ -65,40 +72,44 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	}
 
 	private boolean isObserving(BlockState state, BlockPos pos, BlockPos observing) {
-		return observing.equals(pos.offset(state.get(HORIZONTAL_FACING)));
+		return observing.equals(pos.relative(state.getValue(FACING)));
 	}
 
 	@Override
 	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
-		return side != null && side.getOpposite() != state.get(HORIZONTAL_FACING);
+		return side != null && side.getOpposite() != state.getValue(FACING);
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (side == blockState.get(HORIZONTAL_FACING).getOpposite())
+	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		if (side == blockState.getValue(FACING)
+			.getOpposite())
 			return 0;
-		try {
-			return getTileEntity(blockAccess, pos).isPowered() ? 15 : 0;
-		} catch (TileEntityException e) {
-		}
-		return 0;
+		return getTileEntityOptional(blockAccess, pos).filter(StockpileSwitchTileEntity::isPowered)
+			.map($ -> 15)
+			.orElse(0);
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(HORIZONTAL_FACING, INDICATOR);
-		super.fillStateContainer(builder);
+	public void tick(BlockState blockState, ServerWorld world, BlockPos pos, Random random) {
+		getTileEntityOptional(world, pos).ifPresent(StockpileSwitchTileEntity::updatePowerAfterDelay);
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		builder.add(FACING, INDICATOR);
+		super.createBlockStateDefinition(builder);
+	}
+
+	@Override
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (player != null && AllItems.WRENCH.isIn(player.getHeldItem(handIn)))
+		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return ActionResultType.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
@@ -113,15 +124,19 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = getDefaultState();
+		BlockState state = defaultBlockState();
+		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
-			TileEntity te = context.getWorld()
-				.getTileEntity(context.getPos()
-					.offset(face));
-			if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-				.isPresent())
+			TileEntity te = context.getLevel()
+				.getBlockEntity(context.getClickedPos()
+					.relative(face));
+			if (te != null && (te.getCapability(itemCap)
+				.isPresent()
+				|| te.getCapability(fluidCap)
+					.isPresent()))
 				if (preferredFacing == null)
 					preferredFacing = face;
 				else {
@@ -131,13 +146,13 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 		}
 
 		if (preferredFacing != null) {
-			state = state.with(HORIZONTAL_FACING, preferredFacing);
-		} else if (context.getFace()
+			state = state.setValue(FACING, preferredFacing);
+		} else if (context.getClickedFace()
 			.getAxis()
 			.isHorizontal()) {
-			state = state.with(HORIZONTAL_FACING, context.getFace());
+			state = state.setValue(FACING, context.getClickedFace());
 		} else {
-			state = state.with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing()
+			state = state.setValue(FACING, context.getHorizontalDirection()
 				.getOpposite());
 		}
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;

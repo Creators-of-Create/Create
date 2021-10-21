@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.content.contraptions.components.actors.PortableFluidInterfaceTileEntity.InterfaceFluidHandler;
 import com.simibubi.create.content.contraptions.fluids.PipeConnection.Flow;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -90,7 +91,7 @@ public class FluidNetwork {
 
 				if (!pipeConnection.hasFlow())
 					continue;
-				
+
 				Flow flow = pipeConnection.flow.get();
 				if (!fluid.isEmpty() && !flow.fluid.isFluidEqual(fluid)) {
 					iterator.remove();
@@ -103,7 +104,7 @@ public class FluidNetwork {
 				}
 				if (!flow.complete)
 					continue;
-				
+
 				if (fluid.isEmpty())
 					fluid = flow.fluid;
 
@@ -157,11 +158,14 @@ public class FluidNetwork {
 			source = sourceSupplier.get();
 		if (!source.isPresent())
 			return;
+
+		keepPortableFluidInterfaceEngaged();
+
 		if (targets.isEmpty())
 			return;
 		for (Pair<BlockFace, LazyOptional<IFluidHandler>> pair : targets) {
 			if (pair.getSecond()
-				.isPresent())
+				.isPresent() && world.getGameTime() % 40 != 0)
 				continue;
 			PipeConnection pipeConnection = get(pair.getFirst());
 			if (pipeConnection == null)
@@ -179,7 +183,7 @@ public class FluidNetwork {
 			IFluidHandler handler = source.orElse(null);
 			if (handler == null)
 				return;
-			
+
 			FluidStack transfer = FluidStack.EMPTY;
 			for (int i = 0; i < handler.getTanks(); i++) {
 				FluidStack contained = handler.getFluidInTank(i);
@@ -190,13 +194,13 @@ public class FluidNetwork {
 				FluidStack toExtract = FluidHelper.copyStackWithAmount(contained, flowSpeed);
 				transfer = handler.drain(toExtract, action);
 			}
-			
+
 			if (transfer.isEmpty()) {
 				FluidStack genericExtract = handler.drain(flowSpeed, action);
 				if (!genericExtract.isEmpty() && genericExtract.isFluidEqual(fluid))
 					transfer = genericExtract;
 			}
-				
+
 			if (transfer.isEmpty())
 				return;
 
@@ -251,6 +255,15 @@ public class FluidNetwork {
 //				.lineWidth(1 / 4f)
 //				.colored(0xfaaa33);
 //	}
+
+	private void keepPortableFluidInterfaceEngaged() {
+		IFluidHandler handler = source.orElse(null);
+		if (!(handler instanceof InterfaceFluidHandler))
+			return;
+		if (frontier.isEmpty())
+			return;
+		((InterfaceFluidHandler) handler).keepAlive();
+	}
 
 	public void reset() {
 		frontier.clear();

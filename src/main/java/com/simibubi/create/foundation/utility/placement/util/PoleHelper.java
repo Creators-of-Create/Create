@@ -41,12 +41,12 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 	}
 
 	public int attachedPoles(World world, BlockPos pos, Direction direction) {
-		BlockPos checkPos = pos.offset(direction);
+		BlockPos checkPos = pos.relative(direction);
 		BlockState state = world.getBlockState(checkPos);
 		int count = 0;
 		while (matchesAxis(state, direction.getAxis())) {
 			count++;
-			checkPos = checkPos.offset(direction);
+			checkPos = checkPos.relative(direction);
 			state = world.getBlockState(checkPos);
 		}
 		return count;
@@ -59,7 +59,7 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 
 	@Override
 	public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
-		List<Direction> directions = IPlacementHelper.orderedByDistance(pos, ray.getHitVec(), dir -> dir.getAxis() == axisFunction.apply(state));
+		List<Direction> directions = IPlacementHelper.orderedByDistance(pos, ray.getLocation(), dir -> dir.getAxis() == axisFunction.apply(state));
 		for (Direction dir : directions) {
 			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
 			if (player != null) {
@@ -71,11 +71,11 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 			if (poles >= range)
 				continue;
 
-			BlockPos newPos = pos.offset(dir, poles + 1);
+			BlockPos newPos = pos.relative(dir, poles + 1);
 			BlockState newState = world.getBlockState(newPos);
 
 			if (newState.getMaterial().isReplaceable())
-				return PlacementOffset.success(newPos, bState -> bState.with(property, state.get(property)));
+				return PlacementOffset.success(newPos, bState -> bState.setValue(property, state.getValue(property)));
 
 		}
 

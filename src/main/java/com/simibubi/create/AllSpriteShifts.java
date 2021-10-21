@@ -5,11 +5,12 @@ import static com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTT
 import static com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType.OMNIDIRECTIONAL;
 import static com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType.VERTICAL;
 
+import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.simibubi.create.content.palettes.PaletteBlockPatterns;
-import com.simibubi.create.content.palettes.PaletteBlockPatterns.CTs;
+import com.simibubi.create.content.palettes.PaletteBlockPattern;
+import com.simibubi.create.content.palettes.PaletteBlockPattern.CTs;
 import com.simibubi.create.content.palettes.PaletteStoneVariants;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
@@ -23,7 +24,7 @@ import net.minecraft.item.DyeColor;
 public class AllSpriteShifts {
 
 	static final Map<WoodType, CTSpriteShiftEntry> WOODEN_WINDOWS = new IdentityHashMap<>();
-	static final Map<PaletteStoneVariants, Map<PaletteBlockPatterns.CTs, CTSpriteShiftEntry>> PALETTE_VARIANT_PATTERNS =
+	static final Map<PaletteStoneVariants, Map<PaletteBlockPattern.CTs, CTSpriteShiftEntry>> PALETTE_VARIANT_PATTERNS =
 		new IdentityHashMap<>();
 
 	public static final Map<DyeColor, SpriteShiftEntry> DYED_BELTS = new IdentityHashMap<>(),
@@ -69,7 +70,7 @@ public class AllSpriteShifts {
 		return WOODEN_WINDOWS.get(woodType);
 	}
 
-	public static CTSpriteShiftEntry getVariantPattern(PaletteStoneVariants variant, PaletteBlockPatterns.CTs texture) {
+	public static CTSpriteShiftEntry getVariantPattern(PaletteStoneVariants variant, PaletteBlockPattern.CTs texture) {
 		return PALETTE_VARIANT_PATTERNS.get(variant)
 			.get(texture);
 	}
@@ -77,15 +78,19 @@ public class AllSpriteShifts {
 	//
 
 	private static void populateMaps() {
-		WoodType.stream()
-			.forEach(woodType -> WOODEN_WINDOWS.put(woodType, vertical("palettes/" + woodType.getName() + "_window")));
+		WoodType[] supportedWoodTypes = new WoodType[] {
+			WoodType.OAK, WoodType.SPRUCE, WoodType.BIRCH, WoodType.ACACIA, WoodType.JUNGLE, WoodType.DARK_OAK,
+			WoodType.CRIMSON, WoodType.WARPED
+		};
+		Arrays.stream(supportedWoodTypes)
+			.forEach(woodType -> WOODEN_WINDOWS.put(woodType, vertical("palettes/" + woodType.name() + "_window")));
 
 		for (PaletteStoneVariants paletteStoneVariants : PaletteStoneVariants.values()) {
 			String variantName = Lang.asId(paletteStoneVariants.name());
 			IdentityHashMap<CTs, CTSpriteShiftEntry> map = new IdentityHashMap<>();
 			PALETTE_VARIANT_PATTERNS.put(paletteStoneVariants, map);
 
-			for (PaletteBlockPatterns.CTs texture : PaletteBlockPatterns.CTs.values()) {
+			for (PaletteBlockPattern.CTs texture : PaletteBlockPattern.CTs.values()) {
 				String textureName = Lang.asId(texture.name());
 				String target = "palettes/" + variantName + "/" + textureName;
 				map.put(texture, getCT(texture.type, target));
@@ -93,7 +98,7 @@ public class AllSpriteShifts {
 		}
 
 		for (DyeColor color : DyeColor.values()) {
-			String id = color.getString();
+			String id = color.getSerializedName();
 			DYED_BELTS.put(color, SpriteShifter.get("block/belt", "block/belt/" + id + "_scroll"));
 			DYED_OFFSET_BELTS.put(color, SpriteShifter.get("block/belt_offset", "block/belt/" + id + "_scroll"));
 			DYED_DIAGONAL_BELTS.put(color,

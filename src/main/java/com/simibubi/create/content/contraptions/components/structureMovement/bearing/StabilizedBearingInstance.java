@@ -1,11 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.Materials;
+import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -21,17 +23,19 @@ public class StabilizedBearingInstance extends ActorInstance {
 	final Vector3f rotationAxis;
 	final Quaternion blockOrientation;
 
-	public StabilizedBearingInstance(ContraptionKineticRenderer modelManager, MovementContext context) {
-		super(modelManager, context);
+	public StabilizedBearingInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+		super(materialManager, simulationWorld, context);
 
 		BlockState blockState = context.state;
 
-		facing = blockState.get(BlockStateProperties.FACING);
-		rotationAxis = Direction.getFacingFromAxis(Direction.AxisDirection.POSITIVE, facing.getAxis()).getUnitVector();
+		facing = blockState.getValue(BlockStateProperties.FACING);
+		rotationAxis = Direction.get(Direction.AxisDirection.POSITIVE, facing.getAxis()).step();
 
 		blockOrientation = BearingInstance.getBlockStateOrientation(facing);
 
-		topInstance = modelManager.getOrientedMaterial().getModel(AllBlockPartials.BEARING_TOP, blockState).createInstance();
+        topInstance = materialManager.defaultSolid()
+                .material(Materials.ORIENTED)
+                .getModel(AllBlockPartials.BEARING_TOP, blockState).createInstance();
 
 		topInstance.setPosition(context.localPos)
 				.setRotation(blockOrientation)
@@ -42,9 +46,9 @@ public class StabilizedBearingInstance extends ActorInstance {
 	public void beginFrame() {
 		float counterRotationAngle = StabilizedBearingMovementBehaviour.getCounterRotationAngle(context, facing, AnimationTickHolder.getPartialTicks());
 
-		Quaternion rotation = rotationAxis.getDegreesQuaternion(counterRotationAngle);
+		Quaternion rotation = rotationAxis.rotationDegrees(counterRotationAngle);
 
-		rotation.multiply(blockOrientation);
+		rotation.mul(blockOrientation);
 
 		topInstance.setRotation(rotation);
 	}

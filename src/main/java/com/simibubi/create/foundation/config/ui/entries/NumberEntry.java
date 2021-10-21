@@ -1,6 +1,7 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
 import java.lang.reflect.Field;
+import java.util.Locale;
 import java.util.function.Function;
 
 import javax.annotation.Nullable;
@@ -38,8 +39,28 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-		textField = new ConfigTextField(Minecraft.getInstance().fontRenderer, 0, 0, 200, 20, unit);
-		textField.setText(String.valueOf(getValue()));
+		textField = new ConfigTextField(Minecraft.getInstance().font, 0, 0, 200, 20);
+		if (this instanceof IntegerEntry && annotations.containsKey("IntDisplay")) {
+			String intDisplay = annotations.get("IntDisplay");
+			int intValue = (Integer) getValue();
+			String textValue;
+			switch (intDisplay) {
+				case "#":
+					textValue = "#" + Integer.toHexString(intValue).toUpperCase(Locale.ROOT);
+					break;
+				case "0x":
+					textValue = "0x" + Integer.toHexString(intValue).toUpperCase(Locale.ROOT);
+					break;
+				case "0b":
+					textValue = "0b" + Integer.toBinaryString(intValue);
+					break;
+				default:
+					textValue = String.valueOf(intValue);
+			}
+			textField.setValue(textValue);
+		} else {
+			textField.setValue(String.valueOf(getValue()));
+		}
 		textField.setTextColor(Theme.i(Theme.Key.TEXT));
 
 		Object range = spec.getRange();
@@ -51,18 +72,18 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			T min = (T) minField.get(range);
 			T max = (T) maxField.get(range);
 
-			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			FontRenderer font = Minecraft.getInstance().font;
 			if (min.doubleValue() > getTypeMin().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(formatBound(min) + " < ");
 				minText = new TextStencilElement(font, t).centered(true, false);
 				minText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
-				minOffset = font.getWidth(t);
+				minOffset = font.width(t);
 			}
 			if (max.doubleValue() < getTypeMax().doubleValue()) {
 				StringTextComponent t = new StringTextComponent(" < " + formatBound(max));
 				maxText = new TextStencilElement(font, t).centered(true, false);
 				maxText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0 ,0, height/2, height, width, Theme.p(Theme.Key.TEXT_DARKER)));
-				maxOffset = font.getWidth(t);
+				maxOffset = font.width(t);
 			}
 		} catch (NoSuchFieldException | IllegalAccessException | ClassCastException | NullPointerException ignored) {
 
@@ -82,6 +103,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 			}
 		});
 
+		textField.moveCursorToStart();
 		listeners.add(textField);
 		onReset();
 	}
@@ -101,17 +123,19 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 	@Override
 	protected void setEditable(boolean b) {
 		super.setEditable(b);
-		textField.setEnabled(b);
+		textField.setEditable(b);
 	}
 
 	@Override
 	public void onValueChange(T newValue) {
 		super.onValueChange(newValue);
-		String newText = String.valueOf(newValue);
-		if (textField.getText().equals(newText))
-			return;
 
-		textField.setText(newText);
+		try {
+			T current = getParser().apply(textField.getValue());
+			if (!current.equals(newValue)) {
+				textField.setValue(String.valueOf(newValue));
+			}
+		} catch (IllegalArgumentException ignored) {}
 	}
 
 	@Override
@@ -133,13 +157,13 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 		if (minText != null)
 			minText
 					.at(textField.x - minOffset, textField.y, 0)
-					.withBounds(minOffset, textField.unusedGetHeight())
+					.withBounds(minOffset, textField.getHeight())
 					.render(ms);
 
 		if (maxText != null)
 			maxText
 					.at(textField.x + textField.getWidth(), textField.y, 0)
-					.withBounds(maxOffset, textField.unusedGetHeight())
+					.withBounds(maxOffset, textField.getHeight())
 					.render(ms);
 	}
 
@@ -161,7 +185,17 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 		@Override
 		protected Function<String, Integer> getParser() {
-			return Integer::parseInt;
+			return (string) -> {
+				if (string.startsWith("#")) {
+					return Integer.parseUnsignedInt(string.substring(1), 16);
+				} else if (string.startsWith("0x")) {
+					return Integer.parseUnsignedInt(string.substring(2), 16);
+				} else if (string.startsWith("0b")) {
+					return Integer.parseUnsignedInt(string.substring(2), 2);
+				} else {
+					return Integer.parseInt(string);
+				}
+			};
 		}
 	}
 

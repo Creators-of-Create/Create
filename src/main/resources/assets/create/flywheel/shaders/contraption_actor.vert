@@ -1,71 +1,47 @@
-#version 110
 #define PI 3.1415926538
 
-#flwinclude <"create:core/matutils.glsl">
-#flwinclude <"create:core/quaternion.glsl">
-#flwinclude <"create:core/diffuse.glsl">
+#flwbuiltins
+#flwinclude <"flywheel:core/matutils.glsl">
+#flwinclude <"flywheel:core/quaternion.glsl">
+#flwinclude <"flywheel:core/diffuse.glsl">
 
-// model data
-attribute vec3 aPos;
-attribute vec3 aNormal;
-attribute vec2 aTexCoords;
+#[InstanceData]
+struct Actor {
+    vec3 pos;
+    vec2 light;
+    float offset;
+    vec3 axis;
+    vec4 rotation;
+    vec3 rotationCenter;
+    float speed;
+};
 
-// instance data
-attribute vec3 aInstancePos;
-attribute vec2 aModelLight;
-attribute float aOffset;
-attribute vec3 aAxis;
-attribute vec4 aInstanceRot;
-attribute vec3 aRotationCenter;
-attribute float aSpeed;
+#flwinclude <"flywheel:data/modelvertex.glsl">
+#flwinclude <"flywheel:data/blockfragment.glsl">
 
-
-varying float Diffuse;
-varying vec2 TexCoords;
-varying vec4 Color;
-varying vec3 BoxCoord;
-varying vec2 Light;
-
-uniform vec3 uLightBoxSize;
-uniform vec3 uLightBoxMin;
-uniform mat4 uModel;
-
-uniform float uTime;
-uniform mat4 uViewProjection;
-uniform int uDebug;
-
-uniform vec3 uCameraPos;
-
-#if defined(USE_FOG)
-varying float FragDistance;
-#endif
-
-void main() {
-    float degrees = aOffset + uTime * aSpeed / 20.;
+BlockFrag FLWMain(Vertex v, Actor instance) {
+    float degrees = instance.offset + uTime * instance.speed / 20.;
     //float angle = fract(degrees / 360.) * PI * 2.;
 
-    vec4 kineticRot = quat(aAxis, degrees);
-    vec3 rotated = rotateVertexByQuat(aPos - aRotationCenter, kineticRot) + aRotationCenter;
-    vec3 localPos = rotateVertexByQuat(rotated - .5, aInstanceRot) + aInstancePos + .5;
+    vec4 kineticRot = quat(instance.axis, degrees);
+    vec3 rotated = rotateVertexByQuat(v.pos - instance.rotationCenter, kineticRot) + instance.rotationCenter;
 
-    vec4 worldPos = uModel * vec4(localPos, 1.);
+    vec4 worldPos = vec4(rotateVertexByQuat(rotated - .5, instance.rotation) + instance.pos + .5, 1.);
+    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(v.normal, kineticRot), instance.rotation);
 
-    vec3 norm = rotateVertexByQuat(rotateVertexByQuat(aNormal, kineticRot), aInstanceRot);
-    norm = modelToNormal(uModel) * norm;
+    FLWFinalizeWorldPos(worldPos);
+    FLWFinalizeNormal(norm);
 
-    BoxCoord = (worldPos.xyz - uLightBoxMin) / uLightBoxSize;
-    Diffuse = diffuse(norm);
-    TexCoords = aTexCoords;
-    Light = aModelLight;
-    gl_Position = uViewProjection * worldPos;
+    BlockFrag b;
+    b.diffuse = diffuse(norm);
+    b.texCoords = v.texCoords;
+    b.light = instance.light;
 
-    #if defined(USE_FOG)
-    FragDistance = length(worldPos.xyz);
+    #if defined(DEBUG_NORMAL)
+    b.color = vec4(norm, 1.);
+    #else
+    b.color = vec4(1.);
     #endif
 
-    if (uDebug == 2) {
-        Color = vec4(norm, 1.);
-    } else {
-        Color = vec4(1.);
-    }
+    return b;
 }

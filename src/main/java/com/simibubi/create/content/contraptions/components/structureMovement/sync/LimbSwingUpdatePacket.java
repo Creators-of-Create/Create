@@ -43,17 +43,17 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ClientWorld world = Minecraft.getInstance().world;
+				ClientWorld world = Minecraft.getInstance().level;
 				if (world == null)
 					return;
-				Entity entity = world.getEntityByID(entityId);
+				Entity entity = world.getEntity(entityId);
 				if (entity == null)
 					return;
 				CompoundNBT data = entity.getPersistentData();
 				data.putInt("LastOverrideLimbSwingUpdate", 0);
 				data.putFloat("OverrideLimbSwing", limbSwing);
-				entity.setPositionAndRotationDirect(position.x, position.y, position.z, entity.rotationYaw,
-					entity.rotationPitch, 2, false);
+				entity.lerpTo(position.x, position.y, position.z, entity.yRot,
+					entity.xRot, 2, false);
 			});
 		context.get()
 			.setPacketHandled(true);

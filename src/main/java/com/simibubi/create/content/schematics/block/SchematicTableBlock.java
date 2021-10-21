@@ -32,19 +32,19 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		builder.add(HORIZONTAL_FACING);
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		builder.add(FACING);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return AllShapes.SCHEMATICS_TABLE.get(state.get(HORIZONTAL_FACING));
+		return AllShapes.SCHEMATICS_TABLE.get(state.getValue(FACING));
 	}
 
 	@Override
@@ -64,9 +64,9 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return ActionResultType.SUCCESS;
 
 		withTileEntityDo(worldIn, pos,
@@ -80,12 +80,12 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
-		worldIn.removeTileEntity(pos);
+		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class SchematicTableBlock extends HorizontalBlock implements ITE<Schemati
 	}
 	
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
 

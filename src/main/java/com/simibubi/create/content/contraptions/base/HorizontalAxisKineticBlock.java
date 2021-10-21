@@ -25,25 +25,25 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(HORIZONTAL_AXIS);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Axis preferredAxis = getPreferredHorizontalAxis(context);
 		if (preferredAxis != null)
-			return this.getDefaultState().with(HORIZONTAL_AXIS, preferredAxis);
-		return this.getDefaultState().with(HORIZONTAL_AXIS, context.getPlacementHorizontalFacing().rotateY().getAxis());
+			return this.defaultBlockState().setValue(HORIZONTAL_AXIS, preferredAxis);
+		return this.defaultBlockState().setValue(HORIZONTAL_AXIS, context.getHorizontalDirection().getClockWise().getAxis());
 	}
 
 	public static Axis getPreferredHorizontalAxis(BlockItemUseContext context) {
 		Direction prefferedSide = null;
 		for (Direction side : Iterate.horizontalDirections) {
-			BlockState blockState = context.getWorld().getBlockState(context.getPos().offset(side));
+			BlockState blockState = context.getLevel().getBlockState(context.getClickedPos().relative(side));
 			if (blockState.getBlock() instanceof IRotate) {
-				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getWorld(), context.getPos().offset(side),
+				if (((IRotate) blockState.getBlock()).hasShaftTowards(context.getLevel(), context.getClickedPos().relative(side),
 						blockState, side.getOpposite()))
 					if (prefferedSide != null && prefferedSide.getAxis() != side.getAxis()) {
 						prefferedSide = null;
@@ -58,19 +58,19 @@ public abstract class HorizontalAxisKineticBlock extends KineticBlock {
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_AXIS);
+		return state.getValue(HORIZONTAL_AXIS);
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face.getAxis() == state.get(HORIZONTAL_AXIS);
+		return face.getAxis() == state.getValue(HORIZONTAL_AXIS);
 	}
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		Axis axis = state.get(HORIZONTAL_AXIS);
-		return state.with(HORIZONTAL_AXIS,
-				rot.rotate(Direction.getFacingFromAxis(AxisDirection.POSITIVE, axis)).getAxis());
+		Axis axis = state.getValue(HORIZONTAL_AXIS);
+		return state.setValue(HORIZONTAL_AXIS,
+				rot.rotate(Direction.get(AxisDirection.POSITIVE, axis)).getAxis());
 	}
 
 	@Override

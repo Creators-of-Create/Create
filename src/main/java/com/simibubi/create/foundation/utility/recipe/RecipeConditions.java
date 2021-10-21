@@ -31,7 +31,7 @@ public class RecipeConditions {
 	}
 
 	public static Predicate<IRecipe<?>> outputMatchesFilter(FilteringBehaviour filtering) {
-		return r -> filtering.test(r.getRecipeOutput());
+		return r -> filtering.test(r.getResultItem());
 
 	}
 

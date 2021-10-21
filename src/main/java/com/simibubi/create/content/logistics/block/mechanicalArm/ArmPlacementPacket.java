@@ -27,7 +27,7 @@ public class ArmPlacementPacket extends SimplePacketBase {
 	}
 
 	public ArmPlacementPacket(PacketBuffer buffer) {
-		CompoundNBT nbt = buffer.readCompoundTag();
+		CompoundNBT nbt = buffer.readNbt();
 		receivedTag = nbt.getList("Points", NBT.TAG_COMPOUND);
 		pos = buffer.readBlockPos();
 	}
@@ -40,7 +40,7 @@ public class ArmPlacementPacket extends SimplePacketBase {
 			.map(aip -> aip.serialize(pos))
 			.forEach(pointsNBT::add);
 		nbt.put("Points", pointsNBT);
-		buffer.writeCompoundTag(nbt);
+		buffer.writeNbt(nbt);
 		buffer.writeBlockPos(pos);
 	}
 
@@ -52,10 +52,10 @@ public class ArmPlacementPacket extends SimplePacketBase {
 					.getSender();
 				if (player == null)
 					return;
-				World world = player.world;
-				if (world == null || !world.isBlockPresent(pos))
+				World world = player.level;
+				if (world == null || !world.isLoaded(pos))
 					return;
-				TileEntity tileEntity = world.getTileEntity(pos);
+				TileEntity tileEntity = world.getBlockEntity(pos);
 				if (!(tileEntity instanceof ArmTileEntity))
 					return;
 

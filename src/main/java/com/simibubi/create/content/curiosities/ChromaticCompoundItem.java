@@ -2,15 +2,22 @@ package com.simibubi.create.content.curiosities;
 
 import java.util.Random;
 
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import com.simibubi.create.AllItems;
+import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,7 +41,7 @@ public class ChromaticCompoundItem extends Item {
 	}
 
 	@Override
-	public boolean shouldSyncTag() {
+	public boolean shouldOverrideMultiplayerNbt() {
 		return true;
 	}
 
@@ -54,7 +61,7 @@ public class ChromaticCompoundItem extends Item {
 
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return ColorHelper.mixColors(0x413c69, 0xFFFFFF, (float) (1 - getDurabilityForDisplay(stack)));
+		return Color.mixColors(0x413c69, 0xFFFFFF, (float) (1 - getDurabilityForDisplay(stack)));
 	}
 
 	@Override
@@ -65,15 +72,15 @@ public class ChromaticCompoundItem extends Item {
 	@Override
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
 		double y = entity.getY();
-		double yMotion = entity.getMotion().y;
-		World world = entity.world;
+		double yMotion = entity.getDeltaMovement().y;
+		World world = entity.level;
 		CompoundNBT data = entity.getPersistentData();
 		CompoundNBT itemData = entity.getItem()
 			.getOrCreateTag();
 
-		Vector3d positionVec = entity.getPositionVec();
+		Vector3d positionVec = entity.position();
 		CRecipes config = AllConfigs.SERVER.recipes;
-		if (world.isRemote) {
+		if (world.isClientSide) {
 			int light = itemData.getInt("CollectingLight");
 			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
 				Vector3d start = VecHelper.offsetRandomly(positionVec, random, 3);
@@ -100,11 +107,11 @@ public class ChromaticCompoundItem extends Item {
 		if (itemData.getInt("CollectingLight") >= config.lightSourceCountForRefinedRadiance.get()) {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
-			newEntity.setMotion(entity.getMotion());
+			newEntity.setDeltaMovement(entity.getDeltaMovement());
 			newEntity.getPersistentData()
 				.putBoolean("JustCreated", true);
 			itemData.remove("CollectingLight");
-			world.addEntity(newEntity);
+			world.addFreshEntity(newEntity);
 
 			stack.split(1);
 			entity.setItem(stack);
@@ -125,17 +132,17 @@ public class ChromaticCompoundItem extends Item {
 		while (testPos.getY() > 0) {
 			testPos.move(Direction.DOWN);
 			BlockState state = world.getBlockState(testPos);
-			if (state.getOpacity(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
+			if (state.getLightBlock(world, testPos) >= 15 && state.getBlock() != Blocks.BEDROCK)
 				break;
 			if (state.getBlock() == Blocks.BEACON) {
-				TileEntity te = world.getTileEntity(testPos);
+				TileEntity te = world.getBlockEntity(testPos);
 
 				if (!(te instanceof BeaconTileEntity))
 					break;
 
 				BeaconTileEntity bte = (BeaconTileEntity) te;
 
-				if (bte.getLevels() != 0 && !bte.beamSegments.isEmpty())
+				if (bte.getLevels() != 0 && !bte.beamSections.isEmpty())
 					isOverBeacon = true;
 
 				break;
@@ -151,7 +158,7 @@ public class ChromaticCompoundItem extends Item {
 		}
 
 		// Find a light source and eat it.
-		Random r = world.rand;
+		Random r = world.random;
 		int range = 3;
 		float rate = 1 / 2f;
 		if (r.nextFloat() > rate)
@@ -159,33 +166,74 @@ public class ChromaticCompoundItem extends Item {
 
 		BlockPos randomOffset = new BlockPos(VecHelper.offsetRandomly(positionVec, r, range));
 		BlockState state = world.getBlockState(randomOffset);
+
+		TransportedItemStackHandlerBehaviour behaviour =
+			TileEntityBehaviour.get(world, randomOffset, TransportedItemStackHandlerBehaviour.TYPE);
+
+		// Find a placed light source
+		if (behaviour == null) {
+			if (checkLight(stack, entity, world, itemData, positionVec, randomOffset, state))
+				world.destroyBlock(randomOffset, false);
+			return false;
+		}
+
+		// Find a light source from a depot/belt (chunk rebuild safe)
+		MutableBoolean success = new MutableBoolean(false);
+		behaviour.handleProcessingOnAllItems(ts -> {
+
+			ItemStack heldStack = ts.stack;
+			if (!(heldStack.getItem() instanceof BlockItem))
+				return TransportedResult.doNothing();
+
+			BlockItem blockItem = (BlockItem) heldStack.getItem();
+			if (blockItem.getBlock() == null)
+				return TransportedResult.doNothing();
+
+			BlockState stateToCheck = blockItem.getBlock()
+				.defaultBlockState();
+
+			if (!success.getValue()
+				&& checkLight(stack, entity, world, itemData, positionVec, randomOffset, stateToCheck)) {
+				success.setTrue();
+				if (ts.stack.getCount() == 1)
+					return TransportedResult.removeItem();
+				TransportedItemStack left = ts.copy();
+				left.stack.shrink(1);
+				return TransportedResult.convertTo(left);
+			}
+
+			return TransportedResult.doNothing();
+
+		});
+		return false;
+	}
+
+	public boolean checkLight(ItemStack stack, ItemEntity entity, World world, CompoundNBT itemData,
+		Vector3d positionVec, BlockPos randomOffset, BlockState state) {
 		if (state.getLightValue(world, randomOffset) == 0)
 			return false;
-		if (state.getBlockHardness(world, randomOffset) == -1)
+		if (state.getDestroySpeed(world, randomOffset) == -1)
 			return false;
 		if (state.getBlock() == Blocks.BEACON)
 			return false;
 
-		RayTraceContext context = new RayTraceContext(positionVec, VecHelper.getCenterOf(randomOffset),
-			BlockMode.COLLIDER, FluidMode.NONE, entity);
-		if (!randomOffset.equals(world.rayTraceBlocks(context)
-			.getPos()))
+		RayTraceContext context = new RayTraceContext(positionVec.add(new Vector3d(0, 0.5, 0)),
+			VecHelper.getCenterOf(randomOffset), BlockMode.COLLIDER, FluidMode.NONE, entity);
+		if (!randomOffset.equals(world.clip(context)
+			.getBlockPos()))
 			return false;
-
-		world.destroyBlock(randomOffset, false);
 
 		ItemStack newStack = stack.split(1);
 		newStack.getOrCreateTag()
 			.putInt("CollectingLight", itemData.getInt("CollectingLight") + 1);
 		ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
-		newEntity.setMotion(entity.getMotion());
-		newEntity.setDefaultPickupDelay();
-		world.addEntity(newEntity);
+		newEntity.setDeltaMovement(entity.getDeltaMovement());
+		newEntity.setDefaultPickUpDelay();
+		world.addFreshEntity(newEntity);
 		entity.lifespan = 6000;
 		if (stack.isEmpty())
 			entity.remove();
-
-		return false;
+		return true;
 	}
 
 }

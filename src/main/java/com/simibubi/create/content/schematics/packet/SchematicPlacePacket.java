@@ -2,16 +2,16 @@ package com.simibubi.create.content.schematics.packet;
 
 import java.util.function.Supplier;
 
-import com.simibubi.create.content.schematics.SchematicProcessor;
-import com.simibubi.create.content.schematics.item.SchematicItem;
+import com.simibubi.create.content.schematics.SchematicPrinter;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class SchematicPlacePacket extends SimplePacketBase {
@@ -23,11 +23,11 @@ public class SchematicPlacePacket extends SimplePacketBase {
 	}
 
 	public SchematicPlacePacket(PacketBuffer buffer) {
-		stack = buffer.readItemStack();
+		stack = buffer.readItem();
 	}
 
 	public void write(PacketBuffer buffer) {
-		buffer.writeItemStack(stack);
+		buffer.writeItem(stack);
 	}
 
 	public void handle(Supplier<Context> context) {
@@ -35,13 +35,30 @@ public class SchematicPlacePacket extends SimplePacketBase {
 			ServerPlayerEntity player = context.get().getSender();
 			if (player == null)
 				return;
-			Template t = SchematicItem.loadSchematic(stack);
-			PlacementSettings settings = SchematicItem.getSettings(stack);
-			if (player.canUseCommandBlock())
-				settings.func_215220_b(SchematicProcessor.INSTANCE); // remove processor
-			settings.setIgnoreEntities(false);
-			t.place(player.getServerWorld(), NBTUtil.readBlockPos(stack.getTag().getCompound("Anchor")),
-					settings, player.getRNG());
+
+			World world = player.getLevel();
+			SchematicPrinter printer = new SchematicPrinter();
+			printer.loadSchematic(stack, world, !player.canUseGameMasterBlocks());
+			if (!printer.isLoaded())
+				return;
+			
+			boolean includeAir = AllConfigs.SERVER.schematics.creativePrintIncludesAir.get();
+
+			while (printer.advanceCurrentPos()) {
+				if (!printer.shouldPlaceCurrent(world))
+					continue;
+
+				printer.handleCurrentTarget((pos, state, tile) -> {
+					boolean placingAir = state.getBlock().isAir(state, world, pos);
+					if (placingAir && !includeAir)
+						return;
+					
+					CompoundNBT tileData = tile != null ? tile.save(new CompoundNBT()) : null;
+					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
+				}, (pos, entity) -> {
+					world.addFreshEntity(entity);
+				});
+			}
 		});
 		context.get().setPacketHandled(true);
 	}

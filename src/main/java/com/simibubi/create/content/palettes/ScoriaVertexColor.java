@@ -1,9 +1,11 @@
 package com.simibubi.create.content.palettes;
 
-import com.simibubi.create.foundation.block.IBlockVertexColor;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.block.render.IBlockVertexColor;
+import com.simibubi.create.foundation.utility.Color;
 
 public class ScoriaVertexColor implements IBlockVertexColor {
+
+	public static final ScoriaVertexColor INSTANCE = new ScoriaVertexColor();
 
 	@Override
 	public int getColor(float x, float y, float z) {
@@ -11,15 +13,18 @@ public class ScoriaVertexColor implements IBlockVertexColor {
 		float y2 = (float) Math.floor(y * 1.5 + x * .5 - z);
 		float z2 = (float) Math.floor(y - z * .5 - x);
 
-		int color = 0x448888;
+		Color color = new Color(0x448888);
 		if (x2 % 2 == 0)
-			color |= 0x0011ff;
+			color.modifyValue(v -> v | 0x0011ff);
 		if (z2 % 2 == 0)
-			color |= 0x888888;
-		color = ColorHelper.mixColors(ColorHelper.rainbowColor((int) (x + y + z) * 170), color, .6f);
+			color.modifyValue(v -> v | 0x888888);
+
+		color.mixWith(Color.rainbowColor((int) (x + y + z) * 170), .4f);
+
 		if ((x2 % 4 == 0) || (y2 % 4 == 0))
-			color = ColorHelper.mixColors(0xffffff, color, .2f);
-		return color;
+			color.mixWith(Color.WHITE, .8f);
+
+		return color.getRGB() & 0x00_ffffff;
 	}
 
 }

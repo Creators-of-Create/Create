@@ -15,6 +15,7 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
+import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -67,9 +68,9 @@ public class SchematicAndQuillHandler {
 			return true;
 
 		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos);
-		Vector3i vec = selectedFace.getDirectionVec();
-		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
-			.getProjectedView();
+		Vector3i vec = selectedFace.getNormal();
+		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
+			.getPosition();
 		if (bb.contains(projectedView))
 			delta *= -1;
 
@@ -79,17 +80,17 @@ public class SchematicAndQuillHandler {
 
 		AxisDirection axisDirection = selectedFace.getAxisDirection();
 		if (axisDirection == AxisDirection.NEGATIVE)
-			bb = bb.offset(-x, -y, -z);
+			bb = bb.move(-x, -y, -z);
 
-		double maxX = Math.max(bb.maxX - x * axisDirection.getOffset(), bb.minX);
-		double maxY = Math.max(bb.maxY - y * axisDirection.getOffset(), bb.minY);
-		double maxZ = Math.max(bb.maxZ - z * axisDirection.getOffset(), bb.minZ);
+		double maxX = Math.max(bb.maxX - x * axisDirection.getStep(), bb.minX);
+		double maxY = Math.max(bb.maxY - y * axisDirection.getStep(), bb.minY);
+		double maxZ = Math.max(bb.maxZ - z * axisDirection.getStep(), bb.minZ);
 		bb = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, maxX, maxY, maxZ);
 
 		firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
 		secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
-		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.dimensions", (int) bb.getXSize() + 1,
-			(int) bb.getYSize() + 1, (int) bb.getZSize() + 1);
+		Lang.sendStatus(Minecraft.getInstance().player, "schematicAndQuill.dimensions", (int) bb.getXsize() + 1,
+			(int) bb.getYsize() + 1, (int) bb.getZsize() + 1);
 
 		return true;
 	}
@@ -102,7 +103,7 @@ public class SchematicAndQuillHandler {
 
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
-		if (player.isSneaking()) {
+		if (player.isShiftKeyDown()) {
 			discard();
 			return;
 		}
@@ -126,7 +127,7 @@ public class SchematicAndQuillHandler {
 		firstPos = selectedPos;
 		Lang.sendStatus(player, "schematicAndQuill.firstPos");
 	}
-	
+
 	public void discard() {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		firstPos = null;
@@ -142,21 +143,21 @@ public class SchematicAndQuillHandler {
 		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
 			float pt = AnimationTickHolder.getPartialTicks();
 			Vector3d targetVec = player.getEyePosition(pt)
-				.add(player.getLookVec()
+				.add(player.getLookAngle()
 					.scale(range));
 			selectedPos = new BlockPos(targetVec);
 
 		} else {
-			BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.world, player, 75);
+			BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.level, player, 75);
 			if (trace != null && trace.getType() == Type.BLOCK) {
 
-				BlockPos hit = trace.getPos();
-				boolean replaceable = player.world.getBlockState(hit)
-					.isReplaceable(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND, trace)));
-				if (trace.getFace()
+				BlockPos hit = trace.getBlockPos();
+				boolean replaceable = player.level.getBlockState(hit)
+					.canBeReplaced(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND, trace)));
+				if (trace.getDirection()
 					.getAxis()
 					.isVertical() && !replaceable)
-					hit = hit.offset(trace.getFace());
+					hit = hit.relative(trace.getDirection());
 				selectedPos = hit;
 			} else
 				selectedPos = null;
@@ -164,10 +165,10 @@ public class SchematicAndQuillHandler {
 
 		selectedFace = null;
 		if (secondPos != null) {
-			AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1)
-				.grow(.45f);
-			Vector3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
-				.getProjectedView();
+			AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expandTowards(1, 1, 1)
+				.inflate(.45f);
+			Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
+				.getPosition();
 			boolean inside = bb.contains(projectedView);
 			PredicateTraceResult result =
 				RaycastHelper.rayTraceUntil(player, 70, pos -> inside ^ bb.contains(VecHelper.getCenterOf(pos)));
@@ -190,30 +191,31 @@ public class SchematicAndQuillHandler {
 			if (firstPos == null)
 				return selectedPos == null ? null : new AxisAlignedBB(selectedPos);
 			return selectedPos == null ? new AxisAlignedBB(firstPos)
-				: new AxisAlignedBB(firstPos, selectedPos).expand(1, 1, 1);
+				: new AxisAlignedBB(firstPos, selectedPos).expandTowards(1, 1, 1);
 		}
-		return new AxisAlignedBB(firstPos, secondPos).expand(1, 1, 1);
+		return new AxisAlignedBB(firstPos, secondPos).expandTowards(1, 1, 1);
 	}
 
 	private boolean isActive() {
-		return isPresent() && AllItems.SCHEMATIC_AND_QUILL.isIn(Minecraft.getInstance().player.getHeldItemMainhand());
+		return isPresent() && AllItems.SCHEMATIC_AND_QUILL.isIn(Minecraft.getInstance().player.getMainHandItem());
 	}
 
 	private boolean isPresent() {
-		return Minecraft.getInstance() != null && Minecraft.getInstance().world != null
-			&& Minecraft.getInstance().currentScreen == null;
+		return Minecraft.getInstance() != null && Minecraft.getInstance().level != null
+			&& Minecraft.getInstance().screen == null;
 	}
 
 	public void saveSchematic(String string, boolean convertImmediately) {
 		Template t = new Template();
 		MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
-		BlockPos origin = new BlockPos(bb.minX, bb.minY, bb.minZ);
-		BlockPos bounds = new BlockPos(bb.getXSize(), bb.getYSize(), bb.getZSize());
+		BlockPos origin = new BlockPos(bb.x0, bb.y0, bb.z0);
+		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());
 
-		t.takeBlocksFromWorld(Minecraft.getInstance().world, origin, bounds, true, Blocks.AIR);
+		t.fillFromWorld(Minecraft.getInstance().level, origin, bounds, true, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = Lang.translate("schematicAndQuill.fallbackName").getString();
+			string = Lang.translate("schematicAndQuill.fallbackName")
+				.getString();
 
 		String folderPath = "schematics";
 		FilesHelper.createFolderIfMissing(folderPath);
@@ -224,7 +226,8 @@ public class SchematicAndQuillHandler {
 		OutputStream outputStream = null;
 		try {
 			outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
-			CompoundNBT nbttagcompound = t.writeToNBT(new CompoundNBT());
+			CompoundNBT nbttagcompound = t.save(new CompoundNBT());
+			SchematicAndQuillItem.replaceStructureVoidWithAir(nbttagcompound);
 			CompressedStreamTools.writeCompressed(nbttagcompound, outputStream);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -239,7 +242,7 @@ public class SchematicAndQuillHandler {
 		if (!convertImmediately)
 			return;
 		if (!Files.exists(path)) {
-			Create.logger.fatal("Missing Schematic file: " + path.toString());
+			Create.LOGGER.fatal("Missing Schematic file: " + path.toString());
 			return;
 		}
 		try {
@@ -248,14 +251,14 @@ public class SchematicAndQuillHandler {
 			AllPackets.channel.sendToServer(new InstantSchematicPacket(filename, origin, bounds));
 
 		} catch (IOException e) {
-			Create.logger.fatal("Error finding Schematic file: " + path.toString());
+			Create.LOGGER.fatal("Error finding Schematic file: " + path.toString());
 			e.printStackTrace();
 			return;
 		}
 	}
 
 	private Outliner outliner() {
-		return CreateClient.outliner;
+		return CreateClient.OUTLINER;
 	}
 
 }

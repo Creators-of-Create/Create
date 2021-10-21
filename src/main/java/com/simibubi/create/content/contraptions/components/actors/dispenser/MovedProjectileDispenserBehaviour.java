@@ -28,14 +28,14 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 			return itemStack;
 		Vector3d effectiveMovementVec = facing.scale(getProjectileVelocity()).add(context.motion);
 		ProjectileEntity.shoot(effectiveMovementVec.x, effectiveMovementVec.y, effectiveMovementVec.z, (float) effectiveMovementVec.length(), this.getProjectileInaccuracy());
-		context.world.addEntity(ProjectileEntity);
+		context.world.addFreshEntity(ProjectileEntity);
 		itemStack.shrink(1);
 		return itemStack;
 	}
 
 	@Override
 	protected void playDispenseSound(IWorld world, BlockPos pos) {
-		world.playEvent(1002, pos, 0);
+		world.levelEvent(1002, pos, 0);
 	}
 
 	@Nullable
@@ -81,19 +81,19 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 	}
 
 	private static Method getProjectileEntityLookup() {
-		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82499_a", World.class, IPosition.class, ItemStack.class);
+		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82499_a", World.class, IPosition.class, ItemStack.class); // getProjectile
 		getProjectileEntity.setAccessible(true);
 		return getProjectileEntity;
 	}
 
 	private static Method getProjectileInaccuracyLookup() {
-		Method getProjectileInaccuracy = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82498_a");
+		Method getProjectileInaccuracy = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82498_a"); // getUncertainty
 		getProjectileInaccuracy.setAccessible(true);
 		return getProjectileInaccuracy;
 	}
 
 	private static Method getProjectileVelocityLookup() {
-		Method getProjectileVelocity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82500_b");
+		Method getProjectileVelocity = ObfuscationReflectionHelper.findMethod(ProjectileDispenseBehavior.class, "func_82500_b"); // getPower
 		getProjectileVelocity.setAccessible(true);
 		return getProjectileVelocity;
 	}

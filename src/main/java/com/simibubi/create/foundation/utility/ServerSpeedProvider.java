@@ -32,9 +32,9 @@ public class ServerSpeedProvider {
 	@OnlyIn(Dist.CLIENT)
 	public static void clientTick() {
 		if (Minecraft.getInstance()
-			.isSingleplayer()
+			.hasSingleplayerServer()
 			&& Minecraft.getInstance()
-				.isGamePaused())
+				.isPaused())
 			return;
 		modifier.tick();
 		clientTimer++;

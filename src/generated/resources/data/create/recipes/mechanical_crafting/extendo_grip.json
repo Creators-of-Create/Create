@@ -12,7 +12,7 @@
       "tag": "forge:ingots/brass"
     },
     "R": {
-      "item": "create:cogwheel"
+      "item": "create:precision_mechanism"
     },
     "H": {
       "item": "create:brass_hand"
@@ -23,5 +23,6 @@
   },
   "result": {
     "item": "create:extendo_grip"
-  }
+  },
+  "acceptMirrored": false
 }

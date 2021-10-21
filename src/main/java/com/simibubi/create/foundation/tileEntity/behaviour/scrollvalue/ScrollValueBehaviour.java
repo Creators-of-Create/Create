@@ -55,6 +55,9 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
+	public boolean isSafeNBT() { return true; }
+
+	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.putInt("ScrollValue", value);
 		if (clientPacket && forceClientState) {
@@ -78,7 +81,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	public void tick() {
 		super.tick();
 
-		if (!getWorld().isRemote)
+		if (!getWorld().isClientSide)
 			return;
 		if (ticksUntilScrollPacket == -1)
 			return;
@@ -95,7 +98,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		clientCallback = valueCallback;
 		return this;
 	}
-	
+
 	public ScrollValueBehaviour withCallback(Consumer<Integer> valueCallback) {
 		callback = valueCallback;
 		return this;
@@ -126,7 +129,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		this.unit = unit;
 		return this;
 	}
-	
+
 	public ScrollValueBehaviour onlyActiveWhen(Supplier<Boolean> condition) {
 		isActive = condition;
 		return this;
@@ -151,7 +154,7 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 		this.value = value;
 		forceClientState = true;
 		callback.accept(value);
-		tileEntity.markDirty();
+		tileEntity.setChanged();
 		tileEntity.sendData();
 		scrollableValue = value;
 	}
@@ -168,21 +171,21 @@ public class ScrollValueBehaviour extends TileEntityBehaviour {
 	public BehaviourType<?> getType() {
 		return TYPE;
 	}
-	
+
 	public boolean isActive() {
 		return isActive.get();
 	}
 
 	public boolean testHit(Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.atLowerCornerOf(tileEntity.getBlockPos()));
 		return slotPositioning.testHit(state, localHit);
 	}
 
 	public void setLabel(ITextComponent label) {
 		this.label = label;
 	}
-	
+
 	public static class StepContext {
 		public int currentValue;
 		public boolean forward;

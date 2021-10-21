@@ -2,9 +2,9 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
@@ -48,7 +48,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 			if (lastChange == 0)
 				updateOutput();
 		}
-		if (world.isRemote)
+		if (level.isClientSide)
 			clientState.tick();
 	}
 
@@ -59,7 +59,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	private void updateOutput() {
-		AnalogLeverBlock.updateNeighbors(getBlockState(), world, pos);
+		AnalogLeverBlock.updateNeighbors(getBlockState(), level, worldPosition);
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 
 	@Override
 	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
-		tooltip.add(componentSpacing.copy().append(Lang.translate("tooltip.analogStrength", this.state)));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("tooltip.analogStrength", this.state)));
 
 		return true;
 	}

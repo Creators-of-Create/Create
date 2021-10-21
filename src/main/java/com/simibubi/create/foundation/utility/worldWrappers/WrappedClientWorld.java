@@ -38,7 +38,7 @@ public class WrappedClientWorld extends ClientWorld {
 	protected World world;
 
 	private WrappedClientWorld(World world) {
-		super(mc.getConnection(), mc.world.getWorldInfo(), world.getRegistryKey(), world.getDimension(), mc.getConnection().viewDistance, world.getProfilerSupplier(), mc.worldRenderer, world.isDebugWorld(), world.getBiomeAccess().seed);
+		super(mc.getConnection(), mc.level.getLevelData(), world.dimension(), world.dimensionType(), mc.getConnection().serverChunkRadius, world.getProfilerSupplier(), mc.levelRenderer, world.isDebug(), world.getBiomeManager().biomeZoomSeed);
 		this.world = world;
 	}
 
@@ -47,8 +47,13 @@ public class WrappedClientWorld extends ClientWorld {
 	}
 
 	@Override
-	public boolean isBlockLoaded(BlockPos pos) {
-		return world.isBlockLoaded(pos);
+	public boolean hasChunkAt(BlockPos pos) {
+		return world.hasChunkAt(pos);
+	}
+	
+	@Override
+	public boolean isLoaded(BlockPos pos) {
+		return world.isLoaded(pos);
 	}
 
 	@Override
@@ -70,13 +75,13 @@ public class WrappedClientWorld extends ClientWorld {
 
 
 	@Override
-	public int getLightLevel(LightType type, BlockPos pos) {
-		return world.getLightLevel(type, pos);
+	public int getBrightness(LightType type, BlockPos pos) {
+		return world.getBrightness(type, pos);
 	}
 
 	@Override
-	public int getLightValue(BlockPos pos) {
-		return world.getLightValue(pos);
+	public int getLightEmission(BlockPos pos) {
+		return world.getLightEmission(pos);
 	}
 
 	@Override
@@ -86,13 +91,13 @@ public class WrappedClientWorld extends ClientWorld {
 
 	@Nullable
 	@Override
-	public  <T extends LivingEntity> T getClosestEntity(List<? extends T> p_217361_1_, EntityPredicate p_217361_2_, @Nullable LivingEntity p_217361_3_, double p_217361_4_, double p_217361_6_, double p_217361_8_) {
-		return world.getClosestEntity(p_217361_1_, p_217361_2_, p_217361_3_, p_217361_4_, p_217361_6_, p_217361_8_);
+	public  <T extends LivingEntity> T getNearestEntity(List<? extends T> p_217361_1_, EntityPredicate p_217361_2_, @Nullable LivingEntity p_217361_3_, double p_217361_4_, double p_217361_6_, double p_217361_8_) {
+		return world.getNearestEntity(p_217361_1_, p_217361_2_, p_217361_3_, p_217361_4_, p_217361_6_, p_217361_8_);
 	}
 
 	@Override
-	public int getColor(BlockPos p_225525_1_, ColorResolver p_225525_2_) {
-		return world.getColor(p_225525_1_, p_225525_2_);
+	public int getBlockTint(BlockPos p_225525_1_, ColorResolver p_225525_2_) {
+		return world.getBlockTint(p_225525_1_, p_225525_2_);
 	}
 
 	// FIXME: Emissive Lighting might not light stuff properly
@@ -109,18 +114,18 @@ public class WrappedClientWorld extends ClientWorld {
 	}
 
 	@Override
-	public void addOptionalParticle(IParticleData p_195589_1_, double p_195589_2_, double p_195589_4_, double p_195589_6_, double p_195589_8_, double p_195589_10_, double p_195589_12_) {
-		world.addOptionalParticle(p_195589_1_, p_195589_2_, p_195589_4_, p_195589_6_, p_195589_8_, p_195589_10_, p_195589_12_);
+	public void addAlwaysVisibleParticle(IParticleData p_195589_1_, double p_195589_2_, double p_195589_4_, double p_195589_6_, double p_195589_8_, double p_195589_10_, double p_195589_12_) {
+		world.addAlwaysVisibleParticle(p_195589_1_, p_195589_2_, p_195589_4_, p_195589_6_, p_195589_8_, p_195589_10_, p_195589_12_);
 	}
 
 	@Override
-	public void addOptionalParticle(IParticleData p_217404_1_, boolean p_217404_2_, double p_217404_3_, double p_217404_5_, double p_217404_7_, double p_217404_9_, double p_217404_11_, double p_217404_13_) {
-		world.addOptionalParticle(p_217404_1_, p_217404_2_, p_217404_3_, p_217404_5_, p_217404_7_, p_217404_9_, p_217404_11_, p_217404_13_);
+	public void addAlwaysVisibleParticle(IParticleData p_217404_1_, boolean p_217404_2_, double p_217404_3_, double p_217404_5_, double p_217404_7_, double p_217404_9_, double p_217404_11_, double p_217404_13_) {
+		world.addAlwaysVisibleParticle(p_217404_1_, p_217404_2_, p_217404_3_, p_217404_5_, p_217404_7_, p_217404_9_, p_217404_11_, p_217404_13_);
 	}
 
 	@Override
-	public void playSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_, SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
-		world.playSound(p_184134_1_, p_184134_3_, p_184134_5_, p_184134_7_,p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
+	public void playLocalSound(double p_184134_1_, double p_184134_3_, double p_184134_5_, SoundEvent p_184134_7_, SoundCategory p_184134_8_, float p_184134_9_, float p_184134_10_, boolean p_184134_11_) {
+		world.playLocalSound(p_184134_1_, p_184134_3_, p_184134_5_, p_184134_7_,p_184134_8_, p_184134_9_, p_184134_10_, p_184134_11_);
 	}
 
 	@Override
@@ -130,8 +135,8 @@ public class WrappedClientWorld extends ClientWorld {
 
 	@Nullable
 	@Override
-	public TileEntity getTileEntity(BlockPos p_175625_1_) {
-		return world.getTileEntity(p_175625_1_);
+	public TileEntity getBlockEntity(BlockPos p_175625_1_) {
+		return world.getBlockEntity(p_175625_1_);
 	}
 	public World getWrappedWorld() {
 		return world;

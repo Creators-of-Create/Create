@@ -45,7 +45,7 @@ public class SchematicUploadPacket extends SimplePacketBase {
 
 	public SchematicUploadPacket(PacketBuffer buffer) {
 		code = buffer.readInt();
-		schematic = buffer.readString(256);
+		schematic = buffer.readUtf(256);
 
 		if (code == BEGIN)
 			size = buffer.readLong();
@@ -55,7 +55,7 @@ public class SchematicUploadPacket extends SimplePacketBase {
 
 	public void write(PacketBuffer buffer) {
 		buffer.writeInt(code);
-		buffer.writeString(schematic);
+		buffer.writeUtf(schematic);
 
 		if (code == BEGIN)
 			buffer.writeLong(size);
@@ -71,14 +71,14 @@ public class SchematicUploadPacket extends SimplePacketBase {
 				if (player == null)
 					return;
 				if (code == BEGIN) {
-					BlockPos pos = ((SchematicTableContainer) player.openContainer).getTileEntity()
-						.getPos();
-					Create.schematicReceiver.handleNewUpload(player, schematic, size, pos);
+					BlockPos pos = ((SchematicTableContainer) player.containerMenu).getTileEntity()
+							.getBlockPos();
+					Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
 				}
-				if (code == WRITE) 
-					Create.schematicReceiver.handleWriteRequest(player, schematic, data);
-				if (code == FINISH) 
-					Create.schematicReceiver.handleFinishedUpload(player, schematic);
+				if (code == WRITE)
+					Create.SCHEMATIC_RECEIVER.handleWriteRequest(player, schematic, data);
+				if (code == FINISH)
+					Create.SCHEMATIC_RECEIVER.handleFinishedUpload(player, schematic);
 			});
 		context.get()
 			.setPacketHandled(true);

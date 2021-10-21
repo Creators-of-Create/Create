@@ -31,22 +31,22 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, worldIn, pos, oldState, isMoving);
 		blockUpdate(state, worldIn, pos);
 	}
 
 	@Override
-	public void updateDiagonalNeighbors(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags, int count) {
-		super.updateDiagonalNeighbors(stateIn, worldIn, pos, flags, count);
+	public void updateIndirectNeighbourShapes(BlockState stateIn, IWorld worldIn, BlockPos pos, int flags, int count) {
+		super.updateIndirectNeighbourShapes(stateIn, worldIn, pos, flags, count);
 		blockUpdate(stateIn, worldIn, pos);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
 		if (state.hasTileEntity() && (state.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
 			withTileEntityDo(world, pos, EncasedFanTileEntity::updateChute);
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 		}
 	}
 
@@ -58,29 +58,29 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
-		Direction face = context.getFace();
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		Direction face = context.getClickedFace();
 
-		BlockState placedOn = world.getBlockState(pos.offset(face.getOpposite()));
-		BlockState placedOnOpposite = world.getBlockState(pos.offset(face));
+		BlockState placedOn = world.getBlockState(pos.relative(face.getOpposite()));
+		BlockState placedOnOpposite = world.getBlockState(pos.relative(face));
 		if (AbstractChuteBlock.isChute(placedOn))
-			return getDefaultState().with(FACING, face.getOpposite());
+			return defaultBlockState().setValue(FACING, face.getOpposite());
 		if (AbstractChuteBlock.isChute(placedOnOpposite))
-			return getDefaultState().with(FACING, face);
+			return defaultBlockState().setValue(FACING, face);
 
 		Direction preferredFacing = getPreferredFacing(context);
 		if (preferredFacing == null)
 			preferredFacing = context.getNearestLookingDirection();
-		return getDefaultState().with(FACING, context.getPlayer() != null && context.getPlayer()
-			.isSneaking() ? preferredFacing : preferredFacing.getOpposite());
+		return defaultBlockState().setValue(FACING, context.getPlayer() != null && context.getPlayer()
+			.isShiftKeyDown() ? preferredFacing : preferredFacing.getOpposite());
 	}
 
 	protected void blockUpdate(BlockState state, IWorld worldIn, BlockPos pos) {
 		if (worldIn instanceof WrappedWorld)
 			return;
 		notifyFanTile(worldIn, pos);
-		if (worldIn.isRemote())
+		if (worldIn.isClientSide())
 			return;
 		withTileEntityDo(worldIn, pos, te -> te.queueGeneratorUpdate());
 	}
@@ -91,19 +91,19 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 
 	@Override
 	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
-		blockUpdate(newState, context.getWorld(), context.getPos());
+		blockUpdate(newState, context.getLevel(), context.getClickedPos());
 		return newState;
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis();
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(FACING)
+		return face == state.getValue(FACING)
 			.getOpposite();
 	}
 

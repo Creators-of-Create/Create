@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
@@ -14,11 +15,13 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sid
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -33,29 +36,29 @@ public class FilteringRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult target = mc.objectMouseOver;
+		RayTraceResult target = mc.hitResult;
 		if (target == null || !(target instanceof BlockRayTraceResult))
 			return;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = mc.world;
-		BlockPos pos = result.getPos();
+		ClientWorld world = mc.level;
+		BlockPos pos = result.getBlockPos();
 		BlockState state = world.getBlockState(pos);
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
-		if (mc.player.isSneaking())
+		if (mc.player.isShiftKeyDown())
 			return;
 		if (behaviour == null)
 			return;
 		if (behaviour instanceof SidedFilteringBehaviour) {
-			behaviour = ((SidedFilteringBehaviour) behaviour).get(result.getFace());
+			behaviour = ((SidedFilteringBehaviour) behaviour).get(result.getDirection());
 			if (behaviour == null)
 				return;
 		}
 		if (!behaviour.isActive())
 			return;
 		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
-			((Sided) behaviour.slotPositioning).fromSide(result.getFace());
+			((Sided) behaviour.slotPositioning).fromSide(result.getDirection());
 		if (!behaviour.slotPositioning.shouldRender(state))
 			return;
 
@@ -66,32 +69,39 @@ public class FilteringRenderer {
 		ITextComponent label = isFilterSlotted ? StringTextComponent.EMPTY
 			: Lang.translate(behaviour.recipeFilter ? "logistics.recipe_filter"
 				: fluids ? "logistics.fluid_filter" : "logistics.filter");
-		boolean hit = behaviour.slotPositioning.testHit(state, target.getHitVec()
-			.subtract(Vector3d.of(pos)));
+		boolean hit = behaviour.slotPositioning.testHit(state, target.getLocation()
+			.subtract(Vector3d.atLowerCornerOf(pos)));
 
 		AxisAlignedBB emptyBB = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO);
-		AxisAlignedBB bb = isFilterSlotted ? emptyBB.grow(.45f, .31f, .2f) : emptyBB.grow(.25f);
+		AxisAlignedBB bb = isFilterSlotted ? emptyBB.inflate(.45f, .31f, .2f) : emptyBB.inflate(.25f);
 
 		ValueBox box = showCount ? new ItemValueBox(label, bb, pos, filter, behaviour.scrollableValue)
-			: new ValueBox(label, bb, pos);
+				: new ValueBox(label, bb, pos);
 
 		box.offsetLabel(behaviour.textShift)
-			.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
-			.scrollTooltip(showCount && !isFilterSlotted ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
-			.passive(!hit);
+				.withColors(fluids ? 0x407088 : 0x7A6A2C, fluids ? 0x70adb5 : 0xB79D64)
+				.scrollTooltip(showCount && !isFilterSlotted ? new StringTextComponent("[").append(Lang.translate("action.scroll")).append("]") : StringTextComponent.EMPTY)
+				.passive(!hit);
 
-		CreateClient.outliner.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
-			.lineWidth(1 / 64f)
-			.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
-			.highlightFace(result.getFace());
+		CreateClient.OUTLINER.showValueBox(Pair.of("filter", pos), box.transform(behaviour.slotPositioning))
+				.lineWidth(1 / 64f)
+				.withFaceTexture(hit ? AllSpecialTextures.THIN_CHECKERED : null)
+				.highlightFace(result.getDirection());
 	}
 
-	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
+	public static void renderOnTileEntity(SmartTileEntity te, float partialTicks, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
 
-		if (tileEntityIn == null || tileEntityIn.isRemoved())
+		if (te == null || te.isRemoved())
 			return;
-		FilteringBehaviour behaviour = tileEntityIn.getBehaviour(FilteringBehaviour.TYPE);
+
+		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
+		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()
+			.distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max))
+			return;
+
+		FilteringBehaviour behaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		if (!behaviour.isActive())
@@ -101,7 +111,7 @@ public class FilteringRenderer {
 			return;
 
 		ValueBoxTransform slotPositioning = behaviour.slotPositioning;
-		BlockState blockState = tileEntityIn.getBlockState();
+		BlockState blockState = te.getBlockState();
 
 		if (slotPositioning instanceof ValueBoxTransform.Sided) {
 			ValueBoxTransform.Sided sided = (ValueBoxTransform.Sided) slotPositioning;
@@ -115,18 +125,18 @@ public class FilteringRenderer {
 				if (!slotPositioning.shouldRender(blockState))
 					continue;
 
-				ms.push();
+				ms.pushPose();
 				slotPositioning.transform(blockState, ms);
 				ValueBoxRenderer.renderItemIntoValueBox(filter, ms, buffer, light, overlay);
-				ms.pop();
+				ms.popPose();
 			}
 			sided.fromSide(side);
 			return;
 		} else if (slotPositioning.shouldRender(blockState)) {
-			ms.push();
+			ms.pushPose();
 			slotPositioning.transform(blockState, ms);
 			ValueBoxRenderer.renderItemIntoValueBox(behaviour.getFilter(), ms, buffer, light, overlay);
-			ms.pop();
+			ms.popPose();
 		}
 	}
 

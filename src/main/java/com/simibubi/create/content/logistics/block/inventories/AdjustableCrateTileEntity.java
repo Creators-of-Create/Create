@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.inventories;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,12 +11,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -48,7 +47,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 		@Override
 		protected void onContentsChanged(int slot) {
 			super.onContentsChanged(slot);
-			markDirty();
+			setChanged();
 
 			itemCount = 0;
 			for (int i = 0; i < getSlots(); i++) {
@@ -72,13 +71,13 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 
 	@Override
 	public Container createMenu(int id, PlayerInventory inventory, PlayerEntity player) {
-		return new AdjustableCrateContainer(id, inventory, this);
+		return AdjustableCrateContainer.create(id, inventory, this);
 	}
 
 	public AdjustableCrateTileEntity getOtherCrate() {
 		if (!AllBlocks.ADJUSTABLE_CRATE.has(getBlockState()))
 			return null;
-		TileEntity tileEntity = world.getTileEntity(pos.offset(getFacing()));
+		TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(getFacing()));
 		if (tileEntity instanceof AdjustableCrateTileEntity)
 			return (AdjustableCrateTileEntity) tileEntity;
 		return null;
@@ -139,7 +138,7 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	}
 
 	private void drop(int slot) {
-		InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
+		InventoryHelper.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), inventory.getStackInSlot(slot));
 	}
 
 	@Override
@@ -159,18 +158,12 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 
 	@Override
 	public ITextComponent getDisplayName() {
-		return new StringTextComponent(getType().getRegistryName()
-			.toString());
-	}
-
-	public void sendToContainer(PacketBuffer buffer) {
-		buffer.writeBlockPos(getPos());
-		buffer.writeCompoundTag(getUpdateTag());
+		return Lang.translate("gui.adjustable_crate.title");
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		invHandler.invalidate();
 	}
 

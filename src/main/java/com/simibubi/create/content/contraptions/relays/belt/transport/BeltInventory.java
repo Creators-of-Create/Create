@@ -55,7 +55,7 @@ public class BeltInventory {
 			toInsert.clear();
 			items.removeAll(toRemove);
 			toRemove.clear();
-			belt.markDirty();
+			belt.setChanged();
 			belt.sendData();
 		}
 		
@@ -66,7 +66,7 @@ public class BeltInventory {
 		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
 			beltMovementPositive = !beltMovementPositive;
 			Collections.reverse(items);
-			belt.markDirty();
+			belt.setChanged();
 			belt.sendData();
 		}
 
@@ -79,10 +79,10 @@ public class BeltInventory {
 		float beltSpeed = belt.getDirectionAwareBeltMovementSpeed();
 		Direction movementFacing = belt.getMovementFacing();
 		boolean horizontal = belt.getBlockState()
-			.get(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
+			.getValue(BeltBlock.SLOPE) == BeltSlope.HORIZONTAL;
 		float spacing = 1;
-		World world = belt.getWorld();
-		boolean onClient = world.isRemote && !belt.isVirtual();
+		World world = belt.getLevel();
+		boolean onClient = world.isClientSide && !belt.isVirtual();
 
 		// resolve ending only when items will reach it this tick
 		Ending ending = Ending.UNRESOLVED;
@@ -105,7 +105,7 @@ public class BeltInventory {
 				movement *= ServerSpeedProvider.get();
 
 			// Don't move if held by processing (client)
-			if (world.isRemote && currentItem.locked)
+			if (world.isClientSide && currentItem.locked)
 				continue;
 			
 			// Don't move if held by external components
@@ -256,7 +256,7 @@ public class BeltInventory {
 					continue;
 				if (stackHandlerBehaviour == null)
 					continue;
-				if (BeltProcessingBehaviour.isBlocked(belt.getWorld(), BeltHelper.getPositionForOffset(belt, segment)))
+				if (BeltProcessingBehaviour.isBlocked(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment)))
 					continue;
 
 				ProcessingResult result = processingBehaviour.handleReceivedItem(currentItem, stackHandlerBehaviour);
@@ -276,12 +276,12 @@ public class BeltInventory {
 	}
 
 	protected BeltProcessingBehaviour getBeltProcessingAtSegment(int segment) {
-		return TileEntityBehaviour.get(belt.getWorld(), BeltHelper.getPositionForOffset(belt, segment)
-			.up(2), BeltProcessingBehaviour.TYPE);
+		return TileEntityBehaviour.get(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment)
+			.above(2), BeltProcessingBehaviour.TYPE);
 	}
 
 	protected TransportedItemStackHandlerBehaviour getTransportedItemStackHandlerAtSegment(int segment) {
-		return TileEntityBehaviour.get(belt.getWorld(), BeltHelper.getPositionForOffset(belt, segment),
+		return TileEntityBehaviour.get(belt.getLevel(), BeltHelper.getPositionForOffset(belt, segment),
 			TransportedItemStackHandlerBehaviour.TYPE);
 	}
 
@@ -296,7 +296,7 @@ public class BeltInventory {
 	}
 
 	private Ending resolveEnding() {
-		World world = belt.getWorld();
+		World world = belt.getLevel();
 		BlockPos nextPosition = BeltHelper.getPositionForOffset(belt, beltMovementPositive ? belt.beltLength : -1);
 
 //		if (AllBlocks.BRASS_BELT_FUNNEL.has(world.getBlockState(lastPosition.up())))
@@ -397,15 +397,15 @@ public class BeltInventory {
 		ItemStack ejected = stack.stack;
 		Vector3d outPos = BeltHelper.getVectorForOffset(belt, stack.beltPosition);
 		float movementSpeed = Math.max(Math.abs(belt.getBeltMovementSpeed()), 1 / 8f);
-		Vector3d outMotion = Vector3d.of(belt.getBeltChainDirection()).scale(movementSpeed)
+		Vector3d outMotion = Vector3d.atLowerCornerOf(belt.getBeltChainDirection()).scale(movementSpeed)
 			.add(0, 1 / 8f, 0);
 		outPos = outPos.add(outMotion.normalize().scale(0.001));
-		ItemEntity entity = new ItemEntity(belt.getWorld(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
-		entity.setMotion(outMotion);
-		entity.setDefaultPickupDelay();
-		entity.velocityChanged = true;
-		belt.getWorld()
-			.addEntity(entity);
+		ItemEntity entity = new ItemEntity(belt.getLevel(), outPos.x, outPos.y + 6 / 16f, outPos.z, ejected);
+		entity.setDeltaMovement(outMotion);
+		entity.setDefaultPickUpDelay();
+		entity.hurtMarked = true;
+		belt.getLevel()
+			.addFreshEntity(entity);
 	}
 
 	public void ejectAll() {
@@ -434,7 +434,7 @@ public class BeltInventory {
 			toRemove.add(transported);
 		}
 		if (dirty) {
-			belt.markDirty();
+			belt.setChanged();
 			belt.sendData();
 		}
 	}

@@ -1,10 +1,7 @@
 package com.simibubi.create.foundation.block.render;
 
-import java.util.function.Function;
-
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 
 public class SpriteShiftEntry {
@@ -18,26 +15,24 @@ public class SpriteShiftEntry {
 		this.targetTextureLocation = targetTextureLocation;
 	}
 
-	protected void loadTextures() {
-		Function<ResourceLocation, TextureAtlasSprite> textureMap = Minecraft.getInstance()
-			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
-		original = textureMap.apply(originalTextureLocation);
-		target = textureMap.apply(targetTextureLocation);
+	public ResourceLocation getOriginalResourceLocation() {
+		return originalTextureLocation;
 	}
 
 	public ResourceLocation getTargetResourceLocation() {
 		return targetTextureLocation;
 	}
 
+	public TextureAtlasSprite getOriginal() {
+		return original;
+	}
+
 	public TextureAtlasSprite getTarget() {
-		if (target == null)
-			loadTextures();
 		return target;
 	}
 
-	public TextureAtlasSprite getOriginal() {
-		if (original == null)
-			loadTextures();
-		return original;
+	protected void loadTextures(AtlasTexture atlas) {
+		original = atlas.getSprite(originalTextureLocation);
+		target = atlas.getSprite(targetTextureLocation);
 	}
 }

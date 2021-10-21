@@ -1,9 +1,9 @@
 package com.simibubi.create.content.logistics.block.chute;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock.Shape;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -25,9 +25,9 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		if (te.item.isEmpty())
 			return;
 		BlockState blockState = te.getBlockState();
-		if (blockState.get(ChuteBlock.FACING) != Direction.DOWN)
+		if (blockState.getValue(ChuteBlock.FACING) != Direction.DOWN)
 			return;
-		if (blockState.get(ChuteBlock.SHAPE) != Shape.WINDOW
+		if (blockState.getValue(ChuteBlock.SHAPE) != Shape.WINDOW
 			&& (te.bottomPullDistance == 0 || te.itemPosition.get(partialTicks) > .5f))
 			return;
 
@@ -38,8 +38,8 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance()
 			.getItemRenderer();
-		MatrixStacker msr = MatrixStacker.of(ms);
-		ms.push();
+		MatrixTransformStack msr = MatrixTransformStack.of(ms);
+		ms.pushPose();
 		msr.centre();
 		float itemScale = .5f;
 		float itemPosition = te.itemPosition.get(partialTicks);
@@ -47,8 +47,8 @@ public class ChuteRenderer extends SafeTileEntityRenderer<ChuteTileEntity> {
 		ms.scale(itemScale, itemScale, itemScale);
 		msr.rotateX(itemPosition * 180);
 		msr.rotateY(itemPosition * 180);
-		itemRenderer.renderItem(te.item, TransformType.FIXED, light, overlay, ms, buffer);
-		ms.pop();
+		itemRenderer.renderStatic(te.item, TransformType.FIXED, light, overlay, ms, buffer);
+		ms.popPose();
 	}
 
 }

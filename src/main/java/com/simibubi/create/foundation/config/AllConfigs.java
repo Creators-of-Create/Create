@@ -7,18 +7,23 @@ import java.util.function.Supplier;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.simibubi.create.foundation.block.BlockStressValues;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.config.ModConfig.Type;
 
 public class AllConfigs {
 
-	static Map<ConfigBase, ModConfig.Type> configs = new HashMap<>();
+	private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new HashMap<>();
 
 	public static CClient CLIENT;
 	public static CCommon COMMON;
 	public static CServer SERVER;
+
+	public static ConfigBase byType(ModConfig.Type type) {
+		return CONFIGS.get(type);
+	}
 
 	private static <T extends ConfigBase> T register(Supplier<T> factory, ModConfig.Type side) {
 		Pair<T, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(builder -> {
@@ -29,33 +34,33 @@ public class AllConfigs {
 
 		T config = specPair.getLeft();
 		config.specification = specPair.getRight();
-		configs.put(config, side);
+		CONFIGS.put(side, config);
 		return config;
 	}
 
-	public static void register() {
+	public static void register(ModLoadingContext context) {
 		CLIENT = register(CClient::new, ModConfig.Type.CLIENT);
 		COMMON = register(CCommon::new, ModConfig.Type.COMMON);
 		SERVER = register(CServer::new, ModConfig.Type.SERVER);
 
-		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			ModLoadingContext.get()
-				.registerConfig(pair.getValue(), pair.getKey().specification);
+		for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
+			context.registerConfig(pair.getKey(), pair.getValue().specification);
+
+		BlockStressValues.registerProvider(context.getActiveNamespace(), SERVER.kinetics.stressValues);
 	}
 
 	public static void onLoad(ModConfig.Loading event) {
-		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			if (pair.getKey().specification == event.getConfig()
+		for (ConfigBase config : CONFIGS.values())
+			if (config.specification == event.getConfig()
 				.getSpec())
-				pair.getKey()
-					.onLoad();
+				config.onLoad();
 	}
 
 	public static void onReload(ModConfig.Reloading event) {
-		for (Entry<ConfigBase, Type> pair : configs.entrySet())
-			if (pair.getKey().specification == event.getConfig()
+		for (ConfigBase config : CONFIGS.values())
+			if (config.specification == event.getConfig()
 				.getSpec())
-				pair.getKey()
-					.onReload();
+				config.onReload();
 	}
+
 }

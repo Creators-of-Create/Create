@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.simibubi.create.content.logistics.InWorldProcessing;
+import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
@@ -44,7 +44,7 @@ public class AllTriggers {
 		CHAINED_ITEM_DRAIN = simple("chained_item_drain"), SPOUT = simple("spout"),
 		SPOUT_POTION = simple("spout_potion"), GLASS_PIPE = simple("glass_pipe"),
 		PIPE_COLLISION = simple("pipe_collision"), PIPE_SPILL = simple("pipe_spill"),
-		HOSE_PULLEY = simple("hose_pulley"), MIXER_MIX = simple("mixer");
+		POTATO_KILL = simple("potato_kill"), HOSE_PULLEY = simple("hose_pulley"), MIXER_MIX = simple("mixer");
 
 	private static SimpleTrigger simple(String id) {
 		return add(new SimpleTrigger(id));
@@ -72,7 +72,7 @@ public class AllTriggers {
 		Predicate<PlayerEntity> playerFilter) {
 		if (world == null)
 			return;
-		if (world.isRemote())
+		if (world.isClientSide())
 			return;
 		List<ServerPlayerEntity> players = getPlayersInRange(world, pos, range);
 		players.stream()
@@ -81,6 +81,6 @@ public class AllTriggers {
 	}
 
 	public static List<ServerPlayerEntity> getPlayersInRange(IWorld world, BlockPos pos, int range) {
-		return world.getEntitiesWithinAABB(ServerPlayerEntity.class, new AxisAlignedBB(pos).grow(range));
+		return world.getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(pos).inflate(range));
 	}
 }

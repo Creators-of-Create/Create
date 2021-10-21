@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.advancement.ITriggerable;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -38,7 +39,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		this.pred = pred;
 		bracket = Optional.empty();
 	}
-	
+
 	public BracketedTileEntityBehaviour withTrigger(Function<BlockState, ITriggerable> trigger) {
 		this.trigger = trigger;
 		return this;
@@ -54,7 +55,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		reRender = true;
 		tileEntity.notifyUpdate();
 	}
-	
+
 	public void triggerAdvancements(World world, PlayerEntity player, BlockState state) {
 		if (trigger == null)
 			return;
@@ -63,8 +64,8 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 
 	public void removeBracket(boolean inOnReplacedContext) {
 		World world = getWorld();
-		if (!world.isRemote)
-			world.playEvent(2001, getPos(), Block.getStateId(getBracket()));
+		if (!world.isClientSide)
+			world.levelEvent(2001, getPos(), Block.getId(getBracket()));
 		this.bracket = Optional.empty();
 		reRender = true;
 		if (inOnReplacedContext)
@@ -73,12 +74,22 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 			tileEntity.notifyUpdate();
 	}
 
-	public boolean isBacketPresent() {
-		return getBracket() != Blocks.AIR.getDefaultState();
+	public boolean isBracketPresent() {
+		return getBracket() != Blocks.AIR.defaultBlockState();
 	}
 
 	public BlockState getBracket() {
-		return bracket.orElse(Blocks.AIR.getDefaultState());
+		return bracket.orElse(Blocks.AIR.defaultBlockState());
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		return ItemRequirement.of(getBracket(), null);
+	}
+
+	@Override
+	public boolean isSafeNBT() {
+		return true;
 	}
 
 	@Override
@@ -97,7 +108,7 @@ public class BracketedTileEntityBehaviour extends TileEntityBehaviour {
 		if (nbt.contains("Bracket"))
 			bracket = Optional.of(NBTUtil.readBlockState(nbt.getCompound("Bracket")));
 		if (clientPacket && nbt.contains("Redraw"))
-			getWorld().notifyBlockUpdate(getPos(), tileEntity.getBlockState(), tileEntity.getBlockState(), 16);
+			getWorld().sendBlockUpdated(getPos(), tileEntity.getBlockState(), tileEntity.getBlockState(), 16);
 		super.read(nbt, clientPacket);
 	}
 

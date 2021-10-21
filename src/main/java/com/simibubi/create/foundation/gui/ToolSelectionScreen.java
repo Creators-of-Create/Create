@@ -33,7 +33,7 @@ public class ToolSelectionScreen extends Screen {
 
 	public ToolSelectionScreen(List<Tools> tools, Consumer<Tools> callback) {
 		super(new StringTextComponent("Tool Selection"));
-		this.client = Minecraft.getInstance();
+		this.minecraft = Minecraft.getInstance();
 		this.tools = tools;
 		this.callback = callback;
 		focused = false;
@@ -62,12 +62,12 @@ public class ToolSelectionScreen extends Screen {
 		Minecraft mc = Minecraft.getInstance();
 		MainWindow mainWindow = mc.getWindow();
 		if (!initialized)
-			init(mc, mainWindow.getScaledWidth(), mainWindow.getScaledHeight());
+			init(mc, mainWindow.getGuiScaledWidth(), mainWindow.getGuiScaledHeight());
 
-		int x = (mainWindow.getScaledWidth() - w) / 2 + 15;
-		int y = mainWindow.getScaledHeight() - h - 75;
+		int x = (mainWindow.getGuiScaledWidth() - w) / 2 + 15;
+		int y = mainWindow.getGuiScaledHeight() - h - 75;
 
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(0, -yOffset, focused ? 100 : 0);
 
 		AllGuiTextures gray = AllGuiTextures.HUD_BACKGROUND;
@@ -76,8 +76,8 @@ public class ToolSelectionScreen extends Screen {
 
 		Minecraft.getInstance()
 			.getTextureManager()
-			.bindTexture(gray.location);
-		drawTexture(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
+			.bind(gray.location);
+		blit(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
 		List<ITextComponent> toolTip = tools.get(selection)
@@ -86,40 +86,40 @@ public class ToolSelectionScreen extends Screen {
 
 		if (toolTipAlpha > 0.25f) {
 			RenderSystem.color4f(.7f, .7f, .8f, toolTipAlpha);
-			drawTexture(matrixStack, x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
+			blit(matrixStack, x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
 			RenderSystem.color4f(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)
-				textRenderer.draw(matrixStack, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
+				font.draw(matrixStack, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
 			if (toolTip.size() > 1)
-				textRenderer.draw(matrixStack, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent);
+				font.draw(matrixStack, toolTip.get(1), x - 10, y + 50, 0xCCDDFF + stringAlphaComponent);
 			if (toolTip.size() > 2)
-				textRenderer.draw(matrixStack, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent);
+				font.draw(matrixStack, toolTip.get(2), x - 10, y + 60, 0xCCDDFF + stringAlphaComponent);
 			if (toolTip.size() > 3)
-				textRenderer.draw(matrixStack, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
+				font.draw(matrixStack, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
 		}
 
 		RenderSystem.color4f(1, 1, 1, 1);
 		if (tools.size() > 1) {
 			String keyName = AllKeys.TOOL_MENU.getBoundKey();
-			int width = client.getWindow()
-				.getScaledWidth();
+			int width = minecraft.getWindow()
+				.getGuiScaledWidth();
 			if (!focused)
-				drawCenteredText(matrixStack, client.fontRenderer, Lang.translate(holdToFocus, keyName), width / 2,
+				drawCenteredString(matrixStack, minecraft.font, Lang.translate(holdToFocus, keyName), width / 2,
 					y - 10, 0xCCDDFF);
 			else
-				drawCenteredString(matrixStack, client.fontRenderer, scrollToCycle, width / 2, y - 10, 0xCCDDFF);
+				drawCenteredString(matrixStack, minecraft.font, scrollToCycle, width / 2, y - 10, 0xCCDDFF);
 		} else {
 			x += 65;
 		}
 
 		for (int i = 0; i < tools.size(); i++) {
-			matrixStack.push();
+			matrixStack.pushPose();
 
 			float alpha = focused ? 1 : .2f;
 			if (i == selection) {
 				matrixStack.translate(0, -10, 0);
-				drawCenteredString(matrixStack, client.fontRenderer, tools.get(i)
+				drawCenteredString(matrixStack, minecraft.font, tools.get(i)
 					.getDisplayName()
 					.getString(), x + i * 50 + 24, y + 28, 0xCCDDFF);
 				alpha = 1;
@@ -133,10 +133,11 @@ public class ToolSelectionScreen extends Screen {
 				.getIcon()
 				.draw(matrixStack, this, x + i * 50 + 16, y + 11);
 
-			matrixStack.pop();
+			matrixStack.popPose();
 		}
 
-		matrixStack.pop();
+		RenderSystem.enableBlend();
+		matrixStack.popPose();
 	}
 
 	public void update() {

@@ -3,7 +3,6 @@ package com.simibubi.create.compat.jei.category.animations;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
@@ -22,25 +21,25 @@ public class AnimatedItemDrain extends AnimatedKinetics {
 
 	@Override
 	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 100);
-		matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-15.5f));
-		matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(22.5f));
+		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
+		matrixStack.mulPose(Vector3f.YP.rotationDegrees(22.5f));
 		int scale = 20;
 
-		GuiGameElement.of(AllBlocks.ITEM_DRAIN.getDefaultState())
+		blockElement(AllBlocks.ITEM_DRAIN.getDefaultState())
 			.scale(scale)
 			.render(matrixStack);
 
 		Impl buffer = IRenderTypeBuffer.immediate(Tessellator.getInstance()
-			.getBuffer());
+			.getBuilder());
 		MatrixStack ms = new MatrixStack();
 		ms.scale(scale, -scale, scale);
 		float from = 2/16f;
 		float to = 1f - from;
-		FluidRenderer.renderTiledFluidBB(fluid, from, from, from, to, 3/4f, to, buffer, ms, 0xf000f0, false);
-		buffer.draw();
+		FluidRenderer.renderTiledFluidBB(fluid, from, from, from, to, 3/4f, to, buffer, ms, 0xF000F0, false);
+		buffer.endBatch();
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 }

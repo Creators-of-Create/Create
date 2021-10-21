@@ -2,9 +2,11 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.item.ItemEntity;
@@ -32,15 +34,19 @@ public abstract class MovementBehaviour {
 	}
 
 	public void dropItem(MovementContext context, ItemStack stack) {
-		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+		ItemStack remainder;
+		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get())
+			remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+		else
+			remainder = stack;
 		if (remainder.isEmpty())
 			return;
 
 		Vector3d vec = context.position;
 		ItemEntity itemEntity = new ItemEntity(context.world, vec.x, vec.y, vec.z, remainder);
-		itemEntity.setMotion(context.motion.add(0, 0.5f, 0)
-			.scale(context.world.rand.nextFloat() * .3f));
-		context.world.addEntity(itemEntity);
+		itemEntity.setDeltaMovement(context.motion.add(0, 0.5f, 0)
+			.scale(context.world.random.nextFloat() * .3f));
+		context.world.addFreshEntity(itemEntity);
 	}
 
 	public void stopMoving(MovementContext context) {
@@ -60,12 +66,12 @@ public abstract class MovementBehaviour {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {}
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {}
 
 	@OnlyIn(Dist.CLIENT)
 	@Nullable
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		return null;
 	}
 

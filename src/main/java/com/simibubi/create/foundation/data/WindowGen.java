@@ -44,10 +44,10 @@ public class WindowGen {
 	private static final CreateRegistrate REGISTRATE = Create.registrate();
 
 	private static Properties glassProperties(Properties p) {
-		return p.allowsSpawning(WindowGen::never)
-			.solidBlock(WindowGen::never)
-			.suffocates(WindowGen::never)
-			.blockVision(WindowGen::never);
+		return p.isValidSpawn(WindowGen::never)
+			.isRedstoneConductor(WindowGen::never)
+			.isSuffocating(WindowGen::never)
+			.isViewBlocking(WindowGen::never);
 	}
 
 	private static boolean never(BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
@@ -60,7 +60,7 @@ public class WindowGen {
 	}
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType, Block planksBlock) {
-		return woodenWindowBlock(woodType, planksBlock, () -> RenderType::getCutoutMipped);
+		return woodenWindowBlock(woodType, planksBlock, () -> RenderType::cutoutMipped);
 	}
 
 	public static BlockEntry<WindowBlock> customWindowBlock(String name, Supplier<? extends IItemProvider> ingredient,
@@ -72,7 +72,7 @@ public class WindowGen {
 
 	public static BlockEntry<WindowBlock> woodenWindowBlock(WoodType woodType, Block planksBlock,
 		Supplier<Supplier<RenderType>> renderType) {
-		String woodName = woodType.getName();
+		String woodName = woodType.name();
 		String name = woodName + "_window";
 		NonNullFunction<String, ResourceLocation> end_texture =
 			$ -> new ResourceLocation("block/" + woodName + "_planks");
@@ -87,16 +87,16 @@ public class WindowGen {
 		return REGISTRATE.block(name, WindowBlock::new)
 			.onRegister(connectedTextures(new HorizontalCTBehaviour(ct)))
 			.addLayer(renderType)
-			.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get(), 2)
-				.patternLine(" # ")
-				.patternLine("#X#")
-				.key('#', ingredient.get())
-				.key('X', DataIngredient.tag(Tags.Items.GLASS_COLORLESS))
-				.addCriterion("has_ingredient", p.hasItem(ingredient.get()))
-				.build(p::accept))
+			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 2)
+				.pattern(" # ")
+				.pattern("#X#")
+				.define('#', ingredient.get())
+				.define('X', DataIngredient.tag(Tags.Items.GLASS_COLORLESS))
+				.unlockedBy("has_ingredient", p.hasItem(ingredient.get()))
+				.save(p::accept))
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
-			.loot((t, g) -> t.registerSilkTouch(g))
+			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.blockstate((c, p) -> p.simpleBlock(c.get(), p.models()
 				.cubeColumn(c.getName(), sideTexture.apply(c.getName()), endTexture.apply(c.getName()))))
 			.tag(BlockTags.IMPERMEABLE)
@@ -107,10 +107,10 @@ public class WindowGen {
 	public static BlockEntry<ConnectedGlassBlock> framedGlass(String name, ConnectedTextureBehaviour behaviour) {
 		return REGISTRATE.block(name, ConnectedGlassBlock::new)
 			.onRegister(connectedTextures(behaviour))
-			.addLayer(() -> RenderType::getTranslucent)
+			.addLayer(() -> RenderType::translucent)
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
-			.loot((t, g) -> t.registerSilkTouch(g))
+			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.recipe((c, p) -> p.stonecutting(DataIngredient.tag(Tags.Items.GLASS_COLORLESS), c::get))
 			.blockstate((c, p) -> BlockStateGen.cubeAll(c, p, "palettes/", "framed_glass"))
 			.tag(Tags.Blocks.GLASS_COLORLESS, BlockTags.IMPERMEABLE)
@@ -127,7 +127,7 @@ public class WindowGen {
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + "framed_glass");
 		ResourceLocation itemSideTexture = Create.asResource(palettesDir() + name);
 		ResourceLocation topTexture = Create.asResource(palettesDir() + "framed_glass_pane_top");
-		Supplier<Supplier<RenderType>> renderType = () -> RenderType::getTranslucent;
+		Supplier<Supplier<RenderType>> renderType = () -> RenderType::translucent;
 		return connectedGlassPane(name, parent, ctshift, sideTexture, itemSideTexture, topTexture, renderType);
 	}
 
@@ -140,12 +140,12 @@ public class WindowGen {
 
 	public static BlockEntry<ConnectedGlassPaneBlock> woodenWindowPane(WoodType woodType,
 		Supplier<? extends Block> parent) {
-		return woodenWindowPane(woodType, parent, () -> RenderType::getCutoutMipped);
+		return woodenWindowPane(woodType, parent, () -> RenderType::cutoutMipped);
 	}
 
 	public static BlockEntry<ConnectedGlassPaneBlock> woodenWindowPane(WoodType woodType,
 		Supplier<? extends Block> parent, Supplier<Supplier<RenderType>> renderType) {
-		String woodName = woodType.getName();
+		String woodName = woodType.name();
 		String name = woodName + "_window";
 		ResourceLocation topTexture = new ResourceLocation("block/" + woodName + "_planks");
 		ResourceLocation sideTexture = Create.asResource(palettesDir() + name);
@@ -203,17 +203,17 @@ public class WindowGen {
 			.addLayer(renderType)
 			.initialProperties(() -> Blocks.GLASS_PANE)
 			.blockstate(stateProvider)
-			.recipe((c, p) -> ShapedRecipeBuilder.shapedRecipe(c.get(), 16)
-				.patternLine("###")
-				.patternLine("###")
-				.key('#', parent.get())
-				.addCriterion("has_ingredient", p.hasItem(parent.get()))
-				.build(p::accept))
+			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get(), 16)
+				.pattern("###")
+				.pattern("###")
+				.define('#', parent.get())
+				.unlockedBy("has_ingredient", p.hasItem(parent.get()))
+				.save(p::accept))
 			.tag(Tags.Blocks.GLASS_PANES)
-			.loot((t, g) -> t.registerSilkTouch(g))
+			.loot((t, g) -> t.dropWhenSilkTouch(g))
 			.item()
 			.tag(Tags.Items.GLASS_PANES)
-			.model((c, p) -> p.withExistingParent(c.getName(), new ResourceLocation(Create.ID, "item/pane"))
+			.model((c, p) -> p.withExistingParent(c.getName(), Create.asResource("item/pane"))
 				.texture("pane", sideTexture)
 				.texture("edge", topTexture))
 			.build()

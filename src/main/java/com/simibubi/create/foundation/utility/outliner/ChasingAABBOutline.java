@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -13,8 +13,8 @@ public class ChasingAABBOutline extends AABBOutline {
 
 	public ChasingAABBOutline(AxisAlignedBB bb) {
 		super(bb);
-		prevBB = bb.grow(0);
-		targetBB = bb.grow(0);
+		prevBB = bb.inflate(0);
+		targetBB = bb.inflate(0);
 	}
 
 	public void target(AxisAlignedBB target) {

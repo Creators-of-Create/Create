@@ -4,13 +4,29 @@
 	"itemGroup.create.palettes": "Create Palettes",
 
 	"death.attack.create.crush": "%1$s was processed by Crushing Wheels",
-	"death.attack.create.fan_fire": "%1$s was burned to death by hot air",
-	"death.attack.create.fan_lava": "%1$s was burned to death by lava fan",
+	"death.attack.create.crush.player": "%1$s was thrown into Crushing Wheels by %2$s",
+	"death.attack.create.fan_fire": "%1$s got smoked by an Encased Fan",
+	"death.attack.create.fan_fire.player": "%1$s was thrown into a smoker by %2$s",
+	"death.attack.create.fan_lava": "%1$s was incinerated by an Encased Fan",
+	"death.attack.create.fan_lava.player": "%1$s was thrown into a smelter by %2$s",
 	"death.attack.create.mechanical_drill": "%1$s was impaled by a Mechanical Drill",
+	"death.attack.create.mechanical_drill.player": "%1$s was thrown in front of a Drill by %2$s",
 	"death.attack.create.mechanical_saw": "%1$s got cut in half by a Mechanical Saw",
+	"death.attack.create.mechanical_saw.player": "%1$s was thrown into a Saw by %2$s",
+	"death.attack.create.potato_cannon": "%1$s was shot by %2$s's Potato Cannon",
+	"death.attack.create.potato_cannon.item": "%1$s was shot by %2$s using %3$s",
 	"death.attack.create.cuckoo_clock_explosion": "%1$s was blown up by tampered cuckoo clock",
+	"death.attack.create.cuckoo_clock_explosion.player": "%1$s was blown up by tampered cuckoo clock",
 	"create.block.deployer.damage_source_name": "a rogue Deployer",
 	"create.block.cart_assembler.invalid": "Place your Cart Assembler on a rail block",
+
+	"create.menu.return": "Return to Menu",
+	"create.menu.configure": "Configure...",
+	"create.menu.ponder_index": "Ponder Index",
+	"create.menu.only_ingame": "Available in the Pause Menu",
+	"create.menu.project_page": "Project Page",
+	"create.menu.report_bugs": "Report Issues",
+	"create.menu.support": "Support Us",
 
 	"create.recipe.crushing": "Crushing",
 	"create.recipe.milling": "Milling",
@@ -37,11 +53,23 @@
 	"create.recipe.spout_filling": "Filling by Spout",
 	"create.recipe.draining": "Item Draining",
 
-	"create.recipe.processing.chance": "%1$s%% Chance",	
+	"create.recipe.sequenced_assembly": "Sequenced Assembly",
+	"create.recipe.assembly.next": "Next: %1$s",
+	"create.recipe.assembly.step": "Step %1$s:",
+	"create.recipe.assembly.progress": "Progress: %1$s/%2$s",
+	"create.recipe.assembly.pressing": "Process in Press",
+	"create.recipe.assembly.spout_filling_fluid": "Spout %1$s",
+	"create.recipe.assembly.deploying_item": "Deploy %1$s",
+	"create.recipe.assembly.cutting": "Cut with Saw",
+	"create.recipe.assembly.repeat": "Repeat Sequence %1$s Times",
+	"create.recipe.assembly.junk": "Random salvage",
+
+	"create.recipe.processing.chance": "%1$s%% Chance",
+	"create.recipe.deploying.not_consumed": "Not Consumed",
 	"create.recipe.heat_requirement.none": "No Heating Required",
 	"create.recipe.heat_requirement.heated": "Heated",
 	"create.recipe.heat_requirement.superheated": "Super-Heated",
-	
+
 	"create.generic.range": "Range",
 	"create.generic.radius": "Radius",
 	"create.generic.width": "Width",
@@ -65,7 +93,8 @@
 	"create.action.saveToFile": "Save",
 	"create.action.discard": "Discard",
 
-	"create.keyinfo.toolmenu": "Focus Tool Menu",
+	"create.keyinfo.toolmenu": "Focus Schematic Overlay",
+	"create.keyinfo.toolbelt": "Access Nearby Toolboxes",
 	"create.keyinfo.scrollup": "Simulate Mousewheel Up (inworld)",
 	"create.keyinfo.scrolldown": "Simulate Mousewheel Down (inworld)",
 
@@ -77,6 +106,12 @@
 
 	"create.gui.toolmenu.focusKey": "Hold [%1$s] to Focus",
 	"create.gui.toolmenu.cycle": "[SCROLL] to Cycle",
+	
+	"create.toolbox.unequip": "Unequip: %1$s",
+	"create.toolbox.outOfRange": "Toolbox of held item not in Range",
+	"create.toolbox.detach": "Stop tracking and keep item",
+	"create.toolbox.depositAll": "Return items to nearby Toolboxes",
+	"create.toolbox.depositBox": "Return items to Toolbox",
 
 	"create.gui.symmetryWand.mirrorType": "Mirror",
 	"create.gui.symmetryWand.orientation": "Orientation",
@@ -116,11 +151,11 @@
 	"create.gui.terrainzapper.tool.clear": "Clear",
 	"create.gui.terrainzapper.tool.overlay": "Overlay",
 	"create.gui.terrainzapper.tool.flatten": "Flatten",
-	
+
 	"create.terrainzapper.shiftRightClickToSet": "Shift-Right-Click to Select a Shape",
 	"create.terrainzapper.usingBlock": "Using: %1$s",
 	"create.terrainzapper.leftClickToSet": "Left-Click a Block to set Material",
-	
+
 	"create.minecart_coupling.two_couplings_max": "Minecarts cannot have more than two couplings each",
 	"create.minecart_coupling.unloaded": "Parts of your train seem to be in unloaded chunks",
 	"create.minecart_coupling.no_loops": "Couplings cannot form a loop",
@@ -138,13 +173,13 @@
 	"create.contraptions.cart_movement_mode.rotate": "Always face toward motion",
 	"create.contraptions.cart_movement_mode.rotate_paused": "Pause actors while rotating",
 	"create.contraptions.cart_movement_mode.rotation_locked": "Lock rotation",
-	
+
 	"create.contraptions.windmill.rotation_direction": "Rotation Direction",
 	"create.contraptions.clockwork.clock_hands": "Clock Hands",
 	"create.contraptions.clockwork.hour_first": "Hour hand first",
 	"create.contraptions.clockwork.minute_first": "Minute hand first",
 	"create.contraptions.clockwork.hour_first_24": "24-Hour hand first",
-	
+
 	"create.logistics.filter": "Filter",
 	"create.logistics.recipe_filter": "Recipe Filter",
 	"create.logistics.fluid_filter": "Fluid Filter",
@@ -176,7 +211,7 @@
 	"create.gui.stressometer.capacity": "Remaining Capacity",
 	"create.gui.stressometer.overstressed": "Overstressed",
 	"create.gui.stressometer.no_rotation": "No Rotation",
-	
+
 	"create.gui.contraptions.not_fast_enough": "It appears that this %1$s is _not_ rotating with _enough_ _speed_.",
 	"create.gui.contraptions.network_overstressed": "It appears that this contraption is _overstressed_. Add more sources or _slow_ _down_ the components with a high _stress_ _impact_.",
 
@@ -289,7 +324,7 @@
 	"create.gui.schematicannon.option.replaceWithEmpty": "Replace Solid with Empty",
 	"create.gui.schematicannon.option.skipMissing": "Skip missing Blocks",
 	"create.gui.schematicannon.option.skipTileEntities": "Protect Tile Entities",
-	
+
 	"create.gui.schematicannon.slot.gunpowder": "Add gunpowder to fuel the cannon",
 	"create.gui.schematicannon.slot.listPrinter": "Place books here to print a Checklist for your Schematic",
 	"create.gui.schematicannon.slot.schematic": "Add your Schematic here. Make sure it is deployed at a specific location.",
@@ -330,23 +365,19 @@
 	"create.gui.filter.respect_data.description": "Items only match if their durability, enchantments, and other attributes match as well.",
 	"create.gui.filter.ignore_data": "Ignore Data",
 	"create.gui.filter.ignore_data.description": "Items match regardless of their attributes.",
-	
+
 	"create.item_attributes.placeable": "is placeable",
 	"create.item_attributes.placeable.inverted": "is not placeable",
 	"create.item_attributes.consumable": "can be eaten",
 	"create.item_attributes.consumable.inverted": "cannot be eaten",
-	"create.item_attributes.smeltable": "can be Smelted",
-	"create.item_attributes.smeltable.inverted": "cannot be Smelted",
-	"create.item_attributes.washable": "can be Washed",
-	"create.item_attributes.washable.inverted": "cannot be Washed",
-	"create.item_attributes.smokable": "can be Smoked",
-	"create.item_attributes.smokable.inverted": "cannot be Smoked",
-	"create.item_attributes.crushable": "can be Crushed",
-	"create.item_attributes.crushable.inverted": "cannot be Crushed",
-	"create.item_attributes.blastable": "is smeltable in Blast Furnace",
-	"create.item_attributes.blastable.inverted": "is not smeltable in Blast Furnace",
+	"create.item_attributes.fluid_container": "can store fluids",
+	"create.item_attributes.fluid_container.inverted": "cannot store fluids",
 	"create.item_attributes.enchanted": "is enchanted",
 	"create.item_attributes.enchanted.inverted": "is unenchanted",
+	"create.item_attributes.max_enchanted": "is enchanted at max level",
+	"create.item_attributes.max_enchanted.inverted": "is not enchanted at max level",
+	"create.item_attributes.renamed": "has a custom name",
+	"create.item_attributes.renamed.inverted": "does not have a custom name",
 	"create.item_attributes.damaged": "is damaged",
 	"create.item_attributes.damaged.inverted": "is not damaged",
 	"create.item_attributes.badly_damaged": "is heavily damaged",
@@ -357,19 +388,33 @@
 	"create.item_attributes.equipable.inverted": "cannot be equipped",
 	"create.item_attributes.furnace_fuel": "is furnace fuel",
 	"create.item_attributes.furnace_fuel.inverted": "is not furnace fuel",
+	"create.item_attributes.washable": "can be Washed",
+	"create.item_attributes.washable.inverted": "cannot be Washed",
+	"create.item_attributes.crushable": "can be Crushed",
+	"create.item_attributes.crushable.inverted": "cannot be Crushed",
+	"create.item_attributes.smeltable": "can be Smelted",
+	"create.item_attributes.smeltable.inverted": "cannot be Smelted",
+	"create.item_attributes.smokable": "can be Smoked",
+	"create.item_attributes.smokable.inverted": "cannot be Smoked",
+	"create.item_attributes.blastable": "is smeltable in Blast Furnace",
+	"create.item_attributes.blastable.inverted": "is not smeltable in Blast Furnace",
+
+	"create.item_attributes.shulker_level": "is shulker %1$s",
+	"create.item_attributes.shulker_level.inverted": "is shulker not %1$s",
+	"create.item_attributes.shulker_level.full": "full",
+	"create.item_attributes.shulker_level.empty": "empty",
+	"create.item_attributes.shulker_level.partial": "partially filled",
+
 	"create.item_attributes.in_tag": "is tagged %1$s",
 	"create.item_attributes.in_tag.inverted": "is not tagged %1$s",
 	"create.item_attributes.in_item_group": "is in group '%1$s'",
 	"create.item_attributes.in_item_group.inverted": "is not in group '%1$s'",
 	"create.item_attributes.added_by": "was added by %1$s",
 	"create.item_attributes.added_by.inverted": "was not added by %1$s",
-
 	"create.item_attributes.has_enchant": "is enchanted with %1$s",
 	"create.item_attributes.has_enchant.inverted": "is not enchanted with %1$s",
 	"create.item_attributes.color": "is dyed %1$s",
 	"create.item_attributes.color.inverted": "is not dyed %1$s",
-	"create.item_attributes.max_enchanted": "is enchanted at max level",
-	"create.item_attributes.max_enchanted.inverted": "is not enchanted at max level",
 	"create.item_attributes.has_fluid": "contains %1$s",
 	"create.item_attributes.has_fluid.inverted": "does not contain %1$s",
 	"create.item_attributes.has_name": "has the custom name %1$s",
@@ -384,15 +429,15 @@
 	"create.item_attributes.book_copy_second.inverted": "is not a second-generation copy",
 	"create.item_attributes.book_copy_tattered": "is a tattered mess",
 	"create.item_attributes.book_copy_tattered.inverted": "is not a tattered mess",
-	"create.item_attributes.astralsorcery_crystal": "has crystal attribute %1$s",
-	"create.item_attributes.astralsorcery_crystal.inverted": "does not have crystal attribute %1$s",
-	"create.item_attributes.astralsorcery_constellation": "is attuned to %1$s",
-	"create.item_attributes.astralsorcery_constellation.inverted": "is not attuned to %1$s",
-	"create.item_attributes.astralsorcery_perk_gem": "has perk attribute %1$s",
-	"create.item_attributes.astralsorcery_perk_gem.inverted": "does not have perk attribute %1$s",
 	"create.item_attributes.astralsorcery_amulet": "improves %1$s",
 	"create.item_attributes.astralsorcery_amulet.inverted": "does not improve %1$s",
-	
+	"create.item_attributes.astralsorcery_constellation": "is attuned to %1$s",
+	"create.item_attributes.astralsorcery_constellation.inverted": "is not attuned to %1$s",
+	"create.item_attributes.astralsorcery_crystal": "has crystal attribute %1$s",
+	"create.item_attributes.astralsorcery_crystal.inverted": "does not have crystal attribute %1$s",
+	"create.item_attributes.astralsorcery_perk_gem": "has perk attribute %1$s",
+	"create.item_attributes.astralsorcery_perk_gem.inverted": "does not have perk attribute %1$s",
+
 	"create.gui.attribute_filter.no_selected_attributes": "No attributes selected",
 	"create.gui.attribute_filter.selected_attributes": "Selected attributes:",
 	"create.gui.attribute_filter.add_attribute": "Add attribute to List",
@@ -428,12 +473,12 @@
 	"create.tooltip.generationSpeed" : "Generates at %1$s %2$s",
 
 	"create.tooltip.analogStrength": "Analog Strength: %1$s/15",
-	
+
 	"create.mechanical_arm.extract_from": "Take items from %1$s",
 	"create.mechanical_arm.deposit_to": "Deposit items to %1$s",
 	"create.mechanical_arm.summary": "Mechanical Arm has %1$s input(s) and %2$s output(s).",
 	"create.mechanical_arm.points_outside_range": "%1$s selected interaction point(s) removed due to range limitations.",
-		
+
 	"create.weighted_ejector.target_set": "Target Selected",
 	"create.weighted_ejector.target_not_valid": "Ejecting to Adjacent block (Target was not Valid)",
 	"create.weighted_ejector.no_target": "Ejecting to Adjacent block (No Target was Selected)",
@@ -464,6 +509,28 @@
 	"create.tooltip.chute.fans_pull_down": "Fans pull from Below",
 	"create.tooltip.chute.contains": "Contains: %1$s x%2$s",
 	
+	"create.tooltip.brass_tunnel.contains": "Currently distributing:",
+	"create.tooltip.brass_tunnel.contains_entry": "> %1$s x%2$s",
+	"create.tooltip.brass_tunnel.retrieve": "Right-Click to retrieve",
+
+	"create.linked_controller.bind_mode": "Bind mode active",
+	"create.linked_controller.press_keybind": "Press %1$s, %2$s, %3$s, %4$s, %5$s or %6$s, to bind this frequency to the respective key",
+	"create.linked_controller.key_bound": "Frequency bound to %1$s",
+	"create.linked_controller.frequency_slot_1": "Keybind: %1$s, Freq. #1",
+	"create.linked_controller.frequency_slot_2": "Keybind: %1$s, Freq. #2",
+
+	"create.crafting_blueprint.crafting_slot": "Ingredient Slot",
+	"create.crafting_blueprint.filter_items_viable": "Advanced filter items are viable",
+	"create.crafting_blueprint.display_slot": "Display Slot",
+	"create.crafting_blueprint.inferred": "Inferred from recipe",
+	"create.crafting_blueprint.manually_assigned": "Manually assigned",
+	"create.crafting_blueprint.secondary_display_slot": "Secondary Display Slot",
+	"create.crafting_blueprint.optional": "Optional",
+
+	"create.potato_cannon.ammo.attack_damage": "%1$s Attack Damage",
+	"create.potato_cannon.ammo.reload_ticks": "%1$s Reload Ticks",
+	"create.potato_cannon.ammo.knockback": "%1$s Knockback",
+
 	"create.hint.hose_pulley.title": "Bottomless Supply",
 	"create.hint.hose_pulley": "The targeted body of fluid is considered infinite.",
 	"create.hint.mechanical_arm_no_targets.title": "No Targets",
@@ -489,7 +556,8 @@
 	"create.command.killTPSCommand.status.usage.0": "[Create]: use /killtps stop to bring back server tick to regular speed",
 	"create.command.killTPSCommand.status.usage.1": "[Create]: use /killtps start <tickTime> to artificially slow down the server tick",
 	"create.command.killTPSCommand.argument.tickTime": "tickTime",
-	
-	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up"
+
+	"create.contraption.minecart_contraption_too_big": "This Cart Contraption seems too big to pick up",
+	"create.contraption.minecart_contraption_illegal_pickup": "A mystical force is binding this Cart Contraption to the world"
 
 }

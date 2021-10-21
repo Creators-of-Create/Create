@@ -27,7 +27,7 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Gea
 
 	public GearshiftBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(POWERED, false));
+		registerDefaultState(defaultBlockState().setValue(POWERED, false));
 	}
 
 	@Override
@@ -36,27 +36,27 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Gea
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(POWERED);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).with(POWERED,
-				context.getWorld().isBlockPowered(context.getPos()));
+		return super.getStateForPlacement(context).setValue(POWERED,
+				context.getLevel().hasNeighborSignal(context.getClickedPos()));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
+		boolean previouslyPowered = state.getValue(POWERED);
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos)) {
 			detachKinetics(worldIn, pos, true);
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2);
+			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 		}
 	}
 
@@ -66,19 +66,19 @@ public class GearshiftBlock extends AbstractEncasedShaftBlock implements ITE<Gea
 	}
 
 	public void detachKinetics(World worldIn, BlockPos pos, boolean reAttachNextTick) {
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof KineticTileEntity))
 			return;
 		RotationPropagator.handleRemoved(worldIn, pos, (KineticTileEntity) te);
 
 		// Re-attach next tick
 		if (reAttachNextTick)
-			worldIn.getPendingBlockTicks().scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
+			worldIn.getBlockTicks().scheduleTick(pos, this, 0, TickPriority.EXTREMELY_HIGH);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		TileEntity te = worldIn.getTileEntity(pos);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof KineticTileEntity))
 			return;
 		KineticTileEntity kte = (KineticTileEntity) te;

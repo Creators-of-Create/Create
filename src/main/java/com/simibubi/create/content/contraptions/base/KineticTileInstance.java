@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -15,7 +15,7 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
 
     protected final Direction.Axis axis;
 
-    public KineticTileInstance(InstancedTileRenderer<?> modelManager, T tile) {
+    public KineticTileInstance(MaterialManager<?> modelManager, T tile) {
         super(modelManager, tile);
 
         axis = ((IRotate) blockState.getBlock()).getRotationAxis(blockState);
@@ -84,12 +84,13 @@ public abstract class KineticTileInstance<T extends KineticTileEntity> extends T
         return shaft(getRotationAxis());
     }
 
-    protected final RenderMaterial<?, InstancedModel<RotatingData>> getRotatingMaterial() {
-        return renderer.getMaterial(KineticRenderMaterials.ROTATING);
-    }
+    protected InstanceMaterial<RotatingData> getRotatingMaterial() {
+		return materialManager.defaultSolid()
+				.material(AllMaterialSpecs.ROTATING);
+	}
 
     public static BlockState shaft(Direction.Axis axis) {
         return AllBlocks.SHAFT.getDefaultState()
-                .with(ShaftBlock.AXIS, axis);
+                .setValue(ShaftBlock.AXIS, axis);
     }
 }

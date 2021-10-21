@@ -46,8 +46,8 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(STATE, VERTICAL));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(STATE, VERTICAL));
 	}
 
 	@Override
@@ -63,18 +63,18 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
-		if (!worldIn.getPendingBlockTicks()
-			.isTickPending(pos, this))
-			worldIn.getPendingBlockTicks()
+		if (!worldIn.getBlockTicks()
+			.willTickThisTick(pos, this))
+			worldIn.getBlockTicks()
 				.scheduleTick(pos, this, 0);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
-		boolean previouslyPowered = state.get(STATE) != 0;
-		boolean isPowered = worldIn.isBlockPowered(pos);
+	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+		boolean previouslyPowered = state.getValue(STATE) != 0;
+		boolean isPowered = worldIn.hasNeighborSignal(pos);
 		withTileEntityDo(worldIn, pos, sgte -> sgte.onRedstoneUpdate(isPowered, previouslyPowered));
 	}
 
@@ -85,21 +85,21 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		if (state.get(VERTICAL))
+		if (state.getValue(VERTICAL))
 			return face.getAxis()
 				.isVertical();
 		return super.hasShaftTowards(world, pos, state, face);
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		ItemStack held = player.getHeldItemMainhand();
+		ItemStack held = player.getMainHandItem();
 		if (AllItems.WRENCH.isIn(held))
 			return ActionResultType.PASS;
 		if (held.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) held.getItem();
-			if (blockItem.getBlock() instanceof KineticBlock && hasShaftTowards(worldIn, pos, state, hit.getFace()))
+			if (blockItem.getBlock() instanceof KineticBlock && hasShaftTowards(worldIn, pos, state, hit.getDirection()))
 				return ActionResultType.PASS;
 		}
 
@@ -118,7 +118,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Axis preferredAxis = RotatedPillarKineticBlock.getPreferredAxis(context);
 		if (preferredAxis != null && (context.getPlayer() == null || !context.getPlayer()
-			.isSneaking()))
+			.isShiftKeyDown()))
 			return withAxis(preferredAxis, context);
 		return withAxis(context.getNearestLookingDirection()
 			.getAxis(), context);
@@ -128,9 +128,9 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
 		BlockState newState = state;
 
-		if (context.getFace()
+		if (context.getClickedFace()
 			.getAxis() != Axis.Y)
-			if (newState.get(HORIZONTAL_AXIS) != context.getFace()
+			if (newState.getValue(HORIZONTAL_AXIS) != context.getClickedFace()
 				.getAxis())
 				newState = newState.cycle(VERTICAL);
 
@@ -138,16 +138,16 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	private BlockState withAxis(Axis axis, BlockItemUseContext context) {
-		BlockState state = getDefaultState().with(VERTICAL, axis.isVertical());
+		BlockState state = defaultBlockState().setValue(VERTICAL, axis.isVertical());
 		if (axis.isVertical())
-			return state.with(HORIZONTAL_AXIS, context.getPlacementHorizontalFacing()
+			return state.setValue(HORIZONTAL_AXIS, context.getHorizontalDirection()
 				.getAxis());
-		return state.with(HORIZONTAL_AXIS, axis);
+		return state.setValue(HORIZONTAL_AXIS, axis);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		if (state.get(VERTICAL))
+		if (state.getValue(VERTICAL))
 			return Axis.Y;
 		return super.getRotationAxis(state);
 	}
@@ -158,13 +158,13 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
+	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
-		return state.get(STATE)
+	public int getAnalogOutputSignal(BlockState state, World world, BlockPos pos) {
+		return state.getValue(STATE)
 			.intValue();
 	}
 

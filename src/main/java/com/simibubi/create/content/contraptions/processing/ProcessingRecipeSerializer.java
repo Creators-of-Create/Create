@@ -35,7 +35,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		JsonArray jsonOutputs = new JsonArray();
 
 		recipe.getIngredients()
-			.forEach(i -> jsonIngredients.add(i.serialize()));
+			.forEach(i -> jsonIngredients.add(i.toJson()));
 		recipe.getFluidIngredients()
 			.forEach(i -> jsonIngredients.add(i.serialize()));
 
@@ -65,16 +65,16 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		NonNullList<ProcessingOutput> results = NonNullList.create();
 		NonNullList<FluidStack> fluidResults = NonNullList.create();
 
-		for (JsonElement je : JSONUtils.getJsonArray(json, "ingredients")) {
+		for (JsonElement je : JSONUtils.getAsJsonArray(json, "ingredients")) {
 			if (FluidIngredient.isFluidIngredient(je))
 				fluidIngredients.add(FluidIngredient.deserialize(je));
 			else
-				ingredients.add(Ingredient.deserialize(je));
+				ingredients.add(Ingredient.fromJson(je));
 		}
 
-		for (JsonElement je : JSONUtils.getJsonArray(json, "results")) {
+		for (JsonElement je : JSONUtils.getAsJsonArray(json, "results")) {
 			JsonObject jsonObject = je.getAsJsonObject();
-			if (JSONUtils.hasField(jsonObject, "fluid"))
+			if (JSONUtils.isValidNode(jsonObject, "fluid"))
 				fluidResults.add(FluidHelper.deserializeFluidStack(jsonObject));
 			else
 				results.add(ProcessingOutput.deserialize(je));
@@ -85,12 +85,14 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 			.withFluidIngredients(fluidIngredients)
 			.withFluidOutputs(fluidResults);
 
-		if (JSONUtils.hasField(json, "processingTime"))
-			builder.duration(JSONUtils.getInt(json, "processingTime"));
-		if (JSONUtils.hasField(json, "heatRequirement"))
-			builder.requiresHeat(HeatCondition.deserialize(JSONUtils.getString(json, "heatRequirement")));
+		if (JSONUtils.isValidNode(json, "processingTime"))
+			builder.duration(JSONUtils.getAsInt(json, "processingTime"));
+		if (JSONUtils.isValidNode(json, "heatRequirement"))
+			builder.requiresHeat(HeatCondition.deserialize(JSONUtils.getAsString(json, "heatRequirement")));
 
-		return builder.build();
+		T recipe = builder.build();
+		recipe.readAdditional(json);
+		return recipe;
 	}
 
 	protected void writeToBuffer(PacketBuffer buffer, T recipe) {
@@ -100,7 +102,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		NonNullList<FluidStack> fluidOutputs = recipe.getFluidResults();
 
 		buffer.writeVarInt(ingredients.size());
-		ingredients.forEach(i -> i.write(buffer));
+		ingredients.forEach(i -> i.toNetwork(buffer));
 		buffer.writeVarInt(fluidIngredients.size());
 		fluidIngredients.forEach(i -> i.write(buffer));
 
@@ -112,6 +114,8 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		buffer.writeVarInt(recipe.getProcessingDuration());
 		buffer.writeVarInt(recipe.getRequiredHeat()
 			.ordinal());
+
+		recipe.writeAdditional(buffer);
 	}
 
 	protected T readFromBuffer(ResourceLocation recipeId, PacketBuffer buffer) {
@@ -122,27 +126,29 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
-			ingredients.add(Ingredient.read(buffer));
-		
+			ingredients.add(Ingredient.fromNetwork(buffer));
+
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
 			fluidIngredients.add(FluidIngredient.read(buffer));
-		
+
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
 			results.add(ProcessingOutput.read(buffer));
-		
+
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
 			fluidResults.add(FluidStack.readFromPacket(buffer));
 
-		return new ProcessingRecipeBuilder<>(factory, recipeId).withItemIngredients(ingredients)
+		T recipe = new ProcessingRecipeBuilder<>(factory, recipeId).withItemIngredients(ingredients)
 			.withItemOutputs(results)
 			.withFluidIngredients(fluidIngredients)
 			.withFluidOutputs(fluidResults)
 			.duration(buffer.readVarInt())
 			.requiresHeat(HeatCondition.values()[buffer.readVarInt()])
 			.build();
+		recipe.readAdditional(buffer);
+		return recipe;
 	}
 
 	public final void write(JsonObject json, T recipe) {
@@ -150,17 +156,17 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 	}
 
 	@Override
-	public final T read(ResourceLocation id, JsonObject json) {
+	public final T fromJson(ResourceLocation id, JsonObject json) {
 		return readFromJson(id, json);
 	}
 
 	@Override
-	public final void write(PacketBuffer buffer, T recipe) {
+	public final void toNetwork(PacketBuffer buffer, T recipe) {
 		writeToBuffer(buffer, recipe);
 	}
 
 	@Override
-	public final T read(ResourceLocation id, PacketBuffer buffer) {
+	public final T fromNetwork(ResourceLocation id, PacketBuffer buffer) {
 		return readFromBuffer(id, buffer);
 	}
 

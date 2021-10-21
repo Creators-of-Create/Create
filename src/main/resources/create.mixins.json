@@ -5,19 +5,14 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "create.refmap.json",
   "mixins": [
+    "PlayerListMixin"
   ],
   "client": [
-    "CancelTileEntityRenderMixin",
+    "BreakProgressMixin",
     "EntityContraptionInteractionMixin",
-    "FogColorTrackerMixin",
+    "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
-    "LightUpdateMixin",
-    "NetworkLightUpdateMixin",
-    "RenderHooksMixin",
-    "ShaderCloseMixin",
-    "StoreProjectionMatrixMixin",
-    "TileRemoveMixin",
-    "TileWorldHookMixin",
+    "ModelDataRefreshMixin",
     "WindowResizeMixin"
   ],
   "injectors": {

@@ -41,7 +41,7 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 		@Override
 		public boolean canHaveFlowToward(BlockState state, Direction direction) {
 			return (FluidPipeBlock.isPipe(state) || state.getBlock() instanceof EncasedPipeBlock)
-				&& state.get(FluidPipeBlock.FACING_TO_PROPERTY_MAP.get(direction));
+				&& state.getValue(FluidPipeBlock.PROPERTY_BY_DIRECTION.get(direction));
 		}
 
 		@Override
@@ -52,7 +52,7 @@ public class FluidPipeTileEntity extends SmartTileEntity {
 			if (attachment == AttachmentTypes.RIM && AllBlocks.ENCASED_FLUID_PIPE.has(state))
 				return AttachmentTypes.RIM;
 
-			BlockPos offsetPos = pos.offset(direction);
+			BlockPos offsetPos = pos.relative(direction);
 			if (!FluidPipeBlock.isPipe(world.getBlockState(offsetPos))) {
 				FluidTransportBehaviour pipeBehaviour =
 					TileEntityBehaviour.get(world, offsetPos, FluidTransportBehaviour.TYPE);

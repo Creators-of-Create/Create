@@ -49,11 +49,11 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	private ConfiguredFeature<?, ?> createFeature() {
 		ConfigDrivenOreFeatureConfig config =
-			new ConfigDrivenOreFeatureConfig(FillerBlockType.BASE_STONE_OVERWORLD, block.get()
-				.getDefaultState(), id);
+			new ConfigDrivenOreFeatureConfig(FillerBlockType.NATURAL_STONE, block.get()
+				.defaultBlockState(), id);
 
-		return ConfigDrivenOreFeature.INSTANCE.configure(config)
-			.decorate(ConfigDrivenDecorator.INSTANCE.configure(config));
+		return ConfigDrivenOreFeature.INSTANCE.configured(config)
+			.decorated(ConfigDrivenDecorator.INSTANCE.configured(config));
 	}
 
 	public void addToConfig(ForgeConfigSpec.Builder builder) {

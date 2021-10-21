@@ -22,7 +22,7 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 
 	// From OreFeature, slight adjustments
 
-	public boolean generate(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_,
+	public boolean place(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_,
 		BlockPos p_241855_4_, ConfigDrivenOreFeatureConfig p_241855_5_) {
 		float f = p_241855_3_.nextFloat() * (float) Math.PI;
 		float size = p_241855_5_.getSize();
@@ -43,7 +43,7 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 		for (int l1 = k; l1 <= k + j1; ++l1) {
 			for (int i2 = i1; i2 <= i1 + j1; ++i2) {
 				if (l <= p_241855_1_.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, l1, i2)) {
-					return this.func_207803_a(p_241855_1_, p_241855_3_, p_241855_5_, d0, d1, d2, d3, d4, d5, k, l, i1,
+					return this.doPlace(p_241855_1_, p_241855_3_, p_241855_5_, d0, d1, d2, d3, d4, d5, k, l, i1,
 						j1, k1);
 				}
 			}
@@ -52,7 +52,7 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 		return false;
 	}
 
-	protected boolean func_207803_a(IWorld p_207803_1_, Random p_207803_2_, ConfigDrivenOreFeatureConfig p_207803_3_,
+	protected boolean doPlace(IWorld p_207803_1_, Random p_207803_2_, ConfigDrivenOreFeatureConfig p_207803_3_,
 		double p_207803_4_, double p_207803_6_, double p_207803_8_, double p_207803_10_, double p_207803_12_,
 		double p_207803_14_, int p_207803_16_, int p_207803_17_, int p_207803_18_, int p_207803_19_, int p_207803_20_) {
 		int i = 0;
@@ -120,10 +120,10 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 											+ (k2 - p_207803_18_) * p_207803_19_ * p_207803_20_;
 										if (!bitset.get(l2)) {
 											bitset.set(l2);
-											blockpos$mutable.setPos(i2, j2, k2);
+											blockpos$mutable.set(i2, j2, k2);
 											if (p_207803_3_.target.test(p_207803_1_.getBlockState(blockpos$mutable),
 												p_207803_2_)) {
-												p_207803_1_.setBlockState(blockpos$mutable, p_207803_3_.state, 2);
+												p_207803_1_.setBlock(blockpos$mutable, p_207803_3_.state, 2);
 												++i;
 											}
 										}

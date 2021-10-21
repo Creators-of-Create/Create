@@ -13,15 +13,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class ItemUseOverrides {
 
-	private static final Set<ResourceLocation> overrides = new HashSet<>();
+	private static final Set<ResourceLocation> OVERRIDES = new HashSet<>();
 
 	public static void addBlock(Block block) {
-		overrides.add(block.getRegistryName());
+		OVERRIDES.add(block.getRegistryName());
 	}
 
 	@SubscribeEvent
@@ -30,22 +30,22 @@ public class ItemUseOverrides {
 			return;
 
 		BlockState state = event.getWorld()
-			.getBlockState(event.getPos());
+				.getBlockState(event.getPos());
 		ResourceLocation id = state.getBlock()
-			.getRegistryName();
+				.getRegistryName();
 
-		if (!overrides.contains(id))
+		if (!OVERRIDES.contains(id))
 			return;
 
 		BlockRayTraceResult blockTrace =
-			new BlockRayTraceResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
-		ActionResultType result = state.onUse(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
+				new BlockRayTraceResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
+		ActionResultType result = state.use(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
 
-		if (!result.isAccepted())
+		if (!result.consumesAction())
 			return;
 
 		event.setCanceled(true);
 		event.setCancellationResult(result);
-
 	}
+
 }

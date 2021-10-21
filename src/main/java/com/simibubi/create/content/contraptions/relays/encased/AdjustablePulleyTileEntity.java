@@ -34,9 +34,9 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	public void neighborChanged() {
-		if (!hasWorld())
+		if (!hasLevel())
 			return;
-		int power = world.getRedstonePowerFromNeighbors(pos);
+		int power = level.getBestNeighborSignal(worldPosition);
 		if (power != signal) 
 			signalChanged = true;
 	}
@@ -50,11 +50,11 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		if (signalChanged) {
 			signalChanged = false;
-			analogSignalChanged(world.getRedstonePowerFromNeighbors(pos));
+			analogSignalChanged(level.getBestNeighborSignal(worldPosition));
 		}
 	}
 

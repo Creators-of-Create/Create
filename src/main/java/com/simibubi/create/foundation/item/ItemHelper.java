@@ -26,7 +26,7 @@ public class ItemHelper {
 
 	public static void dropContents(World world, BlockPos pos, IItemHandler inv) {
 		for (int slot = 0; slot < inv.getSlots(); slot++)
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
+			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
 	}
 
 	public static List<ItemStack> multipliedOutput(ItemStack in, ItemStack out) {
@@ -98,8 +98,8 @@ public class ItemHelper {
 		Ingredients: for (Ingredient igd : recipeIngredients) {
 			for (Pair<Ingredient, MutableInt> pair : actualIngredients) {
 				ItemStack[] stacks1 = pair.getFirst()
-					.getMatchingStacks();
-				ItemStack[] stacks2 = igd.getMatchingStacks();
+					.getItems();
+				ItemStack[] stacks2 = igd.getItems();
 				if (stacks1.length != stacks2.length)
 					continue;
 				for (int i = 0; i <= stacks1.length; i++) {
@@ -108,7 +108,7 @@ public class ItemHelper {
 							.increment();
 						continue Ingredients;
 					}
-					if (!ItemStack.areItemStacksEqual(stacks1[i], stacks2[i]))
+					if (!ItemStack.matches(stacks1[i], stacks2[i]))
 						break;
 				}
 			}
@@ -118,11 +118,11 @@ public class ItemHelper {
 	}
 
 	public static boolean matchIngredients(Ingredient i1, Ingredient i2) {
-		ItemStack[] stacks1 = i1.getMatchingStacks();
-		ItemStack[] stacks2 = i2.getMatchingStacks();
+		ItemStack[] stacks1 = i1.getItems();
+		ItemStack[] stacks2 = i2.getItems();
 		if (stacks1.length == stacks2.length) {
 			for (int i = 0; i < stacks1.length; i++)
-				if (!ItemStack.areItemsEqual(stacks1[i], stacks2[i]))
+				if (!ItemStack.isSame(stacks1[i], stacks2[i]))
 					return false;
 			return true;
 		}
@@ -161,7 +161,7 @@ public class ItemHelper {
 					continue;
 				if (!test.test(stack))
 					continue;
-				if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting)) {
+				if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting)) {
 					potentialOtherMatch = true;
 					continue;
 				}
@@ -174,8 +174,7 @@ public class ItemHelper {
 				if (!simulate && hasEnoughItems)
 					inv.extractItem(slot, stack.getCount(), false);
 
-				if (extracting.getCount() >= maxExtractionCount
-					|| extracting.getCount() >= extracting.getMaxStackSize()) {
+				if (extracting.getCount() >= maxExtractionCount) {
 					if (checkHasEnoughItems) {
 						hasEnoughItems = true;
 						checkHasEnoughItems = false;
@@ -225,7 +224,7 @@ public class ItemHelper {
 
 			if (!test.test(stack))
 				continue;
-			if (!extracting.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stack, extracting))
+			if (!extracting.isEmpty() && !canItemStackAmountsStack(stack, extracting))
 				continue;
 
 			if (extracting.isEmpty())
@@ -235,11 +234,15 @@ public class ItemHelper {
 
 			if (!simulate)
 				inv.extractItem(slot, stack.getCount(), false);
-			if (extracting.getCount() >= maxExtractionCount || extracting.getCount() >= extracting.getMaxStackSize())
+			if (extracting.getCount() >= maxExtractionCount)
 				break;
 		}
 
 		return extracting;
+	}
+
+	public static boolean canItemStackAmountsStack(ItemStack a, ItemStack b) {
+		return ItemHandlerHelper.canItemStacksStack(a, b) && a.getCount() + b.getCount() <= a.getMaxStackSize();
 	}
 
 	public static ItemStack findFirstMatch(IItemHandler inv, Predicate<ItemStack> test) {

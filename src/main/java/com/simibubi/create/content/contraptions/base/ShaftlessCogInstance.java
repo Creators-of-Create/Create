@@ -1,17 +1,20 @@
 package com.simibubi.create.content.contraptions.base;
 
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 public class ShaftlessCogInstance extends SingleRotatingInstance {
 
-    public ShaftlessCogInstance(InstancedTileRenderer<?> modelManager, KineticTileEntity tile) {
+    public ShaftlessCogInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
     @Override
-    protected InstancedModel<RotatingData> getModel() {
-		return renderer.getMaterial(KineticRenderMaterials.ROTATING).getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, tile.getBlockState());
+    protected Instancer<RotatingData> getModel() {
+        return materialManager.defaultSolid()
+                .material(AllMaterialSpecs.ROTATING)
+                .getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, tile.getBlockState());
 	}
 }

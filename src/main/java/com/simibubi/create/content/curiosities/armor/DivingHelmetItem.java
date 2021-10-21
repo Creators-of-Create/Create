@@ -3,11 +3,12 @@ package com.simibubi.create.content.curiosities.armor;
 import com.simibubi.create.AllItems;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,50 +24,41 @@ public class DivingHelmetItem extends CopperArmorItem {
 	@SubscribeEvent
 	public static void breatheUnderwater(LivingUpdateEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		World world = entity.world;
+		World world = entity.level;
 		boolean second = world.getGameTime() % 20 == 0;
-		boolean drowning = entity.getAir() == 0;
-		
-		if (world.isRemote)
+		boolean drowning = entity.getAirSupply() == 0;
+
+		if (world.isClientSide)
 			entity.getPersistentData()
 				.remove("VisualBacktankAir");
 
 		if (!AllItems.DIVING_HELMET.get()
 			.isWornBy(entity))
 			return;
-		if (!entity.isInWater())
+		if (!entity.isEyeInFluid(FluidTags.WATER))
+			return;
+		if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
 			return;
 
-		ItemStack backtank = ItemStack.EMPTY;
-		for (ItemStack itemStack : entity.getArmorInventoryList()) {
-			if (AllItems.COPPER_BACKTANK.isIn(itemStack)) {
-				backtank = itemStack;
-				break;
-			}
-		}
-
+		ItemStack backtank = BackTankUtil.get(entity);
 		if (backtank.isEmpty())
 			return;
-
-		CompoundNBT tag = backtank.getOrCreateTag();
-		int airRemaining = tag.getInt("Air");
-		if (airRemaining == 0)
+		if (!BackTankUtil.hasAirRemaining(backtank))
 			return;
 
 		if (drowning)
-			entity.setAir(10);
+			entity.setAirSupply(10);
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			entity.getPersistentData()
-				.putInt("VisualBacktankAir", airRemaining);
+				.putInt("VisualBacktankAir", (int) BackTankUtil.getAir(backtank));
 
 		if (!second)
 			return;
 
-		entity.setAir(Math.min(entity.getMaxAir(), entity.getAir() + 10));
-		entity.addPotionEffect(new EffectInstance(Effects.WATER_BREATHING, 30, 0, true, false, true));
-		tag.putInt("Air", airRemaining - 1);
-		backtank.setTag(tag);
+		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
+		entity.addEffect(new EffectInstance(Effects.WATER_BREATHING, 30, 0, true, false, true));
+		BackTankUtil.consumeAir(backtank, 1);
 	}
 
 }

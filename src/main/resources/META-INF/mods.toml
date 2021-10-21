@@ -1,27 +1,37 @@
-modLoader="javafml" 
-loaderVersion="[34,)" 
-#issueTrackerURL=""
+modLoader="javafml"
+loaderVersion="[36,)"
+issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
 license="MIT"
 
-[[mods]] 
+[[mods]]
 modId="create"
-version="${file.jarVersion}"
-displayName="Create" 
+version="v0.3.2e"
+displayName="Create"
 #updateJSONURL=""
-authors="simibubi" 
+displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
+logoFile="logo.png"
+#credits=""
+authors="simibubi"
 description='''
 Technology that empowers the player.'''
 
-[[dependencies.create]] 
+[[dependencies.create]]
     modId="forge"
-    mandatory=true 
-    versionRange="[35.1.16,)"
+    mandatory=true
+    versionRange="[36.2.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.create]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4,1.17)"
+    versionRange="[1.16.5,1.17)"
     ordering="NONE"
+    side="BOTH"
+
+[[dependencies.create]]
+    modId="flywheel"
+    mandatory=true
+    versionRange="[1.16-0.2.3,1.16-0.3)"
+    ordering="AFTER"
     side="BOTH"

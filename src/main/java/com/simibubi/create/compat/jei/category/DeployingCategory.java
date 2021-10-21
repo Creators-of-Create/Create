@@ -9,11 +9,13 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.util.text.TextFormatting;
 
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
@@ -39,20 +41,33 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 
 		if (!recipe.getRollableResults()
 			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 
 	@Override
 	public void setRecipe(IRecipeLayout recipeLayout, DeployerApplicationRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
-		itemStacks.init(0, true, 50, 4);
-		itemStacks.set(0, Arrays.asList(recipe.getRequiredHeldItem()
-			.getMatchingStacks()));
-		itemStacks.init(1, true, 26, 50);
-		itemStacks.set(1, Arrays.asList(recipe.getProcessedItem()
-			.getMatchingStacks()));
+		itemStacks.init(0, true, 26, 50);
+		itemStacks.set(0, Arrays.asList(recipe.getProcessedItem()
+			.getItems()));
+		itemStacks.init(1, true, 50, 4);
+		itemStacks.set(1, Arrays.asList(recipe.getRequiredHeldItem()
+			.getItems()));
 		itemStacks.init(2, false, 131, 50);
-		itemStacks.set(2, recipe.getRecipeOutput());
+		itemStacks.set(2, recipe.getResultItem());
+
+		if (recipe.shouldKeepHeldItem()) {
+			itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+				if (!input)
+					return;
+				if (slotIndex != 1)
+					return;
+				tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
+					.withStyle(TextFormatting.GOLD));
+			});
+		}
+
+		addStochasticTooltip(itemStacks, recipe.getRollableResults(), 2);
 	}
 
 	@Override

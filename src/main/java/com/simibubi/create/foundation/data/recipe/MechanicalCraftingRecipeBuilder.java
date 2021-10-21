@@ -30,10 +30,12 @@ public class MechanicalCraftingRecipeBuilder {
 	private final int count;
 	private final List<String> pattern = Lists.newArrayList();
 	private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
+	private boolean acceptMirrored;
 
 	public MechanicalCraftingRecipeBuilder(IItemProvider p_i48261_1_, int p_i48261_2_) {
 		result = p_i48261_1_.asItem();
 		count = p_i48261_2_;
+		acceptMirrored = true;
 	}
 
 	/**
@@ -54,14 +56,14 @@ public class MechanicalCraftingRecipeBuilder {
 	 * Adds a key to the recipe pattern.
 	 */
 	public MechanicalCraftingRecipeBuilder key(Character p_200469_1_, Tag<Item> p_200469_2_) {
-		return this.key(p_200469_1_, Ingredient.fromTag(p_200469_2_));
+		return this.key(p_200469_1_, Ingredient.of(p_200469_2_));
 	}
 
 	/**
 	 * Adds a key to the recipe pattern.
 	 */
 	public MechanicalCraftingRecipeBuilder key(Character p_200462_1_, IItemProvider p_200462_2_) {
-		return this.key(p_200462_1_, Ingredient.fromItems(p_200462_2_));
+		return this.key(p_200462_1_, Ingredient.of(p_200462_2_));
 	}
 
 	/**
@@ -92,6 +94,14 @@ public class MechanicalCraftingRecipeBuilder {
 	}
 
 	/**
+	 * Prevents the crafters from matching a vertically flipped version of the recipe
+	 */
+	public MechanicalCraftingRecipeBuilder disallowMirrored() {
+		acceptMirrored = false;
+		return this;
+	}
+
+	/**
 	 * Builds this recipe into an {@link IFinishedRecipe}.
 	 */
 	public void build(Consumer<IFinishedRecipe> p_200464_1_) {
@@ -116,7 +126,8 @@ public class MechanicalCraftingRecipeBuilder {
 	 */
 	public void build(Consumer<IFinishedRecipe> p_200467_1_, ResourceLocation p_200467_2_) {
 		validate(p_200467_2_);
-		p_200467_1_.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key));
+		p_200467_1_
+			.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key, acceptMirrored));
 	}
 
 	/**
@@ -151,17 +162,19 @@ public class MechanicalCraftingRecipeBuilder {
 		private final int count;
 		private final List<String> pattern;
 		private final Map<Character, Ingredient> key;
+		private final boolean acceptMirrored;
 
 		public Result(ResourceLocation p_i48271_2_, Item p_i48271_3_, int p_i48271_4_, List<String> p_i48271_6_,
-			Map<Character, Ingredient> p_i48271_7_) {
+			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical) {
 			this.id = p_i48271_2_;
 			this.result = p_i48271_3_;
 			this.count = p_i48271_4_;
 			this.pattern = p_i48271_6_;
 			this.key = p_i48271_7_;
+			this.acceptMirrored = asymmetrical;
 		}
 
-		public void serialize(JsonObject p_218610_1_) {
+		public void serializeRecipeData(JsonObject p_218610_1_) {
 			JsonArray jsonarray = new JsonArray();
 			for (String s : this.pattern)
 				jsonarray.add(s);
@@ -170,7 +183,7 @@ public class MechanicalCraftingRecipeBuilder {
 			JsonObject jsonobject = new JsonObject();
 			for (Entry<Character, Ingredient> entry : this.key.entrySet())
 				jsonobject.add(String.valueOf(entry.getKey()), entry.getValue()
-					.serialize());
+					.toJson());
 
 			p_218610_1_.add("key", jsonobject);
 			JsonObject jsonobject1 = new JsonObject();
@@ -180,23 +193,24 @@ public class MechanicalCraftingRecipeBuilder {
 				jsonobject1.addProperty("count", this.count);
 
 			p_218610_1_.add("result", jsonobject1);
+			p_218610_1_.addProperty("acceptMirrored", acceptMirrored);
 		}
 
-		public IRecipeSerializer<?> getSerializer() {
-			return AllRecipeTypes.MECHANICAL_CRAFTING.serializer;
+		public IRecipeSerializer<?> getType() {
+			return AllRecipeTypes.MECHANICAL_CRAFTING.getSerializer();
 		}
 
-		public ResourceLocation getID() {
+		public ResourceLocation getId() {
 			return this.id;
 		}
 
 		@Nullable
-		public JsonObject getAdvancementJson() {
+		public JsonObject serializeAdvancement() {
 			return null;
 		}
 
 		@Nullable
-		public ResourceLocation getAdvancementID() {
+		public ResourceLocation getAdvancementId() {
 			return null;
 		}
 	}

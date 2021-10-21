@@ -3,19 +3,20 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.AllTags;
+import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potions;
+import net.minecraftforge.common.Tags;
 
 public class FillingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllTags.forgeFluidTag("honey"), 250)
+	HONEY_BOTTLE = create("honey_bottle", b -> b.require(AllFluidTags.HONEY.tag, 250)
 		.require(Items.GLASS_BOTTLE)
 		.output(Items.HONEY_BOTTLE)),
 
@@ -27,11 +28,11 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 			.require(AllItems.BLAZE_CAKE_BASE.get())
 			.output(AllItems.BLAZE_CAKE.get())),
 		
-		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllTags.forgeFluidTag("honey"), 250)
+		HONEYED_APPLE = create("honeyed_apple", b -> b.require(AllFluidTags.HONEY.tag, 250)
 			.require(Items.APPLE)
 			.output(AllItems.HONEYED_APPLE.get())),
 		
-		SWEET_ROLL = create("sweet_roll", b -> b.require(AllTags.forgeFluidTag("milk"), 250)
+		SWEET_ROLL = create("sweet_roll", b -> b.require(Tags.Fluids.MILK, 250)
 			.require(Items.BREAD)
 			.output(AllItems.SWEET_ROLL.get())),
 		
@@ -53,11 +54,7 @@ public class FillingRecipeGen extends ProcessingRecipeGen {
 
 		GLOWSTONE = create("glowstone", b -> b.require(PotionFluidHandler.potionIngredient(Potions.NIGHT_VISION, 25))
 			.require(AllItems.CINDER_FLOUR.get())
-			.output(Items.GLOWSTONE_DUST)),
-
-		MILK_BUCKET = create("milk_bucket", b -> b.require(AllTags.forgeFluidTag("milk"), 1000)
-			.require(Items.BUCKET)
-			.output(Items.MILK_BUCKET))
+			.output(Items.GLOWSTONE_DUST))
 
 	;
 

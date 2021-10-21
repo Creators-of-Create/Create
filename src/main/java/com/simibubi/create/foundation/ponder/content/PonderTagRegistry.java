@@ -1,14 +1,15 @@
 package com.simibubi.create.foundation.ponder.content;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.util.IItemProvider;
@@ -19,9 +20,12 @@ public class PonderTagRegistry {
 	private final Multimap<ResourceLocation, PonderTag> tags;
 	private final Multimap<PonderChapter, PonderTag> chapterTags;
 
+	private final List<PonderTag> listedTags;
+
 	public PonderTagRegistry() {
 		tags = LinkedHashMultimap.create();
 		chapterTags = LinkedHashMultimap.create();
+		listedTags = new ArrayList<>();
 	}
 
 	public Set<PonderTag> getTags(ResourceLocation item) {
@@ -48,12 +52,24 @@ public class PonderTagRegistry {
 			.collect(ImmutableSet.toImmutableSet());
 	}
 
+	public List<PonderTag> getListedTags() {
+		return listedTags;
+	}
+
+	public void listTag(PonderTag tag) {
+		listedTags.add(tag);
+	}
+
 	public void add(PonderTag tag, ResourceLocation item) {
-		tags.put(item, tag);
+		synchronized (tags) {
+			tags.put(item, tag);
+		}
 	}
 
 	public void add(PonderTag tag, PonderChapter chapter) {
-		chapterTags.put(chapter, tag);
+		synchronized (chapterTags) {
+			chapterTags.put(chapter, tag);
+		}
 	}
 
 	public ItemBuilder forItems(ResourceLocation... items) {
@@ -64,7 +80,7 @@ public class PonderTagRegistry {
 		return new TagBuilder(tag);
 	}
 
-	public static class ItemBuilder {
+	public class ItemBuilder {
 
 		private final Collection<ResourceLocation> items;
 
@@ -73,13 +89,13 @@ public class PonderTagRegistry {
 		}
 
 		public ItemBuilder add(PonderTag tag) {
-			items.forEach(i -> PonderRegistry.tags.add(tag, i));
+			items.forEach(i -> PonderTagRegistry.this.add(tag, i));
 			return this;
 		}
 
 	}
 
-	public static class TagBuilder {
+	public class TagBuilder {
 
 		private final PonderTag tag;
 
@@ -88,7 +104,7 @@ public class PonderTagRegistry {
 		}
 
 		public TagBuilder add(ResourceLocation item) {
-			PonderRegistry.tags.add(tag, item);
+			PonderTagRegistry.this.add(tag, item);
 			return this;
 		}
 
@@ -100,5 +116,7 @@ public class PonderTagRegistry {
 		public TagBuilder add(ItemProviderEntry<?> entry) {
 			return add(entry.get());
 		}
+
 	}
+
 }

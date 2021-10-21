@@ -14,11 +14,11 @@ public class ClearBufferCacheCommand {
 
 	static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("clearRenderBuffers")
-			.requires(cs -> cs.hasPermissionLevel(0))
+			.requires(cs -> cs.hasPermission(0))
 			.executes(ctx -> {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> ClearBufferCacheCommand::execute);
 				ctx.getSource()
-					.sendFeedback(new StringTextComponent("Cleared rendering buffers."), true);
+					.sendSuccess(new StringTextComponent("Cleared rendering buffers."), true);
 				return 1;
 			});
 	}

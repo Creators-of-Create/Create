@@ -30,32 +30,32 @@ public class ScrollValueHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
-		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
+		RayTraceResult objectMouseOver = Minecraft.getInstance().hitResult;
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return false;
 
 		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
 		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.world;
-		BlockPos blockPos = result.getPos();
+		ClientWorld world = mc.level;
+		BlockPos blockPos = result.getBlockPos();
 
 		ScrollValueBehaviour scrolling = TileEntityBehaviour.get(world, blockPos, ScrollValueBehaviour.TYPE);
 		if (scrolling == null)
 			return false;
 		if (!scrolling.isActive())
 			return false;
-		if (!mc.player.isAllowEdit())
+		if (!mc.player.mayBuild())
 			return false;
 
 		passiveScrollDirection = (float) -delta;
 		wrenchCog.bump(3, -delta * 10);
 		int prev = scrolling.scrollableValue;
 
-		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand()))
+		if (scrolling.needsWrench && !AllItems.WRENCH.isIn(mc.player.getMainHandItem()))
 			return false;
 		if (scrolling.slotPositioning instanceof Sided)
-			((Sided) scrolling.slotPositioning).fromSide(result.getFace());
-		if (!scrolling.testHit(objectMouseOver.getHitVec()))
+			((Sided) scrolling.slotPositioning).fromSide(result.getDirection());
+		if (!scrolling.testHit(objectMouseOver.getLocation()))
 			return false;
 
 		if (scrolling instanceof BulkScrollValueBehaviour && AllKeys.ctrlDown()) {
@@ -83,9 +83,12 @@ public class ScrollValueHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void tick() {
-		lastPassiveScroll = passiveScroll;
-		wrenchCog.tick();
-		passiveScroll += passiveScrollDirection * 0.5;
+		if (!Minecraft.getInstance()
+			.isPaused()) {
+			lastPassiveScroll = passiveScroll;
+			wrenchCog.tick();
+			passiveScroll += passiveScrollDirection * 0.5;
+		}
 	}
 
 	protected static void applyTo(double delta, ScrollValueBehaviour scrolling) {

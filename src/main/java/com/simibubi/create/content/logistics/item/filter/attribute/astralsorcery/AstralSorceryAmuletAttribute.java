@@ -54,9 +54,9 @@ public class AstralSorceryAmuletAttribute implements ItemAttribute {
     public Object[] getTranslationParameters() {
         String something = "";
 
-        Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryCreate(enchName));
+        Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(enchName));
         if(enchant != null) {
-            something = new TranslationTextComponent(enchant.getName()).getString();
+            something = new TranslationTextComponent(enchant.getDescriptionId()).getString();
         }
 
         if(enchType == 1) something = "existing " + something;

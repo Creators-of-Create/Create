@@ -3,9 +3,11 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
-import com.simibubi.create.foundation.render.backend.instancing.IFlywheelWorld;
+import com.jozufozu.flywheel.backend.IFlywheelWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -16,10 +18,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.lighting.WorldLightManager;
 
 public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelWorld {
-	public HashMap<BlockPos, BlockState> blocksAdded;
-	public HashMap<BlockPos, TileEntity> tesAdded;
+	public Map<BlockPos, BlockState> blocksAdded;
+	public Map<BlockPos, TileEntity> tesAdded;
 
-	public HashSet<SectionPos> spannedChunks;
+	public Set<SectionPos> spannedSections;
 	public WorldLightManager lighter;
 	public WrappedChunkProvider chunkProvider;
 	private final BlockPos.Mutable scratch = new BlockPos.Mutable();
@@ -31,20 +33,31 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	public PlacementSimulationWorld(World wrapped, WrappedChunkProvider chunkProvider) {
 		super(wrapped, chunkProvider);
 		this.chunkProvider = chunkProvider.setWorld(this);
-		spannedChunks = new HashSet<>();
+		spannedSections = new HashSet<>();
 		lighter = new WorldLightManager(chunkProvider, true, false); // blockLight, skyLight
 		blocksAdded = new HashMap<>();
 		tesAdded = new HashMap<>();
 	}
 
 	@Override
-	public WorldLightManager getLightingProvider() {
+	public WorldLightManager getLightEngine() {
 		return lighter;
+	}
+
+	public void updateLightSources() {
+		for (Map.Entry<BlockPos, BlockState> entry : blocksAdded.entrySet()) {
+			BlockPos pos = entry.getKey();
+			BlockState state = entry.getValue();
+			int light = state.getLightValue(this, pos);
+			if (light > 0) {
+				lighter.onBlockEmissionIncrease(pos, light);
+			}
+		}
 	}
 
 	public void setTileEntities(Collection<TileEntity> tileEntities) {
 		tesAdded.clear();
-		tileEntities.forEach(te -> tesAdded.put(te.getPos(), te));
+		tileEntities.forEach(te -> tesAdded.put(te.getBlockPos(), te));
 	}
 
 	public void clear() {
@@ -52,37 +65,38 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState newState, int flags) {
+	public boolean setBlock(BlockPos pos, BlockState newState, int flags) {
+		blocksAdded.put(pos, newState);
 
-		SectionPos sectionPos = SectionPos.from(pos);
-
-		if (spannedChunks.add(sectionPos)) {
+		SectionPos sectionPos = SectionPos.of(pos);
+		if (spannedSections.add(sectionPos)) {
 			lighter.updateSectionStatus(sectionPos, false);
 		}
 
-		lighter.checkBlock(pos);
+		if ((flags & 128) == 0) {
+			lighter.checkBlock(pos);
+		}
 
-		blocksAdded.put(pos, newState);
 		return true;
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState state) {
-		return setBlockState(pos, state, 0);
+	public boolean setBlockAndUpdate(BlockPos pos, BlockState state) {
+		return setBlock(pos, state, 0);
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getBlockEntity(BlockPos pos) {
 		return tesAdded.get(pos);
 	}
 
 	@Override
-	public boolean hasBlockState(BlockPos pos, Predicate<BlockState> condition) {
+	public boolean isStateAtPosition(BlockPos pos, Predicate<BlockState> condition) {
 		return condition.test(getBlockState(pos));
 	}
 
 	@Override
-	public boolean isBlockPresent(BlockPos pos) {
+	public boolean isLoaded(BlockPos pos) {
 		return true;
 	}
 
@@ -92,7 +106,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 	}
 
 	public BlockState getBlockState(int x, int y, int z) {
-		return getBlockState(scratch.setPos(x, y, z));
+		return getBlockState(scratch.set(x, y, z));
 	}
 
 	@Override
@@ -100,8 +114,6 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 		BlockState state = blocksAdded.get(pos);
 		if (state != null)
 			return state;
-		else
-			return Blocks.AIR.getDefaultState();
+		return Blocks.AIR.defaultBlockState();
 	}
-
 }

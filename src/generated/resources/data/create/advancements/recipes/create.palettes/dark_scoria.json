@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:dark_scoria"
+    ]
+  },
+  "criteria": {
+    "has_dark_scoria_cobblestone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "create:dark_scoria_cobblestone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:dark_scoria"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_dark_scoria_cobblestone",
+      "has_the_recipe"
+    ]
+  ]
+}

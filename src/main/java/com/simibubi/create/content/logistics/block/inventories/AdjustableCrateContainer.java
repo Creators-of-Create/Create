@@ -7,6 +7,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -19,28 +20,32 @@ public class AdjustableCrateContainer extends Container {
 	public PlayerInventory playerInventory;
 	public boolean doubleCrate;
 
-	public AdjustableCrateContainer(int id, PlayerInventory inv, PacketBuffer extraData) {
-		super(AllContainerTypes.FLEXCRATE.type, id);
-		ClientWorld world = Minecraft.getInstance().world;
-		TileEntity tileEntity = world.getTileEntity(extraData.readBlockPos());
+	public AdjustableCrateContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+		super(type, id);
+		ClientWorld world = Minecraft.getInstance().level;
+		TileEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		this.playerInventory = inv;
 		if (tileEntity instanceof AdjustableCrateTileEntity) {
 			this.te = (AdjustableCrateTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), extraData.readCompoundTag());
+			this.te.handleUpdateTag(te.getBlockState(), extraData.readNbt());
 			init();
 		}
 	}
 
-	public AdjustableCrateContainer(int id, PlayerInventory inv, AdjustableCrateTileEntity te) {
-		super(AllContainerTypes.FLEXCRATE.type, id);
+	public AdjustableCrateContainer(ContainerType<?> type, int id, PlayerInventory inv, AdjustableCrateTileEntity te) {
+		super(type, id);
 		this.te = te;
 		this.playerInventory = inv;
 		init();
 	}
 
+	public static AdjustableCrateContainer create(int id, PlayerInventory inv, AdjustableCrateTileEntity te) {
+		return new AdjustableCrateContainer(AllContainerTypes.FLEXCRATE.get(), id, inv, te);
+	}
+
 	private void init() {
 		doubleCrate = te.isDoubleCrate();
-		int x = doubleCrate ? 51 : 123;
+		int x = doubleCrate ? 23 : 53;
 		int maxCol = doubleCrate ? 8 : 4;
 		for (int row = 0; row < 4; ++row) {
 			for (int col = 0; col < maxCol; ++col) {
@@ -49,8 +54,8 @@ public class AdjustableCrateContainer extends Container {
 		}
 
 		// player Slots
-		int xOffset = 58;
-		int yOffset = 155;
+		int xOffset = doubleCrate ? 20 : 8;
+		int yOffset = 149;
 		for (int row = 0; row < 3; ++row) {
 			for (int col = 0; col < 9; ++col) {
 				this.addSlot(new Slot(playerInventory, col + row * 9 + 9, xOffset + col * 18, yOffset + row * 18));
@@ -61,29 +66,29 @@ public class AdjustableCrateContainer extends Container {
 			this.addSlot(new Slot(playerInventory, hotbarSlot, xOffset + hotbarSlot * 18, yOffset + 58));
 		}
 
-		detectAndSendChanges();
+		broadcastChanges();
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
-		if (!clickedSlot.getHasStack())
+		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;
 
-		ItemStack stack = clickedSlot.getStack();
+		ItemStack stack = clickedSlot.getItem();
 		int crateSize = doubleCrate ? 32 : 16;
 		if (index < crateSize) {
-			mergeItemStack(stack, crateSize, inventorySlots.size(), false);
+			moveItemStackTo(stack, crateSize, slots.size(), false);
 			te.inventory.onContentsChanged(index);
 		} else
-			mergeItemStack(stack, 0, crateSize - 1, false);
+			moveItemStackTo(stack, 0, crateSize - 1, false);
 
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
-		return true;
+	public boolean stillValid(PlayerEntity player) {
+		return te != null && te.canPlayerUse(player);
 	}
 
 }

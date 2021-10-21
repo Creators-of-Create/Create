@@ -24,9 +24,9 @@ public class BracketBlockItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
+	public ActionResultType useOn(ItemUseContext context) {
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 		BlockState state = world.getBlockState(pos);
 		BracketBlock bracketBlock = getBracketBlock();
 		PlayerEntity player = context.getPlayer();
@@ -37,29 +37,29 @@ public class BracketBlockItem extends BlockItem {
 			return ActionResultType.FAIL;
 		if (!behaviour.canHaveBracket())
 			return ActionResultType.FAIL;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return ActionResultType.SUCCESS;
 
-		Optional<BlockState> suitableBracket = bracketBlock.getSuitableBracket(state, context.getFace());
+		Optional<BlockState> suitableBracket = bracketBlock.getSuitableBracket(state, context.getClickedFace());
 		if (!suitableBracket.isPresent() && player != null)
 			suitableBracket =
-				bracketBlock.getSuitableBracket(state, Direction.getFacingDirections(player)[0].getOpposite());
+				bracketBlock.getSuitableBracket(state, Direction.orderedByNearest(player)[0].getOpposite());
 		if (!suitableBracket.isPresent())
 			return ActionResultType.SUCCESS;
 
 		BlockState bracket = behaviour.getBracket();
 		behaviour.applyBracket(suitableBracket.get());
 		
-		if (!world.isRemote && player != null)
+		if (!world.isClientSide && player != null)
 			behaviour.triggerAdvancements(world, player, state);
 		
 		if (player == null || !player.isCreative()) {
-			context.getItem()
+			context.getItemInHand()
 				.shrink(1);
-			if (bracket != Blocks.AIR.getDefaultState()) {
+			if (bracket != Blocks.AIR.defaultBlockState()) {
 				ItemStack returnedStack = new ItemStack(bracket.getBlock());
 				if (player == null)
-					Block.spawnAsEntity(world, pos, returnedStack);
+					Block.popResource(world, pos, returnedStack);
 				else
 					player.inventory.placeItemBackInInventory(world, returnedStack);
 			}

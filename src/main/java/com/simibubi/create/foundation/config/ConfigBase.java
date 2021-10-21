@@ -106,11 +106,11 @@ public abstract class ConfigBase {
 		public void addComments(Builder builder, String... comment) {
 			if (comment.length > 0) {
 				String[] comments = new String[comment.length + 1];
-				comments[0] = "";
+				comments[0] = " ";
 				System.arraycopy(comment, 0, comments, 1, comment.length);
 				builder.comment(comments);
 			} else
-				builder.comment("");
+				builder.comment(" ");
 		}
 
 		public void register(ForgeConfigSpec.Builder builder) {

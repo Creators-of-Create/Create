@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.advanced.sequencer;
 
 import java.util.Vector;
 
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.nbt.CompoundNBT;
@@ -23,27 +24,52 @@ public class Instruction {
 		this.value = value;
 	}
 
-	int getDuration(float initialProgress, float speed) {
-		int offset = speed > 0 && speedModifier.value < 0 ? 1 : 2;
+	int getDuration(float currentProgress, float speed) {
 		speed *= speedModifier.value;
 		speed = Math.abs(speed);
 
-		double degreesPerTick = (speed * 360) / 60 / 20;
-		double metersPerTick = speed / 512;
+		double target = value - currentProgress;
+
 		switch (instruction) {
 
 		case TURN_ANGLE:
-			return (int) ((1 - initialProgress) * value / degreesPerTick + 1);
+			double degreesPerTick = KineticTileEntity.convertToAngular(speed);
+			int ticks = (int) (target / degreesPerTick);
+			double degreesErr = target - degreesPerTick*ticks;
+			return ticks + (degreesPerTick > 2*degreesErr ? 0 : 1);
 
 		case TURN_DISTANCE:
-			return (int) ((1 - initialProgress) * value / metersPerTick + offset);
+			double metersPerTick = KineticTileEntity.convertToLinear(speed);
+			int offset = speed > 0 && speedModifier.value < 0 ? 1 : 2;
+			return (int) (target / metersPerTick + offset);
 
 		case DELAY:
-			return (int) ((1 - initialProgress) * value + 1);
+			return (int) target;
 
 		case AWAIT:
 			return -1;
 
+		case END:
+		default:
+			break;
+
+		}
+		return 0;
+	}
+
+	float getTickProgress(float speed) {
+		switch(instruction) {
+
+		case TURN_ANGLE:
+			return KineticTileEntity.convertToAngular(speed);
+
+		case TURN_DISTANCE:
+			return KineticTileEntity.convertToLinear(speed);
+
+		case DELAY:
+			return 1;
+
+		case AWAIT:
 		case END:
 		default:
 			break;

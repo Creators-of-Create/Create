@@ -35,7 +35,7 @@ public class CloneCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("clone")
-			.requires(cs -> cs.hasPermissionLevel(2))
+			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.argument("begin", BlockPosArgument.blockPos())
 				.then(Commands.argument("end", BlockPosArgument.blockPos())
 					.then(Commands.argument("destination", BlockPosArgument.blockPos())
@@ -48,7 +48,7 @@ public class CloneCommand {
 							BlockPosArgument.getLoadedBlockPos(ctx, "destination"), true)))))
 			.executes(ctx -> {
 				ctx.getSource()
-					.sendFeedback(new StringTextComponent(
+					.sendSuccess(new StringTextComponent(
 						"Clones all blocks as well as super glue from the specified area to the target destination"),
 						true);
 
@@ -60,28 +60,28 @@ public class CloneCommand {
 	private static int doClone(CommandSource source, BlockPos begin, BlockPos end, BlockPos destination,
 		boolean cloneBlocks) throws CommandSyntaxException {
 		MutableBoundingBox sourceArea = new MutableBoundingBox(begin, end);
-		BlockPos destinationEnd = destination.add(sourceArea.getLength());
+		BlockPos destinationEnd = destination.offset(sourceArea.getLength());
 		MutableBoundingBox destinationArea = new MutableBoundingBox(destination, destinationEnd);
 
-		int i = sourceArea.getXSize() * sourceArea.getYSize() * sourceArea.getZSize();
+		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
 		if (i > 32768)
 			throw CLONE_TOO_BIG_EXCEPTION.create(32768, i);
 
-		ServerWorld world = source.getWorld();
+		ServerWorld world = source.getLevel();
 
-		if (!world.isAreaLoaded(begin, end) || !world.isAreaLoaded(destination, destinationEnd))
-			throw BlockPosArgument.POS_UNLOADED.create();
+		if (!world.hasChunksAt(begin, end) || !world.hasChunksAt(destination, destinationEnd))
+			throw BlockPosArgument.ERROR_NOT_LOADED.create();
 
-		BlockPos diffToTarget = new BlockPos(destinationArea.minX - sourceArea.minX,
-			destinationArea.minY - sourceArea.minY, destinationArea.minZ - sourceArea.minZ);
+		BlockPos diffToTarget = new BlockPos(destinationArea.x0 - sourceArea.x0,
+			destinationArea.y0 - sourceArea.y0, destinationArea.z0 - sourceArea.z0);
 
 		int blockPastes = cloneBlocks ? cloneBlocks(sourceArea, world, diffToTarget) : 0;
 		int gluePastes = cloneGlue(sourceArea, world, diffToTarget);
 
 		if (cloneBlocks)
-			source.sendFeedback(new StringTextComponent("Successfully cloned " + blockPastes + " Blocks"), true);
+			source.sendSuccess(new StringTextComponent("Successfully cloned " + blockPastes + " Blocks"), true);
 
-		source.sendFeedback(new StringTextComponent("Successfully applied glue " + gluePastes + " times"), true);
+		source.sendSuccess(new StringTextComponent("Successfully applied glue " + gluePastes + " times"), true);
 		return blockPastes + gluePastes;
 
 	}
@@ -90,19 +90,19 @@ public class CloneCommand {
 		int gluePastes = 0;
 
 		List<SuperGlueEntity> glue =
-			world.getEntitiesWithinAABB(SuperGlueEntity.class, AxisAlignedBB.func_216363_a(sourceArea));
+			world.getEntitiesOfClass(SuperGlueEntity.class, AxisAlignedBB.of(sourceArea));
 		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
 
 		for (SuperGlueEntity g : glue) {
 			BlockPos pos = g.getHangingPosition();
 			Direction direction = g.getFacingDirection();
-			newGlue.add(Pair.of(pos.add(diffToTarget), direction));
+			newGlue.add(Pair.of(pos.offset(diffToTarget), direction));
 		}
 
 		for (Pair<BlockPos, Direction> p : newGlue) {
 			SuperGlueEntity g = new SuperGlueEntity(world, p.getFirst(), p.getSecond());
 			if (g.onValidSurface()) {
-				world.addEntity(g);
+				world.addFreshEntity(g);
 				gluePastes++;
 			}
 		}
@@ -115,16 +115,16 @@ public class CloneCommand {
 		List<Template.BlockInfo> blocks = Lists.newArrayList();
 		List<Template.BlockInfo> tileBlocks = Lists.newArrayList();
 
-		for (int z = sourceArea.minZ; z <= sourceArea.maxZ; ++z) {
-			for (int y = sourceArea.minY; y <= sourceArea.maxY; ++y) {
-				for (int x = sourceArea.minX; x <= sourceArea.maxX; ++x) {
+		for (int z = sourceArea.z0; z <= sourceArea.z1; ++z) {
+			for (int y = sourceArea.y0; y <= sourceArea.y1; ++y) {
+				for (int x = sourceArea.x0; x <= sourceArea.x1; ++x) {
 					BlockPos currentPos = new BlockPos(x, y, z);
-					BlockPos newPos = currentPos.add(diffToTarget);
+					BlockPos newPos = currentPos.offset(diffToTarget);
 					CachedBlockInfo cached = new CachedBlockInfo(world, currentPos, false);
-					BlockState state = cached.getBlockState();
-					TileEntity te = world.getTileEntity(currentPos);
+					BlockState state = cached.getState();
+					TileEntity te = world.getBlockEntity(currentPos);
 					if (te != null) {
-						CompoundNBT nbt = te.write(new CompoundNBT());
+						CompoundNBT nbt = te.save(new CompoundNBT());
 						tileBlocks.add(new Template.BlockInfo(newPos, state, nbt));
 					} else {
 						blocks.add(new Template.BlockInfo(newPos, state, null));
@@ -140,36 +140,36 @@ public class CloneCommand {
 		List<Template.BlockInfo> reverse = Lists.reverse(allBlocks);
 
 		for (Template.BlockInfo info : reverse) {
-			TileEntity te = world.getTileEntity(info.pos);
-			IClearable.clearObj(te);
-			world.setBlockState(info.pos, Blocks.BARRIER.getDefaultState(), 2);
+			TileEntity te = world.getBlockEntity(info.pos);
+			IClearable.tryClear(te);
+			world.setBlock(info.pos, Blocks.BARRIER.defaultBlockState(), 2);
 		}
 
 		for (Template.BlockInfo info : allBlocks) {
-			if (world.setBlockState(info.pos, info.state, 2))
+			if (world.setBlock(info.pos, info.state, 2))
 				blockPastes++;
 		}
 
 		for (Template.BlockInfo info : tileBlocks) {
-			TileEntity te = world.getTileEntity(info.pos);
+			TileEntity te = world.getBlockEntity(info.pos);
 			if (te != null && info.nbt != null) {
 				info.nbt.putInt("x", info.pos.getX());
 				info.nbt.putInt("y", info.pos.getY());
 				info.nbt.putInt("z", info.pos.getZ());
-				te.fromTag(info.state, info.nbt);
-				te.markDirty();
+				te.load(info.state, info.nbt);
+				te.setChanged();
 			}
 
 			// idk why the state is set twice for a te, but its done like this in the original clone command
-			world.setBlockState(info.pos, info.state, 2);
+			world.setBlock(info.pos, info.state, 2);
 		}
 
 		for (Template.BlockInfo info : reverse) {
-			world.updateNeighbors(info.pos, info.state.getBlock());
+			world.blockUpdated(info.pos, info.state.getBlock());
 		}
 
-		world.getPendingBlockTicks()
-			.copyTicks(sourceArea, diffToTarget);
+		world.getBlockTicks()
+			.copy(sourceArea, diffToTarget);
 
 		return blockPastes;
 	}

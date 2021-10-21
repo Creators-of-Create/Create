@@ -88,9 +88,9 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	@Override
 	public void initialize() {
 		super.initialize();
-		if (getWorld().isRemote)
+		if (getWorld().isClientSide)
 			return;
-		foreach(ts -> {
+		forEach(ts -> {
 			ts.fluidLevel.forceNextSync();
 			ts.onFluidStackChanged();
 		});
@@ -102,11 +102,11 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
 		if (syncCooldown > 0) {
 			syncCooldown--;
-			if (syncCooldown == 0 && queuedSync) 
+			if (syncCooldown == 0 && queuedSync)
 				updateFluids();
 		}
 
-		foreach(te -> {
+		forEach(te -> {
 			LerpedFloat fluidLevel = te.getFluidLevel();
 			if (fluidLevel != null)
 				fluidLevel.tickChaser();
@@ -132,7 +132,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	protected void updateFluids() {
 		fluidUpdateCallback.run();
 		tileEntity.sendData();
-		tileEntity.markDirty();
+		tileEntity.setChanged();
 	}
 
 	@Override
@@ -160,7 +160,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		return true;
 	}
 
-	public void foreach(Consumer<TankSegment> action) {
+	public void forEach(Consumer<TankSegment> action) {
 		for (TankSegment tankSegment : tanks)
 			action.accept(tankSegment);
 	}
@@ -173,7 +173,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		super.write(nbt, clientPacket);
 		ListNBT tanksNBT = new ListNBT();
-		foreach(ts -> tanksNBT.add(ts.writeNBT()));
+		forEach(ts -> tanksNBT.add(ts.writeNBT()));
 		nbt.put(getType().getName() + "Tanks", tanksNBT);
 	}
 
@@ -203,7 +203,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 				return 0;
 			return super.fill(resource, action);
 		}
-		
+
 		public int forceFill(FluidStack resource, FluidAction action) {
 			return super.fill(resource, action);
 		}
@@ -239,11 +239,14 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		}
 
 		public void onFluidStackChanged() {
-			if (!tileEntity.hasWorld())
+			if (!tileEntity.hasLevel())
 				return;
 			fluidLevel.chase(tank.getFluidAmount() / (float) tank.getCapacity(), .25, Chaser.EXP);
-			if (!getWorld().isRemote)
+			if (!getWorld().isClientSide)
 				sendDataLazily();
+			if (tileEntity.isVirtual() && !tank.getFluid()
+				.isEmpty())
+				renderedFluid = tank.getFluid();
 		}
 
 		public FluidStack getRenderedFluid() {
@@ -272,7 +275,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 				.isEmpty())
 				renderedFluid = tank.getFluid();
 		}
-		
+
 		public boolean isEmpty(float partialTicks) {
 			FluidStack renderedFluid = getRenderedFluid();
 			if (renderedFluid.isEmpty())

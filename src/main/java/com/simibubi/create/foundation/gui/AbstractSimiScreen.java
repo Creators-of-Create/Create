@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.util.InputMappings;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -17,20 +18,37 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractSimiScreen extends Screen {
 
-	protected int sWidth, sHeight;
+	protected int windowWidth, windowHeight;
+	protected int windowXOffset, windowYOffset;
 	protected int guiLeft, guiTop;
 	protected List<Widget> widgets;
 
-	protected AbstractSimiScreen() {
-		super(new StringTextComponent(""));
+	protected AbstractSimiScreen(ITextComponent title) {
+		super(title);
 		widgets = new ArrayList<>();
 	}
 
+	protected AbstractSimiScreen() {
+		this(new StringTextComponent(""));
+	}
+
 	protected void setWindowSize(int width, int height) {
-		sWidth = width;
-		sHeight = height;
-		guiLeft = (this.width - sWidth) / 2;
-		guiTop = (this.height - sHeight) / 2;
+		windowWidth = width;
+		windowHeight = height;
+	}
+
+	protected void setWindowOffset(int xOffset, int yOffset) {
+		windowXOffset = xOffset;
+		windowYOffset = yOffset;
+	}
+
+	@Override
+	protected void init() {
+		super.init();
+		guiLeft = (width - windowWidth) / 2;
+		guiTop = (height - windowHeight) / 2;
+		guiLeft += windowXOffset;
+		guiTop += windowYOffset;
 	}
 
 	@Override
@@ -43,10 +61,12 @@ public abstract class AbstractSimiScreen extends Screen {
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = partialTicks == 10 ? 0
-			: Minecraft.getInstance()
-				.getRenderPartialTicks();
+				: Minecraft.getInstance()
+				.getFrameTime();
 
-		ms.push();
+		ms.pushPose();
+
+		prepareFrame();
 
 		renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 		renderWindow(ms, mouseX, mouseY, partialTicks);
@@ -54,7 +74,15 @@ public abstract class AbstractSimiScreen extends Screen {
 			widget.render(ms, mouseX, mouseY, partialTicks);
 		renderWindowForeground(ms, mouseX, mouseY, partialTicks);
 
-		ms.pop();
+		endFrame();
+
+		ms.popPose();
+	}
+
+	protected void prepareFrame() {
+	}
+
+	protected void endFrame() {
 	}
 
 	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
@@ -83,8 +111,8 @@ public abstract class AbstractSimiScreen extends Screen {
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
-		InputMappings.Input mouseKey = InputMappings.getInputByCode(code, p_keyPressed_2_);
-		if (this.client.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+		InputMappings.Input mouseKey = InputMappings.getKey(code, p_keyPressed_2_);
+		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
 			this.onClose();
 			return true;
 		}
@@ -138,12 +166,21 @@ public abstract class AbstractSimiScreen extends Screen {
 
 			if (widget instanceof AbstractSimiWidget) {
 				if (!((AbstractSimiWidget) widget).getToolTip().isEmpty())
-					renderTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
+					renderComponentTooltip(ms, ((AbstractSimiWidget) widget).getToolTip(), mouseX, mouseY);
 
 			} else {
 				widget.renderToolTip(ms, mouseX, mouseY);
 			}
 		}
+	}
+
+	@Deprecated
+	protected void debugWindowArea(MatrixStack matrixStack) {
+		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
+	}
+	
+	public List<Widget> getWidgets() {
+		return widgets;
 	}
 
 }

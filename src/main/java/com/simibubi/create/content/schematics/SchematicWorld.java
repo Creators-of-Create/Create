@@ -67,13 +67,13 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
-	public boolean addEntity(Entity entityIn) {
+	public boolean addFreshEntity(Entity entityIn) {
 		if (entityIn instanceof ItemFrameEntity)
-			((ItemFrameEntity) entityIn).getDisplayedItem()
+			((ItemFrameEntity) entityIn).getItem()
 				.setTag(null);
 		if (entityIn instanceof ArmorStandEntity) {
 			ArmorStandEntity armorStandEntity = (ArmorStandEntity) entityIn;
-			armorStandEntity.getEquipmentAndArmor()
+			armorStandEntity.getAllSlots()
 				.forEach(stack -> stack.setTag(null));
 		}
 
@@ -85,7 +85,7 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
-	public TileEntity getTileEntity(BlockPos pos) {
+	public TileEntity getBlockEntity(BlockPos pos) {
 		if (isOutsideBuildHeight(pos))
 			return null;
 		if (tileEntities.containsKey(pos))
@@ -104,25 +104,25 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 				}
 				return tileEntity;
 			} catch (Exception e) {
-				Create.logger.debug("Could not create TE of block " + blockState + ": " + e);
+				Create.LOGGER.debug("Could not create TE of block " + blockState + ": " + e);
 			}
 		}
 		return null;
 	}
 
 	protected void onTEadded(TileEntity tileEntity, BlockPos pos) {
-		tileEntity.setLocation(this, pos);
+		tileEntity.setLevelAndPosition(this, pos);
 	}
 
 	@Override
 	public BlockState getBlockState(BlockPos globalPos) {
 		BlockPos pos = globalPos.subtract(anchor);
 
-		if (pos.getY() - bounds.minY == -1 && !renderMode)
-			return Blocks.GRASS_BLOCK.getDefaultState();
-		if (getBounds().isVecInside(pos) && blocks.containsKey(pos))
+		if (pos.getY() - bounds.y0 == -1 && !renderMode)
+			return Blocks.GRASS_BLOCK.defaultBlockState();
+		if (getBounds().isInside(pos) && blocks.containsKey(pos))
 			return processBlockStateForPrinting(blocks.get(pos));
-		return Blocks.AIR.getDefaultState();
+		return Blocks.AIR.defaultBlockState();
 	}
 
 	public Map<BlockPos, BlockState> getBlockMap() {
@@ -140,62 +140,62 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
-	public int getLightLevel(LightType p_226658_1_, BlockPos p_226658_2_) {
+	public int getBrightness(LightType p_226658_1_, BlockPos p_226658_2_) {
 		return 10;
 	}
 
 	@Override
-	public List<Entity> getEntitiesInAABBexcluding(Entity arg0, AxisAlignedBB arg1, Predicate<? super Entity> arg2) {
+	public List<Entity> getEntities(Entity arg0, AxisAlignedBB arg1, Predicate<? super Entity> arg2) {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public <T extends Entity> List<T> getEntitiesWithinAABB(Class<? extends T> arg0, AxisAlignedBB arg1,
+	public <T extends Entity> List<T> getEntitiesOfClass(Class<? extends T> arg0, AxisAlignedBB arg1,
 		Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public List<? extends PlayerEntity> getPlayers() {
+	public List<? extends PlayerEntity> players() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public int getSkylightSubtracted() {
+	public int getSkyDarken() {
 		return 0;
 	}
 
 	@Override
-	public boolean hasBlockState(BlockPos pos, Predicate<BlockState> predicate) {
+	public boolean isStateAtPosition(BlockPos pos, Predicate<BlockState> predicate) {
 		return predicate.test(getBlockState(pos));
 	}
 
 	@Override
 	public boolean destroyBlock(BlockPos arg0, boolean arg1) {
-		return setBlockState(arg0, Blocks.AIR.getDefaultState(), 3);
+		return setBlock(arg0, Blocks.AIR.defaultBlockState(), 3);
 	}
 
 	@Override
 	public boolean removeBlock(BlockPos arg0, boolean arg1) {
-		return setBlockState(arg0, Blocks.AIR.getDefaultState(), 3);
+		return setBlock(arg0, Blocks.AIR.defaultBlockState(), 3);
 	}
 
 	@Override
-	public boolean setBlockState(BlockPos pos, BlockState arg1, int arg2) {
-		pos = pos.toImmutable()
+	public boolean setBlock(BlockPos pos, BlockState arg1, int arg2) {
+		pos = pos.immutable()
 			.subtract(anchor);
-		bounds.expandTo(new MutableBoundingBox(pos, pos));
+		bounds.expand(new MutableBoundingBox(pos, pos));
 		blocks.put(pos, arg1);
 		if (tileEntities.containsKey(pos)) {
 			TileEntity tileEntity = tileEntities.get(pos);
 			if (!tileEntity.getType()
-				.isValidBlock(arg1.getBlock())) {
+				.isValid(arg1.getBlock())) {
 				tileEntities.remove(pos);
 				renderedTileEntities.remove(tileEntity);
 			}
 		}
 
-		TileEntity tileEntity = getTileEntity(pos);
+		TileEntity tileEntity = getBlockEntity(pos);
 		if (tileEntity != null)
 			tileEntities.put(pos, tileEntity);
 
@@ -203,13 +203,16 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	@Override
-	public ITickList<Block> getPendingBlockTicks() {
-		return EmptyTickList.get();
+	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) { }
+
+	@Override
+	public ITickList<Block> getBlockTicks() {
+		return EmptyTickList.empty();
 	}
 
 	@Override
-	public ITickList<Fluid> getPendingFluidTicks() {
-		return EmptyTickList.get();
+	public ITickList<Fluid> getLiquidTicks() {
+		return EmptyTickList.empty();
 	}
 
 	public MutableBoundingBox getBounds() {
@@ -221,16 +224,17 @@ public class SchematicWorld extends WrappedWorld implements IServerWorld {
 	}
 
 	protected BlockState processBlockStateForPrinting(BlockState state) {
-		if (state.getBlock() instanceof AbstractFurnaceBlock && state.contains(BlockStateProperties.LIT))
-			state = state.with(BlockStateProperties.LIT, false);
+		if (state.getBlock() instanceof AbstractFurnaceBlock && state.hasProperty(BlockStateProperties.LIT))
+			state = state.setValue(BlockStateProperties.LIT, false);
 		return state;
 	}
 
 	@Override
-	public ServerWorld getWorld() {
+	public ServerWorld getLevel() {
 		if (this.world instanceof ServerWorld) {
 			return (ServerWorld) this.world;
 		}
 		throw new IllegalStateException("Cannot use IServerWorld#getWorld in a client environment");
 	}
+
 }

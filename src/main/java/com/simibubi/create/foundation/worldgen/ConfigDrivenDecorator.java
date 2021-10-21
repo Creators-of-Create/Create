@@ -18,7 +18,7 @@ public class ConfigDrivenDecorator extends SimplePlacement<ConfigDrivenOreFeatur
 	}
 
 	@Override
-	protected Stream<BlockPos> getPositions(Random r, ConfigDrivenOreFeatureConfig config, BlockPos pos) {
+	protected Stream<BlockPos> place(Random r, ConfigDrivenOreFeatureConfig config, BlockPos pos) {
 		float frequency = config.getFrequency();
 
 		int floored = MathHelper.floor(frequency);

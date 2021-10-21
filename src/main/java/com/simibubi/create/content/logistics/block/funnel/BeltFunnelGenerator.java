@@ -27,15 +27,15 @@ public class BeltFunnelGenerator extends SpecialBlockStateGen {
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		return horizontalAngle(state.get(BeltFunnelBlock.HORIZONTAL_FACING)) + 180;
+		return horizontalAngle(state.getValue(BeltFunnelBlock.HORIZONTAL_FACING)) + 180;
 	}
 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		boolean powered = state.method_28500(BlockStateProperties.POWERED).orElse(false);
-		String shapeName = state.get(BeltFunnelBlock.SHAPE)
-			.getString();
+		boolean powered = state.getOptionalValue(BlockStateProperties.POWERED).orElse(false);
+		String shapeName = state.getValue(BeltFunnelBlock.SHAPE)
+			.getSerializedName();
 		
 		String poweredSuffix = powered ? "_powered" : "";
 		String name = ctx.getName() + "_" + poweredSuffix;

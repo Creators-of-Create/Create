@@ -17,8 +17,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class CrushingWheelTileEntity extends KineticTileEntity {
 
-	public static DamageSource damageSource = new DamageSource("create.crush").setDamageBypassesArmor()
-			.setDifficultyScaled();
+	public static DamageSource damageSource = new DamageSource("create.crush").bypassArmor()
+			.setScalesWithDifficulty();
 
 	public CrushingWheelTileEntity(TileEntityType<? extends CrushingWheelTileEntity> type) {
 		super(type);
@@ -33,13 +33,13 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 
 	public void fixControllers() {
 		for (Direction d : Iterate.directions)
-			((CrushingWheelBlock) getBlockState().getBlock()).updateControllers(getBlockState(), getWorld(), getPos(),
+			((CrushingWheelBlock) getBlockState().getBlock()).updateControllers(getBlockState(), getLevel(), getBlockPos(),
 					d);
 	}
 
 	@Override
 	public AxisAlignedBB makeRenderBoundingBox() {
-		return new AxisAlignedBB(pos).grow(1);
+		return new AxisAlignedBB(worldPosition).inflate(1);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 			return;
 		Vector3d outSpeed = Vector3d.ZERO;
 		for (ItemEntity outputItem : event.getDrops()) {
-			outputItem.setMotion(outSpeed);
+			outputItem.setDeltaMovement(outSpeed);
 		}
 	}
 

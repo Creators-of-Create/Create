@@ -100,7 +100,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 			ResourceLocation nugget = mod.nuggetOf(metalName);
 			create(mod.getId() + "/" + crushed.getId()
 				.getPath(),
-				b -> b.withItemIngredients(Ingredient.fromItems(crushed::get))
+				b -> b.withItemIngredients(Ingredient.of(crushed::get))
 					.output(1, nugget, 10)
 					.output(.5f, nugget, 5)
 					.whenModLoaded(mod.getId()));

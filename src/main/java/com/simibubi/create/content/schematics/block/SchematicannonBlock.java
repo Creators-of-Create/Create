@@ -38,7 +38,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public PushReaction getPushReaction(BlockState state) {
+	public PushReaction getPistonPushReaction(BlockState state) {
 		return PushReaction.BLOCK;
 	}
 
@@ -48,9 +48,9 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 			BlockRayTraceResult hit) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return ActionResultType.SUCCESS;
 		withTileEntityDo(worldIn, pos,
 				te -> NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer));
@@ -58,12 +58,12 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
-		worldIn.removeTileEntity(pos);
+		worldIn.removeBlockEntity(pos);
 	}
 
 	@Override

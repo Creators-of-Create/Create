@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "create:golden_sheet",
+    "create:crushed_gold_ore"
+  ]
+}

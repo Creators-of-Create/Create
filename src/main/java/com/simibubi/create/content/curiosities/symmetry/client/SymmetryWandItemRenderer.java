@@ -1,11 +1,12 @@
 package com.simibubi.create.content.curiosities.symmetry.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.block.render.CustomRenderedItemModelRenderer;
-import com.simibubi.create.foundation.item.PartialItemModelRenderer;
+import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
+import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -27,9 +28,14 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 		float angle = worldTime * -10 % 360;
 
 		ms.translate(0, floating, 0);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
+		ms.mulPose(Vector3f.YP.rotationDegrees(angle));
 
 		renderer.renderGlowing(model.getPartial("bits"), maxLight);
+	}
+
+	@Override
+	public SymmetryWandModel createModel(IBakedModel originalModel) {
+		return new SymmetryWandModel(originalModel);
 	}
 
 }

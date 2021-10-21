@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.mo
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.tracks.ControllerRailBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.block.AbstractRailBlock;
@@ -13,6 +14,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.state.properties.RailShape;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -26,17 +29,18 @@ public class CartAssemblerBlockItem extends BlockItem {
 
 	@Override
 	@Nonnull
-	public ActionResultType onItemUse(ItemUseContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		if (tryPlaceAssembler(context)) {
-			context.getWorld().playSound(null, context.getPos(), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1, 1);
+			context.getLevel()
+				.playSound(null, context.getClickedPos(), SoundEvents.STONE_PLACE, SoundCategory.BLOCKS, 1, 1);
 			return ActionResultType.SUCCESS;
 		}
-		return super.onItemUse(context);
+		return super.useOn(context);
 	}
 
 	public boolean tryPlaceAssembler(ItemUseContext context) {
-		BlockPos pos = context.getPos();
-		World world = context.getWorld();
+		BlockPos pos = context.getClickedPos();
+		World world = context.getLevel();
 		BlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 		PlayerEntity player = context.getPlayer();
@@ -48,25 +52,34 @@ public class CartAssemblerBlockItem extends BlockItem {
 			return false;
 		}
 
-		RailShape shape = state.get(((AbstractRailBlock) block).getShapeProperty());
+		RailShape shape = state.getValue(((AbstractRailBlock) block).getShapeProperty());
 		if (shape != RailShape.EAST_WEST && shape != RailShape.NORTH_SOUTH)
 			return false;
 
 		BlockState newState = AllBlocks.CART_ASSEMBLER.getDefaultState()
-			.with(CartAssemblerBlock.RAIL_SHAPE, shape);
+			.setValue(CartAssemblerBlock.RAIL_SHAPE, shape);
 		CartAssembleRailType newType = null;
 		for (CartAssembleRailType type : CartAssembleRailType.values())
-			if (type.matches.test(state))
+			if (type.matches(state))
 				newType = type;
 		if (newType == null)
 			return false;
-		if (world.isRemote)
+		if (world.isClientSide)
 			return true;
 
-		newState = newState.with(CartAssemblerBlock.RAIL_TYPE, newType);
-		world.setBlockState(pos, newState);
+		newState = newState.setValue(CartAssemblerBlock.RAIL_TYPE, newType);
+		if (state.hasProperty(ControllerRailBlock.BACKWARDS))
+			newState = newState.setValue(CartAssemblerBlock.BACKWARDS, state.getValue(ControllerRailBlock.BACKWARDS));
+		else {
+			Direction direction = player.getMotionDirection();
+			newState =
+				newState.setValue(CartAssemblerBlock.BACKWARDS, direction.getAxisDirection() == AxisDirection.POSITIVE);
+		}
+
+		world.setBlockAndUpdate(pos, newState);
 		if (!player.isCreative())
-			context.getItem().shrink(1);
+			context.getItemInHand()
+				.shrink(1);
 		return true;
 	}
 }

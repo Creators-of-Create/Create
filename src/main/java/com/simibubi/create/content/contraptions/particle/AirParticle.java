@@ -26,27 +26,33 @@ public class AirParticle extends SimpleAnimatedParticle {
 
 	protected AirParticle(ClientWorld world, AirParticleData data, double x, double y, double z, double dx, double dy,
 						  double dz, IAnimatedSprite sprite) {
-		super(world, x, y, z, sprite, world.rand.nextFloat() * .5f);
-		particleScale *= 0.75F;
-		canCollide = false;
+		super(world, x, y, z, sprite, world.random.nextFloat() * .5f);
+		quadSize *= 0.75F;
+		hasPhysics = false;
 
-		setPosition(posX, posY, posZ);
-		originX = (float) (prevPosX = posX);
-		originY = (float) (prevPosY = posY);
-		originZ = (float) (prevPosZ = posZ);
+		setPos(x, y, z);
+		originX = (float) (xo = x);
+		originY = (float) (yo = y);
+		originZ = (float) (zo = z);
 		targetX = (float) (x + dx);
 		targetY = (float) (y + dy);
 		targetZ = (float) (z + dz);
 		drag = data.drag;
 
-		twirlRadius = Create.random.nextFloat() / 6;
-		twirlAngleOffset = Create.random.nextFloat() * 360;
-		twirlAxis = Create.random.nextBoolean() ? Axis.X : Axis.Z;
+		twirlRadius = Create.RANDOM.nextFloat() / 6;
+		twirlAngleOffset = Create.RANDOM.nextFloat() * 360;
+		twirlAxis = Create.RANDOM.nextBoolean() ? Axis.X : Axis.Z;
 
 		// speed in m/ticks
-		maxAge = Math.min((int) (new Vector3d(dx, dy, dz).length() / data.speed), 60);
+		double length = new Vector3d(dx, dy, dz).length();
+		lifetime = Math.min((int) (length / data.speed), 60);
 		selectSprite(7);
-		setAlphaF(.25f);
+		setAlpha(.25f);
+		
+		if (length == 0) {
+			remove();
+			setAlpha(0);
+		}
 	}
 
 	public IParticleRenderType getRenderType() {
@@ -55,15 +61,15 @@ public class AirParticle extends SimpleAnimatedParticle {
 
 	@Override
 	public void tick() {
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		if (this.age++ >= this.maxAge) {
-			this.setExpired();
+		this.xo = this.x;
+		this.yo = this.y;
+		this.zo = this.z;
+		if (this.age++ >= this.lifetime) {
+			this.remove();
 			return;
 		}
 
-		float progress = (float) Math.pow(((float) age) / maxAge, drag);
+		float progress = (float) Math.pow(((float) age) / lifetime, drag);
 		float angle = (progress * 2 * 360 + twirlAngleOffset) % 360;
 		Vector3d twirl = VecHelper.rotate(new Vector3d(0, twirlRadius, 0), angle, twirlAxis);
 		
@@ -71,21 +77,21 @@ public class AirParticle extends SimpleAnimatedParticle {
 		float y = (float) (MathHelper.lerp(progress, originY, targetY) + twirl.y);
 		float z = (float) (MathHelper.lerp(progress, originZ, targetZ) + twirl.z);
 		
-		motionX = x - posX;
-		motionY = y - posY;
-		motionZ = z - posZ;
+		xd = x - this.x;
+		yd = y - this.y;
+		zd = z - this.z;
 
-		selectSpriteWithAge(field_217584_C);
-		this.move(this.motionX, this.motionY, this.motionZ);
+		setSpriteFromAge(sprites);
+		this.move(this.xd, this.yd, this.zd);
 	}
 
-	public int getBrightnessForRender(float partialTick) {
-		BlockPos blockpos = new BlockPos(this.posX, this.posY, this.posZ);
-		return this.world.isBlockPresent(blockpos) ? WorldRenderer.getLightmapCoordinates(world, blockpos) : 0;
+	public int getLightColor(float partialTick) {
+		BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
+		return this.level.isLoaded(blockpos) ? WorldRenderer.getLightColor(level, blockpos) : 0;
 	}
 
 	private void selectSprite(int index) {
-		setSprite(field_217584_C.get(index, 8));
+		setSprite(sprites.get(index, 8));
 	}
 
 	public static class Factory implements IParticleFactory<AirParticleData> {
@@ -95,7 +101,7 @@ public class AirParticle extends SimpleAnimatedParticle {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle makeParticle(AirParticleData data, ClientWorld worldIn, double x, double y, double z, double xSpeed,
+		public Particle createParticle(AirParticleData data, ClientWorld worldIn, double x, double y, double z, double xSpeed,
 			double ySpeed, double zSpeed) {
 			return new AirParticle(worldIn, data, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}

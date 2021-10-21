@@ -131,7 +131,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		if (!json.has("amount"))
 			throw new JsonSyntaxException("Fluid ingredient has to define an amount");
-		ingredient.amountRequired = JSONUtils.getInt(json, "amount");
+		ingredient.amountRequired = JSONUtils.getAsInt(json, "amount");
 		return ingredient;
 	}
 
@@ -146,13 +146,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		void fixFlowing() {
 			if (fluid instanceof FlowingFluid)
-				fluid = ((FlowingFluid) fluid).getStillFluid();
+				fluid = ((FlowingFluid) fluid).getSource();
 		}
 
 		@Override
 		protected boolean testInternal(FluidStack t) {
 			if (!t.getFluid()
-				.isEquivalentTo(fluid))
+				.isSame(fluid))
 				return false;
 			if (tagToMatch.isEmpty())
 				return true;
@@ -165,13 +165,13 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(PacketBuffer buffer) {
 			fluid = buffer.readRegistryId();
-			tagToMatch = buffer.readCompoundTag();
+			tagToMatch = buffer.readNbt();
 		}
 
 		@Override
 		protected void writeInternal(PacketBuffer buffer) {
 			buffer.writeRegistryId(fluid);
-			buffer.writeCompoundTag(tagToMatch);
+			buffer.writeNbt(tagToMatch);
 		}
 
 		@Override
@@ -205,10 +205,10 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 			if (tag == null)
 				for (FluidStack accepted : getMatchingFluidStacks())
 					if (accepted.getFluid()
-						.isEquivalentTo(t.getFluid()))
+						.isSame(t.getFluid()))
 						return true;
 			return t.getFluid()
-				.isIn(tag);
+				.is(tag);
 		}
 
 		@Override
@@ -230,10 +230,10 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void readInternal(JsonObject json) {
-			ResourceLocation id = new ResourceLocation(JSONUtils.getString(json, "fluidTag"));
-			Optional<? extends ITag.INamedTag<Fluid>> optionalINamedTag = FluidTags.getRequiredTags()
+			ResourceLocation id = new ResourceLocation(JSONUtils.getAsString(json, "fluidTag"));
+			Optional<? extends ITag.INamedTag<Fluid>> optionalINamedTag = FluidTags.getWrappers()
 				.stream()
-				.filter(fluidINamedTag -> fluidINamedTag.getId()
+				.filter(fluidINamedTag -> fluidINamedTag.getName()
 					.equals(id))
 				.findFirst(); // fixme
 			if (!optionalINamedTag.isPresent())
@@ -243,17 +243,17 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 		@Override
 		protected void writeInternal(JsonObject json) {
-			json.addProperty("fluidTag", tag.getId()
+			json.addProperty("fluidTag", tag.getName()
 				.toString());
 		}
 
 		@Override
 		protected List<FluidStack> determineMatchingFluidStacks() {
-			return tag.values()
+			return tag.getValues()
 				.stream()
 				.map(f -> {
 					if (f instanceof FlowingFluid)
-						return ((FlowingFluid) f).getStillFluid();
+						return ((FlowingFluid) f).getSource();
 					return f;
 				})
 				.distinct()

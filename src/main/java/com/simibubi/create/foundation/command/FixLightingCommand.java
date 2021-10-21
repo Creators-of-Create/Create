@@ -13,14 +13,14 @@ public class FixLightingCommand {
 
 	static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("fixLighting")
-			.requires(cs -> cs.hasPermissionLevel(0))
+			.requires(cs -> cs.hasPermission(0))
 			.executes(ctx -> {
 				AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource()
 					.getEntity()),
 					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fixLighting.name(), String.valueOf(true)));
 
 				ctx.getSource()
-					.sendFeedback(
+					.sendSuccess(
 						new StringTextComponent("Forge's experimental block rendering pipeline is now enabled."), true);
 
 				return 1;

@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "ceiling=false,facing=north": {
+      "model": "create:block/black_nixie_tube",
+      "y": 180
+    },
+    "ceiling=true,facing=north": {
+      "model": "create:block/black_nixie_tube",
+      "x": 180,
+      "y": 180
+    },
+    "ceiling=false,facing=south": {
+      "model": "create:block/black_nixie_tube"
+    },
+    "ceiling=true,facing=south": {
+      "model": "create:block/black_nixie_tube",
+      "x": 180
+    },
+    "ceiling=false,facing=west": {
+      "model": "create:block/black_nixie_tube",
+      "y": 90
+    },
+    "ceiling=true,facing=west": {
+      "model": "create:block/black_nixie_tube",
+      "x": 180,
+      "y": 90
+    },
+    "ceiling=false,facing=east": {
+      "model": "create:block/black_nixie_tube",
+      "y": 270
+    },
+    "ceiling=true,facing=east": {
+      "model": "create:block/black_nixie_tube",
+      "x": 180,
+      "y": 270
+    }
+  }
+}

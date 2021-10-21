@@ -21,7 +21,7 @@ public class ModelGen {
 	public static ModelFile createOvergrown(DataGenContext<Block, ? extends Block> ctx, BlockStateProvider prov,
 		ResourceLocation side, ResourceLocation top, ResourceLocation bottom, ResourceLocation overlay) {
 		return prov.models()
-			.withExistingParent(ctx.getName(), new ResourceLocation(Create.ID, "block/overgrown"))
+			.withExistingParent(ctx.getName(), Create.asResource("block/overgrown"))
 			.texture("particle", side)
 			.texture("side", side)
 			.texture("top", top)

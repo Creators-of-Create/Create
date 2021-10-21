@@ -6,7 +6,7 @@
     ]
   },
   "criteria": {
-    "has_ingredient": {
+    "has_dolomite": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "has_ingredient",
+      "has_dolomite",
       "has_the_recipe"
     ]
   ]

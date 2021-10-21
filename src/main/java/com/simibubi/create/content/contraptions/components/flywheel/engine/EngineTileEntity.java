@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 
 import java.util.List;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.FlywheelTileEntity;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
@@ -37,7 +37,7 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
-			cachedBoundingBox = super.getRenderBoundingBox().grow(1.5f);
+			cachedBoundingBox = super.getRenderBoundingBox().inflate(1.5f);
 		}
 		return cachedBoundingBox;
 	}
@@ -45,7 +45,7 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		if (poweredWheel != null && poweredWheel.isRemoved())
 			poweredWheel = null;
@@ -54,23 +54,23 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	}
 
 	public void attachWheel() {
-		Direction engineFacing = getBlockState().get(EngineBlock.HORIZONTAL_FACING);
-		BlockPos wheelPos = pos.offset(engineFacing, 2);
-		BlockState wheelState = world.getBlockState(wheelPos);
+		Direction engineFacing = getBlockState().getValue(EngineBlock.FACING);
+		BlockPos wheelPos = worldPosition.relative(engineFacing, 2);
+		BlockState wheelState = level.getBlockState(wheelPos);
 		if (!AllBlocks.FLYWHEEL.has(wheelState))
 			return;
-		Direction wheelFacing = wheelState.get(FlywheelBlock.HORIZONTAL_FACING);
-		if (wheelFacing.getAxis() != engineFacing.rotateY().getAxis())
+		Direction wheelFacing = wheelState.getValue(FlywheelBlock.HORIZONTAL_FACING);
+		if (wheelFacing.getAxis() != engineFacing.getClockWise().getAxis())
 			return;
 		if (FlywheelBlock.isConnected(wheelState)
 				&& FlywheelBlock.getConnection(wheelState) != engineFacing.getOpposite())
 			return;
-		TileEntity te = world.getTileEntity(wheelPos);
+		TileEntity te = level.getBlockEntity(wheelPos);
 		if (te.isRemoved())
 			return;
 		if (te instanceof FlywheelTileEntity) {
 			if (!FlywheelBlock.isConnected(wheelState))
-				FlywheelBlock.setConnection(world, te.getPos(), te.getBlockState(), engineFacing.getOpposite());
+				FlywheelBlock.setConnection(level, te.getBlockPos(), te.getBlockState(), engineFacing.getOpposite());
 			poweredWheel = (FlywheelTileEntity) te;
 			refreshWheelSpeed();
 		}
@@ -80,14 +80,14 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 		if (poweredWheel == null || poweredWheel.isRemoved())
 			return;
 		poweredWheel.setRotation(0, 0);
-		FlywheelBlock.setConnection(world, poweredWheel.getPos(), poweredWheel.getBlockState(), null);
+		FlywheelBlock.setConnection(level, poweredWheel.getBlockPos(), poweredWheel.getBlockState(), null);
 		poweredWheel = null;
 	}
 
 	@Override
-	public void remove() {
+	public void setRemoved() {
 		detachWheel();
-		super.remove();
+		super.setRemoved();
 	}
 
 	protected void refreshWheelSpeed() {
@@ -95,5 +95,6 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 			return;
 		poweredWheel.setRotation(appliedSpeed, appliedCapacity);
 	}
+
 
 }

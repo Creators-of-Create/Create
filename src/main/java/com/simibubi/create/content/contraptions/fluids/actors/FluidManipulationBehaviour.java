@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -50,10 +51,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	// Search
 	static final int searchedPerTick = 256;
+	static final int validationTimerMin = 160;
 	List<BlockPosEntry> frontier;
 	Set<BlockPos> visited;
 
-	static final int validationTimer = 160;
 	int revalidateIn;
 
 	public FluidManipulationBehaviour(SmartTileEntity te) {
@@ -68,12 +69,18 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		counterpartActed = true;
 	}
 
+	protected int validationTimer() {
+		int maxBlocks = maxBlocks();
+		// Allow enough time for the server's infinite block threshold to be reached
+		return maxBlocks < 0 ? validationTimerMin : Math.max(validationTimerMin, maxBlocks / searchedPerTick + 1);
+	}
+
 	protected int setValidationTimer() {
-		return revalidateIn = validationTimer;
+		return revalidateIn = validationTimer();
 	}
 
 	protected int setLongValidationTimer() {
-		return revalidateIn = validationTimer * 2;
+		return revalidateIn = validationTimer() * 2;
 	}
 
 	protected int maxRange() {
@@ -82,6 +89,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	protected int maxBlocks() {
 		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
+	}
+
+	protected boolean fillInfinite() {
+		return AllConfigs.SERVER.fluids.fillInfinite.get();
 	}
 
 	public void reset() {
@@ -102,13 +113,15 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	protected void scheduleUpdatesInAffectedArea() {
 		World world = getWorld();
-		BlockPos.getAllInBox(new BlockPos(affectedArea.minX - 1, affectedArea.minY - 1, affectedArea.minZ - 1), new BlockPos(affectedArea.maxX + 1, affectedArea.maxY + 1, affectedArea.maxZ + 1))
+		BlockPos
+			.betweenClosedStream(new BlockPos(affectedArea.x0 - 1, affectedArea.y0 - 1, affectedArea.z0 - 1),
+				new BlockPos(affectedArea.x1 + 1, affectedArea.y1 + 1, affectedArea.z1 + 1))
 			.forEach(pos -> {
 				FluidState nextFluidState = world.getFluidState(pos);
 				if (nextFluidState.isEmpty())
 					return;
-				world.getPendingFluidTicks()
-					.scheduleTick(pos, nextFluidState.getFluid(), world.getRandom()
+				world.getLiquidTicks()
+					.scheduleTick(pos, nextFluidState.getType(), world.getRandom()
 						.nextInt(5));
 			});
 	}
@@ -123,9 +136,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		if (compareDistance != 0)
 			return compareDistance;
 		return Double.compare(VecHelper.getCenterOf(pos2)
-			.squareDistanceTo(centerOfRoot),
+			.distanceToSqr(centerOfRoot),
 			VecHelper.getCenterOf(pos1)
-				.squareDistanceTo(centerOfRoot));
+				.distanceToSqr(centerOfRoot));
 	}
 
 	protected Fluid search(Fluid fluid, List<BlockPosEntry> frontier, Set<BlockPos> visited,
@@ -148,10 +161,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			if (fluidState.isEmpty())
 				continue;
 
-			Fluid currentFluid = FluidHelper.convertToStill(fluidState.getFluid());
+			Fluid currentFluid = FluidHelper.convertToStill(fluidState.getType());
 			if (fluid == null)
 				fluid = currentFluid;
-			if (!currentFluid.isEquivalentTo(fluid))
+			if (!currentFluid.isSame(fluid))
 				continue;
 
 			add.accept(currentPos, entry.distance);
@@ -160,16 +173,16 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				if (!searchDownward && side == Direction.DOWN)
 					continue;
 
-				BlockPos offsetPos = currentPos.offset(side);
+				BlockPos offsetPos = currentPos.relative(side);
 				if (visited.contains(offsetPos))
 					continue;
-				if (offsetPos.distanceSq(rootPos) > maxRangeSq)
+				if (offsetPos.distSqr(rootPos) > maxRangeSq)
 					continue;
 
 				FluidState nextFluidState = world.getFluidState(offsetPos);
 				if (nextFluidState.isEmpty())
 					continue;
-				Fluid nextFluid = nextFluidState.getFluid();
+				Fluid nextFluid = nextFluidState.getType();
 				if (nextFluid == FluidHelper.convertToFlowing(nextFluid) && side == Direction.UP
 					&& !VecHelper.onSameAxis(rootPos, offsetPos, Axis.Y))
 					continue;
@@ -177,29 +190,29 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 				frontier.add(new BlockPosEntry(offsetPos, entry.distance + 1));
 			}
 		}
-		
+
 		return fluid;
 	}
 
 	protected void playEffect(World world, BlockPos pos, Fluid fluid, boolean fillSound) {
-		BlockPos splooshPos = pos == null ? tileEntity.getPos() : pos;
+		BlockPos splooshPos = pos == null ? tileEntity.getBlockPos() : pos;
 
 		SoundEvent soundevent = fillSound ? fluid.getAttributes()
 			.getFillSound()
 			: fluid.getAttributes()
 				.getEmptySound();
 		if (soundevent == null)
-			soundevent = fluid.isIn(FluidTags.LAVA)
-				? fillSound ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_EMPTY_LAVA
-				: fillSound ? SoundEvents.ITEM_BUCKET_FILL : SoundEvents.ITEM_BUCKET_EMPTY;
+			soundevent =
+				fluid.is(FluidTags.LAVA) ? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
+					: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
 
 		world.playSound(null, splooshPos, soundevent, SoundCategory.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerWorld)
 			AllPackets.sendToNear(world, splooshPos, 10, new FluidSplashPacket(splooshPos, new FluidStack(fluid, 1)));
 	}
-	
+
 	protected boolean canDrainInfinitely(Fluid fluid) {
-		return maxBlocks() != -1; //  && !AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
+		return maxBlocks() != -1 && !AllTags.AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
 	}
 
 	@Override
@@ -208,9 +221,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			nbt.put("LastPos", NBTUtil.writeBlockPos(rootPos));
 		if (affectedArea != null) {
 			nbt.put("AffectedAreaFrom",
-				NBTUtil.writeBlockPos(new BlockPos(affectedArea.minX, affectedArea.minY, affectedArea.minZ)));
+				NBTUtil.writeBlockPos(new BlockPos(affectedArea.x0, affectedArea.y0, affectedArea.z0)));
 			nbt.put("AffectedAreaTo",
-				NBTUtil.writeBlockPos(new BlockPos(affectedArea.maxX, affectedArea.maxY, affectedArea.maxZ)));
+				NBTUtil.writeBlockPos(new BlockPos(affectedArea.x1, affectedArea.y1, affectedArea.z1)));
 		}
 		super.write(nbt, clientPacket);
 	}

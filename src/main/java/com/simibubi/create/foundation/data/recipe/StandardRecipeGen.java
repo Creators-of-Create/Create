@@ -36,6 +36,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.CookingRecipeSerializer;
@@ -56,7 +57,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	/*
 	 * Recipes are added through fields, so one can navigate to the right one easily
-	 * 
+	 *
 	 * (Ctrl-o) in Eclipse
 	 */
 
@@ -77,694 +78,708 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				ImmutableList.of(I::zincNugget, I::zinc, I::zincBlock)),
 
 		ANDESITE_ALLOY = create(AllItems.ANDESITE_ALLOY).unlockedByTag(I::iron)
-			.viaShaped(b -> b.key('A', Blocks.ANDESITE)
-				.key('B', Tags.Items.NUGGETS_IRON)
-				.patternLine("BA")
-				.patternLine("AB")),
+			.viaShaped(b -> b.define('A', Blocks.ANDESITE)
+				.define('B', Tags.Items.NUGGETS_IRON)
+				.pattern("BA")
+				.pattern("AB")),
 
 		ANDESITE_ALLOY_FROM_ZINC = create(AllItems.ANDESITE_ALLOY).withSuffix("_from_zinc")
 			.unlockedByTag(I::zinc)
-			.viaShaped(b -> b.key('A', Blocks.ANDESITE)
-				.key('B', I.zincNugget())
-				.patternLine("BA")
-				.patternLine("AB")),
+			.viaShaped(b -> b.define('A', Blocks.ANDESITE)
+				.define('B', I.zincNugget())
+				.pattern("BA")
+				.pattern("AB")),
 
 		ANDESITE_CASING = create(AllBlocks.ANDESITE_CASING).returns(4)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', ItemTags.PLANKS)
-				.key('C', I.andesite())
-				.key('S', ItemTags.LOGS)
-				.patternLine("AAA")
-				.patternLine("CSC")
-				.patternLine("AAA")),
+			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
+				.define('C', I.andesite())
+				.define('S', ItemTags.LOGS)
+				.pattern("AAA")
+				.pattern("CSC")
+				.pattern("AAA")),
 
 		BRASS_CASING = create(AllBlocks.BRASS_CASING).returns(4)
 			.unlockedByTag(I::brass)
-			.viaShaped(b -> b.key('A', ItemTags.PLANKS)
-				.key('C', I.brassSheet())
-				.key('S', ItemTags.LOGS)
-				.patternLine("AAA")
-				.patternLine("CSC")
-				.patternLine("AAA")),
+			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
+				.define('C', I.brassSheet())
+				.define('S', ItemTags.LOGS)
+				.pattern("AAA")
+				.pattern("CSC")
+				.pattern("AAA")),
 
 		COPPER_CASING = create(AllBlocks.COPPER_CASING).returns(4)
 			.unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('A', ItemTags.PLANKS)
-				.key('C', I.copperSheet())
-				.key('S', ItemTags.LOGS)
-				.patternLine("AAA")
-				.patternLine("CSC")
-				.patternLine("AAA")),
+			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
+				.define('C', I.copperSheet())
+				.define('S', ItemTags.LOGS)
+				.pattern("AAA")
+				.pattern("CSC")
+				.pattern("AAA")),
 
 		RADIANT_CASING = create(AllBlocks.REFINED_RADIANCE_CASING).returns(4)
 			.unlockedBy(I::refinedRadiance)
-			.viaShaped(b -> b.key('A', ItemTags.PLANKS)
-				.key('C', I.refinedRadiance())
-				.key('S', Tags.Items.GLASS_COLORLESS)
-				.patternLine("AAA")
-				.patternLine("CSC")
-				.patternLine("AAA")),
+			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
+				.define('C', I.refinedRadiance())
+				.define('S', Tags.Items.GLASS_COLORLESS)
+				.pattern("AAA")
+				.pattern("CSC")
+				.pattern("AAA")),
 
 		SHADOW_CASING = create(AllBlocks.SHADOW_STEEL_CASING).returns(4)
 			.unlockedBy(I::shadowSteel)
-			.viaShaped(b -> b.key('A', ItemTags.PLANKS)
-				.key('C', I.shadowSteel())
-				.key('S', Tags.Items.OBSIDIAN)
-				.patternLine("AAA")
-				.patternLine("CSC")
-				.patternLine("AAA")),
+			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
+				.define('C', I.shadowSteel())
+				.define('S', Tags.Items.OBSIDIAN)
+				.pattern("AAA")
+				.pattern("CSC")
+				.pattern("AAA")),
 
 		ELECTRON_TUBE = create(AllItems.ELECTRON_TUBE).unlockedBy(AllItems.ROSE_QUARTZ::get)
-			.viaShaped(b -> b.key('L', AllItems.POLISHED_ROSE_QUARTZ.get())
-				.key('R', Items.REDSTONE_TORCH)
-				.key('N', Tags.Items.NUGGETS_IRON)
-				.patternLine("L")
-				.patternLine("R")
-				.patternLine("N")),
+			.viaShaped(b -> b.define('L', AllItems.POLISHED_ROSE_QUARTZ.get())
+				.define('R', Items.REDSTONE_TORCH)
+				.define('N', Tags.Items.NUGGETS_IRON)
+				.pattern("L")
+				.pattern("R")
+				.pattern("N")),
 
 		ROSE_QUARTZ = create(AllItems.ROSE_QUARTZ).unlockedBy(() -> Items.REDSTONE)
-			.viaShapeless(b -> b.addIngredient(Tags.Items.GEMS_QUARTZ)
-				.addIngredient(Ingredient.fromTag(I.redstone()), 8)),
+			.viaShapeless(b -> b.requires(Tags.Items.GEMS_QUARTZ)
+				.requires(Ingredient.of(I.redstone()), 8)),
 
 		SAND_PAPER = create(AllItems.SAND_PAPER).unlockedBy(() -> Items.PAPER)
-			.viaShapeless(b -> b.addIngredient(Items.PAPER)
-				.addIngredient(Tags.Items.SAND_COLORLESS)),
+			.viaShapeless(b -> b.requires(Items.PAPER)
+				.requires(Tags.Items.SAND_COLORLESS)),
 
 		RED_SAND_PAPER = create(AllItems.RED_SAND_PAPER).unlockedBy(() -> Items.PAPER)
-			.viaShapeless(b -> b.addIngredient(Items.PAPER)
-				.addIngredient(Tags.Items.SAND_RED))
+			.viaShapeless(b -> b.requires(Items.PAPER)
+				.requires(Tags.Items.SAND_RED))
 
 	;
 
 	private Marker CURIOSITIES = enterSection(AllSections.CURIOSITIES);
 
 	GeneratedRecipe WAND_OF_SYMMETRY = create(AllItems.WAND_OF_SYMMETRY).unlockedBy(I::refinedRadiance)
-		.viaShaped(b -> b.key('E', I.refinedRadiance())
-			.key('G', Tags.Items.GLASS_PANES_WHITE)
-			.key('O', Tags.Items.OBSIDIAN)
-			.key('L', I.brass())
-			.patternLine(" GE")
-			.patternLine("LEG")
-			.patternLine("OL ")),
+		.viaShaped(b -> b.define('E', I.refinedRadiance())
+			.define('G', Tags.Items.GLASS_PANES_WHITE)
+			.define('O', Tags.Items.OBSIDIAN)
+			.define('L', I.brass())
+			.pattern(" GE")
+			.pattern("LEG")
+			.pattern("OL ")),
+
+		TOOLBOX = create(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)).unlockedByTag(I::goldSheet)
+			.viaShaped(b -> b.define('S', I.goldSheet())
+				.define('C', I.cog())
+				.define('W', Tags.Items.CHESTS_WOODEN)
+				.define('L', Tags.Items.LEATHER)
+				.pattern(" C ")
+				.pattern("SWS")
+				.pattern(" L ")),
 
 		MINECART_COUPLING = create(AllItems.MINECART_COUPLING).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('E', I.andesite())
-				.key('O', I.ironSheet())
-				.patternLine("  E")
-				.patternLine(" O ")
-				.patternLine("E  "))
+			.viaShaped(b -> b.define('E', I.andesite())
+				.define('O', I.ironSheet())
+				.pattern("  E")
+				.pattern(" O ")
+				.pattern("E  ")),
+
+		PECULIAR_BELL = create(AllBlocks.PECULIAR_BELL).unlockedByTag(I::brass)
+			.viaShaped(b -> b.define('I', I.brassBlock())
+				.define('P', I.brassSheet())
+				.pattern("I")
+				.pattern("P"))
 
 	;
 
 	private Marker KINETICS = enterSection(AllSections.KINETICS);
 
 	GeneratedRecipe BASIN = create(AllBlocks.BASIN).unlockedBy(I::andesite)
-		.viaShaped(b -> b.key('A', I.andesite())
-			.patternLine("A A")
-			.patternLine("AAA")),
+		.viaShaped(b -> b.define('A', I.andesite())
+			.pattern("A A")
+			.pattern("AAA")),
 
 		GOGGLES = create(AllItems.GOGGLES).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('G', Tags.Items.GLASS)
-				.key('P', I.goldSheet())
-				.key('S', Tags.Items.STRING)
-				.patternLine(" S ")
-				.patternLine("GPG")),
+			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
+				.define('P', I.goldSheet())
+				.define('S', Tags.Items.STRING)
+				.pattern(" S ")
+				.pattern("GPG")),
 
 		WRENCH = create(AllItems.WRENCH).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('G', I.goldSheet())
-				.key('P', I.cog())
-				.key('S', Tags.Items.RODS_WOODEN)
-				.patternLine("GG")
-				.patternLine("GP")
-				.patternLine(" S")),
+			.viaShaped(b -> b.define('G', I.goldSheet())
+				.define('P', I.cog())
+				.define('S', Tags.Items.RODS_WOODEN)
+				.pattern("GG")
+				.pattern("GP")
+				.pattern(" S")),
 
 		FILTER = create(AllItems.FILTER).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', ItemTags.WOOL)
-				.key('A', Tags.Items.NUGGETS_IRON)
-				.patternLine("ASA")),
+			.viaShaped(b -> b.define('S', ItemTags.WOOL)
+				.define('A', Tags.Items.NUGGETS_IRON)
+				.pattern("ASA")),
 
 		ATTRIBUTE_FILTER = create(AllItems.ATTRIBUTE_FILTER).unlockedByTag(I::brass)
-			.viaShaped(b -> b.key('S', ItemTags.WOOL)
-				.key('A', I.brassNugget())
-				.patternLine("ASA")),
+			.viaShaped(b -> b.define('S', ItemTags.WOOL)
+				.define('A', I.brassNugget())
+				.pattern("ASA")),
 
 		BRASS_HAND = create(AllItems.BRASS_HAND).unlockedByTag(I::brass)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('B', I.brassSheet())
-				.patternLine(" A ")
-				.patternLine("BBB")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('B', I.brassSheet())
+				.pattern(" A ")
+				.pattern("BBB")
+				.pattern(" B ")),
 
 		SUPER_GLUE = create(AllItems.SUPER_GLUE).unlockedByTag(I::ironSheet)
-			.viaShaped(b -> b.key('A', Tags.Items.SLIMEBALLS)
-				.key('S', I.ironSheet())
-				.key('N', Tags.Items.NUGGETS_IRON)
-				.patternLine("AS")
-				.patternLine("NA")),
+			.viaShaped(b -> b.define('A', Tags.Items.SLIMEBALLS)
+				.define('S', I.ironSheet())
+				.define('N', Tags.Items.NUGGETS_IRON)
+				.pattern("AS")
+				.pattern("NA")),
 
 		CRAFTER_SLOT_COVER = create(AllItems.CRAFTER_SLOT_COVER).unlockedBy(AllBlocks.MECHANICAL_CRAFTER::get)
-			.viaShaped(b -> b.key('A', I.brassNugget())
-				.patternLine("AAA")),
+			.viaShaped(b -> b.define('A', I.brassNugget())
+				.pattern("AAA")),
 
 		COGWHEEL = create(AllBlocks.COGWHEEL).returns(8)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', ItemTags.WOODEN_BUTTONS)
-				.key('C', I.andesite())
-				.patternLine("SSS")
-				.patternLine("SCS")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('S', ItemTags.WOODEN_BUTTONS)
+				.define('C', I.andesite())
+				.pattern("SSS")
+				.pattern("SCS")
+				.pattern("SSS")),
 
 		LARGE_COGWHEEL = create(AllBlocks.LARGE_COGWHEEL).returns(2)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', ItemTags.WOODEN_BUTTONS)
-				.key('C', I.andesite())
-				.key('D', ItemTags.PLANKS)
-				.patternLine("SDS")
-				.patternLine("DCD")
-				.patternLine("SDS")),
+			.viaShaped(b -> b.define('S', ItemTags.WOODEN_BUTTONS)
+				.define('C', I.andesite())
+				.define('D', ItemTags.PLANKS)
+				.pattern("SDS")
+				.pattern("DCD")
+				.pattern("SDS")),
 
 		WATER_WHEEL = create(AllBlocks.WATER_WHEEL).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', ItemTags.WOODEN_SLABS)
-				.key('C', AllBlocks.LARGE_COGWHEEL.get())
-				.patternLine("SSS")
-				.patternLine("SCS")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('S', ItemTags.WOODEN_SLABS)
+				.define('C', AllBlocks.LARGE_COGWHEEL.get())
+				.pattern("SSS")
+				.pattern("SCS")
+				.pattern("SSS")),
 
 		SHAFT = create(AllBlocks.SHAFT).returns(8)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.patternLine("A")
-				.patternLine("A")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.pattern("A")
+				.pattern("A")),
 
 		MECHANICAL_PRESS = create(AllBlocks.MECHANICAL_PRESS).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('B', I.andesite())
-				.key('S', I.cog())
-				.key('C', I.andesiteCasing())
-				.key('I', AllTags.forgeItemTag("storage_blocks/iron"))
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('B', I.andesite())
+				.define('S', I.cog())
+				.define('C', I.andesiteCasing())
+				.define('I', AllTags.forgeItemTag("storage_blocks/iron"))
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		MILLSTONE = create(AllBlocks.MILLSTONE).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
-				.key('S', I.andesite())
-				.key('C', I.cog())
-				.key('I', I.stone())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('B', ItemTags.PLANKS)
+				.define('S', I.andesite())
+				.define('C', I.cog())
+				.define('I', I.stone())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		MECHANICAL_PISTON = create(AllBlocks.MECHANICAL_PISTON).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
-				.key('S', I.cog())
-				.key('C', I.andesiteCasing())
-				.key('I', AllBlocks.PISTON_EXTENSION_POLE.get())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('B', ItemTags.PLANKS)
+				.define('S', I.cog())
+				.define('C', I.andesiteCasing())
+				.define('I', AllBlocks.PISTON_EXTENSION_POLE.get())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		STICKY_MECHANICAL_PISTON = create(AllBlocks.STICKY_MECHANICAL_PISTON).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', Tags.Items.SLIMEBALLS)
-				.key('P', AllBlocks.MECHANICAL_PISTON.get())
-				.patternLine("S")
-				.patternLine("P")),
+			.viaShaped(b -> b.define('S', Tags.Items.SLIMEBALLS)
+				.define('P', AllBlocks.MECHANICAL_PISTON.get())
+				.pattern("S")
+				.pattern("P")),
 
 		TURNTABLE = create(AllBlocks.TURNTABLE).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.shaft())
-				.key('P', ItemTags.WOODEN_SLABS)
-				.patternLine("P")
-				.patternLine("S")),
+			.viaShaped(b -> b.define('S', I.shaft())
+				.define('P', ItemTags.WOODEN_SLABS)
+				.pattern("P")
+				.pattern("S")),
 
 		PISTON_EXTENSION_POLE = create(AllBlocks.PISTON_EXTENSION_POLE).returns(8)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('P', ItemTags.PLANKS)
-				.patternLine("P")
-				.patternLine("A")
-				.patternLine("P")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('P', ItemTags.PLANKS)
+				.pattern("P")
+				.pattern("A")
+				.pattern("P")),
 
 		GANTRY_PINION = create(AllBlocks.GANTRY_CARRIAGE).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('B', ItemTags.PLANKS)
-				.key('S', I.cog())
-				.key('C', I.andesiteCasing())
-				.key('I', I.shaft())
-				.patternLine(" B ")
-				.patternLine("ICI")
-				.patternLine(" S ")),
+			.viaShaped(b -> b.define('B', ItemTags.PLANKS)
+				.define('S', I.cog())
+				.define('C', I.andesiteCasing())
+				.define('I', I.shaft())
+				.pattern(" B ")
+				.pattern("ICI")
+				.pattern(" S ")),
 
 		GANTRY_SHAFT = create(AllBlocks.GANTRY_SHAFT).returns(8)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('R', I.redstone())
-				.patternLine("A")
-				.patternLine("R")
-				.patternLine("A")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('R', I.redstone())
+				.pattern("A")
+				.pattern("R")
+				.pattern("A")),
 
 		ANALOG_LEVER = create(AllBlocks.ANALOG_LEVER).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.andesiteCasing())
-				.key('P', Tags.Items.RODS_WOODEN)
-				.patternLine("P")
-				.patternLine("S")),
+			.viaShaped(b -> b.define('S', I.andesiteCasing())
+				.define('P', Tags.Items.RODS_WOODEN)
+				.pattern("P")
+				.pattern("S")),
 
 		BELT_CONNECTOR = create(AllItems.BELT_CONNECTOR).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('D', Items.DRIED_KELP)
-				.patternLine("DDD")
-				.patternLine("DDD")),
+			.viaShaped(b -> b.define('D', Items.DRIED_KELP)
+				.pattern("DDD")
+				.pattern("DDD")),
 
 		ADJUSTABLE_PULLEY = create(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('A', I.electronTube())
-				.key('B', AllBlocks.ENCASED_CHAIN_DRIVE.get())
-				.key('C', AllBlocks.LARGE_COGWHEEL.get())
-				.patternLine("A")
-				.patternLine("B")
-				.patternLine("C")),
+			.viaShaped(b -> b.define('A', I.electronTube())
+				.define('B', AllBlocks.ENCASED_CHAIN_DRIVE.get())
+				.define('C', AllBlocks.LARGE_COGWHEEL.get())
+				.pattern("A")
+				.pattern("B")
+				.pattern("C")),
 
 		CART_ASSEMBLER = create(AllBlocks.CART_ASSEMBLER).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('L', ItemTags.LOGS)
-				.key('R', I.redstone())
-				.key('C', I.andesite())
-				.patternLine(" L ")
-				.patternLine("CRC")
-				.patternLine("L L")),
+			.viaShaped(b -> b.define('L', ItemTags.LOGS)
+				.define('R', I.redstone())
+				.define('C', I.andesite())
+				.pattern(" L ")
+				.pattern("CRC")
+				.pattern("L L")),
 
 		CONTROLLER_RAIL = create(AllBlocks.CONTROLLER_RAIL).returns(6)
 			.unlockedBy(() -> Items.POWERED_RAIL)
-			.viaShaped(b -> b.key('A', I.gold())
-				.key('E', I.electronTube())
-				.key('S', Tags.Items.RODS_WOODEN)
-				.patternLine("A A")
-				.patternLine("ASA")
-				.patternLine("AEA")),
+			.viaShaped(b -> b.define('A', I.gold())
+				.define('E', I.electronTube())
+				.define('S', Tags.Items.RODS_WOODEN)
+				.pattern("A A")
+				.pattern("ASA")
+				.pattern("AEA")),
 
 		HAND_CRANK = create(AllBlocks.HAND_CRANK).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('C', ItemTags.PLANKS)
-				.key('S', I.shaft())
-				.patternLine(" S ")
-				.patternLine("CCC")
-				.patternLine("  A")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('C', ItemTags.PLANKS)
+				.define('S', I.shaft())
+				.pattern(" S ")
+				.pattern("CCC")
+				.pattern("  A")),
 
 		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('S', I.andesite())
-				.key('C', I.copperSheet())
-				.patternLine("CCC")
-				.patternLine(" S ")),
+			.viaShaped(b -> b.define('S', I.andesite())
+				.define('C', I.copperSheet())
+				.pattern("CCC")
+				.pattern(" S ")),
 
 		COPPER_VALVE_HANDLE_FROM_OTHER_HANDLES = create(AllBlocks.COPPER_VALVE_HANDLE).withSuffix("_from_others")
 			.unlockedByTag(I::copper)
-			.viaShapeless(b -> b.addIngredient(AllItemTags.VALVE_HANDLES.tag)),
+			.viaShapeless(b -> b.requires(AllItemTags.VALVE_HANDLES.tag)),
 
 		NOZZLE = create(AllBlocks.NOZZLE).unlockedBy(AllBlocks.ENCASED_FAN::get)
-			.viaShaped(b -> b.key('S', I.andesite())
-				.key('C', ItemTags.WOOL)
-				.patternLine(" S ")
-				.patternLine(" C ")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('S', I.andesite())
+				.define('C', ItemTags.WOOL)
+				.pattern(" S ")
+				.pattern(" C ")
+				.pattern("SSS")),
 
 		PROPELLER = create(AllItems.PROPELLER).unlockedByTag(I::ironSheet)
-			.viaShaped(b -> b.key('S', I.ironSheet())
-				.key('C', I.andesite())
-				.patternLine(" S ")
-				.patternLine("SCS")
-				.patternLine(" S ")),
+			.viaShaped(b -> b.define('S', I.ironSheet())
+				.define('C', I.andesite())
+				.pattern(" S ")
+				.pattern("SCS")
+				.pattern(" S ")),
 
 		WHISK = create(AllItems.WHISK).unlockedByTag(I::ironSheet)
-			.viaShaped(b -> b.key('S', I.ironSheet())
-				.key('C', I.andesite())
-				.patternLine(" C ")
-				.patternLine("SCS")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('S', I.ironSheet())
+				.define('C', I.andesite())
+				.pattern(" C ")
+				.pattern("SCS")
+				.pattern("SSS")),
 
 		ENCASED_FAN = create(AllBlocks.ENCASED_FAN).unlockedByTag(I::ironSheet)
-			.viaShaped(b -> b.key('S', I.shaft())
-				.key('A', I.andesiteCasing())
-				.key('R', I.cog())
-				.key('P', AllItems.PROPELLER.get())
-				.patternLine(" S ")
-				.patternLine("RAR")
-				.patternLine(" P ")),
+			.viaShaped(b -> b.define('S', I.shaft())
+				.define('A', I.andesiteCasing())
+				.define('R', I.cog())
+				.define('P', AllItems.PROPELLER.get())
+				.pattern(" S ")
+				.pattern("RAR")
+				.pattern(" P ")),
 
 		CUCKOO_CLOCK = create(AllBlocks.CUCKOO_CLOCK).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', ItemTags.PLANKS)
-				.key('A', Items.CLOCK)
-				.key('B', ItemTags.LOGS)
-				.key('P', I.cog())
-				.patternLine(" S ")
-				.patternLine("SAS")
-				.patternLine("BPB")),
+			.viaShaped(b -> b.define('S', ItemTags.PLANKS)
+				.define('A', Items.CLOCK)
+				.define('B', ItemTags.LOGS)
+				.define('P', I.cog())
+				.pattern(" S ")
+				.pattern("SAS")
+				.pattern("BPB")),
 
 		MECHANICAL_CRAFTER = create(AllBlocks.MECHANICAL_CRAFTER).returns(3)
 			.unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.electronTube())
-				.key('R', Blocks.CRAFTING_TABLE)
-				.key('C', I.brassCasing())
-				.key('S', I.cog())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" R ")),
+			.viaShaped(b -> b.define('B', I.electronTube())
+				.define('R', Blocks.CRAFTING_TABLE)
+				.define('C', I.brassCasing())
+				.define('S', I.cog())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" R ")),
 
 		WINDMILL_BEARING = create(AllBlocks.WINDMILL_BEARING).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('I', I.shaft())
-				.key('B', AllBlocks.TURNTABLE.get())
-				.key('C', I.stone())
-				.patternLine(" B ")
-				.patternLine(" C ")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('I', I.shaft())
+				.define('B', AllBlocks.TURNTABLE.get())
+				.define('C', I.stone())
+				.pattern(" B ")
+				.pattern(" C ")
+				.pattern(" I ")),
 
 		MECHANICAL_BEARING = create(AllBlocks.MECHANICAL_BEARING).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('I', I.shaft())
-				.key('S', I.andesite())
-				.key('B', AllBlocks.TURNTABLE.get())
-				.key('C', I.andesiteCasing())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('I', I.shaft())
+				.define('S', I.andesite())
+				.define('B', AllBlocks.TURNTABLE.get())
+				.define('C', I.andesiteCasing())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		CLOCKWORK_BEARING = create(AllBlocks.CLOCKWORK_BEARING).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('I', I.shaft())
-				.key('S', I.electronTube())
-				.key('B', AllBlocks.TURNTABLE.get())
-				.key('C', I.brassCasing())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('I', I.shaft())
+				.define('S', I.electronTube())
+				.define('B', AllBlocks.TURNTABLE.get())
+				.define('C', I.brassCasing())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		WOODEN_BRACKET = create(AllBlocks.WOODEN_BRACKET).returns(4)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', Tags.Items.RODS_WOODEN)
-				.key('P', I.planks())
-				.key('C', I.andesite())
-				.patternLine("SSS")
-				.patternLine("PCP")),
+			.viaShaped(b -> b.define('S', Tags.Items.RODS_WOODEN)
+				.define('P', I.planks())
+				.define('C', I.andesite())
+				.pattern("SSS")
+				.pattern("PCP")),
 
 		METAL_BRACKET = create(AllBlocks.METAL_BRACKET).returns(4)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', Tags.Items.NUGGETS_IRON)
-				.key('P', I.iron())
-				.key('C', I.andesite())
-				.patternLine("SSS")
-				.patternLine("PCP")),
+			.viaShaped(b -> b.define('S', Tags.Items.NUGGETS_IRON)
+				.define('P', I.iron())
+				.define('C', I.andesite())
+				.pattern("SSS")
+				.pattern("PCP")),
 
 		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(8)
 			.unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('S', I.copperSheet())
-				.key('C', I.copper())
-				.patternLine("SCS")),
+			.viaShaped(b -> b.define('S', I.copperSheet())
+				.define('C', I.copper())
+				.pattern("SCS")),
 
 		MECHANICAL_PUMP = create(AllBlocks.MECHANICAL_PUMP).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('P', I.cog())
-				.key('S', AllBlocks.FLUID_PIPE.get())
-				.patternLine("P")
-				.patternLine("S")),
+			.viaShaped(b -> b.define('P', I.cog())
+				.define('S', AllBlocks.FLUID_PIPE.get())
+				.pattern("P")
+				.pattern("S")),
 
 		SMART_FLUID_PIPE = create(AllBlocks.SMART_FLUID_PIPE).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('P', I.electronTube())
-				.key('S', AllBlocks.FLUID_PIPE.get())
-				.key('I', I.brassSheet())
-				.patternLine("I")
-				.patternLine("S")
-				.patternLine("P")),
+			.viaShaped(b -> b.define('P', I.electronTube())
+				.define('S', AllBlocks.FLUID_PIPE.get())
+				.define('I', I.brassSheet())
+				.pattern("I")
+				.pattern("S")
+				.pattern("P")),
 
 		FLUID_VALVE = create(AllBlocks.FLUID_VALVE).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('P', I.shaft())
-				.key('S', AllBlocks.FLUID_PIPE.get())
-				.key('I', I.ironSheet())
-				.patternLine("I")
-				.patternLine("S")
-				.patternLine("P")),
+			.viaShaped(b -> b.define('P', I.shaft())
+				.define('S', AllBlocks.FLUID_PIPE.get())
+				.define('I', I.ironSheet())
+				.pattern("I")
+				.pattern("S")
+				.pattern("P")),
 
 		SPOUT = create(AllBlocks.SPOUT).unlockedBy(I::copperCasing)
-			.viaShaped(b -> b.key('T', AllBlocks.FLUID_TANK.get())
-				.key('P', Items.DRIED_KELP)
-				.key('S', I.copperNugget())
-				.patternLine("T")
-				.patternLine("P")
-				.patternLine("S")),
+			.viaShaped(b -> b.define('T', AllBlocks.FLUID_TANK.get())
+				.define('P', Items.DRIED_KELP)
+				.define('S', I.copperNugget())
+				.pattern("T")
+				.pattern("P")
+				.pattern("S")),
 
 		ITEM_DRAIN = create(AllBlocks.ITEM_DRAIN).unlockedBy(I::copperCasing)
-			.viaShaped(b -> b.key('P', Blocks.IRON_BARS)
-				.key('S', I.copperCasing())
-				.patternLine("P")
-				.patternLine("S")),
+			.viaShaped(b -> b.define('P', Blocks.IRON_BARS)
+				.define('S', I.copperCasing())
+				.pattern("P")
+				.pattern("S")),
 
 		FLUID_TANK = create(AllBlocks.FLUID_TANK).returns(2)
 			.unlockedBy(I::copperCasing)
-			.viaShaped(b -> b.key('B', I.copperCasing())
-				.key('S', I.copperNugget())
-				.key('C', Tags.Items.GLASS)
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('B', I.copperCasing())
+				.define('S', I.copperNugget())
+				.define('C', Tags.Items.GLASS)
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" B ")),
 
 		DEPLOYER = create(AllBlocks.DEPLOYER).unlockedBy(I::electronTube)
-			.viaShaped(b -> b.key('I', AllItems.BRASS_HAND.get())
-				.key('B', I.electronTube())
-				.key('S', I.cog())
-				.key('C', I.andesiteCasing())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('I', AllItems.BRASS_HAND.get())
+				.define('B', I.electronTube())
+				.define('S', I.cog())
+				.define('C', I.andesiteCasing())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		PORTABLE_STORAGE_INTERFACE = create(AllBlocks.PORTABLE_STORAGE_INTERFACE).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('I', I.brassCasing())
-				.key('B', AllBlocks.ANDESITE_FUNNEL.get())
-				.patternLine(" B ")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('I', I.brassCasing())
+				.define('B', AllBlocks.ANDESITE_FUNNEL.get())
+				.pattern(" B ")
+				.pattern(" I ")),
 
 		PORTABLE_FLUID_INTERFACE = create(AllBlocks.PORTABLE_FLUID_INTERFACE).unlockedBy(I::copperCasing)
-			.viaShaped(b -> b.key('I', I.copperCasing())
-				.key('B', AllBlocks.ANDESITE_FUNNEL.get())
-				.patternLine(" B ")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('I', I.copperCasing())
+				.define('B', AllBlocks.ANDESITE_FUNNEL.get())
+				.pattern(" B ")
+				.pattern(" I ")),
 
 		ROPE_PULLEY = create(AllBlocks.ROPE_PULLEY).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.shaft())
-				.key('B', I.andesiteCasing())
-				.key('C', ItemTags.WOOL)
-				.key('I', I.ironSheet())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('S', I.shaft())
+				.define('B', I.andesiteCasing())
+				.define('C', ItemTags.WOOL)
+				.define('I', I.ironSheet())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		HOSE_PULLEY = create(AllBlocks.HOSE_PULLEY).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('S', I.shaft())
-				.key('P', AllBlocks.FLUID_PIPE.get())
-				.key('B', I.copperCasing())
-				.key('C', Items.DRIED_KELP)
-				.key('I', I.copperSheet())
-				.patternLine(" B ")
-				.patternLine("SCP")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('S', I.shaft())
+				.define('P', AllBlocks.FLUID_PIPE.get())
+				.define('B', I.copperCasing())
+				.define('C', Items.DRIED_KELP)
+				.define('I', I.copperSheet())
+				.pattern(" B ")
+				.pattern("SCP")
+				.pattern(" I ")),
 
 		EMPTY_BLAZE_BURNER = create(AllItems.EMPTY_BLAZE_BURNER).unlockedByTag(I::iron)
-			.viaShaped(b -> b.key('A', Blocks.IRON_BARS)
-				.key('I', I.ironSheet())
-				.patternLine("II")
-				.patternLine("AA")),
+			.viaShaped(b -> b.define('A', Blocks.IRON_BARS)
+				.define('I', I.ironSheet())
+				.pattern("II")
+				.pattern("AA")),
 
 		CHUTE = create(AllBlocks.CHUTE).unlockedBy(I::andesite)
 			.returns(4)
-			.viaShaped(b -> b.key('A', I.ironSheet())
-				.key('I', I.andesite())
-				.patternLine("II")
-				.patternLine("AA")),
+			.viaShaped(b -> b.define('A', I.ironSheet())
+				.define('I', I.andesite())
+				.pattern("II")
+				.pattern("AA")),
 
 		SMART_CHUTE = create(AllBlocks.SMART_CHUTE).unlockedBy(AllBlocks.CHUTE::get)
-			.viaShaped(b -> b.key('P', I.electronTube())
-				.key('S', AllBlocks.CHUTE.get())
-				.key('I', I.brassSheet())
-				.patternLine("I")
-				.patternLine("S")
-				.patternLine("P")),
+			.viaShaped(b -> b.define('P', I.electronTube())
+				.define('S', AllBlocks.CHUTE.get())
+				.define('I', I.brassSheet())
+				.pattern("I")
+				.pattern("S")
+				.pattern("P")),
 
 		DEPOT = create(AllBlocks.DEPOT).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('I', I.andesiteCasing())
-				.patternLine("A")
-				.patternLine("I")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('I', I.andesiteCasing())
+				.pattern("A")
+				.pattern("I")),
 
 		WEIGHTED_EJECTOR = create(AllBlocks.WEIGHTED_EJECTOR).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('A', I.goldSheet())
-				.key('D', AllBlocks.DEPOT.get())
-				.key('I', I.cog())
-				.patternLine("A")
-				.patternLine("D")
-				.patternLine("I")),
+			.viaShaped(b -> b.define('A', I.goldSheet())
+				.define('D', AllBlocks.DEPOT.get())
+				.define('I', I.cog())
+				.pattern("A")
+				.pattern("D")
+				.pattern("I")),
 
 		MECHANICAL_ARM = create(AllBlocks.MECHANICAL_ARM::get).unlockedBy(I::brassCasing)
 			.returns(1)
-			.viaShaped(b -> b.key('L', I.brassSheet())
-				.key('R', I.cog())
-				.key('I', I.electronTube())
-				.key('A', I.andesite())
-				.key('C', I.brassCasing())
-				.patternLine("LLA")
-				.patternLine("LR ")
-				.patternLine("ICI")),
+			.viaShaped(b -> b.define('L', I.brassSheet())
+				.define('I', I.precisionMechanism())
+				.define('A', I.andesite())
+				.define('C', I.brassCasing())
+				.pattern("LLA")
+				.pattern("L  ")
+				.pattern("IC ")),
 
 		MECHANICAL_MIXER = create(AllBlocks.MECHANICAL_MIXER).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.cog())
-				.key('B', I.andesite())
-				.key('C', I.andesiteCasing())
-				.key('I', AllItems.WHISK.get())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I ")),
+			.viaShaped(b -> b.define('S', I.cog())
+				.define('B', I.andesite())
+				.define('C', I.andesiteCasing())
+				.define('I', AllItems.WHISK.get())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I ")),
 
 		CLUTCH = create(AllBlocks.CLUTCH).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.shaft())
-				.key('B', I.redstone())
-				.key('C', I.andesiteCasing())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('S', I.shaft())
+				.define('B', I.redstone())
+				.define('C', I.andesiteCasing())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" B ")),
 
 		GEARSHIFT = create(AllBlocks.GEARSHIFT).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('S', I.cog())
-				.key('B', I.redstone())
-				.key('C', I.andesiteCasing())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('S', I.cog())
+				.define('B', I.redstone())
+				.define('C', I.andesiteCasing())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" B ")),
 
 		SAIL_FRAME = create(AllBlocks.SAIL_FRAME).returns(8)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('S', Tags.Items.RODS_WOODEN)
-				.patternLine("SSS")
-				.patternLine("SAS")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('S', Tags.Items.RODS_WOODEN)
+				.pattern("SSS")
+				.pattern("SAS")
+				.pattern("SSS")),
 
 		SAIL = create(AllBlocks.SAIL).returns(8)
 			.unlockedBy(AllBlocks.SAIL_FRAME::get)
-			.viaShaped(b -> b.key('F', AllBlocks.SAIL_FRAME.get())
-				.key('W', ItemTags.WOOL)
-				.patternLine("FFF")
-				.patternLine("FWF")
-				.patternLine("FFF")),
+			.viaShaped(b -> b.define('F', AllBlocks.SAIL_FRAME.get())
+				.define('W', ItemTags.WOOL)
+				.pattern("FFF")
+				.pattern("FWF")
+				.pattern("FFF")),
 
 		RADIAL_CHASIS = create(AllBlocks.RADIAL_CHASSIS).returns(3)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('P', I.andesite())
-				.key('L', ItemTags.LOGS)
-				.patternLine(" L ")
-				.patternLine("PLP")
-				.patternLine(" L ")),
+			.viaShaped(b -> b.define('P', I.andesite())
+				.define('L', ItemTags.LOGS)
+				.pattern(" L ")
+				.pattern("PLP")
+				.pattern(" L ")),
 
 		LINEAR_CHASIS = create(AllBlocks.LINEAR_CHASSIS).returns(3)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('P', I.andesite())
-				.key('L', ItemTags.LOGS)
-				.patternLine(" P ")
-				.patternLine("LLL")
-				.patternLine(" P ")),
+			.viaShaped(b -> b.define('P', I.andesite())
+				.define('L', ItemTags.LOGS)
+				.pattern(" P ")
+				.pattern("LLL")
+				.pattern(" P ")),
 
 		LINEAR_CHASSIS_CYCLE =
 			conversionCycle(ImmutableList.of(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)),
 
 		STICKER = create(AllBlocks.STICKER).returns(1)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('I', I.andesite())
-				.key('C', Tags.Items.COBBLESTONE)
-				.key('R', I.redstone())
-				.key('S', Tags.Items.SLIMEBALLS)
-				.patternLine("ISI")
-				.patternLine("CRC")),
+			.viaShaped(b -> b.define('I', I.andesite())
+				.define('C', Tags.Items.COBBLESTONE)
+				.define('R', I.redstone())
+				.define('S', Tags.Items.SLIMEBALLS)
+				.pattern("ISI")
+				.pattern("CRC")),
 
 		MINECART = create(() -> Items.MINECART).withSuffix("_from_contraption_cart")
 			.unlockedBy(AllBlocks.CART_ASSEMBLER::get)
-			.viaShapeless(b -> b.addIngredient(AllItems.MINECART_CONTRAPTION.get())),
+			.viaShapeless(b -> b.requires(AllItems.MINECART_CONTRAPTION.get())),
 
 		FURNACE_MINECART = create(() -> Items.FURNACE_MINECART).withSuffix("_from_contraption_cart")
 			.unlockedBy(AllBlocks.CART_ASSEMBLER::get)
-			.viaShapeless(b -> b.addIngredient(AllItems.FURNACE_MINECART_CONTRAPTION.get())),
+			.viaShapeless(b -> b.requires(AllItems.FURNACE_MINECART_CONTRAPTION.get())),
 
 		GEARBOX = create(AllBlocks.GEARBOX).unlockedBy(I::cog)
-			.viaShaped(b -> b.key('C', I.cog())
-				.key('B', I.andesiteCasing())
-				.patternLine(" C ")
-				.patternLine("CBC")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.define('C', I.cog())
+				.define('B', I.andesiteCasing())
+				.pattern(" C ")
+				.pattern("CBC")
+				.pattern(" C ")),
 
 		GEARBOX_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.GEARBOX, AllItems.VERTICAL_GEARBOX)),
 
 		MYSTERIOUS_CUCKOO_CLOCK = create(AllBlocks.MYSTERIOUS_CUCKOO_CLOCK).unlockedBy(AllBlocks.CUCKOO_CLOCK::get)
-			.viaShaped(b -> b.key('C', Tags.Items.GUNPOWDER)
-				.key('B', AllBlocks.CUCKOO_CLOCK.get())
-				.patternLine(" C ")
-				.patternLine("CBC")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.define('C', Tags.Items.GUNPOWDER)
+				.define('B', AllBlocks.CUCKOO_CLOCK.get())
+				.pattern(" C ")
+				.pattern("CBC")
+				.pattern(" C ")),
 
 		ENCASED_CHAIN_DRIVE = create(AllBlocks.ENCASED_CHAIN_DRIVE).returns(2)
 			.unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('S', I.shaft())
-				.key('B', Tags.Items.NUGGETS_IRON)
-				.key('C', I.andesiteCasing())
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('S', I.shaft())
+				.define('B', Tags.Items.NUGGETS_IRON)
+				.define('C', I.andesiteCasing())
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" B ")),
 
 		SPEEDOMETER = create(AllBlocks.SPEEDOMETER).unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('C', Items.COMPASS)
-				.key('A', I.andesiteCasing())
-				.key('S', I.shaft())
-				.patternLine(" C ")
-				.patternLine("SAS")),
+			.viaShaped(b -> b.define('C', Items.COMPASS)
+				.define('A', I.andesiteCasing())
+				.define('S', I.shaft())
+				.pattern(" C ")
+				.pattern("SAS")),
 
 		GAUGE_CYCLE = conversionCycle(ImmutableList.of(AllBlocks.SPEEDOMETER, AllBlocks.STRESSOMETER)),
 
 		ROTATION_SPEED_CONTROLLER = create(AllBlocks.ROTATION_SPEED_CONTROLLER).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.circuit())
-				.key('C', I.brassCasing())
-				.key('S', I.shaft())
-				.patternLine(" B ")
-				.patternLine("SCS")),
+			.viaShaped(b -> b.define('B', I.precisionMechanism())
+				.define('C', I.brassCasing())
+				.define('S', I.shaft())
+				.pattern(" B ")
+				.pattern("SCS")),
 
-		NIXIE_TUBE = create(AllBlocks.NIXIE_TUBE).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('E', I.electronTube())
-				.key('B', I.brassCasing())
-				.patternLine("EBE")),
+		NIXIE_TUBE = create(AllBlocks.ORANGE_NIXIE_TUBE).unlockedBy(I::brassCasing)
+			.viaShaped(b -> b.define('E', I.electronTube())
+				.define('B', I.brassCasing())
+				.pattern("EBE")),
 
 		MECHANICAL_SAW = create(AllBlocks.MECHANICAL_SAW).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('C', I.andesiteCasing())
-				.key('A', I.ironSheet())
-				.key('I', I.iron())
-				.patternLine(" A ")
-				.patternLine("AIA")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.define('C', I.andesiteCasing())
+				.define('A', I.ironSheet())
+				.define('I', I.iron())
+				.pattern(" A ")
+				.pattern("AIA")
+				.pattern(" C ")),
 
 		MECHANICAL_HARVESTER = create(AllBlocks.MECHANICAL_HARVESTER).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('C', I.andesiteCasing())
-				.key('A', I.andesite())
-				.key('I', I.ironSheet())
-				.patternLine("AIA")
-				.patternLine("AIA")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.define('C', I.andesiteCasing())
+				.define('A', I.andesite())
+				.define('I', I.ironSheet())
+				.pattern("AIA")
+				.pattern("AIA")
+				.pattern(" C ")),
 
 		MECHANICAL_PLOUGH = create(AllBlocks.MECHANICAL_PLOUGH).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('C', I.andesiteCasing())
-				.key('A', I.andesite())
-				.key('I', I.ironSheet())
-				.patternLine("III")
-				.patternLine("AAA")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.define('C', I.andesiteCasing())
+				.define('A', I.andesite())
+				.define('I', I.ironSheet())
+				.pattern("III")
+				.pattern("AAA")
+				.pattern(" C ")),
 
 		MECHANICAL_DRILL = create(AllBlocks.MECHANICAL_DRILL).unlockedBy(I::andesiteCasing)
-			.viaShaped(b -> b.key('C', I.andesiteCasing())
-				.key('A', I.andesite())
-				.key('I', I.iron())
-				.patternLine(" A ")
-				.patternLine("AIA")
-				.patternLine(" C ")),
+			.viaShaped(b -> b.define('C', I.andesiteCasing())
+				.define('A', I.andesite())
+				.define('I', I.iron())
+				.pattern(" A ")
+				.pattern("AIA")
+				.pattern(" C ")),
 
 		SEQUENCED_GEARSHIFT = create(AllBlocks.SEQUENCED_GEARSHIFT).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.electronTube())
-				.key('S', I.cog())
-				.key('C', I.brassCasing())
-				.key('I', Items.CLOCK)
-				.patternLine(" B ")
-				.patternLine("SCS")
-				.patternLine(" I "))
+			.viaShaped(b -> b.define('B', I.electronTube())
+				.define('S', I.cog())
+				.define('C', I.brassCasing())
+				.define('I', Items.CLOCK)
+				.pattern(" B ")
+				.pattern("SCS")
+				.pattern(" I "))
 
 	;
 
@@ -774,111 +789,111 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	REDSTONE_CONTACT = create(AllBlocks.REDSTONE_CONTACT).returns(2)
 		.unlockedBy(I::brassCasing)
-		.viaShaped(b -> b.key('W', I.redstone())
-			.key('C', Blocks.COBBLESTONE)
-			.key('S', I.ironSheet())
-			.patternLine(" S ")
-			.patternLine("CWC")
-			.patternLine("CCC")),
+		.viaShaped(b -> b.define('W', I.redstone())
+			.define('C', Blocks.COBBLESTONE)
+			.define('S', I.ironSheet())
+			.pattern(" S ")
+			.pattern("CWC")
+			.pattern("CCC")),
 
 		ANDESITE_FUNNEL = create(AllBlocks.ANDESITE_FUNNEL).returns(2)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('K', Items.DRIED_KELP)
-				.patternLine("AKA")
-				.patternLine(" K ")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('K', Items.DRIED_KELP)
+				.pattern("AKA")
+				.pattern(" K ")),
 
 		BRASS_FUNNEL = create(AllBlocks.BRASS_FUNNEL).returns(2)
 			.unlockedByTag(I::brass)
-			.viaShaped(b -> b.key('A', I.brass())
-				.key('K', Items.DRIED_KELP)
-				.key('E', I.electronTube())
-				.patternLine("AEA")
-				.patternLine(" K ")),
+			.viaShaped(b -> b.define('A', I.brass())
+				.define('K', Items.DRIED_KELP)
+				.define('E', I.electronTube())
+				.pattern("AEA")
+				.pattern(" K ")),
 
 		ANDESITE_TUNNEL = create(AllBlocks.ANDESITE_TUNNEL).returns(2)
 			.unlockedBy(I::andesite)
-			.viaShaped(b -> b.key('A', I.andesite())
-				.key('K', Items.DRIED_KELP)
-				.patternLine("AA")
-				.patternLine("KK")),
+			.viaShaped(b -> b.define('A', I.andesite())
+				.define('K', Items.DRIED_KELP)
+				.pattern("AA")
+				.pattern("KK")),
 
 		BRASS_TUNNEL = create(AllBlocks.BRASS_TUNNEL).returns(2)
 			.unlockedByTag(I::brass)
-			.viaShaped(b -> b.key('A', I.brass())
-				.key('K', Items.DRIED_KELP)
-				.key('E', I.electronTube())
-				.patternLine("E ")
-				.patternLine("AA")
-				.patternLine("KK")),
+			.viaShaped(b -> b.define('A', I.brass())
+				.define('K', Items.DRIED_KELP)
+				.define('E', I.electronTube())
+				.pattern("E ")
+				.pattern("AA")
+				.pattern("KK")),
 
 		ADJUSTABLE_CRATE = create(AllBlocks.ADJUSTABLE_CRATE).returns(4)
 			.unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.brassCasing())
-				.patternLine("BBB")
-				.patternLine("B B")
-				.patternLine("BBB")),
+			.viaShaped(b -> b.define('B', I.brassCasing())
+				.pattern("BBB")
+				.pattern("B B")
+				.pattern("BBB")),
 
 		BELT_OBSERVER = create(AllBlocks.CONTENT_OBSERVER).unlockedBy(AllItems.BELT_CONNECTOR::get)
-			.viaShaped(b -> b.key('B', I.brassCasing())
-				.key('R', I.redstone())
-				.key('I', I.iron())
-				.key('C', Blocks.OBSERVER)
-				.patternLine("RCI")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('B', I.brassCasing())
+				.define('R', I.redstone())
+				.define('I', I.iron())
+				.define('C', Blocks.OBSERVER)
+				.pattern("RCI")
+				.pattern(" B ")),
 
 		STOCKPILE_SWITCH = create(AllBlocks.STOCKPILE_SWITCH).unlockedBy(I::brassCasing)
-			.viaShaped(b -> b.key('B', I.brassCasing())
-				.key('R', I.redstone())
-				.key('I', I.iron())
-				.key('C', Blocks.COMPARATOR)
-				.patternLine("RCI")
-				.patternLine(" B ")),
+			.viaShaped(b -> b.define('B', I.brassCasing())
+				.define('R', I.redstone())
+				.define('I', I.iron())
+				.define('C', Blocks.COMPARATOR)
+				.pattern("RCI")
+				.pattern(" B ")),
 
 		ADJUSTABLE_REPEATER = create(AllBlocks.ADJUSTABLE_REPEATER).unlockedByTag(I::redstone)
-			.viaShaped(b -> b.key('T', Blocks.REDSTONE_TORCH)
-				.key('C', Items.CLOCK)
-				.key('R', I.redstone())
-				.key('S', I.stone())
-				.patternLine("RCT")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
+				.define('C', Items.CLOCK)
+				.define('R', I.redstone())
+				.define('S', I.stone())
+				.pattern("RCT")
+				.pattern("SSS")),
 
 		ADJUSTABLE_PULSE_REPEATER = create(AllBlocks.ADJUSTABLE_PULSE_REPEATER).unlockedByTag(I::redstone)
-			.viaShaped(b -> b.key('S', AllBlocks.PULSE_REPEATER.get())
-				.key('P', AllBlocks.ADJUSTABLE_REPEATER.get())
-				.patternLine("SP")),
+			.viaShaped(b -> b.define('S', AllBlocks.PULSE_REPEATER.get())
+				.define('P', AllBlocks.ADJUSTABLE_REPEATER.get())
+				.pattern("SP")),
 
 		PULSE_REPEATER = create(AllBlocks.PULSE_REPEATER).unlockedByTag(I::redstone)
-			.viaShaped(b -> b.key('T', Blocks.REDSTONE_TORCH)
-				.key('R', I.redstone())
-				.key('S', I.stone())
-				.patternLine("RRT")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
+				.define('R', I.redstone())
+				.define('S', I.stone())
+				.pattern("RRT")
+				.pattern("SSS")),
 
 		POWERED_TOGGLE_LATCH = create(AllBlocks.POWERED_TOGGLE_LATCH).unlockedByTag(I::redstone)
-			.viaShaped(b -> b.key('T', Blocks.REDSTONE_TORCH)
-				.key('C', Blocks.LEVER)
-				.key('S', I.stone())
-				.patternLine(" T ")
-				.patternLine(" C ")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
+				.define('C', Blocks.LEVER)
+				.define('S', I.stone())
+				.pattern(" T ")
+				.pattern(" C ")
+				.pattern("SSS")),
 
 		POWERED_LATCH = create(AllBlocks.POWERED_LATCH).unlockedByTag(I::redstone)
-			.viaShaped(b -> b.key('T', Blocks.REDSTONE_TORCH)
-				.key('C', Blocks.LEVER)
-				.key('R', I.redstone())
-				.key('S', I.stone())
-				.patternLine(" T ")
-				.patternLine("RCR")
-				.patternLine("SSS")),
+			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
+				.define('C', Blocks.LEVER)
+				.define('R', I.redstone())
+				.define('S', I.stone())
+				.pattern(" T ")
+				.pattern("RCR")
+				.pattern("SSS")),
 
 		REDSTONE_LINK = create(AllBlocks.REDSTONE_LINK).returns(2)
 			.unlockedByTag(I::brass)
-			.viaShaped(b -> b.key('C', Blocks.REDSTONE_TORCH)
-				.key('S', I.brassSheet())
-				.key('I', ItemTags.PLANKS)
-				.patternLine("  C")
-				.patternLine("SIS"))
+			.viaShaped(b -> b.define('C', Blocks.REDSTONE_TORCH)
+				.define('S', I.brassSheet())
+				.define('I', ItemTags.PLANKS)
+				.pattern("  C")
+				.pattern("SIS"))
 
 	;
 
@@ -887,29 +902,29 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	GeneratedRecipe
 
 	SCHEMATIC_TABLE = create(AllBlocks.SCHEMATIC_TABLE).unlockedBy(AllItems.EMPTY_SCHEMATIC::get)
-		.viaShaped(b -> b.key('W', ItemTags.WOODEN_SLABS)
-			.key('S', Blocks.SMOOTH_STONE)
-			.patternLine("WWW")
-			.patternLine(" S ")
-			.patternLine(" S ")),
+		.viaShaped(b -> b.define('W', ItemTags.WOODEN_SLABS)
+			.define('S', Blocks.SMOOTH_STONE)
+			.pattern("WWW")
+			.pattern(" S ")
+			.pattern(" S ")),
 
 		SCHEMATICANNON = create(AllBlocks.SCHEMATICANNON).unlockedBy(AllItems.EMPTY_SCHEMATIC::get)
-			.viaShaped(b -> b.key('L', ItemTags.LOGS)
-				.key('D', Blocks.DISPENSER)
-				.key('C', Blocks.CAULDRON)
-				.key('S', Blocks.SMOOTH_STONE)
-				.key('I', Blocks.IRON_BLOCK)
-				.patternLine(" C ")
-				.patternLine("LDL")
-				.patternLine("SIS")),
+			.viaShaped(b -> b.define('L', ItemTags.LOGS)
+				.define('D', Blocks.DISPENSER)
+				.define('C', Blocks.CAULDRON)
+				.define('S', Blocks.SMOOTH_STONE)
+				.define('I', Blocks.IRON_BLOCK)
+				.pattern(" C ")
+				.pattern("LDL")
+				.pattern("SIS")),
 
 		EMPTY_SCHEMATIC = create(AllItems.EMPTY_SCHEMATIC).unlockedBy(() -> Items.PAPER)
-			.viaShapeless(b -> b.addIngredient(Items.PAPER)
-				.addIngredient(Tags.Items.DYES_LIGHT_BLUE)),
+			.viaShapeless(b -> b.requires(Items.PAPER)
+				.requires(Tags.Items.DYES_LIGHT_BLUE)),
 
 		SCHEMATIC_AND_QUILL = create(AllItems.SCHEMATIC_AND_QUILL).unlockedBy(() -> Items.PAPER)
-			.viaShapeless(b -> b.addIngredient(AllItems.EMPTY_SCHEMATIC.get())
-				.addIngredient(Tags.Items.FEATHERS))
+			.viaShapeless(b -> b.requires(AllItems.EMPTY_SCHEMATIC.get())
+				.requires(Tags.Items.FEATHERS))
 
 	;
 
@@ -919,24 +934,24 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	DARK_SCORIA = create(AllPaletteBlocks.DARK_SCORIA).returns(8)
 		.unlockedBy(() -> AllPaletteBlocks.SCORIA.get())
-		.viaShaped(b -> b.key('#', AllPaletteBlocks.SCORIA.get())
-			.key('D', Tags.Items.DYES_BLACK)
-			.patternLine("###")
-			.patternLine("#D#")
-			.patternLine("###")),
+		.viaShaped(b -> b.define('#', AllPaletteBlocks.SCORIA.get())
+			.define('D', Tags.Items.DYES_BLACK)
+			.pattern("###")
+			.pattern("#D#")
+			.pattern("###")),
 
 		COPPER_SHINGLES = create(AllBlocks.COPPER_SHINGLES).returns(16)
 			.unlockedByTag(I::copperSheet)
-			.viaShaped(b -> b.key('#', I.copperSheet())
-				.patternLine("##")
-				.patternLine("##")),
+			.viaShaped(b -> b.define('#', I.copperSheet())
+				.pattern("##")
+				.pattern("##")),
 
 		COPPER_SHINGLES_FROM_TILES = create(AllBlocks.COPPER_SHINGLES).withSuffix("_from_tiles")
 			.unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.addIngredient(AllBlocks.COPPER_TILES.get())),
+			.viaShapeless(b -> b.requires(AllBlocks.COPPER_TILES.get())),
 
 		COPPER_TILES = create(AllBlocks.COPPER_TILES).unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.addIngredient(AllBlocks.COPPER_SHINGLES.get()))
+			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.get()))
 
 	;
 
@@ -945,40 +960,52 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 	GeneratedRecipe
 
 	DOUGH = create(AllItems.DOUGH).unlockedBy(AllItems.WHEAT_FLOUR::get)
-		.viaShapeless(b -> b.addIngredient(AllItems.WHEAT_FLOUR.get())
-			.addIngredient(Items.WATER_BUCKET)),
+		.viaShapeless(b -> b.requires(AllItems.WHEAT_FLOUR.get())
+			.requires(Items.WATER_BUCKET)),
 
 		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('G', Tags.Items.GLASS)
-				.key('P', I.copper())
-				.patternLine("PPP")
-				.patternLine("PGP")),
+			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
+				.define('P', I.copper())
+				.pattern("PPP")
+				.pattern("PGP")),
 
 		COPPER_BACKTANK = create(AllItems.COPPER_BACKTANK).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('G', I.shaft())
-				.key('A', I.andesite())
-				.key('P', I.copper())
-				.patternLine("AGA")
-				.patternLine("PPP")
-				.patternLine(" P ")),
+			.viaShaped(b -> b.define('G', I.shaft())
+				.define('A', I.andesite())
+				.define('B', I.copperBlock())
+				.define('P', I.copper())
+				.pattern("AGA")
+				.pattern("PBP")
+				.pattern(" P ")),
 
 		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedByTag(I::copper)
-			.viaShaped(b -> b.key('G', I.andesite())
-				.key('P', I.copper())
-				.patternLine("P P")
-				.patternLine("P P")
-				.patternLine("G G")),
+			.viaShaped(b -> b.define('G', I.andesite())
+				.define('P', I.copper())
+				.pattern("P P")
+				.pattern("P P")
+				.pattern("G G")),
+
+		LINKED_CONTROLLER = create(AllItems.LINKED_CONTROLLER).unlockedBy(AllBlocks.REDSTONE_LINK::get)
+			.viaShaped(b -> b.define('S', ItemTags.WOODEN_BUTTONS)
+				.define('P', AllBlocks.REDSTONE_LINK.get())
+				.pattern("SSS")
+				.pattern(" P ")
+				.pattern("SSS")),
+
+		CRAFTING_BLUEPRINT = create(AllItems.CRAFTING_BLUEPRINT).unlockedBy(() -> Items.CRAFTING_TABLE)
+			.viaShapeless(b -> b.requires(Items.PAINTING)
+				.requires(Items.CRAFTING_TABLE)),
 
 		SLIME_BALL = create(() -> Items.SLIME_BALL).unlockedBy(AllItems.DOUGH::get)
-			.viaShapeless(b -> b.addIngredient(AllItems.DOUGH.get())
-				.addIngredient(Tags.Items.DYES_LIME)),
+			.viaShapeless(b -> b.requires(AllItems.DOUGH.get())
+				.requires(Tags.Items.DYES_LIME)),
 
 		TREE_FERTILIZER = create(AllItems.TREE_FERTILIZER).returns(2)
 			.unlockedBy(() -> Items.BONE_MEAL)
-			.viaShapeless(b -> b.addIngredient(Ingredient.fromTag(ItemTags.SMALL_FLOWERS), 2)
-				.addIngredient(Ingredient.fromItems(Items.HORN_CORAL, Items.BRAIN_CORAL, Items.TUBE_CORAL,
-					Items.BUBBLE_CORAL, Items.FIRE_CORAL))
-				.addIngredient(Items.BONE_MEAL))
+			.viaShapeless(b -> b.requires(Ingredient.of(ItemTags.SMALL_FLOWERS), 2)
+				.requires(Ingredient.of(Items.HORN_CORAL, Items.BRAIN_CORAL, Items.TUBE_CORAL, Items.BUBBLE_CORAL,
+					Items.FIRE_CORAL))
+				.requires(Items.BONE_MEAL))
 
 	;
 
@@ -1113,15 +1140,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 			result = create(nextEntry).withSuffix("_from_compacting")
 				.unlockedBy(currentEntry::get)
-				.viaShaped(b -> b.patternLine("###")
-					.patternLine("###")
-					.patternLine("###")
-					.key('#', currentIngredient.get()));
+				.viaShaped(b -> b.pattern("###")
+					.pattern("###")
+					.pattern("###")
+					.define('#', currentIngredient.get()));
 
 			result = create(currentEntry).returns(9)
 				.withSuffix("_from_decompacting")
 				.unlockedBy(nextEntry::get)
-				.viaShapeless(b -> b.addIngredient(nextIngredient.get()));
+				.viaShapeless(b -> b.requires(nextIngredient.get()));
 		}
 		return result;
 	}
@@ -1133,7 +1160,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			ItemProviderEntry<? extends IItemProvider> nextEntry = cycle.get((i + 1) % cycle.size());
 			result = create(nextEntry).withSuffix("from_conversion")
 				.unlockedBy(currentEntry::get)
-				.viaShapeless(b -> b.addIngredient(currentEntry.get()));
+				.viaShapeless(b -> b.requires(currentEntry.get()));
 		}
 		return result;
 	}
@@ -1172,15 +1199,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		GeneratedRecipeBuilder unlockedBy(Supplier<? extends IItemProvider> item) {
-			this.unlockedBy = () -> ItemPredicate.Builder.create()
-				.item(item.get())
+			this.unlockedBy = () -> ItemPredicate.Builder.item()
+				.of(item.get())
 				.build();
 			return this;
 		}
 
 		GeneratedRecipeBuilder unlockedByTag(Supplier<ITag<Item>> tag) {
-			this.unlockedBy = () -> ItemPredicate.Builder.create()
-				.tag(tag.get())
+			this.unlockedBy = () -> ItemPredicate.Builder.item()
+				.of(tag.get())
 				.build();
 			return this;
 		}
@@ -1205,19 +1232,19 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		GeneratedRecipe viaShaped(UnaryOperator<ShapedRecipeBuilder> builder) {
 			return register(consumer -> {
-				ShapedRecipeBuilder b = builder.apply(ShapedRecipeBuilder.shapedRecipe(result.get(), amount));
+				ShapedRecipeBuilder b = builder.apply(ShapedRecipeBuilder.shaped(result.get(), amount));
 				if (unlockedBy != null)
-					b.addCriterion("has_item", hasItem(unlockedBy.get()));
-				b.build(consumer, createLocation("crafting"));
+					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+				b.save(consumer, createLocation("crafting"));
 			});
 		}
 
 		GeneratedRecipe viaShapeless(UnaryOperator<ShapelessRecipeBuilder> builder) {
 			return register(consumer -> {
-				ShapelessRecipeBuilder b = builder.apply(ShapelessRecipeBuilder.shapelessRecipe(result.get(), amount));
+				ShapelessRecipeBuilder b = builder.apply(ShapelessRecipeBuilder.shapeless(result.get(), amount));
 				if (unlockedBy != null)
-					b.addCriterion("has_item", hasItem(unlockedBy.get()));
-				b.build(consumer, createLocation("crafting"));
+					b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+				b.save(consumer, createLocation("crafting"));
 			});
 		}
 
@@ -1236,11 +1263,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends IItemProvider> item) {
-			return unlockedBy(item).viaCookingIngredient(() -> Ingredient.fromItems(item.get()));
+			return unlockedBy(item).viaCookingIngredient(() -> Ingredient.of(item.get()));
 		}
 
 		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<ITag<Item>> tag) {
-			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.fromTag(tag.get()));
+			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.of(tag.get()));
 		}
 
 		GeneratedCookingRecipeBuilder viaCookingIngredient(Supplier<Ingredient> ingredient) {
@@ -1253,9 +1280,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			private float exp;
 			private int cookingTime;
 
-			private final CookingRecipeSerializer<?> FURNACE = IRecipeSerializer.SMELTING,
-				SMOKER = IRecipeSerializer.SMOKING, BLAST = IRecipeSerializer.BLASTING,
-				CAMPFIRE = IRecipeSerializer.CAMPFIRE_COOKING;
+			private final CookingRecipeSerializer<?> FURNACE = IRecipeSerializer.SMELTING_RECIPE,
+				SMOKER = IRecipeSerializer.SMOKING_RECIPE, BLAST = IRecipeSerializer.BLASTING_RECIPE,
+				CAMPFIRE = IRecipeSerializer.CAMPFIRE_COOKING_RECIPE;
 
 			GeneratedCookingRecipeBuilder(Supplier<Ingredient> ingredient) {
 				this.ingredient = ingredient;
@@ -1305,12 +1332,12 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return register(consumer -> {
 					boolean isOtherMod = compatDatagenOutput != null;
 
-					CookingRecipeBuilder b = builder.apply(
-						CookingRecipeBuilder.cookingRecipe(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
+					CookingRecipeBuilder b = builder
+						.apply(CookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
 							exp, (int) (cookingTime * cookingTimeModifier), serializer));
 					if (unlockedBy != null)
-						b.addCriterion("has_item", hasItem(unlockedBy.get()));
-					b.build(result -> {
+						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
+					b.save(result -> {
 						consumer.accept(
 							isOtherMod ? new ModdedCookingRecipeResult(result, compatDatagenOutput, recipeConditions)
 								: result);
@@ -1344,28 +1371,28 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		@Override
-		public ResourceLocation getID() {
-			return wrapped.getID();
+		public ResourceLocation getId() {
+			return wrapped.getId();
 		}
 
 		@Override
-		public IRecipeSerializer<?> getSerializer() {
-			return wrapped.getSerializer();
+		public IRecipeSerializer<?> getType() {
+			return wrapped.getType();
 		}
 
 		@Override
-		public JsonObject getAdvancementJson() {
-			return wrapped.getAdvancementJson();
+		public JsonObject serializeAdvancement() {
+			return wrapped.serializeAdvancement();
 		}
 
 		@Override
-		public ResourceLocation getAdvancementID() {
-			return wrapped.getAdvancementID();
+		public ResourceLocation getAdvancementId() {
+			return wrapped.getAdvancementId();
 		}
 
 		@Override
-		public void serialize(JsonObject object) {
-			wrapped.serialize(object);
+		public void serializeRecipeData(JsonObject object) {
+			wrapped.serializeRecipeData(object);
 			object.addProperty("result", outputOverride.toString());
 
 			JsonArray conds = new JsonArray();

@@ -59,7 +59,7 @@ public class ClientSchematicLoader {
 		Path path = Paths.get("schematics", schematic);
 
 		if (!Files.exists(path)) {
-			Create.logger.fatal("Missing Schematic file: " + path.toString());
+			Create.LOGGER.fatal("Missing Schematic file: " + path.toString());
 			return;
 		}
 
@@ -80,14 +80,14 @@ public class ClientSchematicLoader {
 	}
 
 	public static boolean validateSizeLimitation(long size) {
-		if (Minecraft.getInstance().isSingleplayer())
+		if (Minecraft.getInstance().hasSingleplayerServer())
 			return true;
 		Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
 			ClientPlayerEntity player = Minecraft.getInstance().player;
 			if (player != null) {
-				player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUniqueID());
-				player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUniqueID());
+				player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUUID());
+				player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUUID());
 			}
 			return false;
 		}
@@ -104,7 +104,7 @@ public class ClientSchematicLoader {
 				if (status != -1) {
 					if (status < maxPacketSize)
 						data = Arrays.copyOf(data, status);
-					if (Minecraft.getInstance().world != null)
+					if (Minecraft.getInstance().level != null)
 						AllPackets.channel.sendToServer(SchematicUploadPacket.write(schematic, data));
 					else {
 						activeUploads.remove(schematic);

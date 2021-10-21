@@ -49,7 +49,7 @@ public class MovementContext {
 	public float getAnimationSpeed() {
 		int modifier = 1000;
 		double length = -motion.length();
-		if (world.isRemote && contraption.stalled)
+		if (world.isClientSide && contraption.stalled)
 			return 700;
 		if (Math.abs(length) < 1 / 512f)
 			return 0;
@@ -75,7 +75,7 @@ public class MovementContext {
 			nbt.put("Position", VecHelper.writeNBT(position));
 		nbt.putBoolean("Stall", stall);
 		nbt.putBoolean("FirstMovement", firstMovement);
-		nbt.put("Data", data);
+		nbt.put("Data", data.copy());
 		return nbt;
 	}
 

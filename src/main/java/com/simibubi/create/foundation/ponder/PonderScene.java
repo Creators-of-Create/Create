@@ -13,9 +13,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
@@ -23,9 +26,8 @@ import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -59,7 +61,7 @@ public class PonderScene {
 	boolean finished;
 	int sceneIndex;
 	int textIndex;
-	String sceneId;
+	ResourceLocation sceneId;
 
 	IntList keyframeTimes;
 
@@ -69,6 +71,7 @@ public class PonderScene {
 	List<PonderTag> tags;
 
 	PonderWorld world;
+	String namespace;
 	ResourceLocation component;
 	SceneTransform transform;
 	SceneRenderInfo info;
@@ -78,6 +81,7 @@ public class PonderScene {
 	Vector3d pointOfInterest;
 	Vector3d chasingPointOfInterest;
 	WorldSectionElement baseWorldSection;
+	@Nullable
 	Entity renderViewEntity;
 
 	int basePlateOffsetX;
@@ -90,7 +94,7 @@ public class PonderScene {
 	int totalTime;
 	int currentTime;
 
-	public PonderScene(PonderWorld world, ResourceLocation component, Collection<PonderTag> tags) {
+	public PonderScene(PonderWorld world, String namespace, ResourceLocation component, Collection<PonderTag> tags) {
 		if (world != null)
 			world.scene = this;
 
@@ -98,6 +102,7 @@ public class PonderScene {
 		textIndex = 1;
 
 		this.world = world;
+		this.namespace = namespace;
 		this.component = component;
 
 		outliner = new Outliner();
@@ -107,10 +112,10 @@ public class PonderScene {
 		schedule = new ArrayList<>();
 		activeSchedule = new ArrayList<>();
 		transform = new SceneTransform();
-		basePlateSize = getBounds().getXSize();
+		basePlateSize = getBounds().getXSpan();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
-		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
+		renderViewEntity = world != null ? new ArmorStandEntity(world, 0, 0, 0) : null;
 		keyframeTimes = new IntArrayList(4);
 		scaleFactor = 1;
 		yOffset = 0;
@@ -150,10 +155,10 @@ public class PonderScene {
 
 		BlockPos origin = new BlockPos(basePlateOffsetX, 0, basePlateOffsetZ);
 		if (!world.getBounds()
-			.isVecInside(selectedPos))
+			.isInside(selectedPos))
 			return Pair.of(ItemStack.EMPTY, null);
-		if (new MutableBoundingBox(origin, origin.add(new Vector3i(basePlateSize - 1, 0, basePlateSize - 1)))
-			.isVecInside(selectedPos)) {
+		if (new MutableBoundingBox(origin, origin.offset(new Vector3i(basePlateSize - 1, 0, basePlateSize - 1)))
+			.isInside(selectedPos)) {
 			if (PonderIndex.EDITOR_MODE)
 				nearestHit.getValue()
 					.getFirst()
@@ -223,29 +228,30 @@ public class PonderScene {
 	}
 
 	public void renderScene(SuperRenderTypeBuffer buffer, MatrixStack ms, float pt) {
-		ms.push();
+		ms.pushPose();
 		Minecraft mc = Minecraft.getInstance();
-		Entity prevRVE = mc.renderViewEntity;
+		Entity prevRVE = mc.cameraEntity;
 
-		mc.renderViewEntity = this.renderViewEntity;
+		mc.cameraEntity = this.renderViewEntity;
 		forEachVisible(PonderSceneElement.class, e -> e.renderFirst(world, buffer, ms, pt));
-		mc.renderViewEntity = prevRVE;
+		mc.cameraEntity = prevRVE;
 
-		for (RenderType type : RenderType.getBlockLayers())
+		for (RenderType type : RenderType.chunkBufferLayers())
 			forEachVisible(PonderSceneElement.class, e -> e.renderLayer(world, buffer, type, ms, pt));
+
 		forEachVisible(PonderSceneElement.class, e -> e.renderLast(world, buffer, ms, pt));
-		info.set(transform.xRotation.getValue(pt), transform.yRotation.getValue(pt));
+		info.set(transform.xRotation.getValue(pt) + 90, transform.yRotation.getValue(pt) + 180);
 		world.renderEntities(ms, buffer, info, pt);
 		world.renderParticles(ms, buffer, info, pt);
 		outliner.renderOutlines(ms, buffer, pt);
 
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void renderOverlay(PonderUI screen, MatrixStack ms, float partialTicks) {
-		ms.push();
+		ms.pushPose();
 		forEachVisible(PonderOverlayElement.class, e -> e.render(this, screen, ms, partialTicks));
-		ms.pop();
+		ms.popPose();
 	}
 
 	public void setPointOfInterest(Vector3d poi) {
@@ -391,8 +397,28 @@ public class PonderScene {
 		return new SceneBuildingUtil(getBounds());
 	}
 
+	public String getNamespace() {
+		return namespace;
+	}
+
+	public ResourceLocation getId() {
+		return sceneId;
+	}
+
 	public SceneTransform getTransform() {
 		return transform;
+	}
+
+	public Outliner getOutliner() {
+		return outliner;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
 	}
 
 	public class SceneTransform {
@@ -430,14 +456,14 @@ public class PonderScene {
 		public MatrixStack apply(MatrixStack ms, float pt, boolean overlayCompatible) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateX(-35)
 				.rotateY(55);
 			ms.translate(offset, 0, 0);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateY(-55)
 				.rotateX(35);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.rotateX(xRotation.getValue(pt))
 				.rotateY(yRotation.getValue(pt));
 
@@ -463,7 +489,8 @@ public class PonderScene {
 
 		public void updateSceneRVE(float pt) {
 			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);
-			renderViewEntity.setPosition(v.x, v.y, v.z);
+			if (renderViewEntity != null)
+				renderViewEntity.setPos(v.x, v.y, v.z);
 		}
 
 		public Vector3d screenToScene(double x, double y, int depth, float pt) {
@@ -481,7 +508,7 @@ public class PonderScene {
 
 			float f = 1f / (30 * scaleFactor);
 
-			vec = vec.mul(f, -f, f);
+			vec = vec.multiply(f, -f, f);
 			vec = vec.subtract((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
 				(basePlateSize + basePlateOffsetZ) / -2f);
 
@@ -492,14 +519,14 @@ public class PonderScene {
 			refreshMatrix(pt);
 			Vector4f vec4 = new Vector4f((float) vec.x, (float) vec.y, (float) vec.z, 1);
 			vec4.transform(cachedMat);
-			return new Vector2f(vec4.getX(), vec4.getY());
+			return new Vector2f(vec4.x(), vec4.y());
 		}
 
 		protected void refreshMatrix(float pt) {
 			if (cachedMat != null)
 				return;
-			cachedMat = apply(new MatrixStack(), pt, false).peek()
-				.getModel();
+			cachedMat = apply(new MatrixStack(), pt, false).last()
+				.pose();
 		}
 
 	}
@@ -507,21 +534,9 @@ public class PonderScene {
 	public class SceneRenderInfo extends ActiveRenderInfo {
 
 		public void set(float xRotation, float yRotation) {
-			setDirection(yRotation, xRotation);
+			setRotation(yRotation, xRotation);
 		}
 
-	}
-
-	public Outliner getOutliner() {
-		return outliner;
-	}
-
-	public boolean isFinished() {
-		return finished;
-	}
-
-	public void setFinished(boolean finished) {
-		this.finished = finished;
 	}
 
 }

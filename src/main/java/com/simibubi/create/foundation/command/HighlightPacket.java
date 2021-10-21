@@ -24,12 +24,12 @@ public class HighlightPacket extends SimplePacketBase {
 	}
 
 	public HighlightPacket(PacketBuffer buffer) {
-		this.pos = BlockPos.fromLong(buffer.readLong());
+		this.pos = buffer.readBlockPos();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
-		buffer.writeLong(pos.toLong());
+		buffer.writeBlockPos(pos);
 	}
 
 	@Override
@@ -45,16 +45,16 @@ public class HighlightPacket extends SimplePacketBase {
 
 	@OnlyIn(Dist.CLIENT)
 	public static void performHighlight(BlockPos pos) {
-		if (Minecraft.getInstance().world == null || !Minecraft.getInstance().world.isBlockPresent(pos))
+		if (Minecraft.getInstance().level == null || !Minecraft.getInstance().level.isLoaded(pos))
 			return;
 
-		CreateClient.outliner.showAABB("highlightCommand", VoxelShapes.fullCube()
-			.getBoundingBox()
-			.offset(pos), 200)
-			.lineWidth(1 / 32f)
-			.colored(0xEeEeEe)
-			// .colored(0x243B50)
-			.withFaceTexture(AllSpecialTextures.SELECTION);
-
+		CreateClient.OUTLINER.showAABB("highlightCommand", VoxelShapes.block()
+				.bounds()
+				.move(pos), 200)
+				.lineWidth(1 / 32f)
+				.colored(0xEeEeEe)
+				// .colored(0x243B50)
+				.withFaceTexture(AllSpecialTextures.SELECTION);
 	}
+
 }

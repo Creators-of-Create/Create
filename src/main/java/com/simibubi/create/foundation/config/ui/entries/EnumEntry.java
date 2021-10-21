@@ -1,6 +1,9 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
+import java.util.Locale;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
@@ -23,18 +26,22 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	public EnumEntry(String label, ForgeConfigSpec.ConfigValue<Enum<?>> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
 
-		valueText = new TextStencilElement(Minecraft.getInstance().fontRenderer, "YEP").centered(true, true);
+		valueText = new TextStencilElement(Minecraft.getInstance().font, "YEP").centered(true, true);
 		valueText.withElementRenderer((ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2,
 			height, width, Theme.p(Theme.Key.TEXT)));
 
 		DelegatedStencilElement l = AllIcons.I_CONFIG_PREV.asStencil();
-		cycleLeft = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(l)
-			.withCallback(() -> cycleValue(-1));
+		cycleLeft = new BoxWidget(0, 0, cycleWidth + 8, 16)
+				.withCustomBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.showingElement(l)
+				.withCallback(() -> cycleValue(-1));
 		l.withElementRenderer(BoxWidget.gradientFactory.apply(cycleLeft));
 
 		DelegatedStencilElement r = AllIcons.I_CONFIG_NEXT.asStencil();
-		cycleRight = new BoxWidget(0, 0, cycleWidth + 8, 16).showingElement(r)
-			.withCallback(() -> cycleValue(1));
+		cycleRight = new BoxWidget(0, 0, cycleWidth + 8, 16)
+				.withCustomBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.showingElement(r)
+				.withCallback(() -> cycleValue(1));
 		r.at(cycleWidth - 8, 0);
 		r.withElementRenderer(BoxWidget.gradientFactory.apply(cycleRight));
 
@@ -78,25 +85,25 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 		cycleLeft.y = y + 10;
 		cycleLeft.render(ms, mouseX, mouseY, partialTicks);
 
-		valueText.at(cycleLeft.x + cycleWidth - 8, y + 11, 200)
-			.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
-			.render(ms);
+		valueText.at(cycleLeft.x + cycleWidth - 8, y + 10, 200)
+				.withBounds(width - getLabelWidth(width) - 2 * cycleWidth - resetWidth - 4, 16)
+				.render(ms);
 
 		cycleRight.x = x + width - cycleWidth * 2 - resetWidth + 10;
 		cycleRight.y = y + 10;
 		cycleRight.render(ms, mouseX, mouseY, partialTicks);
 
 		new BoxElement()
-				.withBackground(0)
-				.flatBorder(0)
-				.withBounds(10, 10)
-				.at(cycleLeft.x + cycleWidth + 4, cycleLeft.y + 3)
+				.withBackground(Theme.c(Theme.Key.PONDER_BACKGROUND_FLAT))
+				.flatBorder(0x01_000000)
+				.withBounds(48, 6)
+				.at(cycleLeft.x + 22, cycleLeft.y + 5)
 				.render(ms);
 	}
 
 	@Override
 	public void onValueChange(Enum<?> newValue) {
 		super.onValueChange(newValue);
-		valueText.withText(newValue.name());
+		valueText.withText(ConfigScreen.toHumanReadable(newValue.name().toLowerCase(Locale.ROOT)));
 	}
 }

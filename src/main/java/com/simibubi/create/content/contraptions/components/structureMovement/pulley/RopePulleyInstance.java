@@ -1,38 +1,38 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
 
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.render.backend.core.OrientedData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class RopePulleyInstance extends AbstractPulleyInstance {
 	final PulleyTileEntity tile = (PulleyTileEntity) super.tile;
 
-	public RopePulleyInstance(InstancedTileRenderer<?> dispatcher, PulleyTileEntity tile) {
+	public RopePulleyInstance(MaterialManager<?> dispatcher, PulleyTileEntity tile) {
 		super(dispatcher, tile);
 		beginFrame();
 	}
 
-	protected InstancedModel<OrientedData> getRopeModel() {
+	protected Instancer<OrientedData> getRopeModel() {
 		return getOrientedMaterial().getModel(AllBlocks.ROPE.getDefaultState());
 	}
 
-	protected InstancedModel<OrientedData> getMagnetModel() {
+	protected Instancer<OrientedData> getMagnetModel() {
 		return getOrientedMaterial().getModel(AllBlocks.PULLEY_MAGNET.getDefaultState());
 	}
 
-	protected InstancedModel<OrientedData> getHalfMagnetModel() {
+	protected Instancer<OrientedData> getHalfMagnetModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF_MAGNET, blockState);
 	}
 
-	protected InstancedModel<OrientedData> getCoilModel() {
+	protected Instancer<OrientedData> getCoilModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_COIL, blockState, rotatingAbout);
 	}
 
-	protected InstancedModel<OrientedData> getHalfRopeModel() {
+	protected Instancer<OrientedData> getHalfRopeModel() {
 		return getOrientedMaterial().getModel(AllBlockPartials.ROPE_HALF, blockState);
 	}
 

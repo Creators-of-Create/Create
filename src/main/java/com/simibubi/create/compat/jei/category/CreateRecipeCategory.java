@@ -31,13 +31,13 @@ import net.minecraftforge.fluids.FluidStack;
 
 public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRecipeCategory<T> {
 
-	public List<Supplier<? extends Object>> recipeCatalysts = new ArrayList<>();
-	public List<Supplier<List<? extends IRecipe<?>>>> recipes = new ArrayList<>();
-	public ResourceLocation uid;
+	public final List<Supplier<List<? extends IRecipe<?>>>> recipes = new ArrayList<>();
+	public final List<Supplier<? extends Object>> recipeCatalysts = new ArrayList<>();
 
+	protected ResourceLocation uid;
 	protected String name;
-	private IDrawable icon;
 	private IDrawable background;
+	private IDrawable icon;
 
 	public CreateRecipeCategory(IDrawable icon, IDrawable background) {
 		this.background = background;
@@ -45,13 +45,8 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 	}
 
 	public void setCategoryId(String name) {
-		this.uid = new ResourceLocation(Create.ID, name);
+		this.uid = Create.asResource(name);
 		this.name = name;
-	}
-
-	@Override
-	public IDrawable getIcon() {
-		return icon;
 	}
 
 	@Override
@@ -70,7 +65,12 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return background;
 	}
 
-	protected static AllGuiTextures getRenderedSlot(IRecipe<?> recipe, int index) {
+	@Override
+	public IDrawable getIcon() {
+		return icon;
+	}
+
+	public static AllGuiTextures getRenderedSlot(IRecipe<?> recipe, int index) {
 		AllGuiTextures jeiSlot = AllGuiTextures.JEI_SLOT;
 		if (!(recipe instanceof ProcessingRecipe))
 			return jeiSlot;
@@ -85,51 +85,66 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
 
-	protected static IDrawable emptyBackground(int width, int height) {
+	public static IDrawable emptyBackground(int width, int height) {
 		return new EmptyBackground(width, height);
 	}
 
-	protected static IDrawable doubleItemIcon(IItemProvider item1, IItemProvider item2) {
+	public static IDrawable doubleItemIcon(IItemProvider item1, IItemProvider item2) {
 		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
 	}
 
-	protected static IDrawable itemIcon(IItemProvider item) {
+	public static IDrawable itemIcon(IItemProvider item) {
 		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
 	}
 
-	protected static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
+	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
+		addStochasticTooltip(itemStacks, results, 1);
+	}
+	
+	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results, int startIndex) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (input)
 				return;
-			ProcessingOutput output = results.get(slotIndex - 1);
+			if (slotIndex < startIndex)
+				return;
+			ProcessingOutput output = results.get(slotIndex - startIndex);
 			float chance = output.getChance();
 			if (chance != 1)
-				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100)).formatted(TextFormatting.GOLD));
+				tooltip.add(1, Lang.translate("recipe.processing.chance", chance < 0.01 ? "<1" : (int) (chance * 100))
+					.withStyle(TextFormatting.GOLD));
 		});
 	}
 
-	public List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
+	public static List<FluidStack> withImprovedVisibility(List<FluidStack> stacks) {
 		return stacks.stream()
-			.map(this::withImprovedVisibility)
+			.map(CreateRecipeCategory::withImprovedVisibility)
 			.collect(Collectors.toList());
 	}
 
-	public FluidStack withImprovedVisibility(FluidStack stack) {
+	public static FluidStack withImprovedVisibility(FluidStack stack) {
 		FluidStack display = stack.copy();
 		int displayedAmount = (int) (stack.getAmount() * .75f) + 250;
 		display.setAmount(displayedAmount);
 		return display;
 	}
 
-	protected static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
+	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
 		List<FluidStack> outputs) {
+		addFluidTooltip(fluidStacks, inputs, outputs, -1);
+	}
+
+	public static void addFluidTooltip(IGuiFluidStackGroup fluidStacks, List<FluidIngredient> inputs,
+		List<FluidStack> outputs, int index) {
 		List<Integer> amounts = new ArrayList<>();
 		inputs.forEach(f -> amounts.add(f.getRequiredAmount()));
 		outputs.forEach(f -> amounts.add(f.getAmount()));
 
 		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
+			if (index != -1 && slotIndex != index)
+				return;
+			
 			if (fluid.getFluid()
-				.isEquivalentTo(AllFluids.POTION.get())) {
+				.isSame(AllFluids.POTION.get())) {
 				ITextComponent name = fluid.getDisplayName();
 				if (tooltip.isEmpty())
 					tooltip.add(0, name);
@@ -142,12 +157,13 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 					.collect(Collectors.toList()));
 			}
 
-			int amount = amounts.get(slotIndex);
-			ITextComponent text = (Lang.translate("generic.unit.millibuckets", amount)).formatted(TextFormatting.GOLD);
+			int amount = amounts.get(index != -1 ? 0 : slotIndex);
+			ITextComponent text = (Lang.translate("generic.unit.millibuckets", amount)).withStyle(TextFormatting.GOLD);
 			if (tooltip.isEmpty())
 				tooltip.add(0, text);
 			else {
-				List<ITextComponent> siblings = tooltip.get(0).getSiblings();
+				List<ITextComponent> siblings = tooltip.get(0)
+					.getSiblings();
 				siblings.add(new StringTextComponent(" "));
 				siblings.add(text);
 			}

@@ -2,13 +2,13 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,7 +28,7 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		BlockState state = te.getBlockState();
 		Block block = state.getBlock();
@@ -38,12 +38,12 @@ public class HandCrankRenderer extends KineticTileEntityRenderer {
 		if (renderedHandle == null)
 			return;
 
-		Direction facing = state.get(FACING);
+		Direction facing = state.getValue(FACING);
 		SuperByteBuffer handle = PartialBufferer.getFacing(renderedHandle, state, facing.getOpposite());
 		HandCrankTileEntity crank = (HandCrankTileEntity) te;
 		kineticRotationTransform(handle, te, facing.getAxis(),
 				(crank.independentAngle + partialTicks * crank.chasingVelocity) / 360, light);
-		handle.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+		handle.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 }

@@ -35,7 +35,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (filter == null)
 			return false;
 
-		boolean filterTest = filter.test(recipe.getRecipeOutput());
+		boolean filterTest = filter.test(recipe.getResultItem());
 		if (recipe instanceof BasinRecipe) {
 			BasinRecipe basinRecipe = (BasinRecipe) recipe;
 			if (basinRecipe.getRollableResults()
@@ -66,9 +66,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		if (availableItems == null || availableFluids == null)
 			return false;
 
-		HeatLevel heat = BasinTileEntity.getHeatLevelOf(basin.getWorld()
-			.getBlockState(basin.getPos()
-				.down(1)));
+		HeatLevel heat = BasinTileEntity.getHeatLevelOf(basin.getLevel()
+			.getBlockState(basin.getBlockPos()
+				.below(1)));
 		if (isBasinRecipe && !((BasinRecipe) recipe).getRequiredHeat()
 			.testBlazeBurner(heat))
 			return false;
@@ -77,7 +77,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 		List<FluidStack> recipeOutputFluids = new ArrayList<>();
 
 		List<Ingredient> ingredients = new LinkedList<>(recipe.getIngredients());
-		ingredients.sort(Comparator.comparingInt(i -> i.getMatchingStacks().length));
+		ingredients.sort(Comparator.comparingInt(i -> i.getItems().length));
 		List<FluidIngredient> fluidIngredients =
 			isBasinRecipe ? ((BasinRecipe) recipe).getFluidIngredients() : Collections.emptyList();
 
@@ -101,7 +101,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 						continue;
 					// Catalyst items are never consumed
 					if (extracted.hasContainerItem() && extracted.getContainerItem()
-						.isItemEqual(extracted))
+						.sameItem(extracted))
 						continue Ingredients;
 					if (!simulate)
 						availableItems.extractItem(slot, 1, false);
@@ -145,9 +145,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 			if (fluidsAffected) {
 				basin.getBehaviour(SmartFluidTankBehaviour.INPUT)
-					.foreach(TankSegment::onFluidStackChanged);
+					.forEach(TankSegment::onFluidStackChanged);
 				basin.getBehaviour(SmartFluidTankBehaviour.OUTPUT)
-					.foreach(TankSegment::onFluidStackChanged);
+					.forEach(TankSegment::onFluidStackChanged);
 			}
 
 			if (simulate) {
@@ -155,7 +155,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					recipeOutputItems.addAll(((BasinRecipe) recipe).rollResults());
 					recipeOutputFluids.addAll(((BasinRecipe) recipe).getFluidResults());
 				} else
-					recipeOutputItems.add(recipe.getRecipeOutput());
+					recipeOutputItems.add(recipe.getResultItem());
 			}
 
 			if (!basin.acceptOutputs(recipeOutputItems, recipeOutputFluids, simulate))
@@ -168,7 +168,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 	public static BasinRecipe convertShapeless(IRecipe<?> recipe) {
 		BasinRecipe basinRecipe =
 			new ProcessingRecipeBuilder<>(BasinRecipe::new, recipe.getId()).withItemIngredients(recipe.getIngredients())
-				.withSingleItemOutput(recipe.getRecipeOutput())
+				.withSingleItemOutput(recipe.getResultItem())
 				.build();
 		return basinRecipe;
 	}

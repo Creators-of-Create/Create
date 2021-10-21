@@ -8,79 +8,27 @@ import java.util.function.Supplier;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.FirstPersonRenderer;
-import net.minecraft.client.renderer.entity.PlayerRenderer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
-public class ZapperRenderHandler {
+public class ZapperRenderHandler extends ShootableGadgetRenderHandler {
 
-	public static List<LaserBeam> cachedBeams;
-	public static float leftHandAnimation;
-	public static float rightHandAnimation;
-	public static float lastLeftHandAnimation;
-	public static float lastRightHandAnimation;
+	public List<LaserBeam> cachedBeams;
 
-	private static boolean dontReequipLeft;
-	private static boolean dontReequipRight;
-
-	public static class LaserBeam {
-		float itensity;
-		Vector3d start;
-		Vector3d end;
-		boolean follow;
-		boolean mainHand;
-
-		public LaserBeam(Vector3d start, Vector3d end) {
-			this.start = start;
-			this.end = end;
-			itensity = 1;
-		}
-
-		public LaserBeam followPlayer(boolean follow, boolean mainHand) {
-			this.follow = follow;
-			this.mainHand = mainHand;
-			return this;
-		}
+	@Override
+	protected boolean appliesTo(ItemStack stack) {
+		return stack.getItem() instanceof ZapperItem;
 	}
 
-	public static Vector3d getExactBarrelPos(boolean mainHand) {
-		float partialTicks = AnimationTickHolder.getPartialTicks();
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-		float yaw = (float) ((player.getYaw(partialTicks)) / -180 * Math.PI);
-		float pitch = (float) ((player.getPitch(partialTicks)) / -180 * Math.PI);
-		boolean rightHand = mainHand == (player.getPrimaryHand() == HandSide.RIGHT);
-		float zOffset = ((float) Minecraft.getInstance().gameSettings.fov - 70) / -100;
-		Vector3d barrelPosNoTransform = new Vector3d(rightHand ? -.35f : .35f, -0.115f, .75f + zOffset);
-		Vector3d barrelPos = player.getEyePosition(partialTicks)
-			.add(barrelPosNoTransform.rotatePitch(pitch)
-				.rotateYaw(yaw));
-		return barrelPos;
-	}
-
-	public static void tick() {
-		lastLeftHandAnimation = leftHandAnimation;
-		lastRightHandAnimation = rightHandAnimation;
-		leftHandAnimation *= 0.8f;
-		rightHandAnimation *= 0.8f;
+	@Override
+	public void tick() {
+		super.tick();
 
 		if (cachedBeams == null)
 			cachedBeams = new LinkedList<>();
@@ -90,7 +38,7 @@ public class ZapperRenderHandler {
 			return;
 
 		cachedBeams.forEach(beam -> {
-			CreateClient.outliner.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity)
+			CreateClient.OUTLINER.endChasingLine(beam, beam.start, beam.end, 1 - beam.itensity)
 				.disableNormals()
 				.colored(0xffffff)
 				.lineWidth(beam.itensity * 1 / 8f);
@@ -99,31 +47,28 @@ public class ZapperRenderHandler {
 		cachedBeams.forEach(b -> b.itensity *= .6f);
 	}
 
-	public static void shoot(Hand hand) {
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean rightHand = hand == Hand.MAIN_HAND ^ player.getPrimaryHand() == HandSide.LEFT;
-		if (rightHand) {
-			rightHandAnimation = .2f;
-			dontReequipRight = false;
-		} else {
-			leftHandAnimation = .2f;
-			dontReequipLeft = false;
-		}
-		playSound(hand, player.getBlockPos());
+	@Override
+	protected void transformTool(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {
+		ms.translate(flip * -0.1f, 0.1f, -0.4f);
+		ms.mulPose(Vector3f.YP.rotationDegrees(flip * 5.0F));
 	}
 
-	public static void playSound(Hand hand, BlockPos position) {
+	@Override
+	protected void transformHand(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {}
+
+	@Override
+	protected void playSound(Hand hand, Vector3d position) {
 		float pitch = hand == Hand.MAIN_HAND ? 0.1f : 0.9f;
 		Minecraft mc = Minecraft.getInstance();
-		AllSoundEvents.WORLDSHAPER_PLACE.play(mc.world, mc.player, position, 0.1f, pitch);
+		AllSoundEvents.WORLDSHAPER_PLACE.play(mc.level, mc.player, position, 0.1f, pitch);
 	}
 
-	public static void addBeam(LaserBeam beam) {
+	public void addBeam(LaserBeam beam) {
 		Random r = new Random();
 		double x = beam.end.x;
 		double y = beam.end.y;
 		double z = beam.end.z;
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		Supplier<Double> randomSpeed = () -> (r.nextDouble() - .5d) * .2f;
 		Supplier<Double> randomOffset = () -> (r.nextDouble() - .5d) * .2f;
 		for (int i = 0; i < 10; i++) {
@@ -135,87 +80,16 @@ public class ZapperRenderHandler {
 		cachedBeams.add(beam);
 	}
 
-	@SubscribeEvent
-	public static void onRenderPlayerHand(RenderHandEvent event) {
-		ItemStack heldItem = event.getItemStack();
-		if (!(heldItem.getItem() instanceof ZapperItem))
-			return;
+	public static class LaserBeam {
+		float itensity;
+		Vector3d start;
+		Vector3d end;
 
-		Minecraft mc = Minecraft.getInstance();
-		boolean rightHand = event.getHand() == Hand.MAIN_HAND ^ mc.player.getPrimaryHand() == HandSide.LEFT;
-
-		MatrixStack ms = event.getMatrixStack();
-
-		ms.push();
-		float recoil = rightHand ? MathHelper.lerp(event.getPartialTicks(), lastRightHandAnimation, rightHandAnimation)
-			: MathHelper.lerp(event.getPartialTicks(), lastLeftHandAnimation, leftHandAnimation);
-
-		float equipProgress = event.getEquipProgress();
-
-		if (rightHand && (rightHandAnimation > .01f || dontReequipRight))
-			equipProgress = 0;
-		if (!rightHand && (leftHandAnimation > .01f || dontReequipLeft))
-			equipProgress = 0;
-
-		// Render arm
-		float f = rightHand ? 1.0F : -1.0F;
-		float f1 = MathHelper.sqrt(event.getSwingProgress());
-		float f2 = -0.3F * MathHelper.sin(f1 * (float) Math.PI);
-		float f3 = 0.4F * MathHelper.sin(f1 * ((float) Math.PI * 2F));
-		float f4 = -0.4F * MathHelper.sin(event.getSwingProgress() * (float) Math.PI);
-		float f5 = MathHelper.sin(event.getSwingProgress() * event.getSwingProgress() * (float) Math.PI);
-		float f6 = MathHelper.sin(f1 * (float) Math.PI);
-
-		ms.translate(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
-			f4 + -0.71999997F + .3f + recoil);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 75.0F));
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * f6 * 70.0F));
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * f5 * -20.0F));
-		AbstractClientPlayerEntity abstractclientplayerentity = mc.player;
-		mc.getTextureManager()
-			.bindTexture(abstractclientplayerentity.getLocationSkin());
-		ms.translate(f * -1.0F, 3.6F, 3.5F);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * 120.0F));
-		ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(200.0F));
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * -135.0F));
-		ms.translate(f * 5.6F, 0.0F, 0.0F);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 40.0F));
-
-		PlayerRenderer playerrenderer = (PlayerRenderer) mc.getRenderManager()
-			.getRenderer(abstractclientplayerentity);
-		if (rightHand) {
-			playerrenderer.renderRightArm(event.getMatrixStack(), event.getBuffers(), event.getLight(),
-				abstractclientplayerentity);
-		} else {
-			playerrenderer.renderLeftArm(event.getMatrixStack(), event.getBuffers(), event.getLight(),
-				abstractclientplayerentity);
+		public LaserBeam(Vector3d start, Vector3d end) {
+			this.start = start;
+			this.end = end;
+			itensity = 1;
 		}
-		ms.pop();
-
-		// Render gun
-		ms.push();
-		ms.translate(f * (f2 + 0.64000005F - .1f), f3 + -0.4F + equipProgress * -0.6F,
-			f4 + -0.71999997F - 0.1f + recoil);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * f6 * 70.0F));
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(f * f5 * -20.0F));
-
-		ms.translate(f * -0.1f, 0.1f, -0.4f);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 5.0F));
-
-		FirstPersonRenderer firstPersonRenderer = mc.getFirstPersonRenderer();
-		firstPersonRenderer.renderItem(mc.player, heldItem,
-			rightHand ? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
-				: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
-			!rightHand, event.getMatrixStack(), event.getBuffers(), event.getLight());
-		ms.pop();
-
-		event.setCanceled(true);
-	}
-
-	public static void dontAnimateItem(Hand hand) {
-		boolean rightHand = hand == Hand.MAIN_HAND ^ Minecraft.getInstance().player.getPrimaryHand() == HandSide.LEFT;
-		dontReequipRight |= rightHand;
-		dontReequipLeft |= !rightHand;
 	}
 
 }

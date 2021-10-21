@@ -12,6 +12,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
 import com.simibubi.create.content.contraptions.fluids.actors.FillingRecipe;
+import com.simibubi.create.content.contraptions.fluids.actors.GenericItemFilling;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
@@ -51,7 +52,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 			.forEach(stack -> {
 				if (stack.getItem() instanceof PotionItem) {
 					FluidStack fluidFromPotionItem = PotionFluidHandler.getFluidFromPotionItem(stack);
-					Ingredient bottle = Ingredient.fromItems(Items.GLASS_BOTTLE);
+					Ingredient bottle = Ingredient.of(Items.GLASS_BOTTLE);
 					recipes.add(new ProcessingRecipeBuilder<>(FillingRecipe::new, Create.asResource("potions"))
 						.withItemIngredients(bottle)
 						.withFluidIngredients(FluidIngredient.fromFluidStack(fluidFromPotionItem))
@@ -71,16 +72,18 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 						ItemStack copy = stack.copy();
 						copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
 							.ifPresent(fhi -> {
+								if (!GenericItemFilling.isFluidHandlerValid(copy, fhi))
+									return;
 								FluidStack fluidCopy = fluidStack.copy();
 								fluidCopy.setAmount(1000);
 								fhi.fill(fluidCopy, FluidAction.EXECUTE);
 								ItemStack container = fhi.getContainer();
-								if (container.isItemEqual(copy))
+								if (container.sameItem(copy))
 									return;
 								if (container.isEmpty())
 									return;
 
-								Ingredient bucket = Ingredient.fromStacks(stack);
+								Ingredient bucket = Ingredient.of(stack);
 								ResourceLocation itemName = stack.getItem()
 									.getRegistryName();
 								ResourceLocation fluidName = fluidCopy.getFluid()
@@ -114,7 +117,7 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 
 		if (!recipe.getRollableResults()
 			.isEmpty())
-			ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+			ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 		if (!recipe.getFluidResults()
 			.isEmpty())
 			ingredients.setOutputs(VanillaTypes.FLUID, recipe.getFluidResults());
@@ -127,14 +130,14 @@ public class SpoutCategory extends CreateRecipeCategory<FillingRecipe> {
 		FluidIngredient fluidIngredient = recipe.getRequiredFluid();
 		List<ItemStack> matchingIngredients = Arrays.asList(recipe.getIngredients()
 			.get(0)
-			.getMatchingStacks());
+			.getItems());
 
 		fluidStacks.init(0, true, 27, 32);
 		fluidStacks.set(0, withImprovedVisibility(fluidIngredient.getMatchingFluidStacks()));
 		itemStacks.init(0, true, 26, 50);
 		itemStacks.set(0, matchingIngredients);
 		itemStacks.init(1, false, 131, 50);
-		itemStacks.set(1, recipe.getRecipeOutput());
+		itemStacks.set(1, recipe.getResultItem());
 
 		addFluidTooltip(fluidStacks, ImmutableList.of(fluidIngredient), Collections.emptyList());
 	}

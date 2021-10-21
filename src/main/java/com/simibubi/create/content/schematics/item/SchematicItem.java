@@ -55,7 +55,7 @@ public class SchematicItem extends Item {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public SchematicItem(Properties properties) {
-		super(properties.maxStackSize(1));
+		super(properties.stacksTo(1));
 	}
 
 	public static ItemStack create(String schematic, String owner) {
@@ -75,20 +75,20 @@ public class SchematicItem extends Item {
 	}
 
 	@Override
-	public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {}
+	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {}
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		if (stack.hasTag()) {
 			if (stack.getTag()
 				.contains("File"))
 				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
-			tooltip.add(Lang.translate("schematic.invalid").formatted(TextFormatting.RED));
+			tooltip.add(Lang.translate("schematic.invalid").withStyle(TextFormatting.RED));
 		}
-		super.addInformation(stack, worldIn, tooltip, flagIn);
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 
 	public static void writeSize(ItemStack blueprint) {
@@ -100,11 +100,16 @@ public class SchematicItem extends Item {
 	}
 
 	public static PlacementSettings getSettings(ItemStack blueprint) {
+		return getSettings(blueprint, true);
+	}
+
+	public static PlacementSettings getSettings(ItemStack blueprint, boolean processNBT) {
 		CompoundNBT tag = blueprint.getTag();
 		PlacementSettings settings = new PlacementSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
-		settings.addProcessor(SchematicProcessor.INSTANCE);
+		if (processNBT)
+			settings.addProcessor(SchematicProcessor.INSTANCE);
 		return settings;
 	}
 
@@ -136,7 +141,7 @@ public class SchematicItem extends Item {
 		try (DataInputStream stream = new DataInputStream(new BufferedInputStream(
 				new GZIPInputStream(Files.newInputStream(path, StandardOpenOption.READ))))) {
 			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
-			t.read(nbt);
+			t.load(nbt);
 		} catch (IOException e) {
 			LOGGER.warn("Failed to read schematic", e);
 		}
@@ -146,23 +151,23 @@ public class SchematicItem extends Item {
 
 	@Nonnull
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		if (context.getPlayer() != null && !onItemUse(context.getPlayer(), context.getHand()))
-			return super.onItemUse(context);
+			return super.useOn(context);
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		if (!onItemUse(playerIn, handIn))
-			return super.onItemRightClick(worldIn, playerIn, handIn);
-		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+			return super.use(worldIn, playerIn, handIn);
+		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(handIn));
 	}
 
 	private boolean onItemUse(PlayerEntity player, Hand hand) {
-		if (!player.isSneaking() || hand != Hand.MAIN_HAND)
+		if (!player.isShiftKeyDown() || hand != Hand.MAIN_HAND)
 			return false;
-		if (!player.getHeldItem(hand)
+		if (!player.getItemInHand(hand)
 			.hasTag())
 			return false;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::displayBlueprintScreen);

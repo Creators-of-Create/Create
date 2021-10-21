@@ -29,12 +29,12 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 
 	public FlywheelBlock(Properties properties) {
 		super(properties);
-		setDefaultState(getDefaultState().with(CONNECTION, ConnectionState.NONE));
+		registerDefaultState(defaultBlockState().setValue(CONNECTION, ConnectionState.NONE));
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder.add(CONNECTION));
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder.add(CONNECTION));
 	}
 
 	@Override
@@ -46,8 +46,8 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
 		if (preferred != null)
-			return getDefaultState().with(HORIZONTAL_FACING, preferred.getOpposite());
-		return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing());
+			return defaultBlockState().setValue(HORIZONTAL_FACING, preferred.getOpposite());
+		return this.defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection());
 	}
 
 	public static boolean isConnected(BlockState state) {
@@ -55,37 +55,37 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	}
 
 	public static Direction getConnection(BlockState state) {
-		Direction facing = state.get(HORIZONTAL_FACING);
-		ConnectionState connection = state.get(CONNECTION);
+		Direction facing = state.getValue(HORIZONTAL_FACING);
+		ConnectionState connection = state.getValue(CONNECTION);
 
 		if (connection == ConnectionState.LEFT)
-			return facing.rotateYCCW();
+			return facing.getCounterClockWise();
 		if (connection == ConnectionState.RIGHT)
-			return facing.rotateY();
+			return facing.getClockWise();
 		return null;
 	}
 
 	public static void setConnection(World world, BlockPos pos, BlockState state, Direction direction) {
-		Direction facing = state.get(HORIZONTAL_FACING);
+		Direction facing = state.getValue(HORIZONTAL_FACING);
 		ConnectionState connection = ConnectionState.NONE;
 
-		if (direction == facing.rotateY())
+		if (direction == facing.getClockWise())
 			connection = ConnectionState.RIGHT;
-		if (direction == facing.rotateYCCW())
+		if (direction == facing.getCounterClockWise())
 			connection = ConnectionState.LEFT;
 
-		world.setBlockState(pos, state.with(CONNECTION, connection), 18);
+		world.setBlock(pos, state.setValue(CONNECTION, connection), 18);
 		AllTriggers.triggerForNearbyPlayers(AllTriggers.FLYWHEEL, world, pos, 4);
 	}
 
 	@Override
 	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.get(HORIZONTAL_FACING).getOpposite();
+		return face == state.getValue(HORIZONTAL_FACING).getOpposite();
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(HORIZONTAL_FACING).getAxis();
+		return state.getValue(HORIZONTAL_FACING).getAxis();
 	}
 
 	@Override
@@ -94,23 +94,23 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 		if (connection == null)
 			return super.onWrenched(state ,context);
 
-		if (context.getFace().getAxis() == state.get(HORIZONTAL_FACING).getAxis())
+		if (context.getClickedFace().getAxis() == state.getValue(HORIZONTAL_FACING).getAxis())
 			return ActionResultType.PASS;
 
-		World world = context.getWorld();
-		BlockPos enginePos = context.getPos().offset(connection, 2);
+		World world = context.getLevel();
+		BlockPos enginePos = context.getClickedPos().relative(connection, 2);
 		BlockState engine = world.getBlockState(enginePos);
 		if (engine.getBlock() instanceof FurnaceEngineBlock)
 			((FurnaceEngineBlock) engine.getBlock()).withTileEntityDo(world, enginePos, EngineTileEntity::detachWheel);
 
-		return super.onWrenched(state.with(CONNECTION, ConnectionState.NONE), context);
+		return super.onWrenched(state.setValue(CONNECTION, ConnectionState.NONE), context);
 	}
 
 	public enum ConnectionState implements IStringSerializable {
 		NONE, LEFT, RIGHT;
 
 		@Override
-		public String getString() {
+		public String getSerializedName() {
 			return Lang.asId(name());
 		}
 	}

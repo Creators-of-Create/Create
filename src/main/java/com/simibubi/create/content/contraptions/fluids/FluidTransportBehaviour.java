@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -13,12 +14,14 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -26,14 +29,14 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 
 	public static BehaviourType<FluidTransportBehaviour> TYPE = new BehaviourType<>();
 
-	enum UpdatePhase {
+	public enum UpdatePhase {
 		WAIT_FOR_PUMPS, // Do not run Layer II logic while pumps could still be distributing pressure
 		FLIP_FLOWS, // Do not cut any flows until all pipes had a chance to reverse them
 		IDLE; // Operate normally
 	}
 
-	Map<Direction, PipeConnection> interfaces;
-	UpdatePhase phase;
+	public Map<Direction, PipeConnection> interfaces;
+	public UpdatePhase phase;
 
 	public FluidTransportBehaviour(SmartTileEntity te) {
 		super(te);
@@ -57,8 +60,8 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		super.tick();
 		World world = getWorld();
 		BlockPos pos = getPos();
-		boolean onClient = world.isRemote;
-		
+		boolean onServer = !world.isClientSide || tileEntity.isVirtual();
+
 		if (interfaces == null)
 			return;
 		Collection<PipeConnection> connections = interfaces.values();
@@ -78,7 +81,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			return;
 		}
 
-		if (!onClient) {
+		if (onServer) {
 			boolean sendUpdate = false;
 			for (PipeConnection connection : connections) {
 				sendUpdate |= connection.flipFlowsIfPressureReversed();
@@ -93,7 +96,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 			return;
 		}
 
-		if (!onClient) {
+		if (onServer) {
 			FluidStack availableFlow = FluidStack.EMPTY;
 			FluidStack collidingFlow = FluidStack.EMPTY;
 
@@ -142,7 +145,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		if (interfaces == null)
 			interfaces = new IdentityHashMap<>();
 		for (Direction face : Iterate.directions)
-			if (nbt.contains(face.getName2()))
+			if (nbt.contains(face.getName()))
 				interfaces.computeIfAbsent(face, d -> new PipeConnection(d));
 
 		// Invalid data (missing/outdated). Defer init to runtime
@@ -152,7 +155,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		}
 
 		interfaces.values()
-			.forEach(connection -> connection.deserializeNBT(nbt, clientPacket));
+			.forEach(connection -> connection.deserializeNBT(nbt, tileEntity.getBlockPos(), clientPacket));
 	}
 
 	@Override
@@ -235,15 +238,15 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		if (!canHaveFlowToward(state, direction))
 			return AttachmentTypes.NONE;
 
-		BlockPos offsetPos = pos.offset(direction);
+		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
 
-		if (facingState.getBlock() instanceof PumpBlock && facingState.get(PumpBlock.FACING)
+		if (facingState.getBlock() instanceof PumpBlock && facingState.getValue(PumpBlock.FACING)
 			.getAxis() == direction.getAxis())
 			return AttachmentTypes.NONE;
 
 		if (AllBlocks.ENCASED_FLUID_PIPE.has(facingState)
-			&& facingState.get(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(direction.getOpposite())))
+			&& facingState.getValue(EncasedPipeBlock.FACING_TO_PROPERTY_MAP.get(direction.getOpposite())))
 			return AttachmentTypes.NONE;
 
 		if (FluidPropagator.hasFluidCapability(world, offsetPos, direction.getOpposite())
@@ -264,6 +267,25 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 	@Override
 	public BehaviourType<?> getType() {
 		return TYPE;
+	}
+
+	// for switching TEs, but retaining flows
+
+	public static final WorldAttached<Map<BlockPos, Map<Direction, PipeConnection>>> interfaceTransfer =
+		new WorldAttached<>($ -> new HashMap<>());
+
+	public static void cacheFlows(IWorld world, BlockPos pos) {
+		FluidTransportBehaviour pipe = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		if (pipe != null)
+			interfaceTransfer.get(world)
+				.put(pos, pipe.interfaces);
+	}
+
+	public static void loadFlows(IWorld world, BlockPos pos) {
+		FluidTransportBehaviour newPipe = TileEntityBehaviour.get(world, pos, FluidTransportBehaviour.TYPE);
+		if (newPipe != null)
+			newPipe.interfaces = interfaceTransfer.get(world)
+				.remove(pos);
 	}
 
 }

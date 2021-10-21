@@ -14,8 +14,8 @@ public abstract class DirectionalAxisBlockStateGen extends SpecialBlockStateGen 
 
 	@Override
 	protected int getXRotation(BlockState state) {
-		Direction direction = state.get(GaugeBlock.FACING);
-		boolean alongFirst = state.get(GaugeBlock.AXIS_ALONG_FIRST_COORDINATE);
+		Direction direction = state.getValue(GaugeBlock.FACING);
+		boolean alongFirst = state.getValue(GaugeBlock.AXIS_ALONG_FIRST_COORDINATE);
 
 		if (direction == Direction.DOWN)
 			return 180;
@@ -29,8 +29,8 @@ public abstract class DirectionalAxisBlockStateGen extends SpecialBlockStateGen 
 
 	@Override
 	protected int getYRotation(BlockState state) {
-		Direction direction = state.get(GaugeBlock.FACING);
-		boolean alongFirst = state.get(GaugeBlock.AXIS_ALONG_FIRST_COORDINATE);
+		Direction direction = state.getValue(GaugeBlock.FACING);
+		boolean alongFirst = state.getValue(GaugeBlock.AXIS_ALONG_FIRST_COORDINATE);
 
 		if (direction.getAxis()
 			.isVertical())
@@ -45,7 +45,7 @@ public abstract class DirectionalAxisBlockStateGen extends SpecialBlockStateGen 
 	@Override
 	public <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,
 		BlockState state) {
-		boolean vertical = state.get(GaugeBlock.FACING)
+		boolean vertical = state.getValue(GaugeBlock.FACING)
 			.getAxis()
 			.isVertical();
 		String partial = vertical ? "" : "_wall";

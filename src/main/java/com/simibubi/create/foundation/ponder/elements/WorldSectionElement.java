@@ -8,6 +8,7 @@ import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -21,7 +22,6 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperByteBufferCache;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -60,6 +60,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public static final Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new Compartment<>();
 
 	List<TileEntity> renderedTileEntities;
+	List<TileEntity> tickableTileEntities;
 	Selection section;
 	boolean redraw;
 
@@ -179,22 +180,22 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public Pair<Vector3d, BlockPos> rayTrace(PonderWorld world, Vector3d source, Vector3d target) {
 		world.setMask(this.section);
 		Vector3d transformedTarget = reverseTransformVec(target);
-		BlockRayTraceResult rayTraceBlocks = world.rayTraceBlocks(new RayTraceContext(reverseTransformVec(source),
+		BlockRayTraceResult rayTraceBlocks = world.clip(new RayTraceContext(reverseTransformVec(source),
 			transformedTarget, BlockMode.OUTLINE, FluidMode.NONE, null));
 		world.clearMask();
 
 		if (rayTraceBlocks == null)
 			return null;
-		if (rayTraceBlocks.getHitVec() == null)
+		if (rayTraceBlocks.getLocation() == null)
 			return null;
 
-		double t = rayTraceBlocks.getHitVec()
+		double t = rayTraceBlocks.getLocation()
 			.subtract(transformedTarget)
-			.lengthSquared()
+			.lengthSqr()
 			/ source.subtract(target)
-				.lengthSquared();
+				.lengthSqr();
 		Vector3d actualHit = VecHelper.lerp((float) t, target, source);
-		return Pair.of(actualHit, rayTraceBlocks.getPos());
+		return Pair.of(actualHit, rayTraceBlocks.getBlockPos());
 	}
 
 	private Vector3d reverseTransformVec(Vector3d in) {
@@ -223,7 +224,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	public void transformMS(MatrixStack ms, float pt) {
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
 		if (!animatedRotation.equals(Vector3d.ZERO) || !prevAnimatedRotation.equals(Vector3d.ZERO)) {
 			if (centerOfRotation == null)
@@ -231,14 +232,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			double rotX = MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
 			double rotZ = MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
 			double rotY = MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
-			MatrixStacker.of(ms)
+			MatrixTransformStack.of(ms)
 				.translate(centerOfRotation)
 				.rotateX(rotX)
 				.rotateZ(rotZ)
 				.rotateY(rotY)
 				.translateBack(centerOfRotation);
 			if (stabilizationAnchor != null) {
-				MatrixStacker.of(ms)
+				MatrixTransformStack.of(ms)
 					.translate(stabilizationAnchor)
 					.rotateX(-rotX)
 					.rotateZ(-rotZ)
@@ -255,30 +256,36 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			return;
 		loadTEsIfMissing(scene.getWorld());
 		renderedTileEntities.removeIf(te -> scene.getWorld()
-			.getTileEntity(te.getPos()) != te);
-		renderedTileEntities.forEach(te -> {
+			.getBlockEntity(te.getBlockPos()) != te);
+		tickableTileEntities.removeIf(te -> scene.getWorld()
+			.getBlockEntity(te.getBlockPos()) != te);
+		tickableTileEntities.forEach(te -> {
 			if (te instanceof ITickableTileEntity)
 				((ITickableTileEntity) te).tick();
 		});
 	}
-	
+
 	@Override
 	public void whileSkipping(PonderScene scene) {
-		if (redraw)
+		if (redraw) {
 			renderedTileEntities = null;
+			tickableTileEntities = null;
+		}
 		redraw = false;
 	}
 
 	protected void loadTEsIfMissing(PonderWorld world) {
 		if (renderedTileEntities != null)
 			return;
+		tickableTileEntities = new ArrayList<>();
 		renderedTileEntities = new ArrayList<>();
 		section.forEach(pos -> {
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getBlockEntity(pos);
 			if (tileEntity == null)
 				return;
+			tickableTileEntities.add(tileEntity);
 			renderedTileEntities.add(tileEntity);
-			tileEntity.updateContainingBlockInfo();
+			tileEntity.clearCache();
 		});
 	}
 
@@ -294,8 +301,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		int light = -1;
 		if (fade != 1)
 			light = (int) (MathHelper.lerp(fade, 5, 14));
-		if (redraw)
+		if (redraw) {
 			renderedTileEntities = null;
+			tickableTileEntities = null;
+		}
 		transformMS(ms, pt);
 		world.pushFakeLight(light);
 		renderTileEntities(world, ms, buffer, pt);
@@ -314,30 +323,30 @@ public class WorldSectionElement extends AnimatedSceneElement {
 					.apply(overlayMS, pt, true);
 				transformMS(overlayMS, pt);
 			}
-			ms.push();
+			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 			IVertexBuilder builder = new MatrixApplyingVertexBuilder(
-				buffer.getBuffer(ModelBakery.BLOCK_DESTRUCTION_RENDER_LAYERS.get(entry.getValue())),
-					overlayMS.peek().getModel(),
-					overlayMS.peek().getNormal());
+				buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())),
+					overlayMS.last().pose(),
+					overlayMS.last().normal());
 			Minecraft.getInstance()
-				.getBlockRendererDispatcher()
-				.renderModel(world.getBlockState(pos), pos, world, ms, builder, true, world.rand, EmptyModelData.INSTANCE);
-			ms.pop();
+				.getBlockRenderer()
+				.renderModel(world.getBlockState(pos), pos, world, ms, builder, true, world.random, EmptyModelData.INSTANCE);
+			ms.popPose();
 		}
 	}
 
 	protected void renderStructure(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, RenderType type,
 		float fade) {
-		SuperByteBufferCache bufferCache = CreateClient.bufferCache;
+		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 		int code = hashCode() ^ world.hashCode();
 
-		Pair<Integer, Integer> key = Pair.of(code, RenderType.getBlockLayers()
-			.indexOf(type));
+		Pair<Integer, Integer> key = Pair.of(code, RenderType.chunkBufferLayers()
+				.indexOf(type));
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
-			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
+				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
 		if (contraptionBuffer.isEmpty())
 			return;
 
@@ -352,32 +361,32 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (selectedBlock == null)
 			return;
 		BlockState blockState = world.getBlockState(selectedBlock);
-		if (blockState.isAir(world, selectedBlock))
+		if (blockState.isAir())
 			return;
 		VoxelShape shape =
-			blockState.getShape(world, selectedBlock, ISelectionContext.forEntity(Minecraft.getInstance().player));
+			blockState.getShape(world, selectedBlock, ISelectionContext.of(Minecraft.getInstance().player));
 		if (shape.isEmpty())
 			return;
 
-		ms.push();
+		ms.pushPose();
 		transformMS(ms, pt);
 		RenderSystem.disableTexture();
-		WorldRenderer.drawBox(ms, buffer.getBuffer(RenderType.getLines()), shape.getBoundingBox()
-			.offset(selectedBlock), 1, 1, 1, 0.6f);
-		ms.pop();
+		WorldRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), shape.bounds()
+			.move(selectedBlock), 1, 1, 1, 0.6f);
+		ms.popPose();
 	}
 
 	private void renderTileEntities(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float pt) {
 		loadTEsIfMissing(world);
-		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, new MatrixStack(), buffer, pt);
+		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, buffer, pt);
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
 		ForgeHooksClient.setRenderLayer(layer);
 		MatrixStack ms = new MatrixStack();
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
-			.getBlockRendererDispatcher();
-		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
+			.getBlockRenderer();
+		BlockModelRenderer blockRenderer = dispatcher.getModelRenderer();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
@@ -387,25 +396,25 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			BlockState state = world.getBlockState(pos);
 			FluidState ifluidstate = world.getFluidState(pos);
 
-			ms.push();
+			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderType() != BlockRenderType.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
+			if (state.getRenderShape() != BlockRenderType.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
 				&& RenderTypeLookup.canRenderInLayer(state, layer)) {
-				TileEntity tileEntity = world.getTileEntity(pos);
-				blockRenderer.renderModel(world, dispatcher.getModelForState(state), state, pos, ms, builder, true,
-					random, 42, OverlayTexture.DEFAULT_UV,
+				TileEntity tileEntity = world.getBlockEntity(pos);
+				blockRenderer.renderModel(world, dispatcher.getBlockModel(state), state, pos, ms, builder, true,
+					random, 42, OverlayTexture.NO_OVERLAY,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
 			}
 
 			if (!ifluidstate.isEmpty() && RenderTypeLookup.canRenderInLayer(ifluidstate, layer))
-				dispatcher.renderFluid(pos, world, builder, ifluidstate);
+				dispatcher.renderLiquid(pos, world, builder, ifluidstate);
 
-			ms.pop();
+			ms.popPose();
 		});
 
 		world.clearMask();
-		builder.finishDrawing();
+		builder.end();
 		return new SuperByteBuffer(builder);
 	}
 

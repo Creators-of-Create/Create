@@ -23,12 +23,12 @@ public class ClutchBlock extends GearshiftBlock {
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
-		if (worldIn.isRemote)
+		if (worldIn.isClientSide)
 			return;
 
-		boolean previouslyPowered = state.get(POWERED);
-		if (previouslyPowered != worldIn.isBlockPowered(pos)) {
-			worldIn.setBlockState(pos, state.cycle(POWERED), 2 | 16);
+		boolean previouslyPowered = state.getValue(POWERED);
+		if (previouslyPowered != worldIn.hasNeighborSignal(pos)) {
+			worldIn.setBlock(pos, state.cycle(POWERED), 2 | 16);
 			detachKinetics(worldIn, pos, previouslyPowered);
 		}
 	}

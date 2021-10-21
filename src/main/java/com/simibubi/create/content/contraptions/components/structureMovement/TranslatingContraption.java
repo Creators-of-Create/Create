@@ -22,7 +22,7 @@ public abstract class TranslatingContraption extends Contraption {
 			cachedColliderDirection = movementDirection;
 
 			for (BlockInfo info : getBlocks().values()) {
-				BlockPos offsetPos = info.pos.offset(movementDirection);
+				BlockPos offsetPos = info.pos.relative(movementDirection);
 				if (info.state.getCollisionShape(world, offsetPos)
 					.isEmpty())
 					continue;

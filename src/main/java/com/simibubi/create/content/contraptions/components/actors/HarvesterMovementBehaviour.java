@@ -1,32 +1,37 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.block.HorizontalBlock.HORIZONTAL_FACING;
+import static net.minecraft.block.HorizontalBlock.FACING;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
+import net.minecraft.block.AbstractPlantBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.CropsBlock;
-import net.minecraft.block.KelpBlock;
-import net.minecraft.block.KelpTopBlock;
 import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.block.SweetBerryBushBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.Property;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -36,7 +41,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(HORIZONTAL_FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(FACING)
 			.getOpposite());
 	}
 
@@ -47,21 +52,23 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
-		return new HarvesterActorInstance(kr, context);
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld,
+		MovementContext context) {
+		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffers) {
-		if (!FastRenderDispatcher.available())
-			HarvesterRenderer.renderInContraption(context, ms, msLocal, buffers);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
+		if (!Backend.getInstance()
+			.canUseInstancing())
+			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(HORIZONTAL_FACING)
-			.getDirectionVec())
+		return Vector3d.atLowerCornerOf(context.state.getValue(FACING)
+			.getNormal())
 			.scale(.45);
 	}
 
@@ -71,7 +78,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		BlockState stateVisited = world.getBlockState(pos);
 		boolean notCropButCuttable = false;
 
-		if (world.isRemote)
+		if (world.isClientSide)
 			return;
 
 		if (!isValidCrop(world, pos, stateVisited)) {
@@ -81,37 +88,55 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				return;
 		}
 
+		ItemStack item = ItemStack.EMPTY;
+		float effectChance = 1;
+
+		if (stateVisited.getBlock()
+			.is(BlockTags.LEAVES)) {
+			item = new ItemStack(Items.SHEARS);
+			effectChance = .45f;
+		}
+
 		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
 		BlockState state = stateVisited;
-		BlockHelper.destroyBlock(world, pos, 1, stack -> {
-			if (!seedSubtracted.getValue() && stack.isItemEqual(new ItemStack(state.getBlock()))) {
+		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
+			if (AllConfigs.SERVER.kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
+				&& stack.sameItem(new ItemStack(state.getBlock()))) {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
 			}
 			dropItem(context, stack);
 		});
 
-		world.setBlockState(pos, cutCrop(world, pos, stateVisited));
+		world.setBlockAndUpdate(pos, cutCrop(world, pos, stateVisited));
 	}
 
 	private boolean isValidCrop(World world, BlockPos pos, BlockState state) {
+		boolean harvestPartial = AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get();
+		boolean replant = AllConfigs.SERVER.kinetics.harvesterReplants.get();
+		
 		if (state.getBlock() instanceof CropsBlock) {
 			CropsBlock crop = (CropsBlock) state.getBlock();
-			if (!crop.isMaxAge(state))
-				return false;
-			return true;
+			if (harvestPartial)
+				return state.getValue(crop.getAgeProperty()) != 0 || !replant;
+			return crop.isMaxAge(state);
 		}
+
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
+				IntegerProperty ageProperty = (IntegerProperty) property;
 				if (!property.getName()
-					.equals(BlockStateProperties.AGE_0_1.getName()))
+					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
-				if (((IntegerProperty) property).getAllowedValues()
-					.size() - 1 != state.get((IntegerProperty) property)
-						.intValue())
+				int age = state.getValue(ageProperty)
+					.intValue();
+				if (state.getBlock() instanceof SweetBerryBushBlock && age <= 1 && replant)
+					continue;
+				if (age == 0 && replant || !harvestPartial && (ageProperty.getPossibleValues()
+					.size() - 1 != age))
 					continue;
 				return true;
 			}
@@ -125,19 +150,20 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)
 			return true;
+		if (state.getBlock()
+			.is(BlockTags.LEAVES))
+			return true;
 
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
-			if (state.getBlock() instanceof KelpBlock)
-				return true;
-			if (state.getBlock() instanceof KelpTopBlock)
+			if (state.getBlock() instanceof AbstractPlantBlock)
 				return true;
 
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
-					.equals(BlockStateProperties.AGE_0_1.getName()))
+					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
 				return false;
 			}
@@ -150,34 +176,46 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	private BlockState cutCrop(World world, BlockPos pos, BlockState state) {
-		if (state.getBlock() instanceof CropsBlock) {
-			CropsBlock crop = (CropsBlock) state.getBlock();
-			return crop.withAge(0);
-		}
-		if (state.getBlock() == Blocks.SUGAR_CANE || state.getBlock() == Blocks.KELP) {
+		if (!AllConfigs.SERVER.kinetics.harvesterReplants.get()) {
 			if (state.getFluidState()
 				.isEmpty())
-				return Blocks.AIR.getDefaultState();
+				return Blocks.AIR.defaultBlockState();
 			return state.getFluidState()
-				.getBlockState();
+				.createLegacyBlock();
+		}
+
+		Block block = state.getBlock();
+		if (block instanceof CropsBlock) {
+			CropsBlock crop = (CropsBlock) block;
+			return crop.getStateForAge(0);
+		}
+		if (block == Blocks.SWEET_BERRY_BUSH) {
+			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));
+		}
+		if (block == Blocks.SUGAR_CANE || block instanceof AbstractPlantBlock) {
+			if (state.getFluidState()
+				.isEmpty())
+				return Blocks.AIR.defaultBlockState();
+			return state.getFluidState()
+				.createLegacyBlock();
 		}
 		if (state.getCollisionShape(world, pos)
-			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
+			.isEmpty() || block instanceof CocoaBlock) {
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
-					.equals(BlockStateProperties.AGE_0_1.getName()))
+					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
-				return state.with((IntegerProperty) property, Integer.valueOf(0));
+				return state.setValue((IntegerProperty) property, Integer.valueOf(0));
 			}
 		}
 
 		if (state.getFluidState()
 			.isEmpty())
-			return Blocks.AIR.getDefaultState();
+			return Blocks.AIR.defaultBlockState();
 		return state.getFluidState()
-			.getBlockState();
+			.createLegacyBlock();
 	}
 
 }

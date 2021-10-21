@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -13,6 +14,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -58,6 +60,9 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	@Override
+	public boolean isSafeNBT() { return true; }
+
+	@Override
 	public void write(CompoundNBT nbt, boolean clientPacket) {
 		nbt.put("Filter", getFilter().serializeNBT());
 		nbt.putInt("FilterAmount", count);
@@ -71,7 +76,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void read(CompoundNBT nbt, boolean clientPacket) {
-		filter = ItemStack.read(nbt.getCompound("Filter"));
+		filter = ItemStack.of(nbt.getCompound("Filter"));
 		count = nbt.getInt("FilterAmount");
 		if (nbt.contains("ForceScrollable")) {
 			scrollableValue = count;
@@ -84,7 +89,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	public void tick() {
 		super.tick();
 
-		if (!getWorld().isRemote)
+		if (!getWorld().isClientSide)
 			return;
 		if (ticksUntilScrollPacket == -1)
 			return;
@@ -150,7 +155,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 			: (filter.getItem() instanceof FilterItem) ? 0 : Math.min(stack.getCount(), stack.getMaxStackSize());
 		forceClientState = true;
 
-		tileEntity.markDirty();
+		tileEntity.setChanged();
 		tileEntity.sendData();
 	}
 
@@ -159,10 +164,19 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 		if (filter.getItem() instanceof FilterItem) {
 			Vector3d pos = VecHelper.getCenterOf(getPos());
 			World world = getWorld();
-			world.addEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
+			world.addFreshEntity(new ItemEntity(world, pos.x, pos.y, pos.z, filter.copy()));
 		}
 
 		super.destroy();
+	}
+
+	@Override
+	public ItemRequirement getRequiredItems() {
+		Item filterItem = filter.getItem();
+		if (filterItem instanceof FilterItem)
+			return new ItemRequirement(ItemRequirement.ItemUseType.CONSUME, filterItem);
+
+		return ItemRequirement.NONE;
 	}
 
 	public ItemStack getFilter(Direction side) {
@@ -178,11 +192,11 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 	}
 
 	public boolean test(ItemStack stack) {
-		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
+		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getLevel(), stack, filter);
 	}
 
 	public boolean test(FluidStack stack) {
-		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getWorld(), stack, filter);
+		return !isActive() || filter.isEmpty() || FilterItem.test(tileEntity.getLevel(), stack, filter);
 	}
 
 	@Override
@@ -192,7 +206,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	public boolean testHit(Vector3d hit) {
 		BlockState state = tileEntity.getBlockState();
-		Vector3d localHit = hit.subtract(Vector3d.of(tileEntity.getPos()));
+		Vector3d localHit = hit.subtract(Vector3d.atLowerCornerOf(tileEntity.getBlockPos()));
 		return slotPositioning.testHit(state, localHit);
 	}
 

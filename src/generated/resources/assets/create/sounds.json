@@ -49,6 +49,33 @@
     ],
     "subtitle": "create.subtitle.contraption_disassemble"
   },
+  "controller_click": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.add_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_click"
+  },
+  "controller_put": {
+    "sounds": [
+      {
+        "name": "minecraft:item.book.put",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_put"
+  },
+  "controller_take": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.remove_item",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.controller_take"
+  },
   "copper_armor_equip": {
     "sounds": [
       {
@@ -97,6 +124,31 @@
     "sounds": [
       {
         "name": "minecraft:block.wooden_button.click_off",
+        "type": "event"
+      }
+    ]
+  },
+  "crushing_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.netherrack.hit",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.crushing_1"
+  },
+  "crushing_2": {
+    "sounds": [
+      {
+        "name": "minecraft:block.gravel.place",
+        "type": "event"
+      }
+    ]
+  },
+  "crushing_3": {
+    "sounds": [
+      {
+        "name": "minecraft:block.netherite_block.break",
         "type": "event"
       }
     ]
@@ -154,6 +206,24 @@
       }
     ]
   },
+  "fwoomp": {
+    "sounds": [
+      "create:fwoomp"
+    ],
+    "subtitle": "create.subtitle.fwoomp"
+  },
+  "haunted_bell_convert": {
+    "sounds": [
+      "create:haunted_bell_convert"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_convert"
+  },
+  "haunted_bell_use": {
+    "sounds": [
+      "create:haunted_bell_use"
+    ],
+    "subtitle": "create.subtitle.haunted_bell_use"
+  },
   "mechanical_press_activation": {
     "sounds": [
       {
@@ -204,6 +274,50 @@
         "type": "event"
       }
     ]
+  },
+  "peculiar_bell_use": {
+    "sounds": [
+      {
+        "name": "minecraft:block.bell.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.peculiar_bell_use"
+  },
+  "potato_hit": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.item_frame.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.potato_hit"
+  },
+  "potato_hit_compounded_1": {
+    "sounds": [
+      {
+        "name": "minecraft:block.weeping_vines.break",
+        "type": "event"
+      }
+    ]
+  },
+  "saw_activate_stone": {
+    "sounds": [
+      {
+        "name": "minecraft:ui.stonecutter.take_result",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.saw_activate_stone"
+  },
+  "saw_activate_wood": {
+    "sounds": [
+      {
+        "name": "minecraft:entity.boat.paddle_land",
+        "type": "event"
+      }
+    ],
+    "subtitle": "create.subtitle.saw_activate_wood"
   },
   "schematicannon_finish": {
     "sounds": [

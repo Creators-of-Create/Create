@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Random;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -36,7 +34,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 
 	public PumpBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
-		setDefaultState(super.getDefaultState().with(BlockStateProperties.WATERLOGGED, false));
+		registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
 	}
 
 	@Override
@@ -51,95 +49,68 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 
 	@Override
 	public BlockState getRotatedBlockState(BlockState originalState, Direction targetedFace) {
-		return originalState.with(FACING, originalState.get(FACING)
+		return originalState.setValue(FACING, originalState.getValue(FACING)
 			.getOpposite());
 	}
 
 	@Override
 	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
-		BlockState state = super.updateAfterWrenched(newState, context);
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
-		if (world.isRemote)
-			return state;
-		TileEntity tileEntity = world.getTileEntity(pos);
-		if (!(tileEntity instanceof PumpTileEntity))
-			return state;
-		PumpTileEntity pump = (PumpTileEntity) tileEntity;
-		pump.sidesToUpdate.forEach(MutableBoolean::setTrue);
-		pump.reversed = !pump.reversed;
-		return state;
+		return super.updateAfterWrenched(newState, context);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.get(FACING)
+		return state.getValue(FACING)
 			.getAxis();
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
 		ISelectionContext p_220053_4_) {
-		return AllShapes.PUMP.get(state.get(FACING));
+		return AllShapes.PUMP.get(state.getValue(FACING));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.func_218806_a(world, pos);
+		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
 		if (!isOpenAt(state, d))
 			return;
-		world.getPendingBlockTicks()
+		world.getBlockTicks()
 			.scheduleTick(pos, this, 1, TickPriority.HIGH);
-//		if (world.isRemote)
-//			return;
-//		if (otherBlock instanceof FluidPipeBlock)
-//			return;
-//		TileEntity tileEntity = world.getTileEntity(pos);
-//		if (!(tileEntity instanceof PumpTileEntity))
-//			return;
-//		PumpTileEntity pump = (PumpTileEntity) tileEntity;
-//		Direction facing = state.get(FACING);
-//		for (boolean front : Iterate.trueAndFalse) {
-//			Direction side = front ? facing : facing.getOpposite();
-//			if (!pos.offset(side)
-//				.equals(neighborPos))
-//				continue;
-//			pump.updatePipesOnSide(side);
-//		}
 	}
 
 	@Override
 	public FluidState getFluidState(BlockState state) {
-		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false)
-			: Fluids.EMPTY.getDefaultState();
+		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false)
+			: Fluids.EMPTY.defaultFluidState();
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(BlockStateProperties.WATERLOGGED);
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 	}
 
 	@Override
-	public BlockState updatePostPlacement(BlockState state, Direction direction, BlockState neighbourState,
-		IWorld world, BlockPos pos, BlockPos neighbourPos) {
-		if (state.get(BlockStateProperties.WATERLOGGED)) {
-			world.getPendingFluidTicks()
-				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, IWorld world,
+		BlockPos pos, BlockPos neighbourPos) {
+		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
+			world.getLiquidTicks()
+				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		}
 		return state;
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		FluidState FluidState = context.getWorld()
-			.getFluidState(context.getPos());
-		return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED,
-			Boolean.valueOf(FluidState.getFluid() == Fluids.WATER));
+		FluidState FluidState = context.getLevel()
+			.getFluidState(context.getClickedPos());
+		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
+			Boolean.valueOf(FluidState.getType() == Fluids.WATER));
 	}
 
 	public static boolean isPump(BlockState state) {
@@ -147,36 +118,46 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (world.isRemote)
+	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, world, pos, oldState, isMoving);
+		if (world.isClientSide)
 			return;
 		if (state != oldState)
-			world.getPendingBlockTicks()
+			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		
+		if (isPump(state) && isPump(oldState) && state.getValue(FACING) == oldState.getValue(FACING)
+			.getOpposite()) {
+			TileEntity tileEntity = world.getBlockEntity(pos);
+			if (!(tileEntity instanceof PumpTileEntity))
+				return;
+			PumpTileEntity pump = (PumpTileEntity) tileEntity;
+			pump.pressureUpdate = true;
+		}
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction d) {
-		return d.getAxis() == state.get(FACING)
+		return d.getAxis() == state.getValue(FACING)
 			.getAxis();
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
-		if (blockTypeChanged && !world.isRemote)
+		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
-			world.removeTileEntity(pos);
+			world.removeBlockEntity(pos);
 	}
-	
+
 	@Override
-	public boolean allowsMovement(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
-	
+
 }

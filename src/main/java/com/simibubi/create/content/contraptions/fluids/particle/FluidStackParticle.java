@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.fluids.particle;
 
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.IParticleRenderType;
@@ -15,8 +15,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidStackParticle extends SpriteTexturedParticle {
-	private final float field_217587_G;
-	private final float field_217588_H;
+	private final float uo;
+	private final float vo;
 	private FluidStack fluid;
 
 	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientWorld world, FluidStack fluid, double x,
@@ -31,31 +31,31 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		super(world, x, y, z, vx, vy, vz);
 		this.fluid = fluid;
 		this.setSprite(Minecraft.getInstance()
-			.getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE)
+			.getTextureAtlas(PlayerContainer.BLOCK_ATLAS)
 			.apply(fluid.getFluid()
 				.getAttributes()
 				.getStillTexture()));
 
-		this.particleGravity = 1.0F;
-		this.particleRed = 0.8F;
-		this.particleGreen = 0.8F;
-		this.particleBlue = 0.8F;
+		this.gravity = 1.0F;
+		this.rCol = 0.8F;
+		this.gCol = 0.8F;
+		this.bCol = 0.8F;
 		this.multiplyColor(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
-		
-		this.motionX = vx;
-		this.motionY = vy;
-		this.motionZ = vz;
 
-		this.particleScale /= 2.0F;
-		this.field_217587_G = this.rand.nextFloat() * 3.0F;
-		this.field_217588_H = this.rand.nextFloat() * 3.0F;
+		this.xd = vx;
+		this.yd = vy;
+		this.zd = vz;
+
+		this.quadSize /= 2.0F;
+		this.uo = this.random.nextFloat() * 3.0F;
+		this.vo = this.random.nextFloat() * 3.0F;
 	}
 
 	@Override
-	protected int getBrightnessForRender(float p_189214_1_) {
-		int brightnessForRender = super.getBrightnessForRender(p_189214_1_);
+	protected int getLightColor(float p_189214_1_) {
+		int brightnessForRender = super.getLightColor(p_189214_1_);
 		int skyLight = brightnessForRender >> 20;
 		int blockLight = (brightnessForRender >> 4) & 0xf;
 		blockLight = Math.max(blockLight, fluid.getFluid()
@@ -65,25 +65,25 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 	}
 
 	protected void multiplyColor(int color) {
-		this.particleRed *= (float) (color >> 16 & 255) / 255.0F;
-		this.particleGreen *= (float) (color >> 8 & 255) / 255.0F;
-		this.particleBlue *= (float) (color & 255) / 255.0F;
+		this.rCol *= (float) (color >> 16 & 255) / 255.0F;
+		this.gCol *= (float) (color >> 8 & 255) / 255.0F;
+		this.bCol *= (float) (color & 255) / 255.0F;
 	}
 
-	protected float getMinU() {
-		return this.sprite.getInterpolatedU((double) ((this.field_217587_G + 1.0F) / 4.0F * 16.0F));
+	protected float getU0() {
+		return this.sprite.getU((double) ((this.uo + 1.0F) / 4.0F * 16.0F));
 	}
 
-	protected float getMaxU() {
-		return this.sprite.getInterpolatedU((double) (this.field_217587_G / 4.0F * 16.0F));
+	protected float getU1() {
+		return this.sprite.getU((double) (this.uo / 4.0F * 16.0F));
 	}
 
-	protected float getMinV() {
-		return this.sprite.getInterpolatedV((double) (this.field_217588_H / 4.0F * 16.0F));
+	protected float getV0() {
+		return this.sprite.getV((double) (this.vo / 4.0F * 16.0F));
 	}
 
-	protected float getMaxV() {
-		return this.sprite.getInterpolatedV((double) ((this.field_217588_H + 1.0F) / 4.0F * 16.0F));
+	protected float getV1() {
+		return this.sprite.getV((double) ((this.vo + 1.0F) / 4.0F * 16.0F));
 	}
 
 	@Override
@@ -92,18 +92,18 @@ public class FluidStackParticle extends SpriteTexturedParticle {
 		if (!canEvaporate())
 			return;
 		if (onGround)
-			setExpired();
-		if (!isExpired)
+			remove();
+		if (!removed)
 			return;
-		if (!onGround && world.rand.nextFloat() < 1 / 8f)
+		if (!onGround && level.random.nextFloat() < 1 / 8f)
 			return;
 
-		Vector3d rgb = ColorHelper.getRGB(fluid.getFluid()
+		Vector3d rgb = Color.vectorFromRGB(fluid.getFluid()
 			.getAttributes()
 			.getColor(fluid));
-		world.addParticle(ParticleTypes.ENTITY_EFFECT, posX, posY, posZ, rgb.x, rgb.y, rgb.z);
+		level.addParticle(ParticleTypes.ENTITY_EFFECT, x, y, z, rgb.x, rgb.y, rgb.z);
 	}
-	
+
 	protected boolean canEvaporate() {
 		return fluid.getFluid() instanceof PotionFluid;
 	}

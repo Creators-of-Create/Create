@@ -1,15 +1,14 @@
 package com.simibubi.create.content.schematics.block;
 
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
-import com.simibubi.create.foundation.render.backend.instancing.TileEntityInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.util.Direction;
 
@@ -18,10 +17,10 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
     private final ModelData connector;
     private final ModelData pipe;
 
-    public SchematicannonInstance(InstancedTileRenderer<?> modelManager, SchematicannonTileEntity tile) {
+    public SchematicannonInstance(MaterialManager<?> modelManager, SchematicannonTileEntity tile) {
         super(modelManager, tile);
 
-        RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+        InstanceMaterial<ModelData> mat = getTransformMaterial();
 
         connector = mat.getModel(AllBlockPartials.SCHEMATICANNON_CONNECTOR, blockState).createInstance();
         pipe = mat.getModel(AllBlockPartials.SCHEMATICANNON_PIPE, blockState).createInstance();
@@ -41,16 +40,16 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
         double recoil = SchematicannonRenderer.getRecoil(tile, partialTicks);
 
         MatrixStack ms = new MatrixStack();
-        MatrixStacker msr = MatrixStacker.of(ms);
+        MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(getInstancePosition());
 
-        ms.push();
+        ms.pushPose();
         msr.centre();
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
         msr.unCentre();
         connector.setTransform(ms);
-        ms.pop();
+        ms.popPose();
 
         msr.translate(.5f, 15 / 16f, .5f);
         msr.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));

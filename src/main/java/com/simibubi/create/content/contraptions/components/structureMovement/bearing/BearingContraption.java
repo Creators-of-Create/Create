@@ -34,7 +34,7 @@ public class BearingContraption extends Contraption {
 
 	@Override
 	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
-		BlockPos offset = pos.offset(facing);
+		BlockPos offset = pos.relative(facing);
 		if (!searchMovedStructure(world, offset, null))
 			return false;
 		startMoving(world);
@@ -53,7 +53,7 @@ public class BearingContraption extends Contraption {
 
 	@Override
 	protected boolean isAnchoringBlockAt(BlockPos pos) {
-		return pos.equals(anchor.offset(facing.getOpposite()));
+		return pos.equals(anchor.relative(facing.getOpposite()));
 	}
 
 	@Override
@@ -68,14 +68,14 @@ public class BearingContraption extends Contraption {
 	public CompoundNBT writeNBT(boolean spawnPacket) {
 		CompoundNBT tag = super.writeNBT(spawnPacket);
 		tag.putInt("Sails", sailBlocks);
-		tag.putInt("Facing", facing.getIndex());
+		tag.putInt("Facing", facing.get3DDataValue());
 		return tag;
 	}
 
 	@Override
 	public void readNBT(World world, CompoundNBT tag, boolean spawnData) {
 		sailBlocks = tag.getInt("Sails");
-		facing = Direction.byIndex(tag.getInt("Facing"));
+		facing = Direction.from3DDataValue(tag.getInt("Facing"));
 		super.readNBT(world, tag, spawnData);
 	}
 

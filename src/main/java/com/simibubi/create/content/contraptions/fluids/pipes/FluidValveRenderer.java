@@ -1,14 +1,14 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -28,12 +28,12 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
 		int light, int overlay) {
 
-		if (FastRenderDispatcher.available(te.getWorld())) return;
+		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		BlockState blockState = te.getBlockState();
 		SuperByteBuffer pointer = PartialBufferer.get(AllBlockPartials.FLUID_VALVE_POINTER, blockState);
-		Direction facing = blockState.get(FluidValveBlock.FACING);
+		Direction facing = blockState.getValue(FluidValveBlock.FACING);
 
 		if (!(te instanceof FluidValveTileEntity))
 			return;
@@ -46,7 +46,7 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 		if (pipeAxis.isHorizontal() && shaftAxis == Axis.Z || pipeAxis.isVertical())
 			pointerRotationOffset = 90;
 
-		MatrixStacker.of(ms)
+		MatrixTransformStack.of(ms)
 			.centre()
 			.rotateY(AngleHelper.horizontalAngle(facing))
 			.rotateX(facing == Direction.UP ? 0 : facing == Direction.DOWN ? 180 : 90)
@@ -54,7 +54,7 @@ public class FluidValveRenderer extends KineticTileEntityRenderer {
 			.unCentre();
 
 		pointer.light(light)
-			.renderInto(ms, buffer.getBuffer(RenderType.getSolid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 
 	@Override

@@ -9,14 +9,14 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
 import com.simibubi.create.content.logistics.packet.TunnelFlapPacket;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -44,7 +44,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 
 	public Map<Direction, InterpolatedChasingValue> flaps;
 	public Set<Direction> sides;
-	
+
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
 	protected List<Pair<Direction, Boolean>> flapsToSend;
 
@@ -56,8 +56,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		cap.invalidate();
 	}
 
@@ -65,14 +65,14 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	public void write(CompoundNBT compound, boolean clientPacket) {
 		ListNBT flapsNBT = new ListNBT();
 		for (Direction direction : flaps.keySet())
-			flapsNBT.add(IntNBT.of(direction.getIndex()));
+			flapsNBT.add(IntNBT.valueOf(direction.get3DDataValue()));
 		compound.put("Flaps", flapsNBT);
-		
+
 		ListNBT sidesNBT = new ListNBT();
 		for (Direction direction : sides)
-			sidesNBT.add(IntNBT.of(direction.getIndex()));
+			sidesNBT.add(IntNBT.valueOf(direction.get3DDataValue()));
 		compound.put("Sides", sidesNBT);
-		
+
 		super.write(compound, clientPacket);
 	}
 
@@ -82,13 +82,13 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		ListNBT flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
 		for (INBT inbt : flapsNBT)
 			if (inbt instanceof IntNBT)
-				newFlaps.add(Direction.byIndex(((IntNBT) inbt).getInt()));
-		
+				newFlaps.add(Direction.from3DDataValue(((IntNBT) inbt).getAsInt()));
+
 		sides.clear();
 		ListNBT sidesNBT = compound.getList("Sides", NBT.TAG_INT);
 		for (INBT inbt : sidesNBT)
 			if (inbt instanceof IntNBT)
-				sides.add(Direction.byIndex(((IntNBT) inbt).getInt()));
+				sides.add(Direction.from3DDataValue(((IntNBT) inbt).getAsInt()));
 
 		for (Direction d : Iterate.directions)
 			if (!newFlaps.contains(d))
@@ -97,13 +97,13 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 				flaps.put(d, new InterpolatedChasingValue().start(.25f)
 					.target(0)
 					.withSpeed(.05f));
-		
+
 		// Backwards compat
 		if (!compound.contains("Sides") && compound.contains("Flaps"))
 			sides.addAll(flaps.keySet());
 		super.fromTag(state, compound, clientPacket);
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FastRenderDispatcher.enqueueUpdate(this));
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public void updateTunnelConnections() {
@@ -111,10 +111,10 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		sides.clear();
 		BlockState tunnelState = getBlockState();
 		for (Direction direction : Iterate.horizontalDirections) {
-			if (direction.getAxis() != tunnelState.get(BlockStateProperties.HORIZONTAL_AXIS)) {
+			if (direction.getAxis() != tunnelState.getValue(BlockStateProperties.HORIZONTAL_AXIS)) {
 				boolean positive =
 					direction.getAxisDirection() == AxisDirection.POSITIVE ^ direction.getAxis() == Axis.Z;
-				Shape shape = tunnelState.get(BeltTunnelBlock.SHAPE);
+				Shape shape = tunnelState.getValue(BeltTunnelBlock.SHAPE);
 				if (BeltTunnelBlock.isStraight(tunnelState))
 					continue;
 				if (positive && shape == Shape.T_LEFT)
@@ -122,16 +122,16 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 				if (!positive && shape == Shape.T_RIGHT)
 					continue;
 			}
-			
+
 			sides.add(direction);
-			
+
 			// Flap might be occluded
-			BlockState nextState = world.getBlockState(pos.offset(direction));
+			BlockState nextState = level.getBlockState(worldPosition.relative(direction));
 			if (nextState.getBlock() instanceof BeltTunnelBlock)
 				continue;
 			if (nextState.getBlock() instanceof BeltFunnelBlock)
-				if (nextState.get(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
-					&& nextState.get(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
+				if (nextState.getValue(BeltFunnelBlock.SHAPE) == BeltFunnelBlock.Shape.EXTENDED
+					&& nextState.getValue(BeltFunnelBlock.HORIZONTAL_FACING) == direction.getOpposite())
 					continue;
 
 			flaps.put(direction, new InterpolatedChasingValue().start(.25f)
@@ -142,7 +142,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	}
 
 	public void flap(Direction side, boolean inward) {
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			if (flaps.containsKey(side))
 				flaps.get(side)
 					.set(inward ^ side.getAxis() == Axis.Z ? -1 : 1);
@@ -161,7 +161,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	@Override
 	public void tick() {
 		super.tick();
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			if (!flapsToSend.isEmpty())
 				sendFlaps();
 			return;
@@ -176,10 +176,10 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
-	
+
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
@@ -189,8 +189,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 			return super.getCapability(capability, side);
 
 		if (!this.cap.isPresent()) {
-			if (AllBlocks.BELT.has(world.getBlockState(pos.down()))) {
-				TileEntity teBelow = world.getTileEntity(pos.down());
+			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
+				TileEntity teBelow = level.getBlockEntity(worldPosition.below());
 				if (teBelow != null) {
 					T capBelow = teBelow.getCapability(capability, Direction.UP)
 						.orElse(null);

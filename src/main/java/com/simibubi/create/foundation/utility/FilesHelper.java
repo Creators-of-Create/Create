@@ -23,7 +23,7 @@ public class FilesHelper {
 		try {
 			Files.createDirectories(Paths.get(name));
 		} catch (IOException e) {
-			Create.logger.warn("Could not create Folder: {}", name);
+			Create.LOGGER.warn("Could not create Folder: {}", name);
 		}
 	}
 

@@ -17,21 +17,33 @@ public class MixingRecipeGen extends ProcessingRecipeGen {
 
 	GeneratedRecipe
 
-		TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
-			.output(Fluids.LAVA, 50)
-			.requiresHeat(HeatCondition.SUPERHEATED)),
+	TEMP_LAVA = create("lava_from_cobble", b -> b.require(Tags.Items.COBBLESTONE)
+		.output(Fluids.LAVA, 50)
+		.requiresHeat(HeatCondition.SUPERHEATED)),
 
 		TEA = create("tea", b -> b.require(Fluids.WATER, 250)
-			.require(AllTags.forgeFluidTag("milk"), 250)
+			.require(Tags.Fluids.MILK, 250)
 			.require(ItemTags.LEAVES)
 			.output(AllFluids.TEA.get(), 500)
 			.requiresHeat(HeatCondition.HEATED)),
 
-		CHOCOLATE = create("chocolate", b -> b.require(AllTags.forgeFluidTag("milk"), 250)
+		CHOCOLATE = create("chocolate", b -> b.require(Tags.Fluids.MILK, 250)
 			.require(Items.SUGAR)
 			.require(Items.COCOA_BEANS)
 			.output(AllFluids.CHOCOLATE.get(), 250)
 			.requiresHeat(HeatCondition.HEATED)),
+
+		CHOCOLATE_MELTING = create("chocolate_melting", b -> b.require(AllItems.BAR_OF_CHOCOLATE.get())
+			.output(AllFluids.CHOCOLATE.get(), 250)
+			.requiresHeat(HeatCondition.HEATED)),
+
+		HONEY = create("honey", b -> b.require(Items.HONEY_BLOCK)
+			.output(AllFluids.HONEY.get(), 1000)
+			.requiresHeat(HeatCondition.HEATED)),
+
+		DOUGH = create("dough_by_mixing", b -> b.require(AllItems.WHEAT_FLOUR.get())
+			.require(Fluids.WATER, 1000)
+			.output(AllItems.DOUGH.get(), 1)),
 
 		BRASS_INGOT = create("brass_ingot", b -> b.require(I.copper())
 			.require(I.zinc())

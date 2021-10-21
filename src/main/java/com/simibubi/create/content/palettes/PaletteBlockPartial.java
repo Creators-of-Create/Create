@@ -34,8 +34,8 @@ public abstract class PaletteBlockPartial<B extends Block> {
 	public static final PaletteBlockPartial<SlabBlock> UNIQUE_SLAB = new Slab(true);
 	public static final PaletteBlockPartial<WallBlock> WALL = new Wall();
 
-	public static final PaletteBlockPartial<?>[] AllPartials = { STAIR, SLAB, WALL };
-	public static final PaletteBlockPartial<?>[] ForPolished = { STAIR, UNIQUE_SLAB, WALL };
+	public static final PaletteBlockPartial<?>[] ALL_PARTIALS = { STAIR, SLAB, WALL };
+	public static final PaletteBlockPartial<?>[] FOR_POLISHED = { STAIR, UNIQUE_SLAB, WALL };
 
 	private String name;
 
@@ -43,7 +43,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		this.name = name;
 	}
 
-	public @NonnullType BlockBuilder<B, CreateRegistrate> create(String variantName, PaletteBlockPatterns pattern,
+	public @NonnullType BlockBuilder<B, CreateRegistrate> create(String variantName, PaletteBlockPattern pattern,
 		Supplier<? extends Block> block) {
 		String patternName = pattern.createName(variantName);
 		String blockName = patternName + "_" + this.name;
@@ -57,19 +57,19 @@ public abstract class PaletteBlockPartial<B extends Block> {
 			.build();
 	}
 
-	protected ResourceLocation getMainTexture(String variantName, PaletteBlockPatterns pattern) {
+	protected ResourceLocation getMainTexture(String variantName, PaletteBlockPattern pattern) {
 		return pattern.toLocation(variantName, pattern.getTextureForPartials());
 	}
 
 	protected BlockBuilder<B, CreateRegistrate> transformBlock(BlockBuilder<B, CreateRegistrate> builder,
-		String variantName, PaletteBlockPatterns pattern) {
+		String variantName, PaletteBlockPattern pattern) {
 		getBlockTags().forEach(builder::tag);
 		return builder;
 	}
 
 	protected ItemBuilder<BlockItem, BlockBuilder<B, CreateRegistrate>> transformItem(
 		ItemBuilder<BlockItem, BlockBuilder<B, CreateRegistrate>> builder, String variantName,
-		PaletteBlockPatterns pattern) {
+		PaletteBlockPattern pattern) {
 		getItemTags().forEach(builder::tag);
 		return builder;
 	}
@@ -84,7 +84,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		RegistrateRecipeProvider p);
 
 	protected abstract void generateBlockState(DataGenContext<Block, B> ctx, RegistrateBlockstateProvider prov,
-		String variantName, PaletteBlockPatterns pattern, Supplier<? extends Block> block);
+		String variantName, PaletteBlockPattern pattern, Supplier<? extends Block> block);
 
 	private static class Stairs extends PaletteBlockPartial<StairsBlock> {
 
@@ -95,12 +95,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected StairsBlock createBlock(Supplier<? extends Block> block) {
 			return new StairsBlock(() -> block.get()
-				.getDefaultState(), Properties.from(block.get()));
+				.defaultBlockState(), Properties.copy(block.get()));
 		}
 
 		@Override
 		protected void generateBlockState(DataGenContext<Block, StairsBlock> ctx, RegistrateBlockstateProvider prov,
-			String variantName, PaletteBlockPatterns pattern, Supplier<? extends Block> block) {
+			String variantName, PaletteBlockPattern pattern, Supplier<? extends Block> block) {
 			prov.stairsBlock(ctx.get(), getMainTexture(variantName, pattern));
 		}
 
@@ -135,12 +135,12 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected SlabBlock createBlock(Supplier<? extends Block> block) {
-			return new SlabBlock(Properties.from(block.get()));
+			return new SlabBlock(Properties.copy(block.get()));
 		}
 
 		@Override
 		protected void generateBlockState(DataGenContext<Block, SlabBlock> ctx, RegistrateBlockstateProvider prov,
-			String variantName, PaletteBlockPatterns pattern, Supplier<? extends Block> block) {
+			String variantName, PaletteBlockPattern pattern, Supplier<? extends Block> block) {
 			String name = ctx.getName();
 			ResourceLocation mainTexture = getMainTexture(variantName, pattern);
 			ResourceLocation sideTexture =
@@ -185,8 +185,8 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		@Override
 		protected BlockBuilder<SlabBlock, CreateRegistrate> transformBlock(
 				BlockBuilder<SlabBlock, CreateRegistrate> builder,
-				String variantName, PaletteBlockPatterns pattern) {
-			builder.loot((lt, block) -> lt.registerLootTable(block, RegistrateBlockLootTables.droppingSlab(block)));
+				String variantName, PaletteBlockPattern pattern) {
+			builder.loot((lt, block) -> lt.add(block, RegistrateBlockLootTables.droppingSlab(block)));
 			return super.transformBlock(builder, variantName, pattern);
 		}
 
@@ -200,20 +200,20 @@ public abstract class PaletteBlockPartial<B extends Block> {
 
 		@Override
 		protected WallBlock createBlock(Supplier<? extends Block> block) {
-			return new WallBlock(Properties.from(block.get()));
+			return new WallBlock(Properties.copy(block.get()));
 		}
 
 		@Override
 		protected ItemBuilder<BlockItem, BlockBuilder<WallBlock, CreateRegistrate>> transformItem(
 			ItemBuilder<BlockItem, BlockBuilder<WallBlock, CreateRegistrate>> builder, String variantName,
-			PaletteBlockPatterns pattern) {
+			PaletteBlockPattern pattern) {
 			builder.model((c, p) -> p.wallInventory(c.getName(), getMainTexture(variantName, pattern)));
 			return super.transformItem(builder, variantName, pattern);
 		}
 
 		@Override
 		protected void generateBlockState(DataGenContext<Block, WallBlock> ctx, RegistrateBlockstateProvider prov,
-			String variantName, PaletteBlockPatterns pattern, Supplier<? extends Block> block) {
+			String variantName, PaletteBlockPattern pattern, Supplier<? extends Block> block) {
 			prov.wallBlock(ctx.get(), pattern.createName(variantName), getMainTexture(variantName, pattern));
 		}
 

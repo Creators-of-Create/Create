@@ -8,9 +8,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxHandler;
+import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
-import com.simibubi.create.content.schematics.ServerSchematicLoader;
+import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
 import com.simibubi.create.foundation.command.AllCommands;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.Iterate;
@@ -21,6 +23,7 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -39,10 +42,10 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -54,10 +57,8 @@ public class CommonEvents {
 	public static void onServerTick(ServerTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
-		if (Create.schematicReceiver == null)
-			Create.schematicReceiver = new ServerSchematicLoader();
-		Create.schematicReceiver.tick();
-		Create.lagger.tick();
+		Create.SCHEMATIC_RECEIVER.tick();
+		Create.LAGGER.tick();
 		ServerSpeedProvider.serverTick();
 	}
 
@@ -67,18 +68,25 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
+	public static void playerLoggedIn(PlayerLoggedInEvent event) {
+		PlayerEntity player = event.getPlayer();
+		ToolboxHandler.playerLogin(player);
+	}
+
+	@SubscribeEvent
 	public static void whenFluidsMeet(FluidPlaceBlockEvent event) {
 		BlockState blockState = event.getOriginalState();
 		FluidState fluidState = blockState.getFluidState();
 		BlockPos pos = event.getPos();
 		IWorld world = event.getWorld();
 
-		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getFluid()))
+		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getType()))
 			return;
 
 		for (Direction direction : Iterate.directions) {
-			FluidState metFluidState = fluidState.isSource() ? fluidState : world.getFluidState(pos.offset(direction));
-			if (!metFluidState.isTagged(FluidTags.WATER))
+			FluidState metFluidState =
+				fluidState.isSource() ? fluidState : world.getFluidState(pos.relative(direction));
+			if (!metFluidState.is(FluidTags.WATER))
 				continue;
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(metFluidState);
 			if (lavaInteraction == null)
@@ -96,15 +104,17 @@ public class CommonEvents {
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
+		LinkedControllerServerHandler.tick(world);
 	}
 
 	@SubscribeEvent
 	public static void onUpdateLivingEntity(LivingUpdateEvent event) {
 		LivingEntity entityLiving = event.getEntityLiving();
-		World world = entityLiving.world;
+		World world = entityLiving.level;
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);
+		ToolboxHandler.entityTick(entityLiving, world);
 	}
 
 	@SubscribeEvent
@@ -119,7 +129,7 @@ public class CommonEvents {
 		WrenchItem.wrenchInstaKillsMinecarts(event);
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent
 	public static void registerCommands(RegisterCommandsEvent event) {
 		AllCommands.register(event.getDispatcher());
 	}
@@ -129,25 +139,26 @@ public class CommonEvents {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotionMixingRecipeManager.LISTENER);
 		event.addListener(FluidTransferRecipes.LISTENER);
+		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 	}
 
 	@SubscribeEvent
 	public static void serverStopped(FMLServerStoppingEvent event) {
-		Create.schematicReceiver.shutdown();
+		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
 		IWorld world = event.getWorld();
-		Create.redstoneLinkNetworkHandler.onLoadWorld(world);
-		Create.torquePropagator.onLoadWorld(world);
+		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
+		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
 		IWorld world = event.getWorld();
-		Create.redstoneLinkNetworkHandler.onUnloadWorld(world);
-		Create.torquePropagator.onUnloadWorld(world);
+		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
+		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
 	}
 
@@ -162,7 +173,7 @@ public class CommonEvents {
 	}
 
 	public static void leftClickEmpty(ServerPlayerEntity player) {
-		ItemStack stack = player.getHeldItemMainhand();
+		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof ZapperItem) {
 			ZapperInteractionHandler.trySelect(stack, player);
 		}

@@ -3,20 +3,20 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 import java.util.ArrayList;
 
 import com.google.common.collect.Lists;
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.InstanceData;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import com.simibubi.create.foundation.render.backend.core.ModelData;
-import com.simibubi.create.foundation.render.backend.instancing.IDynamicInstance;
-import com.simibubi.create.foundation.render.backend.instancing.InstanceData;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedModel;
-import com.simibubi.create.foundation.render.backend.instancing.InstancedTileRenderer;
-import com.simibubi.create.foundation.render.backend.instancing.RenderMaterial;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
-import com.simibubi.create.foundation.utility.MatrixStacker;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -37,17 +37,17 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	private final ArmTileEntity arm;
 	private final Boolean ceiling;
 
-	private boolean firstTick = true;
+	private boolean firstRender = true;
 
 	private float baseAngle = Float.NaN;
 	private float lowerArmAngle = Float.NaN;
 	private float upperArmAngle = Float.NaN;
 	private float headAngle = Float.NaN;
 
-	public ArmInstance(InstancedTileRenderer<?> modelManager, ArmTileEntity tile) {
+	public ArmInstance(MaterialManager<?> modelManager, ArmTileEntity tile) {
 		super(modelManager, tile);
 
-		RenderMaterial<?, InstancedModel<ModelData>> mat = getTransformMaterial();
+		InstanceMaterial<ModelData> mat = getTransformMaterial();
 
 		base = mat.getModel(AllBlockPartials.ARM_BASE, blockState).createInstance();
 		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState).createInstance();
@@ -55,22 +55,23 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		head = mat.getModel(AllBlockPartials.ARM_HEAD, blockState).createInstance();
 		claw = mat.getModel(AllBlockPartials.ARM_CLAW_BASE, blockState).createInstance();
 
-		InstancedModel<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
+		Instancer<ModelData> clawHalfModel = mat.getModel(AllBlockPartials.ARM_CLAW_GRIP, blockState);
 		ModelData clawGrip1 = clawHalfModel.createInstance();
 		ModelData clawGrip2 = clawHalfModel.createInstance();
 
 		clawGrips = Lists.newArrayList(clawGrip1, clawGrip2);
 		models = Lists.newArrayList(base, lowerBody, upperBody, head, claw, clawGrip1, clawGrip2);
 		arm = tile;
-		ceiling = blockState.get(ArmBlock.CEILING);
+		ceiling = blockState.getValue(ArmBlock.CEILING);
 
 		animateArm(false);
 	}
 
 	@Override
 	public void beginFrame() {
-		if (arm.phase == ArmTileEntity.Phase.DANCING) {
+		if (arm.phase == ArmTileEntity.Phase.DANCING && tile.getSpeed() != 0) {
 			animateArm(true);
+			firstRender = true;
 			return;
 		}
 
@@ -81,50 +82,47 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		float upperArmAngleNow = this.arm.upperArmAngle.get(pt);
 		float headAngleNow = this.arm.headAngle.get(pt);
 
-		boolean settled = MathHelper.epsilonEquals(baseAngle, baseAngleNow)
-				&& MathHelper.epsilonEquals(lowerArmAngle, lowerArmAngleNow)
-				&& MathHelper.epsilonEquals(upperArmAngle, upperArmAngleNow)
-				&& MathHelper.epsilonEquals(headAngle, headAngleNow);
+		boolean settled = MathHelper.equal(baseAngle, baseAngleNow)
+				&& MathHelper.equal(lowerArmAngle, lowerArmAngleNow)
+				&& MathHelper.equal(upperArmAngle, upperArmAngleNow)
+				&& MathHelper.equal(headAngle, headAngleNow);
 
 		this.baseAngle = baseAngleNow;
 		this.lowerArmAngle = lowerArmAngleNow;
 		this.upperArmAngle = upperArmAngleNow;
 		this.headAngle = headAngleNow;
 
-		if (!settled || firstTick)
+		if (!settled || firstRender)
 			animateArm(false);
 
-		if (settled)
-			firstTick = false;
+		if (firstRender)
+			firstRender = false;
 	}
 
 	private void animateArm(boolean rave) {
-
-		int color;
 		float baseAngle;
 		float lowerArmAngle;
 		float upperArmAngle;
 		float headAngle;
+		int color;
 
 		if (rave) {
-			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getWorld()) + (tile.hashCode() % 64);
+			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (tile.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
-
-			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
+			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100).getRGB();
 		} else {
 			baseAngle = this.baseAngle;
 			lowerArmAngle = this.lowerArmAngle - 135;
 			upperArmAngle = this.upperArmAngle - 90;
 			headAngle = this.headAngle;
-
 			color = 0xFFFFFF;
 		}
 
 		MatrixStack msLocal = new MatrixStack();
-		MatrixStacker msr = MatrixStacker.of(msLocal);
+		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
 		msr.translate(getInstancePosition());
 		msr.centre();
 
@@ -153,15 +151,15 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 				.getItemRenderer();
 		boolean hasItem = !item.isEmpty();
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
-				&& itemRenderer.getItemModelWithOverrides(item, Minecraft.getInstance().world, null)
+				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null)
 				.isGui3d();
 
 		for (int index : Iterate.zeroAndOne) {
-			msLocal.push();
+			msLocal.pushPose();
 			int flip = index * 2 - 1;
 			ArmRenderer.transformClawHalf(msr, hasItem, isBlockItem, flip);
 			clawGrips.get(index).setTransform(msLocal);
-			msLocal.pop();
+			msLocal.popPose();
 		}
 	}
 
@@ -173,7 +171,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	}
 
 	@Override
-	protected InstancedModel<RotatingData> getModel() {
+	protected Instancer<RotatingData> getModel() {
 		return getRotatingMaterial().getModel(AllBlockPartials.ARM_COG, tile.getBlockState());
 	}
 
@@ -182,4 +180,5 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		super.remove();
 		models.forEach(InstanceData::delete);
 	}
+
 }

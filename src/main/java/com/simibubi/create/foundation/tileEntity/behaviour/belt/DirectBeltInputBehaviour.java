@@ -99,20 +99,20 @@ public class DirectBeltInputBehaviour extends TileEntityBehaviour {
 
 	@Nullable
 	public ItemStack tryExportingToBeltFunnel(ItemStack stack, @Nullable Direction side, boolean simulate) {
-		BlockPos funnelPos = tileEntity.getPos()
-			.up();
+		BlockPos funnelPos = tileEntity.getBlockPos()
+			.above();
 		World world = getWorld();
 		BlockState funnelState = world.getBlockState(funnelPos);
 		if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
 			return null;
-		if (funnelState.get(BeltFunnelBlock.SHAPE) != Shape.PULLING)
+		if (funnelState.getValue(BeltFunnelBlock.SHAPE) != Shape.PULLING)
 			return null;
 		if (side != null && FunnelBlock.getFunnelFacing(funnelState) != side)
 			return null;
-		TileEntity te = world.getTileEntity(funnelPos);
+		TileEntity te = world.getBlockEntity(funnelPos);
 		if (!(te instanceof FunnelTileEntity))
 			return null;
-		if (funnelState.get(BeltFunnelBlock.POWERED))
+		if (funnelState.getValue(BeltFunnelBlock.POWERED))
 			return stack;
 		ItemStack insert = FunnelBlock.tryInsert(world, funnelPos, stack, simulate);
 		if (insert.getCount() != stack.getCount() && !simulate)

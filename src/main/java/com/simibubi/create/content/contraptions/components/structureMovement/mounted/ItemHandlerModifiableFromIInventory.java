@@ -21,17 +21,17 @@ public class ItemHandlerModifiableFromIInventory implements IItemHandlerModifiab
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack) {
-		inventory.setInventorySlotContents(slot, stack);
+		inventory.setItem(slot, stack);
 	}
 
 	@Override
 	public int getSlots() {
-		return inventory.getSizeInventory();
+		return inventory.getContainerSize();
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return inventory.getStackInSlot(slot);
+		return inventory.getItem(slot);
 	}
 
 	@Override
@@ -119,12 +119,12 @@ public class ItemHandlerModifiableFromIInventory implements IItemHandlerModifiab
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return inventory.getInventoryStackLimit();
+		return inventory.getMaxStackSize();
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack) {
-		return inventory.isItemValidForSlot(slot, stack);
+		return inventory.canPlaceItem(slot, stack);
 	}
 
 	private void validateSlotIndex(int slot)

@@ -6,7 +6,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -50,15 +50,15 @@ public class EjectorTargetHandler {
 			return;
 		BlockPos pos = event.getPos();
 		World world = event.getWorld();
-		if (!world.isRemote)
+		if (!world.isClientSide)
 			return;
 		PlayerEntity player = event.getPlayer();
-		if (player == null || player.isSpectator() || !player.isSneaking())
+		if (player == null || player.isSpectator() || !player.isShiftKeyDown())
 			return;
 
 		String key = "weighted_ejector.target_set";
 		TextFormatting colour = TextFormatting.GOLD;
-		player.sendStatusMessage(Lang.translate(key).formatted(colour), true);
+		player.displayClientMessage(Lang.translate(key).withStyle(colour), true);
 		currentSelection = pos;
 		launcher = null;
 		event.setCanceled(true);
@@ -69,10 +69,10 @@ public class EjectorTargetHandler {
 	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
 		if (currentItem == null)
 			return;
-		if (!event.getWorld().isRemote)
+		if (!event.getWorld().isClientSide)
 			return;
 		if (!event.getPlayer()
-			.isSneaking())
+			.isShiftKeyDown())
 			return;
 		BlockPos pos = event.getPos();
 		if (pos.equals(currentSelection)) {
@@ -99,7 +99,7 @@ public class EjectorTargetHandler {
 
 		Direction validTargetDirection = getValidTargetDirection(pos);
 		if (validTargetDirection == null) {
-			player.sendStatusMessage(Lang.translate(key).formatted(colour), true);
+			player.displayClientMessage(Lang.translate(key).withStyle(colour), true);
 			currentItem = null;
 			currentSelection = null;
 			return;
@@ -108,9 +108,9 @@ public class EjectorTargetHandler {
 		key = "weighted_ejector.targeting";
 		colour = TextFormatting.GREEN;
 
-		player.sendStatusMessage(
+		player.displayClientMessage(
 			Lang.translate(key, currentSelection.getX(), currentSelection.getY(), currentSelection.getZ())
-				.formatted(colour),
+				.withStyle(colour),
 			true);
 
 		BlockPos diff = pos.subtract(currentSelection);
@@ -137,9 +137,9 @@ public class EjectorTargetHandler {
 			return null;
 
 		if (xDiff == 0)
-			return Direction.getFacingFromAxis(zDiff < 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE, Axis.Z);
+			return Direction.get(zDiff < 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE, Axis.Z);
 		if (zDiff == 0)
-			return Direction.getFacingFromAxis(xDiff < 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE, Axis.X);
+			return Direction.get(xDiff < 0 ? AxisDirection.NEGATIVE : AxisDirection.POSITIVE, Axis.X);
 
 		return null;
 	}
@@ -150,7 +150,7 @@ public class EjectorTargetHandler {
 		if (player == null)
 			return;
 
-		ItemStack heldItemMainhand = player.getHeldItemMainhand();
+		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (!AllBlocks.WEIGHTED_EJECTOR.isIn(heldItemMainhand)) {
 			currentItem = null;
 		} else {
@@ -167,23 +167,23 @@ public class EjectorTargetHandler {
 
 	protected static void drawArc() {
 		Minecraft mc = Minecraft.getInstance();
-		boolean wrench = AllItems.WRENCH.isIn(mc.player.getHeldItemMainhand());
+		boolean wrench = AllItems.WRENCH.isIn(mc.player.getMainHandItem());
 
 		if (currentSelection == null)
 			return;
 		if (currentItem == null && !wrench)
 			return;
 
-		RayTraceResult objectMouseOver = mc.objectMouseOver;
+		RayTraceResult objectMouseOver = mc.hitResult;
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return;
 		BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) objectMouseOver;
 		if (blockRayTraceResult.getType() == Type.MISS)
 			return;
 
-		BlockPos pos = blockRayTraceResult.getPos();
+		BlockPos pos = blockRayTraceResult.getBlockPos();
 		if (!wrench)
-			pos = pos.offset(blockRayTraceResult.getFace());
+			pos = pos.relative(blockRayTraceResult.getDirection());
 
 		int xDiff = currentSelection.getX() - pos.getX();
 		int yDiff = currentSelection.getY() - pos.getY();
@@ -191,12 +191,12 @@ public class EjectorTargetHandler {
 		int validX = Math.abs(zDiff) > Math.abs(xDiff) ? 0 : xDiff;
 		int validZ = Math.abs(zDiff) < Math.abs(xDiff) ? 0 : zDiff;
 
-		BlockPos validPos = currentSelection.add(validX, yDiff, validZ);
+		BlockPos validPos = currentSelection.offset(validX, yDiff, validZ);
 		Direction d = getValidTargetDirection(validPos);
 		if (d == null)
 			return;
-		if (launcher == null || lastHoveredBlockPos != pos.toLong()) {
-			lastHoveredBlockPos = pos.toLong();
+		if (launcher == null || lastHoveredBlockPos != pos.asLong()) {
+			lastHoveredBlockPos = pos.asLong();
 			launcher = new EntityLauncher(Math.abs(validX + validZ), yDiff);
 		}
 
@@ -205,19 +205,19 @@ public class EjectorTargetHandler {
 		double tickOffset = totalFlyingTicks / segments;
 		boolean valid = xDiff == validX && zDiff == validZ;
 		int intColor = valid ? 0x9ede73 : 0xff7171;
-		Vector3d color = ColorHelper.getRGB(intColor);
+		Vector3d color = Color.vectorFromRGB(intColor);
 		RedstoneParticleData data = new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1);
-		ClientWorld world = mc.world;
+		ClientWorld world = mc.level;
 
-		AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, 0, 1).offset(currentSelection.add(-validX, -yDiff, -validZ));
-		CreateClient.outliner.chaseAABB("valid", bb)
-			.colored(intColor)
-			.lineWidth(1 / 16f);
+		AxisAlignedBB bb = new AxisAlignedBB(0, 0, 0, 1, 0, 1).move(currentSelection.offset(-validX, -yDiff, -validZ));
+		CreateClient.OUTLINER.chaseAABB("valid", bb)
+				.colored(intColor)
+				.lineWidth(1 / 16f);
 
 		for (int i = 0; i < segments; i++) {
 			double ticks = ((AnimationTickHolder.getRenderTime() / 3) % tickOffset) + i * tickOffset;
 			Vector3d vec = launcher.getGlobalPos(ticks, d, pos)
-				.add(xDiff - validX, 0, zDiff - validZ);
+					.add(xDiff - validX, 0, zDiff - validZ);
 			world.addParticle(data, vec.x, vec.y, vec.z, 0, 0, 0);
 		}
 	}
@@ -225,25 +225,25 @@ public class EjectorTargetHandler {
 	private static void checkForWrench(ItemStack heldItem) {
 		if (!AllItems.WRENCH.isIn(heldItem))
 			return;
-		RayTraceResult objectMouseOver = Minecraft.getInstance().objectMouseOver;
+		RayTraceResult objectMouseOver = Minecraft.getInstance().hitResult;
 		if (!(objectMouseOver instanceof BlockRayTraceResult))
 			return;
 		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
-		BlockPos pos = result.getPos();
+		BlockPos pos = result.getBlockPos();
 
-		TileEntity te = Minecraft.getInstance().world.getTileEntity(pos);
+		TileEntity te = Minecraft.getInstance().level.getBlockEntity(pos);
 		if (!(te instanceof EjectorTileEntity)) {
 			lastHoveredBlockPos = -1;
 			currentSelection = null;
 			return;
 		}
 
-		if (lastHoveredBlockPos == -1 || lastHoveredBlockPos != pos.toLong()) {
+		if (lastHoveredBlockPos == -1 || lastHoveredBlockPos != pos.asLong()) {
 			EjectorTileEntity ejector = (EjectorTileEntity) te;
 			if (!ejector.getTargetPosition()
-				.equals(ejector.getPos()))
+				.equals(ejector.getBlockPos()))
 				currentSelection = ejector.getTargetPosition();
-			lastHoveredBlockPos = pos.toLong();
+			lastHoveredBlockPos = pos.asLong();
 			launcher = null;
 		}
 
@@ -252,17 +252,17 @@ public class EjectorTargetHandler {
 	}
 
 	private static void drawOutline(BlockPos selection) {
-		World world = Minecraft.getInstance().world;
+		World world = Minecraft.getInstance().level;
 		if (currentSelection == null)
 			return;
 
 		BlockPos pos = currentSelection;
 		BlockState state = world.getBlockState(pos);
 		VoxelShape shape = state.getShape(world, pos);
-		AxisAlignedBB boundingBox = shape.isEmpty() ? new AxisAlignedBB(BlockPos.ZERO) : shape.getBoundingBox();
-		CreateClient.outliner.showAABB("target", boundingBox.offset(pos))
-			.colored(0xffcb74)
-			.lineWidth(1 / 16f);
+		AxisAlignedBB boundingBox = shape.isEmpty() ? new AxisAlignedBB(BlockPos.ZERO) : shape.bounds();
+		CreateClient.OUTLINER.showAABB("target", boundingBox.move(pos))
+				.colored(0xffcb74)
+				.lineWidth(1 / 16f);
 	}
 
 }

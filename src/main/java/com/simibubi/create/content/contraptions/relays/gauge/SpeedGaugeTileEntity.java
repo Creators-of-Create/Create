@@ -6,7 +6,7 @@ import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.goggles.GogglesItem;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.tileentity.TileEntityType;
@@ -26,13 +26,13 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		float speed = Math.abs(getSpeed());
 
 		color = speed == 0 ? 0x333333
-			: ColorHelper.mixColors(SpeedLevel.of(speed)
+			: Color.mixColors(SpeedLevel.of(speed)
 				.getColor(), 0xffffff, .25f);
 		if (speed == 69)
-			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPEED_READ, world, pos, 6, GogglesItem::canSeeParticles);
+			AllTriggers.triggerForNearbyPlayers(AllTriggers.SPEED_READ, level, worldPosition, 6, GogglesItem::canSeeParticles);
 
 		dialTarget = getDialTarget(speed);
-		markDirty();
+		setChanged();
 	}
 
 	public static float getDialTarget(float speed) {
@@ -59,8 +59,8 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-		tooltip.add(componentSpacing.copy().append(Lang.translate("gui.speedometer.title").formatted(TextFormatting.GRAY)));
-		tooltip.add(componentSpacing.copy().append(SpeedLevel.getFormattedSpeedText(speed, isOverStressed())));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.speedometer.title").withStyle(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.plainCopy().append(SpeedLevel.getFormattedSpeedText(speed, isOverStressed())));
 
 		return true;
 	}

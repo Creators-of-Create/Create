@@ -1,0 +1,81 @@
+{
+  "credit": "Made with Blockbench",
+  "textures": {
+    "0": "create:entity/blueprint_large",
+    "particle": "create:entity/blueprint_large"
+  },
+  "elements": [
+    {
+      "from": [
+        -16,
+        0,
+        -16
+      ],
+      "to": [
+        32,
+        1,
+        32
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            12,
+            0.25
+          ],
+          "rotation": 180,
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            11.75,
+            0,
+            12,
+            12
+          ],
+          "rotation": 90,
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            11.75,
+            12,
+            12
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            0.25,
+            12
+          ],
+          "rotation": 270,
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            12,
+            12
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            12,
+            12
+          ],
+          "rotation": 270,
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

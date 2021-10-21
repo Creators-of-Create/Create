@@ -30,7 +30,7 @@ public class CylinderBrush extends ShapedBrush {
 		for (int i = 0; i <= MAX_RADIUS; i++) {
 			int radius = i;
 			List<BlockPos> positions =
-				BlockPos.getAllInBox(BlockPos.ZERO.add(-i - 1, 0, -i - 1), BlockPos.ZERO.add(i + 1, 0, i + 1))
+				BlockPos.betweenClosedStream(BlockPos.ZERO.offset(-i - 1, 0, -i - 1), BlockPos.ZERO.offset(i + 1, 0, i + 1))
 					.map(BlockPos::new)
 					.filter(p -> VecHelper.getCenterOf(p)
 						.distanceTo(VecHelper.getCenterOf(BlockPos.ZERO)) < radius + .42f)
@@ -40,7 +40,7 @@ public class CylinderBrush extends ShapedBrush {
 				for (int layer = 0; layer < h; layer++) {
 					int yOffset = layer - h / 2;
 					for (BlockPos p : positions)
-						stackedPositions.add(p.up(yOffset));
+						stackedPositions.add(p.above(yOffset));
 				}
 				cachedBrushes.put(Pair.of(i, h), stackedPositions);
 			}
@@ -58,7 +58,7 @@ public class CylinderBrush extends ShapedBrush {
 		int r = (param0 + 1 + offset);
 		int y = (param1 + (param1 == 0 ? 0 : yOffset)) / 2;
 
-		return BlockPos.ZERO.offset(face, (face.getAxis()
+		return BlockPos.ZERO.relative(face, (face.getAxis()
 			.isVertical() ? y : r) * (option == PlacementOptions.Attached ? 1 : -1));
 	}
 

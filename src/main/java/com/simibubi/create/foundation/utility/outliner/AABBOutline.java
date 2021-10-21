@@ -2,8 +2,8 @@ package com.simibubi.create.foundation.utility.outliner;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.foundation.renderState.RenderTypes;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.RenderTypes;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -27,10 +27,10 @@ public class AABBOutline extends Outline {
 	}
 
 	public void renderBB(MatrixStack ms, SuperRenderTypeBuffer buffer, AxisAlignedBB bb) {
-		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo()
-			.getProjectedView();
+		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
+			.getPosition();
 		boolean noCull = bb.contains(projectedView);
-		bb = bb.grow(noCull ? -1 / 128d : 1 / 128d);
+		bb = bb.inflate(noCull ? -1 / 128d : 1 / 128d);
 		noCull |= params.disableCull;
 
 		Vector3d xyz = new Vector3d(bb.minX, bb.minY, bb.minZ);

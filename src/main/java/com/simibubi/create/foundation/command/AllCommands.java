@@ -14,16 +14,15 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class AllCommands {
 
-	public static Predicate<CommandSource> sourceIsPlayer = (cs) -> cs.getEntity() instanceof PlayerEntity;
+	public static final Predicate<CommandSource> SOURCE_IS_PLAYER = cs -> cs.getEntity() instanceof PlayerEntity;
 
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 
 		LiteralCommandNode<CommandSource> util = buildUtilityCommands();
 
 		LiteralCommandNode<CommandSource> createRoot = dispatcher.register(Commands.literal("create")
-				.requires(cs -> cs.hasPermissionLevel(0))
+				.requires(cs -> cs.hasPermission(0))
 				// general purpose
-				.then(new ToggleExperimentalRenderingCommand().register())
 				.then(new ToggleDebugCommand().register())
 				.then(FabulousWarningCommand.register())
 				.then(OverlayConfigCommand.register())
@@ -33,6 +32,7 @@ public class AllCommands {
 				.then(ConfigCommand.register())
 				.then(PonderCommand.register())
 				.then(CloneCommand.register())
+				.then(GlueCommand.register())
 
 				// utility
 				.then(util)
@@ -88,4 +88,5 @@ public class AllCommands {
 		}
 		return builder.build();
 	}
+
 }

@@ -9,12 +9,11 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -23,79 +22,83 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class ZapperScreen extends AbstractSimiScreen {
-
-	protected ItemStack zapper;
-	protected boolean offhand;
-	protected float animationProgress;
-	protected AllGuiTextures background;
-	private IconButton confirmButton;
+public abstract class ZapperScreen extends AbstractSimiScreen {
 
 	protected final ITextComponent patternSection = Lang.translate("gui.terrainzapper.patternSection");
 
+	protected AllGuiTextures background;
+	protected ItemStack zapper;
+	protected Hand hand;
+
+	protected float animationProgress;
+
 	protected ITextComponent title;
-	protected Vector<IconButton> patternButtons;
+	protected Vector<IconButton> patternButtons = new Vector<>(6);
+	private IconButton confirmButton;
 	protected int brightColor;
 	protected int fontColor;
 
-	public ZapperScreen(AllGuiTextures background, ItemStack zapper, boolean offhand) {
-		super();
+	protected PlacementPatterns currentPattern;
+
+	public ZapperScreen(AllGuiTextures background, ItemStack zapper, Hand hand) {
 		this.background = background;
 		this.zapper = zapper;
-		this.offhand = offhand;
+		this.hand = hand;
 		title = StringTextComponent.EMPTY;
-		brightColor = 0xfefefe;
+		brightColor = 0xFEFEFE;
 		fontColor = AllGuiTextures.FONT_COLOR;
+
+		CompoundNBT nbt = zapper.getOrCreateTag();
+		currentPattern = NBTHelper.readEnum(nbt, "Pattern", PlacementPatterns.class);
 	}
 
 	@Override
 	protected void init() {
-		animationProgress = 0;
 		setWindowSize(background.width, background.height);
+		setWindowOffset(-10, 0);
 		super.init();
 		widgets.clear();
 
+		animationProgress = 0;
+
+		int x = guiLeft;
+		int y = guiTop;
+
 		confirmButton =
-			new IconButton(guiLeft + background.width - 43, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
 
-		int i = guiLeft - 10;
-		int j = guiTop;
-		CompoundNBT nbt = zapper.getOrCreateTag();
-
-		patternButtons = new Vector<>(6);
+		patternButtons.clear();
 		for (int row = 0; row <= 1; row++) {
 			for (int col = 0; col <= 2; col++) {
 				int id = patternButtons.size();
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
 				patternButtons
-					.add(new IconButton(i + background.width - 76 + col * 18, j + 21 + row * 18, pattern.icon));
+					.add(new IconButton(x + background.width - 76 + col * 18, y + 21 + row * 18, pattern.icon));
 				patternButtons.get(id)
 					.setToolTip(Lang.translate("gui.terrainzapper.pattern." + pattern.translationKey));
 			}
 		}
 
-		if (nbt.contains("Pattern"))
-			patternButtons.get(PlacementPatterns.valueOf(nbt.getString("Pattern"))
-				.ordinal()).active = false;
+		patternButtons.get(currentPattern.ordinal()).active = false;
 
 		widgets.addAll(patternButtons);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		int i = guiLeft - 10;
-		int j = guiTop;
+	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		int x = guiLeft;
+		int y = guiTop;
 
-		background.draw(matrixStack, this, i, j);
-		drawOnBackground(matrixStack, i, j);
+		background.draw(ms, this, x, y);
+		drawOnBackground(ms, x, y);
 
-		renderBlock(matrixStack);
-		renderZapper(matrixStack);
+		renderBlock(ms, x, y);
+		renderZapper(ms, x, y);
 	}
 
-	protected void drawOnBackground(MatrixStack matrixStack, int i, int j) {
-		textRenderer.draw(matrixStack, title, i + 11, j + 4, 0x54214F);
+	protected void drawOnBackground(MatrixStack ms, int x, int y) {
+		font.draw(ms, title, x + 11, y + 4, 0x54214F);
 	}
 
 	@Override
@@ -106,22 +109,19 @@ public class ZapperScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		CompoundNBT nbt = zapper.getTag();
-		writeAdditionalOptions(nbt);
-		AllPackets.channel.sendToServer(new NbtPacket(zapper, offhand ? Hand.OFF_HAND : Hand.MAIN_HAND));
+		ConfigureZapperPacket packet = getConfigurationPacket();
+		packet.configureZapper(zapper);
+		AllPackets.channel.sendToServer(packet);
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		CompoundNBT nbt = zapper.getTag();
-
 		for (IconButton patternButton : patternButtons) {
 			if (patternButton.isHovered()) {
 				patternButtons.forEach(b -> b.active = true);
 				patternButton.active = false;
-				patternButton.playDownSound(Minecraft.getInstance()
-					.getSoundHandler());
-				nbt.putString("Pattern", PlacementPatterns.values()[patternButtons.indexOf(patternButton)].name());
+				patternButton.playDownSound(minecraft.getSoundManager());
+				currentPattern = PlacementPatterns.values()[patternButtons.indexOf(patternButton)];
 			}
 		}
 
@@ -133,31 +133,31 @@ public class ZapperScreen extends AbstractSimiScreen {
 		return super.mouseClicked(x, y, button);
 	}
 
-	protected void renderZapper(MatrixStack matrixStack) {
+	protected void renderZapper(MatrixStack ms, int x, int y) {
 		GuiGameElement.of(zapper)
 				.scale(4)
-				.at((this.width - this.sWidth) / 2 + 220, this.height / 2 - this.sHeight / 4 + 27, -150)
-				.render(matrixStack);
+				.at(x + background.width, y + background.height - 48, -200)
+				.render(ms);
 	}
 
-	protected void renderBlock(MatrixStack matrixStack) {
-		matrixStack.push();
-		matrixStack.translate(guiLeft + 22f, guiTop + 42f, 120);
-		matrixStack.multiply(new Vector3f(1f, 0, 0).getDegreesQuaternion(-25f));
-		matrixStack.multiply(new Vector3f(0, 1f, 0).getDegreesQuaternion(-45f));
-		matrixStack.scale(20, 20, 20);
+	protected void renderBlock(MatrixStack ms, int x, int y) {
+		ms.pushPose();
+		ms.translate(x + 32, y + 42, 120);
+		ms.mulPose(new Vector3f(1f, 0, 0).rotationDegrees(-25f));
+		ms.mulPose(new Vector3f(0, 1f, 0).rotationDegrees(-45f));
+		ms.scale(20, 20, 20);
 
-		BlockState state = Blocks.AIR.getDefaultState();
+		BlockState state = Blocks.AIR.defaultBlockState();
 		if (zapper.hasTag() && zapper.getTag()
 			.contains("BlockUsed"))
 			state = NBTUtil.readBlockState(zapper.getTag()
 				.getCompound("BlockUsed"));
 
 		GuiGameElement.of(state)
-			.render(matrixStack);
-		matrixStack.pop();
+			.render(ms);
+		ms.popPose();
 	}
 
-	protected void writeAdditionalOptions(CompoundNBT nbt) {}
+	protected abstract ConfigureZapperPacket getConfigurationPacket();
 
 }

@@ -12,7 +12,7 @@ import net.minecraft.world.gen.placement.IPlacementConfig;
 public class ConfigDrivenOreFeatureConfig implements IFeatureConfig, IPlacementConfig {
 
 	public static final Codec<ConfigDrivenOreFeatureConfig> CODEC = RecordCodecBuilder.create((p_236568_0_) -> {
-		return p_236568_0_.group(RuleTest.field_25012.fieldOf("target")
+		return p_236568_0_.group(RuleTest.CODEC.fieldOf("target")
 			.forGetter((p_236570_0_) -> {
 				return p_236570_0_.target;
 			}), BlockState.CODEC.fieldOf("state")

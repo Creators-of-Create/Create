@@ -11,9 +11,9 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.render.backend.core.PartialModel;
-import com.simibubi.create.foundation.utility.VirtualEmptyModelData;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class SuperByteBufferCache {
 
-	Map<Compartment<?>, Cache<Object, SuperByteBuffer>> cache;
+	private Map<Compartment<?>, Cache<Object, SuperByteBuffer>> cache;
 
 	public SuperByteBufferCache() {
 		cache = new HashMap<>();
@@ -87,20 +87,24 @@ public class SuperByteBufferCache {
 	}
 
 	public void registerCompartment(Compartment<?> instance) {
-		cache.put(instance, CacheBuilder.newBuilder()
-			.build());
+		synchronized (cache) {
+			cache.put(instance, CacheBuilder.newBuilder()
+				.build());
+		}
 	}
 
 	public void registerCompartment(Compartment<?> instance, long ticksUntilExpired) {
-		cache.put(instance, CacheBuilder.newBuilder()
-			.expireAfterAccess(ticksUntilExpired * 50, TimeUnit.MILLISECONDS)
-			.build());
+		synchronized (cache) {
+			cache.put(instance, CacheBuilder.newBuilder()
+				.expireAfterAccess(ticksUntilExpired * 50, TimeUnit.MILLISECONDS)
+				.build());
+		}
 	}
 
 	private SuperByteBuffer standardBlockRender(BlockState renderedState) {
 		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
-			.getBlockRendererDispatcher();
-		return standardModelRender(dispatcher.getModelForState(renderedState), renderedState);
+			.getBlockRenderer();
+		return standardModelRender(dispatcher.getBlockModel(renderedState), renderedState);
 	}
 
 	private SuperByteBuffer standardModelRender(IBakedModel model, BlockState referenceState) {
@@ -115,14 +119,14 @@ public class SuperByteBufferCache {
 
 	public static BufferBuilder getBufferBuilder(IBakedModel model, BlockState referenceState, MatrixStack ms) {
 		Minecraft mc = Minecraft.getInstance();
-		BlockRendererDispatcher dispatcher = mc.getBlockRendererDispatcher();
-		BlockModelRenderer blockRenderer = dispatcher.getBlockModelRenderer();
+		BlockRendererDispatcher dispatcher = mc.getBlockRenderer();
+		BlockModelRenderer blockRenderer = dispatcher.getModelRenderer();
 		BufferBuilder builder = new BufferBuilder(512);
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		blockRenderer.renderModel(mc.world, model, referenceState, BlockPos.ZERO.up(255), ms, builder, true,
-			mc.world.rand, 42, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
-		builder.finishDrawing();
+		blockRenderer.renderModel(mc.level, model, referenceState, BlockPos.ZERO.above(255), ms, builder, true,
+			mc.level.random, 42, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
+		builder.end();
 		return builder;
 	}
 

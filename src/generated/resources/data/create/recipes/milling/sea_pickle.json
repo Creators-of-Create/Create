@@ -1,0 +1,19 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "item": "minecraft:sea_pickle"
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:lime_dye",
+      "count": 2
+    },
+    {
+      "item": "minecraft:green_dye",
+      "chance": 0.1
+    }
+  ],
+  "processingTime": 50
+}

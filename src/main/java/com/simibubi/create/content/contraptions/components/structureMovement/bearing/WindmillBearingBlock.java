@@ -25,15 +25,15 @@ public class WindmillBearingBlock extends BearingBlock implements ITE<WindmillBe
 	}
 	
 	@Override
-	public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
 		BlockRayTraceResult hit) {
-		if (!player.isAllowEdit())
+		if (!player.mayBuild())
 			return ActionResultType.FAIL;
-		if (player.isSneaking())
+		if (player.isShiftKeyDown())
 			return ActionResultType.FAIL;
-		if (player.getHeldItem(handIn)
+		if (player.getItemInHand(handIn)
 			.isEmpty()) {
-			if (worldIn.isRemote)
+			if (worldIn.isClientSide)
 				return ActionResultType.SUCCESS;
 			withTileEntityDo(worldIn, pos, te -> {
 				if (te.running) {

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import java.util.List;
 
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIconOptions;
@@ -41,7 +42,8 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 			return 0;
 		if (movedContraption == null)
 			return lastGeneratedSpeed;
-		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks() / 8;
+		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks()
+				/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
 		return MathHelper.clamp(sails, 1, 16) * getAngleSpeedDirection();
 	}
 
@@ -82,7 +84,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	private void onDirectionChanged() {
 		if (!running)
 			return;
-		if (!world.isRemote)
+		if (!level.isClientSide)
 			updateGeneratedRotation();
 	}
 

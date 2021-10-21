@@ -1,5 +1,5 @@
 {
-  "parent": "create:integrated_circuit",
+  "parent": "create:precision_mechanism",
   "display": {
     "icon": {
       "item": "create:rotation_speed_controller"

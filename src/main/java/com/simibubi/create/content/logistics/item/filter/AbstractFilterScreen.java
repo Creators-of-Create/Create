@@ -22,7 +22,6 @@ import com.simibubi.create.foundation.networking.AllPackets;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
@@ -30,7 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> extends AbstractSimiContainerScreen<F> {
 
 	protected AllGuiTextures background;
-    private List<Rectangle2d> extraAreas = Collections.EMPTY_LIST;
+    private List<Rectangle2d> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
@@ -42,37 +41,40 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 	@Override
 	protected void init() {
-		setWindowSize(PLAYER_INVENTORY.width, background.height + PLAYER_INVENTORY.height + 20);
+		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width), background.height + 4 + PLAYER_INVENTORY.height);
 		super.init();
 		widgets.clear();
-		int x = guiLeft - 50;
-		int offset = guiTop < 30 ? 30 - guiTop : 0;
-		extraAreas = ImmutableList.of(new Rectangle2d(x, guiTop + offset, background.width + 70, background.height - offset));
 
-		resetButton = new IconButton(x + background.width - 62, guiTop + background.height - 24, AllIcons.I_TRASH);
-		confirmButton = new IconButton(x + background.width - 33, guiTop + background.height - 24, AllIcons.I_CONFIRM);
+		int x = leftPos;
+		int y = topPos;
+
+		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 
 		widgets.add(resetButton);
 		widgets.add(confirmButton);
+
+		extraAreas = ImmutableList.of(
+			new Rectangle2d(x + background.width, y + background.height - 40, 80, 48)
+		);
 	}
 
 	@Override
 	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		int x = guiLeft - 50;
-		int y = guiTop;
+		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
+		int invY = topPos + background.height + 4;
+		renderPlayerInventory(ms, invX, invY);
+
+		int x = leftPos;
+		int y = topPos;
+
 		background.draw(ms, this, x, y);
+		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
-		int invX = guiLeft;
-		int invY = y + background.height + 10;
-		PLAYER_INVENTORY.draw(ms, this, invX, invY);
-		textRenderer.draw(ms, playerInventory.getDisplayName(), invX + 7, invY + 6, 0x666666);
-		textRenderer.draw(ms, I18n.format(container.filterItem.getTranslationKey()), x + 15, y + 3, 0xdedede);
-
-		GuiGameElement.of(container.filterItem)
-				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, guiTop + background.height - 60, -200)
+		GuiGameElement.of(menu.contentHolder)
+				.<GuiGameElement.GuiRenderBuilder>at(x + background.width, y + background.height - 56, -200)
 				.scale(5)
 				.render(ms);
-
 	}
 
 	@Override
@@ -81,9 +83,9 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 		super.tick();
 		handleIndicators();
 
-		if (!container.player.getHeldItemMainhand()
-			.equals(container.filterItem, false))
-			client.player.closeScreen();
+		if (!menu.player.getMainHandItem()
+				.equals(menu.contentHolder, false))
+			minecraft.player.closeContainer();
 	}
 
 	public void handleIndicators() {
@@ -140,13 +142,13 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 
 		if (button == 0) {
 			if (confirmButton.isHovered()) {
-				client.player.closeScreen();
+				minecraft.player.closeContainer();
 				return true;
 			}
 			if (resetButton.isHovered()) {
-				container.clearContents();
+				menu.clearContents();
 				contentsCleared();
-				sendOptionUpdate(Option.CLEAR);
+				menu.sendClearPacket();
 				return true;
 			}
 		}
@@ -164,4 +166,5 @@ public abstract class AbstractFilterScreen<F extends AbstractFilterContainer> ex
 	public List<Rectangle2d> getExtraAreas() {
 		return extraAreas;
 	}
+
 }

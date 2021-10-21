@@ -2,12 +2,13 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionKineticRenderer;
-import com.simibubi.create.foundation.render.backend.FastRenderDispatcher;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -22,22 +23,22 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.get(DrillBlock.FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(DrillBlock.FACING)
 			.getOpposite());
 	}
 
 	@Override
 	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.of(context.state.get(DrillBlock.FACING)
-			.getDirectionVec()).scale(.65f);
+		return Vector3d.atLowerCornerOf(context.state.getValue(DrillBlock.FACING)
+			.getNormal()).scale(.65f);
 	}
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void renderInContraption(MovementContext context, MatrixStack ms, MatrixStack msLocal,
-		IRenderTypeBuffer buffer) {
-		if (!FastRenderDispatcher.available())
-			DrillRenderer.renderInContraption(context, ms, msLocal, buffer);
+	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
+		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		if (!Backend.getInstance().canUseInstancing())
+			DrillRenderer.renderInContraption(context, renderWorld, matrices, buffer);
 	}
 
 	@Override
@@ -47,8 +48,8 @@ public class DrillMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(ContraptionKineticRenderer kr, MovementContext context) {
-		return new DrillActorInstance(kr, context);
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+		return new DrillActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override

@@ -1,15 +1,15 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.LightVolume;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.RenderedContraption;
-import com.simibubi.create.foundation.render.backend.light.GridAlignedBB;
-import com.simibubi.create.foundation.render.backend.light.LightUpdateListener;
-import com.simibubi.create.foundation.render.backend.light.LightUpdater;
-import com.simibubi.create.foundation.render.backend.light.LightVolume;
 
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-public abstract class ContraptionLighter<C extends Contraption> implements LightUpdateListener {
+public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
     public final LightVolume lightVolume;
 
@@ -24,7 +24,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 
         lightVolume = new LightVolume(contraptionBoundsToVolume(bounds.copy()));
 
-        lightVolume.initialize(contraption.entity.world);
+        lightVolume.initialize(contraption.entity.level);
         scheduleRebuild = true;
 
         startListening();
@@ -32,7 +32,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 
     public void tick(RenderedContraption owner) {
         if (scheduleRebuild) {
-            lightVolume.initialize(owner.contraption.entity.world);
+            lightVolume.initialize(owner.contraption.entity.level);
             scheduleRebuild = false;
         }
     }
@@ -62,4 +62,8 @@ public abstract class ContraptionLighter<C extends Contraption> implements Light
 
         return bounds;
     }
+
+	public GridAlignedBB getBounds() {
+		return bounds;
+	}
 }

@@ -41,7 +41,7 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 		isMoving = true;
 		internalTank = new SmartFluidTank(1500, this::onTankContentsChanged);
 		handler = new HosePulleyFluidHandler(internalTank, filler, drainer,
-			() -> pos.down((int) Math.ceil(offset.getValue())), () -> !this.isMoving);
+			() -> worldPosition.below((int) Math.ceil(offset.getValue())), () -> !this.isMoving);
 		capability = LazyOptional.of(() -> handler);
 	}
 
@@ -83,7 +83,7 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 			float newOffset = offset.getValue() + getMovementSpeed();
 			if (newOffset < 0)
 				isMoving = false;
-			if (!world.getBlockState(pos.down((int) Math.ceil(newOffset)))
+			if (!level.getBlockState(worldPosition.below((int) Math.ceil(newOffset)))
 				.getMaterial()
 				.isReplaceable()) {
 				isMoving = false;
@@ -100,13 +100,13 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public AxisAlignedBB getRenderBoundingBox() {
-		return super.getRenderBoundingBox().expand(0, -offset.getValue(), 0);
+		return super.getRenderBoundingBox().expandTowards(0, -offset.getValue(), 0);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public double getMaxRenderDistanceSquared() {
-		return super.getMaxRenderDistanceSquared() + offset.getValue() * offset.getValue();
+	public double getViewDistance() {
+		return super.getViewDistance() + offset.getValue() * offset.getValue();
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 			newOffset = 0;
 			isMoving = false;
 		}
-		if (!world.getBlockState(pos.down((int) Math.ceil(newOffset)))
+		if (!level.getBlockState(worldPosition.below((int) Math.ceil(newOffset)))
 			.getMaterial()
 			.isReplaceable()) {
 			newOffset = (int) newOffset;
@@ -132,13 +132,13 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 		if (isMoving)
 			return;
 
 		int ceil = (int) Math.ceil(offset.getValue() + getMovementSpeed());
-		if (getMovementSpeed() > 0 && world.getBlockState(pos.down(ceil))
+		if (getMovementSpeed() > 0 && level.getBlockState(worldPosition.below(ceil))
 			.getMaterial()
 			.isReplaceable()) {
 			isMoving = true;
@@ -169,14 +169,14 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void remove() {
-		super.remove();
+	public void setRemoved() {
+		super.setRemoved();
 		capability.invalidate();
 	}
 
 	public float getMovementSpeed() {
-		float movementSpeed = getSpeed() / 512f;
-		if (world.isRemote)
+		float movementSpeed = convertToLinear(getSpeed());
+		if (level.isClientSide)
 			movementSpeed *= ServerSpeedProvider.get();
 		return movementSpeed;
 	}
@@ -188,13 +188,13 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (isFluidHandlerCap(cap)
-			&& (side == null || HosePulleyBlock.hasPipeTowards(world, pos, getBlockState(), side)))
+			&& (side == null || HosePulleyBlock.hasPipeTowards(level, worldPosition, getBlockState(), side)))
 			return this.capability.cast();
 		return super.getCapability(cap, side);
 	}
 
 	@Override
-	public boolean shouldRenderAsTE() {
+	public boolean shouldRenderNormally() {
 		return true;
 	}
 }

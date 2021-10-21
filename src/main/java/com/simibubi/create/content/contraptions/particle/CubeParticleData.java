@@ -29,7 +29,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 
 	public static final IParticleData.IDeserializer<CubeParticleData> DESERIALIZER = new IParticleData.IDeserializer<CubeParticleData>() {
 		@Override
-		public CubeParticleData deserialize(ParticleType<CubeParticleData> type, StringReader reader) throws CommandSyntaxException {
+		public CubeParticleData fromCommand(ParticleType<CubeParticleData> type, StringReader reader) throws CommandSyntaxException {
 			reader.expect(' ');
 			float r = reader.readFloat();
 			reader.expect(' ');
@@ -46,7 +46,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 		}
 
 		@Override
-		public CubeParticleData read(ParticleType<CubeParticleData> type, PacketBuffer buffer) {
+		public CubeParticleData fromNetwork(ParticleType<CubeParticleData> type, PacketBuffer buffer) {
 			return new CubeParticleData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readInt(), buffer.readBoolean());
 		}
 	};
@@ -93,7 +93,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void writeToNetwork(PacketBuffer buffer) {
 		buffer.writeFloat(r);
 		buffer.writeFloat(g);
 		buffer.writeFloat(b);
@@ -103,7 +103,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 	}
 
 	@Override
-	public String getParameters() {
+	public String writeToString() {
 		return String.format(Locale.ROOT, "%s %f %f %f %f %d %s", AllParticleTypes.CUBE.parameter(), r, g, b, scale, avgAge, hot);
 	}
 }

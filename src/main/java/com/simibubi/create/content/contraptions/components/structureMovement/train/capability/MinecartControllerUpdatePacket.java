@@ -21,19 +21,19 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 
 	public MinecartControllerUpdatePacket(MinecartController controller) {
 		entityID = controller.cart()
-			.getEntityId();
+			.getId();
 		nbt = controller.serializeNBT();
 	}
 
 	public MinecartControllerUpdatePacket(PacketBuffer buffer) {
 		entityID = buffer.readInt();
-		nbt = buffer.readCompoundTag();
+		nbt = buffer.readNbt();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
  		buffer.writeInt(entityID);
-		buffer.writeCompoundTag(nbt);
+		buffer.writeNbt(nbt);
 	}
 
 	@Override
@@ -46,10 +46,10 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 
 	@OnlyIn(Dist.CLIENT)
 	private void handleCL() {
-		ClientWorld world = Minecraft.getInstance().world;
+		ClientWorld world = Minecraft.getInstance().level;
 		if (world == null)
 			return;
-		Entity entityByID = world.getEntityByID(entityID);
+		Entity entityByID = world.getEntity(entityID);
 		if (entityByID == null)
 			return;
 		entityByID.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY)

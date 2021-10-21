@@ -15,7 +15,7 @@ public interface IBearingTileEntity extends IControlContraption {
 	default ValueBoxTransform getMovementModeSlot() {
 		return new DirectionalExtenderScrollOptionSlot((state, d) -> {
 			Axis axis = d.getAxis();
-			Axis bearingAxis = state.get(BearingBlock.FACING)
+			Axis bearingAxis = state.getValue(BearingBlock.FACING)
 				.getAxis();
 			return bearingAxis != axis;
 		});

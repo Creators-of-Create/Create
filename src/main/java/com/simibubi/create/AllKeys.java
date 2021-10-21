@@ -9,7 +9,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public enum AllKeys {
 
-	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT), ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
+	TOOL_MENU("toolmenu", GLFW.GLFW_KEY_LEFT_ALT),
+	ACTIVATE_TOOL("", GLFW.GLFW_KEY_LEFT_CONTROL),
+	TOOLBELT("toolbelt", GLFW.GLFW_KEY_LEFT_ALT),
 
 	;
 
@@ -41,24 +43,24 @@ public enum AllKeys {
 	public boolean isPressed() {
 		if (!modifiable)
 			return isKeyDown(key);
-		return keybind.isKeyDown();
+		return keybind.isDown();
 	}
 
 	public String getBoundKey() {
-		return keybind.getBoundKeyLocalizedText()
+		return keybind.getTranslatedKeyMessage()
 			.getString()
 			.toUpperCase();
 	}
 
 	public int getBoundCode() {
 		return keybind.getKey()
-			.getKeyCode();
+			.getValue();
 	}
 
 	public static boolean isKeyDown(int key) {
 		return GLFW.glfwGetKey(Minecraft.getInstance()
 			.getWindow()
-			.getHandle(), key) != 0;
+			.getWindow(), key) != 0;
 	}
 
 	public static boolean ctrlDown() {

@@ -5,7 +5,7 @@ import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.render.backend.instancing.IInstanceRendered;
+import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
@@ -36,10 +36,10 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 		maxState.withFormatter(this::format);
 		maxState.withUnit(this::getUnit);
 		maxState.withCallback(this::onMaxDelayChanged);
-		
+
 		behaviours.add(maxState);
 	}
-	
+
 	private void onMaxDelayChanged(int newMax) {
 		state = MathHelper.clamp(state, 0, newMax);
 		sendData();
@@ -90,8 +90,8 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	@Override
 	public void tick() {
 		super.tick();
-		boolean powered = getBlockState().get(POWERED);
-		boolean powering = getBlockState().get(POWERING);
+		boolean powered = getBlockState().getValue(POWERED);
+		boolean powering = getBlockState().getValue(POWERING);
 		boolean atMax = state >= maxState.getValue();
 		boolean atMin = state <= 0;
 		updateState(powered, powering, atMax, atMin);
@@ -102,16 +102,16 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 			charging = true;
 
 		if (charging && atMax) {
-			if (!powering && !world.isRemote)
-				world.setBlockState(pos, getBlockState().with(POWERING, true));
+			if (!powering && !level.isClientSide)
+				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, true));
 			if (!powered)
 				charging = false;
 			return;
 		}
 
 		if (!charging && atMin) {
-			if (powering && !world.isRemote)
-				world.setBlockState(pos, getBlockState().with(POWERING, false));
+			if (powering && !level.isClientSide)
+				level.setBlockAndUpdate(worldPosition, getBlockState().setValue(POWERING, false));
 			return;
 		}
 

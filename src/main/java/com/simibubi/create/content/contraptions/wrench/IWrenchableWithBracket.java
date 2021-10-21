@@ -29,22 +29,22 @@ public interface IWrenchableWithBracket extends IWrenchable {
 	}
 
 	default boolean tryRemoveBracket(ItemUseContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getPos();
+		World world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 		Optional<ItemStack> bracket = removeBracket(world, pos, false);
 		BlockState blockState = world.getBlockState(pos);
 		if (bracket.isPresent()) {
 			PlayerEntity player = context.getPlayer();
-			if (!world.isRemote && !player.isCreative())
+			if (!world.isClientSide && !player.isCreative())
 				player.inventory.placeItemBackInInventory(world, bracket.get());
-			if (!world.isRemote && AllBlocks.FLUID_PIPE.has(blockState)) {
+			if (!world.isClientSide && AllBlocks.FLUID_PIPE.has(blockState)) {
 				Axis preferred = FluidPropagator.getStraightPipeAxis(blockState);
 				Direction preferredDirection =
-					preferred == null ? Direction.UP : Direction.getFacingFromAxis(AxisDirection.POSITIVE, preferred);
+					preferred == null ? Direction.UP : Direction.get(AxisDirection.POSITIVE, preferred);
 				BlockState updated = AllBlocks.FLUID_PIPE.get()
 					.updateBlockState(blockState, preferredDirection, null, world, pos);
 				if (updated != blockState)
-					world.setBlockState(pos, updated);
+					world.setBlockAndUpdate(pos, updated);
 			}
 			return true;
 		}

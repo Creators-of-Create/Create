@@ -39,7 +39,7 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 	@Override
 	protected boolean canCollectItemsFromBelow() {
 		BlockState blockState = getBlockState();
-		return blockState.contains(SmartChuteBlock.POWERED) && !blockState.get(SmartChuteBlock.POWERED);
+		return blockState.hasProperty(SmartChuteBlock.POWERED) && !blockState.getValue(SmartChuteBlock.POWERED);
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 
 	private boolean isExtracting() {
 		boolean up = getItemMotion() < 0;
-		BlockPos chutePos = pos.offset(up ? Direction.UP : Direction.DOWN);
-		BlockState blockState = world.getBlockState(chutePos);
+		BlockPos chutePos = worldPosition.relative(up ? Direction.UP : Direction.DOWN);
+		BlockState blockState = level.getBlockState(chutePos);
 		return !AbstractChuteBlock.isChute(blockState) && !blockState.getMaterial()
 			.isReplaceable();
 	}
