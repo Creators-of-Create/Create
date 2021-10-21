@@ -156,7 +156,7 @@ public class RotationPropagator {
 	}
 
 	private static float getAxisModifier(KineticTileEntity te, Direction direction) {
-		if (!te.hasSource() || !(te instanceof DirectionalShaftHalvesTileEntity))
+		if (!(te.hasSource()||te.isSource()) || !(te instanceof DirectionalShaftHalvesTileEntity))
 			return 1;
 		Direction source = ((DirectionalShaftHalvesTileEntity) te).getSourceFacing();
 
