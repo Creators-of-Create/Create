@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.google.gson.JsonObject;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -18,7 +19,9 @@ import com.simibubi.create.foundation.utility.Lang;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -30,8 +33,11 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
+	private boolean keepHeldItem;
+
 	public DeployerApplicationRecipe(ProcessingRecipeParams params) {
 		super(AllRecipeTypes.DEPLOYING, params);
+		keepHeldItem = false;
 	}
 
 	@Override
@@ -52,6 +58,10 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 		return 2;
 	}
 
+	public boolean shouldKeepHeldItem() {
+		return keepHeldItem;
+	}
+
 	public Ingredient getRequiredHeldItem() {
 		if (ingredients.isEmpty())
 			throw new IllegalStateException("Deploying Recipe: " + id.toString() + " has no tool!");
@@ -66,18 +76,45 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 
 	public static List<DeployerApplicationRecipe> convert(List<IRecipe<?>> sandpaperRecipes) {
 		return sandpaperRecipes.stream()
-			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, new ResourceLocation(r.getId().getNamespace(), r.getId()
-				.getPath() + "_using_deployer")).require(r.getIngredients()
-					.get(0))
-					.require(AllItemTags.SANDPAPER.tag)
-					.output(r.getResultItem())
-					.build())
+			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, new ResourceLocation(r.getId()
+				.getNamespace(),
+				r.getId()
+					.getPath() + "_using_deployer")).require(r.getIngredients()
+						.get(0))
+						.require(AllItemTags.SANDPAPER.tag)
+						.output(r.getResultItem())
+						.build())
 			.collect(Collectors.toList());
 	}
 
 	@Override
 	public void addAssemblyIngredients(List<Ingredient> list) {
 		list.add(ingredients.get(1));
+	}
+
+	@Override
+	public void readAdditional(JsonObject json) {
+		super.readAdditional(json);
+		keepHeldItem = JSONUtils.getAsBoolean(json, "keepHeldItem", false);
+	}
+
+	@Override
+	public void writeAdditional(JsonObject json) {
+		super.writeAdditional(json);
+		if (keepHeldItem)
+			json.addProperty("keepHeldItem", keepHeldItem);
+	}
+
+	@Override
+	public void readAdditional(PacketBuffer buffer) {
+		super.readAdditional(buffer);
+		keepHeldItem = buffer.readBoolean();
+	}
+
+	@Override
+	public void writeAdditional(PacketBuffer buffer) {
+		super.writeAdditional(buffer);
+		buffer.writeBoolean(keepHeldItem);
 	}
 
 	@Override

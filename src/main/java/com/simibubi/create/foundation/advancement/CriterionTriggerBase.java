@@ -26,10 +26,10 @@ import net.minecraft.util.ResourceLocation;
 public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {
 
 	public CriterionTriggerBase(String id) {
-		this.ID = new ResourceLocation(Create.ID, id);
+		this.id = Create.asResource(id);
 	}
 
-	private final ResourceLocation ID;
+	private final ResourceLocation id;
 	protected final Map<PlayerAdvancements, Set<Listener<T>>> listeners = Maps.newHashMap();
 
 	@Override
@@ -57,7 +57,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 
 	@Override
 	public ResourceLocation getId() {
-		return ID;
+		return id;
 	}
 
 	protected void trigger(ServerPlayerEntity player, @Nullable List<Supplier<Object>> suppliers) {

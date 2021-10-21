@@ -11,6 +11,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.utility.BlockFace;
 
@@ -214,6 +215,10 @@ public class OpenEndedPipe extends FlowSource {
 				.scheduleTick(outputPos, Fluids.WATER, 1);
 			return true;
 		}
+
+		if (!AllConfigs.SERVER.fluids.placeFluidSourceBlocks.get())
+			return true;
+
 		world.setBlock(outputPos, fluid.getFluid()
 			.defaultFluidState()
 			.createLegacyBlock(), 3);

@@ -1,5 +1,7 @@
 package com.simibubi.create;
 
+import com.simibubi.create.content.curiosities.toolbox.ToolboxContainer;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxScreen;
 import com.simibubi.create.content.curiosities.tools.BlueprintContainer;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateContainer;
@@ -45,6 +47,9 @@ public class AllContainerTypes {
 
 	public static final ContainerEntry<LinkedControllerContainer> LINKED_CONTROLLER =
 		register("linked_controller", LinkedControllerContainer::new, () -> LinkedControllerScreen::new);
+	
+	public static final ContainerEntry<ToolboxContainer> TOOLBOX =
+		register("toolbox", ToolboxContainer::new, () -> ToolboxScreen::new);
 
 	private static <C extends Container, S extends Screen & IHasContainer<C>> ContainerEntry<C> register(String name, ForgeContainerFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
 		return Create.registrate().container(name, factory, screenFactory).register();

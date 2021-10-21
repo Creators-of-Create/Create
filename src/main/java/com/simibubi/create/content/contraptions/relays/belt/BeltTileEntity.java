@@ -101,11 +101,12 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 	@Override
 	public void tick() {
-		super.tick();
-
 		// Init belt
 		if (beltLength == 0)
 			BeltBlock.initBelt(level, worldPosition);
+		
+		super.tick();
+
 		if (!AllBlocks.BELT.has(level.getBlockState(worldPosition)))
 			return;
 
@@ -211,6 +212,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 	@Override
 	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+		int prevBeltLength = beltLength;
 		super.fromTag(state, compound, clientPacket);
 
 		if (compound.getBoolean("IsController"))
@@ -223,8 +225,10 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			if (!isController())
 				controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
 			trackerUpdateTag = compound;
-			beltLength = compound.getInt("Length");
 			index = compound.getInt("Index");
+			beltLength = compound.getInt("Length");
+			if (prevBeltLength != beltLength) 
+				light = null;
 		}
 
 		if (isController())
@@ -517,6 +521,10 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		return 0;
 	}
 
+	public void invalidateItemHandler() {
+		itemHandler.invalidate();
+	}
+
 	@Override
 	public boolean shouldRenderNormally() {
 		if (level == null)
@@ -527,9 +535,10 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 	@Override
 	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
-		if (this.remove) {
+		if (this.remove) 
 			return true;
-		}
+		if (this.level == null || this.light == null)
+			return false;
 
 		GridAlignedBB beltVolume = getBeltVolume();
 

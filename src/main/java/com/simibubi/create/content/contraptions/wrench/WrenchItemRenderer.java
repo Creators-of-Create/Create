@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.vector.Vector3f;
@@ -24,6 +25,11 @@ public class WrenchItemRenderer extends CustomRenderedItemModelRenderer<WrenchMo
 		ms.translate(xOffset, 0, 0);
 
 		renderer.render(model.getPartial("gear"), light);
+	}
+
+	@Override
+	public WrenchModel createModel(IBakedModel originalModel) {
+		return new WrenchModel(originalModel);
 	}
 
 }

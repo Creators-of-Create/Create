@@ -34,6 +34,10 @@ public class PonderLocalization {
 		TAG.put(key, Couple.create(enUS, description));
 	}
 
+	public static void registerChapter(ResourceLocation key, String enUS) {
+		CHAPTER.put(key, enUS);
+	}
+
 	public static void registerSpecific(ResourceLocation sceneId, String key, String enUS) {
 		SPECIFIC.computeIfAbsent(sceneId, $ -> new HashMap<>())
 			.put(key, enUS);

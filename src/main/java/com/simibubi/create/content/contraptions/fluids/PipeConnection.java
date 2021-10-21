@@ -32,7 +32,7 @@ import net.minecraftforge.fml.DistExecutor;
 
 public class PipeConnection {
 
-	Direction side;
+	public Direction side;
 
 	// Layer I
 	Couple<Float> pressure; // [inbound, outward]

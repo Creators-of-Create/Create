@@ -4,7 +4,6 @@ import static com.simibubi.create.content.contraptions.base.DirectionalKineticBl
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +27,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
@@ -46,6 +46,7 @@ import net.minecraft.util.math.RayTraceContext.FluidMode;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
@@ -441,25 +442,37 @@ public class DeployerTileEntity extends KineticTileEntity {
 	SandPaperInv sandpaperInv = new SandPaperInv(ItemStack.EMPTY);
 
 	@Nullable
-	public IRecipe<?> getRecipe(ItemStack stack) {
-		if (player == null)
+	public IRecipe<? extends IInventory> getRecipe(ItemStack stack) {
+		// safety checks
+		if (player == null || level == null)
 			return null;
+
+		// sandpaper = op
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		if (heldItemMainhand.getItem() instanceof SandPaperItem) {
 			sandpaperInv.setItem(0, stack);
 			return AllRecipeTypes.SANDPAPER_POLISHING.find(sandpaperInv, level)
 				.orElse(null);
 		}
+
+		// inventory
 		recipeInv.setItem(0, stack);
 		recipeInv.setItem(1, heldItemMainhand);
 
-		Optional<DeployerApplicationRecipe> assemblyRecipe = SequencedAssemblyRecipe.getRecipe(level, recipeInv,
-			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class);
-		if (assemblyRecipe.isPresent())
-			return assemblyRecipe.get();
+		// event nonsense
+		DeployerRecipeSearchEvent event = new DeployerRecipeSearchEvent(this, recipeInv);
 
-		return AllRecipeTypes.DEPLOYING.find(recipeInv, level)
-			.orElse(null);
+		// creates deployer recipes
+		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
+				AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
+		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
+
+		// post the event, get result
+		MinecraftForge.EVENT_BUS.post(event);
+		return event.getRecipe();
 	}
 
+	public DeployerFakePlayer getPlayer() {
+		return player;
+	}
 }

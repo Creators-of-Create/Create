@@ -21,8 +21,8 @@ public enum PlacementPatterns {
 	Chance50(AllIcons.I_PATTERN_CHANCE_50),
 	Chance75(AllIcons.I_PATTERN_CHANCE_75);
 
-	public String translationKey;
-	public AllIcons icon;
+	public final String translationKey;
+	public final AllIcons icon;
 
 	private PlacementPatterns(AllIcons icon) {
 		this.translationKey = Lang.asId(name());

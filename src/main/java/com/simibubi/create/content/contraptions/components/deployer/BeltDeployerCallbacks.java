@@ -45,6 +45,11 @@ public class BeltDeployerCallbacks {
 		if (deployerTileEntity.redstoneLocked)
 			return ProcessingResult.PASS;
 
+		DeployerFakePlayer player = deployerTileEntity.getPlayer();
+		ItemStack held = player == null ? ItemStack.EMPTY : player.getMainHandItem();
+
+		if (held.isEmpty())
+			return ProcessingResult.HOLD;
 		if (deployerTileEntity.getRecipe(s.stack) == null)
 			return ProcessingResult.PASS;
 
@@ -60,6 +65,12 @@ public class BeltDeployerCallbacks {
 		BlockState blockState = deployerTileEntity.getBlockState();
 		if (!blockState.hasProperty(FACING) || blockState.getValue(FACING) != Direction.DOWN)
 			return ProcessingResult.PASS;
+
+		DeployerFakePlayer player = deployerTileEntity.getPlayer();
+		ItemStack held = player == null ? ItemStack.EMPTY : player.getMainHandItem();
+		if (held.isEmpty())
+			return ProcessingResult.HOLD;
+
 		IRecipe<?> recipe = deployerTileEntity.getRecipe(s.stack);
 		if (recipe == null)
 			return ProcessingResult.PASS;
@@ -68,10 +79,10 @@ public class BeltDeployerCallbacks {
 			activate(s, i, deployerTileEntity, recipe);
 			return ProcessingResult.HOLD;
 		}
-		
+
 		if (deployerTileEntity.state == State.WAITING) {
 			if (deployerTileEntity.redstoneLocked)
-				return ProcessingResult.PASS;			
+				return ProcessingResult.PASS;
 			deployerTileEntity.start();
 		}
 
@@ -92,6 +103,10 @@ public class BeltDeployerCallbacks {
 					copy.angle = centered ? 180 : Create.RANDOM.nextInt(360);
 					return copy;
 				})
+				.map(t -> {
+					t.locked = false;
+					return t;
+				})
 				.collect(Collectors.toList());
 
 		TransportedItemStack left = transported.copy();
@@ -104,10 +119,17 @@ public class BeltDeployerCallbacks {
 			handler.handleProcessingOnItem(transported, TransportedResult.convertToAndLeaveHeld(collect, left));
 
 		ItemStack heldItem = deployerTileEntity.player.getMainHandItem();
-		if (heldItem.isDamageableItem())
-			heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
-		else
-			heldItem.shrink(1);
+		boolean unbreakable = heldItem.hasTag() && heldItem.getTag()
+			.getBoolean("Unbreakable");
+		boolean keepHeld =
+			recipe instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) recipe).shouldKeepHeldItem();
+
+		if (!unbreakable && !keepHeld) {
+			if (heldItem.isDamageableItem())
+				heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
+			else
+				heldItem.shrink(1);
+		}
 
 		BlockPos pos = deployerTileEntity.getBlockPos();
 		World world = deployerTileEntity.getLevel();

@@ -15,6 +15,7 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
+import com.simibubi.create.content.schematics.item.SchematicAndQuillItem;
 import com.simibubi.create.content.schematics.packet.InstantSchematicPacket;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -126,7 +127,7 @@ public class SchematicAndQuillHandler {
 		firstPos = selectedPos;
 		Lang.sendStatus(player, "schematicAndQuill.firstPos");
 	}
-	
+
 	public void discard() {
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 		firstPos = null;
@@ -213,7 +214,8 @@ public class SchematicAndQuillHandler {
 		t.fillFromWorld(Minecraft.getInstance().level, origin, bounds, true, Blocks.AIR);
 
 		if (string.isEmpty())
-			string = Lang.translate("schematicAndQuill.fallbackName").getString();
+			string = Lang.translate("schematicAndQuill.fallbackName")
+				.getString();
 
 		String folderPath = "schematics";
 		FilesHelper.createFolderIfMissing(folderPath);
@@ -225,6 +227,7 @@ public class SchematicAndQuillHandler {
 		try {
 			outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
 			CompoundNBT nbttagcompound = t.save(new CompoundNBT());
+			SchematicAndQuillItem.replaceStructureVoidWithAir(nbttagcompound);
 			CompressedStreamTools.writeCompressed(nbttagcompound, outputStream);
 		} catch (IOException e) {
 			e.printStackTrace();

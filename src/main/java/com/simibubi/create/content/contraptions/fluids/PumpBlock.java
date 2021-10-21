@@ -2,8 +2,6 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import java.util.Random;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
@@ -57,18 +55,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 
 	@Override
 	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
-		BlockState state = super.updateAfterWrenched(newState, context);
-		World world = context.getLevel();
-		BlockPos pos = context.getClickedPos();
-		if (world.isClientSide)
-			return state;
-		TileEntity tileEntity = world.getBlockEntity(pos);
-		if (!(tileEntity instanceof PumpTileEntity))
-			return state;
-		PumpTileEntity pump = (PumpTileEntity) tileEntity;
-		pump.sidesToUpdate.forEach(MutableBoolean::setTrue);
-		pump.reversed = !pump.reversed;
-		return state;
+		return super.updateAfterWrenched(newState, context);
 	}
 
 	@Override
@@ -94,22 +81,6 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 			return;
 		world.getBlockTicks()
 			.scheduleTick(pos, this, 1, TickPriority.HIGH);
-//		if (world.isRemote)
-//			return;
-//		if (otherBlock instanceof FluidPipeBlock)
-//			return;
-//		TileEntity tileEntity = world.getTileEntity(pos);
-//		if (!(tileEntity instanceof PumpTileEntity))
-//			return;
-//		PumpTileEntity pump = (PumpTileEntity) tileEntity;
-//		Direction facing = state.get(FACING);
-//		for (boolean front : Iterate.trueAndFalse) {
-//			Direction side = front ? facing : facing.getOpposite();
-//			if (!pos.offset(side)
-//				.equals(neighborPos))
-//				continue;
-//			pump.updatePipesOnSide(side);
-//		}
 	}
 
 	@Override
@@ -125,8 +96,8 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-		IWorld world, BlockPos pos, BlockPos neighbourPos) {
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, IWorld world,
+		BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
 			world.getLiquidTicks()
 				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
@@ -148,11 +119,21 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 
 	@Override
 	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+		super.onPlace(state, world, pos, oldState, isMoving);
 		if (world.isClientSide)
 			return;
 		if (state != oldState)
 			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
+		
+		if (isPump(state) && isPump(oldState) && state.getValue(FACING) == oldState.getValue(FACING)
+			.getOpposite()) {
+			TileEntity tileEntity = world.getBlockEntity(pos);
+			if (!(tileEntity instanceof PumpTileEntity))
+				return;
+			PumpTileEntity pump = (PumpTileEntity) tileEntity;
+			pump.pressureUpdate = true;
+		}
 	}
 
 	public static boolean isOpenAt(BlockState state, Direction d) {
@@ -173,10 +154,10 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
 			world.removeBlockEntity(pos);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
 	}
-	
+
 }

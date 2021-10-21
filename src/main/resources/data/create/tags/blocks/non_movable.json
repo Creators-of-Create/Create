@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:obsidian"
   ],
   "optional": [
     "immersiveengineering:connector_lv",

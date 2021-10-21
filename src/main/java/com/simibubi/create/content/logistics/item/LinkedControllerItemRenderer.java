@@ -36,6 +36,10 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	}
 
 	static void tick() {
+		if (Minecraft.getInstance()
+			.isPaused())
+			return;
+
 		boolean active = LinkedControllerClientHandler.MODE != Mode.IDLE;
 		equipProgress.chase(active ? 1 : 0, .2f, Chaser.EXP);
 		equipProgress.tickChaser();
@@ -162,6 +166,11 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		}
 		renderer.renderSolid(button, light);
 		ms.popPose();
+	}
+
+	@Override
+	public LinkedControllerModel createModel(IBakedModel originalModel) {
+		return new LinkedControllerModel(originalModel);
 	}
 
 	protected enum RenderType {

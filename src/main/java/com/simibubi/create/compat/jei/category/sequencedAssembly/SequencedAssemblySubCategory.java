@@ -10,12 +10,16 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSaw;
 import com.simibubi.create.compat.jei.category.animations.AnimatedSpout;
+import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
+import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import net.minecraft.util.text.TextFormatting;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -115,6 +119,19 @@ public abstract class SequencedAssemblySubCategory {
 				.getIngredients()
 				.get(1)
 				.getItems()));
+			
+			IAssemblyRecipe contained = recipe.getAsAssemblyRecipe();
+			if (contained instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) contained).shouldKeepHeldItem()) {
+				itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+					if (!input)
+						return;
+					if (slotIndex != index)
+						return;
+					tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
+						.withStyle(TextFormatting.GOLD));
+				});
+			}
+			
 			return 1;
 		}
 
