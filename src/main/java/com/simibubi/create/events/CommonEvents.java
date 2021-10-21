@@ -8,6 +8,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.fluids.recipe.FluidTransferRecipes;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.wrench.WrenchItem;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxHandler;
+import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 import com.simibubi.create.content.curiosities.zapper.ZapperInteractionHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.content.logistics.item.LinkedControllerServerHandler;
@@ -21,6 +23,7 @@ import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -39,10 +42,10 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
@@ -65,6 +68,12 @@ public class CommonEvents {
 	}
 
 	@SubscribeEvent
+	public static void playerLoggedIn(PlayerLoggedInEvent event) {
+		PlayerEntity player = event.getPlayer();
+		ToolboxHandler.playerLogin(player);
+	}
+
+	@SubscribeEvent
 	public static void whenFluidsMeet(FluidPlaceBlockEvent event) {
 		BlockState blockState = event.getOriginalState();
 		FluidState fluidState = blockState.getFluidState();
@@ -75,7 +84,8 @@ public class CommonEvents {
 			return;
 
 		for (Direction direction : Iterate.directions) {
-			FluidState metFluidState = fluidState.isSource() ? fluidState : world.getFluidState(pos.relative(direction));
+			FluidState metFluidState =
+				fluidState.isSource() ? fluidState : world.getFluidState(pos.relative(direction));
 			if (!metFluidState.is(FluidTags.WATER))
 				continue;
 			BlockState lavaInteraction = AllFluids.getLavaInteraction(metFluidState);
@@ -104,6 +114,7 @@ public class CommonEvents {
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);
+		ToolboxHandler.entityTick(entityLiving, world);
 	}
 
 	@SubscribeEvent
@@ -118,7 +129,7 @@ public class CommonEvents {
 		WrenchItem.wrenchInstaKillsMinecarts(event);
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent
 	public static void registerCommands(RegisterCommandsEvent event) {
 		AllCommands.register(event.getDispatcher());
 	}
@@ -128,6 +139,7 @@ public class CommonEvents {
 		event.addListener(RecipeFinder.LISTENER);
 		event.addListener(PotionMixingRecipeManager.LISTENER);
 		event.addListener(FluidTransferRecipes.LISTENER);
+		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 	}
 
 	@SubscribeEvent

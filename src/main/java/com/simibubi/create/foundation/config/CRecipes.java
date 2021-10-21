@@ -2,22 +2,22 @@ package com.simibubi.create.foundation.config;
 
 public class CRecipes extends ConfigBase {
 
-	public ConfigBool bulkPressing = b(false, "bulkPressing", Comments.bulkPressing);
-	public ConfigBool bulkCutting = b(false, "bulkCutting", Comments.bulkCutting);
-	public ConfigBool allowShapelessInMixer = b(true, "allowShapelessInMixer", Comments.allowShapelessInMixer);
-	public ConfigBool allowShapedSquareInPress = b(true, "allowShapedSquareInPress", Comments.allowShapedSquareInPress);
-	public ConfigBool allowRegularCraftingInCrafter =
+	public final ConfigBool bulkPressing = b(false, "bulkPressing", Comments.bulkPressing);
+	public final ConfigBool bulkCutting = b(false, "bulkCutting", Comments.bulkCutting);
+	public final ConfigBool allowShapelessInMixer = b(true, "allowShapelessInMixer", Comments.allowShapelessInMixer);
+	public final ConfigBool allowShapedSquareInPress = b(true, "allowShapedSquareInPress", Comments.allowShapedSquareInPress);
+	public final ConfigBool allowRegularCraftingInCrafter =
 		b(true, "allowRegularCraftingInCrafter", Comments.allowRegularCraftingInCrafter);
-	public ConfigBool allowBiggerFireworksInCrafter =
+	public final ConfigBool allowBiggerFireworksInCrafter =
 		b(false, "allowBiggerFireworksInCrafter", Comments.allowBiggerFireworksInCrafter);
-	public ConfigBool allowStonecuttingOnSaw = b(true, "allowStonecuttingOnSaw", Comments.allowStonecuttingOnSaw);
-	public ConfigBool allowWoodcuttingOnSaw = b(true, "allowWoodcuttingOnSaw", Comments.allowWoodcuttingOnSaw);
-	public ConfigBool allowCastingBySpout = b(true, "allowCastingBySpout", Comments.allowCastingBySpout);
-	public ConfigInt lightSourceCountForRefinedRadiance =
+	public final ConfigBool allowStonecuttingOnSaw = b(true, "allowStonecuttingOnSaw", Comments.allowStonecuttingOnSaw);
+	public final ConfigBool allowWoodcuttingOnSaw = b(true, "allowWoodcuttingOnSaw", Comments.allowWoodcuttingOnSaw);
+	public final ConfigBool allowCastingBySpout = b(true, "allowCastingBySpout", Comments.allowCastingBySpout);
+	public final ConfigInt lightSourceCountForRefinedRadiance =
 		i(10, 1, "lightSourceCountForRefinedRadiance", Comments.refinedRadiance);
-	public ConfigBool enableRefinedRadianceRecipe =
+	public final ConfigBool enableRefinedRadianceRecipe =
 		b(true, "enableRefinedRadianceRecipe", Comments.refinedRadianceRecipe);
-	public ConfigBool enableShadowSteelRecipe = b(true, "enableShadowSteelRecipe", Comments.shadowSteelRecipe);
+	public final ConfigBool enableShadowSteelRecipe = b(true, "enableShadowSteelRecipe", Comments.shadowSteelRecipe);
 
 	@Override
 	public String getName() {

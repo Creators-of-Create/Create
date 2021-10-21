@@ -4,16 +4,12 @@ import com.jozufozu.flywheel.backend.gl.attrib.VertexFormat;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.instancing.entity.EntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialGroup;
-import com.jozufozu.flywheel.backend.model.BufferedModel;
-import com.jozufozu.flywheel.backend.model.ElementBuffer;
-import com.jozufozu.flywheel.backend.model.IndexedModel;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.backend.state.TextureRenderState;
 import com.jozufozu.flywheel.core.Formats;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.QuadConverter;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
@@ -36,7 +32,7 @@ import net.minecraft.world.LightType;
 public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {
 
 	private static final boolean USE_ATLAS = false;
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Create.ID, "textures/entity/super_glue/slime.png");
+	private static final ResourceLocation TEXTURE = Create.asResource("textures/entity/super_glue/slime.png");
 
 	private final Quaternion rotation;
 	protected ConditionalInstance<OrientedData> model;

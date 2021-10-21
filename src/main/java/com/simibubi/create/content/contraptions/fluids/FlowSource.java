@@ -52,7 +52,7 @@ public abstract class FlowSource {
 	public abstract boolean isEndpoint();
 
 	public void manageSource(World world) {}
-	
+
 	public void whileFlowPresent(World world, boolean pulling) {}
 
 	public LazyOptional<IFluidHandler> provideHandler() {
@@ -68,7 +68,7 @@ public abstract class FlowSource {
 		}
 
 		public void manageSource(World world) {
-			if (fluidHandler.isPresent())
+			if (fluidHandler.isPresent() && world.getGameTime() % 20 != 0)
 				return;
 			TileEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
 			if (tileEntity != null)

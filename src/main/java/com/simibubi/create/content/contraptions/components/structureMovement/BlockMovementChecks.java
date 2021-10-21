@@ -73,7 +73,7 @@ public class BlockMovementChecks {
 	private static final List<BrittleCheck> BRITTLE_CHECKS = new ArrayList<>();
 	private static final List<AttachedCheck> ATTACHED_CHECKS = new ArrayList<>();
 	private static final List<NotSupportiveCheck> NOT_SUPPORTIVE_CHECKS = new ArrayList<>();
-	public static final ResourceLocation NON_MOVABLE = new ResourceLocation(Create.ID, "non_movable");
+	public static final ResourceLocation NON_MOVABLE = Create.asResource("non_movable");
 
 	// Registration
 	// Add new checks to the front instead of the end

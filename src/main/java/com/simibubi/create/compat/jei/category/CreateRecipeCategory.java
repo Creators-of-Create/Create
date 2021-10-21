@@ -45,7 +45,7 @@ public abstract class CreateRecipeCategory<T extends IRecipe<?>> implements IRec
 	}
 
 	public void setCategoryId(String name) {
-		this.uid = new ResourceLocation(Create.ID, name);
+		this.uid = Create.asResource(name);
 		this.name = name;
 	}
 

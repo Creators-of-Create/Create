@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "create:crafting/curiosities/cyan_toolbox_from_main_toolbox"
+    ]
+  },
+  "criteria": {
+    "has_toolbox": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "create:toolboxes"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "create:crafting/curiosities/cyan_toolbox_from_main_toolbox"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_toolbox",
+      "has_the_recipe"
+    ]
+  ]
+}

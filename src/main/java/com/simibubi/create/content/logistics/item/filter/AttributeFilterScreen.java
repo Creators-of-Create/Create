@@ -61,7 +61,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void init() {
-		setWindowOffset(-11, 7);
+		setWindowOffset(-11 + (width % 2 == 0 ? 1 : 0), 7);
 		super.init();
 
 		int x = leftPos;

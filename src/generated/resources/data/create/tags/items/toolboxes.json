@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "create:white_toolbox",
+    "create:orange_toolbox",
+    "create:magenta_toolbox",
+    "create:light_blue_toolbox",
+    "create:yellow_toolbox",
+    "create:lime_toolbox",
+    "create:pink_toolbox",
+    "create:gray_toolbox",
+    "create:light_gray_toolbox",
+    "create:cyan_toolbox",
+    "create:purple_toolbox",
+    "create:blue_toolbox",
+    "create:brown_toolbox",
+    "create:green_toolbox",
+    "create:red_toolbox",
+    "create:black_toolbox"
+  ]
+}

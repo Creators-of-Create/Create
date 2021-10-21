@@ -86,6 +86,7 @@ public class AllIcons implements IScreenRenderable {
 		I_TUNNEL_PREFER_NEAREST = next(),
 		I_TUNNEL_RANDOMIZE = next(),
 		I_TUNNEL_SYNCHRONIZE = next(),
+		I_TOOLBOX = next(),
 
 		I_TOOL_MOVE_XZ = newRow(),
 		I_TOOL_MOVE_Y = next(),

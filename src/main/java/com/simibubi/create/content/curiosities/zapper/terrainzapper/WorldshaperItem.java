@@ -14,6 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -29,8 +30,8 @@ public class WorldshaperItem extends ZapperItem {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	protected void openHandgunGUI(ItemStack item, boolean b) {
-		ScreenOpener.open(new WorldshaperScreen(item, b));
+	protected void openHandgunGUI(ItemStack item, Hand hand) {
+		ScreenOpener.open(new WorldshaperScreen(item, hand));
 	}
 
 	@Override
@@ -80,6 +81,15 @@ public class WorldshaperItem extends ZapperItem {
 			.run(world, affectedPositions, raytrace.getDirection(), stateToUse, data, player);
 
 		return true;
+	}
+
+	public static void configureSettings(ItemStack stack, PlacementPatterns pattern, TerrainBrushes brush, int brushParamX, int brushParamY, int brushParamZ, TerrainTools tool, PlacementOptions placement) {
+		ZapperItem.configureSettings(stack, pattern);
+		CompoundNBT nbt = stack.getOrCreateTag();
+		NBTHelper.writeEnum(nbt, "Brush", brush);
+		nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParamX, brushParamY, brushParamZ)));
+		NBTHelper.writeEnum(nbt, "Tool", tool);
+		NBTHelper.writeEnum(nbt, "Placement", placement);
 	}
 
 }
