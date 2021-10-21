@@ -1,11 +1,11 @@
 package com.simibubi.create.content.curiosities.weapons;
 
-import com.simibubi.create.foundation.item.render.CustomRenderedItemModel;
+import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 
-public class PotatoCannonModel extends CustomRenderedItemModel {
+public class PotatoCannonModel extends CreateCustomRenderedItemModel {
 
 	public PotatoCannonModel(IBakedModel template) {
 		super(template, "potato_cannon");

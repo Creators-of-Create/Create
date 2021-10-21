@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
+import java.util.ConcurrentModificationException;
+
 public abstract class TileEntityBehaviour {
 
 	public SmartTileEntity tileEntity;
@@ -85,7 +87,13 @@ public abstract class TileEntityBehaviour {
 	}
 
 	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos, BehaviourType<T> type) {
-		return get(reader.getBlockEntity(pos), type);
+		TileEntity te;
+		try {
+			te = reader.getBlockEntity(pos);
+		} catch (ConcurrentModificationException e) {
+			te = null;
+		}
+		return get(te, type);
 	}
 
 	public static <T extends TileEntityBehaviour> void destroy(IBlockReader reader, BlockPos pos,

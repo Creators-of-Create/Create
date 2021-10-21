@@ -155,8 +155,8 @@ dependencies {
     // i'll leave this here commented for easier testing
     //runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     //runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
-    //runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.103")
-    //runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.0.3.168")
+    //runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
+    //runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
 }

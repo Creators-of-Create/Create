@@ -3,13 +3,16 @@ package com.simibubi.create.compat;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.simibubi.create.foundation.utility.Lang;
+
 import net.minecraftforge.fml.ModList;
 
 /**
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
  */
 public enum Mods {
-	DYNAMICTREES;
+	DYNAMICTREES,
+	TCONSTRUCT;
 
 	/**
 	 * @return a boolean of whether the mod is loaded or not based on mod id
@@ -22,7 +25,7 @@ public enum Mods {
 	 * @return the mod id
 	 */
 	public String asId() {
-		return name().toLowerCase();
+		return Lang.asId(name());
 	}
 
 	/**

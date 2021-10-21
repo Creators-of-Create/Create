@@ -30,10 +30,12 @@ public class MechanicalCraftingRecipeBuilder {
 	private final int count;
 	private final List<String> pattern = Lists.newArrayList();
 	private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
+	private boolean acceptMirrored;
 
 	public MechanicalCraftingRecipeBuilder(IItemProvider p_i48261_1_, int p_i48261_2_) {
 		result = p_i48261_1_.asItem();
 		count = p_i48261_2_;
+		acceptMirrored = true;
 	}
 
 	/**
@@ -92,6 +94,14 @@ public class MechanicalCraftingRecipeBuilder {
 	}
 
 	/**
+	 * Prevents the crafters from matching a vertically flipped version of the recipe
+	 */
+	public MechanicalCraftingRecipeBuilder disallowMirrored() {
+		acceptMirrored = false;
+		return this;
+	}
+
+	/**
 	 * Builds this recipe into an {@link IFinishedRecipe}.
 	 */
 	public void build(Consumer<IFinishedRecipe> p_200464_1_) {
@@ -116,7 +126,8 @@ public class MechanicalCraftingRecipeBuilder {
 	 */
 	public void build(Consumer<IFinishedRecipe> p_200467_1_, ResourceLocation p_200467_2_) {
 		validate(p_200467_2_);
-		p_200467_1_.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key));
+		p_200467_1_
+			.accept(new MechanicalCraftingRecipeBuilder.Result(p_200467_2_, result, count, pattern, key, acceptMirrored));
 	}
 
 	/**
@@ -151,14 +162,16 @@ public class MechanicalCraftingRecipeBuilder {
 		private final int count;
 		private final List<String> pattern;
 		private final Map<Character, Ingredient> key;
+		private final boolean acceptMirrored;
 
 		public Result(ResourceLocation p_i48271_2_, Item p_i48271_3_, int p_i48271_4_, List<String> p_i48271_6_,
-			Map<Character, Ingredient> p_i48271_7_) {
+			Map<Character, Ingredient> p_i48271_7_, boolean asymmetrical) {
 			this.id = p_i48271_2_;
 			this.result = p_i48271_3_;
 			this.count = p_i48271_4_;
 			this.pattern = p_i48271_6_;
 			this.key = p_i48271_7_;
+			this.acceptMirrored = asymmetrical;
 		}
 
 		public void serializeRecipeData(JsonObject p_218610_1_) {
@@ -180,6 +193,7 @@ public class MechanicalCraftingRecipeBuilder {
 				jsonobject1.addProperty("count", this.count);
 
 			p_218610_1_.add("result", jsonobject1);
+			p_218610_1_.addProperty("acceptMirrored", acceptMirrored);
 		}
 
 		public IRecipeSerializer<?> getType() {
