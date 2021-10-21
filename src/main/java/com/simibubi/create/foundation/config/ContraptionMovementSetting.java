@@ -1,16 +1,16 @@
 package com.simibubi.create.foundation.config;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.function.Supplier;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.feature.template.Template;
 import net.minecraftforge.common.extensions.IForgeBlock;
-
-import javax.annotation.Nullable;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.function.Supplier;
 
 public enum ContraptionMovementSetting {
 	MOVABLE, NO_PICKUP, UNMOVABLE;
@@ -22,8 +22,9 @@ public enum ContraptionMovementSetting {
 	}
 
 	static {
-		// config isnt registered at this point, so im using lambda instead of a method reference
 		register(Blocks.SPAWNER.getRegistryName(), () -> AllConfigs.SERVER.kinetics.spawnerMovement.get());
+		register(Blocks.OBSIDIAN.getRegistryName(), () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
+		register(Blocks.CRYING_OBSIDIAN.getRegistryName(), () -> AllConfigs.SERVER.kinetics.obsidianMovement.get());
 	}
 
 	@Nullable
