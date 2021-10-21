@@ -12,6 +12,8 @@ public class CFluids extends ConfigBase {
 	public final ConfigBool fillInfinite = b(false, "fillInfinite", Comments.fillInfinite);
 	public final ConfigInt hosePulleyRange = i(128, 1, "hosePulleyRange", Comments.blocks, Comments.hosePulleyRange);
 
+	public ConfigBool placeFluidSourceBlocks = b(true, "placeFluidSourceBlocks", Comments.placeFluidSourceBlocks);
+
 	@Override
 	public String getName() {
 		return "fluids";
@@ -30,6 +32,7 @@ public class CFluids extends ConfigBase {
 		static String hosePulleyBlockThreshold =
 			"The minimum amount of fluid blocks the hose pulley needs to find before deeming it an infinite source.";
 		static String fillInfinite = "Whether hose pulleys should continue filling up above-threshold sources";
+		static String placeFluidSourceBlocks = "Whether open-ended pipes and hose pulleys should be allowed to place fluid sources";
 	}
 
 }

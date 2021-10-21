@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
@@ -23,6 +24,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.CocoaBlock;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.block.SugarCaneBlock;
+import net.minecraft.block.SweetBerryBushBlock;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -50,14 +52,16 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld,
+		MovementContext context) {
 		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}
 
 	@Override
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
 		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
-		if (!Backend.getInstance().canUseInstancing())
+		if (!Backend.getInstance()
+			.canUseInstancing())
 			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
@@ -86,16 +90,18 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 		ItemStack item = ItemStack.EMPTY;
 		float effectChance = 1;
-		
-		if (stateVisited.getBlock().is(BlockTags.LEAVES)) {
+
+		if (stateVisited.getBlock()
+			.is(BlockTags.LEAVES)) {
 			item = new ItemStack(Items.SHEARS);
 			effectChance = .45f;
 		}
-		
+
 		MutableBoolean seedSubtracted = new MutableBoolean(notCropButCuttable);
 		BlockState state = stateVisited;
 		BlockHelper.destroyBlockAs(world, pos, null, item, effectChance, stack -> {
-			if (!seedSubtracted.getValue() && stack.sameItem(new ItemStack(state.getBlock()))) {
+			if (AllConfigs.SERVER.kinetics.harvesterReplants.get() && !seedSubtracted.getValue()
+				&& stack.sameItem(new ItemStack(state.getBlock()))) {
 				stack.shrink(1);
 				seedSubtracted.setTrue();
 			}
@@ -106,23 +112,31 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	private boolean isValidCrop(World world, BlockPos pos, BlockState state) {
+		boolean harvestPartial = AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get();
+		boolean replant = AllConfigs.SERVER.kinetics.harvesterReplants.get();
+		
 		if (state.getBlock() instanceof CropsBlock) {
 			CropsBlock crop = (CropsBlock) state.getBlock();
-			if (!crop.isMaxAge(state))
-				return false;
-			return true;
+			if (harvestPartial)
+				return state.getValue(crop.getAgeProperty()) != 0 || !replant;
+			return crop.isMaxAge(state);
 		}
+
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
+				IntegerProperty ageProperty = (IntegerProperty) property;
 				if (!property.getName()
 					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
-				if (((IntegerProperty) property).getPossibleValues()
-					.size() - 1 != state.getValue((IntegerProperty) property)
-						.intValue())
+				int age = state.getValue(ageProperty)
+					.intValue();
+				if (state.getBlock() instanceof SweetBerryBushBlock && age <= 1 && replant)
+					continue;
+				if (age == 0 && replant || !harvestPartial && (ageProperty.getPossibleValues()
+					.size() - 1 != age))
 					continue;
 				return true;
 			}
@@ -136,7 +150,8 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)
 			return true;
-		if (state.getBlock().is(BlockTags.LEAVES))
+		if (state.getBlock()
+			.is(BlockTags.LEAVES))
 			return true;
 
 		if (state.getCollisionShape(world, pos)
@@ -161,6 +176,14 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	}
 
 	private BlockState cutCrop(World world, BlockPos pos, BlockState state) {
+		if (!AllConfigs.SERVER.kinetics.harvesterReplants.get()) {
+			if (state.getFluidState()
+				.isEmpty())
+				return Blocks.AIR.defaultBlockState();
+			return state.getFluidState()
+				.createLegacyBlock();
+		}
+
 		Block block = state.getBlock();
 		if (block instanceof CropsBlock) {
 			CropsBlock crop = (CropsBlock) block;
@@ -171,18 +194,18 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		}
 		if (block == Blocks.SUGAR_CANE || block instanceof AbstractPlantBlock) {
 			if (state.getFluidState()
-					.isEmpty())
+				.isEmpty())
 				return Blocks.AIR.defaultBlockState();
 			return state.getFluidState()
-					.createLegacyBlock();
+				.createLegacyBlock();
 		}
 		if (state.getCollisionShape(world, pos)
-				.isEmpty() || block instanceof CocoaBlock) {
+			.isEmpty() || block instanceof CocoaBlock) {
 			for (Property<?> property : state.getProperties()) {
 				if (!(property instanceof IntegerProperty))
 					continue;
 				if (!property.getName()
-						.equals(BlockStateProperties.AGE_1.getName()))
+					.equals(BlockStateProperties.AGE_1.getName()))
 					continue;
 				return state.setValue((IntegerProperty) property, Integer.valueOf(0));
 			}
