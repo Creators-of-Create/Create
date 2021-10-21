@@ -28,7 +28,7 @@ public class HighlightCommand {
 
 	public static ArgumentBuilder<CommandSource, ?> register() {
 		return Commands.literal("highlight")
-			.requires(cs -> cs.hasPermission(0))
+			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.argument("pos", BlockPosArgument.blockPos())
 				.then(Commands.argument("players", EntityArgument.players())
 					.executes(ctx -> {

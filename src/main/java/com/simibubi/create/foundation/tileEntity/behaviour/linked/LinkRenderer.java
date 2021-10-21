@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
@@ -11,10 +12,12 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -63,6 +66,13 @@ public class LinkRenderer {
 
 		if (te == null || te.isRemoved())
 			return;
+		
+		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
+		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()
+			.distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max))
+			return;
+
 		LinkBehaviour behaviour = te.getBehaviour(LinkBehaviour.TYPE);
 		if (behaviour == null)
 			return;

@@ -18,7 +18,7 @@ import com.simibubi.create.foundation.config.CClient;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.outliner.Outline;
@@ -46,7 +46,7 @@ public class GoggleOverlayRenderer {
 
 	private static final List<Supplier<Boolean>> customGogglePredicates = new LinkedList<>();
 	private static final Map<Object, OutlineEntry> outlines = CreateClient.OUTLINER.getOutlines();
-	
+
 	public static int hoverTicks = 0;
 	public static BlockPos lastHovered = null;
 
@@ -74,15 +74,15 @@ public class GoggleOverlayRenderer {
 		BlockPos pos = result.getBlockPos();
 		ItemStack headSlot = mc.player.getItemBySlot(EquipmentSlotType.HEAD);
 		TileEntity te = world.getBlockEntity(pos);
-		
-		if (lastHovered == null || lastHovered.equals(pos)) 
+
+		if (lastHovered == null || lastHovered.equals(pos))
 			hoverTicks++;
-		else 
+		else
 			hoverTicks = 0;
 		lastHovered = pos;
 
 		boolean wearingGoggles = AllItems.GOGGLES.isIn(headSlot);
-		for (Supplier<Boolean> supplier : customGogglePredicates) 
+		for (Supplier<Boolean> supplier : customGogglePredicates)
 			wearingGoggles |= supplier.get();
 
 		boolean hasGoggleInformation = te instanceof IHaveGoggleInformation;
@@ -179,26 +179,25 @@ public class GoggleOverlayRenderer {
 
 		float fade = MathHelper.clamp((hoverTicks + partialTicks) / 12f, 0, 1);
 		Boolean useCustom = cfg.overlayCustomColor.get();
-		int colorBackground = useCustom ? cfg.overlayBackgroundColor.get()
-			: ColorHelper.applyAlpha(Theme.i(Theme.Key.VANILLA_TOOLTIP_BACKGROUND), .75f);
-		int colorBorderTop =
-			useCustom ? cfg.overlayBorderColorTop.get() : Theme.i(Theme.Key.VANILLA_TOOLTIP_BORDER, true);
-		int colorBorderBot =
-			useCustom ? cfg.overlayBorderColorBot.get() : Theme.i(Theme.Key.VANILLA_TOOLTIP_BORDER, false);
+		Color colorBackground = useCustom ?
+				new Color(cfg.overlayBackgroundColor.get()) :
+				Theme.c(Theme.Key.VANILLA_TOOLTIP_BACKGROUND).scaleAlpha(.75f);
+		Color colorBorderTop = useCustom ?
+				new Color(cfg.overlayBorderColorTop.get()) :
+				Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, true).copy();
+		Color colorBorderBot = useCustom ?
+				new Color(cfg.overlayBorderColorBot.get()) :
+				Theme.c(Theme.Key.VANILLA_TOOLTIP_BORDER, false).copy();
 
 		if (fade < 1) {
 			ms.translate((1 - fade) * Math.signum(cfg.overlayOffsetX.get() + .5f) * 4, 0, 0);
-			int alphaMask = 0xFF000000;
-			if ((alphaMask & colorBackground) != 0)
-				colorBackground = ColorHelper.applyAlpha(colorBackground, fade);
-			if ((alphaMask & colorBorderTop) != 0)
-				colorBorderTop = ColorHelper.applyAlpha(colorBorderTop, fade);
-			if ((alphaMask & colorBorderBot) != 0)
-				colorBorderBot = ColorHelper.applyAlpha(colorBorderBot, fade);
+			colorBackground.scaleAlpha(fade);
+			colorBorderTop.scaleAlpha(fade);
+			colorBorderBot.scaleAlpha(fade);
 		}
-			
+
 		GuiUtils.drawHoveringText(ms, tooltip, posX, posY, tooltipScreen.width, tooltipScreen.height, -1,
-			colorBackground, colorBorderTop, colorBorderBot, mc.font);
+			colorBackground.getRGB(), colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
 		ItemStack item = AllItems.GOGGLES.asStack();
 		GuiGameElement.of(item)

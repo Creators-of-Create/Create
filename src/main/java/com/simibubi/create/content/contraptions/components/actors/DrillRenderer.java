@@ -44,7 +44,7 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 		float time = AnimationTickHolder.getRenderTime() / 20;
 		float angle = (float) (((time * speed) % 360));
 
-		MatrixStack m = matrices.contraptionStack;
+		MatrixStack m = matrices.getModel();
 		m.pushPose();
 		MatrixTransformStack.of(m)
 			.centre()
@@ -55,9 +55,9 @@ public class DrillRenderer extends KineticTileEntityRenderer {
 
 		superBuffer
 			.transform(m)
-			.light(matrices.entityMatrix,
+			.light(matrices.getWorld(),
 					ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.solid()));
+			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.solid()));
 
 		m.popPose();
 	}

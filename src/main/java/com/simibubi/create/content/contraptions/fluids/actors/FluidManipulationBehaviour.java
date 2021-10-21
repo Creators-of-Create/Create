@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import com.simibubi.create.AllTags;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
@@ -90,6 +91,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		return AllConfigs.SERVER.fluids.hosePulleyBlockThreshold.get();
 	}
 
+	protected boolean fillInfinite() {
+		return AllConfigs.SERVER.fluids.fillInfinite.get();
+	}
+
 	public void reset() {
 		if (affectedArea != null)
 			scheduleUpdatesInAffectedArea();
@@ -108,7 +113,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 
 	protected void scheduleUpdatesInAffectedArea() {
 		World world = getWorld();
-		BlockPos.betweenClosedStream(new BlockPos(affectedArea.x0 - 1, affectedArea.y0 - 1, affectedArea.z0 - 1), new BlockPos(affectedArea.x1 + 1, affectedArea.y1 + 1, affectedArea.z1 + 1))
+		BlockPos
+			.betweenClosedStream(new BlockPos(affectedArea.x0 - 1, affectedArea.y0 - 1, affectedArea.z0 - 1),
+				new BlockPos(affectedArea.x1 + 1, affectedArea.y1 + 1, affectedArea.z1 + 1))
 			.forEach(pos -> {
 				FluidState nextFluidState = world.getFluidState(pos);
 				if (nextFluidState.isEmpty())
@@ -195,9 +202,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			: fluid.getAttributes()
 				.getEmptySound();
 		if (soundevent == null)
-			soundevent = fluid.is(FluidTags.LAVA)
-				? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
-				: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
+			soundevent =
+				fluid.is(FluidTags.LAVA) ? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA
+					: fillSound ? SoundEvents.BUCKET_FILL : SoundEvents.BUCKET_EMPTY;
 
 		world.playSound(null, splooshPos, soundevent, SoundCategory.BLOCKS, 0.3F, 1.0F);
 		if (world instanceof ServerWorld)
@@ -205,7 +212,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	}
 
 	protected boolean canDrainInfinitely(Fluid fluid) {
-		return maxBlocks() != -1; //  && !AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
+		return maxBlocks() != -1 && !AllTags.AllFluidTags.NO_INFINITE_DRAINING.matches(fluid);
 	}
 
 	@Override

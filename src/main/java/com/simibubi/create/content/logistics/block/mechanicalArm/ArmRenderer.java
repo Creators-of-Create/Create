@@ -11,7 +11,7 @@ import com.simibubi.create.content.logistics.block.mechanicalArm.ArmTileEntity.P
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.BlockState;
@@ -74,7 +74,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
 			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
-			color = ColorHelper.rainbowColor(AnimationTickHolder.getTicks() * 100);
+			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100).getRGB();
 		} else {
 			baseAngle = arm.baseAngle.get(pt);
 			lowerArmAngle = arm.lowerArmAngle.get(pt) - 135;

@@ -56,9 +56,9 @@ public class PortableStorageInterfaceRenderer extends SafeTileEntityRenderer<Por
 			lit = te.isConnected();
 		}
 
-		render(blockState, lit, progress, matrices.contraptionStack, sbb -> sbb.light(matrices.entityMatrix,
+		render(blockState, lit, progress, matrices.getModel(), sbb -> sbb.light(matrices.getWorld(),
 				ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, vb));
+			.renderInto(matrices.getViewProjection(), vb));
 	}
 
 	private static void render(BlockState blockState, boolean lit, float progress,

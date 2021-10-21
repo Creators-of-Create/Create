@@ -51,7 +51,14 @@ public class SchematicPrinter {
 	public void fromTag(CompoundNBT compound, boolean clientPacket) {
 		if (compound.contains("CurrentPos"))
 			currentPos = NBTUtil.readBlockPos(compound.getCompound("CurrentPos"));
-
+		if (clientPacket) {
+			schematicLoaded = false;
+			if (compound.contains("Anchor")) {
+				schematicAnchor = NBTUtil.readBlockPos(compound.getCompound("Anchor"));
+				schematicLoaded = true;
+			}
+		}
+		
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		compound.getList("DeferredBlocks", 10).stream()
@@ -62,7 +69,9 @@ public class SchematicPrinter {
 	public void write(CompoundNBT compound) {
 		if (currentPos != null)
 			compound.put("CurrentPos", NBTUtil.writeBlockPos(currentPos));
-
+		if (schematicAnchor != null)
+			compound.put("Anchor", NBTUtil.writeBlockPos(schematicAnchor));
+		
 		compound.putInt("EntityProgress", printingEntityIndex);
 		compound.putString("PrintStage", printStage.name());
 		ListNBT tagDeferredBlocks = new ListNBT();
@@ -78,15 +87,19 @@ public class SchematicPrinter {
 		Template activeTemplate = SchematicItem.loadSchematic(blueprint);
 		PlacementSettings settings = SchematicItem.getSettings(blueprint, processNBT);
 
-		schematicAnchor = NBTUtil.readBlockPos(blueprint.getTag().getCompound("Anchor"));
+		schematicAnchor = NBTUtil.readBlockPos(blueprint.getTag()
+			.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
 		activeTemplate.placeInWorldChunk(blockReader, schematicAnchor, settings, blockReader.getRandom());
 
+		BlockPos extraBounds = Template.calculateRelativePosition(settings, activeTemplate.getSize()
+			.offset(-1, -1, -1));
+		blockReader.bounds.expand(new MutableBoundingBox(extraBounds, extraBounds));
+
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());
-		for (TileEntity te : blockReader.tileEntities.values()) {
+		for (TileEntity te : blockReader.tileEntities.values())
 			transform.apply(te);
-		}
 
 		printingEntityIndex = -1;
 		printStage = PrintStage.BLOCKS;

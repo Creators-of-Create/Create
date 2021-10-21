@@ -6,22 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
 import com.simibubi.create.foundation.ponder.content.PonderChapter;
 import com.simibubi.create.foundation.ponder.content.PonderChapterRegistry;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
-import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.content.PonderTagRegistry;
 import com.simibubi.create.foundation.ponder.content.SharedText;
-import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
@@ -38,79 +34,32 @@ public class PonderRegistry {
 
 	public static final PonderTagRegistry TAGS = new PonderTagRegistry();
 	public static final PonderChapterRegistry CHAPTERS = new PonderChapterRegistry();
-	// Map from item ids to all storyboards
+	// Map from item IDs to storyboard entries
 	public static final Map<ResourceLocation, List<PonderStoryBoardEntry>> ALL = new HashMap<>();
 
-	private static final ThreadLocal<String> CURRENT_NAMESPACE = new ThreadLocal<>();
-
-	private static String getCurrentNamespace() {
-		return CURRENT_NAMESPACE.get();
-	}
-
-	private static void setCurrentNamespace(String namespace) {
-		CURRENT_NAMESPACE.set(namespace);
-	}
-
-	public static void startRegistration(String namespace) {
-		if (getCurrentNamespace() != null) {
-			throw new IllegalStateException("Cannot start registration when already started!");
-		}
-		setCurrentNamespace(namespace);
-	}
-
-	public static void endRegistration() {
-		if (getCurrentNamespace() == null) {
-			throw new IllegalStateException("Cannot end registration when not started!");
-		}
-		setCurrentNamespace(null);
-	}
-
-	private static String getNamespaceOrThrow() {
-		String currentNamespace = getCurrentNamespace();
-		if (currentNamespace == null) {
-			throw new IllegalStateException("Cannot register storyboard without starting registration!");
-		}
-		return currentNamespace;
-	}
-
-	public static PonderSceneBuilder addStoryBoard(ItemProviderEntry<?> component, String schematicPath,
-		PonderStoryBoard storyBoard, PonderTag... tags) {
-		ResourceLocation id = component.getId();
-		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, getNamespaceOrThrow(), schematicPath, id);
-		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
-		if (tags.length > 0)
-			builder.highlightTags(tags);
+	public static void addStoryBoard(PonderStoryBoardEntry entry) {
 		synchronized (ALL) {
-			ALL.computeIfAbsent(id, _$ -> new ArrayList<>())
-				.add(entry);
+			List<PonderStoryBoardEntry> list = ALL.computeIfAbsent(entry.getComponent(), $ -> new ArrayList<>());
+			synchronized (list) {
+				list.add(entry);
+			}
 		}
-		return builder;
-	}
-
-	public static PonderSceneBuilder addStoryBoard(PonderChapter chapter, ResourceLocation component, String schematicPath,	PonderStoryBoard storyBoard) {
-		if (component == null)
-			component = new ResourceLocation("minecraft", "stick");
-
-		PonderStoryBoardEntry entry = new PonderStoryBoardEntry(storyBoard, getNamespaceOrThrow(), schematicPath, component);
-		PonderSceneBuilder builder = new PonderSceneBuilder(entry);
-		CHAPTERS.addStoriesToChapter(chapter, entry);
-		return builder;
-	}
-
-	public static MultiSceneBuilder forComponents(ItemProviderEntry<?>... components) {
-		return new MultiSceneBuilder(Arrays.asList(components));
-	}
-
-	public static MultiSceneBuilder forComponents(Iterable<? extends ItemProviderEntry<?>> components) {
-		return new MultiSceneBuilder(components);
 	}
 
 	public static List<PonderScene> compile(ResourceLocation id) {
-		return compile(ALL.get(id));
+		List<PonderStoryBoardEntry> list = ALL.get(id);
+		if (list == null) {
+			return Collections.emptyList();
+		}
+		return compile(list);
 	}
 
 	public static List<PonderScene> compile(PonderChapter chapter) {
-		return compile(CHAPTERS.getStories(chapter));
+		List<PonderStoryBoardEntry> list = CHAPTERS.getStories(chapter);
+		if (list == null) {
+			return Collections.emptyList();
+		}
+		return compile(list);
 	}
 
 	public static List<PonderScene> compile(List<PonderStoryBoardEntry> entries) {
@@ -169,63 +118,6 @@ public class PonderRegistry {
 		CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
 		t.load(nbt);
 		return t;
-	}
-
-	public static class MultiSceneBuilder {
-
-		private final Iterable<? extends ItemProviderEntry<?>> components;
-
-		MultiSceneBuilder(Iterable<? extends ItemProviderEntry<?>> components) {
-			this.components = components;
-		}
-
-		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard) {
-			return addStoryBoard(schematicPath, storyBoard, $ -> {
-			});
-		}
-
-		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard, PonderTag... tags) {
-			return addStoryBoard(schematicPath, storyBoard, sb -> sb.highlightTags(tags));
-		}
-
-		public MultiSceneBuilder addStoryBoard(String schematicPath, PonderStoryBoard storyBoard,
-			Consumer<PonderSceneBuilder> extras) {
-			components.forEach(c -> extras.accept(PonderRegistry.addStoryBoard(c, schematicPath, storyBoard)));
-			return this;
-		}
-
-	}
-
-	public static class PonderSceneBuilder {
-
-		private final PonderStoryBoardEntry entry;
-
-		PonderSceneBuilder(PonderStoryBoardEntry entry) {
-			this.entry = entry;
-		}
-
-		public PonderSceneBuilder highlightAllTags() {
-			entry.getTags()
-				.add(PonderTag.Highlight.ALL);
-			return this;
-		}
-
-		public PonderSceneBuilder highlightTags(PonderTag... tags) {
-			entry.getTags()
-				.addAll(Arrays.asList(tags));
-			return this;
-		}
-
-		public PonderSceneBuilder chapter(PonderChapter chapter) {
-			PonderRegistry.CHAPTERS.addStoriesToChapter(chapter, entry);
-			return this;
-		}
-
-		public PonderSceneBuilder chapters(PonderChapter... chapters) {
-			for (PonderChapter c : chapters)
-				chapter(c);
-			return this;
-		}
 	}
 
 }

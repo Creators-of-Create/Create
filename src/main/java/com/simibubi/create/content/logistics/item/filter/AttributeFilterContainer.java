@@ -126,7 +126,8 @@ public class AttributeFilterContainer extends AbstractFilterContainer {
 	}
 
 	@Override
-	protected void readData(ItemStack filterItem) {
+	protected void initAndReadInventory(ItemStack filterItem) {
+		super.initAndReadInventory(filterItem);
 		selectedAttributes = new ArrayList<>();
 		whitelistMode = WhitelistMode.values()[filterItem.getOrCreateTag()
 			.getInt("WhitelistMode")];

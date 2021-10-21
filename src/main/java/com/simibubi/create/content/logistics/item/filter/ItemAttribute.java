@@ -61,12 +61,12 @@ public interface ItemAttribute {
 	static ItemAttribute hasColor = register(ColorAttribute.EMPTY);
 	static ItemAttribute hasFluid = register(FluidContentsAttribute.EMPTY);
 	static ItemAttribute hasName = register(new ItemNameAttribute("dummy"));
+	static ItemAttribute bookAuthor = register(new BookAuthorAttribute("dummy"));
+	static ItemAttribute bookCopy = register(new BookCopyAttribute(-1));
 	static ItemAttribute astralAmulet = register(new AstralSorceryAmuletAttribute("dummy", -1));
 	static ItemAttribute astralAttunement = register(new AstralSorceryAttunementAttribute("dummy"));
 	static ItemAttribute astralCrystal = register(new AstralSorceryCrystalAttribute("dummy"));
 	static ItemAttribute astralPerkGem = register(new AstralSorceryPerkGemAttribute("dummy"));
-	static ItemAttribute bookAuthor = register(new BookAuthorAttribute("dummy"));
-	static ItemAttribute bookCopy = register(new BookCopyAttribute(-1));
 
 	static ItemAttribute register(ItemAttribute attributeType) {
 		types.add(attributeType);
@@ -131,12 +131,12 @@ public interface ItemAttribute {
 		CONSUMABLE(ItemStack::isEdible),
 		FLUID_CONTAINER(s -> s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()),
 		ENCHANTED(ItemStack::isEnchanted),
+		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		RENAMED(ItemStack::hasCustomHoverName),
 		DAMAGED(ItemStack::isDamaged),
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE(s -> s.getEquipmentSlot() != null),
-		MAX_ENCHANTED(StandardTraits::maxEnchanted),
 		FURNACE_FUEL(AbstractFurnaceTileEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())

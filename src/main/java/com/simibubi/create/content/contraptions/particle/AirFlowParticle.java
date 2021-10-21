@@ -5,7 +5,7 @@ import javax.annotation.Nonnull;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.fan.IAirCurrentSource;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.Blocks;
@@ -102,7 +102,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		InWorldProcessing.Type type = source.getAirCurrent().getSegmentAt((float) distance);
 
 		if (type == InWorldProcessing.Type.SPLASHING) {
-			setColor(ColorHelper.mixColors(0x4499FF, 0x2277FF, level.random.nextFloat()));
+			setColor(Color.mixColors(0x4499FF, 0x2277FF, level.random.nextFloat()));
 			setAlpha(1f);
 			selectSprite(level.random.nextInt(3));
 			if (level.random.nextFloat() < 1 / 32f)
@@ -114,7 +114,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		}
 
 		if (type == InWorldProcessing.Type.SMOKING) {
-			setColor(ColorHelper.mixColors(0x0, 0x555555, level.random.nextFloat()));
+			setColor(Color.mixColors(0x0, 0x555555, level.random.nextFloat()));
 			setAlpha(1f);
 			selectSprite(level.random.nextInt(3));
 			if (level.random.nextFloat() < 1 / 32f)
@@ -126,7 +126,7 @@ public class AirFlowParticle extends SimpleAnimatedParticle {
 		}
 
 		if (type == InWorldProcessing.Type.BLASTING) {
-			setColor(ColorHelper.mixColors(0xFF4400, 0xFF8855, level.random.nextFloat()));
+			setColor(Color.mixColors(0xFF4400, 0xFF8855, level.random.nextFloat()));
 			setAlpha(.5f);
 			selectSprite(level.random.nextInt(3));
 			if (level.random.nextFloat() < 1 / 32f)

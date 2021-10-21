@@ -13,9 +13,7 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.BlockPos;
 
 public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 
@@ -35,14 +33,12 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 
 		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
-		BlockPos pos = te.getBlockPos();
 		BlockState blockState = te.getBlockState();
-		int packedLightmapCoords = WorldRenderer.getLightColor(te.getLevel(), blockState, pos);
 		float renderedHeadOffset = ((MechanicalPressTileEntity) te).getRenderedHeadOffset(partialTicks);
 
 		SuperByteBuffer headRender = PartialBufferer.getFacing(AllBlockPartials.MECHANICAL_PRESS_HEAD, blockState, blockState.getValue(HORIZONTAL_FACING));
 		headRender.translate(0, -renderedHeadOffset, 0)
-				.light(packedLightmapCoords)
+				.light(light)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 

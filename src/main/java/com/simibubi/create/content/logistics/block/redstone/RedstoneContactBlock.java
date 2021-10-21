@@ -6,7 +6,7 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -24,7 +24,7 @@ import net.minecraft.world.server.ServerWorld;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RedstoneContactBlock extends ProperDirectionalBlock {
+public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 

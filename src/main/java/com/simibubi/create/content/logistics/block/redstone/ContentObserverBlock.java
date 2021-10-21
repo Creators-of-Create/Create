@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.block.ITE;
@@ -30,7 +31,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class ContentObserverBlock extends HorizontalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
 
@@ -66,6 +71,8 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = defaultBlockState();
+		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
@@ -77,8 +84,12 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 
 			if (TileEntityBehaviour.get(tileEntity, TransportedItemStackHandlerBehaviour.TYPE) != null)
 				canDetect = true;
-			else if (tileEntity != null && tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-				.isPresent())
+			else if (TileEntityBehaviour.get(tileEntity, FluidTransportBehaviour.TYPE) != null)
+				canDetect = true;
+			else if (tileEntity != null && (tileEntity.getCapability(itemCap)
+				.isPresent()
+				|| tileEntity.getCapability(fluidCap)
+					.isPresent()))
 				canDetect = true;
 			else if (tileEntity instanceof FunnelTileEntity)
 				canDetect = true;
@@ -132,7 +143,7 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 
 	@Override
 	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);

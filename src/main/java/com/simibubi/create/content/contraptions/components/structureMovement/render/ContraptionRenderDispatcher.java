@@ -18,7 +18,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.render.Compartment;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
@@ -44,7 +43,16 @@ public class ContraptionRenderDispatcher {
 
 	private static WorldAttached<ContraptionRenderManager<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
 
-	public static final Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new Compartment<>();
+	/**
+	 * Reset a contraption's renderer.
+	 * @param contraption The contraption to invalidate.
+	 * @return true if there was a renderer associated with the given contraption.
+	 */
+	public static boolean invalidate(Contraption contraption) {
+		World level = contraption.entity.level;
+
+		return WORLDS.get(level).invalidate(contraption);
+	}
 
 	public static void tick(World world) {
 		if (Minecraft.getInstance().isPaused()) return;
@@ -71,13 +79,24 @@ public class ContraptionRenderDispatcher {
 		reset();
 	}
 
-	public static void render(AbstractContraptionEntity entity, Contraption contraption, IRenderTypeBuffer buffers) {
+	public static void renderFromEntity(AbstractContraptionEntity entity, Contraption contraption, IRenderTypeBuffer buffers) {
 		World world = entity.level;
 
 		ContraptionRenderInfo renderInfo = WORLDS.get(world)
 				.getRenderInfo(contraption);
+		ContraptionMatrices matrices = renderInfo.getMatrices();
 
-		renderDynamic(world, renderInfo.renderWorld, contraption, renderInfo.getMatrices(), buffers);
+		// something went wrong with the other rendering
+		if (!matrices.isReady()) return;
+
+		PlacementSimulationWorld renderWorld = renderInfo.renderWorld;
+
+		renderTileEntities(world, renderWorld, contraption, matrices, buffers);
+
+		if (buffers instanceof IRenderTypeBuffer.Impl)
+			((IRenderTypeBuffer.Impl) buffers).endBatch();
+
+		renderActors(world, renderWorld, contraption, matrices, buffers);
 	}
 
 	public static PlacementSimulationWorld setupRenderWorld(World world, Contraption c) {
@@ -96,18 +115,10 @@ public class ContraptionRenderDispatcher {
 		return renderWorld;
 	}
 
-	public static void renderDynamic(World world, PlacementSimulationWorld renderWorld, Contraption c,
-									 ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
-		renderTileEntities(world, renderWorld, c, matrices, buffer);
-		if (buffer instanceof IRenderTypeBuffer.Impl)
-			((IRenderTypeBuffer.Impl) buffer).endBatch();
-		renderActors(world, renderWorld, c, matrices, buffer);
-	}
-
 	public static void renderTileEntities(World world, PlacementSimulationWorld renderWorld, Contraption c,
 										  ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
 		TileEntityRenderHelper.renderTileEntities(world, renderWorld, c.specialRenderedTileEntities,
-				matrices.getFinalStack(), matrices.getFinalLight(), buffer);
+				matrices.getModelViewProjection(), matrices.getLight(), buffer);
 	}
 
 	protected static void renderActors(World world, PlacementSimulationWorld renderWorld, Contraption c,
@@ -120,7 +131,7 @@ public class ContraptionRenderDispatcher {
 				context.world = world;
 			Template.BlockInfo blockInfo = actor.getLeft();
 
-			MatrixStack m = matrices.contraptionStack;
+			MatrixStack m = matrices.getModel();
 			m.pushPose();
 			MatrixTransformStack.of(m)
 					.translate(blockInfo.pos);

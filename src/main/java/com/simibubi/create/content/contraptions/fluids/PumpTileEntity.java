@@ -39,6 +39,7 @@ public class PumpTileEntity extends KineticTileEntity {
 
 	LerpedFloat arrowDirection;
 	Couple<MutableBoolean> sidesToUpdate;
+	boolean pressureUpdate;
 	boolean reversed;
 
 	public PumpTileEntity(TileEntityType<?> typeIn) {
@@ -73,6 +74,9 @@ public class PumpTileEntity extends KineticTileEntity {
 			if (!isVirtual())
 				return;
 		}
+		
+//		if (pressureUpdate)
+//			updatePressureChange();
 
 		sidesToUpdate.forEachWithContext((update, isFront) -> {
 			if (update.isFalse())
@@ -85,6 +89,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			return;
 		if (speed < 0 != reversed) {
 			reversed = speed < 0;
+			updatePressureChange();
 			return;
 		}
 	}
@@ -100,6 +105,11 @@ public class PumpTileEntity extends KineticTileEntity {
 		if (level.isClientSide && !isVirtual())
 			return;
 
+		updatePressureChange();
+	}
+
+	public void updatePressureChange() {
+		pressureUpdate = false;
 		BlockPos frontPos = worldPosition.relative(getFront());
 		BlockPos backPos = worldPosition.relative(getFront().getOpposite());
 		FluidPropagator.propagateChangedPipe(level, frontPos, level.getBlockState(frontPos));

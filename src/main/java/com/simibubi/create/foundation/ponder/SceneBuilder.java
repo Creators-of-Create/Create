@@ -59,7 +59,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -132,7 +132,7 @@ public class SceneBuilder {
 	 * Assign a unique translation key, as well as the standard english translation
 	 * for this scene's title using this method, anywhere inside the program
 	 * function.
-	 * 
+	 *
 	 * @param sceneId
 	 * @param title
 	 */
@@ -147,7 +147,7 @@ public class SceneBuilder {
 	 * the the base plate. <br>
 	 * As a result, showBasePlate() will only show the configured size, and the
 	 * scene's scaling inside the UI will be consistent with its base size.
-	 * 
+	 *
 	 * @param xOffset       Block spaces between the base plate and the schematic
 	 *                      boundary on the Western side.
 	 * @param zOffset       Block spaces between the base plate and the schematic
@@ -164,8 +164,8 @@ public class SceneBuilder {
 	/**
 	 * Use this in case you are not happy with the scale of the scene relative to
 	 * the overlay
-	 * 
-	 * @param factor >1 will make the scene appear larger, smaller otherwise
+	 *
+	 * @param factor {@literal >}1 will make the scene appear larger, smaller otherwise
 	 */
 	public void scaleSceneView(float factor) {
 		scene.scaleFactor = factor;
@@ -174,8 +174,8 @@ public class SceneBuilder {
 	/**
 	 * Use this in case you are not happy with the vertical alignment of the scene
 	 * relative to the overlay
-	 * 
-	 * @param yOffset >0 moves the scene up, down otherwise
+	 *
+	 * @param yOffset {@literal >}0 moves the scene up, down otherwise
 	 */
 	public void setSceneOffsetY(float yOffset) {
 		scene.yOffset = yOffset;
@@ -193,11 +193,29 @@ public class SceneBuilder {
 	}
 
 	/**
+	 * Adds an instruction to the scene. It is recommended to only use this method
+	 * if another method in this class or its subclasses does not already allow
+	 * adding a certain instruction.
+	 */
+	public void addInstruction(PonderInstruction instruction) {
+		scene.schedule.add(instruction);
+	}
+
+	/**
+	 * Adds a simple instruction to the scene. It is recommended to only use this
+	 * method if another method in this class or its subclasses does not already
+	 * allow adding a certain instruction.
+	 */
+	public void addInstruction(Consumer<PonderScene> callback) {
+		addInstruction(PonderInstruction.simple(callback));
+	}
+
+	/**
 	 * Before running the upcoming instructions, wait for a duration to let previous
 	 * actions play out. <br>
 	 * Idle does not stall any animations, only schedules a time gap between
 	 * instructions.
-	 * 
+	 *
 	 * @param ticks Duration to wait for
 	 */
 	public void idle(int ticks) {
@@ -209,7 +227,7 @@ public class SceneBuilder {
 	 * actions play out. <br>
 	 * Idle does not stall any animations, only schedules a time gap between
 	 * instructions.
-	 * 
+	 *
 	 * @param seconds Duration to wait for
 	 */
 	public void idleSeconds(int seconds) {
@@ -229,7 +247,7 @@ public class SceneBuilder {
 
 	/**
 	 * Pans the scene's camera view around the vertical axis by the given amount
-	 * 
+	 *
 	 * @param degrees
 	 */
 	public void rotateCameraY(float degrees) {
@@ -309,7 +327,7 @@ public class SceneBuilder {
 		}
 
 		public void createRedstoneParticles(BlockPos pos, int color, int amount) {
-			Vector3d rgb = ColorHelper.getRGB(color);
+			Vector3d rgb = Color.vectorFromRGB(color);
 			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos), Emitter.withinBlockSpace(
 				new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), Vector3d.ZERO), amount, 2));
 		}
@@ -814,14 +832,6 @@ public class SceneBuilder {
 			addInstruction(callback);
 		}
 
-	}
-
-	private void addInstruction(PonderInstruction instruction) {
-		scene.schedule.add(instruction);
-	}
-
-	private void addInstruction(Consumer<PonderScene> callback) {
-		scene.schedule.add(PonderInstruction.simple(callback));
 	}
 
 }

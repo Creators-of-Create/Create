@@ -13,6 +13,7 @@ import net.minecraft.nbt.FloatNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.common.util.Constants.NBT;
 
 public class NBTHelper {
 
@@ -22,13 +23,15 @@ public class NBTHelper {
 
 	public static <T extends Enum<?>> T readEnum(CompoundNBT nbt, String key, Class<T> enumClass) {
 		T[] enumConstants = enumClass.getEnumConstants();
-		String name = nbt.getString(key);
 		if (enumConstants == null)
-			throw new IllegalArgumentException("Non-Enum class passed to readEnum(): " + enumClass.getName());
-		for (T t : enumConstants) {
-			if (t.name()
-				.equals(name))
-				return t;
+			throw new IllegalArgumentException("Non-Enum class passed to readEnum: " + enumClass.getName());
+		if (nbt.contains(key, NBT.TAG_STRING)) {
+			String name = nbt.getString(key);
+			for (T t : enumConstants) {
+				if (t.name()
+					.equals(name))
+					return t;
+			}
 		}
 		return enumConstants[0];
 	}
@@ -53,7 +56,7 @@ public class NBTHelper {
 		listNBT.forEach(inbt -> consumer.accept((CompoundNBT) inbt));
 	}
 
-	public static ListNBT writeItemList(List<ItemStack> stacks) {
+	public static ListNBT writeItemList(Iterable<ItemStack> stacks) {
 		return writeCompoundList(stacks, ItemStack::serializeNBT);
 	}
 

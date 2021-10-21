@@ -9,11 +9,13 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.util.text.TextFormatting;
 
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
@@ -53,7 +55,18 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 			.getItems()));
 		itemStacks.init(2, false, 131, 50);
 		itemStacks.set(2, recipe.getResultItem());
-		
+
+		if (recipe.shouldKeepHeldItem()) {
+			itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
+				if (!input)
+					return;
+				if (slotIndex != 1)
+					return;
+				tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
+					.withStyle(TextFormatting.GOLD));
+			});
+		}
+
 		addStochasticTooltip(itemStacks, recipe.getRollableResults(), 2);
 	}
 

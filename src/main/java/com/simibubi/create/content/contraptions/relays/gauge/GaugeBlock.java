@@ -5,7 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -70,9 +70,9 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	/*
 	 * FIXME: Is there a new way of doing this in 1.16? Or cn we just delete it?
-	 * 
+	 *
 	 * @SuppressWarnings("deprecation")
-	 * 
+	 *
 	 * @Override
 	 * public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
 	 * return Blocks.SPRUCE_PLANKS.getMaterialColor(state, worldIn, pos);
@@ -152,7 +152,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
 				continue;
 
-			Vector3d rgb = ColorHelper.getRGB(color);
+			Vector3d rgb = Color.vectorFromRGB(color);
 			Vector3d faceVec = Vector3d.atLowerCornerOf(face.getNormal());
 			Direction positiveFacing = Direction.get(AxisDirection.POSITIVE, face.getAxis());
 			Vector3d positiveFaceVec = Vector3d.atLowerCornerOf(positiveFacing.getNormal());

@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "create:block/toolbox/brown",
+		"particle": "block/dark_oak_planks"
+	},
+	"elements": [
+		{
+			"from": [2, 1, 4],
+			"to": [14, 3, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 4.5, 6, 5.5], "texture": "#0"},
+				"east": {"uv": [6, 9, 9, 10], "texture": "#0"},
+				"west": {"uv": [9, 9, 6, 10], "texture": "#0"},
+				"up": {"uv": [0, 5.5, 6, 8.5], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [0, 8.5, 6, 11.5], "texture": "#0"}
+			}
+		}
+	],
+	"display": {}
+}

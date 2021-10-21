@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.content.fluid.DrainScenes;
 import com.simibubi.create.foundation.ponder.content.fluid.FluidMovementActorScenes;
@@ -17,179 +18,179 @@ import net.minecraft.item.DyeColor;
 
 public class PonderIndex {
 
+	static final PonderRegistrationHelper HELPER = new PonderRegistrationHelper(Create.ID);
+
 	public static final boolean EDITOR_MODE = false;
 
 	public static void register() {
-		PonderRegistry.startRegistration(Create.ID);
-
 		// Register storyboards here
 		// (!) Added entries require re-launch
 		// (!) Modifications inside storyboard methods only require re-opening the ui
 
-		PonderRegistry.forComponents(AllBlocks.SHAFT)
+		HELPER.forComponents(AllBlocks.SHAFT)
 			.addStoryBoard("shaft/relay", KineticsScenes::shaftAsRelay, PonderTag.KINETIC_RELAYS);
-		PonderRegistry.forComponents(AllBlocks.SHAFT, AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT)
+		HELPER.forComponents(AllBlocks.SHAFT, AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT)
 			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased);
 
-		PonderRegistry.forComponents(AllBlocks.COGWHEEL)
+		HELPER.forComponents(AllBlocks.COGWHEEL)
 			.addStoryBoard("cog/small", KineticsScenes::cogAsRelay, PonderTag.KINETIC_RELAYS)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp);
 
-		PonderRegistry.forComponents(AllBlocks.LARGE_COGWHEEL)
+		HELPER.forComponents(AllBlocks.LARGE_COGWHEEL)
 			.addStoryBoard("cog/speedup", KineticsScenes::cogsSpeedUp)
 			.addStoryBoard("cog/large", KineticsScenes::largeCogAsRelay, PonderTag.KINETIC_RELAYS);
 
-		PonderRegistry.forComponents(AllItems.BELT_CONNECTOR)
+		HELPER.forComponents(AllItems.BELT_CONNECTOR)
 			.addStoryBoard("belt/connect", BeltScenes::beltConnector, PonderTag.KINETIC_RELAYS)
 			.addStoryBoard("belt/directions", BeltScenes::directions)
 			.addStoryBoard("belt/transport", BeltScenes::transport, PonderTag.LOGISTICS)
 			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
-		PonderRegistry.forComponents(AllBlocks.ANDESITE_CASING, AllBlocks.BRASS_CASING)
+		HELPER.forComponents(AllBlocks.ANDESITE_CASING, AllBlocks.BRASS_CASING)
 			.addStoryBoard("shaft/encasing", KineticsScenes::shaftsCanBeEncased)
 			.addStoryBoard("belt/encasing", BeltScenes::beltsCanBeEncased);
 
-		PonderRegistry.forComponents(AllBlocks.GEARBOX, AllItems.VERTICAL_GEARBOX)
+		HELPER.forComponents(AllBlocks.GEARBOX, AllItems.VERTICAL_GEARBOX)
 			.addStoryBoard("gearbox", KineticsScenes::gearbox, PonderTag.KINETIC_RELAYS);
 
-		PonderRegistry.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch, PonderTag.KINETIC_RELAYS);
-		PonderRegistry.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift,
+		HELPER.addStoryBoard(AllBlocks.CLUTCH, "clutch", KineticsScenes::clutch, PonderTag.KINETIC_RELAYS);
+		HELPER.addStoryBoard(AllBlocks.GEARSHIFT, "gearshift", KineticsScenes::gearshift,
 			PonderTag.KINETIC_RELAYS);
 
-		PonderRegistry.forComponents(AllBlocks.SEQUENCED_GEARSHIFT)
+		HELPER.forComponents(AllBlocks.SEQUENCED_GEARSHIFT)
 			.addStoryBoard("sequenced_gearshift", KineticsScenes::sequencedGearshift);
 
-		PonderRegistry.forComponents(AllBlocks.ENCASED_FAN)
+		HELPER.forComponents(AllBlocks.ENCASED_FAN)
 			.addStoryBoard("fan/direction", FanScenes::direction, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("fan/processing", FanScenes::processing)
 			.addStoryBoard("fan/source", FanScenes::source, PonderTag.KINETIC_SOURCES);
 
-		PonderRegistry.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
+		HELPER.addStoryBoard(AllBlocks.CREATIVE_MOTOR, "creative_motor", KineticsScenes::creativeMotor,
 				PonderTag.KINETIC_SOURCES);
-		PonderRegistry.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
+		HELPER.addStoryBoard(AllBlocks.WATER_WHEEL, "water_wheel", KineticsScenes::waterWheel,
 				PonderTag.KINETIC_SOURCES);
-		PonderRegistry.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank,
+		HELPER.addStoryBoard(AllBlocks.HAND_CRANK, "hand_crank", KineticsScenes::handCrank,
 				PonderTag.KINETIC_SOURCES);
 
-		PonderRegistry.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
+		HELPER.addStoryBoard(AllBlocks.COPPER_VALVE_HANDLE, "valve_handle", KineticsScenes::valveHandle,
 				PonderTag.KINETIC_SOURCES);
-		PonderRegistry.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
+		HELPER.forComponents(AllBlocks.DYED_VALVE_HANDLES.toArray())
 				.addStoryBoard("valve_handle", KineticsScenes::valveHandle);
 
-		PonderRegistry.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
+		HELPER.addStoryBoard(AllBlocks.ENCASED_CHAIN_DRIVE, "chain_drive/relay",
 				ChainDriveScenes::chainDriveAsRelay, PonderTag.KINETIC_RELAYS);
-		PonderRegistry.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
+		HELPER.forComponents(AllBlocks.ENCASED_CHAIN_DRIVE, AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
 				.addStoryBoard("chain_drive/gearshift", ChainDriveScenes::adjustableChainGearshift);
 
-		PonderRegistry.forComponents(AllBlocks.FURNACE_ENGINE)
+		HELPER.forComponents(AllBlocks.FURNACE_ENGINE)
 				.addStoryBoard("furnace_engine", KineticsScenes::furnaceEngine);
-		PonderRegistry.forComponents(AllBlocks.FLYWHEEL)
+		HELPER.forComponents(AllBlocks.FLYWHEEL)
 			.addStoryBoard("furnace_engine", KineticsScenes::flywheel);
-		PonderRegistry.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
+		HELPER.forComponents(AllBlocks.ROTATION_SPEED_CONTROLLER)
 			.addStoryBoard("speed_controller", KineticsScenes::speedController);
 
 		// Gauges
-		PonderRegistry.addStoryBoard(AllBlocks.SPEEDOMETER, "gauges", KineticsScenes::speedometer);
-		PonderRegistry.addStoryBoard(AllBlocks.STRESSOMETER, "gauges", KineticsScenes::stressometer);
+		HELPER.addStoryBoard(AllBlocks.SPEEDOMETER, "gauges", KineticsScenes::speedometer);
+		HELPER.addStoryBoard(AllBlocks.STRESSOMETER, "gauges", KineticsScenes::stressometer);
 
 		// Item Processing
-		PonderRegistry.addStoryBoard(AllBlocks.MILLSTONE, "millstone", ProcessingScenes::millstone);
-		PonderRegistry.addStoryBoard(AllBlocks.CRUSHING_WHEEL, "crushing_wheel", ProcessingScenes::crushingWheels);
-		PonderRegistry.addStoryBoard(AllBlocks.MECHANICAL_MIXER, "mechanical_mixer/mixing", ProcessingScenes::mixing);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PRESS)
+		HELPER.addStoryBoard(AllBlocks.MILLSTONE, "millstone", ProcessingScenes::millstone);
+		HELPER.addStoryBoard(AllBlocks.CRUSHING_WHEEL, "crushing_wheel", ProcessingScenes::crushingWheels);
+		HELPER.addStoryBoard(AllBlocks.MECHANICAL_MIXER, "mechanical_mixer/mixing", ProcessingScenes::mixing);
+		HELPER.forComponents(AllBlocks.MECHANICAL_PRESS)
 			.addStoryBoard("mechanical_press/pressing", ProcessingScenes::pressing)
 			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
-		PonderRegistry.forComponents(AllBlocks.BASIN)
+		HELPER.forComponents(AllBlocks.BASIN)
 			.addStoryBoard("basin", ProcessingScenes::basin)
 			.addStoryBoard("mechanical_mixer/mixing", ProcessingScenes::mixing)
 			.addStoryBoard("mechanical_press/compacting", ProcessingScenes::compacting);
-		PonderRegistry.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner",
+		HELPER.addStoryBoard(AllItems.EMPTY_BLAZE_BURNER, "empty_blaze_burner",
 			ProcessingScenes::emptyBlazeBurner);
-		PonderRegistry.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
-		PonderRegistry.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
-		PonderRegistry.forComponents(AllBlocks.WEIGHTED_EJECTOR)
+		HELPER.addStoryBoard(AllBlocks.BLAZE_BURNER, "blaze_burner", ProcessingScenes::blazeBurner);
+		HELPER.addStoryBoard(AllBlocks.DEPOT, "depot", BeltScenes::depot);
+		HELPER.forComponents(AllBlocks.WEIGHTED_EJECTOR)
 			.addStoryBoard("weighted_ejector/eject", EjectorScenes::ejector)
 			.addStoryBoard("weighted_ejector/split", EjectorScenes::splitY)
 			.addStoryBoard("weighted_ejector/redstone", EjectorScenes::redstone);
 
 		// Crafters
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER)
+		HELPER.forComponents(AllBlocks.MECHANICAL_CRAFTER)
 			.addStoryBoard("mechanical_crafter/setup", CrafterScenes::setup)
 			.addStoryBoard("mechanical_crafter/connect", CrafterScenes::connect);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_CRAFTER, AllItems.CRAFTER_SLOT_COVER)
+		HELPER.forComponents(AllBlocks.MECHANICAL_CRAFTER, AllItems.CRAFTER_SLOT_COVER)
 			.addStoryBoard("mechanical_crafter/covers", CrafterScenes::covers);
 
 		// Chutes
-		PonderRegistry.forComponents(AllBlocks.CHUTE)
+		HELPER.forComponents(AllBlocks.CHUTE)
 			.addStoryBoard("chute/downward", ChuteScenes::downward, PonderTag.LOGISTICS)
 			.addStoryBoard("chute/upward", ChuteScenes::upward);
-		PonderRegistry.forComponents(AllBlocks.CHUTE, AllBlocks.SMART_CHUTE)
+		HELPER.forComponents(AllBlocks.CHUTE, AllBlocks.SMART_CHUTE)
 			.addStoryBoard("chute/smart", ChuteScenes::smart);
 
 		// Funnels
-		PonderRegistry.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
-		PonderRegistry.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)
+		HELPER.addStoryBoard(AllBlocks.BRASS_FUNNEL, "funnels/brass", FunnelScenes::brass);
+		HELPER.forComponents(AllBlocks.ANDESITE_FUNNEL, AllBlocks.BRASS_FUNNEL)
 			.addStoryBoard("funnels/intro", FunnelScenes::intro, PonderTag.LOGISTICS)
 			.addStoryBoard("funnels/direction", FunnelScenes::directionality)
 			.addStoryBoard("funnels/compat", FunnelScenes::compat)
 			.addStoryBoard("funnels/redstone", FunnelScenes::redstone)
 			.addStoryBoard("funnels/transposer", FunnelScenes::transposer);
-		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
+		HELPER.addStoryBoard(AllBlocks.ANDESITE_FUNNEL, "funnels/brass", FunnelScenes::brass);
 
 		// Tunnels
-		PonderRegistry.addStoryBoard(AllBlocks.ANDESITE_TUNNEL, "tunnels/andesite", TunnelScenes::andesite);
-		PonderRegistry.forComponents(AllBlocks.BRASS_TUNNEL)
+		HELPER.addStoryBoard(AllBlocks.ANDESITE_TUNNEL, "tunnels/andesite", TunnelScenes::andesite);
+		HELPER.forComponents(AllBlocks.BRASS_TUNNEL)
 			.addStoryBoard("tunnels/brass", TunnelScenes::brass)
 			.addStoryBoard("tunnels/brass_modes", TunnelScenes::brassModes);
 
 		// Chassis & Super Glue
-		PonderRegistry.forComponents(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
+		HELPER.forComponents(AllBlocks.LINEAR_CHASSIS, AllBlocks.SECONDARY_LINEAR_CHASSIS)
 			.addStoryBoard("chassis/linear_group", ChassisScenes::linearGroup, PonderTag.CONTRAPTION_ASSEMBLY)
 			.addStoryBoard("chassis/linear_attachment", ChassisScenes::linearAttachement);
-		PonderRegistry.forComponents(AllBlocks.RADIAL_CHASSIS)
+		HELPER.forComponents(AllBlocks.RADIAL_CHASSIS)
 			.addStoryBoard("chassis/radial", ChassisScenes::radial, PonderTag.CONTRAPTION_ASSEMBLY);
-		PonderRegistry.forComponents(AllItems.SUPER_GLUE)
+		HELPER.forComponents(AllItems.SUPER_GLUE)
 			.addStoryBoard("super_glue", ChassisScenes::superGlue, PonderTag.CONTRAPTION_ASSEMBLY);
-		PonderRegistry.forComponents(AllBlocks.STICKER)
+		HELPER.forComponents(AllBlocks.STICKER)
 			.addStoryBoard("sticker", RedstoneScenes::sticker, PonderTag.CONTRAPTION_ASSEMBLY);
 
 		// Mechanical Arm
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_ARM)
+		HELPER.forComponents(AllBlocks.MECHANICAL_ARM)
 			.addStoryBoard("mechanical_arm/setup", ArmScenes::setup, PonderTag.ARM_TARGETS)
 			.addStoryBoard("mechanical_arm/filter", ArmScenes::filtering)
 			.addStoryBoard("mechanical_arm/modes", ArmScenes::modes)
 			.addStoryBoard("mechanical_arm/redstone", ArmScenes::redstone);
 
 		// Mechanical Piston
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
+		HELPER.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 			.addStoryBoard("mechanical_piston/anchor", PistonScenes::movement, PonderTag.KINETIC_APPLIANCES,
 				PonderTag.MOVEMENT_ANCHOR);
-		PonderRegistry
+		HELPER
 			.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON,
 				AllBlocks.PISTON_EXTENSION_POLE)
 			.addStoryBoard("mechanical_piston/piston_pole", PistonScenes::poles);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
+		HELPER.forComponents(AllBlocks.MECHANICAL_PISTON, AllBlocks.STICKY_MECHANICAL_PISTON)
 			.addStoryBoard("mechanical_piston/modes", PistonScenes::movementModes);
 
 		// Windmill Bearing
-		PonderRegistry.forComponents(AllBlocks.ROPE_PULLEY)
+		HELPER.forComponents(AllBlocks.ROPE_PULLEY)
 			.addStoryBoard("rope_pulley/anchor", PulleyScenes::movement, PonderTag.KINETIC_APPLIANCES,
 				PonderTag.MOVEMENT_ANCHOR)
 			.addStoryBoard("rope_pulley/modes", PulleyScenes::movementModes)
 			.addStoryBoard("rope_pulley/attachment", PulleyScenes::attachment);
 
 		// Windmill Bearing
-		PonderRegistry.forComponents(AllBlocks.WINDMILL_BEARING)
+		HELPER.forComponents(AllBlocks.WINDMILL_BEARING)
 			.addStoryBoard("windmill_bearing/source", BearingScenes::windmillsAsSource, PonderTag.KINETIC_SOURCES)
 			.addStoryBoard("windmill_bearing/structure", BearingScenes::windmillsAnyStructure,
 				PonderTag.MOVEMENT_ANCHOR);
-		PonderRegistry.forComponents(AllBlocks.SAIL)
+		HELPER.forComponents(AllBlocks.SAIL)
 			.addStoryBoard("sail", BearingScenes::sail);
-		PonderRegistry.forComponents(AllBlocks.SAIL_FRAME)
+		HELPER.forComponents(AllBlocks.SAIL_FRAME)
 			.addStoryBoard("sail", BearingScenes::sailFrame);
 
 		// Mechanical Bearing
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_BEARING)
+		HELPER.forComponents(AllBlocks.MECHANICAL_BEARING)
 			.addStoryBoard("mechanical_bearing/anchor", BearingScenes::mechanicalBearing, PonderTag.KINETIC_APPLIANCES,
 				PonderTag.MOVEMENT_ANCHOR)
 			.addStoryBoard("mechanical_bearing/modes", BearingScenes::bearingModes)
@@ -197,107 +198,105 @@ public class PonderIndex {
 				PonderTag.CONTRAPTION_ACTOR);
 
 		// Clockwork Bearing
-		PonderRegistry.addStoryBoard(AllBlocks.CLOCKWORK_BEARING, "clockwork_bearing", BearingScenes::clockwork,
+		HELPER.addStoryBoard(AllBlocks.CLOCKWORK_BEARING, "clockwork_bearing", BearingScenes::clockwork,
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
 
 		// Gantries
-		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
+		HELPER.addStoryBoard(AllBlocks.GANTRY_SHAFT, "gantry/intro", GantryScenes::introForShaft,
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
-		PonderRegistry.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion,
+		HELPER.addStoryBoard(AllBlocks.GANTRY_CARRIAGE, "gantry/intro", GantryScenes::introForPinion,
 			PonderTag.KINETIC_APPLIANCES, PonderTag.MOVEMENT_ANCHOR);
-		PonderRegistry.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
+		HELPER.forComponents(AllBlocks.GANTRY_SHAFT, AllBlocks.GANTRY_CARRIAGE)
 			.addStoryBoard("gantry/redstone", GantryScenes::redstone)
 			.addStoryBoard("gantry/direction", GantryScenes::direction)
 			.addStoryBoard("gantry/subgantry", GantryScenes::subgantry);
 
 		// Cart Assembler
-		PonderRegistry.forComponents(AllBlocks.CART_ASSEMBLER)
+		HELPER.forComponents(AllBlocks.CART_ASSEMBLER)
 			.addStoryBoard("cart_assembler/anchor", CartAssemblerScenes::anchor, PonderTag.MOVEMENT_ANCHOR)
 			.addStoryBoard("cart_assembler/modes", CartAssemblerScenes::modes)
 			.addStoryBoard("cart_assembler/dual", CartAssemblerScenes::dual)
 			.addStoryBoard("cart_assembler/rails", CartAssemblerScenes::rails);
 
 		// Movement Actors
-		PonderRegistry.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
+		HELPER.forComponents(AllBlocks.PORTABLE_STORAGE_INTERFACE)
 			.addStoryBoard("portable_interface/transfer", MovementActorScenes::psiTransfer, PonderTag.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone", MovementActorScenes::psiRedstone);
-		PonderRegistry.forComponents(AllBlocks.REDSTONE_CONTACT)
+		HELPER.forComponents(AllBlocks.REDSTONE_CONTACT)
 			.addStoryBoard("redstone_contact", RedstoneScenes::contact);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_SAW)
+		HELPER.forComponents(AllBlocks.MECHANICAL_SAW)
 			.addStoryBoard("mechanical_saw/processing", MechanicalSawScenes::processing, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_saw/breaker", MechanicalSawScenes::treeCutting)
 			.addStoryBoard("mechanical_saw/contraption", MechanicalSawScenes::contraption, PonderTag.CONTRAPTION_ACTOR);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_DRILL)
+		HELPER.forComponents(AllBlocks.MECHANICAL_DRILL)
 			.addStoryBoard("mechanical_drill/breaker", MechanicalDrillScenes::breaker, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_drill/contraption", MechanicalDrillScenes::contraption,
 				PonderTag.CONTRAPTION_ACTOR);
-		PonderRegistry.forComponents(AllBlocks.DEPLOYER)
+		HELPER.forComponents(AllBlocks.DEPLOYER)
 			.addStoryBoard("deployer/filter", DeployerScenes::filter, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("deployer/modes", DeployerScenes::modes)
 			.addStoryBoard("deployer/processing", DeployerScenes::processing)
 			.addStoryBoard("deployer/redstone", DeployerScenes::redstone)
 			.addStoryBoard("deployer/contraption", DeployerScenes::contraption, PonderTag.CONTRAPTION_ACTOR);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_HARVESTER)
+		HELPER.forComponents(AllBlocks.MECHANICAL_HARVESTER)
 			.addStoryBoard("harvester", MovementActorScenes::harvester);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PLOUGH)
+		HELPER.forComponents(AllBlocks.MECHANICAL_PLOUGH)
 			.addStoryBoard("plough", MovementActorScenes::plough);
 
 		// Fluids
-		PonderRegistry.forComponents(AllBlocks.FLUID_PIPE)
+		HELPER.forComponents(AllBlocks.FLUID_PIPE)
 			.addStoryBoard("fluid_pipe/flow", PipeScenes::flow, PonderTag.FLUIDS)
 			.addStoryBoard("fluid_pipe/interaction", PipeScenes::interaction)
 			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
-		PonderRegistry.forComponents(AllBlocks.COPPER_CASING)
+		HELPER.forComponents(AllBlocks.COPPER_CASING)
 			.addStoryBoard("fluid_pipe/encasing", PipeScenes::encasing);
-		PonderRegistry.forComponents(AllBlocks.MECHANICAL_PUMP)
+		HELPER.forComponents(AllBlocks.MECHANICAL_PUMP)
 			.addStoryBoard("mechanical_pump/flow", PumpScenes::flow, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("mechanical_pump/speed", PumpScenes::speed);
-		PonderRegistry.forComponents(AllBlocks.FLUID_VALVE)
+		HELPER.forComponents(AllBlocks.FLUID_VALVE)
 			.addStoryBoard("fluid_valve", PipeScenes::valve, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES);
-		PonderRegistry.forComponents(AllBlocks.SMART_FLUID_PIPE)
+		HELPER.forComponents(AllBlocks.SMART_FLUID_PIPE)
 			.addStoryBoard("smart_pipe", PipeScenes::smart, PonderTag.FLUIDS);
-		PonderRegistry.forComponents(AllBlocks.FLUID_TANK)
+		HELPER.forComponents(AllBlocks.FLUID_TANK)
 			.addStoryBoard("fluid_tank/storage", FluidTankScenes::storage, PonderTag.FLUIDS)
 			.addStoryBoard("fluid_tank/sizes", FluidTankScenes::sizes);
-		PonderRegistry.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
+		HELPER.forComponents(AllBlocks.CREATIVE_FLUID_TANK)
 			.addStoryBoard("fluid_tank/storage_creative", FluidTankScenes::creative, PonderTag.FLUIDS, PonderTag.CREATIVE)
 			.addStoryBoard("fluid_tank/sizes_creative", FluidTankScenes::sizes);
-		PonderRegistry.forComponents(AllBlocks.HOSE_PULLEY)
+		HELPER.forComponents(AllBlocks.HOSE_PULLEY)
 			.addStoryBoard("hose_pulley/intro", HosePulleyScenes::intro, PonderTag.FLUIDS, PonderTag.KINETIC_APPLIANCES)
 			.addStoryBoard("hose_pulley/level", HosePulleyScenes::level)
 			.addStoryBoard("hose_pulley/infinite", HosePulleyScenes::infinite);
-		PonderRegistry.forComponents(AllBlocks.SPOUT)
+		HELPER.forComponents(AllBlocks.SPOUT)
 			.addStoryBoard("spout", SpoutScenes::filling, PonderTag.FLUIDS);
-		PonderRegistry.forComponents(AllBlocks.ITEM_DRAIN)
+		HELPER.forComponents(AllBlocks.ITEM_DRAIN)
 			.addStoryBoard("item_drain", DrainScenes::emptying, PonderTag.FLUIDS);
-		PonderRegistry.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
+		HELPER.forComponents(AllBlocks.PORTABLE_FLUID_INTERFACE)
 			.addStoryBoard("portable_interface/transfer_fluid", FluidMovementActorScenes::transfer, PonderTag.FLUIDS,
 				PonderTag.CONTRAPTION_ACTOR)
 			.addStoryBoard("portable_interface/redstone_fluid", MovementActorScenes::psiRedstone);
 
 		// Redstone
-		PonderRegistry.forComponents(AllBlocks.PULSE_REPEATER)
+		HELPER.forComponents(AllBlocks.PULSE_REPEATER)
 			.addStoryBoard("pulse_repeater", RedstoneScenes::pulseRepeater);
-		PonderRegistry.forComponents(AllBlocks.ADJUSTABLE_REPEATER)
+		HELPER.forComponents(AllBlocks.ADJUSTABLE_REPEATER)
 			.addStoryBoard("adjustable_repeater", RedstoneScenes::adjustableRepeater);
-		PonderRegistry.forComponents(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
+		HELPER.forComponents(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.addStoryBoard("adjustable_pulse_repeater", RedstoneScenes::adjustablePulseRepeater);
-		PonderRegistry.forComponents(AllBlocks.POWERED_LATCH)
+		HELPER.forComponents(AllBlocks.POWERED_LATCH)
 			.addStoryBoard("powered_latch", RedstoneScenes::poweredLatch);
-		PonderRegistry.forComponents(AllBlocks.POWERED_TOGGLE_LATCH)
+		HELPER.forComponents(AllBlocks.POWERED_TOGGLE_LATCH)
 			.addStoryBoard("powered_toggle_latch", RedstoneScenes::poweredToggleLatch);
-		PonderRegistry.forComponents(AllBlocks.ANALOG_LEVER)
+		HELPER.forComponents(AllBlocks.ANALOG_LEVER)
 			.addStoryBoard("analog_lever", RedstoneScenes::analogLever);
-		PonderRegistry.forComponents(AllBlocks.ORANGE_NIXIE_TUBE)
+		HELPER.forComponents(AllBlocks.ORANGE_NIXIE_TUBE)
 			.addStoryBoard("nixie_tube", RedstoneScenes::nixieTube);
-		PonderRegistry.forComponents(AllBlocks.REDSTONE_LINK)
+		HELPER.forComponents(AllBlocks.REDSTONE_LINK)
 			.addStoryBoard("redstone_link", RedstoneScenes::redstoneLink);
 
 		// Debug scenes, can be found in game via the Brass Hand
 		if (EDITOR_MODE)
 			DebugScenes.registerAll();
-
-		PonderRegistry.endRegistration();
 	}
 
 	public static void registerTags() {

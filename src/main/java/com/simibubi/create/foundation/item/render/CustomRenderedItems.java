@@ -29,7 +29,7 @@ public class CustomRenderedItems {
 		registered.add(Pair.of(entry, behaviour));
 	}
 
-	public void foreach(
+	public void forEach(
 		NonNullBiConsumer<Item, NonNullFunction<IBakedModel, ? extends CustomRenderedItemModel>> consumer) {
 		loadEntriesIfMissing();
 		customModels.forEach(consumer);

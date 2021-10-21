@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.ponder.content;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
+import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 import net.minecraft.client.Minecraft;
@@ -13,12 +13,26 @@ import net.minecraft.util.ResourceLocation;
 
 public class PonderChapter implements IScreenRenderable {
 
-	private final String id;
+	private final ResourceLocation id;
 	private final ResourceLocation icon;
 
-	private PonderChapter(String id) {
+	private PonderChapter(ResourceLocation id) {
 		this.id = id;
-		icon = new ResourceLocation(Create.ID, "textures/ponder/chapter/" + id + ".png");
+		icon = new ResourceLocation(id.getNamespace(), "textures/ponder/chapter/" + id.getPath() + ".png");
+	}
+
+	public ResourceLocation getId() {
+		return id;
+	}
+
+	public String getTitle() {
+		return PonderLocalization.getChapter(id);
+	}
+
+	public PonderChapter addTagsToChapter(PonderTag... tags) {
+		for (PonderTag t : tags)
+			PonderRegistry.TAGS.add(t, this);
+		return this;
 	}
 
 	@Override
@@ -32,22 +46,12 @@ public class PonderChapter implements IScreenRenderable {
 	}
 
 	@Nonnull
-	public static PonderChapter of(String id) {
+	public static PonderChapter of(ResourceLocation id) {
 		PonderChapter chapter = PonderRegistry.CHAPTERS.getChapter(id);
 		if (chapter == null) {
 			 chapter = PonderRegistry.CHAPTERS.addChapter(new PonderChapter(id));
 		}
 
 		return chapter;
-	}
-
-	public PonderChapter addTagsToChapter(PonderTag... tags) {
-		for (PonderTag t : tags)
-			PonderRegistry.TAGS.add(t, this);
-		return this;
-	}
-
-	public String getId() {
-		return id;
 	}
 }

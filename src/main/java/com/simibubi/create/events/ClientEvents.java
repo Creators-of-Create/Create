@@ -22,10 +22,11 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.turntable.TurntableHandler;
 import com.simibubi.create.content.contraptions.goggles.GoggleOverlayRenderer;
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipe;
+import com.simibubi.create.content.contraptions.relays.belt.BeltSlicer;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorHandler;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.curiosities.tools.BlueprintOverlayRenderer;
 import com.simibubi.create.content.curiosities.tools.ExtendoGripRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
@@ -41,7 +42,7 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.LeftClickPacket;
 import com.simibubi.create.foundation.ponder.PonderTooltipHandler;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.sound.SoundScapes;
 import com.simibubi.create.foundation.tileEntity.behaviour.edgeInteraction.EdgeInteractionRenderer;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRenderer;
@@ -91,15 +92,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class ClientEvents {
 
-	private static final String itemPrefix = "item." + Create.ID;
-	private static final String blockPrefix = "block." + Create.ID;
+	private static final String ITEM_PREFIX = "item." + Create.ID;
+	private static final String BLOCK_PREFIX = "block." + Create.ID;
 
 	@SubscribeEvent
 	public static void onTick(ClientTickEvent event) {
-		World world = Minecraft.getInstance().level;
 		if (!isGameActive())
 			return;
 
+		World world = Minecraft.getInstance().level;
 		if (event.phase == Phase.START) {
 			LinkedControllerClientHandler.tick();
 			AirCurrent.tickClientPlayerSounds();
@@ -125,6 +126,7 @@ public class ClientEvents {
 		// ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
+		BeltSlicer.tickHoveringInformation();
 		FilteringRenderer.tick();
 		LinkRenderer.tick();
 		ScrollValueRenderer.tick();
@@ -143,6 +145,7 @@ public class ClientEvents {
 		CreateClient.GHOST_BLOCKS.tickGhosts();
 		ContraptionRenderDispatcher.tick(world);
 		BlueprintOverlayRenderer.tick();
+		ToolboxHandlerClient.clientTick();
 	}
 
 	@SubscribeEvent
@@ -157,13 +160,6 @@ public class ClientEvents {
 			CreateClient.invalidateRenderers();
 			AnimationTickHolder.reset();
 		}
-
-		/*
-		 * i was getting nullPointers when trying to call this during client setup,
-		 * so i assume minecraft's language manager isn't yet fully loaded at that time.
-		 * not sure where else to call this tho :S
-		 */
-		IHaveGoggleInformation.numberFormat.update();
 	}
 
 	@SubscribeEvent
@@ -223,6 +219,7 @@ public class ClientEvents {
 		LinkedControllerClientHandler.renderOverlay(ms, buffer, light, overlay, partialTicks);
 		BlueprintOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
 		GoggleOverlayRenderer.renderOverlay(ms, buffer, light, overlay, partialTicks);
+		ToolboxHandlerClient.renderOverlay(ms, buffer, light, overlay, partialTicks);
 	}
 
 	@SubscribeEvent
@@ -241,7 +238,7 @@ public class ClientEvents {
 		String translationKey = stack.getItem()
 			.getDescriptionId(stack);
 
-		if (translationKey.startsWith(itemPrefix) || translationKey.startsWith(blockPrefix))
+		if (translationKey.startsWith(ITEM_PREFIX) || translationKey.startsWith(BLOCK_PREFIX))
 			if (TooltipHelper.hasTooltip(stack, event.getPlayer())) {
 				List<ITextComponent> itemTooltip = event.getToolTip();
 				List<ITextComponent> toolTip = new ArrayList<>();

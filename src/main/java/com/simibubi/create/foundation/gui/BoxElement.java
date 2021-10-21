@@ -1,12 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.Color;
-
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.renderer.BufferBuilder;
@@ -96,9 +94,9 @@ public class BoxElement extends RenderElement {
 		RenderSystem.shadeModel(GL11.GL_SMOOTH);
 
 		int f = borderOffset;
-		Color c1 = ColorHelper.applyAlpha(background, alpha);
-		Color c2 = ColorHelper.applyAlpha(borderTop, alpha);
-		Color c3 = ColorHelper.applyAlpha(borderBot, alpha);
+		Color c1 = background.copy().scaleAlpha(alpha);
+		Color c2 = borderTop.copy().scaleAlpha(alpha);
+		Color c3 = borderBot.copy().scaleAlpha(alpha);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder b = tessellator.getBuilder();
 		Matrix4f model = ms.last().pose();

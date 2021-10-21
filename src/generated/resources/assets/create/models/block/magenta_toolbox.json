@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/toolbox/block",
+  "textures": {
+    "0": "create:block/toolbox/magenta"
+  }
+}

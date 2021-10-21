@@ -14,7 +14,7 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class AllCommands {
 
-	public static Predicate<CommandSource> sourceIsPlayer = (cs) -> cs.getEntity() instanceof PlayerEntity;
+	public static final Predicate<CommandSource> SOURCE_IS_PLAYER = cs -> cs.getEntity() instanceof PlayerEntity;
 
 	public static void register(CommandDispatcher<CommandSource> dispatcher) {
 
@@ -88,4 +88,5 @@ public class AllCommands {
 		}
 		return builder.build();
 	}
+
 }

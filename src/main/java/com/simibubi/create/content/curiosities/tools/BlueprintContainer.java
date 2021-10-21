@@ -112,7 +112,8 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 	}
 
 	@Override
-	protected void readData(BlueprintSection contentHolder) {
+	protected void initAndReadInventory(BlueprintSection contentHolder) {
+		super.initAndReadInventory(contentHolder);
 	}
 
 	@Override

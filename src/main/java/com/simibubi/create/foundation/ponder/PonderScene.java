@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -24,7 +26,7 @@ import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.PonderSceneElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.ponder.instructions.HideAllInstruction;
-import com.simibubi.create.foundation.renderState.SuperRenderTypeBuffer;
+import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -79,6 +81,7 @@ public class PonderScene {
 	Vector3d pointOfInterest;
 	Vector3d chasingPointOfInterest;
 	WorldSectionElement baseWorldSection;
+	@Nullable
 	Entity renderViewEntity;
 
 	int basePlateOffsetX;
@@ -112,7 +115,7 @@ public class PonderScene {
 		basePlateSize = getBounds().getXSpan();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
-		renderViewEntity = new ArmorStandEntity(world, 0, 0, 0);
+		renderViewEntity = world != null ? new ArmorStandEntity(world, 0, 0, 0) : null;
 		keyframeTimes = new IntArrayList(4);
 		scaleFactor = 1;
 		yOffset = 0;
@@ -486,7 +489,8 @@ public class PonderScene {
 
 		public void updateSceneRVE(float pt) {
 			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);
-			renderViewEntity.setPos(v.x, v.y, v.z);
+			if (renderViewEntity != null)
+				renderViewEntity.setPos(v.x, v.y, v.z);
 		}
 
 		public Vector3d screenToScene(double x, double y, int depth, float pt) {

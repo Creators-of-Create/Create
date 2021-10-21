@@ -145,9 +145,9 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 
 			if (fluidsAffected) {
 				basin.getBehaviour(SmartFluidTankBehaviour.INPUT)
-					.foreach(TankSegment::onFluidStackChanged);
+					.forEach(TankSegment::onFluidStackChanged);
 				basin.getBehaviour(SmartFluidTankBehaviour.OUTPUT)
-					.foreach(TankSegment::onFluidStackChanged);
+					.forEach(TankSegment::onFluidStackChanged);
 			}
 
 			if (simulate) {

@@ -1,10 +1,14 @@
 package com.simibubi.create.foundation.config.ui;
 
-import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
@@ -32,7 +36,9 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -55,13 +61,15 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected BoxWidget discardChanges;
 	protected BoxWidget goBack;
 	protected BoxWidget serverLocked;
+	protected HintableTextFieldWidget search;
 	protected int listWidth;
 	protected String title;
+	protected Set<String> highlights = new HashSet<>();
 
 	public static SubMenuConfigScreen find(ConfigHelper.ConfigPath path) {
 		ForgeConfigSpec spec = ConfigHelper.findConfigSpecFor(path.getType(), path.getModID());
 		UnmodifiableConfig values = spec.getValues();
-		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID()).searchForSpecsInModContainer();
+		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID());
 		SubMenuConfigScreen screen = new SubMenuConfigScreen(base, "root", path.getType(), spec, values);
 		List<String> remainingPath = Lists.newArrayList(path.getPath());
 
@@ -75,6 +83,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 				if (!(obj instanceof AbstractConfig)) {
 					//highlight entry
+					screen.highlights.add(path.getPath()[path.getPath().length - 1]);
 					continue;
 				}
 
@@ -107,7 +116,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	protected void clearChanges() {
-		changes.clear();
+		ConfigHelper.changes.clear();
 		list.children()
 				.stream()
 				.filter(e -> e instanceof ValueEntry)
@@ -116,11 +125,18 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 	protected void saveChanges() {
 		UnmodifiableConfig values = spec.getValues();
-		changes.forEach((path, value) -> {
+		ConfigHelper.changes.forEach((path, change) -> {
 			ForgeConfigSpec.ConfigValue configValue = values.get(path);
-			configValue.set(value);
+			configValue.set(change.value);
+
 			if (type == ModConfig.Type.SERVER) {
-				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, value));
+				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, change.value));
+			}
+
+			String command = change.annotations.get("Execute");
+			if (Minecraft.getInstance().player != null && command != null && command.startsWith("/")) {
+				Minecraft.getInstance().player.chat(command);
+				//AllPackets.channel.sendToServer(new CChatMessagePacket(command));
 			}
 		});
 		clearChanges();
@@ -133,8 +149,10 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
 				ForgeConfigSpec.ConfigValue configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw((List<String>) configValue.getPath());
+				List<String> comments = new ArrayList<>(Arrays.asList(valueSpec.getComment().split("\n")));
+				Pair<String, Map<String, String>> metadata = ConfigHelper.readMetadataFromComment(comments);
 
-				ConfigHelper.setValue(String.join(".", configValue.getPath()), configValue, valueSpec.getDefault());
+				ConfigHelper.setValue(String.join(".", configValue.getPath()), configValue, valueSpec.getDefault(), metadata.getSecond());
 			}
 		});
 
@@ -181,17 +199,18 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		saveChanges = new BoxWidget(listL - 30, yCenter - 25, 20, 20)
 				.withPadding(2, 2)
 				.withCallback((x, y) -> {
-					if (changes.isEmpty())
+					if (ConfigHelper.changes.isEmpty())
 						return;
 
-					new ConfirmationScreen()
+					ConfirmationScreen confirm = new ConfirmationScreen()
 							.centered()
-							.withText(ITextProperties.of("Saving " + changes.size() + " changed value" + (changes.size() != 1 ? "s" : "") + ""))
+							.withText(ITextProperties.of("Saving " + ConfigHelper.changes.size() + " changed value" + (ConfigHelper.changes.size() != 1 ? "s" : "") + ""))
 							.withAction(success -> {
 								if (success)
 									saveChanges();
-							})
-							.open(this);
+							});
+
+					addAnnotationsToConfirm(confirm).open(this);
 				});
 		saveChanges.showingElement(AllIcons.I_CONFIG_SAVE.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(saveChanges)));
 		saveChanges.getToolTip().add(new StringTextComponent("Save Changes"));
@@ -200,12 +219,12 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		discardChanges = new BoxWidget(listL - 30, yCenter + 5, 20, 20)
 				.withPadding(2, 2)
 				.withCallback((x, y) -> {
-					if (changes.isEmpty())
+					if (ConfigHelper.changes.isEmpty())
 						return;
 
 					new ConfirmationScreen()
 							.centered()
-							.withText(ITextProperties.of("Discarding " + changes.size() + " unsaved change" + (changes.size() != 1 ? "s" : "") + ""))
+							.withText(ITextProperties.of("Discarding " + ConfigHelper.changes.size() + " unsaved change" + (ConfigHelper.changes.size() != 1 ? "s" : "") + ""))
 							.withAction(success -> {
 								if (success)
 									clearChanges();
@@ -227,16 +246,23 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		widgets.add(discardChanges);
 		widgets.add(goBack);
 
-		list = new ConfigScreenList(minecraft, listWidth, height - 60, 45, height - 15, 40);
+		list = new ConfigScreenList(minecraft, listWidth, height - 80, 35, height - 45, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
 		children.add(list);
+
+		search = new ConfigTextField(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
+		search.setResponder(this::updateFilter);
+		search.setHint("Search..");
+		search.moveCursorToStart();
+		widgets.add(search);
 
 		configGroup.valueMap().forEach((key, obj) -> {
 			String humanKey = toHumanReadable(key);
 
 			if (obj instanceof AbstractConfig) {
 				SubMenuEntry entry = new SubMenuEntry(this, humanKey, spec, (UnmodifiableConfig) obj);
+				entry.path = key;
 				list.children().add(entry);
 				if (configGroup.valueMap()
 						.size() == 1)
@@ -247,23 +273,23 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(configValue.getPath());
 				Object value = configValue.get();
+				ConfigScreenList.Entry entry = null;
 
 				if (value instanceof Boolean) {
-					BooleanEntry entry = new BooleanEntry(humanKey, (ForgeConfigSpec.ConfigValue<Boolean>) configValue, valueSpec);
-					list.children().add(entry);
+					entry = new BooleanEntry(humanKey, (ForgeConfigSpec.ConfigValue<Boolean>) configValue, valueSpec);
 				} else if (value instanceof Enum) {
-					EnumEntry entry = new EnumEntry(humanKey, (ForgeConfigSpec.ConfigValue<Enum<?>>) configValue, valueSpec);
-					list.children().add(entry);
+					entry = new EnumEntry(humanKey, (ForgeConfigSpec.ConfigValue<Enum<?>>) configValue, valueSpec);
 				} else if (value instanceof Number) {
-					NumberEntry<? extends Number> entry = NumberEntry.create(value, humanKey, configValue, valueSpec);
-					if (entry != null) {
-						list.children().add(entry);
-					} else {
-						list.children().add(new ConfigScreenList.LabeledEntry("n-" + obj.getClass().getSimpleName() + "  " + humanKey + " : " + value));
-					}
-				} else {
-					list.children().add(new ConfigScreenList.LabeledEntry(humanKey + " : " + value));
+					entry = NumberEntry.create(value, humanKey, configValue, valueSpec);
 				}
+
+				if (entry == null)
+					entry = new LabeledEntry("Impl missing - " + configValue.get().getClass().getSimpleName() + "  " + humanKey + " : " + value);
+
+				if (highlights.contains(key))
+					entry.annotations.put("highlight", ":)");
+
+				list.children().add(entry);
 			}
 		});
 
@@ -281,13 +307,14 @@ public class SubMenuConfigScreen extends ConfigScreen {
 					return group;
 				});
 
+		list.search(highlights.stream().findFirst().orElse(""));
+
 		//extras for server configs
 		if (type != ModConfig.Type.SERVER)
 			return;
 		if (minecraft.hasSingleplayerServer())
 			return;
 
-		list.isForServer = true;
 		boolean canEdit = minecraft != null && minecraft.player != null && minecraft.player.hasPermissions(2);
 
 		Couple<Color> red = Theme.p(Theme.Key.BUTTON_FAIL);
@@ -355,6 +382,12 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
+		if (Screen.hasControlDown()) {
+			if (code == GLFW.GLFW_KEY_F) {
+				search.setFocus(true);
+			}
+		}
+
 		if (code == GLFW.GLFW_KEY_BACKSPACE) {
 			attemptBackstep();
 		}
@@ -362,8 +395,16 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		return false;
 	}
 
+	private void updateFilter(String search) {
+		if (list.search(search)) {
+			this.search.setTextColor(Theme.i(Theme.Key.TEXT));
+		} else {
+			this.search.setTextColor(Theme.i(Theme.Key.BUTTON_FAIL));
+		}
+	}
+
 	private void attemptBackstep() {
-		if (changes.isEmpty() || !(parent instanceof BaseConfigScreen)) {
+		if (ConfigHelper.changes.isEmpty() || !(parent instanceof BaseConfigScreen)) {
 			ScreenOpener.open(parent);
 			return;
 		}
@@ -373,7 +414,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				return;
 			if (success == Response.Confirm)
 				saveChanges();
-			changes.clear();
+			ConfigHelper.changes.clear();
 			ScreenOpener.open(parent);
 		};
 
@@ -382,7 +423,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 	@Override
 	public void onClose() {
-		if (changes.isEmpty()) {
+		if (ConfigHelper.changes.isEmpty()) {
 			super.onClose();
 			ScreenOpener.open(parent);
 			return;
@@ -393,7 +434,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 				return;
 			if (success == Response.Confirm)
 				saveChanges();
-			changes.clear();
+			ConfigHelper.changes.clear();
 			super.onClose();
 		};
 
@@ -401,11 +442,37 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	public void showLeavingPrompt(Consumer<ConfirmationScreen.Response> action) {
-		new ConfirmationScreen().centered()
-				.addText(ITextProperties.of("Leaving with " + changes.size() + " unsaved change"
-						+ (changes.size() != 1 ? "s" : "") + " for this config"))
+		ConfirmationScreen screen = new ConfirmationScreen()
+				.centered()
 				.withThreeActions(action)
-				.open(this);
+				.addText(ITextProperties.of("Leaving with " + ConfigHelper.changes.size() + " unsaved change"
+						+ (ConfigHelper.changes.size() != 1 ? "s" : "") + " for this config"));
+
+		addAnnotationsToConfirm(screen).open(this);
+	}
+
+	private ConfirmationScreen addAnnotationsToConfirm(ConfirmationScreen screen) {
+		AtomicBoolean relog = new AtomicBoolean(false);
+		AtomicBoolean restart = new AtomicBoolean(false);
+		ConfigHelper.changes.values().forEach(change -> {
+			if (change.annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName()))
+				relog.set(true);
+
+			if (change.annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName()))
+				restart.set(true);
+		});
+
+		if (relog.get()) {
+			screen.addText(ITextProperties.of(" "));
+			screen.addText(ITextProperties.of("At least one changed value will require you to relog to take full effect"));
+		}
+
+		if (restart.get()) {
+			screen.addText(ITextProperties.of(" "));
+			screen.addText(ITextProperties.of("At least one changed value will require you to restart your game to take full effect"));
+		}
+
+		return screen;
 	}
 
 }

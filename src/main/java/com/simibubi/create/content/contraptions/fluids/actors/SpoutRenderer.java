@@ -39,6 +39,7 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			.getValue(partialTicks);
 
 		if (!fluidStack.isEmpty() && level != 0) {
+			level = Math.max(level, 0.175f);
 			float min = 2.5f / 16f;
 			float max = min + (11 / 16f);
 			float yOffset = (11 / 16f) * level;
@@ -49,8 +50,8 @@ public class SpoutRenderer extends SafeTileEntityRenderer<SpoutTileEntity> {
 			ms.popPose();
 		}
 
-		int processingTicks = te.getCorrectedProcessingTicks();
-		float processingPT = te.getCorrectedProcessingTicks() - partialTicks;
+		int processingTicks = te.processingTicks;
+		float processingPT = processingTicks - partialTicks;
 		float processingProgress = 1 - (processingPT - 5) / 10;
 		processingProgress = MathHelper.clamp(processingProgress, 0, 1);
 		float radius = 0;

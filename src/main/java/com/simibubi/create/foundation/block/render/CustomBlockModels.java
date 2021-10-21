@@ -29,7 +29,7 @@ public class CustomBlockModels {
 		registered.add(Pair.of(entry, behaviour));
 	}
 
-	public void foreach(NonNullBiConsumer<Block, NonNullFunction<IBakedModel, ? extends IBakedModel>> consumer) {
+	public void forEach(NonNullBiConsumer<Block, NonNullFunction<IBakedModel, ? extends IBakedModel>> consumer) {
 		loadEntriesIfMissing();
 		customModels.forEach(consumer);
 	}

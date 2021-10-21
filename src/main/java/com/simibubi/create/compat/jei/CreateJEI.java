@@ -40,6 +40,7 @@ import com.simibubi.create.content.contraptions.components.press.MechanicalPress
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxScreen;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
@@ -78,7 +79,7 @@ import net.minecraftforge.fml.ModList;
 @SuppressWarnings("unused")
 public class CreateJEI implements IModPlugin {
 
-	private static final ResourceLocation ID = new ResourceLocation(Create.ID, "jei_plugin");
+	private static final ResourceLocation ID = Create.asResource("jei_plugin");
 
 	public IIngredientManager ingredientManager;
 	private final List<CreateRecipeCategory<?>> allCategories = new ArrayList<>();
@@ -123,7 +124,7 @@ public class CreateJEI implements IModPlugin {
 
 		autoShapeless = register("automatic_shapeless", MixingCategory::autoShapeless)
 			.recipes(r -> r.getSerializer() == IRecipeSerializer.SHAPELESS_RECIPE && r.getIngredients()
-				.size() > 1 && !MechanicalPressTileEntity.canCompress(r.getIngredients()),
+				.size() > 1 && !MechanicalPressTileEntity.canCompress(r),
 				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_MIXER::get)
 			.catalyst(AllBlocks.BASIN::get)
@@ -160,7 +161,7 @@ public class CreateJEI implements IModPlugin {
 			.build(),
 
 		autoSquare = register("automatic_packing", PackingCategory::autoSquare)
-			.recipes(r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r.getIngredients()),
+			.recipes(r -> (r instanceof ICraftingRecipe) && MechanicalPressTileEntity.canCompress(r),
 				BasinRecipe::convertShapeless)
 			.catalyst(AllBlocks.MECHANICAL_PRESS::get)
 			.catalyst(AllBlocks.BASIN::get)
@@ -254,6 +255,7 @@ public class CreateJEI implements IModPlugin {
 		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
 		registration.addGuiContainerHandler(BlueprintScreen.class, slotMover);
 		registration.addGuiContainerHandler(LinkedControllerScreen.class, slotMover);
+		registration.addGuiContainerHandler(ToolboxScreen.class, slotMover);
 
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());

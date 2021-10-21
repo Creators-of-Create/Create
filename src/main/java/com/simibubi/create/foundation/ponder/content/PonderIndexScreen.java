@@ -52,7 +52,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		super.init();
 
 		chapters.clear();
-		// chapters.addAll(PonderRegistry.chapters.getAllChapters());
+		// chapters.addAll(PonderRegistry.CHAPTERS.getAllChapters());
 
 		items.clear();
 		PonderRegistry.ALL.keySet()
