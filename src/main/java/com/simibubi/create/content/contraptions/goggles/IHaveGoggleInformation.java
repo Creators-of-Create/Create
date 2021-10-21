@@ -95,7 +95,7 @@ public interface IHaveGoggleInformation {
 
 	class Format {
 
-		private NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);;
+		private NumberFormat format = NumberFormat.getNumberInstance(Locale.ROOT);
 
 		private Format() {}
 

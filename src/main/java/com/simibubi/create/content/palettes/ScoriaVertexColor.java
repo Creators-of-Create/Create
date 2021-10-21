@@ -5,6 +5,8 @@ import com.simibubi.create.foundation.utility.Color;
 
 public class ScoriaVertexColor implements IBlockVertexColor {
 
+	public static final ScoriaVertexColor INSTANCE = new ScoriaVertexColor();
+
 	@Override
 	public int getColor(float x, float y, float z) {
 		float x2 = (float) Math.floor(z + x - y * .5);

@@ -75,7 +75,7 @@ public class MovementContext {
 			nbt.put("Position", VecHelper.writeNBT(position));
 		nbt.putBoolean("Stall", stall);
 		nbt.putBoolean("FirstMovement", firstMovement);
-		nbt.put("Data", data);
+		nbt.put("Data", data.copy());
 		return nbt;
 	}
 

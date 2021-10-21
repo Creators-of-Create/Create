@@ -5,8 +5,9 @@ import java.util.List;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour.InterfaceProvider;
+import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.ITickList;
 import net.minecraft.world.TickPriority;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchTileEntity extends SmartTileEntity {
@@ -30,6 +33,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 	private FilteringBehaviour filtering;
 	private InvManipulationBehaviour observedInventory;
+	private TankManipulationBehaviour observedTank;
 
 	public StockpileSwitchTileEntity(TileEntityType<?> typeIn) {
 		super(typeIn);
@@ -70,34 +74,53 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 	public void updateCurrentLevel() {
 		boolean changed = false;
-		observedInventory.findNewCapability();
-		if (!observedInventory.hasInventory()) {
-			if (currentLevel == -1)
-				return;
-			level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
-			currentLevel = -1;
-			state = false;
-			sendData();
-			scheduleBlockTick();
-			return;
-		}
-
 		float occupied = 0;
 		float totalSpace = 0;
-		IItemHandler inv = observedInventory.getInventory();
 
-		for (int slot = 0; slot < inv.getSlots(); slot++) {
-			ItemStack stackInSlot = inv.getStackInSlot(slot);
-			int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
-			int count = stackInSlot.getCount();
+		observedInventory.findNewCapability();
+		if (observedInventory.hasInventory()) {
+			// Item inventory
+			IItemHandler inv = observedInventory.getInventory();
+			for (int slot = 0; slot < inv.getSlots(); slot++) {
+				ItemStack stackInSlot = inv.getStackInSlot(slot);
+				int space = Math.min(stackInSlot.getMaxStackSize(), inv.getSlotLimit(slot));
+				int count = stackInSlot.getCount();
+				if (space == 0)
+					continue;
 
-			if (space == 0)
-				continue;
+				totalSpace += 1;
+				if (filtering.test(stackInSlot))
+					occupied += count * (1f / space);
+			}
 
-			totalSpace += 1;
+		} else {
+			observedTank.findNewCapability();
+			if (observedTank.hasInventory()) {
+				// Fluid inventory
+				IFluidHandler tank = observedTank.getInventory();
+				for (int slot = 0; slot < tank.getTanks(); slot++) {
+					FluidStack stackInSlot = tank.getFluidInTank(slot);
+					int space = tank.getTankCapacity(slot);
+					int count = stackInSlot.getAmount();
+					if (space == 0)
+						continue;
 
-			if (filtering.test(stackInSlot))
-				occupied += count * (1f / space);
+					totalSpace += 1;
+					if (filtering.test(stackInSlot))
+						occupied += count * (1f / space);
+				}
+
+			} else {
+				// No compatible inventories found
+				if (currentLevel == -1)
+					return;
+				level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
+				currentLevel = -1;
+				state = false;
+				sendData();
+				scheduleBlockTick();
+				return;
+			}
 		}
 
 		float stockLevel = occupied / totalSpace;
@@ -116,7 +139,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		int displayLevel = 0;
 		if (currentLevel > 0)
 			displayLevel = (int) (currentLevel * 6);
-		level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, displayLevel), update ? 3 : 2);
+		level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, displayLevel),
+			update ? 3 : 2);
 
 		if (update)
 			scheduleBlockTick();
@@ -146,8 +170,9 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 			.withCallback($ -> updateCurrentLevel());
 		behaviours.add(filtering);
 
-		observedInventory = new InvManipulationBehaviour(this, InterfaceProvider.towardBlockFacing()).bypassSidedness();
-		behaviours.add(observedInventory);
+		InterfaceProvider towardBlockFacing = InterfaceProvider.towardBlockFacing();
+		behaviours.add(observedInventory = new InvManipulationBehaviour(this, towardBlockFacing).bypassSidedness());
+		behaviours.add(observedTank = new TankManipulationBehaviour(this, towardBlockFacing).bypassSidedness());
 	}
 
 	public float getLevelForDisplay() {

@@ -123,6 +123,8 @@ import com.simibubi.create.content.curiosities.armor.CopperBacktankTileEntity;
 import com.simibubi.create.content.curiosities.bell.BellRenderer;
 import com.simibubi.create.content.curiosities.bell.HauntedBellTileEntity;
 import com.simibubi.create.content.curiosities.bell.PeculiarBellTileEntity;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxRenderer;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxTileEntity;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelInstance;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelRenderer;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
@@ -689,6 +691,12 @@ public class AllTileEntities {
 		.tileEntity("cursed_bell", HauntedBellTileEntity::new)
 		.validBlocks(AllBlocks.HAUNTED_BELL)
 		.renderer(() -> BellRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<ToolboxTileEntity> TOOLBOX = Create.registrate()
+		.tileEntity("toolbox", ToolboxTileEntity::new)
+		.validBlocks(AllBlocks.TOOLBOXES.toArray())
+		.renderer(() -> ToolboxRenderer::new)
 		.register();
 
 	public static void register() {}

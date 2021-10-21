@@ -49,13 +49,12 @@ public class PotatoCannonItem extends ShootableItem {
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
 
-	public PotatoCannonItem(Properties p_i48487_1_) {
-		super(p_i48487_1_);
+	public PotatoCannonItem(Properties properties) {
+		super(properties);
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState p_195938_1_, World p_195938_2_, BlockPos p_195938_3_,
-		PlayerEntity p_195938_4_) {
+	public boolean canAttackBlock(BlockState state, World world, BlockPos pos, PlayerEntity player) {
 		return false;
 	}
 
@@ -137,8 +136,8 @@ public class PotatoCannonItem extends ShootableItem {
 					.subtract(player.position()
 						.add(0, player.getEyeHeight(), 0));
 
-			PotatoCannonProjectileTypes projectileType = PotatoCannonProjectileTypes.getProjectileTypeOf(itemStack)
-				.orElse(PotatoCannonProjectileTypes.FALLBACK);
+			PotatoCannonProjectileType projectileType = PotatoProjectileTypeManager.getTypeForStack(itemStack)
+				.orElse(BuiltinPotatoProjectileTypes.FALLBACK);
 			Vector3d lookVec = player.getLookAngle();
 			Vector3d motion = lookVec.add(correction)
 				.normalize()
@@ -181,8 +180,8 @@ public class PotatoCannonItem extends ShootableItem {
 				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 
 			Integer cooldown =
-				findAmmoInInventory(world, player, stack).flatMap(PotatoCannonProjectileTypes::getProjectileTypeOf)
-					.map(PotatoCannonProjectileTypes::getReloadTicks)
+				findAmmoInInventory(world, player, stack).flatMap(PotatoProjectileTypeManager::getTypeForStack)
+					.map(PotatoCannonProjectileType::getReloadTicks)
 					.orElse(10);
 
 			ShootableGadgetItemMethods.applyCooldown(player, stack, hand, this::isCannon, cooldown);
@@ -200,7 +199,7 @@ public class PotatoCannonItem extends ShootableItem {
 
 	private Optional<ItemStack> findAmmoInInventory(World world, PlayerEntity player, ItemStack held) {
 		ItemStack findAmmo = player.getProjectile(held);
-		return PotatoCannonProjectileTypes.getProjectileTypeOf(findAmmo)
+		return PotatoProjectileTypeManager.getTypeForStack(findAmmo)
 			.map($ -> findAmmo);
 	}
 
@@ -215,7 +214,7 @@ public class PotatoCannonItem extends ShootableItem {
 		if (player == null)
 			return Optional.empty();
 		ItemStack findAmmo = player.getProjectile(cannon);
-		Optional<ItemStack> found = PotatoCannonProjectileTypes.getProjectileTypeOf(findAmmo)
+		Optional<ItemStack> found = PotatoProjectileTypeManager.getTypeForStack(findAmmo)
 			.map($ -> findAmmo);
 		found.ifPresent(stack -> CLIENT_CURRENT_AMMO = stack);
 		return found;
@@ -237,7 +236,7 @@ public class PotatoCannonItem extends ShootableItem {
 			tooltip.add(new StringTextComponent(""));
 			tooltip.add(new TranslationTextComponent(ammo.getDescriptionId()).append(new StringTextComponent(":"))
 				.withStyle(TextFormatting.GRAY));
-			PotatoCannonProjectileTypes type = PotatoCannonProjectileTypes.getProjectileTypeOf(ammo)
+			PotatoCannonProjectileType type = PotatoProjectileTypeManager.getTypeForStack(ammo)
 				.get();
 			StringTextComponent spacing = new StringTextComponent(" ");
 			TextFormatting green = TextFormatting.GREEN;
@@ -269,7 +268,7 @@ public class PotatoCannonItem extends ShootableItem {
 
 	@Override
 	public Predicate<ItemStack> getAllSupportedProjectiles() {
-		return stack -> PotatoCannonProjectileTypes.getProjectileTypeOf(stack)
+		return stack -> PotatoProjectileTypeManager.getTypeForStack(stack)
 			.isPresent();
 	}
 

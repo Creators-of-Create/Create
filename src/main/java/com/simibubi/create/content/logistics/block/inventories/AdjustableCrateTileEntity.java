@@ -11,7 +11,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
@@ -160,11 +159,6 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements INamed
 	@Override
 	public ITextComponent getDisplayName() {
 		return Lang.translate("gui.adjustable_crate.title");
-	}
-
-	public void sendToContainer(PacketBuffer buffer) {
-		buffer.writeBlockPos(getBlockPos());
-		buffer.writeNbt(getUpdateTag());
 	}
 
 	@Override

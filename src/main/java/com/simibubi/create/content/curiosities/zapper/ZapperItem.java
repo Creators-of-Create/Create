@@ -10,6 +10,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
 import net.minecraft.block.BlockState;
@@ -90,7 +91,7 @@ public abstract class ZapperItem extends Item {
 			.isShiftKeyDown()) {
 			if (context.getLevel().isClientSide) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					openHandgunGUI(context.getItemInHand(), context.getHand() == Hand.OFF_HAND);
+					openHandgunGUI(context.getItemInHand(), context.getHand());
 				});
 				context.getPlayer()
 					.getCooldowns()
@@ -112,7 +113,7 @@ public abstract class ZapperItem extends Item {
 		if (player.isShiftKeyDown()) {
 			if (world.isClientSide) {
 				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-					openHandgunGUI(item, hand == Hand.OFF_HAND);
+					openHandgunGUI(item, hand);
 				});
 				player.getCooldowns()
 					.addCooldown(item.getItem(), 10);
@@ -187,7 +188,7 @@ public abstract class ZapperItem extends Item {
 		BlockRayTraceResult raytrace, CompoundNBT data);
 
 	@OnlyIn(Dist.CLIENT)
-	protected abstract void openHandgunGUI(ItemStack item, boolean b);
+	protected abstract void openHandgunGUI(ItemStack item, Hand hand);
 
 	protected abstract int getCooldownDelay(ItemStack item);
 
@@ -210,6 +211,11 @@ public abstract class ZapperItem extends Item {
 	@Override
 	public UseAction getUseAnimation(ItemStack stack) {
 		return UseAction.NONE;
+	}
+
+	public static void configureSettings(ItemStack stack, PlacementPatterns pattern) {
+		CompoundNBT nbt = stack.getOrCreateTag();
+		NBTHelper.writeEnum(nbt, "Pattern", pattern);
 	}
 
 	public static void setTileData(World world, BlockPos pos, BlockState state, CompoundNBT data, PlayerEntity player) {

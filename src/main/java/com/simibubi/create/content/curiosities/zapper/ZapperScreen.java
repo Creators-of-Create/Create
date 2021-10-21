@@ -9,8 +9,8 @@ import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.NbtPacket;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,29 +22,34 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class ZapperScreen extends AbstractSimiScreen {
-
-	protected ItemStack zapper;
-	protected boolean offhand;
-	protected float animationProgress;
-	protected AllGuiTextures background;
-	private IconButton confirmButton;
+public abstract class ZapperScreen extends AbstractSimiScreen {
 
 	protected final ITextComponent patternSection = Lang.translate("gui.terrainzapper.patternSection");
 
+	protected AllGuiTextures background;
+	protected ItemStack zapper;
+	protected Hand hand;
+
+	protected float animationProgress;
+
 	protected ITextComponent title;
-	protected Vector<IconButton> patternButtons;
+	protected Vector<IconButton> patternButtons = new Vector<>(6);
+	private IconButton confirmButton;
 	protected int brightColor;
 	protected int fontColor;
 
-	public ZapperScreen(AllGuiTextures background, ItemStack zapper, boolean offhand) {
-		super();
+	protected PlacementPatterns currentPattern;
+
+	public ZapperScreen(AllGuiTextures background, ItemStack zapper, Hand hand) {
 		this.background = background;
 		this.zapper = zapper;
-		this.offhand = offhand;
+		this.hand = hand;
 		title = StringTextComponent.EMPTY;
 		brightColor = 0xFEFEFE;
 		fontColor = AllGuiTextures.FONT_COLOR;
+
+		CompoundNBT nbt = zapper.getOrCreateTag();
+		currentPattern = NBTHelper.readEnum(nbt, "Pattern", PlacementPatterns.class);
 	}
 
 	@Override
@@ -63,9 +68,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
 		widgets.add(confirmButton);
 
-		CompoundNBT nbt = zapper.getOrCreateTag();
-
-		patternButtons = new Vector<>(6);
+		patternButtons.clear();
 		for (int row = 0; row <= 1; row++) {
 			for (int col = 0; col <= 2; col++) {
 				int id = patternButtons.size();
@@ -77,9 +80,7 @@ public class ZapperScreen extends AbstractSimiScreen {
 			}
 		}
 
-		if (nbt.contains("Pattern"))
-			patternButtons.get(PlacementPatterns.valueOf(nbt.getString("Pattern"))
-				.ordinal()).active = false;
+		patternButtons.get(currentPattern.ordinal()).active = false;
 
 		widgets.addAll(patternButtons);
 	}
@@ -108,21 +109,19 @@ public class ZapperScreen extends AbstractSimiScreen {
 
 	@Override
 	public void removed() {
-		CompoundNBT nbt = zapper.getTag();
-		writeAdditionalOptions(nbt);
-		AllPackets.channel.sendToServer(new NbtPacket(zapper, offhand ? Hand.OFF_HAND : Hand.MAIN_HAND));
+		ConfigureZapperPacket packet = getConfigurationPacket();
+		packet.configureZapper(zapper);
+		AllPackets.channel.sendToServer(packet);
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		CompoundNBT nbt = zapper.getTag();
-
 		for (IconButton patternButton : patternButtons) {
 			if (patternButton.isHovered()) {
 				patternButtons.forEach(b -> b.active = true);
 				patternButton.active = false;
 				patternButton.playDownSound(minecraft.getSoundManager());
-				nbt.putString("Pattern", PlacementPatterns.values()[patternButtons.indexOf(patternButton)].name());
+				currentPattern = PlacementPatterns.values()[patternButtons.indexOf(patternButton)];
 			}
 		}
 
@@ -159,6 +158,6 @@ public class ZapperScreen extends AbstractSimiScreen {
 		ms.popPose();
 	}
 
-	protected void writeAdditionalOptions(CompoundNBT nbt) {}
+	protected abstract ConfigureZapperPacket getConfigurationPacket();
 
 }

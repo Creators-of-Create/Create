@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "create.refmap.json",
   "mixins": [
+    "PlayerListMixin"
   ],
   "client": [
     "BreakProgressMixin",

@@ -9,8 +9,8 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.item.DyeColor;
 import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
 
 public class AllBlockPartials {
 
@@ -93,27 +93,30 @@ public class AllBlockPartials {
 
 		SPOUT_TOP = get("spout/top"), SPOUT_MIDDLE = get("spout/middle"), SPOUT_BOTTOM = get("spout/bottom"),
 
-		PECULIAR_BELL = get("peculiar_bell"),
-		HAUNTED_BELL = get("haunted_bell"),
+		PECULIAR_BELL = get("peculiar_bell"), HAUNTED_BELL = get("haunted_bell"),
 
-	SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
+		TOOLBOX_DRAWER = get("toolbox/drawer"),
 
-	GOGGLES = get("goggles"),
+		SPEED_CONTROLLER_BRACKET = get("rotation_speed_controller/bracket"),
 
-	EJECTOR_TOP = get("weighted_ejector/top"),
+		GOGGLES = get("goggles"),
 
-	COPPER_BACKTANK_SHAFT = get("copper_backtank/block_shaft_input"),
-			COPPER_BACKTANK_COGS = get("copper_backtank/block_cogs"),
+		EJECTOR_TOP = get("weighted_ejector/top"),
 
-	CRAFTING_BLUEPRINT_1x1 = getEntity("crafting_blueprint_small"),
-			CRAFTING_BLUEPRINT_2x2 = getEntity("crafting_blueprint_medium"),
-			CRAFTING_BLUEPRINT_3x3 = getEntity("crafting_blueprint_large"),
+		COPPER_BACKTANK_SHAFT = get("copper_backtank/block_shaft_input"),
+		COPPER_BACKTANK_COGS = get("copper_backtank/block_cogs"),
 
-	COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
-			COUPLING_RING = getEntity("minecart_coupling/ring"),
-			COUPLING_CONNECTOR = getEntity("minecart_coupling/connector");
+		CRAFTING_BLUEPRINT_1x1 = getEntity("crafting_blueprint_small"),
+		CRAFTING_BLUEPRINT_2x2 = getEntity("crafting_blueprint_medium"),
+		CRAFTING_BLUEPRINT_3x3 = getEntity("crafting_blueprint_large"),
 
-	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS = new HashMap<>();
+		COUPLING_ATTACHMENT = getEntity("minecart_coupling/attachment"),
+		COUPLING_RING = getEntity("minecart_coupling/ring"),
+		COUPLING_CONNECTOR = getEntity("minecart_coupling/connector");
+
+	public static final Map<FluidTransportBehaviour.AttachmentTypes, Map<Direction, PartialModel>> PIPE_ATTACHMENTS =
+		new HashMap<>();
+	public static final Map<DyeColor, PartialModel> TOOLBOX_LIDS = new HashMap<>();
 	public static final Map<BlazeBurnerBlock.HeatLevel, PartialModel> BLAZES = new HashMap<>();
 
 	static {
@@ -136,17 +139,20 @@ public class AllBlockPartials {
 				continue;
 			BLAZES.put(heat, get("blaze_burner/blaze/" + heat.getSerializedName()));
 		}
+		for (DyeColor color : DyeColor.values())
+			TOOLBOX_LIDS.put(color, get("toolbox/lid/" + Lang.asId(color.name())));
 	}
 
 	private static PartialModel getEntity(String path) {
-		return new PartialModel(new ResourceLocation(Create.ID, "entity/" + path));
+		return new PartialModel(Create.asResource("entity/" + path));
 	}
 
 	private static PartialModel get(String path) {
-		return new PartialModel(new ResourceLocation(Create.ID, "block/" + path));
+		return new PartialModel(Create.asResource("block/" + path));
 	}
 
-	public static void clientInit() {
+	public static void init() {
 		// init static fields
 	}
+
 }

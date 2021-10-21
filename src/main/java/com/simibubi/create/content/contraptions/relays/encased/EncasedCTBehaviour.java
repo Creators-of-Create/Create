@@ -22,7 +22,7 @@ public class EncasedCTBehaviour extends ConnectedTextureBehaviour {
 							  Direction face) {
 		if (isBeingBlocked(state, reader, pos, otherPos, face))
 			return false;
-		CasingConnectivity cc = CreateClient.getCasingConnectivity();
+		CasingConnectivity cc = CreateClient.CASING_CONNECTIVITY;
 		CasingConnectivity.Entry entry = cc.get(state);
 		CasingConnectivity.Entry otherEntry = cc.get(other);
 		if (entry == null || otherEntry == null)

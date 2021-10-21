@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.simibubi.create.content.curiosities.zapper.ConfigureZapperPacket;
 import com.simibubi.create.content.curiosities.zapper.ZapperScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -16,13 +17,14 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.common.util.Constants;
 
 public class WorldshaperScreen extends ZapperScreen {
 
@@ -36,20 +38,41 @@ public class WorldshaperScreen extends ZapperScreen {
 
 	protected ScrollInput brushInput;
 	protected Label brushLabel;
-	protected Vector<ScrollInput> brushParams;
-	protected Vector<Label> brushParamLabels;
+	protected Vector<ScrollInput> brushParams = new Vector<>(3);
+	protected Vector<Label> brushParamLabels = new Vector<>(3);
 	protected IconButton followDiagonals;
 	protected IconButton acrossMaterials;
 	protected Indicator followDiagonalsIndicator;
 	protected Indicator acrossMaterialsIndicator;
 
-	private CompoundNBT nbt;
+	protected TerrainBrushes currentBrush;
+	protected int[] currentBrushParams = new int[] { 1, 1, 1 };
+	protected boolean currentFollowDiagonals;
+	protected boolean currentAcrossMaterials;
+	protected TerrainTools currentTool;
+	protected PlacementOptions currentPlacement;
 
-	public WorldshaperScreen(ItemStack zapper, boolean offhand) {
-		super(AllGuiTextures.TERRAINZAPPER, zapper, offhand);
+	public WorldshaperScreen(ItemStack zapper, Hand hand) {
+		super(AllGuiTextures.TERRAINZAPPER, zapper, hand);
 		fontColor = 0x767676;
 		title = zapper.getHoverName();
-		nbt = zapper.getOrCreateTag();
+
+		CompoundNBT nbt = zapper.getOrCreateTag();
+		currentBrush = NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class);
+		if (nbt.contains("BrushParams", Constants.NBT.TAG_COMPOUND)) {
+			BlockPos paramsData = NBTUtil.readBlockPos(nbt.getCompound("BrushParams"));
+			currentBrushParams[0] = paramsData.getX();
+			currentBrushParams[1] = paramsData.getY();
+			currentBrushParams[2] = paramsData.getZ();
+			if (currentBrushParams[1] == 0) {
+				currentFollowDiagonals = true;
+			}
+			if (currentBrushParams[2] == 0) {
+				currentAcrossMaterials = true;
+			}
+		}
+		currentTool = NBTHelper.readEnum(nbt, "Tool", TerrainTools.class);
+		currentPlacement = NBTHelper.readEnum(nbt, "Placement", PlacementOptions.class);
 	}
 
 	@Override
@@ -63,60 +86,60 @@ public class WorldshaperScreen extends ZapperScreen {
 		brushInput = new SelectionScrollInput(x + 56, y + 20, 77, 18).forOptions(brushOptions)
 			.titled(Lang.translate("gui.terrainzapper.brush"))
 			.writingTo(brushLabel)
-			.calling(brushIndex -> initBrushParams(x, y));
-		if (nbt.contains("Brush"))
-			brushInput.setState(NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class)
-				.ordinal());
+			.calling(brushIndex -> {
+				currentBrush = TerrainBrushes.values()[brushIndex];
+				initBrushParams(x, y);
+			});
+
+		brushInput.setState(currentBrush.ordinal());
 
 		widgets.add(brushLabel);
 		widgets.add(brushInput);
+
 		initBrushParams(x, y);
 	}
 
-	public void initBrushParams(int x, int y) {
-		if (brushParams != null) {
-			nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(brushParams.get(0)
-				.getState(),
-				brushParams.get(1)
-					.getState(),
-				brushParams.get(2)
-					.getState())));
+	protected void initBrushParams(int x, int y) {
+		Brush currentBrush = this.currentBrush.get();
 
-			widgets.removeAll(brushParamLabels);
-			widgets.removeAll(brushParams);
-		}
+		// Brush Params
 
-		brushParamLabels = new Vector<>(3);
-		brushParams = new Vector<>(3);
-		BlockPos data = NBTUtil.readBlockPos(nbt.getCompound("BrushParams"));
-		int[] params = new int[] { data.getX(), data.getY(), data.getZ() };
-		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
+		widgets.removeAll(brushParamLabels);
+		widgets.removeAll(brushParams);
+
+		brushParamLabels.clear();
+		brushParams.clear();
+
 		for (int index = 0; index < 3; index++) {
-
 			Label label = new Label(x + 65 + 20 * index, y + 45, StringTextComponent.EMPTY).withShadow();
-			brushParamLabels.add(label);
-			int indexFinal = index;
+
+			final int finalIndex = index;
 			ScrollInput input = new ScrollInput(x + 56 + 20 * index, y + 40, 18, 18)
 				.withRange(currentBrush.getMin(index), currentBrush.getMax(index) + 1)
 				.writingTo(label)
 				.titled(currentBrush.getParamLabel(index)
 					.plainCopy())
 				.calling(state -> {
-					label.x = x + 65 + 20 * indexFinal - font.width(label.text) / 2;
+					currentBrushParams[finalIndex] = state;
+					label.x = x + 65 + 20 * finalIndex - font.width(label.text) / 2;
 				});
-			input.setState(params[index]);
+			input.setState(currentBrushParams[index]);
 			input.onChanged();
+
 			if (index >= currentBrush.amtParams) {
 				input.visible = false;
 				label.visible = false;
 				input.active = false;
 			}
 
+			brushParamLabels.add(label);
 			brushParams.add(input);
 		}
 
 		widgets.addAll(brushParamLabels);
 		widgets.addAll(brushParams);
+
+		// Connectivity Options
 
 		if (followDiagonals != null) {
 			widgets.remove(followDiagonals);
@@ -144,13 +167,13 @@ public class WorldshaperScreen extends ZapperScreen {
 			widgets.add(followDiagonalsIndicator);
 			widgets.add(acrossMaterials);
 			widgets.add(acrossMaterialsIndicator);
-			if (params[1] == 0)
+			if (currentFollowDiagonals)
 				followDiagonalsIndicator.state = State.ON;
-			if (params[2] == 0)
+			if (currentAcrossMaterials)
 				acrossMaterialsIndicator.state = State.ON;
 		}
 
-		// TOOLS
+		// Tools
 
 		if (toolButtons != null)
 			widgets.removeAll(toolButtons);
@@ -164,81 +187,71 @@ public class WorldshaperScreen extends ZapperScreen {
 				.setToolTip(Lang.translate("gui.terrainzapper.tool." + tool.translationKey));
 		}
 
-		if (!nbt.contains("Tool"))
-			NBTHelper.writeEnum(nbt, "Tool", toolValues[0]);
-		int index = -1;
-		TerrainTools tool = NBTHelper.readEnum(nbt, "Tool", TerrainTools.class);
+		int toolIndex = -1;
 		for (int i = 0; i < toolValues.length; i++)
-			if (tool == toolValues[i])
-				index = i;
-		if (index == -1) {
-			NBTHelper.writeEnum(nbt, "Tool", toolValues[0]);
-			index = 0;
+			if (currentTool == toolValues[i])
+				toolIndex = i;
+		if (toolIndex == -1) {
+			currentTool = toolValues[0];
+			toolIndex = 0;
 		}
+		toolButtons.get(toolIndex).active = false;
 
-		toolButtons.get(index).active = false;
 		widgets.addAll(toolButtons);
+
+		// Placement Options
 
 		if (placementButtons != null)
 			widgets.removeAll(placementButtons);
-		if (!currentBrush.hasPlacementOptions())
-			return;
 
-		PlacementOptions[] placementValues = PlacementOptions.values();
-		placementButtons = new Vector<>(placementValues.length);
-		for (int id = 0; id < placementValues.length; id++) {
-			PlacementOptions option = placementValues[id];
-			placementButtons.add(new IconButton(x + 136 + id * 18, y + 79, option.icon));
-			placementButtons.get(id)
-				.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
-		}
+		if (currentBrush.hasPlacementOptions()) {
+			PlacementOptions[] placementValues = PlacementOptions.values();
+			placementButtons = new Vector<>(placementValues.length);
+			for (int id = 0; id < placementValues.length; id++) {
+				PlacementOptions option = placementValues[id];
+				placementButtons.add(new IconButton(x + 136 + id * 18, y + 79, option.icon));
+				placementButtons.get(id)
+					.setToolTip(Lang.translate("gui.terrainzapper.placement." + option.translationKey));
+			}
 
-		if (!nbt.contains("Placement"))
-			NBTHelper.writeEnum(nbt, "Placement", placementValues[0]);
-		int optionIndex = NBTHelper.readEnum(nbt, "Placement", PlacementOptions.class)
-			.ordinal();
-		if (optionIndex >= placementValues.length) {
-			NBTHelper.writeEnum(nbt, "Placement", placementValues[0]);
-			optionIndex = 0;
+			placementButtons.get(currentPlacement.ordinal()).active = false;
+
+			widgets.addAll(placementButtons);
 		}
-		placementButtons.get(optionIndex).active = false;
-		widgets.addAll(placementButtons);
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
-		CompoundNBT nbt = zapper.getTag();
-		TerrainBrushes brush = TerrainBrushes.values()[brushInput.getState()];
-		TerrainTools[] supportedTools = brush.get()
+		TerrainTools[] supportedTools = currentBrush.get()
 			.getSupportedTools();
+		for (IconButton toolButton : toolButtons) {
+			if (toolButton.isHovered()) {
+				toolButtons.forEach(b -> b.active = true);
+				toolButton.active = false;
+				toolButton.playDownSound(minecraft.getSoundManager());
+				currentTool = supportedTools[toolButtons.indexOf(toolButton)];
+			}
+		}
 
 		if (placementButtons != null) {
 			for (IconButton placementButton : placementButtons) {
 				if (placementButton.isHovered()) {
 					placementButtons.forEach(b -> b.active = true);
 					placementButton.active = false;
-					placementButton.playDownSound(Minecraft.getInstance()
-						.getSoundManager());
-					nbt.putString("Placement",
-						PlacementOptions.values()[placementButtons.indexOf(placementButton)].name());
+					placementButton.playDownSound(minecraft.getSoundManager());
+					currentPlacement = PlacementOptions.values()[placementButtons.indexOf(placementButton)];
 				}
 			}
 		}
 
-		for (IconButton toolButton : toolButtons) {
-			if (toolButton.isHovered()) {
-				toolButtons.forEach(b -> b.active = true);
-				toolButton.active = false;
-				toolButton.playDownSound(Minecraft.getInstance()
-					.getSoundManager());
-				nbt.putString("Tool", supportedTools[toolButtons.indexOf(toolButton)].name());
-			}
-		}
-
-		if (followDiagonals != null && followDiagonals.isHovered())
+		if (followDiagonals != null && followDiagonals.isHovered()) {
 			followDiagonalsIndicator.state = followDiagonalsIndicator.state == State.OFF ? State.ON : State.OFF;
-		if (acrossMaterials != null && acrossMaterials.isHovered())
+			currentFollowDiagonals = !currentFollowDiagonals;
+		}
+		if (acrossMaterials != null && acrossMaterials.isHovered()) {
 			acrossMaterialsIndicator.state = acrossMaterialsIndicator.state == State.OFF ? State.ON : State.OFF;
+			currentAcrossMaterials = !currentAcrossMaterials;
+		}
 
 		return super.mouseClicked(x, y, button);
 	}
@@ -247,7 +260,7 @@ public class WorldshaperScreen extends ZapperScreen {
 	protected void drawOnBackground(MatrixStack matrixStack, int x, int y) {
 		super.drawOnBackground(matrixStack, x, y);
 
-		Brush currentBrush = TerrainBrushes.values()[brushInput.getState()].get();
+		Brush currentBrush = this.currentBrush.get();
 		for (int index = 2; index >= currentBrush.amtParams; index--)
 			AllGuiTextures.TERRAINZAPPER_INACTIVE_PARAM.draw(matrixStack, x + 56 + 20 * index, y + 40);
 
@@ -257,20 +270,13 @@ public class WorldshaperScreen extends ZapperScreen {
 	}
 
 	@Override
-	protected void writeAdditionalOptions(CompoundNBT nbt) {
-		super.writeAdditionalOptions(nbt);
-		TerrainBrushes brush = TerrainBrushes.values()[brushInput.getState()];
-		int param1 = brushParams.get(0)
-			.getState();
-		int param2 = followDiagonalsIndicator != null ? followDiagonalsIndicator.state == State.ON ? 0 : 1
-			: brushParams.get(1)
-				.getState();
-		int param3 = acrossMaterialsIndicator != null ? acrossMaterialsIndicator.state == State.ON ? 0 : 1
-			: brushParams.get(2)
-				.getState();
-
-		NBTHelper.writeEnum(nbt, "Brush", brush);
-		nbt.put("BrushParams", NBTUtil.writeBlockPos(new BlockPos(param1, param2, param3)));
+	protected ConfigureZapperPacket getConfigurationPacket() {
+		int brushParamX = currentBrushParams[0];
+		int brushParamY = followDiagonalsIndicator != null ? followDiagonalsIndicator.state == State.ON ? 0 : 1
+			: currentBrushParams[1];
+		int brushParamZ = acrossMaterialsIndicator != null ? acrossMaterialsIndicator.state == State.ON ? 0 : 1
+			: currentBrushParams[2];
+		return new ConfigureWorldshaperPacket(hand, currentPattern, currentBrush, brushParamX, brushParamY, brushParamZ, currentTool, currentPlacement);
 	}
 
 }
