@@ -8,6 +8,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public abstract class MovingInteractionBehaviour {
 
@@ -17,12 +20,19 @@ public abstract class MovingInteractionBehaviour {
 		MovementContext ctx) {
 		contraptionEntity.contraption.actors.remove(index);
 		contraptionEntity.contraption.actors.add(index, MutablePair.of(info, ctx));
-		ContraptionRenderDispatcher.invalidate(contraptionEntity.contraption);
+		if (contraptionEntity.level.isClientSide)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
 	}
 
 	protected void setContraptionBlockData(AbstractContraptionEntity contraptionEntity, BlockPos pos, BlockInfo info) {
 		contraptionEntity.contraption.blocks.put(pos, info);
-		ContraptionRenderDispatcher.invalidate(contraptionEntity.contraption);
+		if (contraptionEntity.level.isClientSide)
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	protected void invalidate(Contraption contraption) {
+		ContraptionRenderDispatcher.invalidate(contraption);
 	}
 
 	public boolean handlePlayerInteraction(PlayerEntity player, Hand activeHand, BlockPos localPos,
