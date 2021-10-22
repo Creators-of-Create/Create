@@ -40,9 +40,9 @@ public class CKinetics extends ConfigBase {
 			e(ContraptionMovementSetting.NO_PICKUP, "movableSpawners", Comments.spawnerMovement);
 	public final ConfigEnum<ContraptionMovementSetting> obsidianMovement =
 		e(ContraptionMovementSetting.UNMOVABLE, "movableObsidian", Comments.obsidianMovement);
-	public ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
-	public ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
-	public ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
+	public final ConfigBool moveItemsToStorage = b(true, "moveItemsToStorage", Comments.moveItemsToStorage);
+	public final ConfigBool harvestPartiallyGrown = b(false, "harvestPartiallyGrown", Comments.harvestPartiallyGrown);
+	public final ConfigBool harvesterReplants = b(true, "harvesterReplants", Comments.harvesterReplants);
 
 	public final CStress stressValues = nested(1, CStress::new, Comments.stress);
 

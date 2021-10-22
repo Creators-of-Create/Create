@@ -33,9 +33,8 @@ public interface PotatoProjectileRenderMode {
 				.subtract(p1);
 
 			MatrixTransformStack.of(ms)
-				.rotateY(AngleHelper.deg(MathHelper.atan2(diff.x, diff.z)))
-				.rotateX(180
-					+ AngleHelper.deg(MathHelper.atan2(diff.y, -MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z))));
+				.rotateY(AngleHelper.deg(MathHelper.atan2(diff.x, diff.z)) + 180)
+				.rotateX(AngleHelper.deg(MathHelper.atan2(diff.y, MathHelper.sqrt(diff.x * diff.x + diff.z * diff.z))));
 		}
 
 	}
