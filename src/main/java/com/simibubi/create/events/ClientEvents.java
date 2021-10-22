@@ -126,7 +126,7 @@ public class ClientEvents {
 		// ScreenOpener.tick();
 		ServerSpeedProvider.clientTick();
 		BeltConnectorHandler.tick();
-		BeltSlicer.tickHoveringInformation();
+//		BeltSlicer.tickHoveringInformation();
 		FilteringRenderer.tick();
 		LinkRenderer.tick();
 		ScrollValueRenderer.tick();

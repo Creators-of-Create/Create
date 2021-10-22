@@ -71,10 +71,10 @@ public class BeltSlicer {
 		BeltPart part = state.getValue(BeltBlock.PART);
 		List<BlockPos> beltChain = BeltBlock.getBeltChain(world, controllerTE.getBlockPos());
 		boolean creative = player.isCreative();
-		
+
 		// Shorten from End
 		if (hoveringEnd(state, hit)) {
-			if (world.isClientSide) 
+			if (world.isClientSide)
 				return ActionResultType.SUCCESS;
 
 			for (BlockPos blockPos : beltChain) {
@@ -160,26 +160,37 @@ public class BeltSlicer {
 				requiredShafts++;
 
 			int amountRetrieved = 0;
+			boolean beltFound = false;
 			Search: while (true) {
 				for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
-					if (amountRetrieved == requiredShafts)
+					if (amountRetrieved == requiredShafts && beltFound)
 						break Search;
 
 					ItemStack itemstack = player.inventory.getItem(i);
 					if (itemstack.isEmpty())
 						continue;
 					int count = itemstack.getCount();
+					
+					if (AllItems.BELT_CONNECTOR.isIn(itemstack)) {
+						if (!world.isClientSide)
+							itemstack.shrink(1);
+						beltFound = true;
+						continue;
+					}
+					
 					if (AllBlocks.SHAFT.isIn(itemstack)) {
 						int taken = Math.min(count, requiredShafts - amountRetrieved);
-						if (taken == count)
-							player.inventory.setItem(i, ItemStack.EMPTY);
-						else
-							itemstack.shrink(taken);
+						if (!world.isClientSide)
+							if (taken == count)
+								player.inventory.setItem(i, ItemStack.EMPTY);
+							else
+								itemstack.shrink(taken);
 						amountRetrieved += taken;
 					}
 				}
 
-				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack(amountRetrieved));
+				if (!world.isClientSide)
+					player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack(amountRetrieved));
 				return ActionResultType.FAIL;
 			}
 		}
@@ -333,8 +344,10 @@ public class BeltSlicer {
 					state.setValue(BeltBlock.CASING, segmentTE != null && segmentTE.casing != CasingType.NONE)
 						.setValue(BeltBlock.PART, BeltPart.MIDDLE));
 
-				if (!creative)
+				if (!creative) {
 					player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack(2));
+					player.inventory.placeItemBackInInventory(world, AllItems.BELT_CONNECTOR.asStack());
+				}
 
 				// Transfer items to other controller
 				BlockPos search = controllerTE.getBlockPos();
@@ -449,7 +462,7 @@ public class BeltSlicer {
 
 		Feedback feedback = new Feedback();
 
-		// TODO: Populate feedback in the methods for clientside 
+		// TODO: Populate feedback in the methods for clientside
 		if (AllItems.WRENCH.isIn(held) || AllItems.WRENCH.isIn(heldOffHand))
 			useWrench(state, world, pos, mc.player, Hand.MAIN_HAND, result, feedback);
 		else if (AllItems.BELT_CONNECTOR.isIn(held) || AllItems.BELT_CONNECTOR.isIn(heldOffHand))
