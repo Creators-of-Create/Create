@@ -130,11 +130,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Override
-	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name,
+		EntityType.IFactory<T> factory, EntityClassification classification) {
 		return this.entity(self(), name, factory, classification);
 	}
 
-	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory, EntityClassification classification) {
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory,
+		EntityClassification classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});
@@ -160,8 +162,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return builder;
 	}
 
-	public BlockBuilder<Block, CreateRegistrate> paletteStoneBlock(String name,
-			NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+	public BlockBuilder<Block, CreateRegistrate> paletteStoneBlock(String name, NonNullSupplier<Block> propertiesFrom,
+		boolean worldGenStone) {
 		return paletteStoneBlock(name, Block::new, propertiesFrom, worldGenStone);
 	}
 
@@ -198,7 +200,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> casingConnectivity(
-			BiConsumer<T, CasingConnectivity> consumer) {
+		BiConsumer<T, CasingConnectivity> consumer) {
 		return entry -> onClient(() -> () -> registerCasingConnectivity(entry, consumer));
 	}
 
@@ -207,20 +209,21 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
-			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
 	public static <T extends Item> NonNullConsumer<? super T> itemModel(
-			Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
 		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
-		return b -> b.properties(p -> p.setISTER(() -> () -> supplier.get()
-			.get()))
-			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry)));
+		return b -> {
+			onClient(() -> () -> customRenderedItem(b, supplier));
+			return b;
+		};
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
@@ -228,35 +231,39 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerCustomRenderedItem(Item entry) {
-		ItemStackTileEntityRenderer ister = entry.getItemStackTileEntityRenderer();
-		if (ister instanceof CustomRenderedItemModelRenderer) 
-			registerCustomRenderedItem(entry, (CustomRenderedItemModelRenderer<?>) ister);
+	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
+		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
+		b.properties(p -> p.setISTER(() -> supplier.get()::get))
+			.onRegister(entry -> {
+				ItemStackTileEntityRenderer ister = entry.getItemStackTileEntityRenderer();
+				if (ister instanceof CustomRenderedItemModelRenderer)
+					registerCustomRenderedItem(entry, (CustomRenderedItemModelRenderer<?>) ister);
+			});
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-				.register(entry.delegate, model -> new CTModel(model, behavior));
+			.register(entry.delegate, model -> new CTModel(model, behavior));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static <T extends Block> void registerCasingConnectivity(T entry,
-																	 BiConsumer<T, CasingConnectivity> consumer) {
+		BiConsumer<T, CasingConnectivity> consumer) {
 		consumer.accept(entry, CreateClient.CASING_CONNECTIVITY);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-				.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
+			.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockModel(Block entry,
-										   Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-				.register(entry.delegate, func.get());
+			.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -267,8 +274,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void registerCustomRenderedItem(Item entry,
-		CustomRenderedItemModelRenderer<?> renderer) {
+	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer<?> renderer) {
 		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
 			.register(entry.delegate, renderer::createModel);
 	}
