@@ -218,19 +218,22 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
 		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
-		return b -> b.properties(p -> p.setISTER(() -> () -> supplier.get().get()))
-			.onRegister(entry -> onClient(() -> () -> {
-				ItemStackTileEntityRenderer ister = entry.getItemStackTileEntityRenderer();
-				if (ister instanceof CustomRenderedItemModelRenderer) {
-					registerCustomRenderedItem(entry, (CustomRenderedItemModelRenderer<?>) ister);
-				}
-			}));
+		return b -> b.properties(p -> p.setISTER(() -> () -> supplier.get()
+			.get()))
+			.onRegister(entry -> onClient(() -> () -> registerCustomRenderedItem(entry)));
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, toRun);
 	}
 
+	@OnlyIn(Dist.CLIENT)
+	private static void registerCustomRenderedItem(Item entry) {
+		ItemStackTileEntityRenderer ister = entry.getItemStackTileEntityRenderer();
+		if (ister instanceof CustomRenderedItemModelRenderer) 
+			registerCustomRenderedItem(entry, (CustomRenderedItemModelRenderer<?>) ister);
+	}
+	
 	@OnlyIn(Dist.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()

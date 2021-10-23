@@ -1380,14 +1380,14 @@ public class AllBlocks {
 					.define('-', AllItemTags.TOOLBOXES.tag)
 					.unlockedBy("has_toolbox", RegistrateRecipeProvider.hasItem(AllItemTags.TOOLBOXES.tag))
 					.save(p, Create.asResource("crafting/curiosities/" + c.getName() + "_from_other_toolbox"));
-
-				ShapedRecipeBuilder.shaped(c.get())
-					.pattern("#")
-					.pattern("-")
-					.define('#', DyeHelper.getTagOfDye(colour))
-					.define('-', ToolboxBlock.getMainBox())
-					.unlockedBy("has_toolbox", RegistrateRecipeProvider.hasItem(AllItemTags.TOOLBOXES.tag))
-					.save(p, Create.asResource("crafting/curiosities/" + c.getName() + "_from_main_toolbox"));
+				if (colour != DyeColor.BROWN)
+					ShapedRecipeBuilder.shaped(c.get())
+						.pattern("#")
+						.pattern("-")
+						.define('#', DyeHelper.getTagOfDye(colour))
+						.define('-', ToolboxBlock.getMainBox())
+						.unlockedBy("has_toolbox", RegistrateRecipeProvider.hasItem(AllItemTags.TOOLBOXES.tag))
+						.save(p, Create.asResource("crafting/curiosities/" + c.getName() + "_from_main_toolbox"));
 			})
 			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
 			.tag(AllBlockTags.TOOLBOXES.tag)
