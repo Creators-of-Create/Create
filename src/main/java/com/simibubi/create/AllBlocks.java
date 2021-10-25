@@ -773,6 +773,7 @@ public class AllBlocks {
 						existing.getLocation())
 					.texture("2", p.modLoc("block/" + c.getName() + powered + flipped));
 			}))
+			.transform(BlockStressDefaults.setNoImpact())
 			.item()
 			.transform(customItemModel("_", "block_single"))
 			.register();
