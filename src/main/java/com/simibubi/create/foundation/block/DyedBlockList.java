@@ -25,6 +25,15 @@ public class DyedBlockList<T extends Block> {
 		return (BlockEntry<T>) values[color.ordinal()];
 	}
 
+	public boolean contains(Block block) {
+		for (BlockEntry<?> entry : values) {
+			if (entry.is(block)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@SuppressWarnings("unchecked")
 	public BlockEntry<T>[] toArray() {
 		return (BlockEntry<T>[]) Arrays.copyOf(values, values.length);

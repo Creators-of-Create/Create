@@ -8,6 +8,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,12 +45,12 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE<ToolboxTileEntity> {
 
-	private final DyeColor color;
+	protected final DyeColor color;
 
-	public ToolboxBlock(Properties p_i48440_1_, DyeColor color) {
-		super(p_i48440_1_);
+	public ToolboxBlock(Properties properties, DyeColor color) {
+		super(properties);
 		this.color = color;
-		registerDefaultState(super.defaultBlockState().setValue(WATERLOGGED, false));
+		registerDefaultState(defaultBlockState().setValue(WATERLOGGED, false));
 	}
 
 	@Override
@@ -87,7 +88,7 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 
 	@Override
 	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean moving) {
-		if (state.hasTileEntity() && (!state.is(newState.getBlock()) || !newState.hasTileEntity()))
+		if (state.hasTileEntity() && (!newState.hasTileEntity() || !(newState.getBlock() instanceof ToolboxBlock)))
 			world.removeBlockEntity(pos);
 	}
 
@@ -133,8 +134,8 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos,
+		ISelectionContext context) {
 		return AllShapes.TOOLBOX.get(state.getValue(FACING));
 	}
 
@@ -149,6 +150,17 @@ public class ToolboxBlock extends HorizontalBlock implements IWaterLoggable, ITE
 
 		if (player == null || player.isCrouching())
 			return ActionResultType.PASS;
+
+		ItemStack stack = player.getItemInHand(hand);
+		DyeColor color = DyeColor.getColor(stack);
+		if (color != null && color != this.color) {
+			if (world.isClientSide)
+				return ActionResultType.SUCCESS;
+			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.TOOLBOXES.get(color).getDefaultState());
+			world.setBlockAndUpdate(pos, newState);
+			return ActionResultType.SUCCESS;
+		}
+
 		if (player instanceof FakePlayer)
 			return ActionResultType.PASS;
 		if (world.isClientSide)

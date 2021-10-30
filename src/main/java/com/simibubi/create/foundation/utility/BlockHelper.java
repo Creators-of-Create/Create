@@ -26,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.Property;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.SlabType;
 import net.minecraft.stats.Stats;
@@ -341,4 +342,19 @@ public class BlockHelper {
 			return false;
 		}
 	}
+
+	public static BlockState copyProperties(BlockState fromState, BlockState toState) {
+		for (Property<?> property : fromState.getProperties()) {
+			toState = copyProperty(property, fromState, toState);
+		}
+		return toState;
+	}
+
+	public static <T extends Comparable<T>> BlockState copyProperty(Property<T> property, BlockState fromState, BlockState toState) {
+		if (fromState.hasProperty(property) && toState.hasProperty(property)) {
+			return toState.setValue(property, fromState.getValue(property));
+		}
+		return toState;
+	}
+
 }

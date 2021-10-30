@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
-import com.simibubi.create.foundation.utility.DyeHelper;
+import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
@@ -44,20 +44,22 @@ import net.minecraft.world.World;
 public class SailBlock extends WrenchableDirectionalBlock {
 
 	public static SailBlock frame(Properties properties) {
-		return new SailBlock(properties, true);
+		return new SailBlock(properties, true, null);
 	}
 
-	public static SailBlock withCanvas(Properties properties) {
-		return new SailBlock(properties, false);
+	public static SailBlock withCanvas(Properties properties, DyeColor color) {
+		return new SailBlock(properties, false, color);
 	}
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
-	private final boolean frame;
+	protected final boolean frame;
+	protected final DyeColor color;
 
-	protected SailBlock(Properties p_i48415_1_, boolean frame) {
-		super(p_i48415_1_);
+	protected SailBlock(Properties properties, boolean frame, DyeColor color) {
+		super(properties);
 		this.frame = frame;
+		this.color = color;
 	}
 
 	@Override
@@ -83,10 +85,8 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		if (frame)
 			return ActionResultType.PASS;
 
-		for (DyeColor color : DyeColor.values()) {
-			if (!heldItem.getItem()
-					.is(DyeHelper.getTagOfDye(color)))
-				continue;
+		DyeColor color = DyeColor.getColor(heldItem);
+		if (color != null && color != this.color) {
 			if (!world.isClientSide)
 				applyDye(state, world, pos, color);
 			return ActionResultType.SUCCESS;
@@ -97,8 +97,8 @@ public class SailBlock extends WrenchableDirectionalBlock {
 
 	protected void applyDye(BlockState state, World world, BlockPos pos, @Nullable DyeColor color) {
 		BlockState newState =
-				(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState()
-						.setValue(FACING, state.getValue(FACING));
+				(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState();
+		newState = BlockHelper.copyProperties(state, newState);
 
 		// Dye the block itself
 		if (state != newState) {
@@ -200,6 +200,14 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	@Override
 	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
 		return false;
+	}
+
+	public boolean isFrame() {
+		return frame;
+	}
+
+	public DyeColor getColor() {
+		return color;
 	}
 
 	@MethodsReturnNonnullByDefault

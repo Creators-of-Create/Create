@@ -34,7 +34,7 @@ public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> 
 		float lidAngle = tileEntityIn.lid.getValue(partialTicks);
 		float drawerOffset = tileEntityIn.drawers.getValue(partialTicks);
 
-		IVertexBuilder layer = buffer.getBuffer(RenderType.solid());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.cutoutMipped());
 		lid.matrixStacker()
 			.centre()
 			.rotateY(-facing.toYRot())
@@ -43,7 +43,7 @@ public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> 
 			.rotateX(135 * lidAngle)
 			.translate(0, -6 / 16f, -12 / 16f);
 		lid.light(light)
-			.renderInto(ms, layer);
+			.renderInto(ms, builder);
 
 		for (int offset : Iterate.zeroAndOne) {
 			drawer.matrixStacker()
@@ -52,7 +52,7 @@ public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> 
 				.unCentre();
 			drawer.translate(0, offset * 1 / 8f, -drawerOffset * .175f * (2 - offset))
 				.light(light)
-				.renderInto(ms, layer);
+				.renderInto(ms, builder);
 		}
 
 	}

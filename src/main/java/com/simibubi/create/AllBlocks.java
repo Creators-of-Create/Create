@@ -643,12 +643,12 @@ public class AllBlocks {
 
 	public static final DyedBlockList<ValveHandleBlock> DYED_VALVE_HANDLES = new DyedBlockList<>(colour -> {
 		String colourName = colour.getSerializedName();
-		return REGISTRATE.block(colourName + "_valve_handle", ValveHandleBlock::dyed)
+		return REGISTRATE.block(colourName + "_valve_handle", p -> ValveHandleBlock.dyed(p, colour))
 			.transform(BuilderTransformers.valveHandle(colour))
 			.recipe((c, p) -> ShapedRecipeBuilder.shaped(c.get())
 				.pattern("#")
 				.pattern("-")
-				.define('#', DyeHelper.getTagOfDye(colour))
+				.define('#', colour.getTag())
 				.define('-', AllItemTags.VALVE_HANDLES.tag)
 				.unlockedBy("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
 				.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
@@ -975,7 +975,7 @@ public class AllBlocks {
 	public static final DyedBlockList<SeatBlock> SEATS = new DyedBlockList<>(colour -> {
 		String colourName = colour.getSerializedName();
 		SeatMovementBehaviour movementBehaviour = new SeatMovementBehaviour();
-		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour == DyeColor.RED))
+		return REGISTRATE.block(colourName + "_seat", p -> new SeatBlock(p, colour, colour == DyeColor.RED))
 			.initialProperties(SharedProperties::wooden)
 			.onRegister(addMovementBehaviour(movementBehaviour))
 			.blockstate((c, p) -> {
@@ -995,7 +995,7 @@ public class AllBlocks {
 				ShapedRecipeBuilder.shaped(c.get())
 					.pattern("#")
 					.pattern("-")
-					.define('#', DyeHelper.getTagOfDye(colour))
+					.define('#', colour.getTag())
 					.define('-', AllItemTags.SEATS.tag)
 					.unlockedBy("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
@@ -1017,7 +1017,7 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p))
+	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p, DyeColor.WHITE))
 		.initialProperties(SharedProperties::wooden)
 		.properties(AbstractBlock.Properties::noOcclusion)
 		.blockstate(BlockStateGen.directionalBlockProvider(false))
@@ -1030,7 +1030,7 @@ public class AllBlocks {
 			return SAIL;
 		}
 		String colourName = colour.getSerializedName();
-		return REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p))
+		return REGISTRATE.block(colourName + "_sail", p -> SailBlock.withCanvas(p, colour))
 			.properties(AbstractBlock.Properties::noOcclusion)
 			.initialProperties(SharedProperties::wooden)
 			.blockstate((c, p) -> p.directionalBlock(c.get(), p.models()
@@ -1371,23 +1371,6 @@ public class AllBlocks {
 				p.horizontalBlock(c.get(), p.models()
 					.withExistingParent(colourName + "_toolbox", p.modLoc("block/toolbox/block"))
 					.texture("0", p.modLoc("block/toolbox/" + colourName)));
-			})
-			.recipe((c, p) -> {
-				ShapedRecipeBuilder.shaped(c.get())
-					.pattern("#")
-					.pattern("-")
-					.define('#', DyeHelper.getTagOfDye(colour))
-					.define('-', AllItemTags.TOOLBOXES.tag)
-					.unlockedBy("has_toolbox", RegistrateRecipeProvider.hasItem(AllItemTags.TOOLBOXES.tag))
-					.save(p, Create.asResource("crafting/curiosities/" + c.getName() + "_from_other_toolbox"));
-				if (colour != DyeColor.BROWN)
-					ShapedRecipeBuilder.shaped(c.get())
-						.pattern("#")
-						.pattern("-")
-						.define('#', DyeHelper.getTagOfDye(colour))
-						.define('-', ToolboxBlock.getMainBox())
-						.unlockedBy("has_toolbox", RegistrateRecipeProvider.hasItem(AllItemTags.TOOLBOXES.tag))
-						.save(p, Create.asResource("crafting/curiosities/" + c.getName() + "_from_main_toolbox"));
 			})
 			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.toolbox"))
 			.tag(AllBlockTags.TOOLBOXES.tag)

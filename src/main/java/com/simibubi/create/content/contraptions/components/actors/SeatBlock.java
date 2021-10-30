@@ -7,12 +7,11 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
-import com.simibubi.create.foundation.utility.DyeHelper;
+import com.simibubi.create.foundation.utility.BlockHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -37,10 +36,12 @@ import net.minecraft.world.World;
 @MethodsReturnNonnullByDefault
 public class SeatBlock extends Block {
 
-	private final boolean inCreativeTab;
+	protected final DyeColor color;
+	protected final boolean inCreativeTab;
 
-	public SeatBlock(Properties p_i48440_1_, boolean inCreativeTab) {
-		super(p_i48440_1_);
+	public SeatBlock(Properties properties, DyeColor color, boolean inCreativeTab) {
+		super(properties);
+		this.color = color;
 		this.inCreativeTab = inCreativeTab;
 	}
 
@@ -60,7 +61,7 @@ public class SeatBlock extends Block {
 	public void updateEntityAfterFallOn(IBlockReader reader, Entity entity) {
 		BlockPos pos = entity.blockPosition();
 		if (entity instanceof PlayerEntity || !(entity instanceof LivingEntity) || !canBePickedUp(entity) || isSeatOccupied(entity.level, pos)) {
-			Blocks.PINK_BED.updateEntityAfterFallOn(reader, entity);
+			super.updateEntityAfterFallOn(reader, entity);
 			return;
 		}
 		if (reader.getBlockState(pos)
@@ -94,17 +95,13 @@ public class SeatBlock extends Block {
 			return ActionResultType.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		for (DyeColor color : DyeColor.values()) {
-			if (!heldItem.getItem()
-					.is(DyeHelper.getTagOfDye(color)))
-				continue;
+		DyeColor color = DyeColor.getColor(heldItem);
+		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return ActionResultType.SUCCESS;
-
-			BlockState newState = AllBlocks.SEATS.get(color).getDefaultState();
-			if (newState != state)
-				world.setBlockAndUpdate(pos, newState);
-			return ActionResultType.SUCCESS;
+			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color).getDefaultState());
+			world.setBlockAndUpdate(pos, newState);
+			return ActionResultType.sidedSuccess(world.isClientSide);
 		}
 
 		List<SeatEntity> seats = world.getEntitiesOfClass(SeatEntity.class, new AxisAlignedBB(pos));
@@ -142,6 +139,10 @@ public class SeatBlock extends Block {
 		seat.setPosRaw(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
 		world.addFreshEntity(seat);
 		entity.startRiding(seat, true);
+	}
+
+	public DyeColor getColor() {
+		return color;
 	}
 
 	@Override

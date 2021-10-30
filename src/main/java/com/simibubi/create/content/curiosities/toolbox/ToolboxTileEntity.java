@@ -12,6 +12,7 @@ import java.util.WeakHashMap;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.utility.ResetableLazy;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
@@ -49,7 +50,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	ToolboxInventory inventory;
 	LazyOptional<IItemHandler> inventoryProvider;
-	LazyOptional<DyeColor> colorProvider;
+	ResetableLazy<DyeColor> colorProvider;
 	protected int openCount;
 
 	Map<Integer, WeakHashMap<PlayerEntity, Integer>> connectedPlayers;
@@ -61,7 +62,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		connectedPlayers = new HashMap<>();
 		inventory = new ToolboxInventory(this);
 		inventoryProvider = LazyOptional.of(() -> inventory);
-		colorProvider = LazyOptional.of(() -> {
+		colorProvider = ResetableLazy.of(() -> {
 			BlockState blockState = getBlockState();
 			if (blockState != null && blockState.getBlock() instanceof ToolboxBlock)
 				return ((ToolboxBlock) blockState.getBlock()).getColor();
@@ -71,7 +72,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	}
 
 	public DyeColor getColor() {
-		return colorProvider.orElse(DyeColor.BROWN);
+		return colorProvider.get();
 	}
 
 	@Override
@@ -385,6 +386,18 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	@Override
 	public ITextComponent getName() {
 		return customName;
+	}
+
+	@Override
+	public void clearCache() {
+		super.clearCache();
+		colorProvider.reset();
+	}
+
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		colorProvider.reset();
 	}
 
 }

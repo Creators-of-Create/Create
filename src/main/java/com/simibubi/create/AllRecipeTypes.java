@@ -19,6 +19,7 @@ import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.EmptyingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
+import com.simibubi.create.content.curiosities.toolbox.ToolboxDyeingRecipe;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
@@ -28,6 +29,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
@@ -35,7 +37,6 @@ import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipeTypes implements IRecipeTypeInfo {
 
-	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	CONVERSION(ConversionRecipe::new),
 	CRUSHING(CrushingRecipe::new),
 	CUTTING(CuttingRecipe::new),
@@ -49,7 +50,11 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	DEPLOYING(DeployerApplicationRecipe::new),
 	FILLING(FillingRecipe::new),
 	EMPTYING(EmptyingRecipe::new),
+
+	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
+
+	TOOLBOX_DYEING(() -> new SpecialRecipeSerializer<>(ToolboxDyeingRecipe::new), IRecipeType.CRAFTING);
 
 	;
 

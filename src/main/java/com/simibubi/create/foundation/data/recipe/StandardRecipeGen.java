@@ -18,6 +18,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.Create;
@@ -32,6 +33,7 @@ import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.CookingRecipeBuilder;
+import net.minecraft.data.CustomRecipeBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.ShapedRecipeBuilder;
@@ -42,6 +44,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.CookingRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.SpecialRecipeSerializer;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
@@ -176,6 +179,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern(" C ")
 				.pattern("SWS")
 				.pattern(" L ")),
+
+		TOOLBOX_DYEING = createSpecial(AllRecipeTypes.TOOLBOX_DYEING::getSerializer, "crafting", "toolbox_dyeing"),
 
 		MINECART_COUPLING = create(AllItems.MINECART_COUPLING).unlockedBy(I::andesite)
 			.viaShaped(b -> b.define('E', I.andesite())
@@ -1083,6 +1088,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipeBuilder create(ItemProviderEntry<? extends IItemProvider> result) {
 		return create(result::get);
+	}
+
+	GeneratedRecipe createSpecial(Supplier<? extends SpecialRecipeSerializer<?>> serializer, String recipeType, String path) {
+		ResourceLocation location = Create.asResource(recipeType + "/" + currentFolder + "/" + path);
+		return register(consumer -> {
+			CustomRecipeBuilder b = CustomRecipeBuilder.special(serializer.get());
+			b.save(consumer, location.toString());
+		});
 	}
 
 	GeneratedRecipe blastCrushedMetal(Supplier<? extends IItemProvider> result,

@@ -48,7 +48,7 @@ public abstract class SyncedTileEntity extends TileEntity {
 
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
-		return new SUpdateTileEntityPacket(getBlockPos(), 1, writeToClient(new CompoundNBT()));
+		return new SUpdateTileEntityPacket(getBlockPos(), 0, writeToClient(new CompoundNBT()));
 	}
 
 	@Override

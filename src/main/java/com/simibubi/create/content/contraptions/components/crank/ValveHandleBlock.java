@@ -4,7 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.utility.DyeHelper;
+import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,41 +22,38 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @ParametersAreNonnullByDefault
 public class ValveHandleBlock extends HandCrankBlock {
+
+	private final DyeColor color;
 	private final boolean inCreativeTab;
 
 	public static ValveHandleBlock copper(Properties properties) {
-		return new ValveHandleBlock(properties, true);
+		return new ValveHandleBlock(properties, null, true);
 	}
 
-	public static ValveHandleBlock dyed(Properties properties) {
-		return new ValveHandleBlock(properties, false);
+	public static ValveHandleBlock dyed(Properties properties, DyeColor color) {
+		return new ValveHandleBlock(properties, color, false);
 	}
 
-	private ValveHandleBlock(Properties properties, boolean inCreativeTab) {
+	private ValveHandleBlock(Properties properties, DyeColor color, boolean inCreativeTab) {
 		super(properties);
+		this.color = color;
 		this.inCreativeTab = inCreativeTab;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
+	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult hit) {
-		ItemStack heldItem = player.getItemInHand(handIn);
-		for (DyeColor color : DyeColor.values()) {
-			if (!heldItem.getItem()
-					.is(DyeHelper.getTagOfDye(color)))
-				continue;
-			if (worldIn.isClientSide)
+		ItemStack heldItem = player.getItemInHand(hand);
+		DyeColor color = DyeColor.getColor(heldItem);
+		if (color != null && color != this.color) {
+			if (world.isClientSide)
 				return ActionResultType.SUCCESS;
-
-			BlockState newState = AllBlocks.DYED_VALVE_HANDLES.get(color)
-					.getDefaultState()
-					.setValue(FACING, state.getValue(FACING));
-			if (newState != state)
-				worldIn.setBlockAndUpdate(pos, newState);
+			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.DYED_VALVE_HANDLES.get(color).getDefaultState());
+			world.setBlockAndUpdate(pos, newState);
 			return ActionResultType.SUCCESS;
 		}
 
-		return super.use(state, worldIn, pos, player, handIn, hit);
+		return super.use(state, world, pos, player, hand, hit);
 	}
 
 	@Override
