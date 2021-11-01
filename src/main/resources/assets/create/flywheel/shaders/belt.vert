@@ -1,11 +1,9 @@
 #define PI 3.1415926538
 
-#flwbuiltins
-#flwinclude <"flywheel:core/quaternion.glsl">
-#flwinclude <"flywheel:core/matutils.glsl">
-#flwinclude <"flywheel:core/diffuse.glsl">
+#use "flywheel:core/quaternion.glsl"
+#use "flywheel:core/matutils.glsl"
+#use "flywheel:core/diffuse.glsl"
 
-#[InstanceData]
 struct Belt {
     vec2 light;
     vec4 color;
@@ -18,10 +16,11 @@ struct Belt {
     float scrollMult;
 };
 
-#flwinclude <"flywheel:data/modelvertex.glsl">
-#flwinclude <"flywheel:data/blockfragment.glsl">
+#use "flywheel:data/modelvertex.glsl"
+#use "flywheel:block.frag"
 
-BlockFrag FLWMain(Vertex v, Belt instance) {
+#if defined(VERTEX_SHADER)
+BlockFrag vertex(Vertex v, Belt instance) {
     vec3 rotated = rotateVertexByQuat(v.pos - .5, instance.rotation) + instance.pos + .5;
 
     vec4 worldPos = vec4(rotated, 1.);
@@ -49,3 +48,4 @@ BlockFrag FLWMain(Vertex v, Belt instance) {
 
     return b;
 }
+#endif

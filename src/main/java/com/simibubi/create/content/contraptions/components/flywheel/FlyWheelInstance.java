@@ -9,9 +9,9 @@ import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -45,7 +45,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
     protected float lastAngle = Float.NaN;
 
-    public FlyWheelInstance(MaterialManager<?> modelManager, FlywheelTileEntity tile) {
+    public FlyWheelInstance(MaterialManager modelManager, FlywheelTileEntity tile) {
 		super(modelManager, tile);
 
 		facing = blockState.getValue(HORIZONTAL_FACING);
@@ -63,7 +63,7 @@ public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> im
 
 			connectorAngleMult = flipAngle ? -1 : 1;
 
-			InstanceMaterial<ModelData> mat = getTransformMaterial();
+			Material<ModelData> mat = getTransformMaterial();
 
 			upperRotating = mat.getModel(AllBlockPartials.FLYWHEEL_UPPER_ROTATING, blockState).createInstance();
 			lowerRotating = mat.getModel(AllBlockPartials.FLYWHEEL_LOWER_ROTATING, blockState).createInstance();

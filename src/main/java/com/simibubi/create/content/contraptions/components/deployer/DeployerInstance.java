@@ -7,7 +7,7 @@ import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.ITickableInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -36,7 +36,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     float progress;
     private boolean newHand = false;
 
-    public DeployerInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+    public DeployerInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         this.tile = (DeployerTileEntity) super.tile;

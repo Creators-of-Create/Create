@@ -7,7 +7,7 @@ import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
 public class ShaftlessCogInstance extends SingleRotatingInstance {
 
-    public ShaftlessCogInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public ShaftlessCogInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

@@ -15,7 +15,10 @@ import java.util.function.Function;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderDispatcher;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.ListenerStatus;
+import com.jozufozu.flywheel.light.ImmutableBox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -48,7 +51,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.IModelData;
@@ -118,8 +120,8 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 
 		if (light == null && level.isClientSide) {
 			initializeLight();
-			LightUpdater.getInstance()
-				.startListening(getBeltVolume(), this);
+			LightUpdater.get(level)
+				.addListener(this);
 		}
 
 		getInventory().tick();
@@ -533,14 +535,26 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		return state != null && state.hasProperty(BeltBlock.PART) && state.getValue(BeltBlock.PART) == BeltPart.START;
 	}
 
-	@Override
-	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
-		if (this.remove) 
-			return true;
-		if (this.level == null || this.light == null)
-			return false;
+	public GridAlignedBB getVolume() {
+		BlockPos endPos = BeltHelper.getPositionForOffset(this, beltLength - 1);
+		GridAlignedBB bb = GridAlignedBB.from(worldPosition, endPos);
+		bb.fixMinMax();
+		return bb;
+	}
 
-		GridAlignedBB beltVolume = getBeltVolume();
+	@Override
+	public ListenerStatus status() {
+		return remove ? ListenerStatus.REMOVE : ListenerStatus.OKAY;
+	}
+
+	@Override
+	public void onLightUpdate(LightProvider world, LightType type, ImmutableBox changed) {
+		if (this.remove) 
+			return;
+		if (this.level == null)
+			return;
+		
+		GridAlignedBB beltVolume = getVolume();
 
 		if (beltVolume.intersects(changed)) {
 			if (type == LightType.BLOCK)
@@ -549,16 +563,6 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			if (type == LightType.SKY)
 				updateSkyLight();
 		}
-
-		return false;
-	}
-
-	private GridAlignedBB getBeltVolume() {
-		BlockPos endPos = BeltHelper.getPositionForOffset(this, beltLength - 1);
-
-		GridAlignedBB bb = GridAlignedBB.from(worldPosition, endPos);
-		bb.fixMinMax();
-		return bb;
 	}
 
 	private void initializeLight() {

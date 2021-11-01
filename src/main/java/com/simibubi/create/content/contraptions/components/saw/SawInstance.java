@@ -15,7 +15,7 @@ import net.minecraft.util.Rotation;
 
 public class SawInstance extends SingleRotatingInstance {
 
-    public SawInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public SawInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

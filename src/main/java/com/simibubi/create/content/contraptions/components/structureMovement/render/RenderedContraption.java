@@ -8,13 +8,12 @@ import java.util.function.Supplier;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
 import com.jozufozu.flywheel.backend.model.ArrayModelRenderer;
 import com.jozufozu.flywheel.backend.model.ModelRenderer;
 import com.jozufozu.flywheel.core.model.IModel;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
-import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
@@ -36,7 +35,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final ContraptionLighter<?> lighter;
 
-	public final MaterialManager<ContraptionProgram> materialManager;
+	public final MaterialManagerImpl<ContraptionProgram> materialManager;
 	public final ContraptionInstanceManager kinetics;
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
@@ -48,7 +47,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);
 		this.lighter = contraption.makeLighter();
-		this.materialManager = MaterialManager.builder(CreateContexts.CWORLD)
+		this.materialManager = MaterialManagerImpl.builder(CreateContexts.CWORLD)
 				.setGroupFactory(ContraptionGroup.forContraption(this))
 				.setIgnoreOriginCoordinate(true)
 				.build();
@@ -85,7 +84,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		Vector3d cameraPos = event.getCameraPos();
 
-		lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume())
+		lightBox = lighter.lightVolume.toAABB()
 				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
 	}
 
@@ -111,7 +110,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		}
 		renderLayers.clear();
 
-		lighter.lightVolume.delete();
+		lighter.delete();
 
 		materialManager.delete();
 		kinetics.invalidate();

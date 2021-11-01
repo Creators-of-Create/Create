@@ -20,7 +20,7 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
 
     private final ArrayList<FlapData> flaps;
 
-    public FunnelInstance(MaterialManager<?> modelManager, FunnelTileEntity tile) {
+    public FunnelInstance(MaterialManager modelManager, FunnelTileEntity tile) {
         super(modelManager, tile);
 
         flaps = new ArrayList<>(4);

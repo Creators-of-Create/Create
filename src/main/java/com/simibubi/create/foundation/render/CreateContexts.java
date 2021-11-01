@@ -3,9 +3,14 @@ package com.simibubi.create.foundation.render;
 import java.util.stream.Stream;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.source.FileResolution;
+import com.jozufozu.flywheel.util.ResourceUtil;
 import com.jozufozu.flywheel.backend.SpecMetaRegistry;
-import com.jozufozu.flywheel.backend.gl.shader.ShaderType;
-import com.jozufozu.flywheel.backend.loading.ModelTemplate;
+import com.jozufozu.flywheel.backend.pipeline.IShaderPipeline;
+import com.jozufozu.flywheel.backend.pipeline.InstancingTemplate;
+import com.jozufozu.flywheel.backend.pipeline.OneShotTemplate;
+import com.jozufozu.flywheel.backend.pipeline.WorldShaderPipeline;
+import com.jozufozu.flywheel.backend.source.Resolver;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
@@ -25,17 +30,17 @@ public class CreateContexts {
 		Backend backend = event.getBackend();
 
 		SpecMetaRegistry.register(RainbowDebugStateProvider.INSTANCE);
+        FileResolution header = Resolver.INSTANCE.findShader(ResourceUtil.subPath(CONTRAPTION, ".glsl"));
 
-		CWORLD = backend.register(contraptionContext(backend));
-		STRUCTURE = backend.register(contraptionContext(backend)
-				.withSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
-				.withTemplateFactory(ModelTemplate::new));
+		IShaderPipeline<ContraptionProgram> instancing = new WorldShaderPipeline<>(ContraptionProgram::new, InstancingTemplate.INSTANCE, header);
+		IShaderPipeline<ContraptionProgram> structure = new WorldShaderPipeline<>(ContraptionProgram::new, OneShotTemplate.INSTANCE, header);
+
+		CWORLD = backend.register(WorldContext.builder(backend, CONTRAPTION)
+				.build(instancing));
+
+		STRUCTURE = backend.register(WorldContext.builder(backend, CONTRAPTION)
+				.setSpecStream(() -> Stream.of(AllProgramSpecs.STRUCTURE))
+				.build(structure));
 	}
 
-	private static WorldContext<ContraptionProgram> contraptionContext(Backend backend) {
-		return new WorldContext<>(backend, ContraptionProgram::new)
-				.withName(CONTRAPTION)
-				.withBuiltin(ShaderType.FRAGMENT, CONTRAPTION, "/builtin.frag")
-				.withBuiltin(ShaderType.VERTEX, CONTRAPTION, "/builtin.vert");
-	}
 }

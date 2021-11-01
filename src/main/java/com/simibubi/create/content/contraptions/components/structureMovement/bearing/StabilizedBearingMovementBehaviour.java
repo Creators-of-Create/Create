@@ -70,7 +70,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+	public ActorInstance createInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
 		return new StabilizedBearingInstance(materialManager, simulationWorld, context);
 	}
 

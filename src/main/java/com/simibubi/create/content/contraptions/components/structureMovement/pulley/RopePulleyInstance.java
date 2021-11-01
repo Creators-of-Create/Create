@@ -3,17 +3,14 @@ package com.simibubi.create.content.contraptions.components.structureMovement.pu
 
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 public class RopePulleyInstance extends AbstractPulleyInstance {
-	final PulleyTileEntity tile = (PulleyTileEntity) super.tile;
-
-	public RopePulleyInstance(MaterialManager<?> dispatcher, PulleyTileEntity tile) {
+	public RopePulleyInstance(MaterialManager dispatcher, PulleyTileEntity tile) {
 		super(dispatcher, tile);
-		beginFrame();
 	}
 
 	protected Instancer<OrientedData> getRopeModel() {
@@ -38,10 +35,10 @@ public class RopePulleyInstance extends AbstractPulleyInstance {
 
 	protected float getOffset() {
 		float partialTicks = AnimationTickHolder.getPartialTicks();
-		return PulleyRenderer.getTileOffset(partialTicks, tile);
+		return PulleyRenderer.getTileOffset(partialTicks, (PulleyTileEntity) tile);
 	}
 
 	protected boolean isRunning() {
-		return tile.running || tile.isVirtual();
+		return ((PulleyTileEntity) tile).running || tile.isVirtual();
 	}
 }

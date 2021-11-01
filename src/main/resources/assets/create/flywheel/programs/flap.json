@@ -1,6 +1,5 @@
 {
-  "vert": "create:flap.vert",
-  "frag": "flywheel:block.frag",
+  "source": "create:flap.vert",
   "states": [
     {
       "when": {

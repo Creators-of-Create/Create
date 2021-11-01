@@ -1,28 +1,28 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.pulley;
 
-import java.util.Arrays;
-
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.instancing.GroupInstance;
 import com.jozufozu.flywheel.core.instancing.SelectInstance;
-import com.jozufozu.flywheel.core.materials.OrientedData;
+import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
-import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.IMovingListener;
+import com.jozufozu.flywheel.light.LightPacking;
+import com.jozufozu.flywheel.light.LightProvider;
+import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.LightVolume;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 
-public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, ILightUpdateListener {
+public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, IMovingListener {
 
 	final OrientedData coil;
 	final SelectInstance<OrientedData> magnet;
@@ -33,18 +33,16 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	protected final Direction rotatingAbout;
 	protected final Vector3f rotationAxis;
 
-	private byte[] bLight = new byte[1];
-	private byte[] sLight = new byte[1];
-	private GridAlignedBB volume;
+	private final GridAlignedBB volume = new GridAlignedBB();
+	private final LightVolume light;
 
-	public AbstractPulleyInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+	public AbstractPulleyInstance(MaterialManager dispatcher, KineticTileEntity tile) {
 		super(dispatcher, tile);
 
 		rotatingAbout = Direction.get(Direction.AxisDirection.POSITIVE, axis);
 		rotationAxis = rotatingAbout.step();
 
-		coil = getCoilModel()
-				.createInstance()
+		coil = getCoilModel().createInstance()
 				.setPosition(getInstancePosition());
 
 		magnet = new SelectInstance<>(this::getMagnetModelIndex);
@@ -52,49 +50,60 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 				.addModel(getHalfMagnetModel());
 
 		rope = new GroupInstance<>(getRopeModel());
-		halfRope = new ConditionalInstance<>(getHalfRopeModel())
-				.withCondition(this::shouldRenderHalfRope);
+		halfRope = new ConditionalInstance<>(getHalfRopeModel()).withCondition(this::shouldRenderHalfRope);
+
+		updateOffset();
+		updateVolume();
+
+		light = new LightVolume(volume);
+		light.initialize(LightUpdater.get(world).getProvider());
+
+		beginFrame();
 	}
 
 	@Override
 	public void beginFrame() {
 		updateOffset();
-
-		transformModels();
-	}
-
-	private void transformModels() {
-		resizeRope();
-
 		coil.setRotation(rotationAxis.rotationDegrees(offset * 180));
-		magnet.update().get().ifPresent(data ->
-				{
-					int index = Math.max(0, MathHelper.floor(offset));
+
+		int neededRopeCount = getNeededRopeCount();
+		rope.resize(neededRopeCount);
+
+		magnet.update()
+				.get()
+				.ifPresent(data -> {
+					int i = Math.max(0, MathHelper.floor(offset));
+					short packed = light.getPackedLight(pos.getX(), pos.getY() - i, pos.getZ());
 					data.setPosition(getInstancePosition())
 							.nudge(0, -offset, 0)
-							.setBlockLight(bLight[index])
-							.setSkyLight(sLight[index]);
-				}
-		);
+							.setBlockLight(LightPacking.getBlock(packed))
+							.setSkyLight(LightPacking.getSky(packed));
+				});
 
-		halfRope.update().get().ifPresent(rope -> {
-			float f = offset % 1;
-			float halfRopeNudge = f > .75f ? f - 1 : f;
+		halfRope.update()
+				.get()
+				.ifPresent(rope1 -> {
+					float f = offset % 1;
+					float halfRopeNudge = f > .75f ? f - 1 : f;
 
-			rope.setPosition(getInstancePosition())
-					.nudge(0, -halfRopeNudge, 0)
-					.setBlockLight(bLight[0])
-					.setSkyLight(sLight[0]);
-		});
+					short packed = light.getPackedLight(pos.getX(), pos.getY(), pos.getZ());
+					rope1.setPosition(getInstancePosition())
+							.nudge(0, -halfRopeNudge, 0)
+							.setBlockLight(LightPacking.getBlock(packed))
+							.setSkyLight(LightPacking.getSky(packed));
+				});
 
 		if (isRunning()) {
 			int size = rope.size();
+			int bottomY = pos.getY() - size;
 			for (int i = 0; i < size; i++) {
+				short packed = light.getPackedLight(pos.getX(), bottomY + i, pos.getZ());
+
 				rope.get(i)
 						.setPosition(getInstancePosition())
 						.nudge(0, -offset + i + 1, 0)
-						.setBlockLight(bLight[size - i])
-						.setSkyLight(sLight[size - i]);
+						.setBlockLight(LightPacking.getBlock(packed))
+						.setSkyLight(LightPacking.getSky(packed));
 			}
 		} else {
 			rope.clear();
@@ -114,6 +123,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		magnet.delete();
 		rope.clear();
 		halfRope.delete();
+		light.delete();
 	}
 
 	protected abstract Instancer<OrientedData> getRopeModel();
@@ -130,23 +140,24 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 
 	protected abstract boolean isRunning();
 
-	protected void resizeRope() {
-		int neededRopeCount = getNeededRopeCount();
-		rope.resize(neededRopeCount);
-
-		int length = MathHelper.ceil(offset);
-
-		if (volume == null || bLight.length < length + 1) {
-			volume = GridAlignedBB.from(pos.below(length), pos);
-			volume.fixMinMax();
-
-			bLight = Arrays.copyOf(bLight, length + 1);
-			sLight = Arrays.copyOf(sLight, length + 1);
-
-			initLight(world, volume);
-
-			LightUpdater.getInstance().startListening(volume, this);
+	@Override
+	public boolean update(LightProvider provider) {
+		if (updateVolume()) {
+			light.move(provider, volume);
+			return true;
 		}
+		return false;
+	}
+
+	private boolean updateVolume() {
+		int length = MathHelper.ceil(offset) + 2;
+
+		if (volume.sizeY() < length) {
+			volume.assign(pos.below(length), pos)
+					.fixMinMax();
+			return true;
+		}
+		return false;
 	}
 
 	private void updateOffset() {
@@ -164,7 +175,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 
 	private int getMagnetModelIndex() {
 		if (isRunning() || offset == 0) {
-			return  offset > .25f ? 0 : 1;
+			return offset > .25f ? 0 : 1;
 		} else {
 			return -1;
 		}
@@ -176,26 +187,13 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	@Override
-	public boolean onLightUpdate(IBlockDisplayReader world, LightType type, GridAlignedBB changed) {
-		changed.intersectAssign(volume);
-
-		initLight(world, changed);
-
-		return false;
+	public ImmutableBox getVolume() {
+		return volume;
 	}
 
-	private void initLight(IBlockDisplayReader world, GridAlignedBB changed) {
-		int top = this.pos.getY();
-		BlockPos.Mutable pos = new BlockPos.Mutable();
-		changed.forEachContained((x, y, z) -> {
-			pos.set(x, y, z);
-			byte block = (byte) world.getBrightness(LightType.BLOCK, pos);
-			byte sky = (byte) world.getBrightness(LightType.SKY, pos);
-
-			int i = top - y;
-
-			bLight[i] = block;
-			sLight[i] = sky;
-		});
+	@Override
+	public void onLightUpdate(LightProvider world, LightType type, ImmutableBox changed) {
+		super.onLightUpdate(world, type, changed);
+		light.onLightUpdate(world, type, changed);
 	}
 }

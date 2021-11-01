@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.jozufozu.flywheel.util.transform.TransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -25,7 +25,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
     protected MatrixStack ms;
 
-    protected GaugeInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+    protected GaugeInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         faces = new ArrayList<>(2);
@@ -145,7 +145,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     }
 
     public static class Speed extends GaugeInstance {
-        public Speed(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+        public Speed(MaterialManager dispatcher, KineticTileEntity tile) {
             super(dispatcher, tile);
         }
 
@@ -156,7 +156,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     }
 
     public static class Stress extends GaugeInstance {
-        public Stress(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+        public Stress(MaterialManager dispatcher, KineticTileEntity tile) {
             super(dispatcher, tile);
         }
 

@@ -28,10 +28,6 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 		super.tick();
 
 		for (RenderedContraption contraption : visible) {
-			ContraptionLighter<?> lighter = contraption.getLighter();
-			if (lighter.getBounds().volume() < AllConfigs.CLIENT.maxContraptionLightVolume.get())
-				lighter.tick(contraption);
-
 			contraption.kinetics.tick();
 		}
 	}

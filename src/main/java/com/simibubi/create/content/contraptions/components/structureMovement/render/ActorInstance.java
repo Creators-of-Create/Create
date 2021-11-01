@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 import net.minecraft.world.LightType;
 
 public abstract class ActorInstance {
-    protected final MaterialManager<?> materialManager;
+    protected final MaterialManager materialManager;
 	protected final PlacementSimulationWorld simulationWorld;
 	protected final MovementContext context;
 
-    public ActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld world, MovementContext context) {
+    public ActorInstance(MaterialManager materialManager, PlacementSimulationWorld world, MovementContext context) {
         this.materialManager = materialManager;
         this.simulationWorld = world;
         this.context = context;

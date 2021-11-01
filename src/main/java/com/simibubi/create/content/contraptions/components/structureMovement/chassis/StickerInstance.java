@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.tile.TileEntityInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -23,7 +23,7 @@ public class StickerInstance extends TileEntityInstance<StickerTileEntity> imple
 
     private final ModelData head;
 
-    public StickerInstance(MaterialManager<?> modelManager, StickerTileEntity tile) {
+    public StickerInstance(MaterialManager modelManager, StickerTileEntity tile) {
         super(modelManager, tile);
 
         head = getTransformMaterial().getModel(AllBlockPartials.STICKER_HEAD, blockState).createInstance();

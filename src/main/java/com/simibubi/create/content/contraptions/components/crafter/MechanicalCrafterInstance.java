@@ -16,7 +16,7 @@ import net.minecraft.util.Direction;
 
 public class MechanicalCrafterInstance extends SingleRotatingInstance {
 
-    public MechanicalCrafterInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public MechanicalCrafterInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

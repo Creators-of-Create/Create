@@ -2,10 +2,10 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -34,17 +34,17 @@ public class HarvesterActorInstance extends ActorInstance {
     private double rotation;
     private double previousRotation;
 
-    public HarvesterActorInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
+    public HarvesterActorInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld, MovementContext context) {
         super(materialManager, simulationWorld, context);
 
-		InstanceMaterial<ModelData> instanceMaterial = materialManager.defaultCutout()
+		Material<ModelData> material = materialManager.defaultCutout()
 				.material(Materials.TRANSFORMED);
 
         BlockState state = context.state;
 
         facing = state.getValue(HORIZONTAL_FACING);
 
-        harvester = instanceMaterial.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
+        harvester = material.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
         horizontalAngle = facing.toYRot() + ((facing.getAxis() == Direction.Axis.X) ? 180 : 0);
 

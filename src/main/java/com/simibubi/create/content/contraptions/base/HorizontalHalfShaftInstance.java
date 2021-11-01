@@ -7,7 +7,7 @@ import net.minecraft.util.Direction;
 
 public class HorizontalHalfShaftInstance extends HalfShaftInstance {
 
-    public HorizontalHalfShaftInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public HorizontalHalfShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

@@ -19,7 +19,7 @@ public class FanInstance extends KineticTileInstance<EncasedFanTileEntity> {
     final Direction direction;
     private final Direction opposite;
 
-    public FanInstance(MaterialManager<?> modelManager, EncasedFanTileEntity tile) {
+    public FanInstance(MaterialManager modelManager, EncasedFanTileEntity tile) {
 		super(modelManager, tile);
 
 		direction = blockState.getValue(FACING);

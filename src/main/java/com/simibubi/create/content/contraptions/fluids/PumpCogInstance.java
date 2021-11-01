@@ -14,7 +14,7 @@ import net.minecraft.util.Direction;
 
 public class PumpCogInstance extends SingleRotatingInstance {
 
-    public PumpCogInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public PumpCogInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 

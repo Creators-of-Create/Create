@@ -52,7 +52,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Nullable
 	@Override
-	public ActorInstance createInstance(MaterialManager<?> materialManager, PlacementSimulationWorld simulationWorld,
+	public ActorInstance createInstance(MaterialManager materialManager, PlacementSimulationWorld simulationWorld,
 		MovementContext context) {
 		return new HarvesterActorInstance(materialManager, simulationWorld, context);
 	}

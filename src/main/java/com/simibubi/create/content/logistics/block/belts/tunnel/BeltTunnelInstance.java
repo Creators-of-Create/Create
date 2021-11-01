@@ -23,7 +23,7 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
 
     private final Map<Direction, ArrayList<FlapData>> tunnelFlaps;
 
-    public BeltTunnelInstance(MaterialManager<?> modelManager, BeltTunnelTileEntity tile) {
+    public BeltTunnelInstance(MaterialManager modelManager, BeltTunnelTileEntity tile) {
         super(modelManager, tile);
 
         tunnelFlaps = new EnumMap<>(Direction.class);

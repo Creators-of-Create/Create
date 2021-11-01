@@ -9,7 +9,7 @@ public class SingleRotatingInstance extends KineticTileInstance<KineticTileEntit
 
     protected final RotatingData rotatingModel;
 
-    public SingleRotatingInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public SingleRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
 
         rotatingModel = setup(getModel().createInstance());

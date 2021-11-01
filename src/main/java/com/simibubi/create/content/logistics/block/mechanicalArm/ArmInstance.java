@@ -6,9 +6,9 @@ import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
-import com.jozufozu.flywheel.backend.material.InstanceMaterial;
+import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -44,10 +44,10 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 	private float upperArmAngle = Float.NaN;
 	private float headAngle = Float.NaN;
 
-	public ArmInstance(MaterialManager<?> modelManager, ArmTileEntity tile) {
+	public ArmInstance(MaterialManager modelManager, ArmTileEntity tile) {
 		super(modelManager, tile);
 
-		InstanceMaterial<ModelData> mat = getTransformMaterial();
+		Material<ModelData> mat = getTransformMaterial();
 
 		base = mat.getModel(AllBlockPartials.ARM_BASE, blockState).createInstance();
 		lowerBody = mat.getModel(AllBlockPartials.ARM_LOWER_BODY, blockState).createInstance();

@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.fluids.pipes;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
-import com.jozufozu.flywheel.core.materials.ModelData;
+import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
@@ -24,7 +24,7 @@ public class FluidValveInstance extends ShaftInstance implements IDynamicInstanc
     protected final double yRot;
     protected final int pointerRotationOffset;
 
-    public FluidValveInstance(MaterialManager<?> dispatcher, KineticTileEntity tile) {
+    public FluidValveInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);
 
         Direction facing = blockState.getValue(FluidValveBlock.FACING);

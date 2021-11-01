@@ -14,7 +14,7 @@ import net.minecraft.util.Direction;
 
 public class DrillInstance extends SingleRotatingInstance {
 
-    public DrillInstance(MaterialManager<?> modelManager, KineticTileEntity tile) {
+    public DrillInstance(MaterialManager modelManager, KineticTileEntity tile) {
         super(modelManager, tile);
     }
 
