@@ -68,7 +68,10 @@ public class ServerSpeedProvider {
 					}
 					float target = ((float) getSyncInterval()) / Math.max(clientTimer, 1);
 					modifier.target(Math.min(target, 1));
-					clientTimer = 0;
+					// Set this to -1 because packets are processed before ticks.
+					// ServerSpeedProvider#clientTick will increment it to 0 at the end of this tick.
+					// Setting it to 0 causes consistent desync, as the client ends up counting too many ticks.
+					clientTimer = -1;
 
 				});
 			context.get()
