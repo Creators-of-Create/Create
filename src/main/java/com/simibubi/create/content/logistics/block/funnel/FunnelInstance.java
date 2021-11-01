@@ -13,8 +13,8 @@ import com.simibubi.create.content.logistics.block.FlapData;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.Direction;
-import net.minecraft.world.LightType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.LightLayer;
 
 public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> implements IDynamicInstance {
 
@@ -33,8 +33,8 @@ public class FunnelInstance extends TileEntityInstance<FunnelTileEntity> impleme
                 .material(AllMaterialSpecs.FLAPS)
 				.getModel(flapPartial, blockState);
 
-        int blockLight = world.getBrightness(LightType.BLOCK, pos);
-        int skyLight = world.getBrightness(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = world.getBrightness(LightLayer.SKY, pos);
 
         Direction direction = FunnelBlock.getFunnelFacing(blockState);
 

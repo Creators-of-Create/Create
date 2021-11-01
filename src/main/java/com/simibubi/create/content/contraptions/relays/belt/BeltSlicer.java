@@ -16,29 +16,29 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants.BlockFlags;
@@ -47,25 +47,25 @@ public class BeltSlicer {
 
 	public static class Feedback {
 		int color = 0xffffff;
-		AxisAlignedBB bb;
+		AABB bb;
 		String langKey;
-		TextFormatting formatting = TextFormatting.WHITE;
+		ChatFormatting formatting = ChatFormatting.WHITE;
 	}
 
-	public static ActionResultType useWrench(BlockState state, World world, BlockPos pos, PlayerEntity player,
-		Hand handIn, BlockRayTraceResult hit, Feedback feedBack) {
+	public static InteractionResult useWrench(BlockState state, Level world, BlockPos pos, Player player,
+		InteractionHand handIn, BlockHitResult hit, Feedback feedBack) {
 		BeltTileEntity controllerTE = BeltHelper.getControllerTE(world, pos);
 		if (controllerTE == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (state.getValue(BeltBlock.CASING) && hit.getDirection() != Direction.UP)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (state.getValue(BeltBlock.PART) == BeltPart.PULLEY && hit.getDirection()
 			.getAxis() != Axis.Y)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		int beltLength = controllerTE.beltLength;
 		if (beltLength == 2)
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 
 		BlockPos beltVector = new BlockPos(BeltHelper.getBeltVector(state));
 		BeltPart part = state.getValue(BeltBlock.PART);
@@ -75,7 +75,7 @@ public class BeltSlicer {
 		// Shorten from End
 		if (hoveringEnd(state, hit)) {
 			if (world.isClientSide)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 
 			for (BlockPos blockPos : beltChain) {
 				BeltTileEntity belt = BeltHelper.getSegmentTE(world, blockPos);
@@ -120,7 +120,7 @@ public class BeltSlicer {
 					if (transportedItemStack.beltPosition <= 0) {
 						ItemEntity entity = new ItemEntity(world, pos.getX() + .5f, pos.getY() + 11 / 16f,
 							pos.getZ() + .5f, transportedItemStack.stack);
-						entity.setDeltaMovement(Vector3d.ZERO);
+						entity.setDeltaMovement(Vec3.ZERO);
 						entity.setDefaultPickUpDelay();
 						entity.hurtMarked = true;
 						world.addFreshEntity(entity);
@@ -130,25 +130,25 @@ public class BeltSlicer {
 				}
 			}
 
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		BeltTileEntity segmentTE = BeltHelper.getSegmentTE(world, pos);
 		if (segmentTE == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		// Split in half
 		int hitSegment = segmentTE.index;
-		Vector3d centerOf = VecHelper.getCenterOf(hit.getBlockPos());
-		Vector3d subtract = hit.getLocation()
+		Vec3 centerOf = VecHelper.getCenterOf(hit.getBlockPos());
+		Vec3 subtract = hit.getLocation()
 			.subtract(centerOf);
-		boolean towardPositive = subtract.dot(Vector3d.atLowerCornerOf(beltVector)) > 0;
+		boolean towardPositive = subtract.dot(Vec3.atLowerCornerOf(beltVector)) > 0;
 		BlockPos next = !towardPositive ? pos.subtract(beltVector) : pos.offset(beltVector);
 
 		if (hitSegment == 0 || hitSegment == 1 && !towardPositive)
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		if (hitSegment == controllerTE.beltLength - 1 || hitSegment == controllerTE.beltLength - 2 && towardPositive)
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 
 		// Look for shafts
 		if (!creative) {
@@ -191,7 +191,7 @@ public class BeltSlicer {
 
 				if (!world.isClientSide)
 					player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack(amountRetrieved));
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			}
 		}
 
@@ -211,7 +211,7 @@ public class BeltSlicer {
 			KineticTileEntity.switchToBlockState(world, next, world.getBlockState(next)
 				.setValue(BeltBlock.PART, towardPositive ? BeltPart.START : BeltPart.END));
 			world.playSound(null, pos, SoundEvents.WOOL_HIT,
-				player == null ? SoundCategory.BLOCKS : SoundCategory.PLAYERS, 0.5F, 2.3F);
+				player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.5F, 2.3F);
 
 			// Transfer items to new controller
 			BeltTileEntity newController = towardPositive ? BeltHelper.getSegmentTE(world, next) : segmentTE;
@@ -232,18 +232,18 @@ public class BeltSlicer {
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
-	public static ActionResultType useConnector(BlockState state, World world, BlockPos pos, PlayerEntity player,
-		Hand handIn, BlockRayTraceResult hit, Feedback feedBack) {
+	public static InteractionResult useConnector(BlockState state, Level world, BlockPos pos, Player player,
+		InteractionHand handIn, BlockHitResult hit, Feedback feedBack) {
 		BeltTileEntity controllerTE = BeltHelper.getControllerTE(world, pos);
 		if (controllerTE == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		int beltLength = controllerTE.beltLength;
 		if (beltLength == BeltConnectorItem.maxLength())
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 
 		BlockPos beltVector = new BlockPos(BeltHelper.getBeltVector(state));
 		BeltPart part = state.getValue(BeltBlock.PART);
@@ -252,7 +252,7 @@ public class BeltSlicer {
 		boolean creative = player.isCreative();
 
 		if (!hoveringEnd(state, hit))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		BlockPos next = part == BeltPart.START ? pos.subtract(beltVector) : pos.offset(beltVector);
 		BeltTileEntity mergedController = null;
@@ -263,15 +263,15 @@ public class BeltSlicer {
 		if (!nextState.getMaterial()
 			.isReplaceable()) {
 			if (!AllBlocks.BELT.has(nextState))
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			if (!beltStatesCompatible(state, nextState))
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 
 			mergedController = BeltHelper.getControllerTE(world, next);
 			if (mergedController == null)
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			if (mergedController.beltLength + beltLength > BeltConnectorItem.maxLength())
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 
 			mergedBeltLength = mergedController.beltLength;
 
@@ -322,7 +322,7 @@ public class BeltSlicer {
 				if (segmentTE != null)
 					segmentTE.color = controllerTE.color;
 				world.playSound(null, pos, SoundEvents.WOOL_PLACE,
-					player == null ? SoundCategory.BLOCKS : SoundCategory.PLAYERS, 0.5F, 1F);
+					player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.5F, 1F);
 
 				// Transfer items to new controller
 				if (part == BeltPart.START && segmentTE != null && inventory != null) {
@@ -338,7 +338,7 @@ public class BeltSlicer {
 				// Merge with other
 				BeltInventory mergedInventory = mergedController.inventory;
 				world.playSound(null, pos, SoundEvents.WOOL_HIT,
-					player == null ? SoundCategory.BLOCKS : SoundCategory.PLAYERS, 0.5F, 1.3F);
+					player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.5F, 1.3F);
 				BeltTileEntity segmentTE = BeltHelper.getSegmentTE(world, next);
 				KineticTileEntity.switchToBlockState(world, next,
 					state.setValue(BeltBlock.CASING, segmentTE != null && segmentTE.casing != CasingType.NONE)
@@ -387,7 +387,7 @@ public class BeltSlicer {
 				}
 			}
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	static boolean beltStatesCompatible(BlockState state, BlockState nextState) {
@@ -428,14 +428,14 @@ public class BeltSlicer {
 		return state.setValue(BeltBlock.HORIZONTAL_FACING, facing.getOpposite());
 	}
 
-	static boolean hoveringEnd(BlockState state, BlockRayTraceResult hit) {
+	static boolean hoveringEnd(BlockState state, BlockHitResult hit) {
 		BeltPart part = state.getValue(BeltBlock.PART);
 		if (part == BeltPart.MIDDLE || part == BeltPart.PULLEY)
 			return false;
 
-		Vector3d beltVector = BeltHelper.getBeltVector(state);
-		Vector3d centerOf = VecHelper.getCenterOf(hit.getBlockPos());
-		Vector3d subtract = hit.getLocation()
+		Vec3 beltVector = BeltHelper.getBeltVector(state);
+		Vec3 centerOf = VecHelper.getCenterOf(hit.getBlockPos());
+		Vec3 subtract = hit.getLocation()
 			.subtract(centerOf);
 
 		return subtract.dot(beltVector) > 0 == (part == BeltPart.END);
@@ -444,16 +444,16 @@ public class BeltSlicer {
 	@OnlyIn(Dist.CLIENT)
 	public static void tickHoveringInformation() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult target = mc.hitResult;
-		if (target == null || !(target instanceof BlockRayTraceResult))
+		HitResult target = mc.hitResult;
+		if (target == null || !(target instanceof BlockHitResult))
 			return;
 
-		BlockRayTraceResult result = (BlockRayTraceResult) target;
-		ClientWorld world = mc.level;
+		BlockHitResult result = (BlockHitResult) target;
+		ClientLevel world = mc.level;
 		BlockPos pos = result.getBlockPos();
 		BlockState state = world.getBlockState(pos);
-		ItemStack held = mc.player.getItemInHand(Hand.MAIN_HAND);
-		ItemStack heldOffHand = mc.player.getItemInHand(Hand.OFF_HAND);
+		ItemStack held = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
+		ItemStack heldOffHand = mc.player.getItemInHand(InteractionHand.OFF_HAND);
 
 		if (mc.player.isShiftKeyDown())
 			return;
@@ -464,9 +464,9 @@ public class BeltSlicer {
 
 		// TODO: Populate feedback in the methods for clientside
 		if (AllItems.WRENCH.isIn(held) || AllItems.WRENCH.isIn(heldOffHand))
-			useWrench(state, world, pos, mc.player, Hand.MAIN_HAND, result, feedback);
+			useWrench(state, world, pos, mc.player, InteractionHand.MAIN_HAND, result, feedback);
 		else if (AllItems.BELT_CONNECTOR.isIn(held) || AllItems.BELT_CONNECTOR.isIn(heldOffHand))
-			useConnector(state, world, pos, mc.player, Hand.MAIN_HAND, result, feedback);
+			useConnector(state, world, pos, mc.player, InteractionHand.MAIN_HAND, result, feedback);
 		else
 			return;
 
@@ -474,7 +474,7 @@ public class BeltSlicer {
 			mc.player.displayClientMessage(Lang.translate(feedback.langKey)
 				.withStyle(feedback.formatting), true);
 		else
-			mc.player.displayClientMessage(new StringTextComponent(""), true);
+			mc.player.displayClientMessage(new TextComponent(""), true);
 
 		if (feedback.bb != null)
 			CreateClient.OUTLINER.chaseAABB("BeltSlicer", feedback.bb)

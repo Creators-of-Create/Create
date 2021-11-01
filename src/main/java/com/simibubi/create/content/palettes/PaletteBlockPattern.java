@@ -24,15 +24,15 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.data.CookingRecipeBuilder;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -48,7 +48,7 @@ public class PaletteBlockPattern {
 			.addRecipes(v -> (c, p) -> {
 				DataIngredient ingredient = DataIngredient.items(c.get());
 				Block result = v.getBaseBlock().get();
-				CookingRecipeBuilder.smelting(ingredient, result, 0.1f, 200)
+				SimpleCookingRecipeBuilder.smelting(ingredient, result, 0.1f, 200)
 					.unlockedBy("has_" + p.safeName(ingredient), ingredient.getCritereon(p))
 					.save(p, p.safeId(result));
 			}),
@@ -118,8 +118,8 @@ public class PaletteBlockPattern {
 	private String id;
 	private boolean isTranslucent;
 	private boolean hasFoliage;
-	private ITag.INamedTag<Block>[] blockTags;
-	private ITag.INamedTag<Item>[] itemTags;
+	private Tag.Named<Block>[] blockTags;
+	private Tag.Named<Item>[] itemTags;
 	private Optional<Function<PaletteStoneVariants, ConnectedTextureBehaviour>> ctBehaviour;
 
 	private IPatternBlockStateGenerator blockStateGenerator;
@@ -158,11 +158,11 @@ public class PaletteBlockPattern {
 		return hasFoliage;
 	}
 
-	public ITag.INamedTag<Block>[] getBlockTags() {
+	public Tag.Named<Block>[] getBlockTags() {
 		return blockTags;
 	}
 
-	public ITag.INamedTag<Item>[] getItemTags() {
+	public Tag.Named<Item>[] getItemTags() {
 		return itemTags;
 	}
 
@@ -216,13 +216,13 @@ public class PaletteBlockPattern {
 	}
 
 	@SafeVarargs
-	private final PaletteBlockPattern blockTags(ITag.INamedTag<Block>... tags) {
+	private final PaletteBlockPattern blockTags(Tag.Named<Block>... tags) {
 		blockTags = tags;
 		return this;
 	}
 
 	@SafeVarargs
-	private final PaletteBlockPattern itemTags(ITag.INamedTag<Item>... tags) {
+	private final PaletteBlockPattern itemTags(Tag.Named<Item>... tags) {
 		itemTags = tags;
 		return this;
 	}

@@ -2,15 +2,17 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.content.curiosities.armor.CapacityEnchantment.ICapacityEnchantable;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.NonNullList;
+import net.minecraft.util.Mth;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
 
@@ -18,12 +20,12 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	private BlockItem blockItem;
 
 	public CopperBacktankItem(Properties p_i48534_3_, BlockItem blockItem) {
-		super(EquipmentSlotType.CHEST, p_i48534_3_);
+		super(EquipmentSlot.CHEST, p_i48534_3_);
 		this.blockItem = blockItem;
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext p_195939_1_) {
+	public InteractionResult useOn(UseOnContext p_195939_1_) {
 		return blockItem.useOn(p_195939_1_);
 	}
 
@@ -43,12 +45,12 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 		if (!allowdedIn(p_150895_1_))
 			return;
 		
 		ItemStack stack = new ItemStack(this);
-		CompoundNBT nbt = new CompoundNBT();
+		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("Air", BackTankUtil.maxAirWithoutEnchants());
 		stack.setTag(nbt);
 		p_150895_2_.add(stack);
@@ -56,7 +58,7 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
-		return 1 - MathHelper
+		return 1 - Mth
 			.clamp(getRemainingAir(stack) / ((float) BackTankUtil.maxAir(stack)), 0, 1);
 	}
 
@@ -66,7 +68,7 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	}
 
 	public static int getRemainingAir(ItemStack stack) {
-		CompoundNBT orCreateTag = stack.getOrCreateTag();
+		CompoundTag orCreateTag = stack.getOrCreateTag();
 		return orCreateTag.getInt("Air");
 	}
 	

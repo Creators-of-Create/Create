@@ -20,18 +20,18 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -69,7 +69,7 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public static void playerLoggedIn(PlayerLoggedInEvent event) {
-		PlayerEntity player = event.getPlayer();
+		Player player = event.getPlayer();
 		ToolboxHandler.playerLogin(player);
 	}
 
@@ -78,7 +78,7 @@ public class CommonEvents {
 		BlockState blockState = event.getOriginalState();
 		FluidState fluidState = blockState.getFluidState();
 		BlockPos pos = event.getPos();
-		IWorld world = event.getWorld();
+		LevelAccessor world = event.getWorld();
 
 		if (fluidState.isSource() && FluidHelper.isLava(fluidState.getType()))
 			return;
@@ -100,7 +100,7 @@ public class CommonEvents {
 	public static void onWorldTick(WorldTickEvent event) {
 		if (event.phase == Phase.START)
 			return;
-		World world = event.world;
+		Level world = event.world;
 		ContraptionHandler.tick(world);
 		CapabilityMinecartController.tick(world);
 		CouplingPhysics.tick(world);
@@ -110,7 +110,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void onUpdateLivingEntity(LivingUpdateEvent event) {
 		LivingEntity entityLiving = event.getEntityLiving();
-		World world = entityLiving.level;
+		Level world = entityLiving.level;
 		if (world == null)
 			return;
 		ContraptionHandler.entitiesWhoJustDismountedGetSentToTheRightLocation(entityLiving, world);
@@ -120,7 +120,7 @@ public class CommonEvents {
 	@SubscribeEvent
 	public static void onEntityAdded(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		ContraptionHandler.addSpawnedContraptionsToCollisionList(entity, world);
 	}
 
@@ -149,14 +149,14 @@ public class CommonEvents {
 
 	@SubscribeEvent
 	public static void onLoadWorld(WorldEvent.Load event) {
-		IWorld world = event.getWorld();
+		LevelAccessor world = event.getWorld();
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
 	}
 
 	@SubscribeEvent
 	public static void onUnloadWorld(WorldEvent.Unload event) {
-		IWorld world = event.getWorld();
+		LevelAccessor world = event.getWorld();
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
 		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);
@@ -172,7 +172,7 @@ public class CommonEvents {
 		CapabilityMinecartController.startTracking(event);
 	}
 
-	public static void leftClickEmpty(ServerPlayerEntity player) {
+	public static void leftClickEmpty(ServerPlayer player) {
 		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof ZapperItem) {
 			ZapperInteractionHandler.trySelect(stack, player);

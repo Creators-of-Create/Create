@@ -1,34 +1,35 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import static net.minecraft.entity.MoverType.SELF;
-import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
+import staticnet.minecraft.world.entity.MoverTypeAxisDirection.NEGATIVE;
 import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
-import java.util.List;
-
-import com.simibubi.create.AllBlocks;
+import javanet.minecraft.core.Direction.AxisDirectionAllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.BeltSlope;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.HangingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
+
+import com.simibubi.create.AllBlocks;
+import java.util.List;
 
 public class BeltMovementHandler {
 
@@ -60,16 +61,16 @@ public class BeltMovementHandler {
 	public static boolean canBeTransported(Entity entity) {
 		if (!entity.isAlive())
 			return false;
-		if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isShiftKeyDown())
+		if (entity instanceof Player && ((Player) entity).isShiftKeyDown())
 			return false;
 		return true;
 	}
 
 	public static void transportEntity(BeltTileEntity beltTe, Entity entityIn, TransportedEntityInfo info) {
 		BlockPos pos = info.lastCollidedPos;
-		World world = beltTe.getLevel();
-		TileEntity te = world.getBlockEntity(pos);
-		TileEntity tileEntityBelowPassenger = world.getBlockEntity(entityIn.blockPosition());
+		Level world = beltTe.getLevel();
+		BlockEntity te = world.getBlockEntity(pos);
+		BlockEntity tileEntityBelowPassenger = world.getBlockEntity(entityIn.blockPosition());
 		BlockState blockState = info.lastCollidedState;
 		Direction movementFacing =
 			Direction.fromAxisAndDirection(blockState.getValue(BlockStateProperties.HORIZONTAL_FACING)
@@ -94,9 +95,9 @@ public class BeltMovementHandler {
 			return;
 
 		// Lock entities in place
-		boolean isPlayer = entityIn instanceof PlayerEntity;
+		boolean isPlayer = entityIn instanceof Player;
 		if (entityIn instanceof LivingEntity && !isPlayer) 
-			((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 10, 1, false, false));
+			((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 1, false, false));
 
 		final Direction beltFacing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 		final BeltSlope slope = blockState.getValue(BeltBlock.SLOPE);
@@ -104,10 +105,10 @@ public class BeltMovementHandler {
 		float movementSpeed = beltTe.getBeltMovementSpeed();
 		final Direction movementDirection = Direction.get(axis == Axis.X ? NEGATIVE : POSITIVE, axis);
 
-		Vector3i centeringDirection = Direction.get(POSITIVE, beltFacing.getClockWise()
+		Vec3i centeringDirection = Direction.get(POSITIVE, beltFacing.getClockWise()
 			.getAxis())
 			.getNormal();
-		Vector3d movement = Vector3d.atLowerCornerOf(movementDirection.getNormal())
+		Vec3 movement = Vec3.atLowerCornerOf(movementDirection.getNormal())
 			.scale(movementSpeed);
 
 		double diffCenter =
@@ -136,7 +137,7 @@ public class BeltMovementHandler {
 		if (movingDown)
 			movement = movement.add(0, -Math.abs(axis.choose(movement.x, movement.y, movement.z)), 0);
 
-		Vector3d centering = Vector3d.atLowerCornerOf(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
+		Vec3 centering = Vec3.atLowerCornerOf(centeringDirection).scale(diffCenter * Math.min(Math.abs(movementSpeed), .1f) * 4);
 
 		if (!(entityIn instanceof LivingEntity)
 			|| ((LivingEntity) entityIn).zza == 0 && ((LivingEntity) entityIn).xxa == 0)
@@ -148,10 +149,10 @@ public class BeltMovementHandler {
 
 		// Entity Collisions
 		if (Math.abs(movementSpeed) < .5f) {
-			Vector3d checkDistance = movement.normalize()
+			Vec3 checkDistance = movement.normalize()
 				.scale(0.5);
-			AxisAlignedBB bb = entityIn.getBoundingBox();
-			AxisAlignedBB checkBB = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
+			AABB bb = entityIn.getBoundingBox();
+			AABB checkBB = new AABB(bb.minX, bb.minY, bb.minZ, bb.maxX, bb.maxY, bb.maxZ);
 			checkBB = checkBB.move(checkDistance)
 				.inflate(-Math.abs(checkDistance.x), -Math.abs(checkDistance.y), -Math.abs(checkDistance.z));
 			List<Entity> list = world.getEntities(entityIn, checkBB);
@@ -168,7 +169,7 @@ public class BeltMovementHandler {
 		if (movingUp) {
 			float minVelocity = .13f;
 			float yMovement = (float) -(Math.max(Math.abs(movement.y), minVelocity));
-			entityIn.move(SELF, new Vector3d(0, yMovement, 0));
+			entityIn.move(SELF, new Vec3(0, yMovement, 0));
 			entityIn.move(SELF, movement.multiply(1, 0, 1));
 		} else if (movingDown) {
 			entityIn.move(SELF, movement.multiply(1, 0, 1));

@@ -9,17 +9,17 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIco
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.util.Mth;
 
 public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 
 	protected ScrollOptionBehaviour<RotationDirection> movementDirection;
 	protected float lastGeneratedSpeed;
 
-	public WindmillBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
+	public WindmillBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
 		super(type);
 	}
 
@@ -44,7 +44,7 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 			return lastGeneratedSpeed;
 		int sails = ((BearingContraption) movedContraption.getContraption()).getSailBlocks()
 				/ AllConfigs.SERVER.kinetics.windmillSailsPerRPM.get();
-		return MathHelper.clamp(sails, 1, 16) * getAngleSpeedDirection();
+		return Mth.clamp(sails, 1, 16) * getAngleSpeedDirection();
 	}
 
 	@Override
@@ -58,13 +58,13 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putFloat("LastGenerated", lastGeneratedSpeed);
 		super.write(compound, clientPacket);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		if (!wasMoved)
 			lastGeneratedSpeed = compound.getFloat("LastGenerated");
 		super.fromTag(state, compound, clientPacket);

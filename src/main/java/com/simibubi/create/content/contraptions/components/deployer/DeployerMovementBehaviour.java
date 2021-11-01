@@ -29,19 +29,19 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -50,8 +50,8 @@ import net.minecraftforge.items.IItemHandler;
 public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
-	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
+	public Vec3 getActiveAreaOffset(MovementContext context) {
+		return Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
 			.getNormal())
 			.scale(2);
 	}
@@ -73,16 +73,16 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	public void activate(MovementContext context, BlockPos pos, DeployerFakePlayer player, Mode mode) {
-		World world = context.world;
+		Level world = context.world;
 
 		ItemStack filter = getFilter(context);
 		if (AllItems.SCHEMATIC.isIn(filter))
 			activateAsSchematicPrinter(context, pos, player, world, filter);
 
-		Vector3d facingVec = Vector3d.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
+		Vec3 facingVec = Vec3.atLowerCornerOf(context.state.getValue(DeployerBlock.FACING)
 			.getNormal());
 		facingVec = context.rotation.apply(facingVec);
-		Vector3d vec = context.position.subtract(facingVec.scale(2));
+		Vec3 vec = context.position.subtract(facingVec.scale(2));
 		player.yRot = AbstractContraptionEntity.yawFromVector(facingVec);
 		player.xRot = AbstractContraptionEntity.pitchFromVector(facingVec) - 90;
 
@@ -90,7 +90,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	protected void activateAsSchematicPrinter(MovementContext context, BlockPos pos, DeployerFakePlayer player,
-		World world, ItemStack filter) {
+		Level world, ItemStack filter) {
 		if (!filter.hasTag())
 			return;
 		if (!world.getBlockState(pos)
@@ -98,7 +98,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 			.isReplaceable())
 			return;
 
-		CompoundNBT tag = filter.getTag();
+		CompoundTag tag = filter.getTag();
 		if (!tag.getBoolean("Deployed"))
 			return;
 		SchematicWorld schematicWorld = SchematicInstances.get(world, filter);
@@ -132,11 +132,11 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 						required.item.getCount(), false);
 		}
 
-		CompoundNBT data = null;
+		CompoundTag data = null;
 		if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-			TileEntity tile = schematicWorld.getBlockEntity(pos);
+			BlockEntity tile = schematicWorld.getBlockEntity(pos);
 			if (tile != null) {
-				data = tile.save(new CompoundNBT());
+				data = tile.save(new CompoundTag());
 				data = NBTProcessors.process(tile, data, true);
 			}
 		}
@@ -183,7 +183,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		if (player == null)
 			return;
 
-		context.tileData.put("Inventory", player.inventory.save(new ListNBT()));
+		context.tileData.put("Inventory", player.inventory.save(new ListTag()));
 		player.remove();
 	}
 
@@ -198,7 +198,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 				return;
 			ItemStack held = ItemHelper.extract(context.contraption.inventory,
 				stack -> FilterItem.test(context.world, stack, filter), 1, false);
-			player.setItemInHand(Hand.MAIN_HAND, held);
+			player.setItemInHand(InteractionHand.MAIN_HAND, held);
 		}
 	}
 
@@ -206,7 +206,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		PlayerInventory inv = player.inventory;
+		Inventory inv = player.inventory;
 		ItemStack filter = getFilter(context);
 
 		for (List<ItemStack> list : Arrays.asList(inv.armor, inv.offhand, inv.items)) {
@@ -235,11 +235,11 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 	}
 
 	private DeployerFakePlayer getPlayer(MovementContext context) {
-		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerWorld) {
-			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerWorld) context.world);
+		if (!(context.temporaryData instanceof DeployerFakePlayer) && context.world instanceof ServerLevel) {
+			DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) context.world);
 			deployerFakePlayer.inventory.load(context.tileData.getList("Inventory", NBT.TAG_COMPOUND));
 			if (context.data.contains("HeldItem"))
-				deployerFakePlayer.setItemInHand(Hand.MAIN_HAND, ItemStack.of(context.data.getCompound("HeldItem")));
+				deployerFakePlayer.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.of(context.data.getCompound("HeldItem")));
 			context.tileData.remove("Inventory");
 			context.temporaryData = deployerFakePlayer;
 		}
@@ -256,7 +256,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
+		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		if (!Backend.getInstance().canUseInstancing())
 			DeployerRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}

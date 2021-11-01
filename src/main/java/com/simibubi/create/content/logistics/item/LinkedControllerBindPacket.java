@@ -6,10 +6,10 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequenc
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
@@ -23,21 +23,21 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 		this.linkLocation = linkLocation;
 	}
 
-	public LinkedControllerBindPacket(PacketBuffer buffer) {
+	public LinkedControllerBindPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 		this.button = buffer.readVarInt();
 		this.linkLocation = buffer.readBlockPos();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		super.write(buffer);
 		buffer.writeVarInt(button);
 		buffer.writeBlockPos(linkLocation);
 	}
 
 	@Override
-	protected void handleItem(ServerPlayerEntity player, ItemStack heldItem) {
+	protected void handleItem(ServerPlayer player, ItemStack heldItem) {
 		if (player.isSpectator())
 			return;
 
@@ -58,6 +58,6 @@ public class LinkedControllerBindPacket extends LinkedControllerPacketBase {
 	}
 
 	@Override
-	protected void handleLectern(ServerPlayerEntity player, LecternControllerTileEntity lectern) { }
+	protected void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern) { }
 
 }

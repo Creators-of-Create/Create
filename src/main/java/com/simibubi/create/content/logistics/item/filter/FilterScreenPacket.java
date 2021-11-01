@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterContainer.WhitelistMode;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class FilterScreenPacket extends SimplePacketBase {
@@ -17,24 +17,24 @@ public class FilterScreenPacket extends SimplePacketBase {
 	}
 
 	private final Option option;
-	private final CompoundNBT data;
+	private final CompoundTag data;
 
 	public FilterScreenPacket(Option option) {
-		this(option, new CompoundNBT());
+		this(option, new CompoundTag());
 	}
 
-	public FilterScreenPacket(Option option, CompoundNBT data) {
+	public FilterScreenPacket(Option option, CompoundTag data) {
 		this.option = option;
 		this.data = data;
 	}
 
-	public FilterScreenPacket(PacketBuffer buffer) {
+	public FilterScreenPacket(FriendlyByteBuf buffer) {
 		option = Option.values()[buffer.readInt()];
 		data = buffer.readNbt();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(option.ordinal());
 		buffer.writeNbt(data);
 	}
@@ -42,7 +42,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
+			ServerPlayer player = context.get().getSender();
 			if (player == null)
 				return;
 
@@ -59,7 +59,7 @@ public class FilterScreenPacket extends SimplePacketBase {
 				if (option == Option.UPDATE_FILTER_ITEM)
 					c.ghostInventory.setStackInSlot(
 							data.getInt("Slot"),
-							net.minecraft.item.ItemStack.of(data.getCompound("Item")));
+							net.minecraft.world.item.ItemStack.of(data.getCompound("Item")));
 			}
 
 			if (player.containerMenu instanceof AttributeFilterContainer) {

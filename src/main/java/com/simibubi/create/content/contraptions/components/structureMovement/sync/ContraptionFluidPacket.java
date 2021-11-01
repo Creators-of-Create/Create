@@ -6,9 +6,9 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
@@ -24,14 +24,14 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 		this.containedFluid = containedFluid;
 	}
 	
-	public ContraptionFluidPacket(PacketBuffer buffer) {
+	public ContraptionFluidPacket(FriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
 		localPos = buffer.readBlockPos();
 		containedFluid = FluidStack.readFromPacket(buffer);
 	}
 	
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
 		buffer.writeBlockPos(localPos);
 		containedFluid.writeToPacket(buffer);

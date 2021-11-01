@@ -3,14 +3,16 @@ package com.simibubi.create.foundation.block;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.DirectionHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class WrenchableDirectionalBlock extends DirectionalBlock implements IWrenchable {
 
@@ -37,7 +39,7 @@ public class WrenchableDirectionalBlock extends DirectionalBlock implements IWre
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState().setValue(FACING, context.getNearestLookingDirection());
 	}
 

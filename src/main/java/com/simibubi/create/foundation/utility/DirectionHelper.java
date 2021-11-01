@@ -1,14 +1,14 @@
 package com.simibubi.create.foundation.utility;
 
 import static net.minecraft.util.Direction.DOWN;
-import static net.minecraft.util.Direction.EAST;
+import staticnet.minecraft.core.Directionn.EAST;
 import static net.minecraft.util.Direction.NORTH;
-import static net.minecraft.util.Direction.SOUTH;
+import staticnet.minecraft.core.Directionn.SOUTH;
 import static net.minecraft.util.Direction.UP;
-import static net.minecraft.util.Direction.WEST;
+import staticnet.minecraft.core.Directionn.WEST;
 
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.core.Direction.Axis;
 
 /**
  * A bunch of methods that got stripped out of Direction in 1.15

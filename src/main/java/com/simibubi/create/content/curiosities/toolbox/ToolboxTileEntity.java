@@ -17,30 +17,30 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.INameable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Nameable;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ToolboxTileEntity extends SmartTileEntity implements INamedContainerProvider, INameable {
+public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable {
 
 	public LerpedFloat lid = LerpedFloat.linear()
 		.startWithValue(0);
@@ -53,11 +53,11 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	ResetableLazy<DyeColor> colorProvider;
 	protected int openCount;
 
-	Map<Integer, WeakHashMap<PlayerEntity, Integer>> connectedPlayers;
+	Map<Integer, WeakHashMap<Player, Integer>> connectedPlayers;
 
-	private ITextComponent customName;
+	private Component customName;
 
-	public ToolboxTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public ToolboxTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		connectedPlayers = new HashMap<>();
 		inventory = new ToolboxInventory(this);
@@ -108,21 +108,21 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	private void tickPlayers() {
 		boolean update = false;
 
-		for (Iterator<Entry<Integer, WeakHashMap<PlayerEntity, Integer>>> toolboxSlots = connectedPlayers.entrySet()
+		for (Iterator<Entry<Integer, WeakHashMap<Player, Integer>>> toolboxSlots = connectedPlayers.entrySet()
 			.iterator(); toolboxSlots.hasNext();) {
 
-			Entry<Integer, WeakHashMap<PlayerEntity, Integer>> toolboxSlotEntry = toolboxSlots.next();
-			WeakHashMap<PlayerEntity, Integer> set = toolboxSlotEntry.getValue();
+			Entry<Integer, WeakHashMap<Player, Integer>> toolboxSlotEntry = toolboxSlots.next();
+			WeakHashMap<Player, Integer> set = toolboxSlotEntry.getValue();
 			int slot = toolboxSlotEntry.getKey();
 
 			ItemStack referenceItem = inventory.filters.get(slot);
 			boolean clear = referenceItem.isEmpty();
 
-			for (Iterator<Entry<PlayerEntity, Integer>> playerEntries = set.entrySet()
+			for (Iterator<Entry<Player, Integer>> playerEntries = set.entrySet()
 				.iterator(); playerEntries.hasNext();) {
-				Entry<PlayerEntity, Integer> playerEntry = playerEntries.next();
+				Entry<Player, Integer> playerEntry = playerEntries.next();
 
-				PlayerEntity player = playerEntry.getKey();
+				Player player = playerEntry.getKey();
 				int hotbarSlot = playerEntry.getValue();
 
 				if (!clear && !ToolboxHandler.withinRange(player, this))
@@ -136,7 +136,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 						.getCompound("CreateToolboxData")
 						.remove(String.valueOf(hotbarSlot));
 					playerEntries.remove();
-					if (player instanceof ServerPlayerEntity)
+					if (player instanceof ServerPlayer)
 						ToolboxHandler.syncData(player);
 					continue;
 				}
@@ -199,7 +199,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 
 	}
 
-	private boolean isOpenInContainer(PlayerEntity player) {
+	private boolean isOpenInContainer(Player player) {
 		return player.containerMenu instanceof ToolboxContainer
 			&& ((ToolboxContainer) player.containerMenu).contentHolder == this;
 	}
@@ -208,33 +208,33 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		if (level.isClientSide)
 			return;
 
-		Set<ServerPlayerEntity> affected = new HashSet<>();
+		Set<ServerPlayer> affected = new HashSet<>();
 
-		for (Iterator<Entry<Integer, WeakHashMap<PlayerEntity, Integer>>> toolboxSlots = connectedPlayers.entrySet()
+		for (Iterator<Entry<Integer, WeakHashMap<Player, Integer>>> toolboxSlots = connectedPlayers.entrySet()
 			.iterator(); toolboxSlots.hasNext();) {
 
-			Entry<Integer, WeakHashMap<PlayerEntity, Integer>> toolboxSlotEntry = toolboxSlots.next();
-			WeakHashMap<PlayerEntity, Integer> set = toolboxSlotEntry.getValue();
+			Entry<Integer, WeakHashMap<Player, Integer>> toolboxSlotEntry = toolboxSlots.next();
+			WeakHashMap<Player, Integer> set = toolboxSlotEntry.getValue();
 
-			for (Iterator<Entry<PlayerEntity, Integer>> playerEntries = set.entrySet()
+			for (Iterator<Entry<Player, Integer>> playerEntries = set.entrySet()
 				.iterator(); playerEntries.hasNext();) {
-				Entry<PlayerEntity, Integer> playerEntry = playerEntries.next();
+				Entry<Player, Integer> playerEntry = playerEntries.next();
 
-				PlayerEntity player = playerEntry.getKey();
+				Player player = playerEntry.getKey();
 				int hotbarSlot = playerEntry.getValue();
 
 				ToolboxHandler.unequip(player, hotbarSlot, false);
-				if (player instanceof ServerPlayerEntity)
-					affected.add((ServerPlayerEntity) player);
+				if (player instanceof ServerPlayer)
+					affected.add((ServerPlayer) player);
 			}
 		}
 
-		for (ServerPlayerEntity player : affected)
+		for (ServerPlayer player : affected)
 			ToolboxHandler.syncData(player);
 		connectedPlayers.clear();
 	}
 
-	public void unequip(int slot, PlayerEntity player, int hotbarSlot, boolean keepItems) {
+	public void unequip(int slot, Player player, int hotbarSlot, boolean keepItems) {
 		if (!connectedPlayers.containsKey(slot))
 			return;
 		connectedPlayers.get(slot)
@@ -251,21 +251,21 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	}
 
 	private void tickAudio() {
-		Vector3d vec = VecHelper.getCenterOf(worldPosition);
+		Vec3 vec = VecHelper.getCenterOf(worldPosition);
 		if (lid.settled()) {
 			if (openCount > 0 && lid.getChaseTarget() == 0) {
-				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.IRON_DOOR_OPEN, SoundCategory.BLOCKS, 0.25F,
+				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.IRON_DOOR_OPEN, SoundSource.BLOCKS, 0.25F,
 					level.random.nextFloat() * 0.1F + 1.2F, true);
-				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.CHEST_OPEN, SoundCategory.BLOCKS, 0.1F,
+				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.1F,
 					level.random.nextFloat() * 0.1F + 1.1F, true);
 			}
 			if (openCount == 0 && lid.getChaseTarget() == 1)
-				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.CHEST_CLOSE, SoundCategory.BLOCKS, 0.1F,
+				level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 0.1F,
 					level.random.nextFloat() * 0.1F + 1.1F, true);
 
 		} else if (openCount == 0 && lid.getChaseTarget() == 0 && lid.getValue(0) > 1 / 16f
 			&& lid.getValue(1) < 1 / 16f)
-			level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.IRON_DOOR_CLOSE, SoundCategory.BLOCKS, 0.25F,
+			level.playLocalSound(vec.x, vec.y, vec.z, SoundEvents.IRON_DOOR_CLOSE, SoundSource.BLOCKS, 0.25F,
 				level.random.nextFloat() * 0.1F + 1.2F, true);
 	}
 
@@ -277,27 +277,27 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.fromTag(state, compound, clientPacket);
 		if (compound.contains("CustomName", 8))
-			this.customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
+			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 		if (clientPacket)
 			openCount = compound.getInt("OpenCount");
 	}
 
 	@Override
-	protected void write(CompoundNBT compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
 		if (customName != null)
-			compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
+			compound.putString("CustomName", Component.Serializer.toJson(customName));
 		super.write(compound, clientPacket);
 		if (clientPacket)
 			compound.putInt("OpenCount", openCount);
 	}
 
 	@Override
-	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		return ToolboxContainer.create(id, inv, this);
 	}
 
@@ -318,8 +318,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		int prevOpenCount = openCount;
 		openCount = 0;
 
-		for (PlayerEntity playerentity : level.getEntitiesOfClass(PlayerEntity.class,
-			new AxisAlignedBB(worldPosition).inflate(8)))
+		for (Player playerentity : level.getEntitiesOfClass(Player.class,
+			new AABB(worldPosition).inflate(8)))
 			if (playerentity.containerMenu instanceof ToolboxContainer
 				&& ((ToolboxContainer) playerentity.containerMenu).contentHolder == this)
 				openCount++;
@@ -328,7 +328,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 			sendData();
 	}
 
-	public void startOpen(PlayerEntity player) {
+	public void startOpen(Player player) {
 		if (player.isSpectator())
 			return;
 		if (openCount < 0)
@@ -337,17 +337,17 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		sendData();
 	}
 
-	public void stopOpen(PlayerEntity player) {
+	public void stopOpen(Player player) {
 		if (player.isSpectator())
 			return;
 		openCount--;
 		sendData();
 	}
 
-	public void connectPlayer(int slot, PlayerEntity player, int hotbarSlot) {
+	public void connectPlayer(int slot, Player player, int hotbarSlot) {
 		if (level.isClientSide)
 			return;
-		WeakHashMap<PlayerEntity, Integer> map = connectedPlayers.computeIfAbsent(slot, WeakHashMap::new);
+		WeakHashMap<Player, Integer> map = connectedPlayers.computeIfAbsent(slot, WeakHashMap::new);
 		Integer previous = map.get(player);
 		if (previous != null) {
 			if (previous == hotbarSlot)
@@ -357,24 +357,24 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 		map.put(player, hotbarSlot);
 	}
 
-	public void readInventory(CompoundNBT compound) {
+	public void readInventory(CompoundTag compound) {
 		inventory.deserializeNBT(compound);
 	}
 
-	public void setCustomName(ITextComponent customName) {
+	public void setCustomName(Component customName) {
 		this.customName = customName;
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return customName != null ? customName
-			: new TranslationTextComponent(AllBlocks.TOOLBOXES.get(getColor())
+			: new TranslatableComponent(AllBlocks.TOOLBOXES.get(getColor())
 				.get()
 				.getDescriptionId());
 	}
 
 	@Override
-	public ITextComponent getCustomName() {
+	public Component getCustomName() {
 		return customName;
 	}
 
@@ -384,7 +384,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements INamedContaine
 	}
 
 	@Override
-	public ITextComponent getName() {
+	public Component getName() {
 		return customName;
 	}
 

@@ -9,10 +9,10 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.mojang.blaze3d.vertex.MatrixApplyingVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
@@ -25,33 +25,33 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
@@ -59,17 +59,17 @@ public class WorldSectionElement extends AnimatedSceneElement {
 
 	public static final Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new Compartment<>();
 
-	List<TileEntity> renderedTileEntities;
-	List<TileEntity> tickableTileEntities;
+	List<BlockEntity> renderedTileEntities;
+	List<BlockEntity> tickableTileEntities;
 	Selection section;
 	boolean redraw;
 
-	Vector3d prevAnimatedOffset = Vector3d.ZERO;
-	Vector3d animatedOffset = Vector3d.ZERO;
-	Vector3d prevAnimatedRotation = Vector3d.ZERO;
-	Vector3d animatedRotation = Vector3d.ZERO;
-	Vector3d centerOfRotation = Vector3d.ZERO;
-	Vector3d stabilizationAnchor = null;
+	Vec3 prevAnimatedOffset = Vec3.ZERO;
+	Vec3 animatedOffset = Vec3.ZERO;
+	Vec3 prevAnimatedRotation = Vec3.ZERO;
+	Vec3 animatedRotation = Vec3.ZERO;
+	Vec3 centerOfRotation = Vec3.ZERO;
+	Vec3 stabilizationAnchor = null;
 
 	BlockPos selectedBlock;
 
@@ -105,11 +105,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		queueRedraw();
 	}
 
-	public void setCenterOfRotation(Vector3d center) {
+	public void setCenterOfRotation(Vec3 center) {
 		centerOfRotation = center;
 	}
 
-	public void stabilizeRotation(Vector3d anchor) {
+	public void stabilizeRotation(Vec3 anchor) {
 		stabilizationAnchor = anchor;
 	}
 
@@ -129,10 +129,10 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	public void resetAnimatedTransform() {
-		prevAnimatedOffset = Vector3d.ZERO;
-		animatedOffset = Vector3d.ZERO;
-		prevAnimatedRotation = Vector3d.ZERO;
-		animatedRotation = Vector3d.ZERO;
+		prevAnimatedOffset = Vec3.ZERO;
+		animatedOffset = Vec3.ZERO;
+		prevAnimatedRotation = Vec3.ZERO;
+		animatedRotation = Vec3.ZERO;
 	}
 
 	public void queueRedraw() {
@@ -147,23 +147,23 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		section = null;
 	}
 
-	public void setAnimatedRotation(Vector3d eulerAngles, boolean force) {
+	public void setAnimatedRotation(Vec3 eulerAngles, boolean force) {
 		this.animatedRotation = eulerAngles;
 		if (force)
 			prevAnimatedRotation = animatedRotation;
 	}
 
-	public Vector3d getAnimatedRotation() {
+	public Vec3 getAnimatedRotation() {
 		return animatedRotation;
 	}
 
-	public void setAnimatedOffset(Vector3d offset, boolean force) {
+	public void setAnimatedOffset(Vec3 offset, boolean force) {
 		this.animatedOffset = offset;
 		if (force)
 			prevAnimatedOffset = animatedOffset;
 	}
 
-	public Vector3d getAnimatedOffset() {
+	public Vec3 getAnimatedOffset() {
 		return animatedOffset;
 	}
 
@@ -173,15 +173,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	class WorldSectionRayTraceResult {
-		Vector3d actualHitVec;
+		Vec3 actualHitVec;
 		BlockPos worldPos;
 	}
 
-	public Pair<Vector3d, BlockPos> rayTrace(PonderWorld world, Vector3d source, Vector3d target) {
+	public Pair<Vec3, BlockPos> rayTrace(PonderWorld world, Vec3 source, Vec3 target) {
 		world.setMask(this.section);
-		Vector3d transformedTarget = reverseTransformVec(target);
-		BlockRayTraceResult rayTraceBlocks = world.clip(new RayTraceContext(reverseTransformVec(source),
-			transformedTarget, BlockMode.OUTLINE, FluidMode.NONE, null));
+		Vec3 transformedTarget = reverseTransformVec(target);
+		BlockHitResult rayTraceBlocks = world.clip(new ClipContext(reverseTransformVec(source),
+			transformedTarget, Block.OUTLINE, Fluid.NONE, null));
 		world.clearMask();
 
 		if (rayTraceBlocks == null)
@@ -194,19 +194,19 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			.lengthSqr()
 			/ source.subtract(target)
 				.lengthSqr();
-		Vector3d actualHit = VecHelper.lerp((float) t, target, source);
+		Vec3 actualHit = VecHelper.lerp((float) t, target, source);
 		return Pair.of(actualHit, rayTraceBlocks.getBlockPos());
 	}
 
-	private Vector3d reverseTransformVec(Vector3d in) {
+	private Vec3 reverseTransformVec(Vec3 in) {
 		float pt = AnimationTickHolder.getPartialTicks();
 		in = in.subtract(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
-		if (!animatedRotation.equals(Vector3d.ZERO) || !prevAnimatedRotation.equals(Vector3d.ZERO)) {
+		if (!animatedRotation.equals(Vec3.ZERO) || !prevAnimatedRotation.equals(Vec3.ZERO)) {
 			if (centerOfRotation == null)
 				centerOfRotation = section.getCenter();
-			double rotX = MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
-			double rotZ = MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
-			double rotY = MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
+			double rotX = Mth.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
+			double rotZ = Mth.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
+			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
 			in = in.subtract(centerOfRotation);
 			in = VecHelper.rotate(in, -rotX, Axis.X);
 			in = VecHelper.rotate(in, -rotZ, Axis.Z);
@@ -223,15 +223,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		return in;
 	}
 
-	public void transformMS(MatrixStack ms, float pt) {
+	public void transformMS(PoseStack ms, float pt) {
 		MatrixTransformStack.of(ms)
 			.translate(VecHelper.lerp(pt, prevAnimatedOffset, animatedOffset));
-		if (!animatedRotation.equals(Vector3d.ZERO) || !prevAnimatedRotation.equals(Vector3d.ZERO)) {
+		if (!animatedRotation.equals(Vec3.ZERO) || !prevAnimatedRotation.equals(Vec3.ZERO)) {
 			if (centerOfRotation == null)
 				centerOfRotation = section.getCenter();
-			double rotX = MathHelper.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
-			double rotZ = MathHelper.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
-			double rotY = MathHelper.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
+			double rotX = Mth.lerp(pt, prevAnimatedRotation.x, animatedRotation.x);
+			double rotZ = Mth.lerp(pt, prevAnimatedRotation.z, animatedRotation.z);
+			double rotY = Mth.lerp(pt, prevAnimatedRotation.y, animatedRotation.y);
 			MatrixTransformStack.of(ms)
 				.translate(centerOfRotation)
 				.rotateX(rotX)
@@ -260,8 +260,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		tickableTileEntities.removeIf(te -> scene.getWorld()
 			.getBlockEntity(te.getBlockPos()) != te);
 		tickableTileEntities.forEach(te -> {
-			if (te instanceof ITickableTileEntity)
-				((ITickableTileEntity) te).tick();
+			if (te instanceof TickableBlockEntity)
+				((TickableBlockEntity) te).tick();
 		});
 	}
 
@@ -280,7 +280,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		tickableTileEntities = new ArrayList<>();
 		renderedTileEntities = new ArrayList<>();
 		section.forEach(pos -> {
-			TileEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity tileEntity = world.getBlockEntity(pos);
 			if (tileEntity == null)
 				return;
 			tickableTileEntities.add(tileEntity);
@@ -290,17 +290,17 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	@Override
-	protected void renderLayer(PonderWorld world, IRenderTypeBuffer buffer, RenderType type, MatrixStack ms, float fade,
+	protected void renderLayer(PonderWorld world, MultiBufferSource buffer, RenderType type, PoseStack ms, float fade,
 		float pt) {
 		transformMS(ms, pt);
 		renderStructure(world, ms, buffer, type, fade);
 	}
 
 	@Override
-	public void renderFirst(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {
+	public void renderFirst(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
 		int light = -1;
 		if (fade != 1)
-			light = (int) (MathHelper.lerp(fade, 5, 14));
+			light = (int) (Mth.lerp(fade, 5, 14));
 		if (redraw) {
 			renderedTileEntities = null;
 			tickableTileEntities = null;
@@ -311,21 +311,21 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		world.popLight();
 
 		Map<BlockPos, Integer> blockBreakingProgressions = world.getBlockBreakingProgressions();
-		MatrixStack overlayMS = null;
+		PoseStack overlayMS = null;
 
 		for (Entry<BlockPos, Integer> entry : blockBreakingProgressions.entrySet()) {
 			BlockPos pos = entry.getKey();
 			if (!section.test(pos))
 				continue;
 			if (overlayMS == null) {
-				overlayMS = new MatrixStack();
+				overlayMS = new PoseStack();
 				world.scene.getTransform()
 					.apply(overlayMS, pt, true);
 				transformMS(overlayMS, pt);
 			}
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			IVertexBuilder builder = new MatrixApplyingVertexBuilder(
+			VertexConsumer builder = new SheetedDecalTextureGenerator(
 				buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())),
 					overlayMS.last().pose(),
 					overlayMS.last().normal());
@@ -336,7 +336,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		}
 	}
 
-	protected void renderStructure(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, RenderType type,
+	protected void renderStructure(PonderWorld world, PoseStack ms, MultiBufferSource buffer, RenderType type,
 		float fade) {
 		SuperByteBufferCache bufferCache = CreateClient.BUFFER_CACHE;
 		int code = hashCode() ^ world.hashCode();
@@ -356,7 +356,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	}
 
 	@Override
-	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {
+	protected void renderLast(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
 		redraw = false;
 		if (selectedBlock == null)
 			return;
@@ -364,32 +364,32 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		if (blockState.isAir())
 			return;
 		VoxelShape shape =
-			blockState.getShape(world, selectedBlock, ISelectionContext.of(Minecraft.getInstance().player));
+			blockState.getShape(world, selectedBlock, CollisionContext.of(Minecraft.getInstance().player));
 		if (shape.isEmpty())
 			return;
 
 		ms.pushPose();
 		transformMS(ms, pt);
 		RenderSystem.disableTexture();
-		WorldRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), shape.bounds()
+		LevelRenderer.renderLineBox(ms, buffer.getBuffer(RenderType.lines()), shape.bounds()
 			.move(selectedBlock), 1, 1, 1, 0.6f);
 		ms.popPose();
 	}
 
-	private void renderTileEntities(PonderWorld world, MatrixStack ms, IRenderTypeBuffer buffer, float pt) {
+	private void renderTileEntities(PonderWorld world, PoseStack ms, MultiBufferSource buffer, float pt) {
 		loadTEsIfMissing(world);
 		TileEntityRenderHelper.renderTileEntities(world, renderedTileEntities, ms, buffer, pt);
 	}
 
 	private SuperByteBuffer buildStructureBuffer(PonderWorld world, RenderType layer) {
 		ForgeHooksClient.setRenderLayer(layer);
-		MatrixStack ms = new MatrixStack();
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance()
+		PoseStack ms = new PoseStack();
+		BlockRenderDispatcher dispatcher = Minecraft.getInstance()
 			.getBlockRenderer();
-		BlockModelRenderer blockRenderer = dispatcher.getModelRenderer();
+		ModelBlockRenderer blockRenderer = dispatcher.getModelRenderer();
 		Random random = new Random();
-		BufferBuilder builder = new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize());
-		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+		BufferBuilder builder = new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize());
+		builder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
 		world.setMask(this.section);
 
 		section.forEach(pos -> {
@@ -399,15 +399,15 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			if (state.getRenderShape() != BlockRenderType.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
-				&& RenderTypeLookup.canRenderInLayer(state, layer)) {
-				TileEntity tileEntity = world.getBlockEntity(pos);
+			if (state.getRenderShape() != RenderShape.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
+				&& ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
+				BlockEntity tileEntity = world.getBlockEntity(pos);
 				blockRenderer.renderModel(world, dispatcher.getBlockModel(state), state, pos, ms, builder, true,
 					random, 42, OverlayTexture.NO_OVERLAY,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
 			}
 
-			if (!ifluidstate.isEmpty() && RenderTypeLookup.canRenderInLayer(ifluidstate, layer))
+			if (!ifluidstate.isEmpty() && ItemBlockRenderTypes.canRenderInLayer(ifluidstate, layer))
 				dispatcher.renderLiquid(pos, world, builder, ifluidstate);
 
 			ms.popPose();

@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Color;
 
 public class DelegatedStencilElement extends StencilElement {
@@ -34,18 +34,18 @@ public class DelegatedStencilElement extends StencilElement {
 	}
 
 	@Override
-	protected void renderStencil(MatrixStack ms) {
+	protected void renderStencil(PoseStack ms) {
 		stencil.render(ms, width, height, 1);
 	}
 
 	@Override
-	protected void renderElement(MatrixStack ms) {
+	protected void renderElement(PoseStack ms) {
 		element.render(ms, width, height, alpha);
 	}
 
 	@FunctionalInterface
 	public interface ElementRenderer {
-		void render(MatrixStack ms, int width, int height, float alpha);
+		void render(PoseStack ms, int width, int height, float alpha);
 	}
 
 }

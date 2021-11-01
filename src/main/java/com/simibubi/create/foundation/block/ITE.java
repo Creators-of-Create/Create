@@ -6,32 +6,32 @@ import java.util.function.Function;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
-public interface ITE<T extends TileEntity> {
+public interface ITE<T extends BlockEntity> {
 
 	Class<T> getTileEntityClass();
 
-	default void withTileEntityDo(IBlockReader world, BlockPos pos, Consumer<T> action) {
+	default void withTileEntityDo(BlockGetter world, BlockPos pos, Consumer<T> action) {
 		getTileEntityOptional(world, pos).ifPresent(action);
 	}
 
-	default ActionResultType onTileEntityUse(IBlockReader world, BlockPos pos, Function<T, ActionResultType> action) {
+	default InteractionResult onTileEntityUse(BlockGetter world, BlockPos pos, Function<T, InteractionResult> action) {
 		return getTileEntityOptional(world, pos).map(action)
-				.orElse(ActionResultType.PASS);
+				.orElse(InteractionResult.PASS);
 	}
 
-	default Optional<T> getTileEntityOptional(IBlockReader world, BlockPos pos) {
+	default Optional<T> getTileEntityOptional(BlockGetter world, BlockPos pos) {
 		return Optional.ofNullable(getTileEntity(world, pos));
 	}
 
 	@Nullable
 	@SuppressWarnings("unchecked")
-	default T getTileEntity(IBlockReader worldIn, BlockPos pos) {
-		TileEntity tileEntity = worldIn.getBlockEntity(pos);
+	default T getTileEntity(BlockGetter worldIn, BlockPos pos) {
+		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 		Class<T> expectedClass = getTileEntityClass();
 
 		if (tileEntity == null)

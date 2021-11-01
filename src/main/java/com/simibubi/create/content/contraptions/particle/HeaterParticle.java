@@ -3,22 +3,22 @@ package com.simibubi.create.content.contraptions.particle;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.IParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.Mth;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class HeaterParticle extends SimpleAnimatedParticle {
 
-	private final IAnimatedSprite animatedSprite;
+	private final SpriteSet animatedSprite;
 
-	public HeaterParticle(ClientWorld worldIn, float r, float g, float b, double x, double y, double z, double vx, double vy,
-						  double vz, IAnimatedSprite spriteSet) {
+	public HeaterParticle(ClientLevel worldIn, float r, float g, float b, double x, double y, double z, double vx, double vy,
+						  double vz, SpriteSet spriteSet) {
 		super(worldIn, x, y, z, spriteSet, worldIn.random.nextFloat() * .5f);
 
 		this.animatedSprite = spriteSet;
@@ -42,8 +42,8 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 	}
 
 	@Override
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.PARTICLE_SHEET_LIT;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.PARTICLE_SHEET_LIT;
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 	@Override
 	public int getLightColor(float p_189214_1_) {
 		float f = ((float) this.age + p_189214_1_) / (float) this.lifetime;
-		f = MathHelper.clamp(f, 0.0F, 1.0F);
+		f = Mth.clamp(f, 0.0F, 1.0F);
 		int i = super.getLightColor(p_189214_1_);
 		int j = i & 255;
 		int k = i >> 16 & 255;
@@ -94,15 +94,15 @@ public class HeaterParticle extends SimpleAnimatedParticle {
 		}
 	}
 
-	public static class Factory implements IParticleFactory<HeaterParticleData> {
-		private final IAnimatedSprite spriteSet;
+	public static class Factory implements ParticleProvider<HeaterParticleData> {
+		private final SpriteSet spriteSet;
 
-		public Factory(IAnimatedSprite animatedSprite) {
+		public Factory(SpriteSet animatedSprite) {
 			this.spriteSet = animatedSprite;
 		}
 
 		@Override
-		public Particle createParticle(HeaterParticleData data, ClientWorld worldIn, double x, double y, double z, double vx,
+		public Particle createParticle(HeaterParticleData data, ClientLevel worldIn, double x, double y, double z, double vx,
 			double vy, double vz) {
 			return new HeaterParticle(worldIn, data.r, data.g, data.b, x, y, z, vx, vy, vz, this.spriteSet);
 		}

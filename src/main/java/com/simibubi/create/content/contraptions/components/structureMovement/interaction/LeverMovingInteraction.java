@@ -2,16 +2,16 @@ package com.simibubi.create.content.contraptions.components.structureMovement.in
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.LeverBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
 
 public class LeverMovingInteraction extends SimpleBlockMovingInteraction {
 
 	@Override
-	protected BlockState handle(PlayerEntity player, Contraption contraption, BlockPos pos, BlockState currentState) {
+	protected BlockState handle(Player player, Contraption contraption, BlockPos pos, BlockState currentState) {
 		playSound(player, SoundEvents.LEVER_CLICK, currentState.getValue(LeverBlock.POWERED) ? 0.5f : 0.6f);
 		return currentState.cycle(LeverBlock.POWERED);
 	}

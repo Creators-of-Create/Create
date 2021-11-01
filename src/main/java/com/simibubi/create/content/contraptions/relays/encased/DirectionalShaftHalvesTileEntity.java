@@ -2,13 +2,13 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 public class DirectionalShaftHalvesTileEntity extends KineticTileEntity {
 
-	public DirectionalShaftHalvesTileEntity(TileEntityType<?> typeIn) {
+	public DirectionalShaftHalvesTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 	}
 

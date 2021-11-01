@@ -3,24 +3,24 @@ package com.simibubi.create.content.curiosities.toolbox;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.block.Block;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.SpecialRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 
-public class ToolboxDyeingRecipe extends SpecialRecipe {
+public class ToolboxDyeingRecipe extends CustomRecipe {
 
 	public ToolboxDyeingRecipe(ResourceLocation rl) {
 		super(rl);
 	}
 
 	@Override
-	public boolean matches(CraftingInventory inventory, World world) {
+	public boolean matches(CraftingContainer inventory, Level world) {
 		int toolboxes = 0;
 		int dyes = 0;
 
@@ -47,7 +47,7 @@ public class ToolboxDyeingRecipe extends SpecialRecipe {
 	}
 
 	@Override
-	public ItemStack assemble(CraftingInventory inventory) {
+	public ItemStack assemble(CraftingContainer inventory) {
 		ItemStack toolbox = ItemStack.EMPTY;
 		DyeColor color = DyeColor.BROWN;
 
@@ -79,7 +79,7 @@ public class ToolboxDyeingRecipe extends SpecialRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return AllRecipeTypes.TOOLBOX_DYEING.getSerializer();
 	}
 

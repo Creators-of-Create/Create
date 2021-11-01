@@ -13,11 +13,11 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSeria
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
@@ -39,7 +39,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		GENERATORS.add(new FillingRecipeGen(gen));
 		GENERATORS.add(new EmptyingRecipeGen(gen));
 
-		gen.addProvider(new IDataProvider() {
+		gen.addProvider(new DataProvider() {
 
 			@Override
 			public String getName() {
@@ -47,7 +47,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 			}
 
 			@Override
-			public void run(DirectoryCache dc) throws IOException {
+			public void run(HashCache dc) throws IOException {
 				GENERATORS.forEach(g -> {
 					try {
 						g.run(dc);
@@ -67,11 +67,11 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	 * Create a processing recipe with a single itemstack ingredient, using its id
 	 * as the name of the recipe
 	 */
-	protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String namespace, Supplier<IItemProvider> singleIngredient,
+	protected <T extends ProcessingRecipe<?>> GeneratedRecipe create(String namespace, Supplier<ItemLike> singleIngredient,
 		UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		ProcessingRecipeSerializer<T> serializer = getSerializer();
 		GeneratedRecipe generatedRecipe = c -> {
-			IItemProvider iItemProvider = singleIngredient.get();
+			ItemLike iItemProvider = singleIngredient.get();
 			transform
 				.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(), new ResourceLocation(namespace, iItemProvider.asItem()
 					.getRegistryName()
@@ -86,7 +86,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 	 * Create a processing recipe with a single itemstack ingredient, using its id
 	 * as the name of the recipe
 	 */
-	<T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<IItemProvider> singleIngredient,
+	<T extends ProcessingRecipe<?>> GeneratedRecipe create(Supplier<ItemLike> singleIngredient,
 																	 UnaryOperator<ProcessingRecipeBuilder<T>> transform) {
 		return create(Create.ID, singleIngredient, transform);
 	}

@@ -1,38 +1,38 @@
 package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<ExtendoGripModel> {
 
-	private static final Vector3d rotationOffset = new Vector3d(0, 1 / 2f, 1 / 2f);
-	private static final Vector3d cogRotationOffset = new Vector3d(0, 1 / 16f, 0);
+	private static final Vec3 rotationOffset = new Vec3(0, 1 / 2f, 1 / 2f);
+	private static final Vec3 cogRotationOffset = new Vec3(0, 1 / 16f, 0);
 
 	@Override
 	protected void render(ItemStack stack, ExtendoGripModel model, PartialItemModelRenderer renderer, TransformType transformType,
-		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		MatrixTransformStack stacker = MatrixTransformStack.of(ms);
 		float animation = 0.25f;
 		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean rightHand = transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
 		if (leftHand || rightHand)
-			animation = MathHelper.lerp(AnimationTickHolder.getPartialTicks(),
+			animation = Mth.lerp(AnimationTickHolder.getPartialTicks(),
 										ExtendoGripRenderHandler.lastMainHandAnimation,
 										ExtendoGripRenderHandler.mainHandAnimation);
 
 		animation = animation * animation * animation;
-		float extensionAngle = MathHelper.lerp(animation, 24f, 156f);
+		float extensionAngle = Mth.lerp(animation, 24f, 156f);
 		float halfAngle = extensionAngle / 2;
 		float oppositeAngle = 180 - extensionAngle;
 
@@ -109,7 +109,7 @@ public class ExtendoGripItemRenderer extends CustomRenderedItemModelRenderer<Ext
 	}
 
 	@Override
-	public ExtendoGripModel createModel(IBakedModel originalModel) {
+	public ExtendoGripModel createModel(BakedModel originalModel) {
 		return new ExtendoGripModel(originalModel);
 	}
 

@@ -15,19 +15,21 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CogwheelBlockItem extends BlockItem {
 
@@ -45,14 +47,14 @@ public class CogwheelBlockItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-		World world = context.getLevel();
+	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		BlockState state = world.getBlockState(pos);
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
-		PlayerEntity player = context.getPlayer();
-		BlockRayTraceResult ray = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), pos, true);
+		Player player = context.getPlayer();
+		BlockHitResult ray = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, true);
 		if (helper.matchesState(state) && player != null && !player.isShiftKeyDown()) {
 			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, this, player, context.getHand(), ray);
 		}
@@ -70,12 +72,12 @@ public class CogwheelBlockItem extends BlockItem {
 
 	@Override
 	// Trigger cogwheel criterion
-	protected boolean placeBlock(BlockItemUseContext context, BlockState state) {
+	protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
 		triggerShiftingGearsAdvancement(context.getLevel(), context.getClickedPos(), state, context.getPlayer());
 		return super.placeBlock(context, state);
 	}
 
-	protected void triggerShiftingGearsAdvancement(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+	protected void triggerShiftingGearsAdvancement(Level world, BlockPos pos, BlockState state, Player player) {
 		if (world.isClientSide || player == null)
 			return;
 
@@ -117,7 +119,7 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			if (hitOnShaft(state, ray))
 				return PlacementOffset.fail();
 
@@ -156,7 +158,7 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			if (hitOnShaft(state, ray))
 				return PlacementOffset.fail();
 
@@ -196,7 +198,7 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			// diagonal gears of different size
 			Direction closest = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(), state.getValue(AXIS))
 					.get(0);
@@ -220,7 +222,7 @@ public class CogwheelBlockItem extends BlockItem {
 			return PlacementOffset.fail();
 		}
 
-		protected boolean hitOnShaft(BlockState state, BlockRayTraceResult ray) {
+		protected boolean hitOnShaft(BlockState state, BlockHitResult ray) {
 			return AllShapes.SIX_VOXEL_POLE.get(state.getValue(AXIS))
 					.bounds()
 					.inflate(0.001)
@@ -244,7 +246,7 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			Direction face = ray.getDirection();
 			Axis newAxis;
 
@@ -297,7 +299,7 @@ public class CogwheelBlockItem extends BlockItem {
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			Direction face = ray.getDirection();
 			Axis newAxis;
 

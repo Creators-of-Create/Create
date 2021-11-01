@@ -10,10 +10,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.IntAttached;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -60,8 +60,8 @@ public class HauntedBellPulser {
 			sendPulse(player.level, event.player.blockPosition(), DISTANCE, false);
 	}
 
-	public static void sendPulse(World world, BlockPos pos, int distance, boolean canOverlap) {
-		Chunk chunk = world.getChunkAt(pos);
+	public static void sendPulse(Level world, BlockPos pos, int distance, boolean canOverlap) {
+		LevelChunk chunk = world.getChunkAt(pos);
 		AllPackets.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk),
 			new SoulPulseEffectPacket(pos, distance, canOverlap));
 	}

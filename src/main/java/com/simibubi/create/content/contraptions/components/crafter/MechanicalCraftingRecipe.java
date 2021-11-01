@@ -3,17 +3,17 @@ package com.simibubi.create.content.contraptions.components.crafter;
 import com.google.gson.JsonObject;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 public class MechanicalCraftingRecipe extends ShapedRecipe {
 
@@ -31,7 +31,7 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 	}
 
 	@Override
-	public boolean matches(CraftingInventory inv, World worldIn) {
+	public boolean matches(CraftingContainer inv, Level worldIn) {
 		if (!(inv instanceof MechanicalCraftingInventory))
 			return false;
 		if (acceptsMirrored())
@@ -46,7 +46,7 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 	}
 
 	// From ShapedRecipe
-	private boolean matchesSpecific(CraftingInventory inv, int p_77573_2_, int p_77573_3_) {
+	private boolean matchesSpecific(CraftingContainer inv, int p_77573_2_, int p_77573_3_) {
 		NonNullList<Ingredient> ingredients = getIngredients();
 		int width = getWidth();
 		int height = getHeight();
@@ -65,7 +65,7 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return AllRecipeTypes.MECHANICAL_CRAFTING.getType();
 	}
 
@@ -75,7 +75,7 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return AllRecipeTypes.MECHANICAL_CRAFTING.getSerializer();
 	}
 
@@ -87,16 +87,16 @@ public class MechanicalCraftingRecipe extends ShapedRecipe {
 
 		@Override
 		public ShapedRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-			return fromShaped(super.fromJson(recipeId, json), JSONUtils.getAsBoolean(json, "acceptMirrored", true));
+			return fromShaped(super.fromJson(recipeId, json), GsonHelper.getAsBoolean(json, "acceptMirrored", true));
 		}
 
 		@Override
-		public ShapedRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+		public ShapedRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 			return fromShaped(super.fromNetwork(recipeId, buffer), buffer.readBoolean() && buffer.readBoolean());
 		}
 
 		@Override
-		public void toNetwork(PacketBuffer p_199427_1_, ShapedRecipe p_199427_2_) {
+		public void toNetwork(FriendlyByteBuf p_199427_1_, ShapedRecipe p_199427_2_) {
 			super.toNetwork(p_199427_1_, p_199427_2_);
 			if (p_199427_2_ instanceof MechanicalCraftingRecipe) {
 				p_199427_1_.writeBoolean(true);

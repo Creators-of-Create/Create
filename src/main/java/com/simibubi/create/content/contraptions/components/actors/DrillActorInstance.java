@@ -11,7 +11,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.vector.Quaternion;
 
 public class DrillActorInstance extends ActorInstance {

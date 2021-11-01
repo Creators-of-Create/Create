@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.GuiComponent;
 
 public abstract class RenderElement implements IScreenRenderable {
 
-	public static RenderElement EMPTY = new RenderElement() {@Override public void render(MatrixStack ms) {}};
+	public static RenderElement EMPTY = new RenderElement() {@Override public void render(PoseStack ms) {}};
 
 	public static RenderElement of(IScreenRenderable renderable) {
 		return new SimpleRenderElement(renderable);
@@ -64,15 +64,15 @@ public abstract class RenderElement implements IScreenRenderable {
 		return z;
 	}
 
-	public abstract void render(MatrixStack ms);
+	public abstract void render(PoseStack ms);
 
 	@Override
-	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
+	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
 		this.at(x, y).render(ms);
 	}
 
 	@Override
-	public void draw(MatrixStack ms, int x, int y) {
+	public void draw(PoseStack ms, int x, int y) {
 		this.at(x, y).render(ms);
 	}
 
@@ -85,7 +85,7 @@ public abstract class RenderElement implements IScreenRenderable {
 		}
 
 		@Override
-		public void render(MatrixStack ms) {
+		public void render(PoseStack ms) {
 			renderable.draw(ms, (int) x, (int) y);
 		}
 	}

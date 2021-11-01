@@ -2,29 +2,29 @@ package com.simibubi.create.foundation.render;
 
 import com.jozufozu.flywheel.util.BufferBuilderReader;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.utility.Color;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix3f;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.client.model.pipeline.LightUtil;
 
 public class SuperByteBuffer {
@@ -32,7 +32,7 @@ public class SuperByteBuffer {
 	private final BufferBuilderReader template;
 
 	// Vertex Position
-	private MatrixStack transforms;
+	private PoseStack transforms;
 
 	// Vertex Coloring
 	private boolean shouldColor;
@@ -66,7 +66,7 @@ public class SuperByteBuffer {
 
 	public SuperByteBuffer(BufferBuilder buf) {
 		template = new BufferBuilderReader(buf);
-		transforms = new MatrixStack();
+		transforms = new PoseStack();
 		transforms.pushPose();
 		stacker = MatrixTransformStack.of(transforms);
 	}
@@ -81,7 +81,7 @@ public class SuperByteBuffer {
 		return (v - sprite.getV0()) / f * 16.0F;
 	}
 
-	public void renderInto(MatrixStack input, IVertexBuilder builder) {
+	public void renderInto(PoseStack input, VertexConsumer builder) {
 		if (isEmpty())
 			return;
 
@@ -232,7 +232,7 @@ public class SuperByteBuffer {
 		return stacker;
 	}
 
-	public SuperByteBuffer translate(Vector3d vec) {
+	public SuperByteBuffer translate(Vec3 vec) {
 		return translate(vec.x, vec.y, vec.z);
 	}
 
@@ -245,7 +245,7 @@ public class SuperByteBuffer {
 		return this;
 	}
 
-	public SuperByteBuffer transform(MatrixStack stack) {
+	public SuperByteBuffer transform(PoseStack stack) {
 		transforms.last()
 			.pose()
 			.multiply(stack.last()
@@ -420,11 +420,11 @@ public class SuperByteBuffer {
 	}
 
 	public static int transformColor(byte component, float scale) {
-		return MathHelper.clamp((int) (Byte.toUnsignedInt(component) * scale), 0, 255);
+		return Mth.clamp((int) (Byte.toUnsignedInt(component) * scale), 0, 255);
 	}
 
 	public static int transformColor(int component, float scale) {
-		return MathHelper.clamp((int) (component * scale), 0, 255);
+		return Mth.clamp((int) (component * scale), 0, 255);
 	}
 
 	public static int maxLight(int packedLight1, int packedLight2) {
@@ -435,14 +435,14 @@ public class SuperByteBuffer {
 		return LightTexture.pack(Math.max(blockLight1, blockLight2), Math.max(skyLight1, skyLight2));
 	}
 
-	private static int getLight(World world, Vector4f lightPos) {
+	private static int getLight(Level world, Vector4f lightPos) {
 		BlockPos pos = new BlockPos(lightPos.x(), lightPos.y(), lightPos.z());
-		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.asLong(), $ -> WorldRenderer.getLightColor(world, pos));
+		return WORLD_LIGHT_CACHE.computeIfAbsent(pos.asLong(), $ -> LevelRenderer.getLightColor(world, pos));
 	}
 
 	@FunctionalInterface
 	public interface SpriteShiftFunc {
-		void shift(IVertexBuilder builder, float u, float v);
+		void shift(VertexConsumer builder, float u, float v);
 	}
 
 	@FunctionalInterface

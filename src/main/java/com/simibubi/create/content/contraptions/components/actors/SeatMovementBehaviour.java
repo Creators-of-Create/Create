@@ -9,13 +9,13 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class SeatMovementBehaviour extends MovementBehaviour {
 
@@ -60,7 +60,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 			}
 			if (toDismount != null) {
 				toDismount.stopRiding();
-				Vector3d position = VecHelper.getCenterOf(pos)
+				Vec3 position = VecHelper.getCenterOf(pos)
 					.add(0, slab ? .5f : 1f, 0);
 				toDismount.teleportTo(position.x, position.y, position.z);
 				toDismount.getPersistentData()
@@ -73,7 +73,7 @@ public class SeatMovementBehaviour extends MovementBehaviour {
 			return;
 
 		List<Entity> nearbyEntities = context.world.getEntitiesOfClass(Entity.class,
-			new AxisAlignedBB(pos).deflate(1 / 16f), SeatBlock::canBePickedUp);
+			new AABB(pos).deflate(1 / 16f), SeatBlock::canBePickedUp);
 		if (!nearbyEntities.isEmpty())
 			contraptionEntity.addSittingPassenger(nearbyEntities.get(0), index);
 	}

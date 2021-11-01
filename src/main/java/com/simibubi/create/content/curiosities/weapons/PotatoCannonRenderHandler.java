@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.weapons;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.particle.AirParticleData;
@@ -9,19 +9,19 @@ import com.simibubi.create.content.curiosities.zapper.ShootableGadgetRenderHandl
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
 
 public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 
 	private float nextPitch;
 
 	@Override
-	protected void playSound(Hand hand, Vector3d position) {
+	protected void playSound(InteractionHand hand, Vec3 position) {
 		PotatoProjectileEntity.playLaunchSound(Minecraft.getInstance().level, position, nextPitch);
 	}
 
@@ -31,23 +31,23 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 			.isCannon(stack);
 	}
 
-	public void beforeShoot(float nextPitch, Vector3d location, Vector3d motion, ItemStack stack) {
+	public void beforeShoot(float nextPitch, Vec3 location, Vec3 motion, ItemStack stack) {
 		this.nextPitch = nextPitch;
 		if (stack.isEmpty())
 			return;
-		ClientWorld world = Minecraft.getInstance().level;
+		ClientLevel world = Minecraft.getInstance().level;
 		for (int i = 0; i < 2; i++) {
-			Vector3d m = VecHelper.offsetRandomly(motion.scale(0.1f), Create.RANDOM, .025f);
-			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, stack), location.x, location.y, location.z, m.x,
+			Vec3 m = VecHelper.offsetRandomly(motion.scale(0.1f), Create.RANDOM, .025f);
+			world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), location.x, location.y, location.z, m.x,
 				m.y, m.z);
 
-			Vector3d m2 = VecHelper.offsetRandomly(motion.scale(2f), Create.RANDOM, .5f);
+			Vec3 m2 = VecHelper.offsetRandomly(motion.scale(2f), Create.RANDOM, .5f);
 			world.addParticle(new AirParticleData(1, 1 / 4f), location.x, location.y, location.z, m2.x, m2.y, m2.z);
 		}
 	}
 
 	@Override
-	protected void transformTool(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {
+	protected void transformTool(PoseStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.1f, 0, .14f);
 		ms.scale(.75f, .75f, .75f);
 		MatrixTransformStack.of(ms)
@@ -55,7 +55,7 @@ public class PotatoCannonRenderHandler extends ShootableGadgetRenderHandler {
 	}
 
 	@Override
-	protected void transformHand(MatrixStack ms, float flip, float equipProgress, float recoil, float pt) {
+	protected void transformHand(PoseStack ms, float flip, float equipProgress, float recoil, float pt) {
 		ms.translate(flip * -.09, -.275, -.25);
 		MatrixTransformStack.of(ms)
 			.rotateZ(flip * -10);

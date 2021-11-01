@@ -6,8 +6,8 @@ import static com.simibubi.create.content.contraptions.base.KineticTileEntityRen
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
@@ -19,40 +19,40 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 
 public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
-	public MechanicalCrafterRenderer(TileEntityRendererDispatcher dispatcher) {
+	public MechanicalCrafterRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void renderSafe(MechanicalCrafterTileEntity te, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light, int overlay) {
 		ms.pushPose();
 		Direction facing = te.getBlockState()
 			.getValue(HORIZONTAL_FACING);
-		Vector3d vec = Vector3d.atLowerCornerOf(facing.getNormal())
+		Vec3 vec = Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(.58)
 			.add(.5, .5, .5);
 
 		if (te.phase == Phase.EXPORTING) {
 			Direction targetDirection = MechanicalCrafterBlock.getTargetDirection(te.getBlockState());
 			float progress =
-				MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
-			vec = vec.add(Vector3d.atLowerCornerOf(targetDirection.getNormal())
+				Mth.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
+			vec = vec.add(Vec3.atLowerCornerOf(targetDirection.getNormal())
 				.scale(progress * .75f));
 		}
 
@@ -66,8 +66,8 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		renderFast(te, partialTicks, ms, buffer, light);
 	}
 
-	public void renderItems(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light, int overlay) {
+	public void renderItems(MechanicalCrafterTileEntity te, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light, int overlay) {
 		if (te.phase == Phase.IDLE) {
 			ItemStack stack = te.getInventory()
 				.getItem(0);
@@ -91,13 +91,13 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				items = te.groupedItemsBeforeCraft;
 				items.calcStats();
 				float progress =
-					MathHelper.clamp((2000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
-				float earlyProgress = MathHelper.clamp(progress * 2, 0, 1);
-				float lateProgress = MathHelper.clamp(progress * 2 - 1, 0, 1);
+					Mth.clamp((2000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
+				float earlyProgress = Mth.clamp(progress * 2, 0, 1);
+				float lateProgress = Mth.clamp(progress * 2 - 1, 0, 1);
 
 				ms.scale(1 - lateProgress, 1 - lateProgress, 1 - lateProgress);
-				Vector3d centering =
-					new Vector3d(-items.minX + (-items.width + 1) / 2f, -items.minY + (-items.height + 1) / 2f, 0)
+				Vec3 centering =
+					new Vec3(-items.minX + (-items.width + 1) / 2f, -items.minY + (-items.height + 1) / 2f, 0)
 						.scale(earlyProgress);
 				ms.translate(centering.x * .5f, centering.y * .5f, 0);
 				distance += (-4 * (progress - .5f) * (progress - .5f) + 1) * .25f;
@@ -137,9 +137,9 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 			if (te.phase == Phase.CRAFTING) {
 				items = te.groupedItems;
 				float progress =
-					MathHelper.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
-				float earlyProgress = MathHelper.clamp(progress * 2, 0, 1);
-				float lateProgress = MathHelper.clamp(progress * 2 - 1, 0, 1);
+					Mth.clamp((1000 - te.countDown + te.getCountDownSpeed() * partialTicks) / 1000f, 0, 1);
+				float earlyProgress = Mth.clamp(progress * 2, 0, 1);
+				float lateProgress = Mth.clamp(progress * 2 - 1, 0, 1);
 
 				ms.mulPose(Vector3f.ZP.rotationDegrees(earlyProgress * 2 * 360));
 				float upScaling = earlyProgress * 1.125f;
@@ -165,10 +165,10 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 		}
 	}
 
-	public void renderFast(MechanicalCrafterTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	public void renderFast(MechanicalCrafterTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light) {
 		BlockState blockState = te.getBlockState();
-		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		if (!Backend.getInstance()
 			.canUseInstancing(te.getLevel())) {

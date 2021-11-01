@@ -1,28 +1,28 @@
 package com.simibubi.create.foundation.tileEntity.behaviour;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FenceBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
 import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBoxRenderer {
 
-	public static void renderItemIntoValueBox(ItemStack filter, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		IBakedModel modelWithOverrides = itemRenderer.getModel(filter, Minecraft.getInstance().level, null);
+		BakedModel modelWithOverrides = itemRenderer.getModel(filter, Minecraft.getInstance().level, null);
 		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
 		float zOffset = (!blockItem ? -.225f : 0) + customZOffset(filter.getItem());

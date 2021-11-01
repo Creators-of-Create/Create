@@ -3,22 +3,22 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 import static com.simibubi.create.foundation.utility.AngleHelper.angleLerp;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.bearing.BearingContraption;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,11 +36,11 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	protected float angle;
 	protected float angleDelta;
 
-	public ControlledContraptionEntity(EntityType<?> type, World world) {
+	public ControlledContraptionEntity(EntityType<?> type, Level world) {
 		super(type, world);
 	}
 
-	public static ControlledContraptionEntity create(World world, IControlContraption controller,
+	public static ControlledContraptionEntity create(Level world, IControlContraption controller,
 		Contraption contraption) {
 		ControlledContraptionEntity entity =
 			new ControlledContraptionEntity(AllEntityTypes.CONTROLLED_CONTRAPTION.get(), world);
@@ -50,7 +50,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-		public Vector3d getContactPointMotion(Vector3d globalContactPoint) {
+		public Vec3 getContactPointMotion(Vec3 globalContactPoint) {
 			if (contraption instanceof TranslatingContraption)
 				return getDeltaMovement();
 			return super.getContactPointMotion(globalContactPoint);
@@ -66,18 +66,18 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	protected void readAdditional(CompoundNBT compound, boolean spawnPacket) {
+	protected void readAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.readAdditional(compound, spawnPacket);
-		controllerPos = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+		controllerPos = NbtUtils.readBlockPos(compound.getCompound("Controller"));
 		if (compound.contains("Axis"))
 			rotationAxis = NBTHelper.readEnum(compound, "Axis", Axis.class);
 		angle = compound.getFloat("Angle");
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT compound, boolean spawnPacket) {
+	protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
 		super.writeAdditional(compound, spawnPacket);
-		compound.put("Controller", NBTUtil.writeBlockPos(controllerPos));
+		compound.put("Controller", NbtUtils.writeBlockPos(controllerPos));
 		if (rotationAxis != null)
 			NBTHelper.writeEnum(compound, "Axis", rotationAxis);
 		compound.putFloat("Angle", angle);
@@ -96,13 +96,13 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public Vector3d applyRotation(Vector3d localPos, float partialTicks) {
+	public Vec3 applyRotation(Vec3 localPos, float partialTicks) {
 		localPos = VecHelper.rotate(localPos, getAngle(partialTicks), rotationAxis);
 		return localPos;
 	}
 
 	@Override
-	public Vector3d reverseRotation(Vector3d localPos, float partialTicks) {
+	public Vec3 reverseRotation(Vec3 localPos, float partialTicks) {
 		localPos = VecHelper.rotate(localPos, -getAngle(partialTicks), rotationAxis);
 		return localPos;
 	}
@@ -150,15 +150,15 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 				setPos(getX(), getY(), getZ());
 		}
 
-		Vector3d motion = getDeltaMovement();
+		Vec3 motion = getDeltaMovement();
 		move(motion.x, motion.y, motion.z);
 		if (ContraptionCollider.collideBlocks(this))
 			getController().collided();
 	}
 
 	@Override
-	protected boolean shouldActorTrigger(MovementContext context, BlockInfo blockInfo, MovementBehaviour actor,
-		Vector3d actorPosition, BlockPos gridPosition) {
+	protected boolean shouldActorTrigger(MovementContext context, StructureBlockInfo blockInfo, MovementBehaviour actor,
+		Vec3 actorPosition, BlockPos gridPosition) {
 		if (super.shouldActorTrigger(context, blockInfo, actor, actorPosition, gridPosition))
 			return true;
 
@@ -167,13 +167,13 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return false;
 		BearingContraption bc = (BearingContraption) contraption;
 		Direction facing = bc.getFacing();
-		Vector3d activeAreaOffset = actor.getActiveAreaOffset(context);
-		if (!activeAreaOffset.multiply(VecHelper.axisAlingedPlaneOf(Vector3d.atLowerCornerOf(facing.getNormal())))
-			.equals(Vector3d.ZERO))
+		Vec3 activeAreaOffset = actor.getActiveAreaOffset(context);
+		if (!activeAreaOffset.multiply(VecHelper.axisAlingedPlaneOf(Vec3.atLowerCornerOf(facing.getNormal())))
+			.equals(Vec3.ZERO))
 			return false;
 		if (!VecHelper.onSameAxis(blockInfo.pos, BlockPos.ZERO, facing.getAxis()))
 			return false;
-		context.motion = Vector3d.atLowerCornerOf(facing.getNormal()).scale(angleDelta / 360.0);
+		context.motion = Vec3.atLowerCornerOf(facing.getNormal()).scale(angleDelta / 360.0);
 		context.relativeMotion = context.motion;
 		int timer = context.data.getInt("StationaryTimer");
 		if (timer > 0) {
@@ -190,7 +190,7 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 			return null;
 		if (!level.isLoaded(controllerPos))
 			return null;
-		TileEntity te = level.getBlockEntity(controllerPos);
+		BlockEntity te = level.getBlockEntity(controllerPos);
 		if (!(te instanceof IControlContraption))
 			return null;
 		return (IControlContraption) te;
@@ -226,11 +226,11 @@ public class ControlledContraptionEntity extends AbstractContraptionEntity {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks) {
+	public void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks) {
 		float angle = getAngle(partialTicks);
 		Axis axis = getRotationAxis();
 
-		for (MatrixStack stack : matrixStacks)
+		for (PoseStack stack : matrixStacks)
 			MatrixTransformStack.of(stack)
 						 .nudge(getId())
 						 .centre()

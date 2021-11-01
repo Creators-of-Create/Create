@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.world.LightType;
+import net.minecraft.world.level.LightLayer;
 
 public abstract class ActorInstance {
     protected final MaterialManager materialManager;
@@ -22,6 +22,6 @@ public abstract class ActorInstance {
     public void beginFrame() { }
 
     protected int localBlockLight() {
-        return simulationWorld.getBrightness(LightType.BLOCK, context.localPos);
+        return simulationWorld.getBrightness(LightLayer.BLOCK, context.localPos);
     }
 }

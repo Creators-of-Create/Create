@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 
 public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 
@@ -91,11 +91,11 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 		return Couple.create(second, first);
 	}
 
-	public ListNBT serializeEach(Function<T, CompoundNBT> serializer) {
+	public ListTag serializeEach(Function<T, CompoundTag> serializer) {
 		return NBTHelper.writeCompoundList(ImmutableList.of(first, second), serializer);
 	}
 
-	public static <S> Couple<S> deserializeEach(ListNBT list, Function<CompoundNBT, S> deserializer) {
+	public static <S> Couple<S> deserializeEach(ListTag list, Function<CompoundTag, S> deserializer) {
 		List<S> readCompoundList = NBTHelper.readCompoundList(list, deserializer);
 		return new Couple<>(readCompoundList.get(0), readCompoundList.get(1));
 	}

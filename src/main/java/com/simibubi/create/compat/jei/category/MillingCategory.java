@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedMillstone;
@@ -58,7 +58,7 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 	}
 
 	@Override
-	public void draw(AbstractCrushingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(AbstractCrushingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		int size = recipe.getRollableResultsAsItemStacks()
 			.size();
 

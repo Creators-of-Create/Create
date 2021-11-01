@@ -6,10 +6,10 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 
 @MethodsReturnNonnullByDefault
 public interface IAirCurrentSource {
@@ -17,7 +17,7 @@ public interface IAirCurrentSource {
 	AirCurrent getAirCurrent();
 
 	@Nullable
-	World getAirCurrentWorld();
+	Level getAirCurrentWorld();
 
 	BlockPos getAirCurrentPos();
 
@@ -32,8 +32,8 @@ public interface IAirCurrentSource {
 		float speed = Math.abs(this.getSpeed());
 		CKinetics config = AllConfigs.SERVER.kinetics;
 		float distanceFactor = Math.min(speed / config.fanRotationArgmax.get(), 1);
-		float pushDistance = MathHelper.lerp(distanceFactor, 3, config.fanPushDistance.get());
-		float pullDistance = MathHelper.lerp(distanceFactor, 3f, config.fanPullDistance.get());
+		float pushDistance = Mth.lerp(distanceFactor, 3, config.fanPushDistance.get());
+		float pullDistance = Mth.lerp(distanceFactor, 3f, config.fanPullDistance.get());
 		return this.getSpeed() > 0 ? pushDistance : pullDistance;
 	}
 

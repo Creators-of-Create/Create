@@ -14,8 +14,8 @@ import com.simibubi.create.foundation.ponder.content.SharedText;
 import com.simibubi.create.foundation.utility.Couple;
 import com.tterrag.registrate.AbstractRegistrate;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 
 public class PonderLocalization {
 

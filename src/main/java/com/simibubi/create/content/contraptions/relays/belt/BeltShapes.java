@@ -2,8 +2,19 @@ package com.simibubi.create.content.contraptions.relays.belt;
 
 import static net.minecraft.block.Block.box;
 
+import javanimport com.simibubi.create.AllShapes;
+import com.simibubi.create.foundation.utility.VoxelShaper;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+et.minecraft.world.level.block.Blockva.util.Map;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
@@ -113,21 +124,21 @@ public class BeltShapes {
 	static Map<BlockState, VoxelShape> collisionCache = new HashMap<>();
 
 	private static VoxelShape compose(VoxelShape southPart, VoxelShape northPart){
-		return VoxelShapes.or(
-				VoxelShapes.joinUnoptimized(SOUTH_MASK, southPart, IBooleanFunction.AND),
-				VoxelShapes.joinUnoptimized(NORTH_MASK, northPart, IBooleanFunction.AND)
+		return Shapes.or(
+				Shapes.joinUnoptimized(SOUTH_MASK, southPart, BooleanOp.AND),
+				Shapes.joinUnoptimized(NORTH_MASK, northPart, BooleanOp.AND)
 		);
 	}
 
 	private static VoxelShape makeSlopePart(boolean ascendingInstead) {
 		VoxelShape slice = box(1, 0, 16, 15, 11, 15);
-		VoxelShape result = VoxelShapes.empty();
+		VoxelShape result = Shapes.empty();
 
 		for (int i = 0; i < 16; i++) {
 
 			int yOffset = ascendingInstead ? 10 - i : i - 5;
 
-			result = VoxelShapes.or(
+			result = Shapes.or(
 					result,//move slice i voxels "right" and i-5 voxels "down"
 					slice.move(0, yOffset / 16f, -i / 16f));
 		}
@@ -136,7 +147,7 @@ public class BeltShapes {
 	}
 
 	private static VoxelShape makeFlatEnding(){
-		return VoxelShapes.or(
+		return Shapes.or(
 			box(1,4,0,15,12,16),
 			box(1,3,1,15,13,15)
 		);
@@ -147,7 +158,7 @@ public class BeltShapes {
 	}
 
 	private static VoxelShape makeSidewaysEnding(){
-		return VoxelShapes.or(
+		return Shapes.or(
 			box(4,1,0,12,15,16),
 			box(3,1,1,13,15,15)
 		);
@@ -160,7 +171,7 @@ public class BeltShapes {
 	public static VoxelShape getShape(BlockState state) {
 		if (cache.containsKey(state))
 			return cache.get(state);
-		VoxelShape createdShape = VoxelShapes.or(getBeltShape(state), getCasingShape(state));
+		VoxelShape createdShape = Shapes.or(getBeltShape(state), getCasingShape(state));
 		cache.put(state, createdShape);
 		return createdShape;
 	}
@@ -168,7 +179,7 @@ public class BeltShapes {
 	public static VoxelShape getCollisionShape(BlockState state) {
 		if (collisionCache.containsKey(state))
 			return collisionCache.get(state);
-		VoxelShape createdShape = VoxelShapes.joinUnoptimized(AllShapes.BELT_COLLISION_MASK, getShape(state), IBooleanFunction.AND);
+		VoxelShape createdShape = Shapes.joinUnoptimized(AllShapes.BELT_COLLISION_MASK, getShape(state), BooleanOp.AND);
 		collisionCache.put(state, createdShape);
 		return createdShape;
 	}
@@ -213,21 +224,21 @@ public class BeltShapes {
 			return (slope == BeltSlope.DOWNWARD ? SLOPE_DESC_END : SLOPE_ASC_END).get(facing);
 
 		//bad state
-		return VoxelShapes.empty();
+		return Shapes.empty();
 	}
 
 	private static VoxelShape getCasingShape(BlockState state) {
 		if (!state.getValue(BeltBlock.CASING))
-			return VoxelShapes.empty();
+			return Shapes.empty();
 
 		Direction facing = state.getValue(BeltBlock.HORIZONTAL_FACING);
 		BeltPart part = state.getValue(BeltBlock.PART);
 		BeltSlope slope = state.getValue(BeltBlock.SLOPE);
 
 		if (slope == BeltSlope.VERTICAL)
-			return VoxelShapes.empty();
+			return Shapes.empty();
 		if (slope == BeltSlope.SIDEWAYS)
-			return VoxelShapes.empty();
+			return Shapes.empty();
 
 		if (slope == BeltSlope.HORIZONTAL) {
 			return AllShapes.CASING_11PX.get(Direction.UP);
@@ -242,17 +253,17 @@ public class BeltShapes {
 			return slope == BeltSlope.DOWNWARD ? AllShapes.CASING_11PX.get(Direction.UP) : PARTIAL_CASING.get(facing);
 
 		//something went wrong
-		return VoxelShapes.block();
+		return Shapes.block();
 	}
 
 	private static class VerticalBeltShaper extends VoxelShaper {
 
 		public static VoxelShaper make(VoxelShape southBeltShape){
 			return forDirectionsWithRotation(
-					rotatedCopy(southBeltShape, new Vector3d(-90,0,0)),
+					rotatedCopy(southBeltShape, new Vec3(-90,0,0)),
 					Direction.SOUTH,
 					Direction.Plane.HORIZONTAL,//idk, this can probably be improved :S
-					direction -> new Vector3d(
+					direction -> new Vec3(
 							direction.getAxisDirection() == Direction.AxisDirection.POSITIVE ? 0 : 180,
 							-direction.toYRot(),
 							0));

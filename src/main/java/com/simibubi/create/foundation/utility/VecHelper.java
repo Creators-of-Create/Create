@@ -5,70 +5,70 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.DoubleNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.client.Camera;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
+import net.minecraft.core.Vec3i;
 
 public class VecHelper {
 
 	public static final Vector3f ZERO_3F = new Vector3f(0, 0, 0);
-	public static final Vector3d CENTER_OF_ORIGIN = new Vector3d(.5, .5, .5);
+	public static final Vec3 CENTER_OF_ORIGIN = new Vec3(.5, .5, .5);
 
-	public static Vector3d rotate(Vector3d vec, Vector3d rotationVec) {
+	public static Vec3 rotate(Vec3 vec, Vec3 rotationVec) {
 		return rotate(vec, rotationVec.x, rotationVec.y, rotationVec.z);
 	}
 
-	public static Vector3d rotate(Vector3d vec, double xRot, double yRot, double zRot) {
+	public static Vec3 rotate(Vec3 vec, double xRot, double yRot, double zRot) {
 		return rotate(rotate(rotate(vec, xRot, Axis.X), yRot, Axis.Y), zRot, Axis.Z);
 	}
 
-	public static Vector3d rotateCentered(Vector3d vec, double deg, Axis axis) {
-		Vector3d shift = getCenterOf(BlockPos.ZERO);
+	public static Vec3 rotateCentered(Vec3 vec, double deg, Axis axis) {
+		Vec3 shift = getCenterOf(BlockPos.ZERO);
 		return VecHelper.rotate(vec.subtract(shift), deg, axis).add(shift);
 	}
 
-	public static Vector3d rotate(Vector3d vec, double deg, Axis axis) {
+	public static Vec3 rotate(Vec3 vec, double deg, Axis axis) {
 		if (deg == 0)
 			return vec;
-		if (vec == Vector3d.ZERO)
+		if (vec == Vec3.ZERO)
 			return vec;
 
 		float angle = (float) (deg / 180f * Math.PI);
-		double sin = MathHelper.sin(angle);
-		double cos = MathHelper.cos(angle);
+		double sin = Mth.sin(angle);
+		double cos = Mth.cos(angle);
 		double x = vec.x;
 		double y = vec.y;
 		double z = vec.z;
 
 		if (axis == Axis.X)
-			return new Vector3d(x, y * cos - z * sin, z * cos + y * sin);
+			return new Vec3(x, y * cos - z * sin, z * cos + y * sin);
 		if (axis == Axis.Y)
-			return new Vector3d(x * cos + z * sin, y, z * cos - x * sin);
+			return new Vec3(x * cos + z * sin, y, z * cos - x * sin);
 		if (axis == Axis.Z)
-			return new Vector3d(x * cos - y * sin, y * cos + x * sin, z);
+			return new Vec3(x * cos - y * sin, y * cos + x * sin, z);
 		return vec;
 	}
 
-	public static Vector3d mirrorCentered(Vector3d vec, Mirror mirror) {
-		Vector3d shift = getCenterOf(BlockPos.ZERO);
+	public static Vec3 mirrorCentered(Vec3 vec, Mirror mirror) {
+		Vec3 shift = getCenterOf(BlockPos.ZERO);
 		return VecHelper.mirror(vec.subtract(shift), mirror).add(shift);
 	}
 
-	public static Vector3d mirror(Vector3d vec, Mirror mirror) {
+	public static Vec3 mirror(Vec3 vec, Mirror mirror) {
 		if (mirror == null || mirror == Mirror.NONE)
 			return vec;
-		if (vec == Vector3d.ZERO)
+		if (vec == Vec3.ZERO)
 			return vec;
 
 		double x = vec.x;
@@ -76,75 +76,75 @@ public class VecHelper {
 		double z = vec.z;
 
 		if (mirror == Mirror.LEFT_RIGHT)
-			return new Vector3d(x, y, -z);
+			return new Vec3(x, y, -z);
 		if (mirror == Mirror.FRONT_BACK)
-			return new Vector3d(-x, y, z);
+			return new Vec3(-x, y, z);
 		return vec;
 	}
 
-	public static Vector3d lookAt(Vector3d vec, Vector3d fwd) {
+	public static Vec3 lookAt(Vec3 vec, Vec3 fwd) {
 		fwd = fwd.normalize();
-		Vector3d up = new Vector3d(0,1,0);
+		Vec3 up = new Vec3(0,1,0);
 		double dot = fwd.dot(up);
 		if (Math.abs(dot) > 1 - 1.0E-3)
-			up = new Vector3d(0, 0, dot > 0 ? 1 : -1);
-		Vector3d right = fwd.cross(up).normalize();
+			up = new Vec3(0, 0, dot > 0 ? 1 : -1);
+		Vec3 right = fwd.cross(up).normalize();
 		up = right.cross(fwd).normalize();
 		double x = vec.x * right.x + vec.y * up.x + vec.z * fwd.x;
 		double y = vec.x * right.y + vec.y * up.y + vec.z * fwd.y;
 		double z = vec.x * right.z + vec.y * up.z + vec.z * fwd.z;
-		return new Vector3d(x, y, z);
+		return new Vec3(x, y, z);
 	}
 
-	public static boolean isVecPointingTowards(Vector3d vec, Direction direction) {
-		return Vector3d.atLowerCornerOf(direction.getNormal())
+	public static boolean isVecPointingTowards(Vec3 vec, Direction direction) {
+		return Vec3.atLowerCornerOf(direction.getNormal())
 			.dot(vec.normalize()) > 0.125; // slight tolerance to activate perpendicular movement actors
 	}
 
-	public static Vector3d getCenterOf(Vector3i pos) {
-		if (pos.equals(Vector3i.ZERO))
+	public static Vec3 getCenterOf(Vec3i pos) {
+		if (pos.equals(Vec3i.ZERO))
 			return CENTER_OF_ORIGIN;
-		return Vector3d.atLowerCornerOf(pos)
+		return Vec3.atLowerCornerOf(pos)
 			.add(.5f, .5f, .5f);
 	}
 
-	public static Vector3d offsetRandomly(Vector3d vec, Random r, float radius) {
-		return new Vector3d(vec.x + (r.nextFloat() - .5f) * 2 * radius, vec.y + (r.nextFloat() - .5f) * 2 * radius,
+	public static Vec3 offsetRandomly(Vec3 vec, Random r, float radius) {
+		return new Vec3(vec.x + (r.nextFloat() - .5f) * 2 * radius, vec.y + (r.nextFloat() - .5f) * 2 * radius,
 			vec.z + (r.nextFloat() - .5f) * 2 * radius);
 	}
 
-	public static Vector3d axisAlingedPlaneOf(Vector3d vec) {
+	public static Vec3 axisAlingedPlaneOf(Vec3 vec) {
 		vec = vec.normalize();
-		return new Vector3d(1, 1, 1).subtract(Math.abs(vec.x), Math.abs(vec.y), Math.abs(vec.z));
+		return new Vec3(1, 1, 1).subtract(Math.abs(vec.x), Math.abs(vec.y), Math.abs(vec.z));
 	}
 
-	public static Vector3d axisAlingedPlaneOf(Direction face) {
-		return axisAlingedPlaneOf(Vector3d.atLowerCornerOf(face.getNormal()));
+	public static Vec3 axisAlingedPlaneOf(Direction face) {
+		return axisAlingedPlaneOf(Vec3.atLowerCornerOf(face.getNormal()));
 	}
 
-	public static ListNBT writeNBT(Vector3d vec) {
-		ListNBT listnbt = new ListNBT();
-		listnbt.add(DoubleNBT.valueOf(vec.x));
-		listnbt.add(DoubleNBT.valueOf(vec.y));
-		listnbt.add(DoubleNBT.valueOf(vec.z));
+	public static ListTag writeNBT(Vec3 vec) {
+		ListTag listnbt = new ListTag();
+		listnbt.add(DoubleTag.valueOf(vec.x));
+		listnbt.add(DoubleTag.valueOf(vec.y));
+		listnbt.add(DoubleTag.valueOf(vec.z));
 		return listnbt;
 	}
 
-	public static Vector3d readNBT(ListNBT list) {
+	public static Vec3 readNBT(ListTag list) {
 		if (list.isEmpty())
-			return Vector3d.ZERO;
-		return new Vector3d(list.getDouble(0), list.getDouble(1), list.getDouble(2));
+			return Vec3.ZERO;
+		return new Vec3(list.getDouble(0), list.getDouble(1), list.getDouble(2));
 	}
 
-	public static Vector3d voxelSpace(double x, double y, double z) {
-		return new Vector3d(x, y, z).scale(1 / 16f);
+	public static Vec3 voxelSpace(double x, double y, double z) {
+		return new Vec3(x, y, z).scale(1 / 16f);
 	}
 
-	public static int getCoordinate(Vector3i pos, Axis axis) {
+	public static int getCoordinate(Vec3i pos, Axis axis) {
 		return axis.choose(pos.getX(), pos.getY(), pos.getZ());
 	}
 
-	public static float getCoordinate(Vector3d vec, Axis axis) {
+	public static float getCoordinate(Vec3 vec, Axis axis) {
 		return (float) axis.choose(vec.x, vec.y, vec.z);
 	}
 
@@ -158,52 +158,52 @@ public class VecHelper {
 		return true;
 	}
 
-	public static Vector3d clamp(Vector3d vec, float maxLength) {
+	public static Vec3 clamp(Vec3 vec, float maxLength) {
 		return vec.length() > maxLength ? vec.normalize()
 			.scale(maxLength) : vec;
 	}
 
-	public static Vector3d lerp(float p, Vector3d from, Vector3d to) {
+	public static Vec3 lerp(float p, Vec3 from, Vec3 to) {
 		return from.add(to.subtract(from)
 			.scale(p));
 	}
 
-	public static Vector3d clampComponentWise(Vector3d vec, float maxLength) {
-		return new Vector3d(MathHelper.clamp(vec.x, -maxLength, maxLength),
-			MathHelper.clamp(vec.y, -maxLength, maxLength), MathHelper.clamp(vec.z, -maxLength, maxLength));
+	public static Vec3 clampComponentWise(Vec3 vec, float maxLength) {
+		return new Vec3(Mth.clamp(vec.x, -maxLength, maxLength),
+			Mth.clamp(vec.y, -maxLength, maxLength), Mth.clamp(vec.z, -maxLength, maxLength));
 	}
 
-	public static Vector3d project(Vector3d vec, Vector3d ontoVec) {
-		if (ontoVec.equals(Vector3d.ZERO))
-			return Vector3d.ZERO;
+	public static Vec3 project(Vec3 vec, Vec3 ontoVec) {
+		if (ontoVec.equals(Vec3.ZERO))
+			return Vec3.ZERO;
 		return ontoVec.scale(vec.dot(ontoVec) / ontoVec.lengthSqr());
 	}
 
 	@Nullable
-	public static Vector3d intersectSphere(Vector3d origin, Vector3d lineDirection, Vector3d sphereCenter,
+	public static Vec3 intersectSphere(Vec3 origin, Vec3 lineDirection, Vec3 sphereCenter,
 		double radius) {
-		if (lineDirection.equals(Vector3d.ZERO))
+		if (lineDirection.equals(Vec3.ZERO))
 			return null;
 		if (lineDirection.length() != 1)
 			lineDirection = lineDirection.normalize();
 
-		Vector3d diff = origin.subtract(sphereCenter);
+		Vec3 diff = origin.subtract(sphereCenter);
 		double lineDotDiff = lineDirection.dot(diff);
 		double delta = lineDotDiff * lineDotDiff - (diff.lengthSqr() - radius * radius);
 		if (delta < 0)
 			return null;
-		double t = -lineDotDiff + MathHelper.sqrt(delta);
+		double t = -lineDotDiff + Mth.sqrt(delta);
 		return origin.add(lineDirection.scale(t));
 	}
 
 	// https://forums.minecraftforge.net/topic/88562-116solved-3d-to-2d-conversion/?do=findComment&comment=413573 slightly modified
-	public static Vector3d projectToPlayerView(Vector3d target, float partialTicks) {
+	public static Vec3 projectToPlayerView(Vec3 target, float partialTicks) {
 		/*
 		 * The (centered) location on the screen of the given 3d point in the world.
 		 * Result is (dist right of center screen, dist up from center screen, if < 0, then in front of view plane)
 		 */
-		ActiveRenderInfo ari = Minecraft.getInstance().gameRenderer.getMainCamera();
-		Vector3d camera_pos = ari.getPosition();
+		Camera ari = Minecraft.getInstance().gameRenderer.getMainCamera();
+		Vec3 camera_pos = ari.getPosition();
 		Quaternion camera_rotation_conj = ari.rotation()
 			.copy();
 		camera_rotation_conj.conj();
@@ -217,25 +217,25 @@ public class VecHelper {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.options.bobView) {
 			Entity renderViewEntity = mc.getCameraEntity();
-			if (renderViewEntity instanceof PlayerEntity) {
-				PlayerEntity playerentity = (PlayerEntity) renderViewEntity;
+			if (renderViewEntity instanceof Player) {
+				Player playerentity = (Player) renderViewEntity;
 				float distwalked_modified = playerentity.walkDist;
 
 				float f = distwalked_modified - playerentity.walkDistO;
 				float f1 = -(distwalked_modified + f * partialTicks);
-				float f2 = MathHelper.lerp(partialTicks, playerentity.oBob, playerentity.bob);
+				float f2 = Mth.lerp(partialTicks, playerentity.oBob, playerentity.bob);
 				Quaternion q2 = new Quaternion(Vector3f.XP,
-					Math.abs(MathHelper.cos(f1 * (float) Math.PI - 0.2F) * f2) * 5.0F, true);
+					Math.abs(Mth.cos(f1 * (float) Math.PI - 0.2F) * f2) * 5.0F, true);
 				q2.conj();
 				result3f.transform(q2);
 
 				Quaternion q1 =
-					new Quaternion(Vector3f.ZP, MathHelper.sin(f1 * (float) Math.PI) * f2 * 3.0F, true);
+					new Quaternion(Vector3f.ZP, Mth.sin(f1 * (float) Math.PI) * f2 * 3.0F, true);
 				q1.conj();
 				result3f.transform(q1);
 
-				Vector3f bob_translation = new Vector3f((MathHelper.sin(f1 * (float) Math.PI) * f2 * 0.5F),
-					(-Math.abs(MathHelper.cos(f1 * (float) Math.PI) * f2)), 0.0f);
+				Vector3f bob_translation = new Vector3f((Mth.sin(f1 * (float) Math.PI) * f2 * 0.5F),
+					(-Math.abs(Mth.cos(f1 * (float) Math.PI) * f2)), 0.0f);
 				bob_translation.setY(-bob_translation.y()); // this is weird but hey, if it works
 				result3f.add(bob_translation);
 			}
@@ -247,7 +247,7 @@ public class VecHelper {
 		float half_height = (float) mc.getWindow()
 			.getGuiScaledHeight() / 2;
 		float scale_factor = half_height / (result3f.z() * (float) Math.tan(Math.toRadians(fov / 2)));
-		return new Vector3d(-result3f.x() * scale_factor, result3f.y() * scale_factor, result3f.z());
+		return new Vec3(-result3f.x() * scale_factor, result3f.y() * scale_factor, result3f.z());
 	}
 
 }

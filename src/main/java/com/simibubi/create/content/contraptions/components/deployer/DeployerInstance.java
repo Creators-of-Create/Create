@@ -14,11 +14,13 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3i;
+
+import OrientedData;
 
 public class DeployerInstance extends ShaftInstance implements IDynamicInstance, ITickableInstance {
 
@@ -68,7 +70,7 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
 
         float newProgress = getProgress(AnimationTickHolder.getPartialTicks());
 
-        if (!newHand && MathHelper.equal(newProgress, progress)) return;
+        if (!newHand && Mth.equal(newProgress, progress)) return;
 
         progress = newProgress;
         newHand = false;

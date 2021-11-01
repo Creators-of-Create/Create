@@ -6,21 +6,21 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.StairsShape;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.StairsShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.ClipContext.Block;
+import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -35,21 +35,21 @@ public class ZapperInteractionHandler {
 		ItemStack heldItem = event.getPlayer()
 			.getMainHandItem();
 		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer())) {
-			event.setCancellationResult(ActionResultType.FAIL);
+			event.setCancellationResult(InteractionResult.FAIL);
 			event.setCanceled(true);
 		}
 	}
 
-	public static boolean trySelect(ItemStack stack, PlayerEntity player) {
+	public static boolean trySelect(ItemStack stack, Player player) {
 		if (player.isShiftKeyDown())
 			return false;
 
-		Vector3d start = player.position()
+		Vec3 start = player.position()
 			.add(0, player.getEyeHeight(), 0);
-		Vector3d range = player.getLookAngle()
+		Vec3 range = player.getLookAngle()
 			.scale(getRange(stack));
-		BlockRayTraceResult raytrace = player.level
-			.clip(new RayTraceContext(start, start.add(range), BlockMode.OUTLINE, FluidMode.NONE, player));
+		BlockHitResult raytrace = player.level
+			.clip(new ClipContext(start, start.add(range), Block.OUTLINE, Fluid.NONE, player));
 		BlockPos pos = raytrace.getBlockPos();
 		if (pos == null)
 			return false;
@@ -77,22 +77,22 @@ public class ZapperInteractionHandler {
 		if (newState.hasProperty(BlockStateProperties.WATERLOGGED))
 			newState = newState.setValue(BlockStateProperties.WATERLOGGED, false);
 
-		CompoundNBT data = null;
-		TileEntity tile = player.level.getBlockEntity(pos);
+		CompoundTag data = null;
+		BlockEntity tile = player.level.getBlockEntity(pos);
 		if (tile != null) {
-			data = tile.save(new CompoundNBT());
+			data = tile.save(new CompoundTag());
 			data.remove("x");
 			data.remove("y");
 			data.remove("z");
 			data.remove("id");
 		}
-		CompoundNBT tag = stack.getOrCreateTag();
-		if (tag.contains("BlockUsed") && NBTUtil.readBlockState(stack.getTag()
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains("BlockUsed") && NbtUtils.readBlockState(stack.getTag()
 			.getCompound("BlockUsed")) == newState && Objects.equals(data, tag.get("BlockData"))) {
 			return false;
 		}
 
-		tag.put("BlockUsed", NBTUtil.writeBlockState(newState));
+		tag.put("BlockUsed", NbtUtils.writeBlockState(newState));
 		if (data == null)
 			tag.remove("BlockData");
 		else

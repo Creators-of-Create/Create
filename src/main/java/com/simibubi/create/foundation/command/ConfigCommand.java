@@ -7,10 +7,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -22,10 +22,10 @@ import net.minecraftforge.fml.network.PacketDistributor;
  */
 public class ConfigCommand {
 
-	public static ArgumentBuilder<CommandSource, ?> register() {
+	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("config")
 				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
+					ServerPlayer player = ctx.getSource().getPlayerOrException();
 					AllPackets.channel.send(
 							PacketDistributor.PLAYER.with(() -> player),
 							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), "")
@@ -35,7 +35,7 @@ public class ConfigCommand {
 				})
 				.then(Commands.argument("path", StringArgumentType.string())
 						.executes(ctx -> {
-							ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
+							ServerPlayer player = ctx.getSource().getPlayerOrException();
 							AllPackets.channel.send(
 									PacketDistributor.PLAYER.with(() -> player),
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), StringArgumentType.getString(ctx, "path"))
@@ -55,12 +55,12 @@ public class ConfigCommand {
 											try {
 												configPath = ConfigHelper.ConfigPath.parse(path);
 											} catch (IllegalArgumentException e) {
-												ctx.getSource().sendFailure(new StringTextComponent(e.getMessage()));
+												ctx.getSource().sendFailure(new TextComponent(e.getMessage()));
 												return 0;
 											}
 
 											if (configPath.getType() == ModConfig.Type.CLIENT) {
-												ServerPlayerEntity player = ctx.getSource().getPlayerOrException();
+												ServerPlayer player = ctx.getSource().getPlayerOrException();
 												AllPackets.channel.send(
 														PacketDistributor.PLAYER.with(() -> player),
 														new SConfigureConfigPacket("SET" + path, value)
@@ -71,13 +71,13 @@ public class ConfigCommand {
 
 											try {
 												ConfigHelper.setConfigValue(configPath, value);
-												ctx.getSource().sendSuccess(new StringTextComponent("Great Success!"), false);
+												ctx.getSource().sendSuccess(new TextComponent("Great Success!"), false);
 												return Command.SINGLE_SUCCESS;
 											} catch (ConfigHelper.InvalidValueException e) {
-												ctx.getSource().sendFailure(new StringTextComponent("Config could not be set the the specified value!"));
+												ctx.getSource().sendFailure(new TextComponent("Config could not be set the the specified value!"));
 												return 0;
 											} catch (Exception e) {
-												ctx.getSource().sendFailure(new StringTextComponent("Something went wrong while trying to set config value. Check the server logs for more information"));
+												ctx.getSource().sendFailure(new TextComponent("Something went wrong while trying to set config value. Check the server logs for more information"));
 												Create.LOGGER.warn("Exception during server-side config value set:", e);
 												return 0;
 											}

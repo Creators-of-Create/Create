@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
 import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import staticnet.minecraft.ChatFormattingg.GRAY;
 
 import java.util.List;
 
@@ -27,30 +27,30 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public abstract class KineticTileEntity extends SmartTileEntity
-	implements ITickableTileEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
+	implements TickableBlockEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -71,7 +71,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
 
-	public KineticTileEntity(TileEntityType<?> typeIn) {
+	public KineticTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 		effects = new KineticEffectHandler(this);
 		updateSpeed = true;
@@ -128,7 +128,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			if (!level.isLoaded(source))
 				return;
 
-			TileEntity tileEntity = level.getBlockEntity(source);
+			BlockEntity tileEntity = level.getBlockEntity(source);
 			KineticTileEntity sourceTe =
 				tileEntity instanceof KineticTileEntity ? (KineticTileEntity) tileEntity : null;
 			if (sourceTe == null || sourceTe.speed == 0) {
@@ -195,17 +195,17 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	protected void write(CompoundNBT compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.putFloat("Speed", speed);
 
 		if (needsSpeedUpdate())
 			compound.putBoolean("NeedsSpeedUpdate", true);
 
 		if (hasSource())
-			compound.put("Source", NBTUtil.writeBlockPos(source));
+			compound.put("Source", NbtUtils.writeBlockPos(source));
 
 		if (hasNetwork()) {
-			CompoundNBT networkTag = new CompoundNBT();
+			CompoundTag networkTag = new CompoundTag();
 			networkTag.putLong("Id", this.network);
 			networkTag.putFloat("Stress", stress);
 			networkTag.putFloat("Capacity", capacity);
@@ -227,7 +227,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
@@ -240,10 +240,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		speed = compound.getFloat("Speed");
 
 		if (compound.contains("Source"))
-			source = NBTUtil.readBlockPos(compound.getCompound("Source"));
+			source = NbtUtils.readBlockPos(compound.getCompound("Source"));
 
 		if (compound.contains("Network")) {
-			CompoundNBT networkTag = compound.getCompound("Network");
+			CompoundTag networkTag = compound.getCompound("Network");
 			network = networkTag.getLong("Id");
 			stress = networkTag.getFloat("Stress");
 			capacity = networkTag.getFloat("Capacity");
@@ -293,7 +293,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		if (level == null || level.isClientSide)
 			return;
 
-		TileEntity tileEntity = level.getBlockEntity(source);
+		BlockEntity tileEntity = level.getBlockEntity(source);
 		if (!(tileEntity instanceof KineticTileEntity)) {
 			removeSource();
 			return;
@@ -362,11 +362,11 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		return true;
 	}
 
-	public static void switchToBlockState(World world, BlockPos pos, BlockState state) {
+	public static void switchToBlockState(Level world, BlockPos pos, BlockState state) {
 		if (world.isClientSide)
 			return;
 
-		TileEntity tileEntityIn = world.getBlockEntity(pos);
+		BlockEntity tileEntityIn = world.getBlockEntity(pos);
 		BlockState currentState = world.getBlockState(pos);
 		boolean isKinetic = tileEntityIn instanceof KineticTileEntity;
 
@@ -394,15 +394,15 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
-	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean notFastEnough = !isSpeedRequirementFulfilled() && getSpeed() != 0;
 
 		if (overStressed && AllConfigs.CLIENT.enableOverstressedTooltip.get()) {
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("gui.stressometer.overstressed")
 					.withStyle(GOLD)));
-			ITextComponent hint = Lang.translate("gui.contraptions.network_overstressed");
-			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
+			Component hint = Lang.translate("gui.contraptions.network_overstressed");
+			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
 					.append(cutString.get(i)));
@@ -413,10 +413,10 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("tooltip.speedRequirement")
 					.withStyle(GOLD)));
-			ITextComponent hint =
+			Component hint =
 				Lang.translate("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
 					.getDescriptionId()));
-			List<ITextComponent> cutString = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
+			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
 					.append(cutString.get(i)));
@@ -427,7 +427,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		boolean added = false;
 		float stressAtBase = calculateStressApplied();
 
@@ -436,17 +436,17 @@ public abstract class KineticTileEntity extends SmartTileEntity
 				.append(Lang.translate("gui.goggles.kinetic_stats")));
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("tooltip.stressImpact")
-					.withStyle(TextFormatting.GRAY)));
+					.withStyle(ChatFormatting.GRAY)));
 
 			float stressTotal = stressAtBase * Math.abs(getTheoreticalSpeed());
 
 			tooltip.add(componentSpacing.plainCopy()
-				.append(new StringTextComponent(" " + IHaveGoggleInformation.format(stressTotal))
+				.append(new TextComponent(" " + IHaveGoggleInformation.format(stressTotal))
 					.append(Lang.translate("generic.unit.stress"))
 					.append(" ")
-					.withStyle(TextFormatting.AQUA))
+					.withStyle(ChatFormatting.AQUA))
 				.append(Lang.translate("gui.goggles.at_current_speed")
-					.withStyle(TextFormatting.DARK_GRAY)));
+					.withStyle(ChatFormatting.DARK_GRAY)));
 
 			added = true;
 		}
@@ -565,17 +565,17 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
-	protected AxisAlignedBB cachedBoundingBox;
+	protected AABB cachedBoundingBox;
 
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
 			cachedBoundingBox = makeRenderBoundingBox();
 		}
 		return cachedBoundingBox;
 	}
 
-	protected AxisAlignedBB makeRenderBoundingBox() {
+	protected AABB makeRenderBoundingBox() {
 		return super.getRenderBoundingBox();
 	}
 
@@ -584,7 +584,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 		float componentSpeed = Math.abs(getSpeed());
 		if (componentSpeed == 0)
 			return;
-		float pitch = MathHelper.clamp((componentSpeed / 256f) + .45f, .85f, 1f);
+		float pitch = Mth.clamp((componentSpeed / 256f) + .45f, .85f, 1f);
 
 		if (isNoisy())
 			SoundScapes.play(AmbienceGroup.KINETIC, worldPosition, pitch);

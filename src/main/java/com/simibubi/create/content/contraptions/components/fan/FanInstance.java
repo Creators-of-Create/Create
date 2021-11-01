@@ -2,7 +2,12 @@ package com.simibubi.create.content.contraptions.components.fan;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.net.minimport com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.RotatingData;
+import net.minecraft.core.Direction;
+
+ecraft.world.level.block.state.properties.BlockStateProperties
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;

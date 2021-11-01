@@ -5,8 +5,8 @@ import java.util.Random;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.core.particles.ParticleTypes;
 
 public class CampfireMovementBehaviour extends MovementBehaviour {
 	@Override

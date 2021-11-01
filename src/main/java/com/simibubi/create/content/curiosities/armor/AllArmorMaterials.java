@@ -5,15 +5,15 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public enum AllArmorMaterials implements IArmorMaterial {
+public enum AllArmorMaterials implements ArmorMaterial {
 
 	COPPER("copper", 7, new int[] { 1, 3, 4, 2 }, 25, AllSoundEvents.COPPER_ARMOR_EQUIP.getMainEvent(), 0.0F, 0.0F,
 		() -> Ingredient.of(AllItems.COPPER_INGOT.get()))
@@ -28,7 +28,7 @@ public enum AllArmorMaterials implements IArmorMaterial {
 	private final SoundEvent soundEvent;
 	private final float toughness;
 	private final float knockbackResistance;
-	private final LazyValue<Ingredient> repairMaterial;
+	private final LazyLoadedValue<Ingredient> repairMaterial;
 
 	private AllArmorMaterials(String p_i231593_3_, int p_i231593_4_, int[] p_i231593_5_, int p_i231593_6_,
 		SoundEvent p_i231593_7_, float p_i231593_8_, float p_i231593_9_, Supplier<Ingredient> p_i231593_10_) {
@@ -39,14 +39,14 @@ public enum AllArmorMaterials implements IArmorMaterial {
 		this.soundEvent = p_i231593_7_;
 		this.toughness = p_i231593_8_;
 		this.knockbackResistance = p_i231593_9_;
-		this.repairMaterial = new LazyValue<>(p_i231593_10_);
+		this.repairMaterial = new LazyLoadedValue<>(p_i231593_10_);
 	}
 
-	public int getDurabilityForSlot(EquipmentSlotType p_200896_1_) {
+	public int getDurabilityForSlot(EquipmentSlot p_200896_1_) {
 		return MAX_DAMAGE_ARRAY[p_200896_1_.getIndex()] * this.maxDamageFactor;
 	}
 
-	public int getDefenseForSlot(EquipmentSlotType p_200902_1_) {
+	public int getDefenseForSlot(EquipmentSlot p_200902_1_) {
 		return this.damageReductionAmountArray[p_200902_1_.getIndex()];
 	}
 

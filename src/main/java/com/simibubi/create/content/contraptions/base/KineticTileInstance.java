@@ -8,8 +8,10 @@ import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+
+import Material;
 
 public abstract class KineticTileInstance<T extends KineticTileEntity> extends TileEntityInstance<T> {
 

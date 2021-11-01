@@ -2,10 +2,30 @@ package com.simibubi.create.content.contraptions;
 
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
+import javanet.minimport com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
+import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerTileEntity;
+import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
+import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.content.contraptions.relays.encased.DirectionalShaftHalvesTileEntity;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
+import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
+import com.simibubi.create.content.contraptions.relays.gearbox.GearboxTileEntity;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.Iterate;
 import java.util.LinkedList;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
-import com.simibubi.create.AllBlocks;
+ecraft.world.level.block.state.properties.BlockStateProperties com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
@@ -54,7 +74,7 @@ public class RotationPropagator {
 		final BlockPos diff = to.getBlockPos()
 			.subtract(from.getBlockPos());
 		final Direction direction = Direction.getNearest(diff.getX(), diff.getY(), diff.getZ());
-		final World world = from.getLevel();
+		final Level world = from.getLevel();
 
 		boolean alignedAxes = true;
 		for (Axis axis : Axis.values())
@@ -204,7 +224,7 @@ public class RotationPropagator {
 	 * @param worldIn
 	 * @param pos
 	 */
-	public static void handleAdded(World worldIn, BlockPos pos, KineticTileEntity addedTE) {
+	public static void handleAdded(Level worldIn, BlockPos pos, KineticTileEntity addedTE) {
 		if (worldIn.isClientSide)
 			return;
 		if (!worldIn.isLoaded(pos))
@@ -219,7 +239,7 @@ public class RotationPropagator {
 	 */
 	private static void propagateNewSource(KineticTileEntity currentTE) {
 		BlockPos pos = currentTE.getBlockPos();
-		World world = currentTE.getLevel();
+		Level world = currentTE.getLevel();
 
 		for (KineticTileEntity neighbourTE : getConnectedNeighbours(currentTE)) {
 			float speedOfCurrent = currentTE.getTheoreticalSpeed();
@@ -304,7 +324,7 @@ public class RotationPropagator {
 	 * @param pos
 	 * @param removedTE
 	 */
-	public static void handleRemoved(World worldIn, BlockPos pos, KineticTileEntity removedTE) {
+	public static void handleRemoved(Level worldIn, BlockPos pos, KineticTileEntity removedTE) {
 		if (worldIn.isClientSide)
 			return;
 		if (removedTE == null)
@@ -316,7 +336,7 @@ public class RotationPropagator {
 			BlockState neighbourState = worldIn.getBlockState(neighbourPos);
 			if (!(neighbourState.getBlock() instanceof IRotate))
 				continue;
-			TileEntity tileEntity = worldIn.getBlockEntity(neighbourPos);
+			BlockEntity tileEntity = worldIn.getBlockEntity(neighbourPos);
 			if (!(tileEntity instanceof KineticTileEntity))
 				continue;
 
@@ -336,7 +356,7 @@ public class RotationPropagator {
 	 * @param updateTE
 	 */
 	private static void propagateMissingSource(KineticTileEntity updateTE) {
-		final World world = updateTE.getLevel();
+		final Level world = updateTE.getLevel();
 
 		List<KineticTileEntity> potentialNewSources = new LinkedList<>();
 		List<BlockPos> frontier = new LinkedList<>();
@@ -345,7 +365,7 @@ public class RotationPropagator {
 
 		while (!frontier.isEmpty()) {
 			final BlockPos pos = frontier.remove(0);
-			TileEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity tileEntity = world.getBlockEntity(pos);
 			if (!(tileEntity instanceof KineticTileEntity))
 				continue;
 			final KineticTileEntity currentTE = (KineticTileEntity) tileEntity;
@@ -387,7 +407,7 @@ public class RotationPropagator {
 			return null;
 		if (!neighbourState.hasTileEntity())
 			return null;
-		TileEntity neighbourTE = currentTE.getLevel()
+		BlockEntity neighbourTE = currentTE.getLevel()
 			.getBlockEntity(neighbourPos);
 		if (!(neighbourTE instanceof KineticTileEntity))
 			return null;

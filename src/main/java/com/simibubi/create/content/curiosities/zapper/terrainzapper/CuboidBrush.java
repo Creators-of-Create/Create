@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class CuboidBrush extends ShapedBrush {
 
@@ -44,7 +44,7 @@ public class CuboidBrush extends ShapedBrush {
 	}
 
 	@Override
-	public BlockPos getOffset(Vector3d ray, Direction face, PlacementOptions option) {
+	public BlockPos getOffset(Vec3 ray, Direction face, PlacementOptions option) {
 		if (option == PlacementOptions.Merged)
 			return BlockPos.ZERO;
 

@@ -6,17 +6,17 @@ import com.simibubi.create.foundation.item.ItemHelper.ExtractionCountMode;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 public class SmartChuteTileEntity extends ChuteTileEntity {
 
 	FilteringBehaviour filtering;
 
-	public SmartChuteTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public SmartChuteTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 

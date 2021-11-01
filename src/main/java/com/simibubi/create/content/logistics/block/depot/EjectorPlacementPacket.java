@@ -5,13 +5,13 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class EjectorPlacementPacket extends SimplePacketBase {
@@ -27,7 +27,7 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 		this.facing = facing;
 	}
 
-	public EjectorPlacementPacket(PacketBuffer buffer) {
+	public EjectorPlacementPacket(FriendlyByteBuf buffer) {
 		h = buffer.readInt();
 		v = buffer.readInt();
 		pos = buffer.readBlockPos();
@@ -35,7 +35,7 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(h);
 		buffer.writeInt(v);
 		buffer.writeBlockPos(pos);
@@ -46,14 +46,14 @@ public class EjectorPlacementPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
+				ServerPlayer player = context.get()
 					.getSender();
 				if (player == null)
 					return;
-				World world = player.level;
+				Level world = player.level;
 				if (world == null || !world.isLoaded(pos))
 					return;
-				TileEntity tileEntity = world.getBlockEntity(pos);
+				BlockEntity tileEntity = world.getBlockEntity(pos);
 				BlockState state = world.getBlockState(pos);
 				if (tileEntity instanceof EjectorTileEntity)
 					((EjectorTileEntity) tileEntity).setTarget(h, v);

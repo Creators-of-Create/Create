@@ -12,19 +12,21 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ShaftBlock extends AbstractShaftBlock {
 
@@ -39,7 +41,7 @@ public class ShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.SIX_VOXEL_POLE.get(state.getValue(AXIS));
 	}
 
@@ -54,10 +56,10 @@ public class ShaftBlock extends AbstractShaftBlock {
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult ray) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult ray) {
 		if (player.isShiftKeyDown() || !player.mayBuild())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		for (EncasedShaftBlock encasedShaft : new EncasedShaftBlock[] { AllBlocks.ANDESITE_ENCASED_SHAFT.get(),
@@ -68,19 +70,19 @@ public class ShaftBlock extends AbstractShaftBlock {
 				continue;
 
 			if (world.isClientSide)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			
 			AllTriggers.triggerFor(AllTriggers.CASING_SHAFT, player);
 			KineticTileEntity.switchToBlockState(world, pos, encasedShaft.defaultBlockState()
 				.setValue(AXIS, state.getValue(AXIS)));
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
 		if (helper.matchesItem(heldItem))
 			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@MethodsReturnNonnullByDefault

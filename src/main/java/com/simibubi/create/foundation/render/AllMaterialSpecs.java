@@ -15,6 +15,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import StructType;
+
 @OnlyIn(Dist.CLIENT)
 public class AllMaterialSpecs {
 	public static void init() {

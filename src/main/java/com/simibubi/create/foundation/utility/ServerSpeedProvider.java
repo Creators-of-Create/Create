@@ -8,7 +8,7 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
@@ -52,10 +52,10 @@ public class ServerSpeedProvider {
 
 		public Packet() {}
 
-		public Packet(PacketBuffer buffer) {}
+		public Packet(FriendlyByteBuf buffer) {}
 
 		@Override
-		public void write(PacketBuffer buffer) {}
+		public void write(FriendlyByteBuf buffer) {}
 
 		@Override
 		public void handle(Supplier<Context> context) {

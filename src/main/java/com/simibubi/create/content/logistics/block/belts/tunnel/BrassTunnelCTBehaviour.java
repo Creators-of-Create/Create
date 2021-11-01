@@ -4,11 +4,13 @@ import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+
+import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.CTContext;
 
 public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 
@@ -18,14 +20,14 @@ public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 	}
 
 	@Override
-	public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
+	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 		int yDiff = otherPos.getY() - pos.getY();
 		int zDiff = otherPos.getZ() - pos.getZ();
 		if (yDiff != 0)
 			return false;
 
-		TileEntity te = reader.getBlockEntity(pos);
+		BlockEntity te = reader.getBlockEntity(pos);
 		if (!(te instanceof BrassTunnelTileEntity))
 			return false;
 		BrassTunnelTileEntity tunnelTE = (BrassTunnelTileEntity) te;
@@ -34,7 +36,7 @@ public class BrassTunnelCTBehaviour extends ConnectedTextureBehaviour {
 	}
 
 	@Override
-	public CTContext buildContext(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
+	public CTContext buildContext(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
 		return super.buildContext(reader, pos, state, face);
 	}
 

@@ -23,18 +23,18 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.BeehiveBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.BeehiveBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -108,10 +108,10 @@ public class PipeScenes {
 		scene.world.restoreBlocks(util.select.position(1, 1, 2));
 		scene.idle(40);
 
-		Vector3d center = util.vector.centerOf(2, 1, 2);
-		AxisAlignedBB bb = new AxisAlignedBB(center, center).inflate(1 / 6f);
-		AxisAlignedBB bb1 = bb.move(-0.5, 0, 0);
-		AxisAlignedBB bb2 = bb.move(0, 0, -0.5);
+		Vec3 center = util.vector.centerOf(2, 1, 2);
+		AABB bb = new AABB(center, center).inflate(1 / 6f);
+		AABB bb1 = bb.move(-0.5, 0, 0);
+		AABB bb2 = bb.move(0, 0, -0.5);
 
 		scene.world.showSection(strayPipes, Direction.DOWN);
 		scene.idle(10);
@@ -508,7 +508,7 @@ public class PipeScenes {
 		scene.world.destroyBlock(smartPos);
 		scene.world.restoreBlocks(util.select.position(smartPos));
 
-		Vector3d filterVec = util.vector.topOf(smartPos)
+		Vec3 filterVec = util.vector.topOf(smartPos)
 			.subtract(0.25, 0, 0);
 		scene.overlay.showText(50)
 			.placeNearTarget()

@@ -7,25 +7,27 @@ import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 
@@ -39,7 +41,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
+	public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
 		return false;
 	}
 
@@ -54,7 +56,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Axis placedAxis = context.getNearestLookingDirection()
 			.getAxis();
 		Axis axis = context.getPlayer() != null && context.getPlayer()
@@ -75,7 +77,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction face, BlockState neighbour, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction face, BlockState neighbour, LevelAccessor worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 		Part part = stateIn.getValue(PART);
 		Axis axis = stateIn.getValue(AXIS);
@@ -134,7 +136,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
+	public BlockState updateAfterWrenched(BlockState newState, UseOnContext context) {
 //		Blocks.AIR.getDefaultState()
 //			.updateNeighbors(context.getWorld(), context.getPos(), 1);
 		Axis axis = newState.getValue(AXIS);
@@ -155,7 +157,7 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(AXIS);
 	}
 
@@ -200,11 +202,11 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.ENCASED_SHAFT.create();
 	}
 
-	public enum Part implements IStringSerializable {
+	public enum Part implements StringRepresentable {
 		START, MIDDLE, END, NONE;
 
 		@Override

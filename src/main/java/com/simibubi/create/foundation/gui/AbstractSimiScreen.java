@@ -3,15 +3,15 @@ package com.simibubi.create.foundation.gui;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,15 +21,15 @@ public abstract class AbstractSimiScreen extends Screen {
 	protected int windowWidth, windowHeight;
 	protected int windowXOffset, windowYOffset;
 	protected int guiLeft, guiTop;
-	protected List<Widget> widgets;
+	protected List<AbstractWidget> widgets;
 
-	protected AbstractSimiScreen(ITextComponent title) {
+	protected AbstractSimiScreen(Component title) {
 		super(title);
 		widgets = new ArrayList<>();
 	}
 
 	protected AbstractSimiScreen() {
-		this(new StringTextComponent(""));
+		this(new TextComponent(""));
 	}
 
 	protected void setWindowSize(int width, int height) {
@@ -59,7 +59,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = partialTicks == 10 ? 0
 				: Minecraft.getInstance()
 				.getFrameTime();
@@ -70,7 +70,7 @@ public abstract class AbstractSimiScreen extends Screen {
 
 		renderWindowBackground(ms, mouseX, mouseY, partialTicks);
 		renderWindow(ms, mouseX, mouseY, partialTicks);
-		for (Widget widget : widgets)
+		for (AbstractWidget widget : widgets)
 			widget.render(ms, mouseX, mouseY, partialTicks);
 		renderWindowForeground(ms, mouseX, mouseY, partialTicks);
 
@@ -85,14 +85,14 @@ public abstract class AbstractSimiScreen extends Screen {
 	protected void endFrame() {
 	}
 
-	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		renderBackground(ms);
 	}
 
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		boolean result = false;
-		for (Widget widget : widgets)
+		for (AbstractWidget widget : widgets)
 			if (widget.mouseClicked(x, y, button))
 				result = true;
 
@@ -104,14 +104,14 @@ public abstract class AbstractSimiScreen extends Screen {
 
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-		for (Widget widget : widgets)
+		for (AbstractWidget widget : widgets)
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
 
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
-		InputMappings.Input mouseKey = InputMappings.getKey(code, p_keyPressed_2_);
+		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
 		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
 			this.onClose();
 			return true;
@@ -121,7 +121,7 @@ public abstract class AbstractSimiScreen extends Screen {
 
 	@Override
 	public boolean charTyped(char character, int code) {
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.charTyped(character, code))
 				return true;
 		}
@@ -130,7 +130,7 @@ public abstract class AbstractSimiScreen extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.mouseScrolled(mouseX, mouseY, delta))
 				return true;
 		}
@@ -140,7 +140,7 @@ public abstract class AbstractSimiScreen extends Screen {
 	@Override
 	public boolean mouseReleased(double x, double y, int button) {
 		boolean result = false;
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.mouseReleased(x, y, button))
 				result = true;
 		}
@@ -157,10 +157,10 @@ public abstract class AbstractSimiScreen extends Screen {
 		return false;
 	}
 
-	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
+	protected abstract void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks);
 
-	protected void renderWindowForeground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		for (Widget widget : widgets) {
+	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+		for (AbstractWidget widget : widgets) {
 			if (!widget.isHovered())
 				continue;
 
@@ -175,11 +175,11 @@ public abstract class AbstractSimiScreen extends Screen {
 	}
 
 	@Deprecated
-	protected void debugWindowArea(MatrixStack matrixStack) {
+	protected void debugWindowArea(PoseStack matrixStack) {
 		fill(matrixStack, guiLeft + windowWidth, guiTop + windowHeight, guiLeft, guiTop, 0xD3D3D3D3);
 	}
 	
-	public List<Widget> getWidgets() {
+	public List<AbstractWidget> getWidgets() {
 		return widgets;
 	}
 

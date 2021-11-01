@@ -9,11 +9,11 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
 
 public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IInstanceRendered {
 
@@ -21,19 +21,19 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	int lastChange;
 	InterpolatedChasingValue clientState = new InterpolatedChasingValue().withSpeed(.2f);
 
-	public AnalogLeverTileEntity(TileEntityType<? extends AnalogLeverTileEntity> type) {
+	public AnalogLeverTileEntity(BlockEntityType<? extends AnalogLeverTileEntity> type) {
 		super(type);
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("State", state);
 		compound.putInt("ChangeTimer", lastChange);
 		super.write(compound, clientPacket);
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		lastChange = compound.getInt("ChangeTimer");
 		clientState.target(state);
@@ -69,14 +69,14 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	public void changeState(boolean back) {
 		int prevState = state;
 		state += back ? -1 : 1;
-		state = MathHelper.clamp(state, 0, 15);
+		state = Mth.clamp(state, 0, 15);
 		if (prevState != state)
 			lastChange = 15;
 		sendData();
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("tooltip.analogStrength", this.state)));
 
 		return true;

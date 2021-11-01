@@ -5,15 +5,17 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SpoutBlock extends Block implements IWrenchable {
 
@@ -27,13 +29,13 @@ public class SpoutBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.SPOUT;
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.SPOUT.create();
 	}
 
@@ -43,12 +45,12 @@ public class SpoutBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return ComparatorUtil.levelOfSmartFluidTank(worldIn, pos);
 	}
 	
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

@@ -2,7 +2,7 @@ package com.simibubi.create.content.contraptions.processing;
 
 import com.simibubi.create.foundation.item.SmartInventory;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BasinInventory extends SmartInventory {

@@ -5,27 +5,29 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.UseAction;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
+
+import net.minecraft.world.item.Item.Properties;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -36,27 +38,27 @@ public class SandPaperItem extends Item {
 	}
 
 	@Override
-	public UseAction getUseAnimation(ItemStack stack) {
-		return UseAction.EAT;
+	public UseAnim getUseAnimation(ItemStack stack) {
+		return UseAnim.EAT;
 	}
 
 	@Override
-	public ActionResultType useOn(ItemUseContext context) {
-		return ActionResultType.PASS;
+	public InteractionResult useOn(UseOnContext context) {
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
-		ActionResult<ItemStack> FAIL = new ActionResult<>(ActionResultType.FAIL, itemstack);
+		InteractionResultHolder<ItemStack> FAIL = new InteractionResultHolder<>(InteractionResult.FAIL, itemstack);
 
 		if (itemstack.getOrCreateTag()
 			.contains("Polishing")) {
 			playerIn.startUsingItem(handIn);
-			return new ActionResult<>(ActionResultType.PASS, itemstack);
+			return new InteractionResultHolder<>(InteractionResult.PASS, itemstack);
 		}
 
-		Hand otherHand = handIn == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
+		InteractionHand otherHand = handIn == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
 		ItemStack itemInOtherHand = playerIn.getItemInHand(otherHand);
 		if (SandPaperPolishingRecipe.canPolish(worldIn, itemInOtherHand)) {
 			ItemStack item = itemInOtherHand.copy();
@@ -65,16 +67,16 @@ public class SandPaperItem extends Item {
 			itemstack.getOrCreateTag()
 				.put("Polishing", toPolish.serializeNBT());
 			playerIn.setItemInHand(otherHand, item);
-			return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+			return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 		}
 
-		RayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
-		if (!(raytraceresult instanceof BlockRayTraceResult))
+		HitResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, ClipContext.Fluid.NONE);
+		if (!(raytraceresult instanceof BlockHitResult))
 			return FAIL;
-		BlockRayTraceResult ray = (BlockRayTraceResult) raytraceresult;
-		Vector3d hitVec = ray.getLocation();
+		BlockHitResult ray = (BlockHitResult) raytraceresult;
+		Vec3 hitVec = ray.getLocation();
 
-		AxisAlignedBB bb = new AxisAlignedBB(hitVec, hitVec).inflate(1f);
+		AABB bb = new AABB(hitVec, hitVec).inflate(1f);
 		ItemEntity pickUp = null;
 		for (ItemEntity itemEntity : worldIn.getEntitiesOfClass(ItemEntity.class, bb)) {
 			if (!itemEntity.isAlive())
@@ -107,7 +109,7 @@ public class SandPaperItem extends Item {
 				pickUp.setItem(item);
 		}
 
-		return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}
 
 	@Override
@@ -121,11 +123,11 @@ public class SandPaperItem extends Item {
 	}
 
 	@Override
-	public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-		if (!(entityLiving instanceof PlayerEntity))
+	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+		if (!(entityLiving instanceof Player))
 			return stack;
-		PlayerEntity player = (PlayerEntity) entityLiving;
-		CompoundNBT tag = stack.getOrCreateTag();
+		Player player = (Player) entityLiving;
+		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
 			ItemStack polished =
@@ -153,20 +155,20 @@ public class SandPaperItem extends Item {
 		return stack;
 	}
 
-	public static void spawnParticles(Vector3d location, ItemStack polishedStack, World world) {
+	public static void spawnParticles(Vec3 location, ItemStack polishedStack, Level world) {
 		for (int i = 0; i < 20; i++) {
-			Vector3d motion = VecHelper.offsetRandomly(Vector3d.ZERO, world.random, 1 / 8f);
-			world.addParticle(new ItemParticleData(ParticleTypes.ITEM, polishedStack), location.x, location.y,
+			Vec3 motion = VecHelper.offsetRandomly(Vec3.ZERO, world.random, 1 / 8f);
+			world.addParticle(new ItemParticleOption(ParticleTypes.ITEM, polishedStack), location.x, location.y,
 				location.z, motion.x, motion.y, motion.z);
 		}
 	}
 
 	@Override
-	public void releaseUsing(ItemStack stack, World worldIn, LivingEntity entityLiving, int timeLeft) {
-		if (!(entityLiving instanceof PlayerEntity))
+	public void releaseUsing(ItemStack stack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
+		if (!(entityLiving instanceof Player))
 			return;
-		PlayerEntity player = (PlayerEntity) entityLiving;
-		CompoundNBT tag = stack.getOrCreateTag();
+		Player player = (Player) entityLiving;
+		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
 			player.inventory.placeItemBackInInventory(worldIn, toPolish);

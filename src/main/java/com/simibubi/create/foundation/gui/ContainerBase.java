@@ -1,31 +1,31 @@
 package com.simibubi.create.foundation.gui;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class ContainerBase<T> extends Container {
+public abstract class ContainerBase<T> extends AbstractContainerMenu {
 
-	public PlayerEntity player;
-	public PlayerInventory playerInventory;
+	public Player player;
+	public Inventory playerInventory;
 	public T contentHolder;
 
-	protected ContainerBase(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	protected ContainerBase(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id);
 		init(inv, createOnClient(extraData));
 	}
 
-	protected ContainerBase(ContainerType<?> type, int id, PlayerInventory inv, T contentHolder) {
+	protected ContainerBase(MenuType<?> type, int id, Inventory inv, T contentHolder) {
 		super(type, id);
 		init(inv, contentHolder);
 	}
 
-	protected void init(PlayerInventory inv, T contentHolderIn) {
+	protected void init(Inventory inv, T contentHolderIn) {
 		player = inv.player;
 		playerInventory = inv;
 		contentHolder = contentHolderIn;
@@ -35,7 +35,7 @@ public abstract class ContainerBase<T> extends Container {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	protected abstract T createOnClient(PacketBuffer extraData);
+	protected abstract T createOnClient(FriendlyByteBuf extraData);
 
 	protected abstract void addSlots();
 
@@ -52,13 +52,13 @@ public abstract class ContainerBase<T> extends Container {
 	}
 
 	@Override
-	public void removed(PlayerEntity playerIn) {
+	public void removed(Player playerIn) {
 		super.removed(playerIn);
 		saveData(contentHolder);
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		if (contentHolder == null)
 			return false;
 		if (contentHolder instanceof IInteractionChecker)

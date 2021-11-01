@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public interface IRedstoneLinkable {
 

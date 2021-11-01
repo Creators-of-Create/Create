@@ -7,13 +7,13 @@ import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltFunnelInteractionHandler {
@@ -23,13 +23,13 @@ public class BeltFunnelInteractionHandler {
 		boolean beltMovementPositive = beltInventory.beltMovementPositive;
 		int firstUpcomingSegment = (int) Math.floor(currentItem.beltPosition);
 		int step = beltMovementPositive ? 1 : -1;
-		firstUpcomingSegment = MathHelper.clamp(firstUpcomingSegment, 0, beltInventory.belt.beltLength - 1);
+		firstUpcomingSegment = Mth.clamp(firstUpcomingSegment, 0, beltInventory.belt.beltLength - 1);
 
 		for (int segment = firstUpcomingSegment; beltMovementPositive ? segment <= nextOffset
 			: segment + 1 >= nextOffset; segment += step) {
 			BlockPos funnelPos = BeltHelper.getPositionForOffset(beltInventory.belt, segment)
 				.above();
-			World world = beltInventory.belt.getLevel();
+			Level world = beltInventory.belt.getLevel();
 			BlockState funnelState = world.getBlockState(funnelPos);
 			if (!(funnelState.getBlock() instanceof BeltFunnelBlock))
 				continue;
@@ -58,7 +58,7 @@ public class BeltFunnelInteractionHandler {
 				else
 					continue;
 
-			TileEntity te = world.getBlockEntity(funnelPos);
+			BlockEntity te = world.getBlockEntity(funnelPos);
 			if (!(te instanceof FunnelTileEntity))
 				return true;
 

@@ -5,21 +5,21 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FallingBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.FallingBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 
@@ -32,7 +32,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		World world = context.world;
+		Level world = context.world;
 		BlockState stateVisited = world.getBlockState(pos);
 
 		if (!stateVisited.isRedstoneConductor(world, pos))
@@ -42,31 +42,31 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		if (!canBreak(world, pos, stateVisited))
 			return;
 
-		context.data.put("BreakingPos", NBTUtil.writeBlockPos(pos));
+		context.data.put("BreakingPos", NbtUtils.writeBlockPos(pos));
 		context.stall = true;
 	}
 
-	public void damageEntities(MovementContext context, BlockPos pos, World world) {
+	public void damageEntities(MovementContext context, BlockPos pos, Level world) {
 		DamageSource damageSource = getDamageSource();
 		if (damageSource == null && !throwsEntities())
 			return;
-		Entities: for (Entity entity : world.getEntitiesOfClass(Entity.class, new AxisAlignedBB(pos))) {
+		Entities: for (Entity entity : world.getEntitiesOfClass(Entity.class, new AABB(pos))) {
 			if (entity instanceof ItemEntity)
 				continue;
 			if (entity instanceof AbstractContraptionEntity)
 				continue;
-			if (entity instanceof AbstractMinecartEntity)
+			if (entity instanceof AbstractMinecart)
 				for (Entity passenger : entity.getIndirectPassengers())
 					if (passenger instanceof AbstractContraptionEntity
 							&& ((AbstractContraptionEntity) passenger).getContraption() == context.contraption)
 						continue Entities;
 
 			if (damageSource != null && !world.isClientSide) {
-				float damage = (float) MathHelper.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
+				float damage = (float) Mth.clamp(6 * Math.pow(context.relativeMotion.length(), 0.4) + 1, 2, 10);
 				entity.hurt(damageSource, damage);
 			}
-			if (throwsEntities() && (world.isClientSide == (entity instanceof PlayerEntity))) {
-				Vector3d motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
+			if (throwsEntities() && (world.isClientSide == (entity instanceof Player))) {
+				Vec3 motionBoost = context.motion.add(0, context.motion.length() / 4f, 0);
 				int maxBoost = 4;
 				if (motionBoost.length() > maxBoost) {
 					motionBoost = motionBoost.subtract(motionBoost.normalize().scale(motionBoost.length() - maxBoost));
@@ -87,15 +87,15 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void stopMoving(MovementContext context) {
-		CompoundNBT data = context.data;
+		CompoundTag data = context.data;
 		if (context.world.isClientSide)
 			return;
 		if (!data.contains("BreakingPos"))
 			return;
 
-		World world = context.world;
+		Level world = context.world;
 		int id = data.getInt("BreakerId");
-		BlockPos breakingPos = NBTUtil.readBlockPos(data.getCompound("BreakingPos"));
+		BlockPos breakingPos = NbtUtils.readBlockPos(data.getCompound("BreakingPos"));
 
 		data.remove("Progress");
 		data.remove("TicksUntilNextProgress");
@@ -109,7 +109,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 	public void tick(MovementContext context) {
 		tickBreaker(context);
 
-		CompoundNBT data = context.data;
+		CompoundTag data = context.data;
 		if (!data.contains("WaitingTicks"))
 			return;
 
@@ -120,7 +120,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			return;
 		}
 
-		BlockPos pos = NBTUtil.readBlockPos(data.getCompound("LastPos"));
+		BlockPos pos = NbtUtils.readBlockPos(data.getCompound("LastPos"));
 		data.remove("WaitingTicks");
 		data.remove("LastPos");
 		context.stall = false;
@@ -128,12 +128,12 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 	}
 
 	public void tickBreaker(MovementContext context) {
-		CompoundNBT data = context.data;
+		CompoundTag data = context.data;
 		if (context.world.isClientSide)
 			return;
 		if (!data.contains("BreakingPos"))
 			return;
-		if (context.relativeMotion.equals(Vector3d.ZERO)) {
+		if (context.relativeMotion.equals(Vec3.ZERO)) {
 			context.stall = false;
 			return;
 		}
@@ -144,8 +144,8 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			return;
 		}
 
-		World world = context.world;
-		BlockPos breakingPos = NBTUtil.readBlockPos(data.getCompound("BreakingPos"));
+		Level world = context.world;
+		BlockPos breakingPos = NbtUtils.readBlockPos(data.getCompound("BreakingPos"));
 		int destroyProgress = data.getInt("Progress");
 		int id = data.getInt("BreakerId");
 		BlockState stateToBreak = world.getBlockState(breakingPos);
@@ -163,9 +163,9 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 			return;
 		}
 
-		float breakSpeed = MathHelper.clamp(Math.abs(context.getAnimationSpeed()) / 500f, 1 / 128f, 16f);
-		destroyProgress += MathHelper.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
-		world.playSound(null, breakingPos, stateToBreak.getSoundType().getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
+		float breakSpeed = Mth.clamp(Math.abs(context.getAnimationSpeed()) / 500f, 1 / 128f, 16f);
+		destroyProgress += Mth.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
+		world.playSound(null, breakingPos, stateToBreak.getSoundType().getHitSound(), SoundSource.NEUTRAL, .25f, 1);
 
 		if (destroyProgress >= 10) {
 			world.destroyBlockProgress(id, breakingPos, -1);
@@ -200,7 +200,7 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		return true;
 	}
 
-	public boolean canBreak(World world, BlockPos breakingPos, BlockState state) {
+	public boolean canBreak(Level world, BlockPos breakingPos, BlockState state) {
 		float blockHardness = state.getDestroySpeed(world, breakingPos);
 		return BlockBreakingKineticTileEntity.isBreakable(state, blockHardness);
 	}
@@ -210,9 +210,9 @@ public class BlockBreakingMovementBehaviour extends MovementBehaviour {
 		if (!(brokenState.getBlock() instanceof FallingBlock))
 			return;
 
-		CompoundNBT data = context.data;
+		CompoundTag data = context.data;
 		data.putInt("WaitingTicks", 10);
-		data.put("LastPos", NBTUtil.writeBlockPos(pos));
+		data.put("LastPos", NbtUtils.writeBlockPos(pos));
 		context.stall = true;
 	}
 

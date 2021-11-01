@@ -8,14 +8,16 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class CubeParticleData implements IParticleData, ICustomParticleData<CubeParticleData> {
+import net.minecraft.core.particles.ParticleOptions.Deserializer;
+
+public class CubeParticleData implements ParticleOptions, ICustomParticleData<CubeParticleData> {
 
 	public static final Codec<CubeParticleData> CODEC = RecordCodecBuilder.create(i -> 
 		i.group(
@@ -27,7 +29,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 			Codec.BOOL.fieldOf("hot").forGetter(p -> p.hot))
 		.apply(i, CubeParticleData::new));
 
-	public static final IParticleData.IDeserializer<CubeParticleData> DESERIALIZER = new IParticleData.IDeserializer<CubeParticleData>() {
+	public static final ParticleOptions.Deserializer<CubeParticleData> DESERIALIZER = new ParticleOptions.Deserializer<CubeParticleData>() {
 		@Override
 		public CubeParticleData fromCommand(ParticleType<CubeParticleData> type, StringReader reader) throws CommandSyntaxException {
 			reader.expect(' ');
@@ -46,7 +48,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 		}
 
 		@Override
-		public CubeParticleData fromNetwork(ParticleType<CubeParticleData> type, PacketBuffer buffer) {
+		public CubeParticleData fromNetwork(ParticleType<CubeParticleData> type, FriendlyByteBuf buffer) {
 			return new CubeParticleData(buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat(), buffer.readInt(), buffer.readBoolean());
 		}
 	};
@@ -72,7 +74,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 	}
 
 	@Override
-	public IDeserializer<CubeParticleData> getDeserializer() {
+	public Deserializer<CubeParticleData> getDeserializer() {
 		return DESERIALIZER;
 	}
 
@@ -83,7 +85,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleFactory<CubeParticleData> getFactory() {
+	public ParticleProvider<CubeParticleData> getFactory() {
 		return new CubeParticle.Factory();
 	}
 
@@ -93,7 +95,7 @@ public class CubeParticleData implements IParticleData, ICustomParticleData<Cube
 	}
 
 	@Override
-	public void writeToNetwork(PacketBuffer buffer) {
+	public void writeToNetwork(FriendlyByteBuf buffer) {
 		buffer.writeFloat(r);
 		buffer.writeFloat(g);
 		buffer.writeFloat(b);

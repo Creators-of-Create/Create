@@ -2,8 +2,21 @@ package com.simibubi.create.content.contraptions.components.crank;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
+import com.net.minimport com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+
+ecraft.world.level.block.state.properties.BlockStatePropertiesfozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -19,12 +32,12 @@ import net.minecraft.util.Direction;
 
 public class HandCrankRenderer extends KineticTileEntityRenderer {
 
-	public HandCrankRenderer(TileEntityRendererDispatcher dispatcher) {
+	public HandCrankRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 

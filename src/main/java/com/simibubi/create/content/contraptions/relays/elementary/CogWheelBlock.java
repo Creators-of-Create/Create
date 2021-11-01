@@ -9,19 +9,21 @@ import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerB
 import com.simibubi.create.foundation.utility.Iterate;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -53,16 +55,16 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return (isLarge ? AllShapes.LARGE_GEAR : AllShapes.SMALL_GEAR).get(state.getValue(AXIS));
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		return isValidCogwheelPosition(ICogWheel.isLargeCog(state), worldIn, pos, state.getValue(AXIS));
 	}
 
-	public static boolean isValidCogwheelPosition(boolean large, IWorldReader worldIn, BlockPos pos, Axis cogAxis) {
+	public static boolean isValidCogwheelPosition(boolean large, LevelReader worldIn, BlockPos pos, Axis cogAxis) {
 		for (Direction facing : Iterate.directions) {
 			if (facing.getAxis() == cogAxis)
 				continue;
@@ -78,11 +80,11 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 		return true;
 	}
 
-	protected Axis getAxisForPlacement(BlockItemUseContext context) {
+	protected Axis getAxisForPlacement(BlockPlaceContext context) {
 		if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown())
 			return context.getClickedFace().getAxis();
 
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockState stateBelow = world.getBlockState(context.getClickedPos().below());
 
 		if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLargeCog())
@@ -100,7 +102,7 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		boolean shouldWaterlog = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
 		return this.defaultBlockState()
 			.setValue(AXIS, getAxisForPlacement(context))

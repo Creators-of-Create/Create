@@ -10,19 +10,19 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends ForgeRegistryEntry<IRecipeSerializer<?>>
-	implements IRecipeSerializer<T> {
+public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends ForgeRegistryEntry<RecipeSerializer<?>>
+	implements RecipeSerializer<T> {
 
 	private final ProcessingRecipeFactory<T> factory;
 
@@ -65,16 +65,16 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		NonNullList<ProcessingOutput> results = NonNullList.create();
 		NonNullList<FluidStack> fluidResults = NonNullList.create();
 
-		for (JsonElement je : JSONUtils.getAsJsonArray(json, "ingredients")) {
+		for (JsonElement je : GsonHelper.getAsJsonArray(json, "ingredients")) {
 			if (FluidIngredient.isFluidIngredient(je))
 				fluidIngredients.add(FluidIngredient.deserialize(je));
 			else
 				ingredients.add(Ingredient.fromJson(je));
 		}
 
-		for (JsonElement je : JSONUtils.getAsJsonArray(json, "results")) {
+		for (JsonElement je : GsonHelper.getAsJsonArray(json, "results")) {
 			JsonObject jsonObject = je.getAsJsonObject();
-			if (JSONUtils.isValidNode(jsonObject, "fluid"))
+			if (GsonHelper.isValidNode(jsonObject, "fluid"))
 				fluidResults.add(FluidHelper.deserializeFluidStack(jsonObject));
 			else
 				results.add(ProcessingOutput.deserialize(je));
@@ -85,17 +85,17 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 			.withFluidIngredients(fluidIngredients)
 			.withFluidOutputs(fluidResults);
 
-		if (JSONUtils.isValidNode(json, "processingTime"))
-			builder.duration(JSONUtils.getAsInt(json, "processingTime"));
-		if (JSONUtils.isValidNode(json, "heatRequirement"))
-			builder.requiresHeat(HeatCondition.deserialize(JSONUtils.getAsString(json, "heatRequirement")));
+		if (GsonHelper.isValidNode(json, "processingTime"))
+			builder.duration(GsonHelper.getAsInt(json, "processingTime"));
+		if (GsonHelper.isValidNode(json, "heatRequirement"))
+			builder.requiresHeat(HeatCondition.deserialize(GsonHelper.getAsString(json, "heatRequirement")));
 
 		T recipe = builder.build();
 		recipe.readAdditional(json);
 		return recipe;
 	}
 
-	protected void writeToBuffer(PacketBuffer buffer, T recipe) {
+	protected void writeToBuffer(FriendlyByteBuf buffer, T recipe) {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		NonNullList<FluidIngredient> fluidIngredients = recipe.getFluidIngredients();
 		NonNullList<ProcessingOutput> outputs = recipe.getRollableResults();
@@ -118,7 +118,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		recipe.writeAdditional(buffer);
 	}
 
-	protected T readFromBuffer(ResourceLocation recipeId, PacketBuffer buffer) {
+	protected T readFromBuffer(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		NonNullList<Ingredient> ingredients = NonNullList.create();
 		NonNullList<FluidIngredient> fluidIngredients = NonNullList.create();
 		NonNullList<ProcessingOutput> results = NonNullList.create();
@@ -161,12 +161,12 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 	}
 
 	@Override
-	public final void toNetwork(PacketBuffer buffer, T recipe) {
+	public final void toNetwork(FriendlyByteBuf buffer, T recipe) {
 		writeToBuffer(buffer, recipe);
 	}
 
 	@Override
-	public final T fromNetwork(ResourceLocation id, PacketBuffer buffer) {
+	public final T fromNetwork(ResourceLocation id, FriendlyByteBuf buffer) {
 		return readFromBuffer(id, buffer);
 	}
 

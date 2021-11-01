@@ -2,9 +2,30 @@ package com.simibubi.create.content.contraptions.components.structureMovement.be
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
+import javanet.minimport com.simibubi.create.AllSoundEvents;
+import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
+import com.simibubi.create.content.contraptions.components.structureMovement.ControlledContraptionEntity;
+import com.simibubi.create.content.contraptions.components.structureMovement.IControlContraption.RotationMode;
+import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
+import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.item.TooltipHelper;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
+import com.simibubi.create.foundation.utility.AngleHelper;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
-import com.simibubi.create.AllSoundEvents;
+ecraft.world.level.block.state.properties.BlockStatePropertiesvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -40,7 +61,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 	private float prevAngle;
 
-	public MechanicalBearingTileEntity(TileEntityType<? extends MechanicalBearingTileEntity> type) {
+	public MechanicalBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
 		super(type);
 		setLazyTickRate(3);
 	}
@@ -67,7 +88,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("Angle", angle);
 		AssemblyException.write(compound, lastException);
@@ -75,7 +96,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		if (wasMoved) {
 			super.fromTag(state, compound, clientPacket);
 			return;
@@ -98,10 +119,10 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
 		if (isVirtual())
-			return MathHelper.lerp(partialTicks + .5f, prevAngle, angle);
+			return Mth.lerp(partialTicks + .5f, prevAngle, angle);
 		if (movedContraption == null || movedContraption.isStalled() || !running)
 			partialTicks = 0;
-		return MathHelper.lerp(partialTicks, angle, angle + getAngularSpeed());
+		return Mth.lerp(partialTicks, angle, angle + getAngularSpeed());
 	}
 
 	@Override
@@ -300,7 +321,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	public boolean addToTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		if (super.addToTooltip(tooltip, isPlayerSneaking))
 			return true;
 		if (isPlayerSneaking)

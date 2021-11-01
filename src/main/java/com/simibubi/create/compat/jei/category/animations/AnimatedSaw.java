@@ -1,18 +1,18 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.saw.SawBlock;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import com.mojang.math.Vector3f;
 
 public class AnimatedSaw extends AnimatedKinetics {
 
 	@Override
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
 		matrixStack.translate(0, 0, 200);

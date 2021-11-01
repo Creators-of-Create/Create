@@ -9,21 +9,21 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.command.arguments.ResourceLocationArgument;
-import net.minecraft.command.arguments.SuggestionProviders;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.synchronization.SuggestionProviders;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class PonderCommand {
-	public static final SuggestionProvider<CommandSource> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> ISuggestionProvider.suggestResource(PonderRegistry.ALL.keySet().stream(), builder));
+	public static final SuggestionProvider<CommandSourceStack> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> SharedSuggestionProvider.suggestResource(PonderRegistry.ALL.keySet().stream(), builder));
 
-	static ArgumentBuilder<CommandSource, ?> register() {
+	static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("ponder")
 				.requires(cs -> cs.hasPermission(0))
 				.executes(ctx -> openScene("index", ctx.getSource().getPlayerOrException()))
@@ -38,12 +38,12 @@ public class PonderCommand {
 
 	}
 
-	private static int openScene(String sceneId, ServerPlayerEntity player) {
+	private static int openScene(String sceneId, ServerPlayer player) {
 		return openScene(sceneId, ImmutableList.of(player));
 	}
 
-	private static int openScene(String sceneId, Collection<? extends ServerPlayerEntity> players) {
-		for (ServerPlayerEntity player : players) {
+	private static int openScene(String sceneId, Collection<? extends ServerPlayer> players) {
+		for (ServerPlayer player : players) {
 			if (player instanceof FakePlayer)
 				continue;
 

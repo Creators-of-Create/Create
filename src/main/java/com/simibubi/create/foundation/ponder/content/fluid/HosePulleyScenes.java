@@ -13,12 +13,12 @@ import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -44,7 +44,7 @@ public class HosePulleyScenes {
 		scene.world.moveSection(hoselink, util.vector.of(0, -1, 0), 0);
 		scene.idle(10);
 
-		Vector3d shaftInput = util.vector.blockSurface(hosePos.below(), Direction.WEST);
+		Vec3 shaftInput = util.vector.blockSurface(hosePos.below(), Direction.WEST);
 		scene.overlay.showText(70)
 			.text("Hose Pulleys can be used to fill or drain large bodies of Fluid")
 			.attachKeyFrame()
@@ -226,9 +226,9 @@ public class HosePulleyScenes {
 				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
-		Vector3d surface = util.vector.topOf(1, 3, 1)
+		Vec3 surface = util.vector.topOf(1, 3, 1)
 			.subtract(0, 2 / 8f, 0);
-		AxisAlignedBB bb = new AxisAlignedBB(surface, surface).inflate(1.5, 0, 1.5);
+		AABB bb = new AABB(surface, surface).inflate(1.5, 0, 1.5);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb, 3);
 		scene.idle(3);
 		scene.overlay.chaseBoundingBoxOutline(PonderPalette.MEDIUM, bb, bb.expandTowards(0, -2, 0), 70);
@@ -324,7 +324,7 @@ public class HosePulleyScenes {
 		scene.world.setKineticSpeed(hose, 32);
 		scene.idle(10);
 
-		Vector3d entryPoint = util.vector.topOf(1, 0, 2);
+		Vec3 entryPoint = util.vector.topOf(1, 0, 2);
 		scene.overlay.showText(60)
 			.text("When deploying the Hose Pulley into a large enough ocean...")
 			.attachKeyFrame()

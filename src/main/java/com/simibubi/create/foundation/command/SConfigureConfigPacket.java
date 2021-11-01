@@ -18,14 +18,14 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderIndexScreen;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeConfig;
@@ -43,13 +43,13 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		this.value = value;
 	}
 
-	public SConfigureConfigPacket(PacketBuffer buffer) {
+	public SConfigureConfigPacket(FriendlyByteBuf buffer) {
 		this.option = buffer.readUtf(32767);
 		this.value = buffer.readUtf(32767);
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeUtf(option);
 		buffer.writeUtf(value);
 	}
@@ -77,7 +77,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	private static void trySetConfig(String option, String value) {
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return;
 
@@ -85,7 +85,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		try {
 			configPath = ConfigHelper.ConfigPath.parse(option);
 		} catch (IllegalArgumentException e) {
-			player.displayClientMessage(new StringTextComponent(e.getMessage()), false);
+			player.displayClientMessage(new TextComponent(e.getMessage()), false);
 			return;
 		}
 
@@ -96,11 +96,11 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		try {
 			ConfigHelper.setConfigValue(configPath, value);
-			player.displayClientMessage(new StringTextComponent("Great Success!"), false);
+			player.displayClientMessage(new TextComponent("Great Success!"), false);
 		} catch (ConfigHelper.InvalidValueException e) {
-			player.displayClientMessage(new StringTextComponent("Config could not be set the the specified value!"), false);
+			player.displayClientMessage(new TextComponent("Config could not be set the the specified value!"), false);
 		} catch (Exception e) {
-			player.displayClientMessage(new StringTextComponent("Something went wrong while trying to set config value. Check the client logs for more information"), false);
+			player.displayClientMessage(new TextComponent("Something went wrong while trying to set config value. Check the client logs for more information"), false);
 			Create.LOGGER.warn("Exception during client-side config value set:", e);
 		}
 
@@ -135,38 +135,38 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 				return;
 			}
 
-			ClientPlayerEntity player = Minecraft.getInstance().player;
+			LocalPlayer player = Minecraft.getInstance().player;
 			ConfigHelper.ConfigPath configPath;
 			try {
 				 configPath = ConfigHelper.ConfigPath.parse(value);
 			} catch (IllegalArgumentException e) {
-				player.displayClientMessage(new StringTextComponent(e.getMessage()), false);
+				player.displayClientMessage(new TextComponent(e.getMessage()), false);
 				return;
 			}
 
 			try {
 				ScreenOpener.open(SubMenuConfigScreen.find(configPath));
 			} catch (Exception e) {
-				player.displayClientMessage(new StringTextComponent("Unable to find the specified config"), false);
+				player.displayClientMessage(new TextComponent("Unable to find the specified config"), false);
 			}
 		}
 
 		@OnlyIn(Dist.CLIENT)
 		private static void rainbowDebug(String value) {
-			ClientPlayerEntity player = Minecraft.getInstance().player;
+			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null || "".equals(value))
 				return;
 
 			if (value.equals("info")) {
-				ITextComponent text = new StringTextComponent("Rainbow Debug Utility is currently: ")
+				Component text = new TextComponent("Rainbow Debug Utility is currently: ")
 					.append(boolToText(AllConfigs.CLIENT.rainbowDebug.get()));
 				player.displayClientMessage(text, false);
 				return;
 			}
 
 			AllConfigs.CLIENT.rainbowDebug.set(Boolean.parseBoolean(value));
-			ITextComponent text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
-				.append(new StringTextComponent(" Rainbow Debug Utility").withStyle(TextFormatting.WHITE));
+			Component text = boolToText(AllConfigs.CLIENT.rainbowDebug.get())
+				.append(new TextComponent(" Rainbow Debug Utility").withStyle(ChatFormatting.WHITE));
 			player.displayClientMessage(text, false);
 		}
 
@@ -208,13 +208,13 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 		private static void fabulousWarning(String value) {
 			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
 			Minecraft.getInstance().gui.handleChat(ChatType.CHAT,
-				new StringTextComponent("Disabled Fabulous graphics warning"),
+				new TextComponent("Disabled Fabulous graphics warning"),
 				Minecraft.getInstance().player.getUUID());
 		}
 
-		private static IFormattableTextComponent boolToText(boolean b) {
-			return b ? new StringTextComponent("enabled").withStyle(TextFormatting.DARK_GREEN)
-				: new StringTextComponent("disabled").withStyle(TextFormatting.RED);
+		private static MutableComponent boolToText(boolean b) {
+			return b ? new TextComponent("enabled").withStyle(ChatFormatting.DARK_GREEN)
+				: new TextComponent("disabled").withStyle(ChatFormatting.RED);
 		}
 	}
 }

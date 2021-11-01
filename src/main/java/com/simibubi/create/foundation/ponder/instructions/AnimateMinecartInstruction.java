@@ -6,22 +6,22 @@ import java.util.function.Function;
 import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.elements.MinecartElement;
 
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public class AnimateMinecartInstruction extends AnimateElementInstruction<MinecartElement> {
 
 	public static AnimateMinecartInstruction rotate(ElementLink<MinecartElement> link, float rotation, int ticks) {
-		return new AnimateMinecartInstruction(link, new Vector3d(0, rotation, 0), ticks,
+		return new AnimateMinecartInstruction(link, new Vec3(0, rotation, 0), ticks,
 			(wse, v) -> wse.setRotation((float) v.y, ticks == 0), MinecartElement::getRotation);
 	}
 
-	public static AnimateMinecartInstruction move(ElementLink<MinecartElement> link, Vector3d offset, int ticks) {
+	public static AnimateMinecartInstruction move(ElementLink<MinecartElement> link, Vec3 offset, int ticks) {
 		return new AnimateMinecartInstruction(link, offset, ticks, (wse, v) -> wse.setPositionOffset(v, ticks == 0),
 			MinecartElement::getPositionOffset);
 	}
 
-	protected AnimateMinecartInstruction(ElementLink<MinecartElement> link, Vector3d totalDelta, int ticks,
-		BiConsumer<MinecartElement, Vector3d> setter, Function<MinecartElement, Vector3d> getter) {
+	protected AnimateMinecartInstruction(ElementLink<MinecartElement> link, Vec3 totalDelta, int ticks,
+		BiConsumer<MinecartElement, Vec3> setter, Function<MinecartElement, Vec3> getter) {
 		super(link, totalDelta, ticks, setter, getter);
 	}
 

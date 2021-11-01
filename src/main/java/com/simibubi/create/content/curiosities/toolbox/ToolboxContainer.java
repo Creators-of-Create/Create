@@ -6,41 +6,41 @@ import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.foundation.gui.ContainerBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 
-	public static ToolboxContainer create(int id, PlayerInventory inv, ToolboxTileEntity te) {
+	public static ToolboxContainer create(int id, Inventory inv, ToolboxTileEntity te) {
 		return new ToolboxContainer(AllContainerTypes.TOOLBOX.get(), id, inv, te);
 	}
 
-	public ToolboxContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	public ToolboxContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public ToolboxContainer(ContainerType<?> type, int id, PlayerInventory inv, ToolboxTileEntity te) {
+	public ToolboxContainer(MenuType<?> type, int id, Inventory inv, ToolboxTileEntity te) {
 		super(type, id, inv, te);
 		te.startOpen(player);
 	}
 
 	@Override
-	protected ToolboxTileEntity createOnClient(PacketBuffer extraData) {
+	protected ToolboxTileEntity createOnClient(FriendlyByteBuf extraData) {
 		BlockPos readBlockPos = extraData.readBlockPos();
-		CompoundNBT readNbt = extraData.readNbt();
+		CompoundTag readNbt = extraData.readNbt();
 
-		ClientWorld world = Minecraft.getInstance().level;
-		TileEntity tileEntity = world.getBlockEntity(readBlockPos);
+		ClientLevel world = Minecraft.getInstance().level;
+		BlockEntity tileEntity = world.getBlockEntity(readBlockPos);
 		if (tileEntity instanceof ToolboxTileEntity) {
 			ToolboxTileEntity toolbox = (ToolboxTileEntity) tileEntity;
 			toolbox.handleUpdateTag(toolbox.getBlockState(), readNbt);
@@ -51,7 +51,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity player, int index) {
+	public ItemStack quickMoveStack(Player player, int index) {
 		Slot clickedSlot = getSlot(index);
 		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;
@@ -73,13 +73,13 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 	}
 
 	@Override
-	public ItemStack clicked(int index, int flags, ClickType type, PlayerEntity player) {
+	public ItemStack clicked(int index, int flags, ClickType type, Player player) {
 		int size = contentHolder.inventory.getSlots();
 
 		if (index >= 0 && index < size) {
 
 			ItemStack itemInClickedSlot = getSlot(index).getItem();
-			PlayerInventory playerInv = player.inventory;
+			Inventory playerInv = player.inventory;
 			ItemStack carried = playerInv.getCarried();
 
 			if (type == ClickType.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()
@@ -149,7 +149,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 	}
 
 	@Override
-	public void removed(PlayerEntity playerIn) {
+	public void removed(Player playerIn) {
 		super.removed(playerIn);
 		if (!playerIn.level.isClientSide)
 			contentHolder.stopOpen(playerIn);

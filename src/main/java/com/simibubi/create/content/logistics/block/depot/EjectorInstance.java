@@ -9,7 +9,9 @@ import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
+
+import ModelData;
 
 public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
@@ -32,7 +34,7 @@ public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 	public void beginFrame() {
 		float lidProgress = getLidProgress();
 
-		if (MathHelper.equal(lidProgress, lastProgress)) return;
+		if (Mth.equal(lidProgress, lastProgress)) return;
 
 		pivotPlate(lidProgress);
 		lastProgress = lidProgress;

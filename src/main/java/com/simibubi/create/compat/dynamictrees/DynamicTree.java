@@ -12,11 +12,11 @@ import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class DynamicTree extends AbstractBlockBreakQueue {
 	private BlockPos startCutPos;
@@ -26,7 +26,7 @@ public class DynamicTree extends AbstractBlockBreakQueue {
 	}
 
 	@Override
-	public void destroyBlocks(World world, ItemStack toDamage, @Nullable PlayerEntity playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
+	public void destroyBlocks(Level world, ItemStack toDamage, @Nullable Player playerEntity, BiConsumer<BlockPos, ItemStack> drop) {
 		BranchBlock start = TreeHelper.getBranch(world.getBlockState(startCutPos));
 		if (start == null) //if start is null, it was not a branch
 			start = setBranchToShellMuse(world, world.getBlockState(startCutPos)); //we check for a trunk shell instead

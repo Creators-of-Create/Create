@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.chunk.listener.IChunkStatusListener;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.server.level.progress.ChunkProgressListener;
 
-public class DummyStatusListener implements IChunkStatusListener {
+public class DummyStatusListener implements ChunkProgressListener {
 
 	@Override
 	public void updateSpawnPos(ChunkPos p_219509_1_) {}

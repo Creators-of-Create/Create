@@ -10,14 +10,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import net.minecraft.item.Item;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ResourceLocationException;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IRegistryDelegate;
 
@@ -36,9 +36,9 @@ public class PotatoCannonProjectileType {
 	private boolean sticky = false;
 	private PotatoProjectileRenderMode renderMode = PotatoProjectileRenderMode.Billboard.INSTANCE;
 
-	private Predicate<EntityRayTraceResult> preEntityHit = e -> false; // True if hit should be canceled
-	private Predicate<EntityRayTraceResult> onEntityHit = e -> false; // True if shouldn't recover projectile
-	private BiPredicate<IWorld, BlockRayTraceResult> onBlockHit = (w, ray) -> false;
+	private Predicate<EntityHitResult> preEntityHit = e -> false; // True if hit should be canceled
+	private Predicate<EntityHitResult> onEntityHit = e -> false; // True if shouldn't recover projectile
+	private BiPredicate<LevelAccessor, BlockHitResult> onBlockHit = (w, ray) -> false;
 
 	protected PotatoCannonProjectileType() {
 	}
@@ -87,15 +87,15 @@ public class PotatoCannonProjectileType {
 		return renderMode;
 	}
 
-	public boolean preEntityHit(EntityRayTraceResult ray) {
+	public boolean preEntityHit(EntityHitResult ray) {
 		return preEntityHit.test(ray);
 	}
 	
-	public boolean onEntityHit(EntityRayTraceResult ray) {
+	public boolean onEntityHit(EntityHitResult ray) {
 		return onEntityHit.test(ray);
 	}
 
-	public boolean onBlockHit(IWorld world, BlockRayTraceResult ray) {
+	public boolean onBlockHit(LevelAccessor world, BlockHitResult ray) {
 		return onBlockHit.test(world, ray);
 	}
 
@@ -146,7 +146,7 @@ public class PotatoCannonProjectileType {
 		}
 	}
 
-	public static void toBuffer(PotatoCannonProjectileType type, PacketBuffer buffer) {
+	public static void toBuffer(PotatoCannonProjectileType type, FriendlyByteBuf buffer) {
 		buffer.writeVarInt(type.items.size());
 		for (IRegistryDelegate<Item> delegate : type.items) {
 			buffer.writeResourceLocation(delegate.name());
@@ -162,7 +162,7 @@ public class PotatoCannonProjectileType {
 		buffer.writeBoolean(type.sticky);
 	}
 
-	public static PotatoCannonProjectileType fromBuffer(PacketBuffer buffer) {
+	public static PotatoCannonProjectileType fromBuffer(FriendlyByteBuf buffer) {
 		PotatoCannonProjectileType type = new PotatoCannonProjectileType();
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++) {
@@ -258,23 +258,23 @@ public class PotatoCannonProjectileType {
 			return this;
 		}
 
-		public Builder preEntityHit(Predicate<EntityRayTraceResult> callback) {
+		public Builder preEntityHit(Predicate<EntityHitResult> callback) {
 			result.preEntityHit = callback;
 			return this;
 		}
 
-		public Builder onEntityHit(Predicate<EntityRayTraceResult> callback) {
+		public Builder onEntityHit(Predicate<EntityHitResult> callback) {
 			result.onEntityHit = callback;
 			return this;
 		}
 
-		public Builder onBlockHit(BiPredicate<IWorld, BlockRayTraceResult> callback) {
+		public Builder onBlockHit(BiPredicate<LevelAccessor, BlockHitResult> callback) {
 			result.onBlockHit = callback;
 			return this;
 		}
 
-		public Builder addItems(IItemProvider... items) {
-			for (IItemProvider provider : items)
+		public Builder addItems(ItemLike... items) {
+			for (ItemLike provider : items)
 				result.items.add(provider.asItem().delegate);
 			return this;
 		}
@@ -284,7 +284,7 @@ public class PotatoCannonProjectileType {
 			return result;
 		}
 
-		public PotatoCannonProjectileType registerAndAssign(IItemProvider... items) {
+		public PotatoCannonProjectileType registerAndAssign(ItemLike... items) {
 			addItems(items);
 			register();
 			return result;

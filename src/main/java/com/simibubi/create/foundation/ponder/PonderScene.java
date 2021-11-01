@@ -19,7 +19,7 @@ import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
@@ -35,24 +35,24 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.util.math.vector.Vector4f;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import com.mojang.math.Matrix4f;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
+import com.mojang.math.Vector4f;
 
 public class PonderScene {
 
@@ -78,8 +78,8 @@ public class PonderScene {
 	Outliner outliner;
 	String defaultTitle;
 
-	Vector3d pointOfInterest;
-	Vector3d chasingPointOfInterest;
+	Vec3 pointOfInterest;
+	Vec3 chasingPointOfInterest;
 	WorldSectionElement baseWorldSection;
 	@Nullable
 	Entity renderViewEntity;
@@ -98,7 +98,7 @@ public class PonderScene {
 		if (world != null)
 			world.scene = this;
 
-		pointOfInterest = Vector3d.ZERO;
+		pointOfInterest = Vec3.ZERO;
 		textIndex = 1;
 
 		this.world = world;
@@ -115,19 +115,19 @@ public class PonderScene {
 		basePlateSize = getBounds().getXSpan();
 		info = new SceneRenderInfo();
 		baseWorldSection = new WorldSectionElement();
-		renderViewEntity = world != null ? new ArmorStandEntity(world, 0, 0, 0) : null;
+		renderViewEntity = world != null ? new ArmorStand(world, 0, 0, 0) : null;
 		keyframeTimes = new IntArrayList(4);
 		scaleFactor = 1;
 		yOffset = 0;
 
-		setPointOfInterest(new Vector3d(0, 4, 0));
+		setPointOfInterest(new Vec3(0, 4, 0));
 	}
 
 	public void deselect() {
 		forEach(WorldSectionElement.class, WorldSectionElement::resetSelectedBlock);
 	}
 
-	public Pair<ItemStack, BlockPos> rayTraceScene(Vector3d from, Vector3d to) {
+	public Pair<ItemStack, BlockPos> rayTraceScene(Vec3 from, Vec3 to) {
 		MutableObject<Pair<WorldSectionElement, BlockPos>> nearestHit = new MutableObject<>();
 		MutableDouble bestDistance = new MutableDouble(0);
 
@@ -135,7 +135,7 @@ public class PonderScene {
 			wse.resetSelectedBlock();
 			if (!wse.isVisible())
 				return;
-			Pair<Vector3d, BlockPos> rayTrace = wse.rayTrace(world, from, to);
+			Pair<Vec3, BlockPos> rayTrace = wse.rayTrace(world, from, to);
 			if (rayTrace == null)
 				return;
 			double distanceTo = rayTrace.getFirst()
@@ -157,7 +157,7 @@ public class PonderScene {
 		if (!world.getBounds()
 			.isInside(selectedPos))
 			return Pair.of(ItemStack.EMPTY, null);
-		if (new MutableBoundingBox(origin, origin.offset(new Vector3i(basePlateSize - 1, 0, basePlateSize - 1)))
+		if (new BoundingBox(origin, origin.offset(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
 			.isInside(selectedPos)) {
 			if (PonderIndex.EDITOR_MODE)
 				nearestHit.getValue()
@@ -171,7 +171,7 @@ public class PonderScene {
 			.selectBlock(selectedPos);
 		BlockState blockState = world.getBlockState(selectedPos);
 		ItemStack pickBlock = blockState.getPickBlock(
-			new BlockRayTraceResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world,
+			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world,
 			selectedPos, Minecraft.getInstance().player);
 
 		return Pair.of(pickBlock, selectedPos);
@@ -202,7 +202,7 @@ public class PonderScene {
 
 		transform = new SceneTransform();
 		finished = false;
-		setPointOfInterest(new Vector3d(0, 4, 0));
+		setPointOfInterest(new Vec3(0, 4, 0));
 
 		baseWorldSection.setEmpty();
 		baseWorldSection.forceApplyFade(1);
@@ -227,7 +227,7 @@ public class PonderScene {
 		activeSchedule.add(new HideAllInstruction(10, null));
 	}
 
-	public void renderScene(SuperRenderTypeBuffer buffer, MatrixStack ms, float pt) {
+	public void renderScene(SuperRenderTypeBuffer buffer, PoseStack ms, float pt) {
 		ms.pushPose();
 		Minecraft mc = Minecraft.getInstance();
 		Entity prevRVE = mc.cameraEntity;
@@ -248,19 +248,19 @@ public class PonderScene {
 		ms.popPose();
 	}
 
-	public void renderOverlay(PonderUI screen, MatrixStack ms, float partialTicks) {
+	public void renderOverlay(PonderUI screen, PoseStack ms, float partialTicks) {
 		ms.pushPose();
 		forEachVisible(PonderOverlayElement.class, e -> e.render(this, screen, ms, partialTicks));
 		ms.popPose();
 	}
 
-	public void setPointOfInterest(Vector3d poi) {
+	public void setPointOfInterest(Vec3 poi) {
 		if (chasingPointOfInterest == null)
 			pointOfInterest = poi;
 		chasingPointOfInterest = poi;
 	}
 
-	public Vector3d getPointOfInterest() {
+	public Vec3 getPointOfInterest() {
 		return pointOfInterest;
 	}
 
@@ -377,8 +377,8 @@ public class PonderScene {
 				function.accept(type.cast(element));
 	}
 
-	public MutableBoundingBox getBounds() {
-		return world == null ? new MutableBoundingBox() : world.getBounds();
+	public BoundingBox getBounds() {
+		return world == null ? new BoundingBox() : world.getBounds();
 	}
 
 	public Supplier<String> registerText(String defaultText) {
@@ -449,11 +449,11 @@ public class PonderScene {
 			cachedMat = null;
 		}
 
-		public MatrixStack apply(MatrixStack ms) {
+		public PoseStack apply(PoseStack ms) {
 			return apply(ms, AnimationTickHolder.getPartialTicks(world), false);
 		}
 
-		public MatrixStack apply(MatrixStack ms, float pt, boolean overlayCompatible) {
+		public PoseStack apply(PoseStack ms, float pt, boolean overlayCompatible) {
 			ms.translate(width / 2, height / 2, 200 + offset);
 
 			MatrixTransformStack.of(ms)
@@ -488,14 +488,14 @@ public class PonderScene {
 		}
 
 		public void updateSceneRVE(float pt) {
-			Vector3d v = screenToScene(width / 2, height / 2, 500, pt);
+			Vec3 v = screenToScene(width / 2, height / 2, 500, pt);
 			if (renderViewEntity != null)
 				renderViewEntity.setPos(v.x, v.y, v.z);
 		}
 
-		public Vector3d screenToScene(double x, double y, int depth, float pt) {
+		public Vec3 screenToScene(double x, double y, int depth, float pt) {
 			refreshMatrix(pt);
-			Vector3d vec = new Vector3d(x, y, depth);
+			Vec3 vec = new Vec3(x, y, depth);
 
 			vec = vec.subtract(width / 2, height / 2, 200 + offset);
 			vec = VecHelper.rotate(vec, 35, Axis.X);
@@ -515,23 +515,23 @@ public class PonderScene {
 			return vec;
 		}
 
-		public Vector2f sceneToScreen(Vector3d vec, float pt) {
+		public Vec2 sceneToScreen(Vec3 vec, float pt) {
 			refreshMatrix(pt);
 			Vector4f vec4 = new Vector4f((float) vec.x, (float) vec.y, (float) vec.z, 1);
 			vec4.transform(cachedMat);
-			return new Vector2f(vec4.x(), vec4.y());
+			return new Vec2(vec4.x(), vec4.y());
 		}
 
 		protected void refreshMatrix(float pt) {
 			if (cachedMat != null)
 				return;
-			cachedMat = apply(new MatrixStack(), pt, false).last()
+			cachedMat = apply(new PoseStack(), pt, false).last()
 				.pose();
 		}
 
 	}
 
-	public class SceneRenderInfo extends ActiveRenderInfo {
+	public class SceneRenderInfo extends Camera {
 
 		public void set(float xRotation, float yRotation) {
 			setRotation(yRotation, xRotation);

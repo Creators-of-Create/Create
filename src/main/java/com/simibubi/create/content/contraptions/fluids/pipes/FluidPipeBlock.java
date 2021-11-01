@@ -16,38 +16,40 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.SixWayBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.network.DebugPacketSender;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.TickPriority;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
-public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWrenchableWithBracket {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class FluidPipeBlock extends PipeBlock implements SimpleWaterloggedBlock, IWrenchableWithBracket {
 
 	public FluidPipeBlock(Properties properties) {
 		super(4 / 16f, properties);
@@ -55,24 +57,24 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (tryRemoveBracket(context))
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		Direction clickedFace = context.getClickedFace();
 
 		Axis axis = getAxis(world, pos, state);
 		if (axis == null) {
-			Vector3d clickLocation = context.getClickLocation()
+			Vec3 clickLocation = context.getClickLocation()
 				.subtract(pos.getX(), pos.getY(), pos.getZ());
 			double closest = Float.MAX_VALUE;
 			Direction argClosest = Direction.UP;
 			for (Direction direction : Iterate.directions) {
 				if (clickedFace.getAxis() == direction.getAxis())
 					continue;
-				Vector3d centerOf = Vector3d.atCenterOf(direction.getNormal());
+				Vec3 centerOf = Vec3.atCenterOf(direction.getNormal());
 				double distance = centerOf.distanceToSqr(clickLocation);
 				if (distance < closest) {
 					closest = distance;
@@ -83,7 +85,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		}
 
 		if (clickedFace.getAxis() == axis)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (!world.isClientSide) {
 			FluidTransportBehaviour.cacheFlows(world, pos);
 			world.setBlockAndUpdate(pos, AllBlocks.GLASS_FLUID_PIPE.getDefaultState()
@@ -91,14 +93,14 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 				.setValue(BlockStateProperties.WATERLOGGED, state.getValue(BlockStateProperties.WATERLOGGED)));
 			FluidTransportBehaviour.loadFlows(world, pos);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult hit) {
 		if (!AllBlocks.COPPER_CASING.isIn(player.getItemInHand(hand)))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		AllTriggers.triggerFor(AllTriggers.CASING_PIPE, player);
 		if (!world.isClientSide) {
 			FluidTransportBehaviour.cacheFlows(world, pos);
@@ -106,7 +108,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 				EncasedPipeBlock.transferSixWayProperties(state, AllBlocks.ENCASED_FLUID_PIPE.getDefaultState()));
 			FluidTransportBehaviour.loadFlows(world, pos);
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public BlockState getAxisState(Axis axis) {
@@ -117,7 +119,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Nullable
-	private Axis getAxis(IBlockReader world, BlockPos pos, BlockState state) {
+	private Axis getAxis(BlockGetter world, BlockPos pos, BlockState state) {
 		return FluidPropagator.getStraightPipeAxis(state);
 	}
 
@@ -127,12 +129,12 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.FLUID_PIPE.create();
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
@@ -143,7 +145,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (world.isClientSide)
 			return;
 		if (state != oldState)
@@ -152,9 +154,9 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
+		DebugPackets.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -165,7 +167,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
@@ -173,7 +175,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return state.getBlock() instanceof FluidPipeBlock;
 	}
 
-	public static boolean canConnectTo(IBlockDisplayReader world, BlockPos neighbourPos, BlockState neighbour,
+	public static boolean canConnectTo(BlockAndTintGetter world, BlockPos neighbourPos, BlockState neighbour,
 		Direction direction) {
 		if (FluidPropagator.hasFluidCapability(world, neighbourPos, direction.getOpposite()))
 			return true;
@@ -190,7 +192,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return transport.canHaveFlowToward(neighbour, direction.getOpposite());
 	}
 
-	public static boolean shouldDrawRim(IBlockDisplayReader world, BlockPos pos, BlockState state,
+	public static boolean shouldDrawRim(BlockAndTintGetter world, BlockPos pos, BlockState state,
 		Direction direction) {
 		BlockPos offsetPos = pos.relative(direction);
 		BlockState facingState = world.getBlockState(offsetPos);
@@ -213,12 +215,12 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return state.getValue(PROPERTY_BY_DIRECTION.get(direction));
 	}
 
-	public static boolean isCornerOrEndPipe(IBlockDisplayReader world, BlockPos pos, BlockState state) {
+	public static boolean isCornerOrEndPipe(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		return isPipe(state) && FluidPropagator.getStraightPipeAxis(state) == null
 			&& !shouldDrawCasing(world, pos, state);
 	}
 
-	public static boolean shouldDrawCasing(IBlockDisplayReader world, BlockPos pos, BlockState state) {
+	public static boolean shouldDrawCasing(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		if (!isPipe(state))
 			return false;
 		for (Axis axis : Iterate.axes) {
@@ -239,7 +241,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState FluidState = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		return updateBlockState(defaultBlockState(), context.getNearestLookingDirection(), null, context.getLevel(),
@@ -248,7 +250,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, IWorld world,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
 		BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.getLiquidTicks()
@@ -260,7 +262,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	public BlockState updateBlockState(BlockState state, Direction preferredDirection, @Nullable Direction ignore,
-		IBlockDisplayReader world, BlockPos pos) {
+		BlockAndTintGetter world, BlockPos pos) {
 
 		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (bracket != null && bracket.isBracketPresent())
@@ -309,7 +311,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos, boolean inOnReplacedContext) {
+	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext) {
 		BracketedTileEntityBehaviour behaviour =
 			BracketedTileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
@@ -322,7 +324,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

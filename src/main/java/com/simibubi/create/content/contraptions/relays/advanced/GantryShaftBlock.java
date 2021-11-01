@@ -16,34 +16,36 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 import com.simibubi.create.foundation.utility.placement.util.PoleHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class GantryShaftBlock extends DirectionalKineticBlock {
 
@@ -52,7 +54,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 
 	private static final int placementHelperId = PlacementHelpers.register(new PlacementHelper());
 
-	public enum Part implements IStringSerializable {
+	public enum Part implements StringRepresentable {
 		START, MIDDLE, END, SINGLE;
 
 		@Override
@@ -67,30 +69,30 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult ray) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult ray) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (!placementHelper.matchesItem(heldItem))
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		return placementHelper.getOffset(player, world, state, pos, ray).placeInWorld(world, ((BlockItem) heldItem.getItem()), player, hand, ray);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.EIGHT_VOXEL_POLE.get(state.getValue(FACING)
 			.getAxis());
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state) {
-		return BlockRenderType.ENTITYBLOCK_ANIMATED;
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, IWorld world,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbour, LevelAccessor world,
 		BlockPos pos, BlockPos neighbourPos) {
 		Direction facing = state.getValue(FACING);
 		Axis axis = facing.getAxis();
@@ -135,10 +137,10 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = super.getStateForPlacement(context);
 		BlockPos pos = context.getClickedPos();
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		Direction face = context.getClickedFace();
 
 		BlockState neighbour = world.getBlockState(pos.relative(state.getValue(FACING)
@@ -159,24 +161,24 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		ActionResultType onWrenched = super.onWrenched(state, context);
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		InteractionResult onWrenched = super.onWrenched(state, context);
 		if (onWrenched.consumesAction()) {
 			BlockPos pos = context.getClickedPos();
-			World world = context.getLevel();
+			Level world = context.getLevel();
 			neighborChanged(world.getBlockState(pos), world, pos, state.getBlock(), pos, false);
 		}
 		return onWrenched;
 	}
 
 	@Override
-	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 
 		if (!worldIn.isClientSide() && oldState.getBlock().is(AllBlocks.GANTRY_SHAFT.get())) {
 			Part oldPart = oldState.getValue(PART), part = state.getValue(PART);
 			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
-				TileEntity te = worldIn.getBlockEntity(pos);
+				BlockEntity te = worldIn.getBlockEntity(pos);
 				if (te instanceof GantryShaftTileEntity)
 					((GantryShaftTileEntity) te).checkAttachedCarriageBlocks();
 			}
@@ -184,7 +186,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
 		if (worldIn.isClientSide)
 			return;
@@ -225,7 +227,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		toUpdate.add(pos);
 		for (BlockPos blockPos : toUpdate) {
 			BlockState blockState = worldIn.getBlockState(blockPos);
-			TileEntity te = worldIn.getBlockEntity(blockPos);
+			BlockEntity te = worldIn.getBlockEntity(blockPos);
 			if (te instanceof KineticTileEntity)
 				((KineticTileEntity) te).detachKinetics();
 			if (blockState.getBlock() instanceof GantryShaftBlock)
@@ -233,7 +235,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		}
 	}
 
-	protected boolean shouldBePowered(BlockState state, World worldIn, BlockPos pos) {
+	protected boolean shouldBePowered(BlockState state, Level worldIn, BlockPos pos) {
 		boolean shouldPower = worldIn.hasNeighborSignal(pos);
 
 		Direction facing = state.getValue(FACING);
@@ -253,7 +255,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(FACING)
 			.getAxis();
 	}
@@ -265,7 +267,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.GANTRY_SHAFT.create();
 	}
 
@@ -286,7 +288,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 
@@ -303,7 +305,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
 			offset.withTransform(offset.getTransform().andThen(s -> s.setValue(POWERED, state.getValue(POWERED))));
 			return offset;

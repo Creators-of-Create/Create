@@ -4,6 +4,8 @@ import com.jozufozu.flywheel.light.*;
 
 import net.minecraft.world.LightType;
 
+import GPULightVolume;
+
 public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
     public final GPULightVolume lightVolume;

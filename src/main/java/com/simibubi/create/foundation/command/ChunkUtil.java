@@ -7,18 +7,18 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.server.ChunkHolder;
-import net.minecraft.world.server.ServerChunkProvider;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.server.level.ChunkHolder;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChunkUtil {
 	private static final Logger LOGGER = LogManager.getLogger("Create/ChunkUtil");
-	final EnumSet<Heightmap.Type> POST_FEATURES = EnumSet.of(Heightmap.Type.OCEAN_FLOOR, Heightmap.Type.WORLD_SURFACE,
-		Heightmap.Type.MOTION_BLOCKING, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES);
+	final EnumSet<Heightmap.Types> POST_FEATURES = EnumSet.of(Heightmap.Types.OCEAN_FLOOR, Heightmap.Types.WORLD_SURFACE,
+		Heightmap.Types.MOTION_BLOCKING, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES);
 
 	private final List<Long> markedChunks;
 	private final List<Long> interestingChunks;
@@ -31,7 +31,7 @@ public class ChunkUtil {
 
 	public void init() {
 		ChunkStatus.FULL =
-			new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.Type.LEVELCHUNK,
+			new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.ChunkType.LEVELCHUNK,
 				(_0, _1, _2, _3, _4, future, _6, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
 					if (markedChunks.contains(chunk.getPos()
 						.toLong())) {
@@ -47,7 +47,7 @@ public class ChunkUtil {
 
 	}
 
-	public boolean reloadChunk(ServerChunkProvider provider, ChunkPos pos) {
+	public boolean reloadChunk(ServerChunkCache provider, ChunkPos pos) {
 		ChunkHolder holder = provider.chunkMap.updatingChunkMap.remove(pos.toLong());
 		provider.chunkMap.modified = true;
 		if (holder != null) {
@@ -59,14 +59,14 @@ public class ChunkUtil {
 		}
 	}
 
-	public boolean unloadChunk(ServerChunkProvider provider, ChunkPos pos) {
+	public boolean unloadChunk(ServerChunkCache provider, ChunkPos pos) {
 		this.interestingChunks.add(pos.toLong());
 		this.markedChunks.add(pos.toLong());
 
 		return this.reloadChunk(provider, pos);
 	}
 
-	public int clear(ServerChunkProvider provider) {
+	public int clear(ServerChunkCache provider) {
 		LinkedList<Long> copy = new LinkedList<>(this.markedChunks);
 
 		int size = this.markedChunks.size();
@@ -77,7 +77,7 @@ public class ChunkUtil {
 		return size;
 	}
 
-	public void reForce(ServerChunkProvider provider, ChunkPos pos) {
+	public void reForce(ServerChunkCache provider, ChunkPos pos) {
 		provider.updateChunkForced(pos, true);
 		provider.updateChunkForced(pos, false);
 	}

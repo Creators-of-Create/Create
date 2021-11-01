@@ -3,18 +3,18 @@ package com.simibubi.create.foundation.collision;
 import static java.lang.Math.abs;
 import static java.lang.Math.signum;
 
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public class OBBCollider {
 
-	static final Vector3d uA0 = new Vector3d(1, 0, 0);
-	static final Vector3d uA1 = new Vector3d(0, 1, 0);
-	static final Vector3d uA2 = new Vector3d(0, 0, 1);
+	static final Vec3 uA0 = new Vec3(1, 0, 0);
+	static final Vec3 uA1 = new Vec3(0, 1, 0);
+	static final Vec3 uA2 = new Vec3(0, 0, 1);
 
-	public static Vector3d separateBBs(Vector3d cA, Vector3d cB, Vector3d eA, Vector3d eB, Matrix3d m) {
+	public static Vec3 separateBBs(Vec3 cA, Vec3 cB, Vec3 eA, Vec3 eB, Matrix3d m) {
 		SeparationManifold mf = new SeparationManifold();
 
-		Vector3d t = cB.subtract(cA);
+		Vec3 t = cB.subtract(cA);
 
 		double a00 = abs(m.m00);
 		double a01 = abs(m.m01);
@@ -26,9 +26,9 @@ public class OBBCollider {
 		double a21 = abs(m.m21);
 		double a22 = abs(m.m22);
 
-		Vector3d uB0 = new Vector3d(m.m00, m.m10, m.m20);
-		Vector3d uB1 = new Vector3d(m.m01, m.m11, m.m21);
-		Vector3d uB2 = new Vector3d(m.m02, m.m12, m.m22);
+		Vec3 uB0 = new Vec3(m.m00, m.m10, m.m20);
+		Vec3 uB1 = new Vec3(m.m01, m.m11, m.m21);
+		Vec3 uB2 = new Vec3(m.m02, m.m12, m.m22);
 
 		checkCount = 0;
 
@@ -52,7 +52,7 @@ public class OBBCollider {
 
 	static int checkCount = 0;
 
-	static boolean isSeparatedAlong(SeparationManifold mf, Vector3d axis, double TL, double rA, double rB) {
+	static boolean isSeparatedAlong(SeparationManifold mf, Vec3 axis, double TL, double rA, double rB) {
 		checkCount++;
 		double distance = abs(TL);
 		double diff = distance - (rA + rB);
@@ -72,21 +72,21 @@ public class OBBCollider {
 	}
 
 	static class SeparationManifold {
-		Vector3d axis;
+		Vec3 axis;
 		double separation;
 
 		public SeparationManifold() {
-			axis = Vector3d.ZERO;
+			axis = Vec3.ZERO;
 			separation = Double.MAX_VALUE;
 		}
 
-		public Vector3d asSeparationVec() {
+		public Vec3 asSeparationVec() {
 			double sep = separation;
-			Vector3d axis = this.axis;
+			Vec3 axis = this.axis;
 			return createSeparationVec(sep, axis);
 		}
 
-		protected Vector3d createSeparationVec(double sep, Vector3d axis) {
+		protected Vec3 createSeparationVec(double sep, Vec3 axis) {
 			return axis.normalize()
 				.scale(signum(sep) * (abs(sep) + 1E-4));
 		}

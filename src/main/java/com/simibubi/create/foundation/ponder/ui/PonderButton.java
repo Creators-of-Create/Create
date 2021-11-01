@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.ponder.ui;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.gui.Theme;
@@ -15,15 +15,15 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
 
 public class PonderButton extends BoxWidget {
 
 	protected ItemStack item;
 	protected PonderTag tag;
-	protected KeyBinding shortcut;
+	protected KeyMapping shortcut;
 	protected LerpedFloat flash = LerpedFloat.linear().startWithValue(0).chase(0, 0.1f, LerpedFloat.Chaser.EXP);
 
 	public PonderButton(int x, int y) {
@@ -37,7 +37,7 @@ public class PonderButton extends BoxWidget {
 		paddingY = 2;
 	}
 
-	public <T extends PonderButton> T withShortcut(KeyBinding key) {
+	public <T extends PonderButton> T withShortcut(KeyMapping key) {
 		this.shortcut = key;
 		//noinspection unchecked
 		return (T) this;
@@ -74,22 +74,22 @@ public class PonderButton extends BoxWidget {
 	}
 
 	@Override
-	protected void beforeRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.beforeRender(ms, mouseX, mouseY, partialTicks);
 
 		float flashValue = flash.getValue(partialTicks);
 		if (flashValue > .1f) {
-			float sin = 0.5f + 0.5f * MathHelper.sin((AnimationTickHolder.getTicks(true) + partialTicks) / 5f);
+			float sin = 0.5f + 0.5f * Mth.sin((AnimationTickHolder.getTicks(true) + partialTicks) / 5f);
 			sin *= flashValue;
-			Color nc1 = new Color(255, 255, 255, MathHelper.clamp(gradientColor1.getAlpha() + 150, 0, 255));
-			Color nc2 = new Color(155, 155, 155, MathHelper.clamp(gradientColor2.getAlpha() + 150, 0, 255));
+			Color nc1 = new Color(255, 255, 255, Mth.clamp(gradientColor1.getAlpha() + 150, 0, 255));
+			Color nc2 = new Color(155, 155, 155, Mth.clamp(gradientColor2.getAlpha() + 150, 0, 255));
 			gradientColor1 = gradientColor1.mixWith(nc1, sin);
 			gradientColor2 = gradientColor2.mixWith(nc2, sin);
 		}
 	}
 
 	@Override
-	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderButton(ms, mouseX, mouseY, partialTicks);
 		float fadeValue = fade.getValue();
 

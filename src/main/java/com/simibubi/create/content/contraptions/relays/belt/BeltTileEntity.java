@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import static com.simibubi.create.content.contraptions.relays.belt.BeltPart.MIDDLE;
 import static com.simibubi.create.content.contraptions.relays.belt.BeltSlope.HORIZONTAL;
 import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
+import staticnet.minecraft.core.Direction.AxisDirectionn.POSITIVE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,18 +37,18 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.DyeColor;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.LightType;
@@ -75,7 +75,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 	protected BeltInventory inventory;
 	protected LazyOptional<IItemHandler> itemHandler;
 
-	public CompoundNBT trackerUpdateTag;
+	public CompoundTag trackerUpdateTag;
 
 	// client
 	public byte[] light;
@@ -84,7 +84,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		NONE, ANDESITE, BRASS;
 	}
 
-	public BeltTileEntity(TileEntityType<? extends BeltTileEntity> type) {
+	public BeltTileEntity(BlockEntityType<? extends BeltTileEntity> type) {
 		super(type);
 		controller = BlockPos.ZERO;
 		itemHandler = LazyOptional.empty();

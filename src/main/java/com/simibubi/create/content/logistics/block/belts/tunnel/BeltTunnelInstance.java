@@ -16,8 +16,8 @@ import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.Direction;
-import net.minecraft.world.LightType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.LightLayer;
 
 public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity> implements IDynamicInstance {
 
@@ -32,8 +32,8 @@ public class BeltTunnelInstance extends TileEntityInstance<BeltTunnelTileEntity>
                 .material(AllMaterialSpecs.FLAPS)
 				.getModel(AllBlockPartials.BELT_TUNNEL_FLAP, blockState);
 
-        int blockLight = world.getBrightness(LightType.BLOCK, pos);
-        int skyLight = world.getBrightness(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = world.getBrightness(LightLayer.SKY, pos);
 
         tile.flaps.forEach((direction, flapValue) -> {
 

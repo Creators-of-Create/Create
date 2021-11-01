@@ -12,14 +12,14 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.client.resources.JsonReloadListener;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.IRegistryDelegate;
@@ -75,7 +75,7 @@ public class PotatoProjectileTypeManager {
 		ITEM_TO_TYPE_MAP.remove(AllItems.POTATO_CANNON.get().delegate);
 	}
 
-	public static void toBuffer(PacketBuffer buffer) {
+	public static void toBuffer(FriendlyByteBuf buffer) {
 		buffer.writeVarInt(CUSTOM_TYPE_MAP.size());
 		for (Map.Entry<ResourceLocation, PotatoCannonProjectileType> entry : CUSTOM_TYPE_MAP.entrySet()) {
 			buffer.writeResourceLocation(entry.getKey());
@@ -83,7 +83,7 @@ public class PotatoProjectileTypeManager {
 		}
 	}
 
-	public static void fromBuffer(PacketBuffer buffer) {
+	public static void fromBuffer(FriendlyByteBuf buffer) {
 		clear();
 
 		int size = buffer.readVarInt();
@@ -94,7 +94,7 @@ public class PotatoProjectileTypeManager {
 		fillItemMap();
 	}
 
-	public static void syncTo(ServerPlayerEntity player) {
+	public static void syncTo(ServerPlayer player) {
 		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacket());
 	}
 
@@ -102,7 +102,7 @@ public class PotatoProjectileTypeManager {
 		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SyncPacket());
 	}
 
-	public static class ReloadListener extends JsonReloadListener {
+	public static class ReloadListener extends SimpleJsonResourceReloadListener {
 
 		private static final Gson GSON = new Gson();
 
@@ -113,7 +113,7 @@ public class PotatoProjectileTypeManager {
 		}
 
 		@Override
-		protected void apply(Map<ResourceLocation, JsonElement> map, IResourceManager resourceManager, IProfiler profiler) {
+		protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
 			clear();
 
 			for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
@@ -133,17 +133,17 @@ public class PotatoProjectileTypeManager {
 
 	public static class SyncPacket extends SimplePacketBase {
 
-		private PacketBuffer buffer;
+		private FriendlyByteBuf buffer;
 
 		public SyncPacket() {
 		}
 
-		public SyncPacket(PacketBuffer buffer) {
+		public SyncPacket(FriendlyByteBuf buffer) {
 			this.buffer = buffer;
 		}
 
 		@Override
-		public void write(PacketBuffer buffer) {
+		public void write(FriendlyByteBuf buffer) {
 			toBuffer(buffer);
 		}
 

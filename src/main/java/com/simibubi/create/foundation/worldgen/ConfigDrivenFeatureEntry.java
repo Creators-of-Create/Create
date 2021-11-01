@@ -5,10 +5,13 @@ import java.util.Optional;
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.OreFeatureConfig.FillerBlockType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.Predicates;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import com.simibubi.create.foundation.config.ConfigBase.ConfigFloat;
+import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
@@ -49,7 +52,7 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	private ConfiguredFeature<?, ?> createFeature() {
 		ConfigDrivenOreFeatureConfig config =
-			new ConfigDrivenOreFeatureConfig(FillerBlockType.NATURAL_STONE, block.get()
+			new ConfigDrivenOreFeatureConfig(Predicates.NATURAL_STONE, block.get()
 				.defaultBlockState(), id);
 
 		return ConfigDrivenOreFeature.INSTANCE.configured(config)

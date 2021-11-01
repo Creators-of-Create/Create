@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
@@ -14,10 +14,10 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
 
 public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRecipe> {
 
@@ -56,7 +56,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 	}
 
 	@Override
-	public void draw(SandPaperPolishingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SandPaperPolishingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 28);
 		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 28);
 		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 61, 21);
@@ -69,7 +69,7 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 			return;
 
 
-		CompoundNBT tag = renderedSandpaper.getOrCreateTag();
+		CompoundTag tag = renderedSandpaper.getOrCreateTag();
 		tag.put("Polishing", matchingStacks[0].serializeNBT());
 		tag.putBoolean("JEI", true);
 		GuiGameElement.of(renderedSandpaper)

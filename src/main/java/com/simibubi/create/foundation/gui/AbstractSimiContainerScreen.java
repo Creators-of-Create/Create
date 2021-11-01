@@ -9,36 +9,36 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.Rect2i;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 @ParametersAreNonnullByDefault
-public abstract class AbstractSimiContainerScreen<T extends Container> extends ContainerScreen<T> {
+public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> {
 
-	protected List<Widget> widgets;
+	protected List<AbstractWidget> widgets;
 	protected int windowXOffset;
 	protected int windowYOffset;
 
-	public AbstractSimiContainerScreen(T container, PlayerInventory inv, ITextComponent title) {
+	public AbstractSimiContainerScreen(T container, Inventory inv, Component title) {
 		super(container, inv, title);
 		widgets = new ArrayList<>();
 	}
@@ -61,19 +61,19 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	}
 
 	@Override
-	protected void renderLabels(MatrixStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
+	protected void renderLabels(PoseStack p_230451_1_, int p_230451_2_, int p_230451_3_) {
 		// no-op to prevent screen- and inventory-title from being rendered at incorrect location
 		// could also set this.titleX/Y and this.playerInventoryTitleX/Y to the proper values instead
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		partialTicks = Minecraft.getInstance()
 			.getFrameTime();
 		renderBackground(matrixStack);
 		renderWindow(matrixStack, mouseX, mouseY, partialTicks);
 
-		for (Widget widget : widgets)
+		for (AbstractWidget widget : widgets)
 			widget.render(matrixStack, mouseX, mouseY, partialTicks);
 
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
@@ -81,7 +81,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
 		RenderSystem.disableRescaleNormal();
-		RenderHelper.turnOff();
+		Lighting.turnOff();
 		RenderSystem.disableLighting();
 		RenderSystem.disableDepthTest();
 		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
@@ -90,7 +90,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	@Override
 	public boolean mouseClicked(double x, double y, int button) {
 		boolean result = false;
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.mouseClicked(x, y, button))
 				result = true;
 		}
@@ -99,7 +99,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 				return true;
 		}
@@ -107,7 +107,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		if (super.keyPressed(code, p_keyPressed_2_, p_keyPressed_3_))
 			return true;
 
-		InputMappings.Input mouseKey = InputMappings.getKey(code, p_keyPressed_2_);
+		InputConstants.Key mouseKey = InputConstants.getKey(code, p_keyPressed_2_);
 		if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
 			this.onClose();
 			return true;
@@ -117,7 +117,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 
 	@Override
 	public boolean charTyped(char character, int code) {
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.charTyped(character, code))
 				return true;
 		}
@@ -126,7 +126,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.mouseScrolled(mouseX, mouseY, delta))
 				return true;
 		}
@@ -136,22 +136,22 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	@Override
 	public boolean mouseReleased(double x, double y, int button) {
 		boolean result = false;
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (widget.mouseReleased(x, y, button))
 				result = true;
 		}
 		return result | super.mouseReleased(x, y, button);
 	}
 
-	protected abstract void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks);
+	protected abstract void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks);
 
 	@Override
-	protected void renderBg(MatrixStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
+	protected void renderBg(PoseStack p_230450_1_, float p_230450_2_, int p_230450_3_, int p_230450_4_) {
 	}
 
-	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		renderTooltip(matrixStack, mouseX, mouseY);
-		for (Widget widget : widgets) {
+		for (AbstractWidget widget : widgets) {
 			if (!widget.isHovered())
 				continue;
 
@@ -192,7 +192,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		return (width - textureWidth) / 2;
 	}
 
-	public void renderPlayerInventory(MatrixStack ms, int x, int y) {
+	public void renderPlayerInventory(PoseStack ms, int x, int y) {
 		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, x, y);
 		font.draw(ms, inventory.getDisplayName(), x + 8, y + 6, 0x404040);
 	}
@@ -204,13 +204,13 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	 *
 	 * @return the space that the gui takes up besides the normal rectangle defined by {@link ContainerScreen}.
 	 */
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return Collections.emptyList();
 	}
 
 	// Not up to date with ItemRenderer
 	@Deprecated
-	protected void renderItemOverlayIntoGUI(MatrixStack matrixStack, FontRenderer fr, ItemStack stack, int xPosition,
+	protected void renderItemOverlayIntoGUI(PoseStack matrixStack, Font fr, ItemStack stack, int xPosition,
 		int yPosition, @Nullable String text, int textColor) {
 		if (!stack.isEmpty()) {
 			if (stack.getItem()
@@ -220,7 +220,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 				RenderSystem.disableTexture();
 				RenderSystem.disableAlphaTest();
 				RenderSystem.disableBlend();
-				Tessellator tessellator = Tessellator.getInstance();
+				Tesselator tessellator = Tesselator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuilder();
 				double health = stack.getItem()
 					.getDurabilityForDisplay(stack);
@@ -266,7 +266,7 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 	@Deprecated
 	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
 		int alpha) {
-		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
 		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D)
 			.color(red, green, blue, alpha)
 			.endVertex();
@@ -279,18 +279,18 @@ public abstract class AbstractSimiContainerScreen<T extends Container> extends C
 		renderer.vertex((double) (x + width), (double) (y + 0), 0.0D)
 			.color(red, green, blue, alpha)
 			.endVertex();
-		Tessellator.getInstance()
+		Tesselator.getInstance()
 			.end();
 	}
 
 	@Deprecated
-	protected void debugWindowArea(MatrixStack matrixStack) {
+	protected void debugWindowArea(PoseStack matrixStack) {
 		fill(matrixStack, leftPos + imageWidth, topPos + imageHeight, leftPos, topPos, 0xD3D3D3D3);
 	}
 
 	@Deprecated
-	protected void debugExtraAreas(MatrixStack matrixStack) {
-		for (Rectangle2d area : getExtraAreas()) {
+	protected void debugExtraAreas(PoseStack matrixStack) {
+		for (Rect2i area : getExtraAreas()) {
 			fill(matrixStack, area.getX() + area.getWidth(), area.getY() + area.getHeight(), area.getX(), area.getY(), 0xd3d3d3d3);
 		}
 	}

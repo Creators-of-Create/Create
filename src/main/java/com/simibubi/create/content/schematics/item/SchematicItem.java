@@ -22,33 +22,35 @@ import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTSizeTracker;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class SchematicItem extends Item {
 
@@ -61,11 +63,11 @@ public class SchematicItem extends Item {
 	public static ItemStack create(String schematic, String owner) {
 		ItemStack blueprint = AllItems.SCHEMATIC.asStack();
 
-		CompoundNBT tag = new CompoundNBT();
+		CompoundTag tag = new CompoundTag();
 		tag.putBoolean("Deployed", false);
 		tag.putString("Owner", owner);
 		tag.putString("File", schematic);
-		tag.put("Anchor", NBTUtil.writeBlockPos(BlockPos.ZERO));
+		tag.put("Anchor", NbtUtils.writeBlockPos(BlockPos.ZERO));
 		tag.putString("Rotation", Rotation.NONE.name());
 		tag.putString("Mirror", Mirror.NONE.name());
 		blueprint.setTag(tag);
@@ -75,37 +77,37 @@ public class SchematicItem extends Item {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {}
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {}
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag()) {
 			if (stack.getTag()
 				.contains("File"))
-				tooltip.add(new StringTextComponent(TextFormatting.GOLD + stack.getTag()
+				tooltip.add(new TextComponent(ChatFormatting.GOLD + stack.getTag()
 					.getString("File")));
 		} else {
-			tooltip.add(Lang.translate("schematic.invalid").withStyle(TextFormatting.RED));
+			tooltip.add(Lang.translate("schematic.invalid").withStyle(ChatFormatting.RED));
 		}
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 	}
 
 	public static void writeSize(ItemStack blueprint) {
-		CompoundNBT tag = blueprint.getTag();
-		Template t = loadSchematic(blueprint);
-		tag.put("Bounds", NBTUtil.writeBlockPos(t.getSize()));
+		CompoundTag tag = blueprint.getTag();
+		StructureTemplate t = loadSchematic(blueprint);
+		tag.put("Bounds", NbtUtils.writeBlockPos(t.getSize()));
 		blueprint.setTag(tag);
 		SchematicInstances.clearHash(blueprint);
 	}
 
-	public static PlacementSettings getSettings(ItemStack blueprint) {
+	public static StructurePlaceSettings getSettings(ItemStack blueprint) {
 		return getSettings(blueprint, true);
 	}
 
-	public static PlacementSettings getSettings(ItemStack blueprint, boolean processNBT) {
-		CompoundNBT tag = blueprint.getTag();
-		PlacementSettings settings = new PlacementSettings();
+	public static StructurePlaceSettings getSettings(ItemStack blueprint, boolean processNBT) {
+		CompoundTag tag = blueprint.getTag();
+		StructurePlaceSettings settings = new StructurePlaceSettings();
 		settings.setRotation(Rotation.valueOf(tag.getString("Rotation")));
 		settings.setMirror(Mirror.valueOf(tag.getString("Mirror")));
 		if (processNBT)
@@ -113,8 +115,8 @@ public class SchematicItem extends Item {
 		return settings;
 	}
 
-	public static Template loadSchematic(ItemStack blueprint) {
-		Template t = new Template();
+	public static StructureTemplate loadSchematic(ItemStack blueprint) {
+		StructureTemplate t = new StructureTemplate();
 		String owner = blueprint.getTag()
 			.getString("Owner");
 		String schematic = blueprint.getTag()
@@ -140,7 +142,7 @@ public class SchematicItem extends Item {
 
 		try (DataInputStream stream = new DataInputStream(new BufferedInputStream(
 				new GZIPInputStream(Files.newInputStream(path, StandardOpenOption.READ))))) {
-			CompoundNBT nbt = CompressedStreamTools.read(stream, new NBTSizeTracker(0x20000000L));
+			CompoundTag nbt = NbtIo.read(stream, new NbtAccounter(0x20000000L));
 			t.load(nbt);
 		} catch (IOException e) {
 			LOGGER.warn("Failed to read schematic", e);
@@ -151,21 +153,21 @@ public class SchematicItem extends Item {
 
 	@Nonnull
 	@Override
-	public ActionResultType useOn(ItemUseContext context) {
+	public InteractionResult useOn(UseOnContext context) {
 		if (context.getPlayer() != null && !onItemUse(context.getPlayer(), context.getHand()))
 			return super.useOn(context);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		if (!onItemUse(playerIn, handIn))
 			return super.use(worldIn, playerIn, handIn);
-		return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(handIn));
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
 	}
 
-	private boolean onItemUse(PlayerEntity player, Hand hand) {
-		if (!player.isShiftKeyDown() || hand != Hand.MAIN_HAND)
+	private boolean onItemUse(Player player, InteractionHand hand) {
+		if (!player.isShiftKeyDown() || hand != InteractionHand.MAIN_HAND)
 			return false;
 		if (!player.getItemInHand(hand)
 			.hasTag())

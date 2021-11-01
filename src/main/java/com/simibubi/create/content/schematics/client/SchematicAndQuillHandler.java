@@ -27,25 +27,25 @@ import com.simibubi.create.foundation.utility.RaycastHelper.PredicateTraceResult
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicAndQuillHandler {
 
@@ -63,13 +63,13 @@ public class SchematicAndQuillHandler {
 		if (!AllKeys.ctrlDown())
 			return false;
 		if (secondPos == null)
-			range = (int) MathHelper.clamp(range + delta, 1, 100);
+			range = (int) Mth.clamp(range + delta, 1, 100);
 		if (selectedFace == null)
 			return true;
 
-		AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos);
-		Vector3i vec = selectedFace.getNormal();
-		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
+		AABB bb = new AABB(firstPos, secondPos);
+		Vec3i vec = selectedFace.getNormal();
+		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
 			.getPosition();
 		if (bb.contains(projectedView))
 			delta *= -1;
@@ -85,7 +85,7 @@ public class SchematicAndQuillHandler {
 		double maxX = Math.max(bb.maxX - x * axisDirection.getStep(), bb.minX);
 		double maxY = Math.max(bb.maxY - y * axisDirection.getStep(), bb.minY);
 		double maxZ = Math.max(bb.maxZ - z * axisDirection.getStep(), bb.minZ);
-		bb = new AxisAlignedBB(bb.minX, bb.minY, bb.minZ, maxX, maxY, maxZ);
+		bb = new AABB(bb.minX, bb.minY, bb.minZ, maxX, maxY, maxZ);
 
 		firstPos = new BlockPos(bb.minX, bb.minY, bb.minZ);
 		secondPos = new BlockPos(bb.maxX, bb.maxY, bb.maxZ);
@@ -101,7 +101,7 @@ public class SchematicAndQuillHandler {
 		if (!isActive())
 			return;
 
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 
 		if (player.isShiftKeyDown()) {
 			discard();
@@ -129,7 +129,7 @@ public class SchematicAndQuillHandler {
 	}
 
 	public void discard() {
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		firstPos = null;
 		secondPos = null;
 		Lang.sendStatus(player, "schematicAndQuill.abort");
@@ -139,21 +139,21 @@ public class SchematicAndQuillHandler {
 		if (!isActive())
 			return;
 
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (AllKeys.ACTIVATE_TOOL.isPressed()) {
 			float pt = AnimationTickHolder.getPartialTicks();
-			Vector3d targetVec = player.getEyePosition(pt)
+			Vec3 targetVec = player.getEyePosition(pt)
 				.add(player.getLookAngle()
 					.scale(range));
 			selectedPos = new BlockPos(targetVec);
 
 		} else {
-			BlockRayTraceResult trace = RaycastHelper.rayTraceRange(player.level, player, 75);
+			BlockHitResult trace = RaycastHelper.rayTraceRange(player.level, player, 75);
 			if (trace != null && trace.getType() == Type.BLOCK) {
 
 				BlockPos hit = trace.getBlockPos();
 				boolean replaceable = player.level.getBlockState(hit)
-					.canBeReplaced(new BlockItemUseContext(new ItemUseContext(player, Hand.MAIN_HAND, trace)));
+					.canBeReplaced(new BlockPlaceContext(new UseOnContext(player, InteractionHand.MAIN_HAND, trace)));
 				if (trace.getDirection()
 					.getAxis()
 					.isVertical() && !replaceable)
@@ -165,9 +165,9 @@ public class SchematicAndQuillHandler {
 
 		selectedFace = null;
 		if (secondPos != null) {
-			AxisAlignedBB bb = new AxisAlignedBB(firstPos, secondPos).expandTowards(1, 1, 1)
+			AABB bb = new AABB(firstPos, secondPos).expandTowards(1, 1, 1)
 				.inflate(.45f);
-			Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
+			Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
 				.getPosition();
 			boolean inside = bb.contains(projectedView);
 			PredicateTraceResult result =
@@ -177,7 +177,7 @@ public class SchematicAndQuillHandler {
 					.getOpposite() : result.getFacing();
 		}
 
-		AxisAlignedBB currentSelectionBox = getCurrentSelectionBox();
+		AABB currentSelectionBox = getCurrentSelectionBox();
 		if (currentSelectionBox != null)
 			outliner().chaseAABB(outlineSlot, currentSelectionBox)
 				.colored(0x6886c5)
@@ -186,14 +186,14 @@ public class SchematicAndQuillHandler {
 				.highlightFace(selectedFace);
 	}
 
-	private AxisAlignedBB getCurrentSelectionBox() {
+	private AABB getCurrentSelectionBox() {
 		if (secondPos == null) {
 			if (firstPos == null)
-				return selectedPos == null ? null : new AxisAlignedBB(selectedPos);
-			return selectedPos == null ? new AxisAlignedBB(firstPos)
-				: new AxisAlignedBB(firstPos, selectedPos).expandTowards(1, 1, 1);
+				return selectedPos == null ? null : new AABB(selectedPos);
+			return selectedPos == null ? new AABB(firstPos)
+				: new AABB(firstPos, selectedPos).expandTowards(1, 1, 1);
 		}
-		return new AxisAlignedBB(firstPos, secondPos).expandTowards(1, 1, 1);
+		return new AABB(firstPos, secondPos).expandTowards(1, 1, 1);
 	}
 
 	private boolean isActive() {
@@ -206,8 +206,8 @@ public class SchematicAndQuillHandler {
 	}
 
 	public void saveSchematic(String string, boolean convertImmediately) {
-		Template t = new Template();
-		MutableBoundingBox bb = new MutableBoundingBox(firstPos, secondPos);
+		StructureTemplate t = new StructureTemplate();
+		BoundingBox bb = new BoundingBox(firstPos, secondPos);
 		BlockPos origin = new BlockPos(bb.x0, bb.y0, bb.z0);
 		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());
 
@@ -226,9 +226,9 @@ public class SchematicAndQuillHandler {
 		OutputStream outputStream = null;
 		try {
 			outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE);
-			CompoundNBT nbttagcompound = t.save(new CompoundNBT());
+			CompoundTag nbttagcompound = t.save(new CompoundTag());
 			SchematicAndQuillItem.replaceStructureVoidWithAir(nbttagcompound);
-			CompressedStreamTools.writeCompressed(nbttagcompound, outputStream);
+			NbtIo.writeCompressed(nbttagcompound, outputStream);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

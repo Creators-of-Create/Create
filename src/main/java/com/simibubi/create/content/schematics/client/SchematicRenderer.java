@@ -10,21 +10,21 @@ import java.util.Set;
 import org.lwjgl.opengl.GL11;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.render.TileEntityRenderHelper;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
@@ -68,7 +68,7 @@ public class SchematicRenderer {
 		changed = false;
 	}
 
-	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer) {
 		if (!active)
 			return;
 		buffer.getBuffer(RenderType.solid());
@@ -86,11 +86,11 @@ public class SchematicRenderer {
 		startedBufferBuilders.clear();
 
 		final SchematicWorld blockAccess = schematic;
-		final BlockRendererDispatcher blockRendererDispatcher = minecraft.getBlockRenderer();
+		final BlockRenderDispatcher blockRendererDispatcher = minecraft.getBlockRenderer();
 
 		List<BlockState> blockstates = new LinkedList<>();
 		Map<RenderType, BufferBuilder> buffers = new HashMap<>();
-		MatrixStack ms = new MatrixStack();
+		PoseStack ms = new PoseStack();
 
 		BlockPos.betweenClosedStream(blockAccess.getBounds())
 			.forEach(localPos -> {
@@ -101,17 +101,17 @@ public class SchematicRenderer {
 				BlockState state = blockAccess.getBlockState(pos);
 
 				for (RenderType blockRenderLayer : RenderType.chunkBufferLayers()) {
-					if (!RenderTypeLookup.canRenderInLayer(state, blockRenderLayer))
+					if (!ItemBlockRenderTypes.canRenderInLayer(state, blockRenderLayer))
 						continue;
 					ForgeHooksClient.setRenderLayer(blockRenderLayer);
 					if (!buffers.containsKey(blockRenderLayer))
-						buffers.put(blockRenderLayer, new BufferBuilder(DefaultVertexFormats.BLOCK.getIntegerSize()));
+						buffers.put(blockRenderLayer, new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize()));
 
 					BufferBuilder bufferBuilder = buffers.get(blockRenderLayer);
 					if (startedBufferBuilders.add(blockRenderLayer))
-						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+						bufferBuilder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
 
-					TileEntity tileEntity = blockAccess.getBlockEntity(localPos);
+					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
 
 					if (blockRendererDispatcher.renderModel(state, pos, blockAccess, ms, bufferBuilder, true,
 						minecraft.level.random,

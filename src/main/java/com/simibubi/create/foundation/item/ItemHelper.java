@@ -12,21 +12,21 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ItemHelper {
 
-	public static void dropContents(World world, BlockPos pos, IItemHandler inv) {
+	public static void dropContents(Level world, BlockPos pos, IItemHandler inv) {
 		for (int slot = 0; slot < inv.getSlots(); slot++)
-			InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
+			Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inv.getStackInSlot(slot));
 	}
 
 	public static List<ItemStack> multipliedOutput(ItemStack in, ItemStack out) {
@@ -90,7 +90,7 @@ public class ItemHelper {
 			return 0;
 
 		f = f / totalSlots;
-		return MathHelper.floor(f * 14.0F) + (i > 0 ? 1 : 0);
+		return Mth.floor(f * 14.0F) + (i > 0 ? 1 : 0);
 	}
 
 	public static List<Pair<Ingredient, MutableInt>> condenseIngredients(NonNullList<Ingredient> recipeIngredients) {

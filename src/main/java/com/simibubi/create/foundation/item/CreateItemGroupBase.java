@@ -8,21 +8,21 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.AllSections;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public abstract class CreateItemGroupBase extends ItemGroup {
+public abstract class CreateItemGroupBase extends CreativeModeTab {
 
 	public CreateItemGroupBase(String id) {
 		super(getGroupCountSafe(), Create.ID + "." + id);
@@ -50,14 +50,14 @@ public abstract class CreateItemGroupBase extends ItemGroup {
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
 		Minecraft mc = Minecraft.getInstance();
 		ItemRenderer itemRenderer = mc.getItemRenderer();
-		ClientWorld world = mc.level;
+		ClientLevel world = mc.level;
 
 		for (RegistryEntry<? extends Item> entry : getItems()) {
 			Item item = entry.get();
 			if (item instanceof BlockItem)
 				continue;
 			ItemStack stack = new ItemStack(item);
-			IBakedModel model = itemRenderer.getModel(stack, world, null);
+			BakedModel model = itemRenderer.getModel(stack, world, null);
 			if (model.isGui3d() != specialItems)
 				continue;
 			item.fillItemCategory(this, items);

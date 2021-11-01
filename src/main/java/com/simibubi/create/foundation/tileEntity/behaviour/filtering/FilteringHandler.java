@@ -12,21 +12,21 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -40,10 +40,10 @@ public class FilteringHandler {
 
 	@SubscribeEvent
 	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
-		PlayerEntity player = event.getPlayer();
-		Hand hand = event.getHand();
+		Player player = event.getPlayer();
+		InteractionHand hand = event.getHand();
 
 		if (player.isShiftKeyDown() || player.isSpectator())
 			return;
@@ -52,7 +52,7 @@ public class FilteringHandler {
 		if (behaviour == null)
 			return;
 
-		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
+		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
 			return;
 		if (behaviour instanceof SidedFilteringBehaviour) {
@@ -98,25 +98,25 @@ public class FilteringHandler {
 			String translationKey = world.getBlockState(pos)
 				.getBlock()
 				.getDescriptionId();
-			ITextComponent formattedText = new TranslationTextComponent(translationKey);
+			Component formattedText = new TranslatableComponent(translationKey);
 			player.displayClientMessage(Lang.createTranslationTextComponent("logistics.filter." + feedback, formattedText)
-				.withStyle(TextFormatting.WHITE), true);
+				.withStyle(ChatFormatting.WHITE), true);
 		}
 
 		event.setCanceled(true);
-		event.setCancellationResult(ActionResultType.SUCCESS);
-		world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
+		event.setCancellationResult(InteractionResult.SUCCESS);
+		world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
-		RayTraceResult objectMouseOver = Minecraft.getInstance().hitResult;
-		if (!(objectMouseOver instanceof BlockRayTraceResult))
+		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
+		if (!(objectMouseOver instanceof BlockHitResult))
 			return false;
 
-		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
+		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.level;
+		ClientLevel world = mc.level;
 		BlockPos blockPos = result.getBlockPos();
 
 		FilteringBehaviour filtering = TileEntityBehaviour.get(world, blockPos, FilteringBehaviour.TYPE);
@@ -140,11 +140,11 @@ public class FilteringHandler {
 		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
 		int prev = filtering.scrollableValue;
 		filtering.scrollableValue =
-			(int) MathHelper.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
+			(int) Mth.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
 		
 		if (prev != filtering.scrollableValue) {
 			float pitch = (filtering.scrollableValue) / (float) (maxAmount);
-			pitch = MathHelper.lerp(pitch, 1.5f, 2f);
+			pitch = Mth.lerp(pitch, 1.5f, 2f);
 			AllSoundEvents.SCROLL_VALUE.play(world, mc.player, blockPos, 1, pitch);
 		}
 

@@ -2,15 +2,17 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Rotation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.Rotation;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class RotatedPillarKineticBlock extends KineticBlock {
 
@@ -40,7 +42,7 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 		}
 	}
 
-	public static Axis getPreferredAxis(BlockItemUseContext context) {
+	public static Axis getPreferredAxis(BlockPlaceContext context) {
 		Axis prefferedAxis = null;
 		for (Direction side : Iterate.directions) {
 			BlockState blockState = context.getLevel()
@@ -61,12 +63,12 @@ public abstract class RotatedPillarKineticBlock extends KineticBlock {
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(AXIS);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Axis preferredAxis = getPreferredAxis(context);
 		if (preferredAxis != null && (context.getPlayer() == null || !context.getPlayer()
 			.isShiftKeyDown()))

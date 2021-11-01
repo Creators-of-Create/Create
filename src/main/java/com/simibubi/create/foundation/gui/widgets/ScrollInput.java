@@ -7,18 +7,18 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 
 public class ScrollInput extends AbstractSimiWidget {
 
 	protected Consumer<Integer> onScroll;
 	protected int state;
-	protected ITextComponent title = Lang.translate("gui.scrollInput.defaultTitle");
-	protected final ITextComponent scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
-	protected final ITextComponent shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
+	protected Component title = Lang.translate("gui.scrollInput.defaultTitle");
+	protected final Component scrollToModify = Lang.translate("gui.scrollInput.scrollToModify");
+	protected final Component shiftScrollsFaster = Lang.translate("gui.scrollInput.shiftScrollsFaster");
 	protected Label displayLabel;
 
 	protected int min, max;
@@ -54,7 +54,7 @@ public class ScrollInput extends AbstractSimiWidget {
 		return this;
 	}
 
-	public ScrollInput titled(IFormattableTextComponent title) {
+	public ScrollInput titled(MutableComponent title) {
 		this.title = title;
 		updateTooltip();
 		return this;
@@ -132,14 +132,14 @@ public class ScrollInput extends AbstractSimiWidget {
 	}
 
 	protected void writeToLabel() {
-		displayLabel.text = new StringTextComponent(String.valueOf(state));
+		displayLabel.text = new TextComponent(String.valueOf(state));
 	}
 
 	protected void updateTooltip() {
 		toolTip.clear();
-		toolTip.add(title.plainCopy().withStyle(TextFormatting.BLUE));
-		toolTip.add(scrollToModify.plainCopy().withStyle(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
-		toolTip.add(shiftScrollsFaster.plainCopy().withStyle(TextFormatting.ITALIC, TextFormatting.DARK_GRAY));
+		toolTip.add(title.plainCopy().withStyle(ChatFormatting.BLUE));
+		toolTip.add(scrollToModify.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
+		toolTip.add(shiftScrollsFaster.plainCopy().withStyle(ChatFormatting.ITALIC, ChatFormatting.DARK_GRAY));
 	}
 
 }

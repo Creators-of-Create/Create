@@ -26,18 +26,18 @@ import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.settings.GraphicsFanciness;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.text.ChatType;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponentUtils;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.GraphicsStatus;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -46,7 +46,7 @@ public class CreateClient {
 	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
 	public static final Outliner OUTLINER = new Outliner();
 	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
-	public static final Screen EMPTY_SCREEN = new Screen(new StringTextComponent("")) {};
+	public static final Screen EMPTY_SCREEN = new Screen(new TextComponent("")) {};
 	public static final ModelSwapper MODEL_SWAPPER = new ModelSwapper();
 	public static final CasingConnectivity CASING_CONNECTIVITY = new CasingConnectivity();
 
@@ -80,9 +80,9 @@ public class CreateClient {
 		// null during datagen
 		if (mc == null) return;
 
-		IResourceManager resourceManager = mc.getResourceManager();
-		if (resourceManager instanceof IReloadableResourceManager)
-			((IReloadableResourceManager) resourceManager).registerReloadListener(RESOURCE_RELOAD_LISTENER);
+		ResourceManager resourceManager = mc.getResourceManager();
+		if (resourceManager instanceof ReloadableResourceManager)
+			((ReloadableResourceManager) resourceManager).registerReloadListener(RESOURCE_RELOAD_LISTENER);
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
@@ -106,7 +106,7 @@ public class CreateClient {
 		});
 	}
 
-	protected static void registerLayerRenderers(EntityRendererManager renderManager) {
+	protected static void registerLayerRenderers(EntityRenderDispatcher renderManager) {
 		CopperBacktankArmorLayer.registerOnAll(renderManager);
 	}
 
@@ -121,20 +121,20 @@ public class CreateClient {
 		if (mc.player == null)
 			return;
 
-		if (mc.options.graphicsMode != GraphicsFanciness.FABULOUS)
+		if (mc.options.graphicsMode != GraphicsStatus.FABULOUS)
 			return;
 
 		if (AllConfigs.CLIENT.ignoreFabulousWarning.get())
 			return;
 
-		IFormattableTextComponent text = TextComponentUtils.wrapInSquareBrackets(new StringTextComponent("WARN"))
-			.withStyle(TextFormatting.GOLD)
-			.append(new StringTextComponent(
+		MutableComponent text = ComponentUtils.wrapInSquareBrackets(new TextComponent("WARN"))
+			.withStyle(ChatFormatting.GOLD)
+			.append(new TextComponent(
 				" Some of Create's visual features will not be available while Fabulous graphics are enabled!"))
 			.withStyle(style -> style
 				.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/create dismissFabulousWarning"))
 				.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-					new StringTextComponent("Click here to disable this warning"))));
+					new TextComponent("Click here to disable this warning"))));
 
 		mc.gui.handleChat(ChatType.CHAT, text, mc.player.getUUID());
 	}

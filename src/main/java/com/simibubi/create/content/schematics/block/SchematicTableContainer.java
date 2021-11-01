@@ -4,29 +4,29 @@ import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.AllItems;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicTableContainer extends Container {
+public class SchematicTableContainer extends AbstractContainerMenu {
 
 	private SchematicTableTileEntity te;
 	private Slot inputSlot;
 	private Slot outputSlot;
-	private PlayerEntity player;
+	private Player player;
 
-	public SchematicTableContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	public SchematicTableContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id);
 		player = inv.player;
-		ClientWorld world = Minecraft.getInstance().level;
-		TileEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
+		ClientLevel world = Minecraft.getInstance().level;
+		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		if (tileEntity instanceof SchematicTableTileEntity) {
 			this.te = (SchematicTableTileEntity) tileEntity;
 			this.te.handleUpdateTag(te.getBlockState(), extraData.readNbt());
@@ -34,14 +34,14 @@ public class SchematicTableContainer extends Container {
 		}
 	}
 
-	public SchematicTableContainer(ContainerType<?> type, int id, PlayerInventory inv, SchematicTableTileEntity te) {
+	public SchematicTableContainer(MenuType<?> type, int id, Inventory inv, SchematicTableTileEntity te) {
 		super(type, id);
 		this.player = inv.player;
 		this.te = te;
 		init();
 	}
 
-	public static SchematicTableContainer create(int id, PlayerInventory inv, SchematicTableTileEntity te) {
+	public static SchematicTableContainer create(int id, Inventory inv, SchematicTableTileEntity te) {
 		return new SchematicTableContainer(AllContainerTypes.SCHEMATIC_TABLE.get(), id, inv, te);
 	}
 
@@ -83,12 +83,12 @@ public class SchematicTableContainer extends Container {
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return te != null && te.canPlayerUse(player);
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(Player playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
 		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;

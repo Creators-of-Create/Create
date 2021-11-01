@@ -33,18 +33,18 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.Item;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
@@ -116,14 +116,14 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.collect(Collectors.toList());
 	}
 
-	public <T extends TileEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
-		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
+		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
 		return this.tileEntity(this.self(), name, factory);
 	}
 
 	@Override
-	public <T extends TileEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
-		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
+		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
 		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
 		});
@@ -131,12 +131,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@Override
 	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name,
-		EntityType.IFactory<T> factory, EntityClassification classification) {
+		EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return this.entity(self(), name, factory, classification);
 	}
 
-	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.IFactory<T> factory,
-		EntityClassification classification) {
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.EntityFactory<T> factory,
+		MobCategory classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});
@@ -209,12 +209,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public static <T extends Block> NonNullConsumer<? super T> blockModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		return entry -> onClient(() -> () -> registerBlockModel(entry, func));
 	}
 
 	public static <T extends Item> NonNullConsumer<? super T> itemModel(
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
@@ -235,7 +235,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
 		b.properties(p -> p.setISTER(() -> supplier.get()::get))
 			.onRegister(entry -> {
-				ItemStackTileEntityRenderer ister = entry.getItemStackTileEntityRenderer();
+				BlockEntityWithoutLevelRenderer ister = entry.getItemStackTileEntityRenderer();
 				if (ister instanceof CustomRenderedItemModelRenderer)
 					registerCustomRenderedItem(entry, (CustomRenderedItemModelRenderer<?>) ister);
 			});
@@ -261,14 +261,14 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerBlockModel(Block entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
 			.register(entry.delegate, func.get());
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	private static void registerItemModel(Item entry,
-		Supplier<NonNullFunction<IBakedModel, ? extends IBakedModel>> func) {
+		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomItemModels()
 			.register(entry.delegate, func.get());
 	}

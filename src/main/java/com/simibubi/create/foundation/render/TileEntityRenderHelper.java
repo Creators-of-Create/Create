@@ -7,51 +7,51 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.instancing.InstancedRenderRegistry;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector4f;
+import net.minecraft.world.level.Level;
 
 public class TileEntityRenderHelper {
 
-	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
-			IRenderTypeBuffer buffer) {
+	public static void renderTileEntities(Level world, Iterable<BlockEntity> customRenderTEs, PoseStack ms,
+			MultiBufferSource buffer) {
 		renderTileEntities(world, null, customRenderTEs, ms, null, buffer);
 	}
 
-	public static void renderTileEntities(World world, Iterable<TileEntity> customRenderTEs, MatrixStack ms,
-			IRenderTypeBuffer buffer, float pt) {
+	public static void renderTileEntities(Level world, Iterable<BlockEntity> customRenderTEs, PoseStack ms,
+			MultiBufferSource buffer, float pt) {
 		renderTileEntities(world, null, customRenderTEs, ms, null, buffer, pt);
 	}
 
-	public static void renderTileEntities(World world, @Nullable PlacementSimulationWorld renderWorld,
-			Iterable<TileEntity> customRenderTEs, MatrixStack ms, @Nullable Matrix4f lightTransform, IRenderTypeBuffer buffer) {
+	public static void renderTileEntities(Level world, @Nullable PlacementSimulationWorld renderWorld,
+			Iterable<BlockEntity> customRenderTEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer) {
 		renderTileEntities(world, renderWorld, customRenderTEs, ms, lightTransform, buffer,
 			AnimationTickHolder.getPartialTicks());
 	}
 
-	public static void renderTileEntities(World world, @Nullable PlacementSimulationWorld renderWorld,
-			Iterable<TileEntity> customRenderTEs, MatrixStack ms, @Nullable Matrix4f lightTransform, IRenderTypeBuffer buffer,
+	public static void renderTileEntities(Level world, @Nullable PlacementSimulationWorld renderWorld,
+			Iterable<BlockEntity> customRenderTEs, PoseStack ms, @Nullable Matrix4f lightTransform, MultiBufferSource buffer,
 			float pt) {
-		Iterator<TileEntity> iterator = customRenderTEs.iterator();
+		Iterator<BlockEntity> iterator = customRenderTEs.iterator();
 		while (iterator.hasNext()) {
-			TileEntity tileEntity = iterator.next();
+			BlockEntity tileEntity = iterator.next();
 			if (Backend.getInstance().canUseInstancing(renderWorld) && InstancedRenderRegistry.getInstance()
 					.shouldSkipRender(tileEntity)) continue;
 
-			TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
+			BlockEntityRenderer<BlockEntity> renderer = BlockEntityRenderDispatcher.instance.getRenderer(tileEntity);
 			if (renderer == null) {
 				iterator.remove();
 				continue;
@@ -90,12 +90,12 @@ public class TileEntityRenderHelper {
 		}
 	}
 
-	public static int getCombinedLight(World world, BlockPos worldPos, @Nullable PlacementSimulationWorld renderWorld,
+	public static int getCombinedLight(Level world, BlockPos worldPos, @Nullable PlacementSimulationWorld renderWorld,
 			BlockPos renderWorldPos) {
-		int worldLight = WorldRenderer.getLightColor(world, worldPos);
+		int worldLight = LevelRenderer.getLightColor(world, worldPos);
 
 		if (renderWorld != null) {
-			int renderWorldLight = WorldRenderer.getLightColor(renderWorld, renderWorldPos);
+			int renderWorldLight = LevelRenderer.getLightColor(renderWorld, renderWorldPos);
 			return SuperByteBuffer.maxLight(worldLight, renderWorldLight);
 		}
 

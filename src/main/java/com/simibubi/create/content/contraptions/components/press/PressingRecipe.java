@@ -14,10 +14,10 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -30,7 +30,7 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World worldIn) {
+	public boolean matches(RecipeWrapper inv, Level worldIn) {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0)
@@ -52,12 +52,12 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ITextComponent getDescriptionForAssembly() {
+	public Component getDescriptionForAssembly() {
 		return Lang.translate("recipe.assembly.pressing");
 	}
 	
 	@Override
-	public void addRequiredMachines(Set<IItemProvider> list) {
+	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.MECHANICAL_PRESS.get());
 	}
 	

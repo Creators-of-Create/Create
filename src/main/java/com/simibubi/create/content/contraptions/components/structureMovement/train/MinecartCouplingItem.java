@@ -5,13 +5,13 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -21,6 +21,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import net.minecraft.world.item.Item.Properties;
 
 @EventBusSubscriber
 public class MinecartCouplingItem extends Item {
@@ -32,10 +34,10 @@ public class MinecartCouplingItem extends Item {
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void handleInteractionWithMinecart(PlayerInteractEvent.EntityInteract event) {
 		Entity interacted = event.getTarget();
-		if (!(interacted instanceof AbstractMinecartEntity))
+		if (!(interacted instanceof AbstractMinecart))
 			return;
-		AbstractMinecartEntity minecart = (AbstractMinecartEntity) interacted;
-		PlayerEntity player = event.getPlayer();
+		AbstractMinecart minecart = (AbstractMinecart) interacted;
+		Player player = event.getPlayer();
 		if (player == null)
 			return;
 		LazyOptional<MinecartController> capability =
@@ -55,12 +57,12 @@ public class MinecartCouplingItem extends Item {
 			return;
 
 		event.setCanceled(true);
-		event.setCancellationResult(ActionResultType.SUCCESS);
+		event.setCancellationResult(InteractionResult.SUCCESS);
 	}
 
 	protected static boolean onCouplingInteractOnMinecart(PlayerInteractEvent.EntityInteract event,
-		AbstractMinecartEntity minecart, PlayerEntity player, MinecartController controller) {
-		World world = event.getWorld();
+		AbstractMinecart minecart, Player player, MinecartController controller) {
+		Level world = event.getWorld();
 		if (controller.isFullyCoupled()) {
 			if (!world.isClientSide)
 				CouplingHandler.status(player, "two_couplings_max");
@@ -71,8 +73,8 @@ public class MinecartCouplingItem extends Item {
 		return true;
 	}
 
-	private static boolean onWrenchInteractOnMinecart(EntityInteract event, AbstractMinecartEntity minecart,
-		PlayerEntity player, MinecartController controller) {
+	private static boolean onWrenchInteractOnMinecart(EntityInteract event, AbstractMinecart minecart,
+		Player player, MinecartController controller) {
 		int couplings = (controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 		if (couplings == 0)
 			return false;
@@ -93,8 +95,8 @@ public class MinecartCouplingItem extends Item {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private static void cartClicked(PlayerEntity player, AbstractMinecartEntity interacted) {
-		CouplingHandlerClient.onCartClicked(player, (AbstractMinecartEntity) interacted);
+	private static void cartClicked(Player player, AbstractMinecart interacted) {
+		CouplingHandlerClient.onCartClicked(player, (AbstractMinecart) interacted);
 	}
 
 }

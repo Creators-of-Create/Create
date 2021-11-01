@@ -7,8 +7,8 @@ import java.util.List;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public enum Tools {
 
@@ -31,7 +31,7 @@ public enum Tools {
 		return tool;
 	}
 
-	public TranslationTextComponent getDisplayName() {
+	public TranslatableComponent getDisplayName() {
 		return Lang.translate("schematic.tool." + Lang.asId(name()));
 	}
 
@@ -47,7 +47,7 @@ public enum Tools {
 		return tools;
 	}
 
-	public List<ITextComponent> getDescription() {
+	public List<Component> getDescription() {
 		return Lang.translatedOptions("schematic.tool." + Lang.asId(name()) + ".description", "0", "1", "2", "3");
 	}
 

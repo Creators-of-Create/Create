@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Function;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class IntAttached<V> extends Pair<Integer, V> {
 
@@ -42,14 +42,14 @@ public class IntAttached<V> extends Pair<Integer, V> {
 		return getSecond();
 	}
 
-	public CompoundNBT serializeNBT(Function<V, CompoundNBT> serializer) {
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag serializeNBT(Function<V, CompoundTag> serializer) {
+		CompoundTag nbt = new CompoundTag();
 		nbt.put("Item", serializer.apply(getValue()));
 		nbt.putInt("Location", getFirst());
 		return nbt;
 	}
 
-	public static <T> IntAttached<T> read(CompoundNBT nbt, Function<CompoundNBT, T> deserializer) {
+	public static <T> IntAttached<T> read(CompoundTag nbt, Function<CompoundTag, T> deserializer) {
 		return IntAttached.with(nbt.getInt("Location"), deserializer.apply(nbt.getCompound("Item")));
 	}
 

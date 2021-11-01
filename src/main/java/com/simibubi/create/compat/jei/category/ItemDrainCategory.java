@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.compat.jei.category.animations.AnimatedItemDrain;
@@ -21,11 +21,11 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.runtime.IIngredientManager;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -127,7 +127,7 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 	}
 
 	@Override
-	public void draw(EmptyingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(EmptyingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 131, 7);
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 7);
 		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 26);

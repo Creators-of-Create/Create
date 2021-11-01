@@ -2,15 +2,15 @@ package com.simibubi.create.content.contraptions.components;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
 
-public class AssemblyOperatorUseContext extends BlockItemUseContext {
-	public AssemblyOperatorUseContext(World p_i50056_1_, @Nullable PlayerEntity p_i50056_2_, Hand p_i50056_3_, ItemStack p_i50056_4_, BlockRayTraceResult p_i50056_5_) {
+public class AssemblyOperatorUseContext extends BlockPlaceContext {
+	public AssemblyOperatorUseContext(Level p_i50056_1_, @Nullable Player p_i50056_2_, InteractionHand p_i50056_3_, ItemStack p_i50056_4_, BlockHitResult p_i50056_5_) {
 		super(p_i50056_1_, p_i50056_2_, p_i50056_3_, p_i50056_4_, p_i50056_5_);
 	}
 }

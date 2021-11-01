@@ -32,39 +32,39 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 
-import net.minecraft.block.AbstractPressurePlateBlock;
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.AbstractSignBlock;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BellBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CarpetBlock;
-import net.minecraft.block.DoorBlock;
-import net.minecraft.block.FenceGateBlock;
-import net.minecraft.block.FlowerPotBlock;
-import net.minecraft.block.GrindstoneBlock;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.HorizontalFaceBlock;
-import net.minecraft.block.LadderBlock;
-import net.minecraft.block.RedstoneDiodeBlock;
-import net.minecraft.block.RedstoneWallTorchBlock;
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.block.StandingSignBlock;
-import net.minecraft.block.TorchBlock;
-import net.minecraft.block.WallSignBlock;
-import net.minecraft.block.WallTorchBlock;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.state.properties.BedPart;
-import net.minecraft.state.properties.BellAttachment;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.BasePressurePlateBlock;
+import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.WoolCarpetBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.GrindstoneBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.DiodeBlock;
+import net.minecraft.world.level.block.RedstoneWallTorchBlock;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.StandingSignBlock;
+import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.WallSignBlock;
+import net.minecraft.world.level.block.WallTorchBlock;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.BellAttachType;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class BlockMovementChecks {
 
@@ -108,7 +108,7 @@ public class BlockMovementChecks {
 
 	// Actual check methods
 
-	public static boolean isMovementNecessary(BlockState state, World world, BlockPos pos) {
+	public static boolean isMovementNecessary(BlockState state, Level world, BlockPos pos) {
 		for (MovementNecessaryCheck check : MOVEMENT_NECESSARY_CHECKS) {
 			CheckResult result = check.isMovementNecessary(state, world, pos);
 			if (result != CheckResult.PASS) {
@@ -118,7 +118,7 @@ public class BlockMovementChecks {
 		return isMovementNecessaryFallback(state, world, pos);
 	}
 
-	public static boolean isMovementAllowed(BlockState state, World world, BlockPos pos) {
+	public static boolean isMovementAllowed(BlockState state, Level world, BlockPos pos) {
 		for (MovementAllowedCheck check : MOVEMENT_ALLOWED_CHECKS) {
 			CheckResult result = check.isMovementAllowed(state, world, pos);
 			if (result != CheckResult.PASS) {
@@ -145,7 +145,7 @@ public class BlockMovementChecks {
 	/**
 	 * Attached blocks will move if blocks they are attached to are moved
 	 */
-	public static boolean isBlockAttachedTowards(BlockState state, World world, BlockPos pos,
+	public static boolean isBlockAttachedTowards(BlockState state, Level world, BlockPos pos,
 												 Direction direction) {
 		for (AttachedCheck check : ATTACHED_CHECKS) {
 			CheckResult result = check.isBlockAttachedTowards(state, world, pos, direction);
@@ -172,7 +172,7 @@ public class BlockMovementChecks {
 
 	// Fallback checks
 
-	private static boolean isMovementNecessaryFallback(BlockState state, World world, BlockPos pos) {
+	private static boolean isMovementNecessaryFallback(BlockState state, Level world, BlockPos pos) {
 		if (isBrittle(state))
 			return true;
 		if (state.getBlock() instanceof FenceGateBlock)
@@ -186,7 +186,7 @@ public class BlockMovementChecks {
 		return true;
 	}
 
-	private static boolean isMovementAllowedFallback(BlockState state, World world, BlockPos pos) {
+	private static boolean isMovementAllowedFallback(BlockState state, Level world, BlockPos pos) {
 		Block block = state.getBlock();
 		if (block instanceof AbstractChassisBlock)
 			return true;
@@ -201,22 +201,22 @@ public class BlockMovementChecks {
 		if (block instanceof MechanicalPistonBlock && state.getValue(MechanicalPistonBlock.STATE) != PistonState.MOVING)
 			return true;
 		if (block instanceof MechanicalBearingBlock) {
-			TileEntity te = world.getBlockEntity(pos);
+			BlockEntity te = world.getBlockEntity(pos);
 			if (te instanceof MechanicalBearingTileEntity)
 				return !((MechanicalBearingTileEntity) te).isRunning();
 		}
 		if (block instanceof WindmillBearingBlock) {
-			TileEntity te = world.getBlockEntity(pos);
+			BlockEntity te = world.getBlockEntity(pos);
 			if (te instanceof WindmillBearingTileEntity)
 				return !((WindmillBearingTileEntity) te).isRunning();
 		}
 		if (block instanceof ClockworkBearingBlock) {
-			TileEntity te = world.getBlockEntity(pos);
+			BlockEntity te = world.getBlockEntity(pos);
 			if (te instanceof ClockworkBearingTileEntity)
 				return !((ClockworkBearingTileEntity) te).isRunning();
 		}
 		if (block instanceof PulleyBlock) {
-			TileEntity te = world.getBlockEntity(pos);
+			BlockEntity te = world.getBlockEntity(pos);
 			if (te instanceof PulleyTileEntity)
 				return !((PulleyTileEntity) te).running;
 		}
@@ -237,26 +237,26 @@ public class BlockMovementChecks {
 			return true;
 		if (block instanceof TorchBlock)
 			return true;
-		if (block instanceof AbstractSignBlock)
+		if (block instanceof SignBlock)
 			return true;
-		if (block instanceof AbstractPressurePlateBlock)
+		if (block instanceof BasePressurePlateBlock)
 			return true;
-		if (block instanceof HorizontalFaceBlock && !(block instanceof GrindstoneBlock))
+		if (block instanceof FaceAttachedHorizontalDirectionalBlock && !(block instanceof GrindstoneBlock))
 			return true;
 		if (block instanceof CartAssemblerBlock)
 			return false;
-		if (block instanceof AbstractRailBlock)
+		if (block instanceof BaseRailBlock)
 			return true;
-		if (block instanceof RedstoneDiodeBlock)
+		if (block instanceof DiodeBlock)
 			return true;
-		if (block instanceof RedstoneWireBlock)
+		if (block instanceof RedStoneWireBlock)
 			return true;
-		if (block instanceof CarpetBlock)
+		if (block instanceof WoolCarpetBlock)
 			return true;
 		return AllBlockTags.BRITTLE.tag.contains(block);
 	}
 
-	private static boolean isBlockAttachedTowardsFallback(BlockState state, World world, BlockPos pos,
+	private static boolean isBlockAttachedTowardsFallback(BlockState state, Level world, BlockPos pos,
 														  Direction direction) {
 		Block block = state.getBlock();
 		if (block instanceof LadderBlock)
@@ -267,7 +267,7 @@ public class BlockMovementChecks {
 			return state.getValue(WallSignBlock.FACING) == direction.getOpposite();
 		if (block instanceof StandingSignBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof AbstractPressurePlateBlock)
+		if (block instanceof BasePressurePlateBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof DoorBlock) {
 			if (state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER && direction == Direction.UP)
@@ -284,28 +284,28 @@ public class BlockMovementChecks {
 			return direction.getOpposite() == state.getValue(RedstoneLinkBlock.FACING);
 		if (block instanceof FlowerPotBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof RedstoneDiodeBlock)
+		if (block instanceof DiodeBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof RedstoneWireBlock)
+		if (block instanceof RedStoneWireBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof CarpetBlock)
+		if (block instanceof WoolCarpetBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof RedstoneWallTorchBlock)
 			return state.getValue(RedstoneWallTorchBlock.FACING) == direction.getOpposite();
 		if (block instanceof TorchBlock)
 			return direction == Direction.DOWN;
-		if (block instanceof HorizontalFaceBlock) {
-			AttachFace attachFace = state.getValue(HorizontalFaceBlock.FACE);
+		if (block instanceof FaceAttachedHorizontalDirectionalBlock) {
+			AttachFace attachFace = state.getValue(FaceAttachedHorizontalDirectionalBlock.FACE);
 			if (attachFace == AttachFace.CEILING)
 				return direction == Direction.UP;
 			if (attachFace == AttachFace.FLOOR)
 				return direction == Direction.DOWN;
 			if (attachFace == AttachFace.WALL)
-				return direction.getOpposite() == state.getValue(HorizontalFaceBlock.FACING);
+				return direction.getOpposite() == state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING);
 		}
 		if (state.hasProperty(BlockStateProperties.HANGING))
 			return direction == (state.getValue(BlockStateProperties.HANGING) ? Direction.UP : Direction.DOWN);
-		if (block instanceof AbstractRailBlock)
+		if (block instanceof BaseRailBlock)
 			return direction == Direction.DOWN;
 		if (block instanceof AttachedActorBlock)
 			return direction == state.getValue(HarvesterBlock.FACING)
@@ -320,12 +320,12 @@ public class BlockMovementChecks {
 			return direction == state.getValue(EngineBlock.FACING)
 				.getOpposite();
 		if (block instanceof BellBlock) {
-			BellAttachment attachment = state.getValue(BlockStateProperties.BELL_ATTACHMENT);
-			if (attachment == BellAttachment.FLOOR)
+			BellAttachType attachment = state.getValue(BlockStateProperties.BELL_ATTACHMENT);
+			if (attachment == BellAttachType.FLOOR)
 				return direction == Direction.DOWN;
-			if (attachment == BellAttachment.CEILING)
+			if (attachment == BellAttachType.CEILING)
 				return direction == Direction.UP;
-			return direction == state.getValue(HorizontalBlock.FACING);
+			return direction == state.getValue(HorizontalDirectionalBlock.FACING);
 		}
 		if (state.getBlock() instanceof SailBlock)
 			return direction.getAxis() != state.getValue(SailBlock.FACING)
@@ -354,7 +354,7 @@ public class BlockMovementChecks {
 			return state.getValue(BlockStateProperties.HORIZONTAL_FACING) == facing;
 		if (AllBlocks.ROPE_PULLEY.has(state))
 			return facing == Direction.DOWN;
-		if (state.getBlock() instanceof CarpetBlock)
+		if (state.getBlock() instanceof WoolCarpetBlock)
 			return facing == Direction.UP;
 		if (state.getBlock() instanceof SailBlock)
 			return facing.getAxis() == state.getValue(SailBlock.FACING)
@@ -373,11 +373,11 @@ public class BlockMovementChecks {
 	// Check classes
 
 	public static interface MovementNecessaryCheck {
-		public CheckResult isMovementNecessary(BlockState state, World world, BlockPos pos);
+		public CheckResult isMovementNecessary(BlockState state, Level world, BlockPos pos);
 	}
 
 	public static interface MovementAllowedCheck {
-		public CheckResult isMovementAllowed(BlockState state, World world, BlockPos pos);
+		public CheckResult isMovementAllowed(BlockState state, Level world, BlockPos pos);
 	}
 
 	public static interface BrittleCheck {
@@ -392,7 +392,7 @@ public class BlockMovementChecks {
 		/**
 		 * Attached blocks will move if blocks they are attached to are moved
 		 */
-		public CheckResult isBlockAttachedTowards(BlockState state, World world, BlockPos pos, Direction direction);
+		public CheckResult isBlockAttachedTowards(BlockState state, Level world, BlockPos pos, Direction direction);
 	}
 
 	public static interface NotSupportiveCheck {

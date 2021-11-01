@@ -11,10 +11,10 @@ import com.simibubi.create.content.contraptions.components.actors.dispenser.Drop
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
 
 public class AllMovementBehaviours {
 	private static final HashMap<ResourceLocation, MovementBehaviour> MOVEMENT_BEHAVIOURS = new HashMap<>();

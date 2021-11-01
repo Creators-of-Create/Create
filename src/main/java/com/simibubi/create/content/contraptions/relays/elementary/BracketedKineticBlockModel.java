@@ -7,28 +7,28 @@ import java.util.Random;
 import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 
-public class BracketedKineticBlockModel extends BakedModelWrapper<IBakedModel> {
+public class BracketedKineticBlockModel extends BakedModelWrapper<BakedModel> {
 
 	private static final ModelProperty<BracketedModelData> BRACKET_PROPERTY = new ModelProperty<>();
 
-	public BracketedKineticBlockModel(IBakedModel template) {
+	public BracketedKineticBlockModel(BakedModel template) {
 		super(template);
 	}
 
 	@Override
-	public IModelData getModelData(IBlockDisplayReader world, BlockPos pos, BlockState state, IModelData tileData) {
+	public IModelData getModelData(BlockAndTintGetter world, BlockPos pos, BlockState state, IModelData tileData) {
 		if (tileData == VirtualEmptyModelData.INSTANCE)
 			return tileData;
 		BracketedModelData data = new BracketedModelData();
@@ -56,14 +56,14 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<IBakedModel> {
 
 	private void addQuads(List<BakedQuad> quads, BlockState state, Direction side, Random rand, IModelData data,
 		BracketedModelData pipeData) {
-		IBakedModel bracket = pipeData.getBracket();
+		BakedModel bracket = pipeData.getBracket();
 		if (bracket == null)
 			return;
 		quads.addAll(bracket.getQuads(state, side, rand, data));
 	}
 
 	private class BracketedModelData {
-		IBakedModel bracket;
+		BakedModel bracket;
 
 		public void putBracket(BlockState state) {
 			this.bracket = Minecraft.getInstance()
@@ -71,7 +71,7 @@ public class BracketedKineticBlockModel extends BakedModelWrapper<IBakedModel> {
 				.getBlockModel(state);
 		}
 
-		public IBakedModel getBracket() {
+		public BakedModel getBracket() {
 			return bracket;
 		}
 

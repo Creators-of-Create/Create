@@ -5,20 +5,20 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ArmPlacementPacket extends SimplePacketBase {
 
 	private Collection<ArmInteractionPoint> points;
-	private ListNBT receivedTag;
+	private ListTag receivedTag;
 	private BlockPos pos;
 
 	public ArmPlacementPacket(Collection<ArmInteractionPoint> points, BlockPos pos) {
@@ -26,16 +26,16 @@ public class ArmPlacementPacket extends SimplePacketBase {
 		this.pos = pos;
 	}
 
-	public ArmPlacementPacket(PacketBuffer buffer) {
-		CompoundNBT nbt = buffer.readNbt();
+	public ArmPlacementPacket(FriendlyByteBuf buffer) {
+		CompoundTag nbt = buffer.readNbt();
 		receivedTag = nbt.getList("Points", NBT.TAG_COMPOUND);
 		pos = buffer.readBlockPos();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
-		CompoundNBT nbt = new CompoundNBT();
-		ListNBT pointsNBT = new ListNBT();
+	public void write(FriendlyByteBuf buffer) {
+		CompoundTag nbt = new CompoundTag();
+		ListTag pointsNBT = new ListTag();
 		points.stream()
 			.map(aip -> aip.serialize(pos))
 			.forEach(pointsNBT::add);
@@ -48,14 +48,14 @@ public class ArmPlacementPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity player = context.get()
+				ServerPlayer player = context.get()
 					.getSender();
 				if (player == null)
 					return;
-				World world = player.level;
+				Level world = player.level;
 				if (world == null || !world.isLoaded(pos))
 					return;
-				TileEntity tileEntity = world.getBlockEntity(pos);
+				BlockEntity tileEntity = world.getBlockEntity(pos);
 				if (!(tileEntity instanceof ArmTileEntity))
 					return;
 

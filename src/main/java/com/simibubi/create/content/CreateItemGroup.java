@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.item.CreateItemGroupBase;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class CreateItemGroup extends CreateItemGroupBase {
 

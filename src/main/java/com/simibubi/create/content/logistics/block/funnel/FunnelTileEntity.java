@@ -24,15 +24,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 
@@ -50,7 +50,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
 	}
 
-	public FunnelTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public FunnelTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		extractionCooldown = 0;
 		flap = new InterpolatedChasingValue().start(.25f)
@@ -117,7 +117,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 			return;
 
 		boolean trackingEntityPresent = true;
-		AxisAlignedBB area = getEntityOverflowScanningArea();
+		AABB area = getEntityOverflowScanningArea();
 
 		// Check if last item is still blocking the extractor
 		if (lastObserved == null) {
@@ -153,19 +153,19 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		flap(false);
 		onTransfer(stack);
 
-		Vector3d outputPos = VecHelper.getCenterOf(worldPosition);
+		Vec3 outputPos = VecHelper.getCenterOf(worldPosition);
 		boolean vertical = facing.getAxis()
 			.isVertical();
 		boolean up = facing == Direction.UP;
 
-		outputPos = outputPos.add(Vector3d.atLowerCornerOf(facing.getNormal())
+		outputPos = outputPos.add(Vec3.atLowerCornerOf(facing.getNormal())
 			.scale(vertical ? up ? .15f : .5f : .25f));
 		if (!vertical)
 			outputPos = outputPos.subtract(0, .45f, 0);
 
-		Vector3d motion = Vector3d.ZERO;
+		Vec3 motion = Vec3.ZERO;
 		if (up)
-			motion = new Vector3d(0, 4 / 16f, 0);
+			motion = new Vec3(0, 4 / 16f, 0);
 
 		ItemEntity item = new ItemEntity(level, outputPos.x, outputPos.y, outputPos.z, stack.copy());
 		item.setDefaultPickUpDelay();
@@ -176,12 +176,12 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		startCooldown();
 	}
 
-	static final AxisAlignedBB coreBB =
-		new AxisAlignedBB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).inflate(.75f);
+	static final AABB coreBB =
+		new AABB(VecHelper.CENTER_OF_ORIGIN, VecHelper.CENTER_OF_ORIGIN).inflate(.75f);
 
-	private AxisAlignedBB getEntityOverflowScanningArea() {
+	private AABB getEntityOverflowScanningArea() {
 		Direction facing = AbstractFunnelBlock.getFunnelFacing(getBlockState());
-		AxisAlignedBB bb = coreBB.move(worldPosition);
+		AABB bb = coreBB.move(worldPosition);
 		if (facing == null || facing == Direction.UP)
 			return bb;
 		return bb.expandTowards(0, -1, 0);
@@ -316,13 +316,13 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	@Override
-	protected void write(CompoundNBT compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 		compound.putInt("TransferCooldown", extractionCooldown);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
 

@@ -29,26 +29,26 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.CookingRecipeBuilder;
-import net.minecraft.data.CustomRecipeBuilder;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.CookingRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.tags.ITag;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SimpleCookingSerializer;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
@@ -1078,7 +1078,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return new Marker();
 	}
 
-	GeneratedRecipeBuilder create(Supplier<IItemProvider> result) {
+	GeneratedRecipeBuilder create(Supplier<ItemLike> result) {
 		return new GeneratedRecipeBuilder(currentFolder, result);
 	}
 
@@ -1086,20 +1086,20 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return new GeneratedRecipeBuilder(currentFolder, result);
 	}
 
-	GeneratedRecipeBuilder create(ItemProviderEntry<? extends IItemProvider> result) {
+	GeneratedRecipeBuilder create(ItemProviderEntry<? extends ItemLike> result) {
 		return create(result::get);
 	}
 
-	GeneratedRecipe createSpecial(Supplier<? extends SpecialRecipeSerializer<?>> serializer, String recipeType, String path) {
+	GeneratedRecipe createSpecial(Supplier<? extends SimpleRecipeSerializer<?>> serializer, String recipeType, String path) {
 		ResourceLocation location = Create.asResource(recipeType + "/" + currentFolder + "/" + path);
 		return register(consumer -> {
-			CustomRecipeBuilder b = CustomRecipeBuilder.special(serializer.get());
+			SpecialRecipeBuilder b = SpecialRecipeBuilder.special(serializer.get());
 			b.save(consumer, location.toString());
 		});
 	}
 
-	GeneratedRecipe blastCrushedMetal(Supplier<? extends IItemProvider> result,
-		Supplier<? extends IItemProvider> ingredient) {
+	GeneratedRecipe blastCrushedMetal(Supplier<? extends ItemLike> result,
+		Supplier<? extends ItemLike> ingredient) {
 		return create(result::get).withSuffix("_from_crushed")
 			.viaCooking(ingredient::get)
 			.rewardXP(.1f)
@@ -1119,7 +1119,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return null;
 	}
 
-	GeneratedRecipe blastMetalOre(Supplier<? extends IItemProvider> result, ITag.INamedTag<Item> ore) {
+	GeneratedRecipe blastMetalOre(Supplier<? extends ItemLike> result, Tag.Named<Item> ore) {
 		return create(result::get).withSuffix("_from_ore")
 			.viaCookingTag(() -> ore)
 			.rewardXP(.1f)
@@ -1142,14 +1142,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			.inFurnace();
 	}
 
-	GeneratedRecipe metalCompacting(List<ItemProviderEntry<? extends IItemProvider>> variants,
-		List<Supplier<ITag<Item>>> ingredients) {
+	GeneratedRecipe metalCompacting(List<ItemProviderEntry<? extends ItemLike>> variants,
+		List<Supplier<Tag<Item>>> ingredients) {
 		GeneratedRecipe result = null;
 		for (int i = 0; i + 1 < variants.size(); i++) {
-			ItemProviderEntry<? extends IItemProvider> currentEntry = variants.get(i);
-			ItemProviderEntry<? extends IItemProvider> nextEntry = variants.get(i + 1);
-			Supplier<ITag<Item>> currentIngredient = ingredients.get(i);
-			Supplier<ITag<Item>> nextIngredient = ingredients.get(i + 1);
+			ItemProviderEntry<? extends ItemLike> currentEntry = variants.get(i);
+			ItemProviderEntry<? extends ItemLike> nextEntry = variants.get(i + 1);
+			Supplier<Tag<Item>> currentIngredient = ingredients.get(i);
+			Supplier<Tag<Item>> nextIngredient = ingredients.get(i + 1);
 
 			result = create(nextEntry).withSuffix("_from_compacting")
 				.unlockedBy(currentEntry::get)
@@ -1166,11 +1166,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return result;
 	}
 
-	GeneratedRecipe conversionCycle(List<ItemProviderEntry<? extends IItemProvider>> cycle) {
+	GeneratedRecipe conversionCycle(List<ItemProviderEntry<? extends ItemLike>> cycle) {
 		GeneratedRecipe result = null;
 		for (int i = 0; i < cycle.size(); i++) {
-			ItemProviderEntry<? extends IItemProvider> currentEntry = cycle.get(i);
-			ItemProviderEntry<? extends IItemProvider> nextEntry = cycle.get((i + 1) % cycle.size());
+			ItemProviderEntry<? extends ItemLike> currentEntry = cycle.get(i);
+			ItemProviderEntry<? extends ItemLike> nextEntry = cycle.get((i + 1) % cycle.size());
 			result = create(nextEntry).withSuffix("from_conversion")
 				.unlockedBy(currentEntry::get)
 				.viaShapeless(b -> b.requires(currentEntry.get()));
@@ -1182,7 +1182,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 		private String path;
 		private String suffix;
-		private Supplier<? extends IItemProvider> result;
+		private Supplier<? extends ItemLike> result;
 		private ResourceLocation compatDatagenOutput;
 		List<ICondition> recipeConditions;
 
@@ -1196,7 +1196,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			this.amount = 1;
 		}
 
-		public GeneratedRecipeBuilder(String path, Supplier<? extends IItemProvider> result) {
+		public GeneratedRecipeBuilder(String path, Supplier<? extends ItemLike> result) {
 			this(path);
 			this.result = result;
 		}
@@ -1211,14 +1211,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			return this;
 		}
 
-		GeneratedRecipeBuilder unlockedBy(Supplier<? extends IItemProvider> item) {
+		GeneratedRecipeBuilder unlockedBy(Supplier<? extends ItemLike> item) {
 			this.unlockedBy = () -> ItemPredicate.Builder.item()
 				.of(item.get())
 				.build();
 			return this;
 		}
 
-		GeneratedRecipeBuilder unlockedByTag(Supplier<ITag<Item>> tag) {
+		GeneratedRecipeBuilder unlockedByTag(Supplier<Tag<Item>> tag) {
 			this.unlockedBy = () -> ItemPredicate.Builder.item()
 				.of(tag.get())
 				.build();
@@ -1275,11 +1275,11 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.getRegistryName() : compatDatagenOutput;
 		}
 
-		GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends IItemProvider> item) {
+		GeneratedCookingRecipeBuilder viaCooking(Supplier<? extends ItemLike> item) {
 			return unlockedBy(item).viaCookingIngredient(() -> Ingredient.of(item.get()));
 		}
 
-		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<ITag<Item>> tag) {
+		GeneratedCookingRecipeBuilder viaCookingTag(Supplier<Tag<Item>> tag) {
 			return unlockedByTag(tag).viaCookingIngredient(() -> Ingredient.of(tag.get()));
 		}
 
@@ -1293,9 +1293,9 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 			private float exp;
 			private int cookingTime;
 
-			private final CookingRecipeSerializer<?> FURNACE = IRecipeSerializer.SMELTING_RECIPE,
-				SMOKER = IRecipeSerializer.SMOKING_RECIPE, BLAST = IRecipeSerializer.BLASTING_RECIPE,
-				CAMPFIRE = IRecipeSerializer.CAMPFIRE_COOKING_RECIPE;
+			private final SimpleCookingSerializer<?> FURNACE = RecipeSerializer.SMELTING_RECIPE,
+				SMOKER = RecipeSerializer.SMOKING_RECIPE, BLAST = RecipeSerializer.BLASTING_RECIPE,
+				CAMPFIRE = RecipeSerializer.CAMPFIRE_COOKING_RECIPE;
 
 			GeneratedCookingRecipeBuilder(Supplier<Ingredient> ingredient) {
 				this.ingredient = ingredient;
@@ -1317,7 +1317,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return inFurnace(b -> b);
 			}
 
-			GeneratedRecipe inFurnace(UnaryOperator<CookingRecipeBuilder> builder) {
+			GeneratedRecipe inFurnace(UnaryOperator<SimpleCookingRecipeBuilder> builder) {
 				return create(FURNACE, builder, 1);
 			}
 
@@ -1325,7 +1325,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return inSmoker(b -> b);
 			}
 
-			GeneratedRecipe inSmoker(UnaryOperator<CookingRecipeBuilder> builder) {
+			GeneratedRecipe inSmoker(UnaryOperator<SimpleCookingRecipeBuilder> builder) {
 				create(FURNACE, builder, 1);
 				create(CAMPFIRE, builder, 3);
 				return create(SMOKER, builder, .5f);
@@ -1335,18 +1335,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return inBlastFurnace(b -> b);
 			}
 
-			GeneratedRecipe inBlastFurnace(UnaryOperator<CookingRecipeBuilder> builder) {
+			GeneratedRecipe inBlastFurnace(UnaryOperator<SimpleCookingRecipeBuilder> builder) {
 				create(FURNACE, builder, 1);
 				return create(BLAST, builder, .5f);
 			}
 
-			private GeneratedRecipe create(CookingRecipeSerializer<?> serializer,
-				UnaryOperator<CookingRecipeBuilder> builder, float cookingTimeModifier) {
+			private GeneratedRecipe create(SimpleCookingSerializer<?> serializer,
+				UnaryOperator<SimpleCookingRecipeBuilder> builder, float cookingTimeModifier) {
 				return register(consumer -> {
 					boolean isOtherMod = compatDatagenOutput != null;
 
-					CookingRecipeBuilder b = builder
-						.apply(CookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
+					SimpleCookingRecipeBuilder b = builder
+						.apply(SimpleCookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
 							exp, (int) (cookingTime * cookingTimeModifier), serializer));
 					if (unlockedBy != null)
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));
@@ -1370,13 +1370,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		super(p_i48262_1_);
 	}
 
-	private static class ModdedCookingRecipeResult implements IFinishedRecipe {
+	private static class ModdedCookingRecipeResult implements FinishedRecipe {
 
-		private IFinishedRecipe wrapped;
+		private FinishedRecipe wrapped;
 		private ResourceLocation outputOverride;
 		private List<ICondition> conditions;
 
-		public ModdedCookingRecipeResult(IFinishedRecipe wrapped, ResourceLocation outputOverride,
+		public ModdedCookingRecipeResult(FinishedRecipe wrapped, ResourceLocation outputOverride,
 			List<ICondition> conditions) {
 			this.wrapped = wrapped;
 			this.outputOverride = outputOverride;
@@ -1389,7 +1389,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		}
 
 		@Override
-		public IRecipeSerializer<?> getType() {
+		public RecipeSerializer<?> getType() {
 			return wrapped.getType();
 		}
 

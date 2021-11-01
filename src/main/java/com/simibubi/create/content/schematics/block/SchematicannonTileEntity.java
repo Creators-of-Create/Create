@@ -31,31 +31,31 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.PistonHeadBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.state.properties.BedPart;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
@@ -64,7 +64,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.EmptyHandler;
 
-public class SchematicannonTileEntity extends SmartTileEntity implements INamedContainerProvider, IInstanceRendered {
+public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, IInstanceRendered {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
@@ -113,7 +113,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	public boolean firstRenderTick;
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
 
@@ -123,7 +123,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		return super.getViewDistance() * 16;
 	}
 
-	public SchematicannonTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public SchematicannonTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		setLazyTickRate(30);
 		attachedInventories = new LinkedHashSet<>();
@@ -147,7 +147,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			if (AllBlocks.CREATIVE_CRATE.has(level.getBlockState(worldPosition.relative(facing))))
 				hasCreativeCrate = true;
 
-			TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(facing));
+			BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(facing));
 			if (tileEntity != null) {
 				LazyOptional<IItemHandler> capability =
 					tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
@@ -159,7 +159,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
 		if (!clientPacket) {
 			inventory.deserializeNBT(compound.getCompound("Inventory"));
 		}
@@ -178,7 +178,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			missingItem = ItemStack.of(compound.getCompound("MissingItem"));
 
 		// Settings
-		CompoundNBT options = compound.getCompound("Options");
+		CompoundTag options = compound.getCompound("Options");
 		replaceMode = options.getInt("ReplaceMode");
 		skipMissing = options.getBoolean("SkipMissing");
 		replaceTileEntities = options.getBoolean("ReplaceTileEntities");
@@ -192,15 +192,15 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		super.fromTag(blockState, compound, clientPacket);
 	}
 
-	protected void readFlyingBlocks(CompoundNBT compound) {
-		ListNBT tagBlocks = compound.getList("FlyingBlocks", 10);
+	protected void readFlyingBlocks(CompoundTag compound) {
+		ListTag tagBlocks = compound.getList("FlyingBlocks", 10);
 		if (tagBlocks.isEmpty())
 			flyingBlocks.clear();
 
 		boolean pastDead = false;
 
 		for (int i = 0; i < tagBlocks.size(); i++) {
-			CompoundNBT c = tagBlocks.getCompound(i);
+			CompoundTag c = tagBlocks.getCompound(i);
 			LaunchedItem launched = LaunchedItem.fromNBT(c);
 			BlockPos readBlockPos = launched.target;
 
@@ -228,7 +228,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		if (!clientPacket) {
 			compound.put("Inventory", inventory.serializeNBT());
 			if (state == State.RUNNING) {
@@ -249,18 +249,18 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			compound.put("MissingItem", missingItem.serializeNBT());
 
 		// Settings
-		CompoundNBT options = new CompoundNBT();
+		CompoundTag options = new CompoundTag();
 		options.putInt("ReplaceMode", replaceMode);
 		options.putBoolean("SkipMissing", skipMissing);
 		options.putBoolean("ReplaceTileEntities", replaceTileEntities);
 		compound.put("Options", options);
 
 		// Printer & Flying Blocks
-		CompoundNBT printerData = new CompoundNBT();
+		CompoundTag printerData = new CompoundTag();
 		printer.write(printerData);
 		compound.put("Printer", printerData);
 
-		ListNBT tagFlyingBlocks = new ListNBT();
+		ListTag tagFlyingBlocks = new ListTag();
 		for (LaunchedItem b : flyingBlocks)
 			tagFlyingBlocks.add(b.serializeNBT());
 		compound.put("FlyingBlocks", tagFlyingBlocks);
@@ -575,7 +575,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		blocksToPlace = 0;
 	}
 
-	protected boolean shouldPlace(BlockPos pos, BlockState state, TileEntity te,
+	protected boolean shouldPlace(BlockPos pos, BlockState state, BlockEntity te,
 								  BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube) {
 		if (pos.closerThan(getBlockPos(), 2f))
 			return false;
@@ -604,7 +604,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		return false;
 	}
 
-	protected boolean shouldIgnoreBlockState(BlockState state, TileEntity te) {
+	protected boolean shouldIgnoreBlockState(BlockState state, BlockEntity te) {
 		// Block doesnt have a mapping (Water, lava, etc)
 		if (state.getBlock() == Blocks.STRUCTURE_VOID)
 			return true;
@@ -725,7 +725,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		return blockState;
 	}
 
-	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, TileEntity tile) {
+	protected void launchBlockOrBelt(BlockPos target, ItemStack icon, BlockState blockState, BlockEntity tile) {
 		if (AllBlocks.BELT.has(blockState)) {
 			blockState = stripBeltIfNotLast(blockState);
 			if (tile instanceof BeltTileEntity && AllBlocks.BELT.has(blockState))
@@ -733,13 +733,13 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 			else
 				launchBlock(target, icon, blockState, null);
 		} else {
-			CompoundNBT data = null;
+			CompoundTag data = null;
 			if (tile != null) {
 				if (AllBlockTags.SAFE_NBT.matches(blockState)) {
-					data = tile.save(new CompoundNBT());
+					data = tile.save(new CompoundTag());
 					data = NBTProcessors.process(tile, data, true);
 				} else if (tile instanceof IPartialSafeNBT) {
-					data = new CompoundNBT();
+					data = new CompoundTag();
 					((IPartialSafeNBT) tile).writeSafe(data, false);
 					data = NBTProcessors.process(tile, data, true);
 				}
@@ -755,7 +755,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		playFiringSound();
 	}
 
-	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundNBT data) {
+	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundTag data) {
 		if (!state.getBlock().isAir(state, level, target))
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getBlockPos(), target, stack, state, data));
@@ -772,18 +772,18 @@ public class SchematicannonTileEntity extends SmartTileEntity implements INamedC
 		AllSoundEvents.SCHEMATICANNON_LAUNCH_BLOCK.playOnServer(level, worldPosition);
 	}
 
-	public void sendToContainer(PacketBuffer buffer) {
+	public void sendToContainer(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(getBlockPos());
 		buffer.writeNbt(getUpdateTag());
 	}
 
 	@Override
-	public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
 		return SchematicannonContainer.create(id, inv, this);
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return Lang.translate("gui.schematicannon.title");
 	}
 

@@ -9,15 +9,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.CapManipula
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.ITickList;
-import net.minecraft.world.TickPriority;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.TickList;
+import net.minecraft.world.level.TickPriority;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -35,7 +35,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
 
-	public StockpileSwitchTileEntity(TileEntityType<?> typeIn) {
+	public StockpileSwitchTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 		onWhenAbove = .75f;
 		offWhenBelow = .25f;
@@ -47,7 +47,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
 		onWhenAbove = compound.getFloat("OnAbove");
 		offWhenBelow = compound.getFloat("OffBelow");
 		currentLevel = compound.getFloat("Current");
@@ -58,7 +58,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putFloat("OnAbove", onWhenAbove);
 		compound.putFloat("OffBelow", offWhenBelow);
 		compound.putFloat("Current", currentLevel);
@@ -127,7 +127,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		if (currentLevel != stockLevel)
 			changed = true;
 		currentLevel = stockLevel;
-		currentLevel = MathHelper.clamp(currentLevel, 0, 1);
+		currentLevel = Mth.clamp(currentLevel, 0, 1);
 
 		boolean previouslyPowered = state;
 		if (state && currentLevel <= offWhenBelow)
@@ -150,7 +150,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	protected void scheduleBlockTick() {
-		ITickList<Block> blockTicks = level.getBlockTicks();
+		TickList<Block> blockTicks = level.getBlockTicks();
 		Block block = getBlockState().getBlock();
 		if (!blockTicks.willTickThisTick(worldPosition, block))
 			blockTicks.scheduleTick(worldPosition, block, 2, TickPriority.NORMAL);
@@ -166,7 +166,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).moveText(new Vector3d(0, 5, 0))
+		filtering = new FilteringBehaviour(this, new FilteredDetectorFilterSlot()).moveText(new Vec3(0, 5, 0))
 			.withCallback($ -> updateCurrentLevel());
 		behaviours.add(filtering);
 

@@ -26,19 +26,19 @@ import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery
 import com.simibubi.create.content.logistics.item.filter.attribute.astralsorcery.AstralSorceryPerkGemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -54,7 +54,7 @@ public interface ItemAttribute {
 
 	static ItemAttribute standard = register(StandardTraits.DUMMY);
 	static ItemAttribute inTag = register(new InTag(new ResourceLocation("dummy")));
-	static ItemAttribute inItemGroup = register(new InItemGroup(ItemGroup.TAB_MISC));
+	static ItemAttribute inItemGroup = register(new InItemGroup(CreativeModeTab.TAB_MISC));
 	static ItemAttribute addedBy = register(new InItemGroup.AddedBy("dummy"));
 	static ItemAttribute hasEnchant = register(EnchantAttribute.EMPTY);
 	static ItemAttribute shulkerFillLevel = register(ShulkerFillLevelAttribute.EMPTY);
@@ -73,13 +73,13 @@ public interface ItemAttribute {
 		return attributeType;
 	}
 
-	default boolean appliesTo(ItemStack stack, World world) {
+	default boolean appliesTo(ItemStack stack, Level world) {
 		return appliesTo(stack);
 	}
 
 	boolean appliesTo(ItemStack stack);
 
-	default List<ItemAttribute> listAttributesOf(ItemStack stack, World world) {
+	default List<ItemAttribute> listAttributesOf(ItemStack stack, Level world) {
 		return listAttributesOf(stack);
 	}
 
@@ -87,17 +87,17 @@ public interface ItemAttribute {
 
 	public String getTranslationKey();
 
-	void writeNBT(CompoundNBT nbt);
+	void writeNBT(CompoundTag nbt);
 
-	ItemAttribute readNBT(CompoundNBT nbt);
+	ItemAttribute readNBT(CompoundTag nbt);
 
-	public default void serializeNBT(CompoundNBT nbt) {
-		CompoundNBT compound = new CompoundNBT();
+	public default void serializeNBT(CompoundTag nbt) {
+		CompoundTag compound = new CompoundTag();
 		writeNBT(compound);
 		nbt.put(getNBTKey(), compound);
 	}
 
-	public static ItemAttribute fromNBT(CompoundNBT nbt) {
+	public static ItemAttribute fromNBT(CompoundTag nbt) {
 		for (ItemAttribute itemAttribute : types) {
 			if (!itemAttribute.canRead(nbt))
 				continue;
@@ -110,7 +110,7 @@ public interface ItemAttribute {
 		return new String[0];
 	}
 
-	default boolean canRead(CompoundNBT nbt) {
+	default boolean canRead(CompoundTag nbt) {
 		return nbt.contains(getNBTKey());
 	}
 
@@ -119,7 +119,7 @@ public interface ItemAttribute {
 	}
 
 	@OnlyIn(value = Dist.CLIENT)
-	default TranslationTextComponent format(boolean inverted) {
+	default TranslatableComponent format(boolean inverted) {
 		return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 			getTranslationParameters());
 	}
@@ -137,23 +137,23 @@ public interface ItemAttribute {
 		BADLY_DAMAGED(s -> s.isDamaged() && s.getDamageValue() / s.getMaxDamage() > 3 / 4f),
 		NOT_STACKABLE(((Predicate<ItemStack>) ItemStack::isStackable).negate()),
 		EQUIPABLE(s -> s.getEquipmentSlot() != null),
-		FURNACE_FUEL(AbstractFurnaceTileEntity::isFuel),
+		FURNACE_FUEL(AbstractFurnaceBlockEntity::isFuel),
 		WASHABLE(InWorldProcessing::isWashable),
 		CRUSHABLE((s, w) -> testRecipe(s, w, AllRecipeTypes.CRUSHING.getType())
 			|| testRecipe(s, w, AllRecipeTypes.MILLING.getType())),
-		SMELTABLE((s, w) -> testRecipe(s, w, IRecipeType.SMELTING)),
-		SMOKABLE((s, w) -> testRecipe(s, w, IRecipeType.SMOKING)),
-		BLASTABLE((s, w) -> testRecipe(s, w, IRecipeType.BLASTING));
+		SMELTABLE((s, w) -> testRecipe(s, w, RecipeType.SMELTING)),
+		SMOKABLE((s, w) -> testRecipe(s, w, RecipeType.SMOKING)),
+		BLASTABLE((s, w) -> testRecipe(s, w, RecipeType.BLASTING));
 
 		private static final RecipeWrapper RECIPE_WRAPPER = new RecipeWrapper(new ItemStackHandler(1));
 		private Predicate<ItemStack> test;
-		private BiPredicate<ItemStack, World> testWithWorld;
+		private BiPredicate<ItemStack, Level> testWithWorld;
 
 		private StandardTraits(Predicate<ItemStack> test) {
 			this.test = test;
 		}
 
-		private static boolean testRecipe(ItemStack s, World w, IRecipeType<? extends IRecipe<IInventory>> type) {
+		private static boolean testRecipe(ItemStack s, Level w, RecipeType<? extends Recipe<Container>> type) {
 			RECIPE_WRAPPER.setItem(0, s.copy());
 			return w.getRecipeManager()
 				.getRecipeFor(type, RECIPE_WRAPPER, w)
@@ -167,12 +167,12 @@ public interface ItemAttribute {
 				.anyMatch(e -> e.getKey().getMaxLevel() <= e.getValue());
 		}
 
-		private StandardTraits(BiPredicate<ItemStack, World> test) {
+		private StandardTraits(BiPredicate<ItemStack, Level> test) {
 			this.testWithWorld = test;
 		}
 
 		@Override
-		public boolean appliesTo(ItemStack stack, World world) {
+		public boolean appliesTo(ItemStack stack, Level world) {
 			if (testWithWorld != null)
 				return testWithWorld.test(stack, world);
 			return appliesTo(stack);
@@ -184,7 +184,7 @@ public interface ItemAttribute {
 		}
 
 		@Override
-		public List<ItemAttribute> listAttributesOf(ItemStack stack, World world) {
+		public List<ItemAttribute> listAttributesOf(ItemStack stack, Level world) {
 			List<ItemAttribute> attributes = new ArrayList<>();
 			for (StandardTraits trait : values())
 				if (trait.appliesTo(stack, world))
@@ -208,12 +208,12 @@ public interface ItemAttribute {
 		}
 
 		@Override
-		public void writeNBT(CompoundNBT nbt) {
+		public void writeNBT(CompoundTag nbt) {
 			nbt.putBoolean(name(), true);
 		}
 
 		@Override
-		public ItemAttribute readNBT(CompoundNBT nbt) {
+		public ItemAttribute readNBT(CompoundTag nbt) {
 			for (StandardTraits trait : values())
 				if (nbt.contains(trait.name()))
 					return trait;
@@ -257,13 +257,13 @@ public interface ItemAttribute {
 		}
 
 		@Override
-		public void writeNBT(CompoundNBT nbt) {
+		public void writeNBT(CompoundTag nbt) {
 			nbt.putString("space", tagName.getNamespace());
 			nbt.putString("path", tagName.getPath());
 		}
 
 		@Override
-		public ItemAttribute readNBT(CompoundNBT nbt) {
+		public ItemAttribute readNBT(CompoundTag nbt) {
 			return new InTag(new ResourceLocation(nbt.getString("space"), nbt.getString("path")));
 		}
 
@@ -271,9 +271,9 @@ public interface ItemAttribute {
 
 	public static class InItemGroup implements ItemAttribute {
 
-		private ItemGroup group;
+		private CreativeModeTab group;
 
-		public InItemGroup(ItemGroup group) {
+		public InItemGroup(CreativeModeTab group) {
 			this.group = group;
 		}
 
@@ -285,7 +285,7 @@ public interface ItemAttribute {
 
 		@Override
 		public List<ItemAttribute> listAttributesOf(ItemStack stack) {
-			ItemGroup group = stack.getItem()
+			CreativeModeTab group = stack.getItem()
 				.getItemCategory();
 			return group == null ? Collections.emptyList() : Arrays.asList(new InItemGroup(group));
 		}
@@ -297,20 +297,20 @@ public interface ItemAttribute {
 
 		@Override
 		@OnlyIn(value = Dist.CLIENT)
-		public TranslationTextComponent format(boolean inverted) {
+		public TranslatableComponent format(boolean inverted) {
 			return Lang.translate("item_attributes." + getTranslationKey() + (inverted ? ".inverted" : ""),
 				group.getDisplayName());
 		}
 
 		@Override
-		public void writeNBT(CompoundNBT nbt) {
+		public void writeNBT(CompoundTag nbt) {
 			nbt.putString("path", group.getRecipeFolderName());
 		}
 
 		@Override
-		public ItemAttribute readNBT(CompoundNBT nbt) {
+		public ItemAttribute readNBT(CompoundTag nbt) {
 			String readPath = nbt.getString("path");
-			for (ItemGroup group : ItemGroup.TABS)
+			for (CreativeModeTab group : CreativeModeTab.TABS)
 				if (group.getRecipeFolderName()
 					.equals(readPath))
 					return new InItemGroup(group);
@@ -356,12 +356,12 @@ public interface ItemAttribute {
 		}
 
 		@Override
-		public void writeNBT(CompoundNBT nbt) {
+		public void writeNBT(CompoundTag nbt) {
 			nbt.putString("id", modId);
 		}
 
 		@Override
-		public ItemAttribute readNBT(CompoundNBT nbt) {
+		public ItemAttribute readNBT(CompoundTag nbt) {
 			return new AddedBy(nbt.getString("id"));
 		}
 

@@ -5,35 +5,35 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public abstract class ShootGadgetPacket extends SimplePacketBase {
 
-	public Vector3d location;
-	public Hand hand;
+	public Vec3 location;
+	public InteractionHand hand;
 	public boolean self;
 
-	public ShootGadgetPacket(Vector3d location, Hand hand, boolean self) {
+	public ShootGadgetPacket(Vec3 location, InteractionHand hand, boolean self) {
 		this.location = location;
 		this.hand = hand;
 		this.self = self;
 	}
 
-	public ShootGadgetPacket(PacketBuffer buffer) {
-		hand = buffer.readBoolean() ? Hand.MAIN_HAND : Hand.OFF_HAND;
+	public ShootGadgetPacket(FriendlyByteBuf buffer) {
+		hand = buffer.readBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
 		self = buffer.readBoolean();
-		location = new Vector3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+		location = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
 		readAdditional(buffer);
 	}
 
-	public final void write(PacketBuffer buffer) {
-		buffer.writeBoolean(hand == Hand.MAIN_HAND);
+	public final void write(FriendlyByteBuf buffer) {
+		buffer.writeBoolean(hand == InteractionHand.MAIN_HAND);
 		buffer.writeBoolean(self);
 		buffer.writeDouble(location.x);
 		buffer.writeDouble(location.y);
@@ -41,9 +41,9 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 		writeAdditional(buffer);
 	}
 
-	protected abstract void readAdditional(PacketBuffer buffer);
+	protected abstract void readAdditional(FriendlyByteBuf buffer);
 
-	protected abstract void writeAdditional(PacketBuffer buffer);
+	protected abstract void writeAdditional(FriendlyByteBuf buffer);
 
 	@OnlyIn(Dist.CLIENT)
 	protected abstract void handleAdditional();

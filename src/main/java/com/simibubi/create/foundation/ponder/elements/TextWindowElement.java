@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.elements;
 import java.util.List;
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -12,13 +12,13 @@ import com.simibubi.create.foundation.ponder.PonderUI;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import com.mojang.math.Matrix4f;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.Style;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class TextWindowElement extends AnimatedOverlayElement {
@@ -29,7 +29,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 	// from 0 to 200
 	int y;
 
-	Vector3d vec;
+	Vec3 vec;
 
 	boolean nearScene = false;
 	int color = PonderPalette.WHITE.getColor();
@@ -47,7 +47,7 @@ public class TextWindowElement extends AnimatedOverlayElement {
 			return this;
 		}
 
-		public Builder pointAt(Vector3d vec) {
+		public Builder pointAt(Vec3 vec) {
 			TextWindowElement.this.vec = vec;
 			return this;
 		}
@@ -89,26 +89,26 @@ public class TextWindowElement extends AnimatedOverlayElement {
 	}
 
 	@Override
-	protected void render(PonderScene scene, PonderUI screen, MatrixStack ms, float partialTicks, float fade) {
+	protected void render(PonderScene scene, PonderUI screen, PoseStack ms, float partialTicks, float fade) {
 		if (bakedText == null)
 			bakedText = textGetter.get();
 		if (fade < 1 / 16f)
 			return;
-		Vector2f sceneToScreen = vec != null ? scene.getTransform()
-			.sceneToScreen(vec, partialTicks) : new Vector2f(screen.width / 2, (screen.height - 200) / 2 + y - 8);
+		Vec2 sceneToScreen = vec != null ? scene.getTransform()
+			.sceneToScreen(vec, partialTicks) : new Vec2(screen.width / 2, (screen.height - 200) / 2 + y - 8);
 
 		float yDiff = (screen.height / 2f - sceneToScreen.y - 10) / 100f;
-		int targetX = (int) (screen.width * MathHelper.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
+		int targetX = (int) (screen.width * Mth.lerp(yDiff * yDiff, 6f / 8, 5f / 8));
 
 		if (nearScene)
 			targetX = (int) Math.min(targetX, sceneToScreen.x + 50);
 
 		int textWidth = Math.min(screen.width - targetX, 180);
 
-		List<ITextProperties> lines = screen.getFontRenderer().getSplitter().splitLines(bakedText, textWidth, Style.EMPTY);
+		List<FormattedText> lines = screen.getFontRenderer().getSplitter().splitLines(bakedText, textWidth, Style.EMPTY);
 
 		int boxWidth = 0;
-		for (ITextProperties line : lines)
+		for (FormattedText line : lines)
 			boxWidth = Math.max(boxWidth, screen.getFontRenderer().width(line));
 
 		int boxHeight = screen.getFontRenderer()

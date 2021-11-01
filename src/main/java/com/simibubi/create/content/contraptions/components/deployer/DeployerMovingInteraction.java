@@ -8,27 +8,27 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.Constants;
 
 public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
 	@Override
-	public boolean handlePlayerInteraction(PlayerEntity player, Hand activeHand, BlockPos localPos,
+	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
-		BlockInfo info = contraptionEntity.getContraption()
+		StructureBlockInfo info = contraptionEntity.getContraption()
 			.getBlocks()
 			.get(localPos);
 		if (info == null)
 			return false;
 		MovementContext ctx = null;
 		int index = -1;
-		for (MutablePair<BlockInfo, MovementContext> pair : contraptionEntity.getContraption()
+		for (MutablePair<StructureBlockInfo, MovementContext> pair : contraptionEntity.getContraption()
 			.getActors()) {
 			if (info.equals(pair.left)) {
 				ctx = pair.right;
@@ -53,8 +53,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 				return true; // we'll try again on the server side
 			DeployerFakePlayer fake = null;
 
-			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerWorld) {
-				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerWorld) ctx.world);
+			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
+				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
 				deployerFakePlayer.inventory.load(ctx.tileData.getList("Inventory", Constants.NBT.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;
 				ctx.tileData.remove("Inventory");
@@ -66,7 +66,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
 			ItemStack deployerItem = fake.getMainHandItem();
 			player.setItemInHand(activeHand, deployerItem.copy());
-			fake.setItemInHand(Hand.MAIN_HAND, heldStack.copy());
+			fake.setItemInHand(InteractionHand.MAIN_HAND, heldStack.copy());
 			ctx.tileData.put("HeldItem", heldStack.serializeNBT());
 			ctx.data.put("HeldItem", heldStack.serializeNBT());
 		}

@@ -3,7 +3,7 @@ package com.simibubi.create;
 import com.jozufozu.flywheel.core.AtlasStitcher;
 import com.jozufozu.flywheel.core.StitchedSprite;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class AllStitchedTextures {
 

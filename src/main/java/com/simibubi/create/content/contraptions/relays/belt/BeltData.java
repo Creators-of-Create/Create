@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.math.vector.Quaternion;
+import com.mojang.math.Quaternion;
 
 public class BeltData extends KineticData {
     private float qX;

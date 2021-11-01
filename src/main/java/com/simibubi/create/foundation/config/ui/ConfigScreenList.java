@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
 import com.simibubi.create.foundation.gui.TextStencilElement;
@@ -18,20 +18,20 @@ import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
-public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
+public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry> {
 
-	public static TextFieldWidget currentText;
+	public static EditBox currentText;
 
 	public ConfigScreenList(Minecraft client, int width, int height, int top, int bottom, int elementHeight) {
 		super(client, width, height, top, bottom, elementHeight);
@@ -43,7 +43,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		Color c = new Color(0x60_000000);
 		UIRenderHelper.angledGradient(ms, 90, x0 + width / 2, y0, width, 5, c, Color.TRANSPARENT_BLACK);
 		UIRenderHelper.angledGradient(ms, -90, x0 + width / 2, y1, width, 5, c, Color.TRANSPARENT_BLACK);
@@ -54,8 +54,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 	}
 
 	@Override
-	protected void renderList(MatrixStack p_238478_1_, int p_238478_2_, int p_238478_3_, int p_238478_4_, int p_238478_5_, float p_238478_6_) {
-		MainWindow window = Minecraft.getInstance().getWindow();
+	protected void renderList(PoseStack p_238478_1_, int p_238478_2_, int p_238478_3_, int p_238478_4_, int p_238478_5_, float p_238478_6_) {
+		Window window = Minecraft.getInstance().getWindow();
 		double d0 = window.getGuiScale();
 		RenderSystem.enableScissor((int) (this.x0 * d0), (int) (window.getHeight() - (this.y1 * d0)), (int) (this.width * d0), (int) (this.height * d0));
 		super.renderList(p_238478_1_, p_238478_2_, p_238478_3_, p_238478_4_, p_238478_5_, p_238478_6_);
@@ -121,8 +121,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		ConfigScreen.cogSpin.bump(3, force);
 	}
 
-	public static abstract class Entry extends ExtendedList.AbstractListEntry<Entry> {
-		protected List<IGuiEventListener> listeners;
+	public static abstract class Entry extends ObjectSelectionList.Entry<Entry> {
+		protected List<GuiEventListener> listeners;
 		protected Map<String, String> annotations;
 		protected String path;
 
@@ -148,7 +148,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 		public void tick() {}
 
-		public List<IGuiEventListener> getGuiListeners() {
+		public List<GuiEventListener> getGuiListeners() {
 			return listeners;
 		}
 
@@ -167,7 +167,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		protected static final float labelWidthMult = 0.4f;
 
 		protected TextStencilElement label;
-		protected List<ITextComponent> labelTooltip;
+		protected List<Component> labelTooltip;
 		protected String unit = null;
 		protected LerpedFloat differenceAnimation = LerpedFloat.linear().startWithValue(0);
 		protected LerpedFloat highlightAnimation = LerpedFloat.linear().startWithValue(0);
@@ -191,7 +191,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 		}
 
 		@Override
-		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+		public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 			if (isCurrentValueChanged()) {
 				if (differenceAnimation.getChaseTarget() != 1)
 					differenceAnimation.chase(1, .5f, LerpedFloat.Chaser.EXP);
@@ -215,8 +215,8 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 			UIRenderHelper.streak(ms, 0, x - 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
 			UIRenderHelper.streak(ms, 180, x + (int) (width * 1.35f) + 10, y + height / 2, height - 6, width / 8 * 7, 0xdd_000000);
-			IFormattableTextComponent component = label.getComponent();
-			FontRenderer font = Minecraft.getInstance().font;
+			MutableComponent component = label.getComponent();
+			Font font = Minecraft.getInstance().font;
 			if (font.width(component) > getLabelWidth(width) - 10) {
 				label.withText(font.substrByWidth(component, getLabelWidth(width) - 15).getString() + "...");
 			}
@@ -244,7 +244,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 
 
 			if (mouseX > x && mouseX < x + getLabelWidth(width) && mouseY > y + 5 && mouseY < y + height - 5) {
-				List<ITextComponent> tooltip = getLabelTooltip();
+				List<Component> tooltip = getLabelTooltip();
 				if (tooltip.isEmpty())
 					return;
 
@@ -258,7 +258,7 @@ public class ConfigScreenList extends ExtendedList<ConfigScreenList.Entry> {
 			}
 		}
 
-		public List<ITextComponent> getLabelTooltip() {
+		public List<Component> getLabelTooltip() {
 			return labelTooltip;
 		}
 

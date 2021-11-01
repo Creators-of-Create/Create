@@ -4,15 +4,15 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MilkBucketItem;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.world.World;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MilkBucketItem;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -49,7 +49,7 @@ public class GenericItemFilling {
 		return true;
 	}
 
-	public static boolean canItemBeFilled(World world, ItemStack stack) {
+	public static boolean canItemBeFilled(Level world, ItemStack stack) {
 		if (stack.getItem() == Items.GLASS_BOTTLE)
 			return true;
 		if (stack.getItem() == Items.MILK_BUCKET)
@@ -70,7 +70,7 @@ public class GenericItemFilling {
 		return false;
 	}
 
-	public static int getRequiredAmountForItem(World world, ItemStack stack, FluidStack availableFluid) {
+	public static int getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
 		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid))
 			return PotionFluidHandler.getRequiredAmountForFilledBottle(stack, availableFluid);
 		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
@@ -107,7 +107,7 @@ public class GenericItemFilling {
 		return false;
 	}
 
-	public static ItemStack fillItem(World world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
+	public static ItemStack fillItem(Level world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
 		FluidStack toFill = availableFluid.copy();
 		toFill.setAmount(requiredAmount);
 		availableFluid.shrink(requiredAmount);

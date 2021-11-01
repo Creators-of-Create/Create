@@ -22,9 +22,9 @@ import com.simibubi.create.foundation.utility.FilesHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +33,7 @@ public class ClientSchematicLoader {
 
 	public static final int PACKET_DELAY = 10;
 
-	private List<ITextComponent> availableSchematics;
+	private List<Component> availableSchematics;
 	private Map<String, InputStream> activeUploads;
 	private int packetCycle;
 
@@ -84,7 +84,7 @@ public class ClientSchematicLoader {
 			return true;
 		Integer maxSize = AllConfigs.SERVER.schematics.maxTotalSchematicSize.get();
 		if (size > maxSize * 1000) {
-			ClientPlayerEntity player = Minecraft.getInstance().player;
+			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
 				player.sendMessage(Lang.translate("schematics.uploadTooLarge").append(" (" + size / 1000 + " KB)."), player.getUUID());
 				player.sendMessage(Lang.translate("schematics.maxAllowedSize").append(" " + maxSize + " KB"), player.getUUID());
@@ -137,7 +137,7 @@ public class ClientSchematicLoader {
 						if (Files.isDirectory(path))
 							return;
 
-						availableSchematics.add(new StringTextComponent(path.getFileName().toString()));
+						availableSchematics.add(new TextComponent(path.getFileName().toString()));
 					});
 		} catch (NoSuchFileException e) {
 			// No Schematics created yet
@@ -199,7 +199,7 @@ public class ClientSchematicLoader {
 		});
 	}
 
-	public List<ITextComponent> getAvailableSchematics() {
+	public List<Component> getAvailableSchematics() {
 		return availableSchematics;
 	}
 

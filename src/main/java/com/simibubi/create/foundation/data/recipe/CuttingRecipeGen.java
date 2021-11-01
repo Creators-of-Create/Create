@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.data.recipe;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.DataGenerator;
 
 public class CuttingRecipeGen extends ProcessingRecipeGen {

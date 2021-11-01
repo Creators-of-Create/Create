@@ -9,10 +9,10 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.gson.JsonObject;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.resources.ResourceLocation;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -23,11 +23,11 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 	}
 
 	@Override
-	public Instance createInstance(JsonObject json, ConditionArrayParser context) {
+	public Instance createInstance(JsonObject json, DeserializationContext context) {
 		return new Instance(getId());
 	}
 
-	public void trigger(ServerPlayerEntity player) {
+	public void trigger(ServerPlayer player) {
 		super.trigger(player, null);
 	}
 
@@ -38,7 +38,7 @@ public class SimpleTrigger extends CriterionTriggerBase<SimpleTrigger.Instance> 
 	public static class Instance extends CriterionTriggerBase.Instance {
 
 		public Instance(ResourceLocation idIn) {
-			super(idIn, EntityPredicate.AndPredicate.ANY); // FIXME: Is this right?
+			super(idIn, EntityPredicate.Composite.ANY); // FIXME: Is this right?
 		}
 
 		@Override

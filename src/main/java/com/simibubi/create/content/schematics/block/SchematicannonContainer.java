@@ -3,27 +3,27 @@ package com.simibubi.create.content.schematics.block;
 import com.simibubi.create.AllContainerTypes;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicannonContainer extends Container {
+public class SchematicannonContainer extends AbstractContainerMenu {
 
 	private SchematicannonTileEntity te;
-	private PlayerEntity player;
+	private Player player;
 
-	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer buffer) {
+	public SchematicannonContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf buffer) {
 		super(type, id);
 		player = inv.player;
-		ClientWorld world = Minecraft.getInstance().level;
-		TileEntity tileEntity = world.getBlockEntity(buffer.readBlockPos());
+		ClientLevel world = Minecraft.getInstance().level;
+		BlockEntity tileEntity = world.getBlockEntity(buffer.readBlockPos());
 		if (tileEntity instanceof SchematicannonTileEntity) {
 			this.te = (SchematicannonTileEntity) tileEntity;
 			this.te.handleUpdateTag(te.getBlockState(), buffer.readNbt());
@@ -31,14 +31,14 @@ public class SchematicannonContainer extends Container {
 		}
 	}
 
-	public SchematicannonContainer(ContainerType<?> type, int id, PlayerInventory inv, SchematicannonTileEntity te) {
+	public SchematicannonContainer(MenuType<?> type, int id, Inventory inv, SchematicannonTileEntity te) {
 		super(type, id);
 		player = inv.player;
 		this.te = te;
 		init();
 	}
 
-	public static SchematicannonContainer create(int id, PlayerInventory inv, SchematicannonTileEntity te) {
+	public static SchematicannonContainer create(int id, Inventory inv, SchematicannonTileEntity te) {
 		return new SchematicannonContainer(AllContainerTypes.SCHEMATICANNON.get(), id, inv, te);
 	}
 
@@ -66,12 +66,12 @@ public class SchematicannonContainer extends Container {
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return te != null && te.canPlayerUse(player);
 	}
 
 	@Override
-	public void removed(PlayerEntity playerIn) {
+	public void removed(Player playerIn) {
 		super.removed(playerIn);
 	}
 
@@ -80,7 +80,7 @@ public class SchematicannonContainer extends Container {
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(Player playerIn, int index) {
 		Slot clickedSlot = getSlot(index);
 		if (!clickedSlot.hasItem())
 			return ItemStack.EMPTY;

@@ -3,9 +3,9 @@ package com.simibubi.create.foundation.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
 
 public abstract class ConfigureConfigCommand {
 
@@ -15,12 +15,12 @@ public abstract class ConfigureConfigCommand {
 		this.commandLiteral = commandLiteral;
 	}
 
-	ArgumentBuilder<CommandSource, ?> register() {
+	ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal(this.commandLiteral)
 			.requires(cs -> cs.hasPermission(0))
 			.then(Commands.literal("on")
 				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource()
+					ServerPlayer player = ctx.getSource()
 						.getPlayerOrException();
 					sendPacket(player, String.valueOf(true));
 
@@ -28,14 +28,14 @@ public abstract class ConfigureConfigCommand {
 				}))
 			.then(Commands.literal("off")
 				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource()
+					ServerPlayer player = ctx.getSource()
 						.getPlayerOrException();
 					sendPacket(player, String.valueOf(false));
 
 					return Command.SINGLE_SUCCESS;
 				}))
 			.executes(ctx -> {
-				ServerPlayerEntity player = ctx.getSource()
+				ServerPlayer player = ctx.getSource()
 					.getPlayerOrException();
 				sendPacket(player, "info");
 
@@ -43,5 +43,5 @@ public abstract class ConfigureConfigCommand {
 			});
 	}
 
-	protected abstract void sendPacket(ServerPlayerEntity player, String option);
+	protected abstract void sendPacket(ServerPlayer player, String option);
 }

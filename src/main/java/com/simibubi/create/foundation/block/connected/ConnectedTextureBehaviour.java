@@ -2,12 +2,12 @@ package com.simibubi.create.foundation.block.connected;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 public abstract class ConnectedTextureBehaviour {
 
@@ -34,12 +34,12 @@ public abstract class ConnectedTextureBehaviour {
 		return false;
 	}
 
-	public boolean connectsTo(BlockState state, BlockState other, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
+	public boolean connectsTo(BlockState state, BlockState other, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 		return !isBeingBlocked(state, reader, pos, otherPos, face) && state.getBlock() == other.getBlock();
 	}
 
-	protected boolean isBeingBlocked(BlockState state, IBlockDisplayReader reader, BlockPos pos, BlockPos otherPos,
+	protected boolean isBeingBlocked(BlockState state, BlockAndTintGetter reader, BlockPos pos, BlockPos otherPos,
 		Direction face) {
 		BlockPos blockingPos = otherPos.relative(face);
 		return face.getAxis()
@@ -48,7 +48,7 @@ public abstract class ConnectedTextureBehaviour {
 			&& connectsTo(state, reader.getBlockState(blockingPos), reader, pos, blockingPos, face);
 	}
 
-	public CTContext buildContext(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
+	public CTContext buildContext(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
 		CTContext context = new CTContext();
 		CTSpriteShiftEntry textureEntry = get(state, face);
 
@@ -94,17 +94,17 @@ public abstract class ConnectedTextureBehaviour {
 		return context;
 	}
 
-	protected Direction getUpDirection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
+	protected Direction getUpDirection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
 		Axis axis = face.getAxis();
 		return axis.isHorizontal() ? Direction.UP : Direction.NORTH;
 	}
 
-	protected Direction getRightDirection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face) {
+	protected Direction getRightDirection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face) {
 		Axis axis = face.getAxis();
 		return axis == Axis.X ? Direction.SOUTH : Direction.WEST;
 	}
 
-	private boolean testConnection(IBlockDisplayReader reader, BlockPos pos, BlockState state, Direction face,
+	private boolean testConnection(BlockAndTintGetter reader, BlockPos pos, BlockState state, Direction face,
 		final Direction horizontal, final Direction vertical, int sh, int sv) {
 		BlockPos p = pos.relative(horizontal, sh)
 			.relative(vertical, sv);

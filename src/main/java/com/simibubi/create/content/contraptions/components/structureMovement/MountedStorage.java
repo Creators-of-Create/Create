@@ -6,15 +6,15 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.block.ChestBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.BarrelTileEntity;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.ShulkerBoxTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -27,9 +27,9 @@ public class MountedStorage {
 
 	ItemStackHandler handler;
 	boolean valid;
-	private TileEntity te;
+	private BlockEntity te;
 
-	public static boolean canUseAsStorage(TileEntity te) {
+	public static boolean canUseAsStorage(BlockEntity te) {
 		if (te == null)
 			return false;
 
@@ -37,11 +37,11 @@ public class MountedStorage {
 			return true;
 		if (AllTileEntities.CREATIVE_CRATE.is(te))
 			return true;
-		if (te instanceof ShulkerBoxTileEntity)
+		if (te instanceof ShulkerBoxBlockEntity)
 			return true;
-		if (te instanceof ChestTileEntity)
+		if (te instanceof ChestBlockEntity)
 			return true;
-		if (te instanceof BarrelTileEntity)
+		if (te instanceof BarrelBlockEntity)
 			return true;
 
 		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
@@ -49,7 +49,7 @@ public class MountedStorage {
 		return handler instanceof ItemStackHandler && !(handler instanceof ProcessingInventory);
 	}
 
-	public MountedStorage(TileEntity te) {
+	public MountedStorage(BlockEntity te) {
 		this.te = te;
 		handler = dummyHandler;
 	}
@@ -60,7 +60,7 @@ public class MountedStorage {
 			return;
 
 		// Split double chests
-		if (te.getType() == TileEntityType.CHEST || te.getType() == TileEntityType.TRAPPED_CHEST) {
+		if (te.getType() == BlockEntityType.CHEST || te.getType() == BlockEntityType.TRAPPED_CHEST) {
 			if (te.getBlockState()
 				.getValue(ChestBlock.TYPE) != ChestType.SINGLE)
 				te.getLevel()
@@ -105,7 +105,7 @@ public class MountedStorage {
 
 	}
 
-	public void addStorageToWorld(TileEntity te) {
+	public void addStorageToWorld(BlockEntity te) {
 		// FIXME: More dynamic mounted storage in .4
 		if (handler instanceof BottomlessItemHandler)
 			return;
@@ -124,10 +124,10 @@ public class MountedStorage {
 		return handler;
 	}
 
-	public CompoundNBT serialize() {
+	public CompoundTag serialize() {
 		if (!valid)
 			return null;
-		CompoundNBT tag = handler.serializeNBT();
+		CompoundTag tag = handler.serializeNBT();
 
 		if (handler instanceof BottomlessItemHandler) {
 			NBTHelper.putMarker(tag, "Bottomless");
@@ -138,7 +138,7 @@ public class MountedStorage {
 		return tag;
 	}
 
-	public static MountedStorage deserialize(CompoundNBT nbt) {
+	public static MountedStorage deserialize(CompoundTag nbt) {
 		MountedStorage storage = new MountedStorage(null);
 		storage.handler = new ItemStackHandler();
 		if (nbt == null)

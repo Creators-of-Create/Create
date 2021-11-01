@@ -4,27 +4,27 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class CouplingCreationPacket extends SimplePacketBase {
 
 	int id1, id2;
 
-	public CouplingCreationPacket(AbstractMinecartEntity cart1, AbstractMinecartEntity cart2) {
+	public CouplingCreationPacket(AbstractMinecart cart1, AbstractMinecart cart2) {
 		id1 = cart1.getId();
 		id2 = cart2.getId();
 	}
 
-	public CouplingCreationPacket(PacketBuffer buffer) {
+	public CouplingCreationPacket(FriendlyByteBuf buffer) {
 		id1 = buffer.readInt();
 		id2 = buffer.readInt();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(id1);
 		buffer.writeInt(id2);
 	}
@@ -33,7 +33,7 @@ public class CouplingCreationPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {
-				ServerPlayerEntity sender = context.get()
+				ServerPlayer sender = context.get()
 					.getSender();
 				if (sender != null)
 					CouplingHandler.tryToCoupleCarts(sender, sender.level, id1, id2);

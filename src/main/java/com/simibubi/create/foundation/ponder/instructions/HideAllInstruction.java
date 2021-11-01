@@ -4,8 +4,8 @@ import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.elements.AnimatedOverlayElement;
 import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class HideAllInstruction extends TickingInstruction {
 
@@ -25,7 +25,7 @@ public class HideAllInstruction extends TickingInstruction {
 					AnimatedSceneElement animatedSceneElement = (AnimatedSceneElement) element;
 					animatedSceneElement.setFade(1);
 					animatedSceneElement
-						.setFadeVec(fadeOutTo == null ? null : Vector3d.atLowerCornerOf(fadeOutTo.getNormal()).scale(.5f));
+						.setFadeVec(fadeOutTo == null ? null : Vec3.atLowerCornerOf(fadeOutTo.getNormal()).scale(.5f));
 				} else if (element instanceof AnimatedOverlayElement) {
 					AnimatedOverlayElement animatedSceneElement = (AnimatedOverlayElement) element;
 					animatedSceneElement.setFade(1);

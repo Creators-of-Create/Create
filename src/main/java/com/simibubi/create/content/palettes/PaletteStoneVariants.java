@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public enum PaletteStoneVariants {
 

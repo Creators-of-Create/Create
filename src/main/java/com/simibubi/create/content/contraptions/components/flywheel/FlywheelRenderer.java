@@ -3,8 +3,8 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 import static com.simibubi.create.content.contraptions.base.HorizontalKineticBlock.HORIZONTAL_FACING;
 
 import com.jozufozu.flywheel.backend.Backend;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -13,26 +13,26 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.util.Mth;
 
 public class FlywheelRenderer extends KineticTileEntityRenderer {
 
-	public FlywheelRenderer(TileEntityRendererDispatcher dispatcher) {
+	public FlywheelRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 
@@ -44,11 +44,11 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		float speed = wte.visualSpeed.get(partialTicks) * 3 / 10f;
 		float angle = wte.angle + speed * partialTicks;
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+		VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 
 		if (FlywheelBlock.isConnected(blockState)) {
 			Direction connection = FlywheelBlock.getConnection(blockState);
-			light = WorldRenderer.getLightColor(te.getLevel(), blockState, te.getBlockPos()
+			light = LevelRenderer.getLightColor(te.getLevel(), blockState, te.getBlockPos()
 				.relative(connection));
 			float rotation =
 				connection.getAxis() == Axis.X ^ connection.getAxisDirection() == AxisDirection.NEGATIVE ? -angle
@@ -75,7 +75,7 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		renderFlywheel(te, ms, light, blockState, angle, vb);
 	}
 
-	private void renderFlywheel(KineticTileEntity te, MatrixStack ms, int light, BlockState blockState, float angle, IVertexBuilder vb) {
+	private void renderFlywheel(KineticTileEntity te, PoseStack ms, int light, BlockState blockState, float angle, VertexConsumer vb) {
 		BlockState referenceState = blockState.rotate(Rotation.CLOCKWISE_90);
 		Direction facing = referenceState.getValue(BlockStateProperties.HORIZONTAL_FACING);
 		SuperByteBuffer wheel = PartialBufferer.getFacing(AllBlockPartials.FLYWHEEL, referenceState, facing);
@@ -97,14 +97,14 @@ public class FlywheelRenderer extends KineticTileEntityRenderer {
 		float shift = upper ? 1 / 4f : -1 / 8f;
 		float offset = upper ? 1 / 4f : 1 / 4f;
 		float radians = (float) (angle / 180 * Math.PI);
-		float shifting = MathHelper.sin(radians) * shift + offset;
+		float shifting = Mth.sin(radians) * shift + offset;
 
 		float maxAngle = upper ? -5 : -15;
 		float minAngle = upper ? -45 : 5;
 		float barAngle = 0;
 
 		if (rotating)
-			barAngle = MathHelper.lerp((MathHelper.sin((float) (radians + Math.PI / 2)) + 1) / 2, minAngle, maxAngle);
+			barAngle = Mth.lerp((Mth.sin((float) (radians + Math.PI / 2)) + 1) / 2, minAngle, maxAngle);
 
 		float pivotX = (upper ? 8f : 3f) / 16;
 		float pivotY = (upper ? 8f : 2f) / 16;

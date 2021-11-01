@@ -1,11 +1,11 @@
 package com.simibubi.create.content.schematics;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface ISpecialBlockItemRequirement {
 
-	default ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+	default ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return ItemRequirement.INVALID;
 	}
 

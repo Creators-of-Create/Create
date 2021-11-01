@@ -8,14 +8,14 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome.Category;
-import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -63,7 +63,7 @@ public class AllWorldFeatures {
 		// ForgeRegistries.DECORATORS.register(ConfigDrivenDecorator.INSTANCE);
 		entries.entrySet()
 			.forEach(entry -> {
-				Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, Create.ID + "_" + entry.getKey(),
+				Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Create.ID + "_" + entry.getKey(),
 					entry.getValue()
 						.getFeature());
 			});
@@ -74,10 +74,10 @@ public class AllWorldFeatures {
 			.forEach(entry -> {
 				if (event.getName() == Biomes.THE_VOID.getRegistryName())
 					return;
-				if (event.getCategory() == Category.NETHER)
+				if (event.getCategory() == BiomeCategory.NETHER)
 					return;
 				event.getGeneration()
-					.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, entry.getFeature());
+					.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, entry.getFeature());
 			});
 	}
 
@@ -97,7 +97,7 @@ public class AllWorldFeatures {
 			.register(ConfigDrivenOreFeature.INSTANCE);
 	}
 
-	public static void registerDecoratorFeatures(RegistryEvent.Register<Placement<?>> event) {
+	public static void registerDecoratorFeatures(RegistryEvent.Register<FeatureDecorator<?>> event) {
 		event.getRegistry()
 			.register(ConfigDrivenDecorator.INSTANCE);
 	}

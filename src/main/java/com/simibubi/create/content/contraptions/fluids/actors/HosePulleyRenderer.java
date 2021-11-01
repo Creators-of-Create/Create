@@ -7,12 +7,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pul
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction.Axis;
 
 public class HosePulleyRenderer extends AbstractPulleyRenderer {
 
-	public HosePulleyRenderer(TileEntityRendererDispatcher dispatcher) {
+	public HosePulleyRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher, AllBlockPartials.HOSE_HALF, AllBlockPartials.HOSE_HALF_MAGNET);
 	}
 

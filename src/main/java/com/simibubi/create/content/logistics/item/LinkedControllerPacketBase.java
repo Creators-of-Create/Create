@@ -5,11 +5,11 @@ import java.util.function.Supplier;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public abstract class LinkedControllerPacketBase extends SimplePacketBase {
@@ -20,7 +20,7 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 		this.lecternPos = lecternPos;
 	}
 
-	public LinkedControllerPacketBase(PacketBuffer buffer) {
+	public LinkedControllerPacketBase(FriendlyByteBuf buffer) {
 		if (buffer.readBoolean()) {
 			lecternPos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 		}
@@ -31,7 +31,7 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(inLectern());
 		if (inLectern()) {
 			buffer.writeInt(lecternPos.getX());
@@ -43,12 +43,12 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
+			ServerPlayer player = context.get().getSender();
 			if (player == null)
 				return;
 
 			if (inLectern()) {
-				TileEntity te = player.level.getBlockEntity(lecternPos);
+				BlockEntity te = player.level.getBlockEntity(lecternPos);
 				if (!(te instanceof LecternControllerTileEntity))
 					return;
 				handleLectern(player, (LecternControllerTileEntity) te);
@@ -66,7 +66,7 @@ public abstract class LinkedControllerPacketBase extends SimplePacketBase {
 		context.get().setPacketHandled(true);
 	}
 
-	protected abstract void handleItem(ServerPlayerEntity player, ItemStack heldItem);
-	protected abstract void handleLectern(ServerPlayerEntity player, LecternControllerTileEntity lectern);
+	protected abstract void handleItem(ServerPlayer player, ItemStack heldItem);
+	protected abstract void handleLectern(ServerPlayer player, LecternControllerTileEntity lectern);
 
 }

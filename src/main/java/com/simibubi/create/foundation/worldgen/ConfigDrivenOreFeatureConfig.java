@@ -4,12 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.foundation.config.AllConfigs;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.world.gen.feature.IFeatureConfig;
-import net.minecraft.world.gen.feature.template.RuleTest;
-import net.minecraft.world.gen.placement.IPlacementConfig;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+import net.minecraft.world.level.levelgen.feature.configurations.DecoratorConfiguration;
 
-public class ConfigDrivenOreFeatureConfig implements IFeatureConfig, IPlacementConfig {
+public class ConfigDrivenOreFeatureConfig implements FeatureConfiguration, DecoratorConfiguration {
 
 	public static final Codec<ConfigDrivenOreFeatureConfig> CODEC = RecordCodecBuilder.create((p_236568_0_) -> {
 		return p_236568_0_.group(RuleTest.CODEC.fieldOf("target")

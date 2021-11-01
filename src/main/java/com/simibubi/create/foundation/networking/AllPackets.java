@@ -58,10 +58,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCo
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -135,7 +135,7 @@ public enum AllPackets {
 
 	private LoadedPacket<?> packet;
 
-	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<PacketBuffer, T> factory,
+	<T extends SimplePacketBase> AllPackets(Class<T> type, Function<FriendlyByteBuf, T> factory,
 		NetworkDirection direction) {
 		packet = new LoadedPacket<>(type, factory, direction);
 	}
@@ -150,20 +150,20 @@ public enum AllPackets {
 			packet.packet.register();
 	}
 
-	public static void sendToNear(World world, BlockPos pos, int range, Object message) {
+	public static void sendToNear(Level world, BlockPos pos, int range, Object message) {
 		channel.send(PacketDistributor.NEAR
 			.with(TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), range, world.dimension())), message);
 	}
 
 	private static class LoadedPacket<T extends SimplePacketBase> {
 		private static int index = 0;
-		BiConsumer<T, PacketBuffer> encoder;
-		Function<PacketBuffer, T> decoder;
+		BiConsumer<T, FriendlyByteBuf> encoder;
+		Function<FriendlyByteBuf, T> decoder;
 		BiConsumer<T, Supplier<Context>> handler;
 		Class<T> type;
 		NetworkDirection direction;
 
-		private LoadedPacket(Class<T> type, Function<PacketBuffer, T> factory, NetworkDirection direction) {
+		private LoadedPacket(Class<T> type, Function<FriendlyByteBuf, T> factory, NetworkDirection direction) {
 			encoder = T::write;
 			decoder = factory;
 			handler = T::handle;

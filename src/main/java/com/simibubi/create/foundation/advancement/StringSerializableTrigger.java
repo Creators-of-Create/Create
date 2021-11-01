@@ -17,10 +17,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.loot.ConditionArraySerializer;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.SerializationContext;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -39,7 +39,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		return new Instance<>(this, entries == null ? null : Sets.newHashSet(entries));
 	}
 
-	public void trigger(ServerPlayerEntity player, @Nullable T registryEntry) {
+	public void trigger(ServerPlayer player, @Nullable T registryEntry) {
 		trigger(player, Collections.singletonList(() -> registryEntry));
 	}
 
@@ -48,7 +48,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 	}
 
 	@Override
-	public Instance<T> createInstance(JsonObject json, ConditionArrayParser context) {
+	public Instance<T> createInstance(JsonObject json, DeserializationContext context) {
 		if (json.has(getJsonKey())) {
 			JsonArray elements = json.getAsJsonArray(getJsonKey());
 			return new Instance<>(this, StreamSupport.stream(elements.spliterator(), false)
@@ -77,7 +77,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		private final StringSerializableTrigger<T> trigger;
 
 		public Instance(StringSerializableTrigger<T> trigger, @Nullable Set<T> entries) {
-			super(trigger.getId(), EntityPredicate.AndPredicate.ANY);
+			super(trigger.getId(), EntityPredicate.Composite.ANY);
 			this.trigger = trigger;
 			this.entries = entries;
 		}
@@ -91,7 +91,7 @@ public abstract class StringSerializableTrigger<T> extends CriterionTriggerBase<
 		}
 
 		@Override
-		public JsonObject serializeToJson(ConditionArraySerializer p_230240_1_) {
+		public JsonObject serializeToJson(SerializationContext p_230240_1_) {
 			JsonObject jsonobject = super.serializeToJson(p_230240_1_);
 			JsonArray elements = new JsonArray();
 

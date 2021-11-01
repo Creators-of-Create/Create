@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.components.flywheel.engine;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.IRegistryDelegate;
 
 public class FurnaceEngineModifiers {

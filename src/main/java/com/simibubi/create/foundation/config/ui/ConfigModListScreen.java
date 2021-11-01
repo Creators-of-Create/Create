@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
@@ -12,9 +12,9 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.widgets.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 
@@ -63,7 +63,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil()
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
-				.add(new StringTextComponent("Go Back"));
+				.add(new TextComponent("Go Back"));
 		widgets.add(goBack);
 
 		search = new HintableTextFieldWidget(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
@@ -75,7 +75,7 @@ public class ConfigModListScreen extends ConfigScreen {
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 
 		list.render(ms, mouseX, mouseY, partialTicks);
 
@@ -121,8 +121,8 @@ public class ConfigModListScreen extends ConfigScreen {
 				button.active = false;
 				button.updateColorsFromState();
 				button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BaseConfigScreen.DISABLED_RENDERER));
-				labelTooltip.add(new StringTextComponent(toHumanReadable(id)));
-				labelTooltip.addAll(TooltipHelper.cutTextComponent(new StringTextComponent("This Mod does not have any configs registered or is not using Forge's config system"), TextFormatting.GRAY, TextFormatting.GRAY));
+				labelTooltip.add(new TextComponent(toHumanReadable(id)));
+				labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("This Mod does not have any configs registered or is not using Forge's config system"), ChatFormatting.GRAY, ChatFormatting.GRAY));
 			}
 
 			listeners.add(button);
@@ -139,7 +139,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		}
 
 		@Override
-		public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
+		public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean p_230432_9_, float partialTicks) {
 			super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 
 			button.x = x + width - 108;

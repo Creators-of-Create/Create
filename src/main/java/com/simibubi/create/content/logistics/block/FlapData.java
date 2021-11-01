@@ -4,8 +4,8 @@ import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.core.materials.IFlatLight;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 
 public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 

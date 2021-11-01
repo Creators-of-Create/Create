@@ -3,18 +3,18 @@ package com.simibubi.create.foundation.utility.ghost;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.util.Mth;
 
 public class GhostBlocks {
 
 	public static double getBreathingAlpha() {
 		double period = 2500;
 		double timer = System.currentTimeMillis() % period;
-		double offset = MathHelper.cos((float) ((2d/period) * Math.PI * timer));
+		double offset = Mth.cos((float) ((2d/period) * Math.PI * timer));
 		return 0.55d - 0.2d * offset;
 	}
 
@@ -54,7 +54,7 @@ public class GhostBlocks {
 		ghosts.entrySet().removeIf(e -> !e.getValue().isAlive());
 	}
 
-	public void renderAll(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+	public void renderAll(PoseStack ms, SuperRenderTypeBuffer buffer) {
 		ghosts.forEach((slot, entry) -> {
 			GhostBlockRenderer ghost = entry.ghost;
 			ghost.render(ms, buffer, entry.params);

@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
@@ -14,8 +14,8 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Items;
 
 public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 
@@ -58,7 +58,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 	}
 
 	@Override
-	protected void renderWidgets(MatrixStack matrixStack, SplashingRecipe recipe, double mouseX, double mouseY) {
+	protected void renderWidgets(PoseStack matrixStack, SplashingRecipe recipe, double mouseX, double mouseY) {
 		int size = recipe.getRollableResultsAsItemStacks()
 				.size();
 
@@ -80,12 +80,12 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 	}
 	
 	@Override
-	protected void translateFan(MatrixStack ms) {
+	protected void translateFan(PoseStack ms) {
 		ms.translate(56 + 4, 33, 0);
 	}
 
 	@Override
-	public void renderAttachedBlock(MatrixStack matrixStack) {
+	public void renderAttachedBlock(PoseStack matrixStack) {
 		matrixStack.pushPose();
 
 		GuiGameElement.of(Fluids.WATER)

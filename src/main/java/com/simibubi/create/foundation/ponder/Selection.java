@@ -8,14 +8,14 @@ import java.util.function.Predicate;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class Selection implements Predicate<BlockPos> {
 
-	public static Selection of(MutableBoundingBox bb) {
+	public static Selection of(BoundingBox bb) {
 		return new Simple(bb);
 	}
 
@@ -25,7 +25,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 
 	public abstract Selection copy();
 
-	public abstract Vector3d getCenter();
+	public abstract Vec3 getCenter();
 
 	public abstract void forEach(Consumer<BlockPos> callback);
 
@@ -38,7 +38,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 	private static class Compound extends Selection {
 
 		Set<BlockPos> posSet;
-		Vector3d center;
+		Vec3 center;
 
 		public Compound(Simple initial) {
 			posSet = new HashSet<>();
@@ -79,18 +79,18 @@ public abstract class Selection implements Predicate<BlockPos> {
 		}
 
 		@Override
-		public Vector3d getCenter() {
+		public Vec3 getCenter() {
 			return center == null ? center = evalCenter() : center;
 		}
 
-		private Vector3d evalCenter() {
-			Vector3d center = Vector3d.ZERO;
+		private Vec3 evalCenter() {
+			Vec3 center = Vec3.ZERO;
 			if (posSet.isEmpty())
 				return center;
 			for (BlockPos blockPos : posSet)
-				center = center.add(Vector3d.atLowerCornerOf(blockPos));
+				center = center.add(Vec3.atLowerCornerOf(blockPos));
 			center = center.scale(1f / posSet.size());
-			return center.add(new Vector3d(.5, .5, .5));
+			return center.add(new Vec3(.5, .5, .5));
 		}
 
 		@Override
@@ -102,10 +102,10 @@ public abstract class Selection implements Predicate<BlockPos> {
 
 	private static class Simple extends Selection {
 
-		private MutableBoundingBox bb;
-		private AxisAlignedBB aabb;
+		private BoundingBox bb;
+		private AABB aabb;
 
-		public Simple(MutableBoundingBox bb) {
+		public Simple(BoundingBox bb) {
 			this.bb = bb;
 			this.aabb = getAABB();
 		}
@@ -132,7 +132,7 @@ public abstract class Selection implements Predicate<BlockPos> {
 		}
 
 		@Override
-		public Vector3d getCenter() {
+		public Vec3 getCenter() {
 			return aabb.getCenter();
 		}
 
@@ -141,13 +141,13 @@ public abstract class Selection implements Predicate<BlockPos> {
 			return outliner.showAABB(slot, aabb);
 		}
 
-		private AxisAlignedBB getAABB() {
-			return new AxisAlignedBB(bb.x0, bb.y0, bb.z0, bb.x1 + 1, bb.y1 + 1, bb.z1 + 1);
+		private AABB getAABB() {
+			return new AABB(bb.x0, bb.y0, bb.z0, bb.x1 + 1, bb.y1 + 1, bb.z1 + 1);
 		}
 
 		@Override
 		public Selection copy() {
-			return new Simple(new MutableBoundingBox(bb));
+			return new Simple(new BoundingBox(bb));
 		}
 
 	}

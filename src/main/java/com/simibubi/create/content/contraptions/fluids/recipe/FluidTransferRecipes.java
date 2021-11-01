@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.simibubi.create.foundation.utility.ISimpleReloadListener;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class FluidTransferRecipes {
 

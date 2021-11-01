@@ -2,9 +2,20 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import static net.minecraft.state.properties.BlockStateProperties.POWERED;
 
+import javanet.minimport com.simibubi.create.AllBlocks;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
+import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import java.util.List;
-
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.lang3.tuple.Pair;
+
+ecraft.world.level.block.state.properties.BlockStatePropertiese.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -26,7 +37,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	private LinkBehaviour link;
 	private boolean transmitter;
 
-	public RedstoneLinkTileEntity(TileEntityType<? extends RedstoneLinkTileEntity> type) {
+	public RedstoneLinkTileEntity(BlockEntityType<? extends RedstoneLinkTileEntity> type) {
 		super(type);
 	}
 
@@ -64,7 +75,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Transmitter", transmitter);
 		compound.putInt("Receive", getReceivedSignal());
 		compound.putBoolean("ReceivedChanged", receivedSignalChanged);
@@ -73,7 +84,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		transmitter = compound.getBoolean("Transmitter");
 		super.fromTag(state, compound, clientPacket);
 		

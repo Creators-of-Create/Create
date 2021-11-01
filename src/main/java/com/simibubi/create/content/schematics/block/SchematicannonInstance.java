@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
 
+import ModelData;
+
 public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
 
     private final ModelData connector;

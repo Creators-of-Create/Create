@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.WrittenBookItem;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.WrittenBookItem;
+import net.minecraft.nbt.CompoundTag;
 
 public class BookCopyAttribute implements ItemAttribute {
     int generation;
@@ -47,17 +47,17 @@ public class BookCopyAttribute implements ItemAttribute {
     }
 
     @Override
-    public void writeNBT(CompoundNBT nbt) {
+    public void writeNBT(CompoundTag nbt) {
         nbt.putInt("generation", this.generation);
     }
 
     @Override
-    public ItemAttribute readNBT(CompoundNBT nbt) {
+    public ItemAttribute readNBT(CompoundTag nbt) {
         return new BookCopyAttribute(nbt.getInt("generation"));
     }
 
     private int extractGeneration(ItemStack stack) {
-        CompoundNBT nbt = stack.getTag();
+        CompoundTag nbt = stack.getTag();
         if (nbt != null && stack.getItem() instanceof WrittenBookItem) {
             return nbt.getInt("generation");
         }

@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class AstralSorceryAttunementAttribute implements ItemAttribute {
     String constellationName;
@@ -19,7 +19,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
     @Override
     public boolean appliesTo(ItemStack itemStack) {
-        CompoundNBT nbt = extractAstralNBT(itemStack);
+        CompoundTag nbt = extractAstralNBT(itemStack);
         String constellation = nbt.contains("constellation") ? nbt.getString("constellation") : nbt.getString("constellationName");
 
         // Special handling for shifting stars
@@ -33,7 +33,7 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
 
     @Override
     public List<ItemAttribute> listAttributesOf(ItemStack itemStack) {
-        CompoundNBT nbt = extractAstralNBT(itemStack);
+        CompoundTag nbt = extractAstralNBT(itemStack);
         String constellation = nbt.contains("constellation") ? nbt.getString("constellation") : nbt.getString("constellationName");
 
         // Special handling for shifting stars
@@ -57,21 +57,21 @@ public class AstralSorceryAttunementAttribute implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         ResourceLocation constResource = new ResourceLocation(constellationName);
-        String something = new TranslationTextComponent(String.format("%s.constellation.%s", constResource.getNamespace(), constResource.getPath())).getString();
+        String something = new TranslatableComponent(String.format("%s.constellation.%s", constResource.getNamespace(), constResource.getPath())).getString();
         return new Object[] { something };
     }
 
     @Override
-    public void writeNBT(CompoundNBT nbt) {
+    public void writeNBT(CompoundTag nbt) {
         nbt.putString("constellation", this.constellationName);
     }
 
     @Override
-    public ItemAttribute readNBT(CompoundNBT nbt) {
+    public ItemAttribute readNBT(CompoundTag nbt) {
         return new AstralSorceryAttunementAttribute(nbt.getString("constellation"));
     }
 
-    private CompoundNBT extractAstralNBT(ItemStack stack) {
-        return stack.getTag() != null ? stack.getTag().getCompound("astralsorcery") : new CompoundNBT();
+    private CompoundTag extractAstralNBT(ItemStack stack) {
+        return stack.getTag() != null ? stack.getTag().getCompound("astralsorcery") : new CompoundTag();
     }
 }

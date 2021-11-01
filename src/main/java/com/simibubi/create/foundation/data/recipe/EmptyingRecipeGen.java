@@ -5,7 +5,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllRecipeTypes;
 
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Items;
 
 public class EmptyingRecipeGen extends ProcessingRecipeGen {
 

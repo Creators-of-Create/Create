@@ -3,18 +3,18 @@ package com.simibubi.create.content.logistics.block.inventories;
 import java.util.List;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -22,7 +22,7 @@ import net.minecraftforge.items.IItemHandler;
 
 public class CreativeCrateTileEntity extends CrateTileEntity {
 
-	public CreativeCrateTileEntity(TileEntityType<? extends CreativeCrateTileEntity> type) {
+	public CreativeCrateTileEntity(BlockEntityType<? extends CreativeCrateTileEntity> type) {
 		super(type);
 		inv = new BottomlessItemHandler(filtering::getFilter);
 		itemHandler = LazyOptional.of(() -> inv);
@@ -65,7 +65,7 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 	private CreativeCrateTileEntity getOtherCrate() {
 		if (!AllBlocks.CREATIVE_CRATE.has(getBlockState()))
 			return null;
-		TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(getFacing()));
+		BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(getFacing()));
 		if (tileEntity instanceof CreativeCrateTileEntity)
 			return (CreativeCrateTileEntity) tileEntity;
 		return null;
@@ -95,14 +95,14 @@ public class CreativeCrateTileEntity extends CrateTileEntity {
 		return new FilteringBehaviour(this, new ValueBoxTransform() {
 
 			@Override
-			protected void rotate(BlockState state, MatrixStack ms) {
+			protected void rotate(BlockState state, PoseStack ms) {
 				MatrixTransformStack.of(ms)
 					.rotateX(90);
 			}
 
 			@Override
-			protected Vector3d getLocalOffset(BlockState state) {
-				return new Vector3d(0.5, 13 / 16d, 0.5);
+			protected Vec3 getLocalOffset(BlockState state) {
+				return new Vec3(0.5, 13 / 16d, 0.5);
 			}
 
 			protected float getScale() {

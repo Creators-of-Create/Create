@@ -3,7 +3,7 @@ package com.simibubi.create.content.contraptions.processing;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -14,7 +14,7 @@ public class EmptyingRecipe extends ProcessingRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World p_77569_2_) {
+	public boolean matches(RecipeWrapper inv, Level p_77569_2_) {
 		return ingredients.get(0).test(inv.getItem(0));
 	}
 

@@ -2,8 +2,15 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.backend.material.Material;
+import com.net.minimport ModelData;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+
+ecraft.world.level.block.state.properties.BlockStatePropertiest com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
@@ -23,7 +30,7 @@ import net.minecraft.util.math.vector.Vector3d;
 public class HarvesterActorInstance extends ActorInstance {
     static double oneOverRadius = 16.0 / 6.5;
     static float originOffset = 1 / 16f;
-    static Vector3d rotOffset = new Vector3d(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
+    static Vec3 rotOffset = new Vec3(0.5f, -2 * originOffset + 0.5f, originOffset + 0.5f);
 
 
     ModelData harvester;

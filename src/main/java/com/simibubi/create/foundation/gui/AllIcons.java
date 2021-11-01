@@ -1,17 +1,17 @@
 package com.simibubi.create.foundation.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.matrix.MatrixStack.Entry;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -169,25 +169,25 @@ public class AllIcons implements IScreenRenderable {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void draw(MatrixStack matrixStack, AbstractGui screen, int x, int y) {
+	public void draw(PoseStack matrixStack, GuiComponent screen, int x, int y) {
 		bind();
 		screen.blit(matrixStack, x, y, iconX, iconY, 16, 16);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void draw(MatrixStack ms, IRenderTypeBuffer buffer, int color) {
-		IVertexBuilder builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
+	public void draw(PoseStack ms, MultiBufferSource buffer, int color) {
+		VertexConsumer builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
 		float sheetSize = 256;
 		int i = 15 << 20 | 15 << 4;
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
-		Entry peek = ms.last();
-		Vector3d rgb = Color.vectorFromRGB(color);
+		Pose peek = ms.last();
+		Vec3 rgb = Color.vectorFromRGB(color);
 
-		Vector3d vec4 = new Vector3d(1, 1, 0);
-		Vector3d vec3 = new Vector3d(0, 1, 0);
-		Vector3d vec2 = new Vector3d(0, 0, 0);
-		Vector3d vec1 = new Vector3d(1, 0, 0);
+		Vec3 vec4 = new Vec3(1, 1, 0);
+		Vec3 vec3 = new Vec3(0, 1, 0);
+		Vec3 vec2 = new Vec3(0, 0, 0);
+		Vec3 vec1 = new Vec3(1, 0, 0);
 
 		float u1 = (iconX + 16) / sheetSize;
 		float u2 = iconX / sheetSize;
@@ -206,7 +206,7 @@ public class AllIcons implements IScreenRenderable {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void vertex(Entry peek, IVertexBuilder builder, int j, int k, Vector3d rgb, Vector3d vec, float u, float v) {
+	private void vertex(Pose peek, VertexConsumer builder, int j, int k, Vec3 rgb, Vec3 vec, float u, float v) {
 		builder.vertex(peek.pose(), (float) vec.x, (float) vec.y, (float) vec.z)
 			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, 1)
 			.uv(u, v)

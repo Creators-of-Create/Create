@@ -4,8 +4,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.core.PartialModel;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
 
 public class Compartment<T> {
 	public static final Compartment<BlockState> GENERIC_TILE = new Compartment<>();

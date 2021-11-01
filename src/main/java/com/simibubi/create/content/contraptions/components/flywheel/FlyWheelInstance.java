@@ -2,10 +2,14 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import java.util.Collections;
+import javanet.minimport ModelData;
+import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.simibubi.create.content.contraptions.base.KineticTileInstance;
+import com.simibubi.create.content.contraptions.base.RotatingData;
 import java.util.List;
+import net.minecraft.core.Direction;
 
-import com.google.common.collect.Lists;
+ecraft.world.level.block.state.properties.BlockStatePropertiest com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;

@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -17,8 +17,8 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.item.DyeColor;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.world.LightType;
 
@@ -128,8 +128,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
         Direction.Axis axis = dir.getAxis();
 
-        Supplier<MatrixStack> ms = () -> {
-            MatrixStack modelTransform = new MatrixStack();
+        Supplier<PoseStack> ms = () -> {
+            PoseStack modelTransform = new PoseStack();
             MatrixTransformStack msr = MatrixTransformStack.of(modelTransform);
             msr.centre();
             if (axis == Direction.Axis.X)

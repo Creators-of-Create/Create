@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -15,21 +15,21 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedControllerContainer> {
 
 	protected AllGuiTextures background;
-	private List<Rectangle2d> extraAreas = Collections.emptyList();
+	private List<Rect2i> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	public LinkedControllerScreen(LinkedControllerContainer container, PlayerInventory inv, ITextComponent title) {
+	public LinkedControllerScreen(LinkedControllerContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
 		this.background = AllGuiTextures.LINKED_CONTROLLER;
 	}
@@ -51,12 +51,12 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		widgets.add(confirmButton);
 
 		extraAreas = ImmutableList.of(
-			new Rectangle2d(x + background.width + 4, y + background.height - 44, 64, 56)
+			new Rect2i(x + background.width + 4, y + background.height - 44, 64, 56)
 		);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -101,7 +101,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	protected void renderTooltip(MatrixStack ms, int x, int y) {
+	protected void renderTooltip(PoseStack ms, int x, int y) {
 		if (!this.minecraft.player.inventory.getCarried()
 			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
 			|| hoveredSlot.container == menu.playerInventory) {
@@ -112,14 +112,14 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipFromItem(ItemStack stack) {
-		List<ITextComponent> list = super.getTooltipFromItem(stack);
+	public List<Component> getTooltipFromItem(ItemStack stack) {
+		List<Component> list = super.getTooltipFromItem(stack);
 		if (hoveredSlot.container == menu.playerInventory)
 			return list;
 		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex()) : list;
 	}
 
-	private List<ITextComponent> addToTooltip(List<ITextComponent> list, int slot) {
+	private List<Component> addToTooltip(List<Component> list, int slot) {
 		if (slot < 0 || slot >= 12)
 			return list;
 		list.add(Lang
@@ -128,12 +128,12 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 					.get(slot / 2)
 					.getTranslatedKeyMessage()
 					.getString())
-			.withStyle(TextFormatting.GOLD));
+			.withStyle(ChatFormatting.GOLD));
 		return list;
 	}
 
 	@Override
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 

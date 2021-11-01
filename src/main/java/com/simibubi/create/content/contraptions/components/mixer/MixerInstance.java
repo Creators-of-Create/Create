@@ -10,6 +10,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Direction;
 
+import OrientedData;
+
 public class MixerInstance extends ShaftlessCogInstance implements IDynamicInstance {
 
 	private final RotatingData mixerHead;

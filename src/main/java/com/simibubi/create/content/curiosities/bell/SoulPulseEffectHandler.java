@@ -5,8 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class SoulPulseEffectHandler {
 
@@ -18,7 +18,7 @@ public class SoulPulseEffectHandler {
 		occupied = new HashSet<>();
 	}
 
-	public void tick(World world) {
+	public void tick(Level world) {
 		for (SoulPulseEffect pulse : pulses) {
 			List<BlockPos> spawns = pulse.tick(world);
 			if (spawns == null)

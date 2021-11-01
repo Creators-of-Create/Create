@@ -3,8 +3,8 @@ package com.simibubi.create;
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.KeyMapping;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public enum AllKeys {
@@ -15,7 +15,7 @@ public enum AllKeys {
 
 	;
 
-	private KeyBinding keybind;
+	private KeyMapping keybind;
 	private String description;
 	private int key;
 	private boolean modifiable;
@@ -28,7 +28,7 @@ public enum AllKeys {
 
 	public static void register() {
 		for (AllKeys key : values()) {
-			key.keybind = new KeyBinding(key.description, key.key, Create.NAME);
+			key.keybind = new KeyMapping(key.description, key.key, Create.NAME);
 			if (!key.modifiable)
 				continue;
 
@@ -36,7 +36,7 @@ public enum AllKeys {
 		}
 	}
 
-	public KeyBinding getKeybind() {
+	public KeyMapping getKeybind() {
 		return keybind;
 	}
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.item;
 
 import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import staticnet.minecraft.ChatFormattingg.GRAY;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -22,16 +22,16 @@ import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -43,41 +43,41 @@ public class TooltipHelper {
 	private static boolean gogglesMode;
 	private static final Map<Item, Supplier<String>> tooltipReferrals = new HashMap<>();
 
-	public static IFormattableTextComponent holdShift(Palette color, boolean highlighted) {
+	public static MutableComponent holdShift(Palette color, boolean highlighted) {
 		return Lang.translate("tooltip.holdForDescription", Lang.translate("tooltip.keyShift")
-			.withStyle(TextFormatting.GRAY))
-			.withStyle(TextFormatting.DARK_GRAY);
+			.withStyle(ChatFormatting.GRAY))
+			.withStyle(ChatFormatting.DARK_GRAY);
 	}
 
-	public static void addHint(List<ITextComponent> tooltip, String hintKey, Object... messageParams) {
-		ITextComponent spacing = IHaveGoggleInformation.componentSpacing;
+	public static void addHint(List<Component> tooltip, String hintKey, Object... messageParams) {
+		Component spacing = IHaveGoggleInformation.componentSpacing;
 		tooltip.add(spacing.plainCopy()
 			.append(Lang.translate(hintKey + ".title"))
 			.withStyle(GOLD));
-		ITextComponent hint = Lang.translate(hintKey);
-		List<ITextComponent> cutComponent = TooltipHelper.cutTextComponent(hint, GRAY, TextFormatting.WHITE);
-		for (ITextComponent component : cutComponent)
+		Component hint = Lang.translate(hintKey);
+		List<Component> cutComponent = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
+		for (Component component : cutComponent)
 			tooltip.add(spacing.plainCopy()
 				.append(component));
 	}
 
-	public static void referTo(IItemProvider item, Supplier<? extends IItemProvider> itemWithTooltip) {
+	public static void referTo(ItemLike item, Supplier<? extends ItemLike> itemWithTooltip) {
 		tooltipReferrals.put(item.asItem(), () -> itemWithTooltip.get()
 			.asItem()
 			.getDescriptionId());
 	}
 
-	public static void referTo(IItemProvider item, String string) {
+	public static void referTo(ItemLike item, String string) {
 		tooltipReferrals.put(item.asItem(), () -> string);
 	}
 
 	@Deprecated
-	public static List<String> cutString(ITextComponent s, TextFormatting defaultColor, TextFormatting highlightColor) {
+	public static List<String> cutString(Component s, ChatFormatting defaultColor, ChatFormatting highlightColor) {
 		return cutString(s.getContents(), defaultColor, highlightColor, 0);
 	}
 
 	@Deprecated
-	public static List<String> cutString(String s, TextFormatting defaultColor, TextFormatting highlightColor,
+	public static List<String> cutString(String s, ChatFormatting defaultColor, ChatFormatting highlightColor,
 		int indent) {
 		// Apply markup
 		String markedUp = s.replaceAll("_([^_]+)_", highlightColor + "$1" + defaultColor);
@@ -92,7 +92,7 @@ public class TooltipHelper {
 			words.add(word);
 		}
 
-		FontRenderer font = Minecraft.getInstance().font;
+		Font font = Minecraft.getInstance().font;
 		List<String> lines = FontHelper.cutString(font, markedUp, maxWidthPerLine);
 
 		// Format
@@ -107,23 +107,23 @@ public class TooltipHelper {
 		return formattedLines;
 	}
 
-	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor,
-		TextFormatting highlightColor) {
-		return cutTextComponent(new StringTextComponent(c), defaultColor, highlightColor, 0);
+	public static List<Component> cutStringTextComponent(String c, ChatFormatting defaultColor,
+		ChatFormatting highlightColor) {
+		return cutTextComponent(new TextComponent(c), defaultColor, highlightColor, 0);
 	}
 
-	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor,
-		TextFormatting highlightColor) {
+	public static List<Component> cutTextComponent(Component c, ChatFormatting defaultColor,
+		ChatFormatting highlightColor) {
 		return cutTextComponent(c, defaultColor, highlightColor, 0);
 	}
 
-	public static List<ITextComponent> cutStringTextComponent(String c, TextFormatting defaultColor,
-		TextFormatting highlightColor, int indent) {
-		return cutTextComponent(new StringTextComponent(c), defaultColor, highlightColor, indent);
+	public static List<Component> cutStringTextComponent(String c, ChatFormatting defaultColor,
+		ChatFormatting highlightColor, int indent) {
+		return cutTextComponent(new TextComponent(c), defaultColor, highlightColor, indent);
 	}
 
-	public static List<ITextComponent> cutTextComponent(ITextComponent c, TextFormatting defaultColor,
-		TextFormatting highlightColor, int indent) {
+	public static List<Component> cutTextComponent(Component c, ChatFormatting defaultColor,
+		ChatFormatting highlightColor, int indent) {
 		String s = c.getString();
 
 		// Apply markup
@@ -140,7 +140,7 @@ public class TooltipHelper {
 		}
 
 		// Apply hard wrap
-		FontRenderer font = Minecraft.getInstance().font;
+		Font font = Minecraft.getInstance().font;
 		List<String> lines = new LinkedList<>();
 		StringBuilder currentLine = new StringBuilder();
 		int width = 0;
@@ -165,17 +165,17 @@ public class TooltipHelper {
 		}
 
 		// Format
-		IFormattableTextComponent lineStart = new StringTextComponent(Strings.repeat(" ", indent));
+		MutableComponent lineStart = new TextComponent(Strings.repeat(" ", indent));
 		lineStart.withStyle(defaultColor);
-		List<ITextComponent> formattedLines = new ArrayList<>(lines.size());
-		Couple<TextFormatting> f = Couple.create(highlightColor, defaultColor);
+		List<Component> formattedLines = new ArrayList<>(lines.size());
+		Couple<ChatFormatting> f = Couple.create(highlightColor, defaultColor);
 
 		boolean currentlyHighlighted = false;
 		for (String string : lines) {
-			IFormattableTextComponent currentComponent = lineStart.plainCopy();
+			MutableComponent currentComponent = lineStart.plainCopy();
 			String[] split = string.split("_");
 			for (String part : split) {
-				currentComponent.append(new StringTextComponent(part).withStyle(f.get(currentlyHighlighted)));
+				currentComponent.append(new TextComponent(part).withStyle(f.get(currentlyHighlighted)));
 				currentlyHighlighted = !currentlyHighlighted;
 			}
 
@@ -235,10 +235,10 @@ public class TooltipHelper {
 		}
 	}
 
-	public static boolean hasTooltip(ItemStack stack, PlayerEntity player) {
+	public static boolean hasTooltip(ItemStack stack, Player player) {
 		checkLocale();
 
-		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemBySlot(EquipmentSlotType.HEAD));
+		boolean hasGlasses = AllItems.GOGGLES.isIn(player.getItemBySlot(EquipmentSlot.HEAD));
 
 		if (hasGlasses != gogglesMode) {
 			gogglesMode = hasGlasses;
@@ -279,7 +279,7 @@ public class TooltipHelper {
 
 		// Summary
 		if (I18n.exists(summaryKey))
-			tooltip = tooltip.withSummary(new StringTextComponent(I18n.get(summaryKey)));
+			tooltip = tooltip.withSummary(new TextComponent(I18n.get(summaryKey)));
 
 		// Requirements
 //		if (stack.getItem() instanceof BlockItem) {
@@ -297,7 +297,7 @@ public class TooltipHelper {
 				break;
 			if (i == 1)
 				tooltip.getLinesOnShift()
-					.add(new StringTextComponent(""));
+					.add(new TextComponent(""));
 			tooltip.withBehaviour(I18n.get(conditionKey), I18n.get(behaviourKey));
 		}
 

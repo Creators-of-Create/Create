@@ -5,39 +5,39 @@ import java.util.function.Supplier;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ContraptionInteractionPacket extends SimplePacketBase {
 
-	private Hand interactionHand;
+	private InteractionHand interactionHand;
 	private int target;
 	private BlockPos localPos;
 	private Direction face;
 
-	public ContraptionInteractionPacket(AbstractContraptionEntity target, Hand hand, BlockPos localPos, Direction side) {
+	public ContraptionInteractionPacket(AbstractContraptionEntity target, InteractionHand hand, BlockPos localPos, Direction side) {
 		this.interactionHand = hand;
 		this.localPos = localPos;
 		this.target = target.getId();
 		this.face = side;
 	}
 
-	public ContraptionInteractionPacket(PacketBuffer buffer) {
+	public ContraptionInteractionPacket(FriendlyByteBuf buffer) {
 		target = buffer.readInt();
 		int handId = buffer.readInt();
-		interactionHand = handId == -1 ? null : Hand.values()[handId];
+		interactionHand = handId == -1 ? null : InteractionHand.values()[handId];
 		localPos = buffer.readBlockPos();
 		face = Direction.from3DDataValue(buffer.readShort());
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(target);
 		buffer.writeInt(interactionHand == null ? -1 : interactionHand.ordinal());
 		buffer.writeBlockPos(localPos);
@@ -47,7 +47,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity sender = context.get().getSender();
+			ServerPlayer sender = context.get().getSender();
 			if (sender == null)
 				return;
 			Entity entityByID = sender.getLevel().getEntity(target);

@@ -10,14 +10,14 @@ import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 @MethodsReturnNonnullByDefault
 public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements IAirCurrentSource {
@@ -29,7 +29,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	protected boolean updateAirFlow;
 	protected boolean updateGenerator;
 
-	public EncasedFanTileEntity(TileEntityType<? extends EncasedFanTileEntity> type) {
+	public EncasedFanTileEntity(BlockEntityType<? extends EncasedFanTileEntity> type) {
 		super(type);
 		isGenerator = false;
 		airCurrent = new AirCurrent(this);
@@ -38,7 +38,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		if (!wasMoved) 
 			isGenerator = compound.getBoolean("Generating");
@@ -47,7 +47,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Generating", isGenerator);
 		super.write(compound, clientPacket);
 	}
@@ -116,7 +116,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 
 	@Nullable
 	@Override
-	public World getAirCurrentWorld() {
+	public Level getAirCurrentWorld() {
 		return level;
 	}
 
@@ -158,7 +158,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		if (!direction.getAxis()
 			.isVertical())
 			return;
-		TileEntity poweredChute = level.getBlockEntity(worldPosition.relative(direction));
+		BlockEntity poweredChute = level.getBlockEntity(worldPosition.relative(direction));
 		if (!(poweredChute instanceof ChuteTileEntity))
 			return;
 		ChuteTileEntity chuteTE = (ChuteTileEntity) poweredChute;

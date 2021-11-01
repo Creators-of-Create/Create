@@ -9,14 +9,14 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity {
 
-	public SpeedGaugeTileEntity(TileEntityType<? extends SpeedGaugeTileEntity> type) {
+	public SpeedGaugeTileEntity(BlockEntityType<? extends SpeedGaugeTileEntity> type) {
 		super(type);
 	}
 
@@ -47,19 +47,19 @@ public class SpeedGaugeTileEntity extends GaugeTileEntity {
 		if (speed == 0)
 			target = 0;
 		else if (speed < medium)
-			target = MathHelper.lerp(speed / medium, 0, .45f);
+			target = Mth.lerp(speed / medium, 0, .45f);
 		else if (speed < fast)
-			target = MathHelper.lerp((speed - medium) / (fast - medium), .45f, .75f);
+			target = Mth.lerp((speed - medium) / (fast - medium), .45f, .75f);
 		else
-			target = MathHelper.lerp((speed - fast) / (max - fast), .75f, 1.125f);
+			target = Mth.lerp((speed - fast) / (max - fast), .75f, 1.125f);
 		return target;
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		super.addToGoggleTooltip(tooltip, isPlayerSneaking);
 
-		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.speedometer.title").withStyle(TextFormatting.GRAY)));
+		tooltip.add(componentSpacing.plainCopy().append(Lang.translate("gui.speedometer.title").withStyle(ChatFormatting.GRAY)));
 		tooltip.add(componentSpacing.plainCopy().append(SpeedLevel.getFormattedSpeedText(speed, isOverStressed())));
 
 		return true;

@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
@@ -20,18 +20,18 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.GameSettings;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public class LinkedControllerClientHandler {
 
@@ -40,13 +40,13 @@ public class LinkedControllerClientHandler {
 	public static Collection<Integer> currentlyPressed = new HashSet<>();
 	private static BlockPos lecternPos;
 	private static BlockPos selectedLocation = BlockPos.ZERO;
-	private static Vector<KeyBinding> controls;
+	private static Vector<KeyMapping> controls;
 
 	private static int packetCooldown;
 
-	public static Vector<KeyBinding> getControls() {
+	public static Vector<KeyMapping> getControls() {
 		if (controls == null) {
-			GameSettings gameSettings = Minecraft.getInstance().options;
+			Options gameSettings = Minecraft.getInstance().options;
 			controls = new Vector<>(6);
 			controls.add(gameSettings.keyUp);
 			controls.add(gameSettings.keyDown);
@@ -112,8 +112,8 @@ public class LinkedControllerClientHandler {
 		LinkedControllerItemRenderer.resetButtons();
 	}
 
-	protected static boolean isActuallyPressed(KeyBinding kb) {
-		return InputMappings.isKeyDown(Minecraft.getInstance()
+	protected static boolean isActuallyPressed(KeyMapping kb) {
+		return InputConstants.isKeyDown(Minecraft.getInstance()
 			.getWindow()
 			.getWindow(),
 			kb.getKey()
@@ -129,7 +129,7 @@ public class LinkedControllerClientHandler {
 			packetCooldown--;
 
 		Minecraft mc = Minecraft.getInstance();
-		ClientPlayerEntity player = mc.player;
+		LocalPlayer player = mc.player;
 		ItemStack heldItem = player.getMainHandItem();
 
 		if (player.isSpectator()) {
@@ -160,13 +160,13 @@ public class LinkedControllerClientHandler {
 			return;
 		}
 
-		if (InputMappings.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
+		if (InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_ESCAPE)) {
 			MODE = Mode.IDLE;
 			onReset();
 			return;
 		}
 
-		Vector<KeyBinding> controls = getControls();
+		Vector<KeyMapping> controls = getControls();
 		Collection<Integer> pressedKeys = new HashSet<>();
 		for (int i = 0; i < controls.size(); i++) {
 			if (isActuallyPressed(controls.get(i)))
@@ -227,7 +227,7 @@ public class LinkedControllerClientHandler {
 		controls.forEach(kb -> kb.setDown(false));
 	}
 
-	public static void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
+	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		float partialTicks) {
 		if (MODE != Mode.BIND)
 			return;
@@ -241,23 +241,23 @@ public class LinkedControllerClientHandler {
 				.getGuiScaledHeight());
 
 		Object[] keys = new Object[6];
-		Vector<KeyBinding> controls = getControls();
+		Vector<KeyMapping> controls = getControls();
 		for (int i = 0; i < controls.size(); i++) {
-			KeyBinding keyBinding = controls.get(i);
+			KeyMapping keyBinding = controls.get(i);
 			keys[i] = keyBinding.getTranslatedKeyMessage()
 				.getString();
 		}
 
-		List<ITextComponent> list = new ArrayList<>();
+		List<Component> list = new ArrayList<>();
 		list.add(Lang.createTranslationTextComponent("linked_controller.bind_mode")
-			.withStyle(TextFormatting.GOLD));
+			.withStyle(ChatFormatting.GOLD));
 		list.addAll(
 			TooltipHelper.cutTextComponent(Lang.createTranslationTextComponent("linked_controller.press_keybind", keys),
-				TextFormatting.GRAY, TextFormatting.GRAY));
+				ChatFormatting.GRAY, ChatFormatting.GRAY));
 
 		int width = 0;
 		int height = list.size() * mc.font.lineHeight;
-		for (ITextComponent iTextComponent : list)
+		for (Component iTextComponent : list)
 			width = Math.max(width, mc.font.width(iTextComponent));
 		int x = (tooltipScreen.width / 3) - width / 2;
 		int y = tooltipScreen.height - height;

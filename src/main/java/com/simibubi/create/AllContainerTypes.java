@@ -21,9 +21,9 @@ import com.tterrag.registrate.builders.ContainerBuilder.ScreenFactory;
 import com.tterrag.registrate.util.entry.ContainerEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.client.gui.IHasContainer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class AllContainerTypes {
 
@@ -51,7 +51,7 @@ public class AllContainerTypes {
 	public static final ContainerEntry<ToolboxContainer> TOOLBOX =
 		register("toolbox", ToolboxContainer::new, () -> ToolboxScreen::new);
 
-	private static <C extends Container, S extends Screen & IHasContainer<C>> ContainerEntry<C> register(String name, ForgeContainerFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
+	private static <C extends AbstractContainerMenu, S extends Screen & MenuAccess<C>> ContainerEntry<C> register(String name, ForgeContainerFactory<C> factory, NonNullSupplier<ScreenFactory<C, S>> screenFactory) {
 		return Create.registrate().container(name, factory, screenFactory).register();
 	}
 

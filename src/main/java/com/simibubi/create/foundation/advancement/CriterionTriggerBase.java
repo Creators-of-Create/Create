@@ -14,16 +14,18 @@ import com.google.common.collect.Maps;
 import com.simibubi.create.Create;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.ICriterionTrigger;
-import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.CriterionTrigger;
+import net.minecraft.server.PlayerAdvancements;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
+
+import net.minecraft.advancements.CriterionTrigger.Listener;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements ICriterionTrigger<T> {
+public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instance> implements CriterionTrigger<T> {
 
 	public CriterionTriggerBase(String id) {
 		this.id = Create.asResource(id);
@@ -60,7 +62,7 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		return id;
 	}
 
-	protected void trigger(ServerPlayerEntity player, @Nullable List<Supplier<Object>> suppliers) {
+	protected void trigger(ServerPlayer player, @Nullable List<Supplier<Object>> suppliers) {
 		PlayerAdvancements playerAdvancements = player.getAdvancements();
 		Set<Listener<T>> playerListeners = this.listeners.get(playerAdvancements);
 		if (playerListeners != null) {
@@ -78,9 +80,9 @@ public abstract class CriterionTriggerBase<T extends CriterionTriggerBase.Instan
 		}
 	}
 
-	public abstract static class Instance extends CriterionInstance {
+	public abstract static class Instance extends AbstractCriterionTriggerInstance {
 
-		public Instance(ResourceLocation idIn, EntityPredicate.AndPredicate p_i231464_2_) {
+		public Instance(ResourceLocation idIn, EntityPredicate.Composite p_i231464_2_) {
 			super(idIn, p_i231464_2_);
 		}
 

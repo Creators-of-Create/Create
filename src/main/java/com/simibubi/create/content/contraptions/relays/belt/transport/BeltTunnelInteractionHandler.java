@@ -13,12 +13,12 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltTunnelInteractionHandler {
@@ -40,7 +40,7 @@ public class BeltTunnelInteractionHandler {
 			return true;
 		}
 
-		World world = beltInventory.belt.getLevel();
+		Level world = beltInventory.belt.getLevel();
 		boolean onServer = !world.isClientSide || beltInventory.belt.isVirtual();
 		boolean removed = false;
 		BeltTunnelTileEntity nextTunnel = getTunnelOnSegment(beltInventory, upcomingSegment);
@@ -115,7 +115,7 @@ public class BeltTunnelInteractionHandler {
 			.getBlockState(pos)
 			.getBlock() instanceof BrassTunnelBlock))
 			return false;
-		TileEntity te = belt.getLevel()
+		BlockEntity te = belt.getLevel()
 			.getBlockEntity(pos);
 		if (te == null || !(te instanceof BrassTunnelTileEntity))
 			return false;
@@ -138,11 +138,11 @@ public class BeltTunnelInteractionHandler {
 		return getTunnelOnPosition(belt.getLevel(), BeltHelper.getPositionForOffset(belt, offset));
 	}
 
-	public static BeltTunnelTileEntity getTunnelOnPosition(World world, BlockPos pos) {
+	public static BeltTunnelTileEntity getTunnelOnPosition(Level world, BlockPos pos) {
 		pos = pos.above();
 		if (!(world.getBlockState(pos).getBlock() instanceof BeltTunnelBlock))
 			return null;
-		TileEntity te = world.getBlockEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 		if (te == null || !(te instanceof BeltTunnelTileEntity))
 			return null;
 		return ((BeltTunnelTileEntity) te);

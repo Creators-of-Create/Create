@@ -2,8 +2,19 @@ package com.simibubi.create.content.contraptions.components.press;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import com.jozufozu.flywheel.backend.Backend;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.net.minimport com.jozufozu.flywheel.backend.Backend;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.AllBlockPartials;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.foundation.render.PartialBufferer;
+import com.simibubi.create.foundation.render.SuperByteBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.level.block.state.BlockState;
+
+ecraft.world.level.block.state.properties.BlockStatePropertiesng.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -17,7 +28,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 
 public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 
-	public MechanicalPressRenderer(TileEntityRendererDispatcher dispatcher) {
+	public MechanicalPressRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
@@ -27,7 +38,7 @@ public class MechanicalPressRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 			int light, int overlay) {
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 

@@ -3,15 +3,15 @@ package com.simibubi.create.foundation.ponder.instructions;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class HighlightValueBoxInstruction extends TickingInstruction {
 
-	private Vector3d vec;
-	private Vector3d expands;
+	private Vec3 vec;
+	private Vec3 expands;
 
-	public HighlightValueBoxInstruction(Vector3d vec, Vector3d expands, int duration) {
+	public HighlightValueBoxInstruction(Vec3 vec, Vec3 expands, int duration) {
 		super(false, duration);
 		this.vec = vec;
 		this.expands = expands;
@@ -20,8 +20,8 @@ public class HighlightValueBoxInstruction extends TickingInstruction {
 	@Override
 	public void tick(PonderScene scene) {
 		super.tick(scene);
-		AxisAlignedBB point = new AxisAlignedBB(vec, vec);
-		AxisAlignedBB expanded = point.inflate(expands.x, expands.y, expands.z);
+		AABB point = new AABB(vec, vec);
+		AABB expanded = point.inflate(expands.x, expands.y, expands.z);
 		scene.getOutliner()
 			.chaseAABB(vec, remainingTicks == totalTicks ? point : expanded)
 			.lineWidth(1 / 32f)

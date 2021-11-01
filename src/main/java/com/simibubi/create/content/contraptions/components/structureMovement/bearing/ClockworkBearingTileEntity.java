@@ -19,14 +19,14 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
 
 public class ClockworkBearingTileEntity extends KineticTileEntity
 	implements IBearingTileEntity, IDisplayAssemblyExceptions {
@@ -45,7 +45,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 
 	private float prevForcedAngle;
 
-	public ClockworkBearingTileEntity(TileEntityType<? extends ClockworkBearingTileEntity> type) {
+	public ClockworkBearingTileEntity(BlockEntityType<? extends ClockworkBearingTileEntity> type) {
 		super(type);
 		setLazyTickRate(3);
 	}
@@ -301,7 +301,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Running", running);
 		compound.putFloat("HourAngle", hourAngle);
 		compound.putFloat("MinuteAngle", minuteAngle);
@@ -310,7 +310,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		float hourAngleBefore = hourAngle;
 		float minuteAngleBefore = minuteAngle;
 
@@ -348,10 +348,10 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	@Override
 	public float getInterpolatedAngle(float partialTicks) {
 		if (isVirtual())
-			return MathHelper.lerp(partialTicks, prevForcedAngle, hourAngle);
+			return Mth.lerp(partialTicks, prevForcedAngle, hourAngle);
 		if (hourHand == null || hourHand.isStalled())
 			partialTicks = 0;
-		return MathHelper.lerp(partialTicks, hourAngle, hourAngle + getHourArmSpeed());
+		return Mth.lerp(partialTicks, hourAngle, hourAngle + getHourArmSpeed());
 	}
 
 	@Override

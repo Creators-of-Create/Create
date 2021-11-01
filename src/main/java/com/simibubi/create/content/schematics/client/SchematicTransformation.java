@@ -3,19 +3,19 @@ package com.simibubi.create.content.schematics.client;
 import static java.lang.Math.abs;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 
 public class SchematicTransformation {
 
@@ -33,7 +33,7 @@ public class SchematicTransformation {
 		rotation = new InterpolatedChasingAngle();
 	}
 
-	public void init(BlockPos anchor, PlacementSettings settings, AxisAlignedBB bounds) {
+	public void init(BlockPos anchor, StructurePlaceSettings settings, AABB bounds) {
 		int leftRight = settings.getMirror() == Mirror.LEFT_RIGHT ? -1 : 1;
 		int frontBack = settings.getMirror() == Mirror.FRONT_BACK ? -1 : 1;
 		getScaleFB().start(frontBack);
@@ -45,18 +45,18 @@ public class SchematicTransformation {
 			.ordinal() * 90);
 		rotation.start(r);
 
-		Vector3d vec = fromAnchor(anchor);
+		Vec3 vec = fromAnchor(anchor);
 		x.start((float) vec.x);
 		y.start((float) vec.y);
 		z.start((float) vec.z);
 	}
 
-	public void applyGLTransformations(MatrixStack ms) {
+	public void applyGLTransformations(PoseStack ms) {
 		float pt = AnimationTickHolder.getPartialTicks();
 
 		// Translation
 		ms.translate(x.get(pt), y.get(pt), z.get(pt));
-		Vector3d rotationOffset = getRotationOffset(true);
+		Vec3 rotationOffset = getRotationOffset(true);
 
 		// Rotation & Mirror
 		float fb = getScaleFB().get(pt);
@@ -76,8 +76,8 @@ public class SchematicTransformation {
 		return getMirrorModifier(Axis.X) < 0 != getMirrorModifier(Axis.Z) < 0;
 	}
 
-	public Vector3d getRotationOffset(boolean ignoreMirrors) {
-		Vector3d rotationOffset = Vector3d.ZERO;
+	public Vec3 getRotationOffset(boolean ignoreMirrors) {
+		Vec3 rotationOffset = Vec3.ZERO;
 		if ((int) (zOrigin * 2) % 2 != (int) (xOrigin * 2) % 2) {
 			boolean xGreaterZ = xOrigin > zOrigin;
 			float xIn = (xGreaterZ ? 0 : .5f);
@@ -86,14 +86,14 @@ public class SchematicTransformation {
 				xIn *= getMirrorModifier(Axis.X);
 				zIn *= getMirrorModifier(Axis.Z);
 			}
-			rotationOffset = new Vector3d(xIn, 0, zIn);
+			rotationOffset = new Vec3(xIn, 0, zIn);
 		}
 		return rotationOffset;
 	}
 
-	public Vector3d toLocalSpace(Vector3d vec) {
+	public Vec3 toLocalSpace(Vec3 vec) {
 		float pt = AnimationTickHolder.getPartialTicks();
-		Vector3d rotationOffset = getRotationOffset(true);
+		Vec3 rotationOffset = getRotationOffset(true);
 
 		vec = vec.subtract(x.get(pt), y.get(pt), z.get(pt));
 		vec = vec.subtract(xOrigin + rotationOffset.x, 0, zOrigin + rotationOffset.z);
@@ -105,8 +105,8 @@ public class SchematicTransformation {
 		return vec;
 	}
 
-	public PlacementSettings toSettings() {
-		PlacementSettings settings = new PlacementSettings();
+	public StructurePlaceSettings toSettings() {
+		StructurePlaceSettings settings = new StructurePlaceSettings();
 
 		int i = (int) rotation.getTarget();
 
@@ -144,8 +144,8 @@ public class SchematicTransformation {
 	}
 
 	public BlockPos getAnchor() {
-		Vector3d vec = Vector3d.ZERO.add(.5, 0, .5);
-		Vector3d rotationOffset = getRotationOffset(false);
+		Vec3 vec = Vec3.ZERO.add(.5, 0, .5);
+		Vec3 rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
 		vec = vec.multiply(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
@@ -156,16 +156,16 @@ public class SchematicTransformation {
 		return new BlockPos(vec.x, vec.y, vec.z);
 	}
 
-	public Vector3d fromAnchor(BlockPos pos) {
-		Vector3d vec = Vector3d.ZERO.add(.5, 0, .5);
-		Vector3d rotationOffset = getRotationOffset(false);
+	public Vec3 fromAnchor(BlockPos pos) {
+		Vec3 vec = Vec3.ZERO.add(.5, 0, .5);
+		Vec3 rotationOffset = getRotationOffset(false);
 		vec = vec.subtract(xOrigin, 0, zOrigin);
 		vec = vec.subtract(rotationOffset.x, 0, rotationOffset.z);
 		vec = vec.multiply(getScaleFB().getTarget(), 1, getScaleLR().getTarget());
 		vec = VecHelper.rotate(vec, rotation.getTarget(), Axis.Y);
 		vec = vec.add(xOrigin, 0, zOrigin);
 
-		return Vector3d.atLowerCornerOf(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
+		return Vec3.atLowerCornerOf(pos.subtract(new BlockPos(vec.x, vec.y, vec.z)));
 	}
 
 	public int getRotationTarget() {

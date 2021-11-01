@@ -15,7 +15,7 @@ import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 

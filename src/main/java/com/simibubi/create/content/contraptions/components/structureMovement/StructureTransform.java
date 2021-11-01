@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import static net.minecraft.block.HorizontalFaceBlock.FACE;
-import static net.minecraft.state.properties.BlockStateProperties.AXIS;
+import staticnet.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlockateProperties.AXIS;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.HORIZONTAL_FACING;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
@@ -14,27 +14,27 @@ import com.simibubi.create.foundation.utility.DirectionHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BellBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.block.HorizontalFaceBlock;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.state.properties.BellAttachment;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.Half;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.properties.Half;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class StructureTransform {
 
@@ -87,8 +87,8 @@ public class StructureTransform {
 		mirror = Mirror.NONE;
 	}
 
-	public Vector3d applyWithoutOffset(Vector3d localVec) {
-		Vector3d vec = localVec;
+	public Vec3 applyWithoutOffset(Vec3 localVec) {
+		Vec3 vec = localVec;
 		if (mirror != null)
 			vec = VecHelper.mirrorCentered(vec, mirror);
 		if (rotationAxis != null)
@@ -96,8 +96,8 @@ public class StructureTransform {
 		return vec;
 	}
 
-	public Vector3d apply(Vector3d localVec) {
-		return applyWithoutOffset(localVec).add(Vector3d.atLowerCornerOf(offset));
+	public Vec3 apply(Vec3 localVec) {
+		return applyWithoutOffset(localVec).add(Vec3.atLowerCornerOf(offset));
 	}
 
 	public BlockPos applyWithoutOffset(BlockPos localPos) {
@@ -108,7 +108,7 @@ public class StructureTransform {
 		return applyWithoutOffset(localPos).offset(offset);
 	}
 
-	public void apply(TileEntity te) {
+	public void apply(BlockEntity te) {
 		if (te instanceof ITransformableTE)
 			((ITransformableTE) te).transform(this);
 	}
@@ -126,11 +126,11 @@ public class StructureTransform {
 
 		if (rotationAxis == Axis.Y) {
 			if (block instanceof BellBlock) {
-				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachment.DOUBLE_WALL) {
-					state = state.setValue(BlockStateProperties.BELL_ATTACHMENT, BellAttachment.SINGLE_WALL);
+				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL) {
+					state = state.setValue(BlockStateProperties.BELL_ATTACHMENT, BellAttachType.SINGLE_WALL);
 				}
-				return state.setValue(HorizontalFaceBlock.FACING,
-					rotation.rotate(state.getValue(HorizontalFaceBlock.FACING)));
+				return state.setValue(FaceAttachedHorizontalDirectionalBlock.FACING,
+					rotation.rotate(state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING)));
 			}
 			return state.rotate(rotation);
 		}
@@ -138,8 +138,8 @@ public class StructureTransform {
 		if (block instanceof AbstractChassisBlock)
 			return rotateChassis(state);
 
-		if (block instanceof HorizontalFaceBlock) {
-			Direction stateFacing = state.getValue(HorizontalFaceBlock.FACING);
+		if (block instanceof FaceAttachedHorizontalDirectionalBlock) {
+			Direction stateFacing = state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING);
 			AttachFace stateFace = state.getValue(FACE);
 			Direction forcedAxis = rotationAxis == Axis.Z ? Direction.EAST : Direction.SOUTH;
 
@@ -148,7 +148,7 @@ public class StructureTransform {
 
 			for (int i = 0; i < rotation.ordinal(); i++) {
 				stateFace = state.getValue(FACE);
-				stateFacing = state.getValue(HorizontalFaceBlock.FACING);
+				stateFacing = state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING);
 
 				boolean b = state.getValue(FACE) == AttachFace.CEILING;
 				state = state.setValue(HORIZONTAL_FACING, b ? forcedAxis : forcedAxis.getOpposite());
@@ -169,7 +169,7 @@ public class StructureTransform {
 		}
 
 		boolean halfTurn = rotation == Rotation.CLOCKWISE_180;
-		if (block instanceof StairsBlock) {
+		if (block instanceof StairBlock) {
 			state = transformStairs(state, halfTurn);
 			return state;
 		}
@@ -214,20 +214,20 @@ public class StructureTransform {
 	}
 
 	protected BlockState transformStairs(BlockState state, boolean halfTurn) {
-		if (state.getValue(StairsBlock.FACING)
+		if (state.getValue(StairBlock.FACING)
 			.getAxis() != rotationAxis) {
 			for (int i = 0; i < rotation.ordinal(); i++) {
-				Direction direction = state.getValue(StairsBlock.FACING);
-				Half half = state.getValue(StairsBlock.HALF);
+				Direction direction = state.getValue(StairBlock.FACING);
+				Half half = state.getValue(StairBlock.HALF);
 				if (direction.getAxisDirection() == AxisDirection.POSITIVE ^ half == Half.BOTTOM
 					^ direction.getAxis() == Axis.Z)
-					state = state.cycle(StairsBlock.HALF);
+					state = state.cycle(StairBlock.HALF);
 				else
-					state = state.setValue(StairsBlock.FACING, direction.getOpposite());
+					state = state.setValue(StairBlock.FACING, direction.getOpposite());
 			}
 		} else {
 			if (halfTurn) {
-				state = state.cycle(StairsBlock.HALF);
+				state = state.cycle(StairBlock.HALF);
 			}
 		}
 		return state;
@@ -354,7 +354,7 @@ public class StructureTransform {
 		return rotated;
 	}
 
-	public static StructureTransform fromBuffer(PacketBuffer buffer) {
+	public static StructureTransform fromBuffer(FriendlyByteBuf buffer) {
 		BlockPos readBlockPos = buffer.readBlockPos();
 		int readAngle = buffer.readInt();
 		int axisIndex = buffer.readVarInt();
@@ -365,7 +365,7 @@ public class StructureTransform {
 			mirrorIndex == -1 ? null : Mirror.values()[mirrorIndex]);
 	}
 
-	public void writeToBuffer(PacketBuffer buffer) {
+	public void writeToBuffer(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(offset);
 		buffer.writeInt(angle);
 		buffer.writeVarInt(rotationAxis == null ? -1 : rotationAxis.ordinal());

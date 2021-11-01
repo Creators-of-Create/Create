@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 
 public class CustomLightingSettings implements ILightingSettings {
 

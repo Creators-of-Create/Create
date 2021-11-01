@@ -2,29 +2,31 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import net.minecraft.world.item.Item.Properties;
 
 @EventBusSubscriber
 public class DivingHelmetItem extends CopperArmorItem {
 
 	public DivingHelmetItem(Properties p_i48534_3_) {
-		super(EquipmentSlotType.HEAD, p_i48534_3_);
+		super(EquipmentSlot.HEAD, p_i48534_3_);
 	}
 
 	@SubscribeEvent
 	public static void breatheUnderwater(LivingUpdateEvent event) {
 		LivingEntity entity = event.getEntityLiving();
-		World world = entity.level;
+		Level world = entity.level;
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAirSupply() == 0;
 
@@ -37,7 +39,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			return;
 		if (!entity.isEyeInFluid(FluidTags.WATER))
 			return;
-		if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
+		if (entity instanceof Player && ((Player) entity).isCreative())
 			return;
 
 		ItemStack backtank = BackTankUtil.get(entity);
@@ -57,7 +59,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			return;
 
 		entity.setAirSupply(Math.min(entity.getMaxAirSupply(), entity.getAirSupply() + 10));
-		entity.addEffect(new EffectInstance(Effects.WATER_BREATHING, 30, 0, true, false, true));
+		entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 30, 0, true, false, true));
 		BackTankUtil.consumeAir(backtank, 1);
 	}
 

@@ -15,15 +15,15 @@ import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -57,9 +57,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	// For rendering purposes only
 	private InterpolatedChasingValue fluidLevel;
-	private AxisAlignedBB renderBoundingBox;
+	private AABB renderBoundingBox;
 
-	public FluidTankTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public FluidTankTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		tankInventory = createInventory();
 		fluidCapability = LazyOptional.of(() -> tankInventory);
@@ -181,7 +181,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	public FluidTankTileEntity getControllerTE() {
 		if (isController())
 			return this;
-		TileEntity tileEntity = level.getBlockEntity(controller);
+		BlockEntity tileEntity = level.getBlockEntity(controller);
 		if (tileEntity instanceof FluidTankTileEntity)
 			return (FluidTankTileEntity) tileEntity;
 		return null;
@@ -308,7 +308,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		if (renderBoundingBox == null) {
 			renderBoundingBox = super.getRenderBoundingBox();
 		}
@@ -324,14 +324,14 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	@Nullable
 	public FluidTankTileEntity getOtherFluidTankTileEntity(Direction direction) {
-		TileEntity otherTE = level.getBlockEntity(worldPosition.relative(direction));
+		BlockEntity otherTE = level.getBlockEntity(worldPosition.relative(direction));
 		if (otherTE instanceof FluidTankTileEntity)
 			return (FluidTankTileEntity) otherTE;
 		return null;
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		FluidTankTileEntity controllerTE = getControllerTE();
 		if (controllerTE == null)
 			return false;
@@ -340,7 +340,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 
 		BlockPos controllerBefore = controller;
@@ -354,9 +354,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		lastKnownPos = null;
 
 		if (compound.contains("LastKnownPos"))
-			lastKnownPos = NBTUtil.readBlockPos(compound.getCompound("LastKnownPos"));
+			lastKnownPos = NbtUtils.readBlockPos(compound.getCompound("LastKnownPos"));
 		if (compound.contains("Controller"))
-			controller = NBTUtil.readBlockPos(compound.getCompound("Controller"));
+			controller = NbtUtils.readBlockPos(compound.getCompound("Controller"));
 
 		if (isController()) {
 			window = compound.getBoolean("Window");
@@ -404,16 +404,16 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		if (updateConnectivity)
 			compound.putBoolean("Uninitialized", true);
 		if (lastKnownPos != null)
-			compound.put("LastKnownPos", NBTUtil.writeBlockPos(lastKnownPos));
+			compound.put("LastKnownPos", NbtUtils.writeBlockPos(lastKnownPos));
 		if (!isController())
-			compound.put("Controller", NBTUtil.writeBlockPos(controller));
+			compound.put("Controller", NbtUtils.writeBlockPos(controller));
 		if (isController()) {
 			compound.putBoolean("Window", window);
-			compound.put("TankContent", tankInventory.writeToNBT(new CompoundNBT()));
+			compound.put("TankContent", tankInventory.writeToNBT(new CompoundTag()));
 			compound.putInt("Size", width);
 			compound.putInt("Height", height);
 		}

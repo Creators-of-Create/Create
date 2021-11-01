@@ -12,7 +12,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class MechanicalCrafterInstance extends SingleRotatingInstance {
 

@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
@@ -23,7 +23,7 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
 
     protected final ArrayList<DialFace> faces;
 
-    protected MatrixStack ms;
+    protected PoseStack ms;
 
     protected GaugeInstance(MaterialManager dispatcher, KineticTileEntity tile) {
         super(dispatcher, tile);

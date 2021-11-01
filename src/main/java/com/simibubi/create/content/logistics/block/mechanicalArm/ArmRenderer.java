@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.block.mechanicalArm;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -14,20 +14,20 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
 
 public class ArmRenderer extends KineticTileEntityRenderer {
 
-	public ArmRenderer(TileEntityRendererDispatcher dispatcher) {
+	public ArmRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
@@ -37,7 +37,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 	}
 
 	@Override
-	protected void renderSafe(KineticTileEntity te, float pt, MatrixStack ms, IRenderTypeBuffer buffer, int light,
+	protected void renderSafe(KineticTileEntity te, float pt, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		super.renderSafe(te, pt, ms, buffer, light, overlay);
 
@@ -55,10 +55,10 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null)
 							   .isGui3d();
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.solid());
+		VertexConsumer builder = buffer.getBuffer(RenderType.solid());
 		BlockState blockState = te.getBlockState();
 
-		MatrixStack msLocal = new MatrixStack();
+		PoseStack msLocal = new PoseStack();
 		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
 
 		float baseAngle;
@@ -71,8 +71,8 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 		if (rave) {
 			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel()) + (te.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
-			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
-			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
+			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
+			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
 			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100).getRGB();
 		} else {
@@ -109,7 +109,7 @@ public class ArmRenderer extends KineticTileEntityRenderer {
 
 	}
 
-	private void renderArm(IVertexBuilder builder, MatrixStack ms, MatrixStack msLocal, MatrixTransformStack msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
+	private void renderArm(VertexConsumer builder, PoseStack ms, PoseStack msLocal, MatrixTransformStack msr, BlockState blockState, int color, float baseAngle, float lowerArmAngle, float upperArmAngle, float headAngle, boolean hasItem, boolean isBlockItem, int light) {
 		SuperByteBuffer base = PartialBufferer.get(AllBlockPartials.ARM_BASE, blockState).light(light);
 		SuperByteBuffer lowerBody = PartialBufferer.get(AllBlockPartials.ARM_LOWER_BODY, blockState).light(light);
 		SuperByteBuffer upperBody = PartialBufferer.get(AllBlockPartials.ARM_UPPER_BODY, blockState).light(light);

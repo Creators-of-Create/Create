@@ -1,23 +1,24 @@
 package com.simibubi.create;
 
 import static net.minecraft.util.Direction.NORTH;
-import static net.minecraft.util.Direction.SOUTH;
+import staticnet.minecraft.core.Directionn.SOUTH;
 import static net.minecraft.util.Direction.UP;
 
-import java.util.function.BiFunction;
-
+import javanet.minecraft.core.Direction
 import com.simibubi.create.content.logistics.block.chute.ChuteShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
-import net.minecraft.block.PistonHeadBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+
+import java.util.function.BiFunction;
 
 public class AllShapes {
 
@@ -161,7 +162,7 @@ public class AllShapes {
 		HEATER_BLOCK_SPECIAL_COLLISION_SHAPE = shape(0, 0, 0, 16, 4, 16).build(),
 		CRUSHING_WHEEL_COLLISION_SHAPE = cuboid(0, 0, 0, 16, 16, 16), SEAT = cuboid(0, 0, 0, 16, 8, 16),
 		SEAT_COLLISION = cuboid(0, 0, 0, 16, 6, 16),
-		MECHANICAL_PROCESSOR_SHAPE = shape(VoxelShapes.block()).erase(4, 0, 4, 12, 16, 12)
+		MECHANICAL_PROCESSOR_SHAPE = shape(Shapes.block()).erase(4, 0, 4, 12, 16, 12)
 			.build(),
 		TURNTABLE_SHAPE = shape(1, 4, 1, 15, 8, 15).add(5, 0, 5, 11, 4, 11)
 			.build(),
@@ -251,7 +252,7 @@ public class AllShapes {
 		}
 
 		public Builder add(VoxelShape shape) {
-			this.shape = VoxelShapes.or(this.shape, shape);
+			this.shape = Shapes.or(this.shape, shape);
 			return this;
 		}
 
@@ -260,7 +261,7 @@ public class AllShapes {
 		}
 
 		public Builder erase(double x1, double y1, double z1, double x2, double y2, double z2) {
-			this.shape = VoxelShapes.join(shape, cuboid(x1, y1, z1, x2, y2, z2), IBooleanFunction.ONLY_FIRST);
+			this.shape = Shapes.join(shape, cuboid(x1, y1, z1, x2, y2, z2), BooleanOp.ONLY_FIRST);
 			return this;
 		}
 

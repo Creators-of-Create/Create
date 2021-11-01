@@ -5,21 +5,21 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableMap;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.fonts.TexturedGlyph;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.IRenderTypeBuffer.Impl;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
-import net.minecraft.util.text.Style;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.font.glyphs.BakedGlyph;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.network.chat.Style;
 
 public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntity> {
 
@@ -50,12 +50,12 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 		.build();
 
-	public NixieTubeRenderer(TileEntityRendererDispatcher dispatcher) {
+	public NixieTubeRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(NixieTubeTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(NixieTubeTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		ms.pushPose();
 		BlockState blockState = te.getBlockState();
@@ -84,8 +84,8 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		ms.popPose();
 	}
 
-	private void drawTube(MatrixStack ms, IRenderTypeBuffer buffer, String c, float height, DyeColor color) {
-		FontRenderer fontRenderer = Minecraft.getInstance().font;
+	private void drawTube(PoseStack ms, MultiBufferSource buffer, String c, float height, DyeColor color) {
+		Font fontRenderer = Minecraft.getInstance().font;
 		float charWidth = fontRenderer.width(c);
 		float shadowOffset = .5f;
 		float flicker = r.nextFloat();
@@ -114,14 +114,14 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		ms.popPose();
 	}
 
-	private static void drawChar(MatrixStack ms, IRenderTypeBuffer buffer, String c, int color) {
-		FontRenderer fontRenderer = Minecraft.getInstance().font;
+	private static void drawChar(PoseStack ms, MultiBufferSource buffer, String c, int color) {
+		Font fontRenderer = Minecraft.getInstance().font;
 		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
 			.pose(), buffer, false, 0, 15728880);
-		if (buffer instanceof Impl) {
-			TexturedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
+		if (buffer instanceof BufferSource) {
+			BakedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
 				.whiteGlyph();
-			((Impl) buffer).endBatch(texturedglyph.renderType(false));
+			((BufferSource) buffer).endBatch(texturedglyph.renderType(false));
 		}
 	}
 

@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import static net.minecraft.state.properties.BlockStateProperties.DOWN;
-import static net.minecraft.state.properties.BlockStateProperties.EAST;
+import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.EAST;
 import static net.minecraft.state.properties.BlockStateProperties.NORTH;
-import static net.minecraft.state.properties.BlockStateProperties.SOUTH;
+import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.SOUTH;
 import static net.minecraft.state.properties.BlockStateProperties.UP;
-import static net.minecraft.state.properties.BlockStateProperties.WEST;
+import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.WEST;
 
 import java.util.Map;
 import java.util.Random;
@@ -19,28 +19,30 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SixWayBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.network.DebugPacketSender;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.TickPriority;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement {
 
-	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = SixWayBlock.PROPERTY_BY_DIRECTION;
+	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = PipeBlock.PROPERTY_BY_DIRECTION;
 
 	public EncasedPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -64,7 +66,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
@@ -73,22 +75,22 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (!world.isClientSide && state != oldState)
 			world.getBlockTicks()
 				.scheduleTick(pos, this, 1, TickPriority.HIGH);
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-		PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+		Player player) {
 		return AllBlocks.FLUID_PIPE.asStack();
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
+		DebugPackets.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -99,22 +101,22 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.ENCASED_FLUID_PIPE.create();
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		World world = context.getLevel();
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 
 		if (world.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 
 		context.getLevel()
 			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
@@ -131,7 +133,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		world.setBlockAndUpdate(pos, AllBlocks.FLUID_PIPE.get()
 			.updateBlockState(equivalentPipe, firstFound, null, world, pos));
 		FluidTransportBehaviour.loadFlows(world, pos);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public static BlockState transferSixWayProperties(BlockState from, BlockState to) {
@@ -143,7 +145,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), te);
 	}
 

@@ -4,33 +4,33 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class MovementContext {
 
-	public Vector3d position;
-	public Vector3d motion;
-	public Vector3d relativeMotion;
-	public UnaryOperator<Vector3d> rotation;
+	public Vec3 position;
+	public Vec3 motion;
+	public Vec3 relativeMotion;
+	public UnaryOperator<Vec3> rotation;
 
-	public World world;
+	public Level world;
 	public BlockState state;
 	public BlockPos localPos;
-	public CompoundNBT tileData;
+	public CompoundTag tileData;
 
 	public boolean stall;
 	public boolean firstMovement;
-	public CompoundNBT data;
+	public CompoundTag data;
 	public Contraption contraption;
 	public Object temporaryData;
 
-	public MovementContext(World world, BlockInfo info, Contraption contraption) {
+	public MovementContext(Level world, StructureBlockInfo info, Contraption contraption) {
 		this.world = world;
 		this.state = info.state;
 		this.tileData = info.nbt;
@@ -38,11 +38,11 @@ public class MovementContext {
 		localPos = info.pos;
 
 		firstMovement = true;
-		motion = Vector3d.ZERO;
-		relativeMotion = Vector3d.ZERO;
+		motion = Vec3.ZERO;
+		relativeMotion = Vec3.ZERO;
 		rotation = v -> v;
 		position = null;
-		data = new CompoundNBT();
+		data = new CompoundTag();
 		stall = false;
 	}
 
@@ -56,7 +56,7 @@ public class MovementContext {
 		return (((int) (length * modifier + 100 * Math.signum(length))) / 100) * 100;
 	}
 
-	public static MovementContext readNBT(World world, BlockInfo info, CompoundNBT nbt, Contraption contraption) {
+	public static MovementContext readNBT(Level world, StructureBlockInfo info, CompoundTag nbt, Contraption contraption) {
 		MovementContext context = new MovementContext(world, info, contraption);
 		context.motion = VecHelper.readNBT(nbt.getList("Motion", NBT.TAG_DOUBLE));
 		context.relativeMotion = VecHelper.readNBT(nbt.getList("RelativeMotion", NBT.TAG_DOUBLE));
@@ -68,7 +68,7 @@ public class MovementContext {
 		return context;
 	}
 
-	public CompoundNBT writeToNBT(CompoundNBT nbt) {
+	public CompoundTag writeToNBT(CompoundTag nbt) {
 		nbt.put("Motion", VecHelper.writeNBT(motion));
 		nbt.put("RelativeMotion", VecHelper.writeNBT(relativeMotion));
 		if (position != null)

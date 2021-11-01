@@ -1,32 +1,32 @@
 package com.simibubi.create.foundation.ponder.elements;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public class MinecartElement extends AnimatedSceneElement {
 
-	private Vector3d location;
+	private Vec3 location;
 	private LerpedFloat rotation;
-	private AbstractMinecartEntity entity;
+	private AbstractMinecart entity;
 	private MinecartConstructor constructor;
 	private float initialRotation;
 
 	public interface MinecartConstructor {
-		AbstractMinecartEntity create(World w, double x, double y, double z);
+		AbstractMinecart create(Level w, double x, double y, double z);
 	}
 
-	public MinecartElement(Vector3d location, float rotation, MinecartConstructor constructor) {
+	public MinecartElement(Vec3 location, float rotation, MinecartConstructor constructor) {
 		initialRotation = rotation;
 		this.location = location.add(0, 1 / 16f, 0);
 		this.constructor = constructor;
@@ -63,7 +63,7 @@ public class MinecartElement extends AnimatedSceneElement {
 		entity.zOld = entity.getZ();
 	}
 
-	public void setPositionOffset(Vector3d position, boolean immediate) {
+	public void setPositionOffset(Vec3 position, boolean immediate) {
 		if (entity == null)
 			return;
 		entity.setPos(position.x, position.y, position.z);
@@ -83,25 +83,25 @@ public class MinecartElement extends AnimatedSceneElement {
 		rotation.startWithValue(angle);
 	}
 
-	public Vector3d getPositionOffset() {
-		return entity != null ? entity.position() : Vector3d.ZERO;
+	public Vec3 getPositionOffset() {
+		return entity != null ? entity.position() : Vec3.ZERO;
 	}
 
-	public Vector3d getRotation() {
-		return new Vector3d(0, rotation.getValue(), 0);
+	public Vec3 getRotation() {
+		return new Vec3(0, rotation.getValue(), 0);
 	}
 
 	@Override
-	protected void renderLast(PonderWorld world, IRenderTypeBuffer buffer, MatrixStack ms, float fade, float pt) {
-		EntityRendererManager entityrenderermanager = Minecraft.getInstance()
+	protected void renderLast(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {
+		EntityRenderDispatcher entityrenderermanager = Minecraft.getInstance()
 			.getEntityRenderDispatcher();
 		if (entity == null)
 			entity = constructor.create(world, 0, 0, 0);
 
 		ms.pushPose();
 		ms.translate(location.x, location.y, location.z);
-		ms.translate(MathHelper.lerp(pt, entity.xo, entity.getX()),
-			MathHelper.lerp(pt, entity.yo, entity.getY()), MathHelper.lerp(pt, entity.zo, entity.getZ()));
+		ms.translate(Mth.lerp(pt, entity.xo, entity.getX()),
+			Mth.lerp(pt, entity.yo, entity.getY()), Mth.lerp(pt, entity.zo, entity.getZ()));
 
 		MatrixTransformStack.of(ms)
 			.rotateY(rotation.getValue(pt));

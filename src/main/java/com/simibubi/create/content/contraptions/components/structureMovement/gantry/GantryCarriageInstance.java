@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -12,10 +12,12 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
+
+import ModelData;
 
 public class GantryCarriageInstance extends ShaftInstance implements IDynamicInstance {
 
@@ -53,7 +55,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
     public void beginFrame() {
         float cogAngle = getCogAngle();
 
-        if (MathHelper.equal(cogAngle, lastAngle)) return;
+        if (Mth.equal(cogAngle, lastAngle)) return;
 
         animateCogs(cogAngle);
     }
@@ -63,7 +65,7 @@ public class GantryCarriageInstance extends ShaftInstance implements IDynamicIns
     }
 
     private void animateCogs(float cogAngle) {
-        MatrixStack ms = new MatrixStack();
+        PoseStack ms = new PoseStack();
         MatrixTransformStack.of(ms)
                      .translate(getInstancePosition())
                      .centre()

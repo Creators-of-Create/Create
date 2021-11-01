@@ -23,14 +23,14 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -42,7 +42,7 @@ public class PumpTileEntity extends KineticTileEntity {
 	boolean pressureUpdate;
 	boolean reversed;
 
-	public PumpTileEntity(TileEntityType<?> typeIn) {
+	public PumpTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 		arrowDirection = LerpedFloat.linear()
 			.startWithValue(1);
@@ -274,10 +274,10 @@ public class PumpTileEntity extends KineticTileEntity {
 		return atLeastOneBranchSuccessful;
 	}
 
-	private boolean hasReachedValidEndpoint(IWorld world, BlockFace blockFace, boolean pull) {
+	private boolean hasReachedValidEndpoint(LevelAccessor world, BlockFace blockFace, boolean pull) {
 		BlockPos connectedPos = blockFace.getConnectedPos();
 		BlockState connectedState = world.getBlockState(connectedPos);
-		TileEntity tileEntity = world.getBlockEntity(connectedPos);
+		BlockEntity tileEntity = world.getBlockEntity(connectedPos);
 		Direction face = blockFace.getFace();
 
 		// facing a pump
@@ -305,13 +305,13 @@ public class PumpTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putBoolean("Reversed", reversed);
 		super.write(compound, clientPacket);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		reversed = compound.getBoolean("Reversed");
 		super.fromTag(state, compound, clientPacket);
 	}
@@ -380,7 +380,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		}
 
 		@Override
-		public AttachmentTypes getRenderedRimAttachment(IBlockDisplayReader world, BlockPos pos, BlockState state,
+		public AttachmentTypes getRenderedRimAttachment(BlockAndTintGetter world, BlockPos pos, BlockState state,
 			Direction direction) {
 			AttachmentTypes attachment = super.getRenderedRimAttachment(world, pos, state, direction);
 			if (attachment == AttachmentTypes.RIM)

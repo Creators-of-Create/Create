@@ -7,30 +7,32 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.network.DebugPacketSender;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.TickPriority;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
-public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable, ICogWheel {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterloggedBlock, ICogWheel {
 
 	public PumpBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
@@ -43,7 +45,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.MECHANICAL_PUMP.create();
 	}
 
@@ -54,7 +56,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public BlockState updateAfterWrenched(BlockState newState, ItemUseContext context) {
+	public BlockState updateAfterWrenched(BlockState newState, UseOnContext context) {
 		return super.updateAfterWrenched(newState, context);
 	}
 
@@ -65,15 +67,15 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.PUMP.get(state.getValue(FACING));
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
+		DebugPackets.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -96,7 +98,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, IWorld world,
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, LevelAccessor world,
 		BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
 			world.getLiquidTicks()
@@ -106,7 +108,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState FluidState = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
@@ -118,7 +120,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
 		if (world.isClientSide)
 			return;
@@ -128,7 +130,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 		
 		if (isPump(state) && isPump(oldState) && state.getValue(FACING) == oldState.getValue(FACING)
 			.getOpposite()) {
-			TileEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity tileEntity = world.getBlockEntity(pos);
 			if (!(tileEntity instanceof PumpTileEntity))
 				return;
 			PumpTileEntity pump = (PumpTileEntity) tileEntity;
@@ -142,12 +144,12 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
@@ -156,7 +158,7 @@ public class PumpBlock extends DirectionalKineticBlock implements IWaterLoggable
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

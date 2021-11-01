@@ -10,41 +10,41 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SlimeBlock;
-import net.minecraft.client.particle.DiggingParticle;
-import net.minecraft.client.particle.ParticleManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.Property;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.SlabType;
+import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlimeBlock;
+import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
@@ -54,11 +54,11 @@ import net.minecraftforge.event.world.BlockEvent;
 public class BlockHelper {
 
 	@OnlyIn(Dist.CLIENT)
-	public static void addReducedDestroyEffects(BlockState state, World worldIn, BlockPos pos,
-		ParticleManager manager) {
-		if (!(worldIn instanceof ClientWorld))
+	public static void addReducedDestroyEffects(BlockState state, Level worldIn, BlockPos pos,
+		ParticleEngine manager) {
+		if (!(worldIn instanceof ClientLevel))
 			return;
-		ClientWorld world = (ClientWorld) worldIn;
+		ClientLevel world = (ClientLevel) worldIn;
 		VoxelShape voxelshape = state.getShape(world, pos);
 		MutableInt amtBoxes = new MutableInt(0);
 		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
@@ -68,9 +68,9 @@ public class BlockHelper {
 			double d1 = Math.min(1.0D, x2 - x1);
 			double d2 = Math.min(1.0D, y2 - y1);
 			double d3 = Math.min(1.0D, z2 - z1);
-			int i = Math.max(2, MathHelper.ceil(d1 / 0.25D));
-			int j = Math.max(2, MathHelper.ceil(d2 / 0.25D));
-			int k = Math.max(2, MathHelper.ceil(d3 / 0.25D));
+			int i = Math.max(2, Mth.ceil(d1 / 0.25D));
+			int j = Math.max(2, Mth.ceil(d2 / 0.25D));
+			int k = Math.max(2, Mth.ceil(d3 / 0.25D));
 
 			for (int l = 0; l < i; ++l) {
 				for (int i1 = 0; i1 < j; ++i1) {
@@ -85,7 +85,7 @@ public class BlockHelper {
 						double d8 = d5 * d2 + y1;
 						double d9 = d6 * d3 + z1;
 						manager
-							.add((new DiggingParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
+							.add((new TerrainParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
 								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
 					}
 				}
@@ -124,7 +124,7 @@ public class BlockHelper {
 		return blockState;
 	}
 
-	public static int findAndRemoveInInventory(BlockState block, PlayerEntity player, int amount) {
+	public static int findAndRemoveInInventory(BlockState block, Player player, int amount) {
 		int amountFound = 0;
 		Item required = getRequiredItem(block).getItem();
 
@@ -186,66 +186,66 @@ public class BlockHelper {
 		return itemStack;
 	}
 
-	public static void destroyBlock(World world, BlockPos pos, float effectChance) {
+	public static void destroyBlock(Level world, BlockPos pos, float effectChance) {
 		destroyBlock(world, pos, effectChance, stack -> Block.popResource(world, pos, stack));
 	}
 
-	public static void destroyBlock(World world, BlockPos pos, float effectChance,
+	public static void destroyBlock(Level world, BlockPos pos, float effectChance,
 		Consumer<ItemStack> droppedItemCallback) {
 		destroyBlockAs(world, pos, null, ItemStack.EMPTY, effectChance, droppedItemCallback);
 	}
 
-	public static void destroyBlockAs(World world, BlockPos pos, @Nullable PlayerEntity player, ItemStack usedTool,
+	public static void destroyBlockAs(Level world, BlockPos pos, @Nullable Player player, ItemStack usedTool,
 		float effectChance, Consumer<ItemStack> droppedItemCallback) {
 		FluidState fluidState = world.getFluidState(pos);
 		BlockState state = world.getBlockState(pos);
 		if (world.random.nextFloat() < effectChance)
 			world.levelEvent(2001, pos, Block.getId(state));
-		TileEntity tileentity = state.hasTileEntity() ? world.getBlockEntity(pos) : null;
+		BlockEntity tileentity = state.hasTileEntity() ? world.getBlockEntity(pos) : null;
 		if (player != null) {
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
 			MinecraftForge.EVENT_BUS.post(event);
 			if (event.isCanceled())
 				return;
 
-			if (event.getExpToDrop() > 0 && world instanceof ServerWorld)
+			if (event.getExpToDrop() > 0 && world instanceof ServerLevel)
 				state.getBlock()
-					.popExperience((ServerWorld) world, pos, event.getExpToDrop());
+					.popExperience((ServerLevel) world, pos, event.getExpToDrop());
 
 			usedTool.mineBlock(world, state, pos, player);
 			player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
 		}
 
-		if (world instanceof ServerWorld && world.getGameRules()
+		if (world instanceof ServerLevel && world.getGameRules()
 			.getBoolean(GameRules.RULE_DOBLOCKDROPS) && !world.restoringBlockSnapshots
 			&& (player == null || !player.isCreative())) {
-			for (ItemStack itemStack : Block.getDrops(state, (ServerWorld) world, pos, tileentity, player, usedTool))
+			for (ItemStack itemStack : Block.getDrops(state, (ServerLevel) world, pos, tileentity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
-			state.spawnAfterBreak((ServerWorld) world, pos, ItemStack.EMPTY);
+			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
 		}
 
 		world.setBlockAndUpdate(pos, fluidState.createLegacyBlock());
 	}
 
-	public static boolean isSolidWall(IBlockReader reader, BlockPos fromPos, Direction toDirection) {
+	public static boolean isSolidWall(BlockGetter reader, BlockPos fromPos, Direction toDirection) {
 		return hasBlockSolidSide(reader.getBlockState(fromPos.relative(toDirection)), reader, fromPos.relative(toDirection),
 			toDirection.getOpposite());
 	}
 
-	public static boolean noCollisionInSpace(IBlockReader reader, BlockPos pos) {
+	public static boolean noCollisionInSpace(BlockGetter reader, BlockPos pos) {
 		return reader.getBlockState(pos)
 			.getCollisionShape(reader, pos)
 			.isEmpty();
 	}
 
-	private static void placeRailWithoutUpdate(World world, BlockState state, BlockPos target) {
+	private static void placeRailWithoutUpdate(Level world, BlockState state, BlockPos target) {
 		int i = target.getX() & 15;
 		int j = target.getY();
 		int k = target.getZ() & 15;
-		Chunk chunk = world.getChunkAt(target);
-		ChunkSection chunksection = chunk.getSections()[j >> 4];
-		if (chunksection == Chunk.EMPTY_SECTION) {
-			chunksection = new ChunkSection(j >> 4 << 4);
+		LevelChunk chunk = world.getChunkAt(target);
+		LevelChunkSection chunksection = chunk.getSections()[j >> 4];
+		if (chunksection == LevelChunk.EMPTY_SECTION) {
+			chunksection = new LevelChunkSection(j >> 4 << 4);
 			chunk.getSections()[j >> 4] = chunksection;
 		}
 		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
@@ -256,8 +256,8 @@ public class BlockHelper {
 		world.neighborChanged(target, world.getBlockState(target.below()).getBlock(), target.below());
 	}
 
-	public static void placeSchematicBlock(World world, BlockState state, BlockPos target, ItemStack stack,
-		@Nullable CompoundNBT data) {
+	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,
+		@Nullable CompoundTag data) {
 		// Piston
 		if (state.hasProperty(BlockStateProperties.EXTENDED))
 			state = state.setValue(BlockStateProperties.EXTENDED, Boolean.FALSE);
@@ -280,7 +280,7 @@ public class BlockHelper {
 			int i = target.getX();
 			int j = target.getY();
 			int k = target.getZ();
-			world.playSound(null, target, SoundEvents.FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.5F,
+			world.playSound(null, target, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
 				2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
 			for (int l = 0; l < 8; ++l) {
@@ -291,14 +291,14 @@ public class BlockHelper {
 			return;
 		}
 
-		if (state.getBlock() instanceof AbstractRailBlock) {
+		if (state.getBlock() instanceof BaseRailBlock) {
 			placeRailWithoutUpdate(world, state, target);
 		} else {
 			world.setBlock(target, state, 18);
 		}
 
 		if (data != null) {
-			TileEntity tile = world.getBlockEntity(target);
+			BlockEntity tile = world.getBlockEntity(target);
 			if (tile != null) {
 				data.putInt("x", target.getX());
 				data.putInt("y", target.getY());
@@ -324,13 +324,13 @@ public class BlockHelper {
 		return 0;
 	}
 
-	public static boolean hasBlockSolidSide(BlockState p_220056_0_, IBlockReader p_220056_1_, BlockPos p_220056_2_,
+	public static boolean hasBlockSolidSide(BlockState p_220056_0_, BlockGetter p_220056_1_, BlockPos p_220056_2_,
 		Direction p_220056_3_) {
 		return !p_220056_0_.is(BlockTags.LEAVES)
 			&& Block.isFaceFull(p_220056_0_.getCollisionShape(p_220056_1_, p_220056_2_), p_220056_3_);
 	}
 
-	public static boolean extinguishFire(World world, @Nullable PlayerEntity p_175719_1_, BlockPos p_175719_2_,
+	public static boolean extinguishFire(Level world, @Nullable Player p_175719_1_, BlockPos p_175719_2_,
 		Direction p_175719_3_) {
 		p_175719_2_ = p_175719_2_.relative(p_175719_3_);
 		if (world.getBlockState(p_175719_2_)

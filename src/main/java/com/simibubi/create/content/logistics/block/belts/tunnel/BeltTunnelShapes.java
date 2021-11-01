@@ -3,7 +3,15 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import static net.minecraft.block.Block.box;
 
-import com.simibubi.create.foundation.utility.VoxelShaper;
+import com.nimport com.simibubi.create.foundation.utility.VoxelShaper;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+et.minecraft.world.level.block.Blockn.utility.VoxelShaper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
@@ -19,19 +27,19 @@ public class BeltTunnelShapes {
 	private static VoxelShaper opening = VoxelShaper.forHorizontal(box(2, -5, 14, 14, 10, 16),
 			Direction.SOUTH);
 
-	private static final VoxelShaper STRAIGHT = VoxelShaper.forHorizontalAxis(VoxelShapes.join(block,
-			VoxelShapes.or(opening.get(Direction.SOUTH), opening.get(Direction.NORTH)), IBooleanFunction.NOT_SAME),
+	private static final VoxelShaper STRAIGHT = VoxelShaper.forHorizontalAxis(Shapes.join(block,
+			Shapes.or(opening.get(Direction.SOUTH), opening.get(Direction.NORTH)), BooleanOp.NOT_SAME),
 			Axis.Z),
 
 			TEE = VoxelShaper.forHorizontal(
-					VoxelShapes.join(block, VoxelShapes.or(opening.get(Direction.NORTH),
-							opening.get(Direction.WEST), opening.get(Direction.EAST)), IBooleanFunction.NOT_SAME),
+					Shapes.join(block, Shapes.or(opening.get(Direction.NORTH),
+							opening.get(Direction.WEST), opening.get(Direction.EAST)), BooleanOp.NOT_SAME),
 					Direction.SOUTH);
 
-	private static final VoxelShape CROSS = VoxelShapes.join(block,
-			VoxelShapes.or(opening.get(Direction.SOUTH), opening.get(Direction.NORTH), opening.get(Direction.WEST),
+	private static final VoxelShape CROSS = Shapes.join(block,
+			Shapes.or(opening.get(Direction.SOUTH), opening.get(Direction.NORTH), opening.get(Direction.WEST),
 					opening.get(Direction.EAST)),
-			IBooleanFunction.NOT_SAME);
+			BooleanOp.NOT_SAME);
 
 	public static VoxelShape getShape(BlockState state) {
 		BeltTunnelBlock.Shape shape = state.getValue(BeltTunnelBlock.SHAPE);
@@ -50,6 +58,6 @@ public class BeltTunnelShapes {
 			return TEE.get(axis == Direction.Axis.Z ? Direction.WEST : Direction.SOUTH);
 
 		// something went wrong
-		return VoxelShapes.block();
+		return Shapes.block();
 	}
 }

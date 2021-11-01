@@ -3,27 +3,27 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import static java.lang.Math.max;
 import static net.minecraft.util.math.MathHelper.clamp;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.curiosities.zapper.ZapperItemRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 
 public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel> {
 
 	@Override
-	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType,
-		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void render(ItemStack stack, WorldshaperModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
+		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		super.render(stack, model, renderer, transformType, ms, buffer, light, overlay);
 
 		float pt = AnimationTickHolder.getPartialTicks();
@@ -31,14 +31,14 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 
 		renderer.renderSolid(model.getOriginalModel(), light);
 
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-		boolean leftHanded = player.getMainArm() == HandSide.LEFT;
+		LocalPlayer player = Minecraft.getInstance().player;
+		boolean leftHanded = player.getMainArm() == HumanoidArm.LEFT;
 		boolean mainHand = player.getMainHandItem() == stack;
 		boolean offHand = player.getOffhandItem() == stack;
 		float animation = getAnimationProgress(pt, leftHanded, mainHand);
 
 		// Core glows
-		float multiplier = MathHelper.sin(worldTime * 5);
+		float multiplier = Mth.sin(worldTime * 5);
 		if (mainHand || offHand) 
 			multiplier = animation;
 
@@ -61,7 +61,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 	}
 
 	@Override
-	public WorldshaperModel createModel(IBakedModel originalModel) {
+	public WorldshaperModel createModel(BakedModel originalModel) {
 		return new WorldshaperModel(originalModel);
 	}
 

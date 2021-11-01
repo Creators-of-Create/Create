@@ -18,8 +18,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.IntAttached;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
 
 public class LinkedControllerServerHandler {
 
@@ -27,7 +27,7 @@ public class LinkedControllerServerHandler {
 		new WorldAttached<>($ -> new HashMap<>());
 	static final int TIMEOUT = 30;
 
-	public static void tick(IWorld world) {
+	public static void tick(LevelAccessor world) {
 		Map<UUID, Collection<ManualFrequencyEntry>> map = receivedInputs.get(world);
 		for (Iterator<Entry<UUID, Collection<ManualFrequencyEntry>>> iterator = map.entrySet()
 			.iterator(); iterator.hasNext();) {
@@ -49,7 +49,7 @@ public class LinkedControllerServerHandler {
 		}
 	}
 
-	public static void receivePressed(IWorld world, BlockPos pos, UUID uniqueID, List<Couple<Frequency>> collect,
+	public static void receivePressed(LevelAccessor world, BlockPos pos, UUID uniqueID, List<Couple<Frequency>> collect,
 		boolean pressed) {
 		Map<UUID, Collection<ManualFrequencyEntry>> map = receivedInputs.get(world);
 		Collection<ManualFrequencyEntry> list = map.computeIfAbsent(uniqueID, $ -> new ArrayList<>());

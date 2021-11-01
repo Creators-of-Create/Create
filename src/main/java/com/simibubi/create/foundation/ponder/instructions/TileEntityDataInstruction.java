@@ -7,18 +7,18 @@ import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class TileEntityDataInstruction extends WorldModifyInstruction {
 
 	private boolean redraw;
-	private UnaryOperator<CompoundNBT> data;
-	private Class<? extends TileEntity> type;
+	private UnaryOperator<CompoundTag> data;
+	private Class<? extends BlockEntity> type;
 
-	public TileEntityDataInstruction(Selection selection, Class<? extends TileEntity> type,
-		UnaryOperator<CompoundNBT> data, boolean redraw) {
+	public TileEntityDataInstruction(Selection selection, Class<? extends BlockEntity> type,
+		UnaryOperator<CompoundTag> data, boolean redraw) {
 		super(selection);
 		this.type = type;
 		this.data = data;
@@ -32,10 +32,10 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 			if (!world.getBounds()
 				.isInside(pos))
 				return;
-			TileEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity tileEntity = world.getBlockEntity(pos);
 			if (!type.isInstance(tileEntity))
 				return;
-			CompoundNBT apply = data.apply(tileEntity.save(new CompoundNBT()));
+			CompoundTag apply = data.apply(tileEntity.save(new CompoundTag()));
 			BlockState state = world.getBlockState(pos);
 			if (tileEntity instanceof SyncedTileEntity)
 				((SyncedTileEntity) tileEntity).readClientUpdate(state, apply);

@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 public class BlockFace extends Pair<BlockPos, Direction> {
 
@@ -37,15 +37,15 @@ public class BlockFace extends Pair<BlockPos, Direction> {
 		return getPos().relative(getFace());
 	}
 
-	public CompoundNBT serializeNBT() {
-		CompoundNBT compoundNBT = new CompoundNBT();
-		compoundNBT.put("Pos", NBTUtil.writeBlockPos(getPos()));
+	public CompoundTag serializeNBT() {
+		CompoundTag compoundNBT = new CompoundTag();
+		compoundNBT.put("Pos", NbtUtils.writeBlockPos(getPos()));
 		NBTHelper.writeEnum(compoundNBT, "Face", getFace());
 		return compoundNBT;
 	}
 
-	public static BlockFace fromNBT(CompoundNBT compound) {
-		return new BlockFace(NBTUtil.readBlockPos(compound.getCompound("Pos")),
+	public static BlockFace fromNBT(CompoundTag compound) {
+		return new BlockFace(NbtUtils.readBlockPos(compound.getCompound("Pos")),
 			NBTHelper.readEnum(compound, "Face", Direction.class));
 	}
 

@@ -1,17 +1,17 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.culling.ClippingHelper;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
 
 public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> extends EntityRenderer<C> {
 
-	public ContraptionEntityRenderer(EntityRendererManager manager) {
+	public ContraptionEntityRenderer(EntityRenderDispatcher manager) {
 		super(manager);
 	}
 
@@ -21,7 +21,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	}
 
 	@Override
-	public boolean shouldRender(C entity, ClippingHelper clippingHelper, double cameraX, double cameraY,
+	public boolean shouldRender(C entity, Frustum clippingHelper, double cameraX, double cameraY,
 		double cameraZ) {
 		if (entity.getContraption() == null)
 			return false;
@@ -32,7 +32,7 @@ public class ContraptionEntityRenderer<C extends AbstractContraptionEntity> exte
 	}
 
 	@Override
-	public void render(C entity, float yaw, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffers,
+	public void render(C entity, float yaw, float partialTicks, PoseStack ms, MultiBufferSource buffers,
 		int overlay) {
 		super.render(entity, yaw, partialTicks, ms, buffers, overlay);
 

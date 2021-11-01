@@ -1,12 +1,12 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 
 public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookingRecipe> {
 
@@ -20,7 +20,7 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 	}
 
 	@Override
-	public void renderAttachedBlock(MatrixStack matrixStack) {
+	public void renderAttachedBlock(PoseStack matrixStack) {
 		matrixStack.pushPose();
 
 		GuiGameElement.of(Fluids.LAVA)

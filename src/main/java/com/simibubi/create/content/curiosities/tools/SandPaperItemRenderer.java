@@ -1,35 +1,35 @@
 package com.simibubi.create.content.curiosities.tools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CreateCustomRenderedItemModel;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 
 public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandPaperItemRenderer.SandPaperModel> {
 
 	@Override
 	protected void render(ItemStack stack, SandPaperModel model, PartialItemModelRenderer renderer,
-		TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+		TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		float partialTicks = AnimationTickHolder.getPartialTicks();
 
 		boolean leftHand = transformType == TransformType.FIRST_PERSON_LEFT_HAND;
 		boolean firstPerson = leftHand || transformType == TransformType.FIRST_PERSON_RIGHT_HAND;
 
-		CompoundNBT tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrCreateTag();
 		boolean jeiMode = tag.contains("JEI");
 
 		ms.pushPose();
@@ -49,7 +49,7 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandP
 			float time = (float) (!jeiMode ? player.getUseItemRemainingTicks()
 					: (-AnimationTickHolder.getTicks()) % stack.getUseDuration()) - partialTicks + 1.0F;
 			if (time / (float) stack.getUseDuration() < 0.8F) {
-				float bobbing = -MathHelper.abs(MathHelper.cos(time / 4.0F * (float) Math.PI) * 0.1F);
+				float bobbing = -Mth.abs(Mth.cos(time / 4.0F * (float) Math.PI) * 0.1F);
 
 				if (transformType == TransformType.GUI)
 					ms.translate(bobbing, bobbing, 0.0F);
@@ -80,13 +80,13 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandP
 	}
 
 	@Override
-	public SandPaperModel createModel(IBakedModel originalModel) {
+	public SandPaperModel createModel(BakedModel originalModel) {
 		return new SandPaperModel(originalModel);
 	}
 
 	public static class SandPaperModel extends CreateCustomRenderedItemModel {
 
-		public SandPaperModel(IBakedModel template) {
+		public SandPaperModel(BakedModel template) {
 			super(template, "");
 		}
 

@@ -16,22 +16,24 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -44,12 +46,12 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.ROTATION_SPEED_CONTROLLER.create();
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState above = context.getLevel()
 			.getBlockState(context.getClickedPos()
 				.above());
@@ -60,26 +62,26 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos neighbourPos,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos neighbourPos,
 		boolean p_220069_6_) {
 		if (neighbourPos.equals(pos.above()))
 			withTileEntityDo(world, pos, SpeedControllerTileEntity::updateBracket);
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult ray) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult ray) {
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		IPlacementHelper helper = PlacementHelpers.get(placementHelperId);
 		if (helper.matchesItem(heldItem))
 			return helper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.SPEED_CONTROLLER;
 	}
 
@@ -96,7 +98,7 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 		}
 
 		@Override
-		public PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
 			BlockPos newPos = pos.above();
 			if (!world.getBlockState(newPos)
 				.getMaterial()

@@ -4,9 +4,9 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class GhostItemSubmitPacket extends SimplePacketBase {
@@ -19,13 +19,13 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 		this.slot = slot;
 	}
 
-	public GhostItemSubmitPacket(PacketBuffer buffer) {
+	public GhostItemSubmitPacket(FriendlyByteBuf buffer) {
 		item = buffer.readItem();
 		slot = buffer.readInt();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeItem(item);
 		buffer.writeInt(slot);
 	}
@@ -34,7 +34,7 @@ public class GhostItemSubmitPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 				.enqueueWork(() -> {
-					ServerPlayerEntity player = context.get()
+					ServerPlayer player = context.get()
 							.getSender();
 					if (player == null)
 						return;

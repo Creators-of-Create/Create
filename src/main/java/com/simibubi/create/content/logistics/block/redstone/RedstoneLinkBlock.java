@@ -8,27 +8,29 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE<RedstoneLinkTileEntity> {
 
@@ -42,7 +44,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
 		if (worldIn.isClientSide)
 			return;
@@ -62,18 +64,18 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
 		updateTransmittedSignal(state, worldIn, pos);
 	}
 
 	@Override
-	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (state.getBlock() == oldState.getBlock() || isMoving)
 			return;
 		updateTransmittedSignal(state, worldIn, pos);
 	}
 
-	public void updateTransmittedSignal(BlockState state, World worldIn, BlockPos pos) {
+	public void updateTransmittedSignal(BlockState state, Level worldIn, BlockPos pos) {
 		if (worldIn.isClientSide)
 			return;
 		if (state.getValue(RECEIVER))
@@ -89,7 +91,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 		withTileEntityDo(worldIn, pos, te -> te.transmit(transmit));
 	}
 
-	private int getPower(World worldIn, BlockPos pos) {
+	private int getPower(Level worldIn, BlockPos pos) {
 		int power = 0;
 		for (Direction direction : Iterate.directions)
 			power = Math.max(worldIn.getSignal(pos.relative(direction), direction), power);
@@ -104,14 +106,14 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		if (side != blockState.getValue(FACING))
 			return 0;
 		return getSignal(blockState, blockAccess, pos, side);
 	}
 
 	@Override
-	public int getSignal(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		if (!state.getValue(RECEIVER))
 			return 0;
 		return getTileEntityOptional(blockAccess, pos).map(RedstoneLinkTileEntity::getReceivedSignal)
@@ -130,21 +132,21 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.REDSTONE_LINK.create();
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-		BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+		BlockHitResult hit) {
 		if (player.isShiftKeyDown())
 			return toggleMode(state, worldIn, pos);
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
-	public ActionResultType toggleMode(BlockState state, World worldIn, BlockPos pos) {
+	public InteractionResult toggleMode(BlockState state, Level worldIn, BlockPos pos) {
 		if (worldIn.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 
 		return onTileEntityUse(worldIn, pos, te -> {
 			Boolean wasReceiver = state.getValue(RECEIVER);
@@ -152,14 +154,14 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 			worldIn.setBlock(pos, state.cycle(RECEIVER)
 					.setValue(POWERED, blockPowered), 3);
 			te.transmit(wasReceiver ? 0 : getPower(worldIn, pos));
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		});
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		if (toggleMode(state, context.getLevel(), context.getClickedPos()) == ActionResultType.SUCCESS)
-			return ActionResultType.SUCCESS;
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		if (toggleMode(state, context.getLevel(), context.getClickedPos()) == InteractionResult.SUCCESS)
+			return InteractionResult.SUCCESS;
 		return super.onWrenched(state, context);
 	}
 
@@ -169,12 +171,12 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != null;
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		BlockPos neighbourPos = pos.relative(state.getValue(FACING)
 			.getOpposite());
 		BlockState neighbour = worldIn.getBlockState(neighbourPos);
@@ -183,19 +185,19 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
 		state = state.setValue(FACING, context.getClickedFace());
 		return state;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.REDSTONE_BRIDGE.get(state.getValue(FACING));
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

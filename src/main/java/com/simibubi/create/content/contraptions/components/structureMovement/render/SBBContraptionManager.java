@@ -11,12 +11,12 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.LevelAccessor;
 
 public class SBBContraptionManager extends ContraptionRenderManager<ContraptionRenderInfo> {
 	public static final Compartment<Pair<Contraption, RenderType>> CONTRAPTION = new Compartment<>();
 
-	public SBBContraptionManager(IWorld world) {
+	public SBBContraptionManager(LevelAccessor world) {
 		super(world);
 	}
 

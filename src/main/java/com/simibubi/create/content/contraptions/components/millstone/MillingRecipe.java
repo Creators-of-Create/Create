@@ -6,7 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
@@ -17,7 +17,7 @@ public class MillingRecipe extends AbstractCrushingRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World worldIn) {
+	public boolean matches(RecipeWrapper inv, Level worldIn) {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0)

@@ -7,27 +7,27 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class CouplingHandlerClient {
 
-	static AbstractMinecartEntity selectedCart;
+	static AbstractMinecart selectedCart;
 	static Random r = new Random();
 
 	public static void tick() {
 		if (selectedCart == null)
 			return;
 		spawnSelectionParticles(selectedCart.getBoundingBox(), false);
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		ItemStack heldItemMainhand = player.getMainHandItem();
 		ItemStack heldItemOffhand = player.getOffhandItem();
 		if (AllItems.MINECART_COUPLING.isIn(heldItemMainhand) || AllItems.MINECART_COUPLING.isIn(heldItemOffhand))
@@ -35,7 +35,7 @@ public class CouplingHandlerClient {
 		selectedCart = null;
 	}
 
-	static void onCartClicked(PlayerEntity player, AbstractMinecartEntity entity) {
+	static void onCartClicked(Player player, AbstractMinecart entity) {
 		if (Minecraft.getInstance().player != player)
 			return;
 		if (selectedCart == null || selectedCart == entity) {
@@ -52,13 +52,13 @@ public class CouplingHandlerClient {
 		selectedCart = null;
 	}
 
-	private static void spawnSelectionParticles(AxisAlignedBB axisAlignedBB, boolean highlight) {
-		ClientWorld world = Minecraft.getInstance().level;
-		Vector3d center = axisAlignedBB.getCenter();
+	private static void spawnSelectionParticles(AABB axisAlignedBB, boolean highlight) {
+		ClientLevel world = Minecraft.getInstance().level;
+		Vec3 center = axisAlignedBB.getCenter();
 		int amount = highlight ? 100 : 2;
-		IParticleData particleData = highlight ? ParticleTypes.END_ROD : new RedstoneParticleData(1, 1, 1, 1);
+		ParticleOptions particleData = highlight ? ParticleTypes.END_ROD : new DustParticleOptions(1, 1, 1, 1);
 		for (int i = 0; i < amount; i++) {
-			Vector3d v = VecHelper.offsetRandomly(Vector3d.ZERO, r, 1);
+			Vec3 v = VecHelper.offsetRandomly(Vec3.ZERO, r, 1);
 			double yOffset = v.y;
 			v = v.multiply(1, 0, 1)
 				.normalize()

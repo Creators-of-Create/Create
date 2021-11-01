@@ -11,29 +11,31 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.Tags;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements ITE<MechanicalPistonTileEntity> {
 
@@ -62,33 +64,33 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-		BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+		BlockHitResult hit) {
 		if (!player.mayBuild())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (player.isShiftKeyDown())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (!player.getItemInHand(handIn)
 			.getItem()
 			.is(Tags.Items.SLIMEBALLS)) {
 			if (player.getItemInHand(handIn)
 				.isEmpty()) {
 				withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		}
 		if (state.getValue(STATE) != PistonState.RETRACTED)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		Direction direction = state.getValue(FACING);
 		if (hit.getDirection() != direction)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (((MechanicalPistonBlock) state.getBlock()).isSticky)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (worldIn.isClientSide) {
-			Vector3d vec = hit.getLocation();
+			Vec3 vec = hit.getLocation();
 			worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 		AllSoundEvents.SLIME_ADDED.playOnServer(worldIn, pos, .5f, 1);
 		if (!player.isCreative())
@@ -97,11 +99,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		worldIn.setBlockAndUpdate(pos, AllBlocks.STICKY_MECHANICAL_PISTON.getDefaultState()
 			.setValue(FACING, direction)
 			.setValue(AXIS_ALONG_FIRST_COORDINATE, state.getValue(AXIS_ALONG_FIRST_COORDINATE)));
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos fromPos,
 		boolean p_220069_6_) {
 		Direction direction = state.getValue(FACING);
 		if (!fromPos.equals(pos.relative(direction.getOpposite())))
@@ -113,7 +115,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
 		Direction direction = state.getValue(FACING);
 		BlockState pole = worldIn.getBlockState(pos.relative(direction.getOpposite()));
 		if (!AllBlocks.PISTON_EXTENSION_POLE.has(pole))
@@ -130,18 +132,18 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.MECHANICAL_PISTON.create();
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (state.getValue(STATE) != PistonState.RETRACTED)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		return super.onWrenched(state, context);
 	}
 
-	public enum PistonState implements IStringSerializable {
+	public enum PistonState implements StringRepresentable {
 		RETRACTED, MOVING, EXTENDED;
 
 		@Override
@@ -151,7 +153,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
 		Direction direction = state.getValue(FACING);
 		BlockPos pistonHead = null;
 		BlockPos pistonBase = pos;
@@ -200,7 +202,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
 		if (state.getValue(STATE) == PistonState.EXTENDED)
 			return AllShapes.MECHANICAL_PISTON_EXTENDED.get(state.getValue(FACING));
@@ -208,7 +210,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (state.getValue(STATE) == PistonState.MOVING)
 			return AllShapes.MECHANICAL_PISTON.get(state.getValue(FACING));
 
-		return VoxelShapes.block();
+		return Shapes.block();
 	}
 
 	@Override

@@ -4,18 +4,20 @@ import java.util.Random;
 
 import com.simibubi.create.AllTileEntities;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SmartChuteBlock extends AbstractChuteBlock {
 
@@ -27,7 +29,7 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
 		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
 		if (worldIn.isClientSide)
@@ -39,25 +41,25 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
 		boolean previouslyPowered = state.getValue(POWERED);
 		if (previouslyPowered != worldIn.hasNeighborSignal(pos))
 			worldIn.setBlock(pos, state.cycle(POWERED), 2);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
+	public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
 		return super.getStateForPlacement(p_196258_1_).setValue(POWERED, p_196258_1_.getLevel()
 			.hasNeighborSignal(p_196258_1_.getClickedPos()));
 	}
 
 	@Override
-	public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
 		return true;
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.SMART_CHUTE.create();
 	}
 
@@ -67,7 +69,7 @@ public class SmartChuteBlock extends AbstractChuteBlock {
 	}
 
 	@Override
-	public BlockState updateChuteState(BlockState state, BlockState above, IBlockReader world, BlockPos pos) {
+	public BlockState updateChuteState(BlockState state, BlockState above, BlockGetter world, BlockPos pos) {
 		return state;
 	}
 

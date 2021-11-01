@@ -3,15 +3,15 @@ package com.simibubi.create.foundation.ponder.instructions;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.Vec3;
 
 public class LineInstruction extends TickingInstruction {
 
 	private PonderPalette color;
-	private Vector3d start;
-	private Vector3d end;
+	private Vec3 start;
+	private Vec3 end;
 
-	public LineInstruction(PonderPalette color, Vector3d start, Vector3d end, int ticks) {
+	public LineInstruction(PonderPalette color, Vec3 start, Vec3 end, int ticks) {
 		super(false, ticks);
 		this.color = color;
 		this.start = start;

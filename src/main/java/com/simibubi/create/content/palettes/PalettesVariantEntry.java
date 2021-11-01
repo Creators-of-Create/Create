@@ -13,11 +13,11 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.tags.Tag;
 
 public class PalettesVariantEntry {
 
@@ -42,11 +42,11 @@ public class PalettesVariantEntry {
 			ItemBuilder<BlockItem, ? extends BlockBuilder<? extends Block, CreateRegistrate>> itemBuilder =
 				builder.item();
 
-			ITag.INamedTag<Block>[] blockTags = pattern.getBlockTags();
+			Tag.Named<Block>[] blockTags = pattern.getBlockTags();
 			if (blockTags != null) {
 				builder.tag(blockTags);
 			}
-			ITag.INamedTag<Item>[] itemTags = pattern.getItemTags();
+			Tag.Named<Item>[] itemTags = pattern.getItemTags();
 			if (itemTags != null) {
 				itemBuilder.tag(itemTags);
 			}

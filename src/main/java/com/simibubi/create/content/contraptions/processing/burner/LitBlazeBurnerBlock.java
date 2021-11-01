@@ -6,30 +6,32 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class LitBlazeBurnerBlock extends Block {
 
@@ -47,46 +49,46 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult blockRayTraceResult) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		if (heldItem.getToolTypes().contains(ToolType.SHOVEL)) {
-			world.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 0.5f, 2);
+			world.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5f, 2);
 			if (world.isClientSide)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			heldItem.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (state.getValue(FLAME_TYPE) == FlameType.REGULAR) {
 			if (heldItem.getItem().is(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
-				world.playSound(player, pos, SoundEvents.SOUL_SAND_PLACE, SoundCategory.BLOCKS, 1.0f, world.random.nextFloat() * 0.4F + 0.8F);
+				world.playSound(player, pos, SoundEvents.SOUL_SAND_PLACE, SoundSource.BLOCKS, 1.0f, world.random.nextFloat() * 0.4F + 0.8F);
 				if (world.isClientSide)
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				world.setBlockAndUpdate(pos, defaultBlockState().setValue(FLAME_TYPE, FlameType.SOUL));
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
 
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
 		return AllBlocks.BLAZE_BURNER.get()
 			.getShape(state, reader, pos, context);
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-		PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+		Player player) {
 		return AllItems.EMPTY_BLAZE_BURNER.asStack();
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
 		world.addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true,
 			(double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1),
 			(double) pos.getY() + random.nextDouble() + random.nextDouble(),
@@ -95,7 +97,7 @@ public class LitBlazeBurnerBlock extends Block {
 
 		if (random.nextInt(10) == 0) {
 			world.playLocalSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F),
-				(double) ((float) pos.getZ() + 0.5F), SoundEvents.CAMPFIRE_CRACKLE, SoundCategory.BLOCKS,
+				(double) ((float) pos.getZ() + 0.5F), SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS,
 				0.25F + random.nextFloat() * .25f, random.nextFloat() * 0.7F + 0.6F, false);
 		}
 
@@ -125,19 +127,19 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+	public int getAnalogOutputSignal(BlockState state, Level p_180641_2_, BlockPos p_180641_3_) {
 		return state.getValue(FLAME_TYPE) == FlameType.REGULAR ? 1 : 2;
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos,
-		ISelectionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos,
+		CollisionContext context) {
 		return AllBlocks.BLAZE_BURNER.get()
 			.getCollisionShape(state, reader, pos, context);
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 
@@ -148,7 +150,7 @@ public class LitBlazeBurnerBlock extends Block {
 			return 12;
 	}
 
-	public enum FlameType implements IStringSerializable {
+	public enum FlameType implements StringRepresentable {
 
 		REGULAR, SOUL;
 

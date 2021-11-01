@@ -11,16 +11,18 @@ import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.simibubi.create.AllParticleTypes;
 
-import net.minecraft.client.particle.ParticleManager.IParticleMetaFactory;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.client.particle.ParticleEngine.SpriteParticleRegistration;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.Direction.Axis;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.core.particles.ParticleOptions.Deserializer;
+
 public class RotationIndicatorParticleData
-	implements IParticleData, ICustomParticleDataWithSprite<RotationIndicatorParticleData> {
+	implements ParticleOptions, ICustomParticleDataWithSprite<RotationIndicatorParticleData> {
 
 	// TODO 1.16 make this unnecessary
 	public static final PrimitiveCodec<Character> CHAR = new PrimitiveCodec<Character>() {
@@ -56,8 +58,8 @@ public class RotationIndicatorParticleData
 				.forGetter(p -> p.axis))
 		.apply(i, RotationIndicatorParticleData::new));
 
-	public static final IParticleData.IDeserializer<RotationIndicatorParticleData> DESERIALIZER =
-		new IParticleData.IDeserializer<RotationIndicatorParticleData>() {
+	public static final ParticleOptions.Deserializer<RotationIndicatorParticleData> DESERIALIZER =
+		new ParticleOptions.Deserializer<RotationIndicatorParticleData>() {
 			public RotationIndicatorParticleData fromCommand(ParticleType<RotationIndicatorParticleData> particleTypeIn,
 				StringReader reader) throws CommandSyntaxException {
 				reader.expect(' ');
@@ -76,7 +78,7 @@ public class RotationIndicatorParticleData
 			}
 
 			public RotationIndicatorParticleData fromNetwork(ParticleType<RotationIndicatorParticleData> particleTypeIn,
-				PacketBuffer buffer) {
+				FriendlyByteBuf buffer) {
 				return new RotationIndicatorParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(),
 					buffer.readFloat(), buffer.readInt(), buffer.readChar());
 			}
@@ -113,7 +115,7 @@ public class RotationIndicatorParticleData
 	}
 
 	@Override
-	public void writeToNetwork(PacketBuffer buffer) {
+	public void writeToNetwork(FriendlyByteBuf buffer) {
 		buffer.writeInt(color);
 		buffer.writeFloat(speed);
 		buffer.writeFloat(radius1);
@@ -129,7 +131,7 @@ public class RotationIndicatorParticleData
 	}
 
 	@Override
-	public IDeserializer<RotationIndicatorParticleData> getDeserializer() {
+	public Deserializer<RotationIndicatorParticleData> getDeserializer() {
 		return DESERIALIZER;
 	}
 
@@ -140,7 +142,7 @@ public class RotationIndicatorParticleData
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IParticleMetaFactory<RotationIndicatorParticleData> getMetaFactory() {
+	public SpriteParticleRegistration<RotationIndicatorParticleData> getMetaFactory() {
 		return RotationIndicatorParticle.Factory::new;
 	}
 

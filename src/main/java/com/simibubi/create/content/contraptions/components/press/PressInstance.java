@@ -9,8 +9,10 @@ import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+
+import OrientedData;
 
 public class PressInstance extends ShaftInstance implements IDynamicInstance {
 

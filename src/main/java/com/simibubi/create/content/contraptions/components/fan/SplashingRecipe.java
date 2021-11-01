@@ -8,7 +8,7 @@ import com.simibubi.create.content.contraptions.processing.InWorldProcessing.Spl
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 @ParametersAreNonnullByDefault
 public class SplashingRecipe extends ProcessingRecipe<InWorldProcessing.SplashingWrapper> {
@@ -18,7 +18,7 @@ public class SplashingRecipe extends ProcessingRecipe<InWorldProcessing.Splashin
 	}
 
 	@Override
-	public boolean matches(SplashingWrapper inv, World worldIn) {
+	public boolean matches(SplashingWrapper inv, Level worldIn) {
 		if (inv.isEmpty())
 			return false;
 		return ingredients.get(0)

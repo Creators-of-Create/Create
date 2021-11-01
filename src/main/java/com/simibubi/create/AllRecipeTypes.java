@@ -24,15 +24,15 @@ import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.item.crafting.SpecialRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipeTypes implements IRecipeTypeInfo {
@@ -54,27 +54,27 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 	MECHANICAL_CRAFTING(MechanicalCraftingRecipe.Serializer::new),
 	SEQUENCED_ASSEMBLY(SequencedAssemblyRecipeSerializer::new),
 
-	TOOLBOX_DYEING(() -> new SpecialRecipeSerializer<>(ToolboxDyeingRecipe::new), IRecipeType.CRAFTING);
+	TOOLBOX_DYEING(() -> new SimpleRecipeSerializer<>(ToolboxDyeingRecipe::new), RecipeType.CRAFTING);
 
 	;
 
 	private ResourceLocation id;
-	private Supplier<IRecipeSerializer<?>> serializerSupplier;
-	private Supplier<IRecipeType<?>> typeSupplier;
-	private IRecipeSerializer<?> serializer;
-	private IRecipeType<?> type;
+	private Supplier<RecipeSerializer<?>> serializerSupplier;
+	private Supplier<RecipeType<?>> typeSupplier;
+	private RecipeSerializer<?> serializer;
+	private RecipeType<?> type;
 
-	AllRecipeTypes(Supplier<IRecipeSerializer<?>> serializerSupplier, Supplier<IRecipeType<?>> typeSupplier) {
+	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, Supplier<RecipeType<?>> typeSupplier) {
 		this.id = Create.asResource(Lang.asId(name()));
 		this.serializerSupplier = serializerSupplier;
 		this.typeSupplier = typeSupplier;
 	}
 
-	AllRecipeTypes(Supplier<IRecipeSerializer<?>> serializerSupplier, IRecipeType<?> existingType) {
+	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier, RecipeType<?> existingType) {
 		this(serializerSupplier, () -> existingType);
 	}
 
-	AllRecipeTypes(Supplier<IRecipeSerializer<?>> serializerSupplier) {
+	AllRecipeTypes(Supplier<RecipeSerializer<?>> serializerSupplier) {
 		this.id = Create.asResource(Lang.asId(name()));
 		this.serializerSupplier = serializerSupplier;
 		this.typeSupplier = () -> simpleType(id);
@@ -91,22 +91,22 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IRecipeSerializer<?>> T getSerializer() {
+	public <T extends RecipeSerializer<?>> T getSerializer() {
 		return (T) serializer;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IRecipeType<?>> T getType() {
+	public <T extends RecipeType<?>> T getType() {
 		return (T) type;
 	}
 
-	public <C extends IInventory, T extends IRecipe<C>> Optional<T> find(C inv, World world) {
+	public <C extends Container, T extends Recipe<C>> Optional<T> find(C inv, Level world) {
 		return world.getRecipeManager()
 			.getRecipeFor(getType(), inv, world);
 	}
 
-	public static void register(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+	public static void register(RegistryEvent.Register<RecipeSerializer<?>> event) {
 		ShapedRecipe.setCraftingSize(9, 9);
 
 		for (AllRecipeTypes r : AllRecipeTypes.values()) {
@@ -118,13 +118,13 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 		}
 	}
 
-	private static Supplier<IRecipeSerializer<?>> processingSerializer(ProcessingRecipeFactory<?> factory) {
+	private static Supplier<RecipeSerializer<?>> processingSerializer(ProcessingRecipeFactory<?> factory) {
 		return () -> new ProcessingRecipeSerializer<>(factory);
 	}
 
-	public static <T extends IRecipe<?>> IRecipeType<T> simpleType(ResourceLocation id) {
+	public static <T extends Recipe<?>> RecipeType<T> simpleType(ResourceLocation id) {
 		String stringId = id.toString();
-		return Registry.register(Registry.RECIPE_TYPE, id, new IRecipeType<T>() {
+		return Registry.register(Registry.RECIPE_TYPE, id, new RecipeType<T>() {
 			@Override
 			public String toString() {
 				return stringId;

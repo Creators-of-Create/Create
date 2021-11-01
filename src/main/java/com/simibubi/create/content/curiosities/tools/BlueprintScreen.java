@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
@@ -19,21 +19,21 @@ import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 
 public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContainer> {
 
 	protected AllGuiTextures background;
-	private List<Rectangle2d> extraAreas = Collections.emptyList();
+	private List<Rect2i> extraAreas = Collections.emptyList();
 
 	private IconButton resetButton;
 	private IconButton confirmButton;
 
-	public BlueprintScreen(BlueprintContainer container, PlayerInventory inv, ITextComponent title) {
+	public BlueprintScreen(BlueprintContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
 		this.background = AllGuiTextures.BLUEPRINT;
 	}
@@ -55,12 +55,12 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		widgets.add(confirmButton);
 
 		extraAreas = ImmutableList.of(
-			new Rectangle2d(x + background.width, y + background.height - 36, 56, 44)
+			new Rect2i(x + background.width, y + background.height - 36, 56, 44)
 		);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -79,7 +79,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	}
 
 	@Override
-	protected void renderTooltip(MatrixStack ms, int x, int y) {
+	protected void renderTooltip(PoseStack ms, int x, int y) {
 		if (!this.minecraft.player.inventory.getCarried()
 			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
 			|| hoveredSlot.container == menu.playerInventory) {
@@ -91,39 +91,39 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipFromItem(ItemStack stack) {
-		List<ITextComponent> list = super.getTooltipFromItem(stack);
+	public List<Component> getTooltipFromItem(ItemStack stack) {
+		List<Component> list = super.getTooltipFromItem(stack);
 		if (hoveredSlot.container == menu.playerInventory)
 			return list;
 		return hoveredSlot != null ? addToTooltip(list, hoveredSlot.getSlotIndex(), false) : list;
 	}
 
-	private List<ITextComponent> addToTooltip(List<ITextComponent> list, int slot, boolean isEmptySlot) {
+	private List<Component> addToTooltip(List<Component> list, int slot, boolean isEmptySlot) {
 		if (slot < 0 || slot > 10)
 			return list;
 
 		if (slot < 9) {
 			list.add(Lang.createTranslationTextComponent("crafting_blueprint.crafting_slot")
-				.withStyle(TextFormatting.GOLD));
+				.withStyle(ChatFormatting.GOLD));
 			if (isEmptySlot)
 				list.add(Lang.createTranslationTextComponent("crafting_blueprint.filter_items_viable")
-					.withStyle(TextFormatting.GRAY));
+					.withStyle(ChatFormatting.GRAY));
 
 		} else if (slot == 9) {
 			list.add(Lang.createTranslationTextComponent("crafting_blueprint.display_slot")
-				.withStyle(TextFormatting.GOLD));
+				.withStyle(ChatFormatting.GOLD));
 			if (!isEmptySlot)
 				list.add(Lang
 					.createTranslationTextComponent("crafting_blueprint."
 						+ (menu.contentHolder.inferredIcon ? "inferred" : "manually_assigned"))
-					.withStyle(TextFormatting.GRAY));
+					.withStyle(ChatFormatting.GRAY));
 
 		} else if (slot == 10) {
 			list.add(Lang.createTranslationTextComponent("crafting_blueprint.secondary_display_slot")
-				.withStyle(TextFormatting.GOLD));
+				.withStyle(ChatFormatting.GOLD));
 			if (isEmptySlot)
 				list.add(Lang.createTranslationTextComponent("crafting_blueprint.optional")
-					.withStyle(TextFormatting.GRAY));
+					.withStyle(ChatFormatting.GRAY));
 		}
 
 		return list;
@@ -185,7 +185,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	}
 
 	@Override
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 

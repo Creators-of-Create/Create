@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.block.render;
 
 import java.util.Arrays;
 
-import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 
 public final class QuadHelper {
 

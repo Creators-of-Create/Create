@@ -7,21 +7,23 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class GearboxBlock extends RotatedPillarKineticBlock {
 
@@ -30,7 +32,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.GEARBOX.create();
 	}
 
@@ -40,7 +42,7 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 		super.fillItemCategory(group, items);
 		items.add(AllItems.VERTICAL_GEARBOX.asStack());
 	}
@@ -54,22 +56,22 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	}
 	
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-			PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+			Player player) {
 		if (state.getValue(AXIS).isVertical())
 			return super.getPickBlock(state, target, world, pos, player);
 		return new ItemStack(AllItems.VERTICAL_GEARBOX.get());
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState().setValue(AXIS, Axis.Y);
 	}
 
 	// IRotate:
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() != state.getValue(AXIS);
 	}
 

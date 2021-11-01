@@ -10,17 +10,19 @@ import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+
+import net.minecraftforge.fluids.FluidAttributes.Builder;
 
 public class AllFluids {
 
@@ -73,8 +75,8 @@ public class AllFluids {
 	@OnlyIn(Dist.CLIENT)
 	private static void makeTranslucent(FluidEntry<?> entry) {
 		ForgeFlowingFluid fluid = entry.get();
-		RenderTypeLookup.setRenderLayer(fluid, RenderType.translucent());
-		RenderTypeLookup.setRenderLayer(fluid.getSource(), RenderType.translucent());
+		ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
+		ItemBlockRenderTypes.setRenderLayer(fluid.getSource(), RenderType.translucent());
 	}
 
 	@Nullable
@@ -102,7 +104,7 @@ public class AllFluids {
 		}
 
 		@Override
-		public int getColor(IBlockDisplayReader world, BlockPos pos) {
+		public int getColor(BlockAndTintGetter world, BlockPos pos) {
 			return 0x00ffffff;
 		}
 

@@ -15,6 +15,8 @@ import com.simibubi.create.foundation.utility.Color;
 import net.minecraft.state.properties.AttachFace;
 import net.minecraft.util.Direction;
 
+import ModelData;
+
 public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 
     protected final ModelData handle;

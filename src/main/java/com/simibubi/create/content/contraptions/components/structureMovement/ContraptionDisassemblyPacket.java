@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
@@ -19,13 +19,13 @@ public class ContraptionDisassemblyPacket extends SimplePacketBase {
 		this.transform = transform;
 	}
 
-	public ContraptionDisassemblyPacket(PacketBuffer buffer) {
+	public ContraptionDisassemblyPacket(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		transform = StructureTransform.fromBuffer(buffer);
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		transform.writeToBuffer(buffer);
 	}

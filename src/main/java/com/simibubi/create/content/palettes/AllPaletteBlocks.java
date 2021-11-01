@@ -24,14 +24,14 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.GlassBlock;
-import net.minecraft.block.SandBlock;
-import net.minecraft.block.WoodType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.SandBlock;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {

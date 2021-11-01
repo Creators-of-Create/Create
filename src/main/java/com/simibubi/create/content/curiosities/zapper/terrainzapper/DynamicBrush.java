@@ -9,11 +9,11 @@ import java.util.Set;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.LevelAccessor;
 
 public class DynamicBrush extends Brush {
 
@@ -26,7 +26,7 @@ public class DynamicBrush extends Brush {
 		this.surface = surface;
 	}
 
-	ITextComponent getParamLabel(int paramIndex) {
+	Component getParamLabel(int paramIndex) {
 		return Lang.translate("generic.range");
 	}
 
@@ -64,7 +64,7 @@ public class DynamicBrush extends Brush {
 	}
 
 	@Override
-	public Collection<BlockPos> addToGlobalPositions(IWorld world, BlockPos targetPos, Direction targetFace,
+	public Collection<BlockPos> addToGlobalPositions(LevelAccessor world, BlockPos targetPos, Direction targetFace,
 		Collection<BlockPos> affectedPositions, TerrainTools usedTool) {
 
 		boolean searchDiagonals = param1 == 0;

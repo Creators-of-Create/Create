@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import java.util.Locale;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.BoxElement;
@@ -77,7 +77,7 @@ public class EnumEntry extends ValueEntry<Enum<?>> {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
+	public void render(PoseStack ms, int index, int y, int x, int width, int height, int mouseX, int mouseY,
 		boolean p_230432_9_, float partialTicks) {
 		super.render(ms, index, y, x, width, height, mouseX, mouseY, p_230432_9_, partialTicks);
 

@@ -4,9 +4,9 @@ import java.util.function.BiPredicate;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {
 
@@ -21,7 +21,7 @@ public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {
 	}
 
 	@Override
-	protected Vector3d getSouthLocation() {
+	protected Vec3 getSouthLocation() {
 		return VecHelper.voxelSpace(8, 8, 16);
 	}
 

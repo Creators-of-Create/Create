@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.NonNullList;
 
 public class ShulkerFillLevelAttribute implements ItemAttribute {
 	public static final ShulkerFillLevelAttribute EMPTY = new ShulkerFillLevelAttribute(null);
@@ -53,13 +53,13 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 	}
 
 	@Override
-	public void writeNBT(CompoundNBT nbt) {
+	public void writeNBT(CompoundTag nbt) {
 		if (levels != null)
 			nbt.putString("id", levels.key);
 	}
 
 	@Override
-	public ItemAttribute readNBT(CompoundNBT nbt) {
+	public ItemAttribute readNBT(CompoundTag nbt) {
 		return nbt.contains("id") ? new ShulkerFillLevelAttribute(ShulkerLevels.fromKey(nbt.getString("id"))) : EMPTY;
 	}
 
@@ -88,7 +88,7 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 		public boolean canApply(ItemStack testStack) {
 			if (!isShulker(testStack))
 				return false;
-			CompoundNBT compoundnbt = testStack.getTagElement("BlockEntityTag");
+			CompoundTag compoundnbt = testStack.getTagElement("BlockEntityTag");
 			if (compoundnbt == null)
 				return requiredSize.test(0);
 			if (compoundnbt.contains("LootTable", 8))
@@ -99,7 +99,7 @@ public class ShulkerFillLevelAttribute implements ItemAttribute {
 					return requiredSize.test(rawSize);
 
 				NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
-				ItemStackHelper.loadAllItems(compoundnbt, inventory);
+				ContainerHelper.loadAllItems(compoundnbt, inventory);
 				boolean isFull = inventory.stream().allMatch(itemStack -> !itemStack.isEmpty() && itemStack.getCount() == itemStack.getMaxStackSize());
 				return requiredSize.test(isFull ? Integer.MAX_VALUE : rawSize);
 			}

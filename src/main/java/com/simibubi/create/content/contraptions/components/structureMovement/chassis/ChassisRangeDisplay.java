@@ -16,12 +16,12 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public class ChassisRangeDisplay {
 
@@ -87,8 +87,8 @@ public class ChassisRangeDisplay {
 	static List<GroupEntry> groupEntries = new ArrayList<>();
 
 	public static void tick() {
-		PlayerEntity player = Minecraft.getInstance().player;
-		World world = Minecraft.getInstance().level;
+		Player player = Minecraft.getInstance().player;
+		Level world = Minecraft.getInstance().level;
 		boolean hasWrench = AllItems.WRENCH.isIn(player.getMainHandItem());
 
 		for (Iterator<BlockPos> iterator = entries.keySet()
@@ -113,12 +113,12 @@ public class ChassisRangeDisplay {
 		if (!hasWrench)
 			return;
 
-		RayTraceResult over = Minecraft.getInstance().hitResult;
-		if (!(over instanceof BlockRayTraceResult))
+		HitResult over = Minecraft.getInstance().hitResult;
+		if (!(over instanceof BlockHitResult))
 			return;
-		BlockRayTraceResult ray = (BlockRayTraceResult) over;
+		BlockHitResult ray = (BlockHitResult) over;
 		BlockPos pos = ray.getBlockPos();
-		TileEntity tileEntity = world.getBlockEntity(pos);
+		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (tileEntity == null || tileEntity.isRemoved())
 			return;
 		if (!(tileEntity instanceof ChassisTileEntity))
@@ -147,8 +147,8 @@ public class ChassisRangeDisplay {
 
 	private static boolean tickEntry(Entry entry, boolean hasWrench) {
 		ChassisTileEntity chassisTileEntity = entry.te;
-		World teWorld = chassisTileEntity.getLevel();
-		World world = Minecraft.getInstance().level;
+		Level teWorld = chassisTileEntity.getLevel();
+		Level world = Minecraft.getInstance().level;
 
 		if (chassisTileEntity.isRemoved() || teWorld == null || teWorld != world
 			|| !world.isLoaded(chassisTileEntity.getBlockPos())) {

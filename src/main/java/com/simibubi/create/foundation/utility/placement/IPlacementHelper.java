@@ -13,17 +13,17 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 @MethodsReturnNonnullByDefault
 public interface IPlacementHelper {
@@ -58,10 +58,10 @@ public interface IPlacementHelper {
 	 *     Use {@link PlacementOffset#success(Vector3i)} with the new BlockPos to indicate a success
 	 *     and call {@link PlacementOffset#withTransform(Function)} if the blocks default state has to be modified before it is placed
 	 */
-	PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray);
+	PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray);
 
 	//sets the offset's ghost state with the default state of the held block item, this is used in PlacementHelpers and can be ignored in most cases
-	default PlacementOffset getOffset(PlayerEntity player, World world, BlockState state, BlockPos pos, BlockRayTraceResult ray, ItemStack heldItem) {
+	default PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray, ItemStack heldItem) {
 		PlacementOffset offset = getOffset(player, world, state, pos, ray);
 		if (heldItem.getItem() instanceof BlockItem) {
 			BlockItem blockItem = (BlockItem) heldItem.getItem();
@@ -79,23 +79,23 @@ public interface IPlacementHelper {
 	 * @param offset the PlacementOffset returned by {@link #getOffset(PlayerEntity, World, BlockState, BlockPos, BlockRayTraceResult)}<br>
 	 *               the offset will always be successful if this method is called
 	 */
-	default void renderAt(BlockPos pos, BlockState state, BlockRayTraceResult ray, PlacementOffset offset) {
+	default void renderAt(BlockPos pos, BlockState state, BlockHitResult ray, PlacementOffset offset) {
 		displayGhost(offset);
 	}
 
 	//RIP
-	static void renderArrow(Vector3d center, Vector3d target, Direction arrowPlane) {
+	static void renderArrow(Vec3 center, Vec3 target, Direction arrowPlane) {
 		renderArrow(center, target, arrowPlane, 1D);
 	}
-	static void renderArrow(Vector3d center, Vector3d target, Direction arrowPlane, double distanceFromCenter) {
-		Vector3d direction = target.subtract(center).normalize();
-		Vector3d facing = Vector3d.atLowerCornerOf(arrowPlane.getNormal());
-		Vector3d start = center.add(direction);
-		Vector3d offset = direction.scale(distanceFromCenter - 1);
-		Vector3d offsetA = direction.cross(facing).normalize().scale(.25);
-		Vector3d offsetB = facing.cross(direction).normalize().scale(.25);
-		Vector3d endA = center.add(direction.scale(.75)).add(offsetA);
-		Vector3d endB = center.add(direction.scale(.75)).add(offsetB);
+	static void renderArrow(Vec3 center, Vec3 target, Direction arrowPlane, double distanceFromCenter) {
+		Vec3 direction = target.subtract(center).normalize();
+		Vec3 facing = Vec3.atLowerCornerOf(arrowPlane.getNormal());
+		Vec3 start = center.add(direction);
+		Vec3 offset = direction.scale(distanceFromCenter - 1);
+		Vec3 offsetA = direction.cross(facing).normalize().scale(.25);
+		Vec3 offsetB = facing.cross(direction).normalize().scale(.25);
+		Vec3 endA = center.add(direction.scale(.75)).add(offsetA);
+		Vec3 endB = center.add(direction.scale(.75)).add(offsetB);
 		CreateClient.OUTLINER.showLine("placementArrowA" + center + target, start.add(offset), endA.add(offset)).lineWidth(1 / 16f);
 		CreateClient.OUTLINER.showLine("placementArrowB" + center + target, start.add(offset), endB.add(offset)).lineWidth(1 / 16f);
 	}
@@ -109,39 +109,39 @@ public interface IPlacementHelper {
 				.breathingAlpha();
 	}
 
-	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vector3d hit, Direction.Axis axis) {
+	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vec3 hit, Direction.Axis axis) {
 		return orderedByDistance(pos, hit, dir -> dir.getAxis() == axis);
 	}
 
-	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vector3d hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
+	static List<Direction> orderedByDistanceOnlyAxis(BlockPos pos, Vec3 hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
 		return orderedByDistance(pos, hit, ((Predicate<Direction>) dir -> dir.getAxis() == axis).and(includeDirection));
 	}
 
-	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis axis) {
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vec3 hit, Direction.Axis axis) {
 		return orderedByDistance(pos, hit, dir -> dir.getAxis() != axis);
 	}
 
-	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vec3 hit, Direction.Axis axis, Predicate<Direction> includeDirection) {
 		return orderedByDistance(pos, hit, ((Predicate<Direction>) dir -> dir.getAxis() != axis).and(includeDirection));
 	}
 
-	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis first, Direction.Axis second) {
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vec3 hit, Direction.Axis first, Direction.Axis second) {
 		return orderedByDistanceExceptAxis(pos, hit, first, d -> d.getAxis() != second);
 	}
 
-	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vector3d hit, Direction.Axis first, Direction.Axis second, Predicate<Direction> includeDirection) {
+	static List<Direction> orderedByDistanceExceptAxis(BlockPos pos, Vec3 hit, Direction.Axis first, Direction.Axis second, Predicate<Direction> includeDirection) {
 		return orderedByDistanceExceptAxis(pos, hit, first, ((Predicate<Direction>) d -> d.getAxis() != second).and(includeDirection));
 	}
 
-	static List<Direction> orderedByDistance(BlockPos pos, Vector3d hit) {
+	static List<Direction> orderedByDistance(BlockPos pos, Vec3 hit) {
 		return orderedByDistance(pos, hit, _$ -> true);
 	}
 
-	static List<Direction> orderedByDistance(BlockPos pos, Vector3d hit, Predicate<Direction> includeDirection) {
-		Vector3d centerToHit = hit.subtract(VecHelper.getCenterOf(pos));
+	static List<Direction> orderedByDistance(BlockPos pos, Vec3 hit, Predicate<Direction> includeDirection) {
+		Vec3 centerToHit = hit.subtract(VecHelper.getCenterOf(pos));
 		return Arrays.stream(Iterate.directions)
 				.filter(includeDirection)
-				.map(dir -> Pair.of(dir, Vector3d.atLowerCornerOf(dir.getNormal()).distanceTo(centerToHit)))
+				.map(dir -> Pair.of(dir, Vec3.atLowerCornerOf(dir.getNormal()).distanceTo(centerToHit)))
 				.sorted(Comparator.comparingDouble(Pair::getSecond))
 				.map(Pair::getFirst)
 				.collect(Collectors.toList());

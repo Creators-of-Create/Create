@@ -7,13 +7,13 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.Vec3;
 
 public class VoxelShaper {
 
@@ -47,7 +47,7 @@ public class VoxelShaper {
 
 	public VoxelShaper withVerticalShapes(VoxelShape upShape) {
 		shapes.put(Direction.UP, upShape);
-		shapes.put(Direction.DOWN, rotatedCopy(upShape, new Vector3d(180, 0, 0)));
+		shapes.put(Direction.DOWN, rotatedCopy(upShape, new Vec3(180, 0, 0)));
 		return this;
 	}
 
@@ -65,7 +65,7 @@ public class VoxelShaper {
 	}
 
 	protected static VoxelShaper forDirectionsWithRotation(VoxelShape shape, Direction facing,
-		Iterable<Direction> directions, Function<Direction, Vector3d> rotationValues) {
+		Iterable<Direction> directions, Function<Direction, Vec3> rotationValues) {
 		VoxelShaper voxelShaper = new VoxelShaper();
 		for (Direction dir : directions) {
 			voxelShaper.shapes.put(dir, rotate(shape, facing, dir, rotationValues));
@@ -74,7 +74,7 @@ public class VoxelShaper {
 	}
 
 	protected static VoxelShape rotate(VoxelShape shape, Direction from, Direction to,
-		Function<Direction, Vector3d> usingValues) {
+		Function<Direction, Vec3> usingValues) {
 		if (from == to)
 			return shape;
 
@@ -83,17 +83,17 @@ public class VoxelShaper {
 			.add(usingValues.apply(to)));
 	}
 
-	protected static VoxelShape rotatedCopy(VoxelShape shape, Vector3d rotation) {
-		if (rotation.equals(Vector3d.ZERO))
+	protected static VoxelShape rotatedCopy(VoxelShape shape, Vec3 rotation) {
+		if (rotation.equals(Vec3.ZERO))
 			return shape;
 
-		MutableObject<VoxelShape> result = new MutableObject<>(VoxelShapes.empty());
-		Vector3d center = new Vector3d(8, 8, 8);
+		MutableObject<VoxelShape> result = new MutableObject<>(Shapes.empty());
+		Vec3 center = new Vec3(8, 8, 8);
 
 		shape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-			Vector3d v1 = new Vector3d(x1, y1, z1).scale(16)
+			Vec3 v1 = new Vec3(x1, y1, z1).scale(16)
 				.subtract(center);
-			Vector3d v2 = new Vector3d(x2, y2, z2).scale(16)
+			Vec3 v2 = new Vec3(x2, y2, z2).scale(16)
 				.subtract(center);
 
 			v1 = VecHelper.rotate(v1, (float) rotation.x, Axis.X);
@@ -107,25 +107,25 @@ public class VoxelShaper {
 				.add(center);
 
 			VoxelShape rotated = Block.box(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
-			result.setValue(VoxelShapes.or(result.getValue(), rotated));
+			result.setValue(Shapes.or(result.getValue(), rotated));
 		});
 
 		return result.getValue();
 	}
 
-	protected static class DefaultRotationValues implements Function<Direction, Vector3d> {
+	protected static class DefaultRotationValues implements Function<Direction, Vec3> {
 		// assume facing up as the default rotation
 		@Override
-		public Vector3d apply(Direction direction) {
-			return new Vector3d(direction == Direction.UP ? 0 : (Direction.Plane.VERTICAL.test(direction) ? 180 : 90),
+		public Vec3 apply(Direction direction) {
+			return new Vec3(direction == Direction.UP ? 0 : (Direction.Plane.VERTICAL.test(direction) ? 180 : 90),
 				-horizontalAngleFromDirection(direction), 0);
 		}
 	}
 
-	protected static class HorizontalRotationValues implements Function<Direction, Vector3d> {
+	protected static class HorizontalRotationValues implements Function<Direction, Vec3> {
 		@Override
-		public Vector3d apply(Direction direction) {
-			return new Vector3d(0, -horizontalAngleFromDirection(direction), 0);
+		public Vec3 apply(Direction direction) {
+			return new Vec3(0, -horizontalAngleFromDirection(direction), 0);
 		}
 	}
 

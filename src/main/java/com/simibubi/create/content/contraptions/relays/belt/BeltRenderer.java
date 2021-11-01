@@ -6,8 +6,8 @@ import java.util.function.Supplier;
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSpriteShifts;
@@ -24,27 +24,27 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
+import net.minecraft.core.Vec3i;
 
 public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 
-	public BeltRenderer(TileEntityRendererDispatcher dispatcher) {
+	public BeltRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
@@ -54,7 +54,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 	}
 
 	@Override
-	protected void renderSafe(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderSafe(BeltTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
 		if (!Backend.getInstance().canUseInstancing(te.getLevel())) {
@@ -75,9 +75,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean sideways = beltSlope == BeltSlope.SIDEWAYS;
 			boolean alongX = facing.getAxis() == Axis.X;
 
-			MatrixStack localTransforms = new MatrixStack();
+			PoseStack localTransforms = new PoseStack();
 			MatrixTransformStack msr = MatrixTransformStack.of(localTransforms);
-			IVertexBuilder vb = buffer.getBuffer(RenderType.solid());
+			VertexConsumer vb = buffer.getBuffer(RenderType.solid());
 			float renderTick = AnimationTickHolder.getRenderTime(te.getLevel());
 
 			msr.centre();
@@ -132,8 +132,8 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (te.hasPulley()) {
 				Direction dir = sideways ? Direction.UP : blockState.getValue(BeltBlock.HORIZONTAL_FACING).getClockWise();
 
-				Supplier<MatrixStack> matrixStackSupplier = () -> {
-					MatrixStack stack = new MatrixStack();
+				Supplier<PoseStack> matrixStackSupplier = () -> {
+					PoseStack stack = new PoseStack();
 					MatrixTransformStack stacker = MatrixTransformStack.of(stack);
 					stacker.centre();
 					if (dir.getAxis() == Axis.X) stacker.rotateY(90);
@@ -176,7 +176,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		}
 	}
 
-	protected void renderItems(BeltTileEntity te, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffer,
+	protected void renderItems(BeltTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 		if (!te.isController())
 			return;
@@ -186,9 +186,9 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 		ms.pushPose();
 
 		Direction beltFacing = te.getBeltFacing();
-		Vector3i directionVec = beltFacing
+		Vec3i directionVec = beltFacing
 							   .getNormal();
-		Vector3d beltStartOffset = Vector3d.atLowerCornerOf(directionVec).scale(-.5)
+		Vec3 beltStartOffset = Vec3.atLowerCornerOf(directionVec).scale(-.5)
 			.add(.5, 15 / 16f, .5);
 		ms.translate(beltStartOffset.x, beltStartOffset.y, beltStartOffset.z);
 		BeltSlope slope = te.getBlockState()
@@ -213,19 +213,19 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 				offset = transported.beltPosition;
 				sideOffset = transported.sideOffset;
 			} else {
-				offset = MathHelper.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
-				sideOffset = MathHelper.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
+				offset = Mth.lerp(partialTicks, transported.prevBeltPosition, transported.beltPosition);
+				sideOffset = Mth.lerp(partialTicks, transported.prevSideOffset, transported.sideOffset);
 			}
 
 			if (offset < .5)
 				verticalMovement = 0;
 			else
 				verticalMovement = verticality * (Math.min(offset, te.beltLength - .5f) - .5f);
-			Vector3d offsetVec = Vector3d.atLowerCornerOf(directionVec).scale(offset);
+			Vec3 offsetVec = Vec3.atLowerCornerOf(directionVec).scale(offset);
 			if (verticalMovement != 0)
 				offsetVec = offsetVec.add(0, verticalMovement, 0);
 			boolean onSlope =
-				slope != BeltSlope.HORIZONTAL && MathHelper.clamp(offset, .5f, te.beltLength - .5f) == offset;
+				slope != BeltSlope.HORIZONTAL && Mth.clamp(offset, .5f, te.beltLength - .5f) == offset;
 			boolean tiltForward = (slope == BeltSlope.DOWNWARD ^ beltFacing
 																   .getAxisDirection() == AxisDirection.POSITIVE) == (beltFacing
 																														.getAxis() == Axis.Z);
@@ -246,7 +246,7 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			boolean renderUpright = BeltHelper.isItemUpright(transported.stack);
 			boolean blockItem = itemRenderer.getModel(transported.stack, te.getLevel(), null)
 				.isGui3d();
-			int count = (int) (MathHelper.log2((int) (transported.stack.getCount()))) / 2;
+			int count = (int) (Mth.log2((int) (transported.stack.getCount()))) / 2;
 			Random r = new Random(transported.angle);
 
 			boolean slopeShadowOnly = renderUpright && onSlope;
@@ -269,10 +269,10 @@ public class BeltRenderer extends SafeTileEntityRenderer<BeltTileEntity> {
 			if (renderUpright) {
 				Entity renderViewEntity = Minecraft.getInstance().cameraEntity;
 				if (renderViewEntity != null) {
-					Vector3d positionVec = renderViewEntity.position();
-					Vector3d vectorForOffset = BeltHelper.getVectorForOffset(te, offset);
-					Vector3d diff = vectorForOffset.subtract(positionVec);
-					float yRot = (float) (MathHelper.atan2(diff.x, diff.z) + Math.PI);
+					Vec3 positionVec = renderViewEntity.position();
+					Vec3 vectorForOffset = BeltHelper.getVectorForOffset(te, offset);
+					Vec3 diff = vectorForOffset.subtract(positionVec);
+					float yRot = (float) (Mth.atan2(diff.x, diff.z) + Math.PI);
 					ms.mulPose(Vector3f.YP.rotation(yRot));
 				}
 				ms.translate(0, 3 / 32d, 1 / 16f);

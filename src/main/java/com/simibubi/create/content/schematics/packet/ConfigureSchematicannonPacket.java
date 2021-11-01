@@ -7,8 +7,8 @@ import com.simibubi.create.content.schematics.block.SchematicannonTileEntity;
 import com.simibubi.create.content.schematics.block.SchematicannonTileEntity.State;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ConfigureSchematicannonPacket extends SimplePacketBase {
@@ -25,18 +25,18 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 		this.set = set;
 	}
 
-	public ConfigureSchematicannonPacket(PacketBuffer buffer) {
+	public ConfigureSchematicannonPacket(FriendlyByteBuf buffer) {
 		this(buffer.readEnum(Option.class), buffer.readBoolean());
 	}
 
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeEnum(option);
 		buffer.writeBoolean(set);
 	}
 
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
+			ServerPlayer player = context.get().getSender();
 			if (player == null || !(player.containerMenu instanceof SchematicannonContainer))
 				return;
 

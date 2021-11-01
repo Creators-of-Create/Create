@@ -5,14 +5,16 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @MethodsReturnNonnullByDefault
 public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBlock {
@@ -21,12 +23,12 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
     }
 
     @Override
-    public boolean shouldCheckWeakPower(BlockState state, IWorldReader world, BlockPos pos, Direction side) {
+    public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
         return false;
     }
 
@@ -36,7 +38,7 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         if (context.getPlayer() != null && context.getPlayer()
                 .isShiftKeyDown())
             return super.getStateForPlacement(context);
@@ -47,7 +49,7 @@ public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBloc
     }
 
     @Override
-    public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+    public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return face.getAxis() == state.getValue(AXIS);
     }
 

@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import static net.minecraft.util.text.TextFormatting.GRAY;
-import static net.minecraft.util.text.TextFormatting.WHITE;
+import staticnet.minecraft.ChatFormattingg.WHITE;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,21 +10,21 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public interface IDisplayAssemblyExceptions {
 
-	default boolean addExceptionToTooltip(List<ITextComponent> tooltip) {
+	default boolean addExceptionToTooltip(List<Component> tooltip) {
 		AssemblyException e = getLastAssemblyException();
 		if (e == null)
 			return false;
 
 		if (!tooltip.isEmpty())
-			tooltip.add(StringTextComponent.EMPTY);
+			tooltip.add(TextComponent.EMPTY);
 
-		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy().append(Lang.translate("gui.assembly.exception").withStyle(TextFormatting.GOLD)));
+		tooltip.add(IHaveGoggleInformation.componentSpacing.plainCopy().append(Lang.translate("gui.assembly.exception").withStyle(ChatFormatting.GOLD)));
 
 		String text = e.component.getString();
 		Arrays.stream(text.split("\n"))

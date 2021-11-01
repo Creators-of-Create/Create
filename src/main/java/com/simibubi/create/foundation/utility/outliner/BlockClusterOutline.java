@@ -6,19 +6,19 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class BlockClusterOutline extends Outline {
 
@@ -30,11 +30,11 @@ public class BlockClusterOutline extends Outline {
 	}
 
 	@Override
-	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		for (MergeEntry edge : cluster.visibleEdges) {
-			Vector3d start = Vector3d.atLowerCornerOf(edge.pos);
+			Vec3 start = Vec3.atLowerCornerOf(edge.pos);
 			Direction direction = Direction.get(AxisDirection.POSITIVE, edge.axis);
-			renderAACuboidLine(ms, buffer, start, Vector3d.atLowerCornerOf(edge.pos.relative(direction)));
+			renderAACuboidLine(ms, buffer, start, Vec3.atLowerCornerOf(edge.pos.relative(direction)));
 		}
 
 		for (MergeEntry face : cluster.visibleFaces.keySet()) {
@@ -47,18 +47,18 @@ public class BlockClusterOutline extends Outline {
 		}
 	}
 
-	protected void renderBlockFace(MatrixStack ms, SuperRenderTypeBuffer buffer, BlockPos pos, Direction face) {
+	protected void renderBlockFace(PoseStack ms, SuperRenderTypeBuffer buffer, BlockPos pos, Direction face) {
 		Optional<AllSpecialTextures> faceTexture = params.faceTexture;
 		if (!faceTexture.isPresent())
 			return;
 
 		RenderType translucentType = RenderTypes.getOutlineTranslucent(faceTexture.get()
 			.getLocation(), true);
-		IVertexBuilder builder = buffer.getLateBuffer(translucentType);
+		VertexConsumer builder = buffer.getLateBuffer(translucentType);
 
-		Vector3d center = VecHelper.getCenterOf(pos);
-		Vector3d offset = Vector3d.atLowerCornerOf(face.getNormal());
-		Vector3d plane = VecHelper.axisAlingedPlaneOf(offset);
+		Vec3 center = VecHelper.getCenterOf(pos);
+		Vec3 offset = Vec3.atLowerCornerOf(face.getNormal());
+		Vec3 plane = VecHelper.axisAlingedPlaneOf(offset);
 		Axis axis = face.getAxis();
 
 		offset = offset.scale(1 / 2f + 1 / 64d);
@@ -67,13 +67,13 @@ public class BlockClusterOutline extends Outline {
 
 		int deg = face.getAxisDirection()
 			.getStep() * 90;
-		Vector3d a1 = plane.add(center);
+		Vec3 a1 = plane.add(center);
 		plane = VecHelper.rotate(plane, deg, axis);
-		Vector3d a2 = plane.add(center);
+		Vec3 a2 = plane.add(center);
 		plane = VecHelper.rotate(plane, deg, axis);
-		Vector3d a3 = plane.add(center);
+		Vec3 a3 = plane.add(center);
 		plane = VecHelper.rotate(plane, deg, axis);
-		Vector3d a4 = plane.add(center);
+		Vec3 a4 = plane.add(center);
 
 		putQuad(ms, builder, a1, a2, a3, a4, face);
 	}

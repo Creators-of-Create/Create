@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.relays.encased;
 
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
 
 public class ClutchTileEntity extends SplitShaftTileEntity {
 
-	public ClutchTileEntity(TileEntityType<? extends ClutchTileEntity> type) {
+	public ClutchTileEntity(BlockEntityType<? extends ClutchTileEntity> type) {
 		super(type);
 	}
 

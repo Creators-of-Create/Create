@@ -1,27 +1,27 @@
 package com.simibubi.create.content.contraptions.fluids.particle;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.BasinTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 
 public class BasinFluidParticle extends FluidStackParticle {
 
 	BlockPos basinPos;
-	Vector3d targetPos;
-	Vector3d centerOfBasin;
+	Vec3 targetPos;
+	Vec3 centerOfBasin;
 	float yOffset;
 
-	public BasinFluidParticle(ClientWorld world, FluidStack fluid, double x, double y, double z, double vx, double vy,
+	public BasinFluidParticle(ClientLevel world, FluidStack fluid, double x, double y, double z, double vx, double vy,
 		double vz) {
 		super(world, fluid, x, y, z, vx, vy, vz);
 		gravity = 0;
@@ -32,14 +32,14 @@ public class BasinFluidParticle extends FluidStackParticle {
 		y += yOffset;
 		quadSize = 0;
 		lifetime = 60;
-		Vector3d currentPos = new Vector3d(x, y, z);
+		Vec3 currentPos = new Vec3(x, y, z);
 		basinPos = new BlockPos(currentPos);
 		centerOfBasin = VecHelper.getCenterOf(basinPos);
 
 		if (vx != 0) {
 			lifetime = 20;
-			Vector3d centerOf = VecHelper.getCenterOf(basinPos);
-			Vector3d diff = currentPos.subtract(centerOf)
+			Vec3 centerOf = VecHelper.getCenterOf(basinPos);
+			Vec3 diff = currentPos.subtract(centerOf)
 				.multiply(1, 0, 1)
 				.normalize()
 				.scale(.375);
@@ -61,12 +61,12 @@ public class BasinFluidParticle extends FluidStackParticle {
 				return;
 			}
 
-			TileEntity tileEntity = level.getBlockEntity(basinPos);
+			BlockEntity tileEntity = level.getBlockEntity(basinPos);
 			if (tileEntity instanceof BasinTileEntity) {
 				float totalUnits = ((BasinTileEntity) tileEntity).getTotalFluidUnits(0);
 				if (totalUnits < 1)
 					totalUnits = 0;
-				float fluidLevel = MathHelper.clamp(totalUnits / 2000, 0, 1);
+				float fluidLevel = Mth.clamp(totalUnits / 2000, 0, 1);
 				y = 2 / 16f + basinPos.getY() + 12 / 16f * fluidLevel + yOffset;
 			}
 
@@ -74,7 +74,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 
 		if (targetPos != null) {
 			float progess = (1f * age) / lifetime;
-			Vector3d currentPos = centerOfBasin.add(targetPos.subtract(centerOfBasin)
+			Vec3 currentPos = centerOfBasin.add(targetPos.subtract(centerOfBasin)
 				.scale(progess));
 			x = currentPos.x;
 			z = currentPos.z;
@@ -82,7 +82,7 @@ public class BasinFluidParticle extends FluidStackParticle {
 	}
 
 	@Override
-	public void render(IVertexBuilder vb, ActiveRenderInfo info, float pt) {
+	public void render(VertexConsumer vb, Camera info, float pt) {
 		Quaternion rotation = info.rotation();
 		Quaternion prevRotation = new Quaternion(rotation);
 		rotation.set(1, 0, 0, 1);

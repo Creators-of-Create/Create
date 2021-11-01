@@ -1,28 +1,28 @@
 package com.simibubi.create.content.logistics.item;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 
 public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternControllerTileEntity> {
 
-	public LecternControllerRenderer(TileEntityRendererDispatcher dispatcher) {
+	public LecternControllerRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 
 	@Override
-	protected void renderSafe(LecternControllerTileEntity te, float partialTicks, MatrixStack ms,
-  		IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void renderSafe(LecternControllerTileEntity te, float partialTicks, PoseStack ms,
+  		MultiBufferSource buffer, int light, int overlay) {
 
 		ItemStack stack = AllItems.LINKED_CONTROLLER.asStack();
 		TransformType transformType = TransformType.NONE;

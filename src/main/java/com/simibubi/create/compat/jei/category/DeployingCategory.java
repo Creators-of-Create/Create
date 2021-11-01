@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerApplicationRecipe;
@@ -15,7 +15,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationRecipe> {
 
@@ -63,7 +63,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 				if (slotIndex != 1)
 					return;
 				tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
-					.withStyle(TextFormatting.GOLD));
+					.withStyle(ChatFormatting.GOLD));
 			});
 		}
 
@@ -71,7 +71,7 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 	}
 
 	@Override
-	public void draw(DeployerApplicationRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(DeployerApplicationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 50, 4);
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 50);
 		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 50);

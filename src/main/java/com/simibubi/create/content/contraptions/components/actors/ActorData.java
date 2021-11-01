@@ -3,9 +3,9 @@ package com.simibubi.create.content.contraptions.components.actors;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 public class ActorData extends InstanceData {
     private float x;

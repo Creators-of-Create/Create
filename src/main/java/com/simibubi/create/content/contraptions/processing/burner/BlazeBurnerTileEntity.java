@@ -13,15 +13,15 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraftforge.common.ForgeHooks;
 
 public class BlazeBurnerTileEntity extends SmartTileEntity {
@@ -47,7 +47,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	protected LerpedFloat headAngle;
 	protected boolean isCreative;
 
-	public BlazeBurnerTileEntity(TileEntityType<? extends BlazeBurnerTileEntity> tileEntityTypeIn) {
+	public BlazeBurnerTileEntity(BlockEntityType<? extends BlazeBurnerTileEntity> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		activeFuel = FuelType.NONE;
 		remainingBurnTime = 0;
@@ -99,7 +99,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 
 	private void tickRotation() {
 		float target = 0;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player != null) {
 			double x;
 			double z;
@@ -112,7 +112,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			}
 			double dx = x - (getBlockPos().getX() + 0.5);
 			double dz = z - (getBlockPos().getZ() + 0.5);
-			target = AngleHelper.deg(-MathHelper.atan2(dz, dx)) - 90;
+			target = AngleHelper.deg(-Mth.atan2(dz, dx)) - 90;
 		}
 		target = headAngle.getValue() + AngleHelper.getShortestAngleDiff(headAngle.getValue(), target);
 		headAngle.chase(target, .25f, Chaser.exp(5));
@@ -123,7 +123,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		if (!isCreative) {
 			compound.putInt("fuelLevel", activeFuel.ordinal());
 			compound.putInt("burnTimeRemaining", remainingBurnTime);
@@ -134,7 +134,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		activeFuel = FuelType.values()[compound.getInt("fuelLevel")];
 		remainingBurnTime = compound.getInt("burnTimeRemaining");
 		isCreative = compound.getBoolean("isCreative");
@@ -187,7 +187,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 		if (newFuel == activeFuel) {
 			if (remainingBurnTime + newBurnTime > MAX_HEAT_CAPACITY && !forceOverflow)
 				return false;
-			newBurnTime = MathHelper.clamp(remainingBurnTime + newBurnTime, 0, MAX_HEAT_CAPACITY);
+			newBurnTime = Mth.clamp(remainingBurnTime + newBurnTime, 0, MAX_HEAT_CAPACITY);
 		}
 
 		if (simulate)
@@ -232,7 +232,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	protected void playSound() {
-		level.playSound(null, worldPosition, SoundEvents.BLAZE_SHOOT, SoundCategory.BLOCKS,
+		level.playSound(null, worldPosition, SoundEvents.BLAZE_SHOOT, SoundSource.BLOCKS,
 			.125f + level.random.nextFloat() * .125f, .75f - level.random.nextFloat() * .25f);
 	}
 

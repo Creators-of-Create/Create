@@ -6,11 +6,11 @@ import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -24,12 +24,12 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 	ResourceLocation BASIN = new ResourceLocation("tconstruct", "basin");
 
 	@Override
-	public int fillBlock(World level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public int fillBlock(Level level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
 		boolean simulate) {
 		if (!enabled())
 			return 0;
 
-		TileEntity te = level.getBlockEntity(pos);
+		BlockEntity te = level.getBlockEntity(pos);
 		if (te == null)
 			return 0;
 

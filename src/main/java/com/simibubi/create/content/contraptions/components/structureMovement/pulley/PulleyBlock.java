@@ -6,32 +6,34 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<PulleyTileEntity> {
 
@@ -41,8 +43,8 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         super(properties);
     }
 
-    private static void onRopeBroken(World world, BlockPos pulleyPos) {
-		TileEntity te = world.getBlockEntity(pulleyPos);
+    private static void onRopeBroken(Level world, BlockPos pulleyPos) {
+		BlockEntity te = world.getBlockEntity(pulleyPos);
 		if (te instanceof PulleyTileEntity) {
 			PulleyTileEntity pulley = (PulleyTileEntity) te;
 			pulley.initialOffset = 0;
@@ -51,12 +53,12 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 	}
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return AllTileEntities.ROPE_PULLEY.create();
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             if (!worldIn.isClientSide) {
                 BlockState below = worldIn.getBlockState(pos.below());
@@ -68,22 +70,22 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
     }
 
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-                                  BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+                                  BlockHitResult hit) {
         if (!player.mayBuild())
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         if (player.isShiftKeyDown())
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         if (player.getItemInHand(handIn)
                 .isEmpty()) {
             withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return AllShapes.PULLEY.get(state.getValue(HORIZONTAL_AXIS));
     }
 
@@ -92,7 +94,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         return PulleyTileEntity.class;
     }
 
-    private static class RopeBlockBase extends Block implements IWaterLoggable {
+    private static class RopeBlockBase extends Block implements SimpleWaterloggedBlock {
 
         public RopeBlockBase(Properties properties) {
             super(properties);
@@ -100,7 +102,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
 
 		@Override
-    	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+    	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
     		return false;
     	}
 
@@ -110,13 +112,13 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
 
         @Override
-        public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-                                      PlayerEntity player) {
+        public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+                                      Player player) {
             return AllBlocks.ROPE_PULLEY.asStack();
         }
 
         @Override
-        public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
             if (!isMoving && (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !newState.hasProperty(BlockStateProperties.WATERLOGGED) || state.getValue(BlockStateProperties.WATERLOGGED) == newState.getValue(BlockStateProperties.WATERLOGGED))) {
                 onRopeBroken(worldIn, pos.above());
                 if (!worldIn.isClientSide) {
@@ -147,7 +149,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 
         @Override
         public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-                                              IWorld world, BlockPos pos, BlockPos neighbourPos) {
+                                              LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
             if (state.getValue(BlockStateProperties.WATERLOGGED)) {
                 world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
             }
@@ -155,7 +157,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
 
         @Override
-        public BlockState getStateForPlacement(BlockItemUseContext context) {
+        public BlockState getStateForPlacement(BlockPlaceContext context) {
             FluidState FluidState = context.getLevel().getFluidState(context.getClickedPos());
             return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getType() == Fluids.WATER));
         }
@@ -169,7 +171,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
 
         @Override
-        public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
             return AllShapes.PULLEY_MAGNET;
         }
 
@@ -182,7 +184,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
         }
 
         @Override
-        public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
             return AllShapes.FOUR_VOXEL_POLE.get(Direction.UP);
         }
     }

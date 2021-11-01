@@ -1,20 +1,20 @@
 package com.simibubi.create.content.schematics.client.tools;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class FlipTool extends PlacementToolBase {
 
-	private AABBOutline outline = new AABBOutline(new AxisAlignedBB(BlockPos.ZERO));
+	private AABBOutline outline = new AABBOutline(new AABB(BlockPos.ZERO));
 
 	@Override
 	public void init() {
@@ -49,7 +49,7 @@ public class FlipTool extends PlacementToolBase {
 	}
 
 	@Override
-	public void renderOnSchematic(MatrixStack ms, SuperRenderTypeBuffer buffer) {
+	public void renderOnSchematic(PoseStack ms, SuperRenderTypeBuffer buffer) {
 		if (!schematicSelected || !selectedFace.getAxis()
 			.isHorizontal()) {
 			super.renderOnSchematic(ms, buffer);
@@ -57,12 +57,12 @@ public class FlipTool extends PlacementToolBase {
 		}
 
 		Direction facing = selectedFace.getClockWise();
-		AxisAlignedBB bounds = schematicHandler.getBounds();
+		AABB bounds = schematicHandler.getBounds();
 
-		Vector3d directionVec = Vector3d.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, facing.getAxis())
+		Vec3 directionVec = Vec3.atLowerCornerOf(Direction.get(AxisDirection.POSITIVE, facing.getAxis())
 			.getNormal());
-		Vector3d boundsSize = new Vector3d(bounds.getXsize(), bounds.getYsize(), bounds.getZsize());
-		Vector3d vec = boundsSize.multiply(directionVec);
+		Vec3 boundsSize = new Vec3(bounds.getXsize(), bounds.getYsize(), bounds.getZsize());
+		Vec3 vec = boundsSize.multiply(directionVec);
 		bounds = bounds.contract(vec.x, vec.y, vec.z)
 			.inflate(1 - directionVec.x, 1 - directionVec.y, 1 - directionVec.z);
 		bounds = bounds.move(directionVec.scale(.5f)

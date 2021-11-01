@@ -13,9 +13,11 @@ import com.simibubi.create.foundation.networking.AllPackets;
 
 import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
+import mezz.jei.api.gui.handlers.IGhostIngredientHandler.Target;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -52,7 +54,7 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 
 	private static class GhostTarget<I, T extends GhostItemContainer<?>> implements Target<I> {
 
-		private final Rectangle2d area;
+		private final Rect2i area;
 		private final AbstractSimiContainerScreen<T> gui;
 		private final int slotIndex;
 		private final boolean isAttributeFilter;
@@ -62,11 +64,11 @@ public class GhostIngredientHandler<T extends GhostItemContainer<?>>
 			this.slotIndex = slotIndex;
 			this.isAttributeFilter = isAttributeFilter;
 			Slot slot = gui.getMenu().slots.get(slotIndex + 36);
-			this.area = new Rectangle2d(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 16, 16);
+			this.area = new Rect2i(gui.getGuiLeft() + slot.x, gui.getGuiTop() + slot.y, 16, 16);
 		}
 
 		@Override
-		public Rectangle2d getArea() {
+		public Rect2i getArea() {
 			return area;
 		}
 

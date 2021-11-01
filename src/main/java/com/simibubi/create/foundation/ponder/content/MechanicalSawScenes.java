@@ -12,15 +12,15 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class MechanicalSawScenes {
 
@@ -54,7 +54,7 @@ public class MechanicalSawScenes {
 		ItemStack strippedLog = new ItemStack(Items.STRIPPED_OAK_LOG);
 		ItemStack planks = new ItemStack(Items.OAK_PLANKS);
 
-		Vector3d itemSpawn = util.vector.centerOf(sawPos.above()
+		Vec3 itemSpawn = util.vector.centerOf(sawPos.above()
 			.west());
 		ElementLink<EntityElement> logItem = scene.world.createItemEntity(itemSpawn, util.vector.of(0, 0, 0), log);
 		scene.idle(12);
@@ -140,7 +140,7 @@ public class MechanicalSawScenes {
 		scene.rotateCameraY(-90);
 		scene.idle(20);
 
-		Vector3d filter = util.vector.of(2.5, 1 + 13 / 16f, 2.75);
+		Vec3 filter = util.vector.of(2.5, 1 + 13 / 16f, 2.75);
 		scene.overlay.showFilterSlotInput(filter, 80);
 		ItemStack bricks = new ItemStack(Blocks.STONE_BRICKS);
 		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).withItem(bricks), 80);
@@ -218,7 +218,7 @@ public class MechanicalSawScenes {
 		scene.world.replaceBlocks(util.select.layersFrom(4), Blocks.AIR.defaultBlockState(), false);
 
 		for (int i = 0; i < 5; i++) {
-			Vector3d dropPos = util.vector.centerOf(breakingPos.above(i));
+			Vec3 dropPos = util.vector.centerOf(breakingPos.above(i));
 			float distance = (float) dropPos.distanceTo(util.vector.centerOf(breakingPos));
 			scene.world.createItemEntity(dropPos, util.vector.of(-distance / 20, 0, 0), new ItemStack(Items.OAK_LOG));
 		}
@@ -253,7 +253,7 @@ public class MechanicalSawScenes {
 			scene.world.replaceBlocks(util.select.fromTo(2, i + 1, 2, 1, i + 1, 3), Blocks.AIR.defaultBlockState(), true);
 			for (int x = 1; x <= 2; x++) {
 				for (int z = 2; z <= 3; z++) {
-					Vector3d dropPos = util.vector.centerOf(x, i + 1, z);
+					Vec3 dropPos = util.vector.centerOf(x, i + 1, z);
 					float distance = (float) dropPos.distanceTo(util.vector.centerOf(breakingPos));
 					scene.world.createItemEntity(dropPos, util.vector.of(-distance / 20, 0, 0),
 						new ItemStack(Items.JUNGLE_LOG));
@@ -332,7 +332,7 @@ public class MechanicalSawScenes {
 		scene.world.replaceBlocks(util.select.layersFrom(4), Blocks.AIR.defaultBlockState(), false);
 
 		for (int i = 0; i < 5; i++) {
-			Vector3d dropPos = util.vector.centerOf(breakingPos.above(i));
+			Vec3 dropPos = util.vector.centerOf(breakingPos.above(i));
 			float distance = (float) dropPos.distanceTo(util.vector.centerOf(breakingPos));
 			scene.world.createItemEntity(dropPos, util.vector.of(-distance / 20, 0, 0), new ItemStack(Items.OAK_LOG));
 		}

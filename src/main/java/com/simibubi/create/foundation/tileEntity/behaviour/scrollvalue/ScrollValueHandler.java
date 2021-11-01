@@ -10,11 +10,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -30,13 +30,13 @@ public class ScrollValueHandler {
 
 	@OnlyIn(Dist.CLIENT)
 	public static boolean onScroll(double delta) {
-		RayTraceResult objectMouseOver = Minecraft.getInstance().hitResult;
-		if (!(objectMouseOver instanceof BlockRayTraceResult))
+		HitResult objectMouseOver = Minecraft.getInstance().hitResult;
+		if (!(objectMouseOver instanceof BlockHitResult))
 			return false;
 
-		BlockRayTraceResult result = (BlockRayTraceResult) objectMouseOver;
+		BlockHitResult result = (BlockHitResult) objectMouseOver;
 		Minecraft mc = Minecraft.getInstance();
-		ClientWorld world = mc.level;
+		ClientLevel world = mc.level;
 		BlockPos blockPos = result.getBlockPos();
 
 		ScrollValueBehaviour scrolling = TileEntityBehaviour.get(world, blockPos, ScrollValueBehaviour.TYPE);
@@ -71,14 +71,14 @@ public class ScrollValueHandler {
 
 		if (prev != scrolling.scrollableValue) {
 			float pitch = (scrolling.scrollableValue - scrolling.min) / (float) (scrolling.max - scrolling.min);
-			pitch = MathHelper.lerp(pitch, 1.5f, 2f);
+			pitch = Mth.lerp(pitch, 1.5f, 2f);
 			AllSoundEvents.SCROLL_VALUE.play(world, mc.player, blockPos, 1, pitch);
 		}
 		return true;
 	}
 
 	public static float getScroll(float partialTicks) {
-		return wrenchCog.getValue(partialTicks) + MathHelper.lerp(partialTicks, lastPassiveScroll, passiveScroll);
+		return wrenchCog.getValue(partialTicks) + Mth.lerp(partialTicks, lastPassiveScroll, passiveScroll);
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -102,7 +102,7 @@ public class ScrollValueHandler {
 		context.forward = delta > 0;
 
 		double newValue = scrolling.scrollableValue + Math.signum(delta) * scrolling.step.apply(context);
-		scrolling.scrollableValue = (int) MathHelper.clamp(newValue, scrolling.min, scrolling.max);
+		scrolling.scrollableValue = (int) Mth.clamp(newValue, scrolling.min, scrolling.max);
 
 		if (valueBefore != scrolling.scrollableValue)
 			scrolling.clientCallback.accept(scrolling.scrollableValue);

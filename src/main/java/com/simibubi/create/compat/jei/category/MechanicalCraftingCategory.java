@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrafter;
@@ -16,21 +16,21 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredientRenderer;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
-public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRecipe> {
+public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRecipe> {
 
 	private final AnimatedCrafter crafter = new AnimatedCrafter();
 
@@ -39,13 +39,13 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 	}
 
 	@Override
-	public void setIngredients(ICraftingRecipe recipe, IIngredients ingredients) {
+	public void setIngredients(CraftingRecipe recipe, IIngredients ingredients) {
 		ingredients.setInputIngredients(recipe.getIngredients());
 		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, ICraftingRecipe recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, CraftingRecipe recipe, IIngredients ingredients) {
 		IGuiItemStackGroup itemStacks = recipeLayout.getItemStacks();
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 
@@ -73,30 +73,30 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 
 	static int maxSize = 100;
 
-	public static float getScale(ICraftingRecipe recipe) {
+	public static float getScale(CraftingRecipe recipe) {
 		int w = getWidth(recipe);
 		int h = getHeight(recipe);
 		return Math.min(1, maxSize / (19f * Math.max(w, h)));
 	}
 
-	public static int getYPadding(ICraftingRecipe recipe) {
+	public static int getYPadding(CraftingRecipe recipe) {
 		return 3 + 50 - (int) (getScale(recipe) * getHeight(recipe) * 19 * .5);
 	}
 
-	public static int getXPadding(ICraftingRecipe recipe) {
+	public static int getXPadding(CraftingRecipe recipe) {
 		return 3 + 50 - (int) (getScale(recipe) * getWidth(recipe) * 19 * .5);
 	}
 
-	private static int getWidth(ICraftingRecipe recipe) {
+	private static int getWidth(CraftingRecipe recipe) {
 		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getWidth() : 1;
 	}
 
-	private static int getHeight(ICraftingRecipe recipe) {
+	private static int getHeight(CraftingRecipe recipe) {
 		return recipe instanceof ShapedRecipe ? ((ShapedRecipe) recipe).getHeight() : 1;
 	}
 
 	@Override
-	public void draw(ICraftingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CraftingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		matrixStack.pushPose();
 		float scale = getScale(recipe);
 		matrixStack.translate(getXPadding(recipe), getYPadding(recipe), 0);
@@ -122,7 +122,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 300);
 
-		RenderHelper.turnOff();
+		Lighting.turnOff();
 		int amount = 0;
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			if (Ingredient.EMPTY == ingredient)
@@ -135,20 +135,20 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 	}
 
 	@Override
-	public Class<? extends ICraftingRecipe> getRecipeClass() {
-		return ICraftingRecipe.class;
+	public Class<? extends CraftingRecipe> getRecipeClass() {
+		return CraftingRecipe.class;
 	}
 
 	private static final class CrafterIngredientRenderer implements IIngredientRenderer<ItemStack> {
 
-		private final ICraftingRecipe recipe;
+		private final CraftingRecipe recipe;
 
-		public CrafterIngredientRenderer(ICraftingRecipe recipe) {
+		public CrafterIngredientRenderer(CraftingRecipe recipe) {
 			this.recipe = recipe;
 		}
 
 		@Override
-		public void render(MatrixStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
+		public void render(PoseStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
 			matrixStack.pushPose();
 			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
@@ -158,14 +158,14 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 				RenderSystem.pushMatrix();
 				RenderSystem.multMatrix(matrixStack.last().pose());
 				RenderSystem.enableDepthTest();
-				RenderHelper.turnBackOn();
+				Lighting.turnBackOn();
 				Minecraft minecraft = Minecraft.getInstance();
-				FontRenderer font = getFontRenderer(minecraft, ingredient);
+				Font font = getFontRenderer(minecraft, ingredient);
 				ItemRenderer itemRenderer = minecraft.getItemRenderer();
 				itemRenderer.renderAndDecorateItem(null, ingredient, 0, 0);
 				itemRenderer.renderGuiItemDecorations(font, ingredient, 0, 0, null);
 				RenderSystem.disableBlend();
-				RenderHelper.turnOff();
+				Lighting.turnOff();
 				RenderSystem.popMatrix();
 			}
 
@@ -173,15 +173,15 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<ICraftingRe
 		}
 
 		@Override
-		public List<ITextComponent> getTooltip(ItemStack ingredient, ITooltipFlag tooltipFlag) {
+		public List<Component> getTooltip(ItemStack ingredient, TooltipFlag tooltipFlag) {
 			Minecraft minecraft = Minecraft.getInstance();
-			PlayerEntity player = minecraft.player;
+			Player player = minecraft.player;
 			try {
 				return ingredient.getTooltipLines(player, tooltipFlag);
 			} catch (RuntimeException | LinkageError e) {
-				List<ITextComponent> list = new ArrayList<>();
-				TranslationTextComponent crash = new TranslationTextComponent("jei.tooltip.error.crash");
-				list.add(crash.withStyle(TextFormatting.RED));
+				List<Component> list = new ArrayList<>();
+				TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
+				list.add(crash.withStyle(ChatFormatting.RED));
 				return list;
 			}
 		}

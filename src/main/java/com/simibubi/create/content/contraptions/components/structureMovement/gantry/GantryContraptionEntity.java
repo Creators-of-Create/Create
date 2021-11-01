@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllEntityTypes;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
@@ -13,20 +13,22 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity.ContraptionRotationState;
 
 public class GantryContraptionEntity extends AbstractContraptionEntity {
 
@@ -34,11 +36,11 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	double clientOffsetDiff;
 	double axisMotion;
 
-	public GantryContraptionEntity(EntityType<?> entityTypeIn, World worldIn) {
+	public GantryContraptionEntity(EntityType<?> entityTypeIn, Level worldIn) {
 		super(entityTypeIn, worldIn);
 	}
 
-	public static GantryContraptionEntity create(World world, Contraption contraption, Direction movementAxis) {
+	public static GantryContraptionEntity create(Level world, Contraption contraption, Direction movementAxis) {
 		GantryContraptionEntity entity = new GantryContraptionEntity(AllEntityTypes.GANTRY_CONTRAPTION.get(), world);
 		entity.setContraption(contraption);
 		entity.movementAxis = movementAxis;
@@ -58,7 +60,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 		checkPinionShaft();
 		tickActors();
-		Vector3d movementVec = getDeltaMovement();
+		Vec3 movementVec = getDeltaMovement();
 
 		if (ContraptionCollider.collideBlocks(this)) {
 			if (!level.isClientSide)
@@ -76,15 +78,15 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	protected void checkPinionShaft() {
-		Vector3d movementVec;
+		Vec3 movementVec;
 		Direction facing = ((GantryContraption) contraption).getFacing();
-		Vector3d currentPosition = getAnchorVec().add(.5, .5, .5);
+		Vec3 currentPosition = getAnchorVec().add(.5, .5, .5);
 		BlockPos gantryShaftPos = new BlockPos(currentPosition).relative(facing.getOpposite());
 
-		TileEntity te = level.getBlockEntity(gantryShaftPos);
+		BlockEntity te = level.getBlockEntity(gantryShaftPos);
 		if (!(te instanceof GantryShaftTileEntity) || !AllBlocks.GANTRY_SHAFT.has(te.getBlockState())) {
 			if (!level.isClientSide) {
-				setContraptionMotion(Vector3d.ZERO);
+				setContraptionMotion(Vec3.ZERO);
 				disassemble();
 			}
 			return;
@@ -95,25 +97,25 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 		GantryShaftTileEntity gantryShaftTileEntity = (GantryShaftTileEntity) te;
 
 		float pinionMovementSpeed = gantryShaftTileEntity.getPinionMovementSpeed();
-		movementVec = Vector3d.atLowerCornerOf(direction.getNormal()).scale(pinionMovementSpeed);
+		movementVec = Vec3.atLowerCornerOf(direction.getNormal()).scale(pinionMovementSpeed);
 
 		if (blockState.getValue(GantryShaftBlock.POWERED) || pinionMovementSpeed == 0) {
-			setContraptionMotion(Vector3d.ZERO);
+			setContraptionMotion(Vec3.ZERO);
 			if (!level.isClientSide)
 				disassemble();
 			return;
 		}
 
-		Vector3d nextPosition = currentPosition.add(movementVec);
+		Vec3 nextPosition = currentPosition.add(movementVec);
 		double currentCoord = direction.getAxis()
 			.choose(currentPosition.x, currentPosition.y, currentPosition.z);
 		double nextCoord = direction.getAxis()
 			.choose(nextPosition.x, nextPosition.y, nextPosition.z);
 
-		if ((MathHelper.floor(currentCoord) + .5f < nextCoord != (pinionMovementSpeed * direction.getAxisDirection()
+		if ((Mth.floor(currentCoord) + .5f < nextCoord != (pinionMovementSpeed * direction.getAxisDirection()
 			.getStep() < 0)))
 			if (!gantryShaftTileEntity.canAssembleOn()) {
-				setContraptionMotion(Vector3d.ZERO);
+				setContraptionMotion(Vec3.ZERO);
 				if (!level.isClientSide)
 					disassemble();
 				return;
@@ -127,23 +129,23 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	protected void writeAdditional(CompoundNBT compound, boolean spawnPacket) {
+	protected void writeAdditional(CompoundTag compound, boolean spawnPacket) {
 		NBTHelper.writeEnum(compound, "GantryAxis", movementAxis);
 		super.writeAdditional(compound, spawnPacket);
 	}
 
-	protected void readAdditional(CompoundNBT compound, boolean spawnData) {
+	protected void readAdditional(CompoundTag compound, boolean spawnData) {
 		movementAxis = NBTHelper.readEnum(compound, "GantryAxis", Direction.class);
 		super.readAdditional(compound, spawnData);
 	}
 
 	@Override
-	public Vector3d applyRotation(Vector3d localPos, float partialTicks) {
+	public Vec3 applyRotation(Vec3 localPos, float partialTicks) {
 		return localPos;
 	}
 
 	@Override
-	public Vector3d reverseRotation(Vector3d localPos, float partialTicks) {
+	public Vec3 reverseRotation(Vec3 localPos, float partialTicks) {
 		return localPos;
 	}
 
@@ -176,17 +178,17 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	@Override
-	public void doLocalTransforms(float partialTicks, MatrixStack[] matrixStacks) { }
+	public void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks) { }
 
 	public void updateClientMotion() {
 		float modifier = movementAxis.getAxisDirection()
 			.getStep();
-		setContraptionMotion(Vector3d.atLowerCornerOf(movementAxis.getNormal())
+		setContraptionMotion(Vec3.atLowerCornerOf(movementAxis.getNormal())
 			.scale((axisMotion + clientOffsetDiff * modifier / 2f) * ServerSpeedProvider.get()));
 	}
 
 	public double getAxisCoord() {
-		Vector3d anchorVec = getAnchorVec();
+		Vec3 anchorVec = getAnchorVec();
 		return movementAxis.getAxis()
 			.choose(anchorVec.x, anchorVec.y, anchorVec.z);
 	}

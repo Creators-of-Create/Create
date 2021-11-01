@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
 import com.simibubi.create.compat.jei.category.animations.AnimatedDeployer;
 import com.simibubi.create.compat.jei.category.animations.AnimatedPress;
@@ -19,7 +19,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
 
 public abstract class SequencedAssemblySubCategory {
 
@@ -41,7 +41,7 @@ public abstract class SequencedAssemblySubCategory {
 		return 0;
 	}
 
-	public abstract void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index);
+	public abstract void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index);
 
 	public static class AssemblyPressing extends SequencedAssemblySubCategory {
 
@@ -53,7 +53,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
 			press.offset = index;
 			ms.pushPose();
 			ms.translate(-5, 50, 0);
@@ -87,7 +87,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
 			spout.offset = index;
 			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
 			ms.pushPose();
@@ -128,7 +128,7 @@ public abstract class SequencedAssemblySubCategory {
 					if (slotIndex != index)
 						return;
 					tooltip.add(1, Lang.translate("recipe.deploying.not_consumed")
-						.withStyle(TextFormatting.GOLD));
+						.withStyle(ChatFormatting.GOLD));
 				});
 			}
 			
@@ -136,7 +136,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
 			deployer.offset = index;
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
@@ -158,7 +158,7 @@ public abstract class SequencedAssemblySubCategory {
 		}
 
 		@Override
-		public void draw(SequencedRecipe<?> recipe, MatrixStack ms, double mouseX, double mouseY, int index) {
+		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
 			ms.pushPose();
 			ms.translate(0, 51.5f, 0);
 			ms.scale(.6f, .6f, .6f);

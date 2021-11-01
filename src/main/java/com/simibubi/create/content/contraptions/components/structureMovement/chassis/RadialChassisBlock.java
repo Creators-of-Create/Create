@@ -1,11 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.chassis;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class RadialChassisBlock extends AbstractChassisBlock {
 

@@ -4,18 +4,18 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class FabulousWarningCommand {
 
-	public static ArgumentBuilder<CommandSource, ?> register() {
+	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("dismissFabulousWarning")
 				.requires(AllCommands.SOURCE_IS_PLAYER)
 				.executes(ctx -> {
-					ServerPlayerEntity player = ctx.getSource()
+					ServerPlayer player = ctx.getSource()
 							.getPlayerOrException();
 
 					AllPackets.channel.send(

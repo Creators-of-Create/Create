@@ -4,14 +4,14 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -27,7 +27,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 		this.hotbarSlot = hotbarSlot;
 	}
 
-	public ToolboxEquipPacket(PacketBuffer buffer) {
+	public ToolboxEquipPacket(FriendlyByteBuf buffer) {
 		if (buffer.readBoolean())
 			toolboxPos = buffer.readBlockPos();
 		slot = buffer.readVarInt();
@@ -35,7 +35,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(toolboxPos != null);
 		if (toolboxPos != null)
 			buffer.writeBlockPos(toolboxPos);
@@ -47,8 +47,8 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ServerPlayerEntity player = ctx.getSender();
-			World world = player.level;
+			ServerPlayer player = ctx.getSender();
+			Level world = player.level;
 
 			if (toolboxPos == null) {
 				ToolboxHandler.unequip(player, hotbarSlot, false);
@@ -56,7 +56,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				return;
 			}
 
-			TileEntity blockEntity = world.getBlockEntity(toolboxPos);
+			BlockEntity blockEntity = world.getBlockEntity(toolboxPos);
 
 			double maxRange = ToolboxHandler.getMaxRange(player);
 			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
@@ -87,13 +87,13 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				});
 			}
 
-			CompoundNBT compound = player.getPersistentData()
+			CompoundTag compound = player.getPersistentData()
 				.getCompound("CreateToolboxData");
 			String key = String.valueOf(hotbarSlot);
 
-			CompoundNBT data = new CompoundNBT();
+			CompoundTag data = new CompoundTag();
 			data.putInt("Slot", slot);
-			data.put("Pos", NBTUtil.writeBlockPos(toolboxPos));
+			data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
 			compound.put(key, data);
 
 			player.getPersistentData()

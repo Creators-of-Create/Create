@@ -6,23 +6,23 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 
 public abstract class SymmetryMirror {
 
@@ -31,27 +31,27 @@ public abstract class SymmetryMirror {
 	public static final String CROSS_PLANE = "cross_plane";
 	public static final String TRIPLE_PLANE = "triple_plane";
 
-	protected Vector3d position;
-	protected IStringSerializable orientation;
+	protected Vec3 position;
+	protected StringRepresentable orientation;
 	protected int orientationIndex;
 	public boolean enable;
 
-	public SymmetryMirror(Vector3d pos) {
+	public SymmetryMirror(Vec3 pos) {
 		position = pos;
 		enable = true;
 		orientationIndex = 0;
 	}
 
-	public static List<ITextComponent> getMirrors() {
+	public static List<Component> getMirrors() {
 		return ImmutableList.of(Lang.translate("symmetry.mirror.plane"), Lang.translate("symmetry.mirror.doublePlane"),
 			Lang.translate("symmetry.mirror.triplePlane"));
 	}
 
-	public IStringSerializable getOrientation() {
+	public StringRepresentable getOrientation() {
 		return orientation;
 	}
 
-	public Vector3d getPosition() {
+	public Vec3 getPosition() {
 		return position;
 	}
 
@@ -82,21 +82,21 @@ public abstract class SymmetryMirror {
 
 	public abstract PartialModel getModel();
 
-	public void applyModelTransform(MatrixStack ms) {}
+	public void applyModelTransform(PoseStack ms) {}
 
 	private static final String $ORIENTATION = "direction";
 	private static final String $POSITION = "pos";
 	private static final String $TYPE = "type";
 	private static final String $ENABLE = "enable";
 
-	public CompoundNBT writeToNbt() {
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag writeToNbt() {
+		CompoundTag nbt = new CompoundTag();
 		nbt.putInt($ORIENTATION, orientationIndex);
 
-		ListNBT floatList = new ListNBT();
-		floatList.add(FloatNBT.valueOf((float) position.x));
-		floatList.add(FloatNBT.valueOf((float) position.y));
-		floatList.add(FloatNBT.valueOf((float) position.z));
+		ListTag floatList = new ListTag();
+		floatList.add(FloatTag.valueOf((float) position.x));
+		floatList.add(FloatTag.valueOf((float) position.y));
+		floatList.add(FloatTag.valueOf((float) position.z));
 		nbt.put($POSITION, floatList);
 		nbt.putString($TYPE, typeName());
 		nbt.putBoolean($ENABLE, enable);
@@ -104,9 +104,9 @@ public abstract class SymmetryMirror {
 		return nbt;
 	}
 
-	public static SymmetryMirror fromNBT(CompoundNBT nbt) {
-		ListNBT floatList = nbt.getList($POSITION, 5);
-		Vector3d pos = new Vector3d(floatList.getFloat(0), floatList.getFloat(1), floatList.getFloat(2));
+	public static SymmetryMirror fromNBT(CompoundTag nbt) {
+		ListTag floatList = nbt.getList($POSITION, 5);
+		Vec3 pos = new Vec3(floatList.getFloat(0), floatList.getFloat(1), floatList.getFloat(2));
 		SymmetryMirror element;
 
 		switch (nbt.getString($TYPE)) {
@@ -130,13 +130,13 @@ public abstract class SymmetryMirror {
 		return element;
 	}
 
-	protected Vector3d getDiff(BlockPos position) {
+	protected Vec3 getDiff(BlockPos position) {
 		return this.position.scale(-1)
 			.add(position.getX(), position.getY(), position.getZ());
 	}
 
 	protected BlockPos getIDiff(BlockPos position) {
-		Vector3d diff = getDiff(position);
+		Vec3 diff = getDiff(position);
 		return new BlockPos((int) diff.x, (int) diff.y, (int) diff.z);
 	}
 
@@ -202,10 +202,10 @@ public abstract class SymmetryMirror {
 			position.getZ() - diff.getZ() - diff.getX());
 	}
 
-	public void setPosition(Vector3d pos3d) {
+	public void setPosition(Vec3 pos3d) {
 		this.position = pos3d;
 	}
 
-	public abstract List<ITextComponent> getAlignToolTips();
+	public abstract List<Component> getAlignToolTips();
 
 }

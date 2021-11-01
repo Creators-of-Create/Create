@@ -56,13 +56,13 @@ import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.item.Rarity;
-import net.minecraft.tags.ITag;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class AllItems {
@@ -115,26 +115,26 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<Item> BAR_OF_CHOCOLATE = REGISTRATE.item("bar_of_chocolate", Item::new)
-		.properties(p -> p.food(new Food.Builder().nutrition(6)
+		.properties(p -> p.food(new FoodProperties.Builder().nutrition(6)
 			.saturationMod(0.3F)
 			.build()))
 		.lang("Bar of Chocolate")
 		.register();
 
 	public static final ItemEntry<Item> SWEET_ROLL = REGISTRATE.item("sweet_roll", Item::new)
-		.properties(p -> p.food(new Food.Builder().nutrition(6)
+		.properties(p -> p.food(new FoodProperties.Builder().nutrition(6)
 			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<Item> CHOCOLATE_BERRIES = REGISTRATE.item("chocolate_glazed_berries", Item::new)
-		.properties(p -> p.food(new Food.Builder().nutrition(7)
+		.properties(p -> p.food(new FoodProperties.Builder().nutrition(7)
 			.saturationMod(0.8F)
 			.build()))
 		.register();
 
 	public static final ItemEntry<Item> HONEYED_APPLE = REGISTRATE.item("honeyed_apple", Item::new)
-		.properties(p -> p.food(new Food.Builder().nutrition(8)
+		.properties(p -> p.food(new FoodProperties.Builder().nutrition(8)
 			.saturationMod(0.8F)
 			.build()))
 		.register();
@@ -359,7 +359,7 @@ public class AllItems {
 //	}
 
 	@SafeVarargs
-	private static ItemEntry<Item> taggedIngredient(String name, ITag.INamedTag<Item>... tags) {
+	private static ItemEntry<Item> taggedIngredient(String name, Tag.Named<Item>... tags) {
 		return REGISTRATE.item(name, Item::new)
 			.tag(tags)
 			.register();

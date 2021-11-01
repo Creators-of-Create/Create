@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 /**
@@ -9,7 +9,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
  */
 public class ItemReturnInvWrapper extends InvWrapper {
 
-	public ItemReturnInvWrapper(IInventory inv) {
+	public ItemReturnInvWrapper(Container inv) {
 		super(inv);
 	}
 

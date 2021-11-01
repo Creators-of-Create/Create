@@ -5,29 +5,29 @@ import java.util.function.Supplier;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ConfigureSymmetryWandPacket extends SimplePacketBase {
 
-	protected Hand hand;
+	protected InteractionHand hand;
 	protected SymmetryMirror mirror;
 
-	public ConfigureSymmetryWandPacket(Hand hand, SymmetryMirror mirror) {
+	public ConfigureSymmetryWandPacket(InteractionHand hand, SymmetryMirror mirror) {
 		this.hand = hand;
 		this.mirror = mirror;
 	}
 
-	public ConfigureSymmetryWandPacket(PacketBuffer buffer) {
-		hand = buffer.readEnum(Hand.class);
+	public ConfigureSymmetryWandPacket(FriendlyByteBuf buffer) {
+		hand = buffer.readEnum(InteractionHand.class);
 		mirror = SymmetryMirror.fromNBT(buffer.readNbt());
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeEnum(hand);
 		buffer.writeNbt(mirror.writeToNbt());
 	}
@@ -35,7 +35,7 @@ public class ConfigureSymmetryWandPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
+			ServerPlayer player = context.get().getSender();
 			if (player == null) {
 				return;
 			}

@@ -5,7 +5,7 @@ import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class HalfShaftInstance extends SingleRotatingInstance {
     public HalfShaftInstance(MaterialManager modelManager, KineticTileEntity tile) {

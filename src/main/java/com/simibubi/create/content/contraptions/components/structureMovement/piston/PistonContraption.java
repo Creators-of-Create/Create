@@ -8,9 +8,33 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isStickyPiston;
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
+import javanet.minimport com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
+import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
+import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.VecHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.WoolCarpetBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.lang3.tuple.Pair;
+
+ecraft.world.level.block.state.properties.BlockStatePropertiesva.util.Queue;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -45,7 +69,7 @@ public class PistonContraption extends TranslatingContraption {
 	protected int initialExtensionProgress;
 	protected Direction orientation;
 
-	private AxisAlignedBB pistonExtensionCollisionBox;
+	private AABB pistonExtensionCollisionBox;
 	private boolean retract;
 
 	@Override
@@ -61,7 +85,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public boolean assemble(World world, BlockPos pos) throws AssemblyException {
+	public boolean assemble(Level world, BlockPos pos) throws AssemblyException {
 		if (!collectExtensions(world, pos, orientation))
 			return false;
 		int count = blocks.size();
@@ -76,8 +100,8 @@ public class PistonContraption extends TranslatingContraption {
 		return true;
 	}
 
-	private boolean collectExtensions(World world, BlockPos pos, Direction direction) throws AssemblyException {
-		List<BlockInfo> poles = new ArrayList<>();
+	private boolean collectExtensions(Level world, BlockPos pos, Direction direction) throws AssemblyException {
+		List<StructureBlockInfo> poles = new ArrayList<>();
 		BlockPos actualStart = pos;
 		BlockState nextBlock = world.getBlockState(actualStart.relative(direction));
 		int extensionsInFront = 0;
@@ -91,7 +115,7 @@ public class PistonContraption extends TranslatingContraption {
 			while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis()) || isPistonHead(nextBlock) && nextBlock.getValue(FACING) == direction) {
 
 				actualStart = actualStart.relative(direction);
-				poles.add(new BlockInfo(actualStart, nextBlock.setValue(FACING, direction), null));
+				poles.add(new StructureBlockInfo(actualStart, nextBlock.setValue(FACING, direction), null));
 				extensionsInFront++;
 
 				if (isPistonHead(nextBlock))
@@ -104,11 +128,11 @@ public class PistonContraption extends TranslatingContraption {
 		}
 
 		if (extensionsInFront == 0)
-			poles.add(new BlockInfo(pos, MECHANICAL_PISTON_HEAD.getDefaultState()
+			poles.add(new StructureBlockInfo(pos, MECHANICAL_PISTON_HEAD.getDefaultState()
 				.setValue(FACING, direction)
 				.setValue(BlockStateProperties.PISTON_TYPE, sticky ? PistonType.STICKY : PistonType.DEFAULT), null));
 		else
-			poles.add(new BlockInfo(pos, PISTON_EXTENSION_POLE.getDefaultState()
+			poles.add(new StructureBlockInfo(pos, PISTON_EXTENSION_POLE.getDefaultState()
 				.setValue(FACING, direction), null));
 
 		BlockPos end = pos;
@@ -117,7 +141,7 @@ public class PistonContraption extends TranslatingContraption {
 
 		while (PistonExtensionPoleBlock.PlacementHelper.get().matchesAxis(nextBlock, direction.getAxis())) {
 			end = end.relative(direction.getOpposite());
-			poles.add(new BlockInfo(end, nextBlock.setValue(FACING, direction), null));
+			poles.add(new StructureBlockInfo(end, nextBlock.setValue(FACING, direction), null));
 			extensionsInBack++;
 			nextBlock = world.getBlockState(end.relative(direction.getOpposite()));
 
@@ -128,7 +152,7 @@ public class PistonContraption extends TranslatingContraption {
 		anchor = pos.relative(direction, initialExtensionProgress + 1);
 		extensionLength = extensionsInBack + extensionsInFront;
 		initialExtensionProgress = extensionsInFront;
-		pistonExtensionCollisionBox = new AxisAlignedBB(
+		pistonExtensionCollisionBox = new AABB(
 				BlockPos.ZERO.relative(direction, -1),
 				BlockPos.ZERO.relative(direction, -extensionLength - 1)).expandTowards(1,
 						1, 1);
@@ -136,12 +160,12 @@ public class PistonContraption extends TranslatingContraption {
 		if (extensionLength == 0)
 			throw AssemblyException.noPistonPoles();
 
-		bounds = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+		bounds = new AABB(0, 0, 0, 0, 0, 0);
 
-		for (BlockInfo pole : poles) {
+		for (StructureBlockInfo pole : poles) {
 			BlockPos relPos = pole.pos.relative(direction, -extensionsInFront);
 			BlockPos localPos = relPos.subtract(anchor);
-			getBlocks().put(localPos, new BlockInfo(localPos, pole.state, null));
+			getBlocks().put(localPos, new StructureBlockInfo(localPos, pole.state, null));
 			//pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
 		}
 
@@ -154,7 +178,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	protected boolean addToInitialFrontier(World world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) throws AssemblyException {
+	protected boolean addToInitialFrontier(Level world, BlockPos pos, Direction direction, Queue<BlockPos> frontier) throws AssemblyException {
 		frontier.clear();
 		boolean sticky = isStickyPiston(world.getBlockState(pos.relative(orientation, -1)));
 		boolean retracting = direction != orientation;
@@ -164,14 +188,14 @@ public class PistonContraption extends TranslatingContraption {
 			if (offset == 1 && retracting)
 				return true;
 			BlockPos currentPos = pos.relative(orientation, offset + initialExtensionProgress);
-			if (retracting && World.isOutsideBuildHeight(currentPos))
+			if (retracting && Level.isOutsideBuildHeight(currentPos))
 				return true;
 			if (!world.isLoaded(currentPos))
 				throw AssemblyException.unloadedChunk(currentPos);
 			BlockState state = world.getBlockState(currentPos);
 			if (!BlockMovementChecks.isMovementNecessary(state, world, currentPos))
 				return true;
-			if (BlockMovementChecks.isBrittle(state) && !(state.getBlock() instanceof CarpetBlock))
+			if (BlockMovementChecks.isBrittle(state) && !(state.getBlock() instanceof WoolCarpetBlock))
 				return true;
 			if (isPistonHead(state) && state.getValue(FACING) == direction.getOpposite())
 				return true;
@@ -190,7 +214,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public void addBlock(BlockPos pos, Pair<BlockInfo, TileEntity> capture) {
+	public void addBlock(BlockPos pos, Pair<StructureBlockInfo, BlockEntity> capture) {
 		super.addBlock(pos.relative(orientation, -initialExtensionProgress), capture);
 	}
 
@@ -201,10 +225,10 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	protected boolean customBlockPlacement(IWorld world, BlockPos pos, BlockState state) {
+	protected boolean customBlockPlacement(LevelAccessor world, BlockPos pos, BlockState state) {
 		BlockPos pistonPos = anchor.relative(orientation, -1);
 		BlockState pistonState = world.getBlockState(pistonPos);
-		TileEntity te = world.getBlockEntity(pistonPos);
+		BlockEntity te = world.getBlockEntity(pistonPos);
 		if (pos.equals(pistonPos)) {
 			if (te == null || te.isRemoved())
 				return true;
@@ -217,7 +241,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	protected boolean customBlockRemoval(IWorld world, BlockPos pos, BlockState state) {
+	protected boolean customBlockRemoval(LevelAccessor world, BlockPos pos, BlockState state) {
 		BlockPos pistonPos = anchor.relative(orientation, -1);
 		BlockState blockState = world.getBlockState(pos);
 		if (pos.equals(pistonPos) && isPiston(blockState)) {
@@ -228,7 +252,7 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public void readNBT(World world, CompoundNBT nbt, boolean spawnData) {
+	public void readNBT(Level world, CompoundTag nbt, boolean spawnData) {
 		super.readNBT(world, nbt, spawnData);
 		initialExtensionProgress = nbt.getInt("InitialLength");
 		extensionLength = nbt.getInt("ExtensionLength");
@@ -236,8 +260,8 @@ public class PistonContraption extends TranslatingContraption {
 	}
 
 	@Override
-	public CompoundNBT writeNBT(boolean spawnPacket) {
-		CompoundNBT tag = super.writeNBT(spawnPacket);
+	public CompoundTag writeNBT(boolean spawnPacket) {
+		CompoundTag tag = super.writeNBT(spawnPacket);
 		tag.putInt("InitialLength", initialExtensionProgress);
 		tag.putInt("ExtensionLength", extensionLength);
 		tag.putInt("Orientation", orientation.get3DDataValue());

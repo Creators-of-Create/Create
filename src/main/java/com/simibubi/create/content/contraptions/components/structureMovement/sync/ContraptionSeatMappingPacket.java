@@ -9,8 +9,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class ContraptionSeatMappingPacket extends SimplePacketBase {
@@ -23,7 +23,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 		this.mapping = mapping;
 	}
 
-	public ContraptionSeatMappingPacket(PacketBuffer buffer) {
+	public ContraptionSeatMappingPacket(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		mapping = new HashMap<>();
 		short size = buffer.readShort();
@@ -32,7 +32,7 @@ public class ContraptionSeatMappingPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityID);
 		buffer.writeShort(mapping.size());
 		mapping.forEach((k, v) -> {

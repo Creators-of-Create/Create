@@ -7,16 +7,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.outliner.LineOutline.EndChasingLineOutline;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class Outliner {
 
@@ -33,7 +33,7 @@ public class Outliner {
 		return box.getParams();
 	}
 
-	public OutlineParams showLine(Object slot, Vector3d start, Vector3d end) {
+	public OutlineParams showLine(Object slot, Vec3 start, Vec3 end) {
 		if (!outlines.containsKey(slot)) {
 			LineOutline outline = new LineOutline();
 			outlines.put(slot, new OutlineEntry(outline));
@@ -44,7 +44,7 @@ public class Outliner {
 		return entry.outline.getParams();
 	}
 
-	public OutlineParams endChasingLine(Object slot, Vector3d start, Vector3d end, float chasingProgress) {
+	public OutlineParams endChasingLine(Object slot, Vec3 start, Vec3 end, float chasingProgress) {
 		if (!outlines.containsKey(slot)) {
 			EndChasingLineOutline outline = new EndChasingLineOutline();
 			outlines.put(slot, new OutlineEntry(outline));
@@ -56,21 +56,21 @@ public class Outliner {
 		return entry.outline.getParams();
 	}
 
-	public OutlineParams showAABB(Object slot, AxisAlignedBB bb, int ttl) {
+	public OutlineParams showAABB(Object slot, AABB bb, int ttl) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot, ttl);
 		outline.prevBB = outline.targetBB = outline.bb = bb;
 		return outline.getParams();
 	}
 
-	public OutlineParams showAABB(Object slot, AxisAlignedBB bb) {
+	public OutlineParams showAABB(Object slot, AABB bb) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot);
 		outline.prevBB = outline.targetBB = outline.bb = bb;
 		return outline.getParams();
 	}
 
-	public OutlineParams chaseAABB(Object slot, AxisAlignedBB bb) {
+	public OutlineParams chaseAABB(Object slot, AABB bb) {
 		createAABBOutlineIfMissing(slot, bb);
 		ChasingAABBOutline outline = getAndRefreshAABB(slot);
 		outline.targetBB = bb;
@@ -105,7 +105,7 @@ public class Outliner {
 
 	// Utility
 
-	private void createAABBOutlineIfMissing(Object slot, AxisAlignedBB bb) {
+	private void createAABBOutlineIfMissing(Object slot, AABB bb) {
 		if (!outlines.containsKey(slot) || !(outlines.get(slot).outline instanceof AABBOutline)) {
 			ChasingAABBOutline outline = new ChasingAABBOutline(bb);
 			outlines.put(slot, new OutlineEntry(outline));
@@ -145,7 +145,7 @@ public class Outliner {
 		toClear.forEach(outlines::remove);
 	}
 
-	public void renderOutlines(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void renderOutlines(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		outlines.forEach((key, entry) -> {
 			Outline outline = entry.getOutline();
 			outline.params.alpha = 1;
@@ -155,7 +155,7 @@ public class Outliner {
 				float fadeticks = OutlineEntry.fadeTicks;
 				float lastAlpha = prevTicks >= 0 ? 1 : 1 + (prevTicks / fadeticks);
 				float currentAlpha = 1 + (entry.ticksTillRemoval / fadeticks);
-				float alpha = MathHelper.lerp(pt, lastAlpha, currentAlpha);
+				float alpha = Mth.lerp(pt, lastAlpha, currentAlpha);
 
 				outline.params.alpha = alpha * alpha * alpha;
 				if (outline.params.alpha < 1 / 8f)

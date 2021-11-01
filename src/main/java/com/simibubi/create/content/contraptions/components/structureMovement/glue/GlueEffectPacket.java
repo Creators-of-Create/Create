@@ -5,9 +5,9 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -25,13 +25,13 @@ public class GlueEffectPacket extends SimplePacketBase {
 		this.fullBlock = fullBlock;
 	}
 
-	public GlueEffectPacket(PacketBuffer buffer) {
+	public GlueEffectPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
 		direction = Direction.from3DDataValue(buffer.readByte());
 		fullBlock = buffer.readBoolean();
 	}
 
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
 		buffer.writeByte(direction.get3DDataValue());
 		buffer.writeBoolean(fullBlock);

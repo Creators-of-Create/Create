@@ -1,22 +1,22 @@
 package com.simibubi.create.content.curiosities.symmetry.client;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 
 public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<SymmetryWandModel> {
 
 	@Override
-	protected void render(ItemStack stack, SymmetryWandModel model, PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType,
-		MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay) {
+	protected void render(ItemStack stack, SymmetryWandModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
+		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		float worldTime = AnimationTickHolder.getRenderTime() / 20;
 		int maxLight = 0xF000F0;
 
@@ -24,7 +24,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 		renderer.renderSolidGlowing(model.getPartial("core"), maxLight);
 		renderer.renderGlowing(model.getPartial("core_glow"), maxLight);
 
-		float floating = MathHelper.sin(worldTime) * .05f;
+		float floating = Mth.sin(worldTime) * .05f;
 		float angle = worldTime * -10 % 360;
 
 		ms.translate(0, floating, 0);
@@ -34,7 +34,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 	}
 
 	@Override
-	public SymmetryWandModel createModel(IBakedModel originalModel) {
+	public SymmetryWandModel createModel(BakedModel originalModel) {
 		return new SymmetryWandModel(originalModel);
 	}
 

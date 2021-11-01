@@ -19,12 +19,12 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import com.mojang.math.Quaternion;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -33,7 +33,7 @@ public class StabilizedBearingMovementBehaviour extends MovementBehaviour {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		ContraptionMatrices matrices, IRenderTypeBuffer buffer) {
+		ContraptionMatrices matrices, MultiBufferSource buffer) {
 		if (Backend.getInstance().canUseInstancing()) return;
 
 		Direction facing = context.state.getValue(BlockStateProperties.FACING);

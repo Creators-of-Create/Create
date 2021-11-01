@@ -5,22 +5,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.AirBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.AirBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.server.level.ServerLevel;
 
 public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 
@@ -30,7 +30,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	protected int breakerId = -NEXT_BREAKER_ID.incrementAndGet();
 	protected BlockPos breakingPos;
 
-	public BlockBreakingKineticTileEntity(TileEntityType<?> typeIn) {
+	public BlockBreakingKineticTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 	}
 
@@ -59,20 +59,20 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("Progress", destroyProgress);
 		compound.putInt("NextTick", ticksUntilNextProgress);
 		if (breakingPos != null)
-			compound.put("Breaking", NBTUtil.writeBlockPos(breakingPos));
+			compound.put("Breaking", NbtUtils.writeBlockPos(breakingPos));
 		super.write(compound, clientPacket);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		destroyProgress = compound.getInt("Progress");
 		ticksUntilNextProgress = compound.getInt("NextTick");
 		if (compound.contains("Breaking"))
-			breakingPos = NBTUtil.readBlockPos(compound.getCompound("Breaking"));
+			breakingPos = NbtUtils.readBlockPos(compound.getCompound("Breaking"));
 		super.fromTag(state, compound, clientPacket);
 	}
 
@@ -113,8 +113,8 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		}
 
 		float breakSpeed = getBreakSpeed();
-		destroyProgress += MathHelper.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
-		level.playSound(null, worldPosition, stateToBreak.getSoundType().getHitSound(), SoundCategory.NEUTRAL, .25f, 1);
+		destroyProgress += Mth.clamp((int) (breakSpeed / blockHardness), 1, 10 - destroyProgress);
+		level.playSound(null, worldPosition, stateToBreak.getSoundType().getHitSound(), SoundSource.NEUTRAL, .25f, 1);
 
 		if (destroyProgress >= 10) {
 			onBlockBroken(stateToBreak);
@@ -140,20 +140,20 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	public void onBlockBroken(BlockState stateToBreak) {
 		FluidState FluidState = level.getFluidState(breakingPos);
 		level.levelEvent(2001, breakingPos, Block.getId(stateToBreak));
-		TileEntity tileentity = stateToBreak.hasTileEntity() ? level.getBlockEntity(breakingPos) : null;
-		Vector3d vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
+		BlockEntity tileentity = stateToBreak.hasTileEntity() ? level.getBlockEntity(breakingPos) : null;
+		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
 
-		Block.getDrops(stateToBreak, (ServerWorld) level, breakingPos, tileentity).forEach((stack) -> {
+		Block.getDrops(stateToBreak, (ServerLevel) level, breakingPos, tileentity).forEach((stack) -> {
 			if (!stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)
 					&& !level.restoringBlockSnapshots) {
 				ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
 				itementity.setDefaultPickUpDelay();
-				itementity.setDeltaMovement(Vector3d.ZERO);
+				itementity.setDeltaMovement(Vec3.ZERO);
 				level.addFreshEntity(itementity);
 			}
 		});
-		if (level instanceof ServerWorld)
-			stateToBreak.spawnAfterBreak((ServerWorld) level, breakingPos, ItemStack.EMPTY);
+		if (level instanceof ServerLevel)
+			stateToBreak.spawnAfterBreak((ServerLevel) level, breakingPos, ItemStack.EMPTY);
 		level.setBlock(breakingPos, FluidState.createLegacyBlock(), 3);
 	}
 

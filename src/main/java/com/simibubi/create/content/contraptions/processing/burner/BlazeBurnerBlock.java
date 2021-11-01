@@ -14,44 +14,46 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.FlintAndSteelItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.ConstantRange;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.conditions.BlockStateProperty;
-import net.minecraft.loot.conditions.ILootCondition.IBuilder;
-import net.minecraft.loot.conditions.SurvivesExplosion;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.FlintAndSteelItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.ConstantIntValue;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.NonNullList;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -71,10 +73,10 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState p_220082_4_, boolean p_220082_5_) {
 		if (world.isClientSide)
 			return;
-		TileEntity tileEntity = world.getBlockEntity(pos.above());
+		BlockEntity tileEntity = world.getBlockEntity(pos.above());
 		if (!(tileEntity instanceof BasinTileEntity))
 			return;
 		BasinTileEntity basin = (BasinTileEntity) tileEntity;
@@ -88,14 +90,14 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> list) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
 		list.add(AllItems.EMPTY_BLAZE_BURNER.asStack());
 		super.fillItemCategory(group, list);
 	}
 
 	@Nullable
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.HEATER.create();
 	}
 
@@ -105,27 +107,27 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult blockRayTraceResult) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		if (!state.hasTileEntity()) {
 			if (heldItem.getItem() instanceof FlintAndSteelItem) {
-				world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F,
+				world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F,
 					world.random.nextFloat() * 0.4F + 0.8F);
 				if (world.isClientSide)
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				heldItem.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
 				world.setBlockAndUpdate(pos, AllBlocks.LIT_BLAZE_BURNER.getDefaultState());
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		}
 
 		boolean doNotConsume = player.isCreative();
 		boolean forceOverflow = !(player instanceof FakePlayer);
 
-		ActionResult<ItemStack> res = tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);
+		InteractionResultHolder<ItemStack> res = tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);
 		ItemStack leftover = res.getObject();
 		if (!world.isClientSide && !doNotConsume && !leftover.isEmpty()) {
 			if (heldItem.isEmpty()) {
@@ -135,26 +137,26 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 			}
 		}
 
-		return res.getResult() == ActionResultType.SUCCESS ? ActionResultType.SUCCESS : ActionResultType.PASS;
+		return res.getResult() == InteractionResult.SUCCESS ? InteractionResult.SUCCESS : InteractionResult.PASS;
 	}
 
-	public static ActionResult<ItemStack> tryInsert(BlockState state, World world, BlockPos pos, ItemStack stack, boolean doNotConsume,
+	public static InteractionResultHolder<ItemStack> tryInsert(BlockState state, Level world, BlockPos pos, ItemStack stack, boolean doNotConsume,
 		boolean forceOverflow, boolean simulate) {
 		if (!state.hasTileEntity())
-			return ActionResult.fail(ItemStack.EMPTY);
+			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
-		TileEntity te = world.getBlockEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 		if (!(te instanceof BlazeBurnerTileEntity))
-			return ActionResult.fail(ItemStack.EMPTY);
+			return InteractionResultHolder.fail(ItemStack.EMPTY);
 		BlazeBurnerTileEntity burnerTE = (BlazeBurnerTileEntity) te;
 
 		if (burnerTE.isCreativeFuel(stack)) {
 			if (!simulate)
 				burnerTE.applyCreativeFuel();
-			return ActionResult.success(ItemStack.EMPTY);
+			return InteractionResultHolder.success(ItemStack.EMPTY);
 		}
 		if (!burnerTE.tryUpdateFuel(stack, forceOverflow, simulate))
-			return ActionResult.fail(ItemStack.EMPTY);
+			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		if (!doNotConsume) {
 			ItemStack container = stack.getContainerItem();
@@ -162,14 +164,14 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 				stack.shrink(1);
 			}
 			if (!container.isEmpty()) {
-				return ActionResult.success(container);
+				return InteractionResultHolder.success(container);
 			}
 		}
-		return ActionResult.success(ItemStack.EMPTY);
+		return InteractionResultHolder.success(ItemStack.EMPTY);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		ItemStack stack = context.getItemInHand();
 		Item item = stack.getItem();
 		BlockState defaultState = defaultBlockState();
@@ -181,14 +183,14 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
 		return AllShapes.HEATER_BLOCK_SHAPE;
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
-		if (p_220071_4_ == ISelectionContext.empty())
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
+		CollisionContext p_220071_4_) {
+		if (p_220071_4_ == CollisionContext.empty())
 			return AllShapes.HEATER_BLOCK_SPECIAL_COLLISION_SHAPE;
 		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
 	}
@@ -199,24 +201,24 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState state, World p_180641_2_, BlockPos p_180641_3_) {
+	public int getAnalogOutputSignal(BlockState state, Level p_180641_2_, BlockPos p_180641_3_) {
 		return Math.max(0, state.getValue(HEAT_LEVEL).ordinal() - 1);
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void animateTick(BlockState state, World world, BlockPos pos, Random random) {
+	public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
 		if (random.nextInt(10) != 0)
 			return;
 		if (!state.getValue(HEAT_LEVEL)
 			.isAtLeast(HeatLevel.SMOULDERING))
 			return;
 		world.playLocalSound((double) ((float) pos.getX() + 0.5F), (double) ((float) pos.getY() + 0.5F),
-			(double) ((float) pos.getZ() + 0.5F), SoundEvents.CAMPFIRE_CRACKLE, SoundCategory.BLOCKS,
+			(double) ((float) pos.getZ() + 0.5F), SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS,
 			0.5F + random.nextFloat(), random.nextFloat() * 0.7F + 0.6F, false);
 	}
 
@@ -226,30 +228,30 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	public static int getLight(BlockState state) {
-		return MathHelper.clamp(state.getValue(HEAT_LEVEL)
+		return Mth.clamp(state.getValue(HEAT_LEVEL)
 			.ordinal() * 4 - 1, 0, 15);
 	}
 
 	public static LootTable.Builder buildLootTable() {
-		IBuilder survivesExplosion = SurvivesExplosion.survivesExplosion();
+		Builder survivesExplosion = ExplosionCondition.survivesExplosion();
 		BlazeBurnerBlock block = AllBlocks.BLAZE_BURNER.get();
 
 		LootTable.Builder builder = LootTable.lootTable();
 		LootPool.Builder poolBuilder = LootPool.lootPool();
 		for (HeatLevel level : HeatLevel.values()) {
-			IItemProvider drop =
+			ItemLike drop =
 				level == HeatLevel.NONE ? AllItems.EMPTY_BLAZE_BURNER.get() : AllBlocks.BLAZE_BURNER.get();
-			poolBuilder.add(ItemLootEntry.lootTableItem(drop)
+			poolBuilder.add(LootItem.lootTableItem(drop)
 				.when(survivesExplosion)
-				.when(BlockStateProperty.hasBlockStateProperties(block)
+				.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
 					.setProperties(StatePropertiesPredicate.Builder.properties()
 						.hasProperty(HEAT_LEVEL, level))));
 		}
-		builder.withPool(poolBuilder.setRolls(ConstantRange.exactly(1)));
+		builder.withPool(poolBuilder.setRolls(ConstantIntValue.exactly(1)));
 		return builder;
 	}
 
-	public enum HeatLevel implements IStringSerializable {
+	public enum HeatLevel implements StringRepresentable {
 		NONE, SMOULDERING, FADING, KINDLED, SEETHING, ;
 
 		public static HeatLevel byIndex(int index) {

@@ -6,10 +6,10 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.common.extensions.IForgeBlock;
 
 public enum ContraptionMovementSetting {
@@ -40,11 +40,11 @@ public enum ContraptionMovementSetting {
 		return supplier == null ? null : supplier.get();
 	}
 
-	protected static boolean allAre(Collection<Template.BlockInfo> blocks, ContraptionMovementSetting are) {
+	protected static boolean allAre(Collection<StructureTemplate.StructureBlockInfo> blocks, ContraptionMovementSetting are) {
 		return blocks.stream().anyMatch(b -> get(b.state.getBlock()) == are);
 	}
 
-	public static boolean isNoPickup(Collection<Template.BlockInfo> blocks) {
+	public static boolean isNoPickup(Collection<StructureTemplate.StructureBlockInfo> blocks) {
 		return allAre(blocks, ContraptionMovementSetting.NO_PICKUP);
 	}
 

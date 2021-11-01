@@ -2,14 +2,16 @@ package com.simibubi.create.content.contraptions.base;
 
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.common.ToolType;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class CasingBlock extends Block implements IWrenchable {
 
@@ -18,8 +20,8 @@ public class CasingBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
-		return ActionResultType.FAIL;
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
+		return InteractionResult.FAIL;
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class CasingBlock extends Block implements IWrenchable {
 	}
 
 	@Override
-	public boolean canHarvestBlock(BlockState state, IBlockReader world, BlockPos pos, PlayerEntity player) {
+	public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
 		for (ToolType toolType : player.getMainHandItem().getToolTypes()) {
 			if (isToolEffective(state, toolType))
 				return true;

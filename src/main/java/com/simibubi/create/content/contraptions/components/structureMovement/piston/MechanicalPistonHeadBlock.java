@@ -7,30 +7,32 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.PistonType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 
-public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implements IWaterLoggable {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implements SimpleWaterloggedBlock {
 
     public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 
@@ -51,13 +53,13 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-                                  PlayerEntity player) {
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+                                  Player player) {
         return AllBlocks.PISTON_EXTENSION_POLE.asStack();
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         Direction direction = state.getValue(FACING);
         BlockPos pistonHead = pos;
         BlockPos pistonBase = null;
@@ -89,7 +91,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return AllShapes.MECHANICAL_PISTON_HEAD.get(state.getValue(FACING));
     }
 
@@ -100,7 +102,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-                                          IWorld world, BlockPos pos, BlockPos neighbourPos) {
+                                          LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
         if (state.getValue(BlockStateProperties.WATERLOGGED)) {
             world.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
@@ -108,13 +110,13 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         FluidState FluidState = context.getLevel().getFluidState(context.getClickedPos());
         return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getType() == Fluids.WATER));
     }
     
     @Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 }

@@ -1,29 +1,29 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.glue;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.matrix.MatrixStack.Entry;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.culling.ClippingHelper;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -35,7 +35,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	private float[] insideQuad;
 	private float[] outsideQuad;
 
-	public SuperGlueRenderer(EntityRendererManager renderManager) {
+	public SuperGlueRenderer(EntityRenderDispatcher renderManager) {
 		super(renderManager);
 		initQuads();
 	}
@@ -46,9 +46,9 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	}
 
 	@Override
-	public boolean shouldRender(SuperGlueEntity entity, ClippingHelper frustum, double x, double y, double z) {
+	public boolean shouldRender(SuperGlueEntity entity, Frustum frustum, double x, double y, double z) {
 		if (super.shouldRender(entity, frustum, x, y, z)) {
-			PlayerEntity player = Minecraft.getInstance().player;
+			Player player = Minecraft.getInstance().player;
 			boolean visible = entity.isVisible();
 			boolean holdingGlue = AllItems.SUPER_GLUE.isIn(player.getMainHandItem())
 				|| AllItems.SUPER_GLUE.isIn(player.getOffhandItem());
@@ -60,11 +60,11 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	}
 
 	@Override
-	public void render(SuperGlueEntity entity, float yaw, float partialTicks, MatrixStack ms,
-		IRenderTypeBuffer buffer, int light) {
+	public void render(SuperGlueEntity entity, float yaw, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light) {
 		super.render(entity, yaw, partialTicks, ms, buffer, light);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.entityCutout(getTextureLocation(entity)));
+		VertexConsumer builder = buffer.getBuffer(RenderType.entityCutout(getTextureLocation(entity)));
 		light = getBrightnessForRender(entity);
 		Direction face = entity.getFacingDirection();
 
@@ -72,7 +72,7 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		MatrixTransformStack.of(ms)
 			.rotateY(AngleHelper.horizontalAngleNew(face))
 			.rotateX(AngleHelper.verticalAngle(face));
-		Entry peek = ms.last();
+		Pose peek = ms.last();
 
 		renderQuad(builder, peek, insideQuad, light, -1);
 		renderQuad(builder, peek, outsideQuad, light, 1);
@@ -81,29 +81,29 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 	}
 
 	private void initQuads() {
-		Vector3d diff = Vector3d.atLowerCornerOf(Direction.SOUTH.getNormal());
-		Vector3d extension = diff.normalize()
+		Vec3 diff = Vec3.atLowerCornerOf(Direction.SOUTH.getNormal());
+		Vec3 extension = diff.normalize()
 			.scale(1 / 32f - 1 / 128f);
 
-		Vector3d plane = VecHelper.axisAlingedPlaneOf(diff);
+		Vec3 plane = VecHelper.axisAlingedPlaneOf(diff);
 		Axis axis = Direction.getNearest(diff.x, diff.y, diff.z)
 			.getAxis();
 
-		Vector3d start = Vector3d.ZERO.subtract(extension);
-		Vector3d end = Vector3d.ZERO.add(extension);
+		Vec3 start = Vec3.ZERO.subtract(extension);
+		Vec3 end = Vec3.ZERO.add(extension);
 
 		plane = plane.scale(1 / 2f);
-		Vector3d a1 = plane.add(start);
-		Vector3d b1 = plane.add(end);
+		Vec3 a1 = plane.add(start);
+		Vec3 b1 = plane.add(end);
 		plane = VecHelper.rotate(plane, -90, axis);
-		Vector3d a2 = plane.add(start);
-		Vector3d b2 = plane.add(end);
+		Vec3 a2 = plane.add(start);
+		Vec3 b2 = plane.add(end);
 		plane = VecHelper.rotate(plane, -90, axis);
-		Vector3d a3 = plane.add(start);
-		Vector3d b3 = plane.add(end);
+		Vec3 a3 = plane.add(start);
+		Vec3 b3 = plane.add(end);
 		plane = VecHelper.rotate(plane, -90, axis);
-		Vector3d a4 = plane.add(start);
-		Vector3d b4 = plane.add(end);
+		Vec3 a4 = plane.add(start);
+		Vec3 b4 = plane.add(end);
 
 		insideQuad = new float[] {
 				(float) a1.x, (float) a1.y, (float) a1.z, 1, 0,
@@ -124,14 +124,14 @@ public class SuperGlueRenderer extends EntityRenderer<SuperGlueEntity> {
 		BlockPos blockpos2 = blockpos.relative(entity.getFacingDirection()
 			.getOpposite());
 
-		World world = entity.getCommandSenderWorld();
-		int light = world.isLoaded(blockpos) ? WorldRenderer.getLightColor(world, blockpos) : 15;
-		int light2 = world.isLoaded(blockpos2) ? WorldRenderer.getLightColor(world, blockpos2) : 15;
+		Level world = entity.getCommandSenderWorld();
+		int light = world.isLoaded(blockpos) ? LevelRenderer.getLightColor(world, blockpos) : 15;
+		int light2 = world.isLoaded(blockpos2) ? LevelRenderer.getLightColor(world, blockpos2) : 15;
 		return Math.max(light, light2);
 	}
 
 	// Vertex format: pos x, pos y, pos z, u, v
-	private void renderQuad(IVertexBuilder builder, Entry matrix, float[] data, int light, float normalZ) {
+	private void renderQuad(VertexConsumer builder, Pose matrix, float[] data, int light, float normalZ) {
 		for (int i = 0; i < 4; i++) {
 			builder.vertex(matrix.pose(), data[5 * i], data[5 * i + 1], data[5 * i + 2])
 				.color(255, 255, 255, 255)

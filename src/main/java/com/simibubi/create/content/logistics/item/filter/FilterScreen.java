@@ -10,31 +10,31 @@ import com.simibubi.create.foundation.gui.widgets.IconButton;
 import com.simibubi.create.foundation.gui.widgets.Indicator;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 
 	private static final String PREFIX = "gui.filter.";
 
-	private ITextComponent allowN = Lang.translate(PREFIX + "allow_list");
-	private ITextComponent allowDESC = Lang.translate(PREFIX + "allow_list.description");
-	private ITextComponent denyN = Lang.translate(PREFIX + "deny_list");
-	private ITextComponent denyDESC = Lang.translate(PREFIX + "deny_list.description");
+	private Component allowN = Lang.translate(PREFIX + "allow_list");
+	private Component allowDESC = Lang.translate(PREFIX + "allow_list.description");
+	private Component denyN = Lang.translate(PREFIX + "deny_list");
+	private Component denyDESC = Lang.translate(PREFIX + "deny_list.description");
 
-	private ITextComponent respectDataN = Lang.translate(PREFIX + "respect_data");
-	private ITextComponent respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
-	private ITextComponent ignoreDataN = Lang.translate(PREFIX + "ignore_data");
-	private ITextComponent ignoreDataDESC = Lang.translate(PREFIX + "ignore_data.description");
+	private Component respectDataN = Lang.translate(PREFIX + "respect_data");
+	private Component respectDataDESC = Lang.translate(PREFIX + "respect_data.description");
+	private Component ignoreDataN = Lang.translate(PREFIX + "ignore_data");
+	private Component ignoreDataDESC = Lang.translate(PREFIX + "ignore_data.description");
 
 	private IconButton whitelist, blacklist;
 	private IconButton respectNBT, ignoreNBT;
 	private Indicator whitelistIndicator, blacklistIndicator;
 	private Indicator respectNBTIndicator, ignoreNBTIndicator;
 
-	public FilterScreen(FilterContainer container, PlayerInventory inv, ITextComponent title) {
+	public FilterScreen(FilterContainer container, Inventory inv, Component title) {
 		super(container, inv, title, AllGuiTextures.FILTER);
 	}
 
@@ -50,16 +50,16 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 		blacklist.setToolTip(denyN);
 		whitelist = new IconButton(x + 36, y + 73, AllIcons.I_WHITELIST);
 		whitelist.setToolTip(allowN);
-		blacklistIndicator = new Indicator(x + 18, y + 67, StringTextComponent.EMPTY);
-		whitelistIndicator = new Indicator(x + 36, y + 67, StringTextComponent.EMPTY);
+		blacklistIndicator = new Indicator(x + 18, y + 67, TextComponent.EMPTY);
+		whitelistIndicator = new Indicator(x + 36, y + 67, TextComponent.EMPTY);
 		widgets.addAll(Arrays.asList(blacklist, whitelist, blacklistIndicator, whitelistIndicator));
 
 		respectNBT = new IconButton(x + 60, y + 73, AllIcons.I_RESPECT_NBT);
 		respectNBT.setToolTip(respectDataN);
 		ignoreNBT = new IconButton(x + 78, y + 73, AllIcons.I_IGNORE_NBT);
 		ignoreNBT.setToolTip(ignoreDataN);
-		respectNBTIndicator = new Indicator(x + 60, y + 67, StringTextComponent.EMPTY);
-		ignoreNBTIndicator = new Indicator(x + 78, y + 67, StringTextComponent.EMPTY);
+		respectNBTIndicator = new Indicator(x + 60, y + 67, TextComponent.EMPTY);
+		ignoreNBTIndicator = new Indicator(x + 78, y + 67, TextComponent.EMPTY);
 		widgets.addAll(Arrays.asList(respectNBT, ignoreNBT, respectNBTIndicator, ignoreNBTIndicator));
 
 		handleIndicators();
@@ -105,7 +105,7 @@ public class FilterScreen extends AbstractFilterScreen<FilterContainer> {
 	}
 
 	@Override
-	protected List<IFormattableTextComponent> getTooltipDescriptions() {
+	protected List<MutableComponent> getTooltipDescriptions() {
 		return Arrays.asList(denyDESC.plainCopy(), allowDESC.plainCopy(), respectDataDESC.plainCopy(), ignoreDataDESC.plainCopy());
 	}
 

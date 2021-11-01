@@ -8,21 +8,21 @@ import java.util.Queue;
 import com.google.common.collect.EvictingQueue;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.IParticleRenderType;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.Camera;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.Tessellator;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 public class PonderWorldParticles {
 
-	private final Map<IParticleRenderType, Queue<Particle>> byType = Maps.newIdentityHashMap();
+	private final Map<ParticleRenderType, Queue<Particle>> byType = Maps.newIdentityHashMap();
 	private final Queue<Particle> queue = Queues.newArrayDeque();
 
 	PonderWorld world;
@@ -59,7 +59,7 @@ public class PonderWorldParticles {
 		}
 	}
 
-	public void renderParticles(MatrixStack ms, IRenderTypeBuffer buffer, ActiveRenderInfo renderInfo, float pt) {
+	public void renderParticles(PoseStack ms, MultiBufferSource buffer, Camera renderInfo, float pt) {
 		Minecraft mc = Minecraft.getInstance();
 		LightTexture lightTexture = mc.gameRenderer.lightTexture();
 
@@ -74,14 +74,14 @@ public class PonderWorldParticles {
 		RenderSystem.multMatrix(ms.last()
 			.pose());
 
-		for (IParticleRenderType iparticlerendertype : this.byType.keySet()) {
-			if (iparticlerendertype == IParticleRenderType.NO_RENDER)
+		for (ParticleRenderType iparticlerendertype : this.byType.keySet()) {
+			if (iparticlerendertype == ParticleRenderType.NO_RENDER)
 				continue;
 			enable.run(); 
 			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
 			if (iterable != null) {
 				RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-				Tessellator tessellator = Tessellator.getInstance();
+				Tesselator tessellator = Tesselator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuilder();
 				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
 

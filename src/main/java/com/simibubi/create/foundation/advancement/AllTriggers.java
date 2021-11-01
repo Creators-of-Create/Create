@@ -7,13 +7,13 @@ import java.util.function.Predicate;
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllTriggers {
@@ -59,28 +59,28 @@ public class AllTriggers {
 		triggers.forEach(CriteriaTriggers::register);
 	}
 
-	public static void triggerFor(ITriggerable trigger, PlayerEntity player) {
-		if (player instanceof ServerPlayerEntity)
-			trigger.trigger((ServerPlayerEntity) player);
+	public static void triggerFor(ITriggerable trigger, Player player) {
+		if (player instanceof ServerPlayer)
+			trigger.trigger((ServerPlayer) player);
 	}
 
-	public static void triggerForNearbyPlayers(ITriggerable trigger, IWorld world, BlockPos pos, int range) {
+	public static void triggerForNearbyPlayers(ITriggerable trigger, LevelAccessor world, BlockPos pos, int range) {
 		triggerForNearbyPlayers(trigger, world, pos, range, player -> true);
 	}
 
-	public static void triggerForNearbyPlayers(ITriggerable trigger, IWorld world, BlockPos pos, int range,
-		Predicate<PlayerEntity> playerFilter) {
+	public static void triggerForNearbyPlayers(ITriggerable trigger, LevelAccessor world, BlockPos pos, int range,
+		Predicate<Player> playerFilter) {
 		if (world == null)
 			return;
 		if (world.isClientSide())
 			return;
-		List<ServerPlayerEntity> players = getPlayersInRange(world, pos, range);
+		List<ServerPlayer> players = getPlayersInRange(world, pos, range);
 		players.stream()
 			.filter(playerFilter)
 			.forEach(trigger::trigger);
 	}
 
-	public static List<ServerPlayerEntity> getPlayersInRange(IWorld world, BlockPos pos, int range) {
-		return world.getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(pos).inflate(range));
+	public static List<ServerPlayer> getPlayersInRange(LevelAccessor world, BlockPos pos, int range) {
+		return world.getEntitiesOfClass(ServerPlayer.class, new AABB(pos).inflate(range));
 	}
 }

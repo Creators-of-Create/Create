@@ -2,17 +2,17 @@ package com.simibubi.create.content.contraptions.components.structureMovement.in
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TrapDoorBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
 
 public class TrapdoorMovingInteraction extends SimpleBlockMovingInteraction {
 
 	@Override
-	protected BlockState handle(PlayerEntity player, Contraption contraption, BlockPos pos, BlockState currentState) {
+	protected BlockState handle(Player player, Contraption contraption, BlockPos pos, BlockState currentState) {
 		SoundEvent sound = currentState.getValue(TrapDoorBlock.OPEN) ? SoundEvents.WOODEN_TRAPDOOR_CLOSE
 			: SoundEvents.WOODEN_TRAPDOOR_OPEN;
 		float pitch = player.level.random.nextFloat() * 0.1F + 0.9F;

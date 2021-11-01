@@ -27,17 +27,17 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class BeltScenes {
 
@@ -58,9 +58,9 @@ public class BeltScenes {
 		BlockPos backEnd = util.grid.at(4, 1, 2);
 		BlockPos frontEnd = util.grid.at(0, 1, 2);
 		ItemStack beltItem = AllItems.BELT_CONNECTOR.asStack();
-		Vector3d backEndCenter = util.vector.centerOf(backEnd);
-		AxisAlignedBB connectBB = new AxisAlignedBB(backEndCenter, backEndCenter);
-		AxisAlignedBB shaftBB = AllBlocks.SHAFT.getDefaultState()
+		Vec3 backEndCenter = util.vector.centerOf(backEnd);
+		AABB connectBB = new AABB(backEndCenter, backEndCenter);
+		AABB shaftBB = AllBlocks.SHAFT.getDefaultState()
 			.setValue(ShaftBlock.AXIS, Axis.Z)
 			.getShape(null, null)
 			.bounds();
@@ -92,7 +92,7 @@ public class BeltScenes {
 			.pointAt(util.vector.topOf(2, 1, 2));
 		scene.idle(90);
 
-		Vector3d falseSelection = util.vector.topOf(backEnd.south(1));
+		Vec3 falseSelection = util.vector.topOf(backEnd.south(1));
 		scene.overlay.showControls(new InputWindowElement(falseSelection, Pointing.DOWN).rightClick()
 			.withItem(beltItem), 37);
 		scene.idle(7);
@@ -188,8 +188,8 @@ public class BeltScenes {
 
 		scene.idle(20);
 
-		Vector3d from = util.vector.centerOf(3, 1, 2);
-		Vector3d to = util.vector.centerOf(1, 2, 2);
+		Vec3 from = util.vector.centerOf(3, 1, 2);
+		Vec3 to = util.vector.centerOf(1, 2, 2);
 
 		scene.overlay.showLine(PonderPalette.RED, from, to, 70);
 		scene.idle(10);
@@ -376,7 +376,7 @@ public class BeltScenes {
 		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
 		scene.special.movePointOfInterest(util.grid.at(2, 5, 4));
 
-		Vector3d topOf = util.vector.topOf(util.grid.at(3, 2, 2))
+		Vec3 topOf = util.vector.topOf(util.grid.at(3, 2, 2))
 			.add(-0.1, 0.3, 0);
 		scene.overlay.showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick(), 60);
 		scene.idle(10);
@@ -487,7 +487,7 @@ public class BeltScenes {
 
 		BlockPos depotPos = util.grid.at(2, 1, 2);
 		scene.world.showSection(util.select.position(2, 1, 2), Direction.DOWN);
-		Vector3d topOf = util.vector.topOf(depotPos);
+		Vec3 topOf = util.vector.topOf(depotPos);
 		scene.overlay.showText(60)
 			.attachKeyFrame()
 			.text("Depots can serve as 'stationary' belt elements")
@@ -541,7 +541,7 @@ public class BeltScenes {
 			.west();
 		ItemStack copper = AllItems.COPPER_INGOT.asStack();
 		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, copper);
-		Vector3d depotCenter = util.vector.centerOf(depotPos);
+		Vec3 depotCenter = util.vector.centerOf(depotPos);
 		scene.idle(10);
 
 		Class<MechanicalPressTileEntity> type = MechanicalPressTileEntity.class;

@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import java.util.List;
 import java.util.Vector;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.curiosities.zapper.ConfigureZapperPacket;
 import com.simibubi.create.content.curiosities.zapper.ZapperScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -17,20 +17,20 @@ import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class WorldshaperScreen extends ZapperScreen {
 
-	protected final ITextComponent placementSection = Lang.translate("gui.terrainzapper.placement");
-	protected final ITextComponent toolSection = Lang.translate("gui.terrainzapper.tool");
-	protected final List<ITextComponent> brushOptions =
+	protected final Component placementSection = Lang.translate("gui.terrainzapper.placement");
+	protected final Component toolSection = Lang.translate("gui.terrainzapper.tool");
+	protected final List<Component> brushOptions =
 		Lang.translatedOptions("gui.terrainzapper.brush", "cuboid", "sphere", "cylinder", "surface", "cluster");
 
 	protected Vector<IconButton> toolButtons;
@@ -52,15 +52,15 @@ public class WorldshaperScreen extends ZapperScreen {
 	protected TerrainTools currentTool;
 	protected PlacementOptions currentPlacement;
 
-	public WorldshaperScreen(ItemStack zapper, Hand hand) {
+	public WorldshaperScreen(ItemStack zapper, InteractionHand hand) {
 		super(AllGuiTextures.TERRAINZAPPER, zapper, hand);
 		fontColor = 0x767676;
 		title = zapper.getHoverName();
 
-		CompoundNBT nbt = zapper.getOrCreateTag();
+		CompoundTag nbt = zapper.getOrCreateTag();
 		currentBrush = NBTHelper.readEnum(nbt, "Brush", TerrainBrushes.class);
 		if (nbt.contains("BrushParams", Constants.NBT.TAG_COMPOUND)) {
-			BlockPos paramsData = NBTUtil.readBlockPos(nbt.getCompound("BrushParams"));
+			BlockPos paramsData = NbtUtils.readBlockPos(nbt.getCompound("BrushParams"));
 			currentBrushParams[0] = paramsData.getX();
 			currentBrushParams[1] = paramsData.getY();
 			currentBrushParams[2] = paramsData.getZ();
@@ -82,7 +82,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		brushLabel = new Label(x + 61, y + 25, StringTextComponent.EMPTY).withShadow();
+		brushLabel = new Label(x + 61, y + 25, TextComponent.EMPTY).withShadow();
 		brushInput = new SelectionScrollInput(x + 56, y + 20, 77, 18).forOptions(brushOptions)
 			.titled(Lang.translate("gui.terrainzapper.brush"))
 			.writingTo(brushLabel)
@@ -111,7 +111,7 @@ public class WorldshaperScreen extends ZapperScreen {
 		brushParams.clear();
 
 		for (int index = 0; index < 3; index++) {
-			Label label = new Label(x + 65 + 20 * index, y + 45, StringTextComponent.EMPTY).withShadow();
+			Label label = new Label(x + 65 + 20 * index, y + 45, TextComponent.EMPTY).withShadow();
 
 			final int finalIndex = index;
 			ScrollInput input = new ScrollInput(x + 56 + 20 * index, y + 40, 18, 18)
@@ -155,10 +155,10 @@ public class WorldshaperScreen extends ZapperScreen {
 		if (currentBrush.hasConnectivityOptions()) {
 			int x1 = x + 7 + 4 * 18;
 			int y1 = y + 79;
-			followDiagonalsIndicator = new Indicator(x1, y1 - 6, StringTextComponent.EMPTY);
+			followDiagonalsIndicator = new Indicator(x1, y1 - 6, TextComponent.EMPTY);
 			followDiagonals = new IconButton(x1, y1, AllIcons.I_FOLLOW_DIAGONAL);
 			x1 += 18;
-			acrossMaterialsIndicator = new Indicator(x1, y1 - 6, StringTextComponent.EMPTY);
+			acrossMaterialsIndicator = new Indicator(x1, y1 - 6, TextComponent.EMPTY);
 			acrossMaterials = new IconButton(x1, y1, AllIcons.I_FOLLOW_MATERIAL);
 
 			followDiagonals.setToolTip(Lang.translate("gui.terrainzapper.searchDiagonal"));
@@ -257,7 +257,7 @@ public class WorldshaperScreen extends ZapperScreen {
 	}
 
 	@Override
-	protected void drawOnBackground(MatrixStack matrixStack, int x, int y) {
+	protected void drawOnBackground(PoseStack matrixStack, int x, int y) {
 		super.drawOnBackground(matrixStack, x, y);
 
 		Brush currentBrush = this.currentBrush.get();

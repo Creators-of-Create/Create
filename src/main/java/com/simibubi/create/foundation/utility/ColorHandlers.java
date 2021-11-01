@@ -1,25 +1,25 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.block.RedstoneWireBlock;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.world.GrassColors;
-import net.minecraft.world.biome.BiomeColors;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.GrassColor;
+import net.minecraft.client.renderer.BiomeColors;
 
 public class ColorHandlers {
 
-	public static IBlockColor getGrassyBlock() {
+	public static BlockColor getGrassyBlock() {
 		return (state, world, pos, layer) -> pos != null && world != null ? BiomeColors.getAverageGrassColor(world, pos)
-				: GrassColors.get(0.5D, 1.0D);
+				: GrassColor.get(0.5D, 1.0D);
 	}
 
-	public static IItemColor getGrassyItem() {
-		return (stack, layer) -> GrassColors.get(0.5D, 1.0D);
+	public static ItemColor getGrassyItem() {
+		return (stack, layer) -> GrassColor.get(0.5D, 1.0D);
 	}
 
-	public static IBlockColor getRedstonePower() {
-		return (state, world, pos, layer) -> RedstoneWireBlock
+	public static BlockColor getRedstonePower() {
+		return (state, world, pos, layer) -> RedStoneWireBlock
 				.getColorForPower(pos != null && world != null ? state.getValue(BlockStateProperties.POWER) : 0);
 	}
 

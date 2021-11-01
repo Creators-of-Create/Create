@@ -7,16 +7,16 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class NamedTag<T> implements ITag.INamedTag<T> {
+public class NamedTag<T> implements Tag.Named<T> {
 	private final ResourceLocation id;
-	private final ITag<T> tag;
+	private final Tag<T> tag;
 
-	public NamedTag(@Nullable ITag<T> tag, ResourceLocation id) {
+	public NamedTag(@Nullable Tag<T> tag, ResourceLocation id) {
 		this.tag = tag;
 		this.id = id;
 	}

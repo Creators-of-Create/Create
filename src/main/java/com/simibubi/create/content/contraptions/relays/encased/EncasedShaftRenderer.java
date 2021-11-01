@@ -3,12 +3,12 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 
 public class EncasedShaftRenderer extends KineticTileEntityRenderer {
 
-	public EncasedShaftRenderer(TileEntityRendererDispatcher dispatcher) {
+	public EncasedShaftRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

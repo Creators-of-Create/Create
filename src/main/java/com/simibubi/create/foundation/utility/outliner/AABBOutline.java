@@ -1,48 +1,48 @@
 package com.simibubi.create.foundation.utility.outliner;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class AABBOutline extends Outline {
 
-	protected AxisAlignedBB bb;
+	protected AABB bb;
 
-	public AABBOutline(AxisAlignedBB bb) {
+	public AABBOutline(AABB bb) {
 		this.setBounds(bb);
 	}
 
 	@Override
-	public void render(MatrixStack ms, SuperRenderTypeBuffer buffer, float pt) {
+	public void render(PoseStack ms, SuperRenderTypeBuffer buffer, float pt) {
 		renderBB(ms, buffer, bb);
 	}
 
-	public void renderBB(MatrixStack ms, SuperRenderTypeBuffer buffer, AxisAlignedBB bb) {
-		Vector3d projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
+	public void renderBB(PoseStack ms, SuperRenderTypeBuffer buffer, AABB bb) {
+		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera()
 			.getPosition();
 		boolean noCull = bb.contains(projectedView);
 		bb = bb.inflate(noCull ? -1 / 128d : 1 / 128d);
 		noCull |= params.disableCull;
 
-		Vector3d xyz = new Vector3d(bb.minX, bb.minY, bb.minZ);
-		Vector3d Xyz = new Vector3d(bb.maxX, bb.minY, bb.minZ);
-		Vector3d xYz = new Vector3d(bb.minX, bb.maxY, bb.minZ);
-		Vector3d XYz = new Vector3d(bb.maxX, bb.maxY, bb.minZ);
-		Vector3d xyZ = new Vector3d(bb.minX, bb.minY, bb.maxZ);
-		Vector3d XyZ = new Vector3d(bb.maxX, bb.minY, bb.maxZ);
-		Vector3d xYZ = new Vector3d(bb.minX, bb.maxY, bb.maxZ);
-		Vector3d XYZ = new Vector3d(bb.maxX, bb.maxY, bb.maxZ);
+		Vec3 xyz = new Vec3(bb.minX, bb.minY, bb.minZ);
+		Vec3 Xyz = new Vec3(bb.maxX, bb.minY, bb.minZ);
+		Vec3 xYz = new Vec3(bb.minX, bb.maxY, bb.minZ);
+		Vec3 XYz = new Vec3(bb.maxX, bb.maxY, bb.minZ);
+		Vec3 xyZ = new Vec3(bb.minX, bb.minY, bb.maxZ);
+		Vec3 XyZ = new Vec3(bb.maxX, bb.minY, bb.maxZ);
+		Vec3 xYZ = new Vec3(bb.minX, bb.maxY, bb.maxZ);
+		Vec3 XYZ = new Vec3(bb.maxX, bb.maxY, bb.maxZ);
 
-		Vector3d start = xyz;
+		Vec3 start = xyz;
 		renderAACuboidLine(ms, buffer, start, Xyz);
 		renderAACuboidLine(ms, buffer, start, xYz);
 		renderAACuboidLine(ms, buffer, start, xyZ);
@@ -71,8 +71,8 @@ public class AABBOutline extends Outline {
 
 	}
 
-	protected void renderFace(MatrixStack ms, SuperRenderTypeBuffer buffer, Direction direction, Vector3d p1, Vector3d p2,
-		Vector3d p3, Vector3d p4, boolean noCull) {
+	protected void renderFace(PoseStack ms, SuperRenderTypeBuffer buffer, Direction direction, Vec3 p1, Vec3 p2,
+		Vec3 p3, Vec3 p4, boolean noCull) {
 		if (!params.faceTexture.isPresent())
 			return;
 
@@ -83,18 +83,18 @@ public class AABBOutline extends Outline {
 			(direction == params.getHighlightedFace() && params.hightlightedFaceTexture.isPresent()) ? 1 : 0.5f;
 
 		RenderType translucentType = RenderTypes.getOutlineTranslucent(faceTexture, !noCull);
-		IVertexBuilder builder = buffer.getLateBuffer(translucentType);
+		VertexConsumer builder = buffer.getLateBuffer(translucentType);
 
 		Axis axis = direction.getAxis();
-		Vector3d uDiff = p2.subtract(p1);
-		Vector3d vDiff = p4.subtract(p1);
+		Vec3 uDiff = p2.subtract(p1);
+		Vec3 vDiff = p4.subtract(p1);
 		float maxU = (float) Math.abs(axis == Axis.X ? uDiff.z : uDiff.x);
 		float maxV = (float) Math.abs(axis == Axis.Y ? vDiff.z : vDiff.y);
 		putQuadUV(ms, builder, p1, p2, p3, p4, 0, 0, maxU, maxV, Direction.UP);
 		params.alpha = alphaBefore;
 	}
 
-	public void setBounds(AxisAlignedBB bb) {
+	public void setBounds(AABB bb) {
 		this.bb = bb;
 	}
 

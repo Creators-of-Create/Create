@@ -5,7 +5,7 @@ import java.util.function.UnaryOperator;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -118,7 +118,7 @@ public class ElementWidget extends AbstractSimiWidget {
 	}
 
 	@Override
-	protected void beforeRender(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.beforeRender(ms, mouseX, mouseY, partialTicks);
 
 		float fadeValue = fade.getValue(partialTicks);
@@ -129,7 +129,7 @@ public class ElementWidget extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void renderButton(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
 		ms.translate(x + paddingX, y + paddingY, z);
 		float innerWidth = width - 2 * paddingX;

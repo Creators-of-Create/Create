@@ -6,11 +6,11 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 
 public class CreativeMotorRenderer extends KineticTileEntityRenderer {
 
-	public CreativeMotorRenderer(TileEntityRendererDispatcher dispatcher) {
+	public CreativeMotorRenderer(BlockEntityRenderDispatcher dispatcher) {
 		super(dispatcher);
 	}
 

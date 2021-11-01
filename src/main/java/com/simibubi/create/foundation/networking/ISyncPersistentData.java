@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -22,20 +22,20 @@ public interface ISyncPersistentData {
 
 		private int entityId;
 		private Entity entity;
-		private CompoundNBT readData;
+		private CompoundTag readData;
 
 		public Packet(Entity entity) {
 			this.entity = entity;
 			this.entityId = entity.getId();
 		}
 
-		public Packet(PacketBuffer buffer) {
+		public Packet(FriendlyByteBuf buffer) {
 			entityId = buffer.readInt();
 			readData = buffer.readNbt();
 		}
 
 		@Override
-		public void write(PacketBuffer buffer) {
+		public void write(FriendlyByteBuf buffer) {
 			buffer.writeInt(entityId);
 			buffer.writeNbt(entity.getPersistentData());
 		}
@@ -45,7 +45,7 @@ public interface ISyncPersistentData {
 			context.get()
 				.enqueueWork(() -> {
 					Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-					CompoundNBT data = entityByID.getPersistentData();
+					CompoundTag data = entityByID.getPersistentData();
 					new HashSet<>(data.getAllKeys()).forEach(data::remove);
 					data.merge(readData);
 					if (!(entityByID instanceof ISyncPersistentData))

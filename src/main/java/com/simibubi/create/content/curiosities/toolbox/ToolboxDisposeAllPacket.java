@@ -6,14 +6,14 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -25,12 +25,12 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 		this.toolboxPos = toolboxPos;
 	}
 
-	public ToolboxDisposeAllPacket(PacketBuffer buffer) {
+	public ToolboxDisposeAllPacket(FriendlyByteBuf buffer) {
 		toolboxPos = buffer.readBlockPos();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(toolboxPos);
 	}
 
@@ -38,9 +38,9 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ServerPlayerEntity player = ctx.getSender();
-			World world = player.level;
-			TileEntity blockEntity = world.getBlockEntity(toolboxPos);
+			ServerPlayer player = ctx.getSender();
+			Level world = player.level;
+			BlockEntity blockEntity = world.getBlockEntity(toolboxPos);
 
 			double maxRange = ToolboxHandler.getMaxRange(player);
 			if (player.distanceToSqr(toolboxPos.getX() + 0.5, toolboxPos.getY(), toolboxPos.getZ() + 0.5) > maxRange
@@ -50,14 +50,14 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 				return;
 			ToolboxTileEntity toolbox = (ToolboxTileEntity) blockEntity;
 
-			CompoundNBT compound = player.getPersistentData()
+			CompoundTag compound = player.getPersistentData()
 				.getCompound("CreateToolboxData");
 			MutableBoolean sendData = new MutableBoolean(false);
 
 			toolbox.inventory.inLimitedMode(inventory -> {
 				for (int i = 0; i < 36; i++) {
 					String key = String.valueOf(i);
-					if (compound.contains(key) && NBTUtil.readBlockPos(compound.getCompound(key)
+					if (compound.contains(key) && NbtUtils.readBlockPos(compound.getCompound(key)
 						.getCompound("Pos"))
 						.equals(toolboxPos)) {
 						ToolboxHandler.unequip(player, i, true);

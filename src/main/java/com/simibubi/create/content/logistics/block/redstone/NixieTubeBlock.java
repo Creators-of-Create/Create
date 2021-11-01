@@ -12,32 +12,34 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
-public class NixieTubeBlock extends HorizontalBlock
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class NixieTubeBlock extends HorizontalDirectionalBlock
 	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
@@ -51,37 +53,37 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult ray) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult ray) {
 
 		if (player.isShiftKeyDown())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		NixieTubeTileEntity nixie = getTileEntity(world, pos);
 
 		if (nixie == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		if (heldItem.isEmpty()) {
 			if (nixie.reactsToRedstone())
-				return ActionResultType.PASS;
+				return InteractionResult.PASS;
 			nixie.clearCustomText();
 			updateDisplayedRedstoneValue(state, world, pos);
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
 		DyeColor dye = DyeColor.getColor(heldItem);
 
 		if (!display && dye == null)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		Direction left = state.getValue(FACING)
 			.getClockWise();
 		Direction right = left.getOpposite();
 
 		if (world.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 
 		BlockPos currentPos = pos;
 		while (true) {
@@ -108,7 +110,7 @@ public class NixieTubeBlock extends HorizontalBlock
 			index++;
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -117,34 +119,34 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public void onRemove(BlockState p_196243_1_, World p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
+	public void onRemove(BlockState p_196243_1_, Level p_196243_2_, BlockPos p_196243_3_, BlockState p_196243_4_,
 		boolean p_196243_5_) {
 		if (!(p_196243_4_.getBlock() instanceof NixieTubeBlock))
 			p_196243_2_.removeBlockEntity(p_196243_3_);
 	}
 
 	@Override
-	public ItemStack getCloneItemStack(IBlockReader p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
+	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
 	
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.ORANGE_NIXIE_TUBE.get()
 			.asItem());
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return (state.getValue(CEILING) ? AllShapes.NIXIE_TUBE_CEILING : AllShapes.NIXIE_TUBE)
 			.get(state.getValue(FACING)
 				.getAxis());
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-		PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
+		Player player) {
 		if (color != DyeColor.ORANGE)
 			return AllBlocks.ORANGE_NIXIE_TUBE.get()
 				.getPickBlock(state, target, world, pos, player);
@@ -152,10 +154,10 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockPos pos = context.getClickedPos();
 		boolean ceiling = context.getClickedFace() == Direction.DOWN;
-		Vector3d hitVec = context.getClickLocation();
+		Vec3 hitVec = context.getClickLocation();
 		if (hitVec != null)
 			ceiling = hitVec.y - pos.getY() > .5f;
 		return defaultBlockState().setValue(FACING, context.getHorizontalDirection()
@@ -164,7 +166,7 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
 		if (worldIn.isClientSide)
 			return;
@@ -175,19 +177,19 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random r) {
 		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
 	@Override
-	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (state.getBlock() == oldState.getBlock() || isMoving)
 			return;
 		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return new NixieTubeTileEntity(AllTileEntities.NIXIE_TUBE.get());
 	}
 
@@ -196,7 +198,7 @@ public class NixieTubeBlock extends HorizontalBlock
 		return true;
 	}
 
-	private void updateDisplayedRedstoneValue(BlockState state, World worldIn, BlockPos pos) {
+	private void updateDisplayedRedstoneValue(BlockState state, Level worldIn, BlockPos pos) {
 		if (worldIn.isClientSide)
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
@@ -205,13 +207,13 @@ public class NixieTubeBlock extends HorizontalBlock
 		});
 	}
 
-	static boolean isValidBlock(IBlockReader world, BlockPos pos, boolean above) {
+	static boolean isValidBlock(BlockGetter world, BlockPos pos, boolean above) {
 		BlockState state = world.getBlockState(pos.above(above ? 1 : -1));
 		return !state.getShape(world, pos)
 			.isEmpty();
 	}
 
-	private int getPower(World worldIn, BlockPos pos) {
+	private int getPower(Level worldIn, BlockPos pos) {
 		int power = 0;
 		for (Direction direction : Iterate.directions)
 			power = Math.max(worldIn.getSignal(pos.relative(direction), direction), power);
@@ -221,12 +223,12 @@ public class NixieTubeBlock extends HorizontalBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != null;
 	}
 

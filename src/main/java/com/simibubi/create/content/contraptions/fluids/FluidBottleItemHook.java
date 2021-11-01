@@ -2,21 +2,23 @@ package com.simibubi.create.content.contraptions.fluids;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.GlassBottleItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.BottleItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
+import net.minecraft.world.item.Item.Properties;
 
 @EventBusSubscriber
 public class FluidBottleItemHook extends Item {
@@ -30,15 +32,15 @@ public class FluidBottleItemHook extends Item {
 		ItemStack itemStack = event.getItemStack();
 		if (itemStack.isEmpty())
 			return;
-		if (!(itemStack.getItem() instanceof GlassBottleItem))
+		if (!(itemStack.getItem() instanceof BottleItem))
 			return;
 
-		World world = event.getWorld();
-		PlayerEntity player = event.getPlayer();
-		RayTraceResult raytraceresult = getPlayerPOVHitResult(world, player, RayTraceContext.FluidMode.SOURCE_ONLY);
-		if (raytraceresult.getType() != RayTraceResult.Type.BLOCK)
+		Level world = event.getWorld();
+		Player player = event.getPlayer();
+		HitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.SOURCE_ONLY);
+		if (raytraceresult.getType() != HitResult.Type.BLOCK)
 			return;
-		BlockPos blockpos = ((BlockRayTraceResult) raytraceresult).getBlockPos();
+		BlockPos blockpos = ((BlockHitResult) raytraceresult).getBlockPos();
 		if (!world.mayInteract(player, blockpos))
 			return;
 
@@ -47,7 +49,7 @@ public class FluidBottleItemHook extends Item {
 			.getRegistryName()
 			.getNamespace()
 			.equals(Create.ID)) {
-			event.setCancellationResult(ActionResultType.PASS);
+			event.setCancellationResult(InteractionResult.PASS);
 			event.setCanceled(true);
 			return;
 		}

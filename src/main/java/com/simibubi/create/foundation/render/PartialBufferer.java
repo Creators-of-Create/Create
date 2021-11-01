@@ -2,9 +2,16 @@ package com.simibubi.create.foundation.render;
 
 import static net.minecraft.state.properties.BlockStateProperties.FACING;
 
+import javanet.minimport com.jozufozu.flywheel.core.PartialModel;
+import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.CreateClient;
+import com.simibubi.create.foundation.utility.AngleHelper;
 import java.util.function.Supplier;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
-import com.jozufozu.flywheel.core.PartialModel;
+ecraft.world.level.block.state.properties.BlockStatePropertieswheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.CreateClient;
@@ -28,9 +35,9 @@ public class PartialBufferer {
 		return CreateClient.BUFFER_CACHE.renderDirectionalPartial(partial, referenceState, facing, rotateToFace(facing));
 	}
 
-	public static Supplier<MatrixStack> rotateToFace(Direction facing) {
+	public static Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
-			MatrixStack stack = new MatrixStack();
+			PoseStack stack = new PoseStack();
 			MatrixTransformStack.of(stack)
 					.centre()
 					.rotateY(AngleHelper.horizontalAngle(facing))

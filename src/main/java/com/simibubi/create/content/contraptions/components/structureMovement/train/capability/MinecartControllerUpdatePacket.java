@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 public class MinecartControllerUpdatePacket extends SimplePacketBase {
 
 	int entityID;
-	CompoundNBT nbt;
+	CompoundTag nbt;
 
 	public MinecartControllerUpdatePacket(MinecartController controller) {
 		entityID = controller.cart()
@@ -25,13 +25,13 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 		nbt = controller.serializeNBT();
 	}
 
-	public MinecartControllerUpdatePacket(PacketBuffer buffer) {
+	public MinecartControllerUpdatePacket(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		nbt = buffer.readNbt();
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
  		buffer.writeInt(entityID);
 		buffer.writeNbt(nbt);
 	}
@@ -46,7 +46,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 
 	@OnlyIn(Dist.CLIENT)
 	private void handleCL() {
-		ClientWorld world = Minecraft.getInstance().level;
+		ClientLevel world = Minecraft.getInstance().level;
 		if (world == null)
 			return;
 		Entity entityByID = world.getEntity(entityID);

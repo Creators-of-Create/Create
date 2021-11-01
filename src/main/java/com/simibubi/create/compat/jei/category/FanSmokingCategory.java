@@ -1,12 +1,12 @@
 package com.simibubi.create.compat.jei.category;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.SmokingRecipe;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 
 public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> {
 
@@ -20,7 +20,7 @@ public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> 
 	}
 
 	@Override
-	public void renderAttachedBlock(MatrixStack matrixStack) {
+	public void renderAttachedBlock(PoseStack matrixStack) {
 		GuiGameElement.of(Blocks.FIRE.defaultBlockState())
 				.scale(24)
 				.atLocal(0, 0, 2)

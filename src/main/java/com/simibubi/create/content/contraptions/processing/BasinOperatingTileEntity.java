@@ -11,18 +11,18 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
 	public DeferralBehaviour basinChecker;
 	public boolean basinRemoved;
-	protected IRecipe<?> currentRecipe;
+	protected Recipe<?> currentRecipe;
 
-	public BasinOperatingTileEntity(TileEntityType<?> typeIn) {
+	public BasinOperatingTileEntity(BlockEntityType<?> typeIn) {
 		super(typeIn);
 	}
 
@@ -67,7 +67,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 			.isPresent())
 			return true;
 
-		List<IRecipe<?>> recipes = getMatchingRecipes();
+		List<Recipe<?>> recipes = getMatchingRecipes();
 		if (recipes.isEmpty())
 			return true;
 		currentRecipe = recipes.get(0);
@@ -84,7 +84,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		return true;
 	}
 
-	protected <C extends IInventory> boolean matchBasinRecipe(IRecipe<C> recipe) {
+	protected <C extends Container> boolean matchBasinRecipe(Recipe<C> recipe) {
 		if (recipe == null)
 			return false;
 		Optional<BasinTileEntity> basin = getBasin();
@@ -118,8 +118,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		basin.notifyChangeOfContents();
 	}
 
-	protected List<IRecipe<?>> getMatchingRecipes() {
-		List<IRecipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
+	protected List<Recipe<?>> getMatchingRecipes() {
+		List<Recipe<?>> list = RecipeFinder.get(getRecipeCacheKey(), level, this::matchStaticFilters);
 		return list.stream()
 			.filter(this::matchBasinRecipe)
 			.sorted((r1, r2) -> r2.getIngredients()
@@ -134,7 +134,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	protected Optional<BasinTileEntity> getBasin() {
 		if (level == null)
 			return Optional.empty();
-		TileEntity basinTE = level.getBlockEntity(worldPosition.below(2));
+		BlockEntity basinTE = level.getBlockEntity(worldPosition.below(2));
 		if (!(basinTE instanceof BasinTileEntity))
 			return Optional.empty();
 		return Optional.of((BasinTileEntity) basinTE);
@@ -144,7 +144,7 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 		return Optional.empty();
 	}
 
-	protected abstract <C extends IInventory> boolean matchStaticFilters(IRecipe<C> recipe);
+	protected abstract <C extends Container> boolean matchStaticFilters(Recipe<C> recipe);
 
 	protected abstract Object getRecipeCacheKey();
 

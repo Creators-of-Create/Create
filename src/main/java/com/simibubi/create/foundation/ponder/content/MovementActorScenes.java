@@ -16,16 +16,16 @@ import com.simibubi.create.foundation.ponder.elements.ParrotElement.FlappyPose;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 
 public class MovementActorScenes {
 
@@ -115,7 +115,7 @@ public class MovementActorScenes {
 			.text("Items can now be inserted...");
 
 		ItemStack itemStack = AllItems.COPPER_INGOT.asStack();
-		Vector3d entitySpawn = util.vector.topOf(hopper.above(3));
+		Vec3 entitySpawn = util.vector.topOf(hopper.above(3));
 
 		ElementLink<EntityElement> entity1 =
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), itemStack);
@@ -214,7 +214,7 @@ public class MovementActorScenes {
 				.add(util.select.position(1, 1, 2)));
 
 		scene.world.setBlocks(crops, Blocks.WHEAT.defaultBlockState()
-			.setValue(CropsBlock.AGE, 7), false);
+			.setValue(CropBlock.AGE, 7), false);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 
 		BlockPos bearingPos = util.grid.at(4, 1, 4);
@@ -284,7 +284,7 @@ public class MovementActorScenes {
 		scene.idle(15);
 		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
 		scene.world.setBlocks(crops, Blocks.WHEAT.defaultBlockState()
-			.setValue(CropsBlock.AGE, 7), false);
+			.setValue(CropBlock.AGE, 7), false);
 		scene.world.showSection(crops, Direction.UP);
 
 		for (int i = 0; i < 3; i++)
@@ -375,7 +375,7 @@ public class MovementActorScenes {
 		scene.world.moveSection(contraption, util.vector.of(-2, 0, 0), 60);
 		scene.idle(15);
 
-		Vector3d m = util.vector.of(-0.1, .2, 0);
+		Vec3 m = util.vector.of(-0.1, .2, 0);
 		scene.world.destroyBlock(util.grid.at(2, 1, 3));
 		scene.world.createItemEntity(util.vector.centerOf(2, 1, 3), m, new ItemStack(Items.LEVER));
 		scene.world.destroyBlock(util.grid.at(2, 1, 2));

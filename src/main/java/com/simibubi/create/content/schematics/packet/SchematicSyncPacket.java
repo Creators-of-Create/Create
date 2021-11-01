@@ -6,15 +6,15 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class SchematicSyncPacket extends SimplePacketBase {
@@ -25,7 +25,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 	public Rotation rotation;
 	public Mirror mirror;
 
-	public SchematicSyncPacket(int slot, PlacementSettings settings,
+	public SchematicSyncPacket(int slot, StructurePlaceSettings settings,
 			BlockPos anchor, boolean deployed) {
 		this.slot = slot;
 		this.deployed = deployed;
@@ -34,7 +34,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 		this.mirror = settings.getMirror();
 	}
 
-	public SchematicSyncPacket(PacketBuffer buffer) {
+	public SchematicSyncPacket(FriendlyByteBuf buffer) {
 		slot = buffer.readVarInt();
 		deployed = buffer.readBoolean();
 		anchor = buffer.readBlockPos();
@@ -43,7 +43,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeVarInt(slot);
 		buffer.writeBoolean(deployed);
 		buffer.writeBlockPos(anchor);
@@ -54,7 +54,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
+			ServerPlayer player = context.get().getSender();
 			if (player == null)
 				return;
 			ItemStack stack = ItemStack.EMPTY;
@@ -66,9 +66,9 @@ public class SchematicSyncPacket extends SimplePacketBase {
 			if (!AllItems.SCHEMATIC.isIn(stack)) {
 				return;
 			}
-			CompoundNBT tag = stack.getOrCreateTag();
+			CompoundTag tag = stack.getOrCreateTag();
 			tag.putBoolean("Deployed", deployed);
-			tag.put("Anchor", NBTUtil.writeBlockPos(anchor));
+			tag.put("Anchor", NbtUtils.writeBlockPos(anchor));
 			tag.putString("Rotation", rotation.name());
 			tag.putString("Mirror", mirror.name());
 			SchematicInstances.clearHash(stack);

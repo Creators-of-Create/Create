@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedCrushingWheels;
@@ -56,7 +56,7 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	}
 
 	@Override
-	public void draw(AbstractCrushingRecipe recipe, MatrixStack matrixStack,  double mouseX, double mouseY) {
+	public void draw(AbstractCrushingRecipe recipe, PoseStack matrixStack,  double mouseX, double mouseY) {
 		List<ProcessingOutput> results = recipe.getRollableResults();
 		AllGuiTextures.JEI_SLOT.draw(matrixStack, 50, 2);
 		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 72, 7);

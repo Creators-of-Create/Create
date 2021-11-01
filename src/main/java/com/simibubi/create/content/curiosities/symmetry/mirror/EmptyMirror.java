@@ -7,15 +7,15 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 
 public class EmptyMirror extends SymmetryMirror {
 
-	public static enum Align implements IStringSerializable {
+	public static enum Align implements StringRepresentable {
 		None("none");
 
 		private final String name;
@@ -24,7 +24,7 @@ public class EmptyMirror extends SymmetryMirror {
 		@Override public String toString() { return name; }
 	}
 
-	public EmptyMirror(Vector3d pos) {
+	public EmptyMirror(Vec3 pos) {
 		super(pos);
 		orientation = Align.None;
 	}
@@ -55,7 +55,7 @@ public class EmptyMirror extends SymmetryMirror {
 	}
 
 	@Override
-	public List<ITextComponent> getAlignToolTips() {
+	public List<Component> getAlignToolTips() {
 		return ImmutableList.of();
 	}
 

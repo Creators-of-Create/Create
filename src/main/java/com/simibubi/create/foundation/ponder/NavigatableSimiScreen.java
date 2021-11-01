@@ -8,7 +8,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.lwjgl.glfw.GLFW;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -23,12 +23,12 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -44,7 +44,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	protected PonderButton backTrack;
 
 	public NavigatableSimiScreen() {
-		MainWindow window = Minecraft.getInstance()
+		Window window = Minecraft.getInstance()
 			.getWindow();
 		depthPointX = window.getGuiScaledWidth() / 2;
 		depthPointY = window.getGuiScaledHeight() / 2;
@@ -95,7 +95,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.render(ms, mouseX, mouseY, partialTicks);
 //		renderZeloBreadcrumbs(ms, mouseX, mouseY, partialTicks);
 		if (backTrack == null)
@@ -104,10 +104,10 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		ms.pushPose();
 		ms.translate(0, 0, 500);
 		if (backTrack.isHovered()) {
-			TranslationTextComponent translate = Lang.translate(backTrackingLangKey());
+			TranslatableComponent translate = Lang.translate(backTrackingLangKey());
 			font.draw(ms, translate, 41 - font.width(translate) / 2, height - 16,
 				Theme.i(Theme.Key.TEXT_DARKER));
-			if (MathHelper.equal(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
+			if (Mth.equal(arrowAnimation.getValue(), arrowAnimation.getChaseTarget())) {
 				arrowAnimation.setValue(1);
 				arrowAnimation.setValue(1);// called twice to also set the previous value to 1
 			}
@@ -120,9 +120,9 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	}
 
 	@Override
-	protected void renderWindowBackground(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (backTrack != null) {
-			int x = (int) MathHelper.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
+			int x = (int) Mth.lerp(arrowAnimation.getValue(partialTicks), -9, 21);
 			int maxX = backTrack.x + backTrack.getWidth();
 
 			if (x + 30 < backTrack.x)
@@ -160,7 +160,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 				.getMainRenderTarget()
 				.bindWrite(true);
 
-			MainWindow window = Minecraft.getInstance()
+			Window window = Minecraft.getInstance()
 				.getWindow();
 			int dpx = window.getGuiScaledWidth() / 2;
 			int dpy = window.getGuiScaledHeight() / 2;
@@ -203,7 +203,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	}
 
 	public void centerScalingOnMouse() {
-		MainWindow w = minecraft.getWindow();
+		Window w = minecraft.getWindow();
 		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
 		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
 		centerScalingOn((int) mouseX, (int) mouseY);
@@ -215,7 +215,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
 	public void shareContextWith(NavigatableSimiScreen other) {}
 
-	protected void renderZeloBreadcrumbs(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderZeloBreadcrumbs(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		List<Screen> history = ScreenOpener.getScreenHistory();
 		if (history.isEmpty())
 			return;

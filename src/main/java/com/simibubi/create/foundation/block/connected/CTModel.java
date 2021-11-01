@@ -9,15 +9,15 @@ import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour.
 import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap.Builder;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -44,17 +44,17 @@ public class CTModel extends BakedModelWrapperWithData {
 		}
 	}
 
-	public CTModel(IBakedModel originalModel, ConnectedTextureBehaviour behaviour) {
+	public CTModel(BakedModel originalModel, ConnectedTextureBehaviour behaviour) {
 		super(originalModel);
 		this.behaviour = behaviour;
 	}
 
 	@Override
-	protected Builder gatherModelData(Builder builder, IBlockDisplayReader world, BlockPos pos, BlockState state) {
+	protected Builder gatherModelData(Builder builder, BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		return builder.withInitial(CT_PROPERTY, createCTData(world, pos, state));
 	}
 
-	protected CTData createCTData(IBlockDisplayReader world, BlockPos pos, BlockState state) {
+	protected CTData createCTData(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
 		for (Direction face : Iterate.directions) {
 			if (!Block.shouldRenderFace(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())
@@ -76,7 +76,7 @@ public class CTModel extends BakedModelWrapperWithData {
 		CTData data = extraData.getData(CT_PROPERTY);
 		quads = new ArrayList<>(quads);
 
-		VertexFormat format = DefaultVertexFormats.BLOCK;
+		VertexFormat format = DefaultVertexFormat.BLOCK;
 
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);

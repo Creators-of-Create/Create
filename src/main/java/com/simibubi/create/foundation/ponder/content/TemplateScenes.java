@@ -3,7 +3,7 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class TemplateScenes {
 	

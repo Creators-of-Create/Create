@@ -24,6 +24,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
+import ModelData;
+
 public class ArmInstance extends SingleRotatingInstance implements IDynamicInstance {
 
 	final ModelData base;

@@ -21,44 +21,44 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.DirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
@@ -73,11 +73,11 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	protected BlockPos hangingPosition;
 	protected Direction facingDirection = Direction.SOUTH;
 
-	public SuperGlueEntity(EntityType<?> type, World world) {
+	public SuperGlueEntity(EntityType<?> type, Level world) {
 		super(type, world);
 	}
 
-	public SuperGlueEntity(World world, BlockPos pos, Direction direction) {
+	public SuperGlueEntity(Level world, BlockPos pos, Direction direction) {
 		this(AllEntityTypes.SUPER_GLUE.get(), world);
 		hangingPosition = pos;
 		facingDirection = direction;
@@ -153,7 +153,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			w = w / 32.0D;
 			h = h / 32.0D;
 			l = l / 32.0D;
-			this.setBoundingBox(new AxisAlignedBB(x - w, y - h, z - l, x + w, y + h, z + l));
+			this.setBoundingBox(new AABB(x - w, y - h, z - l, x + w, y + h, z + l));
 		}
 	}
 
@@ -198,7 +198,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 				.isEmpty();
 	}
 
-	public static boolean isValidFace(World world, BlockPos pos, Direction direction) {
+	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
 		if (BlockMovementChecks.isBlockAttachedTowards(state, world, pos, direction))
 			return true;
@@ -209,7 +209,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		return true;
 	}
 
-	public static boolean isSideSticky(World world, BlockPos pos, Direction direction) {
+	public static boolean isSideSticky(Level world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
 		if (AllBlocks.STICKY_MECHANICAL_PISTON.has(state))
 			return state.getValue(DirectionalKineticBlock.FACING) == direction;
@@ -249,8 +249,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public boolean skipAttackInteraction(Entity entity) {
-		return entity instanceof PlayerEntity
-			? hurt(DamageSource.playerAttack((PlayerEntity) entity), 0)
+		return entity instanceof Player
+			? hurt(DamageSource.playerAttack((Player) entity), 0)
 			: false;
 	}
 
@@ -266,12 +266,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 		boolean mobGriefing = level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
 		Entity trueSource = source.getEntity();
-		if (!mobGriefing && trueSource instanceof MobEntity)
+		if (!mobGriefing && trueSource instanceof Mob)
 			return false;
 
 		Entity immediateSource = source.getDirectEntity();
-		if (!isVisible() && immediateSource instanceof PlayerEntity) {
-			if (!AllItems.SUPER_GLUE.isIn(((PlayerEntity) immediateSource).getMainHandItem()))
+		if (!isVisible() && immediateSource instanceof Player) {
+			if (!AllItems.SUPER_GLUE.isIn(((Player) immediateSource).getMainHandItem()))
 				return true;
 		}
 
@@ -285,7 +285,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void move(MoverType typeIn, Vector3d pos) {
+	public void move(MoverType typeIn, Vec3 pos) {
 		if (!level.isClientSide && isAlive() && pos.lengthSqr() > 0.0D) {
 			remove();
 			onBroken(null);
@@ -301,12 +301,12 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	protected float getEyeHeight(Pose poseIn, EntitySize sizeIn) {
+	protected float getEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
 		return 0.0F;
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return AllItems.SUPER_GLUE.asStack();
 	}
 
@@ -316,43 +316,43 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public ActionResultType interact(PlayerEntity player, Hand hand) {
+	public InteractionResult interact(Player player, InteractionHand hand) {
 		if (player instanceof FakePlayer)
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
-		return ActionResultType.CONSUME;
+		return InteractionResult.CONSUME;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	private void triggerPlaceBlock(PlayerEntity player, Hand hand) {
-		if (!(player instanceof ClientPlayerEntity))
+	private void triggerPlaceBlock(Player player, InteractionHand hand) {
+		if (!(player instanceof LocalPlayer))
 			return;
-		if (!(player.level instanceof ClientWorld))
+		if (!(player.level instanceof ClientLevel))
 			return;
 
-		ClientPlayerEntity cPlayer = (ClientPlayerEntity) player;
+		LocalPlayer cPlayer = (LocalPlayer) player;
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult ray =
+		HitResult ray =
 			cPlayer.pick(mc.gameMode.getPickRange(), AnimationTickHolder.getPartialTicks(), false);
 
-		if (!(ray instanceof BlockRayTraceResult))
+		if (!(ray instanceof BlockHitResult))
 			return;
 		if (ray.getType() == Type.MISS)
 			return;
-		BlockRayTraceResult blockRay = (BlockRayTraceResult) ray;
+		BlockHitResult blockRay = (BlockHitResult) ray;
 		BlockFace rayFace = new BlockFace(blockRay.getBlockPos(), blockRay.getDirection());
 		BlockFace hangingFace = new BlockFace(getHangingPosition(), getFacingDirection().getOpposite());
 		if (!rayFace.isEquivalent(hangingFace))
 			return;
 
-		for (Hand handIn : Hand.values()) {
+		for (InteractionHand handIn : InteractionHand.values()) {
 			ItemStack itemstack = cPlayer.getItemInHand(handIn);
 			int countBefore = itemstack.getCount();
-			ActionResultType actionResultType =
-				mc.gameMode.useItemOn(cPlayer, (ClientWorld) cPlayer.level, handIn, blockRay);
-			if (actionResultType != ActionResultType.SUCCESS)
+			InteractionResult actionResultType =
+				mc.gameMode.useItemOn(cPlayer, (ClientLevel) cPlayer.level, handIn, blockRay);
+			if (actionResultType != InteractionResult.SUCCESS)
 				return;
 
 			cPlayer.swing(handIn);
@@ -363,7 +363,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundNBT compound) {
+	public void addAdditionalSaveData(CompoundTag compound) {
 		compound.putByte("Facing", (byte) this.getFacingDirection()
 			.get3DDataValue());
 		BlockPos blockpos = this.getHangingPosition();
@@ -373,7 +373,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundNBT compound) {
+	public void readAdditionalSaveData(CompoundTag compound) {
 		this.hangingPosition =
 			new BlockPos(compound.getInt("TileX"), compound.getInt("TileY"), compound.getInt("TileZ"));
 		this.facingDirection = Direction.from3DDataValue(compound.getByte("Facing"));
@@ -423,7 +423,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			}
 		}
 
-		float f = MathHelper.wrapDegrees(this.yRot);
+		float f = Mth.wrapDegrees(this.yRot);
 		switch (transformRotation) {
 		case CLOCKWISE_180:
 			return f + 180.0F;
@@ -450,7 +450,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public void thunderHit(ServerWorld world, LightningBoltEntity lightningBolt) {}
+	public void thunderHit(ServerLevel world, LightningBolt lightningBolt) {}
 
 	@Override
 	public void refreshDimensions() {}
@@ -462,19 +462,19 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public IPacket<?> getAddEntityPacket() {
+	public Packet<?> getAddEntityPacket() {
 		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	@Override
-	public void writeSpawnData(PacketBuffer buffer) {
-		CompoundNBT compound = new CompoundNBT();
+	public void writeSpawnData(FriendlyByteBuf buffer) {
+		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);
 		buffer.writeNbt(compound);
 	}
 
 	@Override
-	public void readSpawnData(PacketBuffer additionalData) {
+	public void readSpawnData(FriendlyByteBuf additionalData) {
 		readAdditionalSaveData(additionalData.readNbt());
 	}
 
@@ -493,7 +493,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	}
 
 	@Override
-	public World getWorld() {
+	public Level getWorld() {
 		return level;
 	}
 }

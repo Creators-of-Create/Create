@@ -16,20 +16,20 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<T> {
+public abstract class ProcessingRecipe<T extends Container> implements Recipe<T> {
 
 	protected ResourceLocation id;
 	protected NonNullList<Ingredient> ingredients;
@@ -39,8 +39,8 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	protected int processingDuration;
 	protected HeatCondition requiredHeat;
 
-	private IRecipeType<?> type;
-	private IRecipeSerializer<?> serializer;
+	private RecipeType<?> type;
+	private RecipeSerializer<?> serializer;
 	private IRecipeTypeInfo typeInfo;
 	private Supplier<ItemStack> forcedResult;
 
@@ -200,12 +200,12 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return serializer;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return type;
 	}
 
@@ -217,10 +217,10 @@ public abstract class ProcessingRecipe<T extends IInventory> implements IRecipe<
 
 	public void readAdditional(JsonObject json) {}
 
-	public void readAdditional(PacketBuffer buffer) {}
+	public void readAdditional(FriendlyByteBuf buffer) {}
 
 	public void writeAdditional(JsonObject json) {}
 
-	public void writeAdditional(PacketBuffer buffer) {}
+	public void writeAdditional(FriendlyByteBuf buffer) {}
 
 }

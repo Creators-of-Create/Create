@@ -11,14 +11,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class CreativeMotorTileEntity extends GeneratingKineticTileEntity {
 
 	public static final int DEFAULT_SPEED = 16;
 	protected ScrollValueBehaviour generatedSpeed;
 
-	public CreativeMotorTileEntity(TileEntityType<? extends CreativeMotorTileEntity> type) {
+	public CreativeMotorTileEntity(BlockEntityType<? extends CreativeMotorTileEntity> type) {
 		super(type);
 	}
 

@@ -2,18 +2,18 @@ package com.simibubi.create.foundation.render;
 
 import java.util.SortedMap;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RegionRenderCacheBuilder;
+import net.minecraft.client.renderer.Sheets;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.ChunkBufferBuilderPack;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.util.Util;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.Util;
 
-public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
+public class SuperRenderTypeBuffer implements MultiBufferSource {
 
 	static SuperRenderTypeBuffer instance;
 
@@ -33,16 +33,16 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 		lateBuffer = new SuperRenderTypeBufferPhase();
 	}
 
-	public IVertexBuilder getEarlyBuffer(RenderType type) {
+	public VertexConsumer getEarlyBuffer(RenderType type) {
 		return earlyBuffer.getBuffer(type);
 	}
 
 	@Override
-	public IVertexBuilder getBuffer(RenderType type) {
+	public VertexConsumer getBuffer(RenderType type) {
 		return defaultBuffer.getBuffer(type);
 	}
 
-	public IVertexBuilder getLateBuffer(RenderType type) {
+	public VertexConsumer getLateBuffer(RenderType type) {
 		return lateBuffer.getBuffer(type);
 	}
 
@@ -58,23 +58,23 @@ public class SuperRenderTypeBuffer implements IRenderTypeBuffer {
 		lateBuffer.endBatch(type);
 	}
 
-	private static class SuperRenderTypeBufferPhase extends IRenderTypeBuffer.Impl {
+	private static class SuperRenderTypeBufferPhase extends MultiBufferSource.BufferSource {
 
 		// Visible clones from net.minecraft.client.renderer.RenderTypeBuffers
-		static final RegionRenderCacheBuilder blockBuilders = new RegionRenderCacheBuilder();
+		static final ChunkBufferBuilderPack blockBuilders = new ChunkBufferBuilderPack();
 
 		static final SortedMap<RenderType, BufferBuilder> createEntityBuilders() {
 			return Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
-				map.put(Atlases.solidBlockSheet(), blockBuilders.builder(RenderType.solid()));
+				map.put(Sheets.solidBlockSheet(), blockBuilders.builder(RenderType.solid()));
 				assign(map, RenderTypes.getOutlineSolid());
-				map.put(Atlases.cutoutBlockSheet(), blockBuilders.builder(RenderType.cutout()));
-				map.put(Atlases.bannerSheet(), blockBuilders.builder(RenderType.cutoutMipped()));
-				map.put(Atlases.translucentCullBlockSheet(), blockBuilders.builder(RenderType.translucent())); // FIXME new equivalent of getEntityTranslucent() ?
-				assign(map, Atlases.shieldSheet());
-				assign(map, Atlases.bedSheet());
-				assign(map, Atlases.shulkerBoxSheet());
-				assign(map, Atlases.signSheet());
-				assign(map, Atlases.chestSheet());
+				map.put(Sheets.cutoutBlockSheet(), blockBuilders.builder(RenderType.cutout()));
+				map.put(Sheets.bannerSheet(), blockBuilders.builder(RenderType.cutoutMipped()));
+				map.put(Sheets.translucentCullBlockSheet(), blockBuilders.builder(RenderType.translucent())); // FIXME new equivalent of getEntityTranslucent() ?
+				assign(map, Sheets.shieldSheet());
+				assign(map, Sheets.bedSheet());
+				assign(map, Sheets.shulkerBoxSheet());
+				assign(map, Sheets.signSheet());
+				assign(map, Sheets.chestSheet());
 				assign(map, RenderType.translucentNoCrumbling());
 				assign(map, RenderType.glint());
 				assign(map, RenderType.entityGlint());

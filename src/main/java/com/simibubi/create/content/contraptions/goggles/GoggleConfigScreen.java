@@ -3,47 +3,47 @@ package com.simibubi.create.content.contraptions.goggles;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 
 public class GoggleConfigScreen extends AbstractSimiScreen {
 
 	private int offsetX;
 	private int offsetY;
-	private final List<ITextComponent> tooltip;
+	private final List<Component> tooltip;
 
 	public GoggleConfigScreen() {
-		ITextComponent componentSpacing = new StringTextComponent("    ");
+		Component componentSpacing = new TextComponent("    ");
 		tooltip = new ArrayList<>();
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay1")));
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay2")
-				.withStyle(TextFormatting.GRAY)));
-		tooltip.add(StringTextComponent.EMPTY);
+				.withStyle(ChatFormatting.GRAY)));
+		tooltip.add(TextComponent.EMPTY);
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay3")));
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay4")));
-		tooltip.add(StringTextComponent.EMPTY);
+		tooltip.add(TextComponent.EMPTY);
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay5")
-				.withStyle(TextFormatting.GRAY)));
+				.withStyle(ChatFormatting.GRAY)));
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay6")
-				.withStyle(TextFormatting.GRAY)));
-		tooltip.add(StringTextComponent.EMPTY);
+				.withStyle(ChatFormatting.GRAY)));
+		tooltip.add(TextComponent.EMPTY);
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("gui.config.overlay7")));
 		tooltip.add(componentSpacing.plainCopy()
@@ -88,7 +88,7 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 
 		int titleLinesCount = 1;
 		int tooltipTextWidth = 0;
-		for (ITextProperties textLine : tooltip) {
+		for (FormattedText textLine : tooltip) {
 			int textLineWidth = minecraft.font.width(textLine);
 			if (textLineWidth > tooltipTextWidth)
 				tooltipTextWidth = textLineWidth;
@@ -100,12 +100,12 @@ public class GoggleConfigScreen extends AbstractSimiScreen {
 				tooltipHeight += 2; // gap between title lines and next lines
 		}
 
-		offsetX = MathHelper.clamp(offsetX, -(width / 2) - 5, (width / 2) - tooltipTextWidth - 20);
-		offsetY = MathHelper.clamp(offsetY, -(height / 2) + 17, (height / 2) - tooltipHeight + 5);
+		offsetX = Mth.clamp(offsetX, -(width / 2) - 5, (width / 2) - tooltipTextWidth - 20);
+		offsetY = Mth.clamp(offsetY, -(height / 2) + 17, (height / 2) - tooltipHeight + 5);
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int posX = this.width / 2 + offsetX;
 		int posY = this.height / 2 + offsetY;
 		renderComponentTooltip(ms, tooltip, posX, posY);

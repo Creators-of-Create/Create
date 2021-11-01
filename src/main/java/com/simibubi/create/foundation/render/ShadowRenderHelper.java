@@ -1,20 +1,20 @@
 package com.simibubi.create.foundation.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.LevelReader;
 
 /**
  * Taken from EntityRendererManager
@@ -24,9 +24,9 @@ public class ShadowRenderHelper {
 	private static final RenderType SHADOW_LAYER =
 		RenderType.entityNoOutline(new ResourceLocation("textures/misc/shadow.png"));
 
-	public static void renderShadow(MatrixStack matrixStack, IRenderTypeBuffer buffer, float opacity, float radius) {
-		MatrixStack.Entry entry = matrixStack.last();
-		IVertexBuilder builder = buffer.getBuffer(SHADOW_LAYER);
+	public static void renderShadow(PoseStack matrixStack, MultiBufferSource buffer, float opacity, float radius) {
+		PoseStack.Pose entry = matrixStack.last();
+		VertexConsumer builder = buffer.getBuffer(SHADOW_LAYER);
 
 		opacity /= 2;
 		shadowVertex(entry, builder, opacity, -1 * radius, 0, -1 * radius, 0, 0);
@@ -35,21 +35,21 @@ public class ShadowRenderHelper {
 		shadowVertex(entry, builder, opacity, 1 * radius, 0, -1 * radius, 1, 0);
 	}
 
-	public static void renderShadow(MatrixStack matrixStack, IRenderTypeBuffer buffer, IWorldReader world,
-		Vector3d pos, float opacity, float radius) {
+	public static void renderShadow(PoseStack matrixStack, MultiBufferSource buffer, LevelReader world,
+		Vec3 pos, float opacity, float radius) {
 		float f = radius;
 
 		double d2 = pos.x();
 		double d0 = pos.y();
 		double d1 = pos.z();
-		int i = MathHelper.floor(d2 - (double) f);
-		int j = MathHelper.floor(d2 + (double) f);
-		int k = MathHelper.floor(d0 - (double) f);
-		int l = MathHelper.floor(d0);
-		int i1 = MathHelper.floor(d1 - (double) f);
-		int j1 = MathHelper.floor(d1 + (double) f);
-		MatrixStack.Entry entry = matrixStack.last();
-		IVertexBuilder builder = buffer.getBuffer(SHADOW_LAYER);
+		int i = Mth.floor(d2 - (double) f);
+		int j = Mth.floor(d2 + (double) f);
+		int k = Mth.floor(d0 - (double) f);
+		int l = Mth.floor(d0);
+		int i1 = Mth.floor(d1 - (double) f);
+		int j1 = Mth.floor(d1 + (double) f);
+		PoseStack.Pose entry = matrixStack.last();
+		VertexConsumer builder = buffer.getBuffer(SHADOW_LAYER);
 
 		for (BlockPos blockpos : BlockPos.betweenClosed(new BlockPos(i, k, i1), new BlockPos(j, l, j1))) {
 			renderBlockShadow(entry, builder, world, blockpos, d2, d0, d1, f,
@@ -57,12 +57,12 @@ public class ShadowRenderHelper {
 		}
 	}
 
-	private static void renderBlockShadow(MatrixStack.Entry entry, IVertexBuilder builder,
-		IWorldReader world, BlockPos pos, double x, double y, double z,
+	private static void renderBlockShadow(PoseStack.Pose entry, VertexConsumer builder,
+		LevelReader world, BlockPos pos, double x, double y, double z,
 		float radius, float opacity) {
 		BlockPos blockpos = pos.below();
 		BlockState blockstate = world.getBlockState(blockpos);
-		if (blockstate.getRenderShape() != BlockRenderType.INVISIBLE && world.getMaxLocalRawBrightness(pos) > 3) {
+		if (blockstate.getRenderShape() != RenderShape.INVISIBLE && world.getMaxLocalRawBrightness(pos) > 3) {
 			if (blockstate.isCollisionShapeFullBlock(world, blockpos)) {
 				VoxelShape voxelshape = blockstate.getShape(world, pos.below());
 				if (!voxelshape.isEmpty()) {
@@ -74,7 +74,7 @@ public class ShadowRenderHelper {
 							f = 1.0F;
 						}
 
-						AxisAlignedBB axisalignedbb = voxelshape.bounds();
+						AABB axisalignedbb = voxelshape.bounds();
 						double d0 = (double) pos.getX() + axisalignedbb.minX;
 						double d1 = (double) pos.getX() + axisalignedbb.maxX;
 						double d2 = (double) pos.getY() + axisalignedbb.minY;
@@ -99,7 +99,7 @@ public class ShadowRenderHelper {
 		}
 	}
 
-	private static void shadowVertex(MatrixStack.Entry entry, IVertexBuilder builder, float alpha,
+	private static void shadowVertex(PoseStack.Pose entry, VertexConsumer builder, float alpha,
 		float x, float y, float z, float u, float v) {
 		builder.vertex(entry.pose(), x, y, z)
 			.color(1.0F, 1.0F, 1.0F, alpha)

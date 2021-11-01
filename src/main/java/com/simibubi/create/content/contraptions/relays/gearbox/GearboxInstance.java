@@ -12,10 +12,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.LightType;
+import net.minecraft.world.level.LightLayer;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
@@ -29,8 +29,8 @@ public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 
         final Direction.Axis boxAxis = blockState.getValue(BlockStateProperties.AXIS);
 
-        int blockLight = world.getBrightness(LightType.BLOCK, pos);
-        int skyLight = world.getBrightness(LightType.SKY, pos);
+        int blockLight = world.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = world.getBrightness(LightLayer.SKY, pos);
         updateSourceFacing();
 
         Material<RotatingData> rotatingMaterial = getRotatingMaterial();

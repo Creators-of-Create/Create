@@ -17,15 +17,15 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,7 +42,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	protected int processingTicks;
 	Map<Direction, LazyOptional<ItemDrainItemHandler>> itemHandlers;
 
-	public ItemDrainTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public ItemDrainTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		itemHandlers = new IdentityHashMap<>();
 		for (Direction d : Iterate.horizontalDirections) {
@@ -151,11 +151,11 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 				if (!BlockHelper.hasBlockSolidSide(level.getBlockState(nextPosition), level, nextPosition,
 					side.getOpposite())) {
 					ItemStack ejected = heldItem.stack;
-					Vector3d outPos = VecHelper.getCenterOf(worldPosition)
-						.add(Vector3d.atLowerCornerOf(side.getNormal())
+					Vec3 outPos = VecHelper.getCenterOf(worldPosition)
+						.add(Vec3.atLowerCornerOf(side.getNormal())
 							.scale(.75));
 					float movementSpeed = itemMovementPerTick();
-					Vector3d outMotion = Vector3d.atLowerCornerOf(side.getNormal())
+					Vec3 outMotion = Vec3.atLowerCornerOf(side.getNormal())
 						.scale(movementSpeed)
 						.add(0, 1 / 8f, 0);
 					outPos.add(outMotion.normalize());
@@ -262,7 +262,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("ProcessingTicks", processingTicks);
 		if (heldItem != null)
 			compound.put("HeldItem", heldItem.serializeNBT());
@@ -270,7 +270,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		heldItem = null;
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (compound.contains("HeldItem"))
@@ -293,7 +293,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	public boolean addToGoggleTooltip(List<ITextComponent> tooltip, boolean isPlayerSneaking) {
+	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
 	}
 

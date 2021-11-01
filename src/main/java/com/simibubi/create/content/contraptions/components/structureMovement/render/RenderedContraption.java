@@ -24,12 +24,14 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Matrix4f;
+import com.mojang.math.Matrix4f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+
+import MaterialManagerImpl;
 
 public class RenderedContraption extends ContraptionRenderInfo {
 
@@ -42,7 +44,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final Matrix4f modelViewPartial = new Matrix4f();
 	private boolean modelViewPartialReady;
-	private AxisAlignedBB lightBox;
+	private AABB lightBox;
 
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
 		super(contraption, renderWorld);

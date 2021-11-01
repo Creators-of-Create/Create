@@ -7,18 +7,21 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import net.minecraftforge.fluids.FluidAttributes.Builder;
+import net.minecraftforge.fluids.ForgeFlowingFluid.Properties;
 
 public class PotionFluid extends VirtualFluid {
 
@@ -30,7 +33,7 @@ public class PotionFluid extends VirtualFluid {
 		super(properties);
 	}
 
-	public static FluidStack withEffects(int amount, Potion potion, List<EffectInstance> customEffects) {
+	public static FluidStack withEffects(int amount, Potion potion, List<MobEffectInstance> customEffects) {
 		FluidStack fluidStack = new FluidStack(AllFluids.POTION.get()
 			.getSource(), amount);
 		addPotionToFluidStack(fluidStack, potion);
@@ -46,15 +49,15 @@ public class PotionFluid extends VirtualFluid {
 
 		@Override
 		public int getColor(FluidStack stack) {
-			CompoundNBT tag = stack.getOrCreateTag();
+			CompoundTag tag = stack.getOrCreateTag();
 			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
 			return color;
 		}
 
 		@Override
 		public String getTranslationKey(FluidStack stack) {
-			CompoundNBT tag = stack.getOrCreateTag();
-			IItemProvider itemFromBottleType =
+			CompoundTag tag = stack.getOrCreateTag();
+			ItemLike itemFromBottleType =
 				PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
 			return PotionUtils.getPotion(tag)
 				.getName(itemFromBottleType.asItem()
@@ -74,13 +77,13 @@ public class PotionFluid extends VirtualFluid {
 		return fs;
 	}
 
-	public static FluidStack appendEffects(FluidStack fs, Collection<EffectInstance> customEffects) {
+	public static FluidStack appendEffects(FluidStack fs, Collection<MobEffectInstance> customEffects) {
 		if (customEffects.isEmpty())
 			return fs;
-		CompoundNBT compoundnbt = fs.getOrCreateTag();
-		ListNBT listnbt = compoundnbt.getList("CustomPotionEffects", 9);
-		for (EffectInstance effectinstance : customEffects)
-			listnbt.add(effectinstance.save(new CompoundNBT()));
+		CompoundTag compoundnbt = fs.getOrCreateTag();
+		ListTag listnbt = compoundnbt.getList("CustomPotionEffects", 9);
+		for (MobEffectInstance effectinstance : customEffects)
+			listnbt.add(effectinstance.save(new CompoundTag()));
 		compoundnbt.put("CustomPotionEffects", listnbt);
 		return fs;
 	}

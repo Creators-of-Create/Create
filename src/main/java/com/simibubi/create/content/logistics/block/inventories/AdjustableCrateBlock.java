@@ -4,19 +4,21 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class AdjustableCrateBlock extends CrateBlock {
 
@@ -30,15 +32,15 @@ public class AdjustableCrateBlock extends CrateBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.ADJUSTABLE_CRATE.create();
 	}
 
 	@Override
-	public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		if (oldState.getBlock() != state.getBlock() && state.hasTileEntity() && state.getValue(DOUBLE)
 				&& state.getValue(FACING).getAxisDirection() == AxisDirection.POSITIVE) {
-			TileEntity tileEntity = worldIn.getBlockEntity(pos);
+			BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 			if (!(tileEntity instanceof AdjustableCrateTileEntity))
 				return;
 
@@ -57,29 +59,29 @@ public class AdjustableCrateBlock extends CrateBlock {
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+			BlockHitResult hit) {
 
 		if (worldIn.isClientSide) {
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else {
-			TileEntity te = worldIn.getBlockEntity(pos);
+			BlockEntity te = worldIn.getBlockEntity(pos);
 			if (te instanceof AdjustableCrateTileEntity) {
 				AdjustableCrateTileEntity fte = (AdjustableCrateTileEntity) te;
 				fte = fte.getMainCrate();
-				NetworkHooks.openGui((ServerPlayerEntity) player, fte, fte::sendToContainer);
+				NetworkHooks.openGui((ServerPlayer) player, fte, fte::sendToContainer);
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 	}
 
-	public static void splitCrate(World world, BlockPos pos) {
+	public static void splitCrate(Level world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		if (!AllBlocks.ADJUSTABLE_CRATE.has(state))
 			return;
 		if (!state.getValue(DOUBLE))
 			return;
-		TileEntity te = world.getBlockEntity(pos);
+		BlockEntity te = world.getBlockEntity(pos);
 		if (!(te instanceof AdjustableCrateTileEntity))
 			return;
 		AdjustableCrateTileEntity crateTe = (AdjustableCrateTileEntity) te;
@@ -89,7 +91,7 @@ public class AdjustableCrateBlock extends CrateBlock {
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(worldIn.getBlockEntity(pos) instanceof AdjustableCrateTileEntity))
 			return;
 
@@ -108,8 +110,8 @@ public class AdjustableCrateBlock extends CrateBlock {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getBlockEntity(pos);
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if (te instanceof AdjustableCrateTileEntity) {
 			AdjustableCrateTileEntity flexcrateTileEntity = ((AdjustableCrateTileEntity) te).getMainCrate();
 			return ItemHelper.calcRedstoneFromInventory(flexcrateTileEntity.inventory);

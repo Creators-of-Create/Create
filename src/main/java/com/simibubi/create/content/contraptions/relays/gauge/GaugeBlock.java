@@ -11,30 +11,32 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.RedstoneParticleData;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class GaugeBlock extends DirectionalAxisKineticBlock {
 
 	public static final GaugeShaper GAUGE = GaugeShaper.make();
 	protected Type type;
 
-	public enum Type implements IStringSerializable {
+	public enum Type implements StringRepresentable {
 		SPEED, STRESS;
 
 		@Override
@@ -57,7 +59,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		switch (type) {
 		case SPEED:
 			return AllTileEntities.SPEEDOMETER.create();
@@ -80,8 +82,8 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	 */
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		World world = context.getLevel();
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Level world = context.getLevel();
 		Direction face = context.getClickedFace();
 		BlockPos placedOnPos = context.getClickedPos()
 			.relative(context.getClickedFace()
@@ -112,17 +114,17 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	protected Direction getFacingForPlacement(BlockItemUseContext context) {
+	protected Direction getFacingForPlacement(BlockPlaceContext context) {
 		return context.getClickedFace();
 	}
 
 	@Override
-	protected boolean getAxisAlignmentForPlacement(BlockItemUseContext context) {
+	protected boolean getAxisAlignmentForPlacement(BlockPlaceContext context) {
 		return context.getHorizontalDirection()
 			.getAxis() != Axis.X;
 	}
 
-	public boolean shouldRenderHeadOnFace(World world, BlockPos pos, BlockState state, Direction face) {
+	public boolean shouldRenderHeadOnFace(Level world, BlockPos pos, BlockState state, Direction face) {
 		if (face.getAxis()
 			.isVertical())
 			return false;
@@ -139,8 +141,8 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-		TileEntity te = worldIn.getBlockEntity(pos);
+	public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if (te == null || !(te instanceof GaugeTileEntity))
 			return;
 		GaugeTileEntity gaugeTE = (GaugeTileEntity) te;
@@ -152,24 +154,24 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
 				continue;
 
-			Vector3d rgb = Color.vectorFromRGB(color);
-			Vector3d faceVec = Vector3d.atLowerCornerOf(face.getNormal());
+			Vec3 rgb = Color.vectorFromRGB(color);
+			Vec3 faceVec = Vec3.atLowerCornerOf(face.getNormal());
 			Direction positiveFacing = Direction.get(AxisDirection.POSITIVE, face.getAxis());
-			Vector3d positiveFaceVec = Vector3d.atLowerCornerOf(positiveFacing.getNormal());
+			Vec3 positiveFaceVec = Vec3.atLowerCornerOf(positiveFacing.getNormal());
 			int particleCount = gaugeTE.dialTarget > 1 ? 4 : 1;
 
 			if (particleCount == 1 && rand.nextFloat() > 1 / 4f)
 				continue;
 
 			for (int i = 0; i < particleCount; i++) {
-				Vector3d mul = VecHelper.offsetRandomly(Vector3d.ZERO, rand, .25f)
-					.multiply(new Vector3d(1, 1, 1).subtract(positiveFaceVec))
+				Vec3 mul = VecHelper.offsetRandomly(Vec3.ZERO, rand, .25f)
+					.multiply(new Vec3(1, 1, 1).subtract(positiveFaceVec))
 					.normalize()
 					.scale(.3f);
-				Vector3d offset = VecHelper.getCenterOf(pos)
+				Vec3 offset = VecHelper.getCenterOf(pos)
 					.add(faceVec.scale(.55))
 					.add(mul);
-				worldIn.addParticle(new RedstoneParticleData((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
+				worldIn.addParticle(new DustParticleOptions((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
 					offset.y, offset.z, mul.x, mul.y, mul.z);
 			}
 
@@ -178,7 +180,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return GAUGE.get(state.getValue(FACING), state.getValue(AXIS_ALONG_FIRST_COORDINATE));
 	}
 
@@ -188,17 +190,17 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-		TileEntity te = worldIn.getBlockEntity(pos);
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if (te instanceof GaugeTileEntity) {
 			GaugeTileEntity gaugeTileEntity = (GaugeTileEntity) te;
-			return MathHelper.ceil(MathHelper.clamp(gaugeTileEntity.dialTarget * 14, 0, 15));
+			return Mth.ceil(Mth.clamp(gaugeTileEntity.dialTarget * 14, 0, 15));
 		}
 		return 0;
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 }

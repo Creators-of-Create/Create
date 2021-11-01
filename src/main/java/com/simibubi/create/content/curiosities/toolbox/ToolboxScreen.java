@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
@@ -18,12 +18,12 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 
 public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer> {
 
@@ -34,9 +34,9 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	private IconButton disposeButton;
 	private DyeColor color;
 
-	private List<Rectangle2d> extraAreas = Collections.emptyList();
+	private List<Rect2i> extraAreas = Collections.emptyList();
 
-	public ToolboxScreen(ToolboxContainer container, PlayerInventory inv, ITextComponent title) {
+	public ToolboxScreen(ToolboxContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
 		init();
 	}
@@ -53,12 +53,12 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		widgets.add(disposeButton);
 		color = menu.contentHolder.getColor();
 
-		extraAreas = ImmutableList.of(new Rectangle2d(getGuiLeft() + -28, getGuiTop() + 141, 80, 100),
-			new Rectangle2d(getGuiLeft() + 162, getGuiTop() + 111, 100, 70));
+		extraAreas = ImmutableList.of(new Rect2i(getGuiLeft() + -28, getGuiTop() + 141, 80, 100),
+			new Rect2i(getGuiLeft() + 162, getGuiTop() + 111, 100, 70));
 	}
 
 	@Override
-	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		menu.renderPass = true;
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 		menu.renderPass = false;
@@ -70,7 +70,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	}
 
 	@Override
-	protected void renderWindow(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		BG.draw(ms, this, leftPos + 10, topPos);
 		PLAYER.draw(ms, this, leftPos + (BG.width - PLAYER.width) / 2 - 26, topPos + imageHeight - PLAYER.height);
 		font.draw(ms, title, leftPos + 24, topPos + 4, 0x442000);
@@ -113,7 +113,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		}
 	}
 
-	private void renderToolbox(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	private void renderToolbox(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
 		ms.translate(leftPos + 247, topPos + 180, 100);
 		MatrixTransformStack.of(ms)
@@ -146,7 +146,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	}
 
 	@Override
-	protected void renderWindowForeground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWindowForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (hoveredToolboxSlot != null)
 			hoveredSlot = hoveredToolboxSlot;
 		super.renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
@@ -171,7 +171,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	}
 
 	@Override
-	public List<Rectangle2d> getExtraAreas() {
+	public List<Rect2i> getExtraAreas() {
 		return extraAreas;
 	}
 

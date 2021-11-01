@@ -1,6 +1,6 @@
 package com.simibubi.create.foundation.ponder.elements;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 public class EntityElement extends TrackedElement<Entity> {
 

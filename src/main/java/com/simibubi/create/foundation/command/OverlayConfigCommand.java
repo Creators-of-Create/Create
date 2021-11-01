@@ -3,17 +3,17 @@ package com.simibubi.create.foundation.command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 public class OverlayConfigCommand {
 
-	public static ArgumentBuilder<CommandSource, ?> register() {
+	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("overlay")
 				.requires(cs -> cs.hasPermission(0))
 				.then(Commands.literal("reset")
@@ -22,11 +22,11 @@ public class OverlayConfigCommand {
 
 						DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 								AllPackets.channel.send(
-										PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
+										PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
 										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
 
 					ctx.getSource()
-						.sendSuccess(new StringTextComponent("reset overlay offset"), true);
+						.sendSuccess(new TextComponent("reset overlay offset"), true);
 
 						return 1;
 					})
@@ -36,11 +36,11 @@ public class OverlayConfigCommand {
 
 					DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) ctx.getSource().getEntity()),
+									PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
 									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
 
 					ctx.getSource()
-							.sendSuccess(new StringTextComponent("window opened"), true);
+							.sendSuccess(new TextComponent("window opened"), true);
 
 				return 1;
 			});

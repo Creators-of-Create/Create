@@ -1,12 +1,12 @@
 package com.simibubi.create.compat.jei.category.animations;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction.Axis;
+import com.mojang.math.Vector3f;
 
 public class AnimatedCrushingWheels extends AnimatedKinetics {
 
@@ -14,7 +14,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 			.setValue(BlockStateProperties.AXIS, Axis.X);
 
 	@Override
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 100);
 		matrixStack.mulPose(Vector3f.YP.rotationDegrees(-22.5f));

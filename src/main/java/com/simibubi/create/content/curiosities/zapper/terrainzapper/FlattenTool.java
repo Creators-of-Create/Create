@@ -7,12 +7,12 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 
 public class FlattenTool {
 
@@ -47,13 +47,13 @@ public class FlattenTool {
 						newValue += kernel[iOffset + 2][jOffset + 2] * ref;
 					}
 				}
-				result[i][j] = MathHelper.floor(newValue + .5f);
+				result[i][j] = Mth.floor(newValue + .5f);
 			}
 		}
 		return result;
 	}
 
-	public static void apply(World world, List<BlockPos> targetPositions, Direction facing) {
+	public static void apply(Level world, List<BlockPos> targetPositions, Direction facing) {
 		List<BlockPos> surfaces = new ArrayList<>();
 		Map<Pair<Integer, Integer>, Integer> heightMap = new HashMap<>();
 		int offset = facing.getAxisDirection().getStep();
@@ -153,7 +153,7 @@ public class FlattenTool {
 			// Raise surface
 			while (surfaceCoord < targetCoord) {
 				BlockPos above = p.relative(facing);
-				if (!(blockState.getBlock() instanceof FlowingFluidBlock))
+				if (!(blockState.getBlock() instanceof LiquidBlock))
 					world.setBlockAndUpdate(above, blockState);
 				world.setBlockAndUpdate(p, world.getBlockState(p.relative(facing.getOpposite())));
 				p = p.relative(facing);

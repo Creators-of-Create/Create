@@ -5,20 +5,22 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.block.ITE;
 
-import net.minecraft.block.BellBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.properties.BellAttachment;
+import net.minecraft.world.level.block.BellBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> extends BellBlock implements ITE<TE> {
 
@@ -28,12 +30,12 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 
 	@Override
 	@Nullable
-	public TileEntity newBlockEntity(IBlockReader block) {
+	public BlockEntity newBlockEntity(BlockGetter block) {
 		return null;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selection) {
+	public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext selection) {
 		Direction facing = state.getValue(FACING);
 		switch (state.getValue(ATTACHMENT)) {
 		case CEILING:
@@ -45,12 +47,12 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		case SINGLE_WALL:
 			return AllShapes.BELL_WALL.get(facing);
 		default:
-			return VoxelShapes.block();
+			return Shapes.block();
 		}
 	}
 
 	@Override
-	public boolean onHit(World world, BlockState state, BlockRayTraceResult hit, @Nullable PlayerEntity player,
+	public boolean onHit(Level world, BlockState state, BlockHitResult hit, @Nullable Player player,
 		boolean flag) {
 		BlockPos pos = hit.getBlockPos();
 		Direction direction = hit.getDirection();
@@ -81,7 +83,7 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 			return false;
 
 		Direction direction = state.getValue(FACING);
-		BellAttachment bellAttachment = state.getValue(ATTACHMENT);
+		BellAttachType bellAttachment = state.getValue(ATTACHMENT);
 		switch (bellAttachment) {
 		case FLOOR:
 		case CEILING:
@@ -94,6 +96,6 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		}
 	}
 
-	public abstract void playSound(World world, BlockPos pos);
+	public abstract void playSound(Level world, BlockPos pos);
 
 }

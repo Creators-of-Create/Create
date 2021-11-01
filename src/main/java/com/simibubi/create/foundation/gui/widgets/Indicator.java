@@ -3,10 +3,10 @@ package com.simibubi.create.foundation.gui.widgets;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 
 public class Indicator extends AbstractSimiWidget {
 	
@@ -17,14 +17,14 @@ public class Indicator extends AbstractSimiWidget {
 	
 	public State state;
 	
-	public Indicator(int x, int y, ITextComponent tooltip) {
+	public Indicator(int x, int y, Component tooltip) {
 		super(x, y, AllGuiTextures.INDICATOR.width, AllGuiTextures.INDICATOR.height);
 		this.toolTip = ImmutableList.of(tooltip);
 		this.state = State.OFF;
 	}
 	
 	@Override
-	public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks ) {
+	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks ) {
 		AllGuiTextures toDraw;
 		switch(state) {
 			case ON: toDraw = AllGuiTextures.INDICATOR_WHITE; break;

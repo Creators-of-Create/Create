@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -152,12 +152,12 @@ public enum AllGuiTextures implements IScreenRenderable {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void draw(MatrixStack ms, AbstractGui screen, int x, int y) {
+	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
 		bind();
 		screen.blit(ms, x, y, startX, startY, width, height);
 	}
 
-	public void draw(MatrixStack ms, int x, int y, Color c) {
+	public void draw(PoseStack ms, int x, int y, Color c) {
 		bind();
 		UIRenderHelper.drawColoredTexture(ms, c, x, y, startX, startY, width, height);
 	}

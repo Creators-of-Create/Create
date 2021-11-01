@@ -1,7 +1,7 @@
 package com.simibubi.create;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public enum AllSpecialTextures {
 

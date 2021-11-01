@@ -8,30 +8,30 @@ import static com.simibubi.create.foundation.gui.AllGuiTextures.TOOLBELT_SELECTE
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.MainWindow;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 public class ToolboxHandlerClient {
 
@@ -44,13 +44,13 @@ public class ToolboxHandlerClient {
 
 	public static boolean onPickItem() {
 		Minecraft mc = Minecraft.getInstance();
-		ClientPlayerEntity player = mc.player;
+		LocalPlayer player = mc.player;
 		if (player == null)
 			return false;
-		World level = player.level;
-		RayTraceResult hitResult = mc.hitResult;
+		Level level = player.level;
+		HitResult hitResult = mc.hitResult;
 
-		if (hitResult == null || hitResult.getType() == RayTraceResult.Type.MISS)
+		if (hitResult == null || hitResult.getType() == HitResult.Type.MISS)
 			return false;
 		if (player.isCreative())
 			return false;
@@ -61,15 +61,15 @@ public class ToolboxHandlerClient {
 		if (toolboxes.isEmpty())
 			return false;
 
-		if (hitResult.getType() == RayTraceResult.Type.BLOCK) {
-			BlockPos pos = ((BlockRayTraceResult) hitResult).getBlockPos();
+		if (hitResult.getType() == HitResult.Type.BLOCK) {
+			BlockPos pos = ((BlockHitResult) hitResult).getBlockPos();
 			BlockState state = level.getBlockState(pos);
 			if (state.getMaterial() == Material.AIR)
 				return false;
 			result = state.getPickBlock(hitResult, level, pos, player);
 
-		} else if (hitResult.getType() == RayTraceResult.Type.ENTITY) {
-			Entity entity = ((EntityRayTraceResult) hitResult).getEntity();
+		} else if (hitResult.getType() == HitResult.Type.ENTITY) {
+			Entity entity = ((EntityHitResult) hitResult).getEntity();
 			result = entity.getPickedResult(hitResult);
 		}
 
@@ -102,26 +102,26 @@ public class ToolboxHandlerClient {
 			return;
 		if (COOLDOWN > 0)
 			return;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return;
-		World level = player.level;
+		Level level = player.level;
 
 		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
-		CompoundNBT compound = player.getPersistentData()
+		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");
 
 		String slotKey = String.valueOf(player.inventory.selected);
 		boolean equipped = compound.contains(slotKey);
 
 		if (equipped) {
-			BlockPos pos = NBTUtil.readBlockPos(compound.getCompound(slotKey)
+			BlockPos pos = NbtUtils.readBlockPos(compound.getCompound(slotKey)
 				.getCompound("Pos"));
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean canReachToolbox = ToolboxHandler.distance(player.position(), pos) < max * max;
 
 			if (canReachToolbox) {
-				TileEntity blockEntity = level.getBlockEntity(pos);
+				BlockEntity blockEntity = level.getBlockEntity(pos);
 				if (blockEntity instanceof ToolboxTileEntity) {
 					RadialToolboxMenu screen = new RadialToolboxMenu(ImmutableList.of((ToolboxTileEntity) blockEntity),
 						RadialToolboxMenu.State.SELECT_ITEM_UNEQUIP);
@@ -145,20 +145,20 @@ public class ToolboxHandlerClient {
 			ScreenOpener.open(new RadialToolboxMenu(toolboxes, RadialToolboxMenu.State.SELECT_BOX));
 	}
 
-	public static void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
+	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		float partialTicks) {
-		MainWindow mainWindow = Minecraft.getInstance()
+		Window mainWindow = Minecraft.getInstance()
 			.getWindow();
 		int x = mainWindow.getGuiScaledWidth() / 2 - 90;
 		int y = mainWindow.getGuiScaledHeight() - 23;
 		RenderSystem.enableDepthTest();
 
-		PlayerEntity player = Minecraft.getInstance().player;
-		CompoundNBT persistentData = player.getPersistentData();
+		Player player = Minecraft.getInstance().player;
+		CompoundTag persistentData = player.getPersistentData();
 		if (!persistentData.contains("CreateToolboxData"))
 			return;
 
-		CompoundNBT compound = player.getPersistentData()
+		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");
 
 		if (compound.isEmpty())
@@ -169,7 +169,7 @@ public class ToolboxHandlerClient {
 			String key = String.valueOf(slot);
 			if (!compound.contains(key))
 				continue;
-			BlockPos pos = NBTUtil.readBlockPos(compound.getCompound(key)
+			BlockPos pos = NbtUtils.readBlockPos(compound.getCompound(key)
 				.getCompound("Pos"));
 			double max = ToolboxHandler.getMaxRange(player);
 			boolean selected = player.inventory.selected == slot;

@@ -4,19 +4,19 @@ import java.text.BreakIterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.MultiBufferSource;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.math.Matrix4f;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 public final class FontHelper {
 
 	private FontHelper() {}
 
-	public static List<String> cutString(FontRenderer font, String text, int maxWidthPerLine) {
+	public static List<String> cutString(Font font, String text, int maxWidthPerLine) {
 		// Split words
 		List<String> words = new LinkedList<>();
 		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
@@ -52,7 +52,7 @@ public final class FontHelper {
 		return lines;
 	}
 
-	public static void drawSplitString(MatrixStack ms, FontRenderer font, String text, int x, int y, int width,
+	public static void drawSplitString(PoseStack ms, Font font, String text, int x, int y, int width,
 		int color) {
 		List<String> list = cutString(font, text, width);
 		Matrix4f matrix4f = ms.last()
@@ -70,12 +70,12 @@ public final class FontHelper {
 		}
 	}
 
-	private static int draw(FontRenderer font, String p_228078_1_, float p_228078_2_, float p_228078_3_,
+	private static int draw(Font font, String p_228078_1_, float p_228078_2_, float p_228078_3_,
 		int p_228078_4_, Matrix4f p_228078_5_, boolean p_228078_6_) {
 		if (p_228078_1_ == null) {
 			return 0;
 		} else {
-			IRenderTypeBuffer.Impl irendertypebuffer$impl = IRenderTypeBuffer.immediate(Tessellator.getInstance()
+			MultiBufferSource.BufferSource irendertypebuffer$impl = MultiBufferSource.immediate(Tesselator.getInstance()
 				.getBuilder());
 			int i = font.drawInBatch(p_228078_1_, p_228078_2_, p_228078_3_, p_228078_4_, p_228078_6_, p_228078_5_,
 				irendertypebuffer$impl, false, 0, 15728880);

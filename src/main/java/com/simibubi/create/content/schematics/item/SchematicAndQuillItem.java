@@ -2,9 +2,11 @@ package com.simibubi.create.content.schematics.item;
 
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.Item;
+import net.minecraft.nbt.CompoundTag;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class SchematicAndQuillItem extends Item {
 
@@ -12,7 +14,7 @@ public class SchematicAndQuillItem extends Item {
 		super(properties);
 	}
 
-	public static void replaceStructureVoidWithAir(CompoundNBT nbt) {
+	public static void replaceStructureVoidWithAir(CompoundTag nbt) {
 		String air = Blocks.AIR.getRegistryName()
 			.toString();
 		String structureVoid = Blocks.STRUCTURE_VOID.getRegistryName()

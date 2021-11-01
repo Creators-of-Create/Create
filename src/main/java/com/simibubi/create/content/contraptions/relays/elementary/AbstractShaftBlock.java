@@ -7,31 +7,33 @@ import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.content.contraptions.wrench.IWrenchableWithBracket;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
-	implements IWaterLoggable, IWrenchableWithBracket {
+	implements SimpleWaterloggedBlock, IWrenchableWithBracket {
 
 	public AbstractShaftBlock(Properties properties) {
 		super(properties);
@@ -39,7 +41,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		return IWrenchableWithBracket.super.onWrenched(state, context);
 	}
 
@@ -49,13 +51,13 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.SIMPLE_KINETIC.create();
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state != newState && !isMoving)
 			removeBracket(world, pos, true).ifPresent(stack -> Block.popResource(world, pos, stack));
 		super.onRemove(state, world, pos, newState, isMoving);
@@ -64,7 +66,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	// IRotate:
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face.getAxis() == state.getValue(AXIS);
 	}
 
@@ -87,7 +89,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-		IWorld world, BlockPos pos, BlockPos neighbourPos) {
+		LevelAccessor world, BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED)) {
 			world.getLiquidTicks()
 				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
@@ -96,7 +98,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState ifluidstate = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED,
@@ -104,7 +106,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public Optional<ItemStack> removeBracket(IBlockReader world, BlockPos pos, boolean inOnReplacedContext) {
+	public Optional<ItemStack> removeBracket(BlockGetter world, BlockPos pos, boolean inOnReplacedContext) {
 		BracketedTileEntityBehaviour behaviour = TileEntityBehaviour.get(world, pos, BracketedTileEntityBehaviour.TYPE);
 		if (behaviour == null)
 			return Optional.empty();
@@ -116,7 +118,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

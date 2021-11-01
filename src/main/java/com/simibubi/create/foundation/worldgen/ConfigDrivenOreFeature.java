@@ -3,13 +3,13 @@ package com.simibubi.create.foundation.worldgen;
 import java.util.BitSet;
 import java.util.Random;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig> {
 
@@ -22,27 +22,27 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 
 	// From OreFeature, slight adjustments
 
-	public boolean place(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_,
+	public boolean place(WorldGenLevel p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_,
 		BlockPos p_241855_4_, ConfigDrivenOreFeatureConfig p_241855_5_) {
 		float f = p_241855_3_.nextFloat() * (float) Math.PI;
 		float size = p_241855_5_.getSize();
 		float f1 = size / 8.0F;
-		int i = MathHelper.ceil((size / 16.0F * 2.0F + 1.0F) / 2.0F);
+		int i = Mth.ceil((size / 16.0F * 2.0F + 1.0F) / 2.0F);
 		double d0 = (double) p_241855_4_.getX() + Math.sin((double) f) * (double) f1;
 		double d1 = (double) p_241855_4_.getX() - Math.sin((double) f) * (double) f1;
 		double d2 = (double) p_241855_4_.getZ() + Math.cos((double) f) * (double) f1;
 		double d3 = (double) p_241855_4_.getZ() - Math.cos((double) f) * (double) f1;
 		double d4 = (double) (p_241855_4_.getY() + p_241855_3_.nextInt(3) - 2);
 		double d5 = (double) (p_241855_4_.getY() + p_241855_3_.nextInt(3) - 2);
-		int k = p_241855_4_.getX() - MathHelper.ceil(f1) - i;
+		int k = p_241855_4_.getX() - Mth.ceil(f1) - i;
 		int l = p_241855_4_.getY() - 2 - i;
-		int i1 = p_241855_4_.getZ() - MathHelper.ceil(f1) - i;
-		int j1 = 2 * (MathHelper.ceil(f1) + i);
+		int i1 = p_241855_4_.getZ() - Mth.ceil(f1) - i;
+		int j1 = 2 * (Mth.ceil(f1) + i);
 		int k1 = 2 * (2 + i);
 
 		for (int l1 = k; l1 <= k + j1; ++l1) {
 			for (int i2 = i1; i2 <= i1 + j1; ++i2) {
-				if (l <= p_241855_1_.getHeight(Heightmap.Type.OCEAN_FLOOR_WG, l1, i2)) {
+				if (l <= p_241855_1_.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, l1, i2)) {
 					return this.doPlace(p_241855_1_, p_241855_3_, p_241855_5_, d0, d1, d2, d3, d4, d5, k, l, i1,
 						j1, k1);
 				}
@@ -52,22 +52,22 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 		return false;
 	}
 
-	protected boolean doPlace(IWorld p_207803_1_, Random p_207803_2_, ConfigDrivenOreFeatureConfig p_207803_3_,
+	protected boolean doPlace(LevelAccessor p_207803_1_, Random p_207803_2_, ConfigDrivenOreFeatureConfig p_207803_3_,
 		double p_207803_4_, double p_207803_6_, double p_207803_8_, double p_207803_10_, double p_207803_12_,
 		double p_207803_14_, int p_207803_16_, int p_207803_17_, int p_207803_18_, int p_207803_19_, int p_207803_20_) {
 		int i = 0;
 		BitSet bitset = new BitSet(p_207803_19_ * p_207803_20_ * p_207803_19_);
-		BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+		BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
 		int j = p_207803_3_.getSize();
 		double[] adouble = new double[j * 4];
 
 		for (int k = 0; k < j; ++k) {
 			float f = (float) k / (float) j;
-			double d0 = MathHelper.lerp((double) f, p_207803_4_, p_207803_6_);
-			double d2 = MathHelper.lerp((double) f, p_207803_12_, p_207803_14_);
-			double d4 = MathHelper.lerp((double) f, p_207803_8_, p_207803_10_);
+			double d0 = Mth.lerp((double) f, p_207803_4_, p_207803_6_);
+			double d2 = Mth.lerp((double) f, p_207803_12_, p_207803_14_);
+			double d4 = Mth.lerp((double) f, p_207803_8_, p_207803_10_);
 			double d6 = p_207803_2_.nextDouble() * (double) j / 16.0D;
-			double d7 = ((double) (MathHelper.sin((float) Math.PI * f) + 1.0F) * d6 + 1.0D) / 2.0D;
+			double d7 = ((double) (Mth.sin((float) Math.PI * f) + 1.0F) * d6 + 1.0D) / 2.0D;
 			adouble[k * 4 + 0] = d0;
 			adouble[k * 4 + 1] = d2;
 			adouble[k * 4 + 2] = d4;
@@ -100,12 +100,12 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 				double d1 = adouble[j3 * 4 + 0];
 				double d3 = adouble[j3 * 4 + 1];
 				double d5 = adouble[j3 * 4 + 2];
-				int l = Math.max(MathHelper.floor(d1 - d11), p_207803_16_);
-				int l3 = Math.max(MathHelper.floor(d3 - d11), p_207803_17_);
-				int i1 = Math.max(MathHelper.floor(d5 - d11), p_207803_18_);
-				int j1 = Math.max(MathHelper.floor(d1 + d11), l);
-				int k1 = Math.max(MathHelper.floor(d3 + d11), l3);
-				int l1 = Math.max(MathHelper.floor(d5 + d11), i1);
+				int l = Math.max(Mth.floor(d1 - d11), p_207803_16_);
+				int l3 = Math.max(Mth.floor(d3 - d11), p_207803_17_);
+				int i1 = Math.max(Mth.floor(d5 - d11), p_207803_18_);
+				int j1 = Math.max(Mth.floor(d1 + d11), l);
+				int k1 = Math.max(Mth.floor(d3 + d11), l3);
+				int l1 = Math.max(Mth.floor(d5 + d11), i1);
 
 				for (int i2 = l; i2 <= j1; ++i2) {
 					double d8 = ((double) i2 + 0.5D - d1) / d11;

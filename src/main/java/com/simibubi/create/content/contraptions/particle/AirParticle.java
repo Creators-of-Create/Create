@@ -3,17 +3,17 @@ package com.simibubi.create.content.contraptions.particle;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleFactory;
-import net.minecraft.client.particle.IParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class AirParticle extends SimpleAnimatedParticle {
 
@@ -24,8 +24,8 @@ public class AirParticle extends SimpleAnimatedParticle {
 	private float twirlRadius, twirlAngleOffset;
 	private Axis twirlAxis;
 
-	protected AirParticle(ClientWorld world, AirParticleData data, double x, double y, double z, double dx, double dy,
-						  double dz, IAnimatedSprite sprite) {
+	protected AirParticle(ClientLevel world, AirParticleData data, double x, double y, double z, double dx, double dy,
+						  double dz, SpriteSet sprite) {
 		super(world, x, y, z, sprite, world.random.nextFloat() * .5f);
 		quadSize *= 0.75F;
 		hasPhysics = false;
@@ -44,7 +44,7 @@ public class AirParticle extends SimpleAnimatedParticle {
 		twirlAxis = Create.RANDOM.nextBoolean() ? Axis.X : Axis.Z;
 
 		// speed in m/ticks
-		double length = new Vector3d(dx, dy, dz).length();
+		double length = new Vec3(dx, dy, dz).length();
 		lifetime = Math.min((int) (length / data.speed), 60);
 		selectSprite(7);
 		setAlpha(.25f);
@@ -55,8 +55,8 @@ public class AirParticle extends SimpleAnimatedParticle {
 		}
 	}
 
-	public IParticleRenderType getRenderType() {
-		return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
 	@Override
@@ -71,11 +71,11 @@ public class AirParticle extends SimpleAnimatedParticle {
 
 		float progress = (float) Math.pow(((float) age) / lifetime, drag);
 		float angle = (progress * 2 * 360 + twirlAngleOffset) % 360;
-		Vector3d twirl = VecHelper.rotate(new Vector3d(0, twirlRadius, 0), angle, twirlAxis);
+		Vec3 twirl = VecHelper.rotate(new Vec3(0, twirlRadius, 0), angle, twirlAxis);
 		
-		float x = (float) (MathHelper.lerp(progress, originX, targetX) + twirl.x);
-		float y = (float) (MathHelper.lerp(progress, originY, targetY) + twirl.y);
-		float z = (float) (MathHelper.lerp(progress, originZ, targetZ) + twirl.z);
+		float x = (float) (Mth.lerp(progress, originX, targetX) + twirl.x);
+		float y = (float) (Mth.lerp(progress, originY, targetY) + twirl.y);
+		float z = (float) (Mth.lerp(progress, originZ, targetZ) + twirl.z);
 		
 		xd = x - this.x;
 		yd = y - this.y;
@@ -87,21 +87,21 @@ public class AirParticle extends SimpleAnimatedParticle {
 
 	public int getLightColor(float partialTick) {
 		BlockPos blockpos = new BlockPos(this.x, this.y, this.z);
-		return this.level.isLoaded(blockpos) ? WorldRenderer.getLightColor(level, blockpos) : 0;
+		return this.level.isLoaded(blockpos) ? LevelRenderer.getLightColor(level, blockpos) : 0;
 	}
 
 	private void selectSprite(int index) {
 		setSprite(sprites.get(index, 8));
 	}
 
-	public static class Factory implements IParticleFactory<AirParticleData> {
-		private final IAnimatedSprite spriteSet;
+	public static class Factory implements ParticleProvider<AirParticleData> {
+		private final SpriteSet spriteSet;
 
-		public Factory(IAnimatedSprite animatedSprite) {
+		public Factory(SpriteSet animatedSprite) {
 			this.spriteSet = animatedSprite;
 		}
 
-		public Particle createParticle(AirParticleData data, ClientWorld worldIn, double x, double y, double z, double xSpeed,
+		public Particle createParticle(AirParticleData data, ClientLevel worldIn, double x, double y, double z, double xSpeed,
 			double ySpeed, double zSpeed) {
 			return new AirParticle(worldIn, data, x, y, z, xSpeed, ySpeed, zSpeed, this.spriteSet);
 		}

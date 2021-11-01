@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 
 public class AngleHelper {
 

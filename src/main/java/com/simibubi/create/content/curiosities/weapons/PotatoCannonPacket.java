@@ -4,39 +4,39 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.zapper.ShootGadgetPacket;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetRenderHandler;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class PotatoCannonPacket extends ShootGadgetPacket {
 
 	private float pitch;
-	private Vector3d motion;
+	private Vec3 motion;
 	private ItemStack item;
 
-	public PotatoCannonPacket(Vector3d location, Vector3d motion, ItemStack item, Hand hand, float pitch, boolean self) {
+	public PotatoCannonPacket(Vec3 location, Vec3 motion, ItemStack item, InteractionHand hand, float pitch, boolean self) {
 		super(location, hand, self);
 		this.motion = motion;
 		this.item = item;
 		this.pitch = pitch;
 	}
 
-	public PotatoCannonPacket(PacketBuffer buffer) {
+	public PotatoCannonPacket(FriendlyByteBuf buffer) {
 		super(buffer);
 	}
 
 	@Override
-	protected void readAdditional(PacketBuffer buffer) {
+	protected void readAdditional(FriendlyByteBuf buffer) {
 		pitch = buffer.readFloat();
-		motion = new Vector3d(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+		motion = new Vec3(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		item = buffer.readItem();
 	}
 
 	@Override
-	protected void writeAdditional(PacketBuffer buffer) {
+	protected void writeAdditional(FriendlyByteBuf buffer) {
 		buffer.writeFloat(pitch);
 		buffer.writeFloat((float) motion.x);
 		buffer.writeFloat((float) motion.y);

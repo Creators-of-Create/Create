@@ -7,21 +7,23 @@ import com.simibubi.create.content.contraptions.components.flywheel.engine.Furna
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class FlywheelBlock extends HorizontalKineticBlock {
 
@@ -38,12 +40,12 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.FLYWHEEL.create();
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		Direction preferred = getPreferredHorizontalFacing(context);
 		if (preferred != null)
 			return defaultBlockState().setValue(HORIZONTAL_FACING, preferred.getOpposite());
@@ -65,7 +67,7 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 		return null;
 	}
 
-	public static void setConnection(World world, BlockPos pos, BlockState state, Direction direction) {
+	public static void setConnection(Level world, BlockPos pos, BlockState state, Direction direction) {
 		Direction facing = state.getValue(HORIZONTAL_FACING);
 		ConnectionState connection = ConnectionState.NONE;
 
@@ -79,7 +81,7 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.getValue(HORIZONTAL_FACING).getOpposite();
 	}
 
@@ -89,15 +91,15 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		Direction connection = getConnection(state);
 		if (connection == null)
 			return super.onWrenched(state ,context);
 
 		if (context.getClickedFace().getAxis() == state.getValue(HORIZONTAL_FACING).getAxis())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos enginePos = context.getClickedPos().relative(connection, 2);
 		BlockState engine = world.getBlockState(enginePos);
 		if (engine.getBlock() instanceof FurnaceEngineBlock)
@@ -106,7 +108,7 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 		return super.onWrenched(state.setValue(CONNECTION, ConnectionState.NONE), context);
 	}
 
-	public enum ConnectionState implements IStringSerializable {
+	public enum ConnectionState implements StringRepresentable {
 		NONE, LEFT, RIGHT;
 
 		@Override

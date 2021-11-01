@@ -5,21 +5,23 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SchematicannonBlock extends Block implements ITE<SchematicannonTileEntity> {
 
@@ -33,7 +35,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.SCHEMATICANNON.create();
 	}
 
@@ -43,22 +45,22 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.SCHEMATICANNON_SHAPE;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-			BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+			BlockHitResult hit) {
 		if (worldIn.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openGui((ServerPlayerEntity) player, te, te::sendToContainer));
-		return ActionResultType.SUCCESS;
+				te -> NetworkHooks.openGui((ServerPlayer) player, te, te::sendToContainer));
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
 			return;
 
@@ -72,7 +74,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
 		withTileEntityDo(worldIn, pos, te -> te.neighbourCheckCooldown = 0);
 	}

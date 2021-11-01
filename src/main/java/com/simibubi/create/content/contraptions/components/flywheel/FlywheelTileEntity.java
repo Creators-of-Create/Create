@@ -3,10 +3,10 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 
 public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 
@@ -18,7 +18,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	InterpolatedChasingValue visualSpeed = new InterpolatedChasingValue();
 	float angle;
 
-	public FlywheelTileEntity(TileEntityType<? extends FlywheelTileEntity> type) {
+	public FlywheelTileEntity(BlockEntityType<? extends FlywheelTileEntity> type) {
 		super(type);
 	}
 
@@ -49,12 +49,12 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	public AxisAlignedBB makeRenderBoundingBox() {
+	public AABB makeRenderBoundingBox() {
 		return super.makeRenderBoundingBox().inflate(2);
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putFloat("GeneratedSpeed", generatedSpeed);
 		compound.putFloat("GeneratedCapacity", generatedCapacity);
 		compound.putInt("Cooldown", stoppingCooldown);
@@ -62,7 +62,7 @@ public class FlywheelTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		generatedSpeed = compound.getFloat("GeneratedSpeed");
 		generatedCapacity = compound.getFloat("GeneratedCapacity");
 		stoppingCooldown = compound.getInt("Cooldown");

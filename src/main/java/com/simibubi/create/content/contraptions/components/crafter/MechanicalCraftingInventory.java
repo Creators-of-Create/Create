@@ -4,15 +4,15 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 
-public class MechanicalCraftingInventory extends CraftingInventory {
+public class MechanicalCraftingInventory extends CraftingContainer {
 
-	private static Container dummyContainer = new Container(null, -1) {
-		public boolean stillValid(PlayerEntity playerIn) {
+	private static AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
+		public boolean stillValid(Player playerIn) {
 			return false;
 		}
 	};

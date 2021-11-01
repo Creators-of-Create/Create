@@ -23,12 +23,12 @@ import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstructi
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -210,7 +210,7 @@ public class FluidTankScenes {
 			scene.effects.emitParticles(util.vector.topOf(3, 1, 1)
 				.add(0, 1 / 16f, 0),
 				Emitter.simple(FluidFX.getFluidParticle(content),
-					VecHelper.offsetRandomly(Vector3d.ZERO, Create.RANDOM, .1f)),
+					VecHelper.offsetRandomly(Vec3.ZERO, Create.RANDOM, .1f)),
 				1, 1);
 		}
 
@@ -323,7 +323,7 @@ public class FluidTankScenes {
 		scene.world.showSection(full3, Direction.DOWN);
 		scene.idle(10);
 
-		Vector3d blockSurface = util.vector.blockSurface(util.grid.at(3, 3, 1), Direction.WEST);
+		Vec3 blockSurface = util.vector.blockSurface(util.grid.at(3, 3, 1), Direction.WEST);
 		scene.overlay.showText(60)
 			.text("...and grow in height by more than 30 additional layers")
 			.attachKeyFrame()

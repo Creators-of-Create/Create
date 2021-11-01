@@ -15,13 +15,13 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PumpScenes {
@@ -82,9 +82,9 @@ public class PumpScenes {
 			.pointAt(util.vector.topOf(pumpPos)
 				.subtract(0.5f, 0.125f, 0));
 
-		AxisAlignedBB bb1 = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.25, .25, 0)
+		AABB bb1 = new AABB(Vec3.ZERO, Vec3.ZERO).inflate(.25, .25, 0)
 			.move(0, 0, .25);
-		AxisAlignedBB bb2 = new AxisAlignedBB(Vector3d.ZERO, Vector3d.ZERO).inflate(.25, .25, 1.25);
+		AABB bb2 = new AABB(Vec3.ZERO, Vec3.ZERO).inflate(.25, .25, 1.25);
 		scene.idle(65);
 
 		Object in = new Object();

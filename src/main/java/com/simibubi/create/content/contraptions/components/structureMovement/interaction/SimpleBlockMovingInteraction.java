@@ -4,28 +4,28 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Abs
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovingInteractionBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
 public abstract class SimpleBlockMovingInteraction extends MovingInteractionBehaviour {
 
 	@Override
-	public boolean handlePlayerInteraction(PlayerEntity player, Hand activeHand, BlockPos localPos,
+	public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
 		AbstractContraptionEntity contraptionEntity) {
 		Contraption contraption = contraptionEntity.getContraption();
-		BlockInfo info = contraption.getBlocks()
+		StructureBlockInfo info = contraption.getBlocks()
 			.get(localPos);
 
 		BlockState newState = handle(player, contraption, localPos, info.state);
 		if (info.state == newState)
 			return false;
 
-		setContraptionBlockData(contraptionEntity, localPos, new BlockInfo(info.pos, newState, info.nbt));
+		setContraptionBlockData(contraptionEntity, localPos, new StructureBlockInfo(info.pos, newState, info.nbt));
 		if (updateColliders())
 			contraption.invalidateColliders();
 		return true;
@@ -35,11 +35,11 @@ public abstract class SimpleBlockMovingInteraction extends MovingInteractionBeha
 		return false;
 	}
 
-	protected void playSound(PlayerEntity player, SoundEvent sound, float pitch) {
-		player.level.playSound(player, player.blockPosition(), sound, SoundCategory.BLOCKS, 0.3f, pitch);
+	protected void playSound(Player player, SoundEvent sound, float pitch) {
+		player.level.playSound(player, player.blockPosition(), sound, SoundSource.BLOCKS, 0.3f, pitch);
 	}
 
-	protected abstract BlockState handle(PlayerEntity player, Contraption contraption, BlockPos pos,
+	protected abstract BlockState handle(Player player, Contraption contraption, BlockPos pos,
 		BlockState currentState);
 
 }

@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -14,11 +14,11 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 
 	public ItemStackHandler ghostInventory;
 
-	protected GhostItemContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	protected GhostItemContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	protected GhostItemContainer(ContainerType<?> type, int id, PlayerInventory inv, T contentHolder) {
+	protected GhostItemContainer(MenuType<?> type, int id, Inventory inv, T contentHolder) {
 		super(type, id, inv, contentHolder);
 	}
 
@@ -50,7 +50,7 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 	}
 
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		ItemStack held = playerInventory.getCarried();
 		if (slotId < 36)
 			return super.clicked(slotId, dragType, clickTypeIn, player);
@@ -83,7 +83,7 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+	public ItemStack quickMoveStack(Player playerIn, int index) {
 		if (index < 36) {
 			ItemStack stackToInsert = playerInventory.getItem(index);
 			for (int i = 0; i < ghostInventory.getSlots(); i++) {

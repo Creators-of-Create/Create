@@ -15,29 +15,31 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class ContentObserverBlock extends HorizontalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -47,13 +49,13 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.CONTENT_OBSERVER.get(state.getValue(FACING));
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.CONTENT_OBSERVER.create();
 	}
 
@@ -69,7 +71,7 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
 		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
@@ -78,9 +80,9 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 		for (Direction face : Iterate.horizontalDirections) {
 			BlockPos offsetPos = context.getClickedPos()
 				.relative(face);
-			World world = context.getLevel();
+			Level world = context.getLevel();
 			boolean canDetect = false;
-			TileEntity tileEntity = world.getBlockEntity(offsetPos);
+			BlockEntity tileEntity = world.getBlockEntity(offsetPos);
 
 			if (TileEntityBehaviour.get(tileEntity, TransportedItemStackHandlerBehaviour.TYPE) != null)
 				canDetect = true;
@@ -116,25 +118,25 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	}
 
 	@Override
-	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return isSignalSource(blockState) && (side == null || side != blockState.getValue(FACING)
 			.getOpposite()) ? 15 : 0;
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		worldIn.setBlock(pos, state.setValue(POWERED, false), 2);
 		worldIn.updateNeighborsAt(pos, this);
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, Direction side) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		return side != state.getValue(FACING)
 			.getOpposite();
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeBlockEntity(pos);
@@ -142,14 +144,14 @@ public class ContentObserverBlock extends HorizontalBlock implements ITE<Content
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 		boolean isMoving) {
 		InvManipulationBehaviour behaviour = TileEntityBehaviour.get(worldIn, pos, InvManipulationBehaviour.TYPE);
 		if (behaviour != null)
 			behaviour.onNeighborChanged(fromPos);
 	}
 
-	public void onFunnelTransfer(World world, BlockPos funnelPos, ItemStack transferred) {
+	public void onFunnelTransfer(Level world, BlockPos funnelPos, ItemStack transferred) {
 		for (Direction direction : Iterate.horizontalDirections) {
 			BlockPos detectorPos = funnelPos.relative(direction);
 			BlockState detectorState = world.getBlockState(detectorPos);

@@ -11,24 +11,24 @@ import com.tterrag.registrate.util.OneTimeEventReceiver;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-public class CreateTileEntityBuilder<T extends TileEntity, P> extends TileEntityBuilder<T, P> {
+public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntityBuilder<T, P> {
 
 	@Nullable
 	private NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory;
 
-	public static <T extends TileEntity, P> TileEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
-		String name, BuilderCallback callback, NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+	public static <T extends BlockEntity, P> TileEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
+		String name, BuilderCallback callback, NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
 		return new CreateTileEntityBuilder<>(owner, parent, name, callback, factory);
 	}
 
 	protected CreateTileEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback,
-		NonNullFunction<TileEntityType<T>, ? extends T> factory) {
+		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
 		super(owner, parent, name, callback, factory);
 	}
 

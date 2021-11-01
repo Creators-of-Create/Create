@@ -8,10 +8,10 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 /**
@@ -35,7 +35,7 @@ public class ConversionRecipe extends ProcessingRecipe<RecipeWrapper> {
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World worldIn) {
+	public boolean matches(RecipeWrapper inv, Level worldIn) {
 		return false;
 	}
 

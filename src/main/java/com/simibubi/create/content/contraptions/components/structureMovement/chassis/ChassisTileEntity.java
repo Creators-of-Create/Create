@@ -2,9 +2,34 @@ package com.simibubi.create.content.contraptions.components.structureMovement.ch
 
 import static net.minecraft.state.properties.BlockStateProperties.AXIS;
 
+import javanet.minimport com.simibubi.create.AllBlocks;
+import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.CenteredSideValueBoxTransform;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.BulkScrollValueBehaviour;
+import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour;
+import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.Lang;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+
+ecraft.world.level.block.state.properties.BlockStatePropertiesport java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -36,7 +61,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 
 	ScrollValueBehaviour range;
 
-	public ChassisTileEntity(TileEntityType<? extends ChassisTileEntity> type) {
+	public ChassisTileEntity(BlockEntityType<? extends ChassisTileEntity> type) {
 		super(type);
 	}
 
@@ -86,7 +111,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 			if (visited.contains(current))
 				continue;
 			visited.add(current);
-			TileEntity tileEntity = level.getBlockEntity(current);
+			BlockEntity tileEntity = level.getBlockEntity(current);
 			if (tileEntity instanceof ChassisTileEntity) {
 				ChassisTileEntity chassis = (ChassisTileEntity) tileEntity;
 				collected.add(chassis);

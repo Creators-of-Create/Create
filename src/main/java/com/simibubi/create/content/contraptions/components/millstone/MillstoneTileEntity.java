@@ -11,16 +11,16 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
@@ -39,7 +39,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	public int timer;
 	private MillingRecipe lastRecipe;
 
-	public MillstoneTileEntity(TileEntityType<? extends MillstoneTileEntity> type) {
+	public MillstoneTileEntity(BlockEntityType<? extends MillstoneTileEntity> type) {
 		super(type);
 		inputInv = new ItemStackHandler(1);
 		outputInv = new ItemStackHandler(9);
@@ -63,7 +63,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 			.isEmpty())
 			return;
 
-		float pitch = MathHelper.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
+		float pitch = Mth.clamp((Math.abs(getSpeed()) / 256f) + .45f, .85f, 1f);
 		SoundScapes.play(AmbienceGroup.MILLING, worldPosition, pitch);
 	}
 
@@ -142,19 +142,19 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		if (stackInSlot.isEmpty())
 			return;
 
-		ItemParticleData data = new ItemParticleData(ParticleTypes.ITEM, stackInSlot);
+		ItemParticleOption data = new ItemParticleOption(ParticleTypes.ITEM, stackInSlot);
 		float angle = level.random.nextFloat() * 360;
-		Vector3d offset = new Vector3d(0, 0, 0.5f);
+		Vec3 offset = new Vec3(0, 0, 0.5f);
 		offset = VecHelper.rotate(offset, angle, Axis.Y);
-		Vector3d target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y);
+		Vec3 target = VecHelper.rotate(offset, getSpeed() > 0 ? 25 : -25, Axis.Y);
 
-		Vector3d center = offset.add(VecHelper.getCenterOf(worldPosition));
+		Vec3 center = offset.add(VecHelper.getCenterOf(worldPosition));
 		target = VecHelper.offsetRandomly(target.subtract(offset), level.random, 1 / 128f);
 		level.addParticle(data, center.x, center.y, center.z, target.x, target.y, target.z);
 	}
 
 	@Override
-	public void write(CompoundNBT compound, boolean clientPacket) {
+	public void write(CompoundTag compound, boolean clientPacket) {
 		compound.putInt("Timer", timer);
 		compound.put("InputInventory", inputInv.serializeNBT());
 		compound.put("OutputInventory", outputInv.serializeNBT());
@@ -162,7 +162,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		timer = compound.getInt("Timer");
 		inputInv.deserializeNBT(compound.getCompound("InputInventory"));
 		outputInv.deserializeNBT(compound.getCompound("OutputInventory"));
@@ -170,7 +170,7 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	}
 
 	public int getProcessingSpeed() {
-		return MathHelper.clamp((int) Math.abs(getSpeed() / 16f), 1, 512);
+		return Mth.clamp((int) Math.abs(getSpeed() / 16f), 1, 512);
 	}
 
 	@Override

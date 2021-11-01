@@ -17,16 +17,16 @@ import java.util.stream.Collectors;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -35,7 +35,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class ConnectedInputHandler {
 
-	public static boolean shouldConnect(World world, BlockPos pos, Direction face, Direction direction) {
+	public static boolean shouldConnect(Level world, BlockPos pos, Direction face, Direction direction) {
 		BlockState refState = world.getBlockState(pos);
 		if (!refState.hasProperty(HORIZONTAL_FACING))
 			return false;
@@ -52,7 +52,7 @@ public class ConnectedInputHandler {
 		return true;
 	}
 
-	public static void toggleConnection(World world, BlockPos pos, BlockPos pos2) {
+	public static void toggleConnection(Level world, BlockPos pos, BlockPos pos2) {
 		MechanicalCrafterTileEntity crafter1 = CrafterHelper.getCrafter(world, pos);
 		MechanicalCrafterTileEntity crafter2 = CrafterHelper.getCrafter(world, pos2);
 
@@ -114,7 +114,7 @@ public class ConnectedInputHandler {
 		crafter2.connectivityChanged();
 	}
 
-	public static void initAndAddAll(World world, MechanicalCrafterTileEntity crafter, Collection<BlockPos> positions) {
+	public static void initAndAddAll(Level world, MechanicalCrafterTileEntity crafter, Collection<BlockPos> positions) {
 		crafter.input = new ConnectedInput();
 		positions.forEach(splitPos -> {
 			modifyAndUpdate(world, splitPos, input -> {
@@ -124,7 +124,7 @@ public class ConnectedInputHandler {
 		});
 	}
 
-	public static void connectControllers(World world, MechanicalCrafterTileEntity crafter1,
+	public static void connectControllers(Level world, MechanicalCrafterTileEntity crafter1,
 		MechanicalCrafterTileEntity crafter2) {
 
 		crafter1.input.data.forEach(offset -> {
@@ -149,8 +149,8 @@ public class ConnectedInputHandler {
 		crafter1.input.data.add(BlockPos.ZERO.subtract(crafter2.input.data.get(0)));
 	}
 
-	private static void modifyAndUpdate(World world, BlockPos pos, Consumer<ConnectedInput> callback) {
-		TileEntity te = world.getBlockEntity(pos);
+	private static void modifyAndUpdate(Level world, BlockPos pos, Consumer<ConnectedInput> callback) {
+		BlockEntity te = world.getBlockEntity(pos);
 		if (!(te instanceof MechanicalCrafterTileEntity))
 			return;
 
@@ -175,7 +175,7 @@ public class ConnectedInputHandler {
 			data.add(controllerPos.subtract(myPos));
 		}
 
-		public IItemHandler getItemHandler(World world, BlockPos pos) {
+		public IItemHandler getItemHandler(Level world, BlockPos pos) {
 			if (!isController) {
 				BlockPos controllerPos = pos.offset(data.get(0));
 				ConnectedInput input = CrafterHelper.getInput(world, controllerPos);
@@ -209,18 +209,18 @@ public class ConnectedInputHandler {
 			return new CombinedInvWrapper(Arrays.copyOf(list.toArray(), list.size(), IItemHandlerModifiable[].class));
 		}
 
-		public void write(CompoundNBT nbt) {
+		public void write(CompoundTag nbt) {
 			nbt.putBoolean("Controller", isController);
-			ListNBT list = new ListNBT();
-			data.forEach(pos -> list.add(NBTUtil.writeBlockPos(pos)));
+			ListTag list = new ListTag();
+			data.forEach(pos -> list.add(NbtUtils.writeBlockPos(pos)));
 			nbt.put("Data", list);
 		}
 
-		public void read(CompoundNBT nbt) {
+		public void read(CompoundTag nbt) {
 			isController = nbt.getBoolean("Controller");
 			data.clear();
 			nbt.getList("Data", NBT.TAG_COMPOUND)
-				.forEach(inbt -> data.add(NBTUtil.readBlockPos((CompoundNBT) inbt)));
+				.forEach(inbt -> data.add(NbtUtils.readBlockPos((CompoundTag) inbt)));
 		}
 
 	}

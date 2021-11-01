@@ -1,9 +1,11 @@
 package com.simibubi.create.content.palettes;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ConnectedGlassPaneBlock extends GlassPaneBlock {
 

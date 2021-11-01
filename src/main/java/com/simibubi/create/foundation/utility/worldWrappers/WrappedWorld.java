@@ -8,52 +8,52 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.tags.ITagCollectionSupplier;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.DynamicRegistries;
-import net.minecraft.world.ITickList;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.chunk.AbstractChunkProvider;
-import net.minecraft.world.lighting.WorldLightManager;
-import net.minecraft.world.storage.ISpawnWorldInfo;
-import net.minecraft.world.storage.MapData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.tags.TagContainer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.level.TickList;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.chunk.ChunkSource;
+import net.minecraft.world.level.lighting.LevelLightEngine;
+import net.minecraft.world.level.storage.WritableLevelData;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class WrappedWorld extends World {
+public class WrappedWorld extends Level {
 
-	protected World world;
-	protected AbstractChunkProvider provider;
+	protected Level world;
+	protected ChunkSource provider;
 
-	public WrappedWorld(World world, AbstractChunkProvider provider) {
-		super((ISpawnWorldInfo) world.getLevelData(), world.dimension(), world.dimensionType(), world::getProfiler,
+	public WrappedWorld(Level world, ChunkSource provider) {
+		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionType(), world::getProfiler,
 				world.isClientSide, world.isDebug(), 0);
 		this.world = world;
 		this.provider = provider;
 	}
 
-	public WrappedWorld(World world) {
+	public WrappedWorld(Level world) {
 		this(world, null);
 	}
 
-	public World getLevel() {
+	public Level getLevel() {
 		return world;
 	}
 
 	@Override
-	public WorldLightManager getLightEngine() {
+	public LevelLightEngine getLightEngine() {
 		return world.getLightEngine();
 	}
 
@@ -68,7 +68,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public TileEntity getBlockEntity(@Nullable BlockPos pos) {
+	public BlockEntity getBlockEntity(@Nullable BlockPos pos) {
 		return world.getBlockEntity(pos);
 	}
 
@@ -88,35 +88,35 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public ITickList<Block> getBlockTicks() {
+	public TickList<Block> getBlockTicks() {
 		return world.getBlockTicks();
 	}
 
 	@Override
-	public ITickList<Fluid> getLiquidTicks() {
+	public TickList<Fluid> getLiquidTicks() {
 		return world.getLiquidTicks();
 	}
 
 	@Override
-	public AbstractChunkProvider getChunkSource() {
+	public ChunkSource getChunkSource() {
 		return provider;
 	}
 
 	@Override
-	public void levelEvent(@Nullable PlayerEntity player, int type, BlockPos pos, int data) {}
+	public void levelEvent(@Nullable Player player, int type, BlockPos pos, int data) {}
 
 	@Override
-	public List<? extends PlayerEntity> players() {
+	public List<? extends Player> players() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public void playSound(@Nullable PlayerEntity player, double x, double y, double z, SoundEvent soundIn,
-		SoundCategory category, float volume, float pitch) {}
+	public void playSound(@Nullable Player player, double x, double y, double z, SoundEvent soundIn,
+		SoundSource category, float volume, float pitch) {}
 
 	@Override
-	public void playSound(@Nullable PlayerEntity p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
-		SoundCategory p_217384_4_, float p_217384_5_, float p_217384_6_) {}
+	public void playSound(@Nullable Player p_217384_1_, Entity p_217384_2_, SoundEvent p_217384_3_,
+		SoundSource p_217384_4_, float p_217384_5_, float p_217384_6_) {}
 
 	@Override
 	public Entity getEntity(int id) {
@@ -124,7 +124,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public MapData getMapData(String mapName) {
+	public MapItemSavedData getMapData(String mapName) {
 		return null;
 	}
 
@@ -137,7 +137,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void setMapData(MapData mapDataIn) {}
+	public void setMapData(MapItemSavedData mapDataIn) {}
 
 	@Override
 	public int getFreeMapId() {
@@ -158,7 +158,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public ITagCollectionSupplier getTagManager() {
+	public TagContainer getTagManager() {
 		return world.getTagManager();
 	}
 
@@ -168,7 +168,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public DynamicRegistries registryAccess() {
+	public RegistryAccess registryAccess() {
 		return world.registryAccess();
 	}
 
@@ -178,7 +178,7 @@ public class WrappedWorld extends World {
 	}
 
 	@Override
-	public void blockEntityChanged(BlockPos p_175646_1_, TileEntity p_175646_2_) {
+	public void blockEntityChanged(BlockPos p_175646_1_, BlockEntity p_175646_2_) {
 	}
 
 	@Override

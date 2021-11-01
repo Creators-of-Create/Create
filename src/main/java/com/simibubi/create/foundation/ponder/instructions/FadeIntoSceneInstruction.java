@@ -4,8 +4,8 @@ import com.simibubi.create.foundation.ponder.ElementLink;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.elements.AnimatedSceneElement;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class FadeIntoSceneInstruction<T extends AnimatedSceneElement> extends TickingInstruction {
 
@@ -25,7 +25,7 @@ public abstract class FadeIntoSceneInstruction<T extends AnimatedSceneElement> e
 		scene.addElement(element);
 		element.setVisible(true);
 		element.setFade(0);
-		element.setFadeVec(Vector3d.atLowerCornerOf(fadeInFrom.getNormal()).scale(.5f));
+		element.setFadeVec(Vec3.atLowerCornerOf(fadeInFrom.getNormal()).scale(.5f));
 		if (elementLink != null)
 			scene.linkElement(element, elementLink);
 	}

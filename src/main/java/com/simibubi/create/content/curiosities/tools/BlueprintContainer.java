@@ -7,18 +7,18 @@ import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSe
 import com.simibubi.create.foundation.gui.GhostItemContainer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
@@ -27,15 +27,15 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 
-	public BlueprintContainer(ContainerType<?> type, int id, PlayerInventory inv, PacketBuffer extraData) {
+	public BlueprintContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
 
-	public BlueprintContainer(ContainerType<?> type, int id, PlayerInventory inv, BlueprintSection section) {
+	public BlueprintContainer(MenuType<?> type, int id, Inventory inv, BlueprintSection section) {
 		super(type, id, inv, section);
 	}
 
-	public static BlueprintContainer create(int id, PlayerInventory inv, BlueprintSection section) {
+	public static BlueprintContainer create(int id, Inventory inv, BlueprintSection section) {
 		return new BlueprintContainer(AllContainerTypes.CRAFTING_BLUEPRINT.get(), id, inv, section);
 	}
 
@@ -63,11 +63,11 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 		if (contentHolder.getBlueprintWorld().isClientSide)
 			return;
 
-		ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
-		CraftingInventory craftingInventory = new BlueprintCraftingInventory(this, ghostInventory);
-		Optional<ICraftingRecipe> optional = player.getServer()
+		ServerPlayer serverplayerentity = (ServerPlayer) player;
+		CraftingContainer craftingInventory = new BlueprintCraftingInventory(this, ghostInventory);
+		Optional<CraftingRecipe> optional = player.getServer()
 				.getRecipeManager()
-				.getRecipeFor(IRecipeType.CRAFTING, craftingInventory, player.getCommandSenderWorld());
+				.getRecipeFor(RecipeType.CRAFTING, craftingInventory, player.getCommandSenderWorld());
 
 		if (!optional.isPresent()) {
 			if (ghostInventory.getStackInSlot(9)
@@ -77,19 +77,19 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 				return;
 
 			ghostInventory.setStackInSlot(9, ItemStack.EMPTY);
-			serverplayerentity.connection.send(new SSetSlotPacket(containerId, 36 + 9, ItemStack.EMPTY));
+			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, ItemStack.EMPTY));
 			contentHolder.inferredIcon = false;
 			return;
 		}
 
-		ICraftingRecipe icraftingrecipe = optional.get();
+		CraftingRecipe icraftingrecipe = optional.get();
 		ItemStack itemstack = icraftingrecipe.assemble(craftingInventory);
 		ghostInventory.setStackInSlot(9, itemstack);
 		contentHolder.inferredIcon = true;
 		ItemStack toSend = itemstack.copy();
 		toSend.getOrCreateTag()
 				.putBoolean("InferredFromRecipe", true);
-		serverplayerentity.connection.send(new SSetSlotPacket(containerId, 36 + 9, toSend));
+		serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, toSend));
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	protected BlueprintSection createOnClient(PacketBuffer extraData) {
+	protected BlueprintSection createOnClient(FriendlyByteBuf extraData) {
 		int entityID = extraData.readVarInt();
 		int section = extraData.readVarInt();
 		Entity entityByID = Minecraft.getInstance().level.getEntity(entityID);
@@ -135,13 +135,13 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return contentHolder != null && contentHolder.canPlayerUse(player);
 	}
 
-	static class BlueprintCraftingInventory extends CraftingInventory {
+	static class BlueprintCraftingInventory extends CraftingContainer {
 
-		public BlueprintCraftingInventory(Container container, ItemStackHandler items) {
+		public BlueprintCraftingInventory(AbstractContainerMenu container, ItemStackHandler items) {
 			super(container, 3, 3);
 			for (int y = 0; y < 3; y++) {
 				for (int x = 0; x < 3; x++) {
@@ -167,8 +167,8 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 			super.setChanged();
 			if (index == 9 && hasItem() && !contentHolder.getBlueprintWorld().isClientSide) {
 				contentHolder.inferredIcon = false;
-				ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
-				serverplayerentity.connection.send(new SSetSlotPacket(containerId, 36 + 9, getItem()));
+				ServerPlayer serverplayerentity = (ServerPlayer) player;
+				serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, getItem()));
 			}
 			if (index < 9)
 				onCraftMatrixChanged();

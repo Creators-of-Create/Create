@@ -10,23 +10,25 @@ import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.DebugPacketSender;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.TickPriority;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
 
@@ -38,8 +40,8 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.FLUID_VALVE.get(getPipeAxis(state));
 	}
 
@@ -49,7 +51,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	protected boolean prefersConnectionTo(IWorldReader reader, BlockPos pos, Direction facing, boolean shaftAxis) {
+	protected boolean prefersConnectionTo(LevelReader reader, BlockPos pos, Direction facing, boolean shaftAxis) {
 		if (!shaftAxis) {
 			BlockPos offset = pos.relative(facing);
 			BlockState blockState = reader.getBlockState(offset);
@@ -59,7 +61,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.FLUID_VALVE.create();
 	}
 
@@ -87,7 +89,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
@@ -96,12 +98,12 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public boolean canSurvive(BlockState p_196260_1_, IWorldReader p_196260_2_, BlockPos p_196260_3_) {
+	public boolean canSurvive(BlockState p_196260_1_, LevelReader p_196260_2_, BlockPos p_196260_3_) {
 		return true;
 	}
 
 	@Override
-	public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
+	public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, world, pos, oldState, isMoving);
 		if (world.isClientSide)
 			return;
@@ -111,9 +113,9 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block otherBlock, BlockPos neighborPos,
 		boolean isMoving) {
-		DebugPacketSender.sendNeighborsUpdatePacket(world, pos);
+		DebugPackets.sendNeighborsUpdatePacket(world, pos);
 		Direction d = FluidPropagator.validateNeighbourChange(state, world, pos, otherBlock, neighborPos, isMoving);
 		if (d == null)
 			return;
@@ -128,12 +130,12 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld world, BlockPos pos, Random r) {
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
 	}
 	
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

@@ -7,9 +7,9 @@ import java.util.function.Supplier;
 import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.foundation.fluid.FluidIngredient;
 
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -20,9 +20,9 @@ public interface IAssemblyRecipe {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public ITextComponent getDescriptionForAssembly();
+	public Component getDescriptionForAssembly();
 
-	public void addRequiredMachines(Set<IItemProvider> list);
+	public void addRequiredMachines(Set<ItemLike> list);
 	
 	public void addAssemblyIngredients(List<Ingredient> list);
 

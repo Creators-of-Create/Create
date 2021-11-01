@@ -10,27 +10,29 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.PathNodeType;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -46,21 +48,21 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> p_149666_2_) {
-		if (group != ItemGroup.TAB_SEARCH && !inCreativeTab)
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> p_149666_2_) {
+		if (group != CreativeModeTab.TAB_SEARCH && !inCreativeTab)
 			return;
 		super.fillItemCategory(group, p_149666_2_);
 	}
 
 	@Override
-	public void fallOn(World p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	public void fallOn(Level p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
 		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_ * 0.5F);
 	}
 
 	@Override
-	public void updateEntityAfterFallOn(IBlockReader reader, Entity entity) {
+	public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
 		BlockPos pos = entity.blockPosition();
-		if (entity instanceof PlayerEntity || !(entity instanceof LivingEntity) || !canBePickedUp(entity) || isSeatOccupied(entity.level, pos)) {
+		if (entity instanceof Player || !(entity instanceof LivingEntity) || !canBePickedUp(entity) || isSeatOccupied(entity.level, pos)) {
 			super.updateEntityAfterFallOn(reader, entity);
 			return;
 		}
@@ -71,68 +73,68 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos,
-		@Nullable MobEntity entity) {
-		return PathNodeType.RAIL;
+	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos,
+		@Nullable Mob entity) {
+		return BlockPathTypes.RAIL;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_,
-		ISelectionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return AllShapes.SEAT;
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState p_220071_1_, IBlockReader p_220071_2_, BlockPos p_220071_3_,
-		ISelectionContext p_220071_4_) {
+	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
+		CollisionContext p_220071_4_) {
 		return AllShapes.SEAT_COLLISION;
 	}
 
 	@Override
-	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-		BlockRayTraceResult p_225533_6_) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult p_225533_6_) {
 		if (player.isShiftKeyDown())
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		DyeColor color = DyeColor.getColor(heldItem);
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color).getDefaultState());
 			world.setBlockAndUpdate(pos, newState);
-			return ActionResultType.sidedSuccess(world.isClientSide);
+			return InteractionResult.sidedSuccess(world.isClientSide);
 		}
 
-		List<SeatEntity> seats = world.getEntitiesOfClass(SeatEntity.class, new AxisAlignedBB(pos));
+		List<SeatEntity> seats = world.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
 		if (!seats.isEmpty()) {
 			SeatEntity seatEntity = seats.get(0);
 			List<Entity> passengers = seatEntity.getPassengers();
-			if (!passengers.isEmpty() && passengers.get(0) instanceof PlayerEntity)
-				return ActionResultType.PASS;
+			if (!passengers.isEmpty() && passengers.get(0) instanceof Player)
+				return InteractionResult.PASS;
 			if (!world.isClientSide) {
 				seatEntity.ejectPassengers();
 				player.startRiding(seatEntity);
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		if (world.isClientSide)
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		sitDown(world, pos, player);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
-	public static boolean isSeatOccupied(World world, BlockPos pos) {
-		return !world.getEntitiesOfClass(SeatEntity.class, new AxisAlignedBB(pos))
+	public static boolean isSeatOccupied(Level world, BlockPos pos) {
+		return !world.getEntitiesOfClass(SeatEntity.class, new AABB(pos))
 			.isEmpty();
 	}
 
 	public static boolean canBePickedUp(Entity passenger) {
-		return !(passenger instanceof PlayerEntity) && (passenger instanceof LivingEntity);
+		return !(passenger instanceof Player) && (passenger instanceof LivingEntity);
 	}
 
-	public static void sitDown(World world, BlockPos pos, Entity entity) {
+	public static void sitDown(Level world, BlockPos pos, Entity entity) {
 		if (world.isClientSide)
 			return;
 		SeatEntity seat = new SeatEntity(world, pos);
@@ -146,7 +148,7 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

@@ -9,18 +9,18 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidValveTileEntity extends KineticTileEntity {
 
 	LerpedFloat pointer;
 
-	public FluidValveTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public FluidValveTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 		pointer = LerpedFloat.linear()
 			.startWithValue(0)
@@ -59,17 +59,17 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	}
 
 	private float getChaseSpeed() {
-		return MathHelper.clamp(Math.abs(getSpeed()) / 16 / 20, 0, 1);
+		return Mth.clamp(Math.abs(getSpeed()) / 16 / 20, 0, 1);
 	}
 
 	@Override
-	protected void write(CompoundNBT compound, boolean clientPacket) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
 		compound.put("Pointer", pointer.writeNBT());
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		super.fromTag(state, compound, clientPacket);
 		pointer.readNBT(compound.getCompound("Pointer"), clientPacket);
 	}

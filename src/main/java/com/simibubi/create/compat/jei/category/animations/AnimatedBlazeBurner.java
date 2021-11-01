@@ -1,14 +1,14 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.Mth;
+import com.mojang.math.Vector3f;
 
 public class AnimatedBlazeBurner extends AnimatedKinetics {
 
@@ -19,7 +19,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 		return this;
 	}
 
-	public void draw(MatrixStack matrixStack, int xOffset, int yOffset) {
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 200);
 		matrixStack.mulPose(Vector3f.XP.rotationDegrees(-15.5f));
@@ -31,7 +31,7 @@ public class AnimatedBlazeBurner extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
-		float offset = (MathHelper.sin(AnimationTickHolder.getRenderTime() / 16f) + 0.5f) / 16f;
+		float offset = (Mth.sin(AnimationTickHolder.getRenderTime() / 16f) + 0.5f) / 16f;
 		PartialModel blaze = AllBlockPartials.BLAZES.get(heatLevel);
 		blockElement(blaze)
 			.atLocal(1, 1.65 + offset, 1)

@@ -6,15 +6,15 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.LevelReader;
 
 public interface IRotate extends IWrenchable {
 
@@ -23,9 +23,9 @@ public interface IRotate extends IWrenchable {
 		MEDIUM,
 		FAST;
 
-		public TextFormatting getTextColor() {
-			return this == NONE ? TextFormatting.GREEN
-					: this == MEDIUM ? TextFormatting.AQUA : TextFormatting.LIGHT_PURPLE;
+		public ChatFormatting getTextColor() {
+			return this == NONE ? ChatFormatting.GREEN
+					: this == MEDIUM ? ChatFormatting.AQUA : ChatFormatting.LIGHT_PURPLE;
 		}
 
 		public int getColor() {
@@ -59,10 +59,10 @@ public interface IRotate extends IWrenchable {
 			}
 		}
 
-		public static ITextComponent getFormattedSpeedText(float speed, boolean overstressed){
+		public static Component getFormattedSpeedText(float speed, boolean overstressed){
 			SpeedLevel speedLevel = of(speed);
 
-			IFormattableTextComponent level = new StringTextComponent(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
+			MutableComponent level = new TextComponent(ItemDescription.makeProgressBar(3, speedLevel.ordinal()));
 
 			if (speedLevel == SpeedLevel.MEDIUM)
 				level.append(Lang.translate("tooltip.speedRequirement.medium"));
@@ -72,7 +72,7 @@ public interface IRotate extends IWrenchable {
 			level.append(" (" + IHaveGoggleInformation.format(Math.abs(speed))).append(Lang.translate("generic.unit.rpm")).append(") ");
 
 			if (overstressed)
-				level.withStyle(TextFormatting.DARK_GRAY, TextFormatting.STRIKETHROUGH);
+				level.withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.STRIKETHROUGH);
 			else
 				level.withStyle(speedLevel.getTextColor());
 
@@ -87,12 +87,12 @@ public interface IRotate extends IWrenchable {
 		HIGH,
 		OVERSTRESSED;
 
-		public TextFormatting getAbsoluteColor() {
-			return this == LOW ? TextFormatting.YELLOW : this == MEDIUM ? TextFormatting.GOLD : TextFormatting.RED;
+		public ChatFormatting getAbsoluteColor() {
+			return this == LOW ? ChatFormatting.YELLOW : this == MEDIUM ? ChatFormatting.GOLD : ChatFormatting.RED;
 		}
 
-		public TextFormatting getRelativeColor() {
-			return this == LOW ? TextFormatting.GREEN : this == MEDIUM ? TextFormatting.YELLOW : this == HIGH ? TextFormatting.GOLD : TextFormatting.RED;
+		public ChatFormatting getRelativeColor() {
+			return this == LOW ? ChatFormatting.GREEN : this == MEDIUM ? ChatFormatting.YELLOW : this == HIGH ? ChatFormatting.GOLD : ChatFormatting.RED;
 		}
 
 		public static StressImpact of(double stressPercent){
@@ -106,11 +106,11 @@ public interface IRotate extends IWrenchable {
 			return !AllConfigs.SERVER.kinetics.disableStress.get();
 		}
 
-		public static ITextComponent getFormattedStressText(double stressPercent){
+		public static Component getFormattedStressText(double stressPercent){
 			StressImpact stressLevel = of(stressPercent);
-			TextFormatting color = stressLevel.getRelativeColor();
+			ChatFormatting color = stressLevel.getRelativeColor();
 
-			IFormattableTextComponent level = new StringTextComponent(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal(), 2)));
+			MutableComponent level = new TextComponent(ItemDescription.makeProgressBar(3, Math.min(stressLevel.ordinal(), 2)));
 			level.append(Lang.translate("tooltip.stressImpact." + Lang.asId(stressLevel.name())));
 
 			level.append(String.format(" (%s%%) ", (int) (stressPercent * 100)));
@@ -119,7 +119,7 @@ public interface IRotate extends IWrenchable {
 		}
 	}
 
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face);
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face);
 
 	public Axis getRotationAxis(BlockState state);
 

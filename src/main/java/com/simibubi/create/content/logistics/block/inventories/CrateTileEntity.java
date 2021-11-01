@@ -5,13 +5,13 @@ import java.util.List;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
 
 public abstract class CrateTileEntity extends SmartTileEntity {
 
-	public CrateTileEntity(TileEntityType<?> tileEntityTypeIn) {
+	public CrateTileEntity(BlockEntityType<?> tileEntityTypeIn) {
 		super(tileEntityTypeIn);
 	}
 

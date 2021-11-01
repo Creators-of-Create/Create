@@ -17,15 +17,15 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.BeltProcessingBe
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class BeltDeployerCallbacks {
@@ -71,7 +71,7 @@ public class BeltDeployerCallbacks {
 		if (held.isEmpty())
 			return ProcessingResult.HOLD;
 
-		IRecipe<?> recipe = deployerTileEntity.getRecipe(s.stack);
+		Recipe<?> recipe = deployerTileEntity.getRecipe(s.stack);
 		if (recipe == null)
 			return ProcessingResult.PASS;
 
@@ -90,7 +90,7 @@ public class BeltDeployerCallbacks {
 	}
 
 	public static void activate(TransportedItemStack transported, TransportedItemStackHandlerBehaviour handler,
-		DeployerTileEntity deployerTileEntity, IRecipe<?> recipe) {
+		DeployerTileEntity deployerTileEntity, Recipe<?> recipe) {
 
 		List<TransportedItemStack> collect =
 			InWorldProcessing.applyRecipeOn(ItemHandlerHelper.copyStackWithSize(transported.stack, 1), recipe)
@@ -126,16 +126,16 @@ public class BeltDeployerCallbacks {
 
 		if (!unbreakable && !keepHeld) {
 			if (heldItem.isDamageableItem())
-				heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(Hand.MAIN_HAND));
+				heldItem.hurtAndBreak(1, deployerTileEntity.player, s -> s.broadcastBreakEvent(InteractionHand.MAIN_HAND));
 			else
 				heldItem.shrink(1);
 		}
 
 		BlockPos pos = deployerTileEntity.getBlockPos();
-		World world = deployerTileEntity.getLevel();
+		Level world = deployerTileEntity.getLevel();
 		if (heldItem.isEmpty())
-			world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundCategory.BLOCKS, .25f, 1);
-		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, .25f, .75f);
+			world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, .25f, 1);
+		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .25f, .75f);
 		if (recipe instanceof SandPaperPolishingRecipe)
 			AllSoundEvents.AUTO_POLISH.playOnServer(world, pos, .25f, 1f);
 

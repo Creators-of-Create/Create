@@ -5,21 +5,21 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CommandBlockBlock;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.BlockPosArgument;
-import net.minecraft.tileentity.CommandBlockLogic;
-import net.minecraft.tileentity.CommandBlockTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.CommandBlock;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.world.level.BaseCommandBlock;
+import net.minecraft.world.level.block.entity.CommandBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.level.ServerLevel;
 
 public class ReplaceInCommandBlocksCommand {
 
-	public static ArgumentBuilder<CommandSource, ?> register() {
+	public static ArgumentBuilder<CommandSourceStack, ?> register() {
 		return Commands.literal("replaceInCommandBlocks")
 			.requires(cs -> cs.hasPermission(2))
 			.then(Commands.argument("begin", BlockPosArgument.blockPos())
@@ -36,20 +36,20 @@ public class ReplaceInCommandBlocksCommand {
 
 	}
 
-	private static void doReplace(CommandSource source, BlockPos from, BlockPos to, String toReplace,
+	private static void doReplace(CommandSourceStack source, BlockPos from, BlockPos to, String toReplace,
 		String replaceWith) {
-		ServerWorld world = source.getLevel();
+		ServerLevel world = source.getLevel();
 		MutableInt blocks = new MutableInt(0);
 		BlockPos.betweenClosedStream(from, to)
 			.forEach(pos -> {
 				BlockState blockState = world.getBlockState(pos);
-				if (!(blockState.getBlock() instanceof CommandBlockBlock))
+				if (!(blockState.getBlock() instanceof CommandBlock))
 					return;
-				TileEntity tileEntity = world.getBlockEntity(pos);
-				if (!(tileEntity instanceof CommandBlockTileEntity))
+				BlockEntity tileEntity = world.getBlockEntity(pos);
+				if (!(tileEntity instanceof CommandBlockEntity))
 					return;
-				CommandBlockTileEntity cb = (CommandBlockTileEntity) tileEntity;
-				CommandBlockLogic commandBlockLogic = cb.getCommandBlock();
+				CommandBlockEntity cb = (CommandBlockEntity) tileEntity;
+				BaseCommandBlock commandBlockLogic = cb.getCommandBlock();
 				String command = commandBlockLogic.getCommand();
 				if (command.indexOf(toReplace) != -1)
 					blocks.increment();
@@ -59,10 +59,10 @@ public class ReplaceInCommandBlocksCommand {
 			});
 		int intValue = blocks.intValue();
 		if (intValue == 0) {
-			source.sendSuccess(new StringTextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
+			source.sendSuccess(new TextComponent("Couldn't find \"" + toReplace + "\" anywhere."), true);
 			return;
 		}
-		source.sendSuccess(new StringTextComponent("Replaced occurrences in " + intValue + " blocks."), true);
+		source.sendSuccess(new TextComponent("Replaced occurrences in " + intValue + " blocks."), true);
 	}
 
 }

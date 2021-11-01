@@ -1,17 +1,17 @@
 package com.simibubi.create.foundation.sound;
 
-import net.minecraft.client.audio.TickableSound;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
 
-public class ContinuousSound extends TickableSound {
+public class ContinuousSound extends AbstractTickableSoundInstance {
 
 	private float sharedPitch;
 	private SoundScape scape;
 	private float relativeVolume;
 
 	protected ContinuousSound(SoundEvent event, SoundScape scape, float sharedPitch, float relativeVolume) {
-		super(event, SoundCategory.AMBIENT);
+		super(event, SoundSource.AMBIENT);
 		this.scape = scape;
 		this.sharedPitch = sharedPitch;
 		this.relativeVolume = relativeVolume;

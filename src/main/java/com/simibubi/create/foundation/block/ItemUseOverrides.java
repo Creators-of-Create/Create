@@ -6,11 +6,11 @@ import java.util.Set;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -37,9 +37,9 @@ public class ItemUseOverrides {
 		if (!OVERRIDES.contains(id))
 			return;
 
-		BlockRayTraceResult blockTrace =
-				new BlockRayTraceResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
-		ActionResultType result = state.use(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
+		BlockHitResult blockTrace =
+				new BlockHitResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
+		InteractionResult result = state.use(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
 
 		if (!result.consumesAction())
 			return;

@@ -6,8 +6,8 @@ import java.util.function.Predicate;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -51,9 +51,9 @@ public abstract class FlowSource {
 
 	public abstract boolean isEndpoint();
 
-	public void manageSource(World world) {}
+	public void manageSource(Level world) {}
 
-	public void whileFlowPresent(World world, boolean pulling) {}
+	public void whileFlowPresent(Level world, boolean pulling) {}
 
 	public LazyOptional<IFluidHandler> provideHandler() {
 		return EMPTY;
@@ -67,10 +67,10 @@ public abstract class FlowSource {
 			fluidHandler = EMPTY;
 		}
 
-		public void manageSource(World world) {
+		public void manageSource(Level world) {
 			if (fluidHandler.isPresent() && world.getGameTime() % 20 != 0)
 				return;
-			TileEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
+			BlockEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
 			if (tileEntity != null)
 				fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
 					location.getOppositeFace());
@@ -95,7 +95,7 @@ public abstract class FlowSource {
 		}
 
 		@Override
-		public void manageSource(World world) {
+		public void manageSource(Level world) {
 			if (cached != null && cached.get() != null && !cached.get().tileEntity.isRemoved())
 				return;
 			cached = null;

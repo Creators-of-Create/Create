@@ -16,17 +16,17 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -41,7 +41,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	}
 
 	@Override
-	public boolean matches(RecipeWrapper inv, World p_77569_2_) {
+	public boolean matches(RecipeWrapper inv, Level p_77569_2_) {
 		return ingredients.get(0)
 			.test(inv.getItem(0))
 			&& ingredients.get(1)
@@ -74,7 +74,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 		return ingredients.get(0);
 	}
 
-	public static List<DeployerApplicationRecipe> convert(List<IRecipe<?>> sandpaperRecipes) {
+	public static List<DeployerApplicationRecipe> convert(List<Recipe<?>> sandpaperRecipes) {
 		return sandpaperRecipes.stream()
 			.map(r -> new ProcessingRecipeBuilder<>(DeployerApplicationRecipe::new, new ResourceLocation(r.getId()
 				.getNamespace(),
@@ -95,7 +95,7 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	@Override
 	public void readAdditional(JsonObject json) {
 		super.readAdditional(json);
-		keepHeldItem = JSONUtils.getAsBoolean(json, "keepHeldItem", false);
+		keepHeldItem = GsonHelper.getAsBoolean(json, "keepHeldItem", false);
 	}
 
 	@Override
@@ -106,30 +106,30 @@ public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> i
 	}
 
 	@Override
-	public void readAdditional(PacketBuffer buffer) {
+	public void readAdditional(FriendlyByteBuf buffer) {
 		super.readAdditional(buffer);
 		keepHeldItem = buffer.readBoolean();
 	}
 
 	@Override
-	public void writeAdditional(PacketBuffer buffer) {
+	public void writeAdditional(FriendlyByteBuf buffer) {
 		super.writeAdditional(buffer);
 		buffer.writeBoolean(keepHeldItem);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public ITextComponent getDescriptionForAssembly() {
+	public Component getDescriptionForAssembly() {
 		ItemStack[] matchingStacks = ingredients.get(1)
 			.getItems();
 		if (matchingStacks.length == 0)
-			return new StringTextComponent("Invalid");
+			return new TextComponent("Invalid");
 		return Lang.translate("recipe.assembly.deploying_item",
-			new TranslationTextComponent(matchingStacks[0].getDescriptionId()).getString());
+			new TranslatableComponent(matchingStacks[0].getDescriptionId()).getString());
 	}
 
 	@Override
-	public void addRequiredMachines(Set<IItemProvider> list) {
+	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.DEPLOYER.get());
 	}
 

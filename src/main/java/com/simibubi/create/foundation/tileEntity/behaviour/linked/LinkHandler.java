@@ -6,15 +6,15 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
@@ -25,10 +25,10 @@ public class LinkHandler {
 
 	@SubscribeEvent
 	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		World world = event.getWorld();
+		Level world = event.getWorld();
 		BlockPos pos = event.getPos();
-		PlayerEntity player = event.getPlayer();
-		Hand hand = event.getHand();
+		Player player = event.getPlayer();
+		InteractionHand hand = event.getHand();
 		
 		if (player.isShiftKeyDown() || player.isSpectator())
 			return;
@@ -38,7 +38,7 @@ public class LinkHandler {
 			return;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		BlockRayTraceResult ray = RaycastHelper.rayTraceRange(world, player, 10);
+		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
 			return;
 		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
@@ -51,8 +51,8 @@ public class LinkHandler {
 				if (event.getSide() != LogicalSide.CLIENT) 
 					behaviour.setFrequency(first, heldItem);
 				event.setCanceled(true);
-				event.setCancellationResult(ActionResultType.SUCCESS);
-				world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundCategory.BLOCKS, .25f, .1f);
+				event.setCancellationResult(InteractionResult.SUCCESS);
+				world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
 			}
 		}
 	}

@@ -4,12 +4,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Mov
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.curiosities.bell.AbstractBellBlock;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public class BellMovementBehaviour extends MovementBehaviour {
 
@@ -19,7 +19,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 	}
 
 	@Override
-	public void onSpeedChanged(MovementContext context, Vector3d oldMotion, Vector3d motion) {
+	public void onSpeedChanged(MovementContext context, Vec3 oldMotion, Vec3 motion) {
 		double dotProduct = oldMotion.dot(motion);
 
 		if (dotProduct <= 0 && (context.relativeMotion.length() != 0) || context.firstMovement)
@@ -33,7 +33,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 	}
 
 	public static void playSound(MovementContext context) {
-		World world = context.world;
+		Level world = context.world;
 		BlockPos pos = new BlockPos(context.position);
 		Block block = context.state.getBlock();
 
@@ -42,7 +42,7 @@ public class BellMovementBehaviour extends MovementBehaviour {
 		} else {
 			// Vanilla bell sound
 			world.playSound(null, pos, SoundEvents.BELL_BLOCK,
-					SoundCategory.BLOCKS, 2f, 1f);
+					SoundSource.BLOCKS, 2f, 1f);
 		}
 	}
 }

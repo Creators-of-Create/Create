@@ -7,11 +7,11 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 
 public class SchematicPlacePacket extends SimplePacketBase {
@@ -22,21 +22,21 @@ public class SchematicPlacePacket extends SimplePacketBase {
 		this.stack = stack;
 	}
 
-	public SchematicPlacePacket(PacketBuffer buffer) {
+	public SchematicPlacePacket(FriendlyByteBuf buffer) {
 		stack = buffer.readItem();
 	}
 
-	public void write(PacketBuffer buffer) {
+	public void write(FriendlyByteBuf buffer) {
 		buffer.writeItem(stack);
 	}
 
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			ServerPlayerEntity player = context.get().getSender();
+			ServerPlayer player = context.get().getSender();
 			if (player == null)
 				return;
 
-			World world = player.getLevel();
+			Level world = player.getLevel();
 			SchematicPrinter printer = new SchematicPrinter();
 			printer.loadSchematic(stack, world, !player.canUseGameMasterBlocks());
 			if (!printer.isLoaded())
@@ -53,7 +53,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 					if (placingAir && !includeAir)
 						return;
 					
-					CompoundNBT tileData = tile != null ? tile.save(new CompoundNBT()) : null;
+					CompoundTag tileData = tile != null ? tile.save(new CompoundTag()) : null;
 					BlockHelper.placeSchematicBlock(world, state, pos, null, tileData);
 				}, (pos, entity) -> {
 					world.addFreshEntity(entity);

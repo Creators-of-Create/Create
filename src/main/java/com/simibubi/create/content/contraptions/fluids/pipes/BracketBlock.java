@@ -10,14 +10,16 @@ import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.util.StringRepresentable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BracketBlock extends WrenchableDirectionalBlock {
 
@@ -25,7 +27,7 @@ public class BracketBlock extends WrenchableDirectionalBlock {
 		DirectionalAxisKineticBlock.AXIS_ALONG_FIRST_COORDINATE;
 	public static final EnumProperty<BracketType> TYPE = EnumProperty.create("type", BracketType.class);
 
-	public static enum BracketType implements IStringSerializable {
+	public static enum BracketType implements StringRepresentable {
 		PIPE, COG, SHAFT;
 
 		@Override

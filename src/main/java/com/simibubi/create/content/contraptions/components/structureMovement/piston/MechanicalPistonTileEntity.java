@@ -11,34 +11,34 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	protected boolean hadCollisionWithOtherPiston;
 	protected int extensionLength;
 
-	public MechanicalPistonTileEntity(TileEntityType<? extends MechanicalPistonTileEntity> type) {
+	public MechanicalPistonTileEntity(BlockEntityType<? extends MechanicalPistonTileEntity> type) {
 		super(type);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundNBT compound, boolean clientPacket) {
+	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
 		extensionLength = compound.getInt("ExtensionLength");
 		super.fromTag(state, compound, clientPacket);
 	}
 
 	@Override
-	protected void write(CompoundNBT tag, boolean clientPacket) {
+	protected void write(CompoundTag tag, boolean clientPacket) {
 		tag.putInt("ExtensionLength", extensionLength);
 		super.write(tag, clientPacket);
 	}
@@ -118,7 +118,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 
 	@Override
 	public float getMovementSpeed() {
-		float movementSpeed = MathHelper.clamp(convertToLinear(getSpeed()), -.49f, .49f);
+		float movementSpeed = Mth.clamp(convertToLinear(getSpeed()), -.49f, .49f);
 		if (level.isClientSide)
 			movementSpeed *= ServerSpeedProvider.get();
 		Direction pistonDirection = getBlockState().getValue(BlockStateProperties.FACING);
@@ -127,7 +127,7 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 		movementSpeed = movementSpeed * -movementModifier + clientOffsetDiff / 2f;
 
 		int extensionRange = getExtensionRange();
-		movementSpeed = MathHelper.clamp(movementSpeed, 0 - offset, extensionRange - offset);
+		movementSpeed = Mth.clamp(movementSpeed, 0 - offset, extensionRange - offset);
 		return movementSpeed;
 	}
 
@@ -140,18 +140,18 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	protected void visitNewPosition() {}
 
 	@Override
-	protected Vector3d toMotionVector(float speed) {
+	protected Vec3 toMotionVector(float speed) {
 		Direction pistonDirection = getBlockState().getValue(BlockStateProperties.FACING);
-		return Vector3d.atLowerCornerOf(pistonDirection.getNormal())
+		return Vec3.atLowerCornerOf(pistonDirection.getNormal())
 			.scale(speed);
 	}
 
 	@Override
-	protected Vector3d toPosition(float offset) {
-		Vector3d position = Vector3d.atLowerCornerOf(getBlockState().getValue(BlockStateProperties.FACING)
+	protected Vec3 toPosition(float offset) {
+		Vec3 position = Vec3.atLowerCornerOf(getBlockState().getValue(BlockStateProperties.FACING)
 			.getNormal())
 			.scale(offset);
-		return position.add(Vector3d.atLowerCornerOf(movedContraption.getContraption().anchor));
+		return position.add(Vec3.atLowerCornerOf(movedContraption.getContraption().anchor));
 	}
 
 	@Override

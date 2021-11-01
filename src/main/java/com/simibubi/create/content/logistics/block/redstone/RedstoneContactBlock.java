@@ -9,18 +9,20 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -41,7 +43,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState().setValue(FACING, context.getNearestLookingDirection()
 			.getOpposite());
 		Direction placeDirection = context.getClickedFace()
@@ -57,7 +59,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn,
+	public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn,
 		BlockPos currentPos, BlockPos facingPos) {
 		if (facing != stateIn.getValue(FACING))
 			return stateIn;
@@ -70,7 +72,7 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (state.getBlock() == this && newState.getBlock() == this) {
 			if (state == newState.cycle(POWERED))
 				worldIn.updateNeighborsAt(pos, this);
@@ -79,13 +81,13 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		boolean hasValidContact = hasValidContact(worldIn, pos, state.getValue(FACING));
 		if (state.getValue(POWERED) != hasValidContact)
 			worldIn.setBlockAndUpdate(pos, state.setValue(POWERED, hasValidContact));
 	}
 
-	public static boolean hasValidContact(IWorld world, BlockPos pos, Direction direction) {
+	public static boolean hasValidContact(LevelAccessor world, BlockPos pos, Direction direction) {
 		BlockState blockState = world.getBlockState(pos.relative(direction));
 		return AllBlocks.REDSTONE_CONTACT.has(blockState) && blockState.getValue(FACING) == direction.getOpposite();
 	}
@@ -96,14 +98,14 @@ public class RedstoneContactBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public boolean canConnectRedstone(BlockState state, IBlockReader world, BlockPos pos, @Nullable Direction side) {
+	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction side) {
 		if (side == null)
 			return true;
 		return state.getValue(FACING) != side.getOpposite();
 	}
 
 	@Override
-	public int getSignal(BlockState state, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getSignal(BlockState state, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return state.getValue(POWERED) ? 15 : 0;
 	}
 

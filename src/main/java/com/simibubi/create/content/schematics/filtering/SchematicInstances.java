@@ -10,13 +10,13 @@ import com.simibubi.create.content.schematics.SchematicWorld;
 import com.simibubi.create.content.schematics.item.SchematicItem;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.PlacementSettings;
-import net.minecraft.world.gen.feature.template.Template;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public class SchematicInstances {
 
@@ -31,7 +31,7 @@ public class SchematicInstances {
 	public static void register() {}
 
 	@Nullable
-	public static SchematicWorld get(World world, ItemStack schematic) {
+	public static SchematicWorld get(Level world, ItemStack schematic) {
 		Cache<Integer, SchematicWorld> map = loadedSchematics.get(world);
 		int hash = getHash(schematic);
 		SchematicWorld ifPresent = map.getIfPresent(hash);
@@ -44,23 +44,23 @@ public class SchematicInstances {
 		return loadWorld;
 	}
 
-	private static SchematicWorld loadWorld(World wrapped, ItemStack schematic) {
+	private static SchematicWorld loadWorld(Level wrapped, ItemStack schematic) {
 		if (schematic == null || !schematic.hasTag())
 			return null;
 		if (!schematic.getTag()
 			.getBoolean("Deployed"))
 			return null;
 
-		Template activeTemplate = SchematicItem.loadSchematic(schematic);
+		StructureTemplate activeTemplate = SchematicItem.loadSchematic(schematic);
 
 		if (activeTemplate.getSize()
 			.equals(BlockPos.ZERO))
 			return null;
 
-		BlockPos anchor = NBTUtil.readBlockPos(schematic.getTag()
+		BlockPos anchor = NbtUtils.readBlockPos(schematic.getTag()
 			.getCompound("Anchor"));
 		SchematicWorld world = new SchematicWorld(anchor, wrapped);
-		PlacementSettings settings = SchematicItem.getSettings(schematic);
+		StructurePlaceSettings settings = SchematicItem.getSettings(schematic);
 		activeTemplate.placeInWorldChunk(world, anchor, settings, wrapped.getRandom());
 
 		return world;
@@ -76,7 +76,7 @@ public class SchematicInstances {
 	public static int getHash(ItemStack schematic) {
 		if (schematic == null || !schematic.hasTag())
 			return -1;
-		CompoundNBT tag = schematic.getTag();
+		CompoundTag tag = schematic.getTag();
 		if (!tag.contains("SchematicHash"))
 			tag.putInt("SchematicHash", tag.toString()
 				.hashCode());

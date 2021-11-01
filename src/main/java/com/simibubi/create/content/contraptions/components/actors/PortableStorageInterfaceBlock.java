@@ -8,15 +8,17 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -44,25 +46,25 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return (fluids ? AllTileEntities.PORTABLE_FLUID_INTERFACE : AllTileEntities.PORTABLE_STORAGE_INTERFACE)
 			.create();
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
 		boolean p_220069_6_) {
 		withTileEntityDo(world, pos, PortableStorageInterfaceTileEntity::neighbourChanged);
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState().setValue(FACING, context.getNearestLookingDirection()
 			.getOpposite());
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.PORTABLE_STORAGE_INTERFACE.get(state.getValue(FACING));
 	}
 
@@ -72,7 +74,7 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return getTileEntityOptional(worldIn, pos).map(te -> te.isConnected() ? 15 : 0)
 			.orElse(0);
 	}

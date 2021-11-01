@@ -3,13 +3,13 @@ package com.simibubi.create.content.logistics.packet;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
 import com.simibubi.create.foundation.networking.TileEntityDataPacket;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class FunnelFlapPacket extends TileEntityDataPacket<FunnelTileEntity> {
 
     private final boolean inwards;
 
-    public FunnelFlapPacket(PacketBuffer buffer) {
+    public FunnelFlapPacket(FriendlyByteBuf buffer) {
         super(buffer);
 
         inwards = buffer.readBoolean();
@@ -21,7 +21,7 @@ public class FunnelFlapPacket extends TileEntityDataPacket<FunnelTileEntity> {
     }
 
     @Override
-    protected void writeData(PacketBuffer buffer) {
+    protected void writeData(FriendlyByteBuf buffer) {
         buffer.writeBoolean(inwards);
     }
 

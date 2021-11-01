@@ -12,19 +12,19 @@ import com.simibubi.create.foundation.block.render.QuadHelper;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.Direction;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.BakedModelWrapper;
 import net.minecraftforge.client.model.data.IModelData;
 
-public class BeltModel extends BakedModelWrapper<IBakedModel> {
+public class BeltModel extends BakedModelWrapper<BakedModel> {
 
-	public BeltModel(IBakedModel template) {
+	public BeltModel(BakedModel template) {
 		super(template);
 	}
 
@@ -39,7 +39,7 @@ public class BeltModel extends BakedModelWrapper<IBakedModel> {
 		quads = new ArrayList<>(quads);
 
 		SpriteShiftEntry spriteShift = AllSpriteShifts.ANDESIDE_BELT_CASING;
-		VertexFormat format = DefaultVertexFormats.BLOCK;
+		VertexFormat format = DefaultVertexFormat.BLOCK;
 
 		for (int i = 0; i < quads.size(); i++) {
 			BakedQuad quad = quads.get(i);

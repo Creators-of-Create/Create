@@ -3,7 +3,7 @@ package com.simibubi.create.content.logistics.item;
 import java.util.Vector;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler.Mode;
 import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
@@ -13,13 +13,13 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.util.Mth;
 
 public class LinkedControllerItemRenderer extends CustomRenderedItemModelRenderer<LinkedControllerModel> {
 
@@ -62,25 +62,25 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 	@Override
 	protected void render(ItemStack stack, LinkedControllerModel model, PartialItemModelRenderer renderer,
-		ItemCameraTransforms.TransformType transformType, MatrixStack ms, IRenderTypeBuffer buffer, int light,
+		ItemTransforms.TransformType transformType, PoseStack ms, MultiBufferSource buffer, int light,
 		int overlay) {
 		renderNormal(stack, model, renderer, transformType, ms, light);
 	}
 
 	protected static void renderNormal(ItemStack stack, LinkedControllerModel model,
-	  	PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType, MatrixStack ms,
+	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light) {
 		render(stack, model, renderer, transformType, ms, light, RenderType.NORMAL, false, false);
 	}
 
 	public static void renderInLectern(ItemStack stack, LinkedControllerModel model,
-	  	PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType, MatrixStack ms,
+	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light, boolean active, boolean renderDepression) {
 		render(stack, model, renderer, transformType, ms, light, RenderType.LECTERN, active, renderDepression);
 	}
 
 	protected static void render(ItemStack stack, LinkedControllerModel model,
-	  	PartialItemModelRenderer renderer, ItemCameraTransforms.TransformType transformType, MatrixStack ms,
+	  	PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType, PoseStack ms,
   		int light, RenderType renderType, boolean active, boolean renderDepression) {
 		float pt = AnimationTickHolder.getPartialTicks();
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
@@ -89,7 +89,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 
 		if (renderType == RenderType.NORMAL) {
 			Minecraft mc = Minecraft.getInstance();
-			boolean rightHanded = mc.options.mainHand == HandSide.RIGHT;
+			boolean rightHanded = mc.options.mainHand == HumanoidArm.RIGHT;
 			TransformType mainHand =
 					rightHanded ? TransformType.FIRST_PERSON_RIGHT_HAND : TransformType.FIRST_PERSON_LEFT_HAND;
 			TransformType offHand =
@@ -126,14 +126,14 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 			return;
 		}
 
-		IBakedModel button = model.getPartial("button");
+		BakedModel button = model.getPartial("button");
 		float s = 1 / 16f;
 		float b = s * -.75f;
 		int index = 0;
 
 		if (renderType == RenderType.NORMAL) {
 			if (LinkedControllerClientHandler.MODE == Mode.BIND) {
-				int i = (int) MathHelper.lerp((MathHelper.sin(AnimationTickHolder.getRenderTime() / 4f) + 1) / 2, 5, 15);
+				int i = (int) Mth.lerp((Mth.sin(AnimationTickHolder.getRenderTime() / 4f) + 1) / 2, 5, 15);
 				light = i << 20;
 			}
 		}
@@ -157,7 +157,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 		ms.popPose();
 	}
 
-	protected static void renderButton(PartialItemModelRenderer renderer, MatrixStack ms, int light, float pt, IBakedModel button,
+	protected static void renderButton(PartialItemModelRenderer renderer, PoseStack ms, int light, float pt, BakedModel button,
 		float b, int index, boolean renderDepression) {
 		ms.pushPose();
 		if (renderDepression) {
@@ -169,7 +169,7 @@ public class LinkedControllerItemRenderer extends CustomRenderedItemModelRendere
 	}
 
 	@Override
-	public LinkedControllerModel createModel(IBakedModel originalModel) {
+	public LinkedControllerModel createModel(BakedModel originalModel) {
 		return new LinkedControllerModel(originalModel);
 	}
 

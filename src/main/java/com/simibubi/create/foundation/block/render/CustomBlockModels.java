@@ -11,13 +11,13 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.resources.model.BakedModel;
 
 public class CustomBlockModels {
 
-	private List<Pair<Supplier<? extends Block>, NonNullFunction<IBakedModel, ? extends IBakedModel>>> registered;
-	private Map<Block, NonNullFunction<IBakedModel, ? extends IBakedModel>> customModels;
+	private List<Pair<Supplier<? extends Block>, NonNullFunction<BakedModel, ? extends BakedModel>>> registered;
+	private Map<Block, NonNullFunction<BakedModel, ? extends BakedModel>> customModels;
 
 	public CustomBlockModels() {
 		registered = new ArrayList<>();
@@ -25,11 +25,11 @@ public class CustomBlockModels {
 	}
 
 	public void register(Supplier<? extends Block> entry,
-		NonNullFunction<IBakedModel, ? extends IBakedModel> behaviour) {
+		NonNullFunction<BakedModel, ? extends BakedModel> behaviour) {
 		registered.add(Pair.of(entry, behaviour));
 	}
 
-	public void forEach(NonNullBiConsumer<Block, NonNullFunction<IBakedModel, ? extends IBakedModel>> consumer) {
+	public void forEach(NonNullBiConsumer<Block, NonNullFunction<BakedModel, ? extends BakedModel>> consumer) {
 		loadEntriesIfMissing();
 		customModels.forEach(consumer);
 	}
@@ -45,7 +45,7 @@ public class CustomBlockModels {
 			Block key = p.getKey()
 				.get();
 			
-			NonNullFunction<IBakedModel, ? extends IBakedModel> existingModel = customModels.get(key);
+			NonNullFunction<BakedModel, ? extends BakedModel> existingModel = customModels.get(key);
 			if (existingModel != null) {
 				customModels.put(key, p.getValue()
 					.andThen(existingModel));

@@ -15,15 +15,15 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class WashingRecipeGen extends ProcessingRecipeGen {
@@ -90,7 +90,7 @@ public class WashingRecipeGen extends ProcessingRecipeGen {
 		return create(() -> block, b -> b.output(result));
 	}
 
-	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<IItemProvider> nugget) {
+	public GeneratedRecipe crushedOre(ItemEntry<Item> crushed, Supplier<ItemLike> nugget) {
 		return create(crushed::get, b -> b.output(nugget.get(), 10)
 			.output(.5f, nugget.get(), 5));
 	}

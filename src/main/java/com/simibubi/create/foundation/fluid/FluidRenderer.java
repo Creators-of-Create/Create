@@ -3,27 +3,27 @@ package com.simibubi.create.foundation.fluid;
 import java.util.function.Function;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.matrix.MatrixStack.Entry;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.PoseStack.Pose;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -32,21 +32,21 @@ import net.minecraftforge.fluids.FluidStack;
 @OnlyIn(Dist.CLIENT)
 public class FluidRenderer {
 
-	public static IVertexBuilder getFluidBuilder(IRenderTypeBuffer buffer) {
+	public static VertexConsumer getFluidBuilder(MultiBufferSource buffer) {
 		return buffer.getBuffer(RenderTypes.getFluid());
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
-		boolean inbound, IRenderTypeBuffer buffer, MatrixStack ms, int light) {
+		boolean inbound, MultiBufferSource buffer, PoseStack ms, int light) {
 		renderFluidStream(fluidStack, direction, radius, progress, inbound, getFluidBuilder(buffer), ms, light);
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
-		boolean inbound, IVertexBuilder builder, MatrixStack ms, int light) {
+		boolean inbound, VertexConsumer builder, PoseStack ms, int light) {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes fluidAttributes = fluid.getAttributes();
 		Function<ResourceLocation, TextureAtlasSprite> spriteAtlas = Minecraft.getInstance()
-			.getTextureAtlas(PlayerContainer.BLOCK_ATLAS);
+			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
 		TextureAtlasSprite flowTexture = spriteAtlas.apply(fluidAttributes.getFlowingTexture(fluidStack));
 		TextureAtlasSprite stillTexture = spriteAtlas.apply(fluidAttributes.getStillTexture(fluidStack));
 
@@ -71,7 +71,7 @@ public class FluidRenderer {
 		float hMax = (float) (radius);
 		float y = inbound ? 0 : .5f;
 		float yMin = y;
-		float yMax = y + MathHelper.clamp(progress * .5f - 1e-6f, 0, 1);
+		float yMax = y + Mth.clamp(progress * .5f - 1e-6f, 0, 1);
 
 		for (int i = 0; i < 4; i++) {
 			ms.pushPose();
@@ -89,16 +89,16 @@ public class FluidRenderer {
 	}
 
 	public static void renderTiledFluidBB(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
-		float yMax, float zMax, IRenderTypeBuffer buffer, MatrixStack ms, int light, boolean renderBottom) {
+		float yMax, float zMax, MultiBufferSource buffer, PoseStack ms, int light, boolean renderBottom) {
 		renderTiledFluidBB(fluidStack, xMin, yMin, zMin, xMax, yMax, zMax, getFluidBuilder(buffer), ms, light, renderBottom);
 	}
 
 	public static void renderTiledFluidBB(FluidStack fluidStack, float xMin, float yMin, float zMin, float xMax,
-		float yMax, float zMax, IVertexBuilder builder, MatrixStack ms, int light, boolean renderBottom) {
+		float yMax, float zMax, VertexConsumer builder, PoseStack ms, int light, boolean renderBottom) {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes fluidAttributes = fluid.getAttributes();
 		TextureAtlasSprite fluidTexture = Minecraft.getInstance()
-			.getTextureAtlas(PlayerContainer.BLOCK_ATLAS)
+			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
 			.apply(fluidAttributes.getStillTexture(fluidStack));
 
 		int color = fluidAttributes.getColor(fluidStack);
@@ -106,7 +106,7 @@ public class FluidRenderer {
 		int luminosity = Math.max(blockLightIn, fluidAttributes.getLuminosity(fluidStack));
 		light = (light & 0xF00000) | luminosity << 4;
 
-		Vector3d center = new Vector3d(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
+		Vec3 center = new Vec3(xMin + (xMax - xMin) / 2, yMin + (yMax - yMin) / 2, zMin + (zMax - zMin) / 2);
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		ms.pushPose();
 		if (fluidStack.getFluid()
@@ -148,7 +148,7 @@ public class FluidRenderer {
 	}
 
 	private static void renderTiledVerticalFace(float y, Direction face, float xMin, float zMin, float xMax, float zMax,
-		IVertexBuilder builder, MatrixStack ms, int light, int color, TextureAtlasSprite texture) {
+		VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
 		float x2 = 0;
 		float z2 = 0;
 		for (float x1 = xMin; x1 < xMax; x1 = x2) {
@@ -170,7 +170,7 @@ public class FluidRenderer {
 	}
 
 	private static void renderTiledHorizontalFace(float h, Direction face, float hMin, float yMin, float hMax,
-		float yMax, IVertexBuilder builder, MatrixStack ms, int light, int color, TextureAtlasSprite texture) {
+		float yMax, VertexConsumer builder, PoseStack ms, int light, int color, TextureAtlasSprite texture) {
 		boolean X = face.getAxis() == Axis.X;
 
 		float h2 = 0;
@@ -206,11 +206,11 @@ public class FluidRenderer {
 		return f - ((int) f);
 	}
 
-	private static void putVertex(IVertexBuilder builder, MatrixStack ms, float x, float y, float z, int color, float u,
+	private static void putVertex(VertexConsumer builder, PoseStack ms, float x, float y, float z, int color, float u,
 		float v, Direction face, int light) {
 
-		Vector3i n = face.getNormal();
-		Entry peek = ms.last();
+		Vec3i n = face.getNormal();
+		Pose peek = ms.last();
 		int ff = 0xff;
 		int a = color >> 24 & ff;
 		int r = color >> 16 & ff;

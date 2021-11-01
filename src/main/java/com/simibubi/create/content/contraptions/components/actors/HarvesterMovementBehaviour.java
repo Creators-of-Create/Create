@@ -2,9 +2,39 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import static net.minecraft.block.HorizontalBlock.FACING;
 
+import javanet.minecrafimport com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.material.MaterialManager;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
+import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 import javax.annotation.Nullable;
-
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CocoaBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.GrowingPlantBlock;
+import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.IPlantable;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+
+t.world.level.block.HorizontalDirectionalBlockg.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
@@ -59,22 +89,22 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public void renderInContraption(MovementContext context, PlacementSimulationWorld renderWorld,
-		ContraptionMatrices matrices, IRenderTypeBuffer buffers) {
+		ContraptionMatrices matrices, MultiBufferSource buffers) {
 		if (!Backend.getInstance()
 			.canUseInstancing())
 			HarvesterRenderer.renderInContraption(context, renderWorld, matrices, buffers);
 	}
 
 	@Override
-	public Vector3d getActiveAreaOffset(MovementContext context) {
-		return Vector3d.atLowerCornerOf(context.state.getValue(FACING)
+	public Vec3 getActiveAreaOffset(MovementContext context) {
+		return Vec3.atLowerCornerOf(context.state.getValue(FACING)
 			.getNormal())
 			.scale(.45);
 	}
 
 	@Override
 	public void visitNewPosition(MovementContext context, BlockPos pos) {
-		World world = context.world;
+		Level world = context.world;
 		BlockState stateVisited = world.getBlockState(pos);
 		boolean notCropButCuttable = false;
 
@@ -111,12 +141,12 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		world.setBlockAndUpdate(pos, cutCrop(world, pos, stateVisited));
 	}
 
-	private boolean isValidCrop(World world, BlockPos pos, BlockState state) {
+	private boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
 		boolean harvestPartial = AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get();
 		boolean replant = AllConfigs.SERVER.kinetics.harvesterReplants.get();
 		
-		if (state.getBlock() instanceof CropsBlock) {
-			CropsBlock crop = (CropsBlock) state.getBlock();
+		if (state.getBlock() instanceof CropBlock) {
+			CropBlock crop = (CropBlock) state.getBlock();
 			if (harvestPartial)
 				return state.getValue(crop.getAgeProperty()) != 0 || !replant;
 			return crop.isMaxAge(state);
@@ -145,8 +175,8 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		return false;
 	}
 
-	private boolean isValidOther(World world, BlockPos pos, BlockState state) {
-		if (state.getBlock() instanceof CropsBlock)
+	private boolean isValidOther(Level world, BlockPos pos, BlockState state) {
+		if (state.getBlock() instanceof CropBlock)
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)
 			return true;
@@ -156,7 +186,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 		if (state.getCollisionShape(world, pos)
 			.isEmpty() || state.getBlock() instanceof CocoaBlock) {
-			if (state.getBlock() instanceof AbstractPlantBlock)
+			if (state.getBlock() instanceof GrowingPlantBlock)
 				return true;
 
 			for (Property<?> property : state.getProperties()) {
@@ -175,7 +205,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		return false;
 	}
 
-	private BlockState cutCrop(World world, BlockPos pos, BlockState state) {
+	private BlockState cutCrop(Level world, BlockPos pos, BlockState state) {
 		if (!AllConfigs.SERVER.kinetics.harvesterReplants.get()) {
 			if (state.getFluidState()
 				.isEmpty())
@@ -185,14 +215,14 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		}
 
 		Block block = state.getBlock();
-		if (block instanceof CropsBlock) {
-			CropsBlock crop = (CropsBlock) block;
+		if (block instanceof CropBlock) {
+			CropBlock crop = (CropBlock) block;
 			return crop.getStateForAge(0);
 		}
 		if (block == Blocks.SWEET_BERRY_BUSH) {
 			return state.setValue(BlockStateProperties.AGE_3, Integer.valueOf(1));
 		}
-		if (block == Blocks.SUGAR_CANE || block instanceof AbstractPlantBlock) {
+		if (block == Blocks.SUGAR_CANE || block instanceof GrowingPlantBlock) {
 			if (state.getFluidState()
 				.isEmpty())
 				return Blocks.AIR.defaultBlockState();

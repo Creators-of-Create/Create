@@ -2,9 +2,9 @@ package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum BeltPart implements IStringSerializable {
+public enum BeltPart implements StringRepresentable {
 	START, MIDDLE, END, PULLEY;
 
 	@Override

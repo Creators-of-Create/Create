@@ -9,26 +9,28 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable, ISpecialBlockItemRequirement {
+public class GlassFluidPipeBlock extends AxisPipeBlock implements SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty ALT = BooleanProperty.create("alt");
 
@@ -48,26 +50,26 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.GLASS_FLUID_PIPE.create();
 	}
 
 	@Override
-	public ActionResultType onWrenched(BlockState state, ItemUseContext context) {
+	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (tryRemoveBracket(context))
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		BlockState newState;
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
 		FluidTransportBehaviour.cacheFlows(world, pos);
 		newState = toRegularPipe(world, pos, state).setValue(BlockStateProperties.WATERLOGGED, state.getValue(BlockStateProperties.WATERLOGGED));
 		world.setBlock(pos, newState, 3);
 		FluidTransportBehaviour.loadFlows(world, pos);
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState ifluidstate = context.getLevel()
 			.getFluidState(context.getClickedPos());
 		BlockState state = super.getStateForPlacement(context);
@@ -82,12 +84,12 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements IWaterLoggable
 	}
 
 	@Override
-	public ItemRequirement getRequiredItems(BlockState state, TileEntity te) {
+	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return ItemRequirement.of(AllBlocks.FLUID_PIPE.getDefaultState(), te);
 	}
 
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 

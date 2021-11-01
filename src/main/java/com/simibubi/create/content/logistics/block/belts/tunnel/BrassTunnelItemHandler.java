@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.block.belts.tunnel;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 

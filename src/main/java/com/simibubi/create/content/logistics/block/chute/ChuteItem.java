@@ -1,13 +1,15 @@
 package com.simibubi.create.content.logistics.block.chute;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ChuteItem extends BlockItem {
 
@@ -16,11 +18,11 @@ public class ChuteItem extends BlockItem {
 	}
 
 	@Override
-	public ActionResultType place(BlockItemUseContext context) {
+	public InteractionResult place(BlockPlaceContext context) {
 		Direction face = context.getClickedFace();
 		BlockPos placedOnPos = context.getClickedPos()
 			.relative(face.getOpposite());
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		BlockState placedOnState = world.getBlockState(placedOnPos);
 
 		if (!AbstractChuteBlock.isChute(placedOnState) || context.isSecondaryUseActive())
@@ -35,17 +37,17 @@ public class ChuteItem extends BlockItem {
 		BlockState blockState = world.getBlockState(correctPos);
 		if (blockState.getMaterial()
 			.isReplaceable())
-			context = BlockItemUseContext.at(context, correctPos, face);
+			context = BlockPlaceContext.at(context, correctPos, face);
 		else {
 			if (!(blockState.getBlock() instanceof ChuteBlock) || world.isClientSide)
-				return ActionResultType.FAIL;
+				return InteractionResult.FAIL;
 			AbstractChuteBlock block = (AbstractChuteBlock) blockState.getBlock();
 			if (block.getFacing(blockState) == Direction.DOWN) {
 				world.setBlockAndUpdate(correctPos, block.updateChuteState(blockState.setValue(ChuteBlock.FACING, face),
 					world.getBlockState(correctPos.above()), world, correctPos));
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		return super.place(context);

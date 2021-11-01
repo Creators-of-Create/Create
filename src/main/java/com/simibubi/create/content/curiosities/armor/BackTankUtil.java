@@ -5,13 +5,13 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,12 +29,12 @@ public class BackTankUtil {
 	}
 
 	public static float getAir(ItemStack backtank) {
-		CompoundNBT tag = backtank.getOrCreateTag();
+		CompoundTag tag = backtank.getOrCreateTag();
 		return Math.min(tag.getFloat("Air"), maxAir(backtank));
 	}
 
 	public static void consumeAir(ItemStack backtank, float i) {
-		CompoundNBT tag = backtank.getOrCreateTag();
+		CompoundTag tag = backtank.getOrCreateTag();
 		tag.putFloat("Air", Math.min(getAir(backtank) - i, maxAir(backtank)));
 		backtank.setTag(tag);
 	}
@@ -55,7 +55,7 @@ public class BackTankUtil {
 	public static boolean canAbsorbDamage(LivingEntity entity, int usesPerTank) {
 		if (usesPerTank == 0)
 			return true;
-		if (entity instanceof PlayerEntity && ((PlayerEntity) entity).isCreative())
+		if (entity instanceof Player && ((Player) entity).isCreative())
 			return true;
 		ItemStack backtank = get(entity);
 		if (backtank.isEmpty())
@@ -73,12 +73,12 @@ public class BackTankUtil {
 	public static int getRGBDurabilityForDisplay(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return 0;
 		ItemStack backtank = get(player);
 		if (backtank.isEmpty() || !hasAirRemaining(backtank))
-			return MathHelper.hsvToRgb(
+			return Mth.hsvToRgb(
 				Math.max(0.0F, (float) (1.0F - getDurabilityForDisplay(stack, usesPerTank))) / 3.0F, 1.0F, 1.0F);
 		return backtank.getItem()
 			.getRGBDurabilityForDisplay(backtank);
@@ -88,7 +88,7 @@ public class BackTankUtil {
 	public static double getDurabilityForDisplay(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return 0;
 		ItemStack backtank = get(player);
@@ -102,7 +102,7 @@ public class BackTankUtil {
 	public static boolean showDurabilityBar(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return false;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
+		LocalPlayer player = Minecraft.getInstance().player;
 		if (player == null)
 			return false;
 		ItemStack backtank = get(player);

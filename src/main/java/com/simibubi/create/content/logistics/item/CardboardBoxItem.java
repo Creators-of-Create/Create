@@ -4,25 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class CardboardBoxItem extends Item {
 
@@ -35,7 +37,7 @@ public class CardboardBoxItem extends Item {
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		if (!playerIn.isShiftKeyDown())
 			return super.use(worldIn, playerIn, handIn);
 
@@ -46,23 +48,23 @@ public class CardboardBoxItem extends Item {
 		if (!playerIn.isCreative()) {
 			box.shrink(1);
 		}
-		return new ActionResult<>(ActionResultType.SUCCESS, box);
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, box);
 	}
 
 	public static ItemStack containing(List<ItemStack> stacks) {
 		ItemStack box = new ItemStack(randomBox());
-		CompoundNBT compound = new CompoundNBT();
+		CompoundTag compound = new CompoundTag();
 
 		NonNullList<ItemStack> list = NonNullList.create();
 		list.addAll(stacks);
-		ItemStackHelper.saveAllItems(compound, list);
+		ContainerHelper.saveAllItems(compound, list);
 
 		box.setTag(compound);
 		return box;
 	}
 
 	@Override
-	public void fillItemCategory(ItemGroup group, NonNullList<ItemStack> items) {
+	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {
 	}
 	
 	public static void addAddress(ItemStack box, String address) {
@@ -85,7 +87,7 @@ public class CardboardBoxItem extends Item {
 
 	public static List<ItemStack> getContents(ItemStack box) {
 		NonNullList<ItemStack> list = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
-		ItemStackHelper.loadAllItems(box.getOrCreateTag(), list);
+		ContainerHelper.loadAllItems(box.getOrCreateTag(), list);
 		return list;
 	}
 
@@ -95,13 +97,13 @@ public class CardboardBoxItem extends Item {
 
 	@Override
 	@OnlyIn(value = Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
-		CompoundNBT compoundnbt = stack.getOrCreateTag();
+		CompoundTag compoundnbt = stack.getOrCreateTag();
 
 		if (compoundnbt.contains("Address", Constants.NBT.TAG_STRING)) {
-			tooltip.add(new StringTextComponent("-> " + compoundnbt.getString("Address"))
-					.withStyle(TextFormatting.GOLD));
+			tooltip.add(new TextComponent("-> " + compoundnbt.getString("Address"))
+					.withStyle(ChatFormatting.GOLD));
 		}
 
 		if (!compoundnbt.contains("Items", Constants.NBT.TAG_LIST))
@@ -117,15 +119,15 @@ public class CardboardBoxItem extends Item {
 			++j;
 			if (i <= 4) {
 				++i;
-				ITextComponent itextcomponent = itemstack.getHoverName();
+				Component itextcomponent = itemstack.getHoverName();
 				tooltip.add(itextcomponent.plainCopy().append(" x").append(String.valueOf(itemstack.getCount()))
-					.withStyle(TextFormatting.GRAY));
+					.withStyle(ChatFormatting.GRAY));
 			}
 		}
 
 		if (j - i > 0) {
-			tooltip.add((new TranslationTextComponent("container.shulkerBox.more", j - i))
-					.withStyle(TextFormatting.ITALIC));
+			tooltip.add((new TranslatableComponent("container.shulkerBox.more", j - i))
+					.withStyle(ChatFormatting.ITALIC));
 		}
 	}
 

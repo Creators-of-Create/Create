@@ -28,17 +28,17 @@ import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Rarity;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.PistonType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -57,7 +57,7 @@ public class BuilderTransformers {
 	public static <B extends EncasedShaftBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedShaft(String casing,
 		CTSpriteShiftEntry casingShift) {
 		return builder -> builder.initialProperties(SharedProperties::stone)
-			.properties(AbstractBlock.Properties::noOcclusion)
+			.properties(BlockBehaviour.Properties::noOcclusion)
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
 			.onRegister(CreateRegistrate.casingConnectivity(
 				(block, cc) -> cc.make(block, casingShift, (s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
@@ -99,7 +99,7 @@ public class BuilderTransformers {
 		String type, ResourceLocation particleTexture) {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.addLayer(() -> RenderType::cutoutMipped)
-			.properties(AbstractBlock.Properties::noOcclusion)
+			.properties(BlockBehaviour.Properties::noOcclusion)
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> {
 					String id = "block/" + type + "_tunnel";

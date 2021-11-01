@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintCraftingInventory;
@@ -21,22 +21,22 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.SerializationTags;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.HitResult.Type;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -55,7 +55,7 @@ public class BlueprintOverlayRenderer {
 
 	public static void tick() {
 		Minecraft mc = Minecraft.getInstance();
-		RayTraceResult mouseOver = mc.hitResult;
+		HitResult mouseOver = mc.hitResult;
 		BlueprintSection last = lastTargetedSection;
 		boolean sneak = mc.player.isShiftKeyDown();
 		lastTargetedSection = null;
@@ -65,7 +65,7 @@ public class BlueprintOverlayRenderer {
 		if (mouseOver.getType() != Type.ENTITY)
 			return;
 
-		EntityRayTraceResult entityRay = (EntityRayTraceResult) mouseOver;
+		EntityHitResult entityRay = (EntityHitResult) mouseOver;
 		if (!(entityRay.getEntity() instanceof BlueprintEntity))
 			return;
 
@@ -110,7 +110,7 @@ public class BlueprintOverlayRenderer {
 				.copy());
 
 		int amountCrafted = 0;
-		Optional<ICraftingRecipe> recipe = Optional.empty();
+		Optional<CraftingRecipe> recipe = Optional.empty();
 		Map<Integer, ItemStack> craftingGrid = new HashMap<>();
 		ingredients.clear();
 		ItemStackHandler missingItems = new ItemStackHandler(64);
@@ -145,10 +145,10 @@ public class BlueprintOverlayRenderer {
 			}
 
 			if (success) {
-				CraftingInventory craftingInventory = new BlueprintCraftingInventory(craftingGrid);
+				CraftingContainer craftingInventory = new BlueprintCraftingInventory(craftingGrid);
 				if (!recipe.isPresent())
 					recipe = mc.level.getRecipeManager()
-						.getRecipeFor(IRecipeType.CRAFTING, craftingInventory, mc.level);
+						.getRecipeFor(RecipeType.CRAFTING, craftingInventory, mc.level);
 				ItemStack resultFromRecipe = recipe.filter(r -> r.matches(craftingInventory, mc.level))
 					.map(r -> r.assemble(craftingInventory))
 					.orElse(ItemStack.EMPTY);
@@ -202,7 +202,7 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void renderOverlay(MatrixStack ms, IRenderTypeBuffer buffer, int light, int overlay,
+	public static void renderOverlay(PoseStack ms, MultiBufferSource buffer, int light, int overlay,
 		float partialTicks) {
 		if (!active || empty)
 			return;
@@ -219,7 +219,7 @@ public class BlueprintOverlayRenderer {
 			RenderSystem.enableBlend();
 			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).draw(ms, x, y);
 			ItemStack itemStack = pair.getFirst();
-			String count = pair.getSecond() ? null : TextFormatting.GOLD.toString() + itemStack.getCount();
+			String count = pair.getSecond() ? null : ChatFormatting.GOLD.toString() + itemStack.getCount();
 			drawItemStack(ms, mc, x, y, itemStack, count);
 			x += 21;
 		}
@@ -241,7 +241,7 @@ public class BlueprintOverlayRenderer {
 		}
 	}
 
-	public static void drawItemStack(MatrixStack ms, Minecraft mc, int x, int y, ItemStack itemStack, String count) {
+	public static void drawItemStack(PoseStack ms, Minecraft mc, int x, int y, ItemStack itemStack, String count) {
 		if (itemStack.getItem() instanceof FilterItem) {
 			int step = AnimationTickHolder.getTicks(mc.level) / 10;
 			ItemStack[] itemsMatchingFilter = getItemsMatchingFilter(itemStack);
@@ -258,7 +258,7 @@ public class BlueprintOverlayRenderer {
 
 	private static ItemStack[] getItemsMatchingFilter(ItemStack filter) {
 		return cachedRenderedFilters.computeIfAbsent(filter, itemStack -> {
-			CompoundNBT tag = itemStack.getOrCreateTag();
+			CompoundTag tag = itemStack.getOrCreateTag();
 
 			if (AllItems.FILTER.isIn(itemStack) && !tag.getBoolean("Blacklist")) {
 				ItemStackHandler filterItems = FilterItem.getFilterItems(itemStack);
@@ -273,12 +273,12 @@ public class BlueprintOverlayRenderer {
 
 			if (AllItems.ATTRIBUTE_FILTER.isIn(itemStack)) {
 				WhitelistMode whitelistMode = WhitelistMode.values()[tag.getInt("WhitelistMode")];
-				ListNBT attributes = tag.getList("MatchedAttributes", NBT.TAG_COMPOUND);
+				ListTag attributes = tag.getList("MatchedAttributes", NBT.TAG_COMPOUND);
 				if (whitelistMode == WhitelistMode.WHITELIST_DISJ && attributes.size() == 1) {
-					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundNBT) attributes.get(0));
+					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {
 						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						ITag<Item> itag = TagCollectionManager.getInstance()
+						Tag<Item> itag = SerializationTags.getInstance()
 							.getItems()
 							.getTag(inTag.tagName);
 						if (itag != null)

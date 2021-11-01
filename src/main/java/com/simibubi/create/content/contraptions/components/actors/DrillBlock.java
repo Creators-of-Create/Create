@@ -8,24 +8,26 @@ import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
 import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -42,10 +44,10 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 
 	@Override
-	public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof ItemEntity)
 			return;
-		if (!new AxisAlignedBB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
+		if (!new AABB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
@@ -55,17 +57,17 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 		return AllTileEntities.DRILL.create();
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
 			boolean isMoving) {
 		withTileEntityDo(worldIn, pos, DrillTileEntity::destroyNextTick);
 	}
@@ -76,7 +78,7 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 
 	@Override
-	public boolean hasShaftTowards(IWorldReader world, BlockPos pos, BlockState state, Direction face) {
+	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.getValue(FACING).getOpposite();
 	}
 
@@ -91,7 +93,7 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 	
 	@Override
-	public boolean isPathfindable(BlockState state, IBlockReader reader, BlockPos pos, PathType type) {
+	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
 	}
 
@@ -100,6 +102,6 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 		double sub1 = Math.min(speedAbs / 16, 2);
 		double sub2 = Math.min(speedAbs / 32, 4);
 		double sub3 = Math.min(speedAbs / 64, 4);
-		return MathHelper.clamp(sub1 + sub2 + sub3, 1, 10);
+		return Mth.clamp(sub1 + sub2 + sub3, 1, 10);
 	}
 }
