@@ -274,15 +274,14 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 	}
 
 	protected void replaceBlock(Level world, BlockPos pos, BlockState state) {
-		BlockEntity tileentity = state.getBlock()
-			.hasTileEntity(state) ? world.getBlockEntity(pos) : null;
+		BlockEntity tileentity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 		Block.dropResources(state, world, pos, tileentity);
 	}
 
 	// From FlowingFluidBlock#isBlocked
 	protected boolean canBeReplacedByFluid(BlockGetter world, BlockPos pos, BlockState state) {
 		Block block = state.getBlock();
-		if (!(block instanceof DoorBlock) && !block.is(BlockTags.SIGNS) && block != Blocks.LADDER
+		if (!(block instanceof DoorBlock) && !state.is(BlockTags.SIGNS) && block != Blocks.LADDER
 			&& block != Blocks.SUGAR_CANE && block != Blocks.BUBBLE_COLUMN) {
 			Material material = state.getMaterial();
 			if (material != Material.PORTAL && material != Material.STRUCTURAL_AIR && material != Material.WATER_PLANT

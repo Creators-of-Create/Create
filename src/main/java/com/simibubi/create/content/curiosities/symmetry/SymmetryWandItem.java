@@ -318,7 +318,7 @@ public class SymmetryWandItem extends Item {
 						.isEmpty())
 						player.getMainHandItem()
 							.mineBlock(world, blockstate, position, player);
-					BlockEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(position) : null;
+					BlockEntity tileentity = blockstate.hasBlockEntity() ? world.getBlockEntity(position) : null;
 					Block.dropResources(blockstate, world, pos, tileentity, player, player.getMainHandItem()); // Add fortune, silk touch and other loot modifiers
 				}
 			}

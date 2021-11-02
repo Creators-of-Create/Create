@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -69,23 +70,18 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public boolean shouldCheckWeakPower(BlockState state, LevelReader world, BlockPos pos, Direction side) {
 		return false;
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.STICKER.create();
+	public Class<StickerTileEntity> getTileEntityClass() {
+		return StickerTileEntity.class;
 	}
 
 	@Override
-	public Class<StickerTileEntity> getTileEntityClass() {
-		return StickerTileEntity.class;
+	public BlockEntityType<? extends StickerTileEntity> getTileEntityType() {
+		return AllTileEntities.STICKER.get();
 	}
 
 	// Slime block stuff
@@ -96,12 +92,10 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 	}
 
 	@Override
-	public void fallOn(Level p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
-		if (!isUprightSticker(p_180658_1_, p_180658_2_) || p_180658_3_.isSuppressingBounce()) {
-			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
-		} else {
-			p_180658_3_.causeFallDamage(p_180658_4_, 0.0F);
-		}
+	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
+		if (!isUprightSticker(p_152426_, p_152428_) || p_152429_.isSuppressingBounce())
+			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_);
+		p_152429_.causeFallDamage(p_152430_, 1.0F, DamageSource.FALL);
 	}
 
 	@Override
@@ -123,22 +117,23 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 	}
 
 	@Override
-	public void stepOn(Level p_176199_1_, BlockPos p_176199_2_, Entity p_176199_3_) {
-		double d0 = Math.abs(p_176199_3_.getDeltaMovement().y);
-		if (d0 < 0.1D && !p_176199_3_.isSteppingCarefully() && isUprightSticker(p_176199_1_, p_176199_2_)) {
+	public void stepOn(Level p_152431_, BlockPos p_152432_, BlockState p_152433_, Entity p_152434_) {
+		double d0 = Math.abs(p_152434_.getDeltaMovement().y);
+		if (d0 < 0.1D && !p_152434_.isSteppingCarefully() && isUprightSticker(p_152431_, p_152432_)) {
 			double d1 = 0.4D + d0 * 0.2D;
-			p_176199_3_.setDeltaMovement(p_176199_3_.getDeltaMovement()
+			p_152434_.setDeltaMovement(p_152434_.getDeltaMovement()
 				.multiply(d1, 1.0D, d1));
 		}
-		super.stepOn(p_176199_1_, p_176199_2_, p_176199_3_);
+		super.stepOn(p_152431_, p_152432_, p_152433_, p_152434_);
 	}
 
 	@Override
 	public boolean addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2,
 		LivingEntity entity, int numberOfParticles) {
 		if (isUprightSticker(worldserver, pos)) {
-			worldserver.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()),
-				entity.getX(), entity.getY(), entity.getZ(), numberOfParticles, 0.0D, 0.0D, 0.0D, (double) 0.15F);
+			worldserver.sendParticles(
+				new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()), entity.getX(),
+				entity.getY(), entity.getZ(), numberOfParticles, 0.0D, 0.0D, 0.0D, (double) 0.15F);
 			return true;
 		}
 		return super.addLandingEffects(state1, worldserver, pos, state2, entity, numberOfParticles);
@@ -152,8 +147,8 @@ public class StickerBlock extends WrenchableDirectionalBlock implements ITE<Stic
 				new BlockParticleOption(ParticleTypes.BLOCK, Blocks.SLIME_BLOCK.defaultBlockState()).setPos(pos),
 				entity.getX() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(),
 				entity.getY() + 0.1D,
-				entity.getZ() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(), Vector3d.x * -4.0D,
-				1.5D, Vector3d.z * -4.0D);
+				entity.getZ() + ((double) world.random.nextFloat() - 0.5D) * (double) entity.getBbWidth(),
+				Vector3d.x * -4.0D, 1.5D, Vector3d.z * -4.0D);
 			return true;
 		}
 		return super.addRunningEffects(state, world, pos, entity);

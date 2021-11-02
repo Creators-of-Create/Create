@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -18,27 +19,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.Tags;
 
-public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable {
+public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, ITE<ChassisTileEntity> {
 
 	public AbstractChassisBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CHASSIS.create();
 	}
 
 	@Override
@@ -48,8 +39,7 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(handIn);
-		boolean isSlimeBall = heldItem.getItem()
-			.is(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
+		boolean isSlimeBall = heldItem.is(Tags.Items.SLIMEBALLS) || AllItems.SUPER_GLUE.isIn(heldItem);
 
 		BooleanProperty affectedSide = getGlueableSide(state, hit.getDirection());
 		if (affectedSide == null)
@@ -58,7 +48,8 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (isSlimeBall && state.getValue(affectedSide)) {
 			for (Direction face : Iterate.directions) {
 				BooleanProperty glueableSide = getGlueableSide(state, face);
-				if (glueableSide != null && !state.getValue(glueableSide) && glueAllowedOnSide(worldIn, pos, state, face)) {
+				if (glueableSide != null && !state.getValue(glueableSide)
+					&& glueAllowedOnSide(worldIn, pos, state, face)) {
 					if (worldIn.isClientSide) {
 						Vec3 vec = hit.getLocation();
 						worldIn.addParticle(ParticleTypes.ITEM_SLIME, vec.x, vec.y, vec.z, 0, 0, 0);
@@ -95,7 +86,6 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 		if (rotation == Rotation.NONE)
 			return state;
 
-		@SuppressWarnings("deprecation")
 		BlockState rotated = super.rotate(state, rotation);
 		for (Direction face : Iterate.directions) {
 			BooleanProperty glueableSide = getGlueableSide(rotated, face);
@@ -145,6 +135,16 @@ public abstract class AbstractChassisBlock extends RotatedPillarBlock implements
 
 	protected boolean glueAllowedOnSide(BlockGetter world, BlockPos pos, BlockState state, Direction side) {
 		return true;
+	}
+
+	@Override
+	public Class<ChassisTileEntity> getTileEntityClass() {
+		return ChassisTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends ChassisTileEntity> getTileEntityType() {
+		return AllTileEntities.CHASSIS.get();
 	}
 
 }

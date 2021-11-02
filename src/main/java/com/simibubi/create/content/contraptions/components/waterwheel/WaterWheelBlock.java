@@ -20,14 +20,13 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
@@ -38,11 +37,6 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 
 	public WaterWheelBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.WATER_WHEEL.create();
 	}
 
 	@Override
@@ -104,7 +98,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 		if (side.getAxis()
 			.isHorizontal()) {
 			BlockState adjacentBlock = world.getBlockState(pos.relative(side));
-			if (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN.getBlock())
+			if (adjacentBlock.getBlock() == Blocks.BUBBLE_COLUMN)
 				vec = new Vec3(0, adjacentBlock.getValue(BubbleColumnBlock.DRAG_DOWN) ? -1 : 1, 0);
 		}
 
@@ -184,7 +178,7 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 				facing = Direction.UP;
 			else
 				facing = horizontalFacing;
-			
+
 		}
 
 		return defaultBlockState().setValue(FACING, sneaking ? facing.getOpposite() : facing);
@@ -220,6 +214,11 @@ public class WaterWheelBlock extends DirectionalKineticBlock implements ITE<Wate
 	@Override
 	public Class<WaterWheelTileEntity> getTileEntityClass() {
 		return WaterWheelTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends WaterWheelTileEntity> getTileEntityType() {
+		return AllTileEntities.WATER_WHEEL.get();
 	}
 
 }

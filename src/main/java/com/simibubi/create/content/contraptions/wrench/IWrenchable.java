@@ -36,8 +36,8 @@ public interface IWrenchable {
 
 		BlockEntity te = context.getLevel()
 			.getBlockEntity(context.getClickedPos());
-		if (te != null)
-			te.clearCache();
+//		if (te != null)
+//			te.clearCache();
 		if (te instanceof GeneratingKineticTileEntity) {
 			((GeneratingKineticTileEntity) te).reActivateSource = true;
 		}

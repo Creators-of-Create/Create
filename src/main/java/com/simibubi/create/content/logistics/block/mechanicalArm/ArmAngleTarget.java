@@ -33,7 +33,8 @@ public class ArmAngleTarget {
 			.add(0, ceiling ? -4 / 16f : 4 / 16f, 0);
 		Vec3 clawTarget = target;
 		target = target.add(Vec3.atLowerCornerOf(clawFacing.getOpposite()
-			.getNormal()).scale(.5f));
+			.getNormal())
+			.scale(.5f));
 
 		Vec3 diff = target.subtract(origin);
 		float horizontalDistance = (float) diff.multiply(1, 0, 1)
@@ -52,7 +53,7 @@ public class ArmAngleTarget {
 		float b = 17 / 16f; // upper arm length
 		float b2 = b * b;
 		float diffLength =
-			Mth.clamp(Mth.sqrt(diff.y * diff.y + horizontalDistance * horizontalDistance), 1 / 8f, a + b);
+			Mth.clamp(Mth.sqrt((float) (diff.y * diff.y + horizontalDistance * horizontalDistance)), 1 / 8f, a + b);
 		float diffLength2 = diffLength * diffLength;
 
 		float alphaRatio = (-b2 + a2 + diffLength2) / (2 * a * diffLength);
@@ -78,8 +79,7 @@ public class ArmAngleTarget {
 
 		float horizontalHeadDistance = (float) headDiff.multiply(1, 0, 1)
 			.length();
-		float headAngle =
-			(float) (alpha + beta + 135 - AngleHelper.deg(Mth.atan2(headDiff.y, horizontalHeadDistance)));
+		float headAngle = (float) (alpha + beta + 135 - AngleHelper.deg(Mth.atan2(headDiff.y, horizontalHeadDistance)));
 
 		this.lowerArmAngle = alpha;
 		this.upperArmAngle = beta;

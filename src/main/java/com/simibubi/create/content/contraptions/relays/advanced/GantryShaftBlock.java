@@ -9,6 +9,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -45,7 +47,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class GantryShaftBlock extends DirectionalKineticBlock {
+public class GantryShaftBlock extends DirectionalKineticBlock implements ITE<GantryShaftTileEntity> {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -67,14 +69,16 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult ray) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult ray) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (!placementHelper.matchesItem(heldItem))
 			return InteractionResult.PASS;
 
-		return placementHelper.getOffset(player, world, state, pos, ray).placeInWorld(world, ((BlockItem) heldItem.getItem()), player, hand, ray);
+		return placementHelper.getOffset(player, world, state, pos, ray)
+			.placeInWorld(world, ((BlockItem) heldItem.getItem()), player, hand, ray);
 	}
 
 	@Override
@@ -173,7 +177,7 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	public void onPlace(BlockState state, Level worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
 		super.onPlace(state, worldIn, pos, oldState, isMoving);
 
-		if (!worldIn.isClientSide() && oldState.getBlock().is(AllBlocks.GANTRY_SHAFT.get())) {
+		if (!worldIn.isClientSide() && oldState.is(AllBlocks.GANTRY_SHAFT.get())) {
 			Part oldPart = oldState.getValue(PART), part = state.getValue(PART);
 			if ((oldPart != Part.MIDDLE && part == Part.MIDDLE) || (oldPart == Part.SINGLE && part != Part.SINGLE)) {
 				BlockEntity te = worldIn.getBlockEntity(pos);
@@ -265,11 +269,6 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.GANTRY_SHAFT.create();
-	}
-
-	@Override
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
 		return super.areStatesKineticallyEquivalent(oldState, newState)
 			&& oldState.getValue(POWERED) == newState.getValue(POWERED);
@@ -303,11 +302,23 @@ public class GantryShaftBlock extends DirectionalKineticBlock {
 		}
 
 		@Override
-		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
+			BlockHitResult ray) {
 			PlacementOffset offset = super.getOffset(player, world, state, pos, ray);
-			offset.withTransform(offset.getTransform().andThen(s -> s.setValue(POWERED, state.getValue(POWERED))));
+			offset.withTransform(offset.getTransform()
+				.andThen(s -> s.setValue(POWERED, state.getValue(POWERED))));
 			return offset;
 		}
+	}
+
+	@Override
+	public Class<GantryShaftTileEntity> getTileEntityClass() {
+		return GantryShaftTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends GantryShaftTileEntity> getTileEntityType() {
+		return AllTileEntities.GANTRY_SHAFT.get();
 	}
 
 }

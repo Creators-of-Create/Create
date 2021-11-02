@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.data;
 
+import static com.simibubi.create.AllTags.axeOrPickaxe;
+import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.foundation.data.BlockStateGen.axisBlock;
 import static com.simibubi.create.foundation.data.CreateRegistrate.casingConnectivity;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
@@ -89,6 +91,7 @@ public class BuilderTransformers {
 	public static <B extends CasingBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> casing(
 		CTSpriteShiftEntry ct) {
 		return b -> b.initialProperties(SharedProperties::stone)
+			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> p.simpleBlock(c.get()))
 			.onRegister(connectedTextures(new EncasedCTBehaviour(ct)))
 			.onRegister(casingConnectivity((block, cc) -> cc.makeCasing(block, ct)))
@@ -100,6 +103,7 @@ public class BuilderTransformers {
 		return b -> b.initialProperties(SharedProperties::stone)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.properties(BlockBehaviour.Properties::noOcclusion)
+			.transform(pickaxeOnly())
 			.blockstate((c, p) -> p.getVariantBuilder(c.get())
 				.forAllStates(state -> {
 					String id = "block/" + type + "_tunnel";
@@ -164,6 +168,7 @@ public class BuilderTransformers {
 
 	public static <B extends Block, P> NonNullUnaryOperator<BlockBuilder<B, P>> crate(String type) {
 		return b -> b.initialProperties(SharedProperties::stone)
+			.transform(axeOrPickaxe())
 			.blockstate((c, p) -> {
 				String[] variants = { "single", "top", "bottom", "left", "right" };
 				Map<String, ModelFile> models = new HashMap<>();
@@ -223,6 +228,7 @@ public class BuilderTransformers {
 		return b -> b.initialProperties(SharedProperties::softMetal)
 			.properties(p -> p.noOcclusion()
 				.sound(SoundType.ANVIL))
+			.transform(pickaxeOnly())
 			.addLayer(() -> RenderType::cutoutMipped)
 			.tag(AllBlockTags.BRITTLE.tag)
 			.blockstate((c, p) -> p.horizontalBlock(c.getEntry(), state -> {

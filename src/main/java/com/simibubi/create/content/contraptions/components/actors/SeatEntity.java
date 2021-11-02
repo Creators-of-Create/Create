@@ -35,11 +35,6 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 		EntityType.Builder<SeatEntity> entityBuilder = (EntityType.Builder<SeatEntity>) builder;
 		return entityBuilder.sized(0.25f, 0.35f);
 	}
-
-	@Override
-	public AABB getBoundingBox() {
-		return super.getBoundingBox();
-	}
 	
 	@Override
 	public void setPosRaw(double x, double y, double z) {
@@ -60,7 +55,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 			.getBlock() instanceof SeatBlock;
 		if (isVehicle() && blockPresent)
 			return;
-		this.remove();
+		this.discard();
 	}
 
 	@Override

@@ -65,16 +65,19 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = super.getStateForPlacement(context);
-		return state.setValue(FACING, state.getValue(FACING).getOpposite());
+		return state.setValue(FACING, state.getValue(FACING)
+			.getOpposite());
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult ray) {
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult ray) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		IPlacementHelper placementHelper = PlacementHelpers.get(placementHelperId);
 		if (placementHelper.matchesItem(heldItem))
-			return placementHelper.getOffset(player, world, state, pos, ray).placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
+			return placementHelper.getOffset(player, world, state, pos, ray)
+				.placeInWorld(world, (BlockItem) heldItem.getItem(), player, hand, ray);
 
 		if (heldItem.getItem() instanceof ShearsItem) {
 			if (!world.isClientSide)
@@ -97,7 +100,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 
 	protected void applyDye(BlockState state, Level world, BlockPos pos, @Nullable DyeColor color) {
 		BlockState newState =
-				(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState();
+			(color == null ? AllBlocks.SAIL_FRAME : AllBlocks.DYED_SAILS.get(color)).getDefaultState();
 		newState = BlockHelper.copyProperties(state, newState);
 
 		// Dye the block itself
@@ -109,7 +112,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		// Dye all adjacent
 		for (Direction d : Iterate.directions) {
 			if (d.getAxis() == state.getValue(FACING)
-					.getAxis())
+				.getAxis())
 				continue;
 			BlockPos offset = pos.relative(d);
 			BlockState adjacentState = world.getBlockState(offset);
@@ -136,7 +139,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 
 			for (Direction d : Iterate.directions) {
 				if (d.getAxis() == state.getValue(FACING)
-						.getAxis())
+					.getAxis())
 					continue;
 				BlockPos offset = currentPos.relative(d);
 				if (visited.contains(offset))
@@ -154,12 +157,14 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
+	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
+		CollisionContext p_220053_4_) {
 		return (frame ? AllShapes.SAIL_FRAME : AllShapes.SAIL).get(state.getValue(FACING));
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter p_220071_2_, BlockPos p_220071_3_, CollisionContext p_220071_4_) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter p_220071_2_, BlockPos p_220071_3_,
+		CollisionContext p_220071_4_) {
 		if (frame)
 			return AllShapes.SAIL_FRAME_COLLISION.get(state.getValue(FACING));
 		return getShape(state, p_220071_2_, p_220071_3_, p_220071_4_);
@@ -170,14 +175,15 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		ItemStack pickBlock = super.getPickBlock(state, target, world, pos, player);
 		if (pickBlock.isEmpty())
 			return AllBlocks.SAIL.get()
-					.getPickBlock(state, target, world, pos, player);
+				.getPickBlock(state, target, world, pos, player);
 		return pickBlock;
 	}
 
-	public void fallOn(Level p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	@Override
+	public void fallOn(Level p_152426_, BlockState p_152427_, BlockPos p_152428_, Entity p_152429_, float p_152430_) {
 		if (frame)
-			super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
-		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, 0);
+			super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, p_152430_);
+		super.fallOn(p_152426_, p_152427_, p_152428_, p_152429_, 0);
 	}
 
 	public void updateEntityAfterFallOn(BlockGetter p_176216_1_, Entity p_176216_2_) {
@@ -196,7 +202,7 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		}
 
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
@@ -223,13 +229,20 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		}
 
 		@Override
-		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos, BlockHitResult ray) {
-			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(), state.getValue(SailBlock.FACING).getAxis(), dir -> world.getBlockState(pos.relative(dir)).getMaterial().isReplaceable());
+		public PlacementOffset getOffset(Player player, Level world, BlockState state, BlockPos pos,
+			BlockHitResult ray) {
+			List<Direction> directions = IPlacementHelper.orderedByDistanceExceptAxis(pos, ray.getLocation(),
+				state.getValue(SailBlock.FACING)
+					.getAxis(),
+				dir -> world.getBlockState(pos.relative(dir))
+					.getMaterial()
+					.isReplaceable());
 
 			if (directions.isEmpty())
 				return PlacementOffset.fail();
 			else {
-				return PlacementOffset.success(pos.relative(directions.get(0)), s -> s.setValue(FACING, state.getValue(FACING)));
+				return PlacementOffset.success(pos.relative(directions.get(0)),
+					s -> s.setValue(FACING, state.getValue(FACING)));
 			}
 		}
 	}

@@ -18,7 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
@@ -29,11 +29,6 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 
 	public TurntableBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.TURNTABLE.create();
 	}
 
 	@Override
@@ -106,6 +101,11 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 	@Override
 	public Class<TurntableTileEntity> getTileEntityClass() {
 		return TurntableTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends TurntableTileEntity> getTileEntityType() {
+		return AllTileEntities.TURNTABLE.get();
 	}
 	
 	@Override

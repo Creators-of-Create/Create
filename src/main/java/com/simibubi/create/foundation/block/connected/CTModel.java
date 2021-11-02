@@ -57,7 +57,8 @@ public class CTModel extends BakedModelWrapperWithData {
 	protected CTData createCTData(BlockAndTintGetter world, BlockPos pos, BlockState state) {
 		CTData data = new CTData();
 		for (Direction face : Iterate.directions) {
-			if (!Block.shouldRenderFace(state, world, pos, face) && !behaviour.buildContextForOccludedDirections())
+			if (!Block.shouldRenderFace(state, world, pos, face, pos.relative(face))
+				&& !behaviour.buildContextForOccludedDirections())
 				continue;
 			CTSpriteShiftEntry spriteShift = behaviour.get(state, face);
 			if (spriteShift == null)

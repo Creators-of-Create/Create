@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -50,7 +51,8 @@ public class BeltConnectorHandler {
 
 			BlockPos first = NbtUtils.readBlockPos(tag.getCompound("FirstPulley"));
 
-			if (!world.getBlockState(first).hasProperty(BlockStateProperties.AXIS))
+			if (!world.getBlockState(first)
+				.hasProperty(BlockStateProperties.AXIS))
 				continue;
 			Axis axis = world.getBlockState(first)
 				.getValue(BlockStateProperties.AXIS);
@@ -58,7 +60,7 @@ public class BeltConnectorHandler {
 			HitResult rayTrace = Minecraft.getInstance().hitResult;
 			if (rayTrace == null || !(rayTrace instanceof BlockHitResult)) {
 				if (r.nextInt(50) == 0) {
-					world.addParticle(new DustParticleOptions(.3f, .9f, .5f, 1),
+					world.addParticle(new DustParticleOptions(new Vector3f(.3f, .9f, .5f), 1),
 						first.getX() + .5f + randomOffset(.25f), first.getY() + .5f + randomOffset(.25f),
 						first.getZ() + .5f + randomOffset(.25f), 0, 0, 0);
 				}
@@ -125,7 +127,8 @@ public class BeltConnectorHandler {
 			for (float f = 0; f < length; f += .0625f) {
 				Vec3 position = start.add(step.scale(f));
 				if (r.nextInt(10) == 0) {
-					world.addParticle(new DustParticleOptions(canConnect ? .3f : .9f, canConnect ? .9f : .3f, .5f, 1),
+					world.addParticle(
+						new DustParticleOptions(new Vector3f(canConnect ? .3f : .9f, canConnect ? .9f : .3f, .5f), 1),
 						position.x + .5f, position.y + .5f, position.z + .5f, 0, 0, 0);
 				}
 			}

@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ThrownEgg;
 import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.item.ItemStack;
@@ -29,32 +30,31 @@ import net.minecraftforge.fml.common.Mod;
 public class BlazeBurnerHandler {
 
 	@SubscribeEvent
-	public static void onThrowableImpact(ProjectileImpactEvent.Throwable event) {
+	public static void onThrowableImpact(ProjectileImpactEvent event) {
 		thrownEggsGetEatenByBurner(event);
 		splashExtinguishesBurner(event);
 	}
 
-	public static void thrownEggsGetEatenByBurner(ProjectileImpactEvent.Throwable event) {
-		if (!(event.getThrowable() instanceof ThrownEgg))
+	public static void thrownEggsGetEatenByBurner(ProjectileImpactEvent event) {
+		Projectile projectile = event.getProjectile();
+		if (!(projectile instanceof ThrownEgg))
 			return;
 
 		if (event.getRayTraceResult()
 			.getType() != HitResult.Type.BLOCK)
 			return;
 
-		BlockEntity tile = event.getThrowable().level.getBlockEntity(new BlockPos(event.getRayTraceResult()
+		BlockEntity tile = projectile.level.getBlockEntity(new BlockPos(event.getRayTraceResult()
 			.getLocation()));
 		if (!(tile instanceof BlazeBurnerTileEntity)) {
 			return;
 		}
 
 		event.setCanceled(true);
-		event.getThrowable()
-			.setDeltaMovement(Vec3.ZERO);
-		event.getThrowable()
-			.remove();
+		projectile.setDeltaMovement(Vec3.ZERO);
+		projectile.discard();
 
-		Level world = event.getThrowable().level;
+		Level world = projectile.level;
 		if (world.isClientSide)
 			return;
 
@@ -72,13 +72,13 @@ public class BlazeBurnerHandler {
 		AllSoundEvents.BLAZE_MUNCH.playOnServer(world, heater.getBlockPos());
 	}
 
-	public static void splashExtinguishesBurner(ProjectileImpactEvent.Throwable event) {
-		if (event.getThrowable().level.isClientSide)
+	public static void splashExtinguishesBurner(ProjectileImpactEvent event) {
+		Projectile projectile = event.getProjectile();
+		if (projectile.level.isClientSide)
 			return;
-
-		if (!(event.getThrowable() instanceof ThrownPotion))
+		if (!(projectile instanceof ThrownPotion))
 			return;
-		ThrownPotion entity = (ThrownPotion) event.getThrowable();
+		ThrownPotion entity = (ThrownPotion) projectile;
 
 		if (event.getRayTraceResult()
 			.getType() != HitResult.Type.BLOCK)
@@ -86,11 +86,13 @@ public class BlazeBurnerHandler {
 
 		ItemStack stack = entity.getItem();
 		Potion potion = PotionUtils.getPotion(stack);
-		if (potion == Potions.WATER && PotionUtils.getMobEffects(stack).isEmpty()) {
+		if (potion == Potions.WATER && PotionUtils.getMobEffects(stack)
+			.isEmpty()) {
 			BlockHitResult result = (BlockHitResult) event.getRayTraceResult();
 			Level world = entity.level;
 			Direction face = result.getDirection();
-			BlockPos pos = result.getBlockPos().relative(face);
+			BlockPos pos = result.getBlockPos()
+				.relative(face);
 
 			extinguishLitBurners(world, pos, face);
 			extinguishLitBurners(world, pos.relative(face.getOpposite()), face);
@@ -104,7 +106,8 @@ public class BlazeBurnerHandler {
 	private static void extinguishLitBurners(Level world, BlockPos pos, Direction direction) {
 		BlockState state = world.getBlockState(pos);
 		if (AllBlocks.LIT_BLAZE_BURNER.has(state)) {
-			world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+			world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F,
+				2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
 		}
 	}

@@ -390,11 +390,11 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		return customName;
 	}
 
-	@Override
-	public void clearCache() {
-		super.clearCache();
-		colorProvider.reset();
-	}
+//	@Override
+//	public void clearCache() {
+//		super.clearCache();
+//		colorProvider.reset();
+//	}
 
 	@Override
 	public void setChanged() {

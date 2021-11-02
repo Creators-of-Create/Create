@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
@@ -108,7 +109,8 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 		Direction direction = getFunnelFacing(state);
 		Vec3 diff = entityIn.position()
 			.subtract(VecHelper.getCenterOf(pos)
-				.add(Vec3.atLowerCornerOf(direction.getNormal()).scale(-.325f)));
+				.add(Vec3.atLowerCornerOf(direction.getNormal())
+					.scale(-.325f)));
 		double projectedDiff = direction.getAxis()
 			.choose(diff.x, diff.y, diff.z);
 		if (projectedDiff < 0 == (direction.getAxisDirection() == AxisDirection.POSITIVE))
@@ -136,8 +138,9 @@ public abstract class FunnelBlock extends AbstractDirectionalFunnelBlock {
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-		if (context.getEntity() instanceof ItemEntity && getFacing(state).getAxis()
-			.isHorizontal())
+		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity()
+			.orElse(null) instanceof ItemEntity && getFacing(state).getAxis()
+				.isHorizontal())
 			return AllShapes.FUNNEL_COLLISION.get(getFacing(state));
 		return getShape(state, world, pos, context);
 	}

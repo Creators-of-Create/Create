@@ -33,6 +33,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements ISpecialBlockItemRequirement {
@@ -79,7 +80,8 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 	@Override
 	public VoxelShape getCollisionShape(BlockState p_220071_1_, BlockGetter p_220071_2_, BlockPos p_220071_3_,
 		CollisionContext p_220071_4_) {
-		if (p_220071_4_.getEntity() instanceof ItemEntity
+		if (p_220071_4_ instanceof EntityCollisionContext && ((EntityCollisionContext) p_220071_4_).getEntity()
+			.orElse(null) instanceof ItemEntity
 			&& (p_220071_1_.getValue(SHAPE) == Shape.PULLING || p_220071_1_.getValue(SHAPE) == Shape.PUSHING))
 			return AllShapes.FUNNEL_COLLISION.get(getFacing(p_220071_1_));
 		return getShape(p_220071_1_, p_220071_2_, p_220071_3_, p_220071_4_);
@@ -111,8 +113,7 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		return parent.asStack();
 	}
 
@@ -121,7 +122,8 @@ public class BeltFunnelBlock extends AbstractHorizontalFunnelBlock implements IS
 		BlockPos pos, BlockPos p_196271_6_) {
 		if (!isOnValidBelt(state, world, pos)) {
 			BlockState parentState = parent.getDefaultState();
-			if (state.getOptionalValue(POWERED).orElse(false))
+			if (state.getOptionalValue(POWERED)
+				.orElse(false))
 				parentState = parentState.setValue(POWERED, true);
 			if (state.getValue(SHAPE) == Shape.PUSHING)
 				parentState = parentState.setValue(FunnelBlock.EXTRACTING, true);

@@ -2,7 +2,9 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -14,8 +16,8 @@ public class HarvesterTileEntity extends SyncedTileEntity {
 	// For simulations such as Ponder
 	private float manuallyAnimatedSpeed;
 
-	public HarvesterTileEntity(BlockEntityType<? extends HarvesterTileEntity> type) {
-		super(type);
+	public HarvesterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

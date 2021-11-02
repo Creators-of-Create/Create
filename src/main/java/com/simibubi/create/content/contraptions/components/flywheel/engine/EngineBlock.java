@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,17 +33,9 @@ public abstract class EngineBlock extends HorizontalDirectionalBlock implements 
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		return InteractionResult.FAIL;
 	}
-
-	@Override
-	public abstract BlockEntity createTileEntity(BlockState state, BlockGetter world);
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {

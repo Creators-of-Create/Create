@@ -2,17 +2,18 @@ package com.simibubi.create.content.logistics.block.diodes;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
+public class AdjustableRepeaterBlock extends AbstractDiodeBlock implements ITE<AdjustableRepeaterTileEntity> {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 
@@ -26,17 +27,6 @@ public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(POWERED, POWERING, FACING);
 		super.createBlockStateDefinition(builder);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllBlocks.ADJUSTABLE_REPEATER.is(this) ? AllTileEntities.ADJUSTABLE_REPEATER.create()
-			: AllTileEntities.ADJUSTABLE_PULSE_REPEATER.create();
 	}
 
 	@Override
@@ -60,6 +50,17 @@ public class AdjustableRepeaterBlock extends AbstractDiodeBlock {
 			return false;
 		return side.getAxis() == state.getValue(FACING)
 			.getAxis();
+	}
+
+	@Override
+	public Class<AdjustableRepeaterTileEntity> getTileEntityClass() {
+		return AdjustableRepeaterTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends AdjustableRepeaterTileEntity> getTileEntityType() {
+		return AllBlocks.ADJUSTABLE_REPEATER.is(this) ? AllTileEntities.ADJUSTABLE_REPEATER.get()
+			: AllTileEntities.ADJUSTABLE_PULSE_REPEATER.get();
 	}
 
 }

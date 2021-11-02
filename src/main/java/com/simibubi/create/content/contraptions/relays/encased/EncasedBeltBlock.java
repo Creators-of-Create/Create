@@ -4,6 +4,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -14,11 +15,10 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 
-public class EncasedBeltBlock extends RotatedPillarKineticBlock {
+public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<KineticTileEntity> {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE =
@@ -199,11 +199,6 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		return fromMod / toMod;
 	}
 
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ENCASED_SHAFT.create();
-	}
-
 	public enum Part implements StringRepresentable {
 		START, MIDDLE, END, NONE;
 
@@ -211,6 +206,16 @@ public class EncasedBeltBlock extends RotatedPillarKineticBlock {
 		public String getSerializedName() {
 			return Lang.asId(name());
 		}
+	}
+
+	@Override
+	public Class<KineticTileEntity> getTileEntityClass() {
+		return KineticTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
+		return AllTileEntities.ENCASED_SHAFT.get();
 	}
 
 }

@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -54,6 +55,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -88,8 +90,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 	public static BlockState getRailBlock(BlockState state) {
 		BaseRailBlock railBlock = (BaseRailBlock) state.getValue(RAIL_TYPE)
 			.getBlock();
+		
+		@SuppressWarnings("deprecation")
 		BlockState railState = railBlock.defaultBlockState()
 			.setValue(railBlock.getShapeProperty(), state.getValue(RAIL_SHAPE));
+		
 		if (railState.hasProperty(ControllerRailBlock.BACKWARDS))
 			railState = railState.setValue(ControllerRailBlock.BACKWARDS, state.getValue(BACKWARDS));
 		return railState;
@@ -99,16 +104,6 @@ public class CartAssemblerBlock extends BaseRailBlock
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(RAIL_SHAPE, POWERED, RAIL_TYPE, BACKWARDS);
 		super.createBlockStateDefinition(builder);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CART_ASSEMBLER.create();
 	}
 
 	@Override
@@ -166,8 +161,8 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 	@Override
 	@Nonnull
-	public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos,
-		Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult blockRayTraceResult) {
+	public InteractionResult use(@Nonnull BlockState state, @Nonnull Level world, @Nonnull BlockPos pos, Player player,
+		@Nonnull InteractionHand hand, @Nonnull BlockHitResult blockRayTraceResult) {
 
 		ItemStack itemStack = player.getItemInHand(hand);
 		Item previousItem = getRailItem(state);
@@ -185,7 +180,8 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 			if (!player.isCreative()) {
 				itemStack.shrink(1);
-				player.getInventory().placeItemBackInInventory(new ItemStack(previousItem));
+				player.getInventory()
+					.placeItemBackInInventory(new ItemStack(previousItem));
 			}
 			return InteractionResult.SUCCESS;
 		}
@@ -225,11 +221,14 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@Nonnull
 	public VoxelShape getCollisionShape(@Nonnull BlockState state, @Nonnull BlockGetter worldIn, @Nonnull BlockPos pos,
 		CollisionContext context) {
-		Entity entity = context.getEntity();
-		if (entity instanceof AbstractMinecart)
-			return Shapes.empty();
-		if (entity instanceof Player)
-			return AllShapes.CART_ASSEMBLER_PLAYER_COLLISION.get(getRailAxis(state));
+		if (context instanceof EntityCollisionContext) {
+			Entity entity = ((EntityCollisionContext) context).getEntity()
+				.orElse(null);
+			if (entity instanceof AbstractMinecart)
+				return Shapes.empty();
+			if (entity instanceof Player)
+				return AllShapes.CART_ASSEMBLER_PLAYER_COLLISION.get(getRailAxis(state));
+		}
 		return Shapes.block();
 	}
 
@@ -242,6 +241,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@Override
 	public Class<CartAssemblerTileEntity> getTileEntityClass() {
 		return CartAssemblerTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends CartAssemblerTileEntity> getTileEntityType() {
+		return AllTileEntities.CART_ASSEMBLER.get();
 	}
 
 	@Override
@@ -286,7 +290,8 @@ public class CartAssemblerBlock extends BaseRailBlock
 			return InteractionResult.SUCCESS;
 		if (player != null && !player.isCreative())
 			getDropsNoRail(state, (ServerLevel) world, pos, world.getBlockEntity(pos), player, context.getItemInHand())
-				.forEach(itemStack -> player.getInventory().placeItemBackInInventory(itemStack));
+				.forEach(itemStack -> player.getInventory()
+					.placeItemBackInInventory(itemStack));
 		if (world instanceof ServerLevel)
 			state.spawnAfterBreak((ServerLevel) world, pos, ItemStack.EMPTY);
 		world.setBlockAndUpdate(pos, getRailBlock(state));

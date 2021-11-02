@@ -24,6 +24,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
@@ -160,18 +161,13 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.STOCKPILE_SWITCH.create();
-	}
-
-	@Override
 	public Class<StockpileSwitchTileEntity> getTileEntityClass() {
 		return StockpileSwitchTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends StockpileSwitchTileEntity> getTileEntityType() {
+		return AllTileEntities.STOCKPILE_SWITCH.get();
 	}
 
 }

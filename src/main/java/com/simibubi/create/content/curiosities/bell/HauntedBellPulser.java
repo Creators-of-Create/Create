@@ -39,7 +39,7 @@ public class HauntedBellPulser {
 			return;
 		if (event.player.isSpectator())
 			return;
-		if (!event.player.isHolding(AllBlocks.HAUNTED_BELL::is))
+		if (!event.player.isHolding(AllBlocks.HAUNTED_BELL::isIn))
 			return;
 
 		Entity player = event.player;

@@ -35,7 +35,9 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -43,7 +45,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -81,21 +83,9 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return state.getValue(HEAT_LEVEL)
-			.isAtLeast(HeatLevel.SMOULDERING);
-	}
-
-	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> list) {
 		list.add(AllItems.EMPTY_BLAZE_BURNER.asStack());
 		super.fillItemCategory(group, list);
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.HEATER.create();
 	}
 
 	@Override
@@ -104,11 +94,24 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	@Override
+	public BlockEntityType<? extends BlazeBurnerTileEntity> getTileEntityType() {
+		return AllTileEntities.HEATER.get();
+	}
+
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+		if (p_153216_.getValue(HEAT_LEVEL) == HeatLevel.NONE)
+			return null;
+		return ITE.super.newBlockEntity(p_153215_, p_153216_);
+	}
+
+	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (!state.hasTileEntity()) {
+		if (!state.hasBlockEntity()) {
 			if (heldItem.getItem() instanceof FlintAndSteelItem) {
 				world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F,
 					world.random.nextFloat() * 0.4F + 0.8F);
@@ -124,12 +127,14 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		boolean doNotConsume = player.isCreative();
 		boolean forceOverflow = !(player instanceof FakePlayer);
 
-		InteractionResultHolder<ItemStack> res = tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);
+		InteractionResultHolder<ItemStack> res =
+			tryInsert(state, world, pos, heldItem, doNotConsume, forceOverflow, false);
 		ItemStack leftover = res.getObject();
 		if (!world.isClientSide && !doNotConsume && !leftover.isEmpty()) {
 			if (heldItem.isEmpty()) {
 				player.setItemInHand(hand, leftover);
-			} else if (!player.getInventory().add(leftover)) {
+			} else if (!player.getInventory()
+				.add(leftover)) {
 				player.drop(leftover, false);
 			}
 		}
@@ -137,9 +142,9 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		return res.getResult() == InteractionResult.SUCCESS ? InteractionResult.SUCCESS : InteractionResult.PASS;
 	}
 
-	public static InteractionResultHolder<ItemStack> tryInsert(BlockState state, Level world, BlockPos pos, ItemStack stack, boolean doNotConsume,
-		boolean forceOverflow, boolean simulate) {
-		if (!state.hasTileEntity())
+	public static InteractionResultHolder<ItemStack> tryInsert(BlockState state, Level world, BlockPos pos,
+		ItemStack stack, boolean doNotConsume, boolean forceOverflow, boolean simulate) {
+		if (!state.hasBlockEntity())
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		BlockEntity te = world.getBlockEntity(pos);
@@ -199,7 +204,8 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 
 	@Override
 	public int getAnalogOutputSignal(BlockState state, Level p_180641_2_, BlockPos p_180641_3_) {
-		return Math.max(0, state.getValue(HEAT_LEVEL).ordinal() - 1);
+		return Math.max(0, state.getValue(HEAT_LEVEL)
+			.ordinal() - 1);
 	}
 
 	@Override
@@ -230,14 +236,12 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	public static LootTable.Builder buildLootTable() {
-		Builder survivesExplosion = ExplosionCondition.survivesExplosion();
+		LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
 		BlazeBurnerBlock block = AllBlocks.BLAZE_BURNER.get();
-
 		LootTable.Builder builder = LootTable.lootTable();
 		LootPool.Builder poolBuilder = LootPool.lootPool();
 		for (HeatLevel level : HeatLevel.values()) {
-			ItemLike drop =
-				level == HeatLevel.NONE ? AllItems.EMPTY_BLAZE_BURNER.get() : AllBlocks.BLAZE_BURNER.get();
+			ItemLike drop = level == HeatLevel.NONE ? AllItems.EMPTY_BLAZE_BURNER.get() : AllBlocks.BLAZE_BURNER.get();
 			poolBuilder.add(LootItem.lootTableItem(drop)
 				.when(survivesExplosion)
 				.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
@@ -249,7 +253,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 	}
 
 	public enum HeatLevel implements StringRepresentable {
-		NONE, SMOULDERING, FADING, KINDLED, SEETHING, ;
+		NONE, SMOULDERING, FADING, KINDLED, SEETHING,;
 
 		public static HeatLevel byIndex(int index) {
 			return values()[index];

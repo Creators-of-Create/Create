@@ -15,7 +15,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.PushReaction;
@@ -59,11 +59,6 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 			BlockHitResult hit) {
 		if (worldIn.isClientSide)
@@ -75,13 +70,8 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SCHEMATIC_TABLE.create();
-	}
-
-	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
@@ -91,6 +81,11 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	@Override
 	public Class<SchematicTableTileEntity> getTileEntityClass() {
 		return SchematicTableTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends SchematicTableTileEntity> getTileEntityType() {
+		return AllTileEntities.SCHEMATIC_TABLE.get();
 	}
 	
 	@Override

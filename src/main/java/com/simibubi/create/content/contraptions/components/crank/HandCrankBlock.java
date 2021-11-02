@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -98,11 +98,6 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.HAND_CRANK.create();
-	}
-
-	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
 		return face == state.getValue(FACING)
 			.getOpposite();
@@ -117,6 +112,11 @@ public class HandCrankBlock extends DirectionalKineticBlock implements ITE<HandC
 	@Override
 	public Class<HandCrankTileEntity> getTileEntityClass() {
 		return HandCrankTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends HandCrankTileEntity> getTileEntityType() {
+		return AllTileEntities.HAND_CRANK.get();
 	}
 
 	@Override

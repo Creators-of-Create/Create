@@ -38,11 +38,6 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		super(p_i48440_1_);
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
 	public static boolean isChute(BlockState state) {
 		return state.getBlock() instanceof AbstractChuteBlock;
 	}
@@ -71,9 +66,6 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	public boolean isTransparent(BlockState state) {
 		return false;
 	}
-
-	@Override
-	public abstract BlockEntity createTileEntity(BlockState state, BlockGetter world);
 
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter worldIn, Entity entityIn) {
@@ -128,7 +120,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
 		boolean differentBlock = state.getBlock() != p_196243_4_.getBlock();
-		if (state.hasTileEntity() && (differentBlock || !p_196243_4_.hasTileEntity())) {
+		if (state.hasBlockEntity() && (differentBlock || !p_196243_4_.hasBlockEntity())) {
 			TileEntityBehaviour.destroy(world, pos, FilteringBehaviour.TYPE);
 			withTileEntityDo(world, pos, c -> c.onRemoved(state));
 			world.removeBlockEntity(pos);

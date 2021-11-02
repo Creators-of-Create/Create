@@ -15,7 +15,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -44,11 +44,6 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	@Override
 	public PartialModel getFrameModel() {
 		return AllBlockPartials.FURNACE_GENERATOR_FRAME;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.FURNACE_ENGINE.create();
 	}
 
 	@Override
@@ -84,5 +79,11 @@ public class FurnaceEngineBlock extends EngineBlock implements ITE<FurnaceEngine
 	public Class<FurnaceEngineTileEntity> getTileEntityClass() {
 		return FurnaceEngineTileEntity.class;
 	}
+
+	@Override
+	public BlockEntityType<? extends FurnaceEngineTileEntity> getTileEntityType() {
+		return AllTileEntities.FURNACE_ENGINE.get();
+	}
+
 
 }

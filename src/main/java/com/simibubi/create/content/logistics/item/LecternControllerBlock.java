@@ -2,8 +2,6 @@ package com.simibubi.create.content.logistics.item;
 
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
-
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTileEntities;
@@ -21,27 +19,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class LecternControllerBlock extends LecternBlock implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement {
+public class LecternControllerBlock extends LecternBlock
+	implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement {
 
 	public LecternControllerBlock(Properties properties) {
 		super(properties);
 		registerDefaultState(defaultBlockState().setValue(HAS_BOOK, true));
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity newBlockEntity(BlockGetter p_196283_1_) {
-		return null;
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.LECTERN_CONTROLLER.create();
 	}
 
 	@Override
@@ -50,7 +38,18 @@ public class LecternControllerBlock extends LecternBlock implements ITE<LecternC
 	}
 
 	@Override
-	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public BlockEntityType<? extends LecternControllerTileEntity> getTileEntityType() {
+		return AllTileEntities.LECTERN_CONTROLLER.get();
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos p_153573_, BlockState p_153574_) {
+		return ITE.super.newBlockEntity(p_153573_, p_153574_);
+	}
+
+	@Override
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+		BlockHitResult hit) {
 		if (!player.isShiftKeyDown() && LecternControllerTileEntity.playerInRange(player, world, pos)) {
 			if (!world.isClientSide)
 				withTileEntityDo(world, pos, te -> te.tryStartUsing(player));
@@ -82,8 +81,7 @@ public class LecternControllerBlock extends LecternBlock implements ITE<LecternC
 	}
 
 	public void replaceLectern(BlockState lecternState, Level world, BlockPos pos, ItemStack controller) {
-		world.setBlockAndUpdate(pos, defaultBlockState()
-			.setValue(FACING, lecternState.getValue(FACING))
+		world.setBlockAndUpdate(pos, defaultBlockState().setValue(FACING, lecternState.getValue(FACING))
 			.setValue(POWERED, lecternState.getValue(POWERED)));
 		withTileEntityDo(world, pos, te -> te.setController(controller));
 	}

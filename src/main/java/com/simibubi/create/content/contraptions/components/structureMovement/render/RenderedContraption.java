@@ -16,7 +16,6 @@ import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3d;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -25,11 +24,11 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class RenderedContraption extends ContraptionRenderInfo {
 
@@ -82,7 +81,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 		kinetics.beginFrame(event.getInfo());
 
-		Vector3d cameraPos = event.getCameraPos();
+		Vec3 cameraPos = event.getCameraPos();
 
 		lightBox = lighter.lightVolume.toAABB()
 				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);

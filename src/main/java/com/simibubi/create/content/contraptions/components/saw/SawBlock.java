@@ -22,7 +22,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -46,11 +46,6 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 		if (facing.getAxis().isVertical())
 			return stateForPlacement;
 		return stateForPlacement.setValue(AXIS_ALONG_FIRST_COORDINATE, facing.getAxis() == Axis.X);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SAW.create();
 	}
 
 	@Override
@@ -109,7 +104,7 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 
 		withTileEntityDo(worldIn, pos, te -> ItemHelper.dropContents(worldIn, pos, te.inventory));
@@ -120,6 +115,11 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	@Override
 	public Class<SawTileEntity> getTileEntityClass() {
 		return SawTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends SawTileEntity> getTileEntityType() {
+		return AllTileEntities.SAW.get();
 	}
 	
 	@Override

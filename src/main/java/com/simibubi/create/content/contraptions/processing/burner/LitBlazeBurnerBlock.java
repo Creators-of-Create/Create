@@ -29,7 +29,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 
 public class LitBlazeBurnerBlock extends Block {
 
@@ -51,17 +50,8 @@ public class LitBlazeBurnerBlock extends Block {
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (heldItem.getToolTypes().contains(ToolType.SHOVEL)) {
-			world.playSound(player, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5f, 2);
-			if (world.isClientSide)
-				return InteractionResult.SUCCESS;
-			heldItem.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
-			world.setBlockAndUpdate(pos, AllBlocks.BLAZE_BURNER.getDefaultState());
-			return InteractionResult.SUCCESS;
-		}
-
 		if (state.getValue(FLAME_TYPE) == FlameType.REGULAR) {
-			if (heldItem.getItem().is(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
+			if (heldItem.is(ItemTags.SOUL_FIRE_BASE_BLOCKS)) {
 				world.playSound(player, pos, SoundEvents.SOUL_SAND_PLACE, SoundSource.BLOCKS, 1.0f, world.random.nextFloat() * 0.4F + 0.8F);
 				if (world.isClientSide)
 					return InteractionResult.SUCCESS;

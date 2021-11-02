@@ -6,6 +6,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -30,21 +32,11 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterloggedBlock, ICogWheel {
+public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterloggedBlock, ICogWheel, ITE<PumpTileEntity> {
 
 	public PumpBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
 		registerDefaultState(super.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_PUMP.create();
 	}
 
 	@Override
@@ -151,13 +143,23 @@ public class PumpBlock extends DirectionalKineticBlock implements SimpleWaterlog
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
 			world.removeBlockEntity(pos);
 	}
 
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<PumpTileEntity> getTileEntityClass() {
+		return PumpTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends PumpTileEntity> getTileEntityType() {
+		return AllTileEntities.MECHANICAL_PUMP.get();
 	}
 
 }

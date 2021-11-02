@@ -2,6 +2,7 @@ package com.simibubi.create.content.logistics.block.redstone;
 
 import java.util.Random;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 
@@ -19,7 +20,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -36,18 +37,8 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ANALOG_LEVER.create();
-	}
-
-	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-								  BlockHitResult hit) {
+		BlockHitResult hit) {
 		if (worldIn.isClientSide) {
 			addParticles(state, worldIn, pos, 1.0F);
 			return InteractionResult.SUCCESS;
@@ -65,7 +56,7 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	@Override
 	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return getTileEntityOptional(blockAccess, pos).map(al -> al.state)
-				.orElse(0);
+			.orElse(0);
 	}
 
 	@Override
@@ -100,15 +91,16 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 
 	private static void addParticles(BlockState state, LevelAccessor worldIn, BlockPos pos, float alpha) {
 		Direction direction = state.getValue(FACING)
-				.getOpposite();
+			.getOpposite();
 		Direction direction1 = getConnectedDirection(state).getOpposite();
-		double d0 = (double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX()
-				+ 0.2D * (double) direction1.getStepX();
-		double d1 = (double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY()
-				+ 0.2D * (double) direction1.getStepY();
-		double d2 = (double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ()
-				+ 0.2D * (double) direction1.getStepZ();
-		worldIn.addParticle(new DustParticleOptions(1.0F, 0.0F, 0.0F, alpha), d0, d1, d2, 0.0D, 0.0D, 0.0D);
+		double d0 =
+			(double) pos.getX() + 0.5D + 0.1D * (double) direction.getStepX() + 0.2D * (double) direction1.getStepX();
+		double d1 =
+			(double) pos.getY() + 0.5D + 0.1D * (double) direction.getStepY() + 0.2D * (double) direction1.getStepY();
+		double d2 =
+			(double) pos.getZ() + 0.5D + 0.1D * (double) direction.getStepZ() + 0.2D * (double) direction1.getStepZ();
+		worldIn.addParticle(new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), alpha), d0, d1, d2, 0.0D, 0.0D,
+			0.0D);
 	}
 
 	static void updateNeighbors(BlockState state, Level world, BlockPos pos) {
@@ -130,6 +122,11 @@ public class AnalogLeverBlock extends FaceAttachedHorizontalDirectionalBlock imp
 	@Override
 	public Class<AnalogLeverTileEntity> getTileEntityClass() {
 		return AnalogLeverTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends AnalogLeverTileEntity> getTileEntityType() {
+		return AllTileEntities.ANALOG_LEVER.get();
 	}
 
 	@Override

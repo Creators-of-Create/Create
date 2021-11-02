@@ -17,9 +17,7 @@ public class BeltHelper {
 
 	public static boolean isItemUpright(ItemStack stack) {
 		return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-			.isPresent()
-			|| stack.getItem()
-				.is(AllItemTags.UPRIGHT_ON_BELT.tag);
+			.isPresent() || stack.is(AllItemTags.UPRIGHT_ON_BELT.tag);
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {

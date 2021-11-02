@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
@@ -61,7 +62,8 @@ public class InWorldProcessing {
 				return Type.SPLASHING;
 			Block block = blockState.getBlock();
 			if (block == Blocks.FIRE || AllBlocks.LIT_BLAZE_BURNER.has(blockState)
-				|| (BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT).orElse(false))
+				|| (BlockTags.CAMPFIRES.contains(block) && blockState.getOptionalValue(CampfireBlock.LIT)
+					.orElse(false))
 				|| getHeatLevelOf(blockState) == BlazeBurnerBlock.HeatLevel.SMOULDERING)
 				return Type.SMOKING;
 			if (block == Blocks.LAVA || getHeatLevelOf(blockState).isAtLeast(BlazeBurnerBlock.HeatLevel.FADING))
@@ -109,7 +111,8 @@ public class InWorldProcessing {
 			if (blastingRecipe.isPresent())
 				return true;
 
-			return !stack.getItem().isFireResistant();
+			return !stack.getItem()
+				.isFireResistant();
 		}
 
 		if (type == Type.SMOKING) {
@@ -138,7 +141,7 @@ public class InWorldProcessing {
 		if (stacks == null)
 			return;
 		if (stacks.isEmpty()) {
-			entity.remove();
+			entity.discard();
 			return;
 		}
 		entity.setItem(stacks.remove(0));
@@ -248,7 +251,7 @@ public class InWorldProcessing {
 		if (stacks == null)
 			return;
 		if (stacks.isEmpty()) {
-			entity.remove();
+			entity.discard();
 			return;
 		}
 		entity.setItem(stacks.remove(0));
@@ -307,10 +310,9 @@ public class InWorldProcessing {
 			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
 			break;
 		case SPLASHING:
-			Vec3 color = Color.vectorFromRGB(0x0055FF);
-			world.addParticle(new DustParticleOptions((float) color.x, (float) color.y, (float) color.z, 1),
-				vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f,
-				0, 1 / 8f, 0);
+			Vector3f color = new Vector3f(Color.vectorFromRGB(0x0055FF));
+			world.addParticle(new DustParticleOptions(color, 1), vec.x + (world.random.nextFloat() - .5f) * .5f,
+				vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 			world.addParticle(ParticleTypes.SPIT, vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f,
 				vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 			break;

@@ -23,7 +23,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -37,11 +37,6 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 
 	public DeployerBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.DEPLOYER.create();
 	}
 
 	@Override
@@ -66,12 +61,12 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				if (te.player != null && !isMoving) {
 					te.player.getInventory().dropAll();
 					te.overflowItems.forEach(itemstack -> te.player.drop(itemstack, true, false));
-					te.player.remove();
+					te.player.discard();
 					te.player = null;
 				}
 			});
@@ -111,6 +106,11 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 	@Override
 	public Class<DeployerTileEntity> getTileEntityClass() {
 		return DeployerTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends DeployerTileEntity> getTileEntityType() {
+		return AllTileEntities.DEPLOYER.get();
 	}
 
 	@Override

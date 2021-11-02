@@ -34,7 +34,7 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 		return getModifierForSignal(signal);
 	}
 
-	public void neighborChanged() {
+	public void neighbourChanged() {
 		if (!hasLevel())
 			return;
 		int power = level.getBestNeighborSignal(worldPosition);
@@ -45,7 +45,7 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
-		neighborChanged();
+		neighbourChanged();
 	}
 
 	@Override

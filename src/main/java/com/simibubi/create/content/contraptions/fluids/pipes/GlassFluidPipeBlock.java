@@ -7,6 +7,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidTransportBehaviour;
 import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -28,7 +30,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class GlassFluidPipeBlock extends AxisPipeBlock implements SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
+public class GlassFluidPipeBlock extends AxisPipeBlock implements ITE<StraightPipeTileEntity>, SimpleWaterloggedBlock, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty ALT = BooleanProperty.create("alt");
 
@@ -40,16 +42,6 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements SimpleWaterlog
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
 		super.createBlockStateDefinition(p_206840_1_.add(ALT, BlockStateProperties.WATERLOGGED));
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.GLASS_FLUID_PIPE.create();
 	}
 
 	@Override
@@ -89,6 +81,16 @@ public class GlassFluidPipeBlock extends AxisPipeBlock implements SimpleWaterlog
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<StraightPipeTileEntity> getTileEntityClass() {
+		return StraightPipeTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends StraightPipeTileEntity> getTileEntityType() {
+		return AllTileEntities.GLASS_FLUID_PIPE.get();
 	}
 
 }

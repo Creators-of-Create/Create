@@ -5,6 +5,7 @@ import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.EngineTileEntity;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineBlock;
 import com.simibubi.create.foundation.advancement.AllTriggers;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.core.BlockPos;
@@ -14,16 +15,15 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public class FlywheelBlock extends HorizontalKineticBlock {
+public class FlywheelBlock extends HorizontalKineticBlock implements ITE<FlywheelTileEntity> {
 
 	public static EnumProperty<ConnectionState> CONNECTION = EnumProperty.create("connection", ConnectionState.class);
 
@@ -35,11 +35,6 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder.add(CONNECTION));
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.FLYWHEEL.create();
 	}
 
 	@Override
@@ -113,6 +108,16 @@ public class FlywheelBlock extends HorizontalKineticBlock {
 		public String getSerializedName() {
 			return Lang.asId(name());
 		}
+	}
+
+	@Override
+	public Class<FlywheelTileEntity> getTileEntityClass() {
+		return FlywheelTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends FlywheelTileEntity> getTileEntityType() {
+		return AllTileEntities.FLYWHEEL.get();
 	}
 
 }

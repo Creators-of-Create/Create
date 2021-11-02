@@ -13,6 +13,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -24,12 +26,6 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 
 	public AbstractBellBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	@Nullable
-	public BlockEntity newBlockEntity(BlockGetter block) {
-		return null;
 	}
 
 	@Override
@@ -50,8 +46,7 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 	}
 
 	@Override
-	public boolean onHit(Level world, BlockState state, BlockHitResult hit, @Nullable Player player,
-		boolean flag) {
+	public boolean onHit(Level world, BlockState state, BlockHitResult hit, @Nullable Player player, boolean flag) {
 		BlockPos pos = hit.getBlockPos();
 		Direction direction = hit.getDirection();
 		if (direction == null)
@@ -92,6 +87,17 @@ public abstract class AbstractBellBlock<TE extends AbstractBellTileEntity> exten
 		default:
 			return false;
 		}
+	}
+
+	@Nullable
+	public BlockEntity newBlockEntity(BlockPos p_152198_, BlockState p_152199_) {
+		return ITE.super.newBlockEntity(p_152198_, p_152199_);
+	}
+
+	@Nullable
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_152194_, BlockState p_152195_,
+		BlockEntityType<T> p_152196_) {
+		return ITE.super.getTicker(p_152194_, p_152195_, p_152196_);
 	}
 
 	public abstract void playSound(Level world, BlockPos pos);

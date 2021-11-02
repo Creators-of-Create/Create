@@ -127,7 +127,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			return InteractionResult.FAIL;
 
 		giveBurnerItemTo(player, heldItem, hand);
-		entity.remove();
+		entity.discard();
 		return InteractionResult.FAIL;
 	}
 
@@ -139,7 +139,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			player.setItemInHand(hand, filled);
 			return;
 		}
-		player.getInventory().placeItemBackInInventory(player.level, filled);
+		player.getInventory().placeItemBackInInventory(filled);
 	}
 
 	private void spawnCaptureEffects(Level world, Vec3 vec) {

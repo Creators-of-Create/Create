@@ -20,7 +20,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -125,16 +125,6 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.REDSTONE_LINK.create();
-	}
-
-	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
 		BlockHitResult hit) {
 		if (player.isShiftKeyDown())
@@ -202,6 +192,11 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	@Override
 	public Class<RedstoneLinkTileEntity> getTileEntityClass() {
 		return RedstoneLinkTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends RedstoneLinkTileEntity> getTileEntityType() {
+		return AllTileEntities.REDSTONE_LINK.get();
 	}
 
 }

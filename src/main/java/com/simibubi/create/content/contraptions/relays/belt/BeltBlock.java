@@ -55,6 +55,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -69,6 +70,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
@@ -119,14 +121,14 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		return AllItems.BELT_CONNECTOR.asStack();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public List<ItemStack> getDrops(BlockState state, net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
+	public List<ItemStack> getDrops(BlockState state,
+		net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		BlockEntity tileEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
 		if (tileEntity instanceof BeltTileEntity && ((BeltTileEntity) tileEntity).hasPulley())
@@ -269,7 +271,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			MutableBoolean success = new MutableBoolean(false);
 			controllerBelt.getInventory()
 				.applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
-					player.getInventory().placeItemBackInInventory(transportedItemStack.stack);
+					player.getInventory()
+						.placeItemBackInInventory(transportedItemStack.stack);
 					success.setTrue();
 					return TransportedResult.removeItem();
 				});
@@ -326,7 +329,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return InteractionResult.SUCCESS;
 			KineticTileEntity.switchToBlockState(world, pos, state.setValue(PART, BeltPart.MIDDLE));
 			if (player != null && !player.isCreative())
-				player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack());
+				player.getInventory()
+					.placeItemBackInInventory(AllBlocks.SHAFT.asStack());
 			return InteractionResult.SUCCESS;
 		}
 
@@ -337,11 +341,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(SLOPE, PART, CASING);
 		super.createBlockStateDefinition(builder);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 
 	@Override
@@ -362,30 +361,30 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos,
-		CollisionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		if (state.getBlock() != this)
 			return Shapes.empty();
 
 		VoxelShape shape = getShape(state, worldIn, pos, context);
+		if (!(context instanceof EntityCollisionContext))
+			return shape;
+
 		return getTileEntityOptional(worldIn, pos).map(te -> {
-			if (context.getEntity() == null)
+			if (!((EntityCollisionContext) context).getEntity()
+				.isPresent())
 				return shape;
 
 			BeltTileEntity controller = te.getControllerTE();
 			if (controller == null)
 				return shape;
-			if (controller.passengers == null || !controller.passengers.containsKey(context.getEntity()))
+			if (controller.passengers == null || !controller.passengers.containsKey(
+				((EntityCollisionContext) context).getEntity()
+				.get()))
 				return BeltShapes.getCollisionShape(state);
 			return shape;
 
 		})
 			.orElse(shape);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.BELT.create();
 	}
 
 	@Override
@@ -501,8 +500,8 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction side, BlockState p_196271_3_, LevelAccessor world, BlockPos pos,
-		BlockPos p_196271_6_) {
+	public BlockState updateShape(BlockState state, Direction side, BlockState p_196271_3_, LevelAccessor world,
+		BlockPos pos, BlockPos p_196271_6_) {
 		if (side.getAxis()
 			.isHorizontal())
 			updateTunnelConnections(world, pos.above());
@@ -560,6 +559,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	@Override
 	public Class<BeltTileEntity> getTileEntityClass() {
 		return BeltTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends BeltTileEntity> getTileEntityType() {
+		return  AllTileEntities.BELT.get();
 	}
 
 	@Override

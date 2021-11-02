@@ -10,7 +10,7 @@ import net.minecraft.world.entity.Entity;
 
 /**
  * <p>
- *     ContraptionMatrices must be cleared and setup per-contraption per-frame
+ * ContraptionMatrices must be cleared and setup per-contraption per-frame
  * </p>
  */
 public class ContraptionMatrices {
@@ -42,9 +42,9 @@ public class ContraptionMatrices {
 
 		translateToEntity(world, entity, partialTicks);
 
-		light.set(world);
-		light.multiply(model
-				.last().pose());
+		light.load(world);
+		light.multiply(model.last()
+			.pose());
 
 		ready = true;
 	}
@@ -83,12 +83,14 @@ public class ContraptionMatrices {
 	}
 
 	public static void transform(PoseStack ms, PoseStack transform) {
-		ms.last().pose()
+		ms.last()
+			.pose()
 			.multiply(transform.last()
-			.pose());
-		ms.last().normal()
+				.pose());
+		ms.last()
+			.normal()
 			.mul(transform.last()
-			.normal());
+				.normal());
 	}
 
 	public static void translateToEntity(Matrix4f matrix, Entity entity, float partialTicks) {

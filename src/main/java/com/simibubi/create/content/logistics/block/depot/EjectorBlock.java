@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -45,26 +46,27 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public float getSlipperiness(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+	public float getFriction(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		return getTileEntityOptional(world, pos).filter(ete -> ete.state == State.LAUNCHING)
 			.map($ -> 1f)
-			.orElse(super.getSlipperiness(state, world, pos, entity));
+			.orElse(super.getFriction(state, world, pos, entity));
 	}
 
 	@Override
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_,
-		BlockPos p_220069_5_, boolean p_220069_6_) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_,
+		boolean p_220069_6_) {
 		withTileEntityDo(world, pos, EjectorTileEntity::updateSignal);
 	}
-	
+
 	@Override
-	public void fallOn(Level p_180658_1_, BlockPos p_180658_2_, Entity p_180658_3_, float p_180658_4_) {
+	public void fallOn(Level p_180658_1_, BlockState p_152427_, BlockPos p_180658_2_, Entity p_180658_3_,
+		float p_180658_4_) {
 		Optional<EjectorTileEntity> tileEntityOptional = getTileEntityOptional(p_180658_1_, p_180658_2_);
 		if (tileEntityOptional.isPresent() && !p_180658_3_.isSuppressingBounce()) {
-			p_180658_3_.causeFallDamage(p_180658_4_, 0.0F);
+			p_180658_3_.causeFallDamage(p_180658_4_, 1.0F, DamageSource.FALL);
 			return;
 		}
-		super.fallOn(p_180658_1_, p_180658_2_, p_180658_3_, p_180658_4_);
+		super.fallOn(p_180658_1_, p_152427_, p_180658_2_, p_180658_3_, p_180658_4_);
 	}
 
 	@Override
@@ -142,13 +144,13 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.WEIGHTED_EJECTOR.create();
+	public Class<EjectorTileEntity> getTileEntityClass() {
+		return EjectorTileEntity.class;
 	}
 
 	@Override
-	public Class<EjectorTileEntity> getTileEntityClass() {
-		return EjectorTileEntity.class;
+	public BlockEntityType<? extends EjectorTileEntity> getTileEntityType() {
+		return AllTileEntities.WEIGHTED_EJECTOR.get();
 	}
 
 	@Override
@@ -160,7 +162,7 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
 		return SharedDepotBlockMethods.getComparatorInputOverride(blockState, worldIn, pos);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

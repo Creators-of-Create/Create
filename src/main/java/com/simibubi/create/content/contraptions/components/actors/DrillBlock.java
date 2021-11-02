@@ -19,7 +19,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -35,17 +35,13 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	public DrillBlock(Properties properties) {
 		super(properties);
 	}
-	
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
 
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof ItemEntity)
 			return;
-		if (!new AABB(pos).deflate(.1f).intersects(entityIn.getBoundingBox()))
+		if (!new AABB(pos).deflate(.1f)
+			.intersects(entityIn.getBoundingBox()))
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			if (te.getSpeed() == 0)
@@ -55,29 +51,26 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.DRILL.create();
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.CASING_12PX.get(state.getValue(FACING));
 	}
 
 	@Override
 	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
+		boolean isMoving) {
 		withTileEntityDo(worldIn, pos, DrillTileEntity::destroyNextTick);
 	}
 
 	@Override
 	public Axis getRotationAxis(BlockState state) {
-		return state.getValue(FACING).getAxis();
+		return state.getValue(FACING)
+			.getAxis();
 	}
 
 	@Override
 	public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-		return face == state.getValue(FACING).getOpposite();
+		return face == state.getValue(FACING)
+			.getOpposite();
 	}
 
 	@Override
@@ -85,11 +78,6 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 		return PushReaction.NORMAL;
 	}
 
-	@Override
-	public Class<DrillTileEntity> getTileEntityClass() {
-		return DrillTileEntity.class;
-	}
-	
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
@@ -101,5 +89,15 @@ public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTile
 		double sub2 = Math.min(speedAbs / 32, 4);
 		double sub3 = Math.min(speedAbs / 64, 4);
 		return Mth.clamp(sub1 + sub2 + sub3, 1, 10);
+	}
+
+	@Override
+	public Class<DrillTileEntity> getTileEntityClass() {
+		return DrillTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends DrillTileEntity> getTileEntityType() {
+		return AllTileEntities.DRILL.get();
 	}
 }

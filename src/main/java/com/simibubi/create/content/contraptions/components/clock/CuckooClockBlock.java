@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.components.clock;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalKineticBlock;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,13 +15,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CuckooClockBlock extends HorizontalKineticBlock {
+public class CuckooClockBlock extends HorizontalKineticBlock implements ITE<CuckooClockTileEntity> {
 
 	private boolean mysterious;
 
@@ -35,11 +36,6 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	protected CuckooClockBlock(boolean mysterious, Properties properties) {
 		super(properties);
 		this.mysterious = mysterious;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CUCKOO_CLOCK.create();
 	}
 	
 	@Override
@@ -80,6 +76,16 @@ public class CuckooClockBlock extends HorizontalKineticBlock {
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<CuckooClockTileEntity> getTileEntityClass() {
+		return CuckooClockTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends CuckooClockTileEntity> getTileEntityType() {
+		return AllTileEntities.CUCKOO_CLOCK.get();
 	}
 
 }

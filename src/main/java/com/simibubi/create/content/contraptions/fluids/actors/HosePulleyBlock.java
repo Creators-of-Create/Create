@@ -15,7 +15,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -55,11 +55,6 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.HOSE_PULLEY.create();
-	}
-
-	@Override
 	public Direction getPreferredHorizontalFacing(BlockPlaceContext context) {
 		Direction fromParent = super.getPreferredHorizontalFacing(context);
 		if (fromParent != null)
@@ -84,8 +79,8 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	@Override
 	public void onRemove(BlockState p_196243_1_, Level world, BlockPos pos, BlockState p_196243_4_,
 		boolean p_196243_5_) {
-		if (p_196243_1_.hasTileEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
+		if (p_196243_1_.hasBlockEntity()
+			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasBlockEntity())) {
 			TileEntityBehaviour.destroy(world, pos, FluidDrainingBehaviour.TYPE);
 			TileEntityBehaviour.destroy(world, pos, FluidFillingBehaviour.TYPE);
 			world.removeBlockEntity(pos);
@@ -102,6 +97,11 @@ public class HosePulleyBlock extends HorizontalKineticBlock implements ITE<HoseP
 	@Override
 	public Class<HosePulleyTileEntity> getTileEntityClass() {
 		return HosePulleyTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends HosePulleyTileEntity> getTileEntityType() {
+		return AllTileEntities.HOSE_PULLEY.get();
 	}
 
 }

@@ -23,7 +23,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -69,7 +69,6 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
 		if (!player.getItemInHand(handIn)
-			.getItem()
 			.is(Tags.Items.SLIMEBALLS)) {
 			if (player.getItemInHand(handIn)
 				.isEmpty()) {
@@ -127,11 +126,6 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 			te.lastException = null;
 			te.sendData();
 		});
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_PISTON.create();
 	}
 
 	@Override
@@ -214,6 +208,11 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	@Override
 	public Class<MechanicalPistonTileEntity> getTileEntityClass() {
 		return MechanicalPistonTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends MechanicalPistonTileEntity> getTileEntityType() {
+		return AllTileEntities.MECHANICAL_PISTON.get();
 	}
 
 	public static boolean isPiston(BlockState state) {

@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -24,25 +26,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class NozzleBlock extends WrenchableDirectionalBlock {
+public class NozzleBlock extends WrenchableDirectionalBlock implements ITE<NozzleTileEntity> {
 
 	public NozzleBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 	
 	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		return InteractionResult.FAIL;
-	}
-	
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.NOZZLE.create();
 	}
 	
 	@Override
@@ -79,6 +71,16 @@ public class NozzleBlock extends WrenchableDirectionalBlock {
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<NozzleTileEntity> getTileEntityClass() {
+		return NozzleTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends NozzleTileEntity> getTileEntityType() {
+		return AllTileEntities.NOZZLE.get();
 	}
 
 }

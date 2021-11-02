@@ -11,23 +11,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<EncasedFanTileEntity> {
 
 	public EncasedFanBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ENCASED_FAN.create();
 	}
 
 	@Override
@@ -44,7 +38,7 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState p_196243_4_, boolean p_196243_5_) {
-		if (state.hasTileEntity() && (state.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
+		if (state.hasBlockEntity() && (state.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasBlockEntity())) {
 			withTileEntityDo(world, pos, EncasedFanTileEntity::updateChute);
 			world.removeBlockEntity(pos);
 		}
@@ -115,6 +109,11 @@ public class EncasedFanBlock extends DirectionalKineticBlock implements ITE<Enca
 	@Override
 	public Class<EncasedFanTileEntity> getTileEntityClass() {
 		return EncasedFanTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends EncasedFanTileEntity> getTileEntityType() {
+		return AllTileEntities.ENCASED_FAN.get();
 	}
 
 }

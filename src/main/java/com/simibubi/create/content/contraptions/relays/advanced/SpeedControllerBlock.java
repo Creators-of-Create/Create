@@ -27,7 +27,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -41,11 +41,6 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 
 	public SpeedControllerBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ROTATION_SPEED_CONTROLLER.create();
 	}
 
 	@Override
@@ -115,5 +110,10 @@ public class SpeedControllerBlock extends HorizontalAxisKineticBlock implements 
 	@Override
 	public Class<SpeedControllerTileEntity> getTileEntityClass() {
 		return SpeedControllerTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends SpeedControllerTileEntity> getTileEntityType() {
+		return AllTileEntities.ROTATION_SPEED_CONTROLLER.get();
 	}
 }

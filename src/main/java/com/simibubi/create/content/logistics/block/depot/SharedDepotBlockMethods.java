@@ -75,7 +75,7 @@ public class SharedDepotBlockMethods {
 
 	public static void onReplaced(BlockState state, Level worldIn, BlockPos pos, BlockState newState,
 		boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 		DepotBehaviour behaviour = get(worldIn, pos);
 		if (behaviour == null)

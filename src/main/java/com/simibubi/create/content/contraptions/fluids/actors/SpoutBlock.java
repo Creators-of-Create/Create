@@ -3,38 +3,29 @@ package com.simibubi.create.content.contraptions.fluids.actors;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SpoutBlock extends Block implements IWrenchable {
+public class SpoutBlock extends Block implements IWrenchable, ITE<SpoutTileEntity> {
 
 	public SpoutBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
 		return AllShapes.SPOUT;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SPOUT.create();
 	}
 
 	@Override
@@ -50,6 +41,16 @@ public class SpoutBlock extends Block implements IWrenchable {
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<SpoutTileEntity> getTileEntityClass() {
+		return SpoutTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends SpoutTileEntity> getTileEntityType() {
+		return AllTileEntities.SPOUT.get();
 	}
 
 }

@@ -7,9 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -17,11 +16,6 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 
 	public MechanicalBearingBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_BEARING.create();
 	}
 
 	@Override
@@ -50,6 +44,11 @@ public class MechanicalBearingBlock extends BearingBlock implements ITE<Mechanic
 	@Override
 	public Class<MechanicalBearingTileEntity> getTileEntityClass() {
 		return MechanicalBearingTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends MechanicalBearingTileEntity> getTileEntityType() {
+		return AllTileEntities.MECHANICAL_BEARING.get();
 	}
 
 }

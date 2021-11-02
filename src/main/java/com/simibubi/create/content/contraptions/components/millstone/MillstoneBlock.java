@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -39,11 +39,6 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MILLSTONE.create();
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return AllShapes.MILLSTONE;
 	}
@@ -55,8 +50,9 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 
 	@Override
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
-		if (!player.getItemInHand(handIn).isEmpty())
+		BlockHitResult hit) {
+		if (!player.getItemInHand(handIn)
+			.isEmpty())
 			return InteractionResult.PASS;
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
@@ -68,14 +64,16 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (!stackInSlot.isEmpty())
 					emptyOutput = false;
-				player.getInventory().placeItemBackInInventory(worldIn, stackInSlot);
+				player.getInventory()
+					.placeItemBackInInventory(stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 			}
 
 			if (emptyOutput) {
 				inv = millstone.inputInv;
 				for (int slot = 0; slot < inv.getSlots(); slot++) {
-					player.getInventory().placeItemBackInInventory(worldIn, inv.getStackInSlot(slot));
+					player.getInventory()
+						.placeItemBackInInventory(inv.getStackInSlot(slot));
 					inv.setStackInSlot(slot, ItemStack.EMPTY);
 				}
 			}
@@ -111,16 +109,18 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 		if (!capability.isPresent())
 			return;
 
-		ItemStack remainder = capability.orElse(new ItemStackHandler()).insertItem(0, itemEntity.getItem(), false);
+		ItemStack remainder = capability.orElse(new ItemStackHandler())
+			.insertItem(0, itemEntity.getItem(), false);
 		if (remainder.isEmpty())
 			itemEntity.discard();
-		if (remainder.getCount() < itemEntity.getItem().getCount())
+		if (remainder.getCount() < itemEntity.getItem()
+			.getCount())
 			itemEntity.setItem(remainder);
 	}
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemHelper.dropContents(worldIn, pos, te.inputInv);
 				ItemHelper.dropContents(worldIn, pos, te.outputInv);
@@ -138,6 +138,11 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 	@Override
 	public Class<MillstoneTileEntity> getTileEntityClass() {
 		return MillstoneTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends MillstoneTileEntity> getTileEntityType() {
+		return AllTileEntities.MILLSTONE.get();
 	}
 
 	@Override

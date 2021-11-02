@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -28,11 +28,6 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 
 	public CrushingWheelBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CRUSHING_WHEEL.create();
 	}
 
 	@Override
@@ -193,6 +188,11 @@ public class CrushingWheelBlock extends RotatedPillarKineticBlock implements ITE
 	@Override
 	public Class<CrushingWheelTileEntity> getTileEntityClass() {
 		return CrushingWheelTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends CrushingWheelTileEntity> getTileEntityType() {
+		return AllTileEntities.CRUSHING_WHEEL.get();
 	}
 
 }

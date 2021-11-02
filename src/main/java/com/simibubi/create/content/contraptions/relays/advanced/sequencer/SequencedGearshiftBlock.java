@@ -22,11 +22,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -48,11 +47,6 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder.add(STATE, VERTICAL));
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SEQUENCED_GEARSHIFT.create();
 	}
 
 	@Override
@@ -155,6 +149,11 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	@Override
 	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
 		return SequencedGearshiftTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends SequencedGearshiftTileEntity> getTileEntityType() {
+		return AllTileEntities.SEQUENCED_GEARSHIFT.get();
 	}
 
 	@Override

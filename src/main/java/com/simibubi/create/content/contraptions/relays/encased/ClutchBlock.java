@@ -3,21 +3,15 @@ package com.simibubi.create.content.contraptions.relays.encased;
 import com.simibubi.create.AllTileEntities;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ClutchBlock extends GearshiftBlock {
 
 	public ClutchBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CLUTCH.create();
 	}
 
 	@Override
@@ -31,6 +25,11 @@ public class ClutchBlock extends GearshiftBlock {
 			worldIn.setBlock(pos, state.cycle(POWERED), 2 | 16);
 			detachKinetics(worldIn, pos, previouslyPowered);
 		}
+	}
+	
+	@Override
+	public BlockEntityType<? extends SplitShaftTileEntity> getTileEntityType() {
+		return AllTileEntities.CLUTCH.get();
 	}
 
 }

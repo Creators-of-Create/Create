@@ -6,6 +6,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -21,7 +22,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -29,7 +30,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock implements IAxisPipe, IWrenchable {
+public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock
+	implements ITE<SmartFluidPipeTileEntity>, IAxisPipe, IWrenchable {
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);
@@ -85,7 +87,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
 			world.removeBlockEntity(pos);
 	}
 
@@ -119,7 +121,7 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 	public static boolean isOpenAt(BlockState state, Direction d) {
 		return d.getAxis() == getPipeAxis(state);
 	}
-	
+
 	@Override
 	public void tick(BlockState state, ServerLevel world, BlockPos pos, Random r) {
 		FluidPropagator.propagateChangedPipe(world, pos, state);
@@ -129,16 +131,6 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 		return state.getValue(FACE) == AttachFace.WALL ? Axis.Y
 			: state.getValue(FACING)
 				.getAxis();
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.SMART_FLUID_PIPE.create();
 	}
 
 	@Override
@@ -154,10 +146,20 @@ public class SmartFluidPipeBlock extends FaceAttachedHorizontalDirectionalBlock 
 	public Axis getAxis(BlockState state) {
 		return getPipeAxis(state);
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<SmartFluidPipeTileEntity> getTileEntityClass() {
+		return SmartFluidPipeTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends SmartFluidPipeTileEntity> getTileEntityType() {
+		return  AllTileEntities.SMART_FLUID_PIPE.get();
 	}
 
 }

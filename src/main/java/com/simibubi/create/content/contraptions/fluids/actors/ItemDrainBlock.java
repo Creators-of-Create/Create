@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -54,7 +54,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 
 			ItemStack heldItemStack = te.getHeldItemStack();
 			if (!worldIn.isClientSide && !heldItemStack.isEmpty()) {
-				player.getInventory().placeItemBackInInventory(worldIn, heldItemStack);
+				player.getInventory().placeItemBackInInventory(heldItemStack);
 				te.heldItem = null;
 				te.notifyUpdate();
 			}
@@ -79,7 +79,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 		withTileEntityDo(worldIn, pos, te -> {
 			ItemStack heldItemStack = te.getHeldItemStack();
@@ -90,18 +90,13 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.ITEM_DRAIN.create();
-	}
-
-	@Override
 	public Class<ItemDrainTileEntity> getTileEntityClass() {
 		return ItemDrainTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends ItemDrainTileEntity> getTileEntityType() {
+		return AllTileEntities.ITEM_DRAIN.get();
 	}
 
 	@Override

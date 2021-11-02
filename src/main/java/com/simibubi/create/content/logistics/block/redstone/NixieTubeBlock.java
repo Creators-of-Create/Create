@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -186,16 +187,6 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		updateDisplayedRedstoneValue(state, worldIn, pos);
 	}
 
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new NixieTubeTileEntity(AllTileEntities.NIXIE_TUBE.get());
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
 	private void updateDisplayedRedstoneValue(BlockState state, Level worldIn, BlockPos pos) {
 		if (worldIn.isClientSide)
 			return;
@@ -235,6 +226,11 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		return NixieTubeTileEntity.class;
 	}
 
+	@Override
+	public BlockEntityType<? extends NixieTubeTileEntity> getTileEntityType() {
+		return AllTileEntities.NIXIE_TUBE.get();
+	}
+	
 	public DyeColor getColor() {
 		return color;
 	}

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
@@ -58,8 +59,7 @@ public class SymmetryHandler {
 				.isEmpty()
 				&& inv.getItem(i)
 					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
-				SymmetryWandItem.apply(player.level, inv.getItem(i), player, event.getPos(),
-					event.getPlacedBlock());
+				SymmetryWandItem.apply(player.level, inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
 			}
 		}
 	}
@@ -87,7 +87,8 @@ public class SymmetryHandler {
 		LocalPlayer player = mc.player;
 
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			ItemStack stackInSlot = player.getInventory().getItem(i);
+			ItemStack stackInSlot = player.getInventory()
+				.getItem(i);
 			if (!AllItems.WAND_OF_SYMMETRY.isIn(stackInSlot))
 				continue;
 			if (!SymmetryWandItem.isEnabled(stackInSlot))
@@ -120,9 +121,8 @@ public class SymmetryHandler {
 
 			mc.getBlockRenderer()
 				.getModelRenderer()
-				.renderModel(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
-					player.level.getRandom(), Mth.getSeed(pos), OverlayTexture.NO_OVERLAY,
-					EmptyModelData.INSTANCE);
+				.tesselateBlock(player.level, model, Blocks.AIR.defaultBlockState(), pos, ms, builder, true,
+					player.level.getRandom(), Mth.getSeed(pos), OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
 			buffer.endBatch();
 			ms.popPose();
@@ -146,7 +146,8 @@ public class SymmetryHandler {
 
 		if (tickCounter % 10 == 0) {
 			for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-				ItemStack stackInSlot = player.getInventory().getItem(i);
+				ItemStack stackInSlot = player.getInventory()
+					.getItem(i);
 
 				if (stackInSlot != null && AllItems.WAND_OF_SYMMETRY.isIn(stackInSlot)
 					&& SymmetryWandItem.isEnabled(stackInSlot)) {
@@ -171,8 +172,10 @@ public class SymmetryHandler {
 
 	public static void drawEffect(BlockPos from, BlockPos to) {
 		double density = 0.8f;
-		Vec3 start = Vec3.atLowerCornerOf(from).add(0.5, 0.5, 0.5);
-		Vec3 end = Vec3.atLowerCornerOf(to).add(0.5, 0.5, 0.5);
+		Vec3 start = Vec3.atLowerCornerOf(from)
+			.add(0.5, 0.5, 0.5);
+		Vec3 end = Vec3.atLowerCornerOf(to)
+			.add(0.5, 0.5, 0.5);
 		Vec3 diff = end.subtract(start);
 
 		Vec3 step = diff.normalize()
@@ -184,8 +187,8 @@ public class SymmetryHandler {
 			Vec3 pos = start.add(step.scale(i));
 			Vec3 speed = new Vec3(0, r.nextDouble() * -40f, 0);
 
-			Minecraft.getInstance().level.addParticle(new DustParticleOptions(1, 1, 1, 1), pos.x, pos.y, pos.z,
-				speed.x, speed.y, speed.z);
+			Minecraft.getInstance().level.addParticle(new DustParticleOptions(new Vector3f(1, 1, 1), 1), pos.x, pos.y,
+				pos.z, speed.x, speed.y, speed.z);
 		}
 
 		Vec3 speed = new Vec3(0, r.nextDouble() * 1 / 32f, 0);

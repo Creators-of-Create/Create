@@ -8,6 +8,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe {
+public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxisPipe, ITE<FluidValveTileEntity> {
 
 	public static final BooleanProperty ENABLED = BooleanProperty.create("enabled");
 
@@ -56,11 +57,6 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 			return FluidPipeBlock.canConnectTo(reader, offset, blockState, facing);
 		}
 		return super.prefersConnectionTo(reader, pos, facing, shaftAxis);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.FLUID_VALVE.create();
 	}
 
 	@Nonnull
@@ -91,7 +87,7 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasBlockEntity()))
 			world.removeBlockEntity(pos);
 	}
 
@@ -135,6 +131,16 @@ public class FluidValveBlock extends DirectionalAxisKineticBlock implements IAxi
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<FluidValveTileEntity> getTileEntityClass() {
+		return FluidValveTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends FluidValveTileEntity> getTileEntityType() {
+		return AllTileEntities.FLUID_VALVE.get();
 	}
 
 }

@@ -113,7 +113,7 @@ public class FunnelMovementBehaviour extends MovementBehaviour {
 				continue;
 			if (remainder.isEmpty()) {
 				item.setItem(ItemStack.EMPTY);
-				item.remove();
+				item.discard();
 				continue;
 			}
 

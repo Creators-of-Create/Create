@@ -21,7 +21,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -72,20 +72,20 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_ARM.create();
-	}
-
-	@Override
 	public Class<ArmTileEntity> getTileEntityClass() {
 		return ArmTileEntity.class;
 	}
 
 	@Override
+	public BlockEntityType<? extends ArmTileEntity> getTileEntityType() {
+		return AllTileEntities.MECHANICAL_ARM.get();
+	}
+	
+	@Override
 	public void onRemove(BlockState p_196243_1_, Level world, BlockPos pos, BlockState p_196243_4_,
 		boolean p_196243_5_) {
-		if (p_196243_1_.hasTileEntity()
-			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasTileEntity())) {
+		if (p_196243_1_.hasBlockEntity()
+			&& (p_196243_1_.getBlock() != p_196243_4_.getBlock() || !p_196243_4_.hasBlockEntity())) {
 			withTileEntityDo(world, pos, te -> {
 				if (!te.heldItem.isEmpty())
 					Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), te.heldItem);

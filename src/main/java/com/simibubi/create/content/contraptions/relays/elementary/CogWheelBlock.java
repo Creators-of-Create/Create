@@ -25,7 +25,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-@SuppressWarnings("deprecation")
 public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	boolean isLarge;
 
@@ -79,16 +78,21 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 	}
 
 	protected Axis getAxisForPlacement(BlockPlaceContext context) {
-		if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown())
-			return context.getClickedFace().getAxis();
+		if (context.getPlayer() != null && context.getPlayer()
+			.isShiftKeyDown())
+			return context.getClickedFace()
+				.getAxis();
 
 		Level world = context.getLevel();
-		BlockState stateBelow = world.getBlockState(context.getClickedPos().below());
+		BlockState stateBelow = world.getBlockState(context.getClickedPos()
+			.below());
 
 		if (AllBlocks.ROTATION_SPEED_CONTROLLER.has(stateBelow) && isLargeCog())
 			return stateBelow.getValue(SpeedControllerBlock.HORIZONTAL_AXIS) == Axis.X ? Axis.Z : Axis.X;
 
-		BlockPos placedOnPos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
+		BlockPos placedOnPos = context.getClickedPos()
+			.relative(context.getClickedFace()
+				.getOpposite());
 		BlockState placedAgainst = world.getBlockState(placedOnPos);
 
 		Block block = placedAgainst.getBlock();
@@ -96,12 +100,16 @@ public class CogWheelBlock extends AbstractShaftBlock implements ICogWheel {
 			return ((IRotate) block).getRotationAxis(placedAgainst);
 
 		Axis preferredAxis = getPreferredAxis(context);
-		return preferredAxis != null ? preferredAxis : context.getClickedFace().getAxis();
+		return preferredAxis != null ? preferredAxis
+			: context.getClickedFace()
+				.getAxis();
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		boolean shouldWaterlog = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
+		boolean shouldWaterlog = context.getLevel()
+			.getFluidState(context.getClickedPos())
+			.getType() == Fluids.WATER;
 		return this.defaultBlockState()
 			.setValue(AXIS, getAxisForPlacement(context))
 			.setValue(BlockStateProperties.WATERLOGGED, shouldWaterlog);

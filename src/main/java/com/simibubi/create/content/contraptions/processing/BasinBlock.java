@@ -33,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -58,11 +60,6 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
 		super.createBlockStateDefinition(p_206840_1_.add(FACING));
 	}
@@ -76,14 +73,10 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.BASIN.create();
-	}
-
-	@Override
 	public InteractionResult onWrenched(BlockState state, UseOnContext context) {
 		if (!context.getLevel().isClientSide)
-			withTileEntityDo(context.getLevel(), context.getClickedPos(), bte -> bte.onWrenched(context.getClickedFace()));
+			withTileEntityDo(context.getLevel(), context.getClickedPos(),
+				bte -> bte.onWrenched(context.getClickedFace()));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -100,7 +93,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					return InteractionResult.SUCCESS;
 
 				if (EmptyingByBasin.canItemBeEmptied(worldIn, heldItem)
-						|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
+					|| GenericItemFilling.canItemBeFilled(worldIn, heldItem))
 					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
 					.equals(Items.SPONGE)
@@ -119,13 +112,14 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				player.getInventory().placeItemBackInInventory(worldIn, stackInSlot);
+				player.getInventory()
+					.placeItemBackInInventory(stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 				success = true;
 			}
 			if (success)
 				worldIn.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
-						1f + Create.RANDOM.nextFloat());
+					1f + Create.RANDOM.nextFloat());
 			te.onEmptied();
 			return InteractionResult.SUCCESS;
 		});
@@ -173,14 +167,15 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext ctx) {
-		if (ctx.getEntity() instanceof ItemEntity)
+		if (ctx instanceof EntityCollisionContext && ((EntityCollisionContext) ctx).getEntity()
+			.orElse(null) instanceof ItemEntity)
 			return AllShapes.BASIN_COLLISION_SHAPE;
 		return getShape(state, reader, pos, ctx);
 	}
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!state.hasTileEntity() || state.getBlock() == newState.getBlock())
+		if (!state.hasBlockEntity() || state.getBlock() == newState.getBlock())
 			return;
 		TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 		withTileEntityDo(worldIn, pos, te -> {
@@ -206,6 +201,11 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 	@Override
 	public Class<BasinTileEntity> getTileEntityClass() {
 		return BasinTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends BasinTileEntity> getTileEntityType() {
+		return AllTileEntities.BASIN.get();
 	}
 
 	public static boolean canOutputTo(BlockGetter world, BlockPos basinPos, Direction direction) {

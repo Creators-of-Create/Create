@@ -54,6 +54,19 @@ public class AllTags {
 		return forgeTag(FluidTags::createOptional, path);
 	}
 
+	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOrPickaxe() {
+		return b -> b.tag(BlockTags.MINEABLE_WITH_AXE)
+			.tag(BlockTags.MINEABLE_WITH_PICKAXE);
+	}
+
+	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> axeOnly() {
+		return b -> b.tag(BlockTags.MINEABLE_WITH_AXE);
+	}
+
+	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, BlockBuilder<T, P>> pickaxeOnly() {
+		return b -> b.tag(BlockTags.MINEABLE_WITH_PICKAXE);
+	}
+
 	public static <T extends Block, P> NonNullFunction<BlockBuilder<T, P>, ItemBuilder<BlockItem, BlockBuilder<T, P>>> tagBlockAndItem(
 		String path) {
 		return b -> b.tag(forgeBlockTag(path))
@@ -63,9 +76,7 @@ public class AllTags {
 
 	public enum NameSpace {
 
-		MOD(Create.ID, false, true),
-		FORGE("forge"),
-		TIC("tconstruct")
+		MOD(Create.ID, false, true), FORGE("forge"), TIC("tconstruct")
 
 		;
 
@@ -325,8 +336,8 @@ public class AllTags {
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.BUTTONS);
 		AllBlockTags.WRENCH_PICKUP.includeAll(BlockTags.PRESSURE_PLATES);
 		AllBlockTags.WRENCH_PICKUP.add(Blocks.REDSTONE_WIRE, Blocks.REDSTONE_TORCH, Blocks.REPEATER, Blocks.LEVER,
-				Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
-				Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
+			Blocks.COMPARATOR, Blocks.OBSERVER, Blocks.REDSTONE_WALL_TORCH, Blocks.PISTON, Blocks.STICKY_PISTON,
+			Blocks.TRIPWIRE, Blocks.TRIPWIRE_HOOK, Blocks.DAYLIGHT_DETECTOR, Blocks.TARGET);
 	}
 
 }

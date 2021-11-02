@@ -18,7 +18,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -45,11 +45,6 @@ public class ChuteBlock extends AbstractChuteBlock {
 		public String getSerializedName() {
 			return Lang.asId(name());
 		}
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CHUTE.create();
 	}
 
 	@Override
@@ -150,6 +145,11 @@ public class ChuteBlock extends AbstractChuteBlock {
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+	
+	@Override
+	public BlockEntityType<? extends ChuteTileEntity> getTileEntityType() {
+		return AllTileEntities.CHUTE.get();
 	}
 
 }

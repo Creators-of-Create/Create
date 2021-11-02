@@ -386,7 +386,7 @@ public class RotationPropagator {
 			.getBlockState(neighbourPos);
 		if (!(neighbourState.getBlock() instanceof IRotate))
 			return null;
-		if (!neighbourState.hasTileEntity())
+		if (!neighbourState.hasBlockEntity())
 			return null;
 		BlockEntity neighbourTE = currentTE.getLevel()
 			.getBlockEntity(neighbourPos);

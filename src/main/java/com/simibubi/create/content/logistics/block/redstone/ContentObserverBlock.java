@@ -25,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -50,16 +51,6 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	public VoxelShape getShape(BlockState state, BlockGetter p_220053_2_, BlockPos p_220053_3_,
 		CollisionContext p_220053_4_) {
 		return AllShapes.CONTENT_OBSERVER.get(state.getValue(FACING));
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CONTENT_OBSERVER.create();
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 
 	@Override
@@ -135,7 +126,7 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
 			TileEntityBehaviour.destroy(worldIn, pos, FilteringBehaviour.TYPE);
 			worldIn.removeBlockEntity(pos);
 		}
@@ -171,6 +162,11 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	@Override
 	public Class<ContentObserverTileEntity> getTileEntityClass() {
 		return ContentObserverTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends ContentObserverTileEntity> getTileEntityType() {
+		return AllTileEntities.CONTENT_OBSERVER.get();
 	}
 
 }

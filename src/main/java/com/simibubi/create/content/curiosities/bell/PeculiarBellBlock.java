@@ -10,12 +10,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -26,8 +25,8 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.PECULIAR_BELL.create();
+	public BlockEntityType<? extends PeculiarBellTileEntity> getTileEntityType() {
+		return AllTileEntities.PECULIAR_BELL.get();
 	}
 
 	@Override
@@ -66,7 +65,7 @@ public class PeculiarBellBlock extends AbstractBellBlock<PeculiarBellTileEntity>
 			return state;
 
 		Block underBlock = underState.getBlock();
-		if (!(Blocks.SOUL_FIRE.is(underBlock) || Blocks.SOUL_CAMPFIRE.is(underBlock)))
+		if (!(Blocks.SOUL_FIRE.equals(underBlock) || Blocks.SOUL_CAMPFIRE.equals(underBlock)))
 			return state;
 
 		if (world.isClientSide()) {

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.CreateClient;
@@ -58,7 +59,8 @@ public class EjectorTargetHandler {
 
 		String key = "weighted_ejector.target_set";
 		ChatFormatting colour = ChatFormatting.GOLD;
-		player.displayClientMessage(Lang.translate(key).withStyle(colour), true);
+		player.displayClientMessage(Lang.translate(key)
+			.withStyle(colour), true);
 		currentSelection = pos;
 		launcher = null;
 		event.setCanceled(true);
@@ -99,7 +101,8 @@ public class EjectorTargetHandler {
 
 		Direction validTargetDirection = getValidTargetDirection(pos);
 		if (validTargetDirection == null) {
-			player.displayClientMessage(Lang.translate(key).withStyle(colour), true);
+			player.displayClientMessage(Lang.translate(key)
+				.withStyle(colour), true);
 			currentItem = null;
 			currentSelection = null;
 			return;
@@ -205,19 +208,19 @@ public class EjectorTargetHandler {
 		double tickOffset = totalFlyingTicks / segments;
 		boolean valid = xDiff == validX && zDiff == validZ;
 		int intColor = valid ? 0x9ede73 : 0xff7171;
-		Vec3 color = Color.vectorFromRGB(intColor);
-		DustParticleOptions data = new DustParticleOptions((float) color.x, (float) color.y, (float) color.z, 1);
+		Vector3f color = new Vector3f(Color.vectorFromRGB(intColor));
+		DustParticleOptions data = new DustParticleOptions(color, 1);
 		ClientLevel world = mc.level;
 
 		AABB bb = new AABB(0, 0, 0, 1, 0, 1).move(currentSelection.offset(-validX, -yDiff, -validZ));
 		CreateClient.OUTLINER.chaseAABB("valid", bb)
-				.colored(intColor)
-				.lineWidth(1 / 16f);
+			.colored(intColor)
+			.lineWidth(1 / 16f);
 
 		for (int i = 0; i < segments; i++) {
 			double ticks = ((AnimationTickHolder.getRenderTime() / 3) % tickOffset) + i * tickOffset;
 			Vec3 vec = launcher.getGlobalPos(ticks, d, pos)
-					.add(xDiff - validX, 0, zDiff - validZ);
+				.add(xDiff - validX, 0, zDiff - validZ);
 			world.addParticle(data, vec.x, vec.y, vec.z, 0, 0, 0);
 		}
 	}
@@ -261,8 +264,8 @@ public class EjectorTargetHandler {
 		VoxelShape shape = state.getShape(world, pos);
 		AABB boundingBox = shape.isEmpty() ? new AABB(BlockPos.ZERO) : shape.bounds();
 		CreateClient.OUTLINER.showAABB("target", boundingBox.move(pos))
-				.colored(0xffcb74)
-				.lineWidth(1 / 16f);
+			.colored(0xffcb74)
+			.lineWidth(1 / 16f);
 	}
 
 }

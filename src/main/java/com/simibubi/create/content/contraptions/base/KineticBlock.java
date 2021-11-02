@@ -5,16 +5,13 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ToolType;
 
 public abstract class KineticBlock extends Block implements IRotate {
 
@@ -22,26 +19,6 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 	public KineticBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public ToolType getHarvestTool(BlockState state) {
-		return null;
-	}
-
-	@Override
-	public boolean canHarvestBlock(BlockState state, BlockGetter world, BlockPos pos, Player player) {
-		for (ToolType toolType : player.getMainHandItem()
-			.getToolTypes()) {
-			if (isToolEffective(state, toolType))
-				return true;
-		}
-		return super.canHarvestBlock(state, world, pos, player);
-	}
-
-	@Override
-	public boolean isToolEffective(BlockState state, ToolType tool) {
-		return tool == ToolType.AXE || tool == ToolType.PICKAXE;
 	}
 
 	@Override
@@ -58,7 +35,7 @@ public abstract class KineticBlock extends Block implements IRotate {
 
 			if (oldState.getBlock() != state.getBlock())
 				return;
-			if (state.hasTileEntity() != oldState.hasTileEntity())
+			if (state.hasBlockEntity() != oldState.hasBlockEntity())
 				return;
 			if (!areStatesKineticallyEquivalent(oldState, state))
 				return;
@@ -72,19 +49,11 @@ public abstract class KineticBlock extends Block implements IRotate {
 		return false;
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
 	protected boolean areStatesKineticallyEquivalent(BlockState oldState, BlockState newState) {
 		if (oldState.getBlock() != newState.getBlock())
 			return false;
 		return getRotationAxis(newState) == getRotationAxis(oldState);
 	}
-
-	@Override
-	public abstract BlockEntity createTileEntity(BlockState state, BlockGetter world);
 
 	@Override
 	public void updateIndirectNeighbourShapes(BlockState stateIn, LevelAccessor worldIn, BlockPos pos, int flags, int count) {

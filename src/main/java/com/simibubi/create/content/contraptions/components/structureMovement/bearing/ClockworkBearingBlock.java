@@ -8,9 +8,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -18,11 +17,6 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 
 	public ClockworkBearingBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.CLOCKWORK_BEARING.create();
 	}
 
 	@Override
@@ -58,6 +52,11 @@ public class ClockworkBearingBlock extends BearingBlock implements ITE<Clockwork
 		if (!context.getLevel().isClientSide && resultType.consumesAction())
 			withTileEntityDo(context.getLevel(), context.getClickedPos(), ClockworkBearingTileEntity::disassemble);
 		return resultType;
+	}
+
+	@Override
+	public BlockEntityType<? extends ClockworkBearingTileEntity> getTileEntityType() {
+		return AllTileEntities.CLOCKWORK_BEARING.get();
 	}
 
 }

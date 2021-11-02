@@ -13,7 +13,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -36,17 +36,6 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	private PortableStorageInterfaceBlock(Properties p_i48415_1_, boolean fluids) {
 		super(p_i48415_1_);
 		this.fluids = fluids;
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return (fluids ? AllTileEntities.PORTABLE_FLUID_INTERFACE : AllTileEntities.PORTABLE_STORAGE_INTERFACE)
-			.create();
 	}
 
 	@Override
@@ -80,6 +69,12 @@ public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	@Override
 	public Class<PortableStorageInterfaceTileEntity> getTileEntityClass() {
 		return PortableStorageInterfaceTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends PortableStorageInterfaceTileEntity> getTileEntityType() {
+		return fluids ? AllTileEntities.PORTABLE_FLUID_INTERFACE.get()
+			: AllTileEntities.PORTABLE_STORAGE_INTERFACE.get();
 	}
 
 }

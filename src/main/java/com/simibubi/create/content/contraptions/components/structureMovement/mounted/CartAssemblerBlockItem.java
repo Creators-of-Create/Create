@@ -52,7 +52,7 @@ public class CartAssemblerBlockItem extends BlockItem {
 			return false;
 		}
 
-		RailShape shape = state.getValue(((BaseRailBlock) block).getShapeProperty());
+		RailShape shape = ((BaseRailBlock) block).getRailDirection(state, world, pos, null);
 		if (shape != RailShape.EAST_WEST && shape != RailShape.NORTH_SOUTH)
 			return false;
 

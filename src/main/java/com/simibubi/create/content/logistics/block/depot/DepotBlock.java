@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
@@ -38,18 +38,13 @@ public class DepotBlock extends Block implements ITE<DepotTileEntity>, IWrenchab
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.DEPOT.create();
-	}
-
-	@Override
 	public Class<DepotTileEntity> getTileEntityClass() {
 		return DepotTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends DepotTileEntity> getTileEntityType() {
+		return AllTileEntities.DEPOT.get();
 	}
 
 	@Override

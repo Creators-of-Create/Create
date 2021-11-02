@@ -20,6 +20,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -51,11 +52,6 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
 	}
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return AllTileEntities.ROPE_PULLEY.create();
-    }
-
-    @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             if (!worldIn.isClientSide) {
@@ -63,7 +59,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
                 if (below.getBlock() instanceof RopeBlockBase)
                     worldIn.destroyBlock(pos.below(), true);
             }
-            if (state.hasTileEntity())
+            if (state.hasBlockEntity())
                 worldIn.removeBlockEntity(pos);
         }
     }
@@ -90,6 +86,11 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
     @Override
     public Class<PulleyTileEntity> getTileEntityClass() {
         return PulleyTileEntity.class;
+    }
+    
+    @Override
+    public BlockEntityType<? extends PulleyTileEntity> getTileEntityType() {
+    	return AllTileEntities.ROPE_PULLEY.get();
     }
 
     private static class RopeBlockBase extends Block implements SimpleWaterloggedBlock {
@@ -128,7 +129,7 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
                         worldIn.destroyBlock(pos.below(), true);
                 }
             }
-            if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
+            if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
                 worldIn.removeBlockEntity(pos);
             }
         }

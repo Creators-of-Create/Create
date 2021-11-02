@@ -32,7 +32,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -89,7 +89,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 
 	@Override
 	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moving) {
-		if (state.hasTileEntity() && (!newState.hasTileEntity() || !(newState.getBlock() instanceof ToolboxBlock)))
+		if (state.hasBlockEntity() && (!newState.hasBlockEntity() || !(newState.getBlock() instanceof ToolboxBlock)))
 			world.removeBlockEntity(pos);
 	}
 
@@ -141,11 +141,6 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
 		BlockHitResult ray) {
 
@@ -173,11 +168,6 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.TOOLBOX.create();
-	}
-
-	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		FluidState ifluidstate = context.getLevel()
 			.getFluidState(context.getClickedPos());
@@ -189,6 +179,11 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	@Override
 	public Class<ToolboxTileEntity> getTileEntityClass() {
 		return ToolboxTileEntity.class;
+	}
+	
+	@Override
+	public BlockEntityType<? extends ToolboxTileEntity> getTileEntityType() {
+		return AllTileEntities.TOOLBOX.get();
 	}
 
 	public DyeColor getColor() {

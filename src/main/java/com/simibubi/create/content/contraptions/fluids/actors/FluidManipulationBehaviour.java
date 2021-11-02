@@ -114,8 +114,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected void scheduleUpdatesInAffectedArea() {
 		Level world = getWorld();
 		BlockPos
-			.betweenClosedStream(new BlockPos(affectedArea.x0 - 1, affectedArea.y0 - 1, affectedArea.z0 - 1),
-				new BlockPos(affectedArea.x1 + 1, affectedArea.y1 + 1, affectedArea.z1 + 1))
+			.betweenClosedStream(
+				new BlockPos(affectedArea.minX() - 1, affectedArea.minY() - 1, affectedArea.minZ() - 1),
+				new BlockPos(affectedArea.maxX() + 1, affectedArea.maxY() + 1, affectedArea.maxZ() + 1))
 			.forEach(pos -> {
 				FluidState nextFluidState = world.getFluidState(pos);
 				if (nextFluidState.isEmpty())
@@ -221,9 +222,9 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 			nbt.put("LastPos", NbtUtils.writeBlockPos(rootPos));
 		if (affectedArea != null) {
 			nbt.put("AffectedAreaFrom",
-				NbtUtils.writeBlockPos(new BlockPos(affectedArea.x0, affectedArea.y0, affectedArea.z0)));
+				NbtUtils.writeBlockPos(new BlockPos(affectedArea.minX(), affectedArea.minY(), affectedArea.minZ())));
 			nbt.put("AffectedAreaTo",
-				NbtUtils.writeBlockPos(new BlockPos(affectedArea.x1, affectedArea.y1, affectedArea.z1)));
+				NbtUtils.writeBlockPos(new BlockPos(affectedArea.maxX(), affectedArea.maxY(), affectedArea.maxZ())));
 		}
 		super.write(nbt, clientPacket);
 	}

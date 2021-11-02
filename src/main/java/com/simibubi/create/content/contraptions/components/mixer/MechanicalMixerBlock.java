@@ -13,10 +13,11 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class MechanicalMixerBlock extends KineticBlock implements ITE<MechanicalMixerTileEntity>, ICogWheel {
@@ -26,18 +27,14 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	}
 
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.MECHANICAL_MIXER.create();
-	}
-
-	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		return !AllBlocks.BASIN.has(worldIn.getBlockState(pos.below()));
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (context.getEntity() instanceof Player)
+		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity()
+			.orElse(null) instanceof Player)
 			return AllShapes.CASING_14PX.get(Direction.DOWN);
 
 		return AllShapes.MECHANICAL_PROCESSOR_SHAPE;
@@ -72,7 +69,12 @@ public class MechanicalMixerBlock extends KineticBlock implements ITE<Mechanical
 	public Class<MechanicalMixerTileEntity> getTileEntityClass() {
 		return MechanicalMixerTileEntity.class;
 	}
-	
+
+	@Override
+	public BlockEntityType<? extends MechanicalMixerTileEntity> getTileEntityType() {
+		return AllTileEntities.MECHANICAL_MIXER.get();
+	}
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
