@@ -96,8 +96,8 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	private ItemStack scriptedResult = ItemStack.EMPTY;
 
-	public MechanicalCrafterTileEntity(BlockEntityType<? extends MechanicalCrafterTileEntity> type) {
-		super(type);
+	public MechanicalCrafterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(20);
 		phase = Phase.IDLE;
 		groupedItemsBeforeCraft = new GroupedItems();
@@ -157,7 +157,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
 
@@ -172,7 +172,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 				this.phase = phase;
 		countDown = compound.getInt("CountDown");
 		covered = compound.getBoolean("Cover");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		if (!clientPacket)
 			return;
 		if (compound.contains("Redraw"))

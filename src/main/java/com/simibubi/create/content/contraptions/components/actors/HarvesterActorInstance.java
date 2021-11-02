@@ -1,13 +1,11 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
 import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
@@ -18,6 +16,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class HarvesterActorInstance extends ActorInstance {
@@ -42,7 +41,7 @@ public class HarvesterActorInstance extends ActorInstance {
 
         BlockState state = context.state;
 
-        facing = state.getValue(HORIZONTAL_FACING);
+        facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
 
         harvester = material.getModel(AllBlockPartials.HARVESTER_BLADE, state).createInstance();
 
@@ -75,7 +74,7 @@ public class HarvesterActorInstance extends ActorInstance {
 
     @Override
     public void beginFrame() {
-        MatrixStack ms = new MatrixStack();
+        PoseStack ms = new PoseStack();
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(context.localPos)

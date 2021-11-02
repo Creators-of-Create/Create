@@ -5,6 +5,7 @@ import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,8 +20,8 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	public float independentAngle;
 	public float chasingVelocity;
 
-	public HandCrankTileEntity(BlockEntityType<? extends HandCrankTileEntity> type) {
-		super(type);
+	public HandCrankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	public void turn(boolean back) {
@@ -52,9 +53,9 @@ public class HandCrankTileEntity extends GeneratingKineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		inUse = compound.getInt("InUse");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

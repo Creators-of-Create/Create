@@ -52,9 +52,9 @@ public class CouplingHandlerClient {
 		selectedCart = null;
 	}
 
-	private static void spawnSelectionParticles(AABB axisAlignedBB, boolean highlight) {
+	private static void spawnSelectionParticles(AABB AABB, boolean highlight) {
 		ClientLevel world = Minecraft.getInstance().level;
-		Vec3 center = axisAlignedBB.getCenter();
+		Vec3 center = AABB.getCenter();
 		int amount = highlight ? 100 : 2;
 		ParticleOptions particleData = highlight ? ParticleTypes.END_ROD : new DustParticleOptions(1, 1, 1, 1);
 		for (int i = 0; i < amount; i++) {

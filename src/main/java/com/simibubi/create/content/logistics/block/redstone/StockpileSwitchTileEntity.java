@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.CapManipula
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +28,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	public float onWhenAbove;
 	public float offWhenBelow;
 	public float currentLevel;
-	private boolean state;
+	private boolean redstoneState;
 	private boolean inverted;
 	private boolean poweredAfterDelay;
 
@@ -35,26 +36,26 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	private InvManipulationBehaviour observedInventory;
 	private TankManipulationBehaviour observedTank;
 
-	public StockpileSwitchTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public StockpileSwitchTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		onWhenAbove = .75f;
 		offWhenBelow = .25f;
 		currentLevel = -1;
-		state = false;
+		redstoneState = false;
 		inverted = false;
 		poweredAfterDelay = false;
 		setLazyTickRate(10);
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		onWhenAbove = compound.getFloat("OnAbove");
 		offWhenBelow = compound.getFloat("OffBelow");
 		currentLevel = compound.getFloat("Current");
-		state = compound.getBoolean("Powered");
+		redstoneState = compound.getBoolean("Powered");
 		inverted = compound.getBoolean("Inverted");
 		poweredAfterDelay = compound.getBoolean("PoweredAfterDelay");
-		super.fromTag(blockState, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override
@@ -62,7 +63,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		compound.putFloat("OnAbove", onWhenAbove);
 		compound.putFloat("OffBelow", offWhenBelow);
 		compound.putFloat("Current", currentLevel);
-		compound.putBoolean("Powered", state);
+		compound.putBoolean("Powered", redstoneState);
 		compound.putBoolean("Inverted", inverted);
 		compound.putBoolean("PoweredAfterDelay", poweredAfterDelay);
 		super.write(compound, clientPacket);
@@ -116,7 +117,7 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 					return;
 				level.setBlock(worldPosition, getBlockState().setValue(StockpileSwitchBlock.INDICATOR, 0), 3);
 				currentLevel = -1;
-				state = false;
+				redstoneState = false;
 				sendData();
 				scheduleBlockTick();
 				return;
@@ -129,12 +130,12 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 		currentLevel = stockLevel;
 		currentLevel = Mth.clamp(currentLevel, 0, 1);
 
-		boolean previouslyPowered = state;
-		if (state && currentLevel <= offWhenBelow)
-			state = false;
-		else if (!state && currentLevel >= onWhenAbove)
-			state = true;
-		boolean update = previouslyPowered != state;
+		boolean previouslyPowered = redstoneState;
+		if (redstoneState && currentLevel <= offWhenBelow)
+			redstoneState = false;
+		else if (!redstoneState && currentLevel >= onWhenAbove)
+			redstoneState = true;
+		boolean update = previouslyPowered != redstoneState;
 
 		int displayLevel = 0;
 		if (currentLevel > 0)
@@ -180,11 +181,11 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 	}
 
 	public boolean getState() {
-		return state;
+		return redstoneState;
 	}
 
 	public boolean shouldBePowered() {
-		return inverted != state;
+		return inverted != redstoneState;
 	}
 
 	public void updatePowerAfterDelay() {

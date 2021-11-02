@@ -16,8 +16,8 @@
 //import net.minecraft.item.ItemStack;
 //import net.minecraft.nbt.NBTUtil;
 //import net.minecraft.tileentity.TileEntity;
-//import net.minecraft.util.Direction;
-//import net.minecraft.util.Direction.Axis;
+//import net.minecraft.core.Direction;
+//import net.minecraft.core.Direction.Axis;
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.util.math.vector.Vector3d;
 //import net.minecraft.world.World;

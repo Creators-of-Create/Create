@@ -74,7 +74,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		BG.draw(ms, this, leftPos + 10, topPos);
 		PLAYER.draw(ms, this, leftPos + (BG.width - PLAYER.width) / 2 - 26, topPos + imageHeight - PLAYER.height);
 		font.draw(ms, title, leftPos + 24, topPos + 4, 0x442000);
-		font.draw(ms, inventory.getDisplayName(), leftPos - 13, topPos + 154, 0x404040);
+		font.draw(ms, playerInventoryTitle, leftPos - 13, topPos + 154, 0x404040);
 
 		renderToolbox(ms, mouseX, mouseY, partialTicks);
 
@@ -95,7 +95,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 				setBlitOffset(100);
 				itemRenderer.blitOffset = 100.0F;
 				RenderSystem.enableDepthTest();
-				itemRenderer.renderAndDecorateItem(minecraft.player, itemstack, i, j);
+				itemRenderer.renderAndDecorateItem(minecraft.player, itemstack, i, j, 0);
 				itemRenderer.renderGuiItemDecorations(font, itemstack, i, j, s);
 				setBlitOffset(0);
 				itemRenderer.blitOffset = 0.0F;

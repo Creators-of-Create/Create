@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -39,8 +40,8 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	public int timer;
 	private MillingRecipe lastRecipe;
 
-	public MillstoneTileEntity(BlockEntityType<? extends MillstoneTileEntity> type) {
-		super(type);
+	public MillstoneTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		inputInv = new ItemStackHandler(1);
 		outputInv = new ItemStackHandler(9);
 		capability = LazyOptional.of(MillstoneInventoryHandler::new);
@@ -162,11 +163,11 @@ public class MillstoneTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		timer = compound.getInt("Timer");
 		inputInv.deserializeNBT(compound.getCompound("InputInventory"));
 		outputInv.deserializeNBT(compound.getCompound("OutputInventory"));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	public int getProcessingSpeed() {

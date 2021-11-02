@@ -11,10 +11,12 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 
@@ -22,8 +24,8 @@ public abstract class BasinOperatingTileEntity extends KineticTileEntity {
 	public boolean basinRemoved;
 	protected Recipe<?> currentRecipe;
 
-	public BasinOperatingTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public BasinOperatingTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
 	@Override

@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static net.minecraft.block.HorizontalFaceBlock.FACE;
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
@@ -30,6 +31,8 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BellAttachType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.Vec3;
@@ -124,11 +127,10 @@ public class StructureTransform {
 
 		if (rotationAxis == Axis.Y) {
 			if (block instanceof BellBlock) {
-				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL) {
+				if (state.getValue(BlockStateProperties.BELL_ATTACHMENT) == BellAttachType.DOUBLE_WALL) 
 					state = state.setValue(BlockStateProperties.BELL_ATTACHMENT, BellAttachType.SINGLE_WALL);
-				}
-				return state.setValue(FaceAttachedHorizontalDirectionalBlock.FACING,
-					rotation.rotate(state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING)));
+				return state.setValue(BellBlock.FACING,
+					rotation.rotate(state.getValue(BellBlock.FACING)));
 			}
 			return state.rotate(rotation);
 		}
@@ -137,30 +139,32 @@ public class StructureTransform {
 			return rotateChassis(state);
 
 		if (block instanceof FaceAttachedHorizontalDirectionalBlock) {
-			Direction stateFacing = state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING);
-			AttachFace stateFace = state.getValue(FACE);
+			DirectionProperty facingProperty = FaceAttachedHorizontalDirectionalBlock.FACING;
+			EnumProperty<AttachFace> faceProperty = FaceAttachedHorizontalDirectionalBlock.FACE;
+			Direction stateFacing = state.getValue(facingProperty);
+			AttachFace stateFace = state.getValue(faceProperty);
 			Direction forcedAxis = rotationAxis == Axis.Z ? Direction.EAST : Direction.SOUTH;
 
 			if (stateFacing.getAxis() == rotationAxis && stateFace == AttachFace.WALL)
 				return state;
 
 			for (int i = 0; i < rotation.ordinal(); i++) {
-				stateFace = state.getValue(FACE);
-				stateFacing = state.getValue(FaceAttachedHorizontalDirectionalBlock.FACING);
+				stateFace = state.getValue(faceProperty);
+				stateFacing = state.getValue(facingProperty);
 
-				boolean b = state.getValue(FACE) == AttachFace.CEILING;
-				state = state.setValue(HORIZONTAL_FACING, b ? forcedAxis : forcedAxis.getOpposite());
+				boolean b = state.getValue(faceProperty) == AttachFace.CEILING;
+				state = state.setValue(facingProperty, b ? forcedAxis : forcedAxis.getOpposite());
 
 				if (stateFace != AttachFace.WALL) {
-					state = state.setValue(FACE, AttachFace.WALL);
+					state = state.setValue(faceProperty, AttachFace.WALL);
 					continue;
 				}
 
 				if (stateFacing.getAxisDirection() == AxisDirection.POSITIVE) {
-					state = state.setValue(FACE, AttachFace.FLOOR);
+					state = state.setValue(faceProperty, AttachFace.FLOOR);
 					continue;
 				}
-				state = state.setValue(FACE, AttachFace.CEILING);
+				state = state.setValue(faceProperty, AttachFace.CEILING);
 			}
 
 			return state;

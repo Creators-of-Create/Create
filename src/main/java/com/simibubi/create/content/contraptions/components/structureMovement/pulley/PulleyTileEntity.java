@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,18 +30,13 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	protected int initialOffset;
 	private float prevAnimatedOffset;
 
-	public PulleyTileEntity(BlockEntityType<? extends PulleyTileEntity> type) {
-		super(type);
+	public PulleyTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
 	public AABB makeRenderBoundingBox() {
 		return super.makeRenderBoundingBox().expandTowards(0, -offset, 0);
-	}
-
-	@Override
-	public double getViewDistance() {
-		return super.getViewDistance() + offset * offset;
 	}
 
 	@Override
@@ -157,7 +153,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		}
 
 		if (movedContraption != null)
-			movedContraption.remove();
+			movedContraption.remove(RemovalReason.KILLED);
 		movedContraption = null;
 		initialOffset = 0;
 		running = false;
@@ -196,9 +192,9 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		initialOffset = compound.getInt("InitialOffset");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

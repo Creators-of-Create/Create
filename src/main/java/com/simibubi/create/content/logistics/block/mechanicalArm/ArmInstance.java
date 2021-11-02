@@ -10,7 +10,7 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
@@ -20,7 +20,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
@@ -82,10 +82,10 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		float upperArmAngleNow = this.arm.upperArmAngle.get(pt);
 		float headAngleNow = this.arm.headAngle.get(pt);
 
-		boolean settled = MathHelper.equal(baseAngle, baseAngleNow)
-				&& MathHelper.equal(lowerArmAngle, lowerArmAngleNow)
-				&& MathHelper.equal(upperArmAngle, upperArmAngleNow)
-				&& MathHelper.equal(headAngle, headAngleNow);
+		boolean settled = Mth.equal(baseAngle, baseAngleNow)
+				&& Mth.equal(lowerArmAngle, lowerArmAngleNow)
+				&& Mth.equal(upperArmAngle, upperArmAngleNow)
+				&& Mth.equal(headAngle, headAngleNow);
 
 		this.baseAngle = baseAngleNow;
 		this.lowerArmAngle = lowerArmAngleNow;
@@ -109,8 +109,8 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 		if (rave) {
 			float renderTick = AnimationTickHolder.getRenderTime(this.arm.getLevel()) + (tile.hashCode() % 64);
 			baseAngle = (renderTick * 10) % 360;
-			lowerArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 4) + 1) / 2, -45, 15);
-			upperArmAngle = MathHelper.lerp((MathHelper.sin(renderTick / 8) + 1) / 4, -45, 95);
+			lowerArmAngle = Mth.lerp((Mth.sin(renderTick / 4) + 1) / 2, -45, 15);
+			upperArmAngle = Mth.lerp((Mth.sin(renderTick / 8) + 1) / 4, -45, 95);
 			headAngle = -lowerArmAngle;
 			color = Color.rainbowColor(AnimationTickHolder.getTicks() * 100).getRGB();
 		} else {
@@ -121,7 +121,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 			color = 0xFFFFFF;
 		}
 
-		MatrixStack msLocal = new MatrixStack();
+		PoseStack msLocal = new PoseStack();
 		MatrixTransformStack msr = MatrixTransformStack.of(msLocal);
 		msr.translate(getInstancePosition());
 		msr.centre();
@@ -151,7 +151,7 @@ public class ArmInstance extends SingleRotatingInstance implements IDynamicInsta
 				.getItemRenderer();
 		boolean hasItem = !item.isEmpty();
 		boolean isBlockItem = hasItem && (item.getItem() instanceof BlockItem)
-				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null)
+				&& itemRenderer.getModel(item, Minecraft.getInstance().level, null, 0)
 				.isGui3d();
 
 		for (int index : Iterate.zeroAndOne) {

@@ -13,6 +13,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.item.ItemStack;
@@ -26,8 +27,8 @@ public class SmartFluidPipeTileEntity extends SmartTileEntity {
 
 	private FilteringBehaviour filter;
 
-	public SmartFluidPipeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SmartFluidPipeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

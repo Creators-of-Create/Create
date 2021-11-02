@@ -205,7 +205,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.ToolType;
 
 public class AllBlocks {
 
@@ -1018,13 +1017,14 @@ public class AllBlocks {
 		.simpleItem()
 		.register();
 
-	public static final BlockEntry<SailBlock> SAIL = REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p, DyeColor.WHITE))
-		.initialProperties(SharedProperties::wooden)
-		.properties(BlockBehaviour.Properties::noOcclusion)
-		.blockstate(BlockStateGen.directionalBlockProvider(false))
-		.tag(AllBlockTags.WINDMILL_SAILS.tag)
-		.simpleItem()
-		.register();
+	public static final BlockEntry<SailBlock> SAIL =
+		REGISTRATE.block("white_sail", p -> SailBlock.withCanvas(p, DyeColor.WHITE))
+			.initialProperties(SharedProperties::wooden)
+			.properties(BlockBehaviour.Properties::noOcclusion)
+			.blockstate(BlockStateGen.directionalBlockProvider(false))
+			.tag(AllBlockTags.WINDMILL_SAILS.tag)
+			.simpleItem()
+			.register();
 
 	public static final DyedBlockList<SailBlock> DYED_SAILS = new DyedBlockList<>(colour -> {
 		if (colour == DyeColor.WHITE) {
@@ -1401,8 +1401,7 @@ public class AllBlocks {
 
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_BLOCK)
-		.properties(p -> p.harvestLevel(2)
-			.harvestTool(ToolType.PICKAXE)
+		.properties(p -> p.requiresCorrectToolForDrops()
 			.sound(SoundType.STONE))
 		.tag(Tags.Blocks.ORES)
 		.transform(tagBlockAndItem("ores/zinc"))

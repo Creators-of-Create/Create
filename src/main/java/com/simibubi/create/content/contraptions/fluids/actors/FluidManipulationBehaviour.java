@@ -233,7 +233,7 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 		if (nbt.contains("LastPos"))
 			rootPos = NbtUtils.readBlockPos(nbt.getCompound("LastPos"));
 		if (nbt.contains("AffectedAreaFrom") && nbt.contains("AffectedAreaTo"))
-			affectedArea = new BoundingBox(NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaFrom")),
+			affectedArea = BoundingBox.fromCorners(NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaFrom")),
 				NbtUtils.readBlockPos(nbt.getCompound("AffectedAreaTo")));
 		super.read(nbt, clientPacket);
 	}

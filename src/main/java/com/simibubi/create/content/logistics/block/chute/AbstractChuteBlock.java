@@ -96,7 +96,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		ItemStack remainder = input.handleInsertion(toInsert, Direction.UP, false);
 
 		if (remainder.isEmpty())
-			itemEntity.remove();
+			itemEntity.discard();
 		if (remainder.getCount() < toInsert.getCount())
 			itemEntity.setItem(remainder);
 	}
@@ -208,7 +208,7 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		return onTileEntityUse(world, pos, te -> {
 			if (te.item.isEmpty())
 				return InteractionResult.PASS;
-			player.inventory.placeItemBackInInventory(world, te.item);
+			player.getInventory().placeItemBackInInventory(te.item);
 			te.setItem(ItemStack.EMPTY);
 			return InteractionResult.SUCCESS;
 		});

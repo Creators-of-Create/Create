@@ -58,9 +58,9 @@ public class SchematicannonContainer extends AbstractContainerMenu {
 		// player Slots
 		for (int row = 0; row < 3; ++row) 
 			for (int col = 0; col < 9; ++col) 
-				addSlot(new Slot(player.inventory, col + row * 9 + 9, invX + col * 18, invY + row * 18));
+				addSlot(new Slot(player.getInventory(), col + row * 9 + 9, invX + col * 18, invY + row * 18));
 		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
-			addSlot(new Slot(player.inventory, hotbarSlot, invX + hotbarSlot * 18, invY + 58));
+			addSlot(new Slot(player.getInventory(), hotbarSlot, invX + hotbarSlot * 18, invY + 58));
 
 		broadcastChanges();
 	}

@@ -57,13 +57,13 @@ public class WrappedClientWorld extends ClientLevel {
 	}
 
 	@Override
-	public Stream<VoxelShape> getBlockCollisions(@Nullable Entity entity, AABB axisAlignedBB) {
-		return world.getBlockCollisions(entity, axisAlignedBB);
+	public Stream<VoxelShape> getBlockCollisions(@Nullable Entity entity, AABB AABB) {
+		return world.getBlockCollisions(entity, AABB);
 	}
 
 	@Override
-	public Stream<VoxelShape> getBlockCollisions(@Nullable Entity entity, AABB axisAlignedBB, BiPredicate<BlockState, BlockPos> blockStateBlockPosBiPredicate) {
-		return world.getBlockCollisions(entity, axisAlignedBB, blockStateBlockPosBiPredicate);
+	public Stream<VoxelShape> getBlockCollisions(@Nullable Entity entity, AABB AABB, BiPredicate<BlockState, BlockPos> blockStateBlockPosBiPredicate) {
+		return world.getBlockCollisions(entity, AABB, blockStateBlockPosBiPredicate);
 	}
 
 	@Override

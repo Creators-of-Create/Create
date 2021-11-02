@@ -8,11 +8,9 @@ import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.TileEntityBuilder;
 import com.tterrag.registrate.util.OneTimeEventReceiver;
-import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -23,12 +21,12 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 	private NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory;
 
 	public static <T extends BlockEntity, P> TileEntityBuilder<T, P> create(AbstractRegistrate<?> owner, P parent,
-		String name, BuilderCallback callback, NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+		String name, BuilderCallback callback, BlockEntityFactory<T> factory) {
 		return new CreateTileEntityBuilder<>(owner, parent, name, callback, factory);
 	}
 
 	protected CreateTileEntityBuilder(AbstractRegistrate<?> owner, P parent, String name, BuilderCallback callback,
-		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+		BlockEntityFactory<T> factory) {
 		super(owner, parent, name, callback, factory);
 	}
 
@@ -46,9 +44,9 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
 			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
-				InstancedRenderRegistry.getInstance().register(getEntry(), instanceFactory.get());
+				InstancedRenderRegistry.getInstance()
+					.register(getEntry(), instanceFactory.get());
 			}
-
 		});
 	}
 }

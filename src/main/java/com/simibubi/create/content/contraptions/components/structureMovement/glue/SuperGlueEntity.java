@@ -67,7 +67,8 @@ import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
-public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
+public class SuperGlueEntity extends Entity
+	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -112,16 +113,16 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		Validate.notNull(getFacingDirection());
 		if (getFacingDirection().getAxis()
 			.isHorizontal()) {
-			this.xRot = 0.0F;
-			this.yRot = getFacingDirection().get2DDataValue() * 90;
+			setXRot(0);
+			setYRot(getFacingDirection().get2DDataValue() * 90);
 		} else {
-			this.xRot = -90 * getFacingDirection().getAxisDirection()
-				.getStep();
-			this.yRot = 0.0F;
+			setXRot(-90 * getFacingDirection().getAxisDirection()
+				.getStep());
+			setYRot(0);
 		}
 
-		this.xRotO = this.xRot;
-		this.yRotO = this.yRot;
+		this.xRotO = this.getXRot();
+		this.yRotO = this.getYRot();
 		this.updateBoundingBox();
 	}
 
@@ -162,7 +163,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (this.validationTimer++ == 10 && !this.level.isClientSide) {
 			this.validationTimer = 0;
 			if (isAlive() && !this.onValidSurface()) {
-				remove();
+				kill();
 				onBroken(null);
 			}
 		}
@@ -189,13 +190,13 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (!level.isAreaLoaded(pos, 0) || !level.isAreaLoaded(pos2, 0))
 			return true;
 		if (!isValidFace(level, pos2, getFacingDirection())
-				&& !isValidFace(level, pos, getFacingDirection().getOpposite()))
+			&& !isValidFace(level, pos, getFacingDirection().getOpposite()))
 			return false;
 		if (isSideSticky(level, pos2, getFacingDirection())
-				|| isSideSticky(level, pos, getFacingDirection().getOpposite()))
+			|| isSideSticky(level, pos, getFacingDirection().getOpposite()))
 			return false;
 		return level.getEntities(this, getBoundingBox(), e -> e instanceof SuperGlueEntity)
-				.isEmpty();
+			.isEmpty();
 	}
 
 	public static boolean isValidFace(Level world, BlockPos pos, Direction direction) {
@@ -249,9 +250,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 	@Override
 	public boolean skipAttackInteraction(Entity entity) {
-		return entity instanceof Player
-			? hurt(DamageSource.playerAttack((Player) entity), 0)
-			: false;
+		return entity instanceof Player ? hurt(DamageSource.playerAttack((Player) entity), 0) : false;
 	}
 
 	@Override
@@ -264,7 +263,8 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		if (this.isInvulnerableTo(source))
 			return false;
 
-		boolean mobGriefing = level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING);
+		boolean mobGriefing = level.getGameRules()
+			.getBoolean(GameRules.RULE_MOBGRIEFING);
 		Entity trueSource = source.getEntity();
 		if (!mobGriefing && trueSource instanceof Mob)
 			return false;
@@ -276,7 +276,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 		}
 
 		if (isAlive() && !level.isClientSide) {
-			remove();
+			kill();
 			markHurt();
 			onBroken(source.getEntity());
 		}
@@ -287,7 +287,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void move(MoverType typeIn, Vec3 pos) {
 		if (!level.isClientSide && isAlive() && pos.lengthSqr() > 0.0D) {
-			remove();
+			discard();
 			onBroken(null);
 		}
 	}
@@ -295,7 +295,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 	@Override
 	public void push(double x, double y, double z) {
 		if (!level.isClientSide && isAlive() && x * x + y * y + z * z > 0.0D) {
-			remove();
+			discard();
 			onBroken(null);
 		}
 	}
@@ -334,8 +334,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 
 		LocalPlayer cPlayer = (LocalPlayer) player;
 		Minecraft mc = Minecraft.getInstance();
-		HitResult ray =
-			cPlayer.pick(mc.gameMode.getPickRange(), AnimationTickHolder.getPartialTicks(), false);
+		HitResult ray = cPlayer.pick(mc.gameMode.getPickRange(), AnimationTickHolder.getPartialTicks(), false);
 
 		if (!(ray instanceof BlockHitResult))
 			return;
@@ -423,7 +422,7 @@ public class SuperGlueEntity extends Entity implements IEntityAdditionalSpawnDat
 			}
 		}
 
-		float f = Mth.wrapDegrees(this.yRot);
+		float f = Mth.wrapDegrees(this.getYRot());
 		switch (transformRotation) {
 		case CLOCKWISE_180:
 			return f + 180.0F;

@@ -36,7 +36,7 @@ public interface IWrenchableWithBracket extends IWrenchable {
 		if (bracket.isPresent()) {
 			Player player = context.getPlayer();
 			if (!world.isClientSide && !player.isCreative())
-				player.inventory.placeItemBackInInventory(world, bracket.get());
+				player.getInventory().placeItemBackInInventory(bracket.get());
 			if (!world.isClientSide && AllBlocks.FLUID_PIPE.has(blockState)) {
 				Axis preferred = FluidPropagator.getStraightPipeAxis(blockState);
 				Direction preferredDirection =

@@ -195,7 +195,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 	public void renderPlayerInventory(PoseStack ms, int x, int y) {
 		AllGuiTextures.PLAYER_INVENTORY.draw(ms, this, x, y);
-		font.draw(ms, inventory.getDisplayName(), x + 8, y + 6, 0x404040);
+		font.draw(ms, playerInventoryTitle, x + 8, y + 6, 0x404040);
 	}
 
 	/**

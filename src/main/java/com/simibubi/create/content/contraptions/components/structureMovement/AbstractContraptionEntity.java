@@ -51,6 +51,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -58,7 +59,7 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	private static final EntityDataAccessor<Boolean> STALLED =
-			SynchedEntityData.defineId(AbstractContraptionEntity.class, EntityDataSerializers.BOOLEAN);
+		SynchedEntityData.defineId(AbstractContraptionEntity.class, EntityDataSerializers.BOOLEAN);
 
 	public final Map<Entity, MutableInt> collidingEntities;
 
@@ -146,7 +147,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (seat == null)
 			return null;
 		Vec3 transformedVector = toGlobalVector(Vec3.atLowerCornerOf(seat)
-			.add(.5, passenger.getMyRidingOffset() + ySize - .15f, .5), partialTicks).add(VecHelper.getCenterOf(BlockPos.ZERO))
+			.add(.5, passenger.getMyRidingOffset() + ySize - .15f, .5), partialTicks)
+				.add(VecHelper.getCenterOf(BlockPos.ZERO))
 				.subtract(0.5, ySize, 0.5);
 		return transformedVector;
 	}
@@ -165,8 +167,8 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		int indexOfSeat = contraption.getSeats()
 			.indexOf(localPos);
 		if (indexOfSeat == -1)
-			return contraption.interactors.containsKey(localPos)
-				&& contraption.interactors.get(localPos).handlePlayerInteraction(player, interactionHand, localPos, this);
+			return contraption.interactors.containsKey(localPos) && contraption.interactors.get(localPos)
+				.handlePlayerInteraction(player, interactionHand, localPos, this);
 
 		// Eject potential existing passenger
 		Entity toDismount = null;
@@ -218,7 +220,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	@Override
 	public final void tick() {
 		if (contraption == null) {
-			remove();
+			discard();
 			return;
 		}
 
@@ -394,7 +396,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 			int estimatedPacketSize = byteArray.length;
 			if (estimatedPacketSize > 2_000_000) {
 				Create.LOGGER.warn("Could not send Contraption Spawn Data (Packet too big): "
-						+ getContraption().getType().id + " @" + position() + " (" + getUUID().toString() + ")");
+					+ getContraption().getType().id + " @" + position() + " (" + getUUID().toString() + ")");
 				buffer.writeNbt(new CompoundTag());
 				return;
 			}
@@ -446,7 +448,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		if (contraption == null)
 			return;
 
-		remove();
+		discard();
 
 		StructureTransform transform = makeStructureTransform();
 		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
@@ -483,16 +485,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public void remove(boolean keepData) {
-		if (!level.isClientSide && !removed && contraption != null) {
+	public void remove(RemovalReason p_146834_) {
+		if (!level.isClientSide && !isRemoved() && contraption != null)
 			if (!ticking)
 				contraption.stop(level);
-		}
 		if (contraption != null)
 			contraption.onEntityRemoved(this);
-		super.remove(keepData);
+		super.remove(p_146834_);
 	}
 
 	protected abstract StructureTransform makeStructureTransform();
@@ -514,7 +514,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 		super.onRemovedFromWorld();
 		if (level != null && level.isClientSide)
 			return;
-		getPassengers().forEach(Entity::remove);
+		getPassengers().forEach(Entity::discard);
 	}
 
 	@Override
@@ -551,14 +551,14 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	protected abstract void handleStallInformation(float x, float y, float z, float angle);
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public CompoundTag saveWithoutId(CompoundTag nbt) {
 		Vec3 vec = position();
 		List<Entity> passengers = getPassengers();
 
 		for (Entity entity : passengers) {
-			// setPos has world accessing side-effects when removed == false
-			entity.removed = true;
+			// setPos has world accessing side-effects when removed == null
+			String srg = "f_146795_";
+			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
 
 			// Gather passengers into same chunk when saving
 			Vec3 prevVec = entity.position();
@@ -566,7 +566,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
-			entity.removed = false;
+			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
 		}
 
 		CompoundTag tag = super.saveWithoutId(nbt);
@@ -639,10 +639,10 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	}
 
 	@Override
-	public boolean hasOnePlayerPassenger() {
+	public boolean hasExactlyOnePlayerPassenger() {
 		return false;
 	}
-
+	
 	@OnlyIn(Dist.CLIENT)
 	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
 
@@ -679,18 +679,17 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 	}
 
-
 	@Override
 	protected boolean updateInWaterStateAndDoFluidPushing() {
 		/*
-		 * Override this with an empty method to reduce enormous calculation time when contraptions are in water
-		 * WARNING: THIS HAS A BUNCH OF SIDE EFFECTS!
-		 * - Fluids will not try to change contraption movement direction
-		 * - this.inWater and this.isInWater() will return unreliable data
-		 * - entities riding a contraption will not cause water splashes (seats are their own entity so this should be fine)
-		 * - fall distance is not reset when the contraption is in water
-		 * - this.eyesInWater and this.canSwim() will always be false
-		 * - swimming state will never be updated
+		 * Override this with an empty method to reduce enormous calculation time when
+		 * contraptions are in water WARNING: THIS HAS A BUNCH OF SIDE EFFECTS! - Fluids
+		 * will not try to change contraption movement direction - this.inWater and
+		 * this.isInWater() will return unreliable data - entities riding a contraption
+		 * will not cause water splashes (seats are their own entity so this should be
+		 * fine) - fall distance is not reset when the contraption is in water -
+		 * this.eyesInWater and this.canSwim() will always be false - swimming state
+		 * will never be updated
 		 */
 		return false;
 	}

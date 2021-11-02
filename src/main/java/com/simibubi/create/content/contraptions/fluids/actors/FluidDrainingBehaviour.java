@@ -67,7 +67,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (affectedArea == null)
-			affectedArea = new BoundingBox(root, root);
+			affectedArea = BoundingBox.fromCorners(root, root);
 
 		Level world = getWorld();
 		if (!queue.isEmpty() && !isValid) {
@@ -95,7 +95,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 				if (blockState.getValue(LiquidBlock.LEVEL) == 0)
 					fluid = flowingFluid.getFluid();
 				else {
-					affectedArea.expand(new BoundingBox(currentPos, currentPos));
+					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 					if (!tileEntity.isVirtual())
 						world.setBlock(currentPos, emptied, 2 | 16);
 					queue.dequeue();
@@ -139,7 +139,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 
 			if (!tileEntity.isVirtual())
 				world.setBlock(currentPos, emptied, 2 | 16);
-			affectedArea.expand(new BoundingBox(currentPos, currentPos));
+			affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 
 			queue.dequeue();
 			if (queue.isEmpty()) {
@@ -236,7 +236,7 @@ public class FluidDrainingBehaviour extends FluidManipulationBehaviour {
 	public void rebuildContext(BlockPos root) {
 		reset();
 		rootPos = root;
-		affectedArea = new BoundingBox(rootPos, rootPos);
+		affectedArea = BoundingBox.fromCorners(rootPos, rootPos);
 		if (isValid)
 			frontier.add(new BlockPosEntry(root, 0));
 	}

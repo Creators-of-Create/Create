@@ -77,8 +77,8 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	private LazyOptional<IItemHandler> beltCapability;
 	private LazyOptional<IItemHandler> tunnelCapability;
 
-	public BrassTunnelTileEntity(BlockEntityType<? extends BeltTunnelTileEntity> type) {
-		super(type);
+	public BrassTunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		distributionTargets = Couple.create(ArrayList::new);
 		syncSet = new HashSet<>();
 		stackToDistribute = ItemStack.EMPTY;
@@ -581,7 +581,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		boolean wasConnectedLeft = connectedLeft;
 		boolean wasConnectedRight = connectedRight;
 
@@ -603,7 +603,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 				}));
 		}
 
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

@@ -14,7 +14,6 @@ import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
 import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3d;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllStitchedTextures;
 import com.simibubi.create.Create;
@@ -24,9 +23,11 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.LightType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.phys.Vec3;
 
 public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {
 
@@ -82,12 +83,12 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 
 	private void updateLight(OrientedData model) {
 		BlockPos pos = entity.getHangingPosition();
-		model.setBlockLight(world.getBrightness(LightType.BLOCK, pos))
-				.setSkyLight(world.getBrightness(LightType.SKY, pos));
+		model.setBlockLight(world.getBrightness(LightLayer.BLOCK, pos))
+				.setSkyLight(world.getBrightness(LightLayer.SKY, pos));
 	}
 
 	private boolean shouldShow() {
-		PlayerEntity player = Minecraft.getInstance().player;
+		Player player = Minecraft.getInstance().player;
 
 		return entity.isVisible()
 				|| AllItems.SUPER_GLUE.isIn(player.getMainHandItem())
@@ -97,29 +98,29 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	public static class GlueModel implements IModel {
 		@Override
 		public void buffer(VecBuffer buffer) {
-			Vector3d diff = Vector3d.atLowerCornerOf(Direction.SOUTH.getNormal());
-			Vector3d extension = diff.normalize()
+			Vec3 diff = Vec3.atLowerCornerOf(Direction.SOUTH.getNormal());
+			Vec3 extension = diff.normalize()
 					.scale(1 / 32f - 1 / 128f);
 
-			Vector3d plane = VecHelper.axisAlingedPlaneOf(diff);
+			Vec3 plane = VecHelper.axisAlingedPlaneOf(diff);
 			Direction.Axis axis = Direction.getNearest(diff.x, diff.y, diff.z)
 					.getAxis();
 
-			Vector3d start = Vector3d.ZERO.subtract(extension);
-			Vector3d end = Vector3d.ZERO.add(extension);
+			Vec3 start = Vec3.ZERO.subtract(extension);
+			Vec3 end = Vec3.ZERO.add(extension);
 
 			plane = plane.scale(1 / 2f);
-			Vector3d a1 = plane.add(start);
-			Vector3d b1 = plane.add(end);
+			Vec3 a1 = plane.add(start);
+			Vec3 b1 = plane.add(end);
 			plane = VecHelper.rotate(plane, -90, axis);
-			Vector3d a2 = plane.add(start);
-			Vector3d b2 = plane.add(end);
+			Vec3 a2 = plane.add(start);
+			Vec3 b2 = plane.add(end);
 			plane = VecHelper.rotate(plane, -90, axis);
-			Vector3d a3 = plane.add(start);
-			Vector3d b3 = plane.add(end);
+			Vec3 a3 = plane.add(start);
+			Vec3 b3 = plane.add(end);
 			plane = VecHelper.rotate(plane, -90, axis);
-			Vector3d a4 = plane.add(start);
-			Vector3d b4 = plane.add(end);
+			Vec3 a4 = plane.add(start);
+			Vec3 b4 = plane.add(end);
 
 			float minU;
 			float maxU;

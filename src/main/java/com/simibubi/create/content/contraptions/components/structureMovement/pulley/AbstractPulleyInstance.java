@@ -18,8 +18,9 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LightLayer;
 
 public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, IMovingListener {
 
@@ -71,7 +72,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 		magnet.update()
 				.get()
 				.ifPresent(data -> {
-					int i = Math.max(0, MathHelper.floor(offset));
+					int i = Math.max(0, Mth.floor(offset));
 					short packed = light.getPackedLight(pos.getX(), pos.getY() - i, pos.getZ());
 					data.setPosition(getInstancePosition())
 							.nudge(0, -offset, 0)
@@ -149,7 +150,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	private boolean updateVolume() {
-		int length = MathHelper.ceil(offset) + 2;
+		int length = Mth.ceil(offset) + 2;
 
 		if (volume.sizeY() < length) {
 			volume.assign(pos.below(length), pos)
@@ -164,7 +165,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	private int getNeededRopeCount() {
-		return Math.max(0, MathHelper.ceil(offset - 1.25f));
+		return Math.max(0, Mth.ceil(offset - 1.25f));
 	}
 
 	private boolean shouldRenderHalfRope() {
@@ -191,7 +192,7 @@ public abstract class AbstractPulleyInstance extends ShaftInstance implements ID
 	}
 
 	@Override
-	public void onLightUpdate(LightProvider world, LightType type, ImmutableBox changed) {
+	public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
 		super.onLightUpdate(world, type, changed);
 		light.onLightUpdate(world, type, changed);
 	}

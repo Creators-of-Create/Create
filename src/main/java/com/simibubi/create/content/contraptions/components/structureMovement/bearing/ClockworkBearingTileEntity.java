@@ -45,8 +45,8 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 
 	private float prevForcedAngle;
 
-	public ClockworkBearingTileEntity(BlockEntityType<? extends ClockworkBearingTileEntity> type) {
-		super(type);
+	public ClockworkBearingTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(3);
 	}
 
@@ -310,7 +310,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		float hourAngleBefore = hourAngle;
 		float minuteAngleBefore = minuteAngle;
 
@@ -318,7 +318,7 @@ public class ClockworkBearingTileEntity extends KineticTileEntity
 		hourAngle = compound.getFloat("HourAngle");
 		minuteAngle = compound.getFloat("MinuteAngle");
 		lastException = AssemblyException.read(compound);
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

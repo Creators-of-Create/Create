@@ -186,7 +186,7 @@ public class PonderWorld extends SchematicWorld {
 		double d0 = Mth.lerp((double) pt, entity.xOld, entity.getX());
 		double d1 = Mth.lerp((double) pt, entity.yOld, entity.getY());
 		double d2 = Mth.lerp((double) pt, entity.zOld, entity.getZ());
-		float f = Mth.lerp(pt, entity.yRotO, entity.yRot);
+		float f = Mth.lerp(pt, entity.yRotO, entity.getYRot());
 		EntityRenderDispatcher renderManager = Minecraft.getInstance()
 			.getEntityRenderDispatcher();
 		int light = renderManager.getRenderer(entity)

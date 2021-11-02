@@ -61,7 +61,7 @@ public class BracketBlockItem extends BlockItem {
 				if (player == null)
 					Block.popResource(world, pos, returnedStack);
 				else
-					player.inventory.placeItemBackInInventory(world, returnedStack);
+					player.getInventory().placeItemBackInInventory(returnedStack);
 			}
 		}
 		return InteractionResult.SUCCESS;

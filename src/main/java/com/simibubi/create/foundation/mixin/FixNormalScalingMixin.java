@@ -29,7 +29,7 @@ public class FixNormalScalingMixin {
 	 * that would invert all normals. Additionally, Minecraft's fastInverseCbrt method
 	 * does not work for negative numbers.
 	 */
-	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;fastInvCubeRoot(F)F"), method = "scale(FFF)V")
+	@ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Mth;fastInvCubeRoot(F)F"), method = "scale(FFF)V")
 	private float absInvCbrtInput(float input) {
 		return Math.abs(input);
 	}

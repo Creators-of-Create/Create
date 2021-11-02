@@ -32,15 +32,15 @@ public class BuildersTeaItem extends Item {
 		if (playerentity != null) {
 			playerentity.awardStat(Stats.ITEM_USED.get(this));
 			playerentity.getFoodData().eat(1, .6F);
-			if (!playerentity.abilities.instabuild)
+			if (!playerentity.getAbilities().instabuild)
 				stack.shrink(1);
 		}
 
-		if (playerentity == null || !playerentity.abilities.instabuild) {
+		if (playerentity == null || !playerentity.getAbilities().instabuild) {
 			if (stack.isEmpty()) 
 				return new ItemStack(Items.GLASS_BOTTLE);
 			if (playerentity != null) 
-				playerentity.inventory.add(new ItemStack(Items.GLASS_BOTTLE));
+				playerentity.getInventory().add(new ItemStack(Items.GLASS_BOTTLE));
 		}
 
 		return stack;

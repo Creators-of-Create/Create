@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.encased;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -11,8 +12,8 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	int signal;
 	boolean signalChanged;
 
-	public AdjustablePulleyTileEntity(BlockEntityType<? extends AdjustablePulleyTileEntity> type) {
-		super(type);
+	public AdjustablePulleyTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		signal = 0;
 		setLazyTickRate(40);
 	}
@@ -24,9 +25,9 @@ public class AdjustablePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		signal = compound.getInt("Signal");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	public float getModifier() {

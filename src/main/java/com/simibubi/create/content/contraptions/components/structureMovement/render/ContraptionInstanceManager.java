@@ -9,13 +9,13 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.instancing.tile.TileInstanceManager;
 import com.jozufozu.flywheel.backend.material.MaterialManagerImpl;
-import com.jozufozu.flywheel.backend.pipeline.Template;
 import com.simibubi.create.AllMovementBehaviours;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 
-import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 
 public class ContraptionInstanceManager extends TileInstanceManager {
 
@@ -33,7 +33,7 @@ public class ContraptionInstanceManager extends TileInstanceManager {
     }
 
     @Override
-	public void beginFrame(ActiveRenderInfo info) {
+	public void beginFrame(Camera info) {
 		super.beginFrame(info);
 
 		actors.forEach(ActorInstance::beginFrame);
@@ -45,8 +45,8 @@ public class ContraptionInstanceManager extends TileInstanceManager {
 	}
 
     @Nullable
-    public ActorInstance createActor(Pair<Template.BlockInfo, MovementContext> actor) {
-        Template.BlockInfo blockInfo = actor.getLeft();
+    public ActorInstance createActor(Pair<StructureBlockInfo, MovementContext> actor) {
+    	StructureBlockInfo blockInfo = actor.getLeft();
         MovementContext context = actor.getRight();
 
         MovementBehaviour movementBehaviour = AllMovementBehaviours.of(blockInfo.state);

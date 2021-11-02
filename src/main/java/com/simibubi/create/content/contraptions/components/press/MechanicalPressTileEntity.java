@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -64,8 +65,8 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	public Mode mode;
 	public boolean finished;
 
-	public MechanicalPressTileEntity(BlockEntityType<? extends MechanicalPressTileEntity> type) {
-		super(type);
+	public MechanicalPressTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		mode = Mode.WORLD;
 		entityScanCooldown = ENTITY_SCAN;
 	}
@@ -80,12 +81,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		mode = Mode.values()[compound.getInt("Mode")];
 		finished = compound.getBoolean("Finished");
 		prevRunningTicks = runningTicks = compound.getInt("Ticks");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (clientPacket) {
 			NBTHelper.iterateCompoundList(compound.getList("ParticleItems", NBT.TAG_COMPOUND),

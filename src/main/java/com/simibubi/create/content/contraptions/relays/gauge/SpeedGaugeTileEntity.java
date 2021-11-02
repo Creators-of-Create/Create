@@ -10,14 +10,16 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity {
 
-	public SpeedGaugeTileEntity(BlockEntityType<? extends SpeedGaugeTileEntity> type) {
-		super(type);
+	public SpeedGaugeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

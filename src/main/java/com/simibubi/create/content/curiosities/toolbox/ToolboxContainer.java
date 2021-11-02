@@ -79,7 +79,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 		if (index >= 0 && index < size) {
 
 			ItemStack itemInClickedSlot = getSlot(index).getItem();
-			Inventory playerInv = player.inventory;
+			Inventory playerInv = player.getInventory();
 			ItemStack carried = playerInv.getCarried();
 
 			if (type == ClickType.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()

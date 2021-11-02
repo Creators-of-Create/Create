@@ -29,8 +29,8 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 	private TankManipulationBehaviour observedTank;
 	public int turnOffTicks = 0;
 
-	public ContentObserverTileEntity(BlockEntityType<? extends ContentObserverTileEntity> type) {
-		super(type);
+	public ContentObserverTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(20);
 	}
 
@@ -129,8 +129,8 @@ public class ContentObserverTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		turnOffTicks = compound.getInt("TurnOff");
 	}
 

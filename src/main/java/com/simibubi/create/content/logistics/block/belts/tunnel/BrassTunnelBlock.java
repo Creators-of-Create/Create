@@ -43,7 +43,7 @@ public class BrassTunnelBlock extends BeltTunnelBlock {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
 			for (ItemStack itemStack : stacksOfGroup) 
-				player.inventory.placeItemBackInInventory(world, itemStack.copy());
+				player.getInventory().placeItemBackInInventory(itemStack.copy());
 			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 				1f + Create.RANDOM.nextFloat());
 			return InteractionResult.SUCCESS;

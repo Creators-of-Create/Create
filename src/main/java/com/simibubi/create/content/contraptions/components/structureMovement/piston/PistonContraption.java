@@ -6,35 +6,11 @@ import static com.simibubi.create.content.contraptions.components.structureMovem
 import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPiston;
 import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isPistonHead;
 import static com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.isStickyPiston;
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import javanet.minimport com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.BlockMovementChecks;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionType;
-import com.simibubi.create.content.contraptions.components.structureMovement.TranslatingContraption;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.VecHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.WoolCarpetBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.PistonType;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import org.apache.commons.lang3.tuple.Pair;
-
-ecraft.world.level.block.state.properties.BlockStatePropertiesva.util.Queue;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -47,19 +23,19 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CarpetBlock;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.PistonType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.template.Template.BlockInfo;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.WoolCarpetBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -166,7 +142,7 @@ public class PistonContraption extends TranslatingContraption {
 			BlockPos relPos = pole.pos.relative(direction, -extensionsInFront);
 			BlockPos localPos = relPos.subtract(anchor);
 			getBlocks().put(localPos, new StructureBlockInfo(localPos, pole.state, null));
-			//pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AxisAlignedBB(localPos));
+			//pistonExtensionCollisionBox = pistonExtensionCollisionBox.union(new AABB(localPos));
 		}
 
 		return true;
@@ -188,7 +164,7 @@ public class PistonContraption extends TranslatingContraption {
 			if (offset == 1 && retracting)
 				return true;
 			BlockPos currentPos = pos.relative(orientation, offset + initialExtensionProgress);
-			if (retracting && Level.isOutsideBuildHeight(currentPos))
+			if (retracting && world.isOutsideBuildHeight(currentPos))
 				return true;
 			if (!world.isLoaded(currentPos))
 				throw AssemblyException.unloadedChunk(currentPos);

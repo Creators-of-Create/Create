@@ -59,9 +59,9 @@ public class CloneCommand {
 
 	private static int doClone(CommandSourceStack source, BlockPos begin, BlockPos end, BlockPos destination,
 		boolean cloneBlocks) throws CommandSyntaxException {
-		BoundingBox sourceArea = new BoundingBox(begin, end);
+		BoundingBox sourceArea = BoundingBox.fromCorners(begin, end);
 		BlockPos destinationEnd = destination.offset(sourceArea.getLength());
-		BoundingBox destinationArea = new BoundingBox(destination, destinationEnd);
+		BoundingBox destinationArea = BoundingBox.fromCorners(destination, destinationEnd);
 
 		int i = sourceArea.getXSpan() * sourceArea.getYSpan() * sourceArea.getZSpan();
 		if (i > 32768)

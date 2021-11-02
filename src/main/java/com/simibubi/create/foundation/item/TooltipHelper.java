@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.item;
 
-import static net.minecraft.util.text.TextFormatting.GOLD;
-
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,9 +50,9 @@ public class TooltipHelper {
 		Component spacing = IHaveGoggleInformation.componentSpacing;
 		tooltip.add(spacing.plainCopy()
 			.append(Lang.translate(hintKey + ".title"))
-			.withStyle(GOLD));
+			.withStyle(ChatFormatting.GOLD));
 		Component hint = Lang.translate(hintKey);
-		List<Component> cutComponent = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
+		List<Component> cutComponent = TooltipHelper.cutTextComponent(hint, ChatFormatting.GRAY, ChatFormatting.WHITE);
 		for (Component component : cutComponent)
 			tooltip.add(spacing.plainCopy()
 				.append(component));

@@ -13,21 +13,23 @@ import net.minecraftforge.eventbus.api.GenericEvent;
 /**
  * Event that is fired just before a SmartTileEntity is being deserealized <br>
  * Also if a new one is placed<br>
- * Use it to attach a new {@link TileEntityBehaviour} or replace existing ones (with caution) <br>
+ * Use it to attach a new {@link TileEntityBehaviour} or replace existing ones
+ * (with caution) <br>
  * <br>
- * Actual setup of the behaviours internal workings and data should be done in TileEntityBehaviour#read() and TileEntityBehaviour#initialize() respectively.<br>
+ * Actual setup of the behaviours internal workings and data should be done in
+ * TileEntityBehaviour#read() and TileEntityBehaviour#initialize()
+ * respectively.<br>
  * <br>
- * Because of the earlyness of this event, the added behaviours will have access to the initial nbt read (unless the TE was placed, not loaded), thereby allowing tiles to store and retrieve data for injected behaviours
+ * Because of the earlyness of this event, the added behaviours will have access
+ * to the initial nbt read (unless the TE was placed, not loaded), thereby
+ * allowing tiles to store and retrieve data for injected behaviours
  */
 public class TileEntityBehaviourEvent<T extends SmartTileEntity> extends GenericEvent<T> {
 
-	private BlockState state;
 	private T smartTileEntity;
 	private Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 
-	public TileEntityBehaviourEvent(BlockState state, T tileEntity,
-		Map<BehaviourType<?>, TileEntityBehaviour> behaviours) {
-		this.state = state;
+	public TileEntityBehaviourEvent(T tileEntity, Map<BehaviourType<?>, TileEntityBehaviour> behaviours) {
 		smartTileEntity = tileEntity;
 		this.behaviours = behaviours;
 	}
@@ -50,7 +52,7 @@ public class TileEntityBehaviourEvent<T extends SmartTileEntity> extends Generic
 	}
 
 	public BlockState getBlockState() {
-		return state;
+		return smartTileEntity.getBlockState();
 	}
 
 }

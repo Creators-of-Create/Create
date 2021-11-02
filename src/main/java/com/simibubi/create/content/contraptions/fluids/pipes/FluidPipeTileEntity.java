@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FluidPipeTileEntity extends SmartTileEntity {
 
-	public FluidPipeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FluidPipeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

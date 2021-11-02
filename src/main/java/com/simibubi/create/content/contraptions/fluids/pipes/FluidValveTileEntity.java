@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -20,8 +21,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 
 	LerpedFloat pointer;
 
-	public FluidValveTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FluidValveTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		pointer = LerpedFloat.linear()
 			.startWithValue(0)
 			.chase(0, 0, Chaser.LINEAR);
@@ -69,8 +70,8 @@ public class FluidValveTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		pointer.readNBT(compound.getCompound("Pointer"), clientPacket);
 	}
 

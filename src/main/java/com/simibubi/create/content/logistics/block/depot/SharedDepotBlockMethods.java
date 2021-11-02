@@ -50,14 +50,14 @@ public class SharedDepotBlockMethods {
 
 		ItemStack mainItemStack = behaviour.getHeldItemStack();
 		if (!mainItemStack.isEmpty()) {
-			player.inventory.placeItemBackInInventory(world, mainItemStack);
+			player.getInventory().placeItemBackInInventory(mainItemStack);
 			behaviour.removeHeldItem();
 			world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f,
 					1f + Create.RANDOM.nextFloat());
 		}
 		ItemStackHandler outputs = behaviour.processingOutputBuffer;
 		for (int i = 0; i < outputs.getSlots(); i++)
-			player.inventory.placeItemBackInInventory(world, outputs.extractItem(i, 64, false));
+			player.getInventory().placeItemBackInInventory(outputs.extractItem(i, 64, false));
 
 		if (!wasEmptyHanded && !shouldntPlaceItem) {
 			TransportedItemStack transported = new TransportedItemStack(heldItem);
@@ -105,7 +105,7 @@ public class SharedDepotBlockMethods {
 		ItemStack remainder = inputBehaviour.handleInsertion(itemEntity.getItem(), Direction.DOWN, false);
 		itemEntity.setItem(remainder);
 		if (remainder.isEmpty())
-			itemEntity.remove();
+			itemEntity.discard();
 	}
 
 	public static int getComparatorInputOverride(BlockState blockState, Level worldIn, BlockPos pos) {

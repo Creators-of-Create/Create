@@ -82,8 +82,8 @@ public class ChromaticCompoundItem extends Item {
 		CRecipes config = AllConfigs.SERVER.recipes;
 		if (world.isClientSide) {
 			int light = itemData.getInt("CollectingLight");
-			if (random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
-				Vec3 start = VecHelper.offsetRandomly(positionVec, random, 3);
+			if (world.random.nextInt(config.lightSourceCountForRefinedRadiance.get() + 20) < light) {
+				Vec3 start = VecHelper.offsetRandomly(positionVec, world.random, 3);
 				Vec3 motion = positionVec.subtract(start)
 					.normalize()
 					.scale(.2f);
@@ -116,7 +116,7 @@ public class ChromaticCompoundItem extends Item {
 			stack.split(1);
 			entity.setItem(stack);
 			if (stack.isEmpty())
-				entity.remove();
+				entity.discard();
 			return false;
 		}
 
@@ -142,7 +142,7 @@ public class ChromaticCompoundItem extends Item {
 
 				BeaconBlockEntity bte = (BeaconBlockEntity) te;
 
-				if (bte.getLevels() != 0 && !bte.beamSections.isEmpty())
+				if (!bte.beamSections.isEmpty())
 					isOverBeacon = true;
 
 				break;
@@ -208,17 +208,17 @@ public class ChromaticCompoundItem extends Item {
 		return false;
 	}
 
-	public boolean checkLight(ItemStack stack, ItemEntity entity, Level world, CompoundTag itemData,
-		Vec3 positionVec, BlockPos randomOffset, BlockState state) {
-		if (state.getLightValue(world, randomOffset) == 0)
+	public boolean checkLight(ItemStack stack, ItemEntity entity, Level world, CompoundTag itemData, Vec3 positionVec,
+		BlockPos randomOffset, BlockState state) {
+		if (state.getLightEmission(world, randomOffset) == 0)
 			return false;
 		if (state.getDestroySpeed(world, randomOffset) == -1)
 			return false;
 		if (state.getBlock() == Blocks.BEACON)
 			return false;
 
-		ClipContext context = new ClipContext(positionVec.add(new Vec3(0, 0.5, 0)),
-			VecHelper.getCenterOf(randomOffset), Block.COLLIDER, Fluid.NONE, entity);
+		ClipContext context = new ClipContext(positionVec.add(new Vec3(0, 0.5, 0)), VecHelper.getCenterOf(randomOffset),
+			Block.COLLIDER, Fluid.NONE, entity);
 		if (!randomOffset.equals(world.clip(context)
 			.getBlockPos()))
 			return false;
@@ -232,7 +232,7 @@ public class ChromaticCompoundItem extends Item {
 		world.addFreshEntity(newEntity);
 		entity.lifespan = 6000;
 		if (stack.isEmpty())
-			entity.remove();
+			entity.discard();
 		return true;
 	}
 

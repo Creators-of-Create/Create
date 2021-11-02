@@ -89,7 +89,7 @@ public class TurntableBlock extends KineticBlock implements ITE<TurntableTileEnt
 				e.hurtMarked = true;
 			}
 
-			e.yRot -= speed;
+			e.setYRot(e.getYRot() - speed);
 		});
 	}
 

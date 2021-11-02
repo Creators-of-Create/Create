@@ -123,8 +123,7 @@ public class DeployerHandler {
 		return true;
 	}
 
-	static void activate(DeployerFakePlayer player, Vec3 vec, BlockPos clickedPos, Vec3 extensionVector,
-		Mode mode) {
+	static void activate(DeployerFakePlayer player, Vec3 vec, BlockPos clickedPos, Vec3 extensionVector, Mode mode) {
 		Multimap<Attribute, AttributeModifier> attributeModifiers = player.getMainHandItem()
 			.getAttributeModifiers(EquipmentSlot.MAINHAND);
 		player.getAttributes()
@@ -134,8 +133,8 @@ public class DeployerHandler {
 			.addTransientAttributeModifiers(attributeModifiers);
 	}
 
-	private static void activateInner(DeployerFakePlayer player, Vec3 vec, BlockPos clickedPos,
-		Vec3 extensionVector, Mode mode) {
+	private static void activateInner(DeployerFakePlayer player, Vec3 vec, BlockPos clickedPos, Vec3 extensionVector,
+		Mode mode) {
 
 		Vec3 rayOrigin = vec.add(extensionVector.scale(3 / 2f + 1 / 64f));
 		Vec3 rayTarget = vec.add(extensionVector.scale(5 / 2f - 1 / 64f));
@@ -146,7 +145,8 @@ public class DeployerHandler {
 
 		// Check for entities
 		final ServerLevel world = player.getLevel();
-		List<Entity> entities = world.getEntitiesOfClass(Entity.class, new AABB(clickedPos)).stream()
+		List<Entity> entities = world.getEntitiesOfClass(Entity.class, new AABB(clickedPos))
+			.stream()
 			.filter(e -> !(e instanceof AbstractContraptionEntity))
 			.collect(Collectors.toList());
 		InteractionHand hand = InteractionHand.MAIN_HAND;
@@ -165,16 +165,16 @@ public class DeployerHandler {
 				}
 				if (cancelResult == null) {
 					if (entity.interact(player, hand)
-						.consumesAction()){
+						.consumesAction()) {
 						if (entity instanceof AbstractVillager) {
 							AbstractVillager villager = ((AbstractVillager) entity);
 							if (villager.getTradingPlayer() instanceof DeployerFakePlayer)
 								villager.setTradingPlayer(null);
 						}
 						success = true;
-					}
-					else if (entity instanceof LivingEntity && stack.interactLivingEntity(player, (LivingEntity) entity, hand)
-						.consumesAction())
+					} else if (entity instanceof LivingEntity
+						&& stack.interactLivingEntity(player, (LivingEntity) entity, hand)
+							.consumesAction())
 						success = true;
 				}
 				if (!success && stack.isEdible() && entity instanceof Player) {
@@ -196,14 +196,15 @@ public class DeployerHandler {
 			}
 
 			entity.captureDrops(null);
-			capturedDrops.forEach(e -> player.inventory.placeItemBackInInventory(world, e.getItem()));
+			capturedDrops.forEach(e -> player.getInventory()
+				.placeItemBackInInventory(e.getItem()));
 			if (success)
 				return;
 		}
 
 		// Shoot ray
 		ClipContext rayTraceContext =
-			new ClipContext(rayOrigin, rayTarget, Block.OUTLINE, Fluid.NONE, player);
+			new ClipContext(rayOrigin, rayTarget, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player);
 		BlockHitResult result = world.clip(rayTraceContext);
 		if (result.getBlockPos() != clickedPos)
 			result = new BlockHitResult(result.getLocation(), result.getDirection(), clickedPos, result.isInside());
@@ -225,7 +226,8 @@ public class DeployerHandler {
 			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
 			if (event.isCanceled())
 				return;
-			if (BlockHelper.extinguishFire(world, player, clickedPos, face)) // FIXME: is there an equivalent in world, as there was in 1.15?
+			if (BlockHelper.extinguishFire(world, player, clickedPos, face)) // FIXME: is there an equivalent in world,
+																				// as there was in 1.15?
 				return;
 			if (event.getUseBlock() != DENY)
 				clickedState.attack(world, clickedPos, player);
@@ -242,7 +244,7 @@ public class DeployerHandler {
 				.getHitSound(), SoundSource.NEUTRAL, .25f, 1);
 
 			if (progress >= 1) {
-				tryHarvestBlock(player.gameMode, clickedPos);
+				tryHarvestBlock(player, player.gameMode, clickedPos);
 				world.destroyBlockProgress(player.getId(), clickedPos, -1);
 				player.blockBreakingProgress = null;
 				return;
@@ -289,8 +291,7 @@ public class DeployerHandler {
 			return;
 		if (useItem == DENY)
 			return;
-		if (item instanceof BlockItem
-			&& !(item instanceof CartAssemblerBlockItem)
+		if (item instanceof BlockItem && !(item instanceof CartAssemblerBlockItem)
 			&& !clickedState.canBeReplaced(new BlockPlaceContext(itemusecontext)))
 			return;
 
@@ -338,11 +339,10 @@ public class DeployerHandler {
 		player.stopUsingItem();
 	}
 
-	public static boolean tryHarvestBlock(ServerPlayerGameMode interactionManager, BlockPos pos) {
+	public static boolean tryHarvestBlock(ServerPlayer player, ServerPlayerGameMode interactionManager, BlockPos pos) {
 		// <> PlayerInteractionManager#tryHarvestBlock
 
-		ServerLevel world = interactionManager.level;
-		ServerPlayer player = interactionManager.player;
+		ServerLevel world = player.getLevel();
 		BlockState blockstate = world.getBlockState(pos);
 		GameType gameType = interactionManager.getGameModeForPlayer();
 
@@ -364,14 +364,12 @@ public class DeployerHandler {
 		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
 			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, InteractionHand.MAIN_HAND);
 
-
 		BlockPos posUp = pos.above();
 		BlockState stateUp = world.getBlockState(posUp);
 		if (blockstate.getBlock() instanceof DoublePlantBlock
 			&& blockstate.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER
 			&& stateUp.getBlock() == blockstate.getBlock()
-			&& stateUp.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER
-		) {
+			&& stateUp.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
 			// hack to prevent DoublePlantBlock from dropping a duplicate item
 			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 35);
 			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), 35);
@@ -386,7 +384,7 @@ public class DeployerHandler {
 			return true;
 
 		Block.getDrops(blockstate, world, pos, tileentity, player, prevHeldItem)
-			.forEach(item -> player.inventory.placeItemBackInInventory(world, item));
+			.forEach(item -> player.getInventory().placeItemBackInInventory(item));
 		blockstate.spawnAfterBreak(world, pos, prevHeldItem);
 		return true;
 	}
@@ -413,7 +411,7 @@ public class DeployerHandler {
 			world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BEEHIVE_SHEAR,
 				SoundSource.NEUTRAL, 1.0F, 1.0F);
 			// <> BeehiveBlock#dropHoneycomb
-			player.inventory.placeItemBackInInventory(world, new ItemStack(Items.HONEYCOMB, 3));
+			player.getInventory().placeItemBackInInventory(new ItemStack(Items.HONEYCOMB, 3));
 			prevHeldItem.hurtAndBreak(1, player, s -> s.broadcastBreakEvent(hand));
 			success = true;
 		}
@@ -426,7 +424,7 @@ public class DeployerHandler {
 			if (prevHeldItem.isEmpty())
 				player.setItemInHand(hand, honeyBottle);
 			else
-				player.inventory.placeItemBackInInventory(world, honeyBottle);
+				player.getInventory().placeItemBackInInventory(honeyBottle);
 			success = true;
 		}
 

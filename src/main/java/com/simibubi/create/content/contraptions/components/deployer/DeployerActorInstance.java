@@ -9,8 +9,7 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.math.Vector3d;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileInstance;
@@ -26,8 +25,9 @@ import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationW
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class DeployerActorInstance extends ActorInstance {
 
@@ -83,18 +83,18 @@ public class DeployerActorInstance extends ActorInstance {
     public void beginFrame() {
         double factor;
         if (context.contraption.stalled || context.position == null || context.data.contains("StationaryTimer")) {
-            factor = MathHelper.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
+            factor = Mth.sin(AnimationTickHolder.getRenderTime() * .5f) * .25f + .25f;
         } else {
-            Vector3d center = VecHelper.getCenterOf(new BlockPos(context.position));
+        	Vec3 center = VecHelper.getCenterOf(new BlockPos(context.position));
             double distance = context.position.distanceTo(center);
             double nextDistance = context.position.add(context.motion)
                                                   .distanceTo(center);
-            factor = .5f - MathHelper.clamp(MathHelper.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
+            factor = .5f - Mth.clamp(Mth.lerp(AnimationTickHolder.getPartialTicks(), distance, nextDistance), 0, 1);
         }
 
-        Vector3d offset = Vector3d.atLowerCornerOf(facing.getNormal()).scale(factor);
+        Vec3 offset = Vec3.atLowerCornerOf(facing.getNormal()).scale(factor);
 
-        MatrixStack ms = new MatrixStack();
+        PoseStack ms = new PoseStack();
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(context.localPos)

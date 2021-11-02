@@ -59,8 +59,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	private InterpolatedChasingValue fluidLevel;
 	private AABB renderBoundingBox;
 
-	public FluidTankTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FluidTankTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		tankInventory = createInventory();
 		fluidCapability = LazyOptional.of(() -> tankInventory);
 		forceFluidLevelUpdate = true;
@@ -315,13 +315,6 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		return renderBoundingBox;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance() {
-		int dist = 64 + getMaxHeight() * 2;
-		return dist * dist;
-	}
-
 	@Nullable
 	public FluidTankTileEntity getOtherFluidTankTileEntity(Direction direction) {
 		BlockEntity otherTE = level.getBlockEntity(worldPosition.relative(direction));
@@ -340,8 +333,8 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 
 		BlockPos controllerBefore = controller;
 		int prevSize = width;

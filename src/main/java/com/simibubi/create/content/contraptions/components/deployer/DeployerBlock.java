@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -68,7 +69,7 @@ public class DeployerBlock extends DirectionalAxisKineticBlock implements ITE<De
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock()) {
 			withTileEntityDo(worldIn, pos, te -> {
 				if (te.player != null && !isMoving) {
-					te.player.inventory.dropAll();
+					te.player.getInventory().dropAll();
 					te.overflowItems.forEach(itemstack -> te.player.drop(itemstack, true, false));
 					te.player.remove();
 					te.player = null;

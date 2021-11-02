@@ -50,8 +50,8 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.xOld = 0;
 		entity.yOld = 0;
 		entity.zOld = 0;
-		entity.xRotO = entity.xRot = 0;
-		entity.yRotO = entity.yRot = 180;
+		entity.setXRot(entity.xRotO = 0);
+		entity.setYRot(entity.yRotO = 180);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ParrotElement extends AnimatedSceneElement {
 		super.tick(scene);
 		if (entity == null) {
 			entity = pose.create(scene.getWorld());
-			entity.yRotO = entity.yRot = 180;
+			entity.setYRot(entity.yRotO = 180);
 		}
 
 		entity.tickCount++;
@@ -71,8 +71,8 @@ public class ParrotElement extends AnimatedSceneElement {
 		entity.xo = entity.getX();
 		entity.yo = entity.getY();
 		entity.zo = entity.getZ();
-		entity.yRotO = entity.yRot;
-		entity.xRotO = entity.xRot;
+		entity.yRotO = entity.getYRot();
+		entity.xRotO = entity.getXRot();
 
 		pose.tick(scene, entity, location);
 
@@ -95,12 +95,12 @@ public class ParrotElement extends AnimatedSceneElement {
 	public void setRotation(Vec3 eulers, boolean immediate) {
 		if (entity == null)
 			return;
-		entity.xRot = (float) eulers.x;
-		entity.yRot = (float) eulers.y;
+		entity.setXRot((float) eulers.x);
+		entity.setYRot((float) eulers.y);
 		if (!immediate)
 			return;
-		entity.xRotO = entity.xRot;
-		entity.yRotO = entity.yRot;
+		entity.xRotO = entity.getXRot();
+		entity.yRotO = entity.getYRot();
 	}
 
 	public Vec3 getPositionOffset() {
@@ -108,7 +108,7 @@ public class ParrotElement extends AnimatedSceneElement {
 	}
 
 	public Vec3 getRotation() {
-		return entity != null ? new Vec3(entity.xRot, entity.yRot, 0) : Vec3.ZERO;
+		return entity != null ? new Vec3(entity.getXRot(), entity.getYRot(), 0) : Vec3.ZERO;
 	}
 
 	@Override
@@ -118,16 +118,16 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		if (entity == null) {
 			entity = pose.create(world);
-			entity.yRotO = entity.yRot = 180;
+			entity.setYRot(entity.yRotO = 180);
 		}
 
 		ms.pushPose();
 		ms.translate(location.x, location.y, location.z);
-		ms.translate(Mth.lerp(pt, entity.xo, entity.getX()),
-			Mth.lerp(pt, entity.yo, entity.getY()), Mth.lerp(pt, entity.zo, entity.getZ()));
+		ms.translate(Mth.lerp(pt, entity.xo, entity.getX()), Mth.lerp(pt, entity.yo, entity.getY()),
+			Mth.lerp(pt, entity.zo, entity.getZ()));
 
 		MatrixTransformStack.of(ms)
-			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.yRot));
+			.rotateY(AngleHelper.angleLerp(pt, entity.yRotO, entity.getYRot()));
 
 		entityrenderermanager.render(entity, 0, 0, 0, 0, pt, ms, buffer, lightCoordsFromFade(fade));
 		ms.popPose();
@@ -161,8 +161,8 @@ public class ParrotElement extends AnimatedSceneElement {
 
 		@Override
 		void tick(PonderScene scene, Parrot entity, Vec3 location) {
-			entity.yRotO = entity.yRot;
-			entity.yRot -= 2;
+			entity.yRotO = entity.getYRot();
+			entity.setYRot(entity.getYRot() - 2);
 		}
 
 	}
@@ -199,8 +199,8 @@ public class ParrotElement extends AnimatedSceneElement {
 			if (!(tileEntity instanceof KineticTileEntity))
 				return;
 			float rpm = ((KineticTileEntity) tileEntity).getSpeed();
-			entity.yRotO = entity.yRot;
-			entity.yRot += (rpm * .3f);
+			entity.yRotO = entity.getYRot();
+			entity.setYRot(entity.getYRot() + (rpm * .3f));
 		}
 
 	}
@@ -214,14 +214,12 @@ public class ParrotElement extends AnimatedSceneElement {
 			double d0 = p_200602_2_.x - Vector3d.x;
 			double d1 = p_200602_2_.y - Vector3d.y;
 			double d2 = p_200602_2_.z - Vector3d.z;
-			double d3 = (double) Mth.sqrt(d0 * d0 + d2 * d2);
-			float targetPitch =
-				Mth.wrapDegrees((float) -(Mth.atan2(d1, d3) * (double) (180F / (float) Math.PI)));
-			float targetYaw =
-				Mth.wrapDegrees((float) -(Mth.atan2(d2, d0) * (double) (180F / (float) Math.PI)) + 90);
+			double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
+			float targetPitch = Mth.wrapDegrees((float) -(Mth.atan2(d1, d3) * (double) (180F / (float) Math.PI)));
+			float targetYaw = Mth.wrapDegrees((float) -(Mth.atan2(d2, d0) * (double) (180F / (float) Math.PI)) + 90);
 
-			entity.xRot = AngleHelper.angleLerp(.4f, entity.xRot, targetPitch);
-			entity.yRot = AngleHelper.angleLerp(.4f, entity.yRot, targetYaw);
+			entity.setXRot(AngleHelper.angleLerp(.4f, entity.getXRot(), targetPitch));
+			entity.setYRot(AngleHelper.angleLerp(.4f, entity.getYRot(), targetYaw));
 		}
 
 		protected abstract Vec3 getFacedVec(PonderScene scene);

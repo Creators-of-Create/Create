@@ -6,7 +6,7 @@ import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
@@ -27,9 +27,9 @@ public class MechanicalCrafterInstance extends SingleRotatingInstance {
 		return getRotatingMaterial().getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, blockState, facing, rotateToFace(facing));
     }
 
-	private Supplier<MatrixStack> rotateToFace(Direction facing) {
+	private Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
-			MatrixStack stack = new MatrixStack();
+			PoseStack stack = new PoseStack();
 			TransformStack stacker = MatrixTransformStack.of(stack)
 					.centre();
 

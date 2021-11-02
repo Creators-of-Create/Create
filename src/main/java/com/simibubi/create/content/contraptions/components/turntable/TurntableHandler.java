@@ -39,8 +39,8 @@ public class TurntableHandler {
 		if (offset.length() > 1/4f)
 			speed *= Mth.clamp((1/2f - offset.length()) * 2, 0, 1);
 
-		mc.player.yRot = mc.player.yRotO - speed * AnimationTickHolder.getPartialTicks();
-		mc.player.yBodyRot = mc.player.yRot;
+		mc.player.setYRot(mc.player.yRotO - speed * AnimationTickHolder.getPartialTicks());
+		mc.player.yBodyRot = mc.player.getYRot();
 	}
 
 }

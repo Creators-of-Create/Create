@@ -1,23 +1,15 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
-import com.net.minimport com.jozufozu.flywheel.backend.instancing.Instancer;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.RotatingData;
-import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.BlockState;
-
-ecraft.world.level.block.state.properties.BlockStatePropertiesport com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class DrillInstance extends SingleRotatingInstance {
 
@@ -28,7 +20,7 @@ public class DrillInstance extends SingleRotatingInstance {
     @Override
     protected Instancer<RotatingData> getModel() {
 		BlockState referenceState = tile.getBlockState();
-		Direction facing = referenceState.getValue(FACING);
+		Direction facing = referenceState.getValue(BlockStateProperties.FACING);
 		return getRotatingMaterial().getModel(AllBlockPartials.DRILL_HEAD, referenceState, facing);
 	}
 }

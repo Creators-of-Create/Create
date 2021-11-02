@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.nbt.CompoundTag;
@@ -50,8 +51,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	SmartFluidTankBehaviour tank;
 
-	public SpoutTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SpoutTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		processingTicks = -1;
 	}
 
@@ -150,8 +151,8 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (!clientPacket)
 			return;

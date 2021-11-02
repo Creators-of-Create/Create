@@ -19,8 +19,8 @@ import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.Direction;
-import net.minecraft.world.LightType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.LightLayer;
 
 public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 
@@ -169,8 +169,8 @@ public class BeltInstance extends KineticTileInstance<BeltTileEntity> {
 				.setRotationOffset(bottom ? 0.5f : 0f)
                 .setColor(tile)
                 .setPosition(getInstancePosition())
-                .setBlockLight(world.getBrightness(LightType.BLOCK, pos))
-                .setSkyLight(world.getBrightness(LightType.SKY, pos));
+                .setBlockLight(world.getBrightness(LightLayer.BLOCK, pos))
+                .setSkyLight(world.getBrightness(LightLayer.SKY, pos));
 
         return key;
     }

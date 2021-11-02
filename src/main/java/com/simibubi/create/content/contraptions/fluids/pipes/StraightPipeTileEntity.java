@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class StraightPipeTileEntity extends SmartTileEntity {
 
-	public StraightPipeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public StraightPipeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

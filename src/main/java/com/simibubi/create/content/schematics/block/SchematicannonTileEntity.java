@@ -56,8 +56,6 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -117,20 +115,14 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		return INFINITE_EXTENT_AABB;
 	}
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance() {
-		return super.getViewDistance() * 16;
-	}
-
-	public SchematicannonTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SchematicannonTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(30);
 		attachedInventories = new LinkedHashSet<>();
 		flyingBlocks = new LinkedList<>();
 		inventory = new SchematicannonInventory(this);
 		statusMsg = "idle";
-		state = State.STOPPED;
+		this.state = State.STOPPED;
 		replaceMode = 2;
 		checklist = new MaterialChecklist();
 		printer = new SchematicPrinter();
@@ -159,7 +151,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		if (!clientPacket) {
 			inventory.deserializeNBT(compound.getCompound("Inventory"));
 		}
@@ -189,7 +181,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		if (compound.contains("FlyingBlocks"))
 			readFlyingBlocks(compound);
 
-		super.fromTag(blockState, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	protected void readFlyingBlocks(CompoundTag compound) {
@@ -466,7 +458,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			return;
 		}
 
-		if (!printer.getAnchor().closerThan(getBlockPos(), MAX_ANCHOR_DISTANCE)) {
+		if (!printer.getAnchor()
+			.closerThan(getBlockPos(), MAX_ANCHOR_DISTANCE)) {
 			state = State.STOPPED;
 			statusMsg = "targetOutsideRange";
 			printer.resetSchematic();
@@ -575,30 +568,28 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		blocksToPlace = 0;
 	}
 
-	protected boolean shouldPlace(BlockPos pos, BlockState state, BlockEntity te,
-								  BlockState toReplace, BlockState toReplaceOther, boolean isNormalCube) {
+	protected boolean shouldPlace(BlockPos pos, BlockState state, BlockEntity te, BlockState toReplace,
+		BlockState toReplaceOther, boolean isNormalCube) {
 		if (pos.closerThan(getBlockPos(), 2f))
 			return false;
 		if (!replaceTileEntities
-				&& (toReplace.hasTileEntity() || (toReplaceOther != null && toReplaceOther.hasTileEntity())))
+			&& (toReplace.hasBlockEntity() || (toReplaceOther != null && toReplaceOther.hasBlockEntity())))
 			return false;
 
 		if (shouldIgnoreBlockState(state, te))
 			return false;
 
-		boolean placingAir = state.getBlock().isAir(state, level, pos);
+		boolean placingAir = state.isAir();
 
 		if (replaceMode == 3)
 			return true;
 		if (replaceMode == 2 && !placingAir)
 			return true;
-		if (replaceMode == 1
-				&& (isNormalCube || (!toReplace.isRedstoneConductor(level, pos)
-				&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos))))
-				&& !placingAir)
+		if (replaceMode == 1 && (isNormalCube || (!toReplace.isRedstoneConductor(level, pos)
+			&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)))) && !placingAir)
 			return true;
 		if (replaceMode == 0 && !toReplace.isRedstoneConductor(level, pos)
-				&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)) && !placingAir)
+			&& (toReplaceOther == null || !toReplaceOther.isRedstoneConductor(level, pos)) && !placingAir)
 			return true;
 
 		return false;
@@ -617,9 +608,10 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 
 		// Block doesnt need to be placed twice (Doors, beds, double plants)
 		if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
-				&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
+			&& state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER)
 			return true;
-		if (state.hasProperty(BlockStateProperties.BED_PART) && state.getValue(BlockStateProperties.BED_PART) == BedPart.HEAD)
+		if (state.hasProperty(BlockStateProperties.BED_PART)
+			&& state.getValue(BlockStateProperties.BED_PART) == BedPart.HEAD)
 			return true;
 		if (state.getBlock() instanceof PistonHeadBlock)
 			return true;
@@ -686,7 +678,8 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			dontUpdateChecklist = true;
 			inventory.extractItem(BookInput, 1, false);
 			ItemStack stack = checklist.createItem();
-			stack.setCount(inventory.getStackInSlot(BookOutput).getCount() + 1);
+			stack.setCount(inventory.getStackInSlot(BookOutput)
+				.getCount() + 1);
 			inventory.setStackInSlot(BookOutput, stack);
 			sendUpdate = true;
 			return;
@@ -706,22 +699,22 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		boolean end = blockState.getValue(BeltBlock.PART) == BeltPart.END;
 
 		switch (slope) {
-			case DOWNWARD:
-				isLastSegment = start;
-				break;
-			case UPWARD:
-				isLastSegment = end;
-				break;
-			case HORIZONTAL:
-			case VERTICAL:
-			default:
-				isLastSegment = positive && end || !positive && start;
+		case DOWNWARD:
+			isLastSegment = start;
+			break;
+		case UPWARD:
+			isLastSegment = end;
+			break;
+		case HORIZONTAL:
+		case VERTICAL:
+		default:
+			isLastSegment = positive && end || !positive && start;
 		}
 		if (!isLastSegment)
 			blockState = (blockState.getValue(BeltBlock.PART) == BeltPart.MIDDLE) ? Blocks.AIR.defaultBlockState()
-					: AllBlocks.SHAFT.getDefaultState()
+				: AllBlocks.SHAFT.getDefaultState()
 					.setValue(AbstractShaftBlock.AXIS, facing.getClockWise()
-							.getAxis());
+						.getAxis());
 		return blockState;
 	}
 
@@ -756,7 +749,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	}
 
 	protected void launchBlock(BlockPos target, ItemStack stack, BlockState state, @Nullable CompoundTag data) {
-		if (!state.getBlock().isAir(state, level, target))
+		if (!state.isAir())
 			blocksPlaced++;
 		flyingBlocks.add(new LaunchedItem.ForBlockState(this.getBlockPos(), target, stack, state, data));
 		playFiringSound();
@@ -827,6 +820,5 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	public boolean shouldRenderNormally() {
 		return true;
 	}
-
 
 }

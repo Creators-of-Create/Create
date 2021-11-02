@@ -29,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -125,17 +126,17 @@ public class BlueprintEntity extends HangingEntity
 		this.verticalOrientation = verticalOrientation;
 		if (facing.getAxis()
 			.isHorizontal()) {
-			this.xRot = 0.0F;
-			this.yRot = (float) (this.direction.get2DDataValue() * 90);
+			setXRot(0.0F);
+			setYRot(this.direction.get2DDataValue() * 90);
 		} else {
-			this.xRot = (float) (-90 * facing.getAxisDirection()
+			setXRot(-90 * facing.getAxisDirection()
 				.getStep());
-			this.yRot = verticalOrientation.getAxis()
-				.isHorizontal() ? 180 + verticalOrientation.toYRot() : 0;
+			setYRot(verticalOrientation.getAxis()
+				.isHorizontal() ? 180 + verticalOrientation.toYRot() : 0);
 		}
 
-		this.xRotO = this.xRot;
-		this.yRotO = this.yRot;
+		this.xRotO = getXRot();
+		this.yRotO = getYRot();
 		this.recalculateBoundingBox();
 	}
 
@@ -284,9 +285,8 @@ public class BlueprintEntity extends HangingEntity
 		playSound(SoundEvents.PAINTING_BREAK, 1.0F, 1.0F);
 		if (p_110128_1_ instanceof Player) {
 			Player playerentity = (Player) p_110128_1_;
-			if (playerentity.abilities.instabuild) {
+			if (playerentity.getAbilities().instabuild)
 				return;
-			}
 		}
 
 		spawnAtLocation(AllItems.CRAFTING_BLUEPRINT.asStack());
@@ -308,15 +308,14 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public void moveTo(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_,
-		float p_70012_8_) {
+	public void moveTo(double p_70012_1_, double p_70012_3_, double p_70012_5_, float p_70012_7_, float p_70012_8_) {
 		this.setPos(p_70012_1_, p_70012_3_, p_70012_5_);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void lerpTo(double p_180426_1_, double p_180426_3_, double p_180426_5_,
-		float p_180426_7_, float p_180426_8_, int p_180426_9_, boolean p_180426_10_) {
+	public void lerpTo(double p_180426_1_, double p_180426_3_, double p_180426_5_, float p_180426_7_, float p_180426_8_,
+		int p_180426_9_, boolean p_180426_10_) {
 		BlockPos blockpos =
 			this.pos.offset(p_180426_1_ - this.getX(), p_180426_3_ - this.getY(), p_180426_5_ - this.getZ());
 		this.setPos((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ());
@@ -348,7 +347,7 @@ public class BlueprintEntity extends HangingEntity
 		if (!holdingWrench && !level.isClientSide && !items.getStackInSlot(9)
 			.isEmpty()) {
 
-			IItemHandlerModifiable playerInv = new InvWrapper(player.inventory);
+			IItemHandlerModifiable playerInv = new InvWrapper(player.getInventory());
 			boolean firstPass = true;
 			int amountCrafted = 0;
 			ForgeHooks.setCraftingPlayer(player);
@@ -405,11 +404,13 @@ public class BlueprintEntity extends HangingEntity
 							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level);
 
 						if (firstPass)
-							level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP,
-								SoundSource.PLAYERS, .2f, 1f + Create.RANDOM.nextFloat());
-						player.inventory.placeItemBackInInventory(level, result);
+							level.playSound(null, player.blockPosition(), SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
+								.2f, 1f + Create.RANDOM.nextFloat());
+						player.getInventory()
+							.placeItemBackInInventory(result);
 						for (ItemStack itemStack : nonnulllist)
-							player.inventory.placeItemBackInInventory(level, itemStack);
+							player.getInventory()
+								.placeItemBackInInventory(itemStack);
 						firstPass = false;
 					}
 				}
@@ -439,8 +440,8 @@ public class BlueprintEntity extends HangingEntity
 	public BlueprintSection getSectionAt(Vec3 vec) {
 		int index = 0;
 		if (size > 1) {
-			vec = VecHelper.rotate(vec, yRot, Axis.Y);
-			vec = VecHelper.rotate(vec, -xRot, Axis.X);
+			vec = VecHelper.rotate(vec, getYRot(), Axis.Y);
+			vec = VecHelper.rotate(vec, -getXRot(), Axis.X);
 			vec = vec.add(0.5, 0.5, 0);
 			if (size == 3)
 				vec = vec.add(1, 1, 0);

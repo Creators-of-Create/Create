@@ -16,8 +16,8 @@ public class SmartChuteTileEntity extends ChuteTileEntity {
 
 	FilteringBehaviour filtering;
 
-	public SmartChuteTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SmartChuteTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

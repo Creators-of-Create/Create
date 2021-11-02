@@ -49,8 +49,8 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	protected AssemblyException lastException;
 	protected AbstractMinecart cartToAssemble;
 
-	public CartAssemblerTileEntity(BlockEntityType<? extends CartAssemblerTileEntity> type) {
-		super(type);
+	public CartAssemblerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		ticksSinceMinecartUpdate = assemblyCooldown;
 	}
 
@@ -242,9 +242,9 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

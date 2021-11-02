@@ -63,4 +63,10 @@ public class PulleyRenderer extends AbstractPulleyRenderer {
 
 		return offset;
 	}
+	
+	@Override
+	public int getViewDistance() {
+		return 128;
+	}
+	
 }

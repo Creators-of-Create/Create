@@ -47,6 +47,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
@@ -54,8 +55,7 @@ import net.minecraftforge.event.world.BlockEvent;
 public class BlockHelper {
 
 	@OnlyIn(Dist.CLIENT)
-	public static void addReducedDestroyEffects(BlockState state, Level worldIn, BlockPos pos,
-		ParticleEngine manager) {
+	public static void addReducedDestroyEffects(BlockState state, Level worldIn, BlockPos pos, ParticleEngine manager) {
 		if (!(worldIn instanceof ClientLevel))
 			return;
 		ClientLevel world = (ClientLevel) worldIn;
@@ -64,10 +64,16 @@ public class BlockHelper {
 		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> amtBoxes.increment());
 		double chance = 1d / amtBoxes.getValue();
 
-		voxelshape.forAllBoxes((x1, y1, z1, x2, y2, z2) -> {
-			double d1 = Math.min(1.0D, x2 - x1);
-			double d2 = Math.min(1.0D, y2 - y1);
-			double d3 = Math.min(1.0D, z2 - z1);
+		if (state.isAir())
+			return;
+		if (RenderProperties.get(state)
+			.addDestroyEffects(state, worldIn, pos, manager))
+			return;
+
+		voxelshape.forAllBoxes((p_172273_, p_172274_, p_172275_, p_172276_, p_172277_, p_172278_) -> {
+			double d1 = Math.min(1.0D, p_172276_ - p_172273_);
+			double d2 = Math.min(1.0D, p_172277_ - p_172274_);
+			double d3 = Math.min(1.0D, p_172278_ - p_172275_);
 			int i = Math.max(2, Mth.ceil(d1 / 0.25D));
 			int j = Math.max(2, Mth.ceil(d2 / 0.25D));
 			int k = Math.max(2, Mth.ceil(d3 / 0.25D));
@@ -81,16 +87,14 @@ public class BlockHelper {
 						double d4 = ((double) l + 0.5D) / (double) i;
 						double d5 = ((double) i1 + 0.5D) / (double) j;
 						double d6 = ((double) j1 + 0.5D) / (double) k;
-						double d7 = d4 * d1 + x1;
-						double d8 = d5 * d2 + y1;
-						double d9 = d6 * d3 + z1;
-						manager
-							.add((new TerrainParticle(world, (double) pos.getX() + d7, (double) pos.getY() + d8,
-								(double) pos.getZ() + d9, d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state)).init(pos));
+						double d7 = d4 * d1 + p_172273_;
+						double d8 = d5 * d2 + p_172274_;
+						double d9 = d6 * d3 + p_172275_;
+						manager.add(new TerrainParticle(world, pos.getX() + d7, pos.getY() + d8, pos.getZ() + d9,
+							d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state, pos).updateSprite(state, pos));
 					}
 				}
 			}
-
 		});
 	}
 
@@ -143,26 +147,30 @@ public class BlockHelper {
 		{
 			// Try held Item first
 			int preferredSlot = player.getInventory().selected;
-			ItemStack itemstack = player.getInventory().getItem(preferredSlot);
+			ItemStack itemstack = player.getInventory()
+				.getItem(preferredSlot);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.getInventory().setItem(preferredSlot,
-					new ItemStack(itemstack.getItem(), count - taken));
+				player.getInventory()
+					.setItem(preferredSlot, new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
 
 		// Search inventory
-		for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
+		for (int i = 0; i < player.getInventory()
+			.getContainerSize(); ++i) {
 			if (amountFound == amount)
 				break;
 
-			ItemStack itemstack = player.getInventory().getItem(i);
+			ItemStack itemstack = player.getInventory()
+				.getItem(i);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.getInventory().setItem(i, new ItemStack(itemstack.getItem(), count - taken));
+				player.getInventory()
+					.setItem(i, new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
@@ -170,7 +178,8 @@ public class BlockHelper {
 		if (needsTwo) {
 			// Give back 1 if uneven amount was removed
 			if (amountFound % 2 != 0)
-				player.getInventory().add(new ItemStack(required));
+				player.getInventory()
+					.add(new ItemStack(required));
 			amountFound /= 2;
 		}
 
@@ -179,10 +188,9 @@ public class BlockHelper {
 
 	public static ItemStack getRequiredItem(BlockState state) {
 		ItemStack itemStack = new ItemStack(state.getBlock());
-		if (itemStack.getItem() == Items.FARMLAND)
+		Item item = itemStack.getItem();
+		if (item == Items.FARMLAND || item == Items.DIRT_PATH)
 			itemStack = new ItemStack(Items.DIRT);
-		else if (itemStack.getItem() == Items.GRASS_PATH)
-			itemStack = new ItemStack(Items.GRASS_BLOCK);
 		return itemStack;
 	}
 
@@ -201,7 +209,7 @@ public class BlockHelper {
 		BlockState state = world.getBlockState(pos);
 		if (world.random.nextFloat() < effectChance)
 			world.levelEvent(2001, pos, Block.getId(state));
-		BlockEntity tileentity = state.hasTileEntity() ? world.getBlockEntity(pos) : null;
+		BlockEntity tileentity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 		if (player != null) {
 			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
 			MinecraftForge.EVENT_BUS.post(event);
@@ -228,8 +236,8 @@ public class BlockHelper {
 	}
 
 	public static boolean isSolidWall(BlockGetter reader, BlockPos fromPos, Direction toDirection) {
-		return hasBlockSolidSide(reader.getBlockState(fromPos.relative(toDirection)), reader, fromPos.relative(toDirection),
-			toDirection.getOpposite());
+		return hasBlockSolidSide(reader.getBlockState(fromPos.relative(toDirection)), reader,
+			fromPos.relative(toDirection), toDirection.getOpposite());
 	}
 
 	public static boolean noCollisionInSpace(BlockGetter reader, BlockPos pos) {
@@ -253,7 +261,8 @@ public class BlockHelper {
 		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
 		world.setBlock(target, state, 82);
-		world.neighborChanged(target, world.getBlockState(target.below()).getBlock(), target.below());
+		world.neighborChanged(target, world.getBlockState(target.below())
+			.getBlock(), target.below());
 	}
 
 	public static void placeSchematicBlock(Level world, BlockState state, BlockPos target, ItemStack stack,
@@ -305,7 +314,7 @@ public class BlockHelper {
 				data.putInt("z", target.getZ());
 				if (tile instanceof KineticTileEntity)
 					((KineticTileEntity) tile).warnOfMovement();
-				tile.load(tile.getBlockState(), data);
+				tile.load(data);
 			}
 		}
 
@@ -350,7 +359,8 @@ public class BlockHelper {
 		return toState;
 	}
 
-	public static <T extends Comparable<T>> BlockState copyProperty(Property<T> property, BlockState fromState, BlockState toState) {
+	public static <T extends Comparable<T>> BlockState copyProperty(Property<T> property, BlockState fromState,
+		BlockState toState) {
 		if (fromState.hasProperty(property) && toState.hasProperty(property)) {
 			return toState.setValue(property, fromState.getValue(property));
 		}

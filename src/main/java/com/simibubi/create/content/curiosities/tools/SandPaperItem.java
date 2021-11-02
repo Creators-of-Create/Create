@@ -4,6 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -142,7 +143,7 @@ public class SandPaperItem extends Item {
 				if (player instanceof FakePlayer) {
 					player.drop(polished, false, false);
 				} else {
-					player.inventory.placeItemBackInInventory(worldIn, polished);
+					player.getInventory().placeItemBackInInventory(worldIn, polished);
 				}
 			}
 			tag.remove("Polishing");
@@ -168,7 +169,7 @@ public class SandPaperItem extends Item {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
-			player.inventory.placeItemBackInInventory(worldIn, toPolish);
+			player.getInventory().placeItemBackInInventory(worldIn, toPolish);
 			tag.remove("Polishing");
 		}
 	}

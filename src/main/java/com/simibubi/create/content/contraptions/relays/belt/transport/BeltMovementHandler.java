@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
-import static net.minecraft.entity.MoverType.SELF;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
+import static net.minecraft.core.Direction.AxisDirection.NEGATIVE;
+import static net.minecraft.core.Direction.AxisDirection.POSITIVE;
+import static net.minecraft.world.entity.MoverType.SELF;
 
 import java.util.List;
 

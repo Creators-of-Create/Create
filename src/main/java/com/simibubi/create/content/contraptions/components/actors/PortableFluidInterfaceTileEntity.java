@@ -2,8 +2,10 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,8 +16,8 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 
 	protected LazyOptional<IFluidHandler> capability;
 
-	public PortableFluidInterfaceTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public PortableFluidInterfaceTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		capability = createEmptyHandler();
 	}
 

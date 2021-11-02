@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.fluids;
 
-import static net.minecraft.state.properties.BlockStateProperties.LEVEL_HONEY;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.LEVEL_HONEY;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
@@ -130,7 +132,7 @@ public class OpenEndedPipe extends FlowSource {
 		FluidState fluidState = state.getFluidState();
 		boolean waterlog = state.hasProperty(WATERLOGGED);
 
-		if (state.hasProperty(LEVEL_HONEY) && state.getValue(LEVEL_HONEY) >= 5) {
+		if (state.hasProperty(BlockStateProperties.LEVEL_HONEY) && state.getValue(LEVEL_HONEY) >= 5) {
 			if (!simulate)
 				world.setBlock(outputPos, state.setValue(LEVEL_HONEY, 0), 3);
 			return new FluidStack(AllFluids.HONEY.get()

@@ -35,6 +35,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ClipContext;
@@ -81,9 +82,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		PUNCH, USE
 	}
 
-	public DeployerTileEntity(BlockEntityType<? extends DeployerTileEntity> type) {
-		super(type);
-		state = State.WAITING;
+	public DeployerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+		this.state = State.WAITING;
 		mode = Mode.USE;
 		heldItem = ItemStack.EMPTY;
 		redstoneLocked = false;
@@ -108,7 +109,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		if (!level.isClientSide) {
 			player = new DeployerFakePlayer((ServerLevel) level);
 			if (deferredInventoryList != null) {
-				player.inventory.load(deferredInventoryList);
+				player.getInventory()
+					.load(deferredInventoryList);
 				deferredInventoryList = null;
 				heldItem = player.getMainHandItem();
 				sendData();
@@ -156,15 +158,16 @@ public class DeployerTileEntity extends KineticTileEntity {
 			}
 
 			boolean changed = false;
-			for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+			Inventory inventory = player.getInventory();
+			for (int i = 0; i < inventory.getContainerSize(); i++) {
 				if (overflowItems.size() > 10)
 					break;
-				ItemStack item = player.inventory.getItem(i);
+				ItemStack item = inventory.getItem(i);
 				if (item.isEmpty())
 					continue;
 				if (item != stack || !filtering.test(item)) {
 					overflowItems.add(item);
-					player.inventory.setItem(i, ItemStack.EMPTY);
+					inventory.setItem(i, ItemStack.EMPTY);
 					changed = true;
 				}
 			}
@@ -176,7 +179,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 			}
 
 			Direction facing = getBlockState().getValue(FACING);
-			if (mode == Mode.USE && !DeployerHandler.shouldActivate(stack, level, worldPosition.relative(facing, 2), facing)) {
+			if (mode == Mode.USE
+				&& !DeployerHandler.shouldActivate(stack, level, worldPosition.relative(facing, 2), facing)) {
 				timer = getTimerSpeed() * 10;
 				return;
 			}
@@ -218,8 +222,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			.add(movementVector.scale(3 / 2f));
 		Vec3 rayTarget = VecHelper.getCenterOf(worldPosition)
 			.add(movementVector.scale(5 / 2f));
-		ClipContext rayTraceContext =
-			new ClipContext(rayOrigin, rayTarget, Block.OUTLINE, Fluid.NONE, player);
+		ClipContext rayTraceContext = new ClipContext(rayOrigin, rayTarget, Block.OUTLINE, Fluid.NONE, player);
 		BlockHitResult result = level.clip(rayTraceContext);
 		reach = (float) (.5f + Math.min(result.getLocation()
 			.subtract(rayOrigin)
@@ -229,7 +232,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	public boolean startBoop(Direction facing) {
-		if (!level.isEmptyBlock(worldPosition.relative(facing, 1)) || !level.isEmptyBlock(worldPosition.relative(facing, 2)))
+		if (!level.isEmptyBlock(worldPosition.relative(facing, 1))
+			|| !level.isEmptyBlock(worldPosition.relative(facing, 2)))
 			return false;
 		BlockPos otherDeployer = worldPosition.relative(facing, 4);
 		if (!level.isLoaded(otherDeployer))
@@ -270,8 +274,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		deployerTile.sendData();
 
 		// award nearby players
-		List<ServerPlayer> players =
-			level.getEntitiesOfClass(ServerPlayer.class, new AABB(worldPosition).inflate(9));
+		List<ServerPlayer> players = level.getEntitiesOfClass(ServerPlayer.class, new AABB(worldPosition).inflate(9));
 		players.forEach(AllTriggers.DEPLOYER_BOOP::trigger);
 	}
 
@@ -280,8 +283,8 @@ public class DeployerTileEntity extends KineticTileEntity {
 		Direction direction = getBlockState().getValue(FACING);
 		Vec3 center = VecHelper.getCenterOf(worldPosition);
 		BlockPos clickedPos = worldPosition.relative(direction, 2);
-		player.yRot = direction.toYRot();
-		player.xRot = direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0;
+		player.setXRot(direction == Direction.UP ? -90 : direction == Direction.DOWN ? 90 : 0);
+		player.setYRot(direction.toYRot());
 
 		if (direction == Direction.DOWN
 			&& TileEntityBehaviour.get(level, clickedPos, TransportedItemStackHandlerBehaviour.TYPE) != null)
@@ -300,7 +303,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		state = NBTHelper.readEnum(compound, "State", State.class);
 		mode = NBTHelper.readEnum(compound, "Mode", Mode.class);
 		timer = compound.getInt("Timer");
@@ -310,7 +313,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		overflowItems = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		if (compound.contains("HeldItem"))
 			heldItem = ItemStack.of(compound.getCompound("HeldItem"));
-		super.fromTag(blockState, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (!clientPacket)
 			return;
@@ -331,9 +334,11 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		if (player != null) {
 			ListTag invNBT = new ListTag();
-			player.inventory.save(invNBT);
+			player.getInventory()
+				.save(invNBT);
 			compound.put("Inventory", invNBT);
-			compound.put("HeldItem", player.getMainHandItem().serializeNBT());
+			compound.put("HeldItem", player.getMainHandItem()
+				.serializeNBT());
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
 		} else if (deferredInventoryList != null) {
 			compound.put("Inventory", deferredInventoryList);
@@ -464,7 +469,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 
 		// creates deployer recipes
 		event.addRecipe(() -> SequencedAssemblyRecipe.getRecipe(level, event.getInventory(),
-				AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
+			AllRecipeTypes.DEPLOYING.getType(), DeployerApplicationRecipe.class), 100);
 		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
 
 		// post the event, get result

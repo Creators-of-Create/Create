@@ -27,14 +27,14 @@ public class MechanicalPistonTileEntity extends LinearActuatorTileEntity {
 	protected boolean hadCollisionWithOtherPiston;
 	protected int extensionLength;
 
-	public MechanicalPistonTileEntity(BlockEntityType<? extends MechanicalPistonTileEntity> type) {
-		super(type);
+	public MechanicalPistonTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		extensionLength = compound.getInt("ExtensionLength");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

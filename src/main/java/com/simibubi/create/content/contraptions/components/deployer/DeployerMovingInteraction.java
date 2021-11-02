@@ -55,7 +55,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
 			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
 				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
-				deployerFakePlayer.inventory.load(ctx.tileData.getList("Inventory", Constants.NBT.TAG_COMPOUND));
+				deployerFakeplayer.getInventory().load(ctx.tileData.getList("Inventory", Constants.NBT.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;
 				ctx.tileData.remove("Inventory");
 			} else

@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -21,8 +22,8 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	int lastChange;
 	InterpolatedChasingValue clientState = new InterpolatedChasingValue().withSpeed(.2f);
 
-	public AnalogLeverTileEntity(BlockEntityType<? extends AnalogLeverTileEntity> type) {
-		super(type);
+	public AnalogLeverTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -33,11 +34,11 @@ public class AnalogLeverTileEntity extends SmartTileEntity implements IHaveGoggl
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		lastChange = compound.getInt("ChangeTimer");
 		clientState.target(state);
-		super.fromTag(blockState, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

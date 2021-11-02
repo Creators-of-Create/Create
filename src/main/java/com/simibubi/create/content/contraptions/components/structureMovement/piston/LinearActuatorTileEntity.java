@@ -36,8 +36,8 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	// Custom position sync
 	protected float clientOffsetDiff;
 
-	public LinearActuatorTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public LinearActuatorTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		setLazyTickRate(3);
 		forceMove = true;
 	}
@@ -179,7 +179,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		boolean forceMovement = compound.contains("ForceMovement");
 		float offsetBefore = offset;
 
@@ -187,7 +187,7 @@ public abstract class LinearActuatorTileEntity extends KineticTileEntity
 		waitingForSpeedChange = compound.getBoolean("Waiting");
 		offset = compound.getFloat("Offset");
 		lastException = AssemblyException.read(compound);
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (!clientPacket)
 			return;

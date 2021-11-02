@@ -1,7 +1,6 @@
 package com.simibubi.create.content.logistics.block.diodes;
 
 import static com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock.POWERING;
-import static net.minecraft.block.RedstoneDiodeBlock.POWERED;
 
 import java.util.List;
 
@@ -12,9 +11,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollVal
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueBehaviour.StepContext;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -24,14 +25,14 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	public boolean charging;
 	ScrollValueBehaviour maxState;
 
-	public AdjustableRepeaterTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public AdjustableRepeaterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
 		maxState = new ScrollValueBehaviour(Lang.translate("generic.delay"), this, new AdjustableRepeaterScrollSlot())
-				.between(1, 60 * 20 * 30);
+			.between(1, 60 * 20 * 30);
 		maxState.withStepFunction(this::step);
 		maxState.withFormatter(this::format);
 		maxState.withUnit(this::getUnit);
@@ -46,10 +47,10 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		state = compound.getInt("State");
 		charging = compound.getBoolean("Charging");
-		super.fromTag(blockState, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class AdjustableRepeaterTileEntity extends SmartTileEntity implements IIn
 	@Override
 	public void tick() {
 		super.tick();
-		boolean powered = getBlockState().getValue(POWERED);
+		boolean powered = getBlockState().getValue(DiodeBlock.POWERED);
 		boolean powering = getBlockState().getValue(POWERING);
 		boolean atMax = state >= maxState.getValue();
 		boolean atMin = state <= 0;

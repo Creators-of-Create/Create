@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -37,14 +38,14 @@ public class CuckooClockTileEntity extends KineticTileEntity {
 		PIG, CREEPER, SURPRISE, NONE;
 	}
 
-	public CuckooClockTileEntity(BlockEntityType<? extends CuckooClockTileEntity> type) {
-		super(type);
+	public CuckooClockTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		animationType = Animation.NONE;
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		if (clientPacket && compound.contains("Animation")) {
 			animationType = NBTHelper.readEnum(compound, "Animation", Animation.class);
 			animationProgress.lastValue = 0;

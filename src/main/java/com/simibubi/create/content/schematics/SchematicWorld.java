@@ -56,7 +56,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		super(original, new WrappedChunkProvider());
 		this.blocks = new HashMap<>();
 		this.tileEntities = new HashMap<>();
-		this.bounds = new BoundingBox();
+		this.bounds = new BoundingBox(BlockPos.ZERO);
 		this.anchor = anchor;
 		this.entities = new ArrayList<>();
 		this.renderedTileEntities = new ArrayList<>();
@@ -94,7 +94,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 			return null;
 
 		BlockState blockState = getBlockState(pos);
-		if (blockState.hasTileEntity()) {
+		if (blockState.hasBlockEntity()) {
 			try {
 				BlockEntity tileEntity = blockState.createTileEntity(this);
 				if (tileEntity != null) {
@@ -118,7 +118,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public BlockState getBlockState(BlockPos globalPos) {
 		BlockPos pos = globalPos.subtract(anchor);
 
-		if (pos.getY() - bounds.y0 == -1 && !renderMode)
+		if (pos.getY() - bounds.minY() == -1 && !renderMode)
 			return Blocks.GRASS_BLOCK.defaultBlockState();
 		if (getBounds().isInside(pos) && blocks.containsKey(pos))
 			return processBlockStateForPrinting(blocks.get(pos));
@@ -154,7 +154,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}
-
+	
 	@Override
 	public List<? extends Player> players() {
 		return Collections.emptyList();
@@ -184,12 +184,12 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	public boolean setBlock(BlockPos pos, BlockState arg1, int arg2) {
 		pos = pos.immutable()
 			.subtract(anchor);
-		bounds.expand(new BoundingBox(pos, pos));
+		bounds.encapsulate(BoundingBox.fromCorners(pos, pos));
 		blocks.put(pos, arg1);
 		if (tileEntities.containsKey(pos)) {
 			BlockEntity tileEntity = tileEntities.get(pos);
 			if (!tileEntity.getType()
-				.isValid(arg1.getBlock())) {
+				.isValid(arg1)) {
 				tileEntities.remove(pos);
 				renderedTileEntities.remove(tileEntity);
 			}
@@ -203,7 +203,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	@Override
-	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) { }
+	public void sendBlockUpdated(BlockPos pos, BlockState oldState, BlockState newState, int flags) {}
 
 	@Override
 	public TickList<Block> getBlockTicks() {

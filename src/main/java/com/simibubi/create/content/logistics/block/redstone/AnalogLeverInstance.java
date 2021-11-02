@@ -6,12 +6,13 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
@@ -44,7 +45,7 @@ public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntit
     }
 
     protected void animateLever() {
-        MatrixStack ms = new MatrixStack();
+        PoseStack ms = new PoseStack();
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(getInstancePosition());

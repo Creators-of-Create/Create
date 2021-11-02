@@ -24,6 +24,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipula
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -50,8 +51,8 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		INVALID, PAUSED, COLLECT, PUSHING_TO_BELT, TAKING_FROM_BELT, EXTRACT
 	}
 
-	public FunnelTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public FunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		extractionCooldown = 0;
 		flap = new InterpolatedChasingValue().start(.25f)
 			.target(0)
@@ -322,17 +323,12 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
-	}
-
-	@Override
-	public double getViewDistance() {
-		return hasFlap() ? super.getViewDistance() : 64;
 	}
 
 	public void onTransfer(ItemStack stack) {

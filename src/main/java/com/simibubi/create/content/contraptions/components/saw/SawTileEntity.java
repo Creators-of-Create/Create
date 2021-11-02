@@ -28,6 +28,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.recipe.RecipeConditions;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -84,8 +85,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	private ItemStack playEvent;
 
-	public SawTileEntity(BlockEntityType<? extends SawTileEntity> type) {
-		super(type);
+	public SawTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		inventory = new ProcessingInventory(this::start).withSlotLimit(!AllConfigs.SERVER.recipes.bulkCutting.get());
 		inventory.remainingTime = -1;
 		recipeIndex = 0;
@@ -114,8 +115,8 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		recipeIndex = compound.getInt("RecipeIndex");
 		if (compound.contains("PlayEvent"))
@@ -383,7 +384,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		ItemStack remainder = inventory.insertItem(0, entity.getItem()
 			.copy(), false);
 		if (remainder.isEmpty())
-			entity.remove();
+			entity.discard();
 		else
 			entity.setItem(remainder);
 	}
@@ -444,9 +445,11 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 	@Override
 	public void onBlockBroken(BlockState stateToBreak) {
-		Optional<AbstractBlockBreakQueue> dynamicTree = TreeCutter.findDynamicTree(stateToBreak.getBlock(), breakingPos);
+		Optional<AbstractBlockBreakQueue> dynamicTree =
+			TreeCutter.findDynamicTree(stateToBreak.getBlock(), breakingPos);
 		if (dynamicTree.isPresent()) {
-			dynamicTree.get().destroyBlocks(level, null, this::dropItemFromCutTree);
+			dynamicTree.get()
+				.destroyBlocks(level, null, this::dropItemFromCutTree);
 			return;
 		}
 

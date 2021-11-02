@@ -88,7 +88,7 @@ public class ToolboxHandlerClient {
 					continue;
 
 				AllPackets.channel.sendToServer(
-					new ToolboxEquipPacket(toolboxTileEntity.getBlockPos(), comp, player.inventory.selected));
+					new ToolboxEquipPacket(toolboxTileEntity.getBlockPos(), comp, player.getInventory().selected));
 				return true;
 			}
 
@@ -111,7 +111,7 @@ public class ToolboxHandlerClient {
 		CompoundTag compound = player.getPersistentData()
 			.getCompound("CreateToolboxData");
 
-		String slotKey = String.valueOf(player.inventory.selected);
+		String slotKey = String.valueOf(player.getInventory().selected);
 		boolean equipped = compound.contains(slotKey);
 
 		if (equipped) {
@@ -172,7 +172,7 @@ public class ToolboxHandlerClient {
 			BlockPos pos = NbtUtils.readBlockPos(compound.getCompound(key)
 				.getCompound("Pos"));
 			double max = ToolboxHandler.getMaxRange(player);
-			boolean selected = player.inventory.selected == slot;
+			boolean selected = player.getInventory().selected == slot;
 			int offset = selected ? 1 : 0;
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON

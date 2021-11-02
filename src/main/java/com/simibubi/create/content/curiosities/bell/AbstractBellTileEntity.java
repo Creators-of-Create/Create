@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class AbstractBellTileEntity extends SmartTileEntity {
 
@@ -19,8 +20,8 @@ public abstract class AbstractBellTileEntity extends SmartTileEntity {
 	public int ringingTicks;
 	public Direction ringDirection;
 
-	public AbstractBellTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public AbstractBellTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.google.common.collect.Maps;
 import com.simibubi.create.Create;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.EntityPredicate;

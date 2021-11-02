@@ -102,7 +102,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 
 	@Override
 	protected void renderTooltip(PoseStack ms, int x, int y) {
-		if (!this.minecraft.player.inventory.getCarried()
+		if (!this.minecraft.player.getInventory().getCarried()
 			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
 			|| hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(ms, x, y);

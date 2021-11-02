@@ -157,7 +157,7 @@ public class PonderScene {
 		if (!world.getBounds()
 			.isInside(selectedPos))
 			return Pair.of(ItemStack.EMPTY, null);
-		if (new BoundingBox(origin, origin.offset(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
+		if (BoundingBox.fromCorners(origin, origin.offset(new Vec3i(basePlateSize - 1, 0, basePlateSize - 1)))
 			.isInside(selectedPos)) {
 			if (PonderIndex.EDITOR_MODE)
 				nearestHit.getValue()
@@ -171,8 +171,8 @@ public class PonderScene {
 			.selectBlock(selectedPos);
 		BlockState blockState = world.getBlockState(selectedPos);
 		ItemStack pickBlock = blockState.getPickBlock(
-			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world,
-			selectedPos, Minecraft.getInstance().player);
+			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world, selectedPos,
+			Minecraft.getInstance().player);
 
 		return Pair.of(pickBlock, selectedPos);
 	}
@@ -358,10 +358,8 @@ public class PonderScene {
 			.map(type::cast)
 			.forEach(function);
 		/*
-		 * for (Entity element : world.getEntities()) {
-		 * if (type.isInstance(element))
-		 * function.accept(type.cast(element));
-		 * }
+		 * for (Entity element : world.getEntities()) { if (type.isInstance(element))
+		 * function.accept(type.cast(element)); }
 		 */
 	}
 
@@ -378,7 +376,7 @@ public class PonderScene {
 	}
 
 	public BoundingBox getBounds() {
-		return world == null ? new BoundingBox() : world.getBounds();
+		return world == null ? new BoundingBox(BlockPos.ZERO) : world.getBounds();
 	}
 
 	public Supplier<String> registerText(String defaultText) {

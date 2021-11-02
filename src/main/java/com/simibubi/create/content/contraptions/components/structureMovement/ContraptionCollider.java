@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import static net.minecraft.entity.Entity.collideBoundingBoxHeuristically;
+import static net.minecraft.world.entity.Entity.collideBoundingBoxHeuristically;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RewindableStream;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -240,7 +241,7 @@ public class ContraptionCollider {
 					BlockState blockState = contraption.getBlocks()
 						.get(pos).state;
 					bounce = BlockHelper.getBounceMultiplier(blockState.getBlock());
-					slide = Math.max(0, blockState.getSlipperiness(contraption.world, pos, entity) - .6f);
+					slide = Math.max(0, blockState.getFriction(contraption.world, pos, entity) - .6f);
 				}
 			}
 
@@ -298,7 +299,7 @@ public class ContraptionCollider {
 			if (!hardCollision && surfaceCollision.isFalse())
 				continue;
 
-			Vec3 allowedMovement = getAllowedMovement(totalResponse, entity);
+			Vec3 allowedMovement = collide(totalResponse, entity);
 			entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y + allowedMovement.y,
 				entityPosition.z + allowedMovement.z);
 			entityPosition = entity.position();
@@ -317,7 +318,7 @@ public class ContraptionCollider {
 						entityMotion = entityMotion.multiply(.5f, 1, .5f);
 				}
 				contactPointMotion = contraptionEntity.getContactPointMotion(entityPosition);
-				allowedMovement = getAllowedMovement(contactPointMotion, entity);
+				allowedMovement = collide(contactPointMotion, entity);
 				entity.setPos(entityPosition.x + allowedMovement.x, entityPosition.y,
 					entityPosition.z + allowedMovement.z);
 			}
@@ -329,7 +330,7 @@ public class ContraptionCollider {
 
 			double d0 = entity.getX() - entity.xo - contactPointMotion.x;
 			double d1 = entity.getZ() - entity.zo - contactPointMotion.z;
-			float limbSwing = Mth.sqrt(d0 * d0 + d1 * d1) * 4.0F;
+			float limbSwing = Mth.sqrt((float) (d0 * d0 + d1 * d1)) * 4.0F;
 			if (limbSwing > 1.0F)
 				limbSwing = 1.0F;
 			AllPackets.channel.sendToServer(new ClientMotionPacket(entityMotion, true, limbSwing));
@@ -394,45 +395,45 @@ public class ContraptionCollider {
 		return position;
 	}
 
-	/** From Entity#getAllowedMovement **/
-	static Vec3 getAllowedMovement(Vec3 movement, Entity e) {
-		AABB bb = e.getBoundingBox();
-		CollisionContext ctx = CollisionContext.of(e);
-		Level world = e.level;
-		VoxelShape voxelshape = world.getWorldBorder()
+	/** From Entity#collide **/
+	static Vec3 collide(Vec3 p_20273_, Entity e) {
+		AABB aabb = e.getBoundingBox();
+		CollisionContext collisioncontext = CollisionContext.of(e);
+		VoxelShape voxelshape = e.level.getWorldBorder()
 			.getCollisionShape();
 		Stream<VoxelShape> stream =
-			Shapes.joinIsNotEmpty(voxelshape, Shapes.create(bb.deflate(1.0E-7D)), BooleanOp.AND)
-				? Stream.empty()
+			Shapes.joinIsNotEmpty(voxelshape, Shapes.create(aabb.deflate(1.0E-7D)), BooleanOp.AND) ? Stream.empty()
 				: Stream.of(voxelshape);
-		Stream<VoxelShape> stream1 = world.getEntityCollisions(e, bb.expandTowards(movement), entity -> false); // FIXME: 1.15 equivalent translated correctly?
-		RewindableStream<VoxelShape> reuseablestream = new RewindableStream<>(Stream.concat(stream1, stream));
-		Vec3 allowedMovement = movement.lengthSqr() == 0.0D ? movement
-			: collideBoundingBoxHeuristically(e, movement, bb, world, ctx, reuseablestream);
-		boolean xDifferent = movement.x != allowedMovement.x;
-		boolean yDifferent = movement.y != allowedMovement.y;
-		boolean zDifferent = movement.z != allowedMovement.z;
-		boolean notMovingUp = e.isOnGround() || yDifferent && movement.y < 0.0D;
-		if (e.maxUpStep > 0.0F && notMovingUp && (xDifferent || zDifferent)) {
-			Vec3 allowedStep = collideBoundingBoxHeuristically(e, new Vec3(movement.x, (double) e.maxUpStep, movement.z),
-				bb, world, ctx, reuseablestream);
-			Vec3 allowedStepGivenMovement = collideBoundingBoxHeuristically(e, new Vec3(0.0D, (double) e.maxUpStep, 0.0D),
-				bb.expandTowards(movement.x, 0.0D, movement.z), world, ctx, reuseablestream);
-			if (allowedStepGivenMovement.y < (double) e.maxUpStep) {
-				Vec3 vec3 = collideBoundingBoxHeuristically(e, new Vec3(movement.x, 0.0D, movement.z),
-					bb.move(allowedStepGivenMovement), world, ctx, reuseablestream).add(allowedStepGivenMovement);
-				if (getHorizontalDistanceSqr(vec3) > getHorizontalDistanceSqr(allowedStep)) {
-					allowedStep = vec3;
+		Stream<VoxelShape> stream1 = e.level.getEntityCollisions(e, aabb.expandTowards(p_20273_), (p_19949_) -> {
+			return true;
+		});
+		RewindableStream<VoxelShape> rewindablestream = new RewindableStream<>(Stream.concat(stream1, stream));
+		Vec3 vec3 = p_20273_.lengthSqr() == 0.0D ? p_20273_
+			: collideBoundingBoxHeuristically(e, p_20273_, aabb, e.level, collisioncontext, rewindablestream);
+		boolean flag = p_20273_.x != vec3.x;
+		boolean flag1 = p_20273_.y != vec3.y;
+		boolean flag2 = p_20273_.z != vec3.z;
+		boolean flag3 = e.onGround || flag1 && p_20273_.y < 0.0D;
+		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
+			Vec3 vec31 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, e.maxUpStep, p_20273_.z), aabb,
+				e.level, collisioncontext, rewindablestream);
+			Vec3 vec32 = collideBoundingBoxHeuristically(e, new Vec3(0.0D, e.maxUpStep, 0.0D),
+				aabb.expandTowards(p_20273_.x, 0.0D, p_20273_.z), e.level, collisioncontext, rewindablestream);
+			if (vec32.y < e.maxUpStep) {
+				Vec3 vec33 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, 0.0D, p_20273_.z),
+					aabb.move(vec32), e.level, collisioncontext, rewindablestream).add(vec32);
+				if (vec33.horizontalDistanceSqr() > vec31.horizontalDistanceSqr()) {
+					vec31 = vec33;
 				}
 			}
 
-			if (getHorizontalDistanceSqr(allowedStep) > getHorizontalDistanceSqr(allowedMovement)) {
-				return allowedStep.add(collideBoundingBoxHeuristically(e, new Vec3(0.0D, -allowedStep.y + movement.y, 0.0D),
-					bb.move(allowedStep), world, ctx, reuseablestream));
+			if (vec31.horizontalDistanceSqr() > vec3.horizontalDistanceSqr()) {
+				return vec31.add(collideBoundingBoxHeuristically(e, new Vec3(0.0D, -vec31.y + p_20273_.y, 0.0D),
+					aabb.move(vec31), e.level, collisioncontext, rewindablestream));
 			}
 		}
 
-		return allowedMovement;
+		return vec3;
 	}
 
 	private static PlayerType getPlayerType(Entity entity) {

@@ -82,7 +82,7 @@ public class FilteringHandler {
 						.shrink(1);
 				if (behaviour.getFilter()
 					.getItem() instanceof FilterItem)
-					player.inventory.placeItemBackInInventory(world, behaviour.getFilter());
+					player.getInventory().placeItemBackInInventory(behaviour.getFilter());
 			}
 			if (toApply.getItem() instanceof FilterItem)
 				toApply.setCount(1);

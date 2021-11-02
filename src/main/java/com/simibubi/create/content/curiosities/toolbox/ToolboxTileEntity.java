@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -57,8 +58,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 	private Component customName;
 
-	public ToolboxTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public ToolboxTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		connectedPlayers = new HashMap<>();
 		inventory = new ToolboxInventory(this);
 		inventoryProvider = LazyOptional.of(() -> inventory);
@@ -128,7 +129,8 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 				if (!clear && !ToolboxHandler.withinRange(player, this))
 					continue;
 
-				ItemStack playerStack = player.inventory.getItem(hotbarSlot);
+				Inventory playerInv = player.getInventory();
+				ItemStack playerStack = playerInv.getItem(hotbarSlot);
 
 				if (clear || !playerStack.isEmpty()
 					&& !ToolboxInventory.canItemsShareCompartment(playerStack, referenceItem)) {
@@ -160,7 +162,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 					if (!extracted.isEmpty()) {
 						update = true;
 						ItemStack template = playerStack.isEmpty() ? extracted : playerStack;
-						player.inventory.setItem(hotbarSlot,
+						playerInv.setItem(hotbarSlot,
 							ItemHandlerHelper.copyStackWithSize(template, count + extracted.getCount()));
 					}
 				}
@@ -183,7 +185,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 						.getCount();
 					if (deposited > 0) {
 						update = true;
-						player.inventory.setItem(hotbarSlot,
+						playerInv.setItem(hotbarSlot,
 							ItemHandlerHelper.copyStackWithSize(playerStack, count - deposited));
 					}
 				}
@@ -242,12 +244,13 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		if (keepItems)
 			return;
 
-		ItemStack playerStack = player.inventory.getItem(hotbarSlot);
+		Inventory playerInv = player.getInventory();
+		ItemStack playerStack = playerInv.getItem(hotbarSlot);
 		ItemStack toInsert = ToolboxInventory.cleanItemNBT(playerStack.copy());
 		ItemStack remainder = inventory.distributeToCompartment(toInsert, slot, false);
 
 		if (remainder.getCount() != toInsert.getCount())
-			player.inventory.setItem(hotbarSlot, remainder);
+			playerInv.setItem(hotbarSlot, remainder);
 	}
 
 	private void tickAudio() {
@@ -277,9 +280,9 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		if (compound.contains("CustomName", 8))
 			this.customName = Component.Serializer.fromJson(compound.getString("CustomName"));
 		if (clientPacket)
@@ -318,8 +321,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 		int prevOpenCount = openCount;
 		openCount = 0;
 
-		for (Player playerentity : level.getEntitiesOfClass(Player.class,
-			new AABB(worldPosition).inflate(8)))
+		for (Player playerentity : level.getEntitiesOfClass(Player.class, new AABB(worldPosition).inflate(8)))
 			if (playerentity.containerMenu instanceof ToolboxContainer
 				&& ((ToolboxContainer) playerentity.containerMenu).contentHolder == this)
 				openCount++;

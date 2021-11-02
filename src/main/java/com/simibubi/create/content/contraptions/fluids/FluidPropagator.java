@@ -182,7 +182,7 @@ public class FluidPropagator {
 		return AllConfigs.SERVER.fluids.mechanicalPumpRange.get();
 	}
 
-//	static AxisAlignedBB smallCenter = new AxisAlignedBB(BlockPos.ZERO).shrink(.25);
+//	static AABB smallCenter = new AABB(BlockPos.ZERO).shrink(.25);
 //	
 //	@Deprecated 
 //	public static OutlineParams showBlockFace(BlockFace face) {

@@ -459,7 +459,7 @@ public class PipeConnection {
 //		Vector3d scale = new Vector3d(1, 1, 1).subtract(directionVec.scale(side.getAxisDirection()
 //			.getOffset()))
 //			.scale(size);
-//		AxisAlignedBB bb = new AxisAlignedBB(start, start.add(offset)).offset(VecHelper.getCenterOf(pos))
+//		AABB bb = new AABB(start, start.add(offset)).offset(VecHelper.getCenterOf(pos))
 //			.grow(scale.x, scale.y, scale.z);
 //
 //		int color = 0x7fdbda;

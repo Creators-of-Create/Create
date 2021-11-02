@@ -179,5 +179,10 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 		return yMax;
 	}
+	
+	@Override
+	public int getViewDistance() {
+		return 16;
+	}
 
 }

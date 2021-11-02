@@ -29,8 +29,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
-	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {
-	}
+	public SchematicannonRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
 	public boolean shouldRenderOffScreen(SchematicannonTileEntity p_188185_1_) {
@@ -39,13 +38,15 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 	@Override
 	protected void renderSafe(SchematicannonTileEntity tileEntityIn, float partialTicks, PoseStack ms,
-			MultiBufferSource buffer, int light, int overlay) {
+		MultiBufferSource buffer, int light, int overlay) {
 
 		boolean blocksLaunching = !tileEntityIn.flyingBlocks.isEmpty();
 		if (blocksLaunching)
 			renderLaunchedBlocks(tileEntityIn, partialTicks, ms, buffer, light, overlay);
 
-		if (Backend.getInstance().canUseInstancing(tileEntityIn.getLevel())) return;
+		if (Backend.getInstance()
+			.canUseInstancing(tileEntityIn.getLevel()))
+			return;
 
 		BlockPos pos = tileEntityIn.getBlockPos();
 
@@ -66,7 +67,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		connector.translate(.5f, 0, .5f);
 		connector.rotate(Direction.UP, (float) ((yaw + 90) / 180 * Math.PI));
 		connector.translate(-.5f, 0, -.5f);
-		connector.light(lightCoords).renderInto(ms, vb);
+		connector.light(lightCoords)
+			.renderInto(ms, vb);
 
 		SuperByteBuffer pipe = PartialBufferer.get(AllBlockPartials.SCHEMATICANNON_PIPE, state);
 		pipe.translate(.5f, 15 / 16f, .5f);
@@ -74,7 +76,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		pipe.rotate(Direction.SOUTH, (float) (pitch / 180 * Math.PI));
 		pipe.translate(-.5f, -15 / 16f, -.5f);
 		pipe.translate(0, -recoil / 100, 0);
-		pipe.light(lightCoords).renderInto(ms, vb);
+		pipe.light(lightCoords)
+			.renderInto(ms, vb);
 
 		ms.popPose();
 	}
@@ -90,8 +93,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			Vec3 diff = Vec3.atLowerCornerOf(target.subtract(pos));
 			if (tile.previousTarget != null) {
 				diff = (Vec3.atLowerCornerOf(tile.previousTarget)
-						.add(Vec3.atLowerCornerOf(target.subtract(tile.previousTarget)).scale(partialTicks)))
-						.subtract(Vec3.atLowerCornerOf(pos));
+					.add(Vec3.atLowerCornerOf(target.subtract(tile.previousTarget))
+						.scale(partialTicks))).subtract(Vec3.atLowerCornerOf(pos));
 			}
 
 			double diffX = diff.x();
@@ -99,7 +102,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			yaw = Mth.atan2(diffX, diffZ);
 			yaw = yaw / Math.PI * 180;
 
-			float distance = Mth.sqrt(diffX * diffX + diffZ * diffZ);
+			float distance = Mth.sqrt((float) (diffX * diffX + diffZ * diffZ));
 			double yOffset = 0 + distance * 2f;
 			pitch = Mth.atan2(distance, diff.y() * 3 + yOffset);
 			pitch = pitch / Math.PI * 180 + 10;
@@ -114,7 +117,8 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 
 		for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
 
-			if (launched.ticksRemaining == 0) continue;
+			if (launched.ticksRemaining == 0)
+				continue;
 
 			// Apply Recoil if block was just launched
 			if ((launched.ticksRemaining + 1 - partialTicks) > launched.totalTicks - 10)
@@ -124,30 +128,38 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 		return recoil;
 	}
 
-	private static void renderLaunchedBlocks(SchematicannonTileEntity tileEntityIn, float partialTicks, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
+	private static void renderLaunchedBlocks(SchematicannonTileEntity tileEntityIn, float partialTicks, PoseStack ms,
+		MultiBufferSource buffer, int light, int overlay) {
 		for (LaunchedItem launched : tileEntityIn.flyingBlocks) {
 
 			if (launched.ticksRemaining == 0)
 				continue;
 
 			// Calculate position of flying block
-			Vec3 start = Vec3.atLowerCornerOf(tileEntityIn.getBlockPos().offset(.5f, 1, .5f));
-			Vec3 target = Vec3.atLowerCornerOf(launched.target).add(-.5, 0, 1);
+			Vec3 start = Vec3.atLowerCornerOf(tileEntityIn.getBlockPos()
+				.offset(.5f, 1, .5f));
+			Vec3 target = Vec3.atLowerCornerOf(launched.target)
+				.add(-.5, 0, 1);
 			Vec3 distance = target.subtract(start);
 
 			double targetY = target.y - start.y;
 			double throwHeight = Math.sqrt(distance.lengthSqr()) * .6f + targetY;
-			Vec3 cannonOffset = distance.add(0, throwHeight, 0).normalize().scale(2);
+			Vec3 cannonOffset = distance.add(0, throwHeight, 0)
+				.normalize()
+				.scale(2);
 			start = start.add(cannonOffset);
 
 			float progress =
 				((float) launched.totalTicks - (launched.ticksRemaining + 1 - partialTicks)) / launched.totalTicks;
-			Vec3 blockLocationXZ = new Vec3(.5, .5, .5).add(target.subtract(start).scale(progress).multiply(1, 0, 1));
+			Vec3 blockLocationXZ = new Vec3(.5, .5, .5).add(target.subtract(start)
+				.scale(progress)
+				.multiply(1, 0, 1));
 
 			// Height is determined through a bezier curve
 			float t = progress;
 			double yOffset = 2 * (1 - t) * t * throwHeight + t * t * targetY;
-			Vec3 blockLocation = blockLocationXZ.add(0, yOffset + 1, 0).add(cannonOffset);
+			Vec3 blockLocation = blockLocationXZ.add(0, yOffset + 1, 0)
+				.add(cannonOffset);
 
 			// Offset to position
 			ms.pushPose();
@@ -160,14 +172,19 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			if (launched instanceof ForBlockState) {
 				float scale = .3f;
 				ms.scale(scale, scale, scale);
-				Minecraft.getInstance().getBlockRenderer().renderBlock(((ForBlockState) launched).state, ms, buffer, light, overlay, EmptyModelData.INSTANCE);
+				Minecraft.getInstance()
+					.getBlockRenderer()
+					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay,
+						EmptyModelData.INSTANCE);
 			}
 
 			// Render the item
 			if (launched instanceof ForEntity) {
 				float scale = 1.2f;
 				ms.scale(scale, scale, scale);
-				Minecraft.getInstance().getItemRenderer().renderStatic(launched.stack, TransformType.GROUND, light, overlay, ms, buffer, 0);
+				Minecraft.getInstance()
+					.getItemRenderer()
+					.renderStatic(launched.stack, TransformType.GROUND, light, overlay, ms, buffer, 0);
 			}
 
 			ms.popPose();
@@ -176,19 +193,25 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			if (launched.ticksRemaining == launched.totalTicks && tileEntityIn.firstRenderTick) {
 				tileEntityIn.firstRenderTick = false;
 				for (int i = 0; i < 10; i++) {
-					Random r = tileEntityIn.getLevel().getRandom();
+					Random r = tileEntityIn.getLevel()
+						.getRandom();
 					double sX = cannonOffset.x * .01f;
 					double sY = (cannonOffset.y + 1) * .01f;
 					double sZ = cannonOffset.z * .01f;
 					double rX = r.nextFloat() - sX * 40;
 					double rY = r.nextFloat() - sY * 40;
 					double rZ = r.nextFloat() - sZ * 40;
-					tileEntityIn.getLevel().addParticle(ParticleTypes.CLOUD, start.x + rX, start.y + rY,
-														start.z + rZ, sX, sY, sZ);
+					tileEntityIn.getLevel()
+						.addParticle(ParticleTypes.CLOUD, start.x + rX, start.y + rY, start.z + rZ, sX, sY, sZ);
 				}
 			}
 
 		}
+	}
+
+	@Override
+	public int getViewDistance() {
+		return 128;
 	}
 
 }

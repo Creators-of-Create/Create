@@ -157,11 +157,11 @@ public class ExtendoGripItem extends Item {
 		Vec3 Vector3d = player.getEyePosition(AnimationTickHolder.getPartialTicks());
 		Vec3 Vector3d1 = player.getViewVector(1.0F);
 		Vec3 Vector3d2 = Vector3d.add(Vector3d1.x * d0, Vector3d1.y * d0, Vector3d1.z * d0);
-		AABB axisalignedbb = player.getBoundingBox()
+		AABB AABB = player.getBoundingBox()
 			.expandTowards(Vector3d1.scale(d0))
 			.inflate(1.0D, 1.0D, 1.0D);
 		EntityHitResult entityraytraceresult =
-			ProjectileUtil.getEntityHitResult(player, Vector3d, Vector3d2, axisalignedbb, (e) -> {
+			ProjectileUtil.getEntityHitResult(player, Vector3d, Vector3d2, AABB, (e) -> {
 				return !e.isSpectator() && e.isPickable();
 			}, d0 * d0);
 		if (entityraytraceresult != null) {

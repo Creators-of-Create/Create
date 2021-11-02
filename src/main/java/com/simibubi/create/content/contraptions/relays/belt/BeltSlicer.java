@@ -98,7 +98,7 @@ public class BeltSlicer {
 
 			if (!creative && AllBlocks.BELT.has(replacedState)
 				&& replacedState.getValue(BeltBlock.PART) == BeltPart.PULLEY)
-				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack());
+				player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack());
 
 			// Eject overshooting items
 			if (part == BeltPart.END && inventory != null) {
@@ -162,11 +162,11 @@ public class BeltSlicer {
 			int amountRetrieved = 0;
 			boolean beltFound = false;
 			Search: while (true) {
-				for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+				for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
 					if (amountRetrieved == requiredShafts && beltFound)
 						break Search;
 
-					ItemStack itemstack = player.inventory.getItem(i);
+					ItemStack itemstack = player.getInventory().getItem(i);
 					if (itemstack.isEmpty())
 						continue;
 					int count = itemstack.getCount();
@@ -182,7 +182,7 @@ public class BeltSlicer {
 						int taken = Math.min(count, requiredShafts - amountRetrieved);
 						if (!world.isClientSide)
 							if (taken == count)
-								player.inventory.setItem(i, ItemStack.EMPTY);
+								player.getInventory().setItem(i, ItemStack.EMPTY);
 							else
 								itemstack.shrink(taken);
 						amountRetrieved += taken;
@@ -190,7 +190,7 @@ public class BeltSlicer {
 				}
 
 				if (!world.isClientSide)
-					player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack(amountRetrieved));
+					player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack(amountRetrieved));
 				return InteractionResult.FAIL;
 			}
 		}
@@ -345,8 +345,8 @@ public class BeltSlicer {
 						.setValue(BeltBlock.PART, BeltPart.MIDDLE));
 
 				if (!creative) {
-					player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack(2));
-					player.inventory.placeItemBackInInventory(world, AllItems.BELT_CONNECTOR.asStack());
+					player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack(2));
+					player.getInventory().placeItemBackInInventory(AllItems.BELT_CONNECTOR.asStack());
 				}
 
 				// Transfer items to other controller

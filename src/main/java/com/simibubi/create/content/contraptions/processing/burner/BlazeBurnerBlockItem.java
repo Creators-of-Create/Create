@@ -9,6 +9,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -138,7 +139,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 			player.setItemInHand(hand, filled);
 			return;
 		}
-		player.inventory.placeItemBackInInventory(player.level, filled);
+		player.getInventory().placeItemBackInInventory(player.level, filled);
 	}
 
 	private void spawnCaptureEffects(Level world, Vec3 vec) {

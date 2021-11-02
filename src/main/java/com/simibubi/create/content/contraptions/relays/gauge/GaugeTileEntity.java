@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -18,8 +19,8 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 	public float prevDialState;
 	public int color;
 
-	public GaugeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public GaugeTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
 	@Override
@@ -30,10 +31,10 @@ public class GaugeTileEntity extends KineticTileEntity implements IHaveGoggleInf
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		dialTarget = compound.getFloat("Value");
 		color = compound.getInt("Color");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

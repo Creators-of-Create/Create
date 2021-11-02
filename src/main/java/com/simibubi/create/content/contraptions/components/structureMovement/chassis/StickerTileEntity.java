@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -27,8 +28,8 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 	LerpedFloat piston;
 	boolean update;
 
-	public StickerTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public StickerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		piston = LerpedFloat.linear();
 		update = false;
 	}
@@ -82,8 +83,8 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		if (clientPacket)
 			update = true;
 	}

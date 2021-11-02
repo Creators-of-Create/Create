@@ -24,8 +24,8 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 	public float appliedSpeed;
 	protected FlywheelTileEntity poweredWheel;
 
-	public EngineTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public EngineTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

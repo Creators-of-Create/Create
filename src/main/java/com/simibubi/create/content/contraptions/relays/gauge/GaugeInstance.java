@@ -16,7 +16,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
 public abstract class GaugeInstance extends ShaftInstance implements IDynamicInstance {
 
@@ -35,11 +36,11 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
         Instancer<ModelData> dialModel = getTransformMaterial().getModel(AllBlockPartials.GAUGE_DIAL, blockState);
         Instancer<ModelData> headModel = getHeadModel();
 
-        ms = new MatrixStack();
+        ms = new PoseStack();
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
         msr.translate(getInstancePosition());
 
-        float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
+        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
         for (Direction facing : Iterate.directions) {
             if (!gaugeBlock.shouldRenderHeadOnFace(world, pos, blockState, facing))
@@ -61,10 +62,10 @@ public abstract class GaugeInstance extends ShaftInstance implements IDynamicIns
     public void beginFrame() {
         GaugeTileEntity gaugeTile = (GaugeTileEntity) tile;
 
-        if (MathHelper.equal(gaugeTile.prevDialState, gaugeTile.dialState))
+        if (Mth.equal(gaugeTile.prevDialState, gaugeTile.dialState))
             return;
 
-        float progress = MathHelper.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
+        float progress = Mth.lerp(AnimationTickHolder.getPartialTicks(), gaugeTile.prevDialState, gaugeTile.dialState);
 
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
 

@@ -1,9 +1,13 @@
 package com.simibubi.create.content.schematics.block;
 
+import java.util.List;
+
 import com.simibubi.create.foundation.gui.IInteractionChecker;
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
+import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
+import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -13,11 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class SchematicTableTileEntity extends SyncedTileEntity implements TickableBlockEntity, MenuProvider, IInteractionChecker {
+public class SchematicTableTileEntity extends SmartTileEntity implements MenuProvider, IInteractionChecker {
 
 	public SchematicTableInventory inventory;
 	public boolean isUploading;
@@ -37,8 +40,8 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements Tickab
 		}
 	}
 
-	public SchematicTableTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SchematicTableTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		inventory = new SchematicTableInventory();
 		uploadingSchematic = null;
 		uploadingProgress = 0;
@@ -50,14 +53,12 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements Tickab
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag compound) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		readClientUpdate(state, compound);
-		super.load(state, compound);
-	}
-
-	@Override
-	public void readClientUpdate(BlockState state, CompoundTag compound) {
+		super.fromTag(compound, clientPacket);
+		
+		if (!clientPacket)
+			return;
 		if (compound.contains("Uploading")) {
 			isUploading = true;
 			uploadingSchematic = compound.getString("Schematic");
@@ -70,22 +71,17 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements Tickab
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compound) {
+	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
-		writeToClient(compound);
-		return super.save(compound);
-	}
-
-	@Override
-	public CompoundTag writeToClient(CompoundTag compound) {
-		if (isUploading) {
+		super.write(compound, clientPacket);
+		
+		if (clientPacket && isUploading) {
 			compound.putBoolean("Uploading", true);
 			compound.putString("Schematic", uploadingSchematic);
 			compound.putFloat("Progress", uploadingProgress);
 		}
-		return compound;
 	}
-
+	
 	@Override
 	public void tick() {
 		// Update Client Tile
@@ -94,7 +90,7 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements Tickab
 			level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 6);
 		}
 	}
-	
+
 	public void startUpload(String schematic) {
 		isUploading = true;
 		uploadingProgress = 0;
@@ -102,7 +98,7 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements Tickab
 		sendUpdate = true;
 		inventory.setStackInSlot(0, ItemStack.EMPTY);
 	}
-	
+
 	public void finishUpload() {
 		isUploading = false;
 		uploadingProgress = 0;
@@ -125,7 +121,11 @@ public class SchematicTableTileEntity extends SyncedTileEntity implements Tickab
 		if (level == null || level.getBlockEntity(worldPosition) != this) {
 			return false;
 		}
-		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D, worldPosition.getZ() + 0.5D) <= 64.0D;
+		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D,
+			worldPosition.getZ() + 0.5D) <= 64.0D;
 	}
+
+	@Override
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 }

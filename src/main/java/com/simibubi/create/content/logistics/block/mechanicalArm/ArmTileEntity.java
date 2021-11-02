@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -76,8 +77,8 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 		SEARCH_INPUTS, MOVE_TO_INPUT, SEARCH_OUTPUTS, MOVE_TO_OUTPUT, DANCING
 	}
 
-	public ArmTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public ArmTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		inputs = new ArrayList<>();
 		outputs = new ArrayList<>();
 		interactionPointTag = new ListTag();
@@ -467,12 +468,12 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		int previousIndex = chasedPointIndex;
 		Phase previousPhase = phase;
 		ListTag interactionPointTagBefore = interactionPointTag;
 
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		heldItem = ItemStack.of(compound.getCompound("HeldItem"));
 		phase = NBTHelper.readEnum(compound, "Phase", Phase.class);
 		chasedPointIndex = compound.getInt("TargetPointIndex");

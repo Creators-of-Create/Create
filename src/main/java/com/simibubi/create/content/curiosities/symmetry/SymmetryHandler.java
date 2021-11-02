@@ -52,7 +52,7 @@ public class SymmetryHandler {
 			return;
 
 		Player player = (Player) event.getEntity();
-		Inventory inv = player.inventory;
+		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty()
@@ -71,7 +71,7 @@ public class SymmetryHandler {
 			return;
 
 		Player player = event.getPlayer();
-		Inventory inv = player.inventory;
+		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
@@ -87,7 +87,7 @@ public class SymmetryHandler {
 		LocalPlayer player = mc.player;
 
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			ItemStack stackInSlot = player.inventory.getItem(i);
+			ItemStack stackInSlot = player.getInventory().getItem(i);
 			if (!AllItems.WAND_OF_SYMMETRY.isIn(stackInSlot))
 				continue;
 			if (!SymmetryWandItem.isEnabled(stackInSlot))
@@ -146,7 +146,7 @@ public class SymmetryHandler {
 
 		if (tickCounter % 10 == 0) {
 			for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-				ItemStack stackInSlot = player.inventory.getItem(i);
+				ItemStack stackInSlot = player.getInventory().getItem(i);
 
 				if (stackInSlot != null && AllItems.WAND_OF_SYMMETRY.isIn(stackInSlot)
 					&& SymmetryWandItem.isEnabled(stackInSlot)) {

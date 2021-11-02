@@ -1,8 +1,11 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
-import static net.minecraft.state.properties.BlockStateProperties.DOWN;
-import static net.minecraft.state.properties.BlockStateProperties.NORTH;
-import static net.minecraft.state.properties.BlockStateProperties.UP;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.DOWN;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.EAST;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.NORTH;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.SOUTH;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.UP;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WEST;
 
 import java.util.Map;
 import java.util.Random;
@@ -56,7 +59,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
+	public boolean hasBlockEntity(BlockState state) {
 		return true;
 	}
 
@@ -65,7 +68,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 		boolean blockTypeChanged = state.getBlock() != newState.getBlock();
 		if (blockTypeChanged && !world.isClientSide)
 			FluidPropagator.propagateChangedPipe(world, pos, state);
-		if (state.hasTileEntity() && (blockTypeChanged || !newState.hasTileEntity()))
+		if (state.hasBlockEntity() && (blockTypeChanged || !newState.hasTileEntity()))
 			world.removeBlockEntity(pos);
 	}
 
@@ -77,8 +80,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		return AllBlocks.FLUID_PIPE.asStack();
 	}
 

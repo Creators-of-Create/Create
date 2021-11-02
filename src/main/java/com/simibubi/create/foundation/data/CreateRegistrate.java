@@ -35,6 +35,7 @@ import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -56,6 +58,16 @@ import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
+
+	public interface BlockEntityFactory<T extends BlockEntity> {
+
+		public T create(BlockEntityType<T> type, BlockPos pos, BlockState state);
+		
+		default T createWithReversedParams(BlockPos pos, BlockState state, BlockEntityType<T> type) {
+			return create(type, pos, state);
+		}
+
+	}
 
 	protected CreateRegistrate(String modid) {
 		super(modid);
@@ -117,15 +129,14 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	public <T extends BlockEntity> CreateTileEntityBuilder<T, CreateRegistrate> tileEntity(String name,
-		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+		BlockEntityFactory<T> factory) {
 		return this.tileEntity(this.self(), name, factory);
 	}
 
-	@Override
 	public <T extends BlockEntity, P> CreateTileEntityBuilder<T, P> tileEntity(P parent, String name,
-		NonNullFunction<BlockEntityType<T>, ? extends T> factory) {
+		BlockEntityFactory<T> factory) {
 		return (CreateTileEntityBuilder<T, P>) this.entry(name, (callback) -> {
-			return CreateTileEntityBuilder.create(this, parent, name, callback, factory);
+			return CreateTileEntityBuilder.create(this, parent, name, callback, factory::createWithReversedParams);
 		});
 	}
 
@@ -135,8 +146,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return this.entity(self(), name, factory, classification);
 	}
 
-	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name, EntityType.EntityFactory<T> factory,
-		MobCategory classification) {
+	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name,
+		EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});

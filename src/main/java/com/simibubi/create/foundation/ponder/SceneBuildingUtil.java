@@ -111,7 +111,7 @@ public class SceneBuildingUtil {
 		}
 
 		public Selection cuboid(BlockPos origin, Vec3i size) {
-			return Selection.of(new BoundingBox(origin, origin.offset(size)));
+			return Selection.of(BoundingBox.fromCorners(origin, origin.offset(size)));
 		}
 
 	}

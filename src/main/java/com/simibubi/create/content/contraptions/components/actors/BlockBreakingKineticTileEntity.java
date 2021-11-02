@@ -30,8 +30,8 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	protected int breakerId = -NEXT_BREAKER_ID.incrementAndGet();
 	protected BlockPos breakingPos;
 
-	public BlockBreakingKineticTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public BlockBreakingKineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
 	@Override
@@ -68,12 +68,12 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		destroyProgress = compound.getInt("Progress");
 		ticksUntilNextProgress = compound.getInt("NextTick");
 		if (compound.contains("Breaking"))
 			breakingPos = NbtUtils.readBlockPos(compound.getCompound("Breaking"));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 	public void onBlockBroken(BlockState stateToBreak) {
 		FluidState FluidState = level.getFluidState(breakingPos);
 		level.levelEvent(2001, breakingPos, Block.getId(stateToBreak));
-		BlockEntity tileentity = stateToBreak.hasTileEntity() ? level.getBlockEntity(breakingPos) : null;
+		BlockEntity tileentity = stateToBreak.hasBlockEntity() ? level.getBlockEntity(breakingPos) : null;
 		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
 
 		Block.getDrops(stateToBreak, (ServerLevel) level, breakingPos, tileentity).forEach((stack) -> {

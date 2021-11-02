@@ -14,8 +14,8 @@ import net.minecraft.world.phys.AABB;
 
 public class SimpleKineticTileEntity extends KineticTileEntity {
 
-	public SimpleKineticTileEntity(BlockEntityType<? extends SimpleKineticTileEntity> type) {
-		super(type);
+	public SimpleKineticTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

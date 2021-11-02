@@ -2,11 +2,12 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DrillTileEntity extends BlockBreakingKineticTileEntity {
 
-	public DrillTileEntity(BlockEntityType<? extends DrillTileEntity> type) {
-		super(type);
+	public DrillTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override

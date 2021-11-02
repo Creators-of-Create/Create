@@ -31,6 +31,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -83,8 +84,8 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	LazyOptional<IItemHandler> capAbove;
 	LazyOptional<IItemHandler> capBelow;
 
-	public ChuteTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public ChuteTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		item = ItemStack.EMPTY;
 		itemPosition = new InterpolatedValue();
 		itemHandler = new ChuteItemHandler(this);
@@ -231,7 +232,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				continue;
 			setItem(entityItem.copy(), (float) (itemEntity.getBoundingBox()
 				.getCenter().y - worldPosition.getY()));
-			itemEntity.remove();
+			itemEntity.discard();
 			AllTriggers.triggerForNearbyPlayers(AllTriggers.UPWARD_CHUTE, level, worldPosition, 5);
 			break;
 		}
@@ -519,14 +520,14 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		ItemStack previousItem = item;
 		item = ItemStack.of(compound.getCompound("Item"));
 		itemPosition.lastValue = itemPosition.value = compound.getFloat("ItemPosition");
 		pull = compound.getFloat("Pull");
 		push = compound.getFloat("Push");
 		bottomPullDistance = compound.getFloat("BottomAirFlowDistance");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 //		if (clientPacket)
 //			airCurrent.rebuild();
 

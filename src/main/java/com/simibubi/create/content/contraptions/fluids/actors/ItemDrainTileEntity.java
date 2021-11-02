@@ -42,8 +42,8 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	protected int processingTicks;
 	Map<Direction, LazyOptional<ItemDrainItemHandler>> itemHandlers;
 
-	public ItemDrainTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public ItemDrainTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		itemHandlers = new IdentityHashMap<>();
 		for (Direction d : Iterate.horizontalDirections) {
 			ItemDrainItemHandler itemDrainItemHandler = new ItemDrainItemHandler(this, d);
@@ -270,12 +270,12 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		heldItem = null;
 		processingTicks = compound.getInt("ProcessingTicks");
 		if (compound.contains("HeldItem"))
 			heldItem = TransportedItemStack.read(compound.getCompound("HeldItem"));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 	
 	@Override

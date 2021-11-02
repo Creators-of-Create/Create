@@ -6,9 +6,11 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.model.ModelData;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+
+import net.minecraft.core.Direction;
 
 public class SchematicannonInstance extends TileEntityInstance<SchematicannonTileEntity> implements IDynamicInstance {
 
@@ -37,7 +39,7 @@ public class SchematicannonInstance extends TileEntityInstance<SchematicannonTil
 
         double recoil = SchematicannonRenderer.getRecoil(tile, partialTicks);
 
-        MatrixStack ms = new MatrixStack();
+        PoseStack ms = new PoseStack();
         MatrixTransformStack msr = MatrixTransformStack.of(ms);
 
         msr.translate(getInstancePosition());

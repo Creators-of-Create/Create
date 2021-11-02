@@ -181,7 +181,7 @@ public class FluidHelper {
 			tank.drain(copy, FluidAction.EXECUTE);
 
 			if (!player.isCreative())
-				player.getInventory().placeItemBackInInventory(world, out);
+				player.getInventory().placeItemBackInInventory(out);
 			te.notifyUpdate();
 			return true;
 		}

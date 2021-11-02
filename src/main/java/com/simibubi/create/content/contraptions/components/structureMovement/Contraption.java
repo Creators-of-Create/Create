@@ -79,8 +79,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.item.ItemStack;
@@ -105,10 +103,11 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.pipeline.BlockInfo;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
@@ -625,9 +624,9 @@ public abstract class Contraption {
 	protected void addBlock(BlockPos pos, Pair<StructureBlockInfo, BlockEntity> pair) {
 		StructureBlockInfo captured = pair.getKey();
 		BlockPos localPos = pos.subtract(anchor);
-		StructureBlockInfo blockInfo = new StructureBlockInfo(localPos, captured.state, captured.nbt);
+		StructureBlockInfo StructureBlockInfo = new StructureBlockInfo(localPos, captured.state, captured.nbt);
 
-		if (blocks.put(localPos, blockInfo) != null)
+		if (blocks.put(localPos, StructureBlockInfo) != null)
 			return;
 		bounds = bounds.minmax(new AABB(localPos));
 
@@ -637,7 +636,7 @@ public abstract class Contraption {
 		if (te != null && MountedFluidStorage.canUseAsStorage(te))
 			fluidStorage.put(localPos, new MountedFluidStorage(te));
 		if (AllMovementBehaviours.contains(captured.state.getBlock()))
-			actors.add(MutablePair.of(blockInfo, null));
+			actors.add(MutablePair.of(StructureBlockInfo, null));
 		if (AllInteractionBehaviours.contains(captured.state.getBlock()))
 			interactors.put(localPos, AllInteractionBehaviours.of(captured.state.getBlock()));
 		if (te instanceof CreativeCrateTileEntity
@@ -903,7 +902,8 @@ public abstract class Contraption {
 		blockList.forEach(e -> {
 			CompoundTag c = (CompoundTag) e;
 
-			StructureBlockInfo info = usePalettedDeserialization ? readBlockInfo(c, finalPalette) : legacyReadBlockInfo(c);
+			StructureBlockInfo info =
+				usePalettedDeserialization ? readStructureBlockInfo(c, finalPalette) : legacyReadStructureBlockInfo(c);
 
 			this.blocks.put(info.pos, info);
 
@@ -918,10 +918,10 @@ public abstract class Contraption {
 				tag.putInt("y", info.pos.getY());
 				tag.putInt("z", info.pos.getZ());
 
-				BlockEntity te = BlockEntity.loadStatic(info.state, tag);
+				BlockEntity te = BlockEntity.loadStatic(info.pos, info.state, tag);
 				if (te == null)
 					return;
-				te.setLevelAndPosition(new ContraptionTileWorld(world, te, info), te.getBlockPos());
+				te.setLevel(world);
 				if (te instanceof KineticTileEntity)
 					((KineticTileEntity) te).setSpeed(0);
 				te.getBlockState();
@@ -939,13 +939,14 @@ public abstract class Contraption {
 		});
 	}
 
-	private static StructureBlockInfo readBlockInfo(CompoundTag blockListEntry, HashMapPalette<BlockState> palette) {
+	private static StructureBlockInfo readStructureBlockInfo(CompoundTag blockListEntry,
+		HashMapPalette<BlockState> palette) {
 		return new StructureBlockInfo(BlockPos.of(blockListEntry.getLong("Pos")),
 			Objects.requireNonNull(palette.valueFor(blockListEntry.getInt("State"))),
 			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
 	}
 
-	private static StructureBlockInfo legacyReadBlockInfo(CompoundTag blockListEntry) {
+	private static StructureBlockInfo legacyReadStructureBlockInfo(CompoundTag blockListEntry) {
 		return new StructureBlockInfo(NbtUtils.readBlockPos(blockListEntry.getCompound("Pos")),
 			NbtUtils.readBlockState(blockListEntry.getCompound("Block")),
 			blockListEntry.contains("Data") ? blockListEntry.getCompound("Data") : null);
@@ -956,7 +957,7 @@ public abstract class Contraption {
 			.forEach(MountedStorage::removeStorageFromWorld);
 		fluidStorage.values()
 			.forEach(MountedFluidStorage::removeStorageFromWorld);
-		glueToRemove.forEach(SuperGlueEntity::remove);
+		glueToRemove.forEach(SuperGlueEntity::discard);
 
 		for (boolean brittles : Iterate.trueAndFalse) {
 			for (Iterator<StructureBlockInfo> iterator = blocks.values()
@@ -993,8 +994,10 @@ public abstract class Contraption {
 			int flags = BlockFlags.IS_MOVING | BlockFlags.DEFAULT;
 			world.sendBlockUpdated(add, block.state, Blocks.AIR.defaultBlockState(), flags);
 
-			// when the blockstate is set to air, the block's POI data is removed, but markAndNotifyBlock tries to
-			// remove it again, so to prevent an error from being logged by double-removal we add the POI data back now
+			// when the blockstate is set to air, the block's POI data is removed, but
+			// markAndNotifyBlock tries to
+			// remove it again, so to prevent an error from being logged by double-removal
+			// we add the POI data back now
 			// (code copied from ServerWorld.onBlockStateChange)
 			ServerLevel serverWorld = (ServerLevel) world;
 			PoiType.forState(block.state)
@@ -1041,7 +1044,8 @@ public abstract class Contraption {
 					Block.dropResources(state, world, targetPos, null);
 					continue;
 				}
-				if (state.getBlock() instanceof SimpleWaterloggedBlock && state.hasProperty(BlockStateProperties.WATERLOGGED)) {
+				if (state.getBlock() instanceof SimpleWaterloggedBlock
+					&& state.hasProperty(BlockStateProperties.WATERLOGGED)) {
 					FluidState FluidState = world.getFluidState(targetPos);
 					state = state.setValue(BlockStateProperties.WATERLOGGED, FluidState.getType() == Fluids.WATER);
 				}
@@ -1073,7 +1077,7 @@ public abstract class Contraption {
 					if (tileEntity instanceof FluidTankTileEntity && tag.contains("LastKnownPos"))
 						tag.put("LastKnownPos", NbtUtils.writeBlockPos(BlockPos.ZERO.below()));
 
-					tileEntity.load(block.state, tag);
+					tileEntity.load(tag);
 
 					if (storage.containsKey(block.pos)) {
 						MountedStorage mountedStorage = storage.get(block.pos);
@@ -1217,11 +1221,11 @@ public abstract class Contraption {
 		return seats;
 	}
 
-	public Map<BlockPos, BlockInfo> getBlocks() {
+	public Map<BlockPos, StructureBlockInfo> getBlocks() {
 		return blocks;
 	}
 
-	public List<MutablePair<BlockInfo, MovementContext>> getActors() {
+	public List<MutablePair<StructureBlockInfo, MovementContext>> getActors() {
 		return actors;
 	}
 
@@ -1248,15 +1252,15 @@ public abstract class Contraption {
 	private void gatherBBsOffThread() {
 		getContraptionWorld();
 		simplifiedEntityColliderProvider = CompletableFuture.supplyAsync(() -> {
-			VoxelShape combinedShape = VoxelShapes.empty();
-			for (Entry<BlockPos, BlockInfo> entry : blocks.entrySet()) {
-				BlockInfo info = entry.getValue();
+			VoxelShape combinedShape = Shapes.empty();
+			for (Entry<BlockPos, StructureBlockInfo> entry : blocks.entrySet()) {
+				StructureBlockInfo info = entry.getValue();
 				BlockPos localPos = entry.getKey();
 				VoxelShape collisionShape = info.state.getCollisionShape(world, localPos);
 				if (collisionShape.isEmpty())
 					continue;
-				combinedShape = VoxelShapes.joinUnoptimized(combinedShape,
-					collisionShape.move(localPos.getX(), localPos.getY(), localPos.getZ()), IBooleanFunction.OR);
+				combinedShape = Shapes.joinUnoptimized(combinedShape,
+					collisionShape.move(localPos.getX(), localPos.getY(), localPos.getZ()), BooleanOp.OR);
 			}
 			return combinedShape.optimize()
 				.toAabbs();
@@ -1297,10 +1301,10 @@ public abstract class Contraption {
 
 	private static class ContraptionTileWorld extends WrappedWorld implements IFlywheelWorld {
 
-		private final TileEntity te;
-		private final BlockInfo info;
+		private final BlockEntity te;
+		private final StructureBlockInfo info;
 
-		public ContraptionTileWorld(World world, TileEntity te, BlockInfo info) {
+		public ContraptionTileWorld(Level world, BlockEntity te, StructureBlockInfo info) {
 			super(world);
 			this.te = te;
 			this.info = info;

@@ -60,6 +60,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BlockItem;
@@ -281,10 +282,13 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void getFogDensity(EntityViewRenderEvent.FogDensity event) {
 		Camera info = event.getInfo();
-		FluidState fluidState = info.getFluidInCamera();
-		if (fluidState.isEmpty())
-			return;
-		Fluid fluid = fluidState.getType();
+		Level level = Minecraft.getInstance().level;
+		BlockPos blockPos = info.getBlockPosition();
+		FluidState fluidstate = level.getFluidState(blockPos);
+        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos)) 
+           return;
+        
+		Fluid fluid = fluidstate.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setDensity(5f);
@@ -309,10 +313,13 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void getFogColor(EntityViewRenderEvent.FogColors event) {
 		Camera info = event.getInfo();
-		FluidState fluidState = info.getFluidInCamera();
-		if (fluidState.isEmpty())
-			return;
-		Fluid fluid = fluidState.getType();
+		Level level = Minecraft.getInstance().level;
+		BlockPos blockPos = info.getBlockPosition();
+		FluidState fluidstate = level.getFluidState(blockPos);
+        if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos)) 
+           return;
+        
+		Fluid fluid = fluidstate.getType();
 
 		if (fluid.isSame(AllFluids.CHOCOLATE.get())) {
 			event.setRed(98 / 256f);

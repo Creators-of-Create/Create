@@ -142,12 +142,12 @@ public abstract class Selection implements Predicate<BlockPos> {
 		}
 
 		private AABB getAABB() {
-			return new AABB(bb.x0, bb.y0, bb.z0, bb.x1 + 1, bb.y1 + 1, bb.z1 + 1);
+			return new AABB(bb.minX(), bb.minY(), bb.minZ(), bb.maxX() + 1, bb.maxY() + 1, bb.maxZ() + 1);
 		}
 
 		@Override
 		public Selection copy() {
-			return new Simple(new BoundingBox(bb));
+			return new Simple(new BoundingBox(bb.minX(), bb.minY(), bb.minZ(), bb.maxX(), bb.maxY(), bb.maxZ()));
 		}
 
 	}

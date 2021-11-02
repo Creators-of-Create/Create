@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GantryShaftTileEntity extends KineticTileEntity {
 
-	public GantryShaftTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public GantryShaftTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
 	public void checkAttachedCarriageBlocks() {

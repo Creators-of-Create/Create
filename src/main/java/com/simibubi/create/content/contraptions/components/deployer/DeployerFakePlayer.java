@@ -108,7 +108,7 @@ public class DeployerFakePlayer extends FakePlayer {
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
 			event.getDrops()
-				.forEach(stack -> fakePlayer.inventory.placeItemBackInInventory(trueSource.level, stack.getItem()));
+				.forEach(stack -> fakeplayer.getInventory().placeItemBackInInventory(trueSource.level, stack.getItem()));
 			event.setCanceled(true);
 		}
 	}

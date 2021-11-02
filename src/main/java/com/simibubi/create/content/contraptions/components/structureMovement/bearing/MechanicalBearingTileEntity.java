@@ -1,7 +1,5 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.bearing;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
 import java.util.List;
 
 import com.simibubi.create.AllSoundEvents;
@@ -40,8 +38,8 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 
 	private float prevAngle;
 
-	public MechanicalBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
-		super(type);
+	public MechanicalBearingTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(3);
 	}
 
@@ -75,9 +73,9 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		if (wasMoved) {
-			super.fromTag(state, compound, clientPacket);
+			super.fromTag(compound, clientPacket);
 			return;
 		}
 
@@ -85,7 +83,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		running = compound.getBoolean("Running");
 		angle = compound.getFloat("Angle");
 		lastException = AssemblyException.read(compound);
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		if (!clientPacket)
 			return;
 		if (running) {
@@ -145,7 +143,7 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 			.getBlock() instanceof BearingBlock))
 			return;
 
-		Direction direction = getBlockState().getValue(FACING);
+		Direction direction = getBlockState().getValue(BearingBlock.FACING);
 		BearingContraption contraption = new BearingContraption(isWindmill(), direction);
 		try {
 			if (!contraption.assemble(level, worldPosition))
@@ -263,12 +261,12 @@ public class MechanicalBearingTileEntity extends GeneratingKineticTileEntity
 		BlockState blockState = getBlockState();
 		if (!(contraption.getContraption() instanceof BearingContraption))
 			return;
-		if (!blockState.hasProperty(FACING))
+		if (!blockState.hasProperty(BearingBlock.FACING))
 			return;
 
 		this.movedContraption = contraption;
 		setChanged();
-		BlockPos anchor = worldPosition.relative(blockState.getValue(FACING));
+		BlockPos anchor = worldPosition.relative(blockState.getValue(BearingBlock.FACING));
 		movedContraption.setPos(anchor.getX(), anchor.getY(), anchor.getZ());
 		if (!level.isClientSide) {
 			this.running = true;

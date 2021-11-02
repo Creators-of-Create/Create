@@ -17,8 +17,8 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.util.Mth;
-import net.minecraft.util.math.vector.Vector3i;
 
 public class DeployerInstance extends ShaftInstance implements IDynamicInstance, ITickableInstance {
 
@@ -117,8 +117,8 @@ public class DeployerInstance extends ShaftInstance implements IDynamicInstance,
     private void updatePosition() {
         float handLength = currentHand == AllBlockPartials.DEPLOYER_HAND_POINTING ? 0
                 : currentHand == AllBlockPartials.DEPLOYER_HAND_HOLDING ? 4 / 16f : 3 / 16f;
-        float distance = Math.min(MathHelper.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
-        Vector3i facingVec = facing.getNormal();
+        float distance = Math.min(Mth.clamp(progress, 0, 1) * (tile.reach + handLength), 21 / 16f);
+        Vec3i facingVec = facing.getNormal();
         BlockPos blockPos = getInstancePosition();
 
         float x = blockPos.getX() + ((float) facingVec.getX()) * distance;

@@ -25,8 +25,8 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 
 	public int effectTicks = 0;
 
-	public HauntedBellTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public HauntedBellTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -65,8 +65,8 @@ public class HauntedBellTileEntity extends AbstractBellTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		effectTicks = compound.getInt("EffectTicks");
 	}
 

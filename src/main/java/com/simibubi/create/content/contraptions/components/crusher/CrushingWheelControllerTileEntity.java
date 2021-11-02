@@ -1,8 +1,12 @@
 package com.simibubi.create.content.contraptions.components.crusher;
 
-import static net.minecraft.block.DirectionalBlock.FACING;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
-import javanimport com.simibubi.create.AllRecipeTypes;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -14,11 +18,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -47,52 +47,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
-et.minecraft.world.level.block.DirectionalBlockist;
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-
-import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.content.contraptions.processing.ProcessingInventory;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.item.ItemHelper;
-import com.simibubi.create.foundation.sound.SoundScapes;
-import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
-import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.particles.BlockParticleData;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
-
 public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
 	public Entity processingEntity;
@@ -104,8 +58,8 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	private RecipeWrapper wrapper;
 	public float crushingspeed;
 
-	public CrushingWheelControllerTileEntity(BlockEntityType<? extends CrushingWheelControllerTileEntity> type) {
-		super(type);
+	public CrushingWheelControllerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		inventory = new ProcessingInventory(this::itemInserted) {
 
 			@Override
@@ -154,7 +108,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		float speed = crushingspeed * 4;
 
 		Vec3 centerPos = VecHelper.getCenterOf(worldPosition);
-		Direction facing = getBlockState().getValue(FACING);
+		Direction facing = getBlockState().getValue(CrushingWheelControllerBlock.FACING);
 		int offset = facing.getAxisDirection()
 			.getStep();
 		Vec3 outSpeed = new Vec3((facing.getAxis() == Axis.X ? 0.25D : 0.0D) * offset,
@@ -315,7 +269,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		inventory.setStackInSlot(0, itemEntity.getItem()
 			.copy());
 		itemInserted(inventory.getStackInSlot(0));
-		itemEntity.remove();
+		itemEntity.discard();
 		level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2 | 16);
 	}
 
@@ -377,8 +331,8 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		if (compound.contains("Entity") && !isOccupied()) {
 			entityUUID = NbtUtils.loadUUID(NBTHelper.getINBT(compound, "Entity"));
 			this.searchForEntity = true;

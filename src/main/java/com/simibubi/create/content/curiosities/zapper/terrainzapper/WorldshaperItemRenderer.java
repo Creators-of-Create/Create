@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import static java.lang.Math.max;
-import static net.minecraft.util.math.MathHelper.clamp;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -42,7 +41,7 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		if (mainHand || offHand) 
 			multiplier = animation;
 
-		int lightItensity = (int) (15 * clamp(multiplier, 0, 1));
+		int lightItensity = (int) (15 * Mth.clamp(multiplier, 0, 1));
 		int glowLight = LightTexture.pack(lightItensity, max(lightItensity, 4));
 		renderer.renderSolidGlowing(model.getPartial("core"), glowLight);
 		renderer.renderGlowing(model.getPartial("core_glow"), glowLight);

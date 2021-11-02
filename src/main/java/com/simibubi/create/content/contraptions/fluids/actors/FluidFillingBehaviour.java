@@ -99,7 +99,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 			reset();
 			rootPos = root;
 			queue.enqueue(new BlockPosEntry(root, 0));
-			affectedArea = new BoundingBox(rootPos, rootPos);
+			affectedArea = BoundingBox.fromCorners(rootPos, rootPos);
 			return false;
 		}
 
@@ -110,7 +110,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 		}
 
 		if (affectedArea == null)
-			affectedArea = new BoundingBox(root, root);
+			affectedArea = BoundingBox.fromCorners(root, root);
 
 		if (revalidateIn == 0) {
 			visited.clear();
@@ -207,7 +207,7 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 						}
 					}
 
-					affectedArea.expand(new BoundingBox(currentPos, currentPos));
+					affectedArea.encapsulate(BoundingBox.fromCorners(currentPos, currentPos));
 				}
 			}
 

@@ -19,7 +19,7 @@ public class BlueprintTransferHandler implements IRecipeTransferHandler<Blueprin
 
 	@Override
 	public IRecipeTransferError transferRecipe(BlueprintContainer container, Object recipe, IRecipeLayout recipeLayout,
-											   Player player, boolean maxTransfer, boolean doTransfer) {
+		Player player, boolean maxTransfer, boolean doTransfer) {
 		if (!(recipe instanceof Recipe))
 			return null;
 		if (!doTransfer)

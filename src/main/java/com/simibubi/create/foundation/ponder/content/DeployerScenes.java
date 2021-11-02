@@ -134,7 +134,7 @@ public class DeployerScenes {
 		ElementLink<EntityElement> entity1 =
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), tulip);
 		scene.idle(17);
-		scene.world.modifyEntity(entity1, Entity::remove);
+		scene.world.modifyEntity(entity1, Entity::discard);
 		scene.world.modifyTileNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", tulip.serializeNBT()));
 		scene.idle(10);
 		scene.overlay.showText(40)
@@ -184,7 +184,7 @@ public class DeployerScenes {
 			entity.zo = p.z;
 			entity.animationPosition = 0;
 			entity.yRotO = 210;
-			entity.yRot = 210;
+			entity.setYRot(210);
 			entity.yHeadRotO = 210;
 			entity.yHeadRot = 210;
 			return entity;
@@ -193,7 +193,7 @@ public class DeployerScenes {
 		scene.world.showSection(util.select.position(deployerPos.above()), Direction.WEST);
 		entity1 = scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), shears);
 		scene.idle(17);
-		scene.world.modifyEntity(entity1, Entity::remove);
+		scene.world.modifyEntity(entity1, Entity::discard);
 		scene.world.modifyTileNBT(deployerSelection, teType, nbt -> nbt.put("HeldItem", shears.serializeNBT()));
 		scene.idle(10);
 

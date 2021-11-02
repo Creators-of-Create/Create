@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -34,8 +35,8 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	private HosePulleyFluidHandler handler;
 	private boolean infinite;
 
-	public HosePulleyTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public HosePulleyTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		offset = LerpedFloat.linear()
 			.startWithValue(0);
 		isMoving = true;
@@ -104,12 +105,6 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance() {
-		return super.getViewDistance() + offset.getValue() * offset.getValue();
-	}
-
-	@Override
 	public void tick() {
 		super.tick();
 		float newOffset = offset.getValue() + getMovementSpeed();
@@ -160,10 +155,10 @@ public class HosePulleyTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		offset.readNBT(compound.getCompound("Offset"), clientPacket);
 		internalTank.readFromNBT(compound.getCompound("Tank"));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		if (clientPacket)
 			infinite = compound.getBoolean("Infinite");
 	}

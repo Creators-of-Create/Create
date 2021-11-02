@@ -9,6 +9,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.INamedIco
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollOptionBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,8 +20,8 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	protected ScrollOptionBehaviour<RotationDirection> movementDirection;
 	protected float lastGeneratedSpeed;
 
-	public WindmillBearingTileEntity(BlockEntityType<? extends MechanicalBearingTileEntity> type) {
-		super(type);
+	public WindmillBearingTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -64,10 +65,10 @@ public class WindmillBearingTileEntity extends MechanicalBearingTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		if (!wasMoved)
 			lastGeneratedSpeed = compound.getFloat("LastGenerated");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

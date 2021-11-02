@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -19,8 +20,8 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	int timer;
 	boolean poweredPreviously;
 
-	public SequencedGearshiftTileEntity(BlockEntityType<? extends SequencedGearshiftTileEntity> type) {
-		super(type);
+	public SequencedGearshiftTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		instructions = Instruction.createDefault();
 		currentInstruction = -1;
 		currentInstructionDuration = -1;
@@ -145,14 +146,14 @@ public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		currentInstruction = compound.getInt("InstructionIndex");
 		currentInstructionDuration = compound.getInt("InstructionDuration");
 		currentInstructionProgress = compound.getFloat("InstructionProgress");
 		poweredPreviously = compound.getBoolean("PrevPowered");
 		timer = compound.getInt("Timer");
 		instructions = Instruction.deserializeAll(compound.getList("Instructions", NBT.TAG_COMPOUND));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

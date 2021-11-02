@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -52,10 +51,10 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 		float fakeNormalXRotation = -15;
 		int bl = light >> 4 & 0xf;
 		int sl = light >> 20 & 0xf;
-		boolean vertical = entity.xRot != 0;
-		if (entity.xRot == -90)
+		boolean vertical = entity.getXRot() != 0;
+		if (entity.getXRot() == -90)
 			fakeNormalXRotation = -45;
-		else if (entity.xRot == 90 || yaw % 180 != 0) {
+		else if (entity.getXRot() == 90 || yaw % 180 != 0) {
 			bl /= 1.35;
 			sl /= 1.35;
 		}
@@ -73,7 +72,7 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 
 		MatrixTransformStack.of(ms)
 			.rotateY(-yaw)
-			.rotateX(entity.xRot)
+			.rotateX(entity.getXRot())
 			.translate(0, 0, 1 / 32f + .001);
 
 		if (entity.size == 3)

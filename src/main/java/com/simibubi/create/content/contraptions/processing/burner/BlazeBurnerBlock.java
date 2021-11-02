@@ -129,7 +129,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		if (!world.isClientSide && !doNotConsume && !leftover.isEmpty()) {
 			if (heldItem.isEmpty()) {
 				player.setItemInHand(hand, leftover);
-			} else if (!player.inventory.add(leftover)) {
+			} else if (!player.getInventory().add(leftover)) {
 				player.drop(leftover, false);
 			}
 		}

@@ -20,6 +20,7 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
@@ -49,8 +50,8 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	public int processingTicks;
 	public boolean running;
 
-	public MechanicalMixerTileEntity(BlockEntityType<? extends MechanicalMixerTileEntity> type) {
-		super(type);
+	public MechanicalMixerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	public float getRenderedHeadOffset(float partialTicks) {
@@ -94,10 +95,10 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		running = compound.getBoolean("Running");
 		runningTicks = compound.getInt("Ticks");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (clientPacket && hasLevel())
 			getBasin().ifPresent(bte -> bte.setAreFluidsMoving(running && runningTicks <= 20));

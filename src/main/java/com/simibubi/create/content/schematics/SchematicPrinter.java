@@ -94,7 +94,7 @@ public class SchematicPrinter {
 
 		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, activeTemplate.getSize()
 			.offset(-1, -1, -1));
-		blockReader.bounds.expand(new BoundingBox(extraBounds, extraBounds));
+		blockReader.bounds.encapsulate(BoundingBox.fromCorners(extraBounds, extraBounds));
 
 		StructureTransform transform = new StructureTransform(settings.getRotationPivot(), Direction.Axis.Y,
 			settings.getRotation(), settings.getMirror());

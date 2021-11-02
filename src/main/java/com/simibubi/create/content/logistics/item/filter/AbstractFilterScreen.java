@@ -1,7 +1,7 @@
 package com.simibubi.create.content.logistics.item.filter;
 
 import static com.simibubi.create.foundation.gui.AllGuiTextures.PLAYER_INVENTORY;
-import static net.minecraft.util.text.TextFormatting.GRAY;
+import static net.minecraft.ChatFormatting.GRAY;
 
 import java.util.Collections;
 import java.util.List;

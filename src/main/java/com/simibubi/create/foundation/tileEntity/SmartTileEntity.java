@@ -12,22 +12,23 @@ import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public abstract class SmartTileEntity extends SyncedTileEntity implements TickableBlockEntity, IPartialSafeNBT, IInteractionChecker {
+public abstract class SmartTileEntity extends SyncedTileEntity implements IPartialSafeNBT, IInteractionChecker {
 
 	private final Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
-	// Internally maintained to be identical to behaviorMap.values() in order to improve iteration performance.
+	// Internally maintained to be identical to behaviorMap.values() in order to
+	// improve iteration performance.
 	private final List<TileEntityBehaviour> behaviourList;
 	private boolean initialized;
 	private boolean firstNbtRead;
@@ -37,8 +38,8 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements Tickab
 	// Used for simulating this TE in a client-only setting
 	private boolean virtualMode;
 
-	public SmartTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SmartTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+		super(tileEntityTypeIn, pos, state);
 		behaviours = new HashMap<>();
 		initialized = false;
 		firstNbtRead = true;
@@ -60,7 +61,6 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements Tickab
 	 */
 	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {}
 
-	@Override
 	public void tick() {
 		if (!initialized && hasLevel()) {
 			initialize();
@@ -78,7 +78,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements Tickab
 	public void initialize() {
 		if (firstNbtRead) {
 			firstNbtRead = false;
-			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(getBlockState(), this, behaviours));
+			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(this, behaviours));
 			updateBehaviorList();
 		}
 
@@ -99,28 +99,28 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements Tickab
 	}
 
 	@Override
-	public final void readClientUpdate(BlockState state, CompoundTag tag) {
-		fromTag(state, tag, true);
+	public final void readClientUpdate(CompoundTag tag) {
+		fromTag(tag, true);
 	}
 
 	@Override
-	public final void load(BlockState state, CompoundTag tag) {
-		fromTag(state, tag, false);
+	public final void load(CompoundTag tag) {
+		fromTag(tag, false);
 	}
 
 	/**
 	 * Hook only these in future subclasses of STE
 	 */
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		if (firstNbtRead) {
 			firstNbtRead = false;
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
-			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(state, this, behaviours));
+			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(this, behaviours));
 			updateBehaviorList();
 		}
-		super.load(state, compound);
+		super.load(compound);
 		behaviourList.forEach(tb -> tb.read(compound, clientPacket));
 	}
 
@@ -142,11 +142,8 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements Tickab
 	}
 
 	public ItemRequirement getRequiredItems() {
-		return behaviourList.stream().reduce(
-				ItemRequirement.NONE,
-				(a, b) -> a.with(b.getRequiredItems()),
-				(a, b) -> a.with(b)
-		);
+		return behaviourList.stream()
+			.reduce(ItemRequirement.NONE, (a, b) -> a.with(b.getRequiredItems()), (a, b) -> a.with(b));
 	}
 
 	@Override
@@ -220,7 +217,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements Tickab
 		return player.distanceToSqr(worldPosition.getX() + 0.5D, worldPosition.getY() + 0.5D,
 			worldPosition.getZ() + 0.5D) <= 64.0D;
 	}
-	
+
 	public void sendToContainer(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(getBlockPos());
 		buffer.writeNbt(getUpdateTag());

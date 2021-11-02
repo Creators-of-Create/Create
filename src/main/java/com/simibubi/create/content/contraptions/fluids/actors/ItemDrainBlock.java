@@ -54,7 +54,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 
 			ItemStack heldItemStack = te.getHeldItemStack();
 			if (!worldIn.isClientSide && !heldItemStack.isEmpty()) {
-				player.inventory.placeItemBackInInventory(worldIn, heldItemStack);
+				player.getInventory().placeItemBackInInventory(worldIn, heldItemStack);
 				te.heldItem = null;
 				te.notifyUpdate();
 			}

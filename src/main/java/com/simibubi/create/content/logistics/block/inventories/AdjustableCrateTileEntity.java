@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.block.inventories;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -61,8 +62,8 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuPr
 	public int itemCount;
 	protected LazyOptional<IItemHandler> invHandler;
 
-	public AdjustableCrateTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public AdjustableCrateTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		allowedAmount = 512;
 		itemCount = 10;
 		inventory = new Inv();
@@ -150,10 +151,10 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuPr
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		allowedAmount = compound.getInt("AllowedAmount");
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

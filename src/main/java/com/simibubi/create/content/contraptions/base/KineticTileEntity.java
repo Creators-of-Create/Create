@@ -1,6 +1,7 @@
 package com.simibubi.create.content.contraptions.base;
 
-import static net.minecraft.util.text.TextFormatting.GOLD;
+import static net.minecraft.ChatFormatting.GOLD;
+import static net.minecraft.ChatFormatting.GRAY;
 
 import java.util.List;
 
@@ -41,7 +42,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
@@ -49,7 +49,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
 public abstract class KineticTileEntity extends SmartTileEntity
-	implements TickableBlockEntity, IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
+	implements IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
 
 	public @Nullable Long network;
 	public @Nullable BlockPos source;
@@ -70,8 +70,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	protected float lastStressApplied;
 	protected float lastCapacityProvided;
 
-	public KineticTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public KineticTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		effects = new KineticEffectHandler(this);
 		updateSpeed = true;
 	}
@@ -226,13 +226,13 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		boolean overStressedBefore = overStressed;
 		clearKineticInformation();
 
 		// DO NOT READ kinetic information when placed after movement
 		if (wasMoved) {
-			super.fromTag(state, compound, clientPacket);
+			super.fromTag(compound, clientPacket);
 			return;
 		}
 
@@ -252,7 +252,7 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			overStressed = capacity < stress && StressImpact.isEnabled();
 		}
 
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 
 		if (clientPacket && overStressedBefore != overStressed && speed != 0)
 			effects.triggerOverStressedEffect();
@@ -412,9 +412,8 @@ public abstract class KineticTileEntity extends SmartTileEntity
 			tooltip.add(componentSpacing.plainCopy()
 				.append(Lang.translate("tooltip.speedRequirement")
 					.withStyle(GOLD)));
-			Component hint =
-				Lang.translate("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
-					.getDescriptionId()));
+			Component hint = Lang.translate("gui.contraptions.not_fast_enough", I18n.get(getBlockState().getBlock()
+				.getDescriptionId()));
 			List<Component> cutString = TooltipHelper.cutTextComponent(hint, GRAY, ChatFormatting.WHITE);
 			for (int i = 0; i < cutString.size(); i++)
 				tooltip.add(componentSpacing.plainCopy()
@@ -596,6 +595,5 @@ public abstract class KineticTileEntity extends SmartTileEntity
 	protected boolean isNoisy() {
 		return true;
 	}
-
 
 }

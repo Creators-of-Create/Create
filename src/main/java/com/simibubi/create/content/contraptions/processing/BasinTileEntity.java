@@ -51,8 +51,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.LazyOptional;
@@ -94,8 +92,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	List<IntAttached<ItemStack>> visualizedOutputItems;
 	List<IntAttached<FluidStack>> visualizedOutputFluids;
 
-	public BasinTileEntity(BlockEntityType<? extends BasinTileEntity> type) {
-		super(type);
+	public BasinTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		inputInventory = new BasinInventory(9, this);
 		inputInventory.whenContentsChanged($ -> contentsChanged = true);
 		outputInventory = new BasinInventory(9, this).forbidInsertion()
@@ -142,8 +140,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
 		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
 
@@ -439,12 +437,6 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	public SmartInventory getOutputInventory() {
 		return outputInventory;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance() {
-		return 256;
 	}
 
 	public boolean canContinueProcessing() {

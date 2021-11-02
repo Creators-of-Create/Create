@@ -104,7 +104,7 @@ public class ArmBlock extends KineticBlock implements ITE<ArmTileEntity>, ICogWh
 			success.setTrue();
 			if (world.isClientSide)
 				return;
-			player.inventory.placeItemBackInInventory(world, te.heldItem);
+			player.getInventory().placeItemBackInInventory(te.heldItem);
 			te.heldItem = ItemStack.EMPTY;
 			te.phase = Phase.SEARCH_INPUTS;
 			te.setChanged();

@@ -64,7 +64,7 @@ public class OrientedBB {
 		setCenter(getCenter().add(offset));
 	}
 
-	public AABB getAsAxisAlignedBB() {
+	public AABB getAsAABB() {
 		return new AABB(0, 0, 0, 0, 0, 0).move(center)
 			.inflate(extents.x, extents.y, extents.z);
 	}

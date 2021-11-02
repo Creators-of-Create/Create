@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.particle.AirParticleData;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -32,8 +33,8 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	private int capacityEnchantLevel;
 	private ListTag enchantmentTag;
 
-	public CopperBacktankTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public CopperBacktankTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		enchantmentTag = new ListTag();
 	}
 
@@ -94,8 +95,8 @@ public class CopperBacktankTileEntity extends KineticTileEntity implements Namea
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		int prev = airLevel;
 		capacityEnchantLevel = compound.getInt("CapacityEnchantment");
 		airLevel = compound.getInt("Air");

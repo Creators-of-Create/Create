@@ -2,13 +2,20 @@ package com.simibubi.create.foundation.item;
 
 import static com.simibubi.create.foundation.item.TooltipHelper.cutStringTextComponent;
 import static com.simibubi.create.foundation.item.TooltipHelper.cutTextComponent;
-import static net.minecraft.util.text.TextFormatting.AQUA;
-import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
-import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
-import static net.minecraft.util.text.TextFormatting.GOLD;
-import static net.minecraft.util.text.TextFormatting.GREEN;
-import static net.minecraft.util.text.TextFormatting.RED;
-import static net.minecraft.util.text.TextFormatting.WHITE;
+import static net.minecraft.ChatFormatting.AQUA;
+import static net.minecraft.ChatFormatting.BLUE;
+import static net.minecraft.ChatFormatting.DARK_GRAY;
+import static net.minecraft.ChatFormatting.DARK_GREEN;
+import static net.minecraft.ChatFormatting.DARK_PURPLE;
+import static net.minecraft.ChatFormatting.DARK_RED;
+import static net.minecraft.ChatFormatting.GOLD;
+import static net.minecraft.ChatFormatting.GRAY;
+import static net.minecraft.ChatFormatting.GREEN;
+import static net.minecraft.ChatFormatting.LIGHT_PURPLE;
+import static net.minecraft.ChatFormatting.RED;
+import static net.minecraft.ChatFormatting.STRIKETHROUGH;
+import static net.minecraft.ChatFormatting.WHITE;
+import static net.minecraft.ChatFormatting.YELLOW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,8 +45,7 @@ import net.minecraft.world.level.block.Block;
 public class ItemDescription {
 
 	public static final ItemDescription MISSING = new ItemDescription(null);
-	public static Component trim =
-		new TextComponent("                          ").withStyle(WHITE, STRIKETHROUGH);
+	public static Component trim = new TextComponent("                          ").withStyle(WHITE, STRIKETHROUGH);
 
 	public enum Palette {
 
@@ -84,8 +90,7 @@ public class ItemDescription {
 		CKinetics config = AllConfigs.SERVER.kinetics;
 		Component rpmUnit = Lang.translate("generic.unit.rpm");
 
-		boolean hasGoggles =
-			AllItems.GOGGLES.isIn(Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD));
+		boolean hasGoggles = AllItems.GOGGLES.isIn(Minecraft.getInstance().player.getItemBySlot(EquipmentSlot.HEAD));
 
 		SpeedLevel minimumRequiredSpeedLevel;
 		boolean showStressImpact;
@@ -98,12 +103,12 @@ public class ItemDescription {
 		}
 
 		boolean hasSpeedRequirement = minimumRequiredSpeedLevel != SpeedLevel.NONE;
-		boolean hasStressImpact = StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
+		boolean hasStressImpact =
+			StressImpact.isEnabled() && showStressImpact && BlockStressValues.getImpact(block) > 0;
 		boolean hasStressCapacity = StressImpact.isEnabled() && BlockStressValues.hasCapacity(block);
 
 		if (hasSpeedRequirement) {
-			List<Component> speedLevels =
-				Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
+			List<Component> speedLevels = Lang.translatedOptions("tooltip.speedRequirement", "none", "medium", "high");
 			int index = minimumRequiredSpeedLevel.ordinal();
 			MutableComponent level =
 				new TextComponent(makeProgressBar(3, index)).withStyle(minimumRequiredSpeedLevel.getTextColor());
@@ -203,8 +208,12 @@ public class ItemDescription {
 		boolean hasControls = !linesOnCtrl.isEmpty();
 
 		if (hasDescription || hasControls) {
-			String[] holdDesc = Lang.translate("tooltip.holdForDescription", "$").getString().split("\\$");
-			String[] holdCtrl = Lang.translate("tooltip.holdForControls", "$").getString().split("\\$");
+			String[] holdDesc = Lang.translate("tooltip.holdForDescription", "$")
+				.getString()
+				.split("\\$");
+			String[] holdCtrl = Lang.translate("tooltip.holdForControls", "$")
+				.getString()
+				.split("\\$");
 			MutableComponent keyShift = Lang.translate("tooltip.keyShift");
 			MutableComponent keyCtrl = Lang.translate("tooltip.keyCtrl");
 			for (List<Component> list : Arrays.asList(lines, linesOnShift, linesOnCtrl)) {

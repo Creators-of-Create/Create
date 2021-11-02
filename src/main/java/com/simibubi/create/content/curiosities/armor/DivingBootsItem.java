@@ -59,7 +59,7 @@ public class DivingBootsItem extends CopperArmorItem {
 			return false;
 		if (entity instanceof Player) {
 			Player playerEntity = (Player) entity;
-			if (playerEntity.abilities.flying)
+			if (playerEntity.getAbilities().flying)
 				return false;
 		}
 		return true;

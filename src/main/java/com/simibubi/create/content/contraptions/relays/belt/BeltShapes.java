@@ -1,11 +1,13 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
-import static net.minecraft.block.Block.box;
+import static net.minecraft.world.level.block.Block.box;
 
-import javanimport com.simibubi.create.AllShapes;
-import com.simibubi.create.foundation.utility.VoxelShaper;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.simibubi.create.AllShapes;
+import com.simibubi.create.foundation.utility.VoxelShaper;
+
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,19 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-et.minecraft.world.level.block.Blockva.util.Map;
-
-import com.simibubi.create.AllShapes;
-import com.simibubi.create.foundation.utility.VoxelShaper;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
 
 public class BeltShapes {
 

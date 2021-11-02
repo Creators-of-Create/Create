@@ -174,7 +174,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			Player player = (Player) entityIn;
 			if (player.isShiftKeyDown())
 				return;
-			if (player.abilities.flying)
+			if (player.getAbilities().flying)
 				return;
 		}
 
@@ -203,7 +203,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				ItemStack remainder = handler.insertItem(0, itemEntity.getItem()
 					.copy(), false);
 				if (remainder.isEmpty())
-					itemEntity.remove();
+					itemEntity.discard();
 			});
 			return;
 		}
@@ -269,7 +269,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			MutableBoolean success = new MutableBoolean(false);
 			controllerBelt.getInventory()
 				.applyToEachWithin(belt.index + .5f, .55f, (transportedItemStack) -> {
-					player.inventory.placeItemBackInInventory(world, transportedItemStack.stack);
+					player.getInventory().placeItemBackInInventory(transportedItemStack.stack);
 					success.setTrue();
 					return TransportedResult.removeItem();
 				});
@@ -326,7 +326,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return InteractionResult.SUCCESS;
 			KineticTileEntity.switchToBlockState(world, pos, state.setValue(PART, BeltPart.MIDDLE));
 			if (player != null && !player.isCreative())
-				player.inventory.placeItemBackInInventory(world, AllBlocks.SHAFT.asStack());
+				player.getInventory().placeItemBackInInventory(AllBlocks.SHAFT.asStack());
 			return InteractionResult.SUCCESS;
 		}
 

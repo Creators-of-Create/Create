@@ -243,13 +243,13 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 		if (state == State.DETACH) {
 			if (selected == UNEQUIP)
 				AllPackets.channel.sendToServer(
-					new ToolboxEquipPacket(null, selected, Minecraft.getInstance().player.inventory.selected));
+					new ToolboxEquipPacket(null, selected, Minecraft.getInstance().player.getInventory().selected));
 			return;
 		}
 
 		if (selected == UNEQUIP)
 			AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-				Minecraft.getInstance().player.inventory.selected));
+				Minecraft.getInstance().player.getInventory().selected));
 
 		if (selected < 0)
 			return;
@@ -262,7 +262,7 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 			return;
 
 		AllPackets.channel.sendToServer(new ToolboxEquipPacket(selectedBox.getBlockPos(), selected,
-			Minecraft.getInstance().player.inventory.selected));
+			Minecraft.getInstance().player.getInventory().selected));
 	}
 
 	@Override

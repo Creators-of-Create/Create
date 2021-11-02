@@ -1,8 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.gantry;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
-
-import com.net.minimport com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -10,6 +8,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -18,29 +17,13 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-ecraft.world.level.block.state.properties.BlockStatePropertiesate.AllSoundEvents;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
-import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionCollider;
-import com.simibubi.create.content.contraptions.components.structureMovement.IDisplayAssemblyExceptions;
-import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
-import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftTileEntity;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-
 public class GantryCarriageTileEntity extends KineticTileEntity implements IDisplayAssemblyExceptions {
 
 	boolean assembleNextTick;
 	protected AssemblyException lastException;
 
-	public GantryCarriageTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public GantryCarriageTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 	}
 
 	@Override
@@ -87,7 +70,7 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 		if (!(blockState.getBlock() instanceof GantryCarriageBlock))
 			return;
 
-		Direction direction = blockState.getValue(FACING);
+		Direction direction = blockState.getValue(GantryCarriageBlock.FACING);
 		GantryContraption contraption = new GantryContraption(direction);
 
 		BlockEntity shaftTe = level.getBlockEntity(worldPosition.relative(direction.getOpposite()));
@@ -134,9 +117,9 @@ public class GantryCarriageTileEntity extends KineticTileEntity implements IDisp
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		lastException = AssemblyException.read(compound);
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	@Override

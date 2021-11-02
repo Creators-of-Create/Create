@@ -249,7 +249,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		list = new ConfigScreenList(minecraft, listWidth, height - 80, 35, height - 45, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
-		children.add(list);
+		children().add(list);
 
 		search = new ConfigTextField(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
 		search.setResponder(this::updateFilter);

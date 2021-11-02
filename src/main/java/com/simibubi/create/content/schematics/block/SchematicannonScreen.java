@@ -1,8 +1,15 @@
 package com.simibubi.create.content.schematics.block;
 
-import static net.minecraft.util.text.TextFormatting.BLUE;
-import staticnet.minecraft.ChatFormattingg.DARK_PURPLE;
-import static net.minecraft.util.text.TextFormattingimport com.google.common.collect.ImmutableList;
+import static net.minecraft.ChatFormatting.BLUE;
+import static net.minecraft.ChatFormatting.DARK_PURPLE;
+import static net.minecraft.ChatFormatting.GRAY;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
@@ -18,10 +25,7 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -29,38 +33,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-
-.GRAY;
-
-import javanet.minecraft.ChatFormattinglections;
-import java.util.List;
-import java.util.Vector;
-
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.AllBlocks;
-import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket;
-import com.simibubi.create.content.schematics.packet.ConfigureSchematicannonPacket.Option;
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
-import com.simibubi.create.foundation.gui.widgets.Indicator;
-import com.simibubi.create.foundation.gui.widgets.Indicator.State;
-import com.simibubi.create.foundation.item.ItemDescription.Palette;
-import com.simibubi.create.foundation.item.TooltipHelper;
-import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.utility.Lang;
-
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 
 public class SchematicannonScreen extends AbstractSimiContainerScreen<SchematicannonContainer> {
 
@@ -104,8 +76,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	private IconButton showSettingsButton;
 	private Indicator showSettingsIndicator;
 
-	public SchematicannonScreen(SchematicannonContainer container, Inventory inventory,
-								Component title) {
+	public SchematicannonScreen(SchematicannonContainer container, Inventory inventory, Component title) {
 		super(container, inventory, title);
 		placementSettingWidgets = new ArrayList<>();
 	}
@@ -139,9 +110,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		showSettingsIndicator = new Indicator(x + 9, y + 111, TextComponent.EMPTY);
 		widgets.add(showSettingsIndicator);
 
-		extraAreas = ImmutableList.of(
-			new Rect2i(x + BG_TOP.width, y + BG_TOP.height + BG_BOTTOM.height - 62, 84, 92)
-		);
+		extraAreas = ImmutableList.of(new Rect2i(x + BG_TOP.width, y + BG_TOP.height + BG_BOTTOM.height - 62, 84, 92));
 
 		tick();
 	}
@@ -209,26 +178,26 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		resetIndicator.state = State.OFF;
 
 		switch (te.state) {
-			case PAUSED:
-				pauseIndicator.state = State.YELLOW;
-				playButton.active = true;
-				pauseButton.active = false;
-				resetButton.active = true;
-				break;
-			case RUNNING:
-				playIndicator.state = State.GREEN;
-				playButton.active = false;
-				pauseButton.active = true;
-				resetButton.active = true;
-				break;
-			case STOPPED:
-				resetIndicator.state = State.RED;
-				playButton.active = true;
-				pauseButton.active = false;
-				resetButton.active = false;
-				break;
-			default:
-				break;
+		case PAUSED:
+			pauseIndicator.state = State.YELLOW;
+			playButton.active = true;
+			pauseButton.active = false;
+			resetButton.active = true;
+			break;
+		case RUNNING:
+			playIndicator.state = State.GREEN;
+			playButton.active = false;
+			pauseButton.active = true;
+			resetButton.active = true;
+			break;
+		case STOPPED:
+			resetIndicator.state = State.RED;
+			playButton.active = true;
+			pauseButton.active = false;
+			resetButton.active = false;
+			break;
+		default:
+			break;
 		}
 
 		handleTooltips();
@@ -267,9 +236,10 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			return;
 		boolean enabled = indicator.state == State.ON;
 		List<Component> tip = button.getToolTip();
-		tip.add((enabled ? optionEnabled : optionDisabled).plainCopy().withStyle(BLUE));
-		tip.addAll(TooltipHelper.cutTextComponent(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"),
-			GRAY, GRAY));
+		tip.add((enabled ? optionEnabled : optionDisabled).plainCopy()
+			.withStyle(BLUE));
+		tip.addAll(TooltipHelper
+			.cutTextComponent(Lang.translate("gui.schematicannon.option." + tooltipKey + ".description"), GRAY, GRAY));
 	}
 
 	@Override
@@ -293,8 +263,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			.isEmpty())
 			renderBlueprintHighlight(ms, x, y);
 
-		GuiGameElement.of(renderedItem)
-			.<GuiGameElement.GuiRenderBuilder>at(x + BG_TOP.width, y + BG_TOP.height + BG_BOTTOM.height - 48, -200)
+		GuiGameElement.of(renderedItem).<GuiGameElement
+			.GuiRenderBuilder>at(x + BG_TOP.width, y + BG_TOP.height + BG_BOTTOM.height - 48, -200)
 			.scale(5)
 			.render(ms);
 
@@ -305,8 +275,8 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 
 		if (te.missingItem != null) {
 			stringWidth += 16;
-			GuiGameElement.of(te.missingItem)
-				.<GuiGameElement.GuiRenderBuilder>at(x + 128, y + 49, 100)
+			GuiGameElement.of(te.missingItem).<GuiGameElement
+				.GuiRenderBuilder>at(x + 128, y + 49, 100)
 				.scale(1)
 				.render(ms);
 		}
@@ -322,8 +292,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		progress = Math.min(progress, 1);
 		AllGuiTextures sprite = AllGuiTextures.SCHEMATICANNON_PROGRESS;
 		sprite.bind();
-		blit(matrixStack, x + 44, y + 64, sprite.startX, sprite.startY, (int) (sprite.width * progress),
-			sprite.height);
+		blit(matrixStack, x + 44, y + 64, sprite.startX, sprite.startY, (int) (sprite.width * progress), sprite.height);
 	}
 
 	protected void renderChecklistPrinterProgress(PoseStack matrixStack, int x, int y, float progress) {
@@ -340,8 +309,7 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 			return;
 		}
 		sprite.bind();
-		blit(matrixStack, x + 36, y + 19, sprite.startX, sprite.startY, (int) (sprite.width * amount),
-			sprite.height);
+		blit(matrixStack, x + 36, y + 19, sprite.startX, sprite.startY, (int) (sprite.width * amount), sprite.height);
 	}
 
 	@Override
@@ -361,16 +329,13 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (hoveredSlot != null && !hoveredSlot.hasItem()) {
 			if (hoveredSlot.index == 0)
 				renderComponentTooltip(matrixStack,
-					TooltipHelper.cutTextComponent(Lang.translate(_slotSchematic), GRAY, ChatFormatting.BLUE),
-					mouseX, mouseY);
+					TooltipHelper.cutTextComponent(Lang.translate(_slotSchematic), GRAY, BLUE), mouseX, mouseY);
 			if (hoveredSlot.index == 2)
 				renderComponentTooltip(matrixStack,
-					TooltipHelper.cutTextComponent(Lang.translate(_slotListPrinter), GRAY, ChatFormatting.BLUE),
-					mouseX, mouseY);
+					TooltipHelper.cutTextComponent(Lang.translate(_slotListPrinter), GRAY, BLUE), mouseX, mouseY);
 			if (hoveredSlot.index == 4)
 				renderComponentTooltip(matrixStack,
-					TooltipHelper.cutTextComponent(Lang.translate(_slotGunpowder), GRAY, ChatFormatting.BLUE),
-					mouseX, mouseY);
+					TooltipHelper.cutTextComponent(Lang.translate(_slotGunpowder), GRAY, BLUE), mouseX, mouseY);
 		}
 
 		if (te.missingItem != null) {
@@ -398,15 +363,21 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 		if (te.hasCreativeCrate) {
 			tooltip.add(Lang.translate(_gunpowderLevel, "" + 100));
 			tooltip.add(new TextComponent("(").append(new TranslatableComponent(AllBlocks.CREATIVE_CRATE.get()
-				.getDescriptionId())).append(")").withStyle(DARK_PURPLE));
+				.getDescriptionId()))
+				.append(")")
+				.withStyle(DARK_PURPLE));
 			return tooltip;
 		}
 
 		int fillPercent = (int) (te.fuelLevel * 100);
 		tooltip.add(Lang.translate(_gunpowderLevel, fillPercent));
-		tooltip.add(Lang.translate(_shotsRemaining, new TextComponent(Integer.toString(shotsLeft)).withStyle(BLUE)).withStyle(GRAY));
+		tooltip.add(Lang.translate(_shotsRemaining, new TextComponent(Integer.toString(shotsLeft)).withStyle(BLUE))
+			.withStyle(GRAY));
 		if (shotsLeftWithItems != shotsLeft)
-			tooltip.add(Lang.translate(_shotsRemainingWithBackup, new TextComponent(Integer.toString(shotsLeftWithItems)).withStyle(BLUE)).withStyle(GRAY));
+			tooltip.add(Lang
+				.translate(_shotsRemainingWithBackup,
+					new TextComponent(Integer.toString(shotsLeftWithItems)).withStyle(BLUE))
+				.withStyle(GRAY));
 
 		return tooltip;
 	}
@@ -458,4 +429,3 @@ public class SchematicannonScreen extends AbstractSimiContainerScreen<Schematica
 	}
 
 }
-

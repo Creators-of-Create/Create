@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import org.lwjgl.opengl.GL11;
+import java.util.function.Consumer;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,6 +14,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderWorld;
@@ -34,18 +34,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.ClipContext.Block;
-import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -60,7 +60,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public static final Compartment<Pair<Integer, Integer>> DOC_WORLD_SECTION = new Compartment<>();
 
 	List<BlockEntity> renderedTileEntities;
-	List<BlockEntity> tickableTileEntities;
+	List<Pair<BlockEntity, Consumer<Level>>> tickableTileEntities;
 	Selection section;
 	boolean redraw;
 
@@ -180,8 +180,8 @@ public class WorldSectionElement extends AnimatedSceneElement {
 	public Pair<Vec3, BlockPos> rayTrace(PonderWorld world, Vec3 source, Vec3 target) {
 		world.setMask(this.section);
 		Vec3 transformedTarget = reverseTransformVec(target);
-		BlockHitResult rayTraceBlocks = world.clip(new ClipContext(reverseTransformVec(source),
-			transformedTarget, Block.OUTLINE, Fluid.NONE, null));
+		BlockHitResult rayTraceBlocks = world.clip(new ClipContext(reverseTransformVec(source), transformedTarget,
+			ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, null));
 		world.clearMask();
 
 		if (rayTraceBlocks == null)
@@ -258,10 +258,12 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		renderedTileEntities.removeIf(te -> scene.getWorld()
 			.getBlockEntity(te.getBlockPos()) != te);
 		tickableTileEntities.removeIf(te -> scene.getWorld()
-			.getBlockEntity(te.getBlockPos()) != te);
+			.getBlockEntity(te.getFirst()
+				.getBlockPos()) != te.getFirst());
 		tickableTileEntities.forEach(te -> {
-			if (te instanceof TickableBlockEntity)
-				((TickableBlockEntity) te).tick();
+			BlockEntity tile = te.getFirst();
+			te.getSecond()
+				.accept(scene.getWorld());
 		});
 	}
 
@@ -281,12 +283,21 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		renderedTileEntities = new ArrayList<>();
 		section.forEach(pos -> {
 			BlockEntity tileEntity = world.getBlockEntity(pos);
+			BlockState blockState = world.getBlockState(pos);
+			Block block = blockState.getBlock();
 			if (tileEntity == null)
 				return;
-			tickableTileEntities.add(tileEntity);
+			if (!(block instanceof EntityBlock))
+				return;
+			addTicker(tileEntity, ((EntityBlock) block).getTicker(world, blockState, tileEntity.getType()));
 			renderedTileEntities.add(tileEntity);
-			tileEntity.clearCache();
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends BlockEntity> void addTicker(T tileEntity, BlockEntityTicker<?> ticker) {
+		tickableTileEntities.add(Pair.of(tileEntity, w -> ((BlockEntityTicker<T>) ticker).tick(w,
+			tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity)));
 	}
 
 	@Override
@@ -326,12 +337,14 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 			VertexConsumer builder = new SheetedDecalTextureGenerator(
-				buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())),
-					overlayMS.last().pose(),
-					overlayMS.last().normal());
+				buffer.getBuffer(ModelBakery.DESTROY_TYPES.get(entry.getValue())), overlayMS.last()
+					.pose(),
+				overlayMS.last()
+					.normal());
 			Minecraft.getInstance()
 				.getBlockRenderer()
-				.renderModel(world.getBlockState(pos), pos, world, ms, builder, true, world.random, EmptyModelData.INSTANCE);
+				.renderBatched(world.getBlockState(pos), pos, world, ms, builder, true, world.random,
+					EmptyModelData.INSTANCE);
 			ms.popPose();
 		}
 	}
@@ -342,11 +355,11 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		int code = hashCode() ^ world.hashCode();
 
 		Pair<Integer, Integer> key = Pair.of(code, RenderType.chunkBufferLayers()
-				.indexOf(type));
+			.indexOf(type));
 		if (redraw)
 			bufferCache.invalidate(DOC_WORLD_SECTION, key);
 		SuperByteBuffer contraptionBuffer =
-				bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
+			bufferCache.get(DOC_WORLD_SECTION, key, () -> buildStructureBuffer(world, type));
 		if (contraptionBuffer.isEmpty())
 			return;
 
@@ -389,7 +402,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 		ModelBlockRenderer blockRenderer = dispatcher.getModelRenderer();
 		Random random = new Random();
 		BufferBuilder builder = new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize());
-		builder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		world.setMask(this.section);
 
 		section.forEach(pos -> {
@@ -402,8 +415,7 @@ public class WorldSectionElement extends AnimatedSceneElement {
 			if (state.getRenderShape() != RenderShape.ENTITYBLOCK_ANIMATED && state.getBlock() != Blocks.AIR
 				&& ItemBlockRenderTypes.canRenderInLayer(state, layer)) {
 				BlockEntity tileEntity = world.getBlockEntity(pos);
-				blockRenderer.renderModel(world, dispatcher.getBlockModel(state), state, pos, ms, builder, true,
-					random, 42, OverlayTexture.NO_OVERLAY,
+				dispatcher.renderBatched(state, pos, world, ms, builder, true, random,
 					tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE);
 			}
 

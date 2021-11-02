@@ -21,6 +21,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
@@ -48,8 +49,8 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	protected LazyOptional<IItemHandler> cap = LazyOptional.empty();
 	protected List<Pair<Direction, Boolean>> flapsToSend;
 
-	public BeltTunnelTileEntity(BlockEntityType<? extends BeltTunnelTileEntity> type) {
-		super(type);
+	public BeltTunnelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		flaps = new EnumMap<>(Direction.class);
 		sides = new HashSet<>();
 		flapsToSend = new LinkedList<>();
@@ -77,7 +78,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		Set<Direction> newFlaps = new HashSet<>(6);
 		ListTag flapsNBT = compound.getList("Flaps", NBT.TAG_INT);
 		for (Tag inbt : flapsNBT)
@@ -101,7 +102,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 		// Backwards compat
 		if (!compound.contains("Sides") && compound.contains("Flaps"))
 			sides.addAll(flaps.keySet());
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 		if (clientPacket)
 			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}

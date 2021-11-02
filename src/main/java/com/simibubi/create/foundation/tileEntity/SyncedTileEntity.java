@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.tileEntity;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -17,8 +18,8 @@ import net.minecraftforge.fmllegacy.network.PacketDistributor;
 @ParametersAreNonnullByDefault
 public abstract class SyncedTileEntity extends BlockEntity {
 
-	public SyncedTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public SyncedTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+		super(tileEntityTypeIn, pos, state);
 	}
 
 	@Override
@@ -31,10 +32,6 @@ public abstract class SyncedTileEntity extends BlockEntity {
 		return save(new CompoundTag());
 	}
 
-	@Override
-	public void handleUpdateTag(BlockState state, CompoundTag tag) {
-		load(state, tag);
-	}
 
 	public void sendData() {
 		if (level != null && !level.isClientSide)
@@ -53,12 +50,12 @@ public abstract class SyncedTileEntity extends BlockEntity {
 
 	@Override
 	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-		readClientUpdate(getBlockState(), pkt.getTag());
+		readClientUpdate(pkt.getTag());
 	}
 
 	// Special handling for client update packets
-	public void readClientUpdate(BlockState state, CompoundTag tag) {
-		load(state, tag);
+	public void readClientUpdate(CompoundTag tag) {
+		load(tag);
 	}
 
 	// Special handling for client update packets

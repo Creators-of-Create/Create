@@ -9,6 +9,7 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.content.logistics.block.chute.ChuteTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,8 +29,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	protected boolean updateAirFlow;
 	protected boolean updateGenerator;
 
-	public EncasedFanTileEntity(BlockEntityType<? extends EncasedFanTileEntity> type) {
-		super(type);
+	public EncasedFanTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		isGenerator = false;
 		airCurrent = new AirCurrent(this);
 		updateAirFlow = true;
@@ -37,9 +38,9 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
-		if (!wasMoved) 
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
+		if (!wasMoved)
 			isGenerator = compound.getBoolean("Generating");
 		if (clientPacket)
 			airCurrent.rebuild();
@@ -81,7 +82,8 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 			shouldGenerate = false;
 
 		if (shouldGenerate)
-			shouldGenerate = level != null && level.hasNeighborSignal(worldPosition) && level.isLoaded(worldPosition.below()) && blockBelowIsHot();
+			shouldGenerate = level != null && level.hasNeighborSignal(worldPosition)
+				&& level.isLoaded(worldPosition.below()) && blockBelowIsHot();
 
 		if (shouldGenerate == isGenerator)
 			return;
@@ -94,8 +96,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 			return false;
 		BlockState checkState = level.getBlockState(worldPosition.below());
 
-		if (!checkState.getBlock()
-			.is(AllBlockTags.FAN_HEATERS.tag))
+		if (!checkState.is(AllBlockTags.FAN_HEATERS.tag))
 			return false;
 
 		if (checkState.hasProperty(BlazeBurnerBlock.HEAT_LEVEL) && !checkState.getValue(BlazeBurnerBlock.HEAT_LEVEL)
@@ -176,7 +177,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 		super.tick();
 
 		boolean server = !level.isClientSide || isVirtual();
-		
+
 		if (server && airCurrentUpdateCooldown-- <= 0) {
 			airCurrentUpdateCooldown = AllConfigs.SERVER.kinetics.fanBlockCheckRate.get();
 			updateAirFlow = true;
@@ -187,7 +188,7 @@ public class EncasedFanTileEntity extends GeneratingKineticTileEntity implements
 			airCurrent.rebuild();
 			sendData();
 		}
-		
+
 		if (updateGenerator) {
 			updateGenerator = false;
 			updateGenerator();

@@ -44,16 +44,18 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 	protected void renderSafe(KineticTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
 		int light, int overlay) {
 
-		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
+		if (Backend.getInstance()
+			.canUseInstancing(te.getLevel()))
+			return;
 
 		super.renderSafe(te, partialTicks, ms, buffer, light, overlay);
 		float offset = getOffset(te, partialTicks);
 		boolean running = isRunning(te);
 
 		Axis rotationAxis = ((IRotate) te.getBlockState()
-				.getBlock()).getRotationAxis(te.getBlockState());
+			.getBlock()).getRotationAxis(te.getBlockState());
 		kineticRotationTransform(getRotatedCoil(te), te, rotationAxis, AngleHelper.rad(offset * 180), light)
-				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
+			.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 
 		Level world = te.getLevel();
 		BlockState blockState = te.getBlockState();
@@ -107,7 +109,13 @@ public abstract class AbstractPulleyRenderer extends KineticTileEntityRenderer {
 
 	protected SuperByteBuffer getRotatedCoil(KineticTileEntity te) {
 		BlockState blockState = te.getBlockState();
-		return PartialBufferer.getFacing(getCoil(), blockState, Direction.get(AxisDirection.POSITIVE, getShaftAxis(te)));
+		return PartialBufferer.getFacing(getCoil(), blockState,
+			Direction.get(AxisDirection.POSITIVE, getShaftAxis(te)));
+	}
+
+	@Override
+	public int getViewDistance() {
+		return 256;
 	}
 
 }

@@ -20,8 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.GrassPathBlock;
 import net.minecraft.world.level.block.SeaPickleBlock;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.TurtleEggBlock;
@@ -103,9 +103,7 @@ public class ItemRequirement {
 			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(SeaPickleBlock.PICKLES).intValue())));
 		if (block instanceof SnowLayerBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(item, state.getValue(SnowLayerBlock.LAYERS).intValue())));
-		if (block instanceof GrassPathBlock)
-			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(Items.GRASS_BLOCK)));
-		if (block instanceof FarmBlock)
+		if (block instanceof FarmBlock || block instanceof DirtPathBlock)
 			return new ItemRequirement(ItemUseType.CONSUME, Arrays.asList(new ItemStack(Items.DIRT)));
 
 		return item == Items.AIR ? INVALID : new ItemRequirement(ItemUseType.CONSUME, item);
@@ -144,7 +142,7 @@ public class ItemRequirement {
 
 		if (entity instanceof Boat) {
 			Boat boatEntity = (Boat) entity;
-			return new ItemRequirement(ItemUseType.CONSUME, boatEntity.getDropItem().getItem());
+			return new ItemRequirement(ItemUseType.CONSUME, boatEntity.getDropItem());
 		}
 
 		if (type == EntityType.END_CRYSTAL)

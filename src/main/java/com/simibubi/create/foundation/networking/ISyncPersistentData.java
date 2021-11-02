@@ -15,21 +15,21 @@ public interface ISyncPersistentData {
 	void onPersistentDataUpdated();
 
 	default void syncPersistentDataWithTracking(Entity self) {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new Packet(self));
+		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new PersistentDataPacket(self));
 	}
 
-	public static class Packet extends SimplePacketBase {
+	public static class PersistentDataPacket extends SimplePacketBase {
 
 		private int entityId;
 		private Entity entity;
 		private CompoundTag readData;
 
-		public Packet(Entity entity) {
+		public PersistentDataPacket(Entity entity) {
 			this.entity = entity;
 			this.entityId = entity.getId();
 		}
 
-		public Packet(FriendlyByteBuf buffer) {
+		public PersistentDataPacket(FriendlyByteBuf buffer) {
 			entityId = buffer.readInt();
 			readData = buffer.readNbt();
 		}

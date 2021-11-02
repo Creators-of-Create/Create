@@ -252,16 +252,16 @@ public class SchematicHandler {
 			return null;
 
 		activeSchematicItem = stack;
-		activeHotbarSlot = player.inventory.selected;
+		activeHotbarSlot = player.getInventory().selected;
 		return stack;
 	}
 
 	private boolean itemLost(Player player) {
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
-			if (!player.inventory.getItem(i)
+			if (!player.getInventory().getItem(i)
 				.sameItem(activeSchematicItem))
 				continue;
-			if (!ItemStack.tagMatches(player.inventory.getItem(i), activeSchematicItem))
+			if (!ItemStack.tagMatches(player.getInventory().getItem(i), activeSchematicItem))
 				continue;
 			return false;
 		}

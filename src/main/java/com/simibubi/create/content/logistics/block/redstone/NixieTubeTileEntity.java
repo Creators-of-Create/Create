@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -38,8 +39,8 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	private Component parsedCustomText;
 	private Couple<String> displayedStrings;
 
-	public NixieTubeTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public NixieTubeTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		hasCustomText = false;
 		redstoneStrength = 0;
 	}
@@ -113,8 +114,8 @@ public class NixieTubeTileEntity extends SmartTileEntity {
 	//
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag nbt, boolean clientPacket) {
-		super.fromTag(state, nbt, clientPacket);
+	protected void fromTag(CompoundTag nbt, boolean clientPacket) {
+		super.fromTag(nbt, clientPacket);
 
 		if (nbt.contains("RawCustomText", NBT.TAG_STRING)) {
 			rawCustomText = getJsonFromString(nbt.getString("RawCustomText"));

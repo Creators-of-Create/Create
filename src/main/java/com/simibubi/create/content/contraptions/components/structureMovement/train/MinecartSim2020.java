@@ -1,13 +1,13 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train;
 
-import static net.minecraft.entity.Entity.getHorizontalDistanceSqr;
+import java.util.Map;
 
-importimport com.google.common.collect.Maps;
+import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.VecHelper;
-import java.util.Map;
+
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,25 +19,6 @@ import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.LazyOptional;
-
- javanet.minecraft.world.entity.Entityogle.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
-import com.simibubi.create.foundation.utility.VecHelper;
-
-import net.minecraft.block.AbstractRailBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.minecart.AbstractMinecartEntity;
-import net.minecraft.entity.item.minecart.FurnaceMinecartEntity;
-import net.minecraft.state.properties.RailShape;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.util.LazyOptional;
 
 /**
@@ -179,7 +160,7 @@ public class MinecartSim2020 {
 		if (Vector3d3 != null && actualVec != null) {
 			double d17 = (actualVec.y - Vector3d3.y) * 0.05D;
 			Vec3 Vector3d4 = cart.getDeltaMovement();
-			double d18 = Math.sqrt(getHorizontalDistanceSqr(Vector3d4));
+			double d18 = Math.sqrt(Vector3d4.horizontalDistanceSqr());
 			if (d18 > 0.0D) {
 				cart.setDeltaMovement(Vector3d4.multiply((d18 + d17) / d18, 1.0D, (d18 + d17) / d18));
 			}
@@ -195,7 +176,7 @@ public class MinecartSim2020 {
 		int i = Mth.floor(z);
 		if (j != cartPos.getX() || i != cartPos.getZ()) {
 			Vec3 Vector3d5 = cart.getDeltaMovement();
-			double d26 = Math.sqrt(getHorizontalDistanceSqr(Vector3d5));
+			double d26 = Math.sqrt(Vector3d5.horizontalDistanceSqr());
 			cart.setDeltaMovement(d26 * (double) (j - cartPos.getX()), Vector3d5.y, d26 * (double) (i - cartPos.getZ()));
 		}
 

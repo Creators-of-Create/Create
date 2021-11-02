@@ -8,7 +8,7 @@ import com.jozufozu.flywheel.light.LightProvider;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.ListenerStatus;
 
-import net.minecraft.world.LightType;
+import net.minecraft.world.level.LightLayer;
 
 public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;
@@ -42,7 +42,7 @@ public abstract class ContraptionLighter<C extends Contraption> implements ILigh
 	}
 
 	@Override
-    public void onLightUpdate(LightProvider world, LightType type, ImmutableBox changed) {
+    public void onLightUpdate(LightProvider world, LightLayer type, ImmutableBox changed) {
         lightVolume.onLightUpdate(world, type, changed);
     }
 

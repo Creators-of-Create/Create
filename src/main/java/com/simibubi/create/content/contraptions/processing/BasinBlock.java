@@ -119,7 +119,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 				ItemStack stackInSlot = inv.getStackInSlot(slot);
 				if (stackInSlot.isEmpty())
 					continue;
-				player.inventory.placeItemBackInInventory(worldIn, stackInSlot);
+				player.getInventory().placeItemBackInInventory(worldIn, stackInSlot);
 				inv.setStackInSlot(slot, ItemStack.EMPTY);
 				success = true;
 			}
@@ -150,7 +150,7 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 			te.inputInventory.withMaxStackSize(16);
 
 			if (insertItem.isEmpty()) {
-				itemEntity.remove();
+				itemEntity.discard();
 				if (!itemEntity.level.isClientSide)
 					AllTriggers.triggerForNearbyPlayers(AllTriggers.BASIN_THROW, itemEntity.level,
 						itemEntity.blockPosition(), 3);

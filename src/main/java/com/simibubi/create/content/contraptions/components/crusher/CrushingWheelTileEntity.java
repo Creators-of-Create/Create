@@ -3,10 +3,12 @@ package com.simibubi.create.content.contraptions.components.crusher;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -20,8 +22,8 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 	public static DamageSource damageSource = new DamageSource("create.crush").bypassArmor()
 			.setScalesWithDifficulty();
 
-	public CrushingWheelTileEntity(BlockEntityType<? extends CrushingWheelTileEntity> type) {
-		super(type);
+	public CrushingWheelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		setLazyTickRate(20);
 	}
 

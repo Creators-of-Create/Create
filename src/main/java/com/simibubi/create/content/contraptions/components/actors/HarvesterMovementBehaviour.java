@@ -1,8 +1,10 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.block.HorizontalBlock.FACING;
+import javax.annotation.Nullable;
 
-import javanet.minecrafimport com.jozufozu.flywheel.backend.Backend;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
@@ -12,7 +14,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-import javax.annotation.Nullable;
+
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -32,46 +34,12 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IPlantable;
-import org.apache.commons.lang3.mutable.MutableBoolean;
-
-t.world.level.block.HorizontalDirectionalBlockg.apache.commons.lang3.mutable.MutableBoolean;
-
-import com.jozufozu.flywheel.backend.Backend;
-import com.jozufozu.flywheel.backend.material.MaterialManager;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
-import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.BlockHelper;
-import com.simibubi.create.foundation.utility.VecHelper;
-import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
-
-import net.minecraft.block.AbstractPlantBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CocoaBlock;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.block.SugarCaneBlock;
-import net.minecraft.block.SweetBerryBushBlock;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.common.IPlantable;
 
 public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(HarvesterBlock.FACING)
 			.getOpposite());
 	}
 
@@ -97,7 +65,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
-		return Vec3.atLowerCornerOf(context.state.getValue(FACING)
+		return Vec3.atLowerCornerOf(context.state.getValue(HarvesterBlock.FACING)
 			.getNormal())
 			.scale(.45);
 	}
@@ -121,8 +89,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 		ItemStack item = ItemStack.EMPTY;
 		float effectChance = 1;
 
-		if (stateVisited.getBlock()
-			.is(BlockTags.LEAVES)) {
+		if (stateVisited.is(BlockTags.LEAVES)) {
 			item = new ItemStack(Items.SHEARS);
 			effectChance = .45f;
 		}
@@ -144,7 +111,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 	private boolean isValidCrop(Level world, BlockPos pos, BlockState state) {
 		boolean harvestPartial = AllConfigs.SERVER.kinetics.harvestPartiallyGrown.get();
 		boolean replant = AllConfigs.SERVER.kinetics.harvesterReplants.get();
-		
+
 		if (state.getBlock() instanceof CropBlock) {
 			CropBlock crop = (CropBlock) state.getBlock();
 			if (harvestPartial)
@@ -180,8 +147,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 			return false;
 		if (state.getBlock() instanceof SugarCaneBlock)
 			return true;
-		if (state.getBlock()
-			.is(BlockTags.LEAVES))
+		if (state.is(BlockTags.LEAVES))
 			return true;
 
 		if (state.getCollisionShape(world, pos)

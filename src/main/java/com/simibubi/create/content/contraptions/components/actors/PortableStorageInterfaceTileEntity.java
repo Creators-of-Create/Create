@@ -8,6 +8,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -25,8 +26,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	protected boolean powered;
 	protected Entity connectedEntity;
 
-	public PortableStorageInterfaceTileEntity(BlockEntityType<?> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public PortableStorageInterfaceTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		transferTimer = 0;
 		connectionAnimation = LerpedFloat.linear()
 			.startWithValue(0);
@@ -85,8 +86,8 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		transferTimer = compound.getInt("Timer");
 		distance = compound.getFloat("Distance");
 		powered = compound.getBoolean("Powered");

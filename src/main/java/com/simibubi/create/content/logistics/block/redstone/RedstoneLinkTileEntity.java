@@ -1,21 +1,8 @@
 package com.simibubi.create.content.logistics.block.redstone;
 
-import static net.minecraft.state.properties.BlockStateProperties.POWERED;
-
-import javanet.minimport com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
-import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 import java.util.List;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import org.apache.commons.lang3.tuple.Pair;
 
-ecraft.world.level.block.state.properties.BlockStatePropertiese.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -23,11 +10,11 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RedstoneLinkTileEntity extends SmartTileEntity {
 
@@ -37,13 +24,12 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	private LinkBehaviour link;
 	private boolean transmitter;
 
-	public RedstoneLinkTileEntity(BlockEntityType<? extends RedstoneLinkTileEntity> type) {
-		super(type);
+	public RedstoneLinkTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-	}
+	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
 	@Override
 	public void addBehavioursDeferred(List<TileEntityBehaviour> behaviours) {
@@ -55,7 +41,7 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 		Pair<ValueBoxTransform, ValueBoxTransform> slots =
 			ValueBoxTransform.Dual.makeSlots(RedstoneLinkFrequencySlot::new);
 		link = transmitter ? LinkBehaviour.transmitter(this, slots, this::getSignal)
-				: LinkBehaviour.receiver(this, slots, this::setSignal);
+			: LinkBehaviour.receiver(this, slots, this::setSignal);
 	}
 
 	public int getSignal() {
@@ -84,10 +70,10 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		transmitter = compound.getBoolean("Transmitter");
-		super.fromTag(state, compound, clientPacket);
-		
+		super.fromTag(compound, clientPacket);
+
 		receivedSignal = compound.getInt("Receive");
 		receivedSignalChanged = compound.getBoolean("ReceivedChanged");
 		if (level == null || level.isClientSide || !link.newPosition)
@@ -111,21 +97,24 @@ public class RedstoneLinkTileEntity extends SmartTileEntity {
 			return;
 		if (level.isClientSide)
 			return;
-		
+
 		BlockState blockState = getBlockState();
 		if (!AllBlocks.REDSTONE_LINK.has(blockState))
 			return;
 
-		if ((getReceivedSignal() > 0) != blockState.getValue(POWERED)) {
+		if ((getReceivedSignal() > 0) != blockState.getValue(RedstoneLinkBlock.POWERED)) {
 			receivedSignalChanged = true;
-			level.setBlockAndUpdate(worldPosition, blockState.cycle(POWERED));
+			level.setBlockAndUpdate(worldPosition, blockState.cycle(RedstoneLinkBlock.POWERED));
 		}
-		
+
 		if (receivedSignalChanged) {
-			Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING).getOpposite();
+			Direction attachedFace = blockState.getValue(RedstoneLinkBlock.FACING)
+				.getOpposite();
 			BlockPos attachedPos = worldPosition.relative(attachedFace);
-			level.blockUpdated(worldPosition, level.getBlockState(worldPosition).getBlock());
-			level.blockUpdated(attachedPos, level.getBlockState(attachedPos).getBlock());
+			level.blockUpdated(worldPosition, level.getBlockState(worldPosition)
+				.getBlock());
+			level.blockUpdated(attachedPos, level.getBlockState(attachedPos)
+				.getBlock());
 			receivedSignalChanged = false;
 		}
 	}

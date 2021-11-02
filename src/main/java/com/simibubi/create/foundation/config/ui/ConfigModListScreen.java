@@ -44,7 +44,7 @@ public class ConfigModListScreen extends ConfigScreen {
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 60, 15, height - 45, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
-		children.add(list);
+		children().add(list);
 
 		allEntries = new ArrayList<>();
 		ModList.get().getMods().stream().map(ModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));

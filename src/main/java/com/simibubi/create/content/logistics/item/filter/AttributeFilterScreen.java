@@ -185,7 +185,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void renderTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
-		if (this.minecraft.player.inventory.getCarried()
+		if (this.minecraft.player.getInventory().getCarried()
 			.isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
 			if (this.hoveredSlot.index == 37) {
 				renderComponentTooltip(matrixStack, selectedAttributes, mouseX, mouseY);

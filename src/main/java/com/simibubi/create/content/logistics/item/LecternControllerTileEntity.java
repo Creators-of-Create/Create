@@ -33,8 +33,8 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	private UUID prevUser;	// used only on client
 	private boolean deactivatedThisTick;	// used only on server
 
-	public LecternControllerTileEntity(BlockEntityType<?> type) {
-		super(type);
+	public LecternControllerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 	}
 
 	@Override
@@ -55,8 +55,8 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(state, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		controller = ItemStack.of(compound.getCompound("Controller"));
 		user = compound.hasUUID("User") ? compound.getUUID("User") : null;
 	}

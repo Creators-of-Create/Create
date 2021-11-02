@@ -85,12 +85,12 @@ public class EjectorTileEntity extends KineticTileEntity {
 		CHARGED, LAUNCHING, RETRACTING;
 	}
 
-	public EjectorTileEntity(BlockEntityType<?> typeIn) {
-		super(typeIn);
+	public EjectorTileEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+		super(typeIn, pos, state);
 		launcher = new EntityLauncher(1, 0);
 		lidProgress = LerpedFloat.linear()
 			.startWithValue(1);
-		state = State.RETRACTING;
+		this.state = State.RETRACTING;
 		launchedItems = new ArrayList<>();
 		powered = false;
 	}
@@ -164,8 +164,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 				.getItem() instanceof ElytraItem))
 				continue;
 
-			playerEntity.yRot = facing.toYRot();
-			playerEntity.xRot = -35;
+			playerEntity.setXRot(-35);
+			playerEntity.setYRot(facing.toYRot());
 			playerEntity.setDeltaMovement(playerEntity.getDeltaMovement()
 				.scale(.75f));
 			deployElytra(playerEntity);
@@ -469,7 +469,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		if (hd == 0 && vd == 0)
 			distanceFactor = 1;
 		else
-			distanceFactor = 1 * Mth.sqrt(Math.pow(hd, 2) + Math.pow(vd, 2));
+			distanceFactor = 1 * Mth.sqrt(hd * hd + vd * vd);
 		return speedFactor / distanceFactor;
 	}
 
@@ -499,8 +499,8 @@ public class EjectorTileEntity extends KineticTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState blockState, CompoundTag compound, boolean clientPacket) {
-		super.fromTag(blockState, compound, clientPacket);
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
+		super.fromTag(compound, clientPacket);
 		int horizontalDistance = compound.getInt("HorizontalDistance");
 		int verticalDistance = compound.getInt("VerticalDistance");
 
@@ -574,12 +574,6 @@ public class EjectorTileEntity extends KineticTileEntity {
 	@OnlyIn(Dist.CLIENT)
 	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public double getViewDistance() {
-		return super.getViewDistance() * 16;
 	}
 
 	private static abstract class EntityHack extends Entity {

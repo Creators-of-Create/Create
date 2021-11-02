@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -47,8 +48,8 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	protected LerpedFloat headAngle;
 	protected boolean isCreative;
 
-	public BlazeBurnerTileEntity(BlockEntityType<? extends BlazeBurnerTileEntity> tileEntityTypeIn) {
-		super(tileEntityTypeIn);
+	public BlazeBurnerTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
 		activeFuel = FuelType.NONE;
 		remainingBurnTime = 0;
 		headAngle = LerpedFloat.angular();
@@ -134,11 +135,11 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 	}
 
 	@Override
-	protected void fromTag(BlockState state, CompoundTag compound, boolean clientPacket) {
+	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		activeFuel = FuelType.values()[compound.getInt("fuelLevel")];
 		remainingBurnTime = compound.getInt("burnTimeRemaining");
 		isCreative = compound.getBoolean("isCreative");
-		super.fromTag(state, compound, clientPacket);
+		super.fromTag(compound, clientPacket);
 	}
 
 	public BlazeBurnerBlock.HeatLevel getHeatLevelFromBlock() {
@@ -172,7 +173,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = ForgeHooks.getBurnTime(itemStack);
+			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 		}

@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.components.actors;
 
-import static net.minecraft.block.HorizontalBlock.FACING;
-
-import com.net.minecrafimport com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.content.contraptions.components.actors.PloughBlock.PloughFakePlayer;
+import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
 import com.simibubi.create.foundation.utility.VecHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -25,36 +25,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 
-t.world.level.block.HorizontalDirectionalBlocks.components.actors.PloughBlock.PloughFakePlayer;
-import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
-import com.simibubi.create.foundation.utility.VecHelper;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.BubbleColumnBlock;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceContext.BlockMode;
-import net.minecraft.util.math.RayTraceContext.FluidMode;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-
 public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public boolean isActive(MovementContext context) {
-		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(FACING)
+		return !VecHelper.isVecPointingTowards(context.relativeMotion, context.state.getValue(PloughBlock.FACING)
 			.getOpposite());
 	}
 
@@ -74,8 +49,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 		if (player == null)
 			return;
 
-		BlockHitResult ray = world
-			.clip(new ClipContext(vec, vec.add(0, -1, 0), Block.OUTLINE, Fluid.NONE, player));
+		BlockHitResult ray = world.clip(new ClipContext(vec, vec.add(0, -1, 0), Block.OUTLINE, Fluid.NONE, player));
 		if (ray.getType() != Type.BLOCK)
 			return;
 
@@ -85,8 +59,9 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 	@Override
 	public Vec3 getActiveAreaOffset(MovementContext context) {
-		return Vec3.atLowerCornerOf(context.state.getValue(FACING)
-			.getNormal()).scale(.45);
+		return Vec3.atLowerCornerOf(context.state.getValue(PloughBlock.FACING)
+			.getNormal())
+			.scale(.45);
 	}
 
 	@Override
@@ -113,10 +88,11 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 
 		if (brokenState.getBlock() == Blocks.SNOW && context.world instanceof ServerLevel) {
 			ServerLevel world = (ServerLevel) context.world;
-			brokenState.getDrops(new LootContext.Builder(world).withParameter(LootContextParams.BLOCK_STATE, brokenState)
-				.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
-				.withParameter(LootContextParams.THIS_ENTITY, getPlayer(context))
-				.withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_SHOVEL)))
+			brokenState
+				.getDrops(new LootContext.Builder(world).withParameter(LootContextParams.BLOCK_STATE, brokenState)
+					.withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+					.withParameter(LootContextParams.THIS_ENTITY, getPlayer(context))
+					.withParameter(LootContextParams.TOOL, new ItemStack(Items.IRON_SHOVEL)))
 				.forEach(s -> dropItem(context, s));
 		}
 	}
@@ -125,7 +101,7 @@ public class PloughMovementBehaviour extends BlockBreakingMovementBehaviour {
 	public void stopMoving(MovementContext context) {
 		super.stopMoving(context);
 		if (context.temporaryData instanceof PloughFakePlayer)
-			((PloughFakePlayer) context.temporaryData).remove();
+			((PloughFakePlayer) context.temporaryData).discard();
 	}
 
 	private PloughFakePlayer getPlayer(MovementContext context) {

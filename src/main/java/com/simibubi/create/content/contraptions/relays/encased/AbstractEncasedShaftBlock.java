@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
