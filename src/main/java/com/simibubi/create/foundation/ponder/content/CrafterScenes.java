@@ -434,17 +434,17 @@ public class CrafterScenes {
 		ElementLink<EntityElement> ingot =
 			scene.world.createItemEntity(util.vector.centerOf(4, 4, 2), util.vector.of(0, 0.2, 0), iron);
 		scene.idle(17);
-		scene.world.modifyEntity(ingot, Entity::remove);
+		scene.world.modifyEntity(ingot, Entity::discard);
 		scene.world.modifyTileEntity(util.grid.at(3, 2, 2), type, mct -> mct.getInventory()
 			.insertItem(0, iron.copy(), false));
 		ingot = scene.world.createItemEntity(util.vector.centerOf(4, 4, 2), util.vector.of(0, 0.2, 0), iron);
 		scene.idle(17);
-		scene.world.modifyEntity(ingot, Entity::remove);
+		scene.world.modifyEntity(ingot, Entity::discard);
 		scene.world.modifyTileEntity(util.grid.at(2, 1, 2), type, mct -> mct.getInventory()
 			.insertItem(0, iron.copy(), false));
 		ingot = scene.world.createItemEntity(util.vector.centerOf(4, 4, 2), util.vector.of(0, 0.2, 0), iron);
 		scene.idle(17);
-		scene.world.modifyEntity(ingot, Entity::remove);
+		scene.world.modifyEntity(ingot, Entity::discard);
 		scene.world.modifyTileEntity(util.grid.at(1, 2, 2), type, mct -> mct.getInventory()
 			.insertItem(0, iron.copy(), false));
 

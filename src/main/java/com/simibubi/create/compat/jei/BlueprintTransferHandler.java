@@ -10,16 +10,22 @@ import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.Recipe;
 
-public class BlueprintTransferHandler implements IRecipeTransferHandler<BlueprintContainer> {
+@SuppressWarnings("rawtypes")
+public class BlueprintTransferHandler implements IRecipeTransferHandler<BlueprintContainer, Recipe> {
 
 	@Override
 	public Class<BlueprintContainer> getContainerClass() {
 		return BlueprintContainer.class;
 	}
-
+	
 	@Override
-	public IRecipeTransferError transferRecipe(BlueprintContainer container, Object recipe, IRecipeLayout recipeLayout,
-		Player player, boolean maxTransfer, boolean doTransfer) {
+	public Class<Recipe> getRecipeClass() {
+		return Recipe.class;
+	}
+	
+	@Override
+	public IRecipeTransferError transferRecipe(BlueprintContainer container, Recipe recipe,
+		IRecipeLayout recipeLayout, Player player, boolean maxTransfer, boolean doTransfer) {
 		if (!(recipe instanceof Recipe))
 			return null;
 		if (!doTransfer)

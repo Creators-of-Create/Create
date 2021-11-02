@@ -79,7 +79,7 @@ public class FunnelScenes {
 
 		for (int i = 0; i < 4; i++) {
 			if (lastItemEntity != null)
-				scene.world.modifyEntity(lastItemEntity, Entity::remove);
+				scene.world.modifyEntity(lastItemEntity, Entity::discard);
 			if (i < 3)
 				lastItemEntity = scene.world.createItemEntity(topItemSpawn, util.vector.of(0, -0.4, 0), itemStack);
 			scene.idle(8);
@@ -139,7 +139,7 @@ public class FunnelScenes {
 			scene.world.createItemEntity(topCenter, util.vector.of(0, 4 / 16f, 0), itemStack);
 		scene.idle(40);
 
-		scene.world.modifyEntity(itemLink, Entity::remove);
+		scene.world.modifyEntity(itemLink, Entity::discard);
 		scene.world.hideSection(topFunnelSelection, Direction.UP);
 		scene.idle(20);
 
@@ -159,7 +159,7 @@ public class FunnelScenes {
 		itemLink = scene.world.createItemEntity(topCenter.add(0, 3, 0), util.vector.of(0, -0.2, 0), itemStack);
 		scene.idle(10);
 
-		scene.world.modifyEntity(itemLink, Entity::remove);
+		scene.world.modifyEntity(itemLink, Entity::discard);
 		scene.idle(45);
 
 		// Wrench interaction
@@ -182,7 +182,7 @@ public class FunnelScenes {
 		scene.idle(10);
 		scene.world.modifyBlock(topFunnel, s -> s.cycle(FunnelBlock.EXTRACTING), true);
 		scene.idle(10);
-		scene.world.modifyEntity(itemLink, Entity::remove);
+		scene.world.modifyEntity(itemLink, Entity::discard);
 
 		scene.idle(20);
 
@@ -205,7 +205,7 @@ public class FunnelScenes {
 		scene.idle(60);
 		scene.world.hideSection(sideFunnelSelection, Direction.UP);
 		scene.world.hideSection(topFunnelSelection, Direction.UP);
-		scene.world.modifyEntity(itemLink, Entity::remove);
+		scene.world.modifyEntity(itemLink, Entity::discard);
 		scene.idle(20);
 
 		// Belt funnel
@@ -324,7 +324,7 @@ public class FunnelScenes {
 
 		for (int i = 0; i < 4; i++) {
 			if (lastItemEntity != null)
-				scene.world.modifyEntity(lastItemEntity, Entity::remove);
+				scene.world.modifyEntity(lastItemEntity, Entity::discard);
 			lastItemEntity = scene.world.createItemEntity(topItemSpawn, util.vector.of(0, -0.2, 0), itemStack);
 			scene.idle(8);
 

@@ -72,8 +72,8 @@ public class CloneCommand {
 		if (!world.hasChunksAt(begin, end) || !world.hasChunksAt(destination, destinationEnd))
 			throw BlockPosArgument.ERROR_NOT_LOADED.create();
 
-		BlockPos diffToTarget = new BlockPos(destinationArea.x0 - sourceArea.x0,
-			destinationArea.y0 - sourceArea.y0, destinationArea.z0 - sourceArea.z0);
+		BlockPos diffToTarget = new BlockPos(destinationArea.minX() - sourceArea.minX(),
+			destinationArea.minY() - sourceArea.minY(), destinationArea.minZ() - sourceArea.minZ());
 
 		int blockPastes = cloneBlocks ? cloneBlocks(sourceArea, world, diffToTarget) : 0;
 		int gluePastes = cloneGlue(sourceArea, world, diffToTarget);
@@ -89,8 +89,7 @@ public class CloneCommand {
 	private static int cloneGlue(BoundingBox sourceArea, ServerLevel world, BlockPos diffToTarget) {
 		int gluePastes = 0;
 
-		List<SuperGlueEntity> glue =
-			world.getEntitiesOfClass(SuperGlueEntity.class, AABB.of(sourceArea));
+		List<SuperGlueEntity> glue = world.getEntitiesOfClass(SuperGlueEntity.class, AABB.of(sourceArea));
 		List<Pair<BlockPos, Direction>> newGlue = Lists.newArrayList();
 
 		for (SuperGlueEntity g : glue) {
@@ -115,9 +114,9 @@ public class CloneCommand {
 		List<StructureTemplate.StructureBlockInfo> blocks = Lists.newArrayList();
 		List<StructureTemplate.StructureBlockInfo> tileBlocks = Lists.newArrayList();
 
-		for (int z = sourceArea.z0; z <= sourceArea.z1; ++z) {
-			for (int y = sourceArea.y0; y <= sourceArea.y1; ++y) {
-				for (int x = sourceArea.x0; x <= sourceArea.x1; ++x) {
+		for (int z = sourceArea.minZ(); z <= sourceArea.maxZ(); ++z) {
+			for (int y = sourceArea.minY(); y <= sourceArea.maxY(); ++y) {
+				for (int x = sourceArea.minX(); x <= sourceArea.maxX(); ++x) {
 					BlockPos currentPos = new BlockPos(x, y, z);
 					BlockPos newPos = currentPos.offset(diffToTarget);
 					BlockInWorld cached = new BlockInWorld(world, currentPos, false);
@@ -156,11 +155,12 @@ public class CloneCommand {
 				info.nbt.putInt("x", info.pos.getX());
 				info.nbt.putInt("y", info.pos.getY());
 				info.nbt.putInt("z", info.pos.getZ());
-				te.load(info.state, info.nbt);
+				te.load(info.nbt);
 				te.setChanged();
 			}
 
-			// idk why the state is set twice for a te, but its done like this in the original clone command
+			// idk why the state is set twice for a te, but its done like this in the
+			// original clone command
 			world.setBlock(info.pos, info.state, 2);
 		}
 

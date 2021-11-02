@@ -21,7 +21,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -30,8 +29,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
@@ -152,7 +151,8 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			if (!minecartController.isPresent())
 				continue;
 			AbstractMinecart cart = minecartController.cart();
-			if (cart.xChunk == chunkPos.x && cart.zChunk == chunkPos.z)
+			if (cart.chunkPosition()
+				.equals(chunkPos))
 				queuedUnloads.get(event.getWorld())
 					.add(cart.getUUID());
 		}
@@ -206,8 +206,9 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 
 	/* Capability management */
 
-	@CapabilityInject(MinecartController.class)
-	public static Capability<MinecartController> MINECART_CONTROLLER_CAPABILITY = null;
+	public static Capability<MinecartController> MINECART_CONTROLLER_CAPABILITY =
+		CapabilityManager.get(new CapabilityToken<>() {
+		});
 
 	public static void attach(AttachCapabilitiesEvent<Entity> event) {
 		Entity entity = event.getObject();
@@ -231,24 +232,6 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			return;
 		entity.getCapability(MINECART_CONTROLLER_CAPABILITY)
 			.ifPresent(MinecartController::sendData);
-	}
-
-	public static void register() {
-		CapabilityManager.INSTANCE.register(MinecartController.class, new Capability.IStorage<MinecartController>() {
-
-			@Override
-			public Tag writeNBT(Capability<MinecartController> capability, MinecartController instance,
-				Direction side) {
-				return instance.serializeNBT();
-			}
-
-			@Override
-			public void readNBT(Capability<MinecartController> capability, MinecartController instance, Direction side,
-				Tag base) {
-				instance.deserializeNBT((CompoundTag) base);
-			}
-
-		}, MinecartController::empty);
 	}
 
 	/* Capability provider */

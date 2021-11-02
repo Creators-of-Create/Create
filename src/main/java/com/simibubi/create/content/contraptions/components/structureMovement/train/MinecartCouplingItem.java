@@ -71,8 +71,8 @@ public class MinecartCouplingItem extends Item {
 		return true;
 	}
 
-	private static boolean onWrenchInteractOnMinecart(EntityInteract event, AbstractMinecart minecart,
-		Player player, MinecartController controller) {
+	private static boolean onWrenchInteractOnMinecart(EntityInteract event, AbstractMinecart minecart, Player player,
+		MinecartController controller) {
 		int couplings = (controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 		if (couplings == 0)
 			return false;
@@ -87,8 +87,8 @@ public class MinecartCouplingItem extends Item {
 		CouplingHandler.status(player, "removed");
 		controller.decouple();
 		if (!player.isCreative())
-			player.getInventory().placeItemBackInInventory(event.getWorld(),
-				new ItemStack(AllItems.MINECART_COUPLING.get(), couplings));
+			player.getInventory()
+				.placeItemBackInInventory(new ItemStack(AllItems.MINECART_COUPLING.get(), couplings));
 		return true;
 	}
 

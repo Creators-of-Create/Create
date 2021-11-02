@@ -336,7 +336,7 @@ public class BeltScenes {
 		ElementLink<EntityElement> item =
 			scene.world.createItemEntity(util.vector.centerOf(0, 4, 2), util.vector.of(0, 0, 0), stack);
 		scene.idle(13);
-		scene.world.modifyEntity(item, Entity::remove);
+		scene.world.modifyEntity(item, Entity::discard);
 		BlockPos beltEnd = util.grid.at(0, 1, 2);
 		scene.world.createItemOnBelt(beltEnd, Direction.DOWN, stack);
 
@@ -358,7 +358,7 @@ public class BeltScenes {
 		scene.idle(10);
 		scene.special.movePointOfInterest(beltEnd);
 		scene.idle(3);
-		scene.world.modifyEntity(item, Entity::remove);
+		scene.world.modifyEntity(item, Entity::discard);
 		scene.world.createItemOnBelt(beltEnd, Direction.DOWN, stack);
 		scene.idle(8);
 
@@ -373,7 +373,7 @@ public class BeltScenes {
 		scene.idle(5);
 		scene.world.setKineticSpeed(util.select.everywhere(), 0f);
 		scene.idle(10);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.special.movePointOfInterest(util.grid.at(2, 5, 4));
 
 		Vec3 topOf = util.vector.topOf(util.grid.at(3, 2, 2))

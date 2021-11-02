@@ -37,8 +37,8 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 	}
 	
 	@Override
-	public void setPosRaw(double x, double y, double z) {
-		super.setPosRaw(x, y, z);
+	public void setPos(double x, double y, double z) {
+		super.setPos(x, y, z);
 		AABB bb = getBoundingBox();
 		Vec3 diff = new Vec3(x, y, z).subtract(bb.getCenter());
 		setBoundingBox(bb.move(diff));

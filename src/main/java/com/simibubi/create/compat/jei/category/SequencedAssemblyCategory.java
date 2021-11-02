@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.EmptyBackground;
@@ -145,9 +144,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		if (recipe.getLoops() > 1) {
 			matrixStack.pushPose();
 			matrixStack.translate(15, 9, 0);
-			RenderSystem.color4f(.65f, .65f, .65f, 1);
-			AllIcons.I_REFRESH.draw(matrixStack, 50 + xOffset, 75);
-			RenderSystem.color4f(1, 1, 1, 1);
+			AllIcons.I_SEQ_REPEAT.draw(matrixStack, 50 + xOffset, 75);
 			Component repeat = new TextComponent("x" + recipe.getLoops());
 			font.draw(matrixStack, repeat, 66 + xOffset, 80, 0x888888);
 			matrixStack.popPose();

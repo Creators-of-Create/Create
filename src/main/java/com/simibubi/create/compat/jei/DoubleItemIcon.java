@@ -2,7 +2,6 @@ package com.simibubi.create.compat.jei;
 
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.GuiGameElement;
@@ -39,8 +38,6 @@ public class DoubleItemIcon implements IDrawable {
 			secondaryStack = secondarySupplier.get();
 		}
 
-		Lighting.turnBackOn();
-		RenderSystem.color4f(1, 1, 1, 1);
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);

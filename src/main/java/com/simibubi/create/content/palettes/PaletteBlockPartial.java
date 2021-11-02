@@ -186,7 +186,7 @@ public abstract class PaletteBlockPartial<B extends Block> {
 		protected BlockBuilder<SlabBlock, CreateRegistrate> transformBlock(
 				BlockBuilder<SlabBlock, CreateRegistrate> builder,
 				String variantName, PaletteBlockPattern pattern) {
-			builder.loot((lt, block) -> lt.add(block, RegistrateBlockLootTables.droppingSlab(block)));
+			builder.loot((lt, block) -> lt.add(block, RegistrateBlockLootTables.createSlabItemTable(block)));
 			return super.transformBlock(builder, variantName, pattern);
 		}
 

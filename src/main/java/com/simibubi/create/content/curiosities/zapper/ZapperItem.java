@@ -228,7 +228,7 @@ public abstract class ZapperItem extends Item {
 				data.putInt("x", pos.getX());
 				data.putInt("y", pos.getY());
 				data.putInt("z", pos.getZ());
-				tile.load(state, data);
+				tile.load(data);
 			}
 		}
 	}

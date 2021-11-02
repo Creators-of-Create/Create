@@ -32,7 +32,7 @@ import net.minecraftforge.fluids.FluidStack;
 public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IRecipeCategory<T> {
 
 	public final List<Supplier<List<? extends Recipe<?>>>> recipes = new ArrayList<>();
-	public final List<Supplier<? extends Object>> recipeCatalysts = new ArrayList<>();
+	public final List<Supplier<? extends ItemStack>> recipeCatalysts = new ArrayList<>();
 
 	protected ResourceLocation uid;
 	protected String name;
@@ -55,9 +55,8 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	}
 
 	@Override
-	public String getTitle() {
-		return Lang.translate("recipe." + name)
-			.getString();
+	public Component getTitle() {
+		return Lang.translate("recipe." + name);
 	}
 
 	@Override
@@ -100,8 +99,9 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results) {
 		addStochasticTooltip(itemStacks, results, 1);
 	}
-	
-	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results, int startIndex) {
+
+	public static void addStochasticTooltip(IGuiItemStackGroup itemStacks, List<ProcessingOutput> results,
+		int startIndex) {
 		itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
 			if (input)
 				return;
@@ -142,7 +142,7 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		fluidStacks.addTooltipCallback((slotIndex, input, fluid, tooltip) -> {
 			if (index != -1 && slotIndex != index)
 				return;
-			
+
 			if (fluid.getFluid()
 				.isSame(AllFluids.POTION.get())) {
 				Component name = fluid.getDisplayName();

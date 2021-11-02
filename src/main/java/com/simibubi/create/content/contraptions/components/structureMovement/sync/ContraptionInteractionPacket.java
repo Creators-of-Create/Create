@@ -55,13 +55,11 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
 			double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 10;
-			if (!sender.canSee(entityByID))
+			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;
 			d *= d;
-			if (sender.distanceToSqr(entityByID) > d) {
-				// TODO log?
+			if (sender.distanceToSqr(entityByID) > d) 
 				return;
-			}
 			if (contraptionEntity.handlePlayerInteraction(sender, localPos, face, interactionHand))
 				sender.swing(interactionHand, true);
 		});

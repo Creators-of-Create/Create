@@ -299,15 +299,15 @@ public class TunnelScenes {
 		scene.world.createItemEntity(spawn, m, item1);
 		scene.idle(12);
 		scene.world.createItemOnBelt(beltPos, Direction.UP, item1);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.createItemEntity(spawn, m, item2);
 		scene.idle(12);
 		scene.world.createItemOnBelt(beltPos, Direction.UP, item2);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.createItemEntity(spawn, m, item3);
 		scene.idle(12);
 		scene.world.createItemOnBelt(beltPos, Direction.UP, item3);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(50);
 
 		scene.world.showSectionAndMerge(util.select.position(3, 5, 2), Direction.DOWN, newBelt);
@@ -324,15 +324,15 @@ public class TunnelScenes {
 		scene.world.createItemEntity(spawn, m, item1);
 		scene.idle(12);
 		scene.world.createItemOnBelt(beltPos, Direction.EAST, item1);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.createItemEntity(spawn, m, item2);
 		scene.idle(12);
 		scene.world.createItemOnBelt(beltPos, Direction.EAST, item2);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.createItemEntity(spawn, m, item3);
 		scene.idle(12);
 		scene.world.createItemOnBelt(beltPos, Direction.EAST, item3);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(30);
 
 	}

@@ -92,7 +92,7 @@ public class ProcessingScenes {
 		ElementLink<EntityElement> entity1 =
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), itemStack);
 		scene.idle(18);
-		scene.world.modifyEntity(entity1, Entity::remove);
+		scene.world.modifyEntity(entity1, Entity::discard);
 		scene.world.modifyTileEntity(millstone, MillstoneTileEntity.class,
 			ms -> ms.inputInv.setStackInSlot(0, itemStack));
 		scene.idle(10);
@@ -208,7 +208,7 @@ public class ProcessingScenes {
 		ElementLink<EntityElement> entity1 =
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), input);
 		scene.idle(18);
-		scene.world.modifyEntity(entity1, Entity::remove);
+		scene.world.modifyEntity(entity1, Entity::discard);
 		Emitter blockSpace =
 			Emitter.withinBlockSpace(new ItemParticleOption(ParticleTypes.ITEM, input), util.vector.of(0, 0, 0));
 		scene.effects.emitParticles(util.vector.centerOf(center)
@@ -235,7 +235,7 @@ public class ProcessingScenes {
 		scene.idle(5);
 		scene.world.showSection(beltCog, Direction.UP);
 		scene.idle(5);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.showSection(bottomBelt, Direction.SOUTH);
 		scene.idle(5);
 
@@ -581,7 +581,7 @@ public class ProcessingScenes {
 			.placeNearTarget();
 		scene.idle(50);
 
-		scene.world.modifyEntities(Blaze.class, Entity::remove);
+		scene.world.modifyEntities(Blaze.class, Entity::discard);
 		scene.idle(20);
 
 		scene.world.showSection(util.select.position(2, 1, 2), Direction.DOWN);

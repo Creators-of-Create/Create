@@ -43,7 +43,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 		BlockEntity tileEntity = world.getBlockEntity(readBlockPos);
 		if (tileEntity instanceof ToolboxTileEntity) {
 			ToolboxTileEntity toolbox = (ToolboxTileEntity) tileEntity;
-			toolbox.handleUpdateTag(toolbox.getBlockState(), readNbt);
+			toolbox.handleUpdateTag(readNbt);
 			return toolbox;
 		}
 
@@ -73,20 +73,18 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 	}
 
 	@Override
-	public ItemStack clicked(int index, int flags, ClickType type, Player player) {
+	public void clicked(int index, int flags, ClickType type, Player player) {
 		int size = contentHolder.inventory.getSlots();
 
 		if (index >= 0 && index < size) {
-
 			ItemStack itemInClickedSlot = getSlot(index).getItem();
-			Inventory playerInv = player.getInventory();
-			ItemStack carried = playerInv.getCarried();
+			ItemStack carried = getCarried();
 
 			if (type == ClickType.PICKUP && !carried.isEmpty() && !itemInClickedSlot.isEmpty()
 				&& ToolboxInventory.canItemsShareCompartment(itemInClickedSlot, carried)) {
 				int subIndex = index % STACKS_PER_COMPARTMENT;
 				if (subIndex != STACKS_PER_COMPARTMENT - 1)
-					return clicked(index - subIndex + STACKS_PER_COMPARTMENT - 1, flags, type, player);
+					clicked(index - subIndex + STACKS_PER_COMPARTMENT - 1, flags, type, player);
 			}
 
 			if (type == ClickType.PICKUP && carried.isEmpty() && itemInClickedSlot.isEmpty())
@@ -96,7 +94,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 				}
 
 		}
-		return super.clicked(index, flags, type, player);
+		super.clicked(index, flags, type, player);
 	}
 
 	@Override

@@ -31,8 +31,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.entity.BeehiveBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 
 public interface IMovedDispenseItemBehaviour {
@@ -40,8 +38,7 @@ public interface IMovedDispenseItemBehaviour {
 	static void initSpawneggs() {
 		final IMovedDispenseItemBehaviour spawnEggDispenseBehaviour = new MovedDefaultDispenseItemBehaviour() {
 			@Override
-			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos,
-				Vec3 facing) {
+			protected ItemStack dispenseStack(ItemStack itemStack, MovementContext context, BlockPos pos, Vec3 facing) {
 				if (!(itemStack.getItem() instanceof SpawnEggItem))
 					return super.dispenseStack(itemStack, context, pos, facing);
 				if (context.world instanceof ServerLevel) {
@@ -64,8 +61,7 @@ public interface IMovedDispenseItemBehaviour {
 	static void init() {
 		MovedProjectileDispenserBehaviour movedPotionDispenseItemBehaviour = new MovedProjectileDispenserBehaviour() {
 			@Override
-			protected Projectile getProjectileEntity(Level world, double x, double y, double z,
-				ItemStack itemStack) {
+			protected Projectile getProjectileEntity(Level world, double x, double y, double z, ItemStack itemStack) {
 				return Util.make(new ThrownPotion(world, x, y, z), (p_218411_1_) -> p_218411_1_.setItem(itemStack));
 			}
 
@@ -158,18 +154,16 @@ public interface IMovedDispenseItemBehaviour {
 					BlockState state = context.world.getBlockState(interactAt);
 					Block block = state.getBlock();
 
-					if (state.is(BlockTags.BEEHIVES) && state.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) { 
+					if (state.is(BlockTags.BEEHIVES) && state.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) {
 						((BeehiveBlock) block).releaseBeesAndResetHoneyLevel(context.world, state, interactAt, null,
 							BeehiveBlockEntity.BeeReleaseStatus.BEE_RELEASED);
 						this.successful = true;
-						return placeItemInInventory(itemStack, new ItemStack(Items.HONEY_BOTTLE), context, pos,
-							facing);
+						return placeItemInInventory(itemStack, new ItemStack(Items.HONEY_BOTTLE), context, pos, facing);
 					} else if (context.world.getFluidState(interactAt)
 						.is(FluidTags.WATER)) {
 						this.successful = true;
 						return placeItemInInventory(itemStack,
-							PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), context, pos,
-							facing);
+							PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER), context, pos, facing);
 					} else {
 						return super.dispenseStack(itemStack, context, pos, facing);
 					}
@@ -185,10 +179,8 @@ public interface IMovedDispenseItemBehaviour {
 					BlockState state = context.world.getBlockState(interactAt);
 					Block block = state.getBlock();
 					if (block instanceof BucketPickup) {
-						Fluid fluid = ((BucketPickup) block).takeLiquid(context.world, interactAt, state);
-						if (fluid instanceof FlowingFluid)
-							return placeItemInInventory(itemStack, new ItemStack(fluid.getBucket()), context, pos,
-								facing);
+						ItemStack bucket = ((BucketPickup) block).pickupBlock(context.world, interactAt, state);
+						return placeItemInInventory(itemStack, bucket, context, pos, facing);
 					}
 					return super.dispenseStack(itemStack, context, pos, facing);
 				}

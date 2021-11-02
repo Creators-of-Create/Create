@@ -1,6 +1,7 @@
 package com.simibubi.create.content.logistics.block.funnel;
 
 import java.util.Random;
+import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
@@ -10,9 +11,8 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
-import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.foundation.utility.ReducedDestroyEffects;
 
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IBlockRenderProperties;
 
 public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable {
 
@@ -39,6 +40,11 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	protected AbstractFunnelBlock(Properties p_i48377_1_) {
 		super(p_i48377_1_);
 		registerDefaultState(defaultBlockState().setValue(POWERED, false));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+		consumer.accept(new ReducedDestroyEffects());
 	}
 
 	@Override
@@ -55,13 +61,6 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder.add(POWERED));
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
-		return true;
 	}
 
 	@Override

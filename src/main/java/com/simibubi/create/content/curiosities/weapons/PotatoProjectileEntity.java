@@ -134,7 +134,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (stuckEntity != null) {
 			if (getY() < stuckEntity.getY() - 0.1) {
 				pop(position());
-				remove();
+				kill();
 			} else {
 				stuckFallSpeed += 0.007 * projectileType.getGravityMultiplier();
 				stuckOffset = stuckOffset.add(0, -stuckFallSpeed, 0);
@@ -201,7 +201,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		boolean onServer = !level.isClientSide;
 		if (onServer && !target.hurt(causePotatoDamage(), damage)) {
 			target.setRemainingFireTicks(k);
-			remove();
+			kill();
 			return;
 		}
 
@@ -214,7 +214,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 		if (!(target instanceof LivingEntity)) {
 			playHitSound(level, position());
-			remove();
+			kill();
 			return;
 		}
 
@@ -254,7 +254,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (type.isSticky() && target.isAlive()) {
 			setStuckEntity(target);
 		} else {
-			remove();
+			kill();
 		}
 
 	}
@@ -280,7 +280,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 			if (random.nextDouble() <= recoveryChance)
 				recoverItem();
 		super.onHitBlock(ray);
-		remove();
+		kill();
 	}
 
 	@Override
@@ -290,7 +290,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 		if (this.isInvulnerableTo(source))
 			return false;
 		pop(position());
-		remove();
+		kill();
 		return true;
 	}
 

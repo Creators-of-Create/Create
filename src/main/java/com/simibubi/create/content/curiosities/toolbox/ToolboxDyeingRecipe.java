@@ -30,10 +30,8 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 				if (Block.byItem(stack.getItem()) instanceof ToolboxBlock) {
 					++toolboxes;
 				} else {
-					if (!stack.getItem().is(Tags.Items.DYES)) {
+					if (!stack.is(Tags.Items.DYES))
 						return false;
-					}
-
 					++dyes;
 				}
 
@@ -65,9 +63,11 @@ public class ToolboxDyeingRecipe extends CustomRecipe {
 			}
 		}
 
-		ItemStack dyedToolbox = AllBlocks.TOOLBOXES.get(color).asStack();
+		ItemStack dyedToolbox = AllBlocks.TOOLBOXES.get(color)
+			.asStack();
 		if (toolbox.hasTag()) {
-			dyedToolbox.setTag(toolbox.getTag().copy());
+			dyedToolbox.setTag(toolbox.getTag()
+				.copy());
 		}
 
 		return dyedToolbox;

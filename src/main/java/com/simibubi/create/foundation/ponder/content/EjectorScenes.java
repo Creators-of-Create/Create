@@ -127,7 +127,7 @@ public class EjectorScenes {
 			.placeNearTarget();
 		scene.idle(60);
 
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.hideSection(targetS, Direction.SOUTH);
 		scene.idle(15);
 		scene.world.restoreBlocks(targetS);
@@ -187,7 +187,7 @@ public class EjectorScenes {
 		scene.world.hideSection(util.select.fromTo(5, 1, 0, 4, 1, 1), Direction.UP);
 		scene.world.hideSection(util.select.position(5, 0, 1), Direction.DOWN);
 		scene.idle(30);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 
 		scene.addKeyframe();
 		ElementLink<ParrotElement> birb = scene.special.createBirb(util.vector.topOf(ejectorPos)
@@ -309,7 +309,7 @@ public class EjectorScenes {
 		for (int i = 0; i < 3; i++) {
 			scene.world.createItemEntity(topOf, util.vector.of(0, 0.1, 0), copper);
 			scene.idle(12);
-			scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+			scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 			scene.world.createItemOnBeltLike(ejectorPos, Direction.UP, copper);
 			scene.idle(20);
 			if (i == 1) {
@@ -349,7 +349,7 @@ public class EjectorScenes {
 		for (int i = 0; i < 6; i++) {
 			scene.world.createItemEntity(topOf, util.vector.of(0, 0.1, 0), copper);
 			scene.idle(12);
-			scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+			scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 			scene.world.createItemOnBeltLike(ejectorPos, Direction.UP, copper);
 			scene.idle(1);
 			scene.world.toggleRedstonePower(observerRedstone);

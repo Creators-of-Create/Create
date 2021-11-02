@@ -25,7 +25,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.tags.SerializationTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.Item;
@@ -104,9 +104,11 @@ public class BlueprintOverlayRenderer {
 		boolean firstPass = true;
 		boolean success = true;
 		Minecraft mc = Minecraft.getInstance();
-		ItemStackHandler playerInv = new ItemStackHandler(mc.player.getInventory().getContainerSize());
+		ItemStackHandler playerInv = new ItemStackHandler(mc.player.getInventory()
+			.getContainerSize());
 		for (int i = 0; i < playerInv.getSlots(); i++)
-			playerInv.setStackInSlot(i, mc.player.getInventory().getItem(i)
+			playerInv.setStackInSlot(i, mc.player.getInventory()
+				.getItem(i)
 				.copy());
 
 		int amountCrafted = 0;
@@ -278,8 +280,7 @@ public class BlueprintOverlayRenderer {
 					ItemAttribute fromNBT = ItemAttribute.fromNBT((CompoundTag) attributes.get(0));
 					if (fromNBT instanceof ItemAttribute.InTag) {
 						ItemAttribute.InTag inTag = (ItemAttribute.InTag) fromNBT;
-						Tag<Item> itag = SerializationTags.getInstance()
-							.getItems()
+						Tag<Item> itag = ItemTags.getAllTags()
 							.getTag(inTag.tagName);
 						if (itag != null)
 							return Ingredient.of(itag)

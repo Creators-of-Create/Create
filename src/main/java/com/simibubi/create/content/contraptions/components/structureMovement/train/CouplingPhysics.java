@@ -99,8 +99,7 @@ public class CouplingPhysics {
 		motions.replaceWithParams(VecHelper::clamp, Couple.create(1f, 1f));
 		Couple<Vec3> nextPositions = carts.map(MinecartSim2020::predictNextPositionOf);
 
-		Couple<RailShape> shapes = carts.mapWithContext((cart, current) -> {
-			AbstractMinecart minecart = cart.getMinecart();
+		Couple<RailShape> shapes = carts.mapWithContext((minecart, current) -> {
 			Vec3 vec = nextPositions.get(current);
 			int x = Mth.floor(vec.x());
 	        int y = Mth.floor(vec.y());
@@ -112,7 +111,7 @@ public class CouplingPhysics {
 			if (!(railState.getBlock() instanceof BaseRailBlock))
 				return null;
 			BaseRailBlock block = (BaseRailBlock) railState.getBlock();
-			return block.getRailDirection(railState, world, railPosition, cart);
+			return block.getRailDirection(railState, world, railPosition, minecart);
 		});
 
 		float futureStress = (float) (couplingLength - nextPositions.getFirst()

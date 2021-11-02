@@ -123,9 +123,9 @@ public class MovementActorScenes {
 		ElementLink<EntityElement> entity2 =
 			scene.world.createItemEntity(entitySpawn, util.vector.of(0, 0.2, 0), itemStack);
 		scene.idle(10);
-		scene.world.modifyEntity(entity1, Entity::remove);
+		scene.world.modifyEntity(entity1, Entity::discard);
 		scene.idle(10);
-		scene.world.modifyEntity(entity2, Entity::remove);
+		scene.world.modifyEntity(entity2, Entity::discard);
 
 		scene.overlay
 			.showControls(new InputWindowElement(util.vector.topOf(5, 3, 2), Pointing.DOWN).withItem(itemStack), 40);
@@ -146,9 +146,9 @@ public class MovementActorScenes {
 		scene.world.createItemOnBelt(beltPos, Direction.EAST, itemStack);
 
 		scene.idle(20);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(15);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 
 		scene.overlay.showText(120)
 			.placeNearTarget()
@@ -282,7 +282,7 @@ public class MovementActorScenes {
 		scene.idle(101);
 		scene.world.hideSection(crops, Direction.DOWN);
 		scene.idle(15);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.setBlocks(crops, Blocks.WHEAT.defaultBlockState()
 			.setValue(CropBlock.AGE, 7), false);
 		scene.world.showSection(crops, Direction.UP);
@@ -400,7 +400,7 @@ public class MovementActorScenes {
 		scene.world.hideSection(garbage, Direction.UP);
 		scene.idle(40);
 		scene.world.setBlocks(garbage, Blocks.SNOW.defaultBlockState(), false);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		ElementLink<WorldSectionElement> chest =
 			scene.world.showIndependentSection(util.select.position(4, 2, 2), Direction.DOWN);
 

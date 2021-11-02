@@ -158,7 +158,7 @@ public class BearingScenes {
 		scene.title("windmill_structure", "Windmill Contraptions");
 		scene.configureBasePlate(1, 1, 5);
 		scene.setSceneOffsetY(-1);
-		scene.world.modifyEntities(SuperGlueEntity.class, Entity::remove);
+		scene.world.modifyEntities(SuperGlueEntity.class, Entity::discard);
 		scene.world.showSection(util.select.layer(0), Direction.UP);
 		scene.idle(5);
 

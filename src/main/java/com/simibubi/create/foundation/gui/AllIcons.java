@@ -119,6 +119,7 @@ public class AllIcons implements IScreenRenderable {
 		I_FOLLOW_MATERIAL = next(),
 
 		I_SCHEMATIC = newRow(),
+		I_SEQ_REPEAT = next(),
 
 		I_MTD_LEFT = newRow(),
 		I_MTD_CLOSE = next(),

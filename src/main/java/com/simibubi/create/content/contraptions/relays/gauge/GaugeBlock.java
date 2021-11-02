@@ -2,9 +2,11 @@ package com.simibubi.create.content.contraptions.relays.gauge;
 
 import java.util.Random;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalAxisKineticBlock;
 import com.simibubi.create.content.contraptions.base.IRotate;
+import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -23,13 +25,14 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class GaugeBlock extends DirectionalAxisKineticBlock {
+public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<GaugeTileEntity> {
 
 	public static final GaugeShaper GAUGE = GaugeShaper.make();
 	protected Type type;
@@ -55,29 +58,6 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 		super(properties);
 		this.type = type;
 	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		switch (type) {
-		case SPEED:
-			return AllTileEntities.SPEEDOMETER.create();
-		case STRESS:
-			return AllTileEntities.STRESSOMETER.create();
-		default:
-			return null;
-		}
-	}
-
-	/*
-	 * FIXME: Is there a new way of doing this in 1.16? Or cn we just delete it?
-	 *
-	 * @SuppressWarnings("deprecation")
-	 *
-	 * @Override
-	 * public MaterialColor getMaterialColor(BlockState state, IBlockReader worldIn, BlockPos pos) {
-	 * return Blocks.SPRUCE_PLANKS.getMaterialColor(state, worldIn, pos);
-	 * }
-	 */
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -133,7 +113,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			return false;
 		if (getRotationAxis(state) == Axis.Y && face != state.getValue(FACING))
 			return false;
-		if (!Block.shouldRenderFace(state, world, pos, face) && !(world instanceof WrappedWorld))
+		if (!Block.shouldRenderFace(state, world, pos, face, pos.relative(face)) && !(world instanceof WrappedWorld))
 			return false;
 		return true;
 	}
@@ -152,7 +132,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
 				continue;
 
-			Vec3 rgb = Color.vectorFromRGB(color);
+			Vector3f rgb = new Vector3f(Color.vectorFromRGB(color));
 			Vec3 faceVec = Vec3.atLowerCornerOf(face.getNormal());
 			Direction positiveFacing = Direction.get(AxisDirection.POSITIVE, face.getAxis());
 			Vec3 positiveFaceVec = Vec3.atLowerCornerOf(positiveFacing.getNormal());
@@ -169,8 +149,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 				Vec3 offset = VecHelper.getCenterOf(pos)
 					.add(faceVec.scale(.55))
 					.add(mul);
-				worldIn.addParticle(new DustParticleOptions((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), offset.x,
-					offset.y, offset.z, mul.x, mul.y, mul.z);
+				worldIn.addParticle(new DustParticleOptions(rgb, 1), offset.x, offset.y, offset.z, mul.x, mul.y, mul.z);
 			}
 
 		}
@@ -200,5 +179,15 @@ public class GaugeBlock extends DirectionalAxisKineticBlock {
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;
+	}
+
+	@Override
+	public Class<GaugeTileEntity> getTileEntityClass() {
+		return GaugeTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends GaugeTileEntity> getTileEntityType() {
+		return type == Type.SPEED ? AllTileEntities.SPEEDOMETER.get() : AllTileEntities.STRESSOMETER.get();
 	}
 }

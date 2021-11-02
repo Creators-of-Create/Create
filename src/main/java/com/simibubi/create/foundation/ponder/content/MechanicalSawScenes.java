@@ -65,7 +65,7 @@ public class MechanicalSawScenes {
 		scene.world.modifyEntity(logItem, e -> e.setDeltaMovement(util.vector.of(0.05, 0.2, 0)));
 		scene.idle(12);
 
-		scene.world.modifyEntity(logItem, Entity::remove);
+		scene.world.modifyEntity(logItem, Entity::discard);
 		scene.world.createItemOnBeltLike(sawPos, Direction.WEST, log);
 		scene.idle(50);
 
@@ -88,7 +88,7 @@ public class MechanicalSawScenes {
 		scene.world.modifyEntity(logItem, e -> e.setDeltaMovement(util.vector.of(-0.05, 0.2, 0)));
 		scene.idle(12);
 
-		scene.world.modifyEntity(logItem, Entity::remove);
+		scene.world.modifyEntity(logItem, Entity::discard);
 		scene.world.createItemOnBeltLike(sawPos, Direction.EAST, strippedLog);
 		scene.idle(25);
 
@@ -102,7 +102,7 @@ public class MechanicalSawScenes {
 		scene.world.setKineticSpeed(otherBelt, 0);
 		scene.world.setKineticSpeed(belt, 0);
 		scene.world.modifyKineticSpeed(util.select.everywhere(), f -> -f);
-		scene.world.modifyEntity(logItem, Entity::remove);
+		scene.world.modifyEntity(logItem, Entity::discard);
 		scene.world.setBlock(shaftPos, AllBlocks.COGWHEEL.getDefaultState()
 			.setValue(ShaftBlock.AXIS, Axis.Z), true);
 		scene.idle(3);
@@ -144,7 +144,7 @@ public class MechanicalSawScenes {
 		scene.overlay.showFilterSlotInput(filter, 80);
 		ItemStack bricks = new ItemStack(Blocks.STONE_BRICKS);
 		scene.overlay.showControls(new InputWindowElement(filter, Pointing.DOWN).withItem(bricks), 80);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(7);
 		scene.world.setFilterData(util.select.position(sawPos), SawTileEntity.class, bricks);
 		scene.idle(10);
@@ -167,7 +167,7 @@ public class MechanicalSawScenes {
 			.pointAt(filter)
 			.placeNearTarget();
 		scene.idle(65);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 	}
 
 	public static void treeCutting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -227,7 +227,7 @@ public class MechanicalSawScenes {
 		scene.world.destroyBlock(util.grid.at(1, 1, 2));
 		scene.world.hideSection(util.select.layersFrom(2)
 			.add(util.select.fromTo(2, 1, 2, 1, 1, 3)), Direction.UP);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(15);
 		scene.world.setBlocks(util.select.fromTo(2, 1, 2, 1, 20, 3), Blocks.JUNGLE_LOG.defaultBlockState(), false);
 		scene.world.showSection(util.select.layersFrom(2)
@@ -350,7 +350,7 @@ public class MechanicalSawScenes {
 		scene.idle(40);
 
 		scene.world.restoreBlocks(tree);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.glueBlockOnto(util.grid.at(5, 2, 2), Direction.DOWN, contraption);
 
 		scene.overlay.showText(60)

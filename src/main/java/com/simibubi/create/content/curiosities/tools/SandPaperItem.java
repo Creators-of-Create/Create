@@ -102,7 +102,7 @@ public class SandPaperItem extends Item {
 			itemstack.getOrCreateTag()
 				.put("Polishing", toPolish.serializeNBT());
 			if (item.isEmpty())
-				pickUp.remove();
+				pickUp.discard();
 			else
 				pickUp.setItem(item);
 		}
@@ -143,7 +143,7 @@ public class SandPaperItem extends Item {
 				if (player instanceof FakePlayer) {
 					player.drop(polished, false, false);
 				} else {
-					player.getInventory().placeItemBackInInventory(worldIn, polished);
+					player.getInventory().placeItemBackInInventory(polished);
 				}
 			}
 			tag.remove("Polishing");
@@ -169,7 +169,7 @@ public class SandPaperItem extends Item {
 		CompoundTag tag = stack.getOrCreateTag();
 		if (tag.contains("Polishing")) {
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
-			player.getInventory().placeItemBackInInventory(worldIn, toPolish);
+			player.getInventory().placeItemBackInInventory(toPolish);
 			tag.remove("Polishing");
 		}
 	}

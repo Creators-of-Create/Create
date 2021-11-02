@@ -45,6 +45,7 @@ import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -128,7 +129,6 @@ public class Create {
 	}
 
 	public static void init(final FMLCommonSetupEvent event) {
-		CapabilityMinecartController.register();
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
@@ -153,6 +153,10 @@ public class Create {
 		ProcessingRecipeGen.registerAll(gen);
 	}
 
+	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+		event.register(CapabilityMinecartController.class);
+	}
+	
 	public static void onBiomeLoad(BiomeLoadingEvent event) {
 		AllWorldFeatures.reload(event);
 	}

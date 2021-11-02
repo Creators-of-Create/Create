@@ -50,8 +50,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 
 		.build();
 
-	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {
-	}
+	public NixieTubeRenderer(BlockEntityRendererProvider.Context context) {}
 
 	@Override
 	protected void renderSafe(NixieTubeTileEntity te, float partialTicks, PoseStack ms, MultiBufferSource buffer,
@@ -120,7 +119,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 		if (buffer instanceof BufferSource) {
 			BakedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
 				.whiteGlyph();
-			((BufferSource) buffer).endBatch(texturedglyph.renderType(false));
+			((BufferSource) buffer).endBatch(texturedglyph.renderType(Font.DisplayMode.NORMAL));
 		}
 	}
 

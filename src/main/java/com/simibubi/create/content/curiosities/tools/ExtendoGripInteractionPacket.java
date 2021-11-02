@@ -54,29 +54,32 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 
 	@Override
 	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> {
-			ServerPlayer sender = context.get().getSender();
-			if (sender == null)
-				return;
-			Entity entityByID = sender.getLevel().getEntity(target);
-			if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-				double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
-				if (!sender.canSee(entityByID))
-					d -= 3;
-				d *= d;
-				if (sender.distanceToSqr(entityByID) > d) {
-					// TODO log?
+		context.get()
+			.enqueueWork(() -> {
+				ServerPlayer sender = context.get()
+					.getSender();
+				if (sender == null)
 					return;
+				Entity entityByID = sender.getLevel()
+					.getEntity(target);
+				if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
+					double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get())
+						.getValue();
+					if (!sender.hasLineOfSight(entityByID))
+						d -= 3;
+					d *= d;
+					if (sender.distanceToSqr(entityByID) > d)
+						return;
+					if (interactionHand == null)
+						sender.attack(entityByID);
+					else if (specificPoint == null)
+						sender.interactOn(entityByID, interactionHand);
+					else
+						entityByID.interactAt(sender, specificPoint, interactionHand);
 				}
-				if (interactionHand == null)
-					sender.attack(entityByID);
-				else if (specificPoint == null)
-					sender.interactOn(entityByID, interactionHand);
-				else
-					entityByID.interactAt(sender, specificPoint, interactionHand);
-			}
-		});
-		context.get().setPacketHandled(true);
+			});
+		context.get()
+			.setPacketHandled(true);
 	}
 
 }

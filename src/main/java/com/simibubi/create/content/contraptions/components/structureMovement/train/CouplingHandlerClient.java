@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import java.util.Random;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.VecHelper;
@@ -56,7 +57,8 @@ public class CouplingHandlerClient {
 		ClientLevel world = Minecraft.getInstance().level;
 		Vec3 center = AABB.getCenter();
 		int amount = highlight ? 100 : 2;
-		ParticleOptions particleData = highlight ? ParticleTypes.END_ROD : new DustParticleOptions(1, 1, 1, 1);
+		ParticleOptions particleData =
+			highlight ? ParticleTypes.END_ROD : new DustParticleOptions(new Vector3f(1, 1, 1), 1);
 		for (int i = 0; i < amount; i++) {
 			Vec3 v = VecHelper.offsetRandomly(Vec3.ZERO, r, 1);
 			double yOffset = v.y;

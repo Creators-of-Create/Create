@@ -47,7 +47,7 @@ public class ChuteScenes {
 		ElementLink<EntityElement> remove =
 			scene.world.createItemEntity(util.vector.centerOf(util.grid.at(1, 5, 2)), util.vector.of(0, 0.1, 0), stack);
 		scene.idle(15);
-		scene.world.modifyEntity(remove, Entity::remove);
+		scene.world.modifyEntity(remove, Entity::discard);
 
 		scene.overlay.showText(60)
 			.attachKeyFrame()
@@ -55,7 +55,7 @@ public class ChuteScenes {
 			.placeNearTarget()
 			.text("Chutes can transport items vertically from and to inventories");
 		scene.idle(70);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.world.moveSection(bottom, util.vector.of(1, 0, 0), 10);
 		scene.world.moveSection(top, util.vector.of(-1, 0, 0), 10);
 		scene.idle(20);
@@ -125,7 +125,7 @@ public class ChuteScenes {
 				stack);
 			scene.idle(12);
 			scene.world.createItemOnBeltLike(util.grid.at(2, 4, 3), Direction.UP, stack);
-			scene.world.modifyEntity(remove, Entity::remove);
+			scene.world.modifyEntity(remove, Entity::discard);
 			scene.idle(3);
 			offset = offset.getClockWise();
 		}

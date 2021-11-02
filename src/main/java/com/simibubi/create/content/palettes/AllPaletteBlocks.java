@@ -32,12 +32,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.SandBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraftforge.common.Tags;
 
 public class AllPaletteBlocks {
 
 	private static final CreateRegistrate REGISTRATE = Create.registrate()
-			.itemGroup(() -> Create.PALETTES_CREATIVE_TAB)
+		.itemGroup(() -> Create.PALETTES_CREATIVE_TAB)
 		.startSection(AllSections.PALETTES);
 
 	// Windows and Glass
@@ -102,8 +103,8 @@ public class AllPaletteBlocks {
 	public static final PalettesVariantEntry DIORITE_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.DIORITE, PaletteBlockPattern.VANILLA_RANGE);
 
-	public static final PalettesVariantEntry ANDESITE_VARIANTS = new PalettesVariantEntry(PaletteStoneVariants.ANDESITE,
-		PaletteBlockPattern.VANILLA_RANGE);
+	public static final PalettesVariantEntry ANDESITE_VARIANTS =
+		new PalettesVariantEntry(PaletteStoneVariants.ANDESITE, PaletteBlockPattern.VANILLA_RANGE);
 
 	// Create stone variants
 
@@ -126,8 +127,8 @@ public class AllPaletteBlocks {
 			.loot(cobblestoneLoot(PaletteStoneVariants.WEATHERED_LIMESTONE))
 			.register();
 
-	public static final PalettesVariantEntry WEATHERED_LIMESTONE_VARIANTS = new PalettesVariantEntry(
-		PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPattern.STANDARD_RANGE);
+	public static final PalettesVariantEntry WEATHERED_LIMESTONE_VARIANTS =
+		new PalettesVariantEntry(PaletteStoneVariants.WEATHERED_LIMESTONE, PaletteBlockPattern.STANDARD_RANGE);
 
 	public static final BlockEntry<Block> DOLOMITE =
 		REGISTRATE.paletteStoneBlock("dolomite", () -> Blocks.QUARTZ_BLOCK, true)
@@ -137,24 +138,23 @@ public class AllPaletteBlocks {
 	public static final PalettesVariantEntry DOLOMITE_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.DOLOMITE, PaletteBlockPattern.STANDARD_RANGE);
 
-	public static final BlockEntry<Block> GABBRO =
-		REGISTRATE.paletteStoneBlock("gabbro", () -> Blocks.ANDESITE, true)
-			.loot(cobblestoneLoot(PaletteStoneVariants.GABBRO))
-			.register();
+	public static final BlockEntry<Block> GABBRO = REGISTRATE.paletteStoneBlock("gabbro", () -> Blocks.ANDESITE, true)
+		.loot(cobblestoneLoot(PaletteStoneVariants.GABBRO))
+		.register();
 
 	public static final PalettesVariantEntry GABBRO_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.GABBRO, PaletteBlockPattern.STANDARD_RANGE);
 
-	public static final BlockEntry<Block> SCORIA =
-		REGISTRATE.paletteStoneBlock("scoria", () -> Blocks.ANDESITE, false)
-			.loot(cobblestoneLoot(PaletteStoneVariants.SCORIA))
-			.register();
+	public static final BlockEntry<Block> SCORIA = REGISTRATE.paletteStoneBlock("scoria", () -> Blocks.ANDESITE, false)
+		.loot(cobblestoneLoot(PaletteStoneVariants.SCORIA))
+		.register();
 
 	public static final BlockEntry<Block> NATURAL_SCORIA = REGISTRATE.block("natural_scoria", Block::new)
 		.initialProperties(() -> Blocks.ANDESITE)
 		.tag(BlockTags.BASE_STONE_OVERWORLD, AllTags.AllBlockTags.WG_STONE.tag)
 		.onRegister(CreateRegistrate.blockVertexColors(ScoriaVertexColor.INSTANCE))
-		.loot((p, g) -> p.add(g, RegistrateBlockLootTables.droppingWithSilkTouch(g, SCORIA.get())))
+		.loot((p, g) -> p.add(g,
+			RegistrateBlockLootTables.createSilkTouchDispatchTable(g, LootItem.lootTableItem(SCORIA.get()))))
 		.blockstate(palettesCubeAll())
 		.simpleItem()
 		.register();
@@ -170,9 +170,12 @@ public class AllPaletteBlocks {
 	public static final PalettesVariantEntry DARK_SCORIA_VARIANTS =
 		new PalettesVariantEntry(PaletteStoneVariants.DARK_SCORIA, PaletteBlockPattern.STANDARD_RANGE);
 
-	private static <T extends Block> NonNullBiConsumer<RegistrateBlockLootTables, T> cobblestoneLoot(PaletteStoneVariants variant) {
-		return (loot, block) -> loot.add(block, RegistrateBlockLootTables.droppingWithSilkTouch(block,
-			variant.getVariants().registeredBlocks.get(0).get()));
+	private static <T extends Block> NonNullBiConsumer<RegistrateBlockLootTables, T> cobblestoneLoot(
+		PaletteStoneVariants variant) {
+		return (loot, block) -> loot.add(block,
+			RegistrateBlockLootTables.createSilkTouchDispatchTable(block,
+				LootItem.lootTableItem(variant.getVariants().registeredBlocks.get(0)
+					.get())));
 	}
 
 	private static <T extends Block> NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> palettesCubeAll() {

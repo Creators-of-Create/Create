@@ -431,7 +431,7 @@ public class DebugScenes {
 
 		scene.idle(27);
 
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 	}
 	
 	public static void pipeScene(SceneBuilder scene, SceneBuildingUtil util) {

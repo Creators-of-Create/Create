@@ -1,13 +1,12 @@
 package com.simibubi.create.content.contraptions.particle;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -60,15 +59,13 @@ public class CubeParticle extends Particle {
 			RenderSystem.depthMask(false);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
-			RenderSystem.enableLighting();
-			RenderSystem.enableColorMaterial();
 
 			// opaque
 //			RenderSystem.depthMask(true);
 //			RenderSystem.disableBlend();
 //			RenderSystem.enableLighting();
 
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormat.BLOCK);
+			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
 		}
 
 		@Override
@@ -76,7 +73,6 @@ public class CubeParticle extends Particle {
 			tessellator.end();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.disableLighting();
 			RenderSystem.enableTexture();
 		}
 	};

@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
@@ -49,7 +50,7 @@ public class ClientMotionPacket extends SimplePacketBase {
 				sender.setDeltaMovement(motion);
 				sender.setOnGround(onGround);
 				if (onGround) {
-					sender.causeFallDamage(sender.fallDistance, 1);
+					sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
 					sender.fallDistance = 0;
 					sender.connection.aboveGroundTickCount = 0;
 				}

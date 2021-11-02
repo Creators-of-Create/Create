@@ -155,7 +155,7 @@ public class CartAssemblerScenes {
 			.pointAt(cartCenter)
 			.placeNearTarget();
 		scene.idle(80);
-		scene.world.modifyEntity(itemEntity, Entity::remove);
+		scene.world.modifyEntity(itemEntity, Entity::discard);
 
 		scene.overlay.showControls(new InputWindowElement(cartCenter.add(0, 0, 4), Pointing.DOWN).rightClick()
 			.withItem(asStack), 20);

@@ -6,6 +6,7 @@ import java.util.List;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
+import com.simibubi.create.foundation.block.ITE;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,21 +18,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.HitResult;
 
-public class GearboxBlock extends RotatedPillarKineticBlock {
+public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<GearboxTileEntity> {
 
 	public GearboxBlock(Properties properties) {
 		super(properties);
-	}
-
-	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return AllTileEntities.GEARBOX.create();
 	}
 
 	@Override
@@ -76,5 +72,15 @@ public class GearboxBlock extends RotatedPillarKineticBlock {
 	@Override
 	public Axis getRotationAxis(BlockState state) {
 		return state.getValue(AXIS);
+	}
+
+	@Override
+	public Class<GearboxTileEntity> getTileEntityClass() {
+		return GearboxTileEntity.class;
+	}
+
+	@Override
+	public BlockEntityType<? extends GearboxTileEntity> getTileEntityType() {
+		return AllTileEntities.GEARBOX.get();
 	}
 }

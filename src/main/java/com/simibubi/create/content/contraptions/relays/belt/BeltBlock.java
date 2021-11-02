@@ -3,6 +3,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -24,10 +25,9 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.foundation.utility.ReducedDestroyEffects;
 
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -75,6 +75,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IBlockRenderProperties;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -90,6 +91,11 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 		registerDefaultState(defaultBlockState().setValue(SLOPE, BeltSlope.HORIZONTAL)
 			.setValue(PART, BeltPart.START)
 			.setValue(CASING, false));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+		consumer.accept(new ReducedDestroyEffects());
 	}
 
 	@Override
@@ -349,13 +355,6 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public boolean addDestroyEffects(BlockState state, Level world, BlockPos pos, ParticleEngine manager) {
-		BlockHelper.addReducedDestroyEffects(state, world, pos, manager);
-		return true;
-	}
-
-	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return BeltShapes.getShape(state);
 	}
@@ -377,9 +376,9 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BeltTileEntity controller = te.getControllerTE();
 			if (controller == null)
 				return shape;
-			if (controller.passengers == null || !controller.passengers.containsKey(
-				((EntityCollisionContext) context).getEntity()
-				.get()))
+			if (controller.passengers == null
+				|| !controller.passengers.containsKey(((EntityCollisionContext) context).getEntity()
+					.get()))
 				return BeltShapes.getCollisionShape(state);
 			return shape;
 
@@ -560,10 +559,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	public Class<BeltTileEntity> getTileEntityClass() {
 		return BeltTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends BeltTileEntity> getTileEntityType() {
-		return  AllTileEntities.BELT.get();
+		return AllTileEntities.BELT.get();
 	}
 
 	@Override

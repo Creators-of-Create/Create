@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
@@ -50,8 +49,7 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		NonNullList<Ingredient> recipeIngredients = recipe.getIngredients();
 
 		itemStacks.init(0, false, 133, 80);
-		itemStacks.set(0, recipe.getResultItem()
-			.getStack());
+		itemStacks.set(0, recipe.getResultItem());
 
 		int x = getXPadding(recipe);
 		int y = getYPadding(recipe);
@@ -122,7 +120,6 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		matrixStack.pushPose();
 		matrixStack.translate(0, 0, 300);
 
-		Lighting.turnOff();
 		int amount = 0;
 		for (Ingredient ingredient : recipe.getIngredients()) {
 			if (Ingredient.EMPTY == ingredient)
@@ -155,18 +152,18 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 			matrixStack.scale(scale, scale, scale);
 
 			if (ingredient != null) {
-				RenderSystem.pushMatrix();
-				RenderSystem.multMatrix(matrixStack.last().pose());
+				PoseStack modelViewStack = RenderSystem.getModelViewStack();
+				modelViewStack.pushPose();
+				modelViewStack.mulPoseMatrix(matrixStack.last()
+					.pose());
 				RenderSystem.enableDepthTest();
-				Lighting.turnBackOn();
 				Minecraft minecraft = Minecraft.getInstance();
 				Font font = getFontRenderer(minecraft, ingredient);
 				ItemRenderer itemRenderer = minecraft.getItemRenderer();
-				itemRenderer.renderAndDecorateItem(null, ingredient, 0, 0);
-				itemRenderer.renderGuiItemDecorations(font, ingredient, 0, 0, null);
+				itemRenderer.renderAndDecorateFakeItem(ingredient, xPosition, yPosition);
+				itemRenderer.renderGuiItemDecorations(font, ingredient, xPosition, yPosition, null);
 				RenderSystem.disableBlend();
-				Lighting.turnOff();
-				RenderSystem.popMatrix();
+				modelViewStack.popPose();
 			}
 
 			matrixStack.popPose();

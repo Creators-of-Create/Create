@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
-import com.simibubi.create.foundation.networking.ISyncPersistentData;
+import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
 import net.minecraft.core.BlockPos;
@@ -98,7 +98,7 @@ public class ToolboxHandler {
 
 	public static void syncData(Player player) {
 		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-			new ISyncPersistentData.Packet(player));
+			new PersistentDataPacket(player));
 	}
 
 	public static List<ToolboxTileEntity> getNearest(LevelAccessor world, Player player, int maxAmount) {

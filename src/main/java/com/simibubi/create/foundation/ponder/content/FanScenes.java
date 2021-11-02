@@ -137,7 +137,7 @@ public class FanScenes {
 		scene.idle(40);
 		scene.overlay.showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(smelted), 20);
 		scene.idle(20);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(20);
 
 		scene.overlay.showText(80)
@@ -202,7 +202,7 @@ public class FanScenes {
 		scene.world.modifyEntities(ItemEntity.class, ie -> ie.setItem(washed));
 		scene.overlay.showControls(new InputWindowElement(itemVec, Pointing.DOWN).withItem(washed), 20);
 		scene.idle(20);
-		scene.world.modifyEntities(ItemEntity.class, Entity::remove);
+		scene.world.modifyEntities(ItemEntity.class, Entity::discard);
 		scene.idle(20);
 
 		scene.overlay.showText(100)

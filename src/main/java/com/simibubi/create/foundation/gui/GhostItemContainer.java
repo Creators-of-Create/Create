@@ -50,12 +50,14 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 	}
 
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
-		ItemStack held = playerInventory.getCarried();
-		if (slotId < 36)
-			return super.clicked(slotId, dragType, clickTypeIn, player);
+	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+		ItemStack held = getCarried();
+		if (slotId < 36) {
+			super.clicked(slotId, dragType, clickTypeIn, player);
+			return;
+		}
 		if (clickTypeIn == ClickType.THROW)
-			return ItemStack.EMPTY;
+			return;
 
 		int slot = slotId - 36;
 		if (clickTypeIn == ClickType.CLONE) {
@@ -63,23 +65,23 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 				ItemStack stackInSlot = ghostInventory.getStackInSlot(slot)
 						.copy();
 				stackInSlot.setCount(stackInSlot.getMaxStackSize());
-				playerInventory.setCarried(stackInSlot);
-				return ItemStack.EMPTY;
+				setCarried(stackInSlot);
+				return;
 			}
-			return ItemStack.EMPTY;
+			return;
 		}
 
 		if (held.isEmpty()) {
 			ghostInventory.setStackInSlot(slot, ItemStack.EMPTY);
 			getSlot(slotId).setChanged();
-			return ItemStack.EMPTY;
+			return;
 		}
 
 		ItemStack insert = held.copy();
 		insert.setCount(1);
 		ghostInventory.setStackInSlot(slot, insert);
 		getSlot(slotId).setChanged();
-		return held;
+		setCarried(held);
 	}
 
 	@Override
