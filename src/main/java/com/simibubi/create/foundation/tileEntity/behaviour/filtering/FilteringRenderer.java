@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
@@ -14,11 +15,13 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sid
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -86,12 +89,19 @@ public class FilteringRenderer {
 				.highlightFace(result.getDirection());
 	}
 
-	public static void renderOnTileEntity(SmartTileEntity tileEntityIn, float partialTicks, MatrixStack ms,
+	public static void renderOnTileEntity(SmartTileEntity te, float partialTicks, MatrixStack ms,
 		IRenderTypeBuffer buffer, int light, int overlay) {
 
-		if (tileEntityIn == null || tileEntityIn.isRemoved())
+		if (te == null || te.isRemoved())
 			return;
-		FilteringBehaviour behaviour = tileEntityIn.getBehaviour(FilteringBehaviour.TYPE);
+
+		Entity cameraEntity = Minecraft.getInstance().cameraEntity;
+		float max = AllConfigs.CLIENT.filterItemRenderDistance.getF();
+		if (!te.isVirtual() && cameraEntity != null && cameraEntity.position()
+			.distanceToSqr(VecHelper.getCenterOf(te.getBlockPos())) > (max * max))
+			return;
+
+		FilteringBehaviour behaviour = te.getBehaviour(FilteringBehaviour.TYPE);
 		if (behaviour == null)
 			return;
 		if (!behaviour.isActive())
@@ -101,7 +111,7 @@ public class FilteringRenderer {
 			return;
 
 		ValueBoxTransform slotPositioning = behaviour.slotPositioning;
-		BlockState blockState = tileEntityIn.getBlockState();
+		BlockState blockState = te.getBlockState();
 
 		if (slotPositioning instanceof ValueBoxTransform.Sided) {
 			ValueBoxTransform.Sided sided = (ValueBoxTransform.Sided) slotPositioning;

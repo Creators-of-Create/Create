@@ -24,12 +24,12 @@ public class HighlightPacket extends SimplePacketBase {
 	}
 
 	public HighlightPacket(PacketBuffer buffer) {
-		this.pos = BlockPos.of(buffer.readLong());
+		this.pos = buffer.readBlockPos();
 	}
 
 	@Override
 	public void write(PacketBuffer buffer) {
-		buffer.writeLong(pos.asLong());
+		buffer.writeBlockPos(pos);
 	}
 
 	@Override
@@ -55,6 +55,6 @@ public class HighlightPacket extends SimplePacketBase {
 				.colored(0xEeEeEe)
 				// .colored(0x243B50)
 				.withFaceTexture(AllSpecialTextures.SELECTION);
-
 	}
+
 }

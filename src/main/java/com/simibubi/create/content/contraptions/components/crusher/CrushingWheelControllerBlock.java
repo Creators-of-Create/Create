@@ -156,8 +156,10 @@ public class CrushingWheelControllerBlock extends DirectionalBlock
 					continue;
 				if (neighbour.getValue(BlockStateProperties.AXIS) == d.getAxis())
 					continue;
-				KineticTileEntity wheelTe = (KineticTileEntity) world.getBlockEntity(pos.relative(d));
-				te.crushingspeed = Math.abs(wheelTe.getSpeed() / 50f);
+				TileEntity adjTe = world.getBlockEntity(pos.relative(d));
+				if (!(adjTe instanceof KineticTileEntity))
+					continue;
+				te.crushingspeed = Math.abs(((KineticTileEntity) adjTe).getSpeed() / 50f);
 				te.sendData();
 				break;
 			}

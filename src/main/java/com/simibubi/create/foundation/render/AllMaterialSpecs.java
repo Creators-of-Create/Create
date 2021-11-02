@@ -32,9 +32,9 @@ public class AllMaterialSpecs {
 	}
 
 	public static class Locations {
-		public static final ResourceLocation ROTATING = new ResourceLocation(Create.ID, "rotating");
-		public static final ResourceLocation BELTS = new ResourceLocation(Create.ID, "belts");
-		public static final ResourceLocation ACTORS = new ResourceLocation(Create.ID, "actors");
-		public static final ResourceLocation FLAPS = new ResourceLocation(Create.ID, "flaps");
+		public static final ResourceLocation ROTATING = Create.asResource("rotating");
+		public static final ResourceLocation BELTS = Create.asResource("belts");
+		public static final ResourceLocation ACTORS = Create.asResource("actors");
+		public static final ResourceLocation FLAPS = Create.asResource("flaps");
 	}
 }

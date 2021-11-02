@@ -26,5 +26,6 @@
   },
   "result": {
     "item": "create:furnace_engine"
-  }
+  },
+  "acceptMirrored": true
 }

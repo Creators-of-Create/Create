@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
@@ -86,6 +86,7 @@ public class AllIcons implements IScreenRenderable {
 		I_TUNNEL_PREFER_NEAREST = next(),
 		I_TUNNEL_RANDOMIZE = next(),
 		I_TUNNEL_SYNCHRONIZE = next(),
+		I_TOOLBOX = next(),
 
 		I_TOOL_MOVE_XZ = newRow(),
 		I_TOOL_MOVE_Y = next(),
@@ -181,7 +182,7 @@ public class AllIcons implements IScreenRenderable {
 		int j = i >> 16 & '\uffff';
 		int k = i & '\uffff';
 		Entry peek = ms.last();
-		Vector3d rgb = ColorHelper.getRGB(color);
+		Vector3d rgb = Color.vectorFromRGB(color);
 
 		Vector3d vec4 = new Vector3d(1, 1, 0);
 		Vector3d vec3 = new Vector3d(0, 1, 0);

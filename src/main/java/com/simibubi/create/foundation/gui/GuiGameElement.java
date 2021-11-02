@@ -11,7 +11,7 @@ import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -192,7 +192,7 @@ public class GuiGameElement {
 			int color = Minecraft.getInstance()
 				.getBlockColors()
 				.getColor(blockState, null, null, 0);
-			Vector3d rgb = ColorHelper.getRGB(color == -1 ? this.color : color);
+			Vector3d rgb = Color.vectorFromRGB(color == -1 ? this.color : color);
 			blockRenderer.getModelRenderer()
 				.renderModel(ms.last(), vb, blockState, blockModel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
 					0xF000F0, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);

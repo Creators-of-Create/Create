@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.block.BlockState;
@@ -47,7 +47,7 @@ public class KineticDebugger {
 			CreateClient.OUTLINER.chaseAABB("kineticSource", shape.bounds()
 					.move(toOutline))
 					.lineWidth(1 / 16f)
-					.colored(te.hasSource() ? ColorHelper.colorFromLong(te.network) : 0xffcc00);
+					.colored(te.hasSource() ? Color.generateFromLong(te.network).getRGB() : 0xffcc00);
 
 		if (state.getBlock() instanceof IRotate) {
 			Axis axis = ((IRotate) state.getBlock()).getRotationAxis(state);

@@ -1,14 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
-import java.awt.Color;
-
 import javax.annotation.Nonnull;
 
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.MainWindow;
@@ -104,6 +102,22 @@ public class UIRenderHelper {
 		ms.popPose();
 	}
 
+	public static void streak(MatrixStack ms, float angle, int x, int y, int breadth, int length, Color c) {
+		Color color = c.copy().setImmutable();
+		int c1 = color.scaleAlpha(0.625f).getRGB();
+		int c2 = color.scaleAlpha(0.5f).getRGB();
+		int c3 = color.scaleAlpha(0.0625f).getRGB();
+		int c4 = color.scaleAlpha(0f).getRGB();
+
+		ms.pushPose();
+		ms.translate(x, y, 0);
+		ms.mulPose(Vector3f.ZP.rotationDegrees(angle - 90));
+
+		streak(ms, breadth / 2, length, c1, c2, c3, c4);
+
+		ms.popPose();
+	}
+
 	private static void streak(MatrixStack ms, int width, int height, int c1, int c2, int c3, int c4) {
 		double split1 = .5;
 		double split2 = .75;
@@ -116,23 +130,23 @@ public class UIRenderHelper {
 	}
 
 	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
+	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
 	 */
 	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int breadth, int length, Couple<Color> c) {
 		angledGradient(ms, angle, x, y, 0, breadth, length, c);
 	}
 
 	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
+	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
 	 */
 	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int z, int breadth, int length, Couple<Color> c) {
-		angledGradient(ms, angle, x, y, z, breadth, length, c.getFirst().getRGB(), c.getSecond().getRGB());
+		angledGradient(ms, angle, x, y, z, breadth, length, c.getFirst(), c.getSecond());
 	}
 
 	/**
-	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, int, int)
+	 * @see #angledGradient(MatrixStack, float, int, int, int, int, int, Color, Color)
 	 */
-	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int breadth, int length, int color1, int color2) {
+	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int breadth, int length, Color color1, Color color2) {
 		angledGradient(ms, angle, x, y, 0, breadth, length, color1, color2);
 	}
 
@@ -144,22 +158,22 @@ public class UIRenderHelper {
 	 * @param color2  the color at the ending edge
 	 * @param breadth the total width of the gradient
 	 */
-	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int z, int breadth, int length, int color1, int color2) {
+	public static void angledGradient(@Nonnull MatrixStack ms, float angle, int x, int y, int z, int breadth, int length, Color color1, Color color2) {
 		ms.pushPose();
 		ms.translate(x, y, z);
 		ms.mulPose(Vector3f.ZP.rotationDegrees(angle - 90));
 
 		Matrix4f model = ms.last().pose();
 		int w = breadth / 2;
-		GuiUtils.drawGradientRect(model, 0, -w, 0, w, length, color1, color2);
+		GuiUtils.drawGradientRect(model, 0, -w, 0, w, length, color1.getRGB(), color2.getRGB());
 
 		ms.popPose();
 	}
 
-	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, Couple<Color> colors) {breadcrumbArrow(matrixStack, x, y, z, width, height, indent, colors.getFirst().getRGB(), colors.getSecond().getRGB());}
+	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, Couple<Color> colors) {breadcrumbArrow(matrixStack, x, y, z, width, height, indent, colors.getFirst(), colors.getSecond());}
 
 	// draws a wide chevron-style breadcrumb arrow pointing left
-	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, int startColor, int endColor) {
+	public static void breadcrumbArrow(MatrixStack matrixStack, int x, int y, int z, int width, int height, int indent, Color startColor, Color endColor) {
 		matrixStack.pushPose();
 		matrixStack.translate(x - indent, y, z);
 
@@ -168,7 +182,7 @@ public class UIRenderHelper {
 		matrixStack.popPose();
 	}
 
-	private static void breadcrumbArrow(MatrixStack ms, int width, int height, int indent, int c1, int c2) {
+	private static void breadcrumbArrow(MatrixStack ms, int width, int height, int indent, Color c1, Color c2) {
 
 		/*
 		 * 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
@@ -193,10 +207,10 @@ public class UIRenderHelper {
 
 		indent = Math.abs(indent);
 		width = Math.abs(width);
-		int fc1 = ColorHelper.mixAlphaColors(c1, c2, 0);
-		int fc2 = ColorHelper.mixAlphaColors(c1, c2, (indent) / (width + 2f * indent));
-		int fc3 = ColorHelper.mixAlphaColors(c1, c2, (indent + width) / (width + 2f * indent));
-		int fc4 = ColorHelper.mixAlphaColors(c1, c2, 1);
+		Color fc1 = Color.mixColors(c1, c2, 0);
+		Color fc2 = Color.mixColors(c1, c2, (indent) / (width + 2f * indent));
+		Color fc3 = Color.mixColors(c1, c2, (indent + width) / (width + 2f * indent));
+		Color fc4 = Color.mixColors(c1, c2, 1);
 
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
@@ -210,29 +224,29 @@ public class UIRenderHelper {
 		Matrix4f model = ms.last().pose();
 		bufferbuilder.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION_COLOR);
 
-		bufferbuilder.vertex(model, x0, y0, 0).color(fc1 >> 16 & 0xFF, fc1 >> 8 & 0xFF, fc1 & 0xFF, fc1 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x1, y1, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x2, y2, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x0, y0, 0).color(fc1.getRed(), fc1.getGreen(), fc1.getBlue(), fc1.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x1, y1, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x2, y2, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
 
-		bufferbuilder.vertex(model, x0, y0, 0).color(fc1 >> 16 & 0xFF, fc1 >> 8 & 0xFF, fc1 & 0xFF, fc1 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x2, y2, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x0, y0, 0).color(fc1.getRed(), fc1.getGreen(), fc1.getBlue(), fc1.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x2, y2, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x3, y3, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
 
-		bufferbuilder.vertex(model, x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x1, y1, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x3, y3, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x1, y1, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x4, y4, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
 
-		bufferbuilder.vertex(model, x3, y3, 0).color(fc2 >> 16 & 0xFF, fc2 >> 8 & 0xFF, fc2 & 0xFF, fc2 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x6, y6, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x3, y3, 0).color(fc2.getRed(), fc2.getGreen(), fc2.getBlue(), fc2.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x4, y4, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x6, y6, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
 
-		bufferbuilder.vertex(model, x5, y5, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x4, y4, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x7, y7, 0).color(fc4 >> 16 & 0xFF, fc4 >> 8 & 0xFF, fc4 & 0xFF, fc4 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x5, y5, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x4, y4, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x7, y7, 0).color(fc4.getRed(), fc4.getGreen(), fc4.getBlue(), fc4.getAlpha()).endVertex();
 
-		bufferbuilder.vertex(model, x6, y6, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x5, y5, 0).color(fc3 >> 16 & 0xFF, fc3 >> 8 & 0xFF, fc3 & 0xFF, fc3 >> 24 & 0xFF).endVertex();
-		bufferbuilder.vertex(model, x8, y8, 0).color(fc4 >> 16 & 0xFF, fc4 >> 8 & 0xFF, fc4 & 0xFF, fc4 >> 24 & 0xFF).endVertex();
+		bufferbuilder.vertex(model, x6, y6, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x5, y5, 0).color(fc3.getRed(), fc3.getGreen(), fc3.getBlue(), fc3.getAlpha()).endVertex();
+		bufferbuilder.vertex(model, x8, y8, 0).color(fc4.getRed(), fc4.getGreen(), fc4.getBlue(), fc4.getAlpha()).endVertex();
 
 		tessellator.end();
 		RenderSystem.shadeModel(GL11.GL_FLAT);

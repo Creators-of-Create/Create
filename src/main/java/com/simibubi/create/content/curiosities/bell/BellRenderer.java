@@ -1,7 +1,6 @@
 package com.simibubi.create.content.curiosities.bell;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
@@ -11,7 +10,6 @@ import net.minecraft.block.BellBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.BellAttachment;
 import net.minecraft.util.Direction;
@@ -39,9 +37,8 @@ public class BellRenderer<TE extends AbstractBellTileEntity> extends SafeTileEnt
 			rY += 90;
 		bell.rotateCentered(Direction.UP, AngleHelper.rad(rY));
 
-		IVertexBuilder vb = buffer.getBuffer(RenderType.cutout());
-		int lightCoords = WorldRenderer.getLightColor(te.getLevel(), state, te.getBlockPos());
-		bell.light(lightCoords).renderInto(ms, vb);
+		bell.light(light)
+			.renderInto(ms, buffer.getBuffer(RenderType.cutout()));
 	}
 
 	public static float getSwingAngle(float time) {

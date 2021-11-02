@@ -39,7 +39,7 @@ public abstract class NumberEntry<T extends Number> extends ValueEntry<T> {
 
 	public NumberEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
 		super(label, value, spec);
-		textField = new ConfigTextField(Minecraft.getInstance().font, 0, 0, 200, 20, unit);
+		textField = new ConfigTextField(Minecraft.getInstance().font, 0, 0, 200, 20);
 		if (this instanceof IntegerEntry && annotations.containsKey("IntDisplay")) {
 			String intDisplay = annotations.get("IntDisplay");
 			int intValue = (Integer) getValue();

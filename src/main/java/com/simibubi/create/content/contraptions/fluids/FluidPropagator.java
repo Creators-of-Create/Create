@@ -161,6 +161,8 @@ public class FluidPropagator {
 			return true;
 		if (BlockHelper.hasBlockSolidSide(connectedState, reader, connectedPos, side.getOpposite()))
 			return false;
+		if (hasFluidCapability(reader, connectedPos, side.getOpposite()))
+			return false;
 		if (!(connectedState.getMaterial()
 			.isReplaceable() && connectedState.getDestroySpeed(reader, connectedPos) != -1)
 			&& !connectedState.hasProperty(BlockStateProperties.WATERLOGGED))

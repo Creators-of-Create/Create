@@ -5,7 +5,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class PortableStorageInterfaceBlock extends ProperDirectionalBlock
+public class PortableStorageInterfaceBlock extends WrenchableDirectionalBlock
 	implements ITE<PortableStorageInterfaceTileEntity> {
 
 	boolean fluids;

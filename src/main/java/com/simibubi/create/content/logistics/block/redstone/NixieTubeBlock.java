@@ -10,7 +10,6 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.block.Block;
@@ -42,7 +41,8 @@ public class NixieTubeBlock extends HorizontalBlock
 	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
-	private DyeColor color;
+
+	protected final DyeColor color;
 
 	public NixieTubeBlock(Properties properties, DyeColor color) {
 		super(properties);
@@ -54,12 +54,13 @@ public class NixieTubeBlock extends HorizontalBlock
 	public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 		BlockRayTraceResult ray) {
 
+		if (player.isShiftKeyDown())
+			return ActionResultType.PASS;
+
 		ItemStack heldItem = player.getItemInHand(hand);
 		NixieTubeTileEntity nixie = getTileEntity(world, pos);
 
 		if (nixie == null)
-			return ActionResultType.PASS;
-		if (player.isShiftKeyDown())
 			return ActionResultType.PASS;
 		if (heldItem.isEmpty()) {
 			if (nixie.reactsToRedstone())
@@ -70,11 +71,7 @@ public class NixieTubeBlock extends HorizontalBlock
 		}
 
 		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
-		DyeColor dye = null;
-		for (DyeColor color : DyeColor.values())
-			if (heldItem.getItem()
-				.is(DyeHelper.getTagOfDye(color)))
-				dye = color;
+		DyeColor dye = DyeColor.getColor(heldItem);
 
 		if (!display && dye == null)
 			return ActionResultType.PASS;
@@ -236,6 +233,10 @@ public class NixieTubeBlock extends HorizontalBlock
 	@Override
 	public Class<NixieTubeTileEntity> getTileEntityClass() {
 		return NixieTubeTileEntity.class;
+	}
+
+	public DyeColor getColor() {
+		return color;
 	}
 
 	public static boolean areNixieBlocksEqual(BlockState blockState, BlockState otherState) {

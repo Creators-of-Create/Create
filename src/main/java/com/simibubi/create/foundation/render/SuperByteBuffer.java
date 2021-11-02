@@ -5,6 +5,7 @@ import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
+import com.simibubi.create.foundation.utility.Color;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
@@ -207,7 +208,7 @@ public class SuperByteBuffer {
 		while (!transforms.clear())
 			transforms.popPose();
 		transforms.pushPose();
-		
+
 		shouldColor = false;
 		r = 0;
 		g = 0;
@@ -295,6 +296,10 @@ public class SuperByteBuffer {
 		b = (color & 0xFF);
 		a = 255;
 		return this;
+	}
+
+	public SuperByteBuffer color(Color c) {
+		return color(c.getRGB());
 	}
 
 	/**

@@ -220,6 +220,8 @@ public class FilterItem extends Item implements INamedContainerProvider {
 			for (INBT inbt : attributes) {
 				CompoundNBT compound = (CompoundNBT) inbt;
 				ItemAttribute attribute = ItemAttribute.fromNBT(compound);
+				if (attribute == null)
+					continue;
 				boolean matches = attribute.appliesTo(stack, world) != compound.getBoolean("Inverted");
 
 				if (matches) {

@@ -6,9 +6,9 @@ import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.matrix.MatrixStack.Entry;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.simibubi.create.foundation.renderState.RenderTypes;
+import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
@@ -131,7 +131,7 @@ public class FluidRenderer {
 						.translateBack(center);
 
 				boolean X = side.getAxis() == Axis.X;
-				int darkColor = ColorHelper.mixColors(color, 0xff000011, 1 / 4f);
+				int darkColor = Color.mixColors(color, 0xff000011, 1 / 4f);
 				renderTiledHorizontalFace(X ? xMax : zMax, side, X ? zMin : xMin, yMin, X ? zMax : xMax, yMax, builder,
 					ms, light, darkColor, fluidTexture);
 

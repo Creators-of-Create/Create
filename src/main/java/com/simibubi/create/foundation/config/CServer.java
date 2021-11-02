@@ -2,16 +2,16 @@ package com.simibubi.create.foundation.config;
 
 public class CServer extends ConfigBase {
 
-	public ConfigGroup infrastructure = group(0, "infrastructure", Comments.infrastructure);
-	public ConfigInt tickrateSyncTimer =
+	public final ConfigGroup infrastructure = group(0, "infrastructure", Comments.infrastructure);
+	public final ConfigInt tickrateSyncTimer =
 		i(20, 5, "tickrateSyncTimer", "[in Ticks]", Comments.tickrateSyncTimer, Comments.tickrateSyncTimer2);
 
-	public CRecipes recipes = nested(0, CRecipes::new, Comments.recipes);
-	public CKinetics kinetics = nested(0, CKinetics::new, Comments.kinetics);
-	public CFluids fluids = nested(0, CFluids::new, Comments.fluids);
-	public CLogistics logistics = nested(0, CLogistics::new, Comments.logistics);
-	public CSchematics schematics = nested(0, CSchematics::new, Comments.schematics);
-	public CCuriosities curiosities = nested(0, CCuriosities::new, Comments.curiosities);
+	public final CRecipes recipes = nested(0, CRecipes::new, Comments.recipes);
+	public final CKinetics kinetics = nested(0, CKinetics::new, Comments.kinetics);
+	public final CFluids fluids = nested(0, CFluids::new, Comments.fluids);
+	public final CLogistics logistics = nested(0, CLogistics::new, Comments.logistics);
+	public final CSchematics schematics = nested(0, CSchematics::new, Comments.schematics);
+	public final CCuriosities curiosities = nested(0, CCuriosities::new, Comments.curiosities);
 
 	@Override
 	public String getName() {

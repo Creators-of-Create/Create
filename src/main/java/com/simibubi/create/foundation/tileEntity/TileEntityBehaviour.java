@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import java.util.ConcurrentModificationException;
+
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
@@ -85,7 +87,13 @@ public abstract class TileEntityBehaviour {
 	}
 
 	public static <T extends TileEntityBehaviour> T get(IBlockReader reader, BlockPos pos, BehaviourType<T> type) {
-		return get(reader.getBlockEntity(pos), type);
+		TileEntity te;
+		try {
+			te = reader.getBlockEntity(pos);
+		} catch (ConcurrentModificationException e) {
+			te = null;
+		}
+		return get(te, type);
 	}
 
 	public static <T extends TileEntityBehaviour> void destroy(IBlockReader reader, BlockPos pos,

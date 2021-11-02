@@ -192,7 +192,7 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 				superBuffer = PartialBufferer.get(AllBlockPartials.SAW_BLADE_VERTICAL_INACTIVE, state);
 		}
 
-		MatrixStack m = matrices.contraptionStack;
+		MatrixStack m = matrices.getModel();
 		m.pushPose();
 		MatrixTransformStack.of(m)
 			.centre()
@@ -205,8 +205,8 @@ public class SawRenderer extends SafeTileEntityRenderer<SawTileEntity> {
 			.unCentre();
 
 		superBuffer.transform(m)
-			.light(matrices.entityMatrix, ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
-			.renderInto(matrices.entityStack, buffer.getBuffer(RenderType.cutoutMipped()));
+			.light(matrices.getWorld(), ContraptionRenderDispatcher.getContraptionWorldLight(context, renderWorld))
+			.renderInto(matrices.getViewProjection(), buffer.getBuffer(RenderType.cutoutMipped()));
 
 		m.popPose();
 	}

@@ -15,6 +15,7 @@ import com.jozufozu.flywheel.core.model.IModel;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -40,7 +41,8 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final Map<RenderType, ModelRenderer> renderLayers = new HashMap<>();
 
-	private Matrix4f model;
+	private final Matrix4f modelViewPartial = new Matrix4f();
+	private boolean modelViewPartialReady;
 	private AxisAlignedBB lightBox;
 
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
@@ -74,34 +76,36 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	public void beginFrame(BeginFrameEvent event) {
 		super.beginFrame(event);
 
+		modelViewPartial.setIdentity();
+		modelViewPartialReady = false;
+
 		if (!isVisible()) return;
 
 		kinetics.beginFrame(event.getInfo());
 
-		AbstractContraptionEntity entity = contraption.entity;
-		float pt = AnimationTickHolder.getPartialTicks();
-		AxisAlignedBB lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume());
+		Vector3d cameraPos = event.getCameraPos();
 
-		Vector3d cameraPos = event.getInfo()
-				.getPosition();
+		lightBox = GridAlignedBB.toAABB(lighter.lightVolume.getTextureVolume())
+				.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+	}
 
-		float x = (float) (MathHelper.lerp(pt, entity.xOld, entity.getX()) - cameraPos.x);
-		float y = (float) (MathHelper.lerp(pt, entity.yOld, entity.getY()) - cameraPos.y);
-		float z = (float) (MathHelper.lerp(pt, entity.zOld, entity.getZ()) - cameraPos.z);
-		model = Matrix4f.createTranslateMatrix(x, y, z);
+	@Override
+	public void setupMatrices(MatrixStack viewProjection, double camX, double camY, double camZ) {
+		super.setupMatrices(viewProjection, camX, camY, camZ);
 
-		model.multiply(getMatrices().contraptionPose());
-
-		this.lightBox = lightBox.move(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		if (!modelViewPartialReady) {
+			setupModelViewPartial(modelViewPartial, getMatrices().getModel().last().pose(), contraption.entity, camX, camY, camZ, AnimationTickHolder.getPartialTicks());
+			modelViewPartialReady = true;
+		}
 	}
 
 	void setup(ContraptionProgram shader) {
-		if (model == null || lightBox == null) return;
-		shader.bind(model, lightBox);
+		if (!modelViewPartialReady || lightBox == null) return;
+		shader.bind(modelViewPartial, lightBox);
 		lighter.lightVolume.bind();
 	}
 
-	void invalidate() {
+	public void invalidate() {
 		for (ModelRenderer buffer : renderLayers.values()) {
 			buffer.delete();
 		}
@@ -125,10 +129,13 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		for (RenderType layer : blockLayers) {
 			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values());
 
+			ModelRenderer renderer;
 			if (Backend.getInstance().compat.vertexArrayObjectsSupported())
-				renderLayers.put(layer, new ArrayModelRenderer(layerModel));
+				renderer = new ArrayModelRenderer(layerModel);
 			else
-				renderLayers.put(layer, new ModelRenderer(layerModel));
+				renderer = new ModelRenderer(layerModel);
+
+			renderLayers.put(layer, renderer);
 		}
 	}
 
@@ -151,4 +158,13 @@ public class RenderedContraption extends ContraptionRenderInfo {
 	private void buildActors() {
 		contraption.getActors().forEach(kinetics::createActor);
 	}
+
+	public static void setupModelViewPartial(Matrix4f matrix, Matrix4f modelMatrix, AbstractContraptionEntity entity, double camX, double camY, double camZ, float pt) {
+		float x = (float) (MathHelper.lerp(pt, entity.xOld, entity.getX()) - camX);
+		float y = (float) (MathHelper.lerp(pt, entity.yOld, entity.getY()) - camY);
+		float z = (float) (MathHelper.lerp(pt, entity.zOld, entity.getZ()) - camZ);
+		matrix.setTranslation(x, y, z);
+		matrix.multiply(modelMatrix);
+	}
+
 }

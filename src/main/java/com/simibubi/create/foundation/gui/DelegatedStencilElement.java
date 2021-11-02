@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 public class DelegatedStencilElement extends StencilElement {
 
 	protected static final ElementRenderer EMPTY_RENDERER = (ms, width, height, alpha) -> {};
-	protected static final ElementRenderer DEFAULT_ELEMENT = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, -3, 5, height+4, width+6, ColorHelper.applyAlpha(0xff_10dd10, alpha), ColorHelper.applyAlpha(0xff_1010dd, alpha));
+	protected static final ElementRenderer DEFAULT_ELEMENT = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, -3, 5, height+4, width+6, new Color(0xff_10dd10).scaleAlpha(alpha), new Color(0xff_1010dd).scaleAlpha(alpha));
 
 	protected ElementRenderer stencil;
 	protected ElementRenderer element;

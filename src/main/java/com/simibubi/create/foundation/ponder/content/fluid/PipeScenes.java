@@ -35,6 +35,7 @@ import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -481,6 +482,10 @@ public class PipeScenes {
 		Selection pump = util.select.position(1, 1, 2);
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
+		
+		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
+			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);

@@ -32,8 +32,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchBlock extends HorizontalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable {
 
@@ -83,11 +87,12 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 
 	@Override
 	public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (side == blockState.getValue(FACING).getOpposite())
+		if (side == blockState.getValue(FACING)
+			.getOpposite())
 			return 0;
 		return getTileEntityOptional(blockAccess, pos).filter(StockpileSwitchTileEntity::isPowered)
-				.map($ -> 15)
-				.orElse(0);
+			.map($ -> 15)
+			.orElse(0);
 	}
 
 	@Override
@@ -120,14 +125,18 @@ public class StockpileSwitchBlock extends HorizontalBlock implements ITE<Stockpi
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = defaultBlockState();
+		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
 			TileEntity te = context.getLevel()
 				.getBlockEntity(context.getClickedPos()
 					.relative(face));
-			if (te != null && te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-				.isPresent())
+			if (te != null && (te.getCapability(itemCap)
+				.isPresent()
+				|| te.getCapability(fluidCap)
+					.isPresent()))
 				if (preferredFacing == null)
 					preferredFacing = face;
 				else {

@@ -10,7 +10,6 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 
@@ -38,7 +37,7 @@ public class EngineRenderer<T extends EngineTileEntity> extends SafeTileEntityRe
 				PartialBufferer.get(frame, te.getBlockState())
 						.rotateCentered(Direction.UP, angle)
 						.translate(0, 0, -1)
-						.light(WorldRenderer.getLightColor(te.getLevel(), te.getBlockState(), te.getBlockPos()))
+						.light(light)
 						.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 			}
 		}

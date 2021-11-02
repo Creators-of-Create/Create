@@ -5,7 +5,6 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.particle.RotationIndicatorParticleData;
 import com.simibubi.create.foundation.ponder.ElementLink;
-import com.simibubi.create.foundation.ponder.PonderRegistry;
 import com.simibubi.create.foundation.ponder.PonderStoryBoardEntry.PonderStoryBoard;
 import com.simibubi.create.foundation.ponder.SceneBuilder;
 import com.simibubi.create.foundation.ponder.SceneBuildingUtil;
@@ -51,9 +50,9 @@ public class DebugScenes {
 	private static void add(PonderStoryBoard sb) {
 		ItemEntry<Item> item = AllItems.BRASS_HAND;
 		String schematicPath = "debug/scene_" + index;
-		PonderRegistry.addStoryBoard(item, schematicPath, sb)
+		PonderIndex.HELPER.addStoryBoard(item, schematicPath, sb)
 			.highlightAllTags()
-			.chapter(PonderChapter.of("debug"));
+			.chapter(PonderIndex.HELPER.getOrCreateChapter("debug"));
 		index++;
 	}
 

@@ -16,8 +16,8 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class CStress extends ConfigBase implements IStressValueProvider {
 
-	private Map<ResourceLocation, ConfigValue<Double>> capacities = new HashMap<>();
-	private Map<ResourceLocation, ConfigValue<Double>> impacts = new HashMap<>();
+	private final Map<ResourceLocation, ConfigValue<Double>> capacities = new HashMap<>();
+	private final Map<ResourceLocation, ConfigValue<Double>> impacts = new HashMap<>();
 
 	@Override
 	protected void registerAll(Builder builder) {
@@ -62,12 +62,14 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 		return 0;
 	}
 
+	@Override
 	public boolean hasImpact(Block block) {
 		block = redirectValues(block);
 		ResourceLocation key = block.getRegistryName();
 		return getImpacts().containsKey(key);
 	}
 
+	@Override
 	public boolean hasCapacity(Block block) {
 		block = redirectValues(block);
 		ResourceLocation key = block.getRegistryName();

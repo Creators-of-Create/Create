@@ -4,7 +4,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
-import com.simibubi.create.foundation.block.ProperDirectionalBlock;
+import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
 import mcp.MethodsReturnNonnullByDefault;
 import net.minecraft.block.Block;
@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class NozzleBlock extends ProperDirectionalBlock {
+public class NozzleBlock extends WrenchableDirectionalBlock {
 
 	public NozzleBlock(Properties p_i48415_1_) {
 		super(p_i48415_1_);

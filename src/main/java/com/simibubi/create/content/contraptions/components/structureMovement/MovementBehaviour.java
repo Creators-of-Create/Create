@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ActorInstance;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionMatrices;
+import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -33,7 +34,11 @@ public abstract class MovementBehaviour {
 	}
 
 	public void dropItem(MovementContext context, ItemStack stack) {
-		ItemStack remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+		ItemStack remainder;
+		if (AllConfigs.SERVER.kinetics.moveItemsToStorage.get())
+			remainder = ItemHandlerHelper.insertItem(context.contraption.inventory, stack, false);
+		else
+			remainder = stack;
 		if (remainder.isEmpty())
 			return;
 

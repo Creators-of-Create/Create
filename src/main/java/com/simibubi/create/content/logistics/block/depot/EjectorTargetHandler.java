@@ -6,7 +6,7 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -205,7 +205,7 @@ public class EjectorTargetHandler {
 		double tickOffset = totalFlyingTicks / segments;
 		boolean valid = xDiff == validX && zDiff == validZ;
 		int intColor = valid ? 0x9ede73 : 0xff7171;
-		Vector3d color = ColorHelper.getRGB(intColor);
+		Vector3d color = Color.vectorFromRGB(intColor);
 		RedstoneParticleData data = new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1);
 		ClientWorld world = mc.level;
 

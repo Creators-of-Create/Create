@@ -87,6 +87,7 @@ public class AllShapes {
 			.forHorizontal(NORTH),
 		FLUID_VALVE = shape(3, -1, 3, 13, 17, 13).add(2, 2, 2, 14, 14, 14)
 			.forAxis(),
+		TOOLBOX = shape(1, 0, 4, 15, 9, 12).forHorizontal(NORTH),
 		SMART_FLUID_PIPE_FLOOR = shape(4, 4, 0, 12, 12, 16).add(3, 3, 3, 13, 13, 13)
 			.add(5, 13, 3, 11, 14, 11)
 			.add(5, 14, 4, 11, 15, 10)
@@ -110,7 +111,8 @@ public class AllShapes {
 			.forDirectional(Direction.UP),
 		CRUSHING_WHEEL_CONTROLLER_COLLISION = shape(0, 0, 0, 16, 13, 16).forDirectional(Direction.DOWN),
 
-		BELL_FLOOR = shape(0, 0, 5, 16, 11, 11).add(3, 1, 3, 13, 13, 13).forHorizontal(SOUTH),
+		BELL_FLOOR = shape(0, 0, 5, 16, 11, 11).add(3, 1, 3, 13, 13, 13)
+			.forHorizontal(SOUTH),
 		BELL_WALL = shape(5, 5, 8, 11, 11, 16).add(3, 1, 3, 13, 13, 13)
 			.forHorizontal(SOUTH),
 		BELL_DOUBLE_WALL = shape(5, 5, 0, 11, 11, 16).add(3, 1, 3, 13, 13, 13)
@@ -258,8 +260,7 @@ public class AllShapes {
 		}
 
 		public Builder erase(double x1, double y1, double z1, double x2, double y2, double z2) {
-			this.shape =
-				VoxelShapes.join(shape, cuboid(x1, y1, z1, x2, y2, z2), IBooleanFunction.ONLY_FIRST);
+			this.shape = VoxelShapes.join(shape, cuboid(x1, y1, z1, x2, y2, z2), IBooleanFunction.ONLY_FIRST);
 			return this;
 		}
 

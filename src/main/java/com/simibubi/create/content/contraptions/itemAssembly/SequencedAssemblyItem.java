@@ -1,6 +1,6 @@
 package com.simibubi.create.content.contraptions.itemAssembly;
 
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -36,7 +36,7 @@ public class SequencedAssemblyItem extends Item {
 
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack) {
-		return ColorHelper.mixColors(0xFF_46FFE0, 0xFF_FFC074, (float) getDurabilityForDisplay(stack));
+		return Color.mixColors(0xFF_46FFE0, 0xFF_FFC074, (float) getDurabilityForDisplay(stack));
 	}
 
 }

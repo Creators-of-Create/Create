@@ -39,11 +39,9 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 
 	/*
 	 *
-	 * zelo's list for configUI
+	 * TO DO
 	 *
 	 * reduce number of packets sent to the server when saving a bunch of values
-	 * maybe replace java's awt color with something mutable
-	 * find out why framebuffer blending is incorrect
 	 *
 	 * FIXME
 	 *
@@ -54,7 +52,6 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	public static final Map<String, TriConsumer<Screen, MatrixStack, Float>> backgrounds = new HashMap<>();
 	public static final PhysicalFloat cogSpin = PhysicalFloat.create().withLimit(10f).withDrag(0.3).addForce(new Force.Static(.2f));
 	public static final BlockState cogwheelState = AllBlocks.LARGE_COGWHEEL.getDefaultState().setValue(CogWheelBlock.AXIS, Direction.Axis.Y);
-	public static final Map<String, Object> changes = new HashMap<>();
 	public static String modID = null;
 	protected final Screen parent;
 
@@ -147,7 +144,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	public static String toHumanReadable(String key) {
 		String s = key.replaceAll("_", " ");
 		s = Arrays.stream(StringUtils.splitByCharacterTypeCamelCase(s)).map(StringUtils::capitalize).collect(Collectors.joining(" "));
-		s = s.replaceAll("\\s\\s+", " ");
+		s = StringUtils.normalizeSpace(s);
 		return s;
 	}
 

@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.config;
 
 public class CCommon extends ConfigBase {
 
-	public CWorldGen worldGen = nested(0, CWorldGen::new, Comments.worldGen);
+	public final CWorldGen worldGen = nested(0, CWorldGen::new, Comments.worldGen);
 
 	@Override
 	public String getName() {

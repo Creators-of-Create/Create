@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 import com.simibubi.create.foundation.ponder.content.PonderChapter;
-import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
 
@@ -31,7 +30,7 @@ public class ChapterLabel extends AbstractSimiWidget {
 	@Override
 	public void render(@Nonnull MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		UIRenderHelper.streak(ms, 0, x, y + height / 2, height - 2, width);
-		Minecraft.getInstance().font.draw(ms, Lang.translate("ponder.chapter." + chapter.getId()), x + 50,
+		Minecraft.getInstance().font.draw(ms, chapter.getTitle(), x + 50,
 			y + 20, Theme.i(Theme.Key.TEXT_ACCENT_SLIGHT));
 
 		button.renderButton(ms, mouseX, mouseY, partialTicks);

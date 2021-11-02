@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
@@ -57,6 +58,11 @@ public class WorldshaperItemRenderer extends ZapperItemRenderer<WorldshaperModel
 		ms.mulPose(Vector3f.ZP.rotationDegrees(angle));
 		ms.translate(0, -offset, 0);
 		renderer.render(model.getPartial("accelerator"), light);
+	}
+
+	@Override
+	public WorldshaperModel createModel(IBakedModel originalModel) {
+		return new WorldshaperModel(originalModel);
 	}
 
 }

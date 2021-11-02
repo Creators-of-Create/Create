@@ -5,6 +5,7 @@ import java.util.Random;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.fluids.FluidPropagator;
+import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -28,7 +29,7 @@ import net.minecraft.world.TickPriority;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPipe {
+public class SmartFluidPipeBlock extends HorizontalFaceBlock implements IAxisPipe, IWrenchable {
 
 	public SmartFluidPipeBlock(Properties p_i48339_1_) {
 		super(p_i48339_1_);

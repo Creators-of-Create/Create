@@ -181,8 +181,13 @@ public class SymmetryWandItem extends Item {
 
 	public static SymmetryMirror getMirror(ItemStack stack) {
 		checkNBT(stack);
-		return SymmetryMirror.fromNBT((CompoundNBT) stack.getTag()
+		return SymmetryMirror.fromNBT(stack.getTag()
 			.getCompound(SYMMETRY));
+	}
+
+	public static void configureSettings(ItemStack stack, SymmetryMirror mirror) {
+		checkNBT(stack);
+		stack.getTag().put(SYMMETRY, mirror.writeToNbt());
 	}
 
 	public static void apply(World world, ItemStack wand, PlayerEntity player, BlockPos pos, BlockState block) {

@@ -21,6 +21,7 @@ public class PonderLocalization {
 
 	static final Map<ResourceLocation, String> SHARED = new HashMap<>();
 	static final Map<ResourceLocation, Couple<String>> TAG = new HashMap<>();
+	static final Map<ResourceLocation, String> CHAPTER = new HashMap<>();
 	static final Map<ResourceLocation, Map<String, String>> SPECIFIC = new HashMap<>();
 
 	//
@@ -33,6 +34,10 @@ public class PonderLocalization {
 		TAG.put(key, Couple.create(enUS, description));
 	}
 
+	public static void registerChapter(ResourceLocation key, String enUS) {
+		CHAPTER.put(key, enUS);
+	}
+
 	public static void registerSpecific(ResourceLocation sceneId, String key, String enUS) {
 		SPECIFIC.computeIfAbsent(sceneId, $ -> new HashMap<>())
 			.put(key, enUS);
@@ -42,22 +47,28 @@ public class PonderLocalization {
 
 	public static String getShared(ResourceLocation key) {
 		if (PonderIndex.EDITOR_MODE)
-			return SHARED.containsKey(key) ? SHARED.get(key) : ("unregistered shared entry:" + key);
+			return SHARED.containsKey(key) ? SHARED.get(key) : ("unregistered shared entry: " + key);
 		return I18n.get(langKeyForShared(key));
 	}
 
 	public static String getTag(ResourceLocation key) {
 		if (PonderIndex.EDITOR_MODE)
 			return TAG.containsKey(key) ? TAG.get(key)
-				.getFirst() : ("unregistered tag entry:" + key);
+				.getFirst() : ("unregistered tag entry: " + key);
 		return I18n.get(langKeyForTag(key));
 	}
 
 	public static String getTagDescription(ResourceLocation key) {
 		if (PonderIndex.EDITOR_MODE)
 			return TAG.containsKey(key) ? TAG.get(key)
-				.getSecond() : ("unregistered tag entry:" + key);
+				.getSecond() : ("unregistered tag entry: " + key);
 		return I18n.get(langKeyForTagDescription(key));
+	}
+
+	public static String getChapter(ResourceLocation key) {
+		if (PonderIndex.EDITOR_MODE)
+			return CHAPTER.containsKey(key) ? CHAPTER.get(key) : ("unregistered chapter entry: " + key);
+		return I18n.get(langKeyForChapter(key));
 	}
 
 	public static String getSpecific(ResourceLocation sceneId, String k) {
@@ -82,6 +93,12 @@ public class PonderLocalization {
 			if (k.getNamespace().equals(namespace)) {
 				object.addProperty(langKeyForTag(k), v.getFirst());
 				object.addProperty(langKeyForTagDescription(k), v.getSecond());
+			}
+		});
+
+		CHAPTER.forEach((k, v) -> {
+			if (k.getNamespace().equals(namespace)) {
+				object.addProperty(langKeyForChapter(k), v);
 			}
 		});
 
@@ -172,6 +189,10 @@ public class PonderLocalization {
 
 	protected static String langKeyForTagDescription(ResourceLocation k) {
 		return k.getNamespace() + "." + LANG_PREFIX + "tag." + k.getPath() + ".description";
+	}
+
+	protected static String langKeyForChapter(ResourceLocation k) {
+		return k.getNamespace() + "." + LANG_PREFIX + "chapter." + k.getPath();
 	}
 
 	protected static String langKeyForSpecific(ResourceLocation sceneId, String k) {

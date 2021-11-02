@@ -20,5 +20,6 @@
   },
   "result": {
     "item": "create:potato_cannon"
-  }
+  },
+  "acceptMirrored": true
 }

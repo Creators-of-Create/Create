@@ -37,7 +37,7 @@ public abstract class SyncedTileEntity extends TileEntity {
 	}
 
 	public void sendData() {
-		if (level != null)
+		if (level != null && !level.isClientSide)
 			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 2 | 4 | 16);
 	}
 
@@ -48,7 +48,7 @@ public abstract class SyncedTileEntity extends TileEntity {
 
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket() {
-		return new SUpdateTileEntityPacket(getBlockPos(), 1, writeToClient(new CompoundNBT()));
+		return new SUpdateTileEntityPacket(getBlockPos(), 0, writeToClient(new CompoundNBT()));
 	}
 
 	@Override

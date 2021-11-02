@@ -17,7 +17,7 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
-import com.simibubi.create.foundation.utility.ColorHelper;
+import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -307,7 +307,7 @@ public class InWorldProcessing {
 			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
 			break;
 		case SPLASHING:
-			Vector3d color = ColorHelper.getRGB(0x0055FF);
+			Vector3d color = Color.vectorFromRGB(0x0055FF);
 			world.addParticle(new RedstoneParticleData((float) color.x, (float) color.y, (float) color.z, 1),
 				vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f,
 				0, 1 / 8f, 0);

@@ -39,6 +39,7 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
@@ -60,11 +61,28 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 		World world = context.getLevel();
 		BlockPos pos = context.getClickedPos();
+		Direction clickedFace = context.getClickedFace();
+
 		Axis axis = getAxis(world, pos, state);
-		if (axis == null)
-			return ActionResultType.PASS;
-		if (context.getClickedFace()
-			.getAxis() == axis)
+		if (axis == null) {
+			Vector3d clickLocation = context.getClickLocation()
+				.subtract(pos.getX(), pos.getY(), pos.getZ());
+			double closest = Float.MAX_VALUE;
+			Direction argClosest = Direction.UP;
+			for (Direction direction : Iterate.directions) {
+				if (clickedFace.getAxis() == direction.getAxis())
+					continue;
+				Vector3d centerOf = Vector3d.atCenterOf(direction.getNormal());
+				double distance = centerOf.distanceToSqr(clickLocation);
+				if (distance < closest) {
+					closest = distance;
+					argClosest = direction;
+				}
+			}
+			axis = argClosest.getAxis();
+		}
+
+		if (clickedFace.getAxis() == axis)
 			return ActionResultType.PASS;
 		if (!world.isClientSide) {
 			FluidTransportBehaviour.cacheFlows(world, pos);
@@ -97,7 +115,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 			defaultState = defaultState.setValue(PROPERTY_BY_DIRECTION.get(d), d.getAxis() == axis);
 		return defaultState;
 	}
-	
+
 	@Nullable
 	private Axis getAxis(IBlockReader world, BlockPos pos, BlockState state) {
 		return FluidPropagator.getStraightPipeAxis(state);
@@ -155,16 +173,18 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 		return state.getBlock() instanceof FluidPipeBlock;
 	}
 
-	public static boolean canConnectTo(IBlockDisplayReader world, BlockPos neighbourPos, BlockState neighbour, Direction direction) {
+	public static boolean canConnectTo(IBlockDisplayReader world, BlockPos neighbourPos, BlockState neighbour,
+		Direction direction) {
 		if (FluidPropagator.hasFluidCapability(world, neighbourPos, direction.getOpposite()))
 			return true;
 		if (neighbour.hasProperty(BlockStateProperties.LEVEL_HONEY))
 			return true;
 		FluidTransportBehaviour transport = TileEntityBehaviour.get(world, neighbourPos, FluidTransportBehaviour.TYPE);
-		BracketedTileEntityBehaviour bracket = TileEntityBehaviour.get(world, neighbourPos, BracketedTileEntityBehaviour.TYPE);
+		BracketedTileEntityBehaviour bracket =
+			TileEntityBehaviour.get(world, neighbourPos, BracketedTileEntityBehaviour.TYPE);
 		if (isPipe(neighbour))
 			return bracket == null || !bracket.isBracketPresent()
-					|| FluidPropagator.getStraightPipeAxis(neighbour) == direction.getAxis();
+				|| FluidPropagator.getStraightPipeAxis(neighbour) == direction.getAxis();
 		if (transport == null)
 			return false;
 		return transport.canHaveFlowToward(neighbour, direction.getOpposite());
@@ -228,8 +248,8 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 	}
 
 	@Override
-	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState,
-		IWorld world, BlockPos pos, BlockPos neighbourPos) {
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighbourState, IWorld world,
+		BlockPos pos, BlockPos neighbourPos) {
 		if (state.getValue(BlockStateProperties.WATERLOGGED))
 			world.getLiquidTicks()
 				.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
@@ -248,9 +268,9 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 		BlockState prevState = state;
 		int prevStateSides = (int) Arrays.stream(Iterate.directions)
-				.map(PROPERTY_BY_DIRECTION::get)
-				.filter(prevState::getValue)
-				.count();
+			.map(PROPERTY_BY_DIRECTION::get)
+			.filter(prevState::getValue)
+			.count();
 
 		// Update sides that are not ignored
 		for (Direction d : Iterate.directions)
@@ -279,7 +299,7 @@ public class FluidPipeBlock extends SixWayBlock implements IWaterLoggable, IWren
 
 		// Use preferred
 		return state.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection), true)
-				.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection.getOpposite()), true);
+			.setValue(PROPERTY_BY_DIRECTION.get(preferredDirection.getOpposite()), true);
 	}
 
 	@Override

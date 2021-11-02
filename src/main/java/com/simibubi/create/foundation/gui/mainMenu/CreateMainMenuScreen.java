@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.gui.mainMenu;
 
-import java.awt.Color;
-
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -16,6 +14,7 @@ import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
+import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -106,7 +105,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		AllGuiTextures.LOGO.draw(ms, 0, 0);
 		ms.popPose();
 		new BoxElement().withBackground(0x88_000000)
-			.flatBorder(new Color(0x01_000000, true))
+			.flatBorder(new Color(0x01_000000))
 			.at(-32, 56, 100)
 			.withBounds(128, 11)
 			.render(ms);
