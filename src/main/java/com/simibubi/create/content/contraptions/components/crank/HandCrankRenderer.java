@@ -1,39 +1,26 @@
 package com.simibubi.create.content.contraptions.components.crank;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import com.net.minimport com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
+
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-ecraft.world.level.block.state.properties.BlockStatePropertiesfozu.flywheel.core.PartialModel;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
-import com.simibubi.create.foundation.render.PartialBufferer;
-import com.simibubi.create.foundation.render.SuperByteBuffer;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-
 public class HandCrankRenderer extends KineticTileEntityRenderer {
 
-	public HandCrankRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public HandCrankRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class OrientedContraptionEntityRenderer extends ContraptionEntityRenderer<OrientedContraptionEntity> {
 
-	public OrientedContraptionEntityRenderer(EntityRenderDispatcher p_i46179_1_) {
-		super(p_i46179_1_);
+	public OrientedContraptionEntityRenderer(EntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

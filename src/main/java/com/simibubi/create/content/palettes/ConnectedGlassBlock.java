@@ -1,15 +1,13 @@
 package com.simibubi.create.content.palettes;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.GlassBlock;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class ConnectedGlassBlock extends GlassBlock {
 

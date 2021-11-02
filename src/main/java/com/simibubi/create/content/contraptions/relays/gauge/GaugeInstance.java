@@ -16,7 +16,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class GaugeInstance extends ShaftInstance implements IDynamicInstance {

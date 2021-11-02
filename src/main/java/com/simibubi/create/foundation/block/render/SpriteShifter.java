@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import com.simibubi.create.Create;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.event.TextureStitchEvent;
 
 public class SpriteShifter {

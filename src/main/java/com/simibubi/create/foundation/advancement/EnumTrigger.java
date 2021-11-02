@@ -3,8 +3,6 @@ package com.simibubi.create.foundation.advancement;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import mcp.MethodsReturnNonnullByDefault;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class EnumTrigger<T extends Enum<T>> extends StringSerializableTrigger<T> {

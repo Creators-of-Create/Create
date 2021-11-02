@@ -11,11 +11,9 @@ import com.simibubi.create.content.contraptions.components.actors.ActorData;
 import com.simibubi.create.content.contraptions.relays.belt.BeltData;
 import com.simibubi.create.content.logistics.block.FlapData;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import StructType;
 
 @OnlyIn(Dist.CLIENT)
 public class AllMaterialSpecs {

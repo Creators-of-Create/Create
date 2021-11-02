@@ -8,6 +8,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllSpriteShifts;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity.Phase;
@@ -19,23 +20,21 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 
 public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<MechanicalCrafterTileEntity> {
 
-	public MechanicalCrafterRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public MechanicalCrafterRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
@@ -77,7 +76,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 				ms.mulPose(Vector3f.YP.rotationDegrees(180));
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer);
+					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
 				ms.popPose();
 			}
 		} else {
@@ -128,7 +127,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 					.translate(0, 0, (x + y * 3 + offset * 9) / 1024f );
 				Minecraft.getInstance()
 					.getItemRenderer()
-					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer);
+					.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
 				ms.popPose();
 			});
 
@@ -157,7 +156,7 @@ public class MechanicalCrafterRenderer extends SafeTileEntityRenderer<Mechanical
 					ms.mulPose(Vector3f.YP.rotationDegrees(180));
 					Minecraft.getInstance()
 						.getItemRenderer()
-						.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer);
+						.renderStatic(stack, TransformType.FIXED, light, overlay, ms, buffer, 0);
 					ms.popPose();
 				});
 			}

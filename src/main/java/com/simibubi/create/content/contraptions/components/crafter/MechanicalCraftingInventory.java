@@ -5,8 +5,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.contraptions.components.crafter.RecipeGridHandler.GroupedItems;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 
 public class MechanicalCraftingInventory extends CraftingContainer {

@@ -8,9 +8,9 @@ import java.util.function.Predicate;
 import com.simibubi.create.foundation.utility.outliner.Outline.OutlineParams;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class Selection implements Predicate<BlockPos> {

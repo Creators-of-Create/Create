@@ -2,16 +2,16 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Predicate;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class RaycastHelper {
 
@@ -30,8 +30,8 @@ public class RaycastHelper {
 	}
 
 	public static Vec3 getTraceTarget(Player playerIn, double range, Vec3 origin) {
-		float f = playerIn.xRot;
-		float f1 = playerIn.yRot;
+		float f = playerIn.getXRot();
+		float f1 = playerIn.getYRot();
 		float f2 = Mth.cos(-f1 * 0.017453292F - (float) Math.PI);
 		float f3 = Mth.sin(-f1 * 0.017453292F - (float) Math.PI);
 		float f4 = -Mth.cos(-f * 0.017453292F);

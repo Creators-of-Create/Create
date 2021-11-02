@@ -13,6 +13,8 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.instancing.ConditionalInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.core.model.IModel;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3d;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllStitchedTextures;
 import com.simibubi.create.Create;
@@ -21,12 +23,9 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import com.mojang.math.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.LightType;
 
 public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITickableInstance {

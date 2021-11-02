@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.processing;
 
 import java.util.function.Consumer;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ProcessingInventory extends ItemStackHandler {

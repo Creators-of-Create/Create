@@ -7,11 +7,11 @@ import java.util.Map;
 import com.google.common.collect.ImmutableList;
 import com.jozufozu.flywheel.core.PartialModel;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.util.StringRepresentable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class EmptyMirror extends SymmetryMirror {
 

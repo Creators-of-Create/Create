@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.SmokingRecipe;
+import net.minecraft.world.level.block.Blocks;
 
 public class FanSmokingCategory extends ProcessingViaFanCategory<SmokingRecipe> {
 

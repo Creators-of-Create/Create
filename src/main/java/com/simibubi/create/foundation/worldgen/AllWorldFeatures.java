@@ -8,11 +8,11 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.FeatureDecorator;

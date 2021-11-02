@@ -1,13 +1,13 @@
 package com.simibubi.create.foundation.utility;
 
-import static net.minecraft.util.Direction.DOWN;
-import staticnet.minecraft.core.Directionn.EAST;
-import static net.minecraft.util.Direction.NORTH;
-import staticnet.minecraft.core.Directionn.SOUTH;
-import static net.minecraft.util.Direction.UP;
-import staticnet.minecraft.core.Directionn.WEST;
+import static net.minecraft.core.Direction.DOWN;
+import static net.minecraft.core.Direction.EAST;
+import static net.minecraft.core.Direction.NORTH;
+import static net.minecraft.core.Direction.SOUTH;
+import static net.minecraft.core.Direction.UP;
+import static net.minecraft.core.Direction.WEST;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 
 /**

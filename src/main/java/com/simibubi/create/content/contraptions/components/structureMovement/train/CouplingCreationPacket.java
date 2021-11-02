@@ -4,10 +4,10 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public class CouplingCreationPacket extends SimplePacketBase {
 

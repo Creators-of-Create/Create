@@ -2,14 +2,14 @@ package com.simibubi.create.foundation.render;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
 
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 
 public class RenderTypes extends RenderStateShard {
 

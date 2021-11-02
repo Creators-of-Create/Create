@@ -2,11 +2,11 @@ package com.simibubi.create.foundation.ponder;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.Vec3i;
 
 /**
  * Helpful shortcuts for marking boundaries, points or sections inside the scene

@@ -1,11 +1,11 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.GrassColor;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.world.level.GrassColor;
+import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class ColorHandlers {
 

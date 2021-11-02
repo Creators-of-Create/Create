@@ -2,16 +2,16 @@ package com.simibubi.create.content.curiosities.bell;
 
 import com.jozufozu.flywheel.backend.OptifineHandler;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.SimpleAnimatedParticle;
-import net.minecraft.client.Camera;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.util.Mth;
 import com.mojang.math.Quaternion;
-import net.minecraft.world.phys.Vec3;
 import com.mojang.math.Vector3f;
+
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.SimpleAnimatedParticle;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 
 public class CustomRotationParticle extends SimpleAnimatedParticle {
 

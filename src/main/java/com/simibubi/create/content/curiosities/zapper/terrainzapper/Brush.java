@@ -4,11 +4,11 @@ import java.util.Collection;
 
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class Brush {
 

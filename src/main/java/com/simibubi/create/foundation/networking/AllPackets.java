@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.networking;
 
-import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_CLIENT;
-import static net.minecraftforge.fml.network.NetworkDirection.PLAY_TO_SERVER;
+import static net.minecraftforge.fmllegacy.network.NetworkDirection.PLAY_TO_CLIENT;
+import static net.minecraftforge.fmllegacy.network.NetworkDirection.PLAY_TO_SERVER;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -58,16 +58,16 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCo
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.PacketDistributor.TargetPoint;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor.TargetPoint;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 public enum AllPackets {
 
@@ -129,8 +129,9 @@ public enum AllPackets {
 
 	;
 
-	public static final ResourceLocation CHANNEL_NAME = Create.asResource("network");
-	public static final String NETWORK_VERSION = Create.asResource("1").toString();
+	public static final ResourceLocation CHANNEL_NAME = Create.asResource("main");
+	public static final int NETWORK_VERSION = 1;
+	public static final String NETWORK_VERSION_STR = String.valueOf(NETWORK_VERSION);
 	public static SimpleChannel channel;
 
 	private LoadedPacket<?> packet;
@@ -142,9 +143,9 @@ public enum AllPackets {
 
 	public static void registerPackets() {
 		channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
-			.serverAcceptedVersions(NETWORK_VERSION::equals)
-			.clientAcceptedVersions(NETWORK_VERSION::equals)
-			.networkProtocolVersion(() -> NETWORK_VERSION)
+			.serverAcceptedVersions(NETWORK_VERSION_STR::equals)
+			.clientAcceptedVersions(NETWORK_VERSION_STR::equals)
+			.networkProtocolVersion(() -> NETWORK_VERSION_STR)
 			.simpleChannel();
 		for (AllPackets packet : values())
 			packet.packet.register();
@@ -157,6 +158,7 @@ public enum AllPackets {
 
 	private static class LoadedPacket<T extends SimplePacketBase> {
 		private static int index = 0;
+
 		BiConsumer<T, FriendlyByteBuf> encoder;
 		Function<FriendlyByteBuf, T> decoder;
 		BiConsumer<T, Supplier<Context>> handler;

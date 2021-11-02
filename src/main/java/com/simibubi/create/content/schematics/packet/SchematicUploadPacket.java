@@ -6,10 +6,10 @@ import com.simibubi.create.Create;
 import com.simibubi.create.content.schematics.block.SchematicTableContainer;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public class SchematicUploadPacket extends SimplePacketBase {
 

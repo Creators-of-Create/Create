@@ -4,8 +4,8 @@ import java.util.function.BiPredicate;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class CenteredSideValueBoxTransform extends ValueBoxTransform.Sided {

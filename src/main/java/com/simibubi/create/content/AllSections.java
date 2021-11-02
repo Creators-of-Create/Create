@@ -3,10 +3,10 @@ package com.simibubi.create.content;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.item.ItemDescription.Palette;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public enum AllSections {
 

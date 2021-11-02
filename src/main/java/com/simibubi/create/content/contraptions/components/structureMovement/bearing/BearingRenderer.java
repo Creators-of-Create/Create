@@ -12,14 +12,14 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class BearingRenderer extends KineticTileEntityRenderer {
 
-	public BearingRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public BearingRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

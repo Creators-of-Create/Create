@@ -12,17 +12,17 @@ import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRendere
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class FunnelRenderer extends SmartTileEntityRenderer<FunnelTileEntity> {
 
-	public FunnelRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public FunnelRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

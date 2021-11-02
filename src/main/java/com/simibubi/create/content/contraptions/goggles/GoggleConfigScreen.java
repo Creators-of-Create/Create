@@ -10,12 +10,12 @@ import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.Mth;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 
 public class GoggleConfigScreen extends AbstractSimiScreen {
 

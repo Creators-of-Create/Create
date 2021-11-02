@@ -4,12 +4,12 @@ import java.util.function.UnaryOperator;
 
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class MovementContext {

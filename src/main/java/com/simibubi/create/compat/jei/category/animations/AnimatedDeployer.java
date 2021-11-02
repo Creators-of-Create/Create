@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.deployer.DeployerBlock;
@@ -8,7 +9,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import com.mojang.math.Vector3f;
 
 public class AnimatedDeployer extends AnimatedKinetics {
 

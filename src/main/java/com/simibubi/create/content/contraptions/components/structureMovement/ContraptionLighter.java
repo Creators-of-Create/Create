@@ -1,10 +1,14 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
-import com.jozufozu.flywheel.light.*;
+import com.jozufozu.flywheel.light.GPULightVolume;
+import com.jozufozu.flywheel.light.GridAlignedBB;
+import com.jozufozu.flywheel.light.ILightUpdateListener;
+import com.jozufozu.flywheel.light.ImmutableBox;
+import com.jozufozu.flywheel.light.LightProvider;
+import com.jozufozu.flywheel.light.LightUpdater;
+import com.jozufozu.flywheel.light.ListenerStatus;
 
 import net.minecraft.world.LightType;
-
-import GPULightVolume;
 
 public abstract class ContraptionLighter<C extends Contraption> implements ILightUpdateListener {
     protected final C contraption;

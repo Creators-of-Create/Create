@@ -7,6 +7,7 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
@@ -24,25 +25,23 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.item.BlockItem;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 
 public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity> {
 
-	public DeployerRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public DeployerRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 
 		TransformType transform = TransformType.NONE;
 		boolean isBlockItem = (te.heldItem.getItem() instanceof BlockItem)
-			&& itemRenderer.getModel(te.heldItem, Minecraft.getInstance().level, null)
+			&& itemRenderer.getModel(te.heldItem, te.getLevel(), null, 0)
 				.isGui3d();
 
 		if (displayMode) {
@@ -103,7 +102,7 @@ public class DeployerRenderer extends SafeTileEntityRenderer<DeployerTileEntity>
 			transform = punching ? TransformType.THIRD_PERSON_RIGHT_HAND : TransformType.FIXED;
 		}
 
-		itemRenderer.renderStatic(te.heldItem, transform, light, overlay, ms, buffer);
+		itemRenderer.renderStatic(te.heldItem, transform, light, overlay, ms, buffer, 0);
 		ms.popPose();
 	}
 

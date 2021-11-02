@@ -4,15 +4,15 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ToolboxEquipPacket extends SimplePacketBase {
@@ -74,16 +74,16 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 
 			ToolboxTileEntity toolboxTileEntity = (ToolboxTileEntity) blockEntity;
 
-			ItemStack playerStack = player.inventory.getItem(hotbarSlot);
+			ItemStack playerStack = player.getInventory().getItem(hotbarSlot);
 			if (!playerStack.isEmpty() && !ToolboxInventory.canItemsShareCompartment(playerStack,
 				toolboxTileEntity.inventory.filters.get(slot))) {
 				toolboxTileEntity.inventory.inLimitedMode(inventory -> {
 					ItemStack remainder = ItemHandlerHelper.insertItemStacked(inventory, playerStack, false);
 					if (!remainder.isEmpty())
-						remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.inventory),
+						remainder = ItemHandlerHelper.insertItemStacked(new ItemReturnInvWrapper(player.getInventory()),
 							remainder, false);
 					if (remainder.getCount() != playerStack.getCount())
-						player.inventory.setItem(hotbarSlot, remainder);
+						player.getInventory().setItem(hotbarSlot, remainder);
 				});
 			}
 

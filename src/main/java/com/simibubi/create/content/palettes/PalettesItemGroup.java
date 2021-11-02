@@ -5,8 +5,8 @@ import java.util.EnumSet;
 import com.simibubi.create.content.AllSections;
 import com.simibubi.create.foundation.item.CreateItemGroupBase;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 
 public class PalettesItemGroup extends CreateItemGroupBase {
 

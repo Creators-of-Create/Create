@@ -14,8 +14,8 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluids;
 
 public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe> {
 

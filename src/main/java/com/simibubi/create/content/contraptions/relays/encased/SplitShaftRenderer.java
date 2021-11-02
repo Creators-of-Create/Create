@@ -11,18 +11,18 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 
 public class SplitShaftRenderer extends KineticTileEntityRenderer {
 
-	public SplitShaftRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public SplitShaftRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

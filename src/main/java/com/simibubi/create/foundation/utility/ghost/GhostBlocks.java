@@ -6,8 +6,8 @@ import java.util.Map;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class GhostBlocks {
 

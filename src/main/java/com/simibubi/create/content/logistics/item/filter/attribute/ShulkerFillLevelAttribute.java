@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 public class ShulkerFillLevelAttribute implements ItemAttribute {
 	public static final ShulkerFillLevelAttribute EMPTY = new ShulkerFillLevelAttribute(null);

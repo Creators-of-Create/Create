@@ -10,13 +10,11 @@ import com.ferreusveritas.dynamictrees.blocks.branches.TrunkShellBlock;
 import com.ferreusveritas.dynamictrees.util.BranchDestructionData;
 import com.simibubi.create.foundation.utility.AbstractBlockBreakQueue;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DynamicTree extends AbstractBlockBreakQueue {
 	private BlockPos startCutPos;

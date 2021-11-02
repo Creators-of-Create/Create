@@ -2,11 +2,11 @@ package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import com.simibubi.create.foundation.config.AllConfigs;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class AssemblyException extends Exception {
 

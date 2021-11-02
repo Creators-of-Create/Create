@@ -9,12 +9,13 @@ import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 
@@ -68,8 +69,8 @@ public class PartialItemModelRenderer {
 			renderBakedItemModel(model, light, ms,
 				ItemRenderer.getFoilBufferDirect(buffer, type, true, stack.hasFoil()));
 		else
-			stack.getItem()
-				.getItemStackTileEntityRenderer()
+			RenderProperties.get(stack)
+				.getItemStackRenderer()
 				.renderByItem(stack, transformType, ms, buffer, light, overlay);
 
 		ms.popPose();

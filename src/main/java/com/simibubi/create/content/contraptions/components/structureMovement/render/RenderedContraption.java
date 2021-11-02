@@ -15,6 +15,8 @@ import com.jozufozu.flywheel.core.model.IModel;
 import com.jozufozu.flywheel.core.model.WorldModel;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3d;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.content.contraptions.components.structureMovement.Contraption;
 import com.simibubi.create.content.contraptions.components.structureMovement.ContraptionLighter;
@@ -23,15 +25,11 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.worldWrappers.PlacementSimulationWorld;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import com.mojang.math.Matrix4f;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-
-import MaterialManagerImpl;
+import net.minecraft.world.phys.AABB;
 
 public class RenderedContraption extends ContraptionRenderInfo {
 

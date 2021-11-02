@@ -4,17 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEntity> {
 
-	public PotatoProjectileRenderer(EntityRenderDispatcher p_i46179_1_) {
-		super(p_i46179_1_);
+	public PotatoProjectileRenderer(EntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
@@ -31,12 +31,12 @@ public class PotatoProjectileRenderer extends EntityRenderer<PotatoProjectileEnt
 
 		Minecraft.getInstance()
 			.getItemRenderer()
-			.renderStatic(item, TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer);
+			.renderStatic(item, TransformType.GROUND, light, OverlayTexture.NO_OVERLAY, ms, buffer, 0);
 		ms.popPose();
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(PotatoProjectileEntity p_110775_1_) {
+	public ResourceLocation getTextureLocation(PotatoProjectileEntity entity) {
 		return null;
 	}
 

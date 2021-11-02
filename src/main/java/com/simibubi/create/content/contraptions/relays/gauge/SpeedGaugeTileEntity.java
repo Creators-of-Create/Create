@@ -9,10 +9,10 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class SpeedGaugeTileEntity extends GaugeTileEntity {
 

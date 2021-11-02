@@ -2,14 +2,12 @@ package com.simibubi.create.content.contraptions.itemAssembly;
 
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class SequencedAssemblyItem extends Item {
 

@@ -10,17 +10,16 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class AnalogLeverRenderer extends SafeTileEntityRenderer<AnalogLeverTileEntity> {
 
-	public AnalogLeverRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public AnalogLeverRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override

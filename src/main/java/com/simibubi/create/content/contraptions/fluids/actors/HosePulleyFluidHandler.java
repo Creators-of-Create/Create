@@ -11,8 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 public class HosePulleyFluidHandler implements IFluidHandler {
 
 	// The dynamic interface

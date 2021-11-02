@@ -3,19 +3,12 @@ package com.simibubi.create.foundation.item;
 import static com.simibubi.create.foundation.item.TooltipHelper.cutStringTextComponent;
 import static com.simibubi.create.foundation.item.TooltipHelper.cutTextComponent;
 import static net.minecraft.util.text.TextFormatting.AQUA;
-import staticnet.minecraft.ChatFormattingg.BLUE;
 import static net.minecraft.util.text.TextFormatting.DARK_GRAY;
-import staticnet.minecraft.ChatFormattingg.DARK_GREEN;
 import static net.minecraft.util.text.TextFormatting.DARK_PURPLE;
-import staticnet.minecraft.ChatFormattingg.DARK_RED;
 import static net.minecraft.util.text.TextFormatting.GOLD;
-import staticnet.minecraft.ChatFormattingg.GRAY;
 import static net.minecraft.util.text.TextFormatting.GREEN;
-import staticnet.minecraft.ChatFormattingg.LIGHT_PURPLE;
 import static net.minecraft.util.text.TextFormatting.RED;
-import staticnet.minecraft.ChatFormattingg.STRIKETHROUGH;
 import static net.minecraft.util.text.TextFormatting.WHITE;
-import staticnet.minecraft.ChatFormattingg.YELLOW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,14 +26,14 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CKinetics;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.level.block.Block;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.level.block.Block;
 
 public class ItemDescription {
 

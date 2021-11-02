@@ -8,8 +8,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelTileEntity;
 import com.simibubi.create.foundation.networking.TileEntityDataPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class TunnelFlapPacket extends TileEntityDataPacket<BeltTunnelTileEntity> {
 

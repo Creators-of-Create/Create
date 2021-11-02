@@ -5,8 +5,8 @@ import java.util.function.Function;
 
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Block;
 
 public class DyedBlockList<T extends Block> {
 

@@ -7,9 +7,9 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedMixer;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
 import com.simibubi.create.content.contraptions.processing.HeatCondition;
 
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 
 public class MixingCategory extends BasinCategory {
 

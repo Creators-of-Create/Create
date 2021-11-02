@@ -4,7 +4,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
 import com.simibubi.create.content.contraptions.relays.encased.CasingConnectivity;
-import com.simibubi.create.content.curiosities.armor.CopperBacktankArmorLayer;
 import com.simibubi.create.content.curiosities.bell.SoulPulseEffectHandler;
 import com.simibubi.create.content.curiosities.weapons.PotatoCannonRenderHandler;
 import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
@@ -25,19 +24,16 @@ import com.simibubi.create.foundation.utility.ModelSwapper;
 import com.simibubi.create.foundation.utility.ghost.GhostBlocks;
 import com.simibubi.create.foundation.utility.outliner.Outliner;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.GraphicsStatus;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.ComponentUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -74,15 +70,6 @@ public class CreateClient {
 
 		ZAPPER_RENDER_HANDLER.registerListeners(forgeEventBus);
 		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
-
-		Minecraft mc = Minecraft.getInstance();
-
-		// null during datagen
-		if (mc == null) return;
-
-		ResourceManager resourceManager = mc.getResourceManager();
-		if (resourceManager instanceof ReloadableResourceManager)
-			((ReloadableResourceManager) resourceManager).registerReloadListener(RESOURCE_RELOAD_LISTENER);
 	}
 
 	public static void clientInit(final FMLClientSetupEvent event) {
@@ -99,15 +86,6 @@ public class CreateClient {
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
-
-		event.enqueueWork(() -> {
-			registerLayerRenderers(Minecraft.getInstance()
-				.getEntityRenderDispatcher());
-		});
-	}
-
-	protected static void registerLayerRenderers(EntityRenderDispatcher renderManager) {
-		CopperBacktankArmorLayer.registerOnAll(renderManager);
 	}
 
 	public static void invalidateRenderers() {

@@ -16,11 +16,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import mcp.MethodsReturnNonnullByDefault;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.server.level.ServerPlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

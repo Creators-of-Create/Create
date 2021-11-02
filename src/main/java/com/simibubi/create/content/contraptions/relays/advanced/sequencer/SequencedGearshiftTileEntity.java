@@ -4,10 +4,10 @@ import java.util.Vector;
 
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftTileEntity;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants.NBT;
 
 public class SequencedGearshiftTileEntity extends SplitShaftTileEntity {

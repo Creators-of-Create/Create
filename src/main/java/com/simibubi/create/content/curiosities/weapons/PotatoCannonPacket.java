@@ -4,9 +4,9 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.content.curiosities.zapper.ShootGadgetPacket;
 import com.simibubi.create.content.curiosities.zapper.ShootableGadgetRenderHandler;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

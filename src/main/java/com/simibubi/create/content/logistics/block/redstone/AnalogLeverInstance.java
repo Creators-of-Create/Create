@@ -12,10 +12,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.state.properties.AttachFace;
-import net.minecraft.util.Direction;
-
-import ModelData;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class AnalogLeverInstance extends TileEntityInstance<AnalogLeverTileEntity> implements IDynamicInstance {
 

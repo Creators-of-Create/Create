@@ -6,12 +6,12 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.ColoredOverlayTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class AdjustableRepeaterRenderer extends ColoredOverlayTileEntityRenderer<AdjustableRepeaterTileEntity> {
 
-	public AdjustableRepeaterRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public AdjustableRepeaterRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

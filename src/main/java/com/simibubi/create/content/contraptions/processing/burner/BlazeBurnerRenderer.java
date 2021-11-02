@@ -12,14 +12,13 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileEntity> {
 
-	public BlazeBurnerRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public BlazeBurnerRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override

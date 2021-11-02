@@ -18,8 +18,8 @@ import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.state.properties.WoodType;
 
 public class AllSpriteShifts {
 

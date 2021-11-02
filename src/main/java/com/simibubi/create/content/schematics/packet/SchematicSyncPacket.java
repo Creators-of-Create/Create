@@ -6,16 +6,16 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public class SchematicSyncPacket extends SimplePacketBase {
 
@@ -61,7 +61,7 @@ public class SchematicSyncPacket extends SimplePacketBase {
 			if (slot == -1) {
 				stack = player.getMainHandItem();
 			} else {
-				stack = player.inventory.getItem(slot);
+				stack = player.getInventory().getItem(slot);
 			}
 			if (!AllItems.SCHEMATIC.isIn(stack)) {
 				return;

@@ -9,17 +9,16 @@ import com.jozufozu.flywheel.core.instancing.SelectInstance;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.jozufozu.flywheel.light.GridAlignedBB;
 import com.jozufozu.flywheel.light.IMovingListener;
+import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightPacking;
 import com.jozufozu.flywheel.light.LightProvider;
-import com.jozufozu.flywheel.light.ImmutableBox;
 import com.jozufozu.flywheel.light.LightUpdater;
 import com.jozufozu.flywheel.light.LightVolume;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
 
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.LightType;
 
 public abstract class AbstractPulleyInstance extends ShaftInstance implements IDynamicInstance, IMovingListener {

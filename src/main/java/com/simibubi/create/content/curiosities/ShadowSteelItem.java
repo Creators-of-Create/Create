@@ -1,10 +1,8 @@
 package com.simibubi.create.content.curiosities;
 
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.entity.item.ItemEntity;
 
 public class ShadowSteelItem extends NoGravMagicalDohickyItem {
 

@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.sound;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 
 public class ContinuousSound extends AbstractTickableSoundInstance {
 

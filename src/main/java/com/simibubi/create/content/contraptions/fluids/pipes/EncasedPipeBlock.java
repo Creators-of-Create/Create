@@ -1,11 +1,8 @@
 package com.simibubi.create.content.contraptions.fluids.pipes;
 
 import static net.minecraft.state.properties.BlockStateProperties.DOWN;
-import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.EAST;
 import static net.minecraft.state.properties.BlockStateProperties.NORTH;
-import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.SOUTH;
 import static net.minecraft.state.properties.BlockStateProperties.UP;
-import staticnet.minecraft.world.level.block.state.properties.BlockStatePropertiess.WEST;
 
 import java.util.Map;
 import java.util.Random;
@@ -19,26 +16,24 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.DebugPackets;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.network.protocol.game.DebugPackets;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.TickPriority;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.TickPriority;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.PipeBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.HitResult;
 
 public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement {
 

@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.config.ui;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.Theme;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.network.chat.TextComponent;
 
 public class HintableTextFieldWidget extends EditBox {

@@ -10,14 +10,13 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 
 public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternControllerTileEntity> {
 
-	public LecternControllerRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public LecternControllerRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
@@ -28,7 +27,7 @@ public class LecternControllerRenderer extends SafeTileEntityRenderer<LecternCon
 		TransformType transformType = TransformType.NONE;
 		LinkedControllerModel mainModel = (LinkedControllerModel) Minecraft.getInstance()
 			.getItemRenderer()
-			.getModel(stack, null, null);
+			.getModel(stack, te.getLevel(), null, 0);
 		PartialItemModelRenderer renderer = PartialItemModelRenderer.of(stack, transformType, ms, buffer, overlay);
 		boolean active = te.hasUser();
 		boolean renderDepression = te.isUsedBy(Minecraft.getInstance().player);

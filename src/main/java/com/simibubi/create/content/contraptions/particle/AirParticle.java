@@ -3,15 +3,15 @@ package com.simibubi.create.content.contraptions.particle;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.VecHelper;
 
-import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SimpleAnimatedParticle;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 

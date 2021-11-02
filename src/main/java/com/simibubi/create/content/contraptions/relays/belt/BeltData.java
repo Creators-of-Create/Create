@@ -1,11 +1,11 @@
 package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
+import com.mojang.math.Quaternion;
 import com.simibubi.create.content.contraptions.base.KineticData;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import com.mojang.math.Quaternion;
 
 public class BeltData extends KineticData {
     private float qX;

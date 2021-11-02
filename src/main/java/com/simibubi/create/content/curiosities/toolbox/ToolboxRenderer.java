@@ -8,16 +8,16 @@ import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.tileEntity.renderer.SmartTileEntityRenderer;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class ToolboxRenderer extends SmartTileEntityRenderer<ToolboxTileEntity> {
 
-	public ToolboxRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public ToolboxRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

@@ -19,12 +19,10 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.util.math.MathHelper;
-
-import ModelData;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 
 public class ArmInstance extends SingleRotatingInstance implements IDynamicInstance {
 

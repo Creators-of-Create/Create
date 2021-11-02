@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.relays.belt.BeltHelper;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
@@ -12,20 +13,18 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 
 public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 
-	public DepotRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public DepotRenderer(BlockEntityRendererProvider.Context context) {
 	}
 
 	@Override
@@ -105,7 +104,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		int count = (int) (Mth.log2((int) (itemStack.getCount()))) / 2;
 		boolean renderUpright = BeltHelper.isItemUpright(itemStack);
-		boolean blockItem = itemRenderer.getModel(itemStack, null, null)
+		boolean blockItem = itemRenderer.getModel(itemStack, null, null, 0)
 			.isGui3d();
 
 		ms.pushPose();
@@ -132,7 +131,7 @@ public class DepotRenderer extends SafeTileEntityRenderer<DepotTileEntity> {
 				ms.translate(0, -3 / 16f, 0);
 				msr.rotateX(90);
 			}
-			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer);
+			itemRenderer.renderStatic(itemStack, TransformType.FIXED, light, overlay, ms, buffer, 0);
 			ms.popPose();
 
 			if (!renderUpright) {

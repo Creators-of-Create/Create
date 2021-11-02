@@ -6,9 +6,9 @@ import java.util.Locale;
 
 import com.simibubi.create.Create;
 
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 
 public class Lang {
 

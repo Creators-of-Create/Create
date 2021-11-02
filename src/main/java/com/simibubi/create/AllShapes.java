@@ -1,24 +1,23 @@
 package com.simibubi.create;
 
-import static net.minecraft.util.Direction.NORTH;
-import staticnet.minecraft.core.Directionn.SOUTH;
-import static net.minecraft.util.Direction.UP;
+import static net.minecraft.core.Direction.NORTH;
+import static net.minecraft.core.Direction.SOUTH;
+import static net.minecraft.core.Direction.UP;
 
-import javanet.minecraft.core.Direction
+import java.util.function.BiFunction;
+
 import com.simibubi.create.content.logistics.block.chute.ChuteShapes;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
-import net.minecraft.util.Direction;
-import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-
-import java.util.function.BiFunction;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class AllShapes {
 

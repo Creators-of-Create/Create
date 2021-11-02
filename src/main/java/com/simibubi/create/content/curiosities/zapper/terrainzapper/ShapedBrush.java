@@ -3,8 +3,8 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelAccessor;
 
 public abstract class ShapedBrush extends Brush {

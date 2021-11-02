@@ -6,9 +6,9 @@ import java.util.List;
 import com.google.gson.JsonParseException;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemNameAttribute implements ItemAttribute {
     String itemName;

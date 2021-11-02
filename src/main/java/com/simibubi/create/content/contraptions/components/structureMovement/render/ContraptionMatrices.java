@@ -1,12 +1,12 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.world.entity.Entity;
 import net.minecraft.util.Mth;
-import com.mojang.math.Matrix4f;
+import net.minecraft.world.entity.Entity;
 
 /**
  * <p>

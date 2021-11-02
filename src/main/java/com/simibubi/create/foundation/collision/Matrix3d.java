@@ -1,7 +1,8 @@
 package com.simibubi.create.foundation.collision;
 
-import net.minecraft.util.Mth;
 import com.mojang.math.Matrix4f;
+
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

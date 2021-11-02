@@ -6,12 +6,11 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringRe
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkRenderer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class SmartTileEntityRenderer<T extends SmartTileEntity> extends SafeTileEntityRenderer<T> {
 
-	public SmartTileEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public SmartTileEntityRenderer(BlockEntityRendererProvider.Context context) {
 	}
 	
 	@Override

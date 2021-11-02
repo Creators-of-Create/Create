@@ -177,30 +177,31 @@ import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.storage.loot.ConstantIntValue;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.PistonType;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTable.Builder;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition.Builder;
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
-import net.minecraft.world.level.block.state.properties.PistonType;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
@@ -223,13 +224,13 @@ public class AllBlocks {
 			.blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), AssetLookup.partialBaseModel(ctx, prov)))
 			.loot((lt, block) -> {
 				Builder builder = LootTable.lootTable();
-				Builder survivesExplosion = ExplosionCondition.survivesExplosion();
+				LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
 				lt.add(block, builder.withPool(LootPool.lootPool()
 					.when(survivesExplosion)
-					.setRolls(ConstantIntValue.exactly(1))
+					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(AllBlocks.SCHEMATICANNON.get()
 						.asItem())
-						.apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY)
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 							.copy("Options", "BlockEntityTag.Options")))));
 			})
 			.item()
@@ -650,7 +651,7 @@ public class AllBlocks {
 				.pattern("-")
 				.define('#', colour.getTag())
 				.define('-', AllItemTags.VALVE_HANDLES.tag)
-				.unlockedBy("has_valve", RegistrateRecipeProvider.hasItem(AllItemTags.VALVE_HANDLES.tag))
+				.unlockedBy("has_valve", RegistrateRecipeProvider.has(AllItemTags.VALVE_HANDLES.tag))
 				.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_valve_handle")))
 			.register();
 	});
@@ -990,14 +991,14 @@ public class AllBlocks {
 					.pattern("-")
 					.define('#', DyeHelper.getWoolOfDye(colour))
 					.define('-', ItemTags.WOODEN_SLABS)
-					.unlockedBy("has_wool", RegistrateRecipeProvider.hasItem(ItemTags.WOOL))
+					.unlockedBy("has_wool", RegistrateRecipeProvider.has(ItemTags.WOOL))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName()));
 				ShapedRecipeBuilder.shaped(c.get())
 					.pattern("#")
 					.pattern("-")
 					.define('#', colour.getTag())
 					.define('-', AllItemTags.SEATS.tag)
-					.unlockedBy("has_seat", RegistrateRecipeProvider.hasItem(AllItemTags.SEATS.tag))
+					.unlockedBy("has_seat", RegistrateRecipeProvider.has(AllItemTags.SEATS.tag))
 					.save(p, Create.asResource("crafting/kinetics/" + c.getName() + "_from_other_seat"));
 			})
 			.onRegisterAfter(Item.class, v -> TooltipHelper.referTo(v, "block.create.brown_seat"))
@@ -1325,15 +1326,15 @@ public class AllBlocks {
 			.transform(BlockStressDefaults.setImpact(4.0))
 			.loot((lt, block) -> {
 				Builder builder = LootTable.lootTable();
-				Builder survivesExplosion = ExplosionCondition.survivesExplosion();
+				LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
 				lt.add(block, builder.withPool(LootPool.lootPool()
 					.when(survivesExplosion)
-					.setRolls(ConstantIntValue.exactly(1))
+					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(AllItems.COPPER_BACKTANK.get())
 						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-						.apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY)
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 							.copy("Air", "Air"))
-						.apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY)
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 							.copy("Enchantments", "Enchantments")))));
 			})
 			.register();
@@ -1358,13 +1359,13 @@ public class AllBlocks {
 			.addLayer(() -> RenderType::cutoutMipped)
 			.loot((lt, block) -> {
 				Builder builder = LootTable.lootTable();
-				Builder survivesExplosion = ExplosionCondition.survivesExplosion();
+				LootItemCondition.Builder survivesExplosion = ExplosionCondition.survivesExplosion();
 				lt.add(block, builder.withPool(LootPool.lootPool()
 					.when(survivesExplosion)
-					.setRolls(ConstantIntValue.exactly(1))
+					.setRolls(ConstantValue.exactly(1))
 					.add(LootItem.lootTableItem(block)
 						.apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-						.apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY)
+						.apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
 							.copy("Inventory", "Inventory")))));
 			})
 			.blockstate((c, p) -> {

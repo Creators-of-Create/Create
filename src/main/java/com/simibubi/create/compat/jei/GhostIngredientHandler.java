@@ -11,13 +11,10 @@ import com.simibubi.create.foundation.gui.GhostItemContainer;
 import com.simibubi.create.foundation.gui.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.networking.AllPackets;
 
-import mcp.MethodsReturnNonnullByDefault;
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-
-import mezz.jei.api.gui.handlers.IGhostIngredientHandler.Target;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

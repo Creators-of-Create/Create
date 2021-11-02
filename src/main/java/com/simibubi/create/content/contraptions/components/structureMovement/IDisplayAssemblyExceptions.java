@@ -1,7 +1,6 @@
 package com.simibubi.create.content.contraptions.components.structureMovement;
 
 import static net.minecraft.util.text.TextFormatting.GRAY;
-import staticnet.minecraft.ChatFormattingg.WHITE;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,9 +9,9 @@ import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.text.TextFormatting;
 
 public interface IDisplayAssemblyExceptions {
 

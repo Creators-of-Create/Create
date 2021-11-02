@@ -13,17 +13,17 @@ import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.TagParser;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
@@ -142,7 +142,7 @@ public class FluidHelper {
 				player.setItemInHand(handIn, emptyingResult.getSecond());
 			else {
 				player.setItemInHand(handIn, copyOfHeld);
-				player.inventory.placeItemBackInInventory(worldIn, emptyingResult.getSecond());
+				player.getInventory().placeItemBackInInventory(worldIn, emptyingResult.getSecond());
 			}
 		}
 		return true;
@@ -181,7 +181,7 @@ public class FluidHelper {
 			tank.drain(copy, FluidAction.EXECUTE);
 
 			if (!player.isCreative())
-				player.inventory.placeItemBackInInventory(world, out);
+				player.getInventory().placeItemBackInInventory(world, out);
 			te.notifyUpdate();
 			return true;
 		}

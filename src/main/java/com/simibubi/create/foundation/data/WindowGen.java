@@ -17,25 +17,26 @@ import com.simibubi.create.foundation.block.connected.GlassPaneCTBehaviour;
 import com.simibubi.create.foundation.block.connected.HorizontalCTBehaviour;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.Tags;
 
@@ -92,7 +93,7 @@ public class WindowGen {
 				.pattern("#X#")
 				.define('#', ingredient.get())
 				.define('X', DataIngredient.tag(Tags.Items.GLASS_COLORLESS))
-				.unlockedBy("has_ingredient", p.hasItem(ingredient.get()))
+				.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(ingredient.get()))
 				.save(p::accept))
 			.initialProperties(() -> Blocks.GLASS)
 			.properties(WindowGen::glassProperties)
@@ -207,7 +208,7 @@ public class WindowGen {
 				.pattern("###")
 				.pattern("###")
 				.define('#', parent.get())
-				.unlockedBy("has_ingredient", p.hasItem(parent.get()))
+				.unlockedBy("has_ingredient", RegistrateRecipeProvider.has(parent.get()))
 				.save(p::accept))
 			.tag(Tags.Blocks.GLASS_PANES)
 			.loot((t, g) -> t.dropWhenSilkTouch(g))

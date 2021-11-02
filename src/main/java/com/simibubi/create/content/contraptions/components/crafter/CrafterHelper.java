@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.crafter;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CrafterHelper {
 

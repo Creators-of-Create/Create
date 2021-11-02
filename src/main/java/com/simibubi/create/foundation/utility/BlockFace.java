@@ -1,9 +1,9 @@
 package com.simibubi.create.foundation.utility;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 
 public class BlockFace extends Pair<BlockPos, Direction> {
 

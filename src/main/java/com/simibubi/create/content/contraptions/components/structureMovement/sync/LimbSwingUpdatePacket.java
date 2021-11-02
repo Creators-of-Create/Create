@@ -6,11 +6,11 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public class LimbSwingUpdatePacket extends SimplePacketBase {
 
@@ -52,8 +52,8 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 				CompoundTag data = entity.getPersistentData();
 				data.putInt("LastOverrideLimbSwingUpdate", 0);
 				data.putFloat("OverrideLimbSwing", limbSwing);
-				entity.lerpTo(position.x, position.y, position.z, entity.yRot,
-					entity.xRot, 2, false);
+				entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),
+					entity.getXRot(), 2, false);
 			});
 		context.get()
 			.setPacketHandled(true);

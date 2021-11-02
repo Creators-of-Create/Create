@@ -4,8 +4,6 @@ import com.jozufozu.flywheel.backend.material.Material;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.simibubi.create.foundation.render.AllMaterialSpecs;
 
-import Material;
-
 public class CutoutRotatingInstance extends SingleRotatingInstance {
 	public CutoutRotatingInstance(MaterialManager modelManager, KineticTileEntity tile) {
 		super(modelManager, tile);

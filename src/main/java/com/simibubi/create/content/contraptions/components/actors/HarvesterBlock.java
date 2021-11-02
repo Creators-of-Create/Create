@@ -2,11 +2,9 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import com.simibubi.create.AllTileEntities;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.BlockGetter;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class HarvesterBlock extends AttachedActorBlock {
 

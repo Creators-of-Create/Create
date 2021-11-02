@@ -3,8 +3,8 @@ package com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue;
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class ScrollValueUpdatePacket extends TileEntityConfigurationPacket<SmartTileEntity> {
 

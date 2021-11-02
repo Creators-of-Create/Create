@@ -11,8 +11,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.level.block.Block;
 
 public class CustomBlockModels {
 

@@ -5,10 +5,10 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 public class LinkedControllerInputPacket extends LinkedControllerPacketBase {

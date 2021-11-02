@@ -4,12 +4,12 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity> extends SimplePacketBase {
 

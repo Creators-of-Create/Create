@@ -14,8 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-import ModelData;
-
 public class StickerInstance extends TileEntityInstance<StickerTileEntity> implements IDynamicInstance {
 
     float lastOffset = Float.NaN;

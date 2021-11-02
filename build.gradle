@@ -19,14 +19,13 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
 boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
 
 ext.buildnumber = 0
-project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : "custom"
+project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
 
-version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals("custom") ? "+${buildnumber}" : '')
+version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals('custom') ? "+${buildnumber}" : '')
 group = 'com.simibubi.create'
 archivesBaseName = 'create'
 
@@ -83,7 +82,7 @@ minecraft {
 }
 
 compileJava {
-    options.compilerArgs = ["-Xdiags:verbose"]
+    options.compilerArgs = ['-Xdiags:verbose']
 }
 
 sourceSets.main.resources {
@@ -91,39 +90,39 @@ sourceSets.main.resources {
 }
 
 mixin {
-    add sourceSets.main, "create.refmap.json"
+    add sourceSets.main, 'create.refmap.json'
 }
 
 repositories {
     maven {
         // Location of the maven that hosts JEI files (and TiC)
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
+        name 'Progwml6 maven'
+        url 'https://dvs1.progwml6.com/files/maven'
     }
     /*maven {
         // Location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
+        name 'ModMaven'
+        url 'https://modmaven.k-4u.nl'
     }*/
     maven {
         // Location of the maven for vazkii's mods
-        name = "blamejared"
-        url = "https://maven.blamejared.com/"
+        name 'blamejared'
+        url 'https://maven.blamejared.com'
     }
     maven {
         // Location of the maven for mixed mappings, Registrate, and Flywheel
-        name = "tterrag maven"
-        url = "https://maven.tterrag.com/"
+        name 'tterrag maven'
+        url 'https://maven.tterrag.com'
     }
     maven {
-        url = "https://www.cursemaven.com"
+        url 'https://www.cursemaven.com'
         content {
             includeGroup "curse.maven"
         }
     }
     maven {
         //location of the maven for dynamic trees
-        url "https://harleyoconnor.com/maven"
+        url 'https://harleyoconnor.com/maven'
     }
 }
 
@@ -148,7 +147,7 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
     // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
-    // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta12.1")
+    // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
     // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
     // runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
     // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
@@ -161,14 +160,14 @@ jar {
     classifier = 'slim'
     manifest {
         attributes([
-            "Specification-Title": "create",
-            "Specification-Vendor": "simibubi",
-            "Specification-Version": "1",
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"simibubi",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            "MixinConfigs": "create.mixins.json"
+            'Specification-Title': 'create',
+            'Specification-Vendor': 'simibubi',
+            'Specification-Version': '1',
+            'Implementation-Title': project.name,
+            'Implementation-Version': '${version}',
+            'Implementation-Vendor': 'simibubi',
+            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            'MixinConfigs': 'create.mixins.json'
         ])
     }
 }

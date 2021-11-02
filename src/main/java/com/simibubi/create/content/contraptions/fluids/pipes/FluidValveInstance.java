@@ -16,8 +16,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
-import ModelData;
-
 public class FluidValveInstance extends ShaftInstance implements IDynamicInstance {
 
     protected ModelData pointer;

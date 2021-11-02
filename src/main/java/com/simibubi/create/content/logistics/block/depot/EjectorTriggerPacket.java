@@ -2,8 +2,8 @@ package com.simibubi.create.content.logistics.block.depot;
 
 import com.simibubi.create.foundation.networking.TileEntityConfigurationPacket;
 
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 
 public class EjectorTriggerPacket extends TileEntityConfigurationPacket<EjectorTileEntity> {
 

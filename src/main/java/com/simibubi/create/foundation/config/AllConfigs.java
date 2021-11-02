@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.block.BlockStressValues;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class AllConfigs {
 
@@ -49,14 +50,14 @@ public class AllConfigs {
 		BlockStressValues.registerProvider(context.getActiveNamespace(), SERVER.kinetics.stressValues);
 	}
 
-	public static void onLoad(ModConfig.Loading event) {
+	public static void onLoad(ModConfigEvent.Loading event) {
 		for (ConfigBase config : CONFIGS.values())
 			if (config.specification == event.getConfig()
 				.getSpec())
 				config.onLoad();
 	}
 
-	public static void onReload(ModConfig.Reloading event) {
+	public static void onReload(ModConfigEvent.Reloading event) {
 		for (ConfigBase config : CONFIGS.values())
 			if (config.specification == event.getConfig()
 				.getSpec())

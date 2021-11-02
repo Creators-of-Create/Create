@@ -2,13 +2,13 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock.HeatLevel;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
 
 public class AnimatedBlazeBurner extends AnimatedKinetics {
 

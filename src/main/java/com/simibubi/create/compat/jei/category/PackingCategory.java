@@ -13,10 +13,10 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.Blocks;
 
 public class PackingCategory extends BasinCategory {
 

@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 
 public class DyeHelper {
 

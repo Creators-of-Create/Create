@@ -11,17 +11,17 @@ import com.simibubi.create.foundation.render.PartialBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import com.simibubi.create.foundation.utility.AngleHelper;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CuckooClockRenderer extends KineticTileEntityRenderer {
 
-	public CuckooClockRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public CuckooClockRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

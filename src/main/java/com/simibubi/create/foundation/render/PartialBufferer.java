@@ -1,24 +1,17 @@
 package com.simibubi.create.foundation.render;
 
-import static net.minecraft.state.properties.BlockStateProperties.FACING;
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-import javanet.minimport com.jozufozu.flywheel.core.PartialModel;
+import java.util.function.Supplier;
+
+import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import java.util.function.Supplier;
+
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-
-ecraft.world.level.block.state.properties.BlockStatePropertieswheel.core.PartialModel;
-import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.simibubi.create.CreateClient;
-import com.simibubi.create.foundation.utility.AngleHelper;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
 
 public class PartialBufferer {
 

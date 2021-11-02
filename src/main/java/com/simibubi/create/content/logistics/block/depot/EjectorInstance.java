@@ -11,8 +11,6 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.util.Mth;
 
-import ModelData;
-
 public class EjectorInstance extends ShaftInstance implements IDynamicInstance {
 
 	protected final EjectorTileEntity tile;

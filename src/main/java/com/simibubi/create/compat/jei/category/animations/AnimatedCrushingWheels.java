@@ -1,12 +1,12 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.Direction.Axis;
-import com.mojang.math.Vector3f;
 
 public class AnimatedCrushingWheels extends AnimatedKinetics {
 

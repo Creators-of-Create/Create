@@ -12,9 +12,6 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.Direction;
-
 public class SplitShaftInstance extends KineticTileInstance<SplitShaftTileEntity> {
 
     protected final ArrayList<RotatingData> keys;

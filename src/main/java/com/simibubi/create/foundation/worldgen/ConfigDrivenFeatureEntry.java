@@ -10,9 +10,6 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.Predicates;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import com.simibubi.create.foundation.config.ConfigBase.ConfigFloat;
-import com.simibubi.create.foundation.config.ConfigBase.ConfigInt;
-
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
 	public final String id;

@@ -2,14 +2,10 @@ package com.simibubi.create.content.contraptions.components.flywheel;
 
 import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 
-import javanet.minimport ModelData;
-import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
-import com.simibubi.create.content.contraptions.base.KineticTileInstance;
-import com.simibubi.create.content.contraptions.base.RotatingData;
+import java.util.Collections;
 import java.util.List;
-import net.minecraft.core.Direction;
 
-ecraft.world.level.block.state.properties.BlockStatePropertiest com.google.common.collect.Lists;
+import com.google.common.collect.Lists;
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.backend.instancing.Instancer;
@@ -24,10 +20,10 @@ import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class FlyWheelInstance extends KineticTileInstance<FlywheelTileEntity> implements IDynamicInstance {
 

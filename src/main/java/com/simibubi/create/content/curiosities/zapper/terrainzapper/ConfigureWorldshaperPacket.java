@@ -3,9 +3,9 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 import com.simibubi.create.content.curiosities.zapper.ConfigureZapperPacket;
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 
 public class ConfigureWorldshaperPacket extends ConfigureZapperPacket {
 

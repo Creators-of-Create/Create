@@ -9,11 +9,11 @@ import com.simibubi.create.content.contraptions.components.deployer.DeployerAppl
 import com.simibubi.create.content.contraptions.components.saw.CuttingRecipe;
 import com.simibubi.create.content.contraptions.itemAssembly.SequencedAssemblyRecipeBuilder;
 
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.world.level.block.Blocks;
 
 public class SequencedAssemblyRecipeGen extends CreateRecipeProvider {
 

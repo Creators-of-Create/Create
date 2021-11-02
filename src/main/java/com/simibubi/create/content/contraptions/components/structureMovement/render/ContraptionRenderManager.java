@@ -14,8 +14,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 public abstract class ContraptionRenderManager<C extends ContraptionRenderInfo> {
 	protected final Level world;

@@ -11,11 +11,11 @@ import com.simibubi.create.foundation.ponder.elements.TextWindowElement.Builder;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
-import net.minecraft.world.level.block.RedStoneWireBlock;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 
 public class ChainDriveScenes {
 

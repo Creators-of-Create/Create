@@ -4,21 +4,22 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+
 import net.minecraft.client.Camera;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.DoubleTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import com.mojang.math.Quaternion;
-import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.phys.Vec3;
 
 public class VecHelper {
 
@@ -192,7 +193,7 @@ public class VecHelper {
 		double delta = lineDotDiff * lineDotDiff - (diff.lengthSqr() - radius * radius);
 		if (delta < 0)
 			return null;
-		double t = -lineDotDiff + Mth.sqrt(delta);
+		double t = -lineDotDiff + Math.sqrt(delta);
 		return origin.add(lineDirection.scale(t));
 	}
 

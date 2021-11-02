@@ -13,11 +13,11 @@ import com.tterrag.registrate.util.DataIngredient;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.tags.Tag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.Block;
 
 public class PalettesVariantEntry {
 

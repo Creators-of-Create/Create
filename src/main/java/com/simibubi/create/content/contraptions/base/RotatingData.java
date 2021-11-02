@@ -1,9 +1,9 @@
 package com.simibubi.create.content.contraptions.base;
 
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
 
 public class RotatingData extends KineticData {
     private byte rotationAxisX;

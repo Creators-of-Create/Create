@@ -3,9 +3,9 @@ package com.simibubi.create.content.logistics.block;
 import com.jozufozu.flywheel.backend.gl.buffer.VecBuffer;
 import com.jozufozu.flywheel.backend.instancing.InstanceData;
 import com.jozufozu.flywheel.core.materials.IFlatLight;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
 
 public class FlapData extends InstanceData implements IFlatLight<FlapData> {
 

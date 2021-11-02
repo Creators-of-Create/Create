@@ -1,6 +1,7 @@
 package com.simibubi.create;
 
-import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.resources.ResourceLocation;
 
 public enum AllSpecialTextures {
@@ -22,9 +23,7 @@ public enum AllSpecialTextures {
 	}
 
 	public void bind() {
-		Minecraft.getInstance()
-			.getTextureManager()
-			.bind(location);
+		RenderSystem.setShaderTexture(0, location);
 	}
 
 	public ResourceLocation getLocation() {

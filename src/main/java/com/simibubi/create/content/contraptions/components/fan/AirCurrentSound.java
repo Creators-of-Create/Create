@@ -1,8 +1,8 @@
 package com.simibubi.create.content.contraptions.components.fan;
 
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 
 public class AirCurrentSound extends AbstractTickableSoundInstance {
 

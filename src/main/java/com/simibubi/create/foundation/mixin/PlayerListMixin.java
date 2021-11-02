@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.simibubi.create.content.curiosities.weapons.PotatoProjectileTypeManager;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.Connection;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 
 @Mixin(PlayerList.class)

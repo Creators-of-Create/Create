@@ -6,9 +6,9 @@ import java.util.function.BiPredicate;
 
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.Direction;
 
 public class CasingConnectivity {
 

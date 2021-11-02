@@ -10,41 +10,41 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 
-import net.minecraft.world.level.block.BaseRailBlock;
-import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SlimeBlock;
-import net.minecraft.client.particle.TerrainParticle;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.TerrainParticle;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlimeBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
@@ -142,27 +142,27 @@ public class BlockHelper {
 
 		{
 			// Try held Item first
-			int preferredSlot = player.inventory.selected;
-			ItemStack itemstack = player.inventory.getItem(preferredSlot);
+			int preferredSlot = player.getInventory().selected;
+			ItemStack itemstack = player.getInventory().getItem(preferredSlot);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.inventory.setItem(preferredSlot,
+				player.getInventory().setItem(preferredSlot,
 					new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
 
 		// Search inventory
-		for (int i = 0; i < player.inventory.getContainerSize(); ++i) {
+		for (int i = 0; i < player.getInventory().getContainerSize(); ++i) {
 			if (amountFound == amount)
 				break;
 
-			ItemStack itemstack = player.inventory.getItem(i);
+			ItemStack itemstack = player.getInventory().getItem(i);
 			int count = itemstack.getCount();
 			if (itemstack.getItem() == required && count > 0) {
 				int taken = Math.min(count, amount - amountFound);
-				player.inventory.setItem(i, new ItemStack(itemstack.getItem(), count - taken));
+				player.getInventory().setItem(i, new ItemStack(itemstack.getItem(), count - taken));
 				amountFound += taken;
 			}
 		}
@@ -170,7 +170,7 @@ public class BlockHelper {
 		if (needsTwo) {
 			// Give back 1 if uneven amount was removed
 			if (amountFound % 2 != 0)
-				player.inventory.add(new ItemStack(required));
+				player.getInventory().add(new ItemStack(required));
 			amountFound /= 2;
 		}
 

@@ -2,12 +2,12 @@ package com.simibubi.create.compat.jei;
 
 import java.util.function.Supplier;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import mezz.jei.api.gui.drawable.IDrawable;
-import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.world.item.ItemStack;
 
 public class DoubleItemIcon implements IDrawable {

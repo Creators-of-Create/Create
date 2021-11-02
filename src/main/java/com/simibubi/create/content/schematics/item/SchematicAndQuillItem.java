@@ -2,11 +2,9 @@ package com.simibubi.create.content.schematics.item;
 
 import com.simibubi.create.foundation.utility.NBTHelper;
 
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.Item;
 import net.minecraft.nbt.CompoundTag;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 
 public class SchematicAndQuillItem extends Item {
 

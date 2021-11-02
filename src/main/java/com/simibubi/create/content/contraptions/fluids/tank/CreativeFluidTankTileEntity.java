@@ -5,11 +5,9 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
 
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.fluids.FluidStack;
-
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 

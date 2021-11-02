@@ -9,8 +9,8 @@ import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlo
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.DyeColor;
 
 public class AllBlockPartials {
 

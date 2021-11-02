@@ -1,8 +1,8 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
+import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkStatus;
-import net.minecraft.server.level.progress.ChunkProgressListener;
 
 public class DummyStatusListener implements ChunkProgressListener {
 

@@ -3,10 +3,10 @@ package com.simibubi.create.foundation.utility;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 @FunctionalInterface
 public interface ISimpleReloadListener extends PreparableReloadListener {

@@ -5,8 +5,8 @@ import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 
 public class ChromaticCompoundColor implements ItemColor {
 

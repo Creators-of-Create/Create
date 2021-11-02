@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.utility;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.LevelAccessor;
 
 public class WorldHelper {

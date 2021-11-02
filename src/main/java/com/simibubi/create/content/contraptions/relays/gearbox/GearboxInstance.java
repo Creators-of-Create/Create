@@ -12,10 +12,10 @@ import com.simibubi.create.content.contraptions.base.KineticTileInstance;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.foundation.utility.Iterate;
 
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class GearboxInstance extends KineticTileInstance<GearboxTileEntity> {
 

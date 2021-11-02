@@ -6,10 +6,10 @@ import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequenc
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.linked.LinkBehaviour;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.core.BlockPos;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class LinkedControllerBindPacket extends LinkedControllerPacketBase {

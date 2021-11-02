@@ -6,12 +6,12 @@ import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class MillstoneRenderer extends KineticTileEntityRenderer {
 
-	public MillstoneRenderer(BlockEntityRenderDispatcher dispatcher) {
-		super(dispatcher);
+	public MillstoneRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

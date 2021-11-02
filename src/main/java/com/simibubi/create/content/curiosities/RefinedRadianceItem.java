@@ -1,10 +1,8 @@
 package com.simibubi.create.content.curiosities;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class RefinedRadianceItem extends NoGravMagicalDohickyItem {
 

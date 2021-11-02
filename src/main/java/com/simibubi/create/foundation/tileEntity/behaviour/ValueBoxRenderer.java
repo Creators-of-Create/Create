@@ -4,31 +4,31 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FenceBlock;
 import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBoxRenderer {
 
 	public static void renderItemIntoValueBox(ItemStack filter, PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-		BakedModel modelWithOverrides = itemRenderer.getModel(filter, Minecraft.getInstance().level, null);
+		BakedModel modelWithOverrides = itemRenderer.getModel(filter, null, null, 0);
 		boolean blockItem = modelWithOverrides.isGui3d() && !(modelWithOverrides instanceof ItemMultiLayerBakedModel);
 		float scale = (!blockItem ? .5f : 1f) - 1 / 64f;
 		float zOffset = (!blockItem ? -.225f : 0) + customZOffset(filter.getItem());
 		ms.scale(scale, scale, scale);
 		ms.translate(0, 0, zOffset);
-		itemRenderer.renderStatic(filter, TransformType.FIXED, light, overlay, ms, buffer);
+		itemRenderer.renderStatic(filter, TransformType.FIXED, light, overlay, ms, buffer, 0);
 	}
 
 	private static float customZOffset(Item item) {
@@ -41,7 +41,7 @@ public class ValueBoxRenderer {
 				return NUDGE;
 			if (block instanceof FenceBlock)
 				return NUDGE;
-			if (block.is(BlockTags.BUTTONS))
+			if (BlockTags.BUTTONS.contains(block))
 				return NUDGE;
 			if (block == Blocks.END_ROD)
 				return NUDGE;
