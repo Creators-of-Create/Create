@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import com.jozufozu.flywheel.core.PartialModel;
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllItems;
@@ -45,7 +46,7 @@ public class ExtendoGripRenderHandler {
 			return;
 		if (!Minecraft.getInstance()
 			.getItemRenderer()
-			.getModel(main, null, null)
+			.getModel(main, null, null, 0)
 			.isGui3d())
 			return;
 		pose = AllBlockPartials.DEPLOYER_HAND_HOLDING;
@@ -66,8 +67,7 @@ public class ExtendoGripRenderHandler {
 		PoseStack ms = event.getMatrixStack();
 		MatrixTransformStack msr = MatrixTransformStack.of(ms);
 		AbstractClientPlayer abstractclientplayerentity = mc.player;
-		mc.getTextureManager()
-			.bind(abstractclientplayerentity.getSkinTextureLocation());
+		RenderSystem.setShaderTexture(0, abstractclientplayerentity.getSkinTextureLocation());
 
 		float flip = rightHand ? 1.0F : -1.0F;
 		float swingProgress = event.getSwingProgress();
@@ -115,11 +115,11 @@ public class ExtendoGripRenderHandler {
 
 			if (!notInOffhand) {
 				ForgeHooksClient.handleCameraTransforms(ms, mc.getItemRenderer()
-					.getModel(offhandItem, null, null), transform, !rightHand);
+					.getModel(offhandItem, null, null, 0), transform, !rightHand);
 				ms.translate(flip * -.05f, .15f, -1.2f);
 				ms.translate(0, 0, -animation * 2.25f);
 				if (blockItem && mc.getItemRenderer()
-					.getModel(heldItem, null, null)
+					.getModel(heldItem, null, null, 0)
 					.isGui3d()) {
 					msr.rotateY(flip * 45);
 					ms.translate(flip * 0.15f, -0.15f, -.05f);

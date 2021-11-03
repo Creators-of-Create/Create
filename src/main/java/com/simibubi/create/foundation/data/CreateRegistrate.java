@@ -19,21 +19,17 @@ import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
 import com.simibubi.create.foundation.block.render.IBlockVertexColor;
-import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRenderer;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
-import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -229,27 +225,8 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return entry -> onClient(() -> () -> registerItemModel(entry, func));
 	}
 
-	public static <T extends Item, P> NonNullUnaryOperator<ItemBuilder<T, P>> customRenderedItem(
-		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
-		return b -> {
-			onClient(() -> () -> customRenderedItem(b, supplier));
-			return b;
-		};
-	}
-
 	protected static void onClient(Supplier<Runnable> toRun) {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, toRun);
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static <T extends Item, P> void customRenderedItem(ItemBuilder<T, P> b,
-		Supplier<Supplier<CustomRenderedItemModelRenderer<?>>> supplier) {
-		b.properties(p -> p.setISTER(() -> supplier.get()::get))
-			.onRegister(entry -> {
-				BlockEntityWithoutLevelRenderer ister = entry.getItemStackTileEntityRenderer();
-				if (ister instanceof CustomRenderedItemModelRenderer)
-					registerCustomRenderedItem(entry, (CustomRenderedItemModelRenderer<?>) ister);
-			});
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -282,12 +259,6 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomItemModels()
 			.register(entry.delegate, func.get());
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	private static void registerCustomRenderedItem(Item entry, CustomRenderedItemModelRenderer<?> renderer) {
-		CreateClient.MODEL_SWAPPER.getCustomRenderedItems()
-			.register(entry.delegate, renderer::createModel);
 	}
 
 }

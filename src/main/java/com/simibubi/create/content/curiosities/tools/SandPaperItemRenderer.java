@@ -58,7 +58,7 @@ public class SandPaperItemRenderer extends CustomRenderedItemModelRenderer<SandP
 			}
 
 			ItemStack toPolish = ItemStack.of(tag.getCompound("Polishing"));
-			itemRenderer.renderStatic(toPolish, TransformType.NONE, light, overlay, ms, buffer);
+			itemRenderer.renderStatic(toPolish, TransformType.NONE, light, overlay, ms, buffer, 0);
 
 			ms.popPose();
 		}

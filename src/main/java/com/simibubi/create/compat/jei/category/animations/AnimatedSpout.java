@@ -10,6 +10,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.util.Mth;
@@ -68,14 +69,14 @@ public class AnimatedSpout extends AnimatedKinetics {
 		matrixStack.scale(16, -16, 16);
 		float from = 2/16f;
 		float to = 1f - from;
-		FluidRenderer.renderTiledFluidBB(fluids.get(0), from, from, from, to, to, to, buffer, matrixStack, 0xF000F0, false);
+		FluidRenderer.renderTiledFluidBB(fluids.get(0), from, from, from, to, to, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false);
 		matrixStack.popPose();
 
 		float width = 1 / 128f * squeeze;
 		matrixStack.translate(scale / 2f, scale * 1.5f, scale / 2f);
 		matrixStack.scale(16, -16, 16);
 		matrixStack.translate(-width / 2, 0, -width / 2);
-		FluidRenderer.renderTiledFluidBB(fluids.get(0), 0, -0.001f, 0, width, 2.001f, width, buffer, matrixStack, 0xF000F0,
+		FluidRenderer.renderTiledFluidBB(fluids.get(0), 0, -0.001f, 0, width, 2.001f, width, buffer, matrixStack, LightTexture.FULL_BRIGHT,
 			false);
 		buffer.endBatch();
 

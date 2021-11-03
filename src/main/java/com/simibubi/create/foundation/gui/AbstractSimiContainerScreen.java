@@ -7,8 +7,6 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -16,6 +14,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.Minecraft;
@@ -267,7 +266,7 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	@Deprecated
 	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
 		int alpha) {
-		renderer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+		renderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D)
 			.color(red, green, blue, alpha)
 			.endVertex();

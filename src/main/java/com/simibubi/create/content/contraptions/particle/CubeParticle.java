@@ -13,6 +13,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -133,7 +134,7 @@ public class CubeParticle extends Particle {
 		float lerpedZ = (float) (Mth.lerp(p_225606_3_, this.zo, this.z) - projectedView.z());
 
 		// int light = getBrightnessForRender(p_225606_3_);
-		int light = 15728880;// 15<<20 && 15<<4
+		int light = LightTexture.FULL_BRIGHT;// 15<<20 && 15<<4
 		double ageMultiplier = 1 - Math.pow(age, 3) / Math.pow(lifetime, 3);
 
 		for (int i = 0; i < 6; i++) {

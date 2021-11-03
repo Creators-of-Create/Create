@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.outliner.ChasingAABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -229,7 +230,7 @@ public class ValueBox extends ChasingAABBOutline {
 
 	private static void drawString(PoseStack ms, MultiBufferSource buffer, Component text, float x, float y, int color) {
 		Minecraft.getInstance().font.drawInBatch(text, x, y, color, false, ms.last()
-			.pose(), buffer, false, 0, 15728880);
+			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
 	}
 
 }

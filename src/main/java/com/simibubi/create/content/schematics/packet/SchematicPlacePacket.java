@@ -49,7 +49,7 @@ public class SchematicPlacePacket extends SimplePacketBase {
 					continue;
 
 				printer.handleCurrentTarget((pos, state, tile) -> {
-					boolean placingAir = state.getBlock().isAir(state, world, pos);
+					boolean placingAir = state.isAir();
 					if (placingAir && !includeAir)
 						return;
 					

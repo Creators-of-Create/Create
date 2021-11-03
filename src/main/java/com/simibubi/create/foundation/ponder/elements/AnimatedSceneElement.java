@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.ponder.PonderWorld;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.Mth;
@@ -73,10 +74,10 @@ public abstract class AnimatedSceneElement extends PonderSceneElement {
 	protected void renderLast(PonderWorld world, MultiBufferSource buffer, PoseStack ms, float fade, float pt) {}
 
 	protected int lightCoordsFromFade(float fade) {
-		int light = 0xF000F0;
+		int light = LightTexture.FULL_BRIGHT;
 		if (fade != 1) {
 			light = (int) (Mth.lerp(fade, 5, 0xF));
-			light = light << 4 | light << 20;
+			light = LightTexture.pack(light, light);
 		}
 		return light;
 	}

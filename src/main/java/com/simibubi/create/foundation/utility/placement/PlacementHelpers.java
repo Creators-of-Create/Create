@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.config.AllConfigs;
@@ -34,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -145,8 +147,8 @@ public class PlacementHelpers {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void onRender(RenderGameOverlayEvent.Post event) {
-		if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS)
+	public static void afterRenderOverlayLayer(RenderGameOverlayEvent.PostLayer event) {
+		if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT)
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
@@ -272,7 +274,7 @@ public class PlacementHelpers {
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder buffer = tessellator.getBuilder();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
 		Matrix4f mat = ms.last().pose();
 		buffer.vertex(mat, -1, -1, 0).color(1f, 1f, 1f, alpha).uv(tx, ty).endVertex();

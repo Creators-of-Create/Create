@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -36,8 +37,8 @@ public class SchematicProcessor extends StructureProcessor {
 	@Override
 	public StructureTemplate.StructureBlockInfo process(LevelReader world, BlockPos pos, BlockPos anotherPos, StructureTemplate.StructureBlockInfo rawInfo,
 			StructureTemplate.StructureBlockInfo info, StructurePlaceSettings settings, @Nullable StructureTemplate template) {
-		if (info.nbt != null) {
-			BlockEntity te = info.state.createTileEntity(world);
+		if (info.nbt != null && info.state.hasBlockEntity()) {
+			BlockEntity te = ((EntityBlock) info.state.getBlock()).newBlockEntity(info.pos, info.state);
 			if (te != null) {
 				CompoundTag nbt = NBTProcessors.process(te, info.nbt, false);
 				if (nbt != info.nbt)

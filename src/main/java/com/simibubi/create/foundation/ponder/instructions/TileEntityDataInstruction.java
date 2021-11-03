@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class TileEntityDataInstruction extends WorldModifyInstruction {
 
@@ -36,10 +35,9 @@ public class TileEntityDataInstruction extends WorldModifyInstruction {
 			if (!type.isInstance(tileEntity))
 				return;
 			CompoundTag apply = data.apply(tileEntity.save(new CompoundTag()));
-			BlockState state = world.getBlockState(pos);
 			if (tileEntity instanceof SyncedTileEntity)
-				((SyncedTileEntity) tileEntity).readClientUpdate(state, apply);
-			tileEntity.load(state, apply);
+				((SyncedTileEntity) tileEntity).readClientUpdate(apply);
+			tileEntity.load(apply);
 		});
 	}
 

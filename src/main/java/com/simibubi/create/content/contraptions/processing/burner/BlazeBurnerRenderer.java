@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -35,7 +36,7 @@ public class BlazeBurnerRenderer extends SafeTileEntityRenderer<BlazeBurnerTileE
 		SuperByteBuffer blazeBuffer = PartialBufferer.get(blazeModel, te.getBlockState());
 		blazeBuffer.rotateCentered(Direction.UP, AngleHelper.rad(te.headAngle.getValue(partialTicks)));
 		blazeBuffer.translate(0, offset, 0);
-		blazeBuffer.light(0xF000F0)
+		blazeBuffer.light(LightTexture.FULL_BRIGHT)
 				.renderInto(ms, buffer.getBuffer(RenderType.solid()));
 	}
 }

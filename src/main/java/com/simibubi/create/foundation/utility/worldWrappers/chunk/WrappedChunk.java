@@ -84,7 +84,7 @@ public class WrappedChunk implements ChunkAccess {
     }
 
     @Override
-    public void setBlockEntity(BlockPos p_177426_1_, BlockEntity p_177426_2_) {
+    public void setBlockEntity(BlockEntity p_177426_2_) {
 
     }
 
@@ -121,11 +121,6 @@ public class WrappedChunk implements ChunkAccess {
     @Override
     public ChunkPos getPos() {
         return pos;
-    }
-
-    @Override
-    public void setLastSaveTime(long p_177432_1_) {
-
     }
 
     @Nullable

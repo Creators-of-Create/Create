@@ -77,7 +77,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 				return;
 
 			ghostInventory.setStackInSlot(9, ItemStack.EMPTY);
-			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, ItemStack.EMPTY));
+			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 36 + 9, ItemStack.EMPTY));
 			contentHolder.inferredIcon = false;
 			return;
 		}
@@ -89,7 +89,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 		ItemStack toSend = itemstack.copy();
 		toSend.getOrCreateTag()
 				.putBoolean("InferredFromRecipe", true);
-		serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, toSend));
+		serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 36 + 9, toSend));
 	}
 
 	@Override
@@ -168,7 +168,7 @@ public class BlueprintContainer extends GhostItemContainer<BlueprintSection> {
 			if (index == 9 && hasItem() && !contentHolder.getBlueprintWorld().isClientSide) {
 				contentHolder.inferredIcon = false;
 				ServerPlayer serverplayerentity = (ServerPlayer) player;
-				serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 36 + 9, getItem()));
+				serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 36 + 9, getItem()));
 			}
 			if (index < 9)
 				onCraftMatrixChanged();

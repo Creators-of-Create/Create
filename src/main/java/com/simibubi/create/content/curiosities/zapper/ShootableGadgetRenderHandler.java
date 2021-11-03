@@ -1,5 +1,6 @@
 package com.simibubi.create.content.curiosities.zapper;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
@@ -98,7 +99,7 @@ public abstract class ShootableGadgetRenderHandler {
 
 		// Render arm
 		ms.pushPose();
-		textureManager.bind(player.getSkinTextureLocation());
+		RenderSystem.setShaderTexture(0, player.getSkinTextureLocation());
 
 		float flip = rightHand ? 1.0F : -1.0F;
 		float f1 = Mth.sqrt(event.getSwingProgress());

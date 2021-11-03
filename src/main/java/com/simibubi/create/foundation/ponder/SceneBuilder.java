@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
+import com.mojang.math.Vector3f;
 import com.simibubi.create.content.contraptions.base.IRotate.SpeedLevel;
 import com.simibubi.create.content.contraptions.base.KineticBlock;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -329,7 +330,7 @@ public class SceneBuilder {
 		public void createRedstoneParticles(BlockPos pos, int color, int amount) {
 			Vec3 rgb = Color.vectorFromRGB(color);
 			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos), Emitter.withinBlockSpace(
-				new DustParticleOptions((float) rgb.x, (float) rgb.y, (float) rgb.z, 1), Vec3.ZERO), amount, 2));
+				new DustParticleOptions(new Vector3f(rgb), 1), Vec3.ZERO), amount, 2));
 		}
 
 	}

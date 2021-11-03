@@ -1,12 +1,12 @@
 package com.simibubi.create.foundation.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -163,9 +163,7 @@ public class AllIcons implements IScreenRenderable {
 
 	@OnlyIn(Dist.CLIENT)
 	public void bind() {
-		Minecraft.getInstance()
-			.getTextureManager()
-			.bind(ICON_ATLAS);
+		RenderSystem.setShaderTexture(0, ICON_ATLAS);
 	}
 
 	@Override

@@ -74,8 +74,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	protected void containerTick() {
 		if (!menu.player.getMainHandItem()
 			.equals(menu.mainItem, false))
 			minecraft.player.closeContainer();
@@ -102,7 +101,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 
 	@Override
 	protected void renderTooltip(PoseStack ms, int x, int y) {
-		if (!this.minecraft.player.getInventory().getCarried()
+		if (!menu.getCarried()
 			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
 			|| hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(ms, x, y);

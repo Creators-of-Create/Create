@@ -71,8 +71,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 				vanillaPanorama.render(elapsedPartials, 1);
 			panorama.render(elapsedPartials, alpha);
 
-			minecraft.getTextureManager()
-				.bind(PANORAMA_OVERLAY_TEXTURES);
+			RenderSystem.setShaderTexture(0, PANORAMA_OVERLAY_TEXTURES);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

@@ -16,7 +16,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 public class ConfigModListScreen extends ConfigScreen {
 
@@ -47,7 +47,7 @@ public class ConfigModListScreen extends ConfigScreen {
 		children().add(list);
 
 		allEntries = new ArrayList<>();
-		ModList.get().getMods().stream().map(ModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
+		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
 		allEntries.sort((e1, e2) -> {
 			int empty = (e2.button.active ? 1 : 0) - (e1.button.active ? 1 : 0);
 			if (empty != 0)

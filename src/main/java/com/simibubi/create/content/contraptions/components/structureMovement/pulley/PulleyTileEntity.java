@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -153,7 +152,7 @@ public class PulleyTileEntity extends LinearActuatorTileEntity {
 		}
 
 		if (movedContraption != null)
-			movedContraption.remove(RemovalReason.KILLED);
+			movedContraption.discard();
 		movedContraption = null;
 		initialOffset = 0;
 		running = false;

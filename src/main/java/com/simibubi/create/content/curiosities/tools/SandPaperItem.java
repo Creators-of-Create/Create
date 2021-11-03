@@ -1,7 +1,10 @@
 package com.simibubi.create.content.curiosities.tools;
 
+import java.util.function.Consumer;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -25,6 +28,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
@@ -182,6 +188,12 @@ public class SandPaperItem extends Item {
 	@Override
 	public int getEnchantmentValue() {
 		return 5;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(SimpleCustomRenderer.create(this, new SandPaperItemRenderer()));
 	}
 
 }

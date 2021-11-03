@@ -41,7 +41,7 @@ public abstract class ZapperItemRenderer<M extends CustomRenderedItemModel> exte
 		if (state.getBlock() instanceof CrossCollisionBlock)
 			modelForState = Minecraft.getInstance()
 				.getItemRenderer()
-				.getModel(new ItemStack(state.getBlock()), Minecraft.getInstance().level, null);
+				.getModel(new ItemStack(state.getBlock()), null, null, 0);
 
 		Minecraft.getInstance()
 			.getItemRenderer()

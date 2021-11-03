@@ -56,6 +56,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -76,9 +77,9 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
 import net.minecraftforge.event.TickEvent.RenderTickEvent;
@@ -199,21 +200,19 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onRenderOverlay(RenderGameOverlayEvent.Post event) {
+	public static void afterRenderOverlayLayer(RenderGameOverlayEvent.PostLayer event) {
 		PoseStack ms = event.getMatrixStack();
 		BufferSource buffers = Minecraft.getInstance()
 			.renderBuffers()
 			.bufferSource();
-		int light = 0xF000F0;
+		int light = LightTexture.FULL_BRIGHT;
 		int overlay = OverlayTexture.NO_OVERLAY;
 		float pt = event.getPartialTicks();
 
-		if (event.getType() == ElementType.AIR)
+		if (event.getOverlay() == ForgeIngameGui.AIR_LEVEL_ELEMENT)
 			CopperBacktankArmorLayer.renderRemainingAirOverlay(ms, buffers, light, overlay, pt);
-		if (event.getType() != ElementType.HOTBAR)
-			return;
-
-		onRenderHotbar(ms, buffers, light, overlay, pt);
+		if (event.getOverlay() == ForgeIngameGui.HOTBAR_ELEMENT)
+			onRenderHotbar(ms, buffers, light, overlay, pt);
 	}
 
 	public static void onRenderHotbar(PoseStack ms, MultiBufferSource buffer, int light, int overlay,

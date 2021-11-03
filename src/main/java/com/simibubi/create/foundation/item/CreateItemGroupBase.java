@@ -57,7 +57,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 			if (item instanceof BlockItem)
 				continue;
 			ItemStack stack = new ItemStack(item);
-			BakedModel model = itemRenderer.getModel(stack, world, null);
+			BakedModel model = itemRenderer.getModel(stack, world, null, 0);
 			if (model.isGui3d() != specialItems)
 				continue;
 			item.fillItemCategory(this, items);

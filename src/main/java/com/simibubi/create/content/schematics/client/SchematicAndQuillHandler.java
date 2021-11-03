@@ -207,8 +207,8 @@ public class SchematicAndQuillHandler {
 
 	public void saveSchematic(String string, boolean convertImmediately) {
 		StructureTemplate t = new StructureTemplate();
-		BoundingBox bb = new BoundingBox(firstPos, secondPos);
-		BlockPos origin = new BlockPos(bb.x0, bb.y0, bb.z0);
+		BoundingBox bb = BoundingBox.fromCorners(firstPos, secondPos);
+		BlockPos origin = new BlockPos(bb.minX(), bb.minY(), bb.minZ());
 		BlockPos bounds = new BlockPos(bb.getXSpan(), bb.getYSpan(), bb.getZSpan());
 
 		t.fillFromWorld(Minecraft.getInstance().level, origin, bounds, true, Blocks.AIR);

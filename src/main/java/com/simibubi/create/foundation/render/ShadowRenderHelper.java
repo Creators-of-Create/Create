@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -105,7 +106,7 @@ public class ShadowRenderHelper {
 			.color(1.0F, 1.0F, 1.0F, alpha)
 			.uv(u, v)
 			.overlayCoords(OverlayTexture.NO_OVERLAY)
-			.uv2(0xF000F0)
+			.uv2(LightTexture.FULL_BRIGHT)
 			.normal(entry.normal(), 0.0F, 1.0F, 0.0F)
 			.endVertex();
 	}

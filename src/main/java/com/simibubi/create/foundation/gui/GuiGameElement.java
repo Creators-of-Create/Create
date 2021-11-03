@@ -18,6 +18,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
@@ -112,7 +113,7 @@ public class GuiGameElement {
 
 		protected void prepareMatrix(PoseStack matrixStack) {
 			matrixStack.pushPose();
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			RenderSystem.alphaFunc(516, 0.1F);
 			RenderSystem.enableAlphaTest();
 			RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -180,8 +181,7 @@ public class GuiGameElement {
 
 			transformMatrix(matrixStack);
 
-			mc.getTextureManager()
-				.bind(InventoryMenu.BLOCK_ATLAS);
+			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 			renderModel(blockRenderer, buffer, renderType, vb, matrixStack);
 
 			cleanUpMatrix(matrixStack);
@@ -195,7 +195,7 @@ public class GuiGameElement {
 			Vec3 rgb = Color.vectorFromRGB(color == -1 ? this.color : color);
 			blockRenderer.getModelRenderer()
 				.renderModel(ms.last(), vb, blockState, blockModel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
-					0xF000F0, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
+					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
 			buffer.endBatch();
 		}
 
@@ -214,7 +214,7 @@ public class GuiGameElement {
 			RenderType renderType, VertexConsumer vb, PoseStack ms) {
 			if (blockState.getBlock() instanceof FireBlock) {
 				Lighting.setupForFlatItems();
-				blockRenderer.renderBlock(blockState, ms, buffer, 0xF000F0, OverlayTexture.NO_OVERLAY,
+				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
 					VirtualEmptyModelData.INSTANCE);
 				buffer.endBatch();
 				Lighting.setupFor3DItems();
@@ -228,7 +228,7 @@ public class GuiGameElement {
 				return;
 
 			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
-				.getType(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, 0xF000F0, false);
+				.getType(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, LightTexture.FULL_BRIGHT, false);
 			buffer.endBatch();
 		}
 	}
@@ -263,10 +263,10 @@ public class GuiGameElement {
 
 		public static void renderItemIntoGUI(PoseStack matrixStack, ItemStack stack, boolean useDefaultLighting) {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-			BakedModel bakedModel = renderer.getModel(stack, null, null);
+			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
 			matrixStack.pushPose();
-			renderer.textureManager.bind(TextureAtlas.LOCATION_BLOCKS);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 			renderer.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
 			RenderSystem.enableRescaleNormal();
 			RenderSystem.enableAlphaTest();
@@ -274,7 +274,7 @@ public class GuiGameElement {
 			RenderSystem.defaultAlphaFunc();
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			matrixStack.translate(0, 0, 100.0F + renderer.blitOffset);
 			matrixStack.translate(8.0F, -8.0F, 0.0F);
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
@@ -286,7 +286,7 @@ public class GuiGameElement {
 				}
 			}
 
-			renderer.render(stack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
+			renderer.render(stack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
 			buffer.endBatch();
 			RenderSystem.enableDepthTest();
 			if (useDefaultLighting) {

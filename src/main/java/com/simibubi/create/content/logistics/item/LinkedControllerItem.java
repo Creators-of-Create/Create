@@ -1,9 +1,12 @@
 package com.simibubi.create.content.logistics.item;
 
+import java.util.function.Consumer;
+
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler.Frequency;
+import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.core.BlockPos;
@@ -27,6 +30,7 @@ import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemStackHandler;
@@ -136,6 +140,12 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 	@Override
 	public Component getDisplayName() {
 		return new TranslatableComponent(getDescriptionId());
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(SimpleCustomRenderer.create(this, new LinkedControllerItemRenderer()));
 	}
 
 }

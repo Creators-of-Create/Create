@@ -29,7 +29,7 @@ public class SchematicTableContainer extends AbstractContainerMenu {
 		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
 		if (tileEntity instanceof SchematicTableTileEntity) {
 			this.te = (SchematicTableTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), extraData.readNbt());
+			this.te.handleUpdateTag(extraData.readNbt());
 			init();
 		}
 	}

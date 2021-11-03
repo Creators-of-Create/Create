@@ -18,7 +18,6 @@ import com.simibubi.create.content.contraptions.components.structureMovement.cha
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.RadialChassisBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssembleRailType;
 import com.simibubi.create.content.contraptions.components.structureMovement.mounted.CartAssemblerBlock;
-import com.simibubi.create.content.contraptions.components.tracks.ReinforcedRailBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
@@ -239,19 +238,6 @@ public class BlockStateGen {
 			.modelFile(p.models()
 				.getExistingFile(p.modLoc("block/" + c.getName() + "/block")))
 			.build();
-	}
-
-	public static NonNullBiConsumer<DataGenContext<Block, ReinforcedRailBlock>, RegistrateBlockstateProvider> reinforcedRail() {
-		return (c, p) -> p.getVariantBuilder(c.get())
-			.forAllStates(state -> {
-				return ConfiguredModel.builder()
-					.modelFile(p.models()
-						.getExistingFile(p.modLoc(
-							"block/" + c.getName() + "/block" + (state.getValue(ReinforcedRailBlock.CONNECTS_S) ? "_s" : "")
-								+ (state.getValue(ReinforcedRailBlock.CONNECTS_N) ? "_n" : ""))))
-					.rotationY(state.getValue(ReinforcedRailBlock.RAIL_SHAPE) == RailShape.EAST_WEST ? 90 : 0)
-					.build();
-			});
 	}
 
 	public static <B extends LinearChassisBlock> NonNullBiConsumer<DataGenContext<Block, B>, RegistrateBlockstateProvider> linearChassis() {

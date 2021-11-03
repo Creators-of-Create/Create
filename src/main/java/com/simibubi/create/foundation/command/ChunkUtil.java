@@ -32,7 +32,7 @@ public class ChunkUtil {
 	public void init() {
 		ChunkStatus.FULL =
 			new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.ChunkType.LEVELCHUNK,
-				(_0, _1, _2, _3, _4, future, _6, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
+				(_0, _1, _2, _3, _4, _5, future, _7, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
 					if (markedChunks.contains(chunk.getPos()
 						.toLong())) {
 						LOGGER.debug("trying to load unforced chunk " + chunk.getPos()

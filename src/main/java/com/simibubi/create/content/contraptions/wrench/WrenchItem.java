@@ -1,11 +1,14 @@
 package com.simibubi.create.content.contraptions.wrench;
 
+import java.util.function.Consumer;
+
 import javax.annotation.Nonnull;
 
 import com.simibubi.create.AllItems;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.Create;
+import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +23,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 public class WrenchItem extends Item {
@@ -83,6 +89,12 @@ public class WrenchItem extends Item {
 			return;
 		AbstractMinecart minecart = (AbstractMinecart) target;
 		minecart.hurt(DamageSource.playerAttack(player), 100);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
 	}
 
 }

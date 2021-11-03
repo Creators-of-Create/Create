@@ -26,7 +26,7 @@ public class SchematicannonContainer extends AbstractContainerMenu {
 		BlockEntity tileEntity = world.getBlockEntity(buffer.readBlockPos());
 		if (tileEntity instanceof SchematicannonTileEntity) {
 			this.te = (SchematicannonTileEntity) tileEntity;
-			this.te.handleUpdateTag(te.getBlockState(), buffer.readNbt());
+			this.te.handleUpdateTag(buffer.readNbt());
 			init();
 		}
 	}

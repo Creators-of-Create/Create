@@ -1,10 +1,10 @@
 package com.simibubi.create.foundation.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Color;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -145,9 +145,7 @@ public enum AllGuiTextures implements IScreenRenderable {
 
 	@OnlyIn(Dist.CLIENT)
 	public void bind() {
-		Minecraft.getInstance()
-			.getTextureManager()
-			.bind(location);
+		RenderSystem.setShaderTexture(0, location);
 	}
 
 	@Override

@@ -116,9 +116,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-
+	protected void containerTick() {
 		if (!AllBlocks.ADJUSTABLE_CRATE.has(minecraft.level.getBlockState(te.getBlockPos())))
 			minecraft.setScreen(null);
 

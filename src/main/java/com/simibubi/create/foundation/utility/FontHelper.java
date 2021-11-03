@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -78,7 +79,7 @@ public final class FontHelper {
 			MultiBufferSource.BufferSource irendertypebuffer$impl = MultiBufferSource.immediate(Tesselator.getInstance()
 				.getBuilder());
 			int i = font.drawInBatch(p_228078_1_, p_228078_2_, p_228078_3_, p_228078_4_, p_228078_6_, p_228078_5_,
-				irendertypebuffer$impl, false, 0, 15728880);
+				irendertypebuffer$impl, false, 0, LightTexture.FULL_BRIGHT);
 			irendertypebuffer$impl.endBatch();
 			return i;
 		}

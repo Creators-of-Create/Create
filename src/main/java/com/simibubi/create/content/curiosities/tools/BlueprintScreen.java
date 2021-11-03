@@ -80,7 +80,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 
 	@Override
 	protected void renderTooltip(PoseStack ms, int x, int y) {
-		if (!this.minecraft.player.getInventory().getCarried()
+		if (!menu.getCarried()
 			.isEmpty() || this.hoveredSlot == null || this.hoveredSlot.hasItem()
 			|| hoveredSlot.container == menu.playerInventory) {
 			super.renderTooltip(ms, x, y);
@@ -130,9 +130,8 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	}
 
 	@Override
-	public void tick() {
+	protected void containerTick() {
 //		handleTooltips();
-		super.tick();
 
 		if (!menu.contentHolder.isEntityAlive())
 			minecraft.player.closeContainer();

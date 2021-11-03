@@ -6,6 +6,7 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItemModelRendere
 import com.simibubi.create.foundation.item.render.PartialItemModelRenderer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
@@ -18,7 +19,7 @@ public class SymmetryWandItemRenderer extends CustomRenderedItemModelRenderer<Sy
 	protected void render(ItemStack stack, SymmetryWandModel model, PartialItemModelRenderer renderer, ItemTransforms.TransformType transformType,
 		PoseStack ms, MultiBufferSource buffer, int light, int overlay) {
 		float worldTime = AnimationTickHolder.getRenderTime() / 20;
-		int maxLight = 0xF000F0;
+		int maxLight = LightTexture.FULL_BRIGHT;
 
 		renderer.render(model.getOriginalModel(), light);
 		renderer.renderSolidGlowing(model.getPartial("core"), maxLight);

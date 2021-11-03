@@ -142,7 +142,7 @@ public class FluidHelper {
 				player.setItemInHand(handIn, emptyingResult.getSecond());
 			else {
 				player.setItemInHand(handIn, copyOfHeld);
-				player.getInventory().placeItemBackInInventory(worldIn, emptyingResult.getSecond());
+				player.getInventory().placeItemBackInInventory(emptyingResult.getSecond());
 			}
 		}
 		return true;

@@ -84,7 +84,7 @@ public class PonderWorld extends SchematicWorld {
 		originalTileEntities.clear();
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
 		tileEntities.forEach(
-			(k, v) -> originalTileEntities.put(k, BlockEntity.loadStatic(blocks.get(k), v.save(new CompoundTag()))));
+			(k, v) -> originalTileEntities.put(k, BlockEntity.loadStatic(k, blocks.get(k), v.save(new CompoundTag()))));
 		entities.forEach(e -> EntityType.create(e.serializeNBT(), this)
 			.ifPresent(originalEntities::add));
 	}
@@ -97,7 +97,7 @@ public class PonderWorld extends SchematicWorld {
 		renderedTileEntities.clear();
 		originalBlocks.forEach((k, v) -> blocks.put(k, v));
 		originalTileEntities.forEach((k, v) -> {
-			BlockEntity te = BlockEntity.loadStatic(originalBlocks.get(k), v.save(new CompoundTag()));
+			BlockEntity te = BlockEntity.loadStatic(k, originalBlocks.get(k), v.save(new CompoundTag()));
 			onTEadded(te, te.getBlockPos());
 			tileEntities.put(k, te);
 			renderedTileEntities.add(te);
@@ -113,7 +113,7 @@ public class PonderWorld extends SchematicWorld {
 			if (originalBlocks.containsKey(p))
 				blocks.put(p, originalBlocks.get(p));
 			if (originalTileEntities.containsKey(p)) {
-				BlockEntity te = BlockEntity.loadStatic(originalBlocks.get(p), originalTileEntities.get(p)
+				BlockEntity te = BlockEntity.loadStatic(p, originalBlocks.get(p), originalTileEntities.get(p)
 					.save(new CompoundTag()));
 				onTEadded(te, te.getBlockPos());
 				tileEntities.put(p, te);
@@ -211,7 +211,7 @@ public class PonderWorld extends SchematicWorld {
 			entity.tick();
 
 			if (entity.getY() <= -.5f)
-				entity.remove();
+				entity.discard();
 
 			if (!entity.isAlive())
 				iterator.remove();

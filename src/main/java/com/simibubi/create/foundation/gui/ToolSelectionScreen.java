@@ -72,11 +72,9 @@ public class ToolSelectionScreen extends Screen {
 
 		AllGuiTextures gray = AllGuiTextures.HUD_BACKGROUND;
 		RenderSystem.enableBlend();
-		RenderSystem.color4f(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
+		RenderSystem.setShaderColor(1, 1, 1, focused ? 7 / 8f : 1 / 2f);
 
-		Minecraft.getInstance()
-			.getTextureManager()
-			.bind(gray.location);
+		RenderSystem.setShaderTexture(0, gray.location);
 		blit(matrixStack, x - 15, y, gray.startX, gray.startY, w, h, gray.width, gray.height);
 
 		float toolTipAlpha = yOffset / 10;
@@ -85,9 +83,9 @@ public class ToolSelectionScreen extends Screen {
 		int stringAlphaComponent = ((int) (toolTipAlpha * 0xFF)) << 24;
 
 		if (toolTipAlpha > 0.25f) {
-			RenderSystem.color4f(.7f, .7f, .8f, toolTipAlpha);
+			RenderSystem.setShaderColor(.7f, .7f, .8f, toolTipAlpha);
 			blit(matrixStack, x - 15, y + 33, gray.startX, gray.startY, w, h + 22, gray.width, gray.height);
-			RenderSystem.color4f(1, 1, 1, 1);
+			RenderSystem.setShaderColor(1, 1, 1, 1);
 
 			if (toolTip.size() > 0)
 				font.draw(matrixStack, toolTip.get(0), x - 10, y + 38, 0xEEEEEE + stringAlphaComponent);
@@ -99,7 +97,7 @@ public class ToolSelectionScreen extends Screen {
 				font.draw(matrixStack, toolTip.get(3), x - 10, y + 72, 0xCCCCDD + stringAlphaComponent);
 		}
 
-		RenderSystem.color4f(1, 1, 1, 1);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
 		if (tools.size() > 1) {
 			String keyName = AllKeys.TOOL_MENU.getBoundKey();
 			int width = minecraft.getWindow()
@@ -124,11 +122,11 @@ public class ToolSelectionScreen extends Screen {
 					.getString(), x + i * 50 + 24, y + 28, 0xCCDDFF);
 				alpha = 1;
 			}
-			RenderSystem.color4f(0, 0, 0, alpha);
+			RenderSystem.setShaderColor(0, 0, 0, alpha);
 			tools.get(i)
 				.getIcon()
 				.draw(matrixStack, this, x + i * 50 + 16, y + 12);
-			RenderSystem.color4f(1, 1, 1, alpha);
+			RenderSystem.setShaderColor(1, 1, 1, alpha);
 			tools.get(i)
 				.getIcon()
 				.draw(matrixStack, this, x + i * 50 + 16, y + 11);

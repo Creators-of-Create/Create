@@ -92,15 +92,17 @@ public class LinkedControllerContainer extends AbstractContainerMenu implements 
 	}
 
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		if (slotId == playerInventory.selected && clickTypeIn != ClickType.THROW)
-			return ItemStack.EMPTY;
+			return;
 
-		ItemStack held = playerInventory.getCarried();
-		if (slotId < 36)
-			return super.clicked(slotId, dragType, clickTypeIn, player);
+		ItemStack held = getCarried();
+		if (slotId < 36) {
+			super.clicked(slotId, dragType, clickTypeIn, player);
+			return;
+		}
 		if (clickTypeIn == ClickType.THROW)
-			return ItemStack.EMPTY;
+			return;
 
 		int slot = slotId - 36;
 		if (clickTypeIn == ClickType.CLONE) {
@@ -108,21 +110,20 @@ public class LinkedControllerContainer extends AbstractContainerMenu implements 
 				ItemStack stackInSlot = filterInventory.getStackInSlot(slot)
 					.copy();
 				stackInSlot.setCount(64);
-				playerInventory.setCarried(stackInSlot);
-				return ItemStack.EMPTY;
+				setCarried(stackInSlot);
+				return;
 			}
-			return ItemStack.EMPTY;
+			return;
 		}
 
 		if (held.isEmpty()) {
 			filterInventory.setStackInSlot(slot, ItemStack.EMPTY);
-			return ItemStack.EMPTY;
+			return;
 		}
 
 		ItemStack insert = held.copy();
 		insert.setCount(1);
 		filterInventory.setStackInSlot(slot, insert);
-		return held;
 	}
 
 	protected ItemStackHandler createFilterInventory() {

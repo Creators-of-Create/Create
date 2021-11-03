@@ -14,6 +14,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.font.glyphs.BakedGlyph;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -115,7 +116,7 @@ public class NixieTubeRenderer extends SafeTileEntityRenderer<NixieTubeTileEntit
 	private static void drawChar(PoseStack ms, MultiBufferSource buffer, String c, int color) {
 		Font fontRenderer = Minecraft.getInstance().font;
 		fontRenderer.drawInBatch(c, 0, 0, color, false, ms.last()
-			.pose(), buffer, false, 0, 15728880);
+			.pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
 		if (buffer instanceof BufferSource) {
 			BakedGlyph texturedglyph = fontRenderer.getFontSet(Style.DEFAULT_FONT)
 				.whiteGlyph();

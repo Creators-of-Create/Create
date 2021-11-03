@@ -176,8 +176,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	protected void containerTick() {
 		ItemStack stackInSlot = menu.ghostInventory.getStackInSlot(0);
 		if (!stackInSlot.equals(lastItemScanned, false))
 			referenceItemChanged(stackInSlot);
@@ -185,8 +184,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void renderTooltip(PoseStack matrixStack, int mouseX, int mouseY) {
-		if (this.minecraft.player.getInventory().getCarried()
-			.isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+		if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
 			if (this.hoveredSlot.index == 37) {
 				renderComponentTooltip(matrixStack, selectedAttributes, mouseX, mouseY);
 				return;

@@ -23,6 +23,7 @@ import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -67,7 +68,7 @@ public abstract class GhostBlockRenderer {
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
 			dispatcher.getModelRenderer()
-				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.NO_OVERLAY,
+				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
 					VirtualEmptyModelData.INSTANCE);
 
 			ms.popPose();
@@ -100,7 +101,7 @@ public abstract class GhostBlockRenderer {
 			ms.scale(.85f, .85f, .85f);
 			ms.translate(-.5, -.5, -.5);
 
-			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, 0xF000F0, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
+			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 			renderModel(params, ms.last(), vb, params.state, model, 1f, 1f, 1f,
 				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY,
 				VirtualEmptyModelData.INSTANCE);

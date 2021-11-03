@@ -2,10 +2,12 @@ package com.simibubi.create.content.curiosities.zapper.terrainzapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.simibubi.create.content.curiosities.zapper.PlacementPatterns;
 import com.simibubi.create.content.curiosities.zapper.ZapperItem;
 import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
@@ -21,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 
 public class WorldshaperItem extends ZapperItem {
 
@@ -90,6 +93,12 @@ public class WorldshaperItem extends ZapperItem {
 		nbt.put("BrushParams", NbtUtils.writeBlockPos(new BlockPos(brushParamX, brushParamY, brushParamZ)));
 		NBTHelper.writeEnum(nbt, "Tool", tool);
 		NBTHelper.writeEnum(nbt, "Placement", placement);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(SimpleCustomRenderer.create(this, new WorldshaperItemRenderer()));
 	}
 
 }
