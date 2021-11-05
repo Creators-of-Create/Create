@@ -1460,9 +1460,9 @@
 	"item.create.creative_blaze_cake.tooltip.behaviour1": "_锁定_烈焰人燃烧室的热量等级。如果再次使用，会使得燃烧室的热量等级开始_循环_变化。",
 
 	"block.create.controller_rail.tooltip": "控制铁轨",
-	"block.create.controller_rail.tooltip.summary": "一种_汇流的，受红石信号影响的_铁轨，可以_较好地控制_经过矿车的_移动速度_。",
-	"block.create.controller_rail.tooltip.condition1": "通入红石信号时时",
-	"block.create.controller_rail.tooltip.behaviour1": "根据信号强度_加速_或_减速_经过的矿车。还会将红石信号传递到相邻的控制铁轨。向两个控制铁轨通入不同等级的红石信号，两者中间的轨道会受到以此为区间的连续等级的红石信号的激活。",
+	"block.create.controller_rail.tooltip.summary": "一种_单向动力铁轨_，能够_精细控制_矿车的_移动速度_。",
+	"block.create.controller_rail.tooltip.condition1": "当接受红石信号时",
+	"block.create.controller_rail.tooltip.behaviour1": "根据_信号强度__加速_或_减速_通过的_矿车_。还会将红石信号传递到相邻的控制铁轨。为两个控制铁轨提供不同强度的红石信号将导致信号强度在它们之间的控制铁轨上过渡。",
 
 	"item.create.sand_paper.tooltip": "砂纸",
 	"item.create.sand_paper.tooltip.summary": "用来_打磨_物品的砂纸，可以用_机械手_来实现自动化。",
