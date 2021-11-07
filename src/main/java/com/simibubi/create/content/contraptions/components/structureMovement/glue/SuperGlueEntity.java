@@ -276,9 +276,9 @@ public class SuperGlueEntity extends Entity
 		}
 
 		if (isAlive() && !level.isClientSide) {
+			onBroken(source.getEntity());
 			kill();
 			markHurt();
-			onBroken(source.getEntity());
 		}
 
 		return true;

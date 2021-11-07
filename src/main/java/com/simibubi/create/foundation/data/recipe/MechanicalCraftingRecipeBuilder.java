@@ -102,14 +102,14 @@ public class MechanicalCraftingRecipeBuilder {
 	}
 
 	/**
-	 * Builds this recipe into an {@link IFinishedRecipe}.
+	 * Builds this recipe into a {@link FinishedRecipe}.
 	 */
 	public void build(Consumer<FinishedRecipe> p_200464_1_) {
 		this.build(p_200464_1_, ForgeRegistries.ITEMS.getKey(this.result));
 	}
 
 	/**
-	 * Builds this recipe into an {@link IFinishedRecipe}. Use
+	 * Builds this recipe into a {@link FinishedRecipe}. Use
 	 * {@link #build(Consumer)} if save is the same as the ID for the result.
 	 */
 	public void build(Consumer<FinishedRecipe> p_200466_1_, String p_200466_2_) {
@@ -122,7 +122,7 @@ public class MechanicalCraftingRecipeBuilder {
 	}
 
 	/**
-	 * Builds this recipe into an {@link IFinishedRecipe}.
+	 * Builds this recipe into a {@link FinishedRecipe}.
 	 */
 	public void build(Consumer<FinishedRecipe> p_200467_1_, ResourceLocation p_200467_2_) {
 		validate(p_200467_2_);

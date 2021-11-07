@@ -165,8 +165,10 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 			ms.pushPose();
 			ms.translate(blockLocation.x, blockLocation.y, blockLocation.z);
 
-			ms.mulPose(new Vector3f(0, 1, 0).rotationDegrees(360 * t * 2));
-			ms.mulPose(new Vector3f(1, 0, 0).rotationDegrees(360 * t * 2));
+			ms.translate(.125f, .125f, .125f);
+			ms.mulPose(new Vector3f(0, 1, 0).rotationDegrees(360 * t));
+			ms.mulPose(new Vector3f(1, 0, 0).rotationDegrees(360 * t));
+			ms.translate(-.125f, -.125f, -.125f);
 
 			// Render the Block
 			if (launched instanceof ForBlockState) {

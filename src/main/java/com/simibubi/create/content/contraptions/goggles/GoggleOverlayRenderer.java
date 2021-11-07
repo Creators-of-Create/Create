@@ -149,7 +149,7 @@ public class GoggleOverlayRenderer {
 			return;
 
 		ms.pushPose();
-		Screen tooltipScreen = new TooltipScreen(null);
+		Screen tooltipScreen = new TooltipScreen(new TextComponent(""));
 		tooltipScreen.init(mc, mc.getWindow()
 			.getGuiScaledWidth(),
 			mc.getWindow()
