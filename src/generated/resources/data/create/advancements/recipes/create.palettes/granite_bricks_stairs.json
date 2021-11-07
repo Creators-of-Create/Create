@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:granite_bricks"
+            "items": [
+              "create:granite_bricks"
+            ]
           }
         ]
       }

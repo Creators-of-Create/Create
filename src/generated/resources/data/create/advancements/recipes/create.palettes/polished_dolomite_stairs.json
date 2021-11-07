@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:polished_dolomite"
+            "items": [
+              "create:polished_dolomite"
+            ]
           }
         ]
       }

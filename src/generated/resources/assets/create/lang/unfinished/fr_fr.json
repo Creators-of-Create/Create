@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1425",
+	"_": "Missing Localizations: 1424",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -382,7 +382,6 @@
 	"block.create.redstone_contact": "Contact de redstone",
 	"block.create.redstone_link": "Liaison Redstone",
 	"block.create.refined_radiance_casing": "UNLOCALIZED: Radiant Casing",
-	"block.create.reinforced_rail": "UNLOCALIZED: Reinforced Rail",
 	"block.create.rope": "Corde",
 	"block.create.rope_pulley": "Poulie à corde",
 	"block.create.rotation_speed_controller": "Contrôleur de vitesse de rotation",

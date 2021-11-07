@@ -18,6 +18,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -90,9 +91,9 @@ public class SchematicPrinter {
 		schematicAnchor = NbtUtils.readBlockPos(blueprint.getTag()
 			.getCompound("Anchor"));
 		blockReader = new SchematicWorld(schematicAnchor, originalWorld);
-		activeTemplate.placeInWorldChunk(blockReader, schematicAnchor, settings, blockReader.getRandom());
+		activeTemplate.placeInWorld(blockReader, schematicAnchor, schematicAnchor, settings, blockReader.getRandom(), Block.UPDATE_CLIENTS);
 
-		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, activeTemplate.getSize()
+		BlockPos extraBounds = StructureTemplate.calculateRelativePosition(settings, new BlockPos(activeTemplate.getSize())
 			.offset(-1, -1, -1));
 		blockReader.bounds.encapsulate(BoundingBox.fromCorners(extraBounds, extraBounds));
 
@@ -105,7 +106,7 @@ public class SchematicPrinter {
 		printStage = PrintStage.BLOCKS;
 		deferredBlocks.clear();
 		BoundingBox bounds = blockReader.getBounds();
-		currentPos = new BlockPos(bounds.x0 - 1, bounds.y0, bounds.z0);
+		currentPos = new BlockPos(bounds.minX() - 1, bounds.minY(), bounds.minZ());
 		schematicLoaded = true;
 	}
 
@@ -155,7 +156,7 @@ public class SchematicPrinter {
 		BlockPos target = getCurrentTarget();
 
 		if (printStage == PrintStage.ENTITIES) {
-			Entity entity = blockReader.getEntities()
+			Entity entity = blockReader.getEntityStream()
 				.collect(Collectors.toList())
 				.get(printingEntityIndex);
 			entityHandler.handle(target, entity);
@@ -213,7 +214,7 @@ public class SchematicPrinter {
 
 	public ItemRequirement getCurrentRequirement() {
 		if (printStage == PrintStage.ENTITIES)
-			return ItemRequirement.of(blockReader.getEntities()
+			return ItemRequirement.of(blockReader.getEntityStream()
 				.collect(Collectors.toList())
 				.get(printingEntityIndex));
 
@@ -248,7 +249,7 @@ public class SchematicPrinter {
 	}
 
 	public void markAllEntityRequirements(MaterialChecklist checklist) {
-		blockReader.getEntities()
+		blockReader.getEntityStream()
 			.forEach(entity -> {
 				ItemRequirement requirement = ItemRequirement.of(entity);
 				if (requirement.isEmpty())
@@ -260,7 +261,7 @@ public class SchematicPrinter {
 	}
 
 	public boolean advanceCurrentPos() {
-		List<Entity> entities = blockReader.getEntities().collect(Collectors.toList());
+		List<Entity> entities = blockReader.getEntityStream().collect(Collectors.toList());
 
 		do {
 			if (printStage == PrintStage.BLOCKS) {
@@ -295,12 +296,12 @@ public class SchematicPrinter {
 	public boolean tryAdvanceCurrentPos() {
 		currentPos = currentPos.relative(Direction.EAST);
 		BoundingBox bounds = blockReader.getBounds();
-		BlockPos posInBounds = currentPos.offset(-bounds.x0, -bounds.y0, -bounds.z0);
+		BlockPos posInBounds = currentPos.offset(-bounds.minX(), -bounds.minY(), -bounds.minZ());
 
 		if (posInBounds.getX() > bounds.getXSpan())
-			currentPos = new BlockPos(bounds.x0, currentPos.getY(), currentPos.getZ() + 1).west();
+			currentPos = new BlockPos(bounds.minX(), currentPos.getY(), currentPos.getZ() + 1).west();
 		if (posInBounds.getZ() > bounds.getZSpan())
-			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, bounds.z0).west();
+			currentPos = new BlockPos(currentPos.getX(), currentPos.getY() + 1, bounds.minZ()).west();
 
 		// End of blocks reached
 		if (currentPos.getY() > bounds.getYSpan()) {

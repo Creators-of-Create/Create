@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:cart_assembler"
+            "items": [
+              "create:cart_assembler"
+            ]
           }
         ]
       }

@@ -199,10 +199,8 @@ public class LangMerger implements DataProvider {
 		ArrayList<Pair<String, JsonElement>> list = new ArrayList<>();
 
 		String filepath = "assets/" + Create.ID + "/lang/";
-		try {
-			InputStream resourceAsStream = Create.class.getClassLoader()
-				.getResourceAsStream(filepath);
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resourceAsStream));
+		try (InputStream resourceStream = ClassLoader.getSystemResourceAsStream(filepath)) {
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resourceStream));
 			while (true) {
 				String readLine = bufferedReader.readLine();
 				if (readLine == null)
@@ -211,10 +209,9 @@ public class LangMerger implements DataProvider {
 					continue;
 				if (readLine.startsWith("en_us") || readLine.startsWith("en_ud"))
 					continue;
-				list.add(Pair.of(readLine, FilesHelper.loadJsonResource(filepath + "/" + readLine)));
+				list.add(Pair.of(readLine, FilesHelper.loadJsonResource(filepath + readLine)));
 			}
-			resourceAsStream.close();
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			e.printStackTrace();
 		}
 

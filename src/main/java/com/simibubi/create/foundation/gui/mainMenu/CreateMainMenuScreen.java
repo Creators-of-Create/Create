@@ -40,8 +40,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		new CubeMap(Create.asResource("textures/gui/title/background/panorama"));
 	public static final ResourceLocation PANORAMA_OVERLAY_TEXTURES =
 		new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
-	private PanoramaRenderer vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	public static PanoramaRenderer panorama = new PanoramaRenderer(PANORAMA_RESOURCES);
+
+	private PanoramaRenderer vanillaPanorama;
 	private long firstRenderTime;
 	private Button gettingStarted;
 
@@ -50,7 +51,9 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		returnOnClose = true;
 		if (parent instanceof TitleScreen)
 			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, (TitleScreen) parent,
-				"field_209101_K");
+				"f_96729_"); // panorama
+		else
+			vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	}
 
 	@Override
@@ -128,40 +131,38 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	}
 
 	private void addButtons() {
-		buttons.clear();
-
 		int yStart = height / 4 + (parent instanceof TitleScreen ? 40 : 40);
 		int center = width / 2;
 		int bHeight = 20;
 		int bShortWidth = 98;
 		int bLongWidth = 200;
 
-		addButton(
+		addRenderableWidget(
 			new Button(center - 100, yStart + 92, bLongWidth, bHeight, Lang.translate("menu.return"), $ -> onClose()));
-		addButton(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
+		addRenderableWidget(new Button(center - 100, yStart + 24 + -16, bLongWidth, bHeight, Lang.translate("menu.configure"),
 			$ -> linkTo(BaseConfigScreen.forCreate(this))));
 
 		gettingStarted = new Button(center + 2, yStart + 48 + -16, bShortWidth, bHeight,
 			Lang.translate("menu.ponder_index"), $ -> linkTo(new PonderTagIndexScreen()));
 		gettingStarted.active = !(parent instanceof TitleScreen);
-		addButton(gettingStarted);
+		addRenderableWidget(gettingStarted);
 
 		String projectLink = "https://www.curseforge.com/minecraft/mc-mods/create";
 		String issueTrackerLink = "https://github.com/Creators-of-Create/Create/issues";
 		String supportLink = "https://github.com/Creators-of-Create/Create/wiki/Supporting-the-Project";
 
-		addButton(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
+		addRenderableWidget(new Button(center - 100, yStart + 48 + -16, bShortWidth, bHeight, Lang.translate("menu.project_page"),
 			$ -> linkTo(projectLink)));
-		addButton(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
+		addRenderableWidget(new Button(center + 2, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.report_bugs"),
 			$ -> linkTo(issueTrackerLink)));
-		addButton(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
+		addRenderableWidget(new Button(center - 100, yStart + 68, bShortWidth, bHeight, Lang.translate("menu.support"),
 			$ -> linkTo(supportLink)));
 	}
 
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		buttons.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+		renderables.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)

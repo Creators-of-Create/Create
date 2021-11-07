@@ -382,7 +382,6 @@
 	"block.create.redstone_contact": "接触式红石信号发生器",
 	"block.create.redstone_link": "无线红石信号终端",
 	"block.create.refined_radiance_casing": "光辉机壳",
-	"block.create.reinforced_rail": "强化铁轨",
 	"block.create.rope": "绳索",
 	"block.create.rope_pulley": "绳索滑轮",
 	"block.create.rotation_speed_controller": "转速控制器",

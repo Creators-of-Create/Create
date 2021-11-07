@@ -17,7 +17,7 @@ public class GlueCommand {
 				.then(Commands.argument("pos", BlockPosArgument.blockPos())
 						//.then(Commands.argument("direction", EnumArgument.enumArgument(Direction.class))
 								.executes(ctx -> {
-									BlockPos pos = BlockPosArgument.getOrLoadBlockPos(ctx, "pos");
+									BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
 									ServerLevel world = ctx.getSource().getLevel();
 									SuperGlueEntity entity = new SuperGlueEntity(world, pos, Direction.UP);

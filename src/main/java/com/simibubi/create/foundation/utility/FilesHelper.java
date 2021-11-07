@@ -87,8 +87,7 @@ public class FilesHelper {
 	}
 
 	public static JsonElement loadJsonResource(String filepath) {
-		return loadJson(Create.class.getClassLoader()
-			.getResourceAsStream(filepath));
+		return loadJson(ClassLoader.getSystemResourceAsStream(filepath));
 	}
 
 	public static JsonElement loadJson(String filepath) {

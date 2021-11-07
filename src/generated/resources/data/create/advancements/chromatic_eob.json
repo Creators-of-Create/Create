@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:createchromatic_age",
+  "parent": "create:chromatic_age",
   "display": {
     "icon": {
       "item": "minecraft:oak_sapling"
@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:shadow_steel_casing"
+            "items": [
+              "create:shadow_steel_casing"
+            ]
           }
         ]
       }
@@ -31,7 +33,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:refined_radiance_casing"
+            "items": [
+              "create:refined_radiance_casing"
+            ]
           }
         ]
       }

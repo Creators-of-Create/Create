@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.utility.worldWrappers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -32,7 +33,7 @@ public class WrappedChunkProvider extends ChunkSource {
         return world.blocksAdded
                 .entrySet()
                 .stream()
-                .filter(it -> it.getValue().getLightValue(world, it.getKey()) != 0)
+                .filter(it -> it.getValue().getLightEmission(world, it.getKey()) != 0)
                 .map(Map.Entry::getKey);
     }
 
@@ -71,4 +72,14 @@ public class WrappedChunkProvider extends ChunkSource {
     public LevelLightEngine getLightEngine() {
         return world.getLightEngine();
     }
+
+	@Override
+	public void tick(BooleanSupplier pHasTimeLeft) {
+	}
+
+	@Override
+	public int getLoadedChunksCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

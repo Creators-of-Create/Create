@@ -1,6 +1,6 @@
 #use "flywheel:context/fog.glsl"
 
-varying vec3 BoxCoord;
+out vec3 BoxCoord;
 
 uniform sampler3D uLightVolume;
 
@@ -42,8 +42,10 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 #elif defined(FRAGMENT_SHADER)
 #use "flywheel:core/lightutil.glsl"
 
+out vec4 FragColor;
+
 vec4 FLWBlockTexture(vec2 texCoords) {
-    return texture2D(uBlockAtlas, texCoords);
+    return texture(uBlockAtlas, texCoords);
 }
 
 void FLWFinalizeColor(vec4 color) {
@@ -55,13 +57,13 @@ void FLWFinalizeColor(vec4 color) {
     color.a = a;
     #endif
 
-    gl_FragColor = color;
+    FragColor = color;
 }
 
 vec4 FLWLight(vec2 lightCoords) {
-    lightCoords = max(lightCoords, texture3D(uLightVolume, BoxCoord).rg);
+    lightCoords = max(lightCoords, texture(uLightVolume, BoxCoord).rg);
 
-    return texture2D(uLightMap, shiftLight(lightCoords));
+    return texture(uLightMap, shiftLight(lightCoords));
 }
 
 #endif

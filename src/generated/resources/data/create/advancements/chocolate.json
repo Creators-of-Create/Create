@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:chocolate_bucket"
+            "items": [
+              "create:chocolate_bucket"
+            ]
           }
         ]
       }

@@ -49,7 +49,7 @@ public class BaseConfigScreen extends ConfigScreen {
 	 * @param modID     the modID of your addon/mod
 	 */
 	public static void setDefaultActionFor(String modID, UnaryOperator<BaseConfigScreen> transform) {
-		if (modID.equalsIgnoreCase("create"))
+		if (modID.equals(Create.ID))
 			return;
 
 		defaults.put(modID, transform);
@@ -100,19 +100,19 @@ public class BaseConfigScreen extends ConfigScreen {
 		}
 
 		try {
-			clientSpec = ConfigHelper.findConfigSpecFor(ModConfig.Type.CLIENT, this.modID);
+			clientSpec = ConfigHelper.findForgeConfigSpecFor(ModConfig.Type.CLIENT, this.modID);
 		} catch (Exception e) {
 			Create.LOGGER.debug("Unable to find ClientConfigSpec for mod: " + this.modID);
 		}
 
 		try {
-			commonSpec = ConfigHelper.findConfigSpecFor(ModConfig.Type.COMMON, this.modID);
+			commonSpec = ConfigHelper.findForgeConfigSpecFor(ModConfig.Type.COMMON, this.modID);
 		} catch (Exception e) {
 			Create.LOGGER.debug("Unable to find CommonConfigSpec for mod: " + this.modID);
 		}
 
 		try {
-			serverSpec = ConfigHelper.findConfigSpecFor(ModConfig.Type.SERVER, this.modID);
+			serverSpec = ConfigHelper.findForgeConfigSpecFor(ModConfig.Type.SERVER, this.modID);
 		} catch (Exception e) {
 			Create.LOGGER.debug("Unable to find ServerConfigSpec for mod: " + this.modID);
 		}

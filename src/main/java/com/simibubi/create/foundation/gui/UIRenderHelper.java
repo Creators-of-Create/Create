@@ -2,10 +2,8 @@ package com.simibubi.create.foundation.gui;
 
 import javax.annotation.Nonnull;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -20,6 +18,8 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class UIRenderHelper {
@@ -28,57 +28,28 @@ public class UIRenderHelper {
 	 * An FBO that has a stencil buffer for use wherever stencil are necessary. Forcing the main FBO to have a stencil
 	 * buffer will cause GL error spam when using fabulous graphics.
 	 */
-	public static RenderTarget framebuffer;
+	public static CustomRenderTarget framebuffer;
+
+	public static void init() {
+		RenderSystem.recordRenderCall(() -> {
+			Window mainWindow = Minecraft.getInstance()
+					.getWindow();
+			framebuffer = CustomRenderTarget.create(mainWindow);
+		});
+	}
 
 	public static void updateWindowSize(Window mainWindow) {
 		if (framebuffer != null)
 			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
 	}
 
-	public static void init() {
-		RenderSystem.recordRenderCall(() -> {
-			Window mainWindow = Minecraft.getInstance()
-					.getWindow();
-			framebuffer = createFramebuffer(mainWindow);
-		});
-	}
-
-	private static RenderTarget createFramebuffer(Window mainWindow) {
-		RenderTarget framebuffer = new TextureTarget(mainWindow.getWidth(), mainWindow.getHeight(), true,
-				Minecraft.ON_OSX);
-		framebuffer.setClearColor(0, 0, 0, 0);
-		framebuffer.enableStencil();
-		return framebuffer;
-	}
-
 	public static void drawFramebuffer(float alpha) {
-		Window window = Minecraft.getInstance()
-				.getWindow();
-
-		float vx = (float) window.getGuiScaledWidth();
-		float vy = (float) window.getGuiScaledHeight();
-		float tx = (float) framebuffer.viewWidth / (float) framebuffer.width;
-		float ty = (float) framebuffer.viewHeight / (float) framebuffer.height;
-
-		RenderSystem.enableTexture();
-		RenderSystem.enableDepthTest();
-
-		framebuffer.bindRead();
-
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-
-		bufferbuilder.vertex(0, vy, 0).color(1, 1, 1, alpha).uv(0, 0).endVertex();
-		bufferbuilder.vertex(vx, vy, 0).color(1, 1, 1, alpha).uv(tx, 0).endVertex();
-		bufferbuilder.vertex(vx, 0, 0).color(1, 1, 1, alpha).uv(tx, ty).endVertex();
-		bufferbuilder.vertex(0, 0, 0).color(1, 1, 1, alpha).uv(0, ty).endVertex();
-
-		tessellator.end();
-		framebuffer.unbindRead();
+		framebuffer.blitToScreen(alpha);
 	}
 
-	public static void streak(PoseStack ms, float angle, int x, int y, int breadth, int length) {streak(ms, angle, x, y, breadth, length, Theme.i(Theme.Key.STREAK));}
+	public static void streak(PoseStack ms, float angle, int x, int y, int breadth, int length) {
+		streak(ms, angle, x, y, breadth, length, Theme.i(Theme.Key.STREAK));
+	}
 	// angle in degrees; 0° -> fading to the right
 	// x and y specify the middle point of the starting edge
 	// breadth is the total width of the streak
@@ -89,7 +60,7 @@ public class UIRenderHelper {
 		int a3 = 0x10 << 24;
 		int a4 = 0x00 << 24;
 
-		color = color & 0x00FFFFFF;
+		color &= 0x00FFFFFF;
 		int c1 = a1 | color;
 		int c2 = a2 | color;
 		int c3 = a3 | color;
@@ -124,11 +95,9 @@ public class UIRenderHelper {
 		double split1 = .5;
 		double split2 = .75;
 		Matrix4f model = ms.last().pose();
-		RenderSystem.disableAlphaTest();
 		GuiUtils.drawGradientRect(model, 0, -width, 0, width, (int) (split1 * height), c1, c2);
 		GuiUtils.drawGradientRect(model, 0, -width, (int) (split1 * height), width, (int) (split2 * height), c2, c3);
 		GuiUtils.drawGradientRect(model, 0, -width, (int) (split2 * height), width, height, c3, c4);
-		RenderSystem.enableAlphaTest();
 	}
 
 	/**
@@ -155,7 +124,7 @@ public class UIRenderHelper {
 	/**
 	 * x and y specify the middle point of the starting edge
 	 *
-	 * @param angle   the angle of the gradient in degrees; 0° means from left to right
+	 * @param angle	the angle of the gradient in degrees; 0° means from left to right
 	 * @param color1  the color at the starting edge
 	 * @param color2  the color at the ending edge
 	 * @param breadth the total width of the gradient
@@ -187,13 +156,13 @@ public class UIRenderHelper {
 	private static void breadcrumbArrow(PoseStack ms, int width, int height, int indent, Color c1, Color c2) {
 
 		/*
-		 * 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
-		 *       ****                                     ****
-		 *   ****                                     ****
-		 * x0,y0     x2,y2                       x5,y5
-		 *   ****                                     ****
-		 *       ****                                     ****
-		 *           x3,y3 ********************* x6,y6 ***** x8,y8
+		 * 0,0		 x1,y1 ********************* x4,y4 ***** x7,y7
+		 *		 ****												 ****
+		 *	****												 ****
+		 * x0,y0	  x2,y2							  x5,y5
+		 *	****												 ****
+		 *		 ****												 ****
+		 *			  x3,y3 ********************* x6,y6 ***** x8,y8
 		 *
 		 */
 
@@ -217,9 +186,8 @@ public class UIRenderHelper {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.disableCull();
-		RenderSystem.disableAlphaTest();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
@@ -251,10 +219,8 @@ public class UIRenderHelper {
 		bufferbuilder.vertex(model, x8, y8, 0).color(fc4.getRed(), fc4.getGreen(), fc4.getBlue(), fc4.getAlpha()).endVertex();
 
 		tessellator.end();
-		RenderSystem.shadeModel(GL11.GL_FLAT);
-		RenderSystem.disableBlend();
 		RenderSystem.enableCull();
-		RenderSystem.enableAlphaTest();
+		RenderSystem.disableBlend();
 		RenderSystem.enableTexture();
 	}
 
@@ -272,16 +238,87 @@ public class UIRenderHelper {
 	}
 
 	private static void drawTexturedQuad(Matrix4f m, Color c, int left, int right, int top, int bot, int z, float u1, float u2, float v1, float v2) {
+		Tesselator tesselator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tesselator.getBuilder();
 		RenderSystem.enableBlend();
-		BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 		bufferbuilder.vertex(m, (float) left , (float) bot, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u1, v2).endVertex();
 		bufferbuilder.vertex(m, (float) right, (float) bot, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u2, v2).endVertex();
 		bufferbuilder.vertex(m, (float) right, (float) top, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u2, v1).endVertex();
 		bufferbuilder.vertex(m, (float) left , (float) top, (float) z).color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha()).uv(u1, v1).endVertex();
-		bufferbuilder.end();
-		RenderSystem.enableAlphaTest();
-		BufferUploader.end(bufferbuilder);
+		tesselator.end();
+		RenderSystem.disableBlend();
+	}
+
+	public static class CustomRenderTarget extends RenderTarget {
+
+		public CustomRenderTarget(boolean pUseDepth) {
+			super(pUseDepth);
+		}
+
+		public static CustomRenderTarget create(Window mainWindow) {
+			CustomRenderTarget framebuffer = new CustomRenderTarget(false);
+			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
+			framebuffer.setClearColor(0, 0, 0, 0);
+			framebuffer.enableStencil();
+			return framebuffer;
+		}
+
+		public void blitToScreen(float alpha) {
+			Window window = Minecraft.getInstance().getWindow();
+			this.blitToScreen(window.getWidth(), window.getHeight());
+		}
+
+		public void blitToScreen(int pWidth, int pHeight, float alpha) {
+			RenderSystem.assertThread(RenderSystem::isOnGameThreadOrInit);
+			if (!RenderSystem.isInInitPhase()) {
+				RenderSystem.recordRenderCall(() -> {
+					this._blitToScreen(pWidth, pHeight, alpha);
+				});
+			} else {
+				this._blitToScreen(pWidth, pHeight, alpha);
+			}
+		}
+
+		private void _blitToScreen(int pWidth, int pHeight, float alpha) {
+			RenderSystem.assertThread(RenderSystem::isOnRenderThread);
+
+			GlStateManager._enableDepthTest();
+			GlStateManager._viewport(0, 0, pWidth, pHeight);
+
+			Minecraft minecraft = Minecraft.getInstance();
+			ShaderInstance shaderinstance = minecraft.gameRenderer.blitShader;
+			shaderinstance.setSampler("DiffuseSampler", this.colorTextureId);
+			Matrix4f matrix4f = Matrix4f.orthographic((float)pWidth, (float)(-pHeight), 1000.0F, 3000.0F);
+			RenderSystem.setProjectionMatrix(matrix4f);
+			if (shaderinstance.MODEL_VIEW_MATRIX != null) {
+				shaderinstance.MODEL_VIEW_MATRIX.set(Matrix4f.createTranslateMatrix(0.0F, 0.0F, -2000.0F));
+			}
+			if (shaderinstance.PROJECTION_MATRIX != null) {
+				shaderinstance.PROJECTION_MATRIX.set(matrix4f);
+			}
+			shaderinstance.apply();
+
+			float f = (float)pWidth;
+			float f1 = (float)pHeight;
+			float f2 = (float)this.viewWidth / (float)this.width;
+			float f3 = (float)this.viewHeight / (float)this.height;
+
+			Tesselator tesselator = RenderSystem.renderThreadTesselator();
+			BufferBuilder bufferbuilder = tesselator.getBuilder();
+			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+			bufferbuilder.vertex(0.0D, (double)f1, 0.0D).uv(0.0F, 0.0F).color(1, 1, 1, alpha).endVertex();
+			bufferbuilder.vertex((double)f, (double)f1, 0.0D).uv(f2, 0.0F).color(1, 1, 1, alpha).endVertex();
+			bufferbuilder.vertex((double)f, 0.0D, 0.0D).uv(f2, f3).color(1, 1, 1, alpha).endVertex();
+			bufferbuilder.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, f3).color(1, 1, 1, alpha).endVertex();
+			bufferbuilder.end();
+			BufferUploader._endInternal(bufferbuilder);
+
+			shaderinstance.clear();
+		}
+
 	}
 
 }

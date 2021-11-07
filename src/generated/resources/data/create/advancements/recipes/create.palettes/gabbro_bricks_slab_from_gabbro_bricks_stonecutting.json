@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:gabbro_bricks"
+            "items": [
+              "create:gabbro_bricks"
+            ]
           }
         ]
       }

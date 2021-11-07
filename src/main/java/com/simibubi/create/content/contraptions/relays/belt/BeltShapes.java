@@ -120,7 +120,7 @@ public class BeltShapes {
 	}
 
 	private static VoxelShape makeSlopePart(boolean ascendingInstead) {
-		VoxelShape slice = box(1, 0, 16, 15, 11, 15);
+		VoxelShape slice = box(1, 0, 15, 15, 11, 16);
 		VoxelShape result = Shapes.empty();
 
 		for (int i = 0; i < 16; i++) {

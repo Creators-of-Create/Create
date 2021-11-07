@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:rose_quartz"
+            "items": [
+              "create:rose_quartz"
+            ]
           }
         ]
       }

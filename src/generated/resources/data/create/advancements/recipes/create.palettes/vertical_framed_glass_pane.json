@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:vertical_framed_glass"
+            "items": [
+              "create:vertical_framed_glass"
+            ]
           }
         ]
       }

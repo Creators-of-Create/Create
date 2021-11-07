@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:wand_of_symmetry"
+            "items": [
+              "create:wand_of_symmetry"
+            ]
           }
         ]
       }

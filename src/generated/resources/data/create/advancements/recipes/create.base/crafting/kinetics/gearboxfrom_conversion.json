@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:vertical_gearbox"
+            "items": [
+              "create:vertical_gearbox"
+            ]
           }
         ]
       }

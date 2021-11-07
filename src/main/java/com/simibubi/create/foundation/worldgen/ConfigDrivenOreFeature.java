@@ -7,9 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
 public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig> {
 
@@ -17,13 +17,18 @@ public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig
 
 	public ConfigDrivenOreFeature() {
 		super(ConfigDrivenOreFeatureConfig.CODEC);
-		setRegistryName("create_config_driven_ore");
+		setRegistryName("config_driven_ore");
 	}
 
+	// TODO 1.17: use new OreFeature code
 	// From OreFeature, slight adjustments
 
-	public boolean place(WorldGenLevel p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_,
-		BlockPos p_241855_4_, ConfigDrivenOreFeatureConfig p_241855_5_) {
+	public boolean place(FeaturePlaceContext<ConfigDrivenOreFeatureConfig> context) {
+		WorldGenLevel p_241855_1_ = context.level();
+		Random p_241855_3_ = context.random();
+		BlockPos p_241855_4_ = context.origin();
+		ConfigDrivenOreFeatureConfig p_241855_5_ = context.config();
+
 		float f = p_241855_3_.nextFloat() * (float) Math.PI;
 		float size = p_241855_5_.getSize();
 		float f1 = size / 8.0F;

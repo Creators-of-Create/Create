@@ -18,18 +18,22 @@ import com.simibubi.create.foundation.gui.ToolSelectionScreen;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
+import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.outliner.AABBOutline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -122,8 +126,8 @@ public class SchematicHandler {
 
 	private void setupRenderer() {
 		StructureTemplate schematic = SchematicItem.loadSchematic(activeSchematicItem);
-		BlockPos size = schematic.getSize();
-		if (size.equals(BlockPos.ZERO))
+		Vec3i size = schematic.getSize();
+		if (size.equals(Vec3i.ZERO))
 			return;
 
 		Level clientWorld = Minecraft.getInstance().level;
@@ -131,12 +135,16 @@ public class SchematicHandler {
 		SchematicWorld wMirroredFB = new SchematicWorld(clientWorld);
 		SchematicWorld wMirroredLR = new SchematicWorld(clientWorld);
 		StructurePlaceSettings placementSettings = new StructurePlaceSettings();
+		BlockPos pos;
 
-		schematic.placeInWorldChunk(w, BlockPos.ZERO, placementSettings, w.getRandom());
+		pos = BlockPos.ZERO;
+		schematic.placeInWorld(w, pos, pos, placementSettings, w.getRandom(), Block.UPDATE_CLIENTS);
 		placementSettings.setMirror(Mirror.FRONT_BACK);
-		schematic.placeInWorldChunk(wMirroredFB, BlockPos.ZERO.east(size.getX() - 1), placementSettings, wMirroredFB.getRandom());
+		pos = BlockPos.ZERO.east(size.getX() - 1);
+		schematic.placeInWorld(wMirroredFB, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 		placementSettings.setMirror(Mirror.LEFT_RIGHT);
-		schematic.placeInWorldChunk(wMirroredLR, BlockPos.ZERO.south(size.getZ() - 1), placementSettings, wMirroredFB.getRandom());
+		pos = BlockPos.ZERO.south(size.getZ() - 1);
+		schematic.placeInWorld(wMirroredLR, pos, pos, placementSettings, wMirroredFB.getRandom(), Block.UPDATE_CLIENTS);
 
 		renderers.get(0)
 			.display(w);
@@ -293,9 +301,9 @@ public class SchematicHandler {
 		deployed = tag.getBoolean("Deployed");
 		if (deployed)
 			anchor = NbtUtils.readBlockPos(tag.getCompound("Anchor"));
-		BlockPos size = NbtUtils.readBlockPos(tag.getCompound("Bounds"));
+		Vec3i size = NBTHelper.readVec3i(tag.getList("Bounds", Tag.TAG_INT));
 
-		bounds = new AABB(BlockPos.ZERO, size);
+		bounds = new AABB(0, 0, 0, size.getX(), size.getY(), size.getZ());
 		outline = new AABBOutline(bounds);
 		outline.getParams()
 			.colored(0x6886c5)

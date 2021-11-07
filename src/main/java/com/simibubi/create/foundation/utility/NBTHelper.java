@@ -7,8 +7,10 @@ import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
@@ -80,7 +82,18 @@ public class NBTHelper {
 			return null;
 		return new AABB(bbtag.getFloat(0), bbtag.getFloat(1), bbtag.getFloat(2), bbtag.getFloat(3),
 			bbtag.getFloat(4), bbtag.getFloat(5));
+	}
 
+	public static ListTag writeVec3i(Vec3i vec) {
+		ListTag tag = new ListTag();
+		tag.add(IntTag.valueOf(vec.getX()));
+		tag.add(IntTag.valueOf(vec.getY()));
+		tag.add(IntTag.valueOf(vec.getZ()));
+		return tag;
+	}
+
+	public static Vec3i readVec3i(ListTag tag) {
+		return new Vec3i(tag.getInt(0), tag.getInt(1), tag.getInt(2));
 	}
 
 	@Nonnull

@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:paved_scoria"
+            "items": [
+              "create:paved_scoria"
+            ]
           }
         ]
       }

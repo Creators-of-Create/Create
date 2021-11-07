@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:acacia_window"
+            "items": [
+              "create:acacia_window"
+            ]
           }
         ]
       }

@@ -147,7 +147,6 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 		@Override
 		public void render(PoseStack matrixStack, int xPosition, int yPosition, ItemStack ingredient) {
 			matrixStack.pushPose();
-			matrixStack.translate(xPosition, yPosition, 0);
 			float scale = getScale(recipe);
 			matrixStack.scale(scale, scale, scale);
 

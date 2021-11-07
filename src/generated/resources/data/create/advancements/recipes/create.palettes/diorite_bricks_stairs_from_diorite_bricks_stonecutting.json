@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:diorite_bricks"
+            "items": [
+              "create:diorite_bricks"
+            ]
           }
         ]
       }

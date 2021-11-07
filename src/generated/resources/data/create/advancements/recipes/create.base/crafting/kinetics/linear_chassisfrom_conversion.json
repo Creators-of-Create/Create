@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:secondary_linear_chassis"
+            "items": [
+              "create:secondary_linear_chassis"
+            ]
           }
         ]
       }

@@ -106,11 +106,22 @@ public class VoxelShaper {
 			v2 = VecHelper.rotate(v2, (float) rotation.z, Axis.Z)
 				.add(center);
 
-			VoxelShape rotated = Block.box(v1.x, v1.y, v1.z, v2.x, v2.y, v2.z);
+			VoxelShape rotated = blockBox(v1, v2);
 			result.setValue(Shapes.or(result.getValue(), rotated));
 		});
 
 		return result.getValue();
+	}
+
+	protected static VoxelShape blockBox(Vec3 v1, Vec3 v2) {
+		return Block.box(
+				Math.min(v1.x, v2.x),
+				Math.min(v1.y, v2.y),
+				Math.min(v1.z, v2.z),
+				Math.max(v1.x, v2.x),
+				Math.max(v1.y, v2.y),
+				Math.max(v1.z, v2.z)
+		);
 	}
 
 	protected static class DefaultRotationValues implements Function<Direction, Vec3> {

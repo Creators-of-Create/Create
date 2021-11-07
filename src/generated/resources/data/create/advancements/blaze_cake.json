@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:blaze_cake"
+            "items": [
+              "create:blaze_cake"
+            ]
           }
         ]
       }

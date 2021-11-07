@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:wrench"
+            "items": [
+              "create:wrench"
+            ]
           }
         ]
       }

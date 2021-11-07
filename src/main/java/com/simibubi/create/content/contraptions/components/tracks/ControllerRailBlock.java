@@ -50,7 +50,8 @@ public class ControllerRailBlock extends BaseRailBlock implements IWrenchable {
 		this.registerDefaultState(this.stateDefinition.any()
 			.setValue(POWER, 0)
 			.setValue(BACKWARDS, false)
-			.setValue(SHAPE, RailShape.NORTH_SOUTH));
+			.setValue(SHAPE, RailShape.NORTH_SOUTH)
+			.setValue(WATERLOGGED, false));
 	}
 
 	public static Vec3i getAccelerationVector(BlockState state) {
@@ -134,7 +135,7 @@ public class ControllerRailBlock extends BaseRailBlock implements IWrenchable {
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_206840_1_) {
-		p_206840_1_.add(SHAPE, POWER, BACKWARDS);
+		p_206840_1_.add(SHAPE, POWER, BACKWARDS, WATERLOGGED);
 	}
 
 	@Override

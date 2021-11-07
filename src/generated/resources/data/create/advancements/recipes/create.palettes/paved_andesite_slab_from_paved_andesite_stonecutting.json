@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:paved_andesite"
+            "items": [
+              "create:paved_andesite"
+            ]
           }
         ]
       }

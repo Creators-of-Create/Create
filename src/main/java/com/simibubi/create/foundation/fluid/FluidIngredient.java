@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.fluid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -15,10 +14,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.SerializationTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.material.FlowingFluid;
@@ -198,7 +198,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	public static class FluidTagIngredient extends FluidIngredient {
 
-		protected Tag.Named<Fluid> tag;
+		protected Tag<Fluid> tag;
 
 		@Override
 		protected boolean testInternal(FluidStack t) {
@@ -231,20 +231,16 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		@Override
 		protected void readInternal(JsonObject json) {
 			ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluidTag"));
-			Optional<? extends Tag.Named<Fluid>> optionalINamedTag = FluidTags.getWrappers()
-				.stream()
-				.filter(fluidINamedTag -> fluidINamedTag.getName()
-					.equals(id))
-				.findFirst(); // fixme
-			if (!optionalINamedTag.isPresent())
-				throw new JsonSyntaxException("Unknown fluid tag '" + id + "'");
-			tag = optionalINamedTag.get();
+			tag = SerializationTags.getInstance().getTagOrThrow(Registry.FLUID_REGISTRY, id, rl -> {
+				return new JsonSyntaxException("Unknown fluid tag '" + rl + "'");
+			});
 		}
 
 		@Override
 		protected void writeInternal(JsonObject json) {
-			json.addProperty("fluidTag", tag.getName()
-				.toString());
+			json.addProperty("fluidTag", SerializationTags.getInstance().getIdOrThrow(Registry.FLUID_REGISTRY, tag, () -> {
+				return new IllegalStateException("Unknown fluid tag");
+			}).toString());
 		}
 
 		@Override

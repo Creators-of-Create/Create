@@ -114,12 +114,9 @@ public class GuiGameElement {
 		protected void prepareMatrix(PoseStack matrixStack) {
 			matrixStack.pushPose();
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			RenderSystem.alphaFunc(516, 0.1F);
-			RenderSystem.enableAlphaTest();
-			RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.enableBlend();
 			RenderSystem.enableDepthTest();
-			RenderSystem.enableRescaleNormal();
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			prepareLighting(matrixStack);
 		}
 
@@ -137,8 +134,6 @@ public class GuiGameElement {
 
 		protected void cleanUpMatrix(PoseStack matrixStack) {
 			matrixStack.popPose();
-			RenderSystem.disableRescaleNormal();
-			RenderSystem.disableAlphaTest();
 			cleanUpLighting(matrixStack);
 		}
 
@@ -265,16 +260,12 @@ public class GuiGameElement {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
-			matrixStack.pushPose();
-			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 			renderer.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
-			RenderSystem.enableRescaleNormal();
-			RenderSystem.enableAlphaTest();
-			RenderSystem.enableCull();
-			RenderSystem.defaultAlphaFunc();
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+			matrixStack.pushPose();
 			matrixStack.translate(0, 0, 100.0F + renderer.blitOffset);
 			matrixStack.translate(8.0F, -8.0F, 0.0F);
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
@@ -295,9 +286,6 @@ public class GuiGameElement {
 				}
 			}
 
-			RenderSystem.disableAlphaTest();
-			RenderSystem.disableRescaleNormal();
-			RenderSystem.enableCull();
 			matrixStack.popPose();
 		}
 

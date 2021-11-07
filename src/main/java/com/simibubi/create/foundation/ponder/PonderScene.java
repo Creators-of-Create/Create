@@ -353,7 +353,7 @@ public class PonderScene {
 	}
 
 	public <T extends Entity> void forEachWorldEntity(Class<T> type, Consumer<T> function) {
-		world.getEntities()
+		world.getEntityStream()
 			.filter(type::isInstance)
 			.map(type::cast)
 			.forEach(function);

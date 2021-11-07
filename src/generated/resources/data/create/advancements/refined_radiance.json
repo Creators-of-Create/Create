@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:refined_radiance"
+            "items": [
+              "create:refined_radiance"
+            ]
           }
         ]
       }

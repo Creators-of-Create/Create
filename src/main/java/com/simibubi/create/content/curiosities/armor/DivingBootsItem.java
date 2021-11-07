@@ -27,7 +27,7 @@ public class DivingBootsItem extends CopperArmorItem {
 			return;
 
 		Vec3 motion = entity.getDeltaMovement();
-		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "field_70703_bu"); // jumping
+		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "f_20899_"); // jumping
 		entity.onGround |= entity.verticalCollision;
 
 		if (isJumping && entity.onGround) {

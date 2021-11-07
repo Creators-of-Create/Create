@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:scoria_cobblestone"
+            "items": [
+              "create:scoria_cobblestone"
+            ]
           }
         ]
       }

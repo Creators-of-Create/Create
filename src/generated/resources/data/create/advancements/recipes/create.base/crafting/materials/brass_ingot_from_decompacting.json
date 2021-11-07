@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:brass_block"
+            "items": [
+              "create:brass_block"
+            ]
           }
         ]
       }

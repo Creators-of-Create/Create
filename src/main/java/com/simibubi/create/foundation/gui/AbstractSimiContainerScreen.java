@@ -4,21 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -26,7 +18,6 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -78,12 +69,6 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-		RenderSystem.enableAlphaTest();
-		RenderSystem.enableBlend();
-		RenderSystem.disableRescaleNormal();
-		Lighting.turnOff();
-		RenderSystem.disableLighting();
-		RenderSystem.disableDepthTest();
 		renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
@@ -206,81 +191,6 @@ public abstract class AbstractSimiContainerScreen<T extends AbstractContainerMen
 	 */
 	public List<Rect2i> getExtraAreas() {
 		return Collections.emptyList();
-	}
-
-	// Not up to date with ItemRenderer
-	@Deprecated
-	protected void renderItemOverlayIntoGUI(PoseStack matrixStack, Font fr, ItemStack stack, int xPosition,
-		int yPosition, @Nullable String text, int textColor) {
-		if (!stack.isEmpty()) {
-			if (stack.getItem()
-				.showDurabilityBar(stack)) {
-				RenderSystem.disableLighting();
-				RenderSystem.disableDepthTest();
-				RenderSystem.disableTexture();
-				RenderSystem.disableAlphaTest();
-				RenderSystem.disableBlend();
-				Tesselator tessellator = Tesselator.getInstance();
-				BufferBuilder bufferbuilder = tessellator.getBuilder();
-				double health = stack.getItem()
-					.getDurabilityForDisplay(stack);
-				int i = Math.round(13.0F - (float) health * 13.0F);
-				int j = stack.getItem()
-					.getRGBDurabilityForDisplay(stack);
-				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
-				this.draw(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255, j & 255,
-					255);
-				RenderSystem.enableBlend();
-				RenderSystem.enableAlphaTest();
-				RenderSystem.enableTexture();
-				RenderSystem.enableLighting();
-				RenderSystem.enableDepthTest();
-			}
-
-			if (stack.getCount() != 1 || text != null) {
-				String s = text == null ? String.valueOf(stack.getCount()) : text;
-				RenderSystem.disableLighting();
-				RenderSystem.disableDepthTest();
-				RenderSystem.disableBlend();
-				matrixStack.pushPose();
-
-				int guiScaleFactor = (int) minecraft.getWindow()
-					.getGuiScale();
-				matrixStack.translate(xPosition + 16.5f, yPosition + 16.5f, 0);
-				double scale = getItemCountTextScale();
-
-				matrixStack.scale((float) scale, (float) scale, 0);
-				matrixStack.translate(-fr.width(s) - (guiScaleFactor > 1 ? 0 : -.5f),
-					-font.lineHeight + (guiScaleFactor > 1 ? 1 : 1.75f), 0);
-				fr.drawShadow(matrixStack, s, 0, 0, textColor);
-
-				matrixStack.popPose();
-				RenderSystem.enableBlend();
-				RenderSystem.enableLighting();
-				RenderSystem.enableDepthTest();
-				RenderSystem.enableBlend();
-			}
-		}
-	}
-
-	@Deprecated
-	private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green, int blue,
-		int alpha) {
-		renderer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		renderer.vertex((double) (x + 0), (double) (y + 0), 0.0D)
-			.color(red, green, blue, alpha)
-			.endVertex();
-		renderer.vertex((double) (x + 0), (double) (y + height), 0.0D)
-			.color(red, green, blue, alpha)
-			.endVertex();
-		renderer.vertex((double) (x + width), (double) (y + height), 0.0D)
-			.color(red, green, blue, alpha)
-			.endVertex();
-		renderer.vertex((double) (x + width), (double) (y + 0), 0.0D)
-			.color(red, green, blue, alpha)
-			.endVertex();
-		Tesselator.getInstance()
-			.end();
 	}
 
 	@Deprecated

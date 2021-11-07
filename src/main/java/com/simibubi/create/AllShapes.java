@@ -101,10 +101,10 @@ public class AllShapes {
 			.add(5, 8, 16, 11, 10, 17)
 			.forHorizontal(Direction.SOUTH),
 		SMART_FLUID_PIPE_CEILING = shape(4, 4, 0, 12, 12, 16).add(3, 3, 3, 13, 13, 13)
-			.add(5, 3, 3, 11, 2, 11)
-			.add(5, 2, 4, 11, 1, 10)
-			.add(5, 1, 5, 11, 0, 9)
-			.add(5, 0, 6, 11, -1, 8)
+			.add(5, 2, 3, 11, 3, 11)
+			.add(5, 1, 4, 11, 2, 10)
+			.add(5, 0, 5, 11, 1, 9)
+			.add(5, -1, 6, 11, 0, 8)
 			.forHorizontal(Direction.SOUTH),
 		PUMP = shape(2, 0, 2, 14, 5, 14).add(4, 0, 4, 12, 16, 12)
 			.add(3, 12, 3, 13, 16, 13)
@@ -133,8 +133,8 @@ public class AllShapes {
 				.build(),
 		SMALL_GEAR_SHAPE = cuboid(2, 6, 2, 14, 10, 14), LARGE_GEAR_SHAPE = cuboid(0, 6, 0, 16, 10, 16),
 		VERTICAL_TABLET_SHAPE = cuboid(3, 1, -1, 13, 15, 3), SQUARE_TABLET_SHAPE = cuboid(2, 2, -1, 14, 14, 3),
-		LOGISTICS_TABLE_SLOPE = shape(0, 10, 15, 16, 14, 10.667).add(0, 12, 10.667, 16, 16, 6.333)
-			.add(0, 14, 6.333, 16, 18, 2)
+		LOGISTICS_TABLE_SLOPE = shape(0, 10, 10.667, 16, 14, 15).add(0, 12, 6.333, 16, 16, 10.667)
+			.add(0, 14, 2, 16, 18, 6.333)
 			.build(),
 		TANK_BOTTOM_LID = shape(0, 0, 0, 16, 4, 16).build(), TANK_TOP_LID = shape(0, 12, 0, 16, 16, 16).build()
 

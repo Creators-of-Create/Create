@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:chromatic_compound"
+            "items": [
+              "create:chromatic_compound"
+            ]
           }
         ]
       }

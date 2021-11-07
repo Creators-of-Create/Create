@@ -107,7 +107,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 			super.renderTooltip(ms, x, y);
 			return;
 		}
-		renderWrappedToolTip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex()), x, y, font);
+		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex()), x, y, font);
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import com.simibubi.create.foundation.utility.Pair;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.config.IConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
@@ -49,30 +50,33 @@ public class ConfigHelper {
 		return Objects.requireNonNull(configs);
 	}
 
-	public static ForgeConfigSpec findConfigSpecFor(ModConfig.Type type, String modID) {
+	public static IConfigSpec<?> findConfigSpecFor(ModConfig.Type type, String modID) {
 		if (!modID.equals(Create.ID))
 			return configCache.getUnchecked(modID).get(type).getSpec();
+		return AllConfigs.byType(type).specification;
+	}
 
-		switch (type) {
-			case COMMON:
-				return AllConfigs.COMMON.specification;
-			case CLIENT:
-				return AllConfigs.CLIENT.specification;
-			case SERVER:
-				return AllConfigs.SERVER.specification;
+	@Nullable
+	public static ForgeConfigSpec findForgeConfigSpecFor(ModConfig.Type type, String modID) {
+		IConfigSpec<?> spec = findConfigSpecFor(type, modID);
+		if (spec instanceof ForgeConfigSpec) {
+			return (ForgeConfigSpec) spec;
 		}
-
 		return null;
 	}
 
 	public static boolean hasAnyConfig(String modID) {
-		EnumMap<ModConfig.Type, ModConfig> map = configCache.getUnchecked(modID);
-		return map.entrySet().size() > 0;
+		if (!modID.equals(Create.ID))
+			return !configCache.getUnchecked(modID).isEmpty();
+		return true;
 	}
 
-	//Directly set a value
+	// Directly set a value
 	public static <T> void setConfigValue(ConfigPath path, String value) throws InvalidValueException {
-		ForgeConfigSpec spec = findConfigSpecFor(path.getType(), path.getModID());
+		ForgeConfigSpec spec = findForgeConfigSpecFor(path.getType(), path.getModID());
+		if (spec == null)
+			return;
+
 		List<String> pathList = Arrays.asList(path.getPath());
 		ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(pathList);
 		ForgeConfigSpec.ConfigValue<T> configValue = spec.getValues().get(pathList);
@@ -83,7 +87,7 @@ public class ConfigHelper {
 		configValue.set(v);
 	}
 
-	//Add a value to the current UI's changes list
+	// Add a value to the current UI's changes list
 	public static <T> void setValue(String path, ForgeConfigSpec.ConfigValue<T> configValue, T value, @Nullable Map<String, String> annotations) {
 		if (value.equals(configValue.get())) {
 			changes.remove(path);
@@ -92,7 +96,7 @@ public class ConfigHelper {
 		}
 	}
 
-	//Get a value from the current UI's changes list or the config value, if its unchanged
+	// Get a value from the current UI's changes list or the config value, if its unchanged
 	public static <T> T getValue(String path, ForgeConfigSpec.ConfigValue<T> configValue) {
 		ConfigChange configChange = changes.get(path);
 		if (configChange != null)

@@ -81,7 +81,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 		return entities.add(entityIn);
 	}
 
-	public Stream<Entity> getEntities() {
+	public Stream<Entity> getEntityStream() {
 		return entities.stream();
 	}
 
@@ -112,7 +112,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	protected void onTEadded(BlockEntity tileEntity, BlockPos pos) {
-		tileEntity.setLevelAndPosition(this, pos);
+		tileEntity.setLevel(this);
 	}
 
 	@Override
@@ -151,7 +151,7 @@ public class SchematicWorld extends WrappedWorld implements ServerLevelAccessor 
 	}
 
 	@Override
-	public <T extends Entity> List<T> getEntitiesOfClass(Class<? extends T> arg0, AABB arg1,
+	public <T extends Entity> List<T> getEntitiesOfClass(Class<T> arg0, AABB arg1,
 		Predicate<? super T> arg2) {
 		return Collections.emptyList();
 	}

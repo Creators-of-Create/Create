@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:brass_ingot"
+            "items": [
+              "create:brass_ingot"
+            ]
           }
         ]
       }

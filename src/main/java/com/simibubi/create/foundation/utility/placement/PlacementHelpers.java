@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -25,6 +23,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -212,26 +211,25 @@ public class PlacementHelpers {
 	}
 
 	private static void fadedArrow(PoseStack ms, float centerX, float centerY, float r, float g, float b, float a, float length, float snappedAngle) {
-		ms.pushPose();
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
-		RenderSystem.disableAlphaTest();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
+		ms.pushPose();
 		ms.translate(centerX, centerY, 5);
 		ms.mulPose(Vector3f.ZP.rotationDegrees(angle.get(0)));
 		//RenderSystem.rotatef(snappedAngle, 0, 0, 1);
 		double scale = AllConfigs.CLIENT.indicatorScale.get();
-		RenderSystem.scaled(scale, scale, 1);
+		ms.scale((float) scale, (float) scale, 1);
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(GL11.GL_POLYGON, DefaultVertexFormat.POSITION_COLOR);
+		bufferbuilder.begin(VertexFormat.Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
 		Matrix4f mat = ms.last().pose();
 
-		bufferbuilder.vertex(mat, 0, - (10 + length), 0).color(r, g, b, a).endVertex();
+		bufferbuilder.vertex(mat, 0, -(10 + length), 0).color(r, g, b, a).endVertex();
 
 		bufferbuilder.vertex(mat, -9, -3, 0).color(r, g, b, 0f).endVertex();
 		bufferbuilder.vertex(mat, -6, -6, 0).color(r, g, b, 0f).endVertex();
@@ -242,23 +240,20 @@ public class PlacementHelpers {
 		bufferbuilder.vertex(mat, 9, -3, 0).color(r, g, b, 0f).endVertex();
 
 		tessellator.end();
-		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
-		RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
 		ms.popPose();
 	}
 
 	private static void textured(PoseStack ms, float centerX, float centerY, float alpha, float snappedAngle) {
-		ms.pushPose();
 		RenderSystem.enableTexture();
 		AllGuiTextures.PLACEMENT_INDICATOR_SHEET.bind();
-		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
-		RenderSystem.enableAlphaTest();
+		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
+		ms.pushPose();
 		ms.translate(centerX, centerY, 50);
 		float scale = AllConfigs.CLIENT.indicatorScale.get().floatValue() * .75f;
 		ms.scale(scale, scale, 1);
@@ -284,7 +279,6 @@ public class PlacementHelpers {
 
 		tessellator.end();
 
-		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		ms.popPose();
 	}

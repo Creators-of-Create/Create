@@ -25,6 +25,7 @@ import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.material.Fluid;
@@ -62,7 +63,7 @@ public class WrappedChunk implements ChunkAccess {
                 .filter(it -> {
                     BlockPos blockPos = it.getKey();
                     boolean chunkContains = blockPos.getX() >> 4 == x && blockPos.getZ() >> 4 == z;
-                    return chunkContains && it.getValue().getLightValue(world, blockPos) != 0;
+                    return chunkContains && it.getValue().getLightEmission(world, blockPos) != 0;
                 })
                 .map(Map.Entry::getKey);
     }
@@ -85,12 +86,10 @@ public class WrappedChunk implements ChunkAccess {
 
     @Override
     public void setBlockEntity(BlockEntity p_177426_2_) {
-
     }
 
     @Override
     public void addEntity(Entity p_76612_1_) {
-
     }
 
     @Override
@@ -105,7 +104,6 @@ public class WrappedChunk implements ChunkAccess {
 
     @Override
     public void setHeightmap(Heightmap.Types p_201607_1_, long[] p_201607_2_) {
-
     }
 
     @Override
@@ -131,7 +129,6 @@ public class WrappedChunk implements ChunkAccess {
 
     @Override
     public void setUnsaved(boolean p_177427_1_) {
-
     }
 
     @Override
@@ -141,7 +138,6 @@ public class WrappedChunk implements ChunkAccess {
 
     @Override
     public void removeBlockEntity(BlockPos p_177425_1_) {
-
     }
 
     @Override
@@ -178,7 +174,6 @@ public class WrappedChunk implements ChunkAccess {
 
     @Override
     public void setInhabitedTime(long p_177415_1_) {
-
     }
 
     @Override
@@ -214,7 +209,6 @@ public class WrappedChunk implements ChunkAccess {
 
 	@Override
 	public void addReferenceForFeature(StructureFeature<?> arg0, long arg1) {
-
 	}
 
 	@Override
@@ -234,22 +228,34 @@ public class WrappedChunk implements ChunkAccess {
 
 	@Override
 	public void setAllReferences(Map<StructureFeature<?>, LongSet> arg0) {
-
 	}
 
 	@Override
 	public void setStartForFeature(StructureFeature<?> arg0, StructureStart<?> arg1) {
-
 	}
 
 	@Override
 	public void setAllStarts(Map<StructureFeature<?>, StructureStart<?>> p_201612_1_) {
-
 	}
 
 	@Override
 	public Map<StructureFeature<?>, StructureStart<?>> getAllStarts() {
 		return null;
+	}
+
+	@Override
+	public int getHeight() {
+		return world.getHeight();
+	}
+
+	@Override
+	public int getMinBuildHeight() {
+		return world.getMinBuildHeight();
+	}
+
+	@Override
+	public BlockPos getHeighestPosition(Types pType) {
+		return BlockPos.ZERO;
 	}
 
 }

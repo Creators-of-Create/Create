@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:birch_window"
+            "items": [
+              "create:birch_window"
+            ]
           }
         ]
       }

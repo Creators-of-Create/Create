@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:weathered_limestone_cobblestone"
+            "items": [
+              "create:weathered_limestone_cobblestone"
+            ]
           }
         ]
       }

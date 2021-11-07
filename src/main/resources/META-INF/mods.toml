@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[36,)"
+loaderVersion="[37,)"
 issueTrackerURL="https://github.com/Creators-of-Create/Create/issues"
 license="MIT"
 
 [[mods]]
 modId="create"
-version="v0.3.2f"
+version="0.3.2f"
 displayName="Create"
 #updateJSONURL=""
 displayURL="https://www.curseforge.com/minecraft/mc-mods/create"
@@ -18,20 +18,28 @@ Technology that empowers the player.'''
 [[dependencies.create]]
     modId="forge"
     mandatory=true
-    versionRange="[36.2.0,)"
+    versionRange="[37.0.0,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.create]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.5,1.17)"
+    versionRange="[1.17.1,1.18)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.create]]
     modId="flywheel"
     mandatory=true
-    versionRange="[1.16-0.2.3,1.16-0.3)"
+    versionRange="[1.17-0.3.0,1.17-0.3.1)"
+    ordering="AFTER"
+    side="BOTH"
+
+# TODO: remove once Registrate is fixed
+[[dependencies.create]]
+    modId="registrate"
+    mandatory=true
+    versionRange="[1.0.13,1.1.0)"
     ordering="AFTER"
     side="BOTH"

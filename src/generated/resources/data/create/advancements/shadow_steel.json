@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:shadow_steel"
+            "items": [
+              "create:shadow_steel"
+            ]
           }
         ]
       }

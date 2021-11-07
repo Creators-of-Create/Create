@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:electron_tube"
+            "items": [
+              "create:electron_tube"
+            ]
           }
         ]
       }

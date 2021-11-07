@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:cuckoo_clock"
+            "items": [
+              "create:cuckoo_clock"
+            ]
           }
         ]
       }

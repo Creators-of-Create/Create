@@ -382,7 +382,6 @@
 	"block.create.redstone_contact": "Контакт редстоун сигнала",
 	"block.create.redstone_link": "Беспроводной передатчик редстоун сигнала",
 	"block.create.refined_radiance_casing": "Сияющий корпус",
-	"block.create.reinforced_rail": "Усиленные рельсы",
 	"block.create.rope": "Канат",
 	"block.create.rope_pulley": "Лебёдка",
 	"block.create.rotation_speed_controller": "Регулятор скорости вращения",

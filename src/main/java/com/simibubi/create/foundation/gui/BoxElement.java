@@ -1,7 +1,5 @@
 package com.simibubi.create.foundation.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -11,6 +9,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
+
+import net.minecraft.client.renderer.GameRenderer;
 
 public class BoxElement extends RenderElement {
 
@@ -91,15 +91,16 @@ public class BoxElement extends RenderElement {
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.shadeModel(GL11.GL_SMOOTH);
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
+		Matrix4f model = ms.last().pose();
 		int f = borderOffset;
 		Color c1 = background.copy().scaleAlpha(alpha);
 		Color c2 = borderTop.copy().scaleAlpha(alpha);
 		Color c3 = borderBot.copy().scaleAlpha(alpha);
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder b = tessellator.getBuilder();
-		Matrix4f model = ms.last().pose();
+
 		b.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 		//outer top
 		b.vertex(model, x - f - 1        , y - f - 2         , z).color(c1.getRed(), c1.getGreen(), c1.getBlue(), c1.getAlpha()).endVertex();
@@ -151,7 +152,6 @@ public class BoxElement extends RenderElement {
 
 		tessellator.end();
 
-		RenderSystem.shadeModel(GL11.GL_FLAT);
 		RenderSystem.disableBlend();
 		RenderSystem.enableTexture();
 	}

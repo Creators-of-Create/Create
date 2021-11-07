@@ -106,12 +106,12 @@ public class WrappedServerWorld extends ServerLevel {
 
 	@Override
 	public boolean addFreshEntity(Entity entityIn) {
-		entityIn.setLevel(world);
+		entityIn.level = world;
 		return world.addFreshEntity(entityIn);
 	}
 
 	@Override
-	public void setMapData(MapItemSavedData mapDataIn) {
+	public void setMapData(String mapId, MapItemSavedData mapDataIn) {
 	}
 
 	@Override
@@ -139,6 +139,6 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	private static LevelStorageSource.LevelStorageAccess getLevelSaveFromWorld(Level world) {
-		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "field_71310_m"); // storageSource
+		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "f_129744_"); // storageSource
 	}
 }

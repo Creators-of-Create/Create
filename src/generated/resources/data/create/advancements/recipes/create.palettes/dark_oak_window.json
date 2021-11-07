@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:dark_oak_planks"
+            "items": [
+              "minecraft:dark_oak_planks"
+            ]
           }
         ]
       }

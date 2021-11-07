@@ -67,7 +67,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	protected Set<String> highlights = new HashSet<>();
 
 	public static SubMenuConfigScreen find(ConfigHelper.ConfigPath path) {
-		ForgeConfigSpec spec = ConfigHelper.findConfigSpecFor(path.getType(), path.getModID());
+		// TODO 1.17: can be null
+		ForgeConfigSpec spec = ConfigHelper.findForgeConfigSpecFor(path.getType(), path.getModID());
 		UnmodifiableConfig values = spec.getValues();
 		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID());
 		SubMenuConfigScreen screen = new SubMenuConfigScreen(base, "root", path.getType(), spec, values);
@@ -249,7 +250,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		list = new ConfigScreenList(minecraft, listWidth, height - 80, 35, height - 45, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
-		children().add(list);
+		addWidget(list);
 
 		search = new ConfigTextField(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
 		search.setResponder(this::updateFilter);

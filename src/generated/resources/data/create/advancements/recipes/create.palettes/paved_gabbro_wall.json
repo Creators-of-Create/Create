@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:paved_gabbro"
+            "items": [
+              "create:paved_gabbro"
+            ]
           }
         ]
       }

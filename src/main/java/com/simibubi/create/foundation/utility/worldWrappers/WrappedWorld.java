@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkSource;
+import net.minecraft.world.level.entity.LevelEntityGetter;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -36,6 +38,8 @@ public class WrappedWorld extends Level {
 
 	protected Level world;
 	protected ChunkSource provider;
+
+	protected LevelEntityGetter<Entity> entityGetter = new DummyLevelEntityGetter<>();
 
 	public WrappedWorld(Level world, ChunkSource provider) {
 		super((WritableLevelData) world.getLevelData(), world.dimension(), world.dimensionType(), world::getProfiler,
@@ -129,15 +133,14 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public boolean addFreshEntity(@Nullable Entity entityIn) {
-		if (entityIn == null)
-			return false;
-		entityIn.setLevel(world);
+	public boolean addFreshEntity(Entity entityIn) {
+		entityIn.level = world;
 		return world.addFreshEntity(entityIn);
 	}
 
 	@Override
-	public void setMapData(MapItemSavedData mapDataIn) {}
+	public void setMapData(String pMapId, MapItemSavedData pData) {
+	}
 
 	@Override
 	public int getFreeMapId() {
@@ -178,16 +181,25 @@ public class WrappedWorld extends Level {
 	}
 
 	@Override
-	public void blockEntityChanged(BlockPos p_175646_1_, BlockEntity p_175646_2_) {
-	}
-
-	@Override
 	public boolean hasChunkAt(BlockPos p_175667_1_) {
-		return true;
+		return world.hasChunkAt(p_175667_1_);
 	}
 
 	@Override
 	public void updateNeighbourForOutputSignal(BlockPos p_175666_1_, Block p_175666_2_) {
-		return;
+	}
+
+	@Override
+	public void gameEvent(Entity pEntity, GameEvent pEvent, BlockPos pPos) {
+	}
+
+	@Override
+	public String gatherChunkSourceStats() {
+		return world.gatherChunkSourceStats();
+	}
+
+	@Override
+	protected LevelEntityGetter<Entity> getEntities() {
+		return entityGetter;
 	}
 }

@@ -45,7 +45,9 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 				if (sender == null || !sender.hasPermissions(2))
 					return;
 
-				ForgeConfigSpec spec = ConfigHelper.findConfigSpecFor(ModConfig.Type.SERVER, modID);
+				ForgeConfigSpec spec = ConfigHelper.findForgeConfigSpecFor(ModConfig.Type.SERVER, modID);
+				if (spec == null)
+					return;
 				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(path);
 				ForgeConfigSpec.ConfigValue<T> configValue = spec.getValues().get(path);
 

@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:dark_oak_window"
+            "items": [
+              "create:dark_oak_window"
+            ]
           }
         ]
       }

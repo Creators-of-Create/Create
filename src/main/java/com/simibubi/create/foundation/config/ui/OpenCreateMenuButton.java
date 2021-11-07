@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.mainMenu.CreateMainMenuScreen;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -103,6 +104,8 @@ public class OpenCreateMenuButton extends Button {
 
 				int offsetX_ = offsetX;
 				event.getWidgetList().stream()
+					.filter(w -> w instanceof AbstractWidget)
+					.map(w -> (AbstractWidget) w)
 					.filter(w -> w.getMessage().getString().equals(target))
 					.findFirst()
 					.ifPresent(w -> event.addWidget(

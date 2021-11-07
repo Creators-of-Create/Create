@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:brass_casing"
+            "items": [
+              "create:brass_casing"
+            ]
           }
         ]
       }

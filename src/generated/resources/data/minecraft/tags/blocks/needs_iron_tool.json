@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "create:zinc_ore",
+    "create:zinc_block",
+    "create:brass_block"
+  ]
+}

@@ -21,6 +21,7 @@ import com.simibubi.create.content.schematics.client.SchematicEditScreen;
 import com.simibubi.create.content.schematics.filtering.SchematicInstances;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.NBTHelper;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -94,7 +95,7 @@ public class SchematicItem extends Item {
 	public static void writeSize(ItemStack blueprint) {
 		CompoundTag tag = blueprint.getTag();
 		StructureTemplate t = loadSchematic(blueprint);
-		tag.put("Bounds", NbtUtils.writeBlockPos(t.getSize()));
+		tag.put("Bounds", NBTHelper.writeVec3i(t.getSize()));
 		blueprint.setTag(tag);
 		SchematicInstances.clearHash(blueprint);
 	}

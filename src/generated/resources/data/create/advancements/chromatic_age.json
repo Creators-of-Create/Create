@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:shadow_steel_casing"
+            "items": [
+              "create:shadow_steel_casing"
+            ]
           }
         ]
       }
@@ -31,7 +33,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:refined_radiance_casing"
+            "items": [
+              "create:refined_radiance_casing"
+            ]
           }
         ]
       }

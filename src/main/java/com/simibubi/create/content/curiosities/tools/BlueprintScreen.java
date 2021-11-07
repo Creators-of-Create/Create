@@ -86,7 +86,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 			super.renderTooltip(ms, x, y);
 			return;
 		}
-		renderWrappedToolTip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex(), true), x, y,
+		renderComponentTooltip(ms, addToTooltip(new LinkedList<>(), hoveredSlot.getSlotIndex(), true), x, y,
 			font);
 	}
 

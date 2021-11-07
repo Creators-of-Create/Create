@@ -56,6 +56,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -369,7 +370,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			PonderStoryBoardEntry sb = list.get(index);
 			StructureTemplate activeTemplate = PonderRegistry.loadSchematic(sb.getSchematicLocation());
 			PonderWorld world = new PonderWorld(BlockPos.ZERO, Minecraft.getInstance().level);
-			activeTemplate.placeInWorld(world, BlockPos.ZERO, new StructurePlaceSettings(), new Random());
+			activeTemplate.placeInWorld(world, BlockPos.ZERO, BlockPos.ZERO, new StructurePlaceSettings(), new Random(), Block.UPDATE_CLIENTS);
 			world.createBackup();
 			scene = PonderRegistry.compileScene(index, sb, world);
 			scene.begin();
@@ -424,17 +425,15 @@ public class PonderUI extends NavigatableSimiScreen {
 		double diff = i - value;
 		double slide = Mth.lerp(diff * diff, 200, 600) * diff;
 
-		RenderSystem.enableAlphaTest();
 		RenderSystem.enableBlend();
 		RenderSystem.enableDepthTest();
 
-		RenderSystem.pushMatrix();
-
+//		RenderSystem.pushMatrix();
 		// has to be outside of MS transforms, important for vertex sorting
-		RenderSystem.translated(0, 0, 800);
+//		RenderSystem.translated(0, 0, 800);
 
 		ms.pushPose();
-		ms.translate(0, 0, -800);
+//		ms.translate(0, 0, -800);
 		story.transform.updateScreenParams(width, height, slide);
 		story.transform.apply(ms, partialTicks, false);
 		story.transform.updateSceneRVE(partialTicks);
@@ -532,7 +531,7 @@ public class PonderUI extends NavigatableSimiScreen {
 
 		ms.popPose();
 		ms.popPose();
-		RenderSystem.popMatrix();
+//		RenderSystem.popMatrix();
 	}
 
 	protected void renderWidgets(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
@@ -616,7 +615,7 @@ public class PonderUI extends NavigatableSimiScreen {
 					).withStyle(ChatFormatting.GRAY);
 
 					//renderOrderedTooltip(ms, textRenderer.wrapLines(text, width / 3), 0, 0);
-					renderWrappedToolTip(ms, font.getSplitter().splitLines(text, width / 3, Style.EMPTY), 0, 0, font);
+					renderComponentTooltip(ms, font.getSplitter().splitLines(text, width / 3, Style.EMPTY), 0, 0, font);
 					/*String tooltip = Lang
 						.createTranslationTextComponent(IDENTIFY_MODE, client.gameSettings.keyBindDrop.getBoundKeyLocalizedText().applyTextStyle(TextFormatting.WHITE))
 						.applyTextStyle(TextFormatting.GRAY)

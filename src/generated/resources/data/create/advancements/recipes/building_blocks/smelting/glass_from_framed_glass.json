@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:framed_glass"
+            "items": [
+              "create:framed_glass"
+            ]
           }
         ]
       }

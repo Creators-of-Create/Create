@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:zinc_ingot"
+            "items": [
+              "create:zinc_ingot"
+            ]
           }
         ]
       }

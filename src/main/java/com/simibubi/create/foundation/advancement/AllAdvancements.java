@@ -421,7 +421,7 @@ public class AllAdvancements implements DataProvider {
 			.parent(chromatic_compound)
 			.addCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))
 			.addCriterion("1", itemGathered(AllBlocks.REFINED_RADIANCE_CASING.get()))
-			.save(t, id + "chromatic_age");
+			.save(t, id + ":chromatic_age");
 
 		Advancement chromatic_eob = deadEnd().parent(chromatic_age)
 			.addCriterion("0", itemGathered(AllBlocks.SHADOW_STEEL_CASING.get()))

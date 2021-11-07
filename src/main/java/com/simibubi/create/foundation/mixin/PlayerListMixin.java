@@ -13,8 +13,8 @@ import net.minecraft.server.players.PlayerList;
 
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
-	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/item/crafting/ServerRecipeBook;sendInitialRecipeBook(Lnet/minecraft/entity/player/ServerPlayerEntity;)V", shift = At.Shift.AFTER), method = "placeNewPlayer(Lnet/minecraft/network/NetworkManager;Lnet/minecraft/entity/player/ServerPlayerEntity;)V")
-	private void afterSendRecipeBookOnPlaceNewPlayer(Connection networkManager, ServerPlayer player, CallbackInfo ci) {
+	@Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/stats/ServerRecipeBook;sendInitialRecipeBook(Lnet/minecraft/server/level/ServerPlayer;)V", shift = At.Shift.AFTER), method = "placeNewPlayer(Lnet/minecraft/network/Connection;Lnet/minecraft/server/level/ServerPlayer;)V")
+	private void afterSendRecipeBookOnPlaceNewPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
 		PotatoProjectileTypeManager.syncTo(player);
 	}
 

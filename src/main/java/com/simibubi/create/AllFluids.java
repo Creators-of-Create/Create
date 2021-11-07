@@ -46,6 +46,7 @@ public class AllFluids {
 							.slopeFindDistance(3)
 							.explosionResistance(100f))
 					.tag(AllFluidTags.HONEY.tag)
+					.source(ForgeFlowingFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
 					.build()

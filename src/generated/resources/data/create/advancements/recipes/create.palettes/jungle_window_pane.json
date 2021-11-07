@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:jungle_window"
+            "items": [
+              "create:jungle_window"
+            ]
           }
         ]
       }

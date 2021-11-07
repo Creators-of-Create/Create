@@ -557,7 +557,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
-			String srg = "f_146795_";
+			String srg = "f_146795_"; // removalReason
 			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
 
 			// Gather passengers into same chunk when saving

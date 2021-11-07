@@ -73,7 +73,8 @@ public class CartAssemblerBlock extends BaseRailBlock
 		super(true, properties);
 		registerDefaultState(defaultBlockState().setValue(POWERED, false)
 			.setValue(BACKWARDS, false)
-			.setValue(RAIL_TYPE, CartAssembleRailType.POWERED_RAIL));
+			.setValue(RAIL_TYPE, CartAssembleRailType.POWERED_RAIL)
+			.setValue(WATERLOGGED, false));
 	}
 
 	public static BlockState createAnchor(BlockState state) {
@@ -102,7 +103,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
-		builder.add(RAIL_SHAPE, POWERED, RAIL_TYPE, BACKWARDS);
+		builder.add(RAIL_SHAPE, POWERED, RAIL_TYPE, BACKWARDS, WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
 
@@ -264,8 +265,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	@Override
 	@SuppressWarnings("deprecation")
 	@Nonnull
-	public List<ItemStack> getDrops(@Nonnull BlockState state,
-		@Nonnull net.minecraft.world.level.storage.loot.LootContext.Builder builder) {
+	public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
 		List<ItemStack> drops = super.getDrops(state, builder);
 		drops.addAll(getRailBlock(state).getDrops(builder));
 		return drops;

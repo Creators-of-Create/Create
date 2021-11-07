@@ -36,7 +36,7 @@ public class FlySpeedCommand {
 	private static int sendFlySpeedUpdate(CommandContext<CommandSourceStack> ctx, ServerPlayer player, float speed) {
 		ClientboundPlayerAbilitiesPacket packet = new ClientboundPlayerAbilitiesPacket(player.getAbilities());
 		// packet.setFlySpeed(speed);
-		ObfuscationReflectionHelper.setPrivateValue(ClientboundPlayerAbilitiesPacket.class, packet, speed, "field_149116_e"); // flyingSpeed
+		ObfuscationReflectionHelper.setPrivateValue(ClientboundPlayerAbilitiesPacket.class, packet, speed, "f_132663_"); // flyingSpeed
 		player.connection.send(packet);
 
 		ctx.getSource()

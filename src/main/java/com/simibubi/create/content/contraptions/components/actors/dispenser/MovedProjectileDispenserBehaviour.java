@@ -81,19 +81,19 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 	}
 
 	private static Method getProjectileEntityLookup() {
-		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "func_82499_a", Level.class, Position.class, ItemStack.class); // getProjectile
+		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "m_6895_", Level.class, Position.class, ItemStack.class); // getProjectile
 		getProjectileEntity.setAccessible(true);
 		return getProjectileEntity;
 	}
 
 	private static Method getProjectileInaccuracyLookup() {
-		Method getProjectileInaccuracy = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "func_82498_a"); // getUncertainty
+		Method getProjectileInaccuracy = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "m_7101_"); // getUncertainty
 		getProjectileInaccuracy.setAccessible(true);
 		return getProjectileInaccuracy;
 	}
 
 	private static Method getProjectileVelocityLookup() {
-		Method getProjectileVelocity = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "func_82500_b"); // getPower
+		Method getProjectileVelocity = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "m_7104_"); // getPower
 		getProjectileVelocity.setAccessible(true);
 		return getProjectileVelocity;
 	}

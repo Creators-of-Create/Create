@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:belt_connector"
+            "items": [
+              "create:belt_connector"
+            ]
           }
         ]
       }

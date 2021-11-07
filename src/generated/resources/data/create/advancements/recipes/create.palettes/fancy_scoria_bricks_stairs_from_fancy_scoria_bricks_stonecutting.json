@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:fancy_scoria_bricks"
+            "items": [
+              "create:fancy_scoria_bricks"
+            ]
           }
         ]
       }

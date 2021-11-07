@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:andesite_casing"
+            "items": [
+              "create:andesite_casing"
+            ]
           }
         ]
       }

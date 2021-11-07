@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "item": "create:scoria"
+            "items": [
+              "create:scoria"
+            ]
           }
         ]
       }

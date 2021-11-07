@@ -17,6 +17,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 
@@ -64,23 +65,20 @@ public class PonderWorldParticles {
 		LightTexture lightTexture = mc.gameRenderer.lightTexture();
 
 		lightTexture.turnOnLightLayer();
-		Runnable enable = () -> {
-			RenderSystem.enableAlphaTest();
-			RenderSystem.defaultAlphaFunc();
-			RenderSystem.enableDepthTest();
-			RenderSystem.enableFog();
-		};
-		RenderSystem.pushMatrix();
-		RenderSystem.multMatrix(ms.last()
-			.pose());
+		RenderSystem.enableDepthTest();
+		PoseStack posestack = RenderSystem.getModelViewStack();
+		posestack.pushPose();
+		posestack.mulPoseMatrix(ms.last().pose());
+		RenderSystem.applyModelViewMatrix();
 
 		for (ParticleRenderType iparticlerendertype : this.byType.keySet()) {
 			if (iparticlerendertype == ParticleRenderType.NO_RENDER)
 				continue;
-			enable.run(); 
 			Iterable<Particle> iterable = this.byType.get(iparticlerendertype);
 			if (iterable != null) {
 				RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+				RenderSystem.setShader(GameRenderer::getParticleShader);
+
 				Tesselator tessellator = Tesselator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuilder();
 				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
@@ -92,13 +90,11 @@ public class PonderWorldParticles {
 			}
 		}
 
-		RenderSystem.popMatrix();
+		posestack.popPose();
+		RenderSystem.applyModelViewMatrix();
 		RenderSystem.depthMask(true);
-		RenderSystem.depthFunc(515);
 		RenderSystem.disableBlend();
-		RenderSystem.defaultAlphaFunc();
 		lightTexture.turnOffLightLayer();
-		RenderSystem.disableFog();
 	}
 
 	public void clearEffects() {
