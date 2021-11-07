@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack.Pose;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.simibubi.create.foundation.render.RenderTypes;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.client.Minecraft;
@@ -125,15 +124,16 @@ public class FluidRenderer {
 				.isHorizontal()) {
 				ms.pushPose();
 
-				if (side.getAxisDirection() == AxisDirection.NEGATIVE)
+				if (side.getAxisDirection() == AxisDirection.NEGATIVE) {
 					msr.translate(center)
 						.rotateY(180)
 						.translateBack(center);
+					side = Direction.get(AxisDirection.POSITIVE, side.getAxis());
+				}
 
 				boolean X = side.getAxis() == Axis.X;
-				int darkColor = Color.mixColors(color, 0xff000011, 1 / 4f);
 				renderTiledHorizontalFace(X ? xMax : zMax, side, X ? zMin : xMin, yMin, X ? zMax : xMax, yMax, builder,
-					ms, light, darkColor, fluidTexture);
+					ms, light, color, fluidTexture);
 
 				ms.popPose();
 				continue;
@@ -222,7 +222,7 @@ public class FluidRenderer {
 			.uv(u, v)
 			.overlayCoords(OverlayTexture.NO_OVERLAY)
 			.uv2(light)
-			.normal(n.getX(), n.getY(), n.getZ())
+			.normal(peek.normal(), n.getX(), n.getY(), n.getZ())
 			.endVertex();
 	}
 

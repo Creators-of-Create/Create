@@ -249,6 +249,10 @@ public class UIRenderHelper {
 		RenderSystem.disableBlend();
 	}
 
+	public static void flipForGuiRender(PoseStack poseStack) {
+		poseStack.mulPoseMatrix(Matrix4f.createScaleMatrix(1, -1, 1));
+	}
+
 	public static class CustomRenderTarget extends RenderTarget {
 
 		public CustomRenderTarget(boolean pUseDepth) {

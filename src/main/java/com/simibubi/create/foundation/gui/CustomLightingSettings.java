@@ -22,12 +22,12 @@ public class CustomLightingSettings implements ILightingSettings {
 	protected void init(float yRot1, float xRot1, float yRot2, float xRot2, boolean doubleLight) {
 		light1 = Vector3f.ZP.copy();
 		light1.transform(Vector3f.YP.rotationDegrees(yRot1));
-		light1.transform(Vector3f.XP.rotationDegrees(xRot1));
+		light1.transform(Vector3f.XN.rotationDegrees(xRot1));
 
 		if (doubleLight) {
 			light2 = Vector3f.ZP.copy();
 			light2.transform(Vector3f.YP.rotationDegrees(yRot2));
-			light2.transform(Vector3f.XP.rotationDegrees(xRot2));
+			light2.transform(Vector3f.XN.rotationDegrees(xRot2));
 		} else {
 			light2 = VecHelper.ZERO_3F;
 		}

@@ -124,7 +124,7 @@ public class GuiGameElement {
 			matrixStack.translate(x, y, z);
 			matrixStack.scale((float) scale, (float) scale, (float) scale);
 			matrixStack.translate(xLocal, yLocal, zLocal);
-			matrixStack.scale(1, -1, 1);
+			UIRenderHelper.flipForGuiRender(matrixStack);
 			matrixStack.translate(rotationOffset.x, rotationOffset.y, rotationOffset.z);
 			matrixStack.mulPose(Vector3f.ZP.rotationDegrees((float) zRot));
 			matrixStack.mulPose(Vector3f.XP.rotationDegrees((float) xRot));
@@ -271,19 +271,15 @@ public class GuiGameElement {
 			matrixStack.scale(16.0F, 16.0F, 16.0F);
 			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 			boolean flatLighting = !bakedModel.usesBlockLight();
-			if (useDefaultLighting) {
-				if (flatLighting) {
-					Lighting.setupForFlatItems();
-				}
+			if (useDefaultLighting && flatLighting) {
+				Lighting.setupForFlatItems();
 			}
 
 			renderer.render(stack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
 			buffer.endBatch();
 			RenderSystem.enableDepthTest();
-			if (useDefaultLighting) {
-				if (flatLighting) {
-					Lighting.setupFor3DItems();
-				}
+			if (useDefaultLighting && flatLighting) {
+				Lighting.setupFor3DItems();
 			}
 
 			matrixStack.popPose();

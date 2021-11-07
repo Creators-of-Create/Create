@@ -2,6 +2,7 @@ package com.simibubi.create.compat.jei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.foundation.gui.GuiGameElement;
 
 import net.minecraft.world.item.Items;
@@ -26,6 +27,7 @@ public class FanBlastingCategory extends ProcessingViaFanCategory<AbstractCookin
 		GuiGameElement.of(Fluids.LAVA)
 			.scale(24)
 			.atLocal(0, 0, 2)
+			.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 			.render(matrixStack);
 
 		matrixStack.popPose();

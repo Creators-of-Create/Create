@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,7 +36,8 @@ public class AnimatedItemDrain extends AnimatedKinetics {
 		BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance()
 			.getBuilder());
 		PoseStack ms = new PoseStack();
-		ms.scale(scale, -scale, scale);
+		UIRenderHelper.flipForGuiRender(ms);
+		ms.scale(scale, scale, scale);
 		float from = 2/16f;
 		float to = 1f - from;
 		FluidRenderer.renderTiledFluidBB(fluid, from, from, from, to, 3/4f, to, buffer, ms, LightTexture.FULL_BRIGHT, false);

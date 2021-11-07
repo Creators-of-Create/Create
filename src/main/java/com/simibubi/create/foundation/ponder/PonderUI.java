@@ -450,7 +450,7 @@ public class PonderUI extends NavigatableSimiScreen {
 			RenderSystem.enableDepthTest();
 			ms.pushPose();
 			ms.translate(story.basePlateOffsetX, 0, story.basePlateOffsetZ);
-			ms.scale(1, -1, 1);
+			UIRenderHelper.flipForGuiRender(ms);
 
 			float flash = finishingFlash.getValue(partialTicks) * .9f;
 			float alpha = flash;

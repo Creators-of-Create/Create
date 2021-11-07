@@ -2,12 +2,14 @@ package com.simibubi.create.compat.jei.category.animations;
 
 import java.util.List;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.client.renderer.LightTexture;
@@ -63,10 +65,12 @@ public class AnimatedSpout extends AnimatedKinetics {
 			.scale(scale)
 			.render(matrixStack);
 
+		AnimatedKinetics.DEFAULT_LIGHTING.applyLighting();
 		BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance()
 			.getBuilder());
 		matrixStack.pushPose();
-		matrixStack.scale(16, -16, 16);
+		UIRenderHelper.flipForGuiRender(matrixStack);
+		matrixStack.scale(16, 16, 16);
 		float from = 2/16f;
 		float to = 1f - from;
 		FluidRenderer.renderTiledFluidBB(fluids.get(0), from, from, from, to, to, to, buffer, matrixStack, LightTexture.FULL_BRIGHT, false);
@@ -74,11 +78,13 @@ public class AnimatedSpout extends AnimatedKinetics {
 
 		float width = 1 / 128f * squeeze;
 		matrixStack.translate(scale / 2f, scale * 1.5f, scale / 2f);
-		matrixStack.scale(16, -16, 16);
+		UIRenderHelper.flipForGuiRender(matrixStack);
+		matrixStack.scale(16, 16, 16);
 		matrixStack.translate(-width / 2, 0, -width / 2);
 		FluidRenderer.renderTiledFluidBB(fluids.get(0), 0, -0.001f, 0, width, 2.001f, width, buffer, matrixStack, LightTexture.FULL_BRIGHT,
 			false);
 		buffer.endBatch();
+		Lighting.setupFor3DItems();
 
 		matrixStack.popPose();
 	}

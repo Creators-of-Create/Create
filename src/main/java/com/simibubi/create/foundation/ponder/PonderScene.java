@@ -22,6 +22,7 @@ import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.ponder.elements.PonderOverlayElement;
@@ -468,7 +469,8 @@ public class PonderScene {
 			float f = 30 * scaleFactor;
 
 			if (!overlayCompatible) {
-				ms.scale(f, -f, f);
+				UIRenderHelper.flipForGuiRender(ms);
+				ms.scale(f, f, f);
 				ms.translate((basePlateSize + basePlateOffsetX) / -2f, -1f + yOffset,
 					(basePlateSize + basePlateOffsetZ) / -2f);
 			} else {

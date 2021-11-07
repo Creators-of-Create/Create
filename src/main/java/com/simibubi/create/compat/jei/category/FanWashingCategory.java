@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
+import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
@@ -91,6 +92,7 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 		GuiGameElement.of(Fluids.WATER)
 				.scale(24)
 				.atLocal(0, 0, 2)
+				.lighting(AnimatedKinetics.DEFAULT_LIGHTING)
 				.render(matrixStack);
 
 		matrixStack.popPose();
