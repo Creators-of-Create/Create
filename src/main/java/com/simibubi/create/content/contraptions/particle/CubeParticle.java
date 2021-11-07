@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.simibubi.create.AllSpecialTextures;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -40,21 +41,10 @@ public class CubeParticle extends Particle {
 		// RIGHT
 		new Vec3(1, -1, 1), new Vec3(1, 1, 1), new Vec3(1, 1, -1), new Vec3(1, -1, -1) };
 
-	public static final Vec3[] CUBE_NORMALS = {
-		// modified normals for the sides
-		new Vec3(0, 1, 0), new Vec3(0, -1, 0), new Vec3(0, 0, 1), new Vec3(0, 0, 1), new Vec3(0, 0, 1),
-		new Vec3(0, 0, 1),
-
-		/*
-		 * new Vector3d(0, 1, 0), new Vector3d(0, -1, 0), new Vector3d(0, 0, 1), new Vector3d(0, 0,
-		 * -1), new Vector3d(-1, 0, 0), new Vector3d(1, 0, 0)
-		 */
-	};
-
-	private static final ParticleRenderType renderType = new ParticleRenderType() {
+	private static final ParticleRenderType RENDER_TYPE = new ParticleRenderType() {
 		@Override
 		public void begin(BufferBuilder builder, TextureManager textureManager) {
-			RenderSystem.disableTexture();
+			AllSpecialTextures.BLANK.bind();
 
 			// transparent, additive blending
 			RenderSystem.depthMask(false);
@@ -66,7 +56,7 @@ public class CubeParticle extends Particle {
 //			RenderSystem.disableBlend();
 //			RenderSystem.enableLighting();
 
-			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.BLOCK);
+			builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
 		}
 
 		@Override
@@ -74,7 +64,6 @@ public class CubeParticle extends Particle {
 			tessellator.end();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
 				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-			RenderSystem.enableTexture();
 		}
 	};
 
@@ -134,7 +123,7 @@ public class CubeParticle extends Particle {
 		float lerpedZ = (float) (Mth.lerp(p_225606_3_, this.zo, this.z) - projectedView.z());
 
 		// int light = getBrightnessForRender(p_225606_3_);
-		int light = LightTexture.FULL_BRIGHT;// 15<<20 && 15<<4
+		int light = LightTexture.FULL_BRIGHT;
 		double ageMultiplier = 1 - Math.pow(age, 3) / Math.pow(lifetime, 3);
 
 		for (int i = 0; i < 6; i++) {
@@ -146,12 +135,10 @@ public class CubeParticle extends Particle {
 					.scale(scale * ageMultiplier)
 					.add(lerpedX, lerpedY, lerpedZ);
 
-				Vec3 normal = CUBE_NORMALS[i];
 				builder.vertex(vec.x, vec.y, vec.z)
+					.uv(j / 2, j % 2)
 					.color(rCol, gCol, bCol, alpha)
-					.uv(0, 0)
 					.uv2(light)
-					.normal((float) normal.x, (float) normal.y, (float) normal.z)
 					.endVertex();
 			}
 		}
@@ -159,12 +146,10 @@ public class CubeParticle extends Particle {
 
 	@Override
 	public ParticleRenderType getRenderType() {
-		return renderType;
+		return RENDER_TYPE;
 	}
 
 	public static class Factory implements ParticleProvider<CubeParticleData> {
-
-		public Factory() {}
 
 		@Override
 		public Particle createParticle(CubeParticleData data, ClientLevel world, double x, double y, double z, double motionX,
