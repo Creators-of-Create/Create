@@ -29,9 +29,11 @@ public class UIRenderHelper {
 
 	public static void init() {
 		RenderSystem.recordRenderCall(() -> {
-			Window mainWindow = Minecraft.getInstance()
-					.getWindow();
-			framebuffer = CustomRenderTarget.create(mainWindow);
+			Window mainWindow = Minecraft.getInstance().getWindow();
+			framebuffer = new CustomRenderTarget(true);
+			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
+			framebuffer.setClearColor(0, 0, 0, 0);
+			framebuffer.enableStencil();
 		});
 	}
 
