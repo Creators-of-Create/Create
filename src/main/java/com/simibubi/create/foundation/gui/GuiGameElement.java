@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -174,14 +175,11 @@ public class GuiGameElement {
 			VertexConsumer vb = buffer.getBuffer(renderType);
 
 			transformMatrix(matrixStack);
-			if (customLighting == null)
-				Lighting.setupForEntityInInventory();
+
 			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 			renderModel(blockRenderer, buffer, renderType, vb, matrixStack);
 
 			cleanUpMatrix(matrixStack);
-			if (customLighting == null)
-				Lighting.setupFor3DItems();
 		}
 
 		protected void renderModel(BlockRenderDispatcher blockRenderer, MultiBufferSource.BufferSource buffer,
@@ -211,8 +209,8 @@ public class GuiGameElement {
 			RenderType renderType, VertexConsumer vb, PoseStack ms) {
 			if (blockState.getBlock() instanceof FireBlock) {
 				Lighting.setupForFlatItems();
-				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT,
-					OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
+				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+					VirtualEmptyModelData.INSTANCE);
 				buffer.endBatch();
 				Lighting.setupFor3DItems();
 				return;
@@ -224,11 +222,9 @@ public class GuiGameElement {
 				.isEmpty())
 				return;
 
-			Lighting.setupForFlatItems();
 			FluidRenderer.renderTiledFluidBB(new FluidStack(blockState.getFluidState()
 				.getType(), 1000), 0, 0, 0, 1.0001f, 1.0001f, 1.0001f, buffer, ms, LightTexture.FULL_BRIGHT, false);
 			buffer.endBatch();
-			Lighting.setupFor3DItems();
 		}
 	}
 
@@ -260,54 +256,37 @@ public class GuiGameElement {
 			cleanUpMatrix(matrixStack);
 		}
 
-		@Override
-		protected void transformMatrix(PoseStack matrixStack) {
-			super.transformMatrix(matrixStack);
-			PoseStack mvm = RenderSystem.getModelViewStack();
-			mvm.pushPose();
-			mvm.mulPoseMatrix(matrixStack.last()
-				.pose());
-			mvm.translate(8.0F, -8.0F, 8.0F);
-			mvm.scale(16.0F, 16.0F, 16.0F);
-			RenderSystem.applyModelViewMatrix();
-		}
-
-		@Override
-		protected void cleanUpMatrix(PoseStack matrixStack) {
-			super.cleanUpMatrix(matrixStack);
-			RenderSystem.getModelViewStack()
-				.popPose();
-			;
-			RenderSystem.applyModelViewMatrix();
-		}
-
 		public static void renderItemIntoGUI(PoseStack matrixStack, ItemStack stack, boolean useDefaultLighting) {
-			ItemRenderer renderer = Minecraft.getInstance()
-				.getItemRenderer();
+			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
-			renderer.textureManager.getTexture(InventoryMenu.BLOCK_ATLAS)
-				.setFilter(false, false);
-			RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+			renderer.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
-				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-			MultiBufferSource.BufferSource buffer = Minecraft.getInstance()
-				.renderBuffers()
-				.bufferSource();
+			matrixStack.pushPose();
+			matrixStack.translate(0, 0, 100.0F + renderer.blitOffset);
+			matrixStack.translate(8.0F, -8.0F, 0.0F);
+			matrixStack.scale(16.0F, 16.0F, 16.0F);
+			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 			boolean flatLighting = !bakedModel.usesBlockLight();
-			if (useDefaultLighting && flatLighting)
-				Lighting.setupForFlatItems();
+			if (useDefaultLighting) {
+				if (flatLighting) {
+					Lighting.setupForFlatItems();
+				}
+			}
 
-			renderer.render(stack, ItemTransforms.TransformType.GUI, false, new PoseStack(), buffer,
-				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
+			renderer.render(stack, ItemTransforms.TransformType.GUI, false, matrixStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, bakedModel);
 			buffer.endBatch();
 			RenderSystem.enableDepthTest();
-			if (useDefaultLighting && flatLighting)
-				Lighting.setupFor3DItems();
+			if (useDefaultLighting) {
+				if (flatLighting) {
+					Lighting.setupFor3DItems();
+				}
+			}
 
+			matrixStack.popPose();
 		}
 
 	}
