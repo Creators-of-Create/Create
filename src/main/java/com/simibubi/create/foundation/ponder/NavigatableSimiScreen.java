@@ -9,6 +9,7 @@ import org.apache.commons.lang3.mutable.MutableInt;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
@@ -171,7 +172,10 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			ms.translate(dpx, dpy, 0);
 			ms.scale(scale, scale, 1);
 			ms.translate(-dpx, -dpy, 0);
+			RenderSystem.enableBlend();
+			RenderSystem.defaultBlendFunc();
 			UIRenderHelper.drawFramebuffer(1f - Math.abs(transitionValue));
+			RenderSystem.disableBlend();
 			ms.popPose();
 		}
 

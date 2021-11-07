@@ -3,11 +3,9 @@ package com.simibubi.create.foundation.gui;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
@@ -19,7 +17,6 @@ import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 public class UIRenderHelper {
@@ -44,7 +41,7 @@ public class UIRenderHelper {
 	}
 
 	public static void drawFramebuffer(float alpha) {
-		framebuffer.blitToScreen(alpha);
+		framebuffer.renderWithAlpha(alpha);
 	}
 
 	public static void streak(PoseStack ms, float angle, int x, int y, int breadth, int length) {
@@ -266,57 +263,32 @@ public class UIRenderHelper {
 			return framebuffer;
 		}
 
-		public void blitToScreen(float alpha) {
+		public void renderWithAlpha(float alpha) {
 			Window window = Minecraft.getInstance().getWindow();
-			this.blitToScreen(window.getWidth(), window.getHeight());
-		}
 
-		public void blitToScreen(int pWidth, int pHeight, float alpha) {
-			RenderSystem.assertThread(RenderSystem::isOnGameThreadOrInit);
-			if (!RenderSystem.isInInitPhase()) {
-				RenderSystem.recordRenderCall(() -> {
-					this._blitToScreen(pWidth, pHeight, alpha);
-				});
-			} else {
-				this._blitToScreen(pWidth, pHeight, alpha);
-			}
-		}
+			float vx = (float) window.getGuiScaledWidth();
+			float vy = (float) window.getGuiScaledHeight();
+			float tx = (float) viewWidth / (float) width;
+			float ty = (float) viewHeight / (float) height;
 
-		private void _blitToScreen(int pWidth, int pHeight, float alpha) {
-			RenderSystem.assertThread(RenderSystem::isOnRenderThread);
+			RenderSystem.enableTexture();
+			RenderSystem.enableDepthTest();
+			RenderSystem.setShader(() -> Minecraft.getInstance().gameRenderer.blitShader);
+			RenderSystem.getShader().setSampler("DiffuseSampler", colorTextureId);
 
-			GlStateManager._enableDepthTest();
-			GlStateManager._viewport(0, 0, pWidth, pHeight);
+			bindRead();
 
-			Minecraft minecraft = Minecraft.getInstance();
-			ShaderInstance shaderinstance = minecraft.gameRenderer.blitShader;
-			shaderinstance.setSampler("DiffuseSampler", this.colorTextureId);
-			Matrix4f matrix4f = Matrix4f.orthographic((float)pWidth, (float)(-pHeight), 1000.0F, 3000.0F);
-			RenderSystem.setProjectionMatrix(matrix4f);
-			if (shaderinstance.MODEL_VIEW_MATRIX != null) {
-				shaderinstance.MODEL_VIEW_MATRIX.set(Matrix4f.createTranslateMatrix(0.0F, 0.0F, -2000.0F));
-			}
-			if (shaderinstance.PROJECTION_MATRIX != null) {
-				shaderinstance.PROJECTION_MATRIX.set(matrix4f);
-			}
-			shaderinstance.apply();
+			Tesselator tessellator = Tesselator.getInstance();
+			BufferBuilder bufferbuilder = tessellator.getBuilder();
+			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
-			float f = (float)pWidth;
-			float f1 = (float)pHeight;
-			float f2 = (float)this.viewWidth / (float)this.width;
-			float f3 = (float)this.viewHeight / (float)this.height;
+			bufferbuilder.vertex(0, vy, 0).color(1, 1, 1, alpha).uv(0, 0).endVertex();
+			bufferbuilder.vertex(vx, vy, 0).color(1, 1, 1, alpha).uv(tx, 0).endVertex();
+			bufferbuilder.vertex(vx, 0, 0).color(1, 1, 1, alpha).uv(tx, ty).endVertex();
+			bufferbuilder.vertex(0, 0, 0).color(1, 1, 1, alpha).uv(0, ty).endVertex();
 
-			Tesselator tesselator = RenderSystem.renderThreadTesselator();
-			BufferBuilder bufferbuilder = tesselator.getBuilder();
-			bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-			bufferbuilder.vertex(0.0D, (double)f1, 0.0D).uv(0.0F, 0.0F).color(1, 1, 1, alpha).endVertex();
-			bufferbuilder.vertex((double)f, (double)f1, 0.0D).uv(f2, 0.0F).color(1, 1, 1, alpha).endVertex();
-			bufferbuilder.vertex((double)f, 0.0D, 0.0D).uv(f2, f3).color(1, 1, 1, alpha).endVertex();
-			bufferbuilder.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, f3).color(1, 1, 1, alpha).endVertex();
-			bufferbuilder.end();
-			BufferUploader._endInternal(bufferbuilder);
-
-			shaderinstance.clear();
+			tessellator.end();
+			unbindRead();
 		}
 
 	}
