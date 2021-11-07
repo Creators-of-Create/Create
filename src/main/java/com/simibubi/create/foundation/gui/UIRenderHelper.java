@@ -30,10 +30,7 @@ public class UIRenderHelper {
 	public static void init() {
 		RenderSystem.recordRenderCall(() -> {
 			Window mainWindow = Minecraft.getInstance().getWindow();
-			framebuffer = new CustomRenderTarget(true);
-			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
-			framebuffer.setClearColor(0, 0, 0, 0);
-			framebuffer.enableStencil();
+			framebuffer = CustomRenderTarget.create(mainWindow);
 		});
 	}
 
@@ -262,7 +259,7 @@ public class UIRenderHelper {
 		}
 
 		public static CustomRenderTarget create(Window mainWindow) {
-			CustomRenderTarget framebuffer = new CustomRenderTarget(false);
+			CustomRenderTarget framebuffer = new CustomRenderTarget(true);
 			framebuffer.resize(mainWindow.getWidth(), mainWindow.getHeight(), Minecraft.ON_OSX);
 			framebuffer.setClearColor(0, 0, 0, 0);
 			framebuffer.enableStencil();

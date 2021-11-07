@@ -71,6 +71,12 @@ public class ConfigHelper {
 		return true;
 	}
 
+	public static boolean hasAnyForgeConfig(String modID) {
+		if (!modID.equals(Create.ID))
+			return configCache.getUnchecked(modID).values().stream().anyMatch(config -> config.getSpec() instanceof ForgeConfigSpec);
+		return true;
+	}
+
 	// Directly set a value
 	public static <T> void setConfigValue(ConfigPath path, String value) throws InvalidValueException {
 		ForgeConfigSpec spec = findForgeConfigSpecFor(path.getType(), path.getModID());

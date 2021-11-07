@@ -223,6 +223,11 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 		buffer.writeNbt(getUpdateTag());
 	}
 
+	@SuppressWarnings("deprecation")
+	public void refreshBlockState() {
+		setBlockState(getLevel().getBlockState(getBlockPos()));
+	}
+
 	public Level getWorld() {
 		return getLevel();
 	}

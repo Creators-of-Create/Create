@@ -115,7 +115,7 @@ public class ConfigModListScreen extends ConfigScreen {
 					.showingElement(AllIcons.I_CONFIG_OPEN.asStencil().at(10, 0));
 			button.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(button)));
 
-			if (ConfigHelper.hasAnyConfig(id)) {
+			if (ConfigHelper.hasAnyForgeConfig(id)) {
 				button.withCallback(() -> ScreenOpener.open(new BaseConfigScreen(parent, id)));
 			} else {
 				button.active = false;

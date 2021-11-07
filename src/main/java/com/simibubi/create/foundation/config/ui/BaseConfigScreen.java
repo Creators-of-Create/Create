@@ -95,7 +95,7 @@ public class BaseConfigScreen extends ConfigScreen {
 	 * please use {@link #withSpecs(ForgeConfigSpec, ForgeConfigSpec, ForgeConfigSpec)} instead
 	 */
 	public BaseConfigScreen searchForSpecsInModContainer() {
-		if (!ConfigHelper.hasAnyConfig(this.modID)){
+		if (!ConfigHelper.hasAnyForgeConfig(this.modID)){
 			return this;
 		}
 

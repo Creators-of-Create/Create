@@ -113,7 +113,7 @@ public class SeatBlock extends Block {
 			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color)
 				.getDefaultState());
 			world.setBlockAndUpdate(pos, newState);
-			return InteractionResult.sidedSuccess(world.isClientSide);
+			return InteractionResult.SUCCESS;
 		}
 
 		List<SeatEntity> seats = world.getEntitiesOfClass(SeatEntity.class, new AABB(pos));
