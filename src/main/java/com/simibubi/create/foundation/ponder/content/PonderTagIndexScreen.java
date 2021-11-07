@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AllIcons;
@@ -205,12 +206,19 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+		RenderSystem.disableDepthTest();
+		ms.pushPose();
+		ms.translate(0, 0, 200);
+
 		if (hoveredItem != null) {
 			List<Component> list = TooltipHelper.cutStringTextComponent(hoveredItem.getDescription(),
 				ChatFormatting.GRAY, ChatFormatting.GRAY);
 			list.add(0, new TextComponent(hoveredItem.getTitle()));
 			renderComponentTooltip(ms, list, mouseX, mouseY);
 		}
+
+		ms.popPose();
+		RenderSystem.enableDepthTest();
 	}
 
 	@Override

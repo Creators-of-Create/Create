@@ -429,6 +429,7 @@ public class PonderUI extends NavigatableSimiScreen {
 		RenderSystem.enableDepthTest();
 
 //		RenderSystem.pushMatrix();
+		// TODO 1.17: is the following still true?
 		// has to be outside of MS transforms, important for vertex sorting
 //		RenderSystem.translated(0, 0, 800);
 

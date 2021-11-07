@@ -121,7 +121,7 @@ public class UIRenderHelper {
 	/**
 	 * x and y specify the middle point of the starting edge
 	 *
-	 * @param angle	the angle of the gradient in degrees; 0° means from left to right
+	 * @param angle   the angle of the gradient in degrees; 0° means from left to right
 	 * @param color1  the color at the starting edge
 	 * @param color2  the color at the ending edge
 	 * @param breadth the total width of the gradient
@@ -153,13 +153,13 @@ public class UIRenderHelper {
 	private static void breadcrumbArrow(PoseStack ms, int width, int height, int indent, Color c1, Color c2) {
 
 		/*
-		 * 0,0		 x1,y1 ********************* x4,y4 ***** x7,y7
-		 *		 ****												 ****
-		 *	****												 ****
-		 * x0,y0	  x2,y2							  x5,y5
-		 *	****												 ****
-		 *		 ****												 ****
-		 *			  x3,y3 ********************* x6,y6 ***** x8,y8
+		 * 0,0       x1,y1 ********************* x4,y4 ***** x7,y7
+		 *       ****                                     ****
+		 *   ****                                     ****
+		 * x0,y0     x2,y2                       x5,y5
+		 *   ****                                     ****
+		 *       ****                                     ****
+		 *           x3,y3 ********************* x6,y6 ***** x8,y8
 		 *
 		 */
 

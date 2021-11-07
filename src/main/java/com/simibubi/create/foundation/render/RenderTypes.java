@@ -35,6 +35,7 @@ public class RenderTypes extends RenderStateShard {
 				.setCullState(cull ? CULL : NO_CULL)
 				.setLightmapState(LIGHTMAP)
 				.setOverlayState(OVERLAY)
+				.setWriteMaskState(COLOR_WRITE)
 				.createCompositeState(true));
 	}
 

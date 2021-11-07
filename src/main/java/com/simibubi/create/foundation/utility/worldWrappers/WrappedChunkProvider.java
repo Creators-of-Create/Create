@@ -79,7 +79,6 @@ public class WrappedChunkProvider extends ChunkSource {
 
 	@Override
 	public int getLoadedChunksCount() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }

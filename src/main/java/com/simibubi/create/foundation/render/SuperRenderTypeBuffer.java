@@ -15,17 +15,15 @@ import net.minecraft.client.resources.model.ModelBakery;
 
 public class SuperRenderTypeBuffer implements MultiBufferSource {
 
-	static SuperRenderTypeBuffer instance;
+	private static final SuperRenderTypeBuffer INSTANCE = new SuperRenderTypeBuffer();;
 
 	public static SuperRenderTypeBuffer getInstance() {
-		if (instance == null)
-			instance = new SuperRenderTypeBuffer();
-		return instance;
+		return INSTANCE;
 	}
 
-	SuperRenderTypeBufferPhase earlyBuffer;
-	SuperRenderTypeBufferPhase defaultBuffer;
-	SuperRenderTypeBufferPhase lateBuffer;
+	private SuperRenderTypeBufferPhase earlyBuffer;
+	private SuperRenderTypeBufferPhase defaultBuffer;
+	private SuperRenderTypeBufferPhase lateBuffer;
 
 	public SuperRenderTypeBuffer() {
 		earlyBuffer = new SuperRenderTypeBufferPhase();
@@ -34,63 +32,62 @@ public class SuperRenderTypeBuffer implements MultiBufferSource {
 	}
 
 	public VertexConsumer getEarlyBuffer(RenderType type) {
-		return earlyBuffer.getBuffer(type);
+		return earlyBuffer.bufferSource.getBuffer(type);
 	}
 
 	@Override
 	public VertexConsumer getBuffer(RenderType type) {
-		return defaultBuffer.getBuffer(type);
+		return defaultBuffer.bufferSource.getBuffer(type);
 	}
 
 	public VertexConsumer getLateBuffer(RenderType type) {
-		return lateBuffer.getBuffer(type);
+		return lateBuffer.bufferSource.getBuffer(type);
 	}
 
 	public void draw() {
-		earlyBuffer.endBatch();
-		defaultBuffer.endBatch();
-		lateBuffer.endBatch();
+		earlyBuffer.bufferSource.endBatch();
+		defaultBuffer.bufferSource.endBatch();
+		lateBuffer.bufferSource.endBatch();
 	}
 
 	public void draw(RenderType type) {
-		earlyBuffer.endBatch(type);
-		defaultBuffer.endBatch(type);
-		lateBuffer.endBatch(type);
+		earlyBuffer.bufferSource.endBatch(type);
+		defaultBuffer.bufferSource.endBatch(type);
+		lateBuffer.bufferSource.endBatch(type);
 	}
 
-	private static class SuperRenderTypeBufferPhase extends MultiBufferSource.BufferSource {
+	private static class SuperRenderTypeBufferPhase {
 
-		// Visible clones from net.minecraft.client.renderer.RenderTypeBuffers
-		static final ChunkBufferBuilderPack blockBuilders = new ChunkBufferBuilderPack();
-
-		static final SortedMap<RenderType, BufferBuilder> createEntityBuilders() {
-			return Util.make(new Object2ObjectLinkedOpenHashMap<>(), (map) -> {
-				map.put(Sheets.solidBlockSheet(), blockBuilders.builder(RenderType.solid()));
-				assign(map, RenderTypes.getOutlineSolid());
-				map.put(Sheets.cutoutBlockSheet(), blockBuilders.builder(RenderType.cutout()));
-				map.put(Sheets.bannerSheet(), blockBuilders.builder(RenderType.cutoutMipped()));
-				map.put(Sheets.translucentCullBlockSheet(), blockBuilders.builder(RenderType.translucent())); // FIXME new equivalent of getEntityTranslucent() ?
-				assign(map, Sheets.shieldSheet());
-				assign(map, Sheets.bedSheet());
-				assign(map, Sheets.shulkerBoxSheet());
-				assign(map, Sheets.signSheet());
-				assign(map, Sheets.chestSheet());
-				assign(map, RenderType.translucentNoCrumbling());
-				assign(map, RenderType.glint());
-				assign(map, RenderType.entityGlint());
-				assign(map, RenderType.waterMask());
-				ModelBakery.DESTROY_TYPES.forEach((p_228488_1_) -> {
-					assign(map, p_228488_1_);
+		// Visible clones from RenderBuffers
+		private final ChunkBufferBuilderPack fixedBufferPack = new ChunkBufferBuilderPack();
+		private final SortedMap<RenderType, BufferBuilder> fixedBuffers = Util.make(new Object2ObjectLinkedOpenHashMap<>(), map -> {
+				map.put(Sheets.solidBlockSheet(), fixedBufferPack.builder(RenderType.solid()));
+				map.put(Sheets.cutoutBlockSheet(), fixedBufferPack.builder(RenderType.cutout()));
+				map.put(Sheets.bannerSheet(), fixedBufferPack.builder(RenderType.cutoutMipped()));
+				map.put(Sheets.translucentCullBlockSheet(), fixedBufferPack.builder(RenderType.translucent()));
+				put(map, Sheets.shieldSheet());
+				put(map, Sheets.bedSheet());
+				put(map, Sheets.shulkerBoxSheet());
+				put(map, Sheets.signSheet());
+				put(map, Sheets.chestSheet());
+				put(map, RenderType.translucentNoCrumbling());
+				put(map, RenderType.armorGlint());
+				put(map, RenderType.armorEntityGlint());
+				put(map, RenderType.glint());
+				put(map, RenderType.glintDirect());
+				put(map, RenderType.glintTranslucent());
+				put(map, RenderType.entityGlint());
+				put(map, RenderType.entityGlintDirect());
+				put(map, RenderType.waterMask());
+				put(map, RenderTypes.getOutlineSolid());
+				ModelBakery.DESTROY_TYPES.forEach((p_173062_) -> {
+					put(map, p_173062_);
 				});
 			});
-		}
+		private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediateWithBuffers(fixedBuffers, new BufferBuilder(256));
 
-		private static void assign(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, RenderType type) {
+		private static void put(Object2ObjectLinkedOpenHashMap<RenderType, BufferBuilder> map, RenderType type) {
 			map.put(type, new BufferBuilder(type.bufferSize()));
-		}
-
-		protected SuperRenderTypeBufferPhase() {
-			super(new BufferBuilder(256), createEntityBuilders());
 		}
 
 	}
