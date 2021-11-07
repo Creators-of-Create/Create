@@ -29,6 +29,7 @@ import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -60,8 +61,19 @@ public class SeatBlock extends Block {
 	@Override
 	public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
 		BlockPos pos = entity.blockPosition();
-		if (entity instanceof Player || !(entity instanceof LivingEntity) || !canBePickedUp(entity) || isSeatOccupied(entity.level, pos)) {
-			super.updateEntityAfterFallOn(reader, entity);
+		if (entity instanceof Player || !(entity instanceof LivingEntity) || !canBePickedUp(entity)
+			|| isSeatOccupied(entity.level, pos)) {
+			if (entity.isSuppressingBounce()) {
+				super.updateEntityAfterFallOn(reader, entity);
+				return;
+			}
+
+			Vec3 vec3 = entity.getDeltaMovement();
+			if (vec3.y < 0.0D) {
+				double d0 = entity instanceof LivingEntity ? 1.0D : 0.8D;
+				entity.setDeltaMovement(vec3.x, -vec3.y * (double) 0.66F * d0, vec3.z);
+			}
+
 			return;
 		}
 		if (reader.getBlockState(pos)
@@ -71,8 +83,7 @@ public class SeatBlock extends Block {
 	}
 
 	@Override
-	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos,
-		@Nullable Mob entity) {
+	public BlockPathTypes getAiPathNodeType(BlockState state, BlockGetter world, BlockPos pos, @Nullable Mob entity) {
 		return BlockPathTypes.RAIL;
 	}
 
@@ -99,7 +110,8 @@ public class SeatBlock extends Block {
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;
-			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color).getDefaultState());
+			BlockState newState = BlockHelper.copyProperties(state, AllBlocks.SEATS.get(color)
+				.getDefaultState());
 			world.setBlockAndUpdate(pos, newState);
 			return InteractionResult.sidedSuccess(world.isClientSide);
 		}
@@ -136,7 +148,7 @@ public class SeatBlock extends Block {
 		if (world.isClientSide)
 			return;
 		SeatEntity seat = new SeatEntity(world, pos);
-		seat.setPosRaw(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
+		seat.setPos(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
 		world.addFreshEntity(seat);
 		entity.startRiding(seat, true);
 	}

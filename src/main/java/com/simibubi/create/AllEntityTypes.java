@@ -52,7 +52,7 @@ public class AllEntityTypes {
 			MobCategory.MISC, 4, 20, true, false, PotatoProjectileEntity::build).register();
 
 	public static final EntityEntry<SeatEntity> SEAT = register("seat", SeatEntity::new, () -> SeatEntity.Render::new,
-		MobCategory.MISC, 0, Integer.MAX_VALUE, false, true, SeatEntity::build).register();
+		MobCategory.MISC, 5, Integer.MAX_VALUE, false, true, SeatEntity::build).register();
 
 	//
 

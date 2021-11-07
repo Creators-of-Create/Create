@@ -303,7 +303,7 @@ public class ClientEvents {
 
 		if (FluidHelper.isWater(fluid) && AllItems.DIVING_HELMET.get()
 			.isWornBy(Minecraft.getInstance().cameraEntity)) {
-			event.setDensity(0.010f);
+			event.setDensity(300f);
 			event.setCanceled(true);
 			return;
 		}

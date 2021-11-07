@@ -12,6 +12,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -35,7 +36,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 		EntityType.Builder<SeatEntity> entityBuilder = (EntityType.Builder<SeatEntity>) builder;
 		return entityBuilder.sized(0.25f, 0.35f);
 	}
-	
+
 	@Override
 	public void setPos(double x, double y, double z) {
 		super.setPos(x, y, z);
@@ -49,7 +50,7 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	@Override
 	public void tick() {
-		if (level.isClientSide) 
+		if (level.isClientSide)
 			return;
 		boolean blockPresent = level.getBlockState(blockPosition())
 			.getBlock() instanceof SeatBlock;
@@ -60,15 +61,19 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 
 	@Override
 	protected boolean canRide(Entity entity) {
-		// Fake Players (tested with deployers) have a BUNCH of weird issues, don't let them ride seats
+		// Fake Players (tested with deployers) have a BUNCH of weird issues, don't let
+		// them ride seats
 		return !(entity instanceof FakePlayer);
 	}
 
 	@Override
 	protected void removePassenger(Entity entity) {
 		super.removePassenger(entity);
-		Vec3 pos = entity.position();
-		entity.setPos(pos.x, pos.y + 0.85f, pos.z);
+	}
+
+	@Override
+	public Vec3 getDismountLocationForPassenger(LivingEntity pLivingEntity) {
+		return super.getDismountLocationForPassenger(pLivingEntity).add(0, 0.5f, 0);
 	}
 
 	@Override
@@ -92,7 +97,8 @@ public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
 		}
 
 		@Override
-		public boolean shouldRender(SeatEntity p_225626_1_, Frustum p_225626_2_, double p_225626_3_, double p_225626_5_, double p_225626_7_) {
+		public boolean shouldRender(SeatEntity p_225626_1_, Frustum p_225626_2_, double p_225626_3_, double p_225626_5_,
+			double p_225626_7_) {
 			return false;
 		}
 
