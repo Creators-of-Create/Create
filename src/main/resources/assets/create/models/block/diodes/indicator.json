@@ -1,6 +1,6 @@
 {
     "textures": {
-        "flexpeater_off": "create:block/diodes/adjustable_repeater/idle"
+        "flexpeater_off": "create:block/diodes/pulse_repeater/idle"
     },
     "elements": [
         {

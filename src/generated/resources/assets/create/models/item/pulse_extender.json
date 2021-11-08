@@ -1,0 +1,6 @@
+{
+  "parent": "create:block/diodes/pulse_extender",
+  "textures": {
+    "top": "create:block/diodes/pulse_extender/item"
+  }
+}

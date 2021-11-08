@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 45",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "Панель из акациевого окна",
 	"block.create.adjustable_chain_gearshift": "Регулируемый цепной механизм",
 	"block.create.adjustable_crate": "Регулируемый ящик",
-	"block.create.adjustable_pulse_repeater": "Регулируемый импульсный повторитель",
-	"block.create.adjustable_repeater": "Регулируемый повторитель",
 	"block.create.analog_lever": "Аналоговый рычаг",
 	"block.create.andesite_belt_funnel": "Андезитовая конвейерная воронка",
 	"block.create.andesite_bricks": "Андезитовый кирпич",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "Питаемый рычаг",
 	"block.create.powered_toggle_latch": "Питаемый рычаг-переключатель",
 	"block.create.pulley_magnet": "Магнитный шкив",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "Импульсный повторитель",
 	"block.create.purple_nixie_tube": "Фиолетовый газоразрядный индикатор",
 	"block.create.purple_sail": "Фиолетовый парус",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "Транспортировка предметов",
 	"create.ponder.tag.logistics.description": "Компоненты, помогающие перемещать предметы",
 
-	"create.ponder.adjustable_pulse_repeater.header": "Управлении сигналами с помощью Регулируемого импульсного повторителя",
-	"create.ponder.adjustable_pulse_repeater.text_1": "Регулируемые импульсные повторители испускают короткий импульс с задержкой",
-	"create.ponder.adjustable_pulse_repeater.text_2": "Используя колесо мыши, время зарядки может быть настроено",
-	"create.ponder.adjustable_pulse_repeater.text_3": "Настраиваемая задержка может достигать 30 минут",
-
-	"create.ponder.adjustable_repeater.header": "Управлении сигналами с помощью Регулируемого повторителя",
-	"create.ponder.adjustable_repeater.text_1": "Регулируемые повторители ведут себя схожим образом с обычными Повторителями",
-	"create.ponder.adjustable_repeater.text_2": "Они заряжаются за заданное время...",
-	"create.ponder.adjustable_repeater.text_3": "...и разряжаются за столько же времени",
-	"create.ponder.adjustable_repeater.text_4": "Используя колесо мыши, время зарядки может быть настроено",
-	"create.ponder.adjustable_repeater.text_5": "Настраиваемая задержка может достигать 30 минут",
-
 	"create.ponder.analog_lever.header": "Управлении сигналами используя Аналоговый рычаг",
 	"create.ponder.analog_lever.text_1": "Аналоговый рычаг создан как компактный и точный источник Редстоун сигнала",
 	"create.ponder.analog_lever.text_2": "ПКМ, чтобы увеличить силу выходного сигнала",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "Сигналы сзади переключают его состояние",
 	"create.ponder.powered_toggle_latch.text_3": "...включают и снова выключают",
 	"create.ponder.powered_toggle_latch.text_4": "Питаемые рычаги-переключатели также можно переключать вручную",
-
-	"create.ponder.pulse_repeater.header": "Управлении сигналами при помощи Импульсных повторителей",
-	"create.ponder.pulse_repeater.text_1": "Импульсные повторители укоротят любой редстуон сигнал до одного импульса.",
 
 	"create.ponder.radial_chassis.header": "Присоединении блоков при помощи Радиальных шасси",
 	"create.ponder.radial_chassis.text_1": "Радиальное шасси соединяются с идентичными блоками шасси в ряд",

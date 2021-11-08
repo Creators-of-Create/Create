@@ -3,9 +3,9 @@
 	"parent": "block/block",
 	"textures": {
 		"4": "create:block/diodes/brass_diode_base",
-		"particle": "create:block/diodes/brass_diode_base",
-		"top": "create:block/diodes/pulse_repeater/idle",
-		"torch": "block/redstone_torch_off"
+		"top": "create:block/diodes/pulse_extender/idle",
+		"torch": "block/redstone_torch_off",
+		"particle": "create:block/diodes/brass_diode_base"
 	},
 	"elements": [
 		{
@@ -35,8 +35,8 @@
 		},
 		{
 			"name": "Front Torch",
-			"from": [6, 2, 1],
-			"to": [10, 8, 3],
+			"from": [3, 1, 1],
+			"to": [7, 7, 3],
 			"faces": {
 				"north": {"uv": [6, 5, 10, 11], "texture": "#torch"},
 				"south": {"uv": [6, 5, 10, 11], "texture": "#torch"}
@@ -44,8 +44,8 @@
 		},
 		{
 			"name": "Front Torch",
-			"from": [7, 2, 0],
-			"to": [9, 8, 4],
+			"from": [4, 1, 0],
+			"to": [6, 7, 4],
 			"faces": {
 				"east": {"uv": [6, 5, 10, 11], "texture": "#torch"},
 				"west": {"uv": [6, 5, 10, 11], "texture": "#torch"}
@@ -53,8 +53,34 @@
 		},
 		{
 			"name": "Front Torch Top",
-			"from": [7, 6, 1],
-			"to": [9, 7, 3],
+			"from": [4, 5, 1],
+			"to": [6, 6, 3],
+			"faces": {
+				"up": {"uv": [7, 6, 9, 8], "texture": "#torch"}
+			}
+		},
+		{
+			"name": "Front Torch",
+			"from": [9, 1, 1],
+			"to": [13, 7, 3],
+			"faces": {
+				"north": {"uv": [6, 5, 10, 11], "texture": "#torch"},
+				"south": {"uv": [6, 5, 10, 11], "texture": "#torch"}
+			}
+		},
+		{
+			"name": "Front Torch",
+			"from": [10, 1, 0],
+			"to": [12, 7, 4],
+			"faces": {
+				"east": {"uv": [6, 5, 10, 11], "texture": "#torch"},
+				"west": {"uv": [6, 5, 10, 11], "texture": "#torch"}
+			}
+		},
+		{
+			"name": "Front Torch Top",
+			"from": [10, 5, 1],
+			"to": [12, 6, 3],
 			"faces": {
 				"up": {"uv": [7, 6, 9, 8], "texture": "#torch"}
 			}

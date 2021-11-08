@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 63",
+	"_": "Missing Localizations: 64",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "아카시아나무 유리판 ",
 	"block.create.adjustable_chain_gearshift": "벨트 변속기",
 	"block.create.adjustable_crate": "가변 창고",
-	"block.create.adjustable_pulse_repeater": "가변 펄스 중계기",
-	"block.create.adjustable_repeater": "가변 중계기",
 	"block.create.analog_lever": "아날로그 레버",
 	"block.create.andesite_belt_funnel": "안산암 퍼널",
 	"block.create.andesite_bricks": "안산암 벽돌",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "레드스톤 걸쇠",
 	"block.create.powered_toggle_latch": "레드스톤 토글 걸쇠",
 	"block.create.pulley_magnet": "도르래 자석",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "펄스 중계기",
 	"block.create.purple_nixie_tube": "보라샥 닉시관",
 	"block.create.purple_sail": "보라색 날개",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "아이템 수송",
 	"create.ponder.tag.logistics.description": "아이템을 옮기는데 도움을 줄 부품입니다.",
 
-	"create.ponder.adjustable_pulse_repeater.header": "가변 펄스 중계기를 이용해 신호 조절하기",
-	"create.ponder.adjustable_pulse_repeater.text_1": "가변 펄스 중계기는 딜레이 이후 짧은 신호를 보냅니다.",
-	"create.ponder.adjustable_pulse_repeater.text_2": "마우스 휠을 이용하여 딜레이를 조절합니다.",
-	"create.ponder.adjustable_pulse_repeater.text_3": "딜레이는 최대 30분까지 조절할 수 있습니다.",
-
-	"create.ponder.adjustable_repeater.header": "가변 중계기를 이용해 신호 조절하기",
-	"create.ponder.adjustable_repeater.text_1": "가변 중계기는 기존 중계기와 비슷합니다.",
-	"create.ponder.adjustable_repeater.text_2": "정해진 딜레이만큼 신호를 주고...",
-	"create.ponder.adjustable_repeater.text_3": "...정해진 딜레이만큼 쉽니다.",
-	"create.ponder.adjustable_repeater.text_4": "마우스 휠을 이용해 딜레이를 조절합니다.",
-	"create.ponder.adjustable_repeater.text_5": "딜레이는 최대 30분까지 조절할 수 있습니다.",
-
 	"create.ponder.analog_lever.header": "아날로그 레버를 이용해 신호 조절하기",
 	"create.ponder.analog_lever.text_1": "아날로그 레버는 정확하고 간편하게 레드스톤 신호의 세기를 조절합니다.",
 	"create.ponder.analog_lever.text_2": "우클릭으로 세기를 높입니다.",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "뒤에서 오는 신호는 걸쇠의 신호를 킵니다.",
 	"create.ponder.powered_toggle_latch.text_3": "혹은 끕니다.",
 	"create.ponder.powered_toggle_latch.text_4": "레드스톤 토글 걸쇠는 직접 끄고 킬 수도 있습니다.",
-
-	"create.ponder.pulse_repeater.header": "펄스 중계기 사용하기",
-	"create.ponder.pulse_repeater.text_1": "펄스 중계기는 어느 레드스톤 신호라도 1틱 신호로 바꿉니다.",
 
 	"create.ponder.radial_chassis.header": "원형 섀시를 이용해 블록 붙이기",
 	"create.ponder.radial_chassis.text_1": "원형 섀시는 다른 원형 섀시와 이어집니다.",

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 58",
+	"_": "Missing Localizations: 59",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "相思木窗戶片",
 	"block.create.adjustable_chain_gearshift": "可調式鏈式變速箱",
 	"block.create.adjustable_crate": "可調式板條箱",
-	"block.create.adjustable_pulse_repeater": "可調式脈衝中繼器",
-	"block.create.adjustable_repeater": "可調式中繼器",
 	"block.create.analog_lever": "可調式拉桿",
 	"block.create.andesite_belt_funnel": "安山岩輸送帶漏斗",
 	"block.create.andesite_bricks": "安山岩磚",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "閂鎖器",
 	"block.create.powered_toggle_latch": "T型正反器",
 	"block.create.pulley_magnet": "滑輪磁鐵",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "脈衝中繼器",
 	"block.create.purple_nixie_tube": "紫色真空管",
 	"block.create.purple_sail": "紫色風帆",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "傳輸物品",
 	"create.ponder.tag.logistics.description": "該裝置用於物品的傳輸",
 
-	"create.ponder.adjustable_pulse_repeater.header": "使用可調式脈衝中繼器來控制訊號",
-	"create.ponder.adjustable_pulse_repeater.text_1": "可調式脈衝中繼器每次運作時會產生一個短脈衝",
-	"create.ponder.adjustable_pulse_repeater.text_2": "使用滑鼠滾輪來設定啟動後到產生脈衝的延遲",
-	"create.ponder.adjustable_pulse_repeater.text_3": "延遲可設定到最大30分鐘",
-
-	"create.ponder.adjustable_repeater.header": "使用可調式中繼器來控制訊號",
-	"create.ponder.adjustable_repeater.text_1": "可調式中繼器就像一般的中繼器",
-	"create.ponder.adjustable_repeater.text_2": "收到訊號後在設定好的時間過後才啟動...",
-	"create.ponder.adjustable_repeater.text_3": "...訊號停止後也需要相隔同樣的時間過後才會停止",
-	"create.ponder.adjustable_repeater.text_4": "使用滑鼠滾輪來設定延遲",
-	"create.ponder.adjustable_repeater.text_5": "延遲可設定到最大30分鐘",
-
 	"create.ponder.analog_lever.header": "使用可調式拉桿來控制訊號",
 	"create.ponder.analog_lever.text_1": "可調式拉桿是一種小巧而輕準的紅石能源",
 	"create.ponder.analog_lever.text_2": "右鍵來增加其紅石訊號輸出",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "後方訊號輸入可以改變它的狀態",
 	"create.ponder.powered_toggle_latch.text_3": "...開啟或者是關閉",
 	"create.ponder.powered_toggle_latch.text_4": "你也可以手動切換其狀態",
-
-	"create.ponder.pulse_repeater.header": "使用脈衝中繼器控制訊號",
-	"create.ponder.pulse_repeater.text_1": "脈衝中繼器會將所有通入的紅石訊號縮減為一次脈衝",
 
 	"create.ponder.radial_chassis.header": "使用旋轉底盤黏著方塊",
 	"create.ponder.radial_chassis.text_1": "同一行上的旋轉底盤會相互連接在一起",

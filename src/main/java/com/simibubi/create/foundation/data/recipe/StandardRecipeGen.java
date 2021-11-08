@@ -855,24 +855,21 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("RCI")
 				.pattern(" B ")),
 
-		ADJUSTABLE_REPEATER = create(AllBlocks.ADJUSTABLE_REPEATER).unlockedByTag(I::redstone)
+		PULSE_EXTENDER = create(AllBlocks.PULSE_EXTENDER).unlockedByTag(I::redstone)
 			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
-				.define('C', Items.CLOCK)
+				.define('C', I.brassSheet())
 				.define('R', I.redstone())
 				.define('S', I.stone())
+				.pattern("  T")
 				.pattern("RCT")
 				.pattern("SSS")),
 
-		ADJUSTABLE_PULSE_REPEATER = create(AllBlocks.ADJUSTABLE_PULSE_REPEATER).unlockedByTag(I::redstone)
-			.viaShaped(b -> b.define('S', AllBlocks.PULSE_REPEATER.get())
-				.define('P', AllBlocks.ADJUSTABLE_REPEATER.get())
-				.pattern("SP")),
-
 		PULSE_REPEATER = create(AllBlocks.PULSE_REPEATER).unlockedByTag(I::redstone)
 			.viaShaped(b -> b.define('T', Blocks.REDSTONE_TORCH)
+				.define('C', I.brassSheet())
 				.define('R', I.redstone())
 				.define('S', I.stone())
-				.pattern("RRT")
+				.pattern("RCT")
 				.pattern("SSS")),
 
 		POWERED_TOGGLE_LATCH = create(AllBlocks.POWERED_TOGGLE_LATCH).unlockedByTag(I::redstone)

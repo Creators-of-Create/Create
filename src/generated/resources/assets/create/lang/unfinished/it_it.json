@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 953",
+	"_": "Missing Localizations: 942",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "Pannello di finestra di acacia",
 	"block.create.adjustable_chain_gearshift": "Cambio a catena regolabile",
 	"block.create.adjustable_crate": "Baule regolabile",
-	"block.create.adjustable_pulse_repeater": "Ripetitore di impulsi regolabile",
-	"block.create.adjustable_repeater": "Ripetitore regolabile",
 	"block.create.analog_lever": "Leva analogica",
 	"block.create.andesite_belt_funnel": "Imbuto per nastro di andesite",
 	"block.create.andesite_bricks": "Mattoni di andesite",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "Leva alimentata",
 	"block.create.powered_toggle_latch": "Leva alimentata alterata",
 	"block.create.pulley_magnet": "Magnete della carrucola",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "Ripetitore di impulsi",
 	"block.create.purple_nixie_tube": "UNLOCALIZED: Purple Nixie Tube",
 	"block.create.purple_sail": "Vela viola",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "UNLOCALIZED: Item Transportation",
 	"create.ponder.tag.logistics.description": "UNLOCALIZED: Components which help moving items around",
 
-	"create.ponder.adjustable_pulse_repeater.header": "UNLOCALIZED: Controlling signals using Adjustable Pulse Repeaters",
-	"create.ponder.adjustable_pulse_repeater.text_1": "UNLOCALIZED: Adjustable Pulse Repeaters emit a short pulse at a delay",
-	"create.ponder.adjustable_pulse_repeater.text_2": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
-	"create.ponder.adjustable_pulse_repeater.text_3": "UNLOCALIZED: Configured delays can range up to 30 minutes",
-
-	"create.ponder.adjustable_repeater.header": "UNLOCALIZED: Controlling signals using Adjustable Repeaters",
-	"create.ponder.adjustable_repeater.text_1": "UNLOCALIZED: Adjustable Repeaters behave similarly to regular Repeaters",
-	"create.ponder.adjustable_repeater.text_2": "UNLOCALIZED: They charge up for a set time...",
-	"create.ponder.adjustable_repeater.text_3": "UNLOCALIZED: ...and cool down for the same duration",
-	"create.ponder.adjustable_repeater.text_4": "UNLOCALIZED: Using the mouse wheel, the charge time can be configured",
-	"create.ponder.adjustable_repeater.text_5": "UNLOCALIZED: Configured delays can range up to 30 minutes",
-
 	"create.ponder.analog_lever.header": "UNLOCALIZED: Controlling signals using the Analog Lever",
 	"create.ponder.analog_lever.text_1": "UNLOCALIZED: Analog Levers make for a compact and precise source of redstone power",
 	"create.ponder.analog_lever.text_2": "UNLOCALIZED: Right-click to increase its analog power output",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "UNLOCALIZED: Signals at the back will toggle its state",
 	"create.ponder.powered_toggle_latch.text_3": "UNLOCALIZED: ...on and back off",
 	"create.ponder.powered_toggle_latch.text_4": "UNLOCALIZED: Powered toggle latches can also be toggled manually",
-
-	"create.ponder.pulse_repeater.header": "UNLOCALIZED: Controlling signals using Pulse Repeaters",
-	"create.ponder.pulse_repeater.text_1": "UNLOCALIZED: Pulse Repeaters will shorten any redstone signal to a single pulse",
 
 	"create.ponder.radial_chassis.header": "UNLOCALIZED: Attaching blocks using Radial Chassis",
 	"create.ponder.radial_chassis.text_1": "UNLOCALIZED: Radial Chassis connect to identical Chassis blocks in a row",

@@ -138,10 +138,10 @@ import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.depot.EjectorInstance;
 import com.simibubi.create.content.logistics.block.depot.EjectorRenderer;
 import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
-import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterInstance;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterRenderer;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.BrassDiodeInstance;
+import com.simibubi.create.content.logistics.block.diodes.BrassDiodeRenderer;
+import com.simibubi.create.content.logistics.block.diodes.PulseExtenderTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
@@ -651,19 +651,19 @@ public class AllTileEntities {
 		.renderer(() -> SmartTileEntityRenderer::new)
 		.register();
 
-	public static final TileEntityEntry<AdjustableRepeaterTileEntity> ADJUSTABLE_REPEATER = Create.registrate()
-		.tileEntity("adjustable_repeater", AdjustableRepeaterTileEntity::new)
-		.instance(() -> AdjustableRepeaterInstance::new)
-		.validBlocks(AllBlocks.ADJUSTABLE_REPEATER)
-		.renderer(() -> AdjustableRepeaterRenderer::new)
+	public static final TileEntityEntry<PulseExtenderTileEntity> PULSE_EXTENDER = Create.registrate()
+		.tileEntity("adjustable_repeater", PulseExtenderTileEntity::new)
+		.instance(() -> BrassDiodeInstance::new)
+		.validBlocks(AllBlocks.PULSE_EXTENDER)
+		.renderer(() -> BrassDiodeRenderer::new)
 		.register();
 
-	public static final TileEntityEntry<AdjustablePulseRepeaterTileEntity> ADJUSTABLE_PULSE_REPEATER =
+	public static final TileEntityEntry<PulseRepeaterTileEntity> PULSE_REPEATER =
 		Create.registrate()
-			.tileEntity("adjustable_pulse_repeater", AdjustablePulseRepeaterTileEntity::new)
-			.instance(() -> AdjustableRepeaterInstance::new)
-			.validBlocks(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
-			.renderer(() -> AdjustableRepeaterRenderer::new)
+			.tileEntity("adjustable_pulse_repeater", PulseRepeaterTileEntity::new)
+			.instance(() -> BrassDiodeInstance::new)
+			.validBlocks(AllBlocks.PULSE_REPEATER)
+			.renderer(() -> BrassDiodeRenderer::new)
 			.register();
 
 	public static final TileEntityEntry<LecternControllerTileEntity> LECTERN_CONTROLLER =

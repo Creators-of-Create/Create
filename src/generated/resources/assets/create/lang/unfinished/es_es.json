@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 39",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "Panel de ventana de acacia",
 	"block.create.adjustable_chain_gearshift": "Cadena de transmisión ajustable",
 	"block.create.adjustable_crate": "Caja ajustable",
-	"block.create.adjustable_pulse_repeater": "Repetidor de pulso ajustable",
-	"block.create.adjustable_repeater": "Repetidor ajustable",
 	"block.create.analog_lever": "Palanca analógica",
 	"block.create.andesite_belt_funnel": "Embudo de cinta de andesita",
 	"block.create.andesite_bricks": "Ladrillos de andesita",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "Palanca motorizada",
 	"block.create.powered_toggle_latch": "Palanca de cierre motorizada",
 	"block.create.pulley_magnet": "Imán de la polea",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "Repetidor de pulsos de redstone",
 	"block.create.purple_nixie_tube": "Tubo Nixie morado",
 	"block.create.purple_sail": "Vela morada",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "Transporte de objetos",
 	"create.ponder.tag.logistics.description": "Componentes que ayudan a desplazar los objetos",
 
-	"create.ponder.adjustable_pulse_repeater.header": "Controlar señales mediante repetidores de pulsos ajustables",
-	"create.ponder.adjustable_pulse_repeater.text_1": "Los repetidores de pulsos ajustables emiten un pulso corto con un retardo",
-	"create.ponder.adjustable_pulse_repeater.text_2": "Con la rueda del ratón se puede configurar el tiempo de carga",
-	"create.ponder.adjustable_pulse_repeater.text_3": "Los retrasos configurados pueden ser de hasta 30 minutos",
-
-	"create.ponder.adjustable_repeater.header": "Controlar señales mediante repetidores ajustables",
-	"create.ponder.adjustable_repeater.text_1": "Los repetidores ajustables se comportan de forma similar a los repetidores normales",
-	"create.ponder.adjustable_repeater.text_2": "Se cargan durante un tiempo determinado...",
-	"create.ponder.adjustable_repeater.text_3": "...y se enfrían durante el mismo tiempo",
-	"create.ponder.adjustable_repeater.text_4": "Con la rueda del ratón se puede configurar el tiempo de carga",
-	"create.ponder.adjustable_repeater.text_5": "Los retrasos configurados pueden variar hasta 30 minutos",
-
 	"create.ponder.analog_lever.header": "Controlar señales mediante la palanca analógica",
 	"create.ponder.analog_lever.text_1": "Las palancas analógicas son una fuente compacta y precisa de energía de redstone",
 	"create.ponder.analog_lever.text_2": "Haz clic derecho para aumentar su potencia analógica",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "Las señales en la parte trasera cambiarán su estado...",
 	"create.ponder.powered_toggle_latch.text_3": "...encender y apagar",
 	"create.ponder.powered_toggle_latch.text_4": "Las palancas de cierre motorizadas también se pueden accionar manualmente",
-
-	"create.ponder.pulse_repeater.header": "Controlar señales mediante repetidores de pulsos",
-	"create.ponder.pulse_repeater.text_1": "Los repetidores de pulsos acortan cualquier señal de redstone a un solo pulso",
 
 	"create.ponder.radial_chassis.header": "Fijar bloques mediante chasis radiales",
 	"create.ponder.radial_chassis.text_1": "Los chasis radiales se conectan a bloques de chasis idénticos en una fila",

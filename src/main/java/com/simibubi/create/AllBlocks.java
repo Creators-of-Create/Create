@@ -132,12 +132,10 @@ import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorItem;
 import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterGenerator;
+import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
+import com.simibubi.create.content.logistics.block.diodes.BrassDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchGenerator;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlock;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterGenerator;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
@@ -1339,33 +1337,25 @@ public class AllBlocks {
 			.transform(customItemModel())
 			.register();
 
-	public static final BlockEntry<PulseRepeaterBlock> PULSE_REPEATER =
-		REGISTRATE.block("pulse_repeater", PulseRepeaterBlock::new)
-			.initialProperties(() -> Blocks.REPEATER)
-			.blockstate(new PulseRepeaterGenerator()::generate)
-			.addLayer(() -> RenderType::cutoutMipped)
-			.item()
-			.transform(customItemModel("diodes", "pulse_repeater"))
-			.register();
-
-	public static final BlockEntry<AdjustableRepeaterBlock> ADJUSTABLE_REPEATER =
-		REGISTRATE.block("adjustable_repeater", AdjustableRepeaterBlock::new)
+	public static final BlockEntry<BrassDiodeBlock> PULSE_REPEATER =
+		REGISTRATE.block("pulse_repeater", BrassDiodeBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.blockstate(new AdjustableRepeaterGenerator()::generate)
+			.blockstate(new BrassDiodeGenerator()::generate)
+			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
-			.model(AbstractDiodeGenerator.diodeItemModel(true))
+			.model(AbstractDiodeGenerator::diodeItemModel)
 			.build()
 			.register();
 
-	public static final BlockEntry<AdjustableRepeaterBlock> ADJUSTABLE_PULSE_REPEATER =
-		REGISTRATE.block("adjustable_pulse_repeater", AdjustableRepeaterBlock::new)
+	public static final BlockEntry<BrassDiodeBlock> PULSE_EXTENDER =
+		REGISTRATE.block("pulse_extender", BrassDiodeBlock::new)
 			.initialProperties(() -> Blocks.REPEATER)
 			.tag(AllBlockTags.SAFE_NBT.tag)
-			.blockstate(new AdjustableRepeaterGenerator()::generate)
+			.blockstate(new BrassDiodeGenerator()::generate)
 			.addLayer(() -> RenderType::cutoutMipped)
 			.item()
-			.model(AbstractDiodeGenerator.diodeItemModel(true))
+			.model(AbstractDiodeGenerator::diodeItemModel)
 			.build()
 			.register();
 

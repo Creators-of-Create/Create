@@ -1,6 +1,0 @@
-{
-  "parent": "create:block/diodes/adjustable_repeater",
-  "textures": {
-    "top": "create:block/diodes/adjustable_repeater/item"
-  }
-}

@@ -6,8 +6,6 @@
 	"block.create.acacia_window_pane": "Acacia Window Pane",
 	"block.create.adjustable_chain_gearshift": "Adjustable Chain Gearshift",
 	"block.create.adjustable_crate": "Adjustable Crate",
-	"block.create.adjustable_pulse_repeater": "Adjustable Pulse Repeater",
-	"block.create.adjustable_repeater": "Adjustable Repeater",
 	"block.create.analog_lever": "Analog Lever",
 	"block.create.andesite_belt_funnel": "Andesite Belt Funnel",
 	"block.create.andesite_bricks": "Andesite Bricks",
@@ -366,6 +364,7 @@
 	"block.create.powered_latch": "Powered Latch",
 	"block.create.powered_toggle_latch": "Powered Toggle Latch",
 	"block.create.pulley_magnet": "Pulley Magnet",
+	"block.create.pulse_extender": "Pulse Extender",
 	"block.create.pulse_repeater": "Pulse Repeater",
 	"block.create.purple_nixie_tube": "Purple Nixie Tube",
 	"block.create.purple_sail": "Purple Sail",
@@ -1584,18 +1583,6 @@
 	"create.ponder.tag.logistics": "Item Transportation",
 	"create.ponder.tag.logistics.description": "Components which help moving items around",
 
-	"create.ponder.adjustable_pulse_repeater.header": "Controlling signals using Adjustable Pulse Repeaters",
-	"create.ponder.adjustable_pulse_repeater.text_1": "Adjustable Pulse Repeaters emit a short pulse at a delay",
-	"create.ponder.adjustable_pulse_repeater.text_2": "Using the mouse wheel, the charge time can be configured",
-	"create.ponder.adjustable_pulse_repeater.text_3": "Configured delays can range up to 30 minutes",
-
-	"create.ponder.adjustable_repeater.header": "Controlling signals using Adjustable Repeaters",
-	"create.ponder.adjustable_repeater.text_1": "Adjustable Repeaters behave similarly to regular Repeaters",
-	"create.ponder.adjustable_repeater.text_2": "They charge up for a set time...",
-	"create.ponder.adjustable_repeater.text_3": "...and cool down for the same duration",
-	"create.ponder.adjustable_repeater.text_4": "Using the mouse wheel, the charge time can be configured",
-	"create.ponder.adjustable_repeater.text_5": "Configured delays can range up to 30 minutes",
-
 	"create.ponder.analog_lever.header": "Controlling signals using the Analog Lever",
 	"create.ponder.analog_lever.text_1": "Analog Levers make for a compact and precise source of redstone power",
 	"create.ponder.analog_lever.text_2": "Right-click to increase its analog power output",
@@ -2171,9 +2158,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "Signals at the back will toggle its state",
 	"create.ponder.powered_toggle_latch.text_3": "...on and back off",
 	"create.ponder.powered_toggle_latch.text_4": "Powered toggle latches can also be toggled manually",
-
-	"create.ponder.pulse_repeater.header": "Controlling signals using Pulse Repeaters",
-	"create.ponder.pulse_repeater.text_1": "Pulse Repeaters will shorten any redstone signal to a single pulse",
 
 	"create.ponder.radial_chassis.header": "Attaching blocks using Radial Chassis",
 	"create.ponder.radial_chassis.text_1": "Radial Chassis connect to identical Chassis blocks in a row",

@@ -277,12 +277,11 @@ public class PonderIndex {
 			.addStoryBoard("portable_interface/redstone_fluid", MovementActorScenes::psiRedstone);
 
 		// Redstone
-		HELPER.forComponents(AllBlocks.PULSE_REPEATER)
-			.addStoryBoard("pulse_repeater", RedstoneScenes::pulseRepeater);
-		HELPER.forComponents(AllBlocks.ADJUSTABLE_REPEATER)
-			.addStoryBoard("adjustable_repeater", RedstoneScenes::adjustableRepeater);
-		HELPER.forComponents(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
-			.addStoryBoard("adjustable_pulse_repeater", RedstoneScenes::adjustablePulseRepeater);
+		// TODO simi
+//		HELPER.forComponents(AllBlocks.PULSE_EXTENDER)
+//			.addStoryBoard("adjustable_repeater", RedstoneScenes::adjustableRepeater);
+//		HELPER.forComponents(AllBlocks.PULSE_REPEATER)
+//			.addStoryBoard("adjustable_pulse_repeater", RedstoneScenes::adjustablePulseRepeater);
 		HELPER.forComponents(AllBlocks.POWERED_LATCH)
 			.addStoryBoard("powered_latch", RedstoneScenes::poweredLatch);
 		HELPER.forComponents(AllBlocks.POWERED_TOGGLE_LATCH)
@@ -419,9 +418,8 @@ public class PonderIndex {
 			.add(AllBlocks.REDSTONE_CONTACT)
 			.add(AllBlocks.ANALOG_LEVER)
 			.add(AllBlocks.REDSTONE_LINK)
-			.add(AllBlocks.ADJUSTABLE_REPEATER)
+			.add(AllBlocks.PULSE_EXTENDER)
 			.add(AllBlocks.PULSE_REPEATER)
-			.add(AllBlocks.ADJUSTABLE_PULSE_REPEATER)
 			.add(AllBlocks.POWERED_LATCH)
 			.add(AllBlocks.POWERED_TOGGLE_LATCH);
 

@@ -1,8 +1,6 @@
 package com.simibubi.create.foundation.utility;
 
 import static com.simibubi.create.AllBlocks.ADJUSTABLE_CRATE;
-import static com.simibubi.create.AllBlocks.ADJUSTABLE_PULSE_REPEATER;
-import static com.simibubi.create.AllBlocks.ADJUSTABLE_REPEATER;
 import static com.simibubi.create.AllBlocks.ANDESITE_ENCASED_SHAFT;
 import static com.simibubi.create.AllBlocks.BRASS_BELT_FUNNEL;
 import static com.simibubi.create.AllBlocks.BRASS_TUNNEL;
@@ -15,6 +13,8 @@ import static com.simibubi.create.AllBlocks.MECHANICAL_SAW;
 import static com.simibubi.create.AllBlocks.PISTON_EXTENSION_POLE;
 import static com.simibubi.create.AllBlocks.POWERED_LATCH;
 import static com.simibubi.create.AllBlocks.POWERED_TOGGLE_LATCH;
+import static com.simibubi.create.AllBlocks.PULSE_EXTENDER;
+import static com.simibubi.create.AllBlocks.PULSE_REPEATER;
 import static com.simibubi.create.AllBlocks.RADIAL_CHASSIS;
 import static com.simibubi.create.AllBlocks.REDSTONE_CONTACT;
 import static com.simibubi.create.AllBlocks.REDSTONE_LINK;
@@ -108,7 +108,7 @@ public class RemapHelper {
 		reMap.put("scoria_slab", Create.asResource("polished_scoria_slab"));
 		reMap.put("birch_glass", BIRCH_WINDOW.getId());
 		reMap.put("saw", MECHANICAL_SAW.getId());
-		reMap.put("flexpulsepeater", ADJUSTABLE_PULSE_REPEATER.getId());
+		reMap.put("flexpulsepeater", PULSE_REPEATER.getId());
 		reMap.put("dolomite_wall", Create.asResource("polished_dolomite_wall"));
 		reMap.put("gabbro_layers", Create.asResource("layered_gabbro"));
 		reMap.put("scoria_wall", Create.asResource("polished_scoria_wall"));
@@ -126,7 +126,7 @@ public class RemapHelper {
 		reMap.put("granite_layers", Create.asResource("layered_granite"));
 		reMap.put("indented_gabbro", Create.asResource("polished_gabbro"));
 		reMap.put("drill", MECHANICAL_DRILL.getId());
-		reMap.put("flexpeater", ADJUSTABLE_REPEATER.getId());
+		reMap.put("flexpeater", PULSE_EXTENDER.getId());
 		reMap.put("rotation_chassis", RADIAL_CHASSIS.getId());
 		reMap.put("scoria_stairs", Create.asResource("polished_scoria_stairs"));
 		reMap.put("weathered_limestone_wall", Create.asResource("polished_weathered_limestone_wall"));
@@ -142,6 +142,9 @@ public class RemapHelper {
 		reMap.put("translation_chassis_secondary", SECONDARY_LINEAR_CHASSIS.getId());
 		reMap.put("jungle_glass_pane", JUNGLE_WINDOW_PANE.getId());
 		reMap.put("piston_pole", PISTON_EXTENSION_POLE.getId());
+		
+		reMap.put("adjustable_pulse_repeater", PULSE_REPEATER.getId());
+		reMap.put("adjustable_repeater", PULSE_REPEATER.getId());
 
 		reMap.put("crushed_copper", CRUSHED_COPPER.getId());
 		reMap.put("empty_blueprint", SCHEMATIC.getId());

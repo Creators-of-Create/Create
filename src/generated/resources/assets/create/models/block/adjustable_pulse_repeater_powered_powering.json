@@ -1,7 +1,0 @@
-{
-  "parent": "create:block/diodes/adjustable_pulse_repeater",
-  "textures": {
-    "torch": "minecraft:block/redstone_torch",
-    "top": "create:block/diodes/adjustable_pulse_repeater/powered_powering"
-  }
-}

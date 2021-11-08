@@ -5,6 +5,8 @@ import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -43,10 +45,12 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 		else if (side || back)
 			tickpriority = TickPriority.VERY_HIGH;
 
-		if (worldIn.getBlockTicks().willTickThisTick(pos, this))
+		if (worldIn.getBlockTicks()
+			.willTickThisTick(pos, this))
 			return;
 		if (back != shouldBack || side != shouldSide)
-			worldIn.getBlockTicks().scheduleTick(pos, this, this.getDelay(state), tickpriority);
+			worldIn.getBlockTicks()
+				.scheduleTick(pos, this, this.getDelay(state), tickpriority);
 	}
 
 	protected boolean isPoweredOnSides(Level worldIn, BlockPos pos, BlockState state) {
@@ -98,8 +102,11 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
 		if (state.getValue(POWERED) != state.getValue(POWERED_SIDE))
 			return InteractionResult.PASS;
-		if (!worldIn.isClientSide)
+		if (!worldIn.isClientSide) {
+			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
+			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
 			worldIn.setBlock(pos, state.cycle(POWERING), 2);
+		}
 		return InteractionResult.SUCCESS;
 	}
 
@@ -107,7 +114,8 @@ public class PoweredLatchBlock extends ToggleLatchBlock {
 	public boolean canConnectRedstone(BlockState state, BlockGetter world, BlockPos pos, Direction side) {
 		if (side == null)
 			return false;
-		return side.getAxis().isHorizontal();
+		return side.getAxis()
+			.isHorizontal();
 	}
 
 }

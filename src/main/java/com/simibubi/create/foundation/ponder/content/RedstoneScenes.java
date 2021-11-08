@@ -3,11 +3,10 @@ package com.simibubi.create.foundation.ponder.content;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.chassis.StickerTileEntity;
-import com.simibubi.create.content.logistics.block.diodes.AdjustablePulseRepeaterTileEntity;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterBlock;
-import com.simibubi.create.content.logistics.block.diodes.AdjustableRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.PulseExtenderTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterBlock;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
 import com.simibubi.create.content.logistics.block.redstone.AnalogLeverTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
@@ -191,48 +190,6 @@ public class RedstoneScenes {
 		scene.world.rotateSection(contact, 0, 10, 0, speed);
 	}
 
-	public static void pulseRepeater(SceneBuilder scene, SceneBuildingUtil util) {
-		scene.title("pulse_repeater", "Controlling signals using Pulse Repeaters");
-		scene.configureBasePlate(0, 0, 5);
-		scene.world.showSection(util.select.layer(0), Direction.UP);
-
-		BlockPos circuitPos = util.grid.at(2, 1, 2);
-		BlockPos leverPos = util.grid.at(4, 1, 2);
-
-		scene.world.showSection(util.select.layersFrom(1)
-			.substract(util.select.position(circuitPos)), Direction.UP);
-		scene.idle(10);
-		scene.world.showSection(util.select.position(circuitPos), Direction.DOWN);
-		scene.idle(20);
-		scene.effects.indicateRedstone(leverPos);
-		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 0, 1, 2));
-		scene.world.cycleBlockProperty(circuitPos, PulseRepeaterBlock.PULSING);
-		scene.idle(3);
-		scene.world.cycleBlockProperty(circuitPos, PulseRepeaterBlock.PULSING);
-		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
-		scene.idle(2);
-		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
-
-		scene.idle(15);
-		scene.overlay.showText(70)
-			.text("Pulse Repeaters will shorten any redstone signal to a single pulse")
-			.placeNearTarget()
-			.attachKeyFrame()
-			.pointAt(util.vector.topOf(util.grid.at(0, 1, 2)));
-		scene.idle(60);
-
-		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
-		scene.idle(20);
-		scene.effects.indicateRedstone(leverPos);
-		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 0, 1, 2));
-		scene.world.cycleBlockProperty(circuitPos, PulseRepeaterBlock.PULSING);
-		scene.idle(3);
-		scene.world.cycleBlockProperty(circuitPos, PulseRepeaterBlock.PULSING);
-		scene.world.toggleRedstonePower(util.select.position(1, 1, 2));
-		scene.idle(2);
-		scene.world.toggleRedstonePower(util.select.position(0, 1, 2));
-	}
-
 	public static void adjustableRepeater(SceneBuilder scene, SceneBuildingUtil util) {
 		scene.title("adjustable_repeater", "Controlling signals using Adjustable Repeaters");
 		scene.configureBasePlate(0, 0, 5);
@@ -241,7 +198,7 @@ public class RedstoneScenes {
 		BlockPos circuitPos = util.grid.at(2, 1, 2);
 		BlockPos leverPos = util.grid.at(4, 1, 2);
 
-		scene.world.modifyTileNBT(util.select.position(circuitPos), AdjustableRepeaterTileEntity.class,
+		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseExtenderTileEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 30));
 		scene.world.showSection(util.select.layersFrom(1)
 			.substract(util.select.position(circuitPos)), Direction.UP);
@@ -261,7 +218,7 @@ public class RedstoneScenes {
 		scene.effects.indicateRedstone(leverPos);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
 		scene.idle(30);
-		scene.world.cycleBlockProperty(circuitPos, AdjustableRepeaterBlock.POWERING);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
 		scene.idle(15);
 
@@ -274,7 +231,7 @@ public class RedstoneScenes {
 		scene.effects.indicateRedstone(leverPos);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
 		scene.idle(30);
-		scene.world.cycleBlockProperty(circuitPos, AdjustableRepeaterBlock.POWERING);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
 		scene.idle(15);
 
@@ -292,7 +249,7 @@ public class RedstoneScenes {
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
-		scene.world.modifyTileNBT(util.select.position(circuitPos), AdjustableRepeaterTileEntity.class,
+		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseExtenderTileEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 120));
 		scene.idle(70);
 
@@ -304,7 +261,7 @@ public class RedstoneScenes {
 			.placeNearTarget()
 			.pointAt(circuitTop);
 		scene.idle(60);
-		scene.world.cycleBlockProperty(circuitPos, AdjustableRepeaterBlock.POWERING);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
 		scene.idle(15);
 
@@ -318,7 +275,7 @@ public class RedstoneScenes {
 		BlockPos circuitPos = util.grid.at(2, 1, 2);
 		BlockPos leverPos = util.grid.at(4, 1, 2);
 
-		scene.world.modifyTileNBT(util.select.position(circuitPos), AdjustablePulseRepeaterTileEntity.class,
+		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseRepeaterTileEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 30));
 		scene.world.showSection(util.select.layersFrom(1)
 			.substract(util.select.position(circuitPos)), Direction.UP);
@@ -332,7 +289,7 @@ public class RedstoneScenes {
 		scene.effects.indicateRedstone(leverPos);
 		scene.world.toggleRedstonePower(util.select.fromTo(4, 1, 2, 2, 1, 2));
 		scene.idle(30);
-		scene.world.cycleBlockProperty(circuitPos, AdjustableRepeaterBlock.POWERING);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
 		scene.idle(3);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
@@ -355,7 +312,7 @@ public class RedstoneScenes {
 			.attachKeyFrame()
 			.placeNearTarget()
 			.pointAt(circuitTop);
-		scene.world.modifyTileNBT(util.select.position(circuitPos), AdjustablePulseRepeaterTileEntity.class,
+		scene.world.modifyTileNBT(util.select.position(circuitPos), PulseRepeaterTileEntity.class,
 			nbt -> nbt.putInt("ScrollValue", 120));
 		scene.idle(70);
 
@@ -367,7 +324,7 @@ public class RedstoneScenes {
 			.placeNearTarget()
 			.pointAt(circuitTop);
 		scene.idle(60);
-		scene.world.cycleBlockProperty(circuitPos, AdjustableRepeaterBlock.POWERING);
+		scene.world.cycleBlockProperty(circuitPos, BrassDiodeBlock.POWERING);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));
 		scene.idle(3);
 		scene.world.toggleRedstonePower(util.select.fromTo(1, 1, 2, 0, 1, 2));

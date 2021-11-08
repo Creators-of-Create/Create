@@ -7,7 +7,6 @@ import com.simibubi.create.foundation.data.SpecialBlockStateGen;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -23,16 +22,11 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 
 	private Vector<ModelFile> models;
 
-	public static <I extends BlockItem> NonNullBiConsumer<DataGenContext<Item, I>, RegistrateItemModelProvider> diodeItemModel(
-		boolean needsItemTexture) {
-		return (c, p) -> {
-			String name = c.getName();
-			String path = "block/diodes/";
-			ItemModelBuilder builder = p.withExistingParent(name, p.modLoc(path + name));
-			if (!needsItemTexture)
-				return;
-			builder.texture("top", path + name + "/item");
-		};
+	public static <I extends BlockItem> void diodeItemModel(DataGenContext<Item, I> c, RegistrateItemModelProvider p) {
+		String name = c.getName();
+		String path = "block/diodes/";
+		ItemModelBuilder builder = p.withExistingParent(name, p.modLoc(path + name));
+		builder.texture("top", path + name + "/item");
 	}
 
 	@Override
@@ -45,9 +39,10 @@ public abstract class AbstractDiodeGenerator extends SpecialBlockStateGen {
 		return horizontalAngle(state.getValue(AbstractDiodeBlock.FACING));
 	}
 
-	abstract <T extends Block> Vector<ModelFile> createModels(DataGenContext<Block, T> ctx, BlockModelProvider prov);
+	protected abstract <T extends Block> Vector<ModelFile> createModels(DataGenContext<Block, T> ctx,
+		BlockModelProvider prov);
 
-	abstract int getModelIndex(BlockState state);
+	protected abstract int getModelIndex(BlockState state);
 
 	@Override
 	public final <T extends Block> ModelFile getModel(DataGenContext<Block, T> ctx, RegistrateBlockstateProvider prov,

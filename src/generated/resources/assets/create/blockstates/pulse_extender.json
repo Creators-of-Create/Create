@@ -1,63 +1,63 @@
 {
   "variants": {
     "facing=north,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater",
+      "model": "create:block/diodes/pulse_extender",
       "y": 180
     },
     "facing=south,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater"
+      "model": "create:block/diodes/pulse_extender"
     },
     "facing=west,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater",
+      "model": "create:block/diodes/pulse_extender",
       "y": 90
     },
     "facing=east,powered=false,powering=false": {
-      "model": "create:block/diodes/pulse_repeater",
+      "model": "create:block/diodes/pulse_extender",
       "y": 270
     },
     "facing=north,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered",
+      "model": "create:block/pulse_extender_powered",
       "y": 180
     },
     "facing=south,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered"
+      "model": "create:block/pulse_extender_powered"
     },
     "facing=west,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered",
+      "model": "create:block/pulse_extender_powered",
       "y": 90
     },
     "facing=east,powered=true,powering=false": {
-      "model": "create:block/pulse_repeater_powered",
+      "model": "create:block/pulse_extender_powered",
       "y": 270
     },
     "facing=north,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering",
+      "model": "create:block/pulse_extender_powering",
       "y": 180
     },
     "facing=south,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering"
+      "model": "create:block/pulse_extender_powering"
     },
     "facing=west,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering",
+      "model": "create:block/pulse_extender_powering",
       "y": 90
     },
     "facing=east,powered=false,powering=true": {
-      "model": "create:block/pulse_repeater_powering",
+      "model": "create:block/pulse_extender_powering",
       "y": 270
     },
     "facing=north,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering",
+      "model": "create:block/pulse_extender_powered_powering",
       "y": 180
     },
     "facing=south,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering"
+      "model": "create:block/pulse_extender_powered_powering"
     },
     "facing=west,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering",
+      "model": "create:block/pulse_extender_powered_powering",
       "y": 90
     },
     "facing=east,powered=true,powering=true": {
-      "model": "create:block/pulse_repeater_powered_powering",
+      "model": "create:block/pulse_extender_powered_powering",
       "y": 270
     }
   }

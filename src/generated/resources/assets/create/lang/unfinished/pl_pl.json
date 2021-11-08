@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 39",
+	"_": "Missing Localizations: 40",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "Akacjowa szyba okienna",
 	"block.create.adjustable_chain_gearshift": "Regulowany przekładnik łańcuchowy",
 	"block.create.adjustable_crate": "Regulowana skrzynka",
-	"block.create.adjustable_pulse_repeater": "Regulowany przekaźnik pulsu",
-	"block.create.adjustable_repeater": "Regulowany przekaźnik",
 	"block.create.analog_lever": "Dźwignia analogowa",
 	"block.create.andesite_belt_funnel": "Andezytowy lejek taśmowy",
 	"block.create.andesite_bricks": "Andezytowe cegły",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "Zaawansowany zasilany przełącznik",
 	"block.create.powered_toggle_latch": "Zasilany przełącznik",
 	"block.create.pulley_magnet": "Krążek z magnesem",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "Przekaźnik pulsowy",
 	"block.create.purple_nixie_tube": "Fioletowa lampa cyfrowa",
 	"block.create.purple_sail": "Fioletowy żagiel",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "Transport przedmiotów",
 	"create.ponder.tag.logistics.description": "Komponenty, które pomagają w transporcie przedmiotów",
 
-	"create.ponder.adjustable_pulse_repeater.header": "Kontrola sygnałów z wykorzystaniem regulowanych przekaźników pulsu",
-	"create.ponder.adjustable_pulse_repeater.text_1": "Regulowane przekaźniki pulsu emitują krótki puls po opóźnieniu",
-	"create.ponder.adjustable_pulse_repeater.text_2": "Używając rolki w myszce można modyfikować opóźnienie",
-	"create.ponder.adjustable_pulse_repeater.text_3": "Opóźnienia mogą mieć nawet do 30 minut",
-
-	"create.ponder.adjustable_repeater.header": "Kontrola sygnałów z wykorzystaniem regulowanych przekaźników\n",
-	"create.ponder.adjustable_repeater.text_1": "Regulowane przekaźniki zachowują się podobnie do zwykłych przekaźników",
-	"create.ponder.adjustable_repeater.text_2": "Ładują się przez określony czas...",
-	"create.ponder.adjustable_repeater.text_3": "...i stygną przez ten sam czas",
-	"create.ponder.adjustable_repeater.text_4": "Używając rolki w myszce można modyfikować czas ładowania",
-	"create.ponder.adjustable_repeater.text_5": "Czasy ładowania mogą mieć nawet do 30 minut",
-
 	"create.ponder.analog_lever.header": "Kontrola sygnałów z wykorzystaniem dźwigni analogowej",
 	"create.ponder.analog_lever.text_1": "Dźwignie analogowe są kompaktowymi i dokładnymi źródłami sygnału Redstone",
 	"create.ponder.analog_lever.text_2": "Kliknij PPM, aby zwiększyć wysyłaną przez nie siłę sygnału ",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "Sygnały otrzymane z tyłu przełączają je",
 	"create.ponder.powered_toggle_latch.text_3": "włączone... wyłączone...",
 	"create.ponder.powered_toggle_latch.text_4": "Zasilane przełączniki mogą też być przełączone ręcznie",
-
-	"create.ponder.pulse_repeater.header": "Kontrola sygnału z użyciem przekaźników pulsowych",
-	"create.ponder.pulse_repeater.text_1": "Przekaźniki pulsowe skrócą dowolny sygnał do pojedynczego pulsu",
 
 	"create.ponder.radial_chassis.header": "Przyłączanie bloków z użyciem stelaża promienistego",
 	"create.ponder.radial_chassis.text_1": "Stelaże promieniste łączą się z identycznymi stelażami w jednym rzędzie",

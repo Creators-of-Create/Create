@@ -1,6 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "  T",
     "RCT",
     "SSS"
   ],
@@ -19,6 +20,6 @@
     }
   },
   "result": {
-    "item": "create:pulse_repeater"
+    "item": "create:pulse_extender"
   }
 }

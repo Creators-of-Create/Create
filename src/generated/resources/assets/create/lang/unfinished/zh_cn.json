@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 43",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "金合欢木窗户板",
 	"block.create.adjustable_chain_gearshift": "可调节链式传动箱",
 	"block.create.adjustable_crate": "可调节板条箱",
-	"block.create.adjustable_pulse_repeater": "可调节脉冲中继器",
-	"block.create.adjustable_repeater": "可调节中继器",
 	"block.create.analog_lever": "模拟拉杆",
 	"block.create.andesite_belt_funnel": "安山岩传送带漏斗",
 	"block.create.andesite_bricks": "安山岩砖",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "锁存器",
 	"block.create.powered_toggle_latch": "转换锁存器",
 	"block.create.pulley_magnet": "滑轮磁铁",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "脉冲中继器",
 	"block.create.purple_nixie_tube": "紫色辉光管",
 	"block.create.purple_sail": "紫色风帆",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "物品运输",
 	"create.ponder.tag.logistics.description": "该组件可以协助物品运输",
 
-	"create.ponder.adjustable_pulse_repeater.header": "使用可调节脉冲中继器控制信号发送",
-	"create.ponder.adjustable_pulse_repeater.text_1": "可调节脉冲中继器在一段延时之后会发出一道短时脉冲",
-	"create.ponder.adjustable_pulse_repeater.text_2": "滑动滚轮即可更改延时时间",
-	"create.ponder.adjustable_pulse_repeater.text_3": "延时配置范围的上限为 30 分钟",
-
-	"create.ponder.adjustable_repeater.header": "使用可调节中继器控制信号发送",
-	"create.ponder.adjustable_repeater.text_1": "可调节中继器与常规的中继器的行为较为相似",
-	"create.ponder.adjustable_repeater.text_2": "它们会进行一段时间的充能，时长为设定的时间...",
-	"create.ponder.adjustable_repeater.text_3": "...然后以同样的时长逐渐退出充能状态",
-	"create.ponder.adjustable_repeater.text_4": "滑动滚轮即可更改充能时间",
-	"create.ponder.adjustable_repeater.text_5": "延时配置范围的上限为 30 分钟",
-
 	"create.ponder.analog_lever.header": "使用模拟拉杆控制信号发送",
 	"create.ponder.analog_lever.text_1": "要想使得红石信号源信号强度精确且占地面积小，模拟拉杆不可少。",
 	"create.ponder.analog_lever.text_2": "右击可以提升输出模拟信号的强度",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "后方信号输入可以改变它的状态",
 	"create.ponder.powered_toggle_latch.text_3": "...开启或者是关闭",
 	"create.ponder.powered_toggle_latch.text_4": "你也可以手动切换其状态",
-
-	"create.ponder.pulse_repeater.header": "使用脉冲中继器控制信号",
-	"create.ponder.pulse_repeater.text_1": "脉冲中继器会将所有通入的红石信号缩减为一次脉冲",
 
 	"create.ponder.radial_chassis.header": "使用旋转底盘黏着方块",
 	"create.ponder.radial_chassis.text_1": "同一行上的旋转底盘会相互连接在一起",

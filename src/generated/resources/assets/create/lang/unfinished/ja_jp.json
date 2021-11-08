@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 48",
+	"_": "Missing Localizations: 49",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -7,8 +7,6 @@
 	"block.create.acacia_window_pane": "アカシアの窓板",
 	"block.create.adjustable_chain_gearshift": "可変チェーンギアシフト",
 	"block.create.adjustable_crate": "可変クレート",
-	"block.create.adjustable_pulse_repeater": "可変パルスリピーター",
-	"block.create.adjustable_repeater": "可変リピーター",
 	"block.create.analog_lever": "アナログレバー",
 	"block.create.andesite_belt_funnel": "安山岩のベルトファンネル",
 	"block.create.andesite_bricks": "安山岩レンガ",
@@ -367,6 +365,7 @@
 	"block.create.powered_latch": "パワードラッチ",
 	"block.create.powered_toggle_latch": "パワードトグルラッチ",
 	"block.create.pulley_magnet": "プーリーマグネット",
+	"block.create.pulse_extender": "UNLOCALIZED: Pulse Extender",
 	"block.create.pulse_repeater": "パルスリピーター",
 	"block.create.purple_nixie_tube": "紫色のニキシー管",
 	"block.create.purple_sail": "紫色の帆",
@@ -1585,18 +1584,6 @@
 	"create.ponder.tag.logistics": "輸送機械",
 	"create.ponder.tag.logistics.description": "アイテムの運搬を補助する機械です",
 
-	"create.ponder.adjustable_pulse_repeater.header": "可変パルスリピーターによる信号制御",
-	"create.ponder.adjustable_pulse_repeater.text_1": "可変パルスリピーターは信号を遅延し、短いパルスにして出力します",
-	"create.ponder.adjustable_pulse_repeater.text_2": "マウスホイールで遅延時間を調整できます",
-	"create.ponder.adjustable_pulse_repeater.text_3": "最大30分まで遅延時間を調整できます",
-
-	"create.ponder.adjustable_repeater.header": "可変リピーターによる信号制御",
-	"create.ponder.adjustable_repeater.text_1": "可変リピーターは通常のレッドストーンリピーターと同様の動作をします",
-	"create.ponder.adjustable_repeater.text_2": "決められた時間だけ遅延します...",
-	"create.ponder.adjustable_repeater.text_3": "...そして同じ時間だけクールダウンします",
-	"create.ponder.adjustable_repeater.text_4": "マウスホイールで遅延時間を調整できます",
-	"create.ponder.adjustable_repeater.text_5": "最大30分まで遅延時間を調整できます",
-
 	"create.ponder.analog_lever.header": "アナログレバーによる信号制御",
 	"create.ponder.analog_lever.text_1": "アナログレバーはコンパクトに正確なレッドストーン動力を出力できます。",
 	"create.ponder.analog_lever.text_2": "右クリックでレッドストーン強度を上げられます。",
@@ -2172,9 +2159,6 @@
 	"create.ponder.powered_toggle_latch.text_2": "後ろからの信号で切り替えできます",
 	"create.ponder.powered_toggle_latch.text_3": "何度も信号を送るとオンとオフと繰り返します",
 	"create.ponder.powered_toggle_latch.text_4": "パワードトグルラッチは、手動でもオンオフもできます",
-
-	"create.ponder.pulse_repeater.header": "パルスリピーターによる信号制御",
-	"create.ponder.pulse_repeater.text_1": "パルスリピーターは、レッドストーン信号を短縮して1tickのパルス信号にします",
 
 	"create.ponder.radial_chassis.header": "ラジアルシャーシによるブロックの取り付け",
 	"create.ponder.radial_chassis.text_1": "ラジアルシャーシは、同じ種類のシャーシと繋がります",

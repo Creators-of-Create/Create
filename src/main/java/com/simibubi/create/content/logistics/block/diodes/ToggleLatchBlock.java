@@ -7,6 +7,8 @@ import com.simibubi.create.AllItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -70,8 +72,11 @@ public class ToggleLatchBlock extends AbstractDiodeBlock {
 	}
 
 	protected InteractionResult activated(Level worldIn, BlockPos pos, BlockState state) {
-		if (!worldIn.isClientSide)
+		if (!worldIn.isClientSide) {
+			float f = !state.getValue(POWERING) ? 0.6F : 0.5F;
+			worldIn.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
 			worldIn.setBlock(pos, state.cycle(POWERING), 2);
+		}
 		return InteractionResult.SUCCESS;
 	}
 
