@@ -39,7 +39,6 @@ public class FlwContraptionManager extends ContraptionRenderManager<RenderedCont
 		RenderType layer = event.getType();
 
 		layer.setupRenderState();
-		GlTextureUnit.T4.makeActive(); // the shaders expect light volumes to be in texture 4
 
 		ContraptionProgram structureShader = CreateContexts.STRUCTURE.getProgram(AllProgramSpecs.STRUCTURE);
 

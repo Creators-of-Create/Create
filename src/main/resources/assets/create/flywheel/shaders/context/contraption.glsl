@@ -15,8 +15,6 @@ uniform float uTime;
 uniform mat4 uViewProjection;
 uniform vec3 uCameraPos;
 
-uniform vec2 uWindowSize;
-
 void FLWFinalizeNormal(inout vec3 normal) {
     mat3 m;
     m[0] = uModel[0].xyz;
