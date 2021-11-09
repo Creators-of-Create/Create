@@ -86,8 +86,8 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		});
 	}
 
-	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 587 injecting before `!blockstate.isAir(this.world, blockpos)`
-		ordinal = 4), method = "move")
+	@Inject(at = @At(value = "JUMP", opcode = 154, // IFNE line 661 injecting before `!blockstate.isAir(this.world, blockpos)`
+		ordinal = 5), method = "move")
 	private void movementMixin(MoverType mover, Vec3 movement, CallbackInfo ci) {
 		Vec3 worldPos = self.position()
 			.add(0, -0.2, 0);
