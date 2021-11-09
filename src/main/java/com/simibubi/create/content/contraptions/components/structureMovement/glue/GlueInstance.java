@@ -96,6 +96,12 @@ public class GlueInstance extends EntityInstance<SuperGlueEntity> implements ITi
 	}
 
 	public static class GlueModel implements IModel {
+
+		@Override
+		public String name() {
+			return "glue";
+		}
+
 		@Override
 		public void buffer(VecBuffer buffer) {
 			Vec3 diff = Vec3.atLowerCornerOf(Direction.SOUTH.getNormal());

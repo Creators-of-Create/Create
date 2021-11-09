@@ -41,6 +41,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 
 	private final Matrix4f modelViewPartial = new Matrix4f();
 	private boolean modelViewPartialReady;
+	// floats because we're uploading this to the gpu
 	private AABB lightBox;
 
 	public RenderedContraption(Contraption contraption, PlacementSimulationWorld renderWorld) {
@@ -125,7 +126,7 @@ public class RenderedContraption extends ContraptionRenderInfo {
 		List<RenderType> blockLayers = RenderType.chunkBufferLayers();
 
 		for (RenderType layer : blockLayers) {
-			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values());
+			Supplier<IModel> layerModel = () -> new WorldModel(renderWorld, layer, contraption.getBlocks().values(), layer + "_" + contraption.entity.getId());
 
 			ModelRenderer renderer;
 			if (Backend.getInstance().compat.vertexArrayObjectsSupported())
