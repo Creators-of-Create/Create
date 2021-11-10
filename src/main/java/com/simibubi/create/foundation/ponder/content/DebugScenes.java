@@ -25,6 +25,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -395,7 +396,7 @@ public class DebugScenes {
 		scene.world.showSection(util.select.layersFrom(1), Direction.DOWN);
 
 		ItemStack brassItem = AllItems.BRASS_INGOT.asStack();
-		ItemStack copperItem = AllItems.COPPER_INGOT.asStack();
+		ItemStack copperItem = new ItemStack(Items.COPPER_INGOT);
 
 		for (int z = 4; z >= 2; z--) {
 			scene.world.createItemEntity(util.vector.centerOf(0, 4, z), Vec3.ZERO, brassItem.copy());

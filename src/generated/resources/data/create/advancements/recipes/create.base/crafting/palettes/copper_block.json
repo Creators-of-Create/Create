@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/materials/copper_block_from_compacting"
+      "create:crafting/palettes/copper_block"
     ]
   },
   "criteria": {
@@ -11,9 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "create:copper_ingot"
-            ]
+            "tag": "forge:plates/copper"
           }
         ]
       }
@@ -21,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/materials/copper_block_from_compacting"
+        "recipe": "create:crafting/palettes/copper_block"
       }
     }
   },

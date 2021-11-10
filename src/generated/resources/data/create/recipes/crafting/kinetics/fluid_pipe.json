@@ -8,7 +8,7 @@
       "tag": "forge:plates/copper"
     },
     "C": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     }
   },
   "result": {

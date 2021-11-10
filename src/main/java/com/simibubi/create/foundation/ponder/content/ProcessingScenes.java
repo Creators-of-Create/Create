@@ -306,7 +306,7 @@ public class ProcessingScenes {
 			.placeNearTarget()
 			.text("The Input items can be dropped or placed on a Depot under the Press");
 		scene.idle(50);
-		ItemStack copper = AllItems.COPPER_INGOT.asStack();
+		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
 		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, copper);
 		Vec3 depotCenter = util.vector.centerOf(depotPos.south());
 		scene.overlay.showControls(new InputWindowElement(depotCenter, Pointing.UP).withItem(copper), 30);
@@ -477,8 +477,8 @@ public class ProcessingScenes {
 		BlockPos pressPos = util.grid.at(1, 4, 2);
 		Vec3 basinSide = util.vector.blockSurface(basin, Direction.WEST);
 
-		ItemStack copper = AllItems.COPPER_INGOT.asStack();
-		ItemStack copperBlock = AllBlocks.COPPER_BLOCK.asStack();
+		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
+		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK);
 
 		scene.overlay.showText(60)
 			.pointAt(basinSide)
@@ -863,7 +863,7 @@ public class ProcessingScenes {
 		scene.world.modifyTileEntity(pressPos, type,
 			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basinPos), nugget));
 
-		ItemStack ingot = AllItems.COPPER_INGOT.asStack();
+		ItemStack ingot = new ItemStack(Items.COPPER_INGOT);
 		scene.idle(30);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(basinPos), Pointing.RIGHT).withItem(ingot),
 			30);
@@ -873,7 +873,7 @@ public class ProcessingScenes {
 		scene.world.modifyTileEntity(pressPos, type,
 			pte -> pte.makeCompactingParticleEffect(util.vector.centerOf(basinPos), ingot));
 
-		ItemStack block = AllBlocks.COPPER_BLOCK.asStack();
+		ItemStack block = new ItemStack(Items.COPPER_BLOCK);
 		scene.idle(30);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(basinPos), Pointing.RIGHT).withItem(block),
 			30);

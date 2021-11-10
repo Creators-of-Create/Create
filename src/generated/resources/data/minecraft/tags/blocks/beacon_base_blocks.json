@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "create:copper_block",
     "create:zinc_block",
     "create:brass_block"
   ]

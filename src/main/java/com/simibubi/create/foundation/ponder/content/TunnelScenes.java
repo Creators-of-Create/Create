@@ -85,9 +85,9 @@ public class TunnelScenes {
 		scene.idle(70);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(4, 1, 2)), Pointing.DOWN)
-			.withItem(AllItems.COPPER_INGOT.asStack()), 20);
+			.withItem(new ItemStack(Items.COPPER_INGOT)), 20);
 		scene.idle(7);
-		scene.world.createItemOnBelt(util.grid.at(4, 1, 2), Direction.UP, AllItems.COPPER_INGOT.asStack(64));
+		scene.world.createItemOnBelt(util.grid.at(4, 1, 2), Direction.UP, new ItemStack(Items.COPPER_INGOT, 64));
 		scene.idle(40);
 		scene.world.multiplyKineticSpeed(util.select.everywhere(), 1 / 16f);
 		scene.overlay.showText(80)
@@ -176,7 +176,7 @@ public class TunnelScenes {
 			.pointAt(tunnelFilterVec)
 			.placeNearTarget()
 			.text("Filters on inbound connections simply block non-matching items");
-		ItemStack copper = AllItems.COPPER_INGOT.asStack();
+		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
 		Class<BrassTunnelTileEntity> tunnelClass = BrassTunnelTileEntity.class;
 		scene.world.modifyTileEntity(tunnelPos, tunnelClass, te -> te.getBehaviour(SidedFilteringBehaviour.TYPE)
 			.setFilter(Direction.EAST, copper));

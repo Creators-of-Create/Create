@@ -15,6 +15,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
@@ -127,8 +128,8 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllItems.PRECISION_MECHANISM.get();
 		}
 
-		static Tag.Named<Item> copperBlock() {
-			return AllTags.forgeItemTag("storage_blocks/copper");
+		static ItemLike copperBlock() {
+			return Items.COPPER_BLOCK;
 		}
 
 		static Tag.Named<Item> brassBlock() {
@@ -139,8 +140,8 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 			return AllTags.forgeItemTag("storage_blocks/zinc");
 		}
 
-		static Tag.Named<Item> copper() {
-			return AllTags.forgeItemTag("ingots/copper");
+		static ItemLike copper() {
+			return Items.COPPER_INGOT;
 		}
 
 		static Tag.Named<Item> copperSheet() {

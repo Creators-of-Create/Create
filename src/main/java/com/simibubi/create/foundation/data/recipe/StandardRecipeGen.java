@@ -68,9 +68,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 
 	GeneratedRecipe
 
-	COPPER_COMPACTING =
-		metalCompacting(ImmutableList.of(AllItems.COPPER_NUGGET, AllItems.COPPER_INGOT, AllBlocks.COPPER_BLOCK),
-			ImmutableList.of(I::copperNugget, I::copper, I::copperBlock)),
+	COPPER_NUGGET = create(AllItems.COPPER_NUGGET).returns(9)
+		.unlockedBy(() -> Items.COPPER_INGOT)
+		.viaShapeless(b -> b.requires(I.copper())),
+
+		COPPER_INGOT = create(() -> Items.COPPER_INGOT).unlockedBy(AllItems.COPPER_NUGGET::get)
+			.viaShaped(b -> b.define('C', I.copperNugget())
+				.pattern("CCC")
+				.pattern("CCC")
+				.pattern("CCC")),
 
 		BRASS_COMPACTING =
 			metalCompacting(ImmutableList.of(AllItems.BRASS_NUGGET, AllItems.BRASS_INGOT, AllBlocks.BRASS_BLOCK),
@@ -112,7 +118,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("AAA")),
 
 		COPPER_CASING = create(AllBlocks.COPPER_CASING).returns(4)
-			.unlockedByTag(I::copper)
+			.unlockedBy(I::copper)
 			.viaShaped(b -> b.define('A', ItemTags.PLANKS)
 				.define('C', I.copperSheet())
 				.define('S', ItemTags.LOGS)
@@ -385,14 +391,14 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("CCC")
 				.pattern("  A")),
 
-		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedByTag(I::copper)
+		COPPER_VALVE_HANDLE = create(AllBlocks.COPPER_VALVE_HANDLE).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('S', I.andesite())
 				.define('C', I.copperSheet())
 				.pattern("CCC")
 				.pattern(" S ")),
 
 		COPPER_VALVE_HANDLE_FROM_OTHER_HANDLES = create(AllBlocks.COPPER_VALVE_HANDLE).withSuffix("_from_others")
-			.unlockedByTag(I::copper)
+			.unlockedBy(I::copper)
 			.viaShapeless(b -> b.requires(AllItemTags.VALVE_HANDLES.tag)),
 
 		NOZZLE = create(AllBlocks.NOZZLE).unlockedBy(AllBlocks.ENCASED_FAN::get)
@@ -487,18 +493,18 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("PCP")),
 
 		FLUID_PIPE = create(AllBlocks.FLUID_PIPE).returns(8)
-			.unlockedByTag(I::copper)
+			.unlockedBy(I::copper)
 			.viaShaped(b -> b.define('S', I.copperSheet())
 				.define('C', I.copper())
 				.pattern("SCS")),
 
-		MECHANICAL_PUMP = create(AllBlocks.MECHANICAL_PUMP).unlockedByTag(I::copper)
+		MECHANICAL_PUMP = create(AllBlocks.MECHANICAL_PUMP).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('P', I.cog())
 				.define('S', AllBlocks.FLUID_PIPE.get())
 				.pattern("P")
 				.pattern("S")),
 
-		SMART_FLUID_PIPE = create(AllBlocks.SMART_FLUID_PIPE).unlockedByTag(I::copper)
+		SMART_FLUID_PIPE = create(AllBlocks.SMART_FLUID_PIPE).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('P', I.electronTube())
 				.define('S', AllBlocks.FLUID_PIPE.get())
 				.define('I', I.brassSheet())
@@ -506,7 +512,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("S")
 				.pattern("P")),
 
-		FLUID_VALVE = create(AllBlocks.FLUID_VALVE).unlockedByTag(I::copper)
+		FLUID_VALVE = create(AllBlocks.FLUID_VALVE).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('P', I.shaft())
 				.define('S', AllBlocks.FLUID_PIPE.get())
 				.define('I', I.ironSheet())
@@ -567,7 +573,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("SCS")
 				.pattern(" I ")),
 
-		HOSE_PULLEY = create(AllBlocks.HOSE_PULLEY).unlockedByTag(I::copper)
+		HOSE_PULLEY = create(AllBlocks.HOSE_PULLEY).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('S', I.shaft())
 				.define('P', AllBlocks.FLUID_PIPE.get())
 				.define('B', I.copperCasing())
@@ -948,12 +954,15 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("##")
 				.pattern("##")),
 
-		COPPER_SHINGLES_FROM_TILES = create(AllBlocks.COPPER_SHINGLES).withSuffix("_from_tiles")
+		COPPER_SHINGLES_FROM_TILES = create(AllBlocks.COPPER_SHINGLES).withSuffix("_from_plating")
 			.unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.requires(AllBlocks.COPPER_TILES.get())),
+			.viaShapeless(b -> b.requires(AllBlocks.COPPER_PLATING.get())),
 
 		COPPER_TILES = create(AllBlocks.COPPER_TILES).unlockedByTag(I::copperSheet)
-			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.get()))
+			.viaShapeless(b -> b.requires(AllBlocks.COPPER_SHINGLES.get())),
+
+		COPPER_PLATING = create(AllBlocks.COPPER_PLATING).unlockedByTag(I::copperSheet)
+			.viaShapeless(b -> b.requires(AllBlocks.COPPER_TILES.get()))
 
 	;
 
@@ -965,13 +974,13 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		.viaShapeless(b -> b.requires(AllItems.WHEAT_FLOUR.get())
 			.requires(Items.WATER_BUCKET)),
 
-		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedByTag(I::copper)
+		DIVING_HELMET = create(AllItems.DIVING_HELMET).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', Tags.Items.GLASS)
 				.define('P', I.copper())
 				.pattern("PPP")
 				.pattern("PGP")),
 
-		COPPER_BACKTANK = create(AllItems.COPPER_BACKTANK).unlockedByTag(I::copper)
+		COPPER_BACKTANK = create(AllItems.COPPER_BACKTANK).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', I.shaft())
 				.define('A', I.andesite())
 				.define('B', I.copperBlock())
@@ -980,7 +989,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				.pattern("PBP")
 				.pattern(" P ")),
 
-		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedByTag(I::copper)
+		DIVING_BOOTS = create(AllItems.DIVING_BOOTS).unlockedBy(I::copper)
 			.viaShaped(b -> b.define('G', I.andesite())
 				.define('P', I.copper())
 				.pattern("P P")
@@ -1039,11 +1048,10 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		VERTICAL_FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.VERTICAL_FRAMED_GLASS_PANE),
 		HORIZONTAL_FRAMED_GLASS_PANE = recycleGlassPane(AllPaletteBlocks.HORIZONTAL_FRAMED_GLASS_PANE),
 
-		COPPER_ORE = blastMetalOre(AllItems.COPPER_INGOT::get, AllTags.forgeItemTag("ores/copper")),
 		ZINC_ORE = blastMetalOre(AllItems.ZINC_INGOT::get, AllTags.forgeItemTag("ores/zinc")),
 		CRUSHED_IRON = blastCrushedMetal(() -> Items.IRON_INGOT, AllItems.CRUSHED_IRON::get),
 		CRUSHED_GOLD = blastCrushedMetal(() -> Items.GOLD_INGOT, AllItems.CRUSHED_GOLD::get),
-		CRUSHED_COPPER = blastCrushedMetal(AllItems.COPPER_INGOT::get, AllItems.CRUSHED_COPPER::get),
+		CRUSHED_COPPER = blastCrushedMetal(() -> Items.COPPER_INGOT, AllItems.CRUSHED_COPPER::get),
 		CRUSHED_ZINC = blastCrushedMetal(AllItems.ZINC_INGOT::get, AllItems.CRUSHED_ZINC::get),
 		CRUSHED_BRASS = blastCrushedMetal(AllItems.BRASS_INGOT::get, AllItems.CRUSHED_BRASS::get),
 
@@ -1087,7 +1095,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		return create(result::get);
 	}
 
-	GeneratedRecipe createSpecial(Supplier<? extends SimpleRecipeSerializer<?>> serializer, String recipeType, String path) {
+	GeneratedRecipe createSpecial(Supplier<? extends SimpleRecipeSerializer<?>> serializer, String recipeType,
+		String path) {
 		ResourceLocation location = Create.asResource(recipeType + "/" + currentFolder + "/" + path);
 		return register(consumer -> {
 			SpecialRecipeBuilder b = SpecialRecipeBuilder.special(serializer.get());
@@ -1095,8 +1104,7 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 		});
 	}
 
-	GeneratedRecipe blastCrushedMetal(Supplier<? extends ItemLike> result,
-		Supplier<? extends ItemLike> ingredient) {
+	GeneratedRecipe blastCrushedMetal(Supplier<? extends ItemLike> result, Supplier<? extends ItemLike> ingredient) {
 		return create(result::get).withSuffix("_from_crushed")
 			.viaCooking(ingredient::get)
 			.rewardXP(.1f)
@@ -1342,8 +1350,8 @@ public class StandardRecipeGen extends CreateRecipeProvider {
 				return register(consumer -> {
 					boolean isOtherMod = compatDatagenOutput != null;
 
-					SimpleCookingRecipeBuilder b = builder
-						.apply(SimpleCookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
+					SimpleCookingRecipeBuilder b = builder.apply(
+						SimpleCookingRecipeBuilder.cooking(ingredient.get(), isOtherMod ? Items.DIRT : result.get(),
 							exp, (int) (cookingTime * cookingTimeModifier), serializer));
 					if (unlockedBy != null)
 						b.unlockedBy("has_item", inventoryTrigger(unlockedBy.get()));

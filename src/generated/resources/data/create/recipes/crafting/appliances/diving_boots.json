@@ -10,7 +10,7 @@
       "item": "create:andesite_alloy"
     },
     "P": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     }
   },
   "result": {

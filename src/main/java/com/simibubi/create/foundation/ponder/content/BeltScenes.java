@@ -332,7 +332,7 @@ public class BeltScenes {
 		scene.idle(10);
 		scene.special.movePointOfInterest(util.grid.at(2, 2, 0));
 
-		ItemStack stack = AllBlocks.COPPER_BLOCK.asStack();
+		ItemStack stack = new ItemStack(Items.COPPER_BLOCK);
 		ElementLink<EntityElement> item =
 			scene.world.createItemEntity(util.vector.centerOf(0, 4, 2), util.vector.of(0, 0, 0), stack);
 		scene.idle(13);
@@ -496,9 +496,9 @@ public class BeltScenes {
 		scene.idle(70);
 
 		scene.overlay.showControls(new InputWindowElement(topOf, Pointing.DOWN).rightClick()
-			.withItem(AllBlocks.COPPER_BLOCK.asStack()), 20);
+			.withItem(new ItemStack(Items.COPPER_BLOCK)), 20);
 		scene.idle(7);
-		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, AllBlocks.COPPER_BLOCK.asStack());
+		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, new ItemStack(Items.COPPER_BLOCK));
 		scene.idle(10);
 		scene.overlay.showText(70)
 			.attachKeyFrame()
@@ -539,7 +539,7 @@ public class BeltScenes {
 
 		BlockPos pressPos = depotPos.above(2)
 			.west();
-		ItemStack copper = AllItems.COPPER_INGOT.asStack();
+		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
 		scene.world.createItemOnBeltLike(depotPos, Direction.NORTH, copper);
 		Vec3 depotCenter = util.vector.centerOf(depotPos);
 		scene.idle(10);

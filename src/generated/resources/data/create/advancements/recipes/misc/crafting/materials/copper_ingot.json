@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:blasting/copper_ingot_from_ore"
+      "create:crafting/materials/copper_ingot"
     ]
   },
   "criteria": {
@@ -11,7 +11,9 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ores/copper"
+            "items": [
+              "create:copper_nugget"
+            ]
           }
         ]
       }
@@ -19,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:blasting/copper_ingot_from_ore"
+        "recipe": "create:crafting/materials/copper_ingot"
       }
     }
   },

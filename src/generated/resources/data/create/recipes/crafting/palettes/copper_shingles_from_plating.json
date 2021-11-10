@@ -2,11 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "tag": "forge:storage_blocks/copper"
+      "item": "create:copper_block"
     }
   ],
   "result": {
-    "item": "create:copper_ingot",
-    "count": 9
+    "item": "create:copper_shingles"
   }
 }

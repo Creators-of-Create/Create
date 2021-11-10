@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "###",
-    "###",
-    "###"
+    "CCC",
+    "CCC",
+    "CCC"
   ],
   "key": {
-    "#": {
+    "C": {
       "tag": "forge:nuggets/copper"
     }
   },
   "result": {
-    "item": "create:copper_ingot"
+    "item": "minecraft:copper_ingot"
   }
 }

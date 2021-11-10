@@ -9,7 +9,7 @@
       "tag": "forge:glass"
     },
     "P": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     }
   },
   "result": {

@@ -15,7 +15,7 @@
       "item": "create:fluid_pipe"
     },
     "C": {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     }
   },
   "result": {

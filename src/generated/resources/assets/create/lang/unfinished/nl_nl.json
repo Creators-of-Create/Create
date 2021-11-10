@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1796",
+	"_": "Missing Localizations: 1795",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -67,9 +67,8 @@
 	"block.create.content_observer": "UNLOCALIZED: Content Observer",
 	"block.create.controller_rail": "UNLOCALIZED: Controller Rail",
 	"block.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
-	"block.create.copper_block": "UNLOCALIZED: Block of Copper",
+	"block.create.copper_block": "UNLOCALIZED: Copper Plating",
 	"block.create.copper_casing": "UNLOCALIZED: Copper Casing",
-	"block.create.copper_ore": "UNLOCALIZED: Copper Ore",
 	"block.create.copper_shingles": "UNLOCALIZED: Copper Shingles",
 	"block.create.copper_tiles": "UNLOCALIZED: Copper Tiles",
 	"block.create.copper_valve_handle": "UNLOCALIZED: Copper Valve Handle",
@@ -480,7 +479,6 @@
 	"item.create.chromatic_compound": "UNLOCALIZED: Chromatic Compound",
 	"item.create.cinder_flour": "UNLOCALIZED: Cinder Flour",
 	"item.create.copper_backtank": "UNLOCALIZED: Copper Backtank",
-	"item.create.copper_ingot": "Koperstaaf",
 	"item.create.copper_nugget": "Koper klompje",
 	"item.create.copper_sheet": "UNLOCALIZED: Copper Sheet",
 	"item.create.crafter_slot_cover": "UNLOCALIZED: Crafter Slot Cover",

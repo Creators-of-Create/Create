@@ -1,6 +1,5 @@
 package com.simibubi.create.foundation.ponder.content;
 
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.actors.HarvesterTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableItemInterfaceTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.PortableStorageInterfaceTileEntity;
@@ -114,7 +113,7 @@ public class MovementActorScenes {
 			.attachKeyFrame()
 			.text("Items can now be inserted...");
 
-		ItemStack itemStack = AllItems.COPPER_INGOT.asStack();
+		ItemStack itemStack = new ItemStack(Items.COPPER_INGOT);
 		Vec3 entitySpawn = util.vector.topOf(hopper.above(3));
 
 		ElementLink<EntityElement> entity1 =

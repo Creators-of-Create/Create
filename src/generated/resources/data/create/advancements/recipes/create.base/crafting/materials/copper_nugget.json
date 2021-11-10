@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "create:crafting/materials/copper_ingot_from_compacting"
+      "create:crafting/materials/copper_nugget"
     ]
   },
   "criteria": {
@@ -12,7 +12,7 @@
         "items": [
           {
             "items": [
-              "create:copper_nugget"
+              "minecraft:copper_ingot"
             ]
           }
         ]
@@ -21,7 +21,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "create:crafting/materials/copper_ingot_from_compacting"
+        "recipe": "create:crafting/materials/copper_nugget"
       }
     }
   },

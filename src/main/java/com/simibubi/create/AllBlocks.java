@@ -1496,18 +1496,6 @@ public class AllBlocks {
 		REGISTRATE.startSection(AllSections.MATERIALS);
 	}
 
-	public static final BlockEntry<OxidizingBlock> COPPER_ORE =
-		REGISTRATE.block("copper_ore", p -> new OxidizingBlock(p, 1))
-			.initialProperties(() -> Blocks.IRON_ORE)
-			.properties(p -> p.requiresCorrectToolForDrops())
-			.transform(pickaxeOnly())
-			.transform(oxidizedBlockstate())
-			.tag(Tags.Blocks.ORES)
-			.transform(tagBlockAndItem("ores/copper"))
-			.tag(Tags.Items.ORES)
-			.transform(oxidizedItemModel())
-			.register();
-
 	public static final BlockEntry<Block> ZINC_ORE = REGISTRATE.block("zinc_ore", Block::new)
 		.initialProperties(() -> Blocks.GOLD_BLOCK)
 		.properties(p -> p.requiresCorrectToolForDrops()
@@ -1520,18 +1508,15 @@ public class AllBlocks {
 		.build()
 		.register();
 
-	public static final BlockEntry<OxidizingBlock> COPPER_BLOCK =
+	public static final BlockEntry<OxidizingBlock> COPPER_PLATING =
 		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
 			.initialProperties(() -> Blocks.IRON_BLOCK)
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
-			.tag(Tags.Blocks.STORAGE_BLOCKS)
-			.tag(BlockTags.BEACON_BASE_BLOCKS)
-			.transform(tagBlockAndItem("storage_blocks/copper"))
-			.tag(Tags.Items.STORAGE_BLOCKS)
+			.item()
 			.transform(oxidizedItemModel())
 			.transform(oxidizedBlockstate())
-			.lang("Block of Copper")
+			.lang("Copper Plating")
 			.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =

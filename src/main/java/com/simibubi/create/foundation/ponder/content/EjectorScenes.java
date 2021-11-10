@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.ponder.ElementLink;
@@ -19,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -114,8 +114,8 @@ public class EjectorScenes {
 			.placeNearTarget();
 		scene.idle(60);
 
-		ItemStack copperBlock = AllBlocks.COPPER_BLOCK.asStack();
-		ItemStack copperIngot = AllItems.COPPER_INGOT.asStack();
+		ItemStack copperBlock = new ItemStack(Items.COPPER_BLOCK);
+		ItemStack copperIngot = new ItemStack(Items.COPPER_INGOT);
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(ejectorPos)
 			.add(0.5, 0, 0), Pointing.RIGHT).withItem(copperBlock), 30);
 		scene.idle(7);
@@ -269,9 +269,9 @@ public class EjectorScenes {
 		scene.idle(90);
 
 		scene.overlay.showControls(new InputWindowElement(util.vector.topOf(util.grid.at(4, 1, 3)), Pointing.DOWN)
-			.withItem(AllItems.COPPER_INGOT.asStack()), 20);
+			.withItem(new ItemStack(Items.COPPER_INGOT)), 20);
 		scene.idle(7);
-		scene.world.createItemOnBelt(util.grid.at(4, 1, 3), Direction.UP, AllItems.COPPER_INGOT.asStack(64));
+		scene.world.createItemOnBelt(util.grid.at(4, 1, 3), Direction.UP, new ItemStack(Items.COPPER_INGOT, 64));
 		scene.idle(40);
 		scene.world.multiplyKineticSpeed(util.select.everywhere(), 1 / 16f);
 		scene.overlay.showText(80)
@@ -304,7 +304,7 @@ public class EjectorScenes {
 
 		BlockPos ejectorPos = util.grid.at(4, 1, 2);
 		Vec3 topOf = util.vector.topOf(ejectorPos.above(2));
-		ItemStack copper = AllItems.COPPER_INGOT.asStack();
+		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
 
 		for (int i = 0; i < 3; i++) {
 			scene.world.createItemEntity(topOf, util.vector.of(0, 0.1, 0), copper);

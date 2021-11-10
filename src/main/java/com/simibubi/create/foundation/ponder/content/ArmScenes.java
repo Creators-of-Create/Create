@@ -1,7 +1,6 @@
 package com.simibubi.create.foundation.ponder.content;
 
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.crafter.MechanicalCrafterTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
@@ -116,7 +115,7 @@ public class ArmScenes {
 		scene.effects.indicateSuccess(armPos);
 		scene.world.showSection(util.select.fromTo(2, 1, 5, 2, 1, 3)
 			.add(util.select.position(2, 0, 5)), Direction.DOWN);
-		ItemStack copper = AllItems.COPPER_INGOT.asStack();
+		ItemStack copper = new ItemStack(Items.COPPER_INGOT);
 		scene.world.createItemOnBeltLike(inputDepot, Direction.SOUTH, copper);
 		scene.idle(10);
 
@@ -157,7 +156,7 @@ public class ArmScenes {
 
 		inputDepot = util.grid.at(1, 3, 4);
 		outputDepot = util.grid.at(1, 1, 0);
-		copper = AllBlocks.COPPER_BLOCK.asStack();
+		copper = new ItemStack(Items.COPPER_BLOCK);
 		scene.world.createItemOnBeltLike(inputDepot, Direction.SOUTH, copper);
 		scene.idle(20);
 		scene.world.instructArm(armPos, Phase.MOVE_TO_INPUT, ItemStack.EMPTY, 2);

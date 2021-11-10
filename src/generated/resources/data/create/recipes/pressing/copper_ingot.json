@@ -2,7 +2,7 @@
   "type": "create:pressing",
   "ingredients": [
     {
-      "tag": "forge:ingots/copper"
+      "item": "minecraft:copper_ingot"
     }
   ],
   "results": [

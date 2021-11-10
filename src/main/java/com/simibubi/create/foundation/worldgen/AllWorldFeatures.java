@@ -26,8 +26,6 @@ public class AllWorldFeatures {
 
 	static final ConfigDrivenFeatureEntry
 
-	COPPER = register("copper_ore", AllBlocks.COPPER_ORE, 18, 2).between(40, 85),
-
 		ZINC = register("zinc_ore", AllBlocks.ZINC_ORE, 14, 4).between(15, 70),
 
 		LIMESTONE = register("limestone", AllPaletteBlocks.LIMESTONE, 128, 1 / 64f).between(30, 70),
