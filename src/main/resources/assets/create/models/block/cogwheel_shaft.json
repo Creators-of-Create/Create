@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "create:block/axis_top",
+		"1": "create:block/cogwheel_axis",
+		"particle": "create:block/axis_top"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 16, 10],
+			"faces": {
+				"north": {"uv": [6, 0, 10, 16], "texture": "#1"},
+				"east": {"uv": [6, 0, 10, 16], "texture": "#1"},
+				"south": {"uv": [6, 0, 10, 16], "texture": "#1"},
+				"west": {"uv": [6, 0, 10, 16], "texture": "#1"},
+				"up": {"uv": [6, 6, 10, 10], "texture": "#0"},
+				"down": {"uv": [6, 6, 10, 10], "texture": "#0"}
+			}
+		}
+	]
+}

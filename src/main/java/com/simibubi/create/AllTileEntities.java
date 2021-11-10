@@ -104,6 +104,8 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltInstance;
 import com.simibubi.create.content.contraptions.relays.belt.BeltRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticTileEntity;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticTileInstance;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticTileRenderer;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
@@ -188,11 +190,11 @@ public class AllTileEntities {
 	// Kinetics
 	public static final TileEntityEntry<BracketedKineticTileEntity> BRACKETED_KINETIC = Create.registrate()
 		.tileEntity("simple_kinetic", BracketedKineticTileEntity::new)
-		.instance(() -> SingleRotatingInstance::new)
+		.instance(() -> BracketedKineticTileInstance::new)
 		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL)
-		.renderer(() -> KineticTileEntityRenderer::new)
+		.renderer(() -> BracketedKineticTileRenderer::new)
 		.register();
-
+	
 	public static final TileEntityEntry<CreativeMotorTileEntity> MOTOR = Create.registrate()
 		.tileEntity("motor", CreativeMotorTileEntity::new)
 		.instance(() -> HalfShaftInstance::new)
