@@ -30,6 +30,10 @@ public class Couple<T> extends Pair<T, T> implements Iterable<T> {
 		return new Couple<>(factory.get(), factory.get());
 	}
 
+	public static <T> Couple<T> createWithContext(Function<Boolean, T> factory) {
+		return new Couple<>(factory.apply(true), factory.apply(false));
+	}
+	
 	public T get(boolean first) {
 		return first ? getFirst() : getSecond();
 	}

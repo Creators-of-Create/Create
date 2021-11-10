@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1417",
+	"_": "Missing Localizations: 1418",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "Vitre encadrée horizontale",
 	"block.create.hose_pulley": "UNLOCALIZED: Hose Pulley",
 	"block.create.item_drain": "UNLOCALIZED: Item Drain",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "UNLOCALIZED: Jungle Window",
 	"block.create.jungle_window_pane": "UNLOCALIZED: Jungle Window Pane",
 	"block.create.large_cogwheel": "Grande roue dentée",

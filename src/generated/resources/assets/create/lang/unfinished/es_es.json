@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 45",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "Panel de cristal con marco horizontal",
 	"block.create.hose_pulley": "Polea de manguera",
 	"block.create.item_drain": "Drenador de objetos",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "Ventana de jungla",
 	"block.create.jungle_window_pane": "Panel de ventana de jungla",
 	"block.create.large_cogwheel": "Engranaje grande",

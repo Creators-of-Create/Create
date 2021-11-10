@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1166",
+	"_": "Missing Localizations: 1167",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "Horizontal Gerahmte Glasscheibe",
 	"block.create.hose_pulley": "Umlenkrolle",
 	"block.create.item_drain": "Abfluss",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "Tropenholzfenster",
 	"block.create.jungle_window_pane": "Tropenholzfensterscheibe",
 	"block.create.large_cogwheel": "Großes Zahnrad",

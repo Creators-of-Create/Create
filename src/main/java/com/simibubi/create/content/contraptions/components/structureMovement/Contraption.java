@@ -59,6 +59,7 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
 import com.simibubi.create.content.logistics.block.inventories.CreativeCrateTileEntity;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
+import com.simibubi.create.content.logistics.block.vault.VaultTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
@@ -656,7 +657,8 @@ public abstract class Contraption {
 		nbt.remove("y");
 		nbt.remove("z");
 
-		if (tileentity instanceof FluidTankTileEntity && nbt.contains("Controller"))
+		if ((tileentity instanceof FluidTankTileEntity || tileentity instanceof VaultTileEntity)
+			&& nbt.contains("Controller"))
 			nbt.put("Controller",
 				NbtUtils.writeBlockPos(toLocalPos(NbtUtils.readBlockPos(nbt.getCompound("Controller")))));
 

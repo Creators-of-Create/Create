@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 63",
+	"_": "Missing Localizations: 64",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "豎直邊框玻璃片",
 	"block.create.hose_pulley": "軟管滑輪",
 	"block.create.item_drain": "分液池",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "叢林木窗戶",
 	"block.create.jungle_window_pane": "叢林木窗戶片",
 	"block.create.large_cogwheel": "大齒輪",

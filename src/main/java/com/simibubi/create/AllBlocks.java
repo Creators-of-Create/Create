@@ -160,6 +160,9 @@ import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
+import com.simibubi.create.content.logistics.block.vault.VaultBlock;
+import com.simibubi.create.content.logistics.block.vault.VaultCTBehaviour;
+import com.simibubi.create.content.logistics.block.vault.VaultItem;
 import com.simibubi.create.content.logistics.item.LecternControllerBlock;
 import com.simibubi.create.content.schematics.block.SchematicTableBlock;
 import com.simibubi.create.content.schematics.block.SchematicannonBlock;
@@ -181,6 +184,7 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -1239,6 +1243,19 @@ public class AllBlocks {
 		.transform(BlockStressDefaults.setImpact(2.0))
 		.item(ArmItem::new)
 		.transform(customItemModel())
+		.register();
+
+	public static final BlockEntry<VaultBlock> ITEM_VAULT = REGISTRATE.block("item_vault", VaultBlock::new)
+		.initialProperties(SharedProperties::softMetal)
+		.properties(p -> p.sound(SoundType.NETHERITE_BLOCK))
+		.blockstate((c, p) -> p.getVariantBuilder(c.get())
+			.forAllStates(s -> ConfiguredModel.builder()
+				.modelFile(AssetLookup.standardModel(c, p))
+				.rotationY(s.getValue(VaultBlock.HORIZONTAL_AXIS) == Axis.X ? 90 : 0)
+				.build()))
+		.onRegister(connectedTextures(new VaultCTBehaviour()))
+		.item(VaultItem::new)
+		.build()
 		.register();
 
 	public static final BlockEntry<AndesiteFunnelBlock> ANDESITE_FUNNEL =

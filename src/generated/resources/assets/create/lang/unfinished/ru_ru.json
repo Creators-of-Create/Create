@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 49",
+	"_": "Missing Localizations: 50",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "Горизонтальная обрамлённая стеклянная панель",
 	"block.create.hose_pulley": "Шкив со шлангом",
 	"block.create.item_drain": "Предметный осушитель",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "Окно из тропического дерева",
 	"block.create.jungle_window_pane": "Панель окна из тропического дерева",
 	"block.create.large_cogwheel": "Большая шестерня",

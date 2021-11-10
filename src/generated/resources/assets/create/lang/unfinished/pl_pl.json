@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 44",
+	"_": "Missing Localizations: 45",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "Pozioma oprawiona szyba",
 	"block.create.hose_pulley": "Krążek z wężem",
 	"block.create.item_drain": "Odpływ",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "Dżunglowe okno",
 	"block.create.jungle_window_pane": "Dżunglowa szyba okienna",
 	"block.create.large_cogwheel": "Duże koło zębate",

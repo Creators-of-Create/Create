@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 68",
+	"_": "Missing Localizations: 69",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "수평 유리판",
 	"block.create.hose_pulley": "호스 도르래",
 	"block.create.item_drain": "아이템 배수구",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "정글나무 유리창",
 	"block.create.jungle_window_pane": "정글나무 유리판",
 	"block.create.large_cogwheel": "큰 톱니바퀴",

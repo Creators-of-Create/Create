@@ -7,6 +7,7 @@ public class CLogistics extends ConfigBase {
 	public final ConfigInt psiTimeout = i(20, 1, "psiTimeout", Comments.psiTimeout);
 	public final ConfigInt mechanicalArmRange = i(5, 1, "mechanicalArmRange", Comments.mechanicalArmRange);
 	public final ConfigInt linkRange = i(128, 1, "linkRange", Comments.linkRange);
+	public final ConfigInt vaultCapacity = i(27, 1, "vaultCapacity", Comments.vaultCapacity);
 
 	@Override
 	public String getName() {
@@ -22,6 +23,7 @@ public class CLogistics extends ConfigBase {
 		static String psiTimeout =
 			"The amount of ticks a portable storage interface waits for transfers until letting contraptions move along.";
 		static String mechanicalArmRange = "Maximum distance in blocks a Mechanical Arm can reach across.";
+		static String vaultCapacity = "The total amount of stacks a vault can hold per block in size.";
 	}
 
 }

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1644",
+	"_": "Missing Localizations: 1645",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "UNLOCALIZED: Horizontal Framed Glass Pane",
 	"block.create.hose_pulley": "Polia de Mangueira",
 	"block.create.item_drain": "Dreno de Item",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "UNLOCALIZED: Jungle Window",
 	"block.create.jungle_window_pane": "UNLOCALIZED: Jungle Window Pane",
 	"block.create.large_cogwheel": "Roda Dentada Grande",

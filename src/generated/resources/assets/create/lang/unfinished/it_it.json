@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 946",
+	"_": "Missing Localizations: 947",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -205,6 +205,7 @@
 	"block.create.horizontal_framed_glass_pane": "Pannello di finestra di vetro orizzontale",
 	"block.create.hose_pulley": "Carrucola per tubi",
 	"block.create.item_drain": "Drenante di oggetti",
+	"block.create.item_vault": "UNLOCALIZED: Item Vault",
 	"block.create.jungle_window": "Finestra della giungla",
 	"block.create.jungle_window_pane": "Pannello di finestra della giungla",
 	"block.create.large_cogwheel": "Ruota dentata grande",

@@ -13,9 +13,11 @@ import com.simibubi.create.content.palettes.PaletteBlockPattern;
 import com.simibubi.create.content.palettes.PaletteBlockPattern.CTs;
 import com.simibubi.create.content.palettes.PaletteStoneVariants;
 import com.simibubi.create.foundation.block.connected.CTSpriteShiftEntry;
+import com.simibubi.create.foundation.block.connected.CTSpriteShifter;
 import com.simibubi.create.foundation.block.connected.CTSpriteShifter.CTType;
 import com.simibubi.create.foundation.block.render.SpriteShiftEntry;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.world.item.DyeColor;
@@ -57,6 +59,9 @@ public class AllSpriteShifts {
 	public static final CTSpriteShiftEntry BRASS_TUNNEL_TOP = vertical("brass_tunnel_top"),
 		FLUID_TANK = getCT(CTType.CROSS, "fluid_tank"),
 		CREATIVE_FLUID_TANK = getCT(CTType.CROSS, "creative_fluid_tank");
+
+	public static final Couple<CTSpriteShiftEntry> VAULT_TOP = vault("top"), VAULT_FRONT = vault("front"),
+		VAULT_SIDE = vault("side"), VAULT_BOTTOM = vault("bottom");
 
 	public static final SpriteShiftEntry BELT = SpriteShifter.get("block/belt", "block/belt_scroll"),
 		BELT_OFFSET = SpriteShifter.get("block/belt_offset", "block/belt_scroll"),
@@ -106,6 +111,12 @@ public class AllSpriteShifts {
 			DYED_DIAGONAL_BELTS.put(color,
 				SpriteShifter.get("block/belt_diagonal", "block/belt/" + id + "_diagonal_scroll"));
 		}
+	}
+
+	static Couple<CTSpriteShiftEntry> vault(String name) {
+		final String prefixed = "vault_" + name;
+		return Couple
+			.createWithContext(b -> getCT(CTSpriteShifter.CTType.CROSS, prefixed, b ? prefixed : prefixed + "_large"));
 	}
 
 	//
