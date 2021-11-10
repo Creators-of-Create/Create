@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
+import com.jozufozu.flywheel.backend.gl.error.GlError;
 import com.jozufozu.flywheel.core.model.ModelUtil;
 import com.jozufozu.flywheel.event.BeginFrameEvent;
 import com.jozufozu.flywheel.event.GatherContextEvent;
@@ -68,6 +69,8 @@ public class ContraptionRenderDispatcher {
 	@SubscribeEvent
 	public static void renderLayer(RenderLayerEvent event) {
 		WORLDS.get(event.getWorld()).renderLayer(event);
+
+		GlError.pollAndThrow(() -> "contraption layer: " + event.getLayer());
 	}
 
 	@SubscribeEvent
