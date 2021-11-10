@@ -25,17 +25,35 @@ public class PartialBufferer {
 	}
 
 	public static SuperByteBuffer getFacing(PartialModel partial, BlockState referenceState, Direction facing) {
-		return CreateClient.BUFFER_CACHE.renderDirectionalPartial(partial, referenceState, facing, rotateToFace(facing));
+		return CreateClient.BUFFER_CACHE.renderDirectionalPartial(partial, referenceState, facing,
+			rotateToFace(facing));
+	}
+
+	public static SuperByteBuffer getFacingVertical(PartialModel partial, BlockState referenceState, Direction facing) {
+		return CreateClient.BUFFER_CACHE.renderDirectionalPartial(partial, referenceState, facing,
+			rotateToFaceVertical(facing));
 	}
 
 	public static Supplier<PoseStack> rotateToFace(Direction facing) {
 		return () -> {
 			PoseStack stack = new PoseStack();
 			MatrixTransformStack.of(stack)
-					.centre()
-					.rotateY(AngleHelper.horizontalAngle(facing))
-					.rotateX(AngleHelper.verticalAngle(facing))
-					.unCentre();
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(AngleHelper.verticalAngle(facing))
+				.unCentre();
+			return stack;
+		};
+	}
+
+	public static Supplier<PoseStack> rotateToFaceVertical(Direction facing) {
+		return () -> {
+			PoseStack stack = new PoseStack();
+			MatrixTransformStack.of(stack)
+				.centre()
+				.rotateY(AngleHelper.horizontalAngle(facing))
+				.rotateX(AngleHelper.verticalAngle(facing) + 90)
+				.unCentre();
 			return stack;
 		};
 	}

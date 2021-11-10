@@ -8,6 +8,7 @@ import static com.simibubi.create.foundation.data.CreateRegistrate.connectedText
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +20,8 @@ import com.simibubi.create.content.contraptions.base.CasingBlock;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonGenerator;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock.Shape;
@@ -36,6 +39,7 @@ import net.minecraft.core.Direction.Axis;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -61,8 +65,8 @@ public class BuilderTransformers {
 		return builder -> builder.initialProperties(SharedProperties::stone)
 			.properties(BlockBehaviour.Properties::noOcclusion)
 			.onRegister(CreateRegistrate.connectedTextures(new EncasedCTBehaviour(casingShift)))
-			.onRegister(CreateRegistrate.casingConnectivity(
-				(block, cc) -> cc.make(block, casingShift, (s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
+				(s, f) -> f.getAxis() != s.getValue(EncasedShaftBlock.AXIS))))
 			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
 				.getExistingFile(p.modLoc("block/encased_shaft/block_" + casing)), true))
 			.transform(BlockStressDefaults.setNoImpact())
@@ -70,6 +74,51 @@ public class BuilderTransformers {
 			.item()
 			.model(AssetLookup.customBlockItemModel("encased_shaft", "item_" + casing))
 			.build();
+	}
+
+	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedCogwheel(
+		String casing, CTSpriteShiftEntry casingShift) {
+		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.COGWHEEL.get())
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
+				.withExistingParent(c.getName(), p.modLoc("block/encased_cogwheel/block"))
+				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
+				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side")), false))
+			.item()
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_cogwheel/item"))
+				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
+				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side")))
+			.build();
+	}
+
+	public static <B extends EncasedCogwheelBlock, P> NonNullUnaryOperator<BlockBuilder<B, P>> encasedLargeCogwheel(
+		String casing, CTSpriteShiftEntry casingShift) {
+		return b -> encasedCogwheelBase(b, casing, casingShift, () -> AllBlocks.LARGE_COGWHEEL.get())
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(casingShift)))
+			.blockstate((c, p) -> axisBlock(c, p, blockState -> p.models()
+				.withExistingParent(c.getName(), p.modLoc("block/encased_large_cogwheel/block"))
+				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
+				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side_connected")), false))
+			.item()
+			.model((c, p) -> p.withExistingParent(c.getName(), p.modLoc("block/encased_large_cogwheel/item"))
+				.texture("casing", Create.asResource("block/" + casing + "_casing"))
+				.texture("1", new ResourceLocation("block/stripped_dark_oak_log_top"))
+				.texture("side", Create.asResource("block/" + casing + "_encased_cogwheel_side_connected")))
+			.build();
+	}
+
+	private static <B extends EncasedCogwheelBlock, P> BlockBuilder<B, P> encasedCogwheelBase(BlockBuilder<B, P> b,
+		String casing, CTSpriteShiftEntry casingShift, Supplier<ItemLike> drop) {
+		return b.initialProperties(SharedProperties::stone)
+			.addLayer(() -> RenderType::cutoutMipped)
+			.properties(BlockBehaviour.Properties::noOcclusion)
+			.transform(BlockStressDefaults.setNoImpact())
+			.loot((p, lb) -> p.dropOther(lb, drop.get()))
+			.onRegister(CreateRegistrate.casingConnectivity((block, cc) -> cc.make(block, casingShift,
+				(s, f) -> f.getAxis() == s.getValue(EncasedCogwheelBlock.AXIS))));
+
 	}
 
 	public static <B extends ValveHandleBlock> NonNullUnaryOperator<BlockBuilder<B, CreateRegistrate>> valveHandle(

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 1640",
+	"_": "Missing Localizations: 1644",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -18,6 +18,8 @@
 	"block.create.andesite_cobblestone_slab": "UNLOCALIZED: Andesite Cobblestone Slab",
 	"block.create.andesite_cobblestone_stairs": "UNLOCALIZED: Andesite Cobblestone Stairs",
 	"block.create.andesite_cobblestone_wall": "UNLOCALIZED: Andesite Cobblestone Wall",
+	"block.create.andesite_encased_cogwheel": "UNLOCALIZED: Andesite Encased Cogwheel",
+	"block.create.andesite_encased_large_cogwheel": "UNLOCALIZED: Andesite Encased Large Cogwheel",
 	"block.create.andesite_encased_shaft": "UNLOCALIZED: Andesite Encased Shaft",
 	"block.create.andesite_funnel": "Funil de Andesito",
 	"block.create.andesite_pillar": "UNLOCALIZED: Andesite Pillar",
@@ -40,6 +42,8 @@
 	"block.create.brass_belt_funnel": "Funil de Esteira de Latão",
 	"block.create.brass_block": "Bloco de Latão",
 	"block.create.brass_casing": "Revestimento de Latão",
+	"block.create.brass_encased_cogwheel": "UNLOCALIZED: Brass Encased Cogwheel",
+	"block.create.brass_encased_large_cogwheel": "UNLOCALIZED: Brass Encased Large Cogwheel",
 	"block.create.brass_encased_shaft": "Eixo Revestido com Latão",
 	"block.create.brass_funnel": "Funil de Latão",
 	"block.create.brass_tunnel": "Tunel de Latão",

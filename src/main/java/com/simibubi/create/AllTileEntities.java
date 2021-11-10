@@ -3,7 +3,9 @@ package com.simibubi.create;
 import com.simibubi.create.content.contraptions.base.CutoutRotatingInstance;
 import com.simibubi.create.content.contraptions.base.HalfShaftInstance;
 import com.simibubi.create.content.contraptions.base.HorizontalHalfShaftInstance;
+import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
+import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
 import com.simibubi.create.content.contraptions.base.SingleRotatingInstance;
 import com.simibubi.create.content.contraptions.components.actors.DrillInstance;
 import com.simibubi.create.content.contraptions.components.actors.DrillRenderer;
@@ -101,12 +103,13 @@ import com.simibubi.create.content.contraptions.relays.advanced.sequencer.Sequen
 import com.simibubi.create.content.contraptions.relays.belt.BeltInstance;
 import com.simibubi.create.content.contraptions.relays.belt.BeltRenderer;
 import com.simibubi.create.content.contraptions.relays.belt.BeltTileEntity;
+import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.elementary.SimpleKineticTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchTileEntity;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftRenderer;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftTileEntity;
 import com.simibubi.create.content.contraptions.relays.encased.ShaftInstance;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftRenderer;
+import com.simibubi.create.content.contraptions.relays.encased.ShaftlessCogRenderer;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftInstance;
 import com.simibubi.create.content.contraptions.relays.encased.SplitShaftRenderer;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeInstance;
@@ -138,10 +141,10 @@ import com.simibubi.create.content.logistics.block.depot.DepotTileEntity;
 import com.simibubi.create.content.logistics.block.depot.EjectorInstance;
 import com.simibubi.create.content.logistics.block.depot.EjectorRenderer;
 import com.simibubi.create.content.logistics.block.depot.EjectorTileEntity;
-import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeInstance;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeRenderer;
 import com.simibubi.create.content.logistics.block.diodes.PulseExtenderTileEntity;
+import com.simibubi.create.content.logistics.block.diodes.PulseRepeaterTileEntity;
 import com.simibubi.create.content.logistics.block.funnel.FunnelInstance;
 import com.simibubi.create.content.logistics.block.funnel.FunnelRenderer;
 import com.simibubi.create.content.logistics.block.funnel.FunnelTileEntity;
@@ -183,8 +186,8 @@ public class AllTileEntities {
 		.register();
 
 	// Kinetics
-	public static final TileEntityEntry<SimpleKineticTileEntity> SIMPLE_KINETIC = Create.registrate()
-		.tileEntity("simple_kinetic", SimpleKineticTileEntity::new)
+	public static final TileEntityEntry<BracketedKineticTileEntity> BRACKETED_KINETIC = Create.registrate()
+		.tileEntity("simple_kinetic", BracketedKineticTileEntity::new)
 		.instance(() -> SingleRotatingInstance::new)
 		.validBlocks(AllBlocks.SHAFT, AllBlocks.COGWHEEL, AllBlocks.LARGE_COGWHEEL)
 		.renderer(() -> KineticTileEntityRenderer::new)
@@ -204,18 +207,32 @@ public class AllTileEntities {
 		.renderer(() -> GearboxRenderer::new)
 		.register();
 
-	public static final TileEntityEntry<EncasedShaftTileEntity> ENCASED_SHAFT = Create.registrate()
-		.tileEntity("encased_shaft", EncasedShaftTileEntity::new)
+	public static final TileEntityEntry<KineticTileEntity> ENCASED_SHAFT = Create.registrate()
+		.tileEntity("encased_shaft", KineticTileEntity::new)
 		.instance(() -> ShaftInstance::new)
 		.validBlocks(AllBlocks.ANDESITE_ENCASED_SHAFT, AllBlocks.BRASS_ENCASED_SHAFT, AllBlocks.ENCASED_CHAIN_DRIVE)
-		.renderer(() -> EncasedShaftRenderer::new)
+		.renderer(() -> ShaftRenderer::new)
+		.register();
+	
+	public static final TileEntityEntry<SimpleKineticTileEntity> ENCASED_COGWHEEL = Create.registrate()
+		.tileEntity("encased_cogwheel", SimpleKineticTileEntity::new)
+		.instance(() -> ShaftlessCogInstance::small)
+		.validBlocks(AllBlocks.ANDESITE_ENCASED_COGWHEEL, AllBlocks.BRASS_ENCASED_COGWHEEL)
+		.renderer(() -> ShaftlessCogRenderer::small)
+		.register();
+	
+	public static final TileEntityEntry<SimpleKineticTileEntity> ENCASED_LARGE_COGWHEEL = Create.registrate()
+		.tileEntity("encased_large_cogwheel", SimpleKineticTileEntity::new)
+		.instance(() -> ShaftlessCogInstance::large)
+		.validBlocks(AllBlocks.ANDESITE_ENCASED_LARGE_COGWHEEL, AllBlocks.BRASS_ENCASED_LARGE_COGWHEEL)
+		.renderer(() -> ShaftlessCogRenderer::large)
 		.register();
 
 	public static final TileEntityEntry<AdjustablePulleyTileEntity> ADJUSTABLE_PULLEY = Create.registrate()
 		.tileEntity("adjustable_pulley", AdjustablePulleyTileEntity::new)
 		.instance(() -> ShaftInstance::new)
 		.validBlocks(AllBlocks.ADJUSTABLE_CHAIN_GEARSHIFT)
-		.renderer(() -> EncasedShaftRenderer::new)
+		.renderer(() -> ShaftRenderer::new)
 		.register();
 
 	public static final TileEntityEntry<EncasedFanTileEntity> ENCASED_FAN = Create.registrate()

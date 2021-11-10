@@ -38,7 +38,11 @@ public class AllSpriteShifts {
 
 	public static final CTSpriteShiftEntry CRAFTER_FRONT = getCT(CTType.OMNIDIRECTIONAL, "crafter_top", "brass_casing"),
 		CRAFTER_SIDE = getCT(CTType.VERTICAL, "crafter_side"),
-		CRAFTER_OTHERSIDE = getCT(CTType.HORIZONTAL, "crafter_side");
+		CRAFTER_OTHERSIDE = getCT(CTType.HORIZONTAL, "crafter_side"),
+		ANDESITE_ENCASED_COGWHEEL_SIDE = getCT(CTType.VERTICAL, "andesite_encased_cogwheel_side"),
+		ANDESITE_ENCASED_COGWHEEL_OTHERSIDE = getCT(CTType.HORIZONTAL, "andesite_encased_cogwheel_side"),
+		BRASS_ENCASED_COGWHEEL_SIDE = getCT(CTType.VERTICAL, "brass_encased_cogwheel_side"),
+		BRASS_ENCASED_COGWHEEL_OTHERSIDE = getCT(CTType.HORIZONTAL, "brass_encased_cogwheel_side");
 
 	public static final CTSpriteShiftEntry ANDESITE_CASING = omni("andesite_casing"),
 		BRASS_CASING = omni("brass_casing"), COPPER_CASING = omni("copper_casing"),
@@ -78,10 +82,8 @@ public class AllSpriteShifts {
 	//
 
 	private static void populateMaps() {
-		WoodType[] supportedWoodTypes = new WoodType[] {
-			WoodType.OAK, WoodType.SPRUCE, WoodType.BIRCH, WoodType.ACACIA, WoodType.JUNGLE, WoodType.DARK_OAK,
-			WoodType.CRIMSON, WoodType.WARPED
-		};
+		WoodType[] supportedWoodTypes = new WoodType[] { WoodType.OAK, WoodType.SPRUCE, WoodType.BIRCH, WoodType.ACACIA,
+			WoodType.JUNGLE, WoodType.DARK_OAK, WoodType.CRIMSON, WoodType.WARPED };
 		Arrays.stream(supportedWoodTypes)
 			.forEach(woodType -> WOODEN_WINDOWS.put(woodType, vertical("palettes/" + woodType.name() + "_window")));
 

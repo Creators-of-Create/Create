@@ -16,7 +16,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ITE<EncasedShaftTileEntity>, ISpecialBlockItemRequirement {
+public class EncasedShaftBlock extends AbstractEncasedShaftBlock
+	implements ITE<KineticTileEntity>, ISpecialBlockItemRequirement {
 
 	private BlockEntry<CasingBlock> casing;
 
@@ -41,8 +42,11 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ITE<
 	public InteractionResult onSneakWrenched(BlockState state, UseOnContext context) {
 		if (context.getLevel().isClientSide)
 			return InteractionResult.SUCCESS;
-		context.getLevel().levelEvent(2001, context.getClickedPos(), Block.getId(state));
-		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(), AllBlocks.SHAFT.getDefaultState().setValue(AXIS, state.getValue(AXIS)));
+		context.getLevel()
+			.levelEvent(2001, context.getClickedPos(), Block.getId(state));
+		KineticTileEntity.switchToBlockState(context.getLevel(), context.getClickedPos(),
+			AllBlocks.SHAFT.getDefaultState()
+				.setValue(AXIS, state.getValue(AXIS)));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -50,14 +54,14 @@ public class EncasedShaftBlock extends AbstractEncasedShaftBlock implements ITE<
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return ItemRequirement.of(AllBlocks.SHAFT.getDefaultState(), te);
 	}
-	
+
 	@Override
-	public Class<EncasedShaftTileEntity> getTileEntityClass() {
-		return EncasedShaftTileEntity.class;
+	public Class<KineticTileEntity> getTileEntityClass() {
+		return KineticTileEntity.class;
 	}
 
 	@Override
-	public BlockEntityType<? extends EncasedShaftTileEntity> getTileEntityType() {
+	public BlockEntityType<? extends KineticTileEntity> getTileEntityType() {
 		return AllTileEntities.ENCASED_SHAFT.get();
 	}
 

@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 64",
+	"_": "Missing Localizations: 68",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -18,6 +18,8 @@
 	"block.create.andesite_cobblestone_slab": "안산암 조약돌 반 블록",
 	"block.create.andesite_cobblestone_stairs": "안산암 조약돌 계단",
 	"block.create.andesite_cobblestone_wall": "안산암 조약돌 담장",
+	"block.create.andesite_encased_cogwheel": "UNLOCALIZED: Andesite Encased Cogwheel",
+	"block.create.andesite_encased_large_cogwheel": "UNLOCALIZED: Andesite Encased Large Cogwheel",
 	"block.create.andesite_encased_shaft": "안산암 케이스를 씌운 축",
 	"block.create.andesite_funnel": "안산암 퍼널",
 	"block.create.andesite_pillar": "안산암 기둥",
@@ -40,6 +42,8 @@
 	"block.create.brass_belt_funnel": "황동 퍼널",
 	"block.create.brass_block": "황동 블록",
 	"block.create.brass_casing": "황동 케이스",
+	"block.create.brass_encased_cogwheel": "UNLOCALIZED: Brass Encased Cogwheel",
+	"block.create.brass_encased_large_cogwheel": "UNLOCALIZED: Brass Encased Large Cogwheel",
 	"block.create.brass_encased_shaft": "황동 케이스를 씌운 축",
 	"block.create.brass_funnel": "황동 퍼널",
 	"block.create.brass_tunnel": "황동 터널",

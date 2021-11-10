@@ -48,7 +48,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
 
-public abstract class KineticTileEntity extends SmartTileEntity
+public class KineticTileEntity extends SmartTileEntity
 	implements IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
 
 	public @Nullable Long network;

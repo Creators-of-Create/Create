@@ -1,11 +1,13 @@
 package com.simibubi.create.content.contraptions.components.mixer;
 
 import com.jozufozu.flywheel.backend.instancing.IDynamicInstance;
+import com.jozufozu.flywheel.backend.instancing.Instancer;
 import com.jozufozu.flywheel.backend.material.MaterialManager;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.contraptions.base.RotatingData;
 import com.simibubi.create.content.contraptions.base.ShaftlessCogInstance;
+import com.simibubi.create.foundation.render.AllMaterialSpecs;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
 import net.minecraft.core.Direction;
@@ -17,7 +19,7 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 	private final MechanicalMixerTileEntity mixer;
 
 	public MixerInstance(MaterialManager dispatcher, MechanicalMixerTileEntity tile) {
-		super(dispatcher, tile);
+		super(dispatcher, tile, false);
 		this.mixer = tile;
 
 		mixerHead = getRotatingMaterial().getModel(AllBlockPartials.MECHANICAL_MIXER_HEAD, blockState)
@@ -34,6 +36,13 @@ public class MixerInstance extends ShaftlessCogInstance implements IDynamicInsta
 
 		transformPole(renderedHeadOffset);
 		transformHead(renderedHeadOffset);
+	}
+	
+	@Override
+	protected Instancer<RotatingData> getModel() {
+		return materialManager.defaultSolid()
+			.material(AllMaterialSpecs.ROTATING)
+			.getModel(AllBlockPartials.SHAFTLESS_COGWHEEL, tile.getBlockState());
 	}
 
 	@Override

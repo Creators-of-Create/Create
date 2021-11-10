@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 40",
+	"_": "Missing Localizations: 44",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -18,6 +18,8 @@
 	"block.create.andesite_cobblestone_slab": "Andezytowa brukowa płyta",
 	"block.create.andesite_cobblestone_stairs": "Andezytowe brukowe schody",
 	"block.create.andesite_cobblestone_wall": "Andezytowy brukowy murek",
+	"block.create.andesite_encased_cogwheel": "UNLOCALIZED: Andesite Encased Cogwheel",
+	"block.create.andesite_encased_large_cogwheel": "UNLOCALIZED: Andesite Encased Large Cogwheel",
 	"block.create.andesite_encased_shaft": "Andezytowy izolowany wał",
 	"block.create.andesite_funnel": "Andezytowy lejek",
 	"block.create.andesite_pillar": "Andezytowy filar",
@@ -40,6 +42,8 @@
 	"block.create.brass_belt_funnel": "Mosiężny lejek taśmowy",
 	"block.create.brass_block": "Blok mosiądzu",
 	"block.create.brass_casing": "Mosiężna obudowa",
+	"block.create.brass_encased_cogwheel": "UNLOCALIZED: Brass Encased Cogwheel",
+	"block.create.brass_encased_large_cogwheel": "UNLOCALIZED: Brass Encased Large Cogwheel",
 	"block.create.brass_encased_shaft": "Mosiężny izolowany wał",
 	"block.create.brass_funnel": "Mosiężny lejek",
 	"block.create.brass_tunnel": "Mosiężny tunel",

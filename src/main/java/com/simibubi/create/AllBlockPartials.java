@@ -17,7 +17,8 @@ public class AllBlockPartials {
 	public static final PartialModel SCHEMATICANNON_CONNECTOR = get("schematicannon/connector"),
 		SCHEMATICANNON_PIPE = get("schematicannon/pipe"),
 
-		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), SHAFT_HALF = get("shaft_half"),
+		SHAFTLESS_COGWHEEL = get("cogwheel_shaftless"), SHAFTLESS_LARGE_COGWHEEL = get("large_cogwheel_shaftless"),
+		SHAFT_HALF = get("shaft_half"),
 
 		BELT_PULLEY = get("belt_pulley"), BELT_START = get("belt/start"), BELT_MIDDLE = get("belt/middle"),
 		BELT_END = get("belt/end"), BELT_START_BOTTOM = get("belt/start_bottom"),

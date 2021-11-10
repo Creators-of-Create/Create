@@ -111,6 +111,8 @@ import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltGenerator;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
+import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
@@ -172,6 +174,7 @@ import com.simibubi.create.foundation.data.ModelGen;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.ColorHandlers;
+import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.DyeHelper;
 import com.simibubi.create.foundation.worldgen.OxidizingBlock;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
@@ -293,6 +296,36 @@ public class AllBlocks {
 	public static final BlockEntry<EncasedShaftBlock> BRASS_ENCASED_SHAFT =
 		REGISTRATE.block("brass_encased_shaft", EncasedShaftBlock::brass)
 			.transform(BuilderTransformers.encasedShaft("brass", AllSpriteShifts.BRASS_CASING))
+			.transform(axeOrPickaxe())
+			.register();
+
+	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_COGWHEEL =
+		REGISTRATE.block("andesite_encased_cogwheel", p -> EncasedCogwheelBlock.andesite(false, p))
+			.transform(BuilderTransformers.encasedCogwheel("andesite", AllSpriteShifts.ANDESITE_CASING))
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(AllSpriteShifts.ANDESITE_CASING,
+				Couple.create(AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_SIDE,
+					AllSpriteShifts.ANDESITE_ENCASED_COGWHEEL_OTHERSIDE))))
+			.transform(axeOrPickaxe())
+			.register();
+
+	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_COGWHEEL =
+		REGISTRATE.block("brass_encased_cogwheel", p -> EncasedCogwheelBlock.brass(false, p))
+			.transform(BuilderTransformers.encasedCogwheel("brass", AllSpriteShifts.BRASS_CASING))
+			.onRegister(CreateRegistrate.connectedTextures(new EncasedCogCTBehaviour(AllSpriteShifts.BRASS_CASING,
+				Couple.create(AllSpriteShifts.BRASS_ENCASED_COGWHEEL_SIDE,
+					AllSpriteShifts.BRASS_ENCASED_COGWHEEL_OTHERSIDE))))
+			.transform(axeOrPickaxe())
+			.register();
+
+	public static final BlockEntry<EncasedCogwheelBlock> ANDESITE_ENCASED_LARGE_COGWHEEL =
+		REGISTRATE.block("andesite_encased_large_cogwheel", p -> EncasedCogwheelBlock.andesite(true, p))
+			.transform(BuilderTransformers.encasedLargeCogwheel("andesite", AllSpriteShifts.ANDESITE_CASING))
+			.transform(axeOrPickaxe())
+			.register();
+
+	public static final BlockEntry<EncasedCogwheelBlock> BRASS_ENCASED_LARGE_COGWHEEL =
+		REGISTRATE.block("brass_encased_large_cogwheel", p -> EncasedCogwheelBlock.brass(true, p))
+			.transform(BuilderTransformers.encasedLargeCogwheel("brass", AllSpriteShifts.BRASS_CASING))
 			.transform(axeOrPickaxe())
 			.register();
 

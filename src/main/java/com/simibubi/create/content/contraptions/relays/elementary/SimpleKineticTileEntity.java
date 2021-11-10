@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.simibubi.create.content.contraptions.base.IRotate;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -16,13 +14,6 @@ public class SimpleKineticTileEntity extends KineticTileEntity {
 
 	public SimpleKineticTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
-	}
-
-	@Override
-	public void addBehaviours(List<TileEntityBehaviour> behaviours) {
-		behaviours.add(new BracketedTileEntityBehaviour(this, state -> state.getBlock() instanceof AbstractShaftBlock)
-			.withTrigger(state -> AllTriggers.BRACKET_APPLY_TRIGGER.constructTriggerFor(state.getBlock())));
-		super.addBehaviours(behaviours);
 	}
 
 	@Override

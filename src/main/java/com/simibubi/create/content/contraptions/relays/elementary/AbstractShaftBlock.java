@@ -123,7 +123,7 @@ public abstract class AbstractShaftBlock extends RotatedPillarKineticBlock
 
 	@Override
 	public BlockEntityType<? extends SimpleKineticTileEntity> getTileEntityType() {
-		return AllTileEntities.SIMPLE_KINETIC.get();
+		return AllTileEntities.BRACKETED_KINETIC.get();
 	}
 
 }
