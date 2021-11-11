@@ -15,16 +15,16 @@ import net.minecraftforge.client.event.InputEvent.MouseScrollEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class InputEvents {
 
 	@SubscribeEvent
 	public static void onKeyInput(KeyInputEvent event) {
-		int key = event.getKey();
-		boolean pressed = !(event.getAction() == 0);
-
 		if (Minecraft.getInstance().screen != null)
 			return;
+
+		int key = event.getKey();
+		boolean pressed = !(event.getAction() == 0);
 
 		CreateClient.SCHEMATIC_HANDLER.onKeyInput(key, pressed);
 		ToolboxHandlerClient.onKeyInput(key, pressed);

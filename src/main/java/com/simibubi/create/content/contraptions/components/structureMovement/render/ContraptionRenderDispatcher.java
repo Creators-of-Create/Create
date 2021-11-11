@@ -32,6 +32,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -110,7 +111,7 @@ public class ContraptionRenderDispatcher {
 		for (StructureTemplate.StructureBlockInfo info : c.getBlocks()
 				.values())
 			// Skip individual lighting updates to prevent lag with large contraptions
-			renderWorld.setBlock(info.pos, info.state, 128);
+			renderWorld.setBlock(info.pos, info.state, Block.UPDATE_SUPPRESS_LIGHT);
 
 		renderWorld.updateLightSources();
 		renderWorld.lighter.runUpdates(Integer.MAX_VALUE, false, false);

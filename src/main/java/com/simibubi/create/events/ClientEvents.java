@@ -93,7 +93,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
-@EventBusSubscriber(value = Dist.CLIENT)
+@EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
 
 	private static final String ITEM_PREFIX = "item." + Create.ID;
@@ -341,23 +341,29 @@ public class ClientEvents {
 		}
 	}
 
-	@SubscribeEvent
-	public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-		event.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
-	}
+	@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+	public static class ModBusEvents {
 
-	@SubscribeEvent
-	public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
-		EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
-		CopperBacktankArmorLayer.registerOnAll(dispatcher);
-	}
+		@SubscribeEvent
+		public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+			event.registerReloadListener(CreateClient.RESOURCE_RELOAD_LISTENER);
+		}
 
-	public static void loadCompleted(FMLLoadCompleteEvent event) {
-		ModContainer createContainer = ModList.get()
-			.getModContainerById(Create.ID)
-			.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
-		createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-			() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+		@SubscribeEvent
+		public static void addEntityRendererLayers(EntityRenderersEvent.AddLayers event) {
+			EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+			CopperBacktankArmorLayer.registerOnAll(dispatcher);
+		}
+
+		@SubscribeEvent
+		public static void loadCompleted(FMLLoadCompleteEvent event) {
+			ModContainer createContainer = ModList.get()
+				.getModContainerById(Create.ID)
+				.orElseThrow(() -> new IllegalStateException("Create Mod Container missing after loadCompleted"));
+			createContainer.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
+				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
+		}
+
 	}
 
 }

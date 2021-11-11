@@ -19,6 +19,7 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.WorldAttached;
 import com.simibubi.create.foundation.utility.recipe.RecipeFinder;
+import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -44,8 +46,10 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
@@ -172,11 +176,26 @@ public class CommonEvents {
 		CapabilityMinecartController.startTracking(event);
 	}
 
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onBiomeLoad(BiomeLoadingEvent event) {
+		AllWorldFeatures.reload(event);
+	}
+
 	public static void leftClickEmpty(ServerPlayer player) {
 		ItemStack stack = player.getMainHandItem();
 		if (stack.getItem() instanceof ZapperItem) {
 			ZapperInteractionHandler.trySelect(stack, player);
 		}
+	}
+
+	@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+	public static class ModBusEvents {
+
+		@SubscribeEvent
+		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+			event.register(CapabilityMinecartController.class);
+		}
+
 	}
 
 }

@@ -13,6 +13,7 @@ import com.jozufozu.flywheel.backend.source.Resolver;
 import com.jozufozu.flywheel.core.WorldContext;
 import com.jozufozu.flywheel.event.GatherContextEvent;
 import com.jozufozu.flywheel.util.ResourceUtil;
+import com.simibubi.create.Create;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionProgram;
 
 import net.minecraft.resources.ResourceLocation;
@@ -21,7 +22,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class CreateContexts {
-	private static final ResourceLocation CONTRAPTION = new ResourceLocation("create", "context/contraption");
+	private static final ResourceLocation CONTRAPTION = Create.asResource("context/contraption");
 
 	public static WorldContext<ContraptionProgram> CWORLD;
 	public static WorldContext<ContraptionProgram> STRUCTURE;

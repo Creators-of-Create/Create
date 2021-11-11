@@ -10,9 +10,7 @@ import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
-import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
-import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.ponder.content.PonderIndex;
@@ -58,9 +56,6 @@ public class CreateClient {
 
 	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
 		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.addListener(ClientEvents::loadCompleted);
-		modEventBus.addListener(SpriteShifter::onTextureStitchPre);
-		modEventBus.addListener(SpriteShifter::onTextureStitchPost);
 		modEventBus.addListener(AllParticleTypes::registerFactories);
 		modEventBus.addListener(CreateContexts::flwInit);
 		modEventBus.addListener(AllMaterialSpecs::flwInit);

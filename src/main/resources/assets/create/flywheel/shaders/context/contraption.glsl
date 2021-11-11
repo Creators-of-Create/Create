@@ -1,7 +1,5 @@
 #use "flywheel:context/fog.glsl"
 
-out vec3 BoxCoord;
-
 uniform sampler3D uLightVolume;
 
 uniform sampler2D uBlockAtlas;
@@ -25,6 +23,8 @@ void FLWFinalizeNormal(inout vec3 normal) {
 
 #if defined(VERTEX_SHADER)
 
+out vec3 BoxCoord;
+
 void FLWFinalizeWorldPos(inout vec4 worldPos) {
     worldPos = uModel * worldPos;
 
@@ -39,6 +39,8 @@ void FLWFinalizeWorldPos(inout vec4 worldPos) {
 
 #elif defined(FRAGMENT_SHADER)
 #use "flywheel:core/lightutil.glsl"
+
+in vec3 BoxCoord;
 
 out vec4 FragColor;
 

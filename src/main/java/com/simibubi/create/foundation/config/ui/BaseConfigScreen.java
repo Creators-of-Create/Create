@@ -30,10 +30,10 @@ import net.minecraftforge.fml.config.ModConfig;
 public class BaseConfigScreen extends ConfigScreen {
 
 	public static final DelegatedStencilElement.ElementRenderer DISABLED_RENDERER = (ms, width, height, alpha) -> UIRenderHelper.angledGradient(ms, 0, 0, height / 2, height, width, Theme.p(Theme.Key.BUTTON_DISABLE));
-	private static final Map<String, UnaryOperator<BaseConfigScreen>> defaults = new HashMap<>();
+	private static final Map<String, UnaryOperator<BaseConfigScreen>> DEFAULTS = new HashMap<>();
 
 	static {
-		defaults.put("create", (base) -> base
+		DEFAULTS.put(Create.ID, (base) -> base
 				.withTitles("Client Settings", "World Generation Settings", "Gameplay Settings")
 				.withSpecs(AllConfigs.CLIENT.specification, AllConfigs.COMMON.specification, AllConfigs.SERVER.specification)
 		);
@@ -52,7 +52,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		if (modID.equals(Create.ID))
 			return;
 
-		defaults.put(modID, transform);
+		DEFAULTS.put(modID, transform);
 	}
 
 	public static BaseConfigScreen forCreate(Screen parent) {
@@ -79,8 +79,8 @@ public class BaseConfigScreen extends ConfigScreen {
 		super(parent);
 		this.modID = modID;
 
-		if (defaults.containsKey(modID))
-			defaults.get(modID).apply(this);
+		if (DEFAULTS.containsKey(modID))
+			DEFAULTS.get(modID).apply(this);
 		else {
 			this.searchForSpecsInModContainer();
 		}

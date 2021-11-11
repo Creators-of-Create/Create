@@ -11,7 +11,6 @@ import com.simibubi.create.api.behaviour.BlockSpoutingBehaviour;
 import com.simibubi.create.content.CreateItemGroup;
 import com.simibubi.create.content.contraptions.TorquePropagator;
 import com.simibubi.create.content.contraptions.components.flywheel.engine.FurnaceEngineModifiers;
-import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.CapabilityMinecartController;
 import com.simibubi.create.content.curiosities.weapons.BuiltinPotatoProjectileTypes;
 import com.simibubi.create.content.logistics.RedstoneLinkNetworkHandler;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -45,8 +44,6 @@ import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
@@ -112,16 +109,13 @@ public class Create {
 		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
 		modEventBus.addListener(Create::init);
+		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
 		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
 		modEventBus.addGenericListener(FeatureDecorator.class, AllWorldFeatures::registerDecoratorFeatures);
 		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
 		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
 		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
-		modEventBus.addListener(AllConfigs::onLoad);
-		modEventBus.addListener(AllConfigs::onReload);
-		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
 
-		forgeEventBus.addListener(EventPriority.HIGH, Create::onBiomeLoad);
 		forgeEventBus.register(CHUNK_UTIL);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
@@ -151,14 +145,6 @@ public class Create {
 		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
 		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
 		ProcessingRecipeGen.registerAll(gen);
-	}
-
-	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		event.register(CapabilityMinecartController.class);
-	}
-	
-	public static void onBiomeLoad(BiomeLoadingEvent event) {
-		AllWorldFeatures.reload(event);
 	}
 
 	public static CreateRegistrate registrate() {
