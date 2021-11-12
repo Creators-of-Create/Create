@@ -149,7 +149,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 			if (entity instanceof ItemEntity)
 				continue;
 
-			entity.onGround = false;
+			entity.setOnGround(false);
 
 			if (isPlayerEntity != level.isClientSide)
 				continue;

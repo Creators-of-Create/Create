@@ -101,17 +101,9 @@ public class BlueprintRenderer extends EntityRenderer<BlueprintEntity> {
 						squashedMS.scale(.625f, .625f, 1);
 					}
 
-					Matrix3f n = squashedMS.last()
-						.normal();
-					n.m00 = copy.m00;
-					n.m01 = copy.m01;
-					n.m02 = copy.m02;
-					n.m10 = copy.m10;
-					n.m11 = copy.m11;
-					n.m12 = copy.m12;
-					n.m20 = copy.m20;
-					n.m21 = copy.m21;
-					n.m22 = copy.m22;
+					squashedMS.last()
+						.normal()
+						.load(copy);
 
 					Minecraft.getInstance()
 						.getItemRenderer()

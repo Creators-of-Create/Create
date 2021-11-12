@@ -96,8 +96,8 @@ public class EjectorBlock extends HorizontalKineticBlock implements ITE<EjectorT
 		if (ejectorTileEntity.launcher.getHorizontalDistance() == 0)
 			return;
 
-		if (entityIn.onGround) {
-			entityIn.onGround = false;
+		if (entityIn.isOnGround()) {
+			entityIn.setOnGround(false);
 			Vec3 center = VecHelper.getCenterOf(position)
 				.add(0, 7 / 16f, 0);
 			Vec3 positionVec = entityIn.position();

@@ -54,7 +54,7 @@ public class MinecartElement extends AnimatedSceneElement {
 			entity = constructor.create(scene.getWorld(), 0, 0, 0);
 
 		entity.tickCount++;
-		entity.onGround = true;
+		entity.setOnGround(true);
 		entity.xo = entity.getX();
 		entity.yo = entity.getY();
 		entity.zo = entity.getZ();

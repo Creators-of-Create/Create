@@ -28,11 +28,11 @@ public class DivingBootsItem extends CopperArmorItem {
 
 		Vec3 motion = entity.getDeltaMovement();
 		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "f_20899_"); // jumping
-		entity.onGround |= entity.verticalCollision;
+		entity.setOnGround(entity.isOnGround() || entity.verticalCollision);
 
-		if (isJumping && entity.onGround) {
+		if (isJumping && entity.isOnGround()) {
 			motion = motion.add(0, .5f, 0);
-			entity.onGround = false;
+			entity.setOnGround(false);
 		} else {
 			motion = motion.add(0, -0.05f, 0);
 		}

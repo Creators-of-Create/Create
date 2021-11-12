@@ -313,7 +313,7 @@ public class ContraptionCollider {
 				boolean canWalk = bounce != 0 || slide == 0;
 				if (canWalk || !rotation.hasVerticalRotation()) {
 					if (canWalk)
-						entity.onGround = true;
+						entity.setOnGround(true);
 					if (entity instanceof ItemEntity)
 						entityMotion = entityMotion.multiply(.5f, 1, .5f);
 				}
@@ -413,7 +413,7 @@ public class ContraptionCollider {
 		boolean flag = p_20273_.x != vec3.x;
 		boolean flag1 = p_20273_.y != vec3.y;
 		boolean flag2 = p_20273_.z != vec3.z;
-		boolean flag3 = e.onGround || flag1 && p_20273_.y < 0.0D;
+		boolean flag3 = e.isOnGround() || flag1 && p_20273_.y < 0.0D;
 		if (e.maxUpStep > 0.0F && flag3 && (flag || flag2)) {
 			Vec3 vec31 = collideBoundingBoxHeuristically(e, new Vec3(p_20273_.x, e.maxUpStep, p_20273_.z), aabb,
 				e.level, collisioncontext, rewindablestream);

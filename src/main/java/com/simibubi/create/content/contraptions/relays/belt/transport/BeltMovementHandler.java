@@ -177,7 +177,7 @@ public class BeltMovementHandler {
 			entityIn.move(SELF, movement);
 		}
 		
-		entityIn.onGround = true;
+		entityIn.setOnGround(true);
 
 		if (!isPlayer)
 			entityIn.maxUpStep = step;
