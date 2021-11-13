@@ -20,7 +20,6 @@ import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
-@EventBusSubscriber
 public class HauntedBellPulser {
 
 	public static final int DISTANCE = 3;

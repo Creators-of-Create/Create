@@ -1,20 +1,23 @@
 package com.simibubi.create.content.contraptions.components.structureMovement.train.capability;
 
-import java.util.function.Supplier;
+import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
-import com.simibubi.create.foundation.networking.SimplePacketBase;
-
+import me.pepperbell.simplenetworking.S2CPacket;
+import me.pepperbell.simplenetworking.SimpleChannel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import com.tterrag.registrate.fabric.EnvExecutor;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 
 
-public class MinecartControllerUpdatePacket extends SimplePacketBase {
+public class MinecartControllerUpdatePacket implements S2CPacket {
 
 	int entityID;
 	CompoundTag nbt;
@@ -22,10 +25,11 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	public MinecartControllerUpdatePacket(MinecartController controller) {
 		entityID = controller.cart()
 			.getId();
-		nbt = controller.serializeNBT();
+		nbt = controller.create$serializeNBT();
 	}
 
-	public MinecartControllerUpdatePacket(FriendlyByteBuf buffer) {
+	@Override
+	public void read(FriendlyByteBuf buffer) {
 		entityID = buffer.readInt();
 		nbt = buffer.readNbt();
 	}
@@ -37,11 +41,8 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<Context> context) {
-		context.get()
-			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleCL));
-		context.get()
-			.setPacketHandled(true);
+	public void handle(Minecraft client, ClientPacketListener handler, SimpleChannel.ResponseTarget responseTarget) {
+		client.execute(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleCL));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -52,8 +53,8 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 		Entity entityByID = world.getEntity(entityID);
 		if (entityByID == null)
 			return;
-		entityByID.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY)
-			.ifPresent(mc -> mc.deserializeNBT(nbt));
+		LazyOptional.ofObject(MinecartAndRailUtil.getController((AbstractMinecart) entityByID))
+				.ifPresent(mc -> mc.create$deserializeNBT(nbt));
 	}
 
 }

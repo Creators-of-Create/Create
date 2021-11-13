@@ -12,9 +12,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import com.simibubi.create.lib.utility.MinecraftClientUtil;
 
 /*
 * Implement this Interface in the TileEntity class that wants to add info to the screen
@@ -104,10 +106,7 @@ public interface IHaveGoggleInformation {
 		}
 
 		public void update() {
-			format = NumberFormat.getInstance(Minecraft.getInstance()
-				.getLanguageManager()
-				.getSelected()
-				.getJavaLocale());
+			format = NumberFormat.getInstance(MinecraftClientUtil.getLocale());
 			format.setMaximumFractionDigits(2);
 			format.setMinimumFractionDigits(0);
 			format.setGroupingUsed(true);

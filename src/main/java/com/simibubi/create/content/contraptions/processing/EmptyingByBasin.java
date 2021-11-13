@@ -11,6 +11,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -46,7 +51,7 @@ public class EmptyingByBasin {
 	}
 
 	public static Pair<FluidStack, ItemStack> emptyItem(Level world, ItemStack stack, boolean simulate) {
-		FluidStack resultingFluid = FluidStack.EMPTY;
+		FluidStack resultingFluid = FluidStack.empty();
 		ItemStack resultingItem = ItemStack.EMPTY;
 
 		if (stack.getItem() instanceof PotionItem)
@@ -71,7 +76,7 @@ public class EmptyingByBasin {
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);
-		resultingFluid = tank.drain(1000, simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
+		resultingFluid = tank.drain(1000, simulate);
 		resultingItem = tank.getContainer()
 			.copy();
 		if (!simulate)

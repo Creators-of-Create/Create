@@ -438,7 +438,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
-	public IFluidTank getTankInventory() {
+	public FluidTank getTankInventory() {
 		return tankInventory;
 	}
 

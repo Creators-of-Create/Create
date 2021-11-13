@@ -18,7 +18,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class FluidFX {
 

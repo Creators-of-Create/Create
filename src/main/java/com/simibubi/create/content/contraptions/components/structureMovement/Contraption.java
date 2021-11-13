@@ -22,6 +22,14 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+
+import com.simibubi.create.lib.utility.Constants.BlockFlags;
+import com.simibubi.create.lib.utility.StickinessUtil;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -74,6 +82,7 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.IdMapper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
@@ -109,16 +118,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.Constants.BlockFlags;
 import com.simibubi.create.lib.utility.NBT;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.registries.GameData;
 
 public abstract class Contraption {
 
@@ -395,7 +395,7 @@ public abstract class Contraption {
 			boolean blockAttachedTowardsFace =
 				BlockMovementChecks.isBlockAttachedTowards(blockState, world, offsetPos, offset.getOpposite());
 			boolean brittle = BlockMovementChecks.isBrittle(blockState);
-			boolean canStick = !brittle && state.canStickTo(blockState) && blockState.canStickTo(state);
+			boolean canStick = !brittle && StickinessUtil.canStickTo(state, blockState) && StickinessUtil.canStickTo(blockState, state);
 			if (canStick) {
 				if (state.getPistonPushReaction() == PushReaction.PUSH_ONLY
 					|| blockState.getPistonPushReaction() == PushReaction.PUSH_ONLY) {
@@ -741,7 +741,7 @@ public abstract class Contraption {
 				if (!(tileEntity instanceof FluidTankTileEntity))
 					return;
 				FluidTankTileEntity tank = (FluidTankTileEntity) tileEntity;
-				IFluidTank tankInventory = tank.getTankInventory();
+				FluidTank tankInventory = tank.getTankInventory();
 				if (tankInventory instanceof FluidTank)
 					((FluidTank) tankInventory).setFluid(mfs.tank.getFluid());
 				tank.getFluidLevel()
@@ -862,9 +862,9 @@ public abstract class Contraption {
 
 	private CompoundTag writeBlocksCompound() {
 		CompoundTag compound = new CompoundTag();
-		HashMapPalette<BlockState> palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
-			throw new IllegalStateException("Palette Map index exceeded maximum");
-		}, NbtUtils::readBlockState, NbtUtils::writeBlockState);
+		HashMapPalette<BlockState> palette = new HashMapPalette<>(new IdMapper<>(), 16, (i, s) -> { // fixme, this is very deeply
+			throw new IllegalStateException("Palette Map index exceeded maximum");								// integrated into forge and
+		}, NbtUtils::readBlockState, NbtUtils::writeBlockState);													// probably broken
 		ListTag blockList = new ListTag();
 
 		for (StructureBlockInfo block : this.blocks.values()) {
@@ -890,7 +890,7 @@ public abstract class Contraption {
 		ListTag blockList;
 		if (usePalettedDeserialization) {
 			CompoundTag c = ((CompoundTag) compound);
-			palette = new HashMapPalette<>(GameData.getBlockStateIDMap(), 16, (i, s) -> {
+			palette = new HashMapPalette<>(new IdMapper<>(), 16, (i, s) -> { // see above comment
 				throw new IllegalStateException("Palette Map index exceeded maximum");
 			}, NbtUtils::readBlockState, NbtUtils::writeBlockState);
 			palette.read(c.getList("Palette", 10));
@@ -1012,8 +1012,8 @@ public abstract class Contraption {
 						});
 				});
 
-			world.markAndNotifyBlock(add, world.getChunkAt(add), block.state, Blocks.AIR.defaultBlockState(), flags,
-				512);
+			world.setBlock(add, Blocks.AIR.defaultBlockState(), flags,
+					512);
 			block.state.updateIndirectNeighbourShapes(world, add, flags & -2);
 		}
 	}

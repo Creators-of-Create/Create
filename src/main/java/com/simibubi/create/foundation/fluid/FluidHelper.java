@@ -13,7 +13,11 @@ import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
+import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -23,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
@@ -61,8 +66,8 @@ public class FluidHelper {
 			return Fluids.FLOWING_WATER;
 		if (fluid == Fluids.LAVA)
 			return Fluids.FLOWING_LAVA;
-		if (fluid instanceof ForgeFlowingFluid)
-			return ((ForgeFlowingFluid) fluid).getFlowing();
+		if (fluid instanceof FlowingFluid)
+			return ((FlowingFluid) fluid).getFlowing();
 		return fluid;
 	}
 
@@ -71,15 +76,14 @@ public class FluidHelper {
 			return Fluids.WATER;
 		if (fluid == Fluids.FLOWING_LAVA)
 			return Fluids.LAVA;
-		if (fluid instanceof ForgeFlowingFluid)
-			return ((ForgeFlowingFluid) fluid).getSource();
+		if (fluid instanceof FlowingFluid)
+			return ((FlowingFluid) fluid).getSource();
 		return fluid;
 	}
 
 	public static JsonElement serializeFluidStack(FluidStack stack) {
 		JsonObject json = new JsonObject();
-		json.addProperty("fluid", stack.getFluid()
-			.getRegistryName()
+		json.addProperty("fluid", Registry.FLUID.getKey(stack.getFluid())
 			.toString());
 		json.addProperty("amount", stack.getAmount());
 		if (stack.hasTag())
@@ -184,7 +188,7 @@ public class FluidHelper {
 
 	@Nullable
 	public static FluidExchange exchange(IFluidHandler fluidTank, IFluidHandlerItem fluidItem, FluidExchange preferred,
-		int maxAmount) {
+										 int maxAmount) {
 		return exchange(fluidTank, fluidItem, preferred, true, maxAmount);
 	}
 

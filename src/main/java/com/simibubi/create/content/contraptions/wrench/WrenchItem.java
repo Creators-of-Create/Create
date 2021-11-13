@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -23,10 +24,13 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.EntityHitResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+
+import org.jetbrains.annotations.Nullable;
 
 public class WrenchItem extends Item {
 
@@ -77,11 +81,9 @@ public class WrenchItem extends Item {
 		return InteractionResult.SUCCESS;
 	}
 
-	public static void wrenchInstaKillsMinecarts(AttackEntityEvent event) {
-		Entity target = event.getTarget();
+	public static void wrenchInstaKillsMinecarts(Player player, Level world, InteractionHand hand, Entity target, @Nullable EntityHitResult entityRayTraceResult) {
 		if (!(target instanceof AbstractMinecart))
 			return;
-		Player player = event.getPlayer();
 		ItemStack heldItem = player.getMainHandItem();
 		if (!AllItems.WRENCH.isIn(heldItem))
 			return;

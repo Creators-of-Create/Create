@@ -51,20 +51,21 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
-public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInformation, FluidTransferable, ItemTransferable {
 
 	private boolean areFluidsMoving;
 	LerpedFloat ingredientRotationSpeed;
@@ -142,8 +143,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		super.fromTag(compound, clientPacket);
-		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
-		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+		inputInventory.create$deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.create$deserializeNBT(compound.getCompound("OutputItems"));
 
 		preferredSpoutput = null;
 		if (compound.contains("PreferredSpoutput"))
@@ -153,7 +154,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		disabledList.forEach(d -> disabledSpoutputs.add(Direction.valueOf(((StringTag) d).getAsString())));
 		spoutputBuffer = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		spoutputFluidBuffer = NBTHelper.readCompoundList(compound.getList("FluidOverflow", NBT.TAG_COMPOUND),
-			FluidStack::loadFluidStackFromNBT);
+			FluidStack::fromNBT);
 
 		if (!clientPacket)
 			return;
@@ -162,14 +163,14 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			c -> visualizedOutputItems.add(IntAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.of(c))));
 		NBTHelper.iterateCompoundList(compound.getList("VisualizedFluids", NBT.TAG_COMPOUND),
 			c -> visualizedOutputFluids
-				.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.loadFluidStackFromNBT(c))));
+				.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.fromNBT(c))));
 	}
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		super.write(compound, clientPacket);
-		compound.put("InputItems", inputInventory.serializeNBT());
-		compound.put("OutputItems", outputInventory.serializeNBT());
+		compound.put("InputItems", inputInventory.create$serializeNBT());
+		compound.put("OutputItems", outputInventory.create$serializeNBT());
 
 		if (preferredSpoutput != null)
 			NBTHelper.writeEnum(compound, "PreferredSpoutput", preferredSpoutput);
@@ -183,8 +184,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (!clientPacket)
 			return;
 
-		compound.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> ia.getValue()
-			.serializeNBT()));
+		compound.put("VisualizedItems", NBTHelper.writeCompoundList(visualizedOutputItems, ia -> NBTSerializer.serializeNBT(ia.getValue())));
 		compound.put("VisualizedFluids", NBTHelper.writeCompoundList(visualizedOutputFluids, ia -> ia.getValue()
 			.writeToNBT(new CompoundTag())));
 		visualizedOutputItems.clear();
@@ -203,15 +203,15 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		super.setRemoved();
 	}
 
-	@Nonnull
-	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return itemCapability.cast();
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return fluidCapability.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Nonnull
+//	@Override
+//	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
+//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//			return itemCapability.cast();
+//		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+//			return fluidCapability.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	public void notifyUpdate() {
@@ -321,7 +321,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		}
 
 		IItemHandler targetInv = te == null ? null
-			: te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())
+				: TransferUtil.getItemHandler(te, direction.getOpposite())
 				.orElse(inserter == null ? null : inserter.getInventory());
 
 		IFluidHandler targetTank = te == null ? null

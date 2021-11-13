@@ -23,10 +23,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
 
 @Environment(EnvType.CLIENT)
 public class FluidRenderer {
@@ -36,7 +37,7 @@ public class FluidRenderer {
 	}
 
 	public static void renderFluidStream(FluidStack fluidStack, Direction direction, float radius, float progress,
-		boolean inbound, MultiBufferSource buffer, PoseStack ms, int light) {
+										 boolean inbound, MultiBufferSource buffer, PoseStack ms, int light) {
 		renderFluidStream(fluidStack, direction, radius, progress, inbound, getFluidBuilder(buffer), ms, light);
 	}
 

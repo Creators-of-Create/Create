@@ -16,10 +16,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.simibubi.create.lib.annotation.MethodsReturnNonnullByDefault;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
 
 /**
  * This is pretty much the Forge class copied over, theres really not much change you can do while keeping things functioning.

@@ -6,13 +6,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTileEntity {
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.utility.LazyOptional;
+
+import org.jetbrains.annotations.Nullable;
+
+public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTileEntity implements FluidTransferable {
 
 	protected LazyOptional<IFluidHandler> capability;
 
@@ -24,7 +28,8 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 	@Override
 	public void startTransferringTo(Contraption contraption, float distance) {
 		LazyOptional<IFluidHandler> oldcap = capability;
-		capability = LazyOptional.of(() -> new InterfaceFluidHandler(contraption.fluidInventory));
+		//capability = LazyOptional.of(() -> new InterfaceFluidHandler(contraption.fluidInventory));
+		capability = LazyOptional.empty();
 		oldcap.invalidate();
 		super.startTransferringTo(contraption, distance);
 	}
@@ -46,12 +51,18 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		return LazyOptional.of(() -> new InterfaceFluidHandler(new FluidTank(0)));
 	}
 
+	@Nullable
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isFluidHandlerCap(cap))
-			return capability.cast();
-		return super.getCapability(cap, side);
+	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+		return capability.getValueUnsafer();
 	}
+
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isFluidHandlerCap(cap))
+//			return capability.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	public class InterfaceFluidHandler implements IFluidHandler {
 
@@ -72,41 +83,41 @@ public class PortableFluidInterfaceTileEntity extends PortableStorageInterfaceTi
 		}
 
 		@Override
-		public int getTankCapacity(int tank) {
+		public long getTankCapacity(int tank) {
 			return wrapped.getTankCapacity(tank);
 		}
 
-		@Override
-		public boolean isFluidValid(int tank, FluidStack stack) {
-			return wrapped.isFluidValid(tank, stack);
-		}
+//		@Override
+//		public boolean isFluidValid(int tank, FluidStack stack) {
+//			return wrapped.isFluidValid(tank, stack);
+//		}
 
 		@Override
-		public int fill(FluidStack resource, FluidAction action) {
+		public long fill(FluidStack resource, boolean sim) {
 			if (!isConnected())
 				return 0;
-			int fill = wrapped.fill(resource, action);
-			if (fill > 0 && action.execute())
+			long fill = wrapped.fill(resource, sim);
+			if (fill > 0 && !sim)
 				keepAlive();
 			return fill;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
+		public FluidStack drain(FluidStack resource, boolean sim) {
 			if (!canTransfer())
-				return FluidStack.EMPTY;
-			FluidStack drain = wrapped.drain(resource, action);
-			if (!drain.isEmpty() && action.execute())
+				return FluidStack.empty();
+			FluidStack drain = wrapped.drain(resource, sim);
+			if (!drain.isEmpty() && !sim)
 				keepAlive();
 			return drain;
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
+		public FluidStack drain(long maxDrain, boolean sim) {
 			if (!canTransfer())
-				return FluidStack.EMPTY;
-			FluidStack drain = wrapped.drain(maxDrain, action);
-			if (!drain.isEmpty() && action.execute())
+				return FluidStack.empty();
+			FluidStack drain = wrapped.drain(maxDrain, sim);
+			if (!drain.isEmpty() && !sim)
 				keepAlive();
 			return drain;
 		}

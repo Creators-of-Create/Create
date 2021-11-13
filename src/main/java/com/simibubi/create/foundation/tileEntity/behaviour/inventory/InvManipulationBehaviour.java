@@ -10,10 +10,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItemHandler, InvManipulationBehaviour> {
 
@@ -41,10 +41,10 @@ public class InvManipulationBehaviour extends CapManipulationBehaviourBase<IItem
 		super(te, target);
 		behaviourType = type;
 	}
-	
+
 	@Override
-	protected Capability<IItemHandler> capability() {
-		return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+	protected Class<IItemHandler> capability() {
+		return IItemHandler.class;
 	}
 
 	public ItemStack extract() {

@@ -2,8 +2,9 @@ package com.simibubi.create.foundation.fluid;
 
 import java.util.function.Consumer;
 
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
 
 public class SmartFluidTank extends FluidTank {
 
@@ -14,9 +15,9 @@ public class SmartFluidTank extends FluidTank {
 		this.updateCallback = updateCallback;
 	}
 
-	@Override
+//	@Override
 	protected void onContentsChanged() {
-		super.onContentsChanged();
+//		super.onContentsChanged();
 		updateCallback.accept(getFluid());
 	}
 

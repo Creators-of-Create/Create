@@ -15,7 +15,6 @@ public class FluidStack {
 
 	private FluidVariant type;
 	private long amount;
-	private CompoundTag nbt;
 
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
@@ -24,6 +23,11 @@ public class FluidStack {
 
 	public FluidStack(Fluid type, long amount) {
 		this.type = FluidVariant.of(type);
+		this.amount = amount;
+	}
+
+	public FluidStack(Fluid type, long amount, CompoundTag nbt) {
+		this.type = FluidVariant.of(type, nbt);
 		this.amount = amount;
 	}
 
@@ -85,6 +89,52 @@ public class FluidStack {
 		boolean tagsEqual = myTag.equals(theirTag);
 
 		return fluidsEqual && tagsEqual;
+	}
+
+	public CompoundTag writeToNBT(CompoundTag tag) {
+		tag.put("Fluid", getType().toNbt());
+		tag.putLong("Amount", getAmount());
+		return tag;
+	}
+
+	public static FluidStack fromNBT(CompoundTag tag) {
+		Tag fluidTag = tag.get("Fluid");
+		FluidVariant fluid = FluidVariant.fromNbt((CompoundTag) fluidTag);
+		long amount = tag.getLong("Amount");
+		return new FluidStack(fluid, amount);
+	}
+
+	public CompoundTag toTag() {
+		return writeToNBT(new CompoundTag());
+	}
+
+	public CompoundTag toTag(CompoundTag tag) {
+		return writeToNBT(tag);
+	}
+
+	public CompoundTag getTag() {
+		return getType().copyNbt();
+	}
+
+	public static FluidStack fromBuffer(FriendlyByteBuf buffer) {
+		Fluid fluid = Registry.FLUID.get(buffer.readResourceLocation());
+		long amount = buffer.readVarLong();
+		CompoundTag tag = buffer.readNbt();
+		if (fluid == Fluids.EMPTY) {
+			return EMPTY;
+		}
+		return new FluidStack(FluidVariant.of(fluid, tag), amount);
+	}
+
+	public FriendlyByteBuf toBuffer(FriendlyByteBuf buffer) {
+		return toBuffer(this, buffer);
+	}
+
+	public static FriendlyByteBuf toBuffer(FluidStack stack, FriendlyByteBuf buffer) {
+		buffer.writeResourceLocation(Registry.FLUID.getKey(stack.getFluid()));
+		buffer.writeVarLong(stack.getAmount());
+		buffer.writeNbt(stack.type.copyNbt());
+		return buffer;
 	}
 
 	public static FluidStack empty() {

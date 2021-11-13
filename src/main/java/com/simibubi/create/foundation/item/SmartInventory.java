@@ -8,12 +8,13 @@ import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import com.simibubi.create.lib.utility.NBTSerializable;
 
 public class SmartInventory extends RecipeWrapper
-	implements IItemHandlerModifiableIntermediate, INBTSerializable<CompoundTag> {
+	implements IItemHandlerModifiableIntermediate, NBTSerializable {
 
 	protected boolean extractionAllowed;
 	protected boolean insertionAllowed;
@@ -33,7 +34,7 @@ public class SmartInventory extends RecipeWrapper
 		this.stackSize = stackSize;
 		wrapped = (SyncedStackHandler) inv;
 	}
-	
+
 	public SmartInventory withMaxStackSize(int maxStackSize) {
 		stackSize = maxStackSize;
 		wrapped.stackSize = maxStackSize;
@@ -114,12 +115,12 @@ public class SmartInventory extends RecipeWrapper
 	}
 
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag create$serializeNBT() {
 		return getInv().serializeNBT();
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag nbt) {
+	public void create$deserializeNBT(CompoundTag nbt) {
 		getInv().deserializeNBT(nbt);
 	}
 

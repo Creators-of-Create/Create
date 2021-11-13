@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -77,8 +78,7 @@ public class TileEntityRenderHelper {
 			} catch (Exception e) {
 				iterator.remove();
 
-				String message = "TileEntity " + tileEntity.getType()
-					.getRegistryName()
+				String message = "TileEntity " + Registry.BLOCK_ENTITY_TYPE.getKey(tileEntity.getType())
 					.toString() + " didn't want to render while moved.\n";
 				if (AllConfigs.CLIENT.explainRenderErrors.get())
 					Create.LOGGER.error(message, e);

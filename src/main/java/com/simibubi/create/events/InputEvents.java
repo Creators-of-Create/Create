@@ -5,69 +5,67 @@ import com.simibubi.create.content.curiosities.toolbox.ToolboxHandlerClient;
 import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringHandler;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueHandler;
+import com.simibubi.create.lib.event.KeyInputCallback;
+import com.simibubi.create.lib.event.MouseButtonCallback;
+import com.simibubi.create.lib.event.MouseScrolledCallback;
 
 import net.minecraft.client.Minecraft;
-import net.fabricmc.api.EnvType;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
-import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
-import net.minecraftforge.client.event.InputEvent.MouseScrollEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraft.world.InteractionResult;
 
-@EventBusSubscriber(EnvType.CLIENT)
 public class InputEvents {
 
-	@SubscribeEvent
-	public static void onKeyInput(KeyInputEvent event) {
+	public static void onKeyInput(int key, int scancode, int action, int mods) {
 		if (Minecraft.getInstance().screen != null)
 			return;
 
-		int key = event.getKey();
-		boolean pressed = !(event.getAction() == 0);
+		boolean pressed = !(action == 0);
 
 		CreateClient.SCHEMATIC_HANDLER.onKeyInput(key, pressed);
 		ToolboxHandlerClient.onKeyInput(key, pressed);
 	}
 
-	@SubscribeEvent
-	public static void onMouseScrolled(MouseScrollEvent event) {
+	public static boolean onMouseScrolled(double delta) {
 		if (Minecraft.getInstance().screen != null)
-			return;
+			return false;
 
-		double delta = event.getScrollDelta();
 //		CollisionDebugger.onScroll(delta);
 		boolean cancelled = CreateClient.SCHEMATIC_HANDLER.mouseScrolled(delta)
 				|| CreateClient.SCHEMATIC_AND_QUILL_HANDLER.mouseScrolled(delta) || FilteringHandler.onScroll(delta)
 				|| ScrollValueHandler.onScroll(delta);
-		event.setCanceled(cancelled);
+		return cancelled;
 	}
 
-	@SubscribeEvent
-	public static void onMouseInput(MouseInputEvent event) {
+	public static InteractionResult onMouseInput(int button, int action, int mods) {
 		if (Minecraft.getInstance().screen != null)
-			return;
+			return InteractionResult.PASS;
 
-		int button = event.getButton();
-		boolean pressed = !(event.getAction() == 0);
+		boolean pressed = !(action == 0);
 
 		CreateClient.SCHEMATIC_HANDLER.onMouseInput(button, pressed);
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.onMouseInput(button, pressed);
+		return InteractionResult.PASS;
 	}
 
-	@SubscribeEvent
-	public static void onClickInput(ClickInputEvent event) {
+	public static InteractionResult onClickInput(int button, int action, int mods) {
 		if (Minecraft.getInstance().screen != null)
-			return;
-		
-		if (event.getKeyBinding() == Minecraft.getInstance().options.keyPickItem) {
+			return InteractionResult.PASS;
+
+		if (Minecraft.getInstance().options.keyPickItem.matchesMouse(button)) {
 			if (ToolboxHandlerClient.onPickItem())
-				event.setCanceled(true);
-			return;
+				return InteractionResult.SUCCESS;
+			return InteractionResult.PASS;
 		}
 
-		if (event.isUseItem())
+		if (button == 1)
 			LinkedControllerClientHandler.deactivateInLectern();
+		return InteractionResult.PASS;
+	}
+
+	public static void register() {
+		KeyInputCallback.EVENT.register(InputEvents::onKeyInput);
+		MouseScrolledCallback.EVENT.register(InputEvents::onMouseScrolled);
+		MouseButtonCallback.EVENT.register(InputEvents::onMouseInput);
+		MouseButtonCallback.EVENT.register(InputEvents::onClickInput);
 	}
 
 }

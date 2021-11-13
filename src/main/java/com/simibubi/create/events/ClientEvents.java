@@ -43,7 +43,6 @@ import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -103,7 +102,6 @@ import com.simibubi.create.lib.event.RenderHandCallback;
 import com.simibubi.create.lib.event.RenderTickStartCallback;
 import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -115,28 +113,7 @@ import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.RenderTickEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
-@EventBusSubscriber(EnvType.CLIENT)
 public class ClientEvents {
 
 	private static final String ITEM_PREFIX = "item." + Create.ID;
@@ -147,7 +124,6 @@ public class ClientEvents {
 		AirCurrent.tickClientPlayerSounds();
 	}
 
-	@SubscribeEvent
 	public static void onTick(Minecraft client) {
 		if (!isGameActive())
 			return;
@@ -316,7 +292,7 @@ public class ClientEvents {
 		BlockPos blockPos = info.getBlockPosition();
 		FluidState fluidstate = level.getFluidState(blockPos);
         if (info.getPosition().y > blockPos.getY() + fluidstate.getHeight(level, blockPos))
-           return;
+           return currentDensity;
 
 		Fluid fluid = fluidstate.getType();
 
@@ -338,6 +314,7 @@ public class ClientEvents {
 //			event.setCanceled(true);
 			return 300f;
 		}
+		return currentDensity;
 	}
 
 	public static Vector3f getFogColor(Camera info, Vector3f currentColor) {
@@ -362,6 +339,7 @@ public class ClientEvents {
 //			event.setBlue(47 / 256f);
 			return new Vector3f(234 / 256f, 174 / 256f, 47 / 256f);
 		}
+		return currentColor;
 	}
 
 	public static void leftClickEmpty(LocalPlayer player) {

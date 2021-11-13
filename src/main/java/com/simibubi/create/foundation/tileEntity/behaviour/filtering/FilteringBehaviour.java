@@ -20,8 +20,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class FilteringBehaviour extends TileEntityBehaviour {
 
@@ -64,7 +68,7 @@ public class FilteringBehaviour extends TileEntityBehaviour {
 
 	@Override
 	public void write(CompoundTag nbt, boolean clientPacket) {
-		nbt.put("Filter", getFilter().serializeNBT());
+		nbt.put("Filter", NBTSerializer.serializeNBT(getFilter()));
 		nbt.putInt("FilterAmount", count);
 
 		if (clientPacket && forceClientState) {

@@ -8,11 +8,14 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+
 import com.simibubi.create.lib.utility.LazyOptional;
 
 public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationBehaviourBase<?, ?>>
@@ -33,7 +36,7 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		bypassSided = false;
 	}
 
-	protected abstract Capability<T> capability();
+	protected abstract Class<T> capability();
 
 	@Override
 	public void initialize() {
@@ -115,9 +118,9 @@ public abstract class CapManipulationBehaviourBase<T, S extends CapManipulationB
 		BlockEntity invTE = world.getBlockEntity(pos);
 		if (invTE == null)
 			return;
-		Capability<T> capability = capability();
+		Class<T> capability = capability();
 		targetCapability =
-			bypassSided ? invTE.getCapability(capability) : invTE.getCapability(capability, targetBlockFace.getFace());
+			bypassSided ? (LazyOptional<T>) TransferUtil.getHandler(invTE, Direction.UP, capability) : (LazyOptional<T>) TransferUtil.getHandler(invTE, targetBlockFace.getFace(), capability);
 		if (targetCapability.isPresent())
 			targetCapability.addListener(this::onHandlerInvalidated);
 	}

@@ -1,10 +1,9 @@
 package com.simibubi.create.foundation.fluid;
 
 import com.simibubi.create.foundation.utility.Iterate;
-
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.wrapper.EmptyHandler;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.EmptyHandler;
 
 /**
  * Combines multiple IFluidHandlers into one interface (See CombinedInvWrapper
@@ -47,23 +46,23 @@ public class CombinedTankWrapper implements IFluidHandler {
 	}
 
 	@Override
-	public int getTankCapacity(int tank) {
+	public long getTankCapacity(int tank) {
 		int index = getIndexForSlot(tank);
 		IFluidHandler handler = getHandlerFromIndex(index);
 		int localSlot = getSlotFromIndex(tank, index);
 		return handler.getTankCapacity(localSlot);
 	}
 
-	@Override
-	public boolean isFluidValid(int tank, FluidStack stack) {
-		int index = getIndexForSlot(tank);
-		IFluidHandler handler = getHandlerFromIndex(index);
-		int localSlot = getSlotFromIndex(tank, index);
-		return handler.isFluidValid(localSlot, stack);
-	}
+//	@Override
+//	public boolean isFluidValid(int tank, FluidStack stack) {
+//		int index = getIndexForSlot(tank);
+//		IFluidHandler handler = getHandlerFromIndex(index);
+//		int localSlot = getSlotFromIndex(tank, index);
+//		return handler.isFluidValid(localSlot, stack);
+//	}
 
 	@Override
-	public int fill(FluidStack resource, FluidAction action) {
+	public long fill(FluidStack resource, boolean sim) {
 		if (resource.isEmpty())
 			return 0;
 
@@ -82,7 +81,7 @@ public class CombinedTankWrapper implements IFluidHandler {
 				if (searchPass && !fittingHandlerFound)
 					continue;
 
-				int filledIntoCurrent = iFluidHandler.fill(resource, action);
+				long filledIntoCurrent = iFluidHandler.fill(resource, sim);
 				resource.shrink(filledIntoCurrent);
 				filled += filledIntoCurrent;
 
@@ -95,16 +94,16 @@ public class CombinedTankWrapper implements IFluidHandler {
 	}
 
 	@Override
-	public FluidStack drain(FluidStack resource, FluidAction action) {
+	public FluidStack drain(FluidStack resource, boolean sim) {
 		if (resource.isEmpty())
 			return resource;
 
-		FluidStack drained = FluidStack.EMPTY;
+		FluidStack drained = FluidStack.empty();
 		resource = resource.copy();
 
 		for (IFluidHandler iFluidHandler : itemHandler) {
-			FluidStack drainedFromCurrent = iFluidHandler.drain(resource, action);
-			int amount = drainedFromCurrent.getAmount();
+			FluidStack drainedFromCurrent = iFluidHandler.drain(resource, sim);
+			long amount = drainedFromCurrent.getAmount();
 			resource.shrink(amount);
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))
@@ -118,12 +117,12 @@ public class CombinedTankWrapper implements IFluidHandler {
 	}
 
 	@Override
-	public FluidStack drain(int maxDrain, FluidAction action) {
-		FluidStack drained = FluidStack.EMPTY;
+	public FluidStack drain(long maxDrain, boolean sim) {
+		FluidStack drained = FluidStack.empty();
 
 		for (IFluidHandler iFluidHandler : itemHandler) {
-			FluidStack drainedFromCurrent = iFluidHandler.drain(maxDrain, action);
-			int amount = drainedFromCurrent.getAmount();
+			FluidStack drainedFromCurrent = iFluidHandler.drain(maxDrain, sim);
+			long amount = drainedFromCurrent.getAmount();
 			maxDrain -= amount;
 
 			if (!drainedFromCurrent.isEmpty() && (drained.isEmpty() || drainedFromCurrent.isFluidEqual(drained)))

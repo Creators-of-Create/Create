@@ -16,10 +16,6 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
 
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class FlowSource {
 
@@ -50,7 +46,7 @@ public abstract class FlowSource {
 			return tank.drain(toExtract, FluidAction.SIMULATE);
 		}
 
-		return FluidStack.EMPTY;
+		return FluidStack.empty();
 	}
 
 	// Layer III. PFIs need active attention to prevent them from disengaging early
@@ -115,10 +111,10 @@ public abstract class FlowSource {
 		@Override
 		public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
 			if (cached == null || cached.get() == null)
-				return FluidStack.EMPTY;
+				return FluidStack.empty();
 			FluidTransportBehaviour behaviour = cached.get();
 			FluidStack providedOutwardFluid = behaviour.getProvidedOutwardFluid(location.getOppositeFace());
-			return extractionPredicate.test(providedOutwardFluid) ? providedOutwardFluid : FluidStack.EMPTY;
+			return extractionPredicate.test(providedOutwardFluid) ? providedOutwardFluid : FluidStack.empty();
 		}
 
 		@Override

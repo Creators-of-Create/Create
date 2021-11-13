@@ -7,11 +7,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
 public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFluidHandler, TankManipulationBehaviour> {
 
@@ -30,7 +27,7 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 
 	public FluidStack extractAny() {
 		if (!hasInventory())
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		IFluidHandler inventory = getInventory();
 		Predicate<FluidStack> filterTest = getFilterTest(Predicates.alwaysTrue());
 		for (int i = 0; i < inventory.getTanks(); i++) {
@@ -40,12 +37,12 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 			if (!filterTest.test(fluidInTank))
 				continue;
 			FluidStack drained =
-				inventory.drain(fluidInTank, simulateNext ? FluidAction.SIMULATE : FluidAction.EXECUTE);
+				inventory.drain(fluidInTank, simulateNext);
 			if (!drained.isEmpty())
 				return drained;
 		}
 
-		return FluidStack.EMPTY;
+		return FluidStack.empty();
 	}
 
 	protected Predicate<FluidStack> getFilterTest(Predicate<FluidStack> customFilter) {
@@ -57,8 +54,8 @@ public class TankManipulationBehaviour extends CapManipulationBehaviourBase<IFlu
 	}
 
 	@Override
-	protected Capability<IFluidHandler> capability() {
-		return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+	protected Class<IFluidHandler> capability() {
+		return IFluidHandler.class;
 	}
 
 	@Override

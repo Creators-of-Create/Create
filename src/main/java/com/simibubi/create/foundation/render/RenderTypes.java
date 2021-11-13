@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.Create;
+import com.simibubi.create.lib.mixin.accessor.RenderTypeAccessor;
 
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -14,7 +15,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 public class RenderTypes extends RenderStateShard {
 
 	private static final RenderType OUTLINE_SOLID =
-		RenderType.create(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
+		RenderTypeAccessor.invokeCreate(createLayerName("outline_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(AllSpecialTextures.BLANK.getLocation(), false, false))
@@ -27,7 +28,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static RenderType getOutlineTranslucent(ResourceLocation texture, boolean cull) {
-		return RenderType.create(createLayerName("outline_translucent" + (cull ? "_cull" : "")),
+		return RenderTypeAccessor.invokeCreate(createLayerName("outline_translucent" + (cull ? "_cull" : "")),
 			DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -40,7 +41,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static RenderType getGlowingSolid(ResourceLocation texture) {
-		return RenderType.create(createLayerName("glowing_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
+		return RenderTypeAccessor.invokeCreate(createLayerName("glowing_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
 			true, false, RenderType.CompositeState.builder()
 				.setShaderState(NEW_ENTITY_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -56,7 +57,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	public static RenderType getGlowingTranslucent(ResourceLocation texture) {
-		return RenderType.create(createLayerName("glowing_translucent"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
+		return RenderTypeAccessor.invokeCreate(createLayerName("glowing_translucent"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS,
 			256, true, true, RenderType.CompositeState.builder()
 				.setShaderState(NEW_ENTITY_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
@@ -74,7 +75,7 @@ public class RenderTypes extends RenderStateShard {
 	}
 
 	private static final RenderType ITEM_PARTIAL_SOLID =
-		RenderType.create(createLayerName("item_partial_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
+		RenderTypeAccessor.invokeCreate(createLayerName("item_partial_solid"), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true,
 			false, RenderType.CompositeState.builder()
 				.setShaderState(RENDERTYPE_ENTITY_SOLID_SHADER)
 				.setTextureState(BLOCK_SHEET)
@@ -87,7 +88,7 @@ public class RenderTypes extends RenderStateShard {
 		return ITEM_PARTIAL_SOLID;
 	}
 
-	private static final RenderType ITEM_PARTIAL_TRANSLUCENT = RenderType.create(createLayerName("item_partial_translucent"),
+	private static final RenderType ITEM_PARTIAL_TRANSLUCENT = RenderTypeAccessor.invokeCreate(createLayerName("item_partial_translucent"),
 		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
 			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
 			.setTextureState(BLOCK_SHEET)
@@ -100,7 +101,7 @@ public class RenderTypes extends RenderStateShard {
 		return ITEM_PARTIAL_TRANSLUCENT;
 	}
 
-	private static final RenderType FLUID = RenderType.create(createLayerName("fluid"),
+	private static final RenderType FLUID = RenderTypeAccessor.invokeCreate(createLayerName("fluid"),
 		DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, true, true, RenderType.CompositeState.builder()
 			.setShaderState(RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
 			.setTextureState(BLOCK_SHEET_MIPPED)

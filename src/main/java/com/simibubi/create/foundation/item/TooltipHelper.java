@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.item.ItemDescription.Palette;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.lib.utility.MinecraftClientUtil;
 
 import com.simibubi.create.lib.utility.MinecraftClientUtil;
 

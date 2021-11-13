@@ -27,6 +27,10 @@ import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
+import com.simibubi.create.lib.utility.NBT;
+
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -254,7 +258,7 @@ public class PipeConnection {
 
 		if (connectionData.contains("Flow")) {
 			CompoundTag flowData = connectionData.getCompound("Flow");
-			FluidStack fluid = FluidStack.loadFluidStackFromNBT(flowData);
+			FluidStack fluid = FluidStack.fromNBT(flowData);
 			boolean inbound = flowData.getBoolean("In");
 			if (!flow.isPresent()) {
 				flow = Optional.of(new Flow(inbound, fluid));

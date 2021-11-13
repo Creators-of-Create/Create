@@ -17,6 +17,12 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
 
+import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.simibubi.create.lib.utility.NBTSerializable;
+
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
+
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 import net.minecraft.core.Direction;
@@ -27,6 +33,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -38,7 +45,7 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 
-public class CapabilityMinecartController implements ICapabilitySerializable<CompoundTag> {
+public class CapabilityMinecartController implements NBTSerializable/*ICapabilitySerializable<CompoundTag>*/ {
 
 	/* Global map of loaded carts */
 
@@ -110,15 +117,12 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 
 			cartsWithCoupling.remove(uniqueID);
 
-			LazyOptional<MinecartController> capability = cart.getCapability(MINECART_CONTROLLER_CAPABILITY);
-			MinecartController controller = capability.orElse(null);
-			capability.addListener(new MinecartRemovalListener(world, cart));
+			MinecartController controller = (MinecartController) MinecartAndRailUtil.getController(cart);
+			controller.addListener(new MinecartRemovalListener(world, cart));
 			carts.put(uniqueID, controller);
 
-			capability.ifPresent(mc -> {
-				if (mc.isLeadingCoupling())
-					cartsWithCoupling.add(uniqueID);
-			});
+			if (controller.isLeadingCoupling())
+				cartsWithCoupling.add(uniqueID);
 			if (!world.isClientSide && controller != null)
 				controller.sendData();
 		}
@@ -141,10 +145,10 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 		keySet.removeAll(toRemove);
 	}
 
-	public static void onChunkUnloaded(ChunkEvent.Unload event) {
-		ChunkPos chunkPos = event.getChunk()
+	public static void onChunkUnloaded(Level world, LevelChunk chunk) {
+		ChunkPos chunkPos = chunk
 			.getPos();
-		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(event.getWorld());
+		Map<UUID, MinecartController> carts = loadedMinecartsByUUID.get(world);
 		for (MinecartController minecartController : carts.values()) {
 			if (minecartController == null)
 				continue;
@@ -153,7 +157,7 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			AbstractMinecart cart = minecartController.cart();
 			if (cart.chunkPosition()
 				.equals(chunkPos))
-				queuedUnloads.get(event.getWorld())
+				queuedUnloads.get(world)
 					.add(cart.getUUID());
 		}
 	}
@@ -226,12 +230,10 @@ public class CapabilityMinecartController implements ICapabilitySerializable<Com
 			.add((AbstractMinecart) entity);
 	}
 
-	public static void startTracking(PlayerEvent.StartTracking event) {
-		Entity entity = event.getTarget();
+	public static void startTracking(Entity entity) {
 		if (!(entity instanceof AbstractMinecart))
 			return;
-		entity.getCapability(MINECART_CONTROLLER_CAPABILITY)
-			.ifPresent(MinecartController::sendData);
+		MinecartAndRailUtil.getController((AbstractMinecart) entity).sendData();
 	}
 
 	/* Capability provider */

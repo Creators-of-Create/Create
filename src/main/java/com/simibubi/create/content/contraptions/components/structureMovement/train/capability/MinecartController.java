@@ -2,11 +2,20 @@ package com.simibubi.create.content.contraptions.components.structureMovement.tr
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
+
+import com.simibubi.create.lib.helper.AbstractMinecartEntityHelper;
+import com.simibubi.create.lib.utility.ListenerProvider;
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+import com.simibubi.create.lib.utility.NBTSerializable;
+
+import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -33,14 +42,18 @@ import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.utility.NBT;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 /**
  * Extended code for Minecarts, this allows for handling stalled carts and
  * coupled trains
  */
-public class MinecartController implements INBTSerializable<CompoundTag> {
+public class MinecartController implements NBTSerializable, ListenerProvider {
+
+	public Set<NonNullConsumer> listeners = new HashSet<>();
+	@Override
+	public Set<NonNullConsumer> getListeners() {
+		return listeners;
+	}
 
 	public static MinecartController EMPTY;
 	private boolean needsEntryRefresh;
@@ -109,10 +122,10 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 		}
 		BlockPos blockpos = new BlockPos(i, j, k);
 		BlockState blockstate = world.getBlockState(blockpos);
-		if (cart.canUseRail() && blockstate.is(BlockTags.RAILS)
+		if (AbstractMinecartEntityHelper.canCartUseRail(cart) && blockstate.is(BlockTags.RAILS)
 				&& blockstate.getBlock() instanceof PoweredRailBlock
-				&& ((PoweredRailBlock) blockstate.getBlock())
-						.isActivatorRail()) {
+				&& (MinecartAndRailUtil.isActivatorRail(
+				blockstate.getBlock()))) {
 			if (cart.isVehicle()) {
 				cart.ejectPassengers();
 			}
@@ -292,12 +305,12 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 	public void sendData() {
 		if (getWorld().isClientSide)
 			return;
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(this::cart),
-			new MinecartControllerUpdatePacket(this));
+		AllPackets.channel.sendToClientsTracking(
+				new MinecartControllerUpdatePacket(this), this.cart());
 	}
 
 	@Override
-	public CompoundTag serializeNBT() {
+	public CompoundTag create$serializeNBT() {
 		CompoundTag compoundNBT = new CompoundTag();
 
 		stallData.forEachWithContext((opt, internal) -> opt
@@ -309,7 +322,7 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 	}
 
 	@Override
-	public void deserializeNBT(CompoundTag nbt) {
+	public void create$deserializeNBT(CompoundTag nbt) {
 		Optional<StallData> internalSD = Optional.empty();
 		Optional<StallData> externalSD = Optional.empty();
 		Optional<CouplingData> mainCD = Optional.empty();

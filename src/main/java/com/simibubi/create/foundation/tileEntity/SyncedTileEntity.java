@@ -70,12 +70,17 @@ public abstract class SyncedTileEntity extends BlockEntity implements BlockEntit
 		sendData();
 	}
 
-	public PacketDistributor.PacketTarget packetTarget() {
-		return PacketDistributor.TRACKING_CHUNK.with(this::containedChunk);
-	}
+//	public PacketDistributor.PacketTarget packetTarget() {
+//		return PacketDistributor.TRACKING_CHUNK.with(this::containedChunk);
+//	}
 
 	public LevelChunk containedChunk() {
 		SectionPos sectionPos = SectionPos.of(worldPosition);
 		return level.getChunk(sectionPos.x(), sectionPos.z());
+	}
+
+	@Override
+	public void create$deserializeNBT(BlockState state, CompoundTag nbt) {
+		this.load(nbt);
 	}
 }

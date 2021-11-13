@@ -81,7 +81,6 @@ public class SymmetryHandler {
 	}
 
 	@Environment(EnvType.CLIENT)
-	@SubscribeEvent
 	public static void render(RenderWorldLastEvent event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
