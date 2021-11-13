@@ -24,17 +24,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.utility.LazyOptional;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
 
@@ -105,7 +103,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (fluidLevel != null)
 			fluidLevel.tick();
 	}
-	
+
 	public BlockPos getLastKnownPos() {
 		return lastKnownPos;
 	}
@@ -161,7 +159,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			setChanged();
 			sendData();
 		}
-		
+
 		if (isVirtual()) {
 			if (fluidLevel == null)
 				fluidLevel = new InterpolatedChasingValue().start(getFillState());

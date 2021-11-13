@@ -15,46 +15,37 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class LinkHandler {
 
-	@SubscribeEvent
-	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		Level world = event.getWorld();
-		BlockPos pos = event.getPos();
-		Player player = event.getPlayer();
-		InteractionHand hand = event.getHand();
-		
+	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult blockRayTraceResult) {
+		BlockPos pos = blockRayTraceResult.getBlockPos();
+
 		if (player.isShiftKeyDown() || player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 
 		LinkBehaviour behaviour = TileEntityBehaviour.get(world, pos, LinkBehaviour.TYPE);
 		if (behaviour == null)
-			return;
+			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
-			return;
+			return InteractionResult.PASS;
 		if (AllItems.LINKED_CONTROLLER.isIn(heldItem))
-			return;
+			return InteractionResult.PASS;
 		if (AllItems.WRENCH.isIn(heldItem))
-			return;
+			return InteractionResult.PASS;
 
 		for (boolean first : Arrays.asList(false, true)) {
 			if (behaviour.testHit(first, ray.getLocation())) {
-				if (event.getSide() != LogicalSide.CLIENT) 
+				if (!world.isClientSide)
 					behaviour.setFrequency(first, heldItem);
-				event.setCanceled(true);
-				event.setCancellationResult(InteractionResult.SUCCESS);
 				world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
+				return InteractionResult.SUCCESS;
 			}
 		}
+		return InteractionResult.PASS;
 	}
 
 }

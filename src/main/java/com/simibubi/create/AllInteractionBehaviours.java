@@ -48,7 +48,7 @@ public class AllInteractionBehaviours {
 	}
 
 	static void register() {
-		addInteractionBehaviour(Blocks.LEVER.getRegistryName(), LeverMovingInteraction::new);
+		addInteractionBehaviour(Registry.BLOCK.getKey(Blocks.LEVER), LeverMovingInteraction::new);
 		addInteractionBehaviour(AllBlocks.DEPLOYER.getId(), DeployerMovingInteraction::new);
 
 		// TODO: Scan registry for instanceof (-> modded door support)
@@ -56,12 +56,12 @@ public class AllInteractionBehaviours {
 		for (Block trapdoor : ImmutableList.of(Blocks.ACACIA_TRAPDOOR, Blocks.OAK_TRAPDOOR, Blocks.DARK_OAK_TRAPDOOR,
 			Blocks.SPRUCE_TRAPDOOR, Blocks.JUNGLE_TRAPDOOR, Blocks.BIRCH_TRAPDOOR, Blocks.WARPED_TRAPDOOR,
 			Blocks.CRIMSON_TRAPDOOR)) {
-			addInteractionBehaviour(trapdoor.getRegistryName(), TrapdoorMovingInteraction::new);
+			addInteractionBehaviour(Registry.BLOCK.getKey(trapdoor), TrapdoorMovingInteraction::new);
 		}
 
 		for (Block door : ImmutableList.of(Blocks.ACACIA_DOOR, Blocks.OAK_DOOR, Blocks.DARK_OAK_DOOR,
 			Blocks.SPRUCE_DOOR, Blocks.JUNGLE_DOOR, Blocks.BIRCH_DOOR, Blocks.WARPED_DOOR, Blocks.CRIMSON_DOOR)) {
-			addInteractionBehaviour(door.getRegistryName(), DoorMovingInteraction::new);
+			addInteractionBehaviour(Registry.BLOCK.getKey(door), DoorMovingInteraction::new);
 		}
 	}
 }

@@ -10,14 +10,69 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public interface RenderHandCallback {
-	public static final Event<RenderHandCallback> EVENT = EventFactory.createArrayBacked(RenderHandCallback.class, callbacks -> (player, hand, stack, matrices, vertexConsumers, tickDelta, pitch, swingProgress, equipProgress, light) -> {
+	Event<RenderHandCallback> EVENT = EventFactory.createArrayBacked(RenderHandCallback.class, callbacks -> (handEvent) -> {
 		for (RenderHandCallback callback : callbacks) {
-			if (callback.onRenderHand(player, hand, stack, matrices, vertexConsumers, tickDelta, pitch, swingProgress, equipProgress, light)) {
-				return true;
-			}
+			callback.onRenderHand(handEvent);
 		}
-		return false;
 	});
 
-	boolean onRenderHand(AbstractClientPlayer player, InteractionHand hand, ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, float tickDelta, float pitch, float swingProgress, float equipProgress, int light);
+	void onRenderHand(RenderHandEvent event);
+
+	class RenderHandEvent extends CancellableEvent {
+		private AbstractClientPlayer player;
+		private InteractionHand hand;
+		private ItemStack stack;
+		private PoseStack matrices;
+		private MultiBufferSource vertexConsumers;
+		private float tickDelta;
+		private float pitch;
+		private float swingProgress;
+		private float equipProgress;
+		private int light;
+
+		public RenderHandEvent(AbstractClientPlayer player, InteractionHand hand, ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, float tickDelta, float pitch, float swingProgress, float equipProgress, int light) {
+			this.player = player;
+			this.hand = hand;
+			this.stack = stack;
+			this.matrices = matrices;
+			this.vertexConsumers = vertexConsumers;
+			this.tickDelta = tickDelta;
+			this.pitch = pitch;
+			this.swingProgress = swingProgress;
+			this.equipProgress = equipProgress;
+			this.light = light;
+		}
+
+		public ItemStack getItemStack() {
+			return stack;
+		}
+
+		public PoseStack getMatrixStack() {
+			return matrices;
+		}
+
+		public MultiBufferSource getBuffers() {
+			return vertexConsumers;
+		}
+
+		public int getLight() {
+			return light;
+		}
+
+		public float getPartialTicks() {
+			return tickDelta;
+		}
+
+		public InteractionHand getHand() {
+			return hand;
+		}
+
+		public float getEquipProgress() {
+			return equipProgress;
+		}
+
+		public float getSwingProgress() {
+			return swingProgress;
+		}
+	}
 }

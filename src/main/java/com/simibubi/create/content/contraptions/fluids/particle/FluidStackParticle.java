@@ -12,7 +12,10 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 
 public class FluidStackParticle extends TextureSheetParticle {
 	private final float uo;
@@ -20,7 +23,7 @@ public class FluidStackParticle extends TextureSheetParticle {
 	private FluidStack fluid;
 
 	public static FluidStackParticle create(ParticleType<FluidParticleData> type, ClientLevel world, FluidStack fluid, double x,
-		double y, double z, double vx, double vy, double vz) {
+											double y, double z, double vx, double vy, double vz) {
 		if (type == AllParticleTypes.BASIN_FLUID.get())
 			return new BasinFluidParticle(world, fluid, x, y, z, vx, vy, vz);
 		return new FluidStackParticle(world, fluid, x, y, z, vx, vy, vz);
@@ -32,17 +35,13 @@ public class FluidStackParticle extends TextureSheetParticle {
 		this.fluid = fluid;
 		this.setSprite(Minecraft.getInstance()
 			.getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-			.apply(fluid.getFluid()
-				.getAttributes()
-				.getStillTexture()));
+			.apply(FluidRenderHandlerRegistry.INSTANCE.get(fluid.getFluid()).getFluidSprites(null, null, fluid.getFluid().defaultFluidState())[0].getName()));
 
 		this.gravity = 1.0F;
 		this.rCol = 0.8F;
 		this.gCol = 0.8F;
 		this.bCol = 0.8F;
-		this.multiplyColor(fluid.getFluid()
-			.getAttributes()
-			.getColor(fluid));
+		this.multiplyColor(FluidRenderHandlerRegistry.INSTANCE.get(fluid.getFluid()).getFluidColor(null, null, fluid.getFluid().defaultFluidState()));
 
 		this.xd = vx;
 		this.yd = vy;
@@ -58,9 +57,9 @@ public class FluidStackParticle extends TextureSheetParticle {
 		int brightnessForRender = super.getLightColor(p_189214_1_);
 		int skyLight = brightnessForRender >> 20;
 		int blockLight = (brightnessForRender >> 4) & 0xf;
-		blockLight = Math.max(blockLight, fluid.getFluid()
-			.getAttributes()
-			.getLuminosity(fluid));
+//		blockLight = Math.max(blockLight, fluid.getFluid()
+//			.getAttributes()
+//			.getLuminosity(fluid));
 		return (skyLight << 20) | (blockLight << 4);
 	}
 

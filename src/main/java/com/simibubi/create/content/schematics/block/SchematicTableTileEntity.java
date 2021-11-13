@@ -18,7 +18,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+
 
 public class SchematicTableTileEntity extends SmartTileEntity implements MenuProvider, IInteractionChecker {
 
@@ -56,7 +58,7 @@ public class SchematicTableTileEntity extends SmartTileEntity implements MenuPro
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {
 		inventory.deserializeNBT(compound.getCompound("Inventory"));
 		super.fromTag(compound, clientPacket);
-		
+
 		if (!clientPacket)
 			return;
 		if (compound.contains("Uploading")) {
@@ -74,14 +76,14 @@ public class SchematicTableTileEntity extends SmartTileEntity implements MenuPro
 	protected void write(CompoundTag compound, boolean clientPacket) {
 		compound.put("Inventory", inventory.serializeNBT());
 		super.write(compound, clientPacket);
-		
+
 		if (clientPacket && isUploading) {
 			compound.putBoolean("Uploading", true);
 			compound.putString("Schematic", uploadingSchematic);
 			compound.putFloat("Progress", uploadingProgress);
 		}
 	}
-	
+
 	@Override
 	public void tick() {
 		// Update Client Tile

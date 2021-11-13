@@ -12,14 +12,19 @@ import com.simibubi.create.foundation.item.render.CustomRenderedItems;
 
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.eventbus.api.IEventBus;
+
+import com.simibubi.create.lib.event.ModelsBakedCallback;
+
+import com.simibubi.create.lib.event.OnModelRegistryCallback;
+
+import com.simibubi.create.lib.utility.SpecialModelUtil;
 
 public class ModelSwapper {
 
@@ -39,29 +44,29 @@ public class ModelSwapper {
 		return customRenderedItems;
 	}
 
-	public void onModelRegistry(ModelRegistryEvent event) {
+	public void onModelRegistry() {
+		OnModelRegistryCallback.EVENT.register(this::onModelRegistry);
+		ModelsBakedCallback.EVENT.register(this::onModelBake);
 		customRenderedItems.forEach((item, modelFunc) -> modelFunc.apply(null)
 			.getModelLocations()
-			.forEach(ModelLoader::addSpecialModel));
+			.forEach(SpecialModelUtil::addSpecialModel));
 	}
 
-	public void onModelBake(ModelBakeEvent event) {
-		Map<ResourceLocation, BakedModel> modelRegistry = event.getModelRegistry();
-
+	public void onModelBake(ModelManager manager, Map<ResourceLocation, BakedModel> modelRegistry, ModelBakery loader) {
 		customBlockModels.forEach((block, modelFunc) -> swapModels(modelRegistry, getAllBlockStateModelLocations(block), modelFunc));
 		customItemModels.forEach((item, modelFunc) -> swapModels(modelRegistry, getItemModelLocation(item), modelFunc));
 		customRenderedItems.forEach((item, modelFunc) -> {
 			swapModels(modelRegistry, getItemModelLocation(item), m -> {
 				CustomRenderedItemModel swapped = modelFunc.apply(m);
-				swapped.loadPartials(event);
+				swapped.loadPartials(loader);
 				return swapped;
 			});
 		});
 	}
 
-	public void registerListeners(IEventBus modEventBus) {
-		modEventBus.addListener(this::onModelRegistry);
-		modEventBus.addListener(this::onModelBake);
+	public void registerListeners() {
+		OnModelRegistryCallback.EVENT.register(this::onModelRegistry);
+		ModelsBakedCallback.EVENT.register(this::onModelBake);
 	}
 
 	public static <T extends BakedModel> void swapModels(Map<ResourceLocation, BakedModel> modelRegistry,
@@ -88,7 +93,7 @@ public class ModelSwapper {
 	}
 
 	public static ModelResourceLocation getItemModelLocation(Item item) {
-		return new ModelResourceLocation(item.getRegistryName(), "inventory");
+		return new ModelResourceLocation(Registry.ITEM.getKey(item), "inventory");
 	}
 
 }

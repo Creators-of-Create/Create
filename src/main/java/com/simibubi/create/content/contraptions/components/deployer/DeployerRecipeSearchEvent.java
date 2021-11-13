@@ -7,6 +7,9 @@ import javax.annotation.Nullable;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
+
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 

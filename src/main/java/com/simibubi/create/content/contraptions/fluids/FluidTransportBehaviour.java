@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.WorldAttached;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
 
 public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 
@@ -97,8 +97,8 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 		}
 
 		if (onServer) {
-			FluidStack availableFlow = FluidStack.EMPTY;
-			FluidStack collidingFlow = FluidStack.EMPTY;
+			FluidStack availableFlow = FluidStack.empty();
+			FluidStack collidingFlow = FluidStack.empty();
 
 			for (PipeConnection connection : connections) {
 				FluidStack fluidInFlow = connection.getProvidedFluid();
@@ -125,7 +125,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 
 			boolean sendUpdate = false;
 			for (PipeConnection connection : connections) {
-				FluidStack internalFluid = singleSource != connection ? availableFlow : FluidStack.EMPTY;
+				FluidStack internalFluid = singleSource != connection ? availableFlow : FluidStack.empty();
 				Predicate<FluidStack> extractionPredicate =
 					extracted -> canPullFluidFrom(extracted, tileEntity.getBlockState(), connection.side);
 				sendUpdate |= connection.manageFlows(world, pos, internalFluid, extractionPredicate);
@@ -173,7 +173,7 @@ public abstract class FluidTransportBehaviour extends TileEntityBehaviour {
 	public FluidStack getProvidedOutwardFluid(Direction side) {
 		createConnectionData();
 		if (!interfaces.containsKey(side))
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		return interfaces.get(side)
 			.provideOutboundFlow();
 	}

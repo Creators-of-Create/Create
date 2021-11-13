@@ -54,6 +54,7 @@ import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -77,7 +78,7 @@ import net.minecraftforge.fml.ModList;
 
 @JeiPlugin
 @SuppressWarnings("unused")
-public class CreateJEI implements IModPlugin {
+public class CreateJEI implements REIClientPlugin {
 
 	private static final ResourceLocation ID = Create.asResource("jei_plugin");
 

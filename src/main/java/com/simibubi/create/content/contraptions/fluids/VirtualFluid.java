@@ -6,9 +6,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
+
+import com.tterrag.registrate.fabric.SimpleFlowableFluid;
+
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
-public class VirtualFluid extends ForgeFlowingFluid {
+public class VirtualFluid extends SimpleFlowableFluid {
 
 	public VirtualFluid(Properties properties) {
 		super(properties);

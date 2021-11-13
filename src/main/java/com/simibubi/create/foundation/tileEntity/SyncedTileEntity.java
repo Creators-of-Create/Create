@@ -1,5 +1,7 @@
 package com.simibubi.create.foundation.tileEntity;
 
+import com.simibubi.create.lib.extensions.BlockEntityExtensions;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -12,19 +14,18 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class SyncedTileEntity extends BlockEntity {
+public abstract class SyncedTileEntity extends BlockEntity implements BlockEntityExtensions {
 
 	public SyncedTileEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
 		super(tileEntityTypeIn, pos, state);
 	}
 
 	@Override
-	public CompoundTag getTileData() {
-		return super.getTileData();
+	public CompoundTag create$getExtraCustomData() {
+		return ((BlockEntityExtensions) this).create$getExtraCustomData();
 	}
 
 	@Override

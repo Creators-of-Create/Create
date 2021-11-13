@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.lib.utility.BurnUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -23,7 +24,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
 
 public class BlazeBurnerTileEntity extends SmartTileEntity {
 
@@ -173,7 +173,7 @@ public class BlazeBurnerTileEntity extends SmartTileEntity {
 			newBurnTime = 1000;
 			newFuel = FuelType.SPECIAL;
 		} else {
-			newBurnTime = ForgeHooks.getBurnTime(itemStack, null);
+			newBurnTime = BurnUtil.getBurnTime(itemStack);
 			if (newBurnTime > 0)
 				newFuel = FuelType.NORMAL;
 		}

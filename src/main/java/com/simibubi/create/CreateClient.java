@@ -1,5 +1,6 @@
 package com.simibubi.create;
 
+import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.simibubi.create.content.contraptions.base.KineticTileEntityRenderer;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.ContraptionRenderDispatcher;
 import com.simibubi.create.content.contraptions.components.structureMovement.render.SBBContraptionManager;
@@ -10,6 +11,7 @@ import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler;
 import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
+import com.simibubi.create.events.ClientEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -32,10 +34,9 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.fabricmc.api.ClientModInitializer;
 
-public class CreateClient {
+public class CreateClient implements ClientModInitializer {
 
 	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
 	public static final Outliner OUTLINER = new Outliner();
@@ -54,20 +55,21 @@ public class CreateClient {
 
 	public static final ClientResourceReloadListener RESOURCE_RELOAD_LISTENER = new ClientResourceReloadListener();
 
-	public static void onCtorClient(IEventBus modEventBus, IEventBus forgeEventBus) {
-		modEventBus.addListener(CreateClient::clientInit);
-		modEventBus.addListener(AllParticleTypes::registerFactories);
-		modEventBus.addListener(CreateContexts::flwInit);
-		modEventBus.addListener(AllMaterialSpecs::flwInit);
-		modEventBus.addListener(ContraptionRenderDispatcher::gatherContext);
+	public static void onCtorClient() {
+//		modEventBus.addListener(CreateClient::clientInit);
+//		modEventBus.addListener(AllParticleTypes::registerFactories);
+		FlywheelEvents.GATHER_CONTEXT.register(CreateContexts::flwInit);
+		FlywheelEvents.GATHER_CONTEXT.register(AllMaterialSpecs::flwInit);
+		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
 
-		MODEL_SWAPPER.registerListeners(modEventBus);
+		MODEL_SWAPPER.registerListeners();
 
-		ZAPPER_RENDER_HANDLER.registerListeners(forgeEventBus);
-		POTATO_CANNON_RENDER_HANDLER.registerListeners(forgeEventBus);
+		ZAPPER_RENDER_HANDLER.registerListeners();
+		POTATO_CANNON_RENDER_HANDLER.registerListeners();
 	}
 
-	public static void clientInit(final FMLClientSetupEvent event) {
+	@Override
+	public void onInitializeClient() {
 		BUFFER_CACHE.registerCompartment(KineticTileEntityRenderer.KINETIC_TILE);
 		BUFFER_CACHE.registerCompartment(SBBContraptionManager.CONTRAPTION, 20);
 		BUFFER_CACHE.registerCompartment(WorldSectionElement.DOC_WORLD_SECTION, 20);
@@ -81,6 +83,9 @@ public class CreateClient {
 		PonderIndex.registerTags();
 
 		UIRenderHelper.init();
+
+		onCtorClient();
+		ClientEvents.ModBusEvents.register();
 	}
 
 	public static void invalidateRenderers() {

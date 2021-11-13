@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
 
 public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 
@@ -21,7 +21,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 	protected SmartFluidTank createInventory() {
 		return new CreativeSmartFluidTank(getCapacityMultiplier(), this::onFluidStackChanged);
 	}
-	
+
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return false;
@@ -32,15 +32,15 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 		public CreativeSmartFluidTank(int capacity, Consumer<FluidStack> updateCallback) {
 			super(capacity, updateCallback);
 		}
-		
+
 		@Override
 		public int getFluidAmount() {
 			return getFluid().isEmpty() ? 0 : getTankCapacity(0);
 		}
-		
+
 		public void setContainedFluid(FluidStack fluidStack) {
 			fluid = fluidStack.copy();
-			if (!fluidStack.isEmpty()) 
+			if (!fluidStack.isEmpty())
 				fluid.setAmount(getTankCapacity(0));
 			onContentsChanged();
 		}

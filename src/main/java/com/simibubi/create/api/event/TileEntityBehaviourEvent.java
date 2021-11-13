@@ -8,7 +8,8 @@ import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.eventbus.api.GenericEvent;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 
 /**
  * Event that is fired just before a SmartTileEntity is being deserealized <br>
@@ -24,17 +25,29 @@ import net.minecraftforge.eventbus.api.GenericEvent;
  * to the initial nbt read (unless the TE was placed, not loaded), thereby
  * allowing tiles to store and retrieve data for injected behaviours
  */
-public class TileEntityBehaviourEvent<T extends SmartTileEntity> extends GenericEvent<T> {
+public class TileEntityBehaviourEvent<T extends SmartTileEntity> {
 
+	private BlockState state;
 	private T smartTileEntity;
 	private Map<BehaviourType<?>, TileEntityBehaviour> behaviours;
 
-	public TileEntityBehaviourEvent(T tileEntity, Map<BehaviourType<?>, TileEntityBehaviour> behaviours) {
+	public static final Event<TileEntityBehaviorCallback> EVENT = EventFactory.createArrayBacked(TileEntityBehaviorCallback.class, callbacks -> event -> {
+		for (TileEntityBehaviorCallback callback : callbacks) {
+			callback.onDeserialize(event);
+		}
+	});
+
+	public interface TileEntityBehaviorCallback {
+		void onDeserialize(TileEntityBehaviourEvent event);
+	}
+
+	public TileEntityBehaviourEvent(BlockState state, T tileEntity,
+									Map<BehaviourType<?>, TileEntityBehaviour> behaviours) {
+		this.state = state;
 		smartTileEntity = tileEntity;
 		this.behaviours = behaviours;
 	}
 
-	@Override
 	public Type getGenericType() {
 		return smartTileEntity.getClass();
 	}
@@ -52,7 +65,7 @@ public class TileEntityBehaviourEvent<T extends SmartTileEntity> extends Generic
 	}
 
 	public BlockState getBlockState() {
-		return smartTileEntity.getBlockState();
+		return state;
 	}
 
 }

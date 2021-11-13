@@ -4,6 +4,9 @@ import com.mojang.math.Matrix4f;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.helper.Matrix4fHelper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
@@ -142,7 +145,7 @@ public class Matrix3d {
 		conversionBuffer[9] = (float) m21;
 		conversionBuffer[10] = (float) m22;
 
-		return new Matrix4f(conversionBuffer);
+		return Matrix4fHelper.fromFloatArray(conversionBuffer);
 	}
 
 }

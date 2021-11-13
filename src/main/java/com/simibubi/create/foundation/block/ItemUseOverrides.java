@@ -6,16 +6,17 @@ import java.util.Set;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class ItemUseOverrides {
 
 	private static final Set<ResourceLocation> OVERRIDES = new HashSet<>();
@@ -24,28 +25,27 @@ public class ItemUseOverrides {
 		OVERRIDES.add(Registry.BLOCK.getKey(block));
 	}
 
-	@SubscribeEvent
-	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		if (AllItems.WRENCH.isIn(event.getItemStack()))
-			return;
+	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult traceResult) {
+		if (AllItems.WRENCH.isIn(player.getItemInHand(hand)))
+			return InteractionResult.PASS;
 
-		BlockState state = event.getWorld()
-				.getBlockState(event.getPos());
-		ResourceLocation id = state.getBlock()
-				.getRegistryName();
+		BlockPos pos = traceResult.getBlockPos();
+
+		BlockState state = world
+				.getBlockState(pos);
+		ResourceLocation id = Registry.BLOCK.getKey(state.getBlock());
 
 		if (!OVERRIDES.contains(id))
-			return;
+			return InteractionResult.PASS;
 
 		BlockHitResult blockTrace =
-				new BlockHitResult(VecHelper.getCenterOf(event.getPos()), event.getFace(), event.getPos(), true);
-		InteractionResult result = state.use(event.getWorld(), event.getPlayer(), event.getHand(), blockTrace);
+				new BlockHitResult(VecHelper.getCenterOf(pos), traceResult.getDirection(), pos, true);
+		InteractionResult result = state.use(world, player, hand, blockTrace);
 
 		if (!result.consumesAction())
-			return;
+			return InteractionResult.PASS;
 
-		event.setCanceled(true);
-		event.setCancellationResult(result);
+		return result;
 	}
 
 }

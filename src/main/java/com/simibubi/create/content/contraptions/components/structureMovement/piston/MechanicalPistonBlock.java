@@ -33,7 +33,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.Tags;
 
 public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implements ITE<MechanicalPistonTileEntity> {
 
@@ -209,7 +208,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 	public Class<MechanicalPistonTileEntity> getTileEntityClass() {
 		return MechanicalPistonTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends MechanicalPistonTileEntity> getTileEntityType() {
 		return AllTileEntities.MECHANICAL_PISTON.get();

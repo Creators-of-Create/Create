@@ -31,14 +31,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.event.OverlayRenderCallback;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class PlacementHelpers {
 
 	private static final List<IPlacementHelper> helpers = new ArrayList<>();
@@ -144,23 +142,20 @@ public class PlacementHelpers {
 			lastTarget = target;
 	}
 
-	@SubscribeEvent
 	@Environment(EnvType.CLIENT)
-	public static void afterRenderOverlayLayer(RenderGameOverlayEvent.PostLayer event) {
-		if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT)
+	public static void afterRenderOverlayLayer(PoseStack stack, float partialTicks, Window res, OverlayRenderCallback.Types type) {
+		if (type != OverlayRenderCallback.Types.CROSSHAIRS)
 			return;
 
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 
 		if (player != null && animationTick > 0) {
-			Window res = event.getWindow();
-
 			float screenY = res.getGuiScaledHeight() / 2f;
 			float screenX = res.getGuiScaledWidth() / 2f;
 			float progress = getCurrentAlpha();
 
-			drawDirectionIndicator(event.getMatrixStack(), event.getPartialTicks(), screenX, screenY, progress);
+			drawDirectionIndicator(stack, partialTicks, screenX, screenY, progress);
 		}
 	}
 

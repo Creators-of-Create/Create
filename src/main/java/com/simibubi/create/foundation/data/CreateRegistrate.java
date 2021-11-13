@@ -19,10 +19,14 @@ import com.simibubi.create.foundation.block.connected.CTModel;
 import com.simibubi.create.foundation.block.connected.ConnectedTextureBehaviour;
 import com.simibubi.create.foundation.block.render.ColoredVertexModel;
 import com.simibubi.create.foundation.block.render.IBlockVertexColor;
+import com.simibubi.create.lib.data.Tags;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.Builder;
 import com.tterrag.registrate.builders.FluidBuilder;
+import com.tterrag.registrate.fabric.EnvExecutor;
+import com.tterrag.registrate.fabric.RegistryObject;
+import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
@@ -58,7 +62,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	public interface BlockEntityFactory<T extends BlockEntity> {
 
 		public T create(BlockEntityType<T> type, BlockPos pos, BlockState state);
-		
+
 		default T createWithReversedParams(BlockPos pos, BlockState state, BlockEntityType<T> type) {
 			return create(type, pos, state);
 		}
@@ -71,8 +75,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public static NonNullLazyValue<CreateRegistrate> lazy(String modid) {
 		return new NonNullLazyValue<>(
-			() -> new CreateRegistrate(modid).registerEventListeners(FMLJavaModLoadingContext.get()
-				.getModEventBus()));
+			() -> new CreateRegistrate(modid));
 	}
 
 	/* Section Tracking */
@@ -90,7 +93,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Override
-	protected <R extends IForgeRegistryEntry<R>, T extends R> RegistryEntry<T> accept(String name,
+	protected <R, T extends R> RegistryEntry<T> accept(String name,
 		Class<? super R> type, Builder<R, T, ?, ?> builder, NonNullSupplier<? extends T> creator,
 		NonNullFunction<RegistryObject<T>, ? extends RegistryEntry<T>> entryFactory) {
 		RegistryEntry<T> ret = super.accept(name, type, builder, creator, entryFactory);
@@ -106,7 +109,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 		return sectionLookup.getOrDefault(entry, AllSections.UNASSIGNED);
 	}
 
-	public AllSections getSection(IForgeRegistryEntry<?> entry) {
+	public AllSections getSection(Object entry) {
 		return sectionLookup.entrySet()
 			.stream()
 			.filter(e -> e.getKey()
@@ -116,7 +119,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 			.orElse(AllSections.UNASSIGNED);
 	}
 
-	public <R extends IForgeRegistryEntry<R>> Collection<RegistryEntry<R>> getAll(AllSections section,
+	public <R> Collection<RegistryEntry<R>> getAll(AllSections section,
 		Class<? super R> registryType) {
 		return this.<R>getAll(registryType)
 			.stream()
@@ -176,9 +179,9 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	/* Fluids */
 
-	public <T extends ForgeFlowingFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
+	public <T extends SimpleFlowableFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
 		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
-		NonNullFunction<ForgeFlowingFluid.Properties, T> factory) {
+		NonNullFunction<SimpleFlowableFluid.Properties, T> factory) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
 				Create.asResource("fluid/" + name + "_flow"), attributesFactory, factory));
@@ -190,11 +193,11 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 				Create.asResource("fluid/" + name + "_flow"), null, VirtualFluid::new));
 	}
 
-	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name) {
+	public FluidBuilder<SimpleFlowableFluid.Flowing, CreateRegistrate> standardFluid(String name) {
 		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"));
 	}
 
-	public FluidBuilder<ForgeFlowingFluid.Flowing, CreateRegistrate> standardFluid(String name,
+	public FluidBuilder<SimpleFlowableFluid.Flowing, CreateRegistrate> standardFluid(String name,
 		NonNullBiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory) {
 		return fluid(name, Create.asResource("fluid/" + name + "_still"), Create.asResource("fluid/" + name + "_flow"),
 			attributesFactory);
@@ -226,7 +229,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	protected static void onClient(Supplier<Runnable> toRun) {
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, toRun);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, toRun);
 	}
 
 	@Environment(EnvType.CLIENT)

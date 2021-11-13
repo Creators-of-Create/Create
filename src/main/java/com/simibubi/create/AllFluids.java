@@ -8,6 +8,7 @@ import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.PotionFluidAttributes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
+import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 
@@ -36,7 +38,7 @@ public class AllFluids {
 			.tag(AllTags.forgeFluidTag("tea"))
 			.register();
 
-	public static final FluidEntry<ForgeFlowingFluid.Flowing> HONEY =
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> HONEY =
 			REGISTRATE.standardFluid("honey", NoColorFluidAttributes::new)
 					.lang(f -> "fluid.create.honey", "Honey")
 					.attributes(b -> b.viscosity(2000)
@@ -46,13 +48,13 @@ public class AllFluids {
 							.slopeFindDistance(3)
 							.explosionResistance(100f))
 					.tag(AllFluidTags.HONEY.tag)
-					.source(ForgeFlowingFluid.Source::new) // TODO: remove when Registrate fixes FluidBuilder
+					.source(SimpleFlowableFluid.Still::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
 					.tag(AllTags.forgeItemTag("buckets/honey"))
 					.build()
 					.register();
 
-	public static final FluidEntry<ForgeFlowingFluid.Flowing> CHOCOLATE =
+	public static final FluidEntry<SimpleFlowableFluid.Flowing> CHOCOLATE =
 			REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
 					.lang(f -> "fluid.create.chocolate", "Chocolate")
 					.tag(AllTags.forgeFluidTag("chocolate"))
@@ -73,9 +75,13 @@ public class AllFluids {
 
 	@Environment(EnvType.CLIENT)
 	private static void makeTranslucent(FluidEntry<?> entry) {
-		ForgeFlowingFluid fluid = entry.get();
-		ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
-		ItemBlockRenderTypes.setRenderLayer(fluid.getSource(), RenderType.translucent());
+//		SimpleFlowableFluid fluid = entry.get();
+//		ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
+//		ItemBlockRenderTypes.setRenderLayer(fluid.getSource(), RenderType.translucent());
+
+		// fabric
+		BlockRenderLayerMap.INSTANCE.putFluid(entry.get(), RenderType.translucent());
+		BlockRenderLayerMap.INSTANCE.putFluid(entry.get().getSource(), RenderType.translucent());
 	}
 
 	@Nullable
@@ -108,5 +114,5 @@ public class AllFluids {
 		}
 
 	}
-	
+
 }

@@ -19,10 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public abstract class SmartTileEntity extends SyncedTileEntity implements IPartialSafeNBT, IInteractionChecker {
 
@@ -78,7 +74,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 	public void initialize() {
 		if (firstNbtRead) {
 			firstNbtRead = false;
-			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(this, behaviours));
+			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent(getBlockState(), this, behaviours));
 			updateBehaviorList();
 		}
 
@@ -117,7 +113,7 @@ public abstract class SmartTileEntity extends SyncedTileEntity implements IParti
 			ArrayList<TileEntityBehaviour> list = new ArrayList<>();
 			addBehavioursDeferred(list);
 			list.forEach(b -> behaviours.put(b.getType(), b));
-			MinecraftForge.EVENT_BUS.post(new TileEntityBehaviourEvent<>(this, behaviours));
+			TileEntityBehaviourEvent.EVENT.invoker().onDeserialize(new TileEntityBehaviourEvent(getBlockState(), this, behaviours));
 			updateBehaviorList();
 		}
 		super.load(compound);

@@ -5,8 +5,6 @@ import java.util.function.Supplier;
 import com.simibubi.create.events.CommonEvents;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public class LeftClickPacket extends SimplePacketBase {
 

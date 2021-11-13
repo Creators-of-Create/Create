@@ -50,9 +50,11 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import com.simibubi.create.lib.entity.FakePlayer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -161,7 +163,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 
 		if (!doNotConsume) {
-			ItemStack container = stack.getContainerItem();
+			ItemStack container = new ItemStack(stack.getItem().getCraftingRemainingItem());
 			if (!world.isClientSide && !simulate) {
 				stack.shrink(1);
 			}

@@ -8,6 +8,13 @@ import com.simibubi.create.foundation.utility.BlockFace;
 
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.utility.LazyOptional;
+
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -27,7 +34,7 @@ public abstract class FlowSource {
 	public FluidStack provideFluid(Predicate<FluidStack> extractionPredicate) {
 		IFluidHandler tank = provideHandler().orElse(null);
 		if (tank == null)
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		FluidStack immediateFluid = tank.drain(1, FluidAction.SIMULATE);
 		if (extractionPredicate.test(immediateFluid))
 			return immediateFluid;

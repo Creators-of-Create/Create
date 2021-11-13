@@ -16,10 +16,11 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluids;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidParticleData implements ParticleOptions, ICustomParticleData<FluidParticleData> {
 
@@ -48,25 +49,25 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 
 	@Override
 	public void writeToNetwork(FriendlyByteBuf buffer) {
-		buffer.writeFluidStack(fluid);
+		fluid.toBuffer(buffer);
 	}
 
 	@Override
 	public String writeToString() {
-		return ForgeRegistries.PARTICLE_TYPES.getKey(type) + " " + fluid.getFluid()
-			.getRegistryName();
+		return Registry.PARTICLE_TYPE.getKey(type) + " " + Registry.FLUID.getKey(fluid.getFluid());
 	}
 
 	public static final Codec<FluidStack> FLUID_CODEC = RecordCodecBuilder.create(i -> i.group(
-		Registry.FLUID.fieldOf("FluidName")
-			.forGetter(FluidStack::getFluid),
-		Codec.INT.fieldOf("Amount")
-			.forGetter(FluidStack::getAmount),
-		CompoundTag.CODEC.optionalFieldOf("tag")
-			.forGetter((fs) -> {
-				return Optional.ofNullable(fs.getTag());
-			}))
-		.apply(i, (f, a, t) -> new FluidStack(f, a, t.orElse(null))));
+					Registry.FLUID.fieldOf("FluidName")
+							.forGetter(FluidStack::getFluid),
+					Codec.LONG.fieldOf("Amount")
+							.forGetter(FluidStack::getAmount),
+					CompoundTag.CODEC.optionalFieldOf("tag")
+							.forGetter((fs) -> {
+								return Optional.ofNullable(fs.toTag());
+							}))
+			//Just ignore tags for now
+			.apply(i, (f, a, t) -> new FluidStack(f, a)));
 
 	public static final Codec<FluidParticleData> CODEC = RecordCodecBuilder.create(i -> i
 		.group(FLUID_CODEC.fieldOf("fluid")
@@ -93,7 +94,7 @@ public class FluidParticleData implements ParticleOptions, ICustomParticleData<F
 			}
 
 			public FluidParticleData fromNetwork(ParticleType<FluidParticleData> particleTypeIn, FriendlyByteBuf buffer) {
-				return new FluidParticleData(particleTypeIn, buffer.readFluidStack());
+				return new FluidParticleData(particleTypeIn, FluidStack.fromBuffer(buffer));
 			}
 		};
 

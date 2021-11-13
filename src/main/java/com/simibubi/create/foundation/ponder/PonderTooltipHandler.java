@@ -14,11 +14,14 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.RenderTooltipEvent;
+
+import com.simibubi.create.lib.event.RenderTooltipBorderColorCallback;
+import com.simibubi.create.lib.helper.KeyBindingHelper;
 
 public class PonderTooltipHandler {
 
@@ -47,8 +50,7 @@ public class PonderTooltipHandler {
 		Minecraft instance = Minecraft.getInstance();
 		Screen currentScreen = instance.screen;
 		float value = holdWProgress.getValue();
-		int keyCode = ponderKeybind().getKey()
-			.getValue();
+		int keyCode = KeyBindingHelper.getKeyCode(ponderKeybind()).getValue();
 		long window = instance.getWindow()
 			.getWindow();
 
@@ -102,8 +104,7 @@ public class PonderTooltipHandler {
 
 		if (stack.isEmpty())
 			return;
-		if (!PonderRegistry.ALL.containsKey(stack.getItem()
-			.getRegistryName()))
+		if (!PonderRegistry.ALL.containsKey(Registry.ITEM.getKey(stack.getItem())))
 			return;
 
 		if (prevStack.isEmpty() || !prevStack.sameItem(stack))
@@ -113,22 +114,21 @@ public class PonderTooltipHandler {
 		trackingStack = stack;
 	}
 
-	public static void handleTooltipColor(RenderTooltipEvent.Color event) {
-		if (trackingStack != event.getStack())
-			return;
+	public static RenderTooltipBorderColorCallback.BorderColorEntry handleTooltipColor(ItemStack stack, int originalBorderColorStart, int originalBorderColorEn) {
+		if (trackingStack != stack)
+			return null;
 		if (holdWProgress.getValue() == 0)
-			return;
+			return null;
 		float renderPartialTicks = Minecraft.getInstance()
 			.getFrameTime();
-		int start = event.getOriginalBorderStart();
-		int end = event.getOriginalBorderEnd();
+		int start = originalBorderColorStart;
+		int end = originalBorderColorEn;
 		float progress = Math.min(1, holdWProgress.getValue(renderPartialTicks) * 8 / 7f);
 
 		start = getSmoothColorForProgress(progress);
 		end = getSmoothColorForProgress((progress));
 
-		event.setBorderStart(start | 0xa0000000);
-		event.setBorderEnd(end | 0xa0000000);
+		return new RenderTooltipBorderColorCallback.BorderColorEntry(start | 0xa0000000, end | 0xa0000000);
 	}
 
 	private static int getSmoothColorForProgress(float progress) {

@@ -10,7 +10,8 @@ import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fluids.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public abstract class BlockSpoutingBehaviour {
 
@@ -34,7 +35,7 @@ public abstract class BlockSpoutingBehaviour {
 	 * When fillBlock returns &gt; 0 once again, the Spout will drain its content by the returned amount of units <br>
 	 * Perform any other side-effects in this method <br>
 	 * This method is called server-side only (except in ponder) <br>
-	 * 
+	 *
 	 * @param world
 	 * @param pos            of the affected block
 	 * @param spout

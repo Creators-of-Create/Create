@@ -8,6 +8,7 @@ import java.util.function.Function;
 
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.lib.mixin.accessor.ItemTagsAccessor;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.ProviderType;
@@ -47,7 +48,7 @@ public class AllTags {
 	}
 
 	public static Tag.Named<Item> forgeItemTag(String path) {
-		return forgeTag(ItemTags::createOptional, path);
+		return forgeTag(ItemTagsAccessor::createOptional, path);
 	}
 
 	public static Tag.Named<Fluid> forgeFluidTag(String path) {

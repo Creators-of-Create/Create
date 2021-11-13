@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTil
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -24,14 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidHelper {
 
@@ -55,9 +48,9 @@ public class FluidHelper {
 
 	public static FluidStack copyStackWithAmount(FluidStack fs, int amount) {
 		if (amount <= 0)
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		if (fs.isEmpty())
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		FluidStack copy = fs.copy();
 		copy.setAmount(amount);
 		return copy;

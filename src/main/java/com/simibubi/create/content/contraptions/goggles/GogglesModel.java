@@ -1,24 +1,25 @@
 package com.simibubi.create.content.contraptions.goggles;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllBlockPartials;
-
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraftforge.client.model.BakedModelWrapper;
 
-public class GogglesModel extends BakedModelWrapper<BakedModel> {
+public class GogglesModel extends ForwardingBakedModel {
 
 	public GogglesModel(BakedModel template) {
-		super(template);
+		wrapped = template;
 	}
 
+//	@Override
+//	public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack mat) {
+//		if (cameraTransformType == TransformType.HEAD)
+//			return AllBlockPartials.GOGGLES.get()
+//				.handlePerspective(cameraTransformType, mat);
+//		return super.handlePerspective(cameraTransformType, mat);
+//	}
+
 	@Override
-	public BakedModel handlePerspective(TransformType cameraTransformType, PoseStack mat) {
-		if (cameraTransformType == TransformType.HEAD)
-			return AllBlockPartials.GOGGLES.get()
-				.handlePerspective(cameraTransformType, mat);
-		return super.handlePerspective(cameraTransformType, mat);
+	public boolean isCustomRenderer() {
+		return true;
 	}
 
 }

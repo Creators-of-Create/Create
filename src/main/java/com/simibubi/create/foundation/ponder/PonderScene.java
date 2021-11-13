@@ -15,6 +15,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
+
 import org.apache.commons.lang3.mutable.MutableDouble;
 import org.apache.commons.lang3.mutable.MutableObject;
 
@@ -171,9 +173,17 @@ public class PonderScene {
 			.getFirst()
 			.selectBlock(selectedPos);
 		BlockState blockState = world.getBlockState(selectedPos);
-		ItemStack pickBlock = blockState.getPickBlock(
-			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world, selectedPos,
-			Minecraft.getInstance().player);
+		ItemStack pickBlock;
+
+		if (blockState instanceof BlockPickInteractionAware) {
+			pickBlock = ((BlockPickInteractionAware) blockState).getPickedStack(blockState, world, selectedPos, Minecraft.getInstance().player, new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true));
+		} else {
+			pickBlock = blockState.getBlock().getCloneItemStack(world, selectedPos, blockState);
+		}
+
+//		= blockState.getPickBlock(
+//			new BlockHitResult(VecHelper.getCenterOf(selectedPos), Direction.UP, selectedPos, true), world, selectedPos,
+//			Minecraft.getInstance().player);
 
 		return Pair.of(pickBlock, selectedPos);
 	}

@@ -17,8 +17,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
+
+import com.simibubi.create.lib.event.RenderHandCallback;
+import com.simibubi.create.lib.event.RenderHandCallback.RenderHandEvent;
 
 public abstract class ShootableGadgetRenderHandler {
 
@@ -66,8 +67,8 @@ public abstract class ShootableGadgetRenderHandler {
 
 	protected abstract void transformHand(PoseStack ms, float flip, float equipProgress, float recoil, float pt);
 
-	public void registerListeners(IEventBus bus) {
-		bus.addListener(this::onRenderPlayerHand);
+	public void registerListeners() {
+		RenderHandCallback.EVENT.register(this::onRenderPlayerHand);
 	}
 
 	protected void onRenderPlayerHand(RenderHandEvent event) {

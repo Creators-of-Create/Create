@@ -24,11 +24,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.DistExecutor;
 
 public class PipeConnection {
 
@@ -299,10 +299,10 @@ public class PipeConnection {
 
 	public FluidStack provideOutboundFlow() {
 		if (!hasFlow())
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		Flow flow = this.flow.get();
 		if (!flow.complete || flow.inbound)
-			return FluidStack.EMPTY;
+			return FluidStack.empty();
 		return flow.fluid;
 	}
 

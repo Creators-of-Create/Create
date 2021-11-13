@@ -45,7 +45,9 @@ public abstract class ItemInHandRendererMixin {
 
 	@Inject(at = @At("HEAD"), method = "renderArmWithItem", cancellable = true)
 	private void create$renderArmWithItem(AbstractClientPlayer player, float tickDelta, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equipProgress, PoseStack matrices, MultiBufferSource vertexConsumers, int light, CallbackInfo ci) {
-		if (RenderHandCallback.EVENT.invoker().onRenderHand(player, hand, stack, matrices, vertexConsumers, tickDelta, pitch, swingProgress, equipProgress, light)) {
+		RenderHandCallback.RenderHandEvent event = new RenderHandCallback.RenderHandEvent(player, hand, stack, matrices, vertexConsumers, tickDelta, pitch, swingProgress, equipProgress, light);
+		RenderHandCallback.EVENT.invoker().onRenderHand(event);
+		if (event.isCanceled()) {
 			ci.cancel();
 		}
 	}

@@ -146,21 +146,16 @@ public class CommonEvents {
 		event.addListener(PotatoProjectileTypeManager.ReloadListener.INSTANCE);
 	}
 
-	@SubscribeEvent
-	public static void serverStopped(FMLServerStoppingEvent event) {
+	public static void serverStopped() {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 
-	@SubscribeEvent
-	public static void onLoadWorld(WorldEvent.Load event) {
-		LevelAccessor world = event.getWorld();
+	public static void onLoadWorld(LevelAccessor world) {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onLoadWorld(world);
 		Create.TORQUE_PROPAGATOR.onLoadWorld(world);
 	}
 
-	@SubscribeEvent
-	public static void onUnloadWorld(WorldEvent.Unload event) {
-		LevelAccessor world = event.getWorld();
+	public static void onUnloadWorld(LevelAccessor world) {
 		Create.REDSTONE_LINK_NETWORK_HANDLER.onUnloadWorld(world);
 		Create.TORQUE_PROPAGATOR.onUnloadWorld(world);
 		WorldAttached.invalidateWorld(world);

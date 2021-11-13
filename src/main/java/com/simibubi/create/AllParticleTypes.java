@@ -21,9 +21,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.IForgeRegistry;
 
 public enum AllParticleTypes {
 
@@ -54,7 +51,7 @@ public enum AllParticleTypes {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void registerFactories(ParticleFactoryRegisterEvent event) {
+	public static void registerFactories() {
 		ParticleEngine particles = Minecraft.getInstance().particleEngine;
 		for (AllParticleTypes particle : values())
 			particle.entry.registerFactory(particles);
