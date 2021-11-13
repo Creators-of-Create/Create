@@ -1,0 +1,29 @@
+accessWidener v1 named
+
+accessible class com/mojang/blaze3d/platform/GlStateManager$BooleanState
+accessible class com/mojang/blaze3d/platform/GlStateManager$FogState
+
+accessible class net/minecraft/client/particle/ParticleEngine$SpriteParticleRegistration
+
+accessible class net/minecraft/world/level/chunk/ChunkStatus$GenerationTask
+accessible class net/minecraft/world/level/chunk/ChunkStatus$LoadingTask
+
+accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+
+accessible class net/minecraft/world/level/chunk/PaletteResize
+
+accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
+
+extendable method net/minecraft/entity/Entity positionRider (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity$MoveFunction;)V
+
+accessible class net/minecraft/world/item/crafting/Ingredient$Value
+accessible class net/minecraft/world/item/crafting/Ingredient$ItemValue
+accessible class net/minecraft/world/item/crafting/Ingredient$TagValue
+
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+
+accessible class net/minecraft/tags/TagRegistry$NamedTag
+accessible method net/minecraft/tags/TagRegistry$NamedTag <init> (Lnet/minecraft/util/ResourceLocation;)V
+
+extendable class net/minecraft/world/inventory/MenuType$MenuSupplier

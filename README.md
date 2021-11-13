@@ -1,3 +1,24 @@
+<h1 align="center">Important Information</h1>
+<p align="center">This repo is for Create: Refabricated, a Fabric port of Create.</p>
+<p align="center"><b>This project is not complete, and we do not recommend using it yet. You've been warned!</b></p>
+
+[<h3 align="center">Contributing</h3>](README/CONTRIBUTING.md)
+
+<h1 align="center">Download</h1>
+
+<p align="center">
+
+![Download](README/download.jpg)
+
+The Fabric port is currently incomplete and lacking in many features. Don't expect it to be finished
+soon. If you want to contribute and help with the porting, then by all means go for it! However don't expect
+to be able to play with this mod or have a compiled Jar anytime soon.
+
+While you wait for the port, you can listen to [Tchaikovsky's violin concerto in D major](https://youtu.be/cbJZeNlrYKg).
+<sup>Seriously, it's an awesome piece of music</sup>
+
+</p>
+
 <p align="center"><img src="https://i.imgur.com/SXaePW6.png" alt="Logo" width="200"></p>
 <h1 align="center">Create  <br>
 	<a href="https://www.patreon.com/simibubi"><img src="https://img.shields.io/badge/Supporters-80-ff5733" alt="Patreon"></a>
@@ -19,6 +40,6 @@ Check out the wiki and in-game Tool-tips for further info on how to use these fe
 [<img src="https://i.imgur.com/xj8o2xC.jpg" width="200">](https://www.patreon.com/simibubi "Support Us")
 
 - Support for Minecraft 1.12: Not planned
-- Support for Fabric: Not planned
+- Support for Forge: https://github.com/Creators-of-Create/Create
 <hr>
 <h4 align="center">Find out more about Create on our <a href="https://www.curseforge.com/minecraft/mc-mods/create">Project Page</a></h4>

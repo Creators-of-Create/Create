@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "id": "create",
+  "version": "${version}",
+
+  "name": "Create: Refabricated",
+  "description": "A Fabric port of Create.",
+  "authors": [
+    "Create: Refabricated Team",
+    "Create Team"
+  ],
+  "contact": {
+    "sources": "https://github.com/Create-Fabric/Create-Refabricated"
+  },
+
+  "license": "MIT",
+  "icon": "logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.simibubi.create.Create"
+    ],
+    "client": [
+      "com.simibubi.create.CreateClient"
+    ],
+
+    "config": [
+      "com.simibubi.create.foundation.config.CClient",
+      "com.simibubi.create.foundation.config.CCommon",
+      "com.simibubi.create.foundation.config.CCuriosities",
+      "com.simibubi.create.foundation.config.CFluids",
+      "com.simibubi.create.foundation.config.CKinetics",
+      "com.simibubi.create.foundation.config.CLogistics",
+      "com.simibubi.create.foundation.config.CRecipes",
+      "com.simibubi.create.foundation.config.CSchematics",
+      "com.simibubi.create.foundation.config.CServer",
+      "com.simibubi.create.foundation.config.CStress",
+      "com.simibubi.create.foundation.config.CWorldGen"
+    ]
+  },
+
+  "mixins": [
+    "create.mixins.json",
+    "create_lib.mixins.json"
+  ],
+  "accessWidener": "create.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.17.x",
+    "registrate": "*"
+  }
+}

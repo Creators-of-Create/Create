@@ -1,271 +1,142 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
-        jcenter()
-        maven { url = 'https://repo.spongepowered.org/repository/maven-public' }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: "${forgegradle_version}", changing: true
-        classpath "org.spongepowered:mixingradle:${mixingradle_version}"
-        classpath "org.parchmentmc:librarian:${librarian_version}"
-    }
-}
 plugins {
-    id 'com.github.johnrengelman.shadow' version "${shadow_version}"
-    id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
+    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'maven-publish'
+    id 'io.github.juuxel.loom-quiltflower' version '1.3.0'
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-boolean dev = System.getenv('RELEASE') == null || System.getenv('RELEASE').equals('false');
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
-ext.buildnumber = 0
-project.buildnumber = System.getenv('BUILD_NUMBER') != null ? System.getenv('BUILD_NUMBER') : 'custom'
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
-version = "mc${minecraft_version}_v${mod_version}" + (dev && !buildnumber.equals('custom') ? "+${buildnumber}" : '')
-group = 'com.simibubi.create'
-archivesBaseName = 'create'
+String getTerraformersMCMaven() { // thanks LambdAurora
+    def terraformersUrl = 'https://maven.terraformersmc.com/'
+    if (pingUrl(terraformersUrl))
+        return terraformersUrl
+    else
+        return 'https://maven.kotlindiscord.com/repository/terraformers/'
+}
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
-
-minecraft {
-    mappings channel: 'parchment', version: "${parchment_version}-${minecraft_version}"
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-            arg '-mixin.config=create.mixins.json'
-            //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
-            property 'forge.logging.console.level', 'info'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run/server')
-            arg '-mixin.config=create.mixins.json'
-            property 'forge.logging.console.level', 'info'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            args '--mod', 'create', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources')
-            mods {
-                create {
-                    source sourceSets.main
-                }
-            }
-        }
+boolean pingUrl(String address) {
+    try {
+        def conn = (HttpURLConnection) new URL(address).openConnection()
+        int responseCode = conn.getResponseCode()
+        return (200 <= responseCode && responseCode <= 399)
+    } catch (IOException ignored) {
+        return false
     }
-}
-
-compileJava {
-    options.compilerArgs = ['-Xdiags:verbose']
-}
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
-mixin {
-    add sourceSets.main, 'create.refmap.json'
 }
 
 repositories {
+    maven { url = "https://api.modrinth.com/maven" }
+    maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://maven.tterrag.com/" }
+    maven { url = "https://storage.googleapis.com/devan-maven/" }
+    maven { url = "https://maven.shedaniel.me/" }
+    maven { url = "https://aperlambda.github.io/maven" }
+    maven { url = "https://ladysnake.jfrog.io/artifactory/mods" }
+    maven { url = "https://maven.kotlindiscord.com/repository/terraformers/" }
+    maven { url = "https://maven.devos.community/releases/" }
+    maven { url = getTerraformersMCMaven() }
     maven {
-        // Location of the maven that hosts JEI files (and TiC)
-        name 'Progwml6 maven'
-        url 'https://dvs1.progwml6.com/files/maven'
-    }
-    /*maven {
-        // Location of a maven mirror for JEI files, as a fallback
-        name 'ModMaven'
-        url 'https://modmaven.k-4u.nl'
-    }*/
-    maven {
-        // Location of the maven for vazkii's mods
-        name 'blamejared'
-        url 'https://maven.blamejared.com'
-    }
-    maven {
-        // Location of the maven for mixed mappings, Registrate, and Flywheel
-        name 'tterrag maven'
-        url 'https://maven.tterrag.com'
-    }
-    maven {
-        url 'https://www.cursemaven.com'
+        url = "https://jitpack.io/"
         content {
-            includeGroup "curse.maven"
+            includeGroup("com.github.PepperCode1")
+            includeGroup("com.github.SuperCoder7979")
+            includeGroup("com.github.Jozufozu")
         }
     }
     maven {
-        //location of the maven for dynamic trees
-        url 'https://harleyoconnor.com/maven'
+        url = "https://maven.jamieswhiteshirt.com/libs-release"
+        content {
+            includeGroup("com.jamieswhiteshirt")
+        }
     }
-}
-
-configurations {
-    shade
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    mappings(minecraft.officialMojangMappings())
+    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-    def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
-    implementation fg.deobf(registrate)
-    shade registrate
+    modImplementation(include("com.tterrag:registrate-fabric:${project.registrate_version}"))
+    modImplementation(include("com.jozufozu.flywheel:Flywheel:${project.flywheel_version}"))
+    modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
+    modImplementation(include("net.devtech:arrp:${project.arrp_version}"))
 
-    if (findProject(':Flywheel') != null) {
-        implementation project(':Flywheel') // jozu: I use a gradle workspace with both projects
-    } else {
-        implementation fg.deobf("com.jozufozu.flywheel:Flywheel:${flywheel_version}")
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
     }
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    // implementation fg.deobf("curse.maven:druidcraft-340991:3101903")
-    // implementation fg.deobf("com.ferreusveritas.dynamictrees:DynamicTrees-1.16.5:0.10.0-Beta25")
-    // runtimeOnly fg.deobf("vazkii.arl:AutoRegLib:1.4-35.69")
-    // runtimeOnly fg.deobf("vazkii.quark:Quark:r2.0-212.984")
-    // runtimeOnly fg.deobf("slimeknights.mantle:Mantle:1.16.5-1.6.115")
-    // runtimeOnly fg.deobf("slimeknights.tconstruct:TConstruct:1.16.5-3.1.1.252")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}")
+    modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}")
+    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
 
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    modImplementation("maven.modrinth:lazydfu:0.1.2")
+
+    implementation(include("com.google.code.findbugs:jsr305:${project.jsr305_version}"))
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/create.accesswidener")
+    sourceSets {
+        main {
+            resources {
+                srcDir("src/generated/resources")
+                exclude("src/generated/resources/.cache")
+            }
+        }
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+
+    it.options.release = 16
+}
+
+java {
+    withSourcesJar()
 }
 
 jar {
-    classifier = 'slim'
-    manifest {
-        attributes([
-            'Specification-Title': 'create',
-            'Specification-Vendor': 'simibubi',
-            'Specification-Version': '1',
-            'Implementation-Title': project.name,
-            'Implementation-Version': '${version}',
-            'Implementation-Vendor': 'simibubi',
-            'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-            'MixinConfigs': 'create.mixins.json'
-        ])
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}"}
     }
 }
 
-shadowJar {
-    classifier = ''
-    configurations = [project.configurations.shade]
-    relocate 'com.tterrag.registrate', 'com.simibubi.create.repack.registrate'
-}
-
-reobf {
-    shadowJar {}
-}
-
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    archiveBaseName.set(project.archivesBaseName)
-    archiveVersion.set("${project.version}")
-    archiveClassifier.set('sources')
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    archiveClassifier.set('javadoc')
-}
-
-artifacts {
-    archives jar, shadowJar, sourcesJar, javadocJar
-}
-
+// configure the maven publication
 publishing {
-    tasks.publish.dependsOn 'build'
     publications {
         mavenJava(MavenPublication) {
-            artifact shadowJar
-            artifact sourcesJar
-            artifact javadocJar
-        }
-    }
-
-    repositories {
-        if (project.hasProperty('mavendir')) {
-            maven { url mavendir }
-        }
-    }
-}
-
-String getChangelogText() {
-    def changelogFile = file('changelog.txt')
-    String str = ''
-    int lineCount = 0
-    boolean done = false
-    changelogFile.eachLine {
-        if (done || it == null) {
-            return
-        }
-        if (it.size() > 1) {
-            def temp = it
-            if (lineCount == 0) {
-                temp = "Create ${version}"
-                temp = "<span style=\"font-size: 18px; color: #333399;\">Create v${mod_version}</span>&nbsp;&nbsp;<em>for Minecraft ${minecraft_version}</em><br/>"
-            } else if (it.startsWith('-')) {
-                temp = "&nbsp;&nbsp;&nbsp;$temp<br/>"
-                temp = temp.replaceAll("(\\S+\\/\\S+)#([0-9]+)\\b", "<a href=\"https://github.com/\$1/issues/\$2\">\$0</a>");
-                temp = temp.replaceAll("#([0-9]+)\\b(?!<\\/a>)", "<a href=\"https://github.com/$github_project/issues/\$1\">\$0</a>");
-            } else {
-                temp = "<h4>$temp</h4>"
+            // add all the jars that should be included when publishing to maven
+            artifact(remapJar) {
+                builtBy remapJar
             }
-            str += temp
-            lineCount++
-        } else {
-            str += "<p>Please submit any Issues you come across on the&nbsp;<a href=\"https://github.com/${github_project}/issues\" rel=\"nofollow\">Issue Tracker</a>.</p>"
-            done = true
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
         }
     }
-    return str
-}
 
-// changelog debugging
-// new File("changelog.html").write getChangelogText()
-// tasks.curseforge.enabled = !dev && project.hasProperty('simi_curseforge_key')
-// curseforge {
-//     if (project.hasProperty('simi_curseforge_key')) {
-//         apiKey = project.simi_curseforge_key
-//     }
-// 
-//     project {
-//         id = project.projectId
-//         changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
-//         changelogType = 'html'
-//         releaseType = project.curse_type
-//         mainArtifact(shadowJar) {
-//             displayName = "Create - ${version}"
-//         }
-//         relations {
-//             optionalDependency 'jei'
-//         }
-//     }
-// }
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
+}

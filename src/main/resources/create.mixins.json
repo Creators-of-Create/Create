@@ -5,14 +5,16 @@
   "compatibilityLevel": "JAVA_16",
   "refmap": "create.refmap.json",
   "mixins": [
-    "PlayerListMixin"
+    "ChunkStatusMixin",
+    "PlayerListMixin",
+    "RenderSystemMixin",
+    "ShapesMixin"
   ],
   "client": [
     "BreakProgressMixin",
     "EntityContraptionInteractionMixin",
     "FixNormalScalingMixin",
     "HeavyBootsOnPlayerMixin",
-    "ModelDataRefreshMixin",
     "WindowResizeMixin"
   ],
   "injectors": {
