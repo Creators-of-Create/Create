@@ -8,15 +8,15 @@ import net.minecraft.server.level.ChunkMap;
 
 public final class ChunkManagerHelper {
 	public static Long2ObjectLinkedOpenHashMap<ChunkHolder> getLoadedChunks(ChunkMap chunkManager) {
-		return get(chunkManager).create$loadedChunks();
+		return get(chunkManager).create$updatingChunkMap();
 	}
 
 	public static Long2ObjectLinkedOpenHashMap<ChunkHolder> getChunksToUnload(ChunkMap chunkManager) {
-		return get(chunkManager).create$chunksToUnload();
+		return get(chunkManager).create$pendingUnloads();
 	}
 
 	public static void setImmutableLoadedChunksDirty(ChunkMap chunkManager, boolean v) {
-		get(chunkManager).create$immutableLoadedChunksDirty(v);
+		get(chunkManager).create$modified(v);
 	}
 
 	public static void scheduleSave(ChunkMap chunkManager, long l, ChunkHolder chunkHolder) {

@@ -4,6 +4,16 @@ import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.simibubi.create.lib.mixin.accessor.ChunkMapAccessor;
+
+import com.simibubi.create.lib.mixin.accessor.ChunkStatusAccessor;
+
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
+
+import net.minecraft.server.level.ServerLevel;
+
+import net.minecraft.world.level.chunk.LevelChunk;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,8 +22,6 @@ import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ChunkUtil {
 	private static final Logger LOGGER = LogManager.getLogger("Create/ChunkUtil");
@@ -30,29 +38,31 @@ public class ChunkUtil {
 	}
 
 	public void init() {
-		ChunkStatus.FULL =
-			new ChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.ChunkType.LEVELCHUNK,
+		ChunkStatusAccessor.create$setFull(ChunkStatusAccessor.newChunkStatus("full", ChunkStatus.HEIGHTMAPS, 0, POST_FEATURES, ChunkStatus.ChunkType.LEVELCHUNK,
 				(_0, _1, _2, _3, _4, _5, future, _7, chunk) -> future.apply(chunk), (_0, _1, _2, _3, future, chunk) -> {
 					if (markedChunks.contains(chunk.getPos()
-						.toLong())) {
+							.toLong())) {
 						LOGGER.debug("trying to load unforced chunk " + chunk.getPos()
-							.toString() + ", returning chunk loading error");
+								.toString() + ", returning chunk loading error");
 						// this.reloadChunk(world.getChunkProvider(), chunk.getPos());
 						return ChunkHolder.UNLOADED_CHUNK_FUTURE;
 					} else {
 						// LOGGER.debug("regular, chunkStatus: " + chunk.getStatus().toString());
 						return future.apply(chunk);
 					}
-				});
+				}));
+	}
 
+	public void fabricInitEvents() {
+		ServerChunkEvents.CHUNK_LOAD.register(this::chunkLoad);
 	}
 
 	public boolean reloadChunk(ServerChunkCache provider, ChunkPos pos) {
-		ChunkHolder holder = provider.chunkMap.updatingChunkMap.remove(pos.toLong());
-		provider.chunkMap.modified = true;
+		ChunkHolder holder = ((ChunkMapAccessor) provider.chunkMap).create$updatingChunkMap().remove(pos.toLong());
+		((ChunkMapAccessor) provider.chunkMap).create$modified(true);
 		if (holder != null) {
-			provider.chunkMap.pendingUnloads.put(pos.toLong(), holder);
-			provider.chunkMap.scheduleUnload(pos.toLong(), holder);
+			((ChunkMapAccessor) provider.chunkMap).create$pendingUnloads().put(pos.toLong(), holder);
+			((ChunkMapAccessor) provider.chunkMap).create$scheduleUnload(pos.toLong(), holder);
 			return true;
 		} else {
 			return false;
@@ -82,23 +92,21 @@ public class ChunkUtil {
 		provider.updateChunkForced(pos, false);
 	}
 
-	@SubscribeEvent
-	public void chunkUnload(ChunkEvent.Unload event) {
+	public void chunkUnload(ServerLevel world, LevelChunk chunk) {
 		// LOGGER.debug("Chunk Unload: " + event.getChunk().getPos().toString());
-		if (interestingChunks.contains(event.getChunk()
+		if (interestingChunks.contains(chunk
 			.getPos()
 			.toLong())) {
-			LOGGER.info("Interesting Chunk Unload: " + event.getChunk()
+			LOGGER.info("Interesting Chunk Unload: " + chunk
 				.getPos()
 				.toString());
 		}
 	}
 
-	@SubscribeEvent
-	public void chunkLoad(ChunkEvent.Load event) {
+	public void chunkLoad(ServerLevel world, LevelChunk chunk) {
 		// LOGGER.debug("Chunk Load: " + event.getChunk().getPos().toString());
 
-		ChunkPos pos = event.getChunk()
+		ChunkPos pos = chunk
 			.getPos();
 		if (interestingChunks.contains(pos.toLong())) {
 			LOGGER.info("Interesting Chunk Load: " + pos.toString());
@@ -107,5 +115,4 @@ public class ChunkUtil {
 		}
 
 	}
-
 }

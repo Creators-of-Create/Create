@@ -4,7 +4,10 @@ import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.simibubi.create.Create;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.placement.DecorationContext;
 import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
@@ -12,10 +15,10 @@ import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 public class ConfigDrivenDecorator extends FeatureDecorator<ConfigDrivenOreFeatureConfig> {
 
 	public static final ConfigDrivenDecorator INSTANCE = new ConfigDrivenDecorator();
+	public static final ResourceLocation ID = new ResourceLocation(Create.ID, "config_driven_decorator");
 
 	public ConfigDrivenDecorator() {
 		super(ConfigDrivenOreFeatureConfig.CODEC);
-		setRegistryName("config_driven_decorator");
 	}
 
 	@Override

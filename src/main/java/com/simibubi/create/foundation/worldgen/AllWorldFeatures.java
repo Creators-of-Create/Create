@@ -14,11 +14,6 @@ import net.minecraft.world.level.biome.Biome.BiomeCategory;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 
 public class AllWorldFeatures {
 
@@ -90,13 +85,11 @@ public class AllWorldFeatures {
 
 	public static void register() {}
 
-	public static void registerOreFeatures(RegistryEvent.Register<Feature<?>> event) {
-		event.getRegistry()
-			.register(ConfigDrivenOreFeature.INSTANCE);
+	public static void registerOreFeatures() {
+		Registry.register(Registry.FEATURE, ConfigDrivenOreFeature.ID, ConfigDrivenOreFeature.INSTANCE);
 	}
 
-	public static void registerDecoratorFeatures(RegistryEvent.Register<FeatureDecorator<?>> event) {
-		event.getRegistry()
-			.register(ConfigDrivenDecorator.INSTANCE);
+	public static void registerDecoratorFeatures() {
+		Registry.register(Registry.DECORATOR, ConfigDrivenDecorator.ID, ConfigDrivenDecorator.INSTANCE);
 	}
 }

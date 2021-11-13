@@ -21,7 +21,7 @@ public class ItemUseOverrides {
 	private static final Set<ResourceLocation> OVERRIDES = new HashSet<>();
 
 	public static void addBlock(Block block) {
-		OVERRIDES.add(block.getRegistryName());
+		OVERRIDES.add(Registry.BLOCK.getKey(block));
 	}
 
 	@SubscribeEvent

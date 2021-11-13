@@ -2,9 +2,15 @@ package com.simibubi.create;
 
 import java.util.Random;
 
+import com.jozufozu.flywheel.event.GatherContextEvent;
+import com.jozufozu.flywheel.fabric.event.FlywheelEvents;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.fabricmc.api.EnvType;
+
+import net.fabricmc.api.ModInitializer;
+
+import net.minecraft.core.Registry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,8 +52,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 
-@Mod(Create.ID)
-public class Create {
+public class Create implements ModInitializer {
 
 	public static final String ID = "create";
 	public static final String NAME = "Create";
@@ -71,13 +76,11 @@ public class Create {
 
 	private static final NonNullLazyValue<CreateRegistrate> REGISTRATE = CreateRegistrate.lazy(ID);
 
-	public Create() {
+	public void onInitialize() {
 		onCtor();
 	}
 
 	public static void onCtor() {
-		ModLoadingContext modLoadingContext = ModLoadingContext.get();
-
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
@@ -92,53 +95,62 @@ public class Create {
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		FurnaceEngineModifiers.register();
-		AllConfigs.register(modLoadingContext);
+		AllConfigs.register();
 		BlockSpoutingBehaviour.register();
 
-		ForgeMod.enableMilkFluid();
+//		ForgeMod.enableMilkFluid(); // FIXME milk
 
-		IEventBus modEventBus = FMLJavaModLoadingContext.get()
-			.getModEventBus();
-		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+//		IEventBus modEventBus = FMLJavaModLoadingContext.get()
+//			.getModEventBus();
+//		IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
-		modEventBus.addListener(Create::init);
-		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
-		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
-		modEventBus.addGenericListener(FeatureDecorator.class, AllWorldFeatures::registerDecoratorFeatures);
-		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
-		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
-		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
+//		modEventBus.addListener(Create::init);
+		init();
+//		modEventBus.addListener(EventPriority.LOWEST, Create::gatherData);
+		// datagen, not needed
+//		modEventBus.addGenericListener(Feature.class, AllWorldFeatures::registerOreFeatures);
+		AllWorldFeatures.registerOreFeatures();
+//		modEventBus.addGenericListener(FeatureDecorator.class, AllWorldFeatures::registerDecoratorFeatures);
+		AllWorldFeatures.registerDecoratorFeatures();
+//		modEventBus.addGenericListener(RecipeSerializer.class, AllRecipeTypes::register);
+		AllRecipeTypes.register();
+//		modEventBus.addGenericListener(ParticleType.class, AllParticleTypes::register);
+		AllParticleTypes.register();
+//		modEventBus.addGenericListener(SoundEvent.class, AllSoundEvents::register);
+		AllSoundEvents.register();
 
-		forgeEventBus.register(CHUNK_UTIL);
+//		forgeEventBus.register(CHUNK_UTIL);
+		CHUNK_UTIL.fabricInitEvents();
 
-		EnvExecutor.runWhenOn(EnvType.CLIENT,
-			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
+		// handled as ClientModInitializer
+//		EnvExecutor.runWhenOn(EnvType.CLIENT,
+//			() -> () -> CreateClient.onCtorClient(modEventBus, forgeEventBus));
 	}
 
-	public static void init(final FMLCommonSetupEvent event) {
+	public static void init() {
 		AllPackets.registerPackets();
 		SchematicInstances.register();
 		BuiltinPotatoProjectileTypes.register();
 
 		CHUNK_UTIL.init();
 
-		event.enqueueWork(() -> {
+//		event.enqueueWork(() -> {
 			AllTriggers.register();
 			SchematicProcessor.register();
 			AllWorldFeatures.registerFeatures();
-		});
+//		});
 	}
 
-	public static void gatherData(GatherDataEvent event) {
-		DataGenerator gen = event.getGenerator();
-		gen.addProvider(new AllAdvancements(gen));
-		gen.addProvider(new LangMerger(gen));
-		gen.addProvider(AllSoundEvents.provider(gen));
-		gen.addProvider(new StandardRecipeGen(gen));
-		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
-		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
-		ProcessingRecipeGen.registerAll(gen);
-	}
+//	public static void gatherData(GatherDataEvent event) { // datagen
+//		DataGenerator gen = event.getGenerator();
+//		gen.addProvider(new AllAdvancements(gen));
+//		gen.addProvider(new LangMerger(gen));
+//		gen.addProvider(AllSoundEvents.provider(gen));
+//		gen.addProvider(new StandardRecipeGen(gen));
+//		gen.addProvider(new MechanicalCraftingRecipeGen(gen));
+//		gen.addProvider(new SequencedAssemblyRecipeGen(gen));
+//		ProcessingRecipeGen.registerAll(gen);
+//	}
 
 	public static CreateRegistrate registrate() {
 		return REGISTRATE.get();

@@ -45,6 +45,7 @@
     "common.BlockParticleOptionMixin",
     "common.BlockStateMixin",
     "common.BoatMixin",
+    "common.ChunkStatusAccessor",
     "common.ClientboundAddEntityPacketMixin",
     "common.ClipContextMixin",
     "common.EnchantmentHelperMixin",

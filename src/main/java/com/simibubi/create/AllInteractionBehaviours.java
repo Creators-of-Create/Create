@@ -12,6 +12,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.int
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.LeverMovingInteraction;
 import com.simibubi.create.content.contraptions.components.structureMovement.interaction.TrapdoorMovingInteraction;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -27,7 +28,7 @@ public class AllInteractionBehaviours {
 	}
 
 	public static void addInteractionBehaviour(Block block, Supplier<MovingInteractionBehaviour> behaviour) {
-		addInteractionBehaviour(block.getRegistryName(), behaviour);
+		addInteractionBehaviour(Registry.BLOCK.getKey(block), behaviour);
 	}
 
 	@Nullable
@@ -39,11 +40,11 @@ public class AllInteractionBehaviours {
 
 	@Nullable
 	public static MovingInteractionBehaviour of(Block block) {
-		return of(block.getRegistryName());
+		return of(Registry.BLOCK.getKey(block));
 	}
 
 	public static boolean contains(Block block) {
-		return INTERACT_BEHAVIOURS.containsKey(block.getRegistryName());
+		return INTERACT_BEHAVIOURS.containsKey(Registry.BLOCK.getKey(block));
 	}
 
 	static void register() {
@@ -51,7 +52,7 @@ public class AllInteractionBehaviours {
 		addInteractionBehaviour(AllBlocks.DEPLOYER.getId(), DeployerMovingInteraction::new);
 
 		// TODO: Scan registry for instanceof (-> modded door support)
-		
+
 		for (Block trapdoor : ImmutableList.of(Blocks.ACACIA_TRAPDOOR, Blocks.OAK_TRAPDOOR, Blocks.DARK_OAK_TRAPDOOR,
 			Blocks.SPRUCE_TRAPDOOR, Blocks.JUNGLE_TRAPDOOR, Blocks.BIRCH_TRAPDOOR, Blocks.WARPED_TRAPDOOR,
 			Blocks.CRIMSON_TRAPDOOR)) {

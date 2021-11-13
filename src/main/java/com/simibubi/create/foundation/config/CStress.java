@@ -43,7 +43,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public double getImpact(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = Registry.BLOCK.getKey(block);
 		ConfigValue<Double> value = getImpacts().get(key);
 		if (value != null) {
 			return value.get();
@@ -54,7 +54,7 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public double getCapacity(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = Registry.BLOCK.getKey(block);
 		ConfigValue<Double> value = getCapacities().get(key);
 		if (value != null) {
 			return value.get();
@@ -65,14 +65,14 @@ public class CStress extends ConfigBase implements IStressValueProvider {
 	@Override
 	public boolean hasImpact(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = Registry.BLOCK.getKey(block);
 		return getImpacts().containsKey(key);
 	}
 
 	@Override
 	public boolean hasCapacity(Block block) {
 		block = redirectValues(block);
-		ResourceLocation key = block.getRegistryName();
+		ResourceLocation key = Registry.BLOCK.getKey(block);
 		return getCapacities().containsKey(key);
 	}
 

@@ -42,7 +42,7 @@ public class AllConfigs {
 		return config;
 	}
 
-	public static void register(ModLoadingContext context) {
+	public static void register() {
 		CLIENT = register(CClient::new, ModConfig.Type.CLIENT);
 		COMMON = register(CCommon::new, ModConfig.Type.COMMON);
 		SERVER = register(CServer::new, ModConfig.Type.SERVER);

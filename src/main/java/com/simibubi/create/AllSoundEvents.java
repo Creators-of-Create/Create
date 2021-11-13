@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -26,8 +27,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.IForgeRegistry;
 
 //@EventBusSubscriber(bus = Bus.FORGE)
 public class AllSoundEvents {
@@ -202,17 +201,17 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.NETHERRACK_HIT)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		CRUSHING_2 = create("crushing_2").noSubtitle()
 			.playExisting(SoundEvents.GRAVEL_PLACE)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		CRUSHING_3 = create("crushing_3").noSubtitle()
 			.playExisting(SoundEvents.NETHERITE_BLOCK_BREAK)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		PECULIAR_BELL_USE = create("peculiar_bell_use").subtitle("Peculiar Bell tolls")
 			.playExisting(SoundEvents.BELL_BLOCK)
 			.category(SoundSource.BLOCKS)
@@ -230,10 +229,9 @@ public class AllSoundEvents {
 		return new SoundEntryBuilder(id);
 	}
 
-	public static void register(RegistryEvent.Register<SoundEvent> event) {
-		IForgeRegistry<SoundEvent> registry = event.getRegistry();
+	public static void register() {
 		for (SoundEntry entry : entries.values())
-			entry.register(registry);
+			entry.register();
 	}
 
 	public static void prepare() {
@@ -321,7 +319,7 @@ public class AllSoundEvents {
 			this.subtitle = subtitle;
 			return this;
 		}
-		
+
 		public SoundEntryBuilder noSubtitle() {
 			this.subtitle = null;
 			return this;
@@ -364,7 +362,7 @@ public class AllSoundEvents {
 
 		public abstract void prepare();
 
-		public abstract void register(IForgeRegistry<SoundEvent> registry);
+		public abstract void register();
 
 		public abstract void write(JsonObject json);
 
@@ -381,7 +379,7 @@ public class AllSoundEvents {
 		public ResourceLocation getLocation() {
 			return Create.asResource(id);
 		}
-		
+
 		public boolean hasSubtitle() {
 			return subtitle != null;
 		}
@@ -449,16 +447,16 @@ public class AllSoundEvents {
 		public void prepare() {
 			for (int i = 0; i < wrappedEvents.size(); i++) {
 				ResourceLocation location = Create.asResource(getIdOf(i));
-				SoundEvent sound = new SoundEvent(location).setRegistryName(location);
+				SoundEvent sound = new SoundEvent(location);
 				compiledEvents.add(Pair.of(sound, wrappedEvents.get(i)
 					.getSecond()));
 			}
 		}
 
 		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
+		public void register() {
 			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents)
-				registry.register(pair.getFirst());
+				Registry.register(Registry.SOUND_EVENT, getLocation(), pair.getFirst());
 		}
 
 		@Override
@@ -520,12 +518,12 @@ public class AllSoundEvents {
 		@Override
 		public void prepare() {
 			ResourceLocation location = getLocation();
-			event = new SoundEvent(location).setRegistryName(location);
+			event = new SoundEvent(location);
 		}
 
 		@Override
-		public void register(IForgeRegistry<SoundEvent> registry) {
-			registry.register(event);
+		public void register() {
+			Registry.register(Registry.SOUND_EVENT, getLocation(), event);
 		}
 
 		@Override

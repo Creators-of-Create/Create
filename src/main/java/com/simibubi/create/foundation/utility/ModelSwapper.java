@@ -78,7 +78,7 @@ public class ModelSwapper {
 
 	public static List<ModelResourceLocation> getAllBlockStateModelLocations(Block block) {
 		List<ModelResourceLocation> models = new ArrayList<>();
-		ResourceLocation blockRl = block.getRegistryName();
+		ResourceLocation blockRl = Registry.BLOCK.getKey(block);
 		block.getStateDefinition()
 			.getPossibleStates()
 			.forEach(state -> {

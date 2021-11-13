@@ -11,13 +11,13 @@ import net.minecraft.server.level.ChunkMap;
 @Mixin(ChunkMap.class)
 public interface ChunkMapAccessor {
 	@Accessor("updatingChunkMap")
-	Long2ObjectLinkedOpenHashMap<ChunkHolder> create$loadedChunks();
+	Long2ObjectLinkedOpenHashMap<ChunkHolder> create$updatingChunkMap();
 
 	@Accessor("pendingUnloads")
-	Long2ObjectLinkedOpenHashMap<ChunkHolder> create$chunksToUnload();
+	Long2ObjectLinkedOpenHashMap<ChunkHolder> create$pendingUnloads();
 
 	@Accessor("modified")
-	void create$immutableLoadedChunksDirty(boolean v);
+	void create$modified(boolean v);
 
 	@Invoker("scheduleUnload")
 	void create$scheduleUnload(long l, ChunkHolder chunkHolder);

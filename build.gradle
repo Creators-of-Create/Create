@@ -73,9 +73,9 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}")
-    modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}")
-    modImplementation("dev.architectury:architectury-fabric:${project.architectury_version}")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {transitive = false}
+    modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") {transitive = false}
+    modRuntime("dev.architectury:architectury-fabric:${project.architectury_version}")
 
     modImplementation("maven.modrinth:lazydfu:0.1.2")
 

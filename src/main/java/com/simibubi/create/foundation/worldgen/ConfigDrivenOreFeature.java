@@ -3,7 +3,10 @@ package com.simibubi.create.foundation.worldgen;
 import java.util.BitSet;
 import java.util.Random;
 
+import com.simibubi.create.Create;
+
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -14,10 +17,10 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 public class ConfigDrivenOreFeature extends Feature<ConfigDrivenOreFeatureConfig> {
 
 	public static final ConfigDrivenOreFeature INSTANCE = new ConfigDrivenOreFeature();
+	public static final ResourceLocation ID = new ResourceLocation(Create.ID, "config_driven_ore");
 
 	public ConfigDrivenOreFeature() {
 		super(ConfigDrivenOreFeatureConfig.CODEC);
-		setRegistryName("config_driven_ore");
 	}
 
 	// TODO 1.17: use new OreFeature code

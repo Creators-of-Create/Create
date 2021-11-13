@@ -49,6 +49,7 @@ import com.simibubi.create.foundation.item.TagDependentIngredientItem;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.tterrag.registrate.util.entry.ItemEntry;
 
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
@@ -56,7 +57,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraftforge.common.Tags;
 
 public class AllItems {
 
@@ -83,12 +83,12 @@ public class AllItems {
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_COGWHEEL =
 			REGISTRATE.item("incomplete_cogwheel", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
+//					.model(AssetLookup.existingItemModel())
 					.register();
 
 	public static final ItemEntry<SequencedAssemblyItem> INCOMPLETE_LARGE_COGWHEEL =
 			REGISTRATE.item("incomplete_large_cogwheel", SequencedAssemblyItem::new)
-					.model(AssetLookup.existingItemModel())
+//					.model(AssetLookup.existingItemModel())
 					.register();
 
 	public static final ItemEntry<HiddenIngredientItem> BLAZE_CAKE_BASE =
@@ -134,7 +134,7 @@ public class AllItems {
 
 	public static final ItemEntry<BuildersTeaItem> BUILDERS_TEA = REGISTRATE.item("builders_tea", BuildersTeaItem::new)
 		.tag(AllItemTags.UPRIGHT_ON_BELT.tag)
-		.properties(p -> p.stacksTo(16))
+		.properties(p -> (FabricItemSettings) p.stacksTo(16))
 		.lang("Builder's Tea")
 		.register();
 
@@ -145,7 +145,7 @@ public class AllItems {
 	public static final ItemEntry<ChromaticCompoundItem> CHROMATIC_COMPOUND =
 		REGISTRATE.item("chromatic_compound", ChromaticCompoundItem::new)
 			.properties(p -> p.rarity(Rarity.UNCOMMON))
-			.model(AssetLookup.existingItemModel())
+//			.model(AssetLookup.existingItemModel())
 			.color(() -> ChromaticCompoundColor::new)
 			.register();
 
@@ -193,16 +193,16 @@ public class AllItems {
 
 	public static final ItemEntry<VerticalGearboxItem> VERTICAL_GEARBOX =
 		REGISTRATE.item("vertical_gearbox", VerticalGearboxItem::new)
-			.model(AssetLookup.customBlockItemModel("gearbox", "item_vertical"))
+//			.model(AssetLookup.customBlockItemModel("gearbox", "item_vertical"))
 			.register();
 
 	public static final ItemEntry<BlazeBurnerBlockItem> EMPTY_BLAZE_BURNER =
 		REGISTRATE.item("empty_blaze_burner", BlazeBurnerBlockItem::empty)
-			.model(AssetLookup.customBlockItemModel("blaze_burner", "block"))
+//			.model(AssetLookup.customBlockItemModel("blaze_burner", "block"))
 			.register();
 
 	public static final ItemEntry<GogglesItem> GOGGLES = REGISTRATE.item("goggles", GogglesItem::new)
-		.properties(p -> p.stacksTo(1))
+		.properties(p -> (FabricItemSettings) p.stacksTo(1))
 		.onRegister(CreateRegistrate.itemModel(() -> GogglesModel::new))
 		.lang("Engineer's Goggles")
 		.register();
@@ -228,8 +228,8 @@ public class AllItems {
 		.register();
 
 	public static final ItemEntry<WrenchItem> WRENCH = REGISTRATE.item("wrench", WrenchItem::new)
-		.properties(p -> p.stacksTo(1))
-		.model(AssetLookup.itemModelWithPartials())
+		.properties(p -> (FabricItemSettings) p.stacksTo(1))
+//		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<MinecartContraptionItem> MINECART_CONTRAPTION =
@@ -252,30 +252,30 @@ public class AllItems {
 
 	public static final ItemEntry<LinkedControllerItem> LINKED_CONTROLLER =
 		REGISTRATE.item("linked_controller", LinkedControllerItem::new)
-			.properties(p -> p.stacksTo(1))
-			.model(AssetLookup.itemModelWithPartials())
+			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+//			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<PotatoCannonItem> POTATO_CANNON =
 		REGISTRATE.item("potato_cannon", PotatoCannonItem::new)
-			.properties(p -> p.stacksTo(1))
-			.model(AssetLookup.itemModelWithPartials())
+			.properties(p -> (FabricItemSettings) p.stacksTo(1))
+//			.model(AssetLookup.itemModelWithPartials())
 			.register();
-	
+
 	public static final ItemEntry<ExtendoGripItem> EXTENDO_GRIP = REGISTRATE.item("extendo_grip", ExtendoGripItem::new)
-		.model(AssetLookup.itemModelWithPartials())
+//		.model(AssetLookup.itemModelWithPartials())
 		.register();
 
 	public static final ItemEntry<SymmetryWandItem> WAND_OF_SYMMETRY =
 		REGISTRATE.item("wand_of_symmetry", SymmetryWandItem::new)
-			.model(AssetLookup.itemModelWithPartials())
+//			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<WorldshaperItem> WORLDSHAPER =
 		REGISTRATE.item("handheld_worldshaper", WorldshaperItem::new)
 			.properties(p -> p.rarity(Rarity.EPIC))
 			.lang("Creative Worldshaper")
-			.model(AssetLookup.itemModelWithPartials())
+//			.model(AssetLookup.itemModelWithPartials())
 			.register();
 
 	public static final ItemEntry<? extends CopperArmorItem>
@@ -283,7 +283,7 @@ public class AllItems {
 	COPPER_BACKTANK =
 		REGISTRATE
 			.item("copper_backtank", p -> new CopperBacktankItem(p, new BlockItem(AllBlocks.COPPER_BACKTANK.get(), p)))
-			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
+//			.model(AssetLookup.<CopperBacktankItem>customGenericItemModel("_", "item"))
 			.register(),
 
 		DIVING_HELMET = REGISTRATE.item("diving_helmet", DivingHelmetItem::new)
@@ -303,12 +303,12 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<FilterItem> FILTER = REGISTRATE.item("filter", FilterItem::regular)
-		.model(AssetLookup.existingItemModel())
+//		.model(AssetLookup.existingItemModel())
 		.register();
 
 	public static final ItemEntry<FilterItem> ATTRIBUTE_FILTER =
 		REGISTRATE.item("attribute_filter", FilterItem::attribute)
-			.model(AssetLookup.existingItemModel())
+//			.model(AssetLookup.existingItemModel())
 			.register();
 
 	// Schematics
@@ -318,16 +318,16 @@ public class AllItems {
 	}
 
 	public static final ItemEntry<Item> EMPTY_SCHEMATIC = REGISTRATE.item("empty_schematic", Item::new)
-		.properties(p -> p.stacksTo(1))
+		.properties(p -> (FabricItemSettings) p.stacksTo(1))
 		.register();
 
 	public static final ItemEntry<SchematicAndQuillItem> SCHEMATIC_AND_QUILL =
 		REGISTRATE.item("schematic_and_quill", SchematicAndQuillItem::new)
-			.properties(p -> p.stacksTo(1))
+			.properties(p -> (FabricItemSettings) p.stacksTo(1))
 			.register();
 
 	public static final ItemEntry<SchematicItem> SCHEMATIC = REGISTRATE.item("schematic", SchematicItem::new)
-		.properties(p -> p.stacksTo(1))
+		.properties(p -> (FabricItemSettings) p.stacksTo(1))
 		.register();
 
 	// Shortcuts

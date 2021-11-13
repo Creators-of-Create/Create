@@ -11,6 +11,7 @@ import com.simibubi.create.content.contraptions.components.actors.dispenser.Drop
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementBehaviour;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -26,7 +27,7 @@ public class AllMovementBehaviours {
 	}
 
 	public static void addMovementBehaviour(Block block, MovementBehaviour movementBehaviour) {
-		addMovementBehaviour(block.getRegistryName(), movementBehaviour);
+		addMovementBehaviour(Registry.BLOCK.getKey(block), movementBehaviour);
 	}
 
 	@Nullable
@@ -36,7 +37,7 @@ public class AllMovementBehaviours {
 
 	@Nullable
 	public static MovementBehaviour of(Block block) {
-		return of(block.getRegistryName());
+		return of(Registry.BLOCK.getKey(block));
 	}
 
 	@Nullable
@@ -45,12 +46,12 @@ public class AllMovementBehaviours {
 	}
 
 	public static boolean contains(Block block) {
-		return MOVEMENT_BEHAVIOURS.containsKey(block.getRegistryName());
+		return MOVEMENT_BEHAVIOURS.containsKey(Registry.BLOCK.getKey(block));
 	}
 
 	public static <B extends Block> NonNullConsumer<? super B> addMovementBehaviour(
 		MovementBehaviour movementBehaviour) {
-		return b -> addMovementBehaviour(b.getRegistryName(), movementBehaviour);
+		return b -> addMovementBehaviour(Registry.BLOCK.getKey(b), movementBehaviour);
 	}
 
 	static void register() {

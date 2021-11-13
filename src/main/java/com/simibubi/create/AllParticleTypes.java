@@ -15,6 +15,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
@@ -47,9 +48,9 @@ public enum AllParticleTypes {
 		entry = new ParticleEntry<>(new ResourceLocation(Create.ID, asId), typeFactory);
 	}
 
-	public static void register(RegistryEvent.Register<ParticleType<?>> event) {
+	public static void register() {
 		for (AllParticleTypes particle : values())
-			particle.entry.register(event.getRegistry());
+			particle.entry.register();
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -77,8 +78,8 @@ public enum AllParticleTypes {
 			this.typeFactory = typeFactory;
 		}
 
-		void register(IForgeRegistry<ParticleType<?>> registry) {
-			registry.register(getOrCreateType());
+		void register() {
+			Registry.register(Registry.PARTICLE_TYPE, id, getOrCreateType());
 		}
 
 		ParticleType<D> getOrCreateType() {
@@ -86,7 +87,6 @@ public enum AllParticleTypes {
 				return type;
 			type = typeFactory.get()
 				.createType();
-			type.setRegistryName(id);
 			return type;
 		}
 

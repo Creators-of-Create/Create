@@ -1,11 +1,12 @@
 package com.simibubi.create;
 
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+
 import org.lwjgl.glfw.GLFW;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 public enum AllKeys {
 
@@ -32,7 +33,7 @@ public enum AllKeys {
 			if (!key.modifiable)
 				continue;
 
-			ClientRegistry.registerKeyBinding(key.keybind);
+			KeyBindingHelper.registerKeyBinding(key.keybind);
 		}
 	}
 
@@ -53,8 +54,8 @@ public enum AllKeys {
 	}
 
 	public int getBoundCode() {
-		return keybind.getKey()
-			.getValue();
+		return com.simibubi.create.lib.helper.KeyBindingHelper.getKeyCode(keybind)
+				.getValue();
 	}
 
 	public static boolean isKeyDown(int key) {

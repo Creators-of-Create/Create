@@ -24,16 +24,16 @@ import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import com.simibubi.create.lib.utility.ShapedRecipeUtil;
+
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.RegistryEvent;
 
 public enum AllRecipeTypes implements IRecipeTypeInfo {
 
@@ -106,15 +106,13 @@ public enum AllRecipeTypes implements IRecipeTypeInfo {
 			.getRecipeFor(getType(), inv, world);
 	}
 
-	public static void register(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		ShapedRecipe.setCraftingSize(9, 9);
+	public static void register() {
+		ShapedRecipeUtil.setCraftingSize(9, 9);
 
 		for (AllRecipeTypes r : AllRecipeTypes.values()) {
 			r.serializer = r.serializerSupplier.get();
 			r.type = r.typeSupplier.get();
-			r.serializer.setRegistryName(r.id);
-			event.getRegistry()
-				.register(r.serializer);
+			Registry.register(Registry.RECIPE_SERIALIZER, r.id, r.serializer);
 		}
 	}
 
