@@ -43,8 +43,8 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
 
 public class PotatoCannonItem extends ProjectileWeaponItem {
@@ -206,7 +206,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			.map($ -> findAmmo);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static Optional<ItemStack> getAmmoforPreview(ItemStack cannon) {
 		if (AnimationTickHolder.getTicks() % 3 != 0)
 			return Optional.of(CLIENT_CURRENT_AMMO)
@@ -224,7 +224,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void appendHoverText(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag flag) {
 		int power = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
 		int punch = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, stack);
@@ -296,7 +296,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new PotatoCannonItemRenderer()));
 	}

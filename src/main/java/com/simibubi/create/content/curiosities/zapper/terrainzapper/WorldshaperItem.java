@@ -21,8 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
 
 public class WorldshaperItem extends ZapperItem {
@@ -32,7 +32,7 @@ public class WorldshaperItem extends ZapperItem {
 	}
 
 	@Override
-	@OnlyIn(value = Dist.CLIENT)
+	@Environment(value = EnvType.CLIENT)
 	protected void openHandgunGUI(ItemStack item, InteractionHand hand) {
 		ScreenOpener.open(new WorldshaperScreen(item, hand));
 	}
@@ -96,7 +96,7 @@ public class WorldshaperItem extends ZapperItem {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new WorldshaperItemRenderer()));
 	}

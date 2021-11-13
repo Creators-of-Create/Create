@@ -4,8 +4,8 @@ import com.mojang.math.Matrix4f;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class Matrix3d {
 
@@ -126,7 +126,7 @@ public class Matrix3d {
 
 	float[] conversionBuffer = new float[16];
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public Matrix4f getAsMatrix4f() {
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)

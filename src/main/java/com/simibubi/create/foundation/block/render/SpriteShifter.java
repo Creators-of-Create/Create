@@ -10,12 +10,12 @@ import com.simibubi.create.Create;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.api.distmarker.Dist;
+import net.fabricmc.api.EnvType;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(value = EnvType.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class SpriteShifter {
 
 	protected static final Map<String, SpriteShiftEntry> ENTRY_CACHE = new HashMap<>();

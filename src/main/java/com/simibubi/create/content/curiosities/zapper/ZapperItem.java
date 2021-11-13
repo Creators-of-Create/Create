@@ -38,8 +38,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.DistExecutor;
 
@@ -50,7 +50,7 @@ public abstract class ZapperItem extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag() && stack.getTag()
 			.contains("BlockUsed")) {
@@ -90,7 +90,7 @@ public abstract class ZapperItem extends Item {
 		if (context.getPlayer() != null && context.getPlayer()
 			.isShiftKeyDown()) {
 			if (context.getLevel().isClientSide) {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
 					openHandgunGUI(context.getItemInHand(), context.getHand());
 				});
 				context.getPlayer()
@@ -112,7 +112,7 @@ public abstract class ZapperItem extends Item {
 		// Shift -> Open GUI
 		if (player.isShiftKeyDown()) {
 			if (world.isClientSide) {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
 					openHandgunGUI(item, hand);
 				});
 				player.getCooldowns()
@@ -187,7 +187,7 @@ public abstract class ZapperItem extends Item {
 	protected abstract boolean activate(Level world, Player player, ItemStack item, BlockState stateToUse,
 		BlockHitResult raytrace, CompoundTag data);
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected abstract void openHandgunGUI(ItemStack item, InteractionHand hand);
 
 	protected abstract int getCooldownDelay(ItemStack item);

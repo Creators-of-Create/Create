@@ -43,8 +43,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.Constants.BlockFlags;
@@ -77,7 +77,7 @@ public class SymmetryWandItem extends Item {
 		// Shift -> open GUI
 		if (player.isShiftKeyDown()) {
 			if (player.level.isClientSide) {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
 					openWandGUI(wand, context.getHand());
 				});
 				player.getCooldowns()
@@ -146,7 +146,7 @@ public class SymmetryWandItem extends Item {
 		// Shift -> Open GUI
 		if (playerIn.isShiftKeyDown()) {
 			if (worldIn.isClientSide) {
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
 					openWandGUI(playerIn.getItemInHand(handIn), handIn);
 				});
 				playerIn.getCooldowns()
@@ -161,7 +161,7 @@ public class SymmetryWandItem extends Item {
 		return new InteractionResultHolder<ItemStack>(InteractionResult.SUCCESS, wand);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void openWandGUI(ItemStack wand, InteractionHand hand) {
 		ScreenOpener.open(new SymmetryWandScreen(wand, hand));
 	}
@@ -333,7 +333,7 @@ public class SymmetryWandItem extends Item {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new SymmetryWandItemRenderer()));
 	}

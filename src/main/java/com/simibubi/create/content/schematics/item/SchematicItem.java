@@ -46,8 +46,8 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
@@ -79,7 +79,7 @@ public class SchematicItem extends Item {
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {}
 
 	@Override
-	@OnlyIn(value = Dist.CLIENT)
+	@Environment(value = EnvType.CLIENT)
 	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		if (stack.hasTag()) {
 			if (stack.getTag()
@@ -171,11 +171,11 @@ public class SchematicItem extends Item {
 		if (!player.getItemInHand(hand)
 			.hasTag())
 			return false;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::displayBlueprintScreen);
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::displayBlueprintScreen);
 		return true;
 	}
 
-	@OnlyIn(value = Dist.CLIENT)
+	@Environment(value = EnvType.CLIENT)
 	protected void displayBlueprintScreen() {
 		ScreenOpener.open(new SchematicEditScreen());
 	}

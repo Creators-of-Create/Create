@@ -12,8 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class BackTankUtil {
 
@@ -69,7 +69,7 @@ public class BackTankUtil {
 
 	// For Air-using tools
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static int getRGBDurabilityForDisplay(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
@@ -84,7 +84,7 @@ public class BackTankUtil {
 			.getRGBDurabilityForDisplay(backtank);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static double getDurabilityForDisplay(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return 0;
@@ -98,7 +98,7 @@ public class BackTankUtil {
 			.getDurabilityForDisplay(backtank);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static boolean showDurabilityBar(ItemStack stack, int usesPerTank) {
 		if (usesPerTank == 0)
 			return false;

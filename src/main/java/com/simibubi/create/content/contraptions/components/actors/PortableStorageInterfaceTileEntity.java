@@ -15,8 +15,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity {
 
@@ -116,7 +116,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	protected AABB cachedBoundingBox;
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
 			cachedBoundingBox = super.getRenderBoundingBox().inflate(2);

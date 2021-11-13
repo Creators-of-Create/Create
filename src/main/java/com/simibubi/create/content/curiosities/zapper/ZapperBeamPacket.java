@@ -6,8 +6,8 @@ import com.simibubi.create.content.curiosities.zapper.ZapperRenderHandler.LaserB
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class ZapperBeamPacket extends ShootGadgetPacket {
 
@@ -35,13 +35,13 @@ public class ZapperBeamPacket extends ShootGadgetPacket {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected ShootableGadgetRenderHandler getHandler() {
 		return CreateClient.ZAPPER_RENDER_HANDLER;
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected void handleAdditional() {
 		CreateClient.ZAPPER_RENDER_HANDLER.addBeam(new LaserBeam(location, target));
 	}

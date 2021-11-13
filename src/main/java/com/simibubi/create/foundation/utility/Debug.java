@@ -7,12 +7,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 
 /** Deprecated so simi doensn't forget to remove debug calls **/
-@OnlyIn(value = Dist.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class Debug {
 
 	@Deprecated

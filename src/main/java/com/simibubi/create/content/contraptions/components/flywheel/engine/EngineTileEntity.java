@@ -15,8 +15,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class EngineTileEntity extends SmartTileEntity implements IInstanceRendered {
 
@@ -34,7 +34,7 @@ public class EngineTileEntity extends SmartTileEntity implements IInstanceRender
 
 	protected AABB cachedBoundingBox;
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
 			cachedBoundingBox = super.getRenderBoundingBox().inflate(1.5f);

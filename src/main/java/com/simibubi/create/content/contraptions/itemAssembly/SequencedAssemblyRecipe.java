@@ -29,8 +29,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 
@@ -219,7 +219,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void addToTooltip(List<Component> toolTip, ItemStack stack) {
 		if (!stack.hasTag() || !stack.getTag()
 			.contains("SequencedAssembly"))

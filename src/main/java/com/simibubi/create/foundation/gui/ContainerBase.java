@@ -6,8 +6,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class ContainerBase<T> extends AbstractContainerMenu {
 
@@ -34,7 +34,7 @@ public abstract class ContainerBase<T> extends AbstractContainerMenu {
 		broadcastChanges();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected abstract T createOnClient(FriendlyByteBuf extraData);
 
 	protected abstract void addSlots();

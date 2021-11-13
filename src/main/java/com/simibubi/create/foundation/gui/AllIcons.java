@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class AllIcons implements IScreenRenderable {
 
@@ -161,19 +161,19 @@ public class AllIcons implements IScreenRenderable {
 		return new AllIcons(x = 0, ++y);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void bind() {
 		RenderSystem.setShaderTexture(0, ICON_ATLAS);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void draw(PoseStack matrixStack, GuiComponent screen, int x, int y) {
 		bind();
 		screen.blit(matrixStack, x, y, iconX, iconY, 16, 16);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void draw(PoseStack ms, MultiBufferSource buffer, int color) {
 		VertexConsumer builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
 		float sheetSize = 256;
@@ -199,12 +199,12 @@ public class AllIcons implements IScreenRenderable {
 		vertex(peek, builder, j, k, rgb, vec4, u1, v2);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public DelegatedStencilElement asStencil() {
 		return new DelegatedStencilElement().withStencilRenderer((ms, w, h, alpha) -> this.draw(ms, 0, 0)).withBounds(16, 16);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void vertex(Pose peek, VertexConsumer builder, int j, int k, Vec3 rgb, Vec3 vec, float u, float v) {
 		builder.vertex(peek.pose(), (float) vec.x, (float) vec.y, (float) vec.z)
 			.color((float) rgb.x, (float) rgb.y, (float) rgb.z, 1)

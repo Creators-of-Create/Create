@@ -30,8 +30,8 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fluids.FluidStack;
 
 public class PotionFluidHandler {
@@ -93,7 +93,7 @@ public class PotionFluidHandler {
 	}
 
 	// Modified version of PotionUtils#addPotionTooltip
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void addPotionTooltip(FluidStack fs, List<Component> tooltip, float p_185182_2_) {
 		List<MobEffectInstance> list = PotionUtils.getAllEffects(fs.getOrCreateTag());
 		List<Tuple<String, AttributeModifier>> list1 = Lists.newArrayList();

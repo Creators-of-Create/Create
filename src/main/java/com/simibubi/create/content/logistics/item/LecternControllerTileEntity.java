@@ -21,8 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.DistExecutor;
 
@@ -104,7 +104,7 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 		super.tick();
 
 		if (level.isClientSide) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::tryToggleActive);
+			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::tryToggleActive);
 			prevUser = user;
 		}
 
@@ -128,7 +128,7 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void tryToggleActive() {
 		if (user == null && Minecraft.getInstance().player.getUUID().equals(prevUser)) {
 			LinkedControllerClientHandler.deactivateInLectern();

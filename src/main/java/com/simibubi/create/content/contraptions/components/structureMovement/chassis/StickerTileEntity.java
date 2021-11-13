@@ -19,8 +19,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class StickerTileEntity extends SmartTileEntity implements IInstanceRendered {
@@ -60,7 +60,7 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 
 		if (isAttachedToBlock() && piston.getValue(0) != piston.getValue() && piston.getValue() == 1) {
 			SuperGlueItem.spawnParticles(level, worldPosition, getBlockState().getValue(StickerBlock.FACING), true);
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(true));
+			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> playSound(true));
 		}
 
 		if (!update)
@@ -68,10 +68,10 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 		update = false;
 		int target = isBlockStateExtended() ? 1 : 0;
 		if (isAttachedToBlock() && target == 0 && piston.getChaseTarget() == 1)
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> playSound(false));
+			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
 
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public boolean isAttachedToBlock() {
@@ -89,7 +89,7 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 			update = true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void playSound(boolean attach) {
 		AllSoundEvents.SLIME_ADDED.play(level, Minecraft.getInstance().player, worldPosition, 0.35f, attach ? 0.75f : 0.2f);
 	}

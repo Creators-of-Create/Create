@@ -18,8 +18,8 @@ import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -52,7 +52,7 @@ public enum AllParticleTypes {
 			particle.entry.register(event.getRegistry());
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void registerFactories(ParticleFactoryRegisterEvent event) {
 		ParticleEngine particles = Minecraft.getInstance().particleEngine;
 		for (AllParticleTypes particle : values())
@@ -90,7 +90,7 @@ public enum AllParticleTypes {
 			return type;
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		void registerFactory(ParticleEngine particles) {
 			typeFactory.get()
 				.register(getOrCreateType(), particles);

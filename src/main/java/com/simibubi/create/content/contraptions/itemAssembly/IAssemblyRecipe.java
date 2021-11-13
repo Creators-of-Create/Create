@@ -10,8 +10,8 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public interface IAssemblyRecipe {
 
@@ -19,7 +19,7 @@ public interface IAssemblyRecipe {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public Component getDescriptionForAssembly();
 
 	public void addRequiredMachines(Set<ItemLike> list);

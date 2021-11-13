@@ -12,10 +12,10 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltData;
 import com.simibubi.create.content.logistics.block.FlapData;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class AllMaterialSpecs {
 	public static void init() {
 		// noop, make sure the static field are loaded.

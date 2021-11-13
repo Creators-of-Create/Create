@@ -24,8 +24,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class GantryContraptionEntity extends AbstractContraptionEntity {
@@ -161,7 +161,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	public void teleportTo(double p_70634_1_, double p_70634_3_, double p_70634_5_) {}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void lerpTo(double x, double y, double z, float yw, float pt, int inc, boolean t) {}
 
 	@Override
@@ -196,7 +196,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 			new GantryContraptionUpdatePacket(getId(), getAxisCoord(), axisMotion));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void handlePacket(GantryContraptionUpdatePacket packet) {
 		Entity entity = Minecraft.getInstance().level.getEntity(packet.entityID);
 		if (!(entity instanceof GantryContraptionEntity))

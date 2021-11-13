@@ -24,8 +24,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.DistExecutor;
@@ -358,14 +358,14 @@ public class PipeConnection {
 	public static final Random r = new Random();
 
 	public void spawnSplashOnRim(Level world, BlockPos pos, FluidStack fluid) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));
 	}
 
 	public void spawnParticles(Level world, BlockPos pos, FluidStack fluid) {
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> spawnParticlesInner(world, pos, fluid));
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> spawnParticlesInner(world, pos, fluid));
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void spawnParticlesInner(Level world, BlockPos pos, FluidStack fluid) {
 		if (world == Minecraft.getInstance().level)
 			if (!isRenderEntityWithinDistance(pos))
@@ -376,7 +376,7 @@ public class PipeConnection {
 			spawnRimParticles(world, pos, fluid, 1);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void spawnSplashOnRimInner(Level world, BlockPos pos, FluidStack fluid) {
 		if (world == Minecraft.getInstance().level)
 			if (!isRenderEntityWithinDistance(pos))
@@ -384,7 +384,7 @@ public class PipeConnection {
 		spawnRimParticles(world, pos, fluid, SPLASH_PARTICLE_AMOUNT);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void spawnRimParticles(Level world, BlockPos pos, FluidStack fluid, int amount) {
 		if (hasOpenEnd()) {
 			spawnPouringLiquid(world, pos, fluid, amount);
@@ -395,7 +395,7 @@ public class PipeConnection {
 		FluidFX.spawnRimParticles(world, pos, side, amount, particle, RIM_RADIUS);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void spawnPouringLiquid(Level world, BlockPos pos, FluidStack fluid, int amount) {
 		ParticleOptions particle = FluidFX.getFluidParticle(fluid);
 		Vec3 directionVec = Vec3.atLowerCornerOf(side.getNormal());
@@ -405,7 +405,7 @@ public class PipeConnection {
 		FluidFX.spawnPouringLiquid(world, pos, amount, particle, RIM_RADIUS, directionVec, flow.inbound);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static boolean isRenderEntityWithinDistance(BlockPos pos) {
 		Entity renderViewEntity = Minecraft.getInstance()
 			.getCameraEntity();

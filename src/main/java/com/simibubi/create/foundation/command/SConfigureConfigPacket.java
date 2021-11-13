@@ -26,8 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.config.ModConfig;
@@ -57,7 +57,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
 				if (option.startsWith("SET")) {
 					trySetConfig(option.substring(3), value);
 					return;
@@ -128,7 +128,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 				.accept(value);
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void configScreen(String value) {
 			if (value.equals("")) {
 				ScreenOpener.open(BaseConfigScreen.forCreate(null));
@@ -151,7 +151,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			}
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void rainbowDebug(String value) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null || "".equals(value))
@@ -170,24 +170,24 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			player.displayClientMessage(text, false);
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void overlayReset(String value) {
 			AllConfigs.CLIENT.overlayOffsetX.set(0);
 			AllConfigs.CLIENT.overlayOffsetY.set(0);
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void overlayScreen(String value) {
 			ScreenOpener.open(new GoggleConfigScreen());
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void experimentalLighting(String value) {
 			ForgeConfig.CLIENT.experimentalForgeLightPipelineEnabled.set(true);
 			Minecraft.getInstance().levelRenderer.allChanged();
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void openPonder(String value) {
 			if (value.equals("index")) {
 				ScreenOpener.transitionTo(new PonderIndexScreen());
@@ -204,7 +204,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 
 		}
 
-		@OnlyIn(Dist.CLIENT)
+		@Environment(EnvType.CLIENT)
 		private static void fabulousWarning(String value) {
 			AllConfigs.CLIENT.ignoreFabulousWarning.set(true);
 			Minecraft.getInstance().gui.handleChat(ChatType.CHAT,

@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
+import net.fabricmc.api.EnvType;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
@@ -38,7 +38,7 @@ public class GantryContraptionUpdatePacket extends SimplePacketBase {
 	public void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(
-				() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> GantryContraptionEntity.handlePacket(this)));
+				() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> GantryContraptionEntity.handlePacket(this)));
 		context.get()
 			.setPacketHandled(true);
 	}

@@ -59,8 +59,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
@@ -319,13 +319,13 @@ public class SuperGlueEntity extends Entity
 	public InteractionResult interact(Player player, InteractionHand hand) {
 		if (player instanceof FakePlayer)
 			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
 		return InteractionResult.CONSUME;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void triggerPlaceBlock(Player player, InteractionHand hand) {
 		if (!(player instanceof LocalPlayer))
 			return;

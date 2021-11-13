@@ -8,8 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class AbstractFilterContainer extends GhostItemContainer<ItemStack> {
 
@@ -34,7 +34,7 @@ public abstract class AbstractFilterContainer extends GhostItemContainer<ItemSta
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected ItemStack createOnClient(FriendlyByteBuf extraData) {
 		return extraData.readItem();
 	}

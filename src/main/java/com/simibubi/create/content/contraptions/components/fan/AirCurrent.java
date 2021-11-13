@@ -40,8 +40,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.DistExecutor;
 
 public class AirCurrent {
@@ -114,7 +114,7 @@ public class AirCurrent {
 
 			entity.setDeltaMovement(previousMotion.add(new Vec3(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
 				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayer)
@@ -354,10 +354,10 @@ public class AirCurrent {
 		int endOffset;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	static AirCurrentSound flyingSound;
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void enableClientPlayerSound(Entity e, float maxVolume) {
 		if (e != Minecraft.getInstance()
 			.getCameraEntity())
@@ -378,7 +378,7 @@ public class AirCurrent {
 		flyingSound.fadeIn(maxVolume);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void tickClientPlayerSounds() {
 		if (!AirCurrent.isClientPlayerInAirCurrent && flyingSound != null)
 			if (flyingSound.isFaded())

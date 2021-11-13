@@ -19,8 +19,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public abstract class CreateItemGroupBase extends CreativeModeTab {
 
@@ -29,14 +29,14 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void fillItemList(NonNullList<ItemStack> items) {
 		addItems(items, true);
 		addBlocks(items);
 		addItems(items, false);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void addBlocks(NonNullList<ItemStack> items) {
 		for (RegistryEntry<? extends Block> entry : getBlocks()) {
 			Block def = entry.get();
@@ -46,7 +46,7 @@ public abstract class CreateItemGroupBase extends CreativeModeTab {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void addItems(NonNullList<ItemStack> items, boolean specialItems) {
 		Minecraft mc = Minecraft.getInstance();
 		ItemRenderer itemRenderer = mc.getItemRenderer();

@@ -9,8 +9,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public abstract class ShootGadgetPacket extends SimplePacketBase {
@@ -45,14 +45,14 @@ public abstract class ShootGadgetPacket extends SimplePacketBase {
 
 	protected abstract void writeAdditional(FriendlyByteBuf buffer);
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected abstract void handleAdditional();
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	protected abstract ShootableGadgetRenderHandler getHandler();
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public final void handle(Supplier<Context> context) {
 		context.get()
 			.enqueueWork(() -> {

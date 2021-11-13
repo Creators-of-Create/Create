@@ -28,8 +28,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
@@ -61,7 +61,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 			} else {
 				if (AllBlocks.REDSTONE_LINK.has(hitState)) {
 					if (world.isClientSide)
-						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> this.toggleBindMode(ctx.getClickedPos()));
+						DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> this.toggleBindMode(ctx.getClickedPos()));
 					player.getCooldowns()
 							.addCooldown(this, 2);
 					return InteractionResult.SUCCESS;
@@ -97,7 +97,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 
 		if (!player.isShiftKeyDown()) {
 			if (world.isClientSide)
-				DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::toggleActive);
+				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::toggleActive);
 			player.getCooldowns()
 				.addCooldown(this, 2);
 		}
@@ -105,12 +105,12 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 		return InteractionResultHolder.pass(heldItem);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void toggleBindMode(BlockPos pos) {
 		LinkedControllerClientHandler.toggleBindMode(pos);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void toggleActive() {
 		LinkedControllerClientHandler.toggle();
 	}
@@ -143,7 +143,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
 		consumer.accept(SimpleCustomRenderer.create(this, new LinkedControllerItemRenderer()));
 	}

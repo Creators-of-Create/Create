@@ -31,8 +31,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -59,7 +59,7 @@ public class PlacementHelpers {
 		return helpers.get(id);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void tick() {
 		setTarget(null);
 		checkHelpers();
@@ -76,7 +76,7 @@ public class PlacementHelpers {
 
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void checkHelpers() {
 		Minecraft mc = Minecraft.getInstance();
 		ClientLevel world = mc.level;
@@ -145,7 +145,7 @@ public class PlacementHelpers {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public static void afterRenderOverlayLayer(RenderGameOverlayEvent.PostLayer event) {
 		if (event.getOverlay() != ForgeIngameGui.CROSSHAIR_ELEMENT)
 			return;
@@ -168,7 +168,7 @@ public class PlacementHelpers {
 		return Math.min(animationTick / 10f/* + event.getPartialTicks()*/, 1f);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private static void drawDirectionIndicator(PoseStack ms, float partialTicks, float centerX, float centerY, float progress) {
 		float r = .8f;
 		float g = .8f;

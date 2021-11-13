@@ -7,7 +7,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
+import net.fabricmc.api.EnvType;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
@@ -18,7 +18,7 @@ public class OverlayConfigCommand {
 				.requires(cs -> cs.hasPermission(0))
 				.then(Commands.literal("reset")
 					.executes(ctx -> {
-						DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
+						DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
 
 						DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 								AllPackets.channel.send(
@@ -32,7 +32,7 @@ public class OverlayConfigCommand {
 					})
 				)
 				.executes(ctx -> {
-					DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
+					DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
 
 					DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () ->
 							AllPackets.channel.send(

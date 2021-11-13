@@ -7,8 +7,8 @@ import com.simibubi.create.foundation.utility.Color;
 
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public enum AllGuiTextures implements IScreenRenderable {
 
@@ -143,13 +143,13 @@ public enum AllGuiTextures implements IScreenRenderable {
 		this.startY = startY;
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void bind() {
 		RenderSystem.setShaderTexture(0, location);
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
 		bind();
 		screen.blit(ms, x, y, startX, startY, width, height);
