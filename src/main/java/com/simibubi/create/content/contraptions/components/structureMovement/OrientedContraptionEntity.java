@@ -46,7 +46,7 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.LazyOptional;
+import com.simibubi.create.lib.utility.LazyOptional;
 
 /**
  * Ex: Minecarts, Couplings <br>

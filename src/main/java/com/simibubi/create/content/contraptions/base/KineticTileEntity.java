@@ -48,7 +48,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class KineticTileEntity extends SmartTileEntity
 	implements IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
@@ -597,5 +596,8 @@ public class KineticTileEntity extends SmartTileEntity
 	protected boolean isNoisy() {
 		return true;
 	}
+
+	// ----- fabric -----
+
 
 }

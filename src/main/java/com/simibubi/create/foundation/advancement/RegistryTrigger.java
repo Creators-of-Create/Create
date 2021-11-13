@@ -4,16 +4,15 @@ import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class RegistryTrigger<T extends IForgeRegistryEntry<T>> extends StringSerializableTrigger<T> {
-	private final IForgeRegistry<T> registry;
+public class RegistryTrigger<T> extends StringSerializableTrigger<T> {
+	private final Registry<T> registry;
 
-	public RegistryTrigger(String id, IForgeRegistry<T> registry) {
+	public RegistryTrigger(String id, Registry<T> registry) {
 		super(id);
 		this.registry = registry;
 	}
@@ -21,7 +20,7 @@ public class RegistryTrigger<T extends IForgeRegistryEntry<T>> extends StringSer
 	@Nullable
 	@Override
 	protected T getValue(String key) {
-		return registry.getValue(new ResourceLocation(key));
+		return registry.get(new ResourceLocation(key));
 	}
 
 	@Nullable

@@ -31,7 +31,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.LazyOptional;
+import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -74,7 +74,7 @@ public class PumpTileEntity extends KineticTileEntity {
 			if (!isVirtual())
 				return;
 		}
-		
+
 //		if (pressureUpdate)
 //			updatePressureChange();
 

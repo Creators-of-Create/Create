@@ -26,20 +26,14 @@ public class ConfigCommand {
 		return Commands.literal("config")
 				.executes(ctx -> {
 					ServerPlayer player = ctx.getSource().getPlayerOrException();
-					AllPackets.channel.send(
-							PacketDistributor.PLAYER.with(() -> player),
-							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), "")
-					);
+					AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), ""), player);
 
 					return Command.SINGLE_SUCCESS;
 				})
 				.then(Commands.argument("path", StringArgumentType.string())
 						.executes(ctx -> {
 							ServerPlayer player = ctx.getSource().getPlayerOrException();
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> player),
-									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), StringArgumentType.getString(ctx, "path"))
-							);
+							AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.configScreen.name(), StringArgumentType.getString(ctx, "path")), player);
 
 							return Command.SINGLE_SUCCESS;
 						})
@@ -61,10 +55,7 @@ public class ConfigCommand {
 
 											if (configPath.getType() == ModConfig.Type.CLIENT) {
 												ServerPlayer player = ctx.getSource().getPlayerOrException();
-												AllPackets.channel.send(
-														PacketDistributor.PLAYER.with(() -> player),
-														new SConfigureConfigPacket("SET" + path, value)
-												);
+												AllPackets.channel.sendToClient(new SConfigureConfigPacket("SET" + path, value), player);
 
 												return Command.SINGLE_SUCCESS;
 											}

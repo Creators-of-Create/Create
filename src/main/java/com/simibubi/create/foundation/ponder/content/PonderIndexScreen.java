@@ -20,12 +20,12 @@ import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.Registry;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderIndexScreen extends NavigatableSimiScreen {
 
@@ -58,9 +58,9 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		PonderRegistry.ALL.keySet()
 			.stream()
 			.map(key -> {
-				Item item = ForgeRegistries.ITEMS.getValue(key);
+				Item item = Registry.ITEM.get(key);
 				if (item == null) {
-					Block b = ForgeRegistries.BLOCKS.getValue(key);
+					Block b = Registry.BLOCK.get(key);
 					if (b != null)
 						item = b.asItem();
 				}
@@ -108,7 +108,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(item))
 					.withCallback((x, y) -> {
-						if (!PonderRegistry.ALL.containsKey(item.getRegistryName()))
+						if (!PonderRegistry.ALL.containsKey(Registry.ITEM.getKey(item)))
 							return;
 
 						centerScalingOn(x, y);

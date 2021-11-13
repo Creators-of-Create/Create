@@ -16,6 +16,8 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +26,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CrafterScenes {
 
@@ -165,7 +166,7 @@ public class CrafterScenes {
 		ItemStack log = new ItemStack(Items.OAK_LOG);
 
 		scene.world.setCraftingResult(util.grid.at(1, 1, 2), AllBlocks.ANDESITE_CASING.asStack(4));
-		
+
 		scene.world.modifyTileEntity(util.grid.at(2, 3, 2), type, mct -> mct.getInventory()
 			.insertItem(0, planks.copy(), false));
 		scene.idle(5);
@@ -201,7 +202,7 @@ public class CrafterScenes {
 
 		ItemStack stick = new ItemStack(Items.STICK);
 		ItemStack iron = new ItemStack(Items.IRON_INGOT);
-		
+
 		scene.world.setCraftingResult(util.grid.at(1, 1, 2), new ItemStack(Items.IRON_PICKAXE));
 
 		scene.world.modifyTileEntity(util.grid.at(1, 3, 2), type, mct -> mct.getInventory()

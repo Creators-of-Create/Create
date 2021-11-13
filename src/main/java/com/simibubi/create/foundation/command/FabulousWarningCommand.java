@@ -18,10 +18,7 @@ public class FabulousWarningCommand {
 					ServerPlayer player = ctx.getSource()
 							.getPlayerOrException();
 
-					AllPackets.channel.send(
-							PacketDistributor.PLAYER.with(() -> player),
-							new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fabulousWarning.name(), "")
-					);
+					AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.fabulousWarning.name(), ""), player);
 
 					return Command.SINGLE_SUCCESS;
 				});

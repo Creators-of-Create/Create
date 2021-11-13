@@ -28,10 +28,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.ForgeConfig;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class SConfigureConfigPacket extends SimplePacketBase {
 

@@ -6,24 +6,25 @@ import java.util.function.Predicate;
 
 import com.simibubi.create.content.contraptions.processing.InWorldProcessing;
 
+import net.fabricmc.fabric.mixin.object.builder.CriteriaAccessor;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AllTriggers {
 
 	private static final List<CriterionTriggerBase<?>> triggers = new LinkedList<>();
 
 	public static final StringSerializableTrigger<Fluid> INFINITE_FLUID =
-		add(new RegistryTrigger<>("infinite_fluid", ForgeRegistries.FLUIDS));
+		add(new RegistryTrigger<>("infinite_fluid", Registry.FLUID));
 	public static final StringSerializableTrigger<Block> BRACKET_APPLY_TRIGGER =
-		add(new RegistryTrigger<>("bracket_apply", ForgeRegistries.BLOCKS));
+		add(new RegistryTrigger<>("bracket_apply", Registry.BLOCK));
 	public static final StringSerializableTrigger<InWorldProcessing.Type> FAN_PROCESSING =
 		add(new EnumTrigger<>("fan_processing", InWorldProcessing.Type.class));
 
@@ -56,7 +57,7 @@ public class AllTriggers {
 	}
 
 	public static void register() {
-		triggers.forEach(CriteriaTriggers::register);
+		triggers.forEach(CriteriaAccessor::callRegister);
 	}
 
 	public static void triggerFor(ITriggerable trigger, Player player) {

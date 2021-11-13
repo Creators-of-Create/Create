@@ -18,6 +18,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.utility.MinecraftClientUtil;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -30,7 +32,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public class TooltipHelper {
 
@@ -81,7 +82,7 @@ public class TooltipHelper {
 
 		// Split words
 		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftClientUtil.getLocale());
 		iterator.setText(markedUp);
 		int start = iterator.first();
 		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {
@@ -128,7 +129,7 @@ public class TooltipHelper {
 
 		// Split words
 		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftClientUtil.getLocale());
 		iterator.setText(markedUp);
 		int start = iterator.first();
 		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {

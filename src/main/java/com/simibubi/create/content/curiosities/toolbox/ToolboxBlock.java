@@ -41,7 +41,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.FakePlayer;
+import com.simibubi.create.lib.entity.FakePlayer;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, ITE<ToolboxTileEntity> {
@@ -180,7 +180,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 	public Class<ToolboxTileEntity> getTileEntityClass() {
 		return ToolboxTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ToolboxTileEntity> getTileEntityType() {
 		return AllTileEntities.TOOLBOX.get();

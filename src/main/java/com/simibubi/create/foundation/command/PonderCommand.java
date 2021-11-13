@@ -9,6 +9,8 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
+import com.simibubi.create.lib.entity.FakePlayer;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -17,8 +19,6 @@ import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class PonderCommand {
 	public static final SuggestionProvider<CommandSourceStack> ITEM_PONDERS = SuggestionProviders.register(new ResourceLocation("all_ponders"), (iSuggestionProviderCommandContext, builder) -> SharedSuggestionProvider.suggestResource(PonderRegistry.ALL.keySet().stream(), builder));
@@ -47,9 +47,7 @@ public class PonderCommand {
 			if (player instanceof FakePlayer)
 				continue;
 
-			AllPackets.channel.send(
-					PacketDistributor.PLAYER.with(() -> player),
-					new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId));
+			AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.openPonder.name(), sceneId), player);
 		}
 		return Command.SINGLE_SUCCESS;
 	}

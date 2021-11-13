@@ -34,6 +34,7 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -49,13 +50,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmllegacy.RegistryObject;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
@@ -155,13 +149,13 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> paletteStoneBlock(String name,
-		NonNullFunction<Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		NonNullFunction<FabricBlockSettings, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
-			.blockstate((c, p) -> {
-				final String location = "block/palettes/" + c.getName() + "/plain";
-				p.simpleBlock(c.get(), p.models()
-					.cubeAll(c.getName(), p.modLoc(location)));
-			})
+//			.blockstate((c, p) -> {
+//				final String location = "block/palettes/" + c.getName() + "/plain";
+//				p.simpleBlock(c.get(), p.models()
+//					.cubeAll(c.getName(), p.modLoc(location)));
+//			})
 			.tag(Tags.Blocks.STONE)
 			.item()
 			.tag(Tags.Items.STONE)
@@ -180,17 +174,17 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Fluids */
 
 	public <T extends SimpleFlowableFluid> FluidBuilder<T, CreateRegistrate> virtualFluid(String name,
-		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
+//		BiFunction<FluidAttributes.Builder, Fluid, FluidAttributes> attributesFactory,
 		NonNullFunction<SimpleFlowableFluid.Properties, T> factory) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
-				Create.asResource("fluid/" + name + "_flow"), attributesFactory, factory));
+				Create.asResource("fluid/" + name + "_flow"), /*attributesFactory, */factory));
 	}
 
 	public FluidBuilder<VirtualFluid, CreateRegistrate> virtualFluid(String name) {
 		return entry(name,
 			c -> new VirtualFluidBuilder<>(self(), self(), name, c, Create.asResource("fluid/" + name + "_still"),
-				Create.asResource("fluid/" + name + "_flow"), null, VirtualFluid::new));
+				Create.asResource("fluid/" + name + "_flow"), /*null, */VirtualFluid::new));
 	}
 
 	public FluidBuilder<SimpleFlowableFluid.Flowing, CreateRegistrate> standardFluid(String name) {
@@ -235,7 +229,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@Environment(EnvType.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, model -> new CTModel(model, behavior));
+			.register(entry/*.delegate*/, model -> new CTModel(model, behavior));
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -247,21 +241,21 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@Environment(EnvType.CLIENT)
 	private static void registerBlockVertexColor(Block entry, IBlockVertexColor colorFunc) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, model -> new ColoredVertexModel(model, colorFunc));
+			.register(() -> entry/*.delegate*/, model -> new ColoredVertexModel(model, colorFunc));
 	}
 
 	@Environment(EnvType.CLIENT)
 	private static void registerBlockModel(Block entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry.delegate, func.get());
+			.register(() -> entry/*.delegate*/, func.get());
 	}
 
 	@Environment(EnvType.CLIENT)
 	private static void registerItemModel(Item entry,
 		Supplier<NonNullFunction<BakedModel, ? extends BakedModel>> func) {
 		CreateClient.MODEL_SWAPPER.getCustomItemModels()
-			.register(entry.delegate, func.get());
+			.register(() -> entry/*.delegate*/, func.get());
 	}
 
 }

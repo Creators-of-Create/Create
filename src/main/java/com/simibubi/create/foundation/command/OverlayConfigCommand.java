@@ -20,10 +20,9 @@ public class OverlayConfigCommand {
 					.executes(ctx -> {
 						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayReset.performAction(""));
 
-						EnvExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () ->
-								AllPackets.channel.send(
-										PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
-										new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), "")));
+						EnvExecutor.runWhenOn(EnvType.SERVER, () -> () ->
+								AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayReset.name(), ""),
+										(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
 						.sendSuccess(new TextComponent("reset overlay offset"), true);
@@ -34,10 +33,9 @@ public class OverlayConfigCommand {
 				.executes(ctx -> {
 					EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> SConfigureConfigPacket.Actions.overlayScreen.performAction(""));
 
-					EnvExecutor.runWhenOn(Dist.DEDICATED_SERVER, () -> () ->
-							AllPackets.channel.send(
-									PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource().getEntity()),
-									new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), "")));
+					EnvExecutor.runWhenOn(EnvType.SERVER, () -> () ->
+							AllPackets.channel.sendToClient(new SConfigureConfigPacket(SConfigureConfigPacket.Actions.overlayScreen.name(), ""),
+									(ServerPlayer) ctx.getSource().getEntity()));
 
 					ctx.getSource()
 							.sendSuccess(new TextComponent("window opened"), true);

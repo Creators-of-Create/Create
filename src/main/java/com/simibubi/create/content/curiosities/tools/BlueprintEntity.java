@@ -61,7 +61,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.util.FakePlayer;
+import com.simibubi.create.lib.entity.FakePlayer;
 import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
 import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;

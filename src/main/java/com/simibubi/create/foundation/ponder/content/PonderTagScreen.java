@@ -24,12 +24,12 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderTagScreen extends NavigatableSimiScreen {
 
@@ -63,9 +63,9 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		PonderRegistry.TAGS.getItems(tag)
 			.stream()
 			.map(key -> {
-				Item item = ForgeRegistries.ITEMS.getValue(key);
+				Item item = Registry.ITEM.get(key);
 				if (item == null) {
-					Block b = ForgeRegistries.BLOCKS.getValue(key);
+					Block b = Registry.BLOCK.get(key);
 					if (b != null)
 						item = b.asItem();
 				}
@@ -87,13 +87,13 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 			PonderButton b = new PonderButton(itemCenterX + layout.getX() + 4, itemCenterY + layout.getY() + 4)
 					.showing(new ItemStack(i));
 
-			if (PonderRegistry.ALL.containsKey(i.getRegistryName())) {
+			if (PonderRegistry.ALL.containsKey(Registry.ITEM.getKey(i))) {
 				b.withCallback((mouseX, mouseY) -> {
 					centerScalingOn(mouseX, mouseY);
 					ScreenOpener.transitionTo(PonderUI.of(new ItemStack(i), tag));
 				});
 			} else {
-				if (i.getRegistryName()
+				if (Registry.ITEM.getKey(i)
 						.getNamespace()
 						.equals(Create.ID))
 					b.withBorderColors(Theme.p(Theme.Key.PONDER_MISSING_CREATE))
@@ -108,9 +108,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		}
 
 		if (!tag.getMainItem().isEmpty()) {
-			ResourceLocation registryName = tag.getMainItem()
-					.getItem()
-					.getRegistryName();
+			ResourceLocation registryName = Registry.ITEM.getKey(tag.getMainItem().getItem());
 
 			PonderButton b = new PonderButton(itemCenterX - layout.getTotalWidth() / 2 - 42, itemCenterY - 10)
 					.showing(tag.getMainItem());
@@ -351,7 +349,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 	public PonderTag getTag() {
 		return tag;
 	}
-	
+
 	@Override
 	public void removed() {
 		super.removed();

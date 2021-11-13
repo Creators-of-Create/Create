@@ -5,15 +5,12 @@ import javax.annotation.Nullable;
 import com.simibubi.create.AllTags.AllFluidTags;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid;
-import com.simibubi.create.content.contraptions.fluids.potion.PotionFluid.PotionFluidAttributes;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 import com.tterrag.registrate.util.entry.FluidEntry;
 
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -52,7 +49,7 @@ public class AllFluids {
 					.register();
 
 	public static final FluidEntry<SimpleFlowableFluid.Flowing> CHOCOLATE =
-			REGISTRATE.standardFluid("chocolate", NoColorFluidAttributes::new)
+			REGISTRATE.standardFluid("chocolate"/*, NoColorFluidAttributes::new*/)
 					.lang(f -> "fluid.create.chocolate", "Chocolate")
 					.tag(AllTags.forgeFluidTag("chocolate"))
 //					.attributes(b -> b.viscosity(1500)

@@ -59,7 +59,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.NBT;
-import net.minecraftforge.common.util.LazyOptional;
+import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class EjectorTileEntity extends KineticTileEntity {

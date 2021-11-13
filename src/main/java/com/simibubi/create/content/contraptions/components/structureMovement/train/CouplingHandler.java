@@ -22,7 +22,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
+import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.event.entity.EntityMountEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,7 +45,7 @@ public class CouplingHandler {
 			event.setResult(Result.DENY);
 		}
 	}
-	
+
 	public static void forEachLoadedCoupling(Level world, Consumer<Couple<MinecartController>> consumer) {
 		if (world == null)
 			return;
@@ -83,13 +83,13 @@ public class CouplingHandler {
 		int distanceTo = (int) entity1.position()
 			.distanceTo(entity2.position());
 		boolean contraptionCoupling = player == null;
-		
+
 		if (distanceTo < 2) {
 			if (contraptionCoupling)
 				return false; // dont allow train contraptions with <2 distance
 			distanceTo = 2;
 		}
-		
+
 		if (distanceTo > AllConfigs.SERVER.kinetics.maxCartCouplingLength.get()) {
 			status(player, tooFar);
 			return false;

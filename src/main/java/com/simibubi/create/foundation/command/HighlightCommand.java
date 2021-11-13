@@ -2,6 +2,7 @@ package com.simibubi.create.foundation.command;
 
 import java.util.Collection;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.simibubi.create.content.contraptions.components.structureMovement.AssemblyException;
@@ -21,8 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class HighlightCommand {
 
@@ -36,7 +35,7 @@ public class HighlightCommand {
 						BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
 						for (ServerPlayer p : players) {
-							AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> p), new HighlightPacket(pos));
+							AllPackets.channel.sendToClient(new HighlightPacket(pos), p);
 						}
 
 						return players.size();
@@ -45,8 +44,7 @@ public class HighlightCommand {
 				.executes(ctx -> {
 					BlockPos pos = BlockPosArgument.getLoadedBlockPos(ctx, "pos");
 
-					AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) ctx.getSource()
-						.getEntity()), new HighlightPacket(pos));
+					AllPackets.channel.sendToClient(new HighlightPacket(pos), (ServerPlayer) ctx.getSource().getEntity());
 
 					return Command.SINGLE_SUCCESS;
 				}))
@@ -66,7 +64,7 @@ public class HighlightCommand {
 	}
 
 	private static int highlightAssemblyExceptionFor(ServerPlayer player, CommandSourceStack source) {
-		double distance = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+		double distance = player.getAttribute(ReachEntityAttributes.REACH)
 			.getValue();
 		Vec3 start = player.getEyePosition(1);
 		Vec3 look = player.getViewVector(1);

@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.lib.extensions.BlockParticleOptionExtensions;
+import com.simibubi.create.lib.extensions.BlockStateExtensions;
+
 import org.apache.logging.log4j.util.TriConsumer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,14 +33,9 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.CapabilityProvider;
 
 @Mixin(Entity.class)
-public abstract class EntityContraptionInteractionMixin extends CapabilityProvider<Entity> {
-	private EntityContraptionInteractionMixin(Class<Entity> baseClass) {
-		super(baseClass);
-	}
-
+public abstract class EntityContraptionInteractionMixin {
 	private final Entity self = (Entity) (Object) this;
 
 	private AbstractContraptionEntity contraption;
@@ -111,10 +109,10 @@ public abstract class EntityContraptionInteractionMixin extends CapabilityProvid
 		BlockPos pos = new BlockPos(worldPos); // pos where particles are spawned
 
 		forCollision(worldPos, (contraption, blockstate, blockpos) -> {
-			if (!blockstate.addRunningEffects(self.level, blockpos, self)
+			if (!((BlockStateExtensions) blockstate).create$addRunningEffects(self.level, blockpos, self)
 				&& blockstate.getRenderShape() != RenderShape.INVISIBLE) {
 				Vec3 vec3d = self.getDeltaMovement();
-				self.level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate).setPos(pos),
+				self.level.addParticle(((BlockParticleOptionExtensions) new BlockParticleOption(ParticleTypes.BLOCK, blockstate)).create$setPos(pos),
 					self.getX() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), self.getY() + 0.1D,
 					self.getZ() + ((double) random.nextFloat() - 0.5D) * (double) self.getBbWidth(), vec3d.x * -4.0D, 1.5D,
 					vec3d.z * -4.0D);

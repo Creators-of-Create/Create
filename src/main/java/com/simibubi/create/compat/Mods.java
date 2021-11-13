@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraftforge.fml.ModList;
+import net.fabricmc.loader.api.FabricLoader;
 
 /**
  * For compatibility with and without another mod present, we have to define load conditions of the specific code
@@ -14,12 +14,18 @@ public enum Mods {
 	DYNAMICTREES,
 	TCONSTRUCT;
 
+	private final boolean loaded;
+
+	Mods() {
+		loaded = FabricLoader.getInstance().isModLoaded(asId());
+	}
+
 	/**
 	 * @return a boolean of whether the mod is loaded or not based on mod id
 	 */
 	public boolean isLoaded() {
-		return ModList.get().isLoaded(asId());
-	}
+		return loaded;
+    }
 
 	/**
 	 * @return the mod id

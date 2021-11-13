@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+import com.simibubi.create.lib.helper.KeyBindingHelper;
+import com.simibubi.create.lib.utility.GuiUtils;
+
+import net.minecraft.core.Registry;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.ClipboardManager;
@@ -61,8 +66,6 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderUI extends NavigatableSimiScreen {
 
@@ -114,13 +117,11 @@ public class PonderUI extends NavigatableSimiScreen {
 	}
 
 	public static PonderUI of(ItemStack item) {
-		return new PonderUI(PonderRegistry.compile(item.getItem()
-			.getRegistryName()));
+		return new PonderUI(PonderRegistry.compile(Registry.ITEM.getKey(item.getItem())));
 	}
 
 	public static PonderUI of(ItemStack item, PonderTag tag) {
-		PonderUI ponderUI = new PonderUI(PonderRegistry.compile(item.getItem()
-			.getRegistryName()));
+		PonderUI ponderUI = new PonderUI(PonderRegistry.compile(Registry.ITEM.getKey(item.getItem())));
 		ponderUI.referredToByTag = tag;
 		return ponderUI;
 	}
@@ -133,10 +134,10 @@ public class PonderUI extends NavigatableSimiScreen {
 
 	PonderUI(List<PonderScene> scenes) {
 		ResourceLocation component = scenes.get(0).component;
-		if (ForgeRegistries.ITEMS.containsKey(component))
-			stack = new ItemStack(ForgeRegistries.ITEMS.getValue(component));
+		if (Registry.ITEM.containsKey(component))
+			stack = new ItemStack(Registry.ITEM.get(component));
 		else
-			stack = new ItemStack(ForgeRegistries.BLOCKS.getValue(component));
+			stack = new ItemStack(Registry.BLOCK.get(component));
 
 		tags = new ArrayList<>(PonderRegistry.TAGS.getTags(component));
 		this.scenes = scenes;
@@ -782,13 +783,14 @@ public class PonderUI extends NavigatableSimiScreen {
 	@Override
 	public boolean keyPressed(int code, int p_keyPressed_2_, int p_keyPressed_3_) {
 		Options settings = Minecraft.getInstance().options;
-		int sCode = settings.keyDown.getKey()
+		int sCode = KeyBindingHelper.getKeyCode(settings.keyDown)
 			.getValue();
-		int aCode = settings.keyLeft.getKey()
+
+		int aCode = KeyBindingHelper.getKeyCode(settings.keyLeft)
 			.getValue();
-		int dCode = settings.keyRight.getKey()
+		int dCode = KeyBindingHelper.getKeyCode(settings.keyRight)
 			.getValue();
-		int qCode = settings.keyDrop.getKey()
+		int qCode = KeyBindingHelper.getKeyCode(settings.keyDrop)
 			.getValue();
 
 		if (code == sCode) {

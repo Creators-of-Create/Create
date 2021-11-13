@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.common.util.LazyOptional;
+import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -80,7 +80,7 @@ public interface IHaveGoggleInformation {
 				tooltip.remove(tooltip.size() - 1);
 			return true;
 		}
-		
+
 		if (!isEmpty)
 			return true;
 

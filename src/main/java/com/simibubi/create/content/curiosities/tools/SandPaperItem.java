@@ -31,7 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.common.util.FakePlayer;
+import com.simibubi.create.lib.entity.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

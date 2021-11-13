@@ -42,7 +42,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.util.FakePlayer;
+import com.simibubi.create.lib.entity.FakePlayer;
 
 public class CopperBacktankBlock extends HorizontalKineticBlock
 	implements ITE<CopperBacktankTileEntity>, SimpleWaterloggedBlock {
@@ -63,12 +63,12 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 		builder.add(BlockStateProperties.WATERLOGGED);
 		super.createBlockStateDefinition(builder);
 	}
-	
+
 	@Override
 	public boolean hasAnalogOutputSignal(BlockState p_149740_1_) {
 		return true;
 	}
-	
+
 	@Override
 	public int getAnalogOutputSignal(BlockState p_180641_1_, Level world, BlockPos pos) {
 		return getTileEntityOptional(world, pos).map(CopperBacktankTileEntity::getComparatorOutput)
@@ -179,7 +179,7 @@ public class CopperBacktankBlock extends HorizontalKineticBlock
 	public Class<CopperBacktankTileEntity> getTileEntityClass() {
 		return CopperBacktankTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends CopperBacktankTileEntity> getTileEntityType() {
 		return AllTileEntities.COPPER_BACKTANK.get();

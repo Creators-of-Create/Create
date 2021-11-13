@@ -3,19 +3,19 @@ package com.simibubi.create.foundation.networking;
 import java.util.HashSet;
 import java.util.function.Supplier;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public interface ISyncPersistentData {
 
 	void onPersistentDataUpdated();
 
 	default void syncPersistentDataWithTracking(Entity self) {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> self), new PersistentDataPacket(self));
+		AllPackets.channel.sendToClientsTracking(new PersistentDataPacket(self), self);
 	}
 
 	public static class PersistentDataPacket extends SimplePacketBase {
@@ -45,7 +45,7 @@ public interface ISyncPersistentData {
 			context.get()
 				.enqueueWork(() -> {
 					Entity entityByID = Minecraft.getInstance().level.getEntity(entityId);
-					CompoundTag data = entityByID.getPersistentData();
+					CompoundTag data = EntityHelper.getExtraCustomData(entity);
 					new HashSet<>(data.getAllKeys()).forEach(data::remove);
 					data.merge(readData);
 					if (!(entityByID instanceof ISyncPersistentData))

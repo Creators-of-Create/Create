@@ -15,7 +15,7 @@ import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 
-import net.minecraftforge.common.util.LazyOptional;
+import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;

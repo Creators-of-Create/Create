@@ -18,6 +18,8 @@ import com.simibubi.create.foundation.render.SuperRenderTypeBuffer;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
+import com.simibubi.create.lib.mixin.accessor.ParticleEngineAccessor;
+
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -75,8 +77,9 @@ public class PonderWorld extends SchematicWorld {
 		particles = new PonderWorldParticles(this);
 
 		// ParticleManager.factories - ATs don't seem to like this one
-		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleEngine.class,
-			Minecraft.getInstance().particleEngine, "f_107293_"); // providers
+		particleFactories = ((ParticleEngineAccessor) Minecraft.getInstance().particleEngine).getProviders();
+//		particleFactories = ObfuscationReflectionHelper.getPrivateValue(ParticleEngine.class,
+//			Minecraft.getInstance().particleEngine, "f_107293_"); // providers
 	}
 
 	public void createBackup() {
