@@ -21,7 +21,7 @@ public class NoGravMagicalDohickyItem extends Item {
 	public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
 		Level world = entity.level;
 		Vec3 pos = entity.position();
-		CompoundTag persistentData = entity.getPersistentData();
+		CompoundTag persistentData = EntityHelper.getExtraCustomData(entity);
 
 		if (world.isClientSide) {
 			if (world.random.nextFloat() < getIdleParticleChance(entity)) {

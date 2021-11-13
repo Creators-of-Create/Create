@@ -10,8 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 
 public class GlueEffectPacket extends SimplePacketBase {
 
@@ -39,7 +39,7 @@ public class GlueEffectPacket extends SimplePacketBase {
 
 	@Environment(EnvType.CLIENT)
 	public void handle(Supplier<Context> context) {
-		context.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+		context.get().enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			Minecraft mc = Minecraft.getInstance();
 			if (!mc.player.blockPosition().closerThan(pos, 100))
 				return;

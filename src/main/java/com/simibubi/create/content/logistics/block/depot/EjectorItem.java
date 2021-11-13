@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
@@ -39,7 +39,7 @@ public class EjectorItem extends BlockItem {
 	protected boolean updateCustomBlockEntityTag(BlockPos pos, Level world, Player p_195943_3_, ItemStack p_195943_4_,
 		BlockState p_195943_5_) {
 		if (world.isClientSide)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> EjectorTargetHandler.flushSettings(pos));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> EjectorTargetHandler.flushSettings(pos));
 		return super.updateCustomBlockEntityTag(pos, world, p_195943_3_, p_195943_4_, p_195943_5_);
 	}
 

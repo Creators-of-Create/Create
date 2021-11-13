@@ -2,6 +2,15 @@ package com.simibubi.create.content.contraptions.components.structureMovement.gl
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
+
+import com.simibubi.create.lib.entity.FakePlayer;
+
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.tterrag.registrate.fabric.EnvExecutor;
+
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+
 import org.apache.commons.lang3.Validate;
 
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
@@ -61,14 +70,9 @@ import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class SuperGlueEntity extends Entity
-	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, IInstanceRendered {
+	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, IInstanceRendered {
 
 	private int validationTimer;
 	protected BlockPos hangingPosition;
@@ -99,8 +103,8 @@ public class SuperGlueEntity extends Entity
 	public void onBroken(@Nullable Entity breaker) {
 		playSound(SoundEvents.SLIME_SQUISH_SMALL, 1.0F, 1.0F);
 		if (onValidSurface()) {
-			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-				new GlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false));
+			AllPackets.channel.sendToClientsTracking(
+					new GlueEffectPacket(getHangingPosition(), getFacingDirection().getOpposite(), false), this);
 			AllSoundEvents.SLIME_ADDED.playFrom(this, 0.5F, 0.5F);
 		}
 	}
@@ -187,7 +191,7 @@ public class SuperGlueEntity extends Entity
 		BlockPos pos2 = hangingPosition.relative(getFacingDirection().getOpposite());
 		if (pos2.getY() >= 256)
 			return false;
-		if (!level.isAreaLoaded(pos, 0) || !level.isAreaLoaded(pos2, 0))
+		if (!LoadedCheckUtil.isAreaLoaded(level, pos, 0) || !LoadedCheckUtil.isAreaLoaded(level, pos2, 0))
 			return true;
 		if (!isValidFace(level, pos2, getFacingDirection())
 			&& !isValidFace(level, pos, getFacingDirection().getOpposite()))
@@ -305,8 +309,9 @@ public class SuperGlueEntity extends Entity
 		return 0.0F;
 	}
 
+	@Nullable
 	@Override
-	public ItemStack getPickedResult(HitResult target) {
+	public ItemStack getPickResult() {
 		return AllItems.SUPER_GLUE.asStack();
 	}
 
@@ -319,7 +324,7 @@ public class SuperGlueEntity extends Entity
 	public InteractionResult interact(Player player, InteractionHand hand) {
 		if (player instanceof FakePlayer)
 			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			triggerPlaceBlock(player, hand);
 		});
 		return InteractionResult.CONSUME;
@@ -462,7 +467,7 @@ public class SuperGlueEntity extends Entity
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+		return new ClientboundAddEntityPacket(this);
 	}
 
 	@Override

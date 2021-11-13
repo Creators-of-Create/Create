@@ -6,8 +6,8 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 
 public class ContraptionStallPacket extends SimplePacketBase {
 
@@ -42,7 +42,7 @@ public class ContraptionStallPacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(
-				() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> AbstractContraptionEntity.handleStallPacket(this)));
+				() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> AbstractContraptionEntity.handleStallPacket(this)));
 		context.get().setPacketHandled(true);
 	}
 

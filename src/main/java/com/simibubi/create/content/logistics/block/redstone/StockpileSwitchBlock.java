@@ -36,7 +36,7 @@ import net.fabricmc.api.Environment;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -112,7 +112,7 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 		BlockHitResult hit) {
 		if (player != null && AllItems.WRENCH.isIn(player.getItemInHand(handIn)))
 			return InteractionResult.PASS;
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
+		EnvExecutor.runWhenOn(EnvType.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return InteractionResult.SUCCESS;
 	}
@@ -164,7 +164,7 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 	public Class<StockpileSwitchTileEntity> getTileEntityClass() {
 		return StockpileSwitchTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends StockpileSwitchTileEntity> getTileEntityType() {
 		return AllTileEntities.STOCKPILE_SWITCH.get();

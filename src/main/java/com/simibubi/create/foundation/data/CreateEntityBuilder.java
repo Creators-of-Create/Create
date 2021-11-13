@@ -15,7 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @ParametersAreNonnullByDefault

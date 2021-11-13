@@ -49,7 +49,7 @@ import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class SymmetryWandItem extends Item {
@@ -77,7 +77,7 @@ public class SymmetryWandItem extends Item {
 		// Shift -> open GUI
 		if (player.isShiftKeyDown()) {
 			if (player.level.isClientSide) {
-				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 					openWandGUI(wand, context.getHand());
 				});
 				player.getCooldowns()
@@ -146,7 +146,7 @@ public class SymmetryWandItem extends Item {
 		// Shift -> Open GUI
 		if (playerIn.isShiftKeyDown()) {
 			if (worldIn.isClientSide) {
-				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 					openWandGUI(playerIn.getItemInHand(handIn), handIn);
 				});
 				playerIn.getCooldowns()

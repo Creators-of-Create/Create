@@ -59,7 +59,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -274,7 +274,7 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 			belt.color = Optional.ofNullable(colorIn);
 			belt.setChanged();
 			belt.sendData();
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(belt));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(belt));
 		}
 	}
 

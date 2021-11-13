@@ -27,6 +27,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
@@ -46,7 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class KineticTileEntity extends SmartTileEntity
 	implements IHaveGoggleInformation, IHaveHoveringInformation, IInstanceRendered {
@@ -98,7 +100,7 @@ public class KineticTileEntity extends SmartTileEntity
 
 		if (level.isClientSide) {
 			cachedBoundingBox = null; // cache the bounding box for every frame between ticks
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio());
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio());
 			return;
 		}
 
@@ -258,7 +260,7 @@ public class KineticTileEntity extends SmartTileEntity
 			effects.triggerOverStressedEffect();
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public float getGeneratedSpeed() {
@@ -560,7 +562,7 @@ public class KineticTileEntity extends SmartTileEntity
 	public void requestModelDataUpdate() {
 		super.requestModelDataUpdate();
 		if (!this.remove)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	protected AABB cachedBoundingBox;

@@ -29,7 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.common.ForgeConfig;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
@@ -55,9 +55,9 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> ctx) {
+	public void handle(Supplier<Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				if (option.startsWith("SET")) {
 					trySetConfig(option.substring(3), value);
 					return;

@@ -7,6 +7,7 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.VirtualFluid;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -18,10 +19,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PotionFluid extends VirtualFluid {
 
@@ -41,33 +38,33 @@ public class PotionFluid extends VirtualFluid {
 		return fluidStack;
 	}
 
-	public static class PotionFluidAttributes extends FluidAttributes {
-
-		public PotionFluidAttributes(Builder builder, Fluid fluid) {
-			super(builder, fluid);
-		}
-
-		@Override
-		public int getColor(FluidStack stack) {
-			CompoundTag tag = stack.getOrCreateTag();
-			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
-			return color;
-		}
-
-		@Override
-		public String getTranslationKey(FluidStack stack) {
-			CompoundTag tag = stack.getOrCreateTag();
-			ItemLike itemFromBottleType =
-				PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
-			return PotionUtils.getPotion(tag)
-				.getName(itemFromBottleType.asItem()
-					.getDescriptionId() + ".effect.");
-		}
-
-	}
+//	public static class PotionFluidAttributes extends FluidAttributes {
+//
+//		public PotionFluidAttributes(Builder builder, Fluid fluid) {
+//			super(builder, fluid);
+//		}
+//
+//		@Override
+//		public int getColor(FluidStack stack) {
+//			CompoundTag tag = stack.getOrCreateTag();
+//			int color = PotionUtils.getColor(PotionUtils.getAllEffects(tag)) | 0xff000000;
+//			return color;
+//		}
+//
+//		@Override
+//		public String getTranslationKey(FluidStack stack) {
+//			CompoundTag tag = stack.getOrCreateTag();
+//			ItemLike itemFromBottleType =
+//				PotionFluidHandler.itemFromBottleType(NBTHelper.readEnum(tag, "Bottle", BottleType.class));
+//			return PotionUtils.getPotion(tag)
+//				.getName(itemFromBottleType.asItem()
+//					.getDescriptionId() + ".effect.");
+//		}
+//
+//	}
 
 	public static FluidStack addPotionToFluidStack(FluidStack fs, Potion potion) {
-		ResourceLocation resourcelocation = ForgeRegistries.POTIONS.getKey(potion);
+		ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
 		if (potion == Potions.EMPTY) {
 			fs.removeChildTag("Potion");
 			return fs;

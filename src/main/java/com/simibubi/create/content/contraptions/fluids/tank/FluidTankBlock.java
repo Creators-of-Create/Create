@@ -90,7 +90,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	protected void createBlockStateDefinition(Builder<Block, BlockState> p_206840_1_) {
 		p_206840_1_.add(TOP, BOTTOM, SHAPE);
 	}
-	
+
 	@Override
 	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
@@ -239,7 +239,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	public Class<FluidTankTileEntity> getTileEntityClass() {
 		return FluidTankTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends FluidTankTileEntity> getTileEntityType() {
 		return creative ? AllTileEntities.CREATIVE_FLUID_TANK.get() : AllTileEntities.FLUID_TANK.get();
@@ -303,7 +303,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	@Override
 	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
 		SoundType soundType = super.getSoundType(state, world, pos, entity);
-		if (entity != null && entity.getPersistentData()
+		if (entity != null && EntityHelper.getExtraCustomData(entity)
 			.contains("SilenceTankSound"))
 			return SILENCED_METAL;
 		return soundType;

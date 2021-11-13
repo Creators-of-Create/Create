@@ -1,15 +1,6 @@
 package com.simibubi.create.lib.utility;
 
 public class Constants {
-	public static class NBT {
-		public static final int TAG_INT         = 3;
-		public static final int TAG_FLOAT       = 5;
-		public static final int TAG_DOUBLE      = 6;
-		public static final int TAG_STRING      = 8;
-		public static final int TAG_LIST        = 9;
-		public static final int TAG_COMPOUND    = 10;
-	}
-
 	public static class BlockFlags {
 		public static final int NOTIFY_NEIGHBORS = 1; // 0b1
 		public static final int BLOCK_UPDATE = 2; // 0b10

@@ -9,11 +9,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 /**
  * A server to client version of {@link TileEntityConfigurationPacket}
- * 
+ *
  * @param <TE>
  */
 public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends SimplePacketBase {
@@ -35,8 +34,8 @@ public abstract class TileEntityDataPacket<TE extends SyncedTileEntity> extends 
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> context) {
-		NetworkEvent.Context ctx = context.get();
+	public void handle(Supplier<Context> context) {
+		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ClientLevel world = Minecraft.getInstance().level;
 

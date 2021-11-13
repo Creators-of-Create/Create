@@ -19,7 +19,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
@@ -67,7 +67,7 @@ public class MinecartCouplingItem extends Item {
 			return true;
 		}
 		if (world != null && world.isClientSide)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> cartClicked(player, minecart));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> cartClicked(player, minecart));
 		return true;
 	}
 

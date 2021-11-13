@@ -358,11 +358,11 @@ public class PipeConnection {
 	public static final Random r = new Random();
 
 	public void spawnSplashOnRim(Level world, BlockPos pos, FluidStack fluid) {
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> spawnSplashOnRimInner(world, pos, fluid));
 	}
 
 	public void spawnParticles(Level world, BlockPos pos, FluidStack fluid) {
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> spawnParticlesInner(world, pos, fluid));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> spawnParticlesInner(world, pos, fluid));
 	}
 
 	@Environment(EnvType.CLIENT)

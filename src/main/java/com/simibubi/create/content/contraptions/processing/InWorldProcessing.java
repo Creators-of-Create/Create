@@ -73,9 +73,9 @@ public class InWorldProcessing {
 	}
 
 	public static boolean canProcess(ItemEntity entity, Type type) {
-		if (entity.getPersistentData()
+		if (EntityHelper.getExtraCustomData(entity)
 			.contains("CreateData")) {
-			CompoundTag compound = entity.getPersistentData()
+			CompoundTag compound = EntityHelper.getExtraCustomData(entity)
 				.getCompound("CreateData");
 			if (compound.contains("Processing")) {
 				CompoundTag processing = compound.getCompound("Processing");
@@ -222,7 +222,7 @@ public class InWorldProcessing {
 	}
 
 	private static int decrementProcessingTime(ItemEntity entity, Type type) {
-		CompoundTag nbt = entity.getPersistentData();
+		CompoundTag nbt = EntityHelper.getExtraCustomData(entity);
 
 		if (!nbt.contains("CreateData"))
 			nbt.put("CreateData", new CompoundTag());

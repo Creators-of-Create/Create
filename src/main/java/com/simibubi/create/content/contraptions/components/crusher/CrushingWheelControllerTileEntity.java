@@ -42,7 +42,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -103,7 +103,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 			return;
 
 		if (level.isClientSide)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio());
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.tickAudio());
 
 		float speed = crushingspeed * 4;
 

@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class StickerTileEntity extends SmartTileEntity implements IInstanceRendered {
 
@@ -60,7 +60,7 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 
 		if (isAttachedToBlock() && piston.getValue(0) != piston.getValue() && piston.getValue() == 1) {
 			SuperGlueItem.spawnParticles(level, worldPosition, getBlockState().getValue(StickerBlock.FACING), true);
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> playSound(true));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> playSound(true));
 		}
 
 		if (!update)
@@ -68,10 +68,10 @@ public class StickerTileEntity extends SmartTileEntity implements IInstanceRende
 		update = false;
 		int target = isBlockStateExtended() ? 1 : 0;
 		if (isAttachedToBlock() && target == 0 && piston.getChaseTarget() == 1)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> playSound(false));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> playSound(false));
 		piston.chase(target, .4f, Chaser.LINEAR);
 
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public boolean isAttachedToBlock() {

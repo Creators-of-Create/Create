@@ -11,8 +11,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 
 public class FluidSplashPacket extends SimplePacketBase {
 
@@ -36,7 +36,7 @@ public class FluidSplashPacket extends SimplePacketBase {
 
 	public void handle(Supplier<Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				if (Minecraft.getInstance().player.position()
 					.distanceTo(new Vec3(pos.getX(), pos.getY(), pos.getZ())) > 100)
 					return;

@@ -10,7 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public class ExtendoGripInteractionPacket extends SimplePacketBase {
 

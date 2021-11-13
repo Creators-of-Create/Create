@@ -169,7 +169,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 		if (entity == null)
 			return standardShape;
 
-		CompoundTag data = entity.getPersistentData();
+		CompoundTag data = EntityHelper.getExtraCustomData(entity);
 		if (data.contains("BypassCrushingWheel"))
 			if (pos.equals(NbtUtils.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				if (state.getValue(FACING) != Direction.UP) // Allow output items to land on top of the block rather

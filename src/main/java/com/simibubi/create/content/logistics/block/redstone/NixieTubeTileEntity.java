@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 
 public class NixieTubeTileEntity extends SmartTileEntity {
 

@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public class ContraptionFluidPacket extends SimplePacketBase {
 
@@ -23,13 +23,13 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 		this.localPos = localPos;
 		this.containedFluid = containedFluid;
 	}
-	
+
 	public ContraptionFluidPacket(FriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
 		localPos = buffer.readBlockPos();
 		containedFluid = FluidStack.readFromPacket(buffer);
 	}
-	
+
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);

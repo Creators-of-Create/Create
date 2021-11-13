@@ -11,7 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class ServerSpeedProvider {

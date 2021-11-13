@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ToolboxDisposeAllPacket extends SimplePacketBase {
@@ -63,14 +63,14 @@ public class ToolboxDisposeAllPacket extends SimplePacketBase {
 						ToolboxHandler.unequip(player, i, true);
 						sendData.setTrue();
 					}
-					
+
 					ItemStack itemStack = player.getInventory().getItem(i);
 					ItemStack remainder = ItemHandlerHelper.insertItemStacked(toolbox.inventory, itemStack, false);
 					if (remainder.getCount() != itemStack.getCount())
 						player.getInventory().setItem(i, remainder);
 				}
 			});
-			
+
 			if (sendData.booleanValue())
 				ToolboxHandler.syncData(player);
 

@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implements ITE<SequencedGearshiftTileEntity> {
 
@@ -97,7 +97,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 				return InteractionResult.PASS;
 		}
 
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
+		EnvExecutor.runWhenOn(EnvType.CLIENT,
 			() -> () -> withTileEntityDo(worldIn, pos, te -> this.displayScreen(te, player)));
 		return InteractionResult.SUCCESS;
 	}
@@ -150,7 +150,7 @@ public class SequencedGearshiftBlock extends HorizontalAxisKineticBlock implemen
 	public Class<SequencedGearshiftTileEntity> getTileEntityClass() {
 		return SequencedGearshiftTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SequencedGearshiftTileEntity> getTileEntityType() {
 		return AllTileEntities.SEQUENCED_GEARSHIFT.get();

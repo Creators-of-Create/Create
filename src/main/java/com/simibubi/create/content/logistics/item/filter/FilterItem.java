@@ -35,7 +35,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;

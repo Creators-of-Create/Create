@@ -11,8 +11,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 
 public class MinecartControllerUpdatePacket extends SimplePacketBase {
 
@@ -39,7 +39,7 @@ public class MinecartControllerUpdatePacket extends SimplePacketBase {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::handleCL));
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::handleCL));
 		context.get()
 			.setPacketHandled(true);
 	}

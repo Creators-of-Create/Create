@@ -11,8 +11,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 
 public class SymmetryEffectPacket extends SimplePacketBase {
 
@@ -42,7 +42,7 @@ public class SymmetryEffectPacket extends SimplePacketBase {
 	}
 
 	public void handle(Supplier<Context> ctx) {
-		ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+		ctx.get().enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 			if (Minecraft.getInstance().player.position().distanceTo(Vec3.atLowerCornerOf(mirror)) > 100)
 				return;
 			for (BlockPos to : positions)

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public abstract class MovingInteractionBehaviour {
 
@@ -21,13 +21,13 @@ public abstract class MovingInteractionBehaviour {
 		contraptionEntity.contraption.actors.remove(index);
 		contraptionEntity.contraption.actors.add(index, MutablePair.of(info, ctx));
 		if (contraptionEntity.level.isClientSide)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
 	}
 
 	protected void setContraptionBlockData(AbstractContraptionEntity contraptionEntity, BlockPos pos, StructureBlockInfo info) {
 		contraptionEntity.contraption.blocks.put(pos, info);
 		if (contraptionEntity.level.isClientSide)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> invalidate(contraptionEntity.contraption));
 	}
 
 	@Environment(EnvType.CLIENT)

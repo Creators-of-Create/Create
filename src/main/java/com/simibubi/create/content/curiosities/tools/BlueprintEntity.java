@@ -62,7 +62,7 @@ import net.fabricmc.api.Environment;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
 import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -70,7 +70,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class BlueprintEntity extends HangingEntity
-	implements IEntityAdditionalSpawnData, ISpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker {
+	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker {
 
 	protected int size;
 	protected Direction verticalOrientation;

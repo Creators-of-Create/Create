@@ -9,7 +9,7 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public class ConfigureSchematicannonPacket extends SimplePacketBase {
 

@@ -33,11 +33,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class PotatoProjectileEntity extends AbstractHurtingProjectile implements IEntityAdditionalSpawnData {
+public class PotatoProjectileEntity extends AbstractHurtingProjectile implements ExtraSpawnDataEntity {
 
 	protected PotatoCannonProjectileType type;
 	protected ItemStack stack = ItemStack.EMPTY;

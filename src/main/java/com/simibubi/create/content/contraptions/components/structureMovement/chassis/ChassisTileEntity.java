@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class ChassisTileEntity extends SmartTileEntity {
 
@@ -47,7 +47,7 @@ public class ChassisTileEntity extends SmartTileEntity {
 		range.between(1, max);
 		range
 				.withClientCallback(
-						i -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
+						i -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> ChassisRangeDisplay.display(this)));
 		range.value = max / 2;
 		behaviours.add(range);
 	}

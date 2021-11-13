@@ -8,7 +8,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class ClearBufferCacheCommand {
 
@@ -16,7 +16,7 @@ public class ClearBufferCacheCommand {
 		return Commands.literal("clearRenderBuffers")
 			.requires(cs -> cs.hasPermission(0))
 			.executes(ctx -> {
-				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> ClearBufferCacheCommand::execute);
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> ClearBufferCacheCommand::execute);
 				ctx.getSource()
 					.sendSuccess(new TextComponent("Cleared rendering buffers."), true);
 				return 1;

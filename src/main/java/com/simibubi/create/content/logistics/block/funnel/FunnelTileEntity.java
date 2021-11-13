@@ -35,7 +35,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringInformation, IInstanceRendered {
 
@@ -328,7 +328,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 		extractionCooldown = compound.getInt("TransferCooldown");
 
 		if (clientPacket)
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
 
 	public void onTransfer(ItemStack stack) {

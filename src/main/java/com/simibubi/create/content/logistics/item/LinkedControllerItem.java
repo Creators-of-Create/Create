@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -61,7 +61,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 			} else {
 				if (AllBlocks.REDSTONE_LINK.has(hitState)) {
 					if (world.isClientSide)
-						DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> this.toggleBindMode(ctx.getClickedPos()));
+						EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> this.toggleBindMode(ctx.getClickedPos()));
 					player.getCooldowns()
 							.addCooldown(this, 2);
 					return InteractionResult.SUCCESS;
@@ -97,7 +97,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 
 		if (!player.isShiftKeyDown()) {
 			if (world.isClientSide)
-				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::toggleActive);
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::toggleActive);
 			player.getCooldowns()
 				.addCooldown(this, 2);
 		}

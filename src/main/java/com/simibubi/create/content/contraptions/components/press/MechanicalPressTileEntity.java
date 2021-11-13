@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -350,12 +350,12 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		if (!(recipe instanceof CraftingRecipe))
 			return false;
-		
+
 		RecipeSerializer<?> serializer = recipe.getSerializer();
-		for (ResourceLocation denied : RECIPE_DENY_LIST) 
+		for (ResourceLocation denied : RECIPE_DENY_LIST)
 			if (serializer != null && denied.equals(serializer.getRegistryName()))
 				return false;
-		
+
 		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()
 			&& (ingredients.size() == 4 || ingredients.size() == 9) && ItemHelper.condenseIngredients(ingredients)
 				.size() == 1;

@@ -52,11 +52,11 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
-public abstract class AbstractContraptionEntity extends Entity implements IEntityAdditionalSpawnData {
+public abstract class AbstractContraptionEntity extends Entity implements ExtraSpawnDataEntity {
 
 	private static final EntityDataAccessor<Boolean> STALLED =
 		SynchedEntityData.defineId(AbstractContraptionEntity.class, EntityDataSerializers.BOOLEAN);
@@ -642,7 +642,7 @@ public abstract class AbstractContraptionEntity extends Entity implements IEntit
 	public boolean hasExactlyOnePlayerPassenger() {
 		return false;
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public abstract void doLocalTransforms(float partialTicks, PoseStack[] matrixStacks);
 

@@ -17,10 +17,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fmllegacy.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
-public class SeatEntity extends Entity implements IEntityAdditionalSpawnData {
+public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 
 	public SeatEntity(EntityType<?> p_i48580_1_, Level p_i48580_2_) {
 		super(p_i48580_1_, p_i48580_2_);

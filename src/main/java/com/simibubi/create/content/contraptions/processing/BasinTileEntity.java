@@ -52,7 +52,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -288,7 +288,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			tryClearingSpoutputOverflow();
 		if (!contentsChanged)
 			return;
-		
+
 		contentsChanged = false;
 		getOperator().ifPresent(te -> te.basinChecker.scheduleUpdate());
 
@@ -312,7 +312,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		Direction direction = blockState.getValue(BasinBlock.FACING);
 		BlockEntity te = level.getBlockEntity(worldPosition.below()
 			.relative(direction));
-		
+
 		FilteringBehaviour filter = null;
 		InvManipulationBehaviour inserter = null;
 		if (te != null) {
@@ -362,7 +362,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				update = true;
 				continue;
 			}
-			
+
 			if (targetTank == null)
 				break;
 
@@ -459,7 +459,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		Direction direction = blockState.getValue(BasinBlock.FACING);
 		if (direction != Direction.DOWN) {
-			
+
 			BlockEntity te = level.getBlockEntity(worldPosition.below()
 				.relative(direction));
 
@@ -475,7 +475,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				return false;
 			if (!outputFluids.isEmpty() && targetTank == null)
 				return false;
-			
+
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {
@@ -484,7 +484,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 					continue;
 				spoutputBuffer.add(itemStack.copy());
 			}
-			for (FluidStack fluidStack : outputFluids) 
+			for (FluidStack fluidStack : outputFluids)
 				spoutputFluidBuffer.add(fluidStack.copy());
 			return true;
 		}

@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public class ContraptionInteractionPacket extends SimplePacketBase {
 
@@ -58,7 +58,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;
 			d *= d;
-			if (sender.distanceToSqr(entityByID) > d) 
+			if (sender.distanceToSqr(entityByID) > d)
 				return;
 			if (contraptionEntity.handlePlayerInteraction(sender, localPos, face, interactionHand))
 				sender.swing(interactionHand, true);

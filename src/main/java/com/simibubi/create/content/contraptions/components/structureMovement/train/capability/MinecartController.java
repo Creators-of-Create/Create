@@ -32,7 +32,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.PoweredRailBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
@@ -176,11 +176,11 @@ public class MinecartController implements INBTSerializable<CompoundTag> {
 			List<Entity> passengers = cart().getPassengers();
 			if (!passengers.isEmpty()) {
 				Entity entity = passengers.get(0);
-				if (entity instanceof AbstractContraptionEntity) 
+				if (entity instanceof AbstractContraptionEntity)
 					((AbstractContraptionEntity) entity).disassemble();
 			}
 		}
-		
+
 		couplings.set(main, Optional.empty());
 		needsEntryRefresh |= main;
 		sendData();

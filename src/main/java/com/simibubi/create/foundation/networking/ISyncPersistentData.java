@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public interface ISyncPersistentData {
@@ -37,7 +37,7 @@ public interface ISyncPersistentData {
 		@Override
 		public void write(FriendlyByteBuf buffer) {
 			buffer.writeInt(entityId);
-			buffer.writeNbt(entity.getPersistentData());
+			buffer.writeNbt(EntityHelper.getExtraCustomData(entity));
 		}
 
 		@Override

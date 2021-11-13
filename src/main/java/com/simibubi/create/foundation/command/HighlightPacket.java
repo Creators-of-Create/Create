@@ -6,14 +6,14 @@ import com.simibubi.create.AllSpecialTextures;
 import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.tterrag.registrate.fabric.EnvExecutor;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class HighlightPacket extends SimplePacketBase {
 
@@ -33,9 +33,9 @@ public class HighlightPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> ctx) {
+	public void handle(Supplier<Context> ctx) {
 		ctx.get()
-			.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+			.enqueueWork(() -> EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 				performHighlight(pos);
 			}));
 

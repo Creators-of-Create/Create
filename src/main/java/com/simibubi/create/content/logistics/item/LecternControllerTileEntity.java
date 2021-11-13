@@ -24,7 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class LecternControllerTileEntity extends SmartTileEntity {
 
@@ -104,7 +104,7 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 		super.tick();
 
 		if (level.isClientSide) {
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::tryToggleActive);
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::tryToggleActive);
 			prevUser = user;
 		}
 

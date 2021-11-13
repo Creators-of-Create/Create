@@ -98,7 +98,7 @@ public class Create implements ModInitializer {
 		AllConfigs.register();
 		BlockSpoutingBehaviour.register();
 
-//		ForgeMod.enableMilkFluid(); // FIXME milk
+//		ForgeMod.enableMilkFluid(); // FIXME PORT: milk
 
 //		IEventBus modEventBus = FMLJavaModLoadingContext.get()
 //			.getModEventBus();

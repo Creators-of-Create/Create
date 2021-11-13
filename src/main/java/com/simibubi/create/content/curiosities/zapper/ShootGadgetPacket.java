@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public abstract class ShootGadgetPacket extends SimplePacketBase {
 

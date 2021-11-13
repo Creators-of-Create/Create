@@ -35,7 +35,7 @@ public class SoulPulseEffectPacket extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> context) {
+	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			CreateClient.SOUL_PULSE_EFFECT_HANDLER.addPulse(new SoulPulseEffect(pos, distance, canOverlap));
 		});

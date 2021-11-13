@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public class SchematicSyncPacket extends SimplePacketBase {
 

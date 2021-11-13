@@ -47,12 +47,12 @@ public class DivingBootsItem extends CopperArmorItem {
 	protected static boolean affects(LivingEntity entity) {
 		if (!AllItems.DIVING_BOOTS.get()
 			.isWornBy(entity)) {
-			entity.getPersistentData()
+			EntityHelper.getExtraCustomData(entity)
 				.remove("HeavyBoots");
 			return false;
 		}
 
-		NBTHelper.putMarker(entity.getPersistentData(), "HeavyBoots");
+		NBTHelper.putMarker(EntityHelper.getExtraCustomData(entity), "HeavyBoots");
 		if (!entity.isInWater())
 			return false;
 		if (entity.getPose() == Pose.SWIMMING)

@@ -74,7 +74,7 @@ public class ChromaticCompoundItem extends Item {
 		double y = entity.getY();
 		double yMotion = entity.getDeltaMovement().y;
 		Level world = entity.level;
-		CompoundTag data = entity.getPersistentData();
+		CompoundTag data = EntityHelper.getExtraCustomData(entity);
 		CompoundTag itemData = entity.getItem()
 			.getOrCreateTag();
 
@@ -108,7 +108,7 @@ public class ChromaticCompoundItem extends Item {
 			ItemStack newStack = AllItems.REFINED_RADIANCE.asStack();
 			ItemEntity newEntity = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), newStack);
 			newEntity.setDeltaMovement(entity.getDeltaMovement());
-			newEntity.getPersistentData()
+			newEntityHelper.getExtraCustomData(entity)
 				.putBoolean("JustCreated", true);
 			itemData.remove("CollectingLight");
 			world.addFreshEntity(newEntity);

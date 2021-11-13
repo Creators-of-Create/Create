@@ -9,8 +9,6 @@ import net.minecraft.world.level.material.FluidState;
 
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-
 public class VirtualFluid extends SimpleFlowableFluid {
 
 	public VirtualFluid(Properties properties) {

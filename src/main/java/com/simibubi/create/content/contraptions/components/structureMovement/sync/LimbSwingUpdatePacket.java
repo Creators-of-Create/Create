@@ -4,13 +4,17 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
+import org.apache.http.util.EntityUtils;
+
 
 public class LimbSwingUpdatePacket extends SimplePacketBase {
 
@@ -49,7 +53,7 @@ public class LimbSwingUpdatePacket extends SimplePacketBase {
 				Entity entity = world.getEntity(entityId);
 				if (entity == null)
 					return;
-				CompoundTag data = entity.getPersistentData();
+				CompoundTag data = EntityHelper.getExtraCustomData(entity);
 				data.putInt("LastOverrideLimbSwingUpdate", 0);
 				data.putFloat("OverrideLimbSwing", limbSwing);
 				entity.lerpTo(position.x, position.y, position.z, entity.getYRot(),

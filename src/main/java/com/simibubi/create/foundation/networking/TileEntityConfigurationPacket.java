@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+
 
 public abstract class TileEntityConfigurationPacket<TE extends SyncedTileEntity> extends SimplePacketBase {
 

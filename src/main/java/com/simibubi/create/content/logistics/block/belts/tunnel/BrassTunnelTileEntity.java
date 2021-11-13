@@ -48,7 +48,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -748,7 +748,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		List<ItemStack> allStacks = grabAllStacksOfGroup(true);
 		if (allStacks.isEmpty())
 			return false;
-		
+
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("tooltip.brass_tunnel.contains"))
 			.withStyle(ChatFormatting.WHITE));
@@ -761,7 +761,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		tooltip.add(componentSpacing.plainCopy()
 			.append(Lang.translate("tooltip.brass_tunnel.retrieve"))
 			.withStyle(ChatFormatting.DARK_GRAY));
-		
+
 		return true;
 	}
 

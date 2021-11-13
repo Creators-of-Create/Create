@@ -29,7 +29,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.Constants.NBT;
+import com.simibubi.create.lib.utility.NBT;
 
 public class BeltInventory {
 
@@ -58,10 +58,10 @@ public class BeltInventory {
 			belt.setChanged();
 			belt.sendData();
 		}
-		
+
 		if (belt.getSpeed() == 0)
 			return;
-		
+
 		// Reverse item collection if belt just reversed
 		if (beltMovementPositive != belt.getDirectionAwareBeltMovementSpeed() > 0) {
 			beltMovementPositive = !beltMovementPositive;
@@ -107,7 +107,7 @@ public class BeltInventory {
 			// Don't move if held by processing (client)
 			if (world.isClientSide && currentItem.locked)
 				continue;
-			
+
 			// Don't move if held by external components
 			if (currentItem.lockedExternally) {
 				currentItem.lockedExternally = false;
@@ -442,5 +442,5 @@ public class BeltInventory {
 	public List<TransportedItemStack> getTransportedItems() {
 		return items;
 	}
-	
+
 }

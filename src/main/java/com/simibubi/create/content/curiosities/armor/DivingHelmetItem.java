@@ -29,7 +29,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 		boolean drowning = entity.getAirSupply() == 0;
 
 		if (world.isClientSide)
-			entity.getPersistentData()
+			EntityHelper.getExtraCustomData(entity)
 				.remove("VisualBacktankAir");
 
 		if (!AllItems.DIVING_HELMET.get()
@@ -50,7 +50,7 @@ public class DivingHelmetItem extends CopperArmorItem {
 			entity.setAirSupply(10);
 
 		if (world.isClientSide)
-			entity.getPersistentData()
+			EntityHelper.getExtraCustomData(entity)
 				.putInt("VisualBacktankAir", (int) BackTankUtil.getAir(backtank));
 
 		if (!second)

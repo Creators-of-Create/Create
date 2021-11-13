@@ -8,9 +8,6 @@ import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class CConfigureConfigPacket<T> extends SimplePacketBase {
 
@@ -38,7 +35,7 @@ public class CConfigureConfigPacket<T> extends SimplePacketBase {
 	}
 
 	@Override
-	public void handle(Supplier<NetworkEvent.Context> context) {
+	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			try {
 				ServerPlayer sender = context.get().getSender();

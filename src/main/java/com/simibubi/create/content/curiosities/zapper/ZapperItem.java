@@ -40,8 +40,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.DistExecutor;
+import com.simibubi.create.lib.utility.NBT;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public abstract class ZapperItem extends Item {
 
@@ -90,7 +90,7 @@ public abstract class ZapperItem extends Item {
 		if (context.getPlayer() != null && context.getPlayer()
 			.isShiftKeyDown()) {
 			if (context.getLevel().isClientSide) {
-				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 					openHandgunGUI(context.getItemInHand(), context.getHand());
 				});
 				context.getPlayer()
@@ -112,7 +112,7 @@ public abstract class ZapperItem extends Item {
 		// Shift -> Open GUI
 		if (player.isShiftKeyDown()) {
 			if (world.isClientSide) {
-				DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> {
+				EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> {
 					openHandgunGUI(item, hand);
 				});
 				player.getCooldowns()

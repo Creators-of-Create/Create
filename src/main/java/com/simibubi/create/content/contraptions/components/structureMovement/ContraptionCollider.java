@@ -50,7 +50,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class ContraptionCollider {
 
@@ -442,7 +442,7 @@ public class ContraptionCollider {
 		if (!entity.level.isClientSide)
 			return PlayerType.SERVER;
 		MutableBoolean isClient = new MutableBoolean(false);
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> isClient.setValue(isClientPlayerEntity(entity)));
 		return isClient.booleanValue() ? PlayerType.CLIENT : PlayerType.REMOTE;
 	}
 

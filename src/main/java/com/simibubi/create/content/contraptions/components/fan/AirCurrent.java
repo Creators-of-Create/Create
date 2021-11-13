@@ -42,7 +42,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class AirCurrent {
 
@@ -114,7 +114,7 @@ public class AirCurrent {
 
 			entity.setDeltaMovement(previousMotion.add(new Vec3(xIn, yIn, zIn).scale(1 / 8f)));
 			entity.fallDistance = 0;
-			DistExecutor.unsafeRunWhenOn(EnvType.CLIENT,
+			EnvExecutor.runWhenOn(EnvType.CLIENT,
 				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayer)

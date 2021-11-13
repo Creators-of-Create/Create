@@ -48,7 +48,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.DistExecutor;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 public class SchematicItem extends Item {
@@ -171,7 +171,7 @@ public class SchematicItem extends Item {
 		if (!player.getItemInHand(hand)
 			.hasTag())
 			return false;
-		DistExecutor.unsafeRunWhenOn(EnvType.CLIENT, () -> this::displayBlueprintScreen);
+		EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::displayBlueprintScreen);
 		return true;
 	}
 
