@@ -16,6 +16,11 @@ import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.networking.AllPackets;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
+import net.fabricmc.fabric.api.entity.EntityPickInteractionAware;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -66,11 +71,15 @@ public class ToolboxHandlerClient {
 			BlockState state = level.getBlockState(pos);
 			if (state.getMaterial() == Material.AIR)
 				return false;
-			result = state.getPickBlock(hitResult, level, pos, player);
+			if (state.getBlock() instanceof BlockPickInteractionAware aware) {
+				result = aware.getPickedStack(state, level, pos, player, hitResult);
+			}
 
 		} else if (hitResult.getType() == HitResult.Type.ENTITY) {
 			Entity entity = ((EntityHitResult) hitResult).getEntity();
-			result = entity.getPickedResult(hitResult);
+			if (entity instanceof EntityPickInteractionAware aware) {
+				result = aware.getPickedStack(player, hitResult);
+			}
 		}
 
 		if (result.isEmpty())
@@ -108,7 +117,7 @@ public class ToolboxHandlerClient {
 		Level level = player.level;
 
 		List<ToolboxTileEntity> toolboxes = ToolboxHandler.getNearest(player.level, player, 8);
-		CompoundTag compound = player.getPersistentData()
+		CompoundTag compound = EntityHelper.getExtraCustomData(player)
 			.getCompound("CreateToolboxData");
 
 		String slotKey = String.valueOf(player.getInventory().selected);
@@ -154,11 +163,11 @@ public class ToolboxHandlerClient {
 		RenderSystem.enableDepthTest();
 
 		Player player = Minecraft.getInstance().player;
-		CompoundTag persistentData = player.getPersistentData();
+		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
 		if (!persistentData.contains("CreateToolboxData"))
 			return;
 
-		CompoundTag compound = player.getPersistentData()
+		CompoundTag compound = EntityHelper.getExtraCustomData(player)
 			.getCompound("CreateToolboxData");
 
 		if (compound.isEmpty())

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
@@ -1101,7 +1102,7 @@ public abstract class Contraption {
 			if (!shouldUpdateAfterMovement(block))
 				continue;
 			BlockPos targetPos = transform.apply(block.pos);
-			world.markAndNotifyBlock(targetPos, world.getChunkAt(targetPos), block.state, block.state,
+			world.setBlock(targetPos, /*world.getChunkAt(targetPos), block.state, */block.state,
 				BlockFlags.IS_MOVING | BlockFlags.DEFAULT, 512);
 		}
 
@@ -1110,7 +1111,7 @@ public abstract class Contraption {
 				inventory.setStackInSlot(i, ItemStack.EMPTY);
 		}
 		for (int i = 0; i < fluidInventory.getTanks(); i++)
-			fluidInventory.drain(fluidInventory.getFluidInTank(i), FluidAction.EXECUTE);
+			fluidInventory.drain(fluidInventory.getFluidInTank(i), false);
 
 		for (Pair<BlockPos, Direction> pair : superglue) {
 			BlockPos targetPos = transform.apply(pair.getKey());

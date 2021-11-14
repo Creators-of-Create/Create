@@ -27,8 +27,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
 
 import org.jetbrains.annotations.Nullable;
 

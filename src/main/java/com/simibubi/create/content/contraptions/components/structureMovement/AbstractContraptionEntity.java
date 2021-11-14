@@ -10,6 +10,10 @@ import java.util.UUID;
 
 import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
+import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -35,6 +39,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -100,8 +105,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 			return;
 		contraption.getSeatMapping()
 			.put(passenger.getUUID(), seatIndex);
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
+		AllPackets.channel.sendToClientsTracking(
+			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()), this);
 	}
 
 	@Override
@@ -111,12 +116,12 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		if (level.isClientSide)
 			return;
 		if (transformedVector != null)
-			passenger.getPersistentData()
+			EntityHelper.getExtraCustomData(passenger)
 				.put("ContraptionDismountLocation", VecHelper.writeNBT(transformedVector));
 		contraption.getSeatMapping()
 			.remove(passenger.getUUID());
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()));
+		AllPackets.channel.sendToClientsTracking(
+			new ContraptionSeatMappingPacket(getId(), contraption.getSeatMapping()), this);
 	}
 
 	@Override
@@ -315,8 +320,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 	}
 
 	protected void onContraptionStalled() {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionStallPacket(getId(), getX(), getY(), getZ(), getStalledAngle()));
+		AllPackets.channel.sendToClientsTracking(
+			new ContraptionStallPacket(getId(), getX(), getY(), getZ(), getStalledAngle()), this);
 	}
 
 	protected boolean shouldActorTrigger(MovementContext context, StructureBlockInfo blockInfo, MovementBehaviour actor,
@@ -379,7 +384,7 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+		return new ClientboundAddEntityPacket(this, this == null ? 0 : getId());
 	}
 
 	@Override
@@ -449,8 +454,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		discard();
 
 		StructureTransform transform = makeStructureTransform();
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new ContraptionDisassemblyPacket(this.getId(), transform));
+		AllPackets.channel.sendToClientsTracking(
+			new ContraptionDisassemblyPacket(this.getId(), transform), this);
 
 		contraption.addBlocksToWorld(level, transform);
 		contraption.addPassengersToWorld(level, transform, getPassengers());
@@ -507,9 +512,9 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		super.outOfWorld();
 	}
 
-	@Override
+//	@Override
 	public void onRemovedFromWorld() {
-		super.onRemovedFromWorld();
+//		super.onRemovedFromWorld();
 		if (level != null && level.isClientSide)
 			return;
 		getPassengers().forEach(Entity::discard);
@@ -556,7 +561,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		for (Entity entity : passengers) {
 			// setPos has world accessing side-effects when removed == null
 			String srg = "f_146795_"; // removalReason
-			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
+			((EntityAccessor)entity).setRemovalReason(RemovalReason.UNLOADED_TO_CHUNK);
+//			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, RemovalReason.UNLOADED_TO_CHUNK, srg);
 
 			// Gather passengers into same chunk when saving
 			Vec3 prevVec = entity.position();
@@ -564,7 +570,8 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 
 			// Super requires all passengers to not be removed in order to write them to the
 			// tag
-			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
+			((EntityAccessor)entity).setRemovalReason(null);
+//			ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, null, srg);
 		}
 
 		CompoundTag tag = super.saveWithoutId(nbt);

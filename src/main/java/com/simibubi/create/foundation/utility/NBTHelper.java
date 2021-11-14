@@ -16,6 +16,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import com.simibubi.create.lib.utility.NBT;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class NBTHelper {
 
@@ -59,7 +60,7 @@ public class NBTHelper {
 	}
 
 	public static ListTag writeItemList(Iterable<ItemStack> stacks) {
-		return writeCompoundList(stacks, ItemStack::serializeNBT);
+		return writeCompoundList(stacks, NBTSerializer::serializeNBT);
 	}
 
 	public static List<ItemStack> readItemList(ListTag stacks) {

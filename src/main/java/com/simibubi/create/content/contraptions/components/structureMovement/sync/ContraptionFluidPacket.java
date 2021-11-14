@@ -9,8 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.fluids.FluidStack;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class ContraptionFluidPacket extends SimplePacketBase {
 
@@ -27,14 +27,14 @@ public class ContraptionFluidPacket extends SimplePacketBase {
 	public ContraptionFluidPacket(FriendlyByteBuf buffer) {
 		entityId = buffer.readInt();
 		localPos = buffer.readBlockPos();
-		containedFluid = FluidStack.readFromPacket(buffer);
+		containedFluid = FluidStack.fromBuffer(buffer);
 	}
 
 	@Override
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeInt(entityId);
 		buffer.writeBlockPos(localPos);
-		containedFluid.writeToPacket(buffer);
+		containedFluid.toBuffer(buffer);
 	}
 
 	@Override

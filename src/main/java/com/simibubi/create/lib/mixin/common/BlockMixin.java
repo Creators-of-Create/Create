@@ -30,7 +30,7 @@ public abstract class BlockMixin extends BlockBehaviour implements BlockExtensio
 	}
 
 	@Override
-	public int create$getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+	public int create$getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		return state.getLightEmission();
 	}
 }

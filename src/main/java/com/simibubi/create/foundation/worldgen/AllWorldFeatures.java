@@ -10,7 +10,10 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -62,16 +65,17 @@ public class AllWorldFeatures {
 			});
 	}
 
-	public static void reload(BiomeLoadingEvent event) {
+	public static BiomeGenerationSettings.Builder reload(ResourceLocation key, Biome.BiomeCategory category, BiomeGenerationSettings.Builder generation) {
 		entries.values()
 			.forEach(entry -> {
-				if (event.getName() == Biomes.THE_VOID.getRegistryName())
+				if (key == Biomes.THE_VOID.location()) // uhhh???
 					return;
-				if (event.getCategory() == BiomeCategory.NETHER)
+				if (category == BiomeCategory.NETHER)
 					return;
-				event.getGeneration()
+				generation
 					.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, entry.getFeature());
 			});
+		return generation;
 	}
 
 	public static void fillConfig(ForgeConfigSpec.Builder builder) {

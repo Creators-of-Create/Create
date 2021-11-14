@@ -48,7 +48,7 @@ public interface BlockExtensions {
 		return ((Block) this).getSoundType(state);
 	}
 
-	default int create$getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+	default int create$getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		return state.getLightEmission();
 	}
 

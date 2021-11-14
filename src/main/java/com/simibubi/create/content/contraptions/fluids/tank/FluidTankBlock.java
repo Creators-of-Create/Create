@@ -42,14 +42,17 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.ForgeSoundType;
-import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
-public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity> {
+import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.utility.LazyOptional;
+
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+
+public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankTileEntity>, BlockExtensions {
 
 	public static final BooleanProperty TOP = BooleanProperty.create("top");
 	public static final BooleanProperty BOTTOM = BooleanProperty.create("bottom");
@@ -92,7 +95,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 	}
 
 	@Override
-	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+	public int create$getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		FluidTankTileEntity tankAt = FluidTankConnectivityHandler.anyTankAt(world, pos);
 		if (tankAt == null)
 			return 0;
@@ -124,7 +127,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		if (te == null)
 			return InteractionResult.FAIL;
 
-		LazyOptional<IFluidHandler> tankCapability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> tankCapability = TransferUtil.getFluidHandler(te);
 		if (!tankCapability.isPresent())
 			return InteractionResult.PASS;
 		IFluidHandler fluidTank = tankCapability.orElse(null);
@@ -146,7 +149,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 		SoundEvent soundevent = null;
 		BlockState fluidState = null;
 		FluidStack fluidInTank = tankCapability.map(fh -> fh.getFluidInTank(0))
-			.orElse(FluidStack.EMPTY);
+			.orElse(FluidStack.empty());
 
 		if (exchange == FluidExchange.ITEM_TO_TANK) {
 			if (creative && !onClient) {
@@ -159,25 +162,25 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			Fluid fluid = fluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()
 				.createLegacyBlock();
-			FluidAttributes attributes = fluid.getAttributes();
-			soundevent = attributes.getEmptySound();
-			if (soundevent == null)
+//			FluidAttributes attributes = fluid.getAttributes();
+//			soundevent = attributes.getEmptySound();
+//			if (soundevent == null)
 				soundevent =
 					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 		}
 		if (exchange == FluidExchange.TANK_TO_ITEM) {
 			if (creative && !onClient)
 				if (fluidTank instanceof CreativeSmartFluidTank)
-					((CreativeSmartFluidTank) fluidTank).setContainedFluid(FluidStack.EMPTY);
+					((CreativeSmartFluidTank) fluidTank).setContainedFluid(FluidStack.empty());
 
 			Fluid fluid = prevFluidInTank.getFluid();
 			fluidState = fluid.defaultFluidState()
 				.createLegacyBlock();
-			soundevent = fluid.getAttributes()
-				.getFillSound();
-			if (soundevent == null)
-				soundevent =
-					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
+//			soundevent = fluid.getAttributes()
+//				.getFillSound();
+//			if (soundevent == null)
+//				soundevent =
+//					fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
 		}
 
 		if (soundevent != null && !onClient) {
@@ -189,7 +192,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 			world.playSound(null, pos, soundevent, SoundSource.BLOCKS, .5f, pitch);
 		}
 
-		if (!fluidInTank.isFluidStackIdentical(prevFluidInTank)) {
+		if (!fluidInTank.isFluidEqual(prevFluidInTank)) {
 			if (te instanceof FluidTankTileEntity) {
 				FluidTankTileEntity controllerTE = ((FluidTankTileEntity) te).getControllerTE();
 				if (controllerTE != null) {
@@ -197,9 +200,7 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 						BlockParticleOption blockParticleData = new BlockParticleOption(ParticleTypes.BLOCK, fluidState);
 						float level = (float) fluidInTank.getAmount() / fluidTank.getTankCapacity(0);
 
-						boolean reversed = fluidInTank.getFluid()
-							.getAttributes()
-							.isLighterThanAir();
+						boolean reversed = FluidVariantRendering.fillsFromTop(fluidInTank.getType());
 						if (reversed)
 							level = 1 - level;
 
@@ -297,12 +298,12 @@ public class FluidTankBlock extends Block implements IWrenchable, ITE<FluidTankT
 
 	// Tanks are less noisy when placed in batch
 	public static final SoundType SILENCED_METAL =
-		new ForgeSoundType(0.1F, 1.5F, () -> SoundEvents.METAL_BREAK, () -> SoundEvents.METAL_STEP,
-			() -> SoundEvents.METAL_PLACE, () -> SoundEvents.METAL_HIT, () -> SoundEvents.METAL_FALL);
+		new SoundType(0.1F, 1.5F, SoundEvents.METAL_BREAK, SoundEvents.METAL_STEP,
+			SoundEvents.METAL_PLACE, SoundEvents.METAL_HIT, SoundEvents.METAL_FALL);
 
 	@Override
-	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
-		SoundType soundType = super.getSoundType(state, world, pos, entity);
+	public SoundType create$getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+		SoundType soundType = ((BlockExtensions) this).create$getSoundType(state, world, pos, entity);
 		if (entity != null && EntityHelper.getExtraCustomData(entity)
 			.contains("SilenceTankSound"))
 			return SILENCED_METAL;

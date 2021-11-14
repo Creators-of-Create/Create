@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import javax.annotation.Nonnull;
-
 import com.simibubi.create.AllParticleTypes;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.contraptions.components.mixer.MechanicalMixerTileEntity;
@@ -57,13 +55,18 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
+import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.utility.NBTSerializer;
+
+import org.jetbrains.annotations.Nullable;
 
 public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInformation, FluidTransferable, ItemTransferable {
 
@@ -325,7 +328,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.orElse(inserter == null ? null : inserter.getInventory());
 
 		IFluidHandler targetTank = te == null ? null
-			: te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())
+			: TransferUtil.getFluidHandler(te, direction.getOpposite())
 				.orElse(null);
 
 		boolean update = false;
@@ -367,10 +370,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				break;
 
 			for (boolean simulate : Iterate.trueAndFalse) {
-				FluidAction action = simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE;
-				int fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
-					? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), action)
-					: targetTank.fill(fluidStack.copy(), action);
+				long fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
+						? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), simulate)
+					: targetTank.fill(fluidStack.copy(), simulate);
 				if (fill != fluidStack.getAmount())
 					break;
 				if (simulate)
@@ -466,10 +468,10 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			InvManipulationBehaviour inserter =
 				te == null ? null : TileEntityBehaviour.get(level, te.getBlockPos(), InvManipulationBehaviour.TYPE);
 			IItemHandler targetInv = te == null ? null
-				: te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())
+				: TransferUtil.getItemHandler(te, direction.getOpposite())
 					.orElse(inserter == null ? null : inserter.getInventory());
 			IFluidHandler targetTank = te == null ? null
-				: te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())
+				: TransferUtil.getFluidHandler(te, direction.getOpposite())
 					.orElse(null);
 			if (!outputItems.isEmpty() && targetInv == null)
 				return false;
@@ -479,7 +481,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {
-				if (itemStack.hasContainerItem() && itemStack.getContainerItem()
+				IFluidHandlerItem handler = TransferUtil.getFluidHandlerItem(itemStack, getWorld()).getValueUnsafer();
+				if (handler != null && handler.getContainer()
 					.sameItem(itemStack))
 					continue;
 				spoutputBuffer.add(itemStack.copy());
@@ -498,8 +501,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 		for (ItemStack itemStack : outputItems) {
 			// Catalyst items are never consumed
-			if (itemStack.hasContainerItem() && itemStack.getContainerItem()
-				.sameItem(itemStack))
+			if (itemStack.getItem().hasCraftingRemainingItem() && itemStack.getItem().getCraftingRemainingItem()
+				.equals(itemStack.getItem()))
 				continue;
 			if (!ItemHandlerHelper.insertItemStacked(targetInv, itemStack.copy(), simulate)
 				.isEmpty())
@@ -512,10 +515,9 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			return false;
 
 		for (FluidStack fluidStack : outputFluids) {
-			FluidAction action = simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE;
-			int fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
-				? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), action)
-				: targetTank.fill(fluidStack.copy(), action);
+			long fill = targetTank instanceof SmartFluidTankBehaviour.InternalFluidHandler
+				? ((SmartFluidTankBehaviour.InternalFluidHandler) targetTank).forceFill(fluidStack.copy(), simulate)
+				: targetTank.fill(fluidStack.copy(), simulate);
 			if (fill != fluidStack.getAmount())
 				return false;
 		}
@@ -524,8 +526,8 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	public void readOnlyItems(CompoundTag compound) {
-		inputInventory.deserializeNBT(compound.getCompound("InputItems"));
-		outputInventory.deserializeNBT(compound.getCompound("OutputItems"));
+		inputInventory.create$deserializeNBT(compound.getCompound("InputItems"));
+		outputInventory.create$deserializeNBT(compound.getCompound("OutputItems"));
 	}
 
 	public static HeatLevel getHeatLevelOf(BlockState state) {
@@ -659,7 +661,19 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+				TransferUtil.getFluidHandler(this));
+	}
+
+	@Override
+	@Nullable
+	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+		return fluidCapability.orElse(null);
+	}
+
+	@Override
+	@Nullable
+	public IItemHandler getItemHandler(Direction direction) {
+		return itemCapability.getValueUnsafer();
 	}
 
 	class BasinValueBox extends ValueBoxTransform.Sided {

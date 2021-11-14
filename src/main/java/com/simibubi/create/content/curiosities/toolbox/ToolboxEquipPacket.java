@@ -3,6 +3,8 @@ package com.simibubi.create.content.curiosities.toolbox;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -12,8 +14,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ToolboxEquipPacket extends SimplePacketBase {
 
@@ -87,7 +87,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 				});
 			}
 
-			CompoundTag compound = player.getPersistentData()
+			CompoundTag compound = EntityHelper.getExtraCustomData(player)
 				.getCompound("CreateToolboxData");
 			String key = String.valueOf(hotbarSlot);
 
@@ -96,7 +96,7 @@ public class ToolboxEquipPacket extends SimplePacketBase {
 			data.put("Pos", NbtUtils.writeBlockPos(toolboxPos));
 			compound.put(key, data);
 
-			player.getPersistentData()
+			EntityHelper.getExtraCustomData(player)
 				.put("CreateToolboxData", compound);
 
 			toolboxTileEntity.connectPlayer(slot, player, hotbarSlot);

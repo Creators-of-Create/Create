@@ -2,6 +2,9 @@ package com.simibubi.create.foundation.tileEntity.behaviour.fluid;
 
 import java.util.function.Consumer;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.simibubi.create.foundation.fluid.CombinedTankWrapper;
@@ -17,8 +20,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 
@@ -198,28 +199,28 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 		}
 
 		@Override
-		public int fill(FluidStack resource, FluidAction action) {
+		public long fill(FluidStack resource, boolean sim) {
 			if (!insertionAllowed)
 				return 0;
-			return super.fill(resource, action);
+			return super.fill(resource, sim);
 		}
 
-		public int forceFill(FluidStack resource, FluidAction action) {
-			return super.fill(resource, action);
-		}
-
-		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
-			if (!extractionAllowed)
-				return FluidStack.EMPTY;
-			return super.drain(resource, action);
+		public long forceFill(FluidStack resource, boolean sim) {
+			return super.fill(resource, sim);
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
+		public FluidStack drain(FluidStack resource, boolean sim) {
 			if (!extractionAllowed)
-				return FluidStack.EMPTY;
-			return super.drain(maxDrain, action);
+				return FluidStack.empty();
+			return super.drain(resource, sim);
+		}
+
+		@Override
+		public FluidStack drain(long maxDrain, boolean sim) {
+			if (!extractionAllowed)
+				return FluidStack.empty();
+			return super.drain(maxDrain, sim);
 		}
 
 	}
@@ -235,7 +236,7 @@ public class SmartFluidTankBehaviour extends TileEntityBehaviour {
 			fluidLevel = LerpedFloat.linear()
 				.startWithValue(0)
 				.chase(0, .25, Chaser.EXP);
-			renderedFluid = FluidStack.EMPTY;
+			renderedFluid = FluidStack.empty();
 		}
 
 		public void onFluidStackChanged() {

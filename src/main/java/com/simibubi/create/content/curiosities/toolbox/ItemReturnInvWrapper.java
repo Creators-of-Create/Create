@@ -2,7 +2,8 @@ package com.simibubi.create.content.curiosities.toolbox;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.wrapper.InvWrapper;
+
+import com.simibubi.create.lib.transfer.item.InvWrapper;
 
 /**
  * For inserting items into a players' inventory anywhere except the hotbar
