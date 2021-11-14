@@ -1,33 +1,48 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import javax.annotation.Nullable;
-
-import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.Recipe;
 
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
 
-public class DeployerRecipeSearchEvent extends Event {
+import java.util.Optional;
+import java.util.function.Supplier;
+
+public class DeployerRecipeSearchEvent {
+	private boolean canceled = false;
 	private final DeployerTileEntity tileEntity;
 	private final RecipeWrapper inventory;
 	@Nullable
 	Recipe<? extends Container> recipe = null;
 	private int maxPriority = 0;
 
+	public static final Event<DeployerRecipeSearchCallback> EVENT = EventFactory.createArrayBacked(DeployerRecipeSearchCallback.class, callbacks -> (event) -> {
+		for (DeployerRecipeSearchCallback callback : callbacks) {
+			callback.handle(event);
+		}
+	});
+
+	@FunctionalInterface
+	public interface DeployerRecipeSearchCallback {
+		void handle(DeployerRecipeSearchEvent event);
+	}
+
 	public DeployerRecipeSearchEvent(DeployerTileEntity tileEntity, RecipeWrapper inventory) {
 		this.tileEntity = tileEntity;
 		this.inventory = inventory;
 	}
 
-	@Override
-	public boolean isCancelable() {
-		return true;
+//	@Override
+//	public boolean isCancelable() {
+//		return true;
+//	}
+
+	public void cancel() {
+		canceled = true;
 	}
 
 	public DeployerTileEntity getTileEntity() {
@@ -40,12 +55,12 @@ public class DeployerRecipeSearchEvent extends Event {
 
 	// lazyness to not scan for recipes that aren't selected
 	public boolean shouldAddRecipeWithPriority(int priority) {
-		return !isCanceled() && priority > maxPriority;
+		return !canceled && priority > maxPriority;
 	}
 
 	@Nullable
 	public Recipe<? extends Container> getRecipe() {
-		if (isCanceled())
+		if (canceled)
 			return null;
 		return recipe;
 	}

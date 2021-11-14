@@ -3,6 +3,7 @@ package com.simibubi.create.lib.transfer.item;
 import java.util.Arrays;
 
 import com.simibubi.create.lib.utility.Constants;
+import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.NBTSerializable;
 
 import net.minecraft.nbt.CompoundTag;
@@ -141,7 +142,7 @@ public class ItemStackHandler implements IItemHandlerModifiable, NBTSerializable
 	public void create$deserializeNBT(CompoundTag nbt) {
 		int size = nbt.getInt("Size");
 		setSize(size);
-		ListTag tagList = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
+		ListTag tagList = nbt.getList("Items", NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.size(); i++) {
 			CompoundTag itemTags = tagList.getCompound(i);
 			int slot = itemTags.getInt("Slot");

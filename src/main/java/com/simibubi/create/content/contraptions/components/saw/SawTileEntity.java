@@ -61,12 +61,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
+import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -110,7 +114,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 
 		if (!clientPacket || playEvent.isEmpty())
 			return;
-		compound.put("PlayEvent", playEvent.serializeNBT());
+		compound.put("PlayEvent", NBTSerializer.serializeNBT(playEvent));
 		playEvent = ItemStack.EMPTY;
 	}
 
@@ -141,7 +145,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 			Item item = playEvent.getItem();
 			if (item instanceof BlockItem) {
 				Block block = ((BlockItem) item).getBlock();
-				isWood = block.getSoundType(block.defaultBlockState(), level, worldPosition, null) == SoundType.WOOD;
+				isWood = ((BlockExtensions)block).create$getSoundType(block.defaultBlockState(), level, worldPosition, null) == SoundType.WOOD;
 			}
 			spawnEventParticles(playEvent);
 			playEvent = ItemStack.EMPTY;
@@ -223,7 +227,7 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 				if (stack.isEmpty())
 					continue;
 				ItemStack remainder = behaviour.handleInsertion(stack, itemMovementFacing, false);
-				if (remainder.equals(stack, false))
+				if (ItemStackUtil.equals(remainder, stack, false))
 					continue;
 				inventory.setStackInSlot(slot, remainder);
 				changed = true;
@@ -261,12 +265,12 @@ public class SawTileEntity extends BlockBreakingKineticTileEntity {
 		super.setRemoved();
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.DOWN)
-			return invProvider.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != Direction.DOWN)
+//			return invProvider.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	protected void spawnEventParticles(ItemStack stack) {
 		if (stack == null || stack.isEmpty())

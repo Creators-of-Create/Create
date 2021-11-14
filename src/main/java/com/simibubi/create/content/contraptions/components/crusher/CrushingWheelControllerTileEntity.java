@@ -38,14 +38,18 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
+import com.simibubi.create.lib.utility.ItemStackUtil;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 
@@ -159,7 +163,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 						if (stack.isEmpty())
 							continue;
 						ItemStack remainder = behaviour.handleInsertion(stack, facing, false);
-						if (remainder.equals(stack, false))
+						if (ItemStackUtil.equals(remainder, stack, false))
 							continue;
 						inventory.setStackInSlot(slot, remainder);
 						changed = true;
@@ -179,7 +183,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 					continue;
 				ItemEntity entityIn = new ItemEntity(level, outPos.x, outPos.y, outPos.z, stack);
 				entityIn.setDeltaMovement(outSpeed);
-				entityIn.getPersistentData()
+				EntityHelper.getExtraCustomData(entityIn)
 					.put("BypassCrushingWheel", NbtUtils.writeBlockPos(worldPosition));
 				level.addFreshEntity(entityIn);
 			}
@@ -353,12 +357,12 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 		inventory.appliedRecipe = false;
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return handler.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//			return handler.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	public void clear() {
 		processingEntity = null;

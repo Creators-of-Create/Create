@@ -26,14 +26,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+import com.simibubi.create.lib.utility.LazyOptional;
+
+import org.jetbrains.annotations.Nullable;
+
+public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleInformation, FluidTransferable, ItemTransferable {
 
 	public static final int FILLING_TIME = 20;
 
@@ -219,7 +224,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (processingTicks > 5) {
 			internalTank.allowInsertion();
 			if (internalTank.getPrimaryHandler()
-				.fill(fluidFromItem, FluidAction.SIMULATE) != fluidFromItem.getAmount()) {
+				.fill(fluidFromItem, true) != fluidFromItem.getAmount()) {
 				internalTank.forbidInsertion();
 				processingTicks = FILLING_TIME;
 				return true;
@@ -239,7 +244,7 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 			heldItem = null;
 		internalTank.allowInsertion();
 		internalTank.getPrimaryHandler()
-			.fill(fluidFromItem, FluidAction.EXECUTE);
+			.fill(fluidFromItem, false);
 		internalTank.forbidInsertion();
 		notifyUpdate();
 		return true;
@@ -278,23 +283,41 @@ public class ItemDrainTileEntity extends SmartTileEntity implements IHaveGoggleI
 		super.fromTag(compound, clientPacket);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (side != null && side.getAxis()
-			.isHorizontal() && isItemHandlerCap(cap))
-			return itemHandlers.get(side)
-				.cast();
-
-		if (side != Direction.UP && isFluidHandlerCap(cap))
-			return internalTank.getCapability()
-				.cast();
-
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (side != null && side.getAxis()
+//			.isHorizontal() && isItemHandlerCap(cap))
+//			return itemHandlers.get(side)
+//				.cast();
+//
+//		if (side != Direction.UP && isFluidHandlerCap(cap))
+//			return internalTank.getCapability()
+//				.cast();
+//
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-		return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+		return containedFluidTooltip(tooltip, isPlayerSneaking, TransferUtil.getFluidHandler(this));
+	}
+
+	@Nullable
+	@Override
+	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+		if (direction != Direction.UP) {
+			return internalTank.getCapability().getValueUnsafer();
+		}
+		return null;
+	}
+
+	@Nullable
+	@Override
+	public IItemHandler getItemHandler(@Nullable Direction direction) {
+		if (direction != null && direction.getAxis().isHorizontal()) {
+			return itemHandlers.get(direction).getValueUnsafer();
+		}
+		return null;
 	}
 
 }

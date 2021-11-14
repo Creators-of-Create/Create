@@ -10,7 +10,15 @@ import com.simibubi.create.foundation.sound.SoundScapes.AmbienceGroup;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+import com.simibubi.create.lib.utility.LazyOptional;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -22,15 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
-import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class MillstoneTileEntity extends KineticTileEntity {
 
@@ -174,12 +173,12 @@ public class MillstoneTileEntity extends KineticTileEntity {
 		return Mth.clamp((int) Math.abs(getSpeed() / 16f), 1, 512);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return capability.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap))
+//			return capability.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	private boolean canProcess(ItemStack stack) {
 		ItemStackHandler tester = new ItemStackHandler(1);

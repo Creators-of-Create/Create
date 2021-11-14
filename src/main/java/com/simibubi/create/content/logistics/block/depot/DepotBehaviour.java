@@ -32,11 +32,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+
+import com.simibubi.create.lib.utility.ItemStackUtil;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class DepotBehaviour extends TileEntityBehaviour {
 
@@ -128,7 +130,7 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		}
 
 		heldItem.locked = result == ProcessingResult.HOLD;
-		if (heldItem.locked != wasLocked || !previousItem.equals(heldItem.stack, false))
+		if (heldItem.locked != wasLocked || !ItemStackUtil.equals(previousItem, heldItem.stack, false))
 			tileEntity.sendData();
 	}
 
@@ -303,9 +305,9 @@ public class DepotBehaviour extends TileEntityBehaviour {
 		this.heldItem.prevBeltPosition = 0.5f;
 	}
 
-	public <T> LazyOptional<T> getItemCapability(Capability<T> cap, Direction side) {
-		return lazyItemHandler.cast();
-	}
+//	public <T> LazyOptional<T> getItemCapability(Capability<T> cap, Direction side) {
+//		return lazyItemHandler.cast();
+//	}
 
 	private ItemStack tryInsertingFromSide(TransportedItemStack transportedStack, Direction side, boolean simulate) {
 		ItemStack inserted = transportedStack.stack;

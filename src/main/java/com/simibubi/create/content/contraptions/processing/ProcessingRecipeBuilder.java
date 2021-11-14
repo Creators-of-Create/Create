@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -21,17 +22,16 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
-import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.fluids.FluidStack;
+
+import com.simibubi.create.lib.condition.ModLoadedCondition;
+import com.simibubi.create.lib.condition.NotCondition;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	protected ProcessingRecipeFactory<T> factory;
 	protected ProcessingRecipeParams params;
-	protected List<ICondition> recipeConditions;
+	protected List<Condition> recipeConditions;
 
 	public ProcessingRecipeBuilder(ProcessingRecipeFactory<T> factory, ResourceLocation recipeId) {
 		params = new ProcessingRecipeParams(recipeId);
@@ -71,7 +71,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 	}
 
 	public ProcessingRecipeBuilder<T> withFluidOutputs(FluidStack... outputs) {
-		return withFluidOutputs(NonNullList.of(FluidStack.EMPTY, outputs));
+		return withFluidOutputs(NonNullList.of(FluidStack.empty(), outputs));
 	}
 
 	public ProcessingRecipeBuilder<T> withFluidOutputs(NonNullList<FluidStack> outputs) {
@@ -179,7 +179,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		return withCondition(new NotCondition(new ModLoadedCondition(modid)));
 	}
 
-	public ProcessingRecipeBuilder<T> withCondition(ICondition condition) {
+	public ProcessingRecipeBuilder<T> withCondition(Condition condition) {
 		recipeConditions.add(condition);
 		return this;
 	}
@@ -219,7 +219,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 		private S recipe;
 
 		@SuppressWarnings("unchecked")
-		public DataGenResult(S recipe, List<ICondition> recipeConditions) {
+		public DataGenResult(S recipe, List<Condition> recipeConditions) {
 			this.recipe = recipe;
 			this.recipeConditions = recipeConditions;
 			IRecipeTypeInfo recipeType = this.recipe.getTypeInfo();

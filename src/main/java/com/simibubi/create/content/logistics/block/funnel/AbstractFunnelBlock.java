@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IBlockRenderProperties;
 
 public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTileEntity>, IWrenchable {
 
@@ -42,10 +41,10 @@ public abstract class AbstractFunnelBlock extends Block implements ITE<FunnelTil
 		registerDefaultState(defaultBlockState().setValue(POWERED, false));
 	}
 
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new ReducedDestroyEffects());
-	}
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+//		consumer.accept(new ReducedDestroyEffects());
+//	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {

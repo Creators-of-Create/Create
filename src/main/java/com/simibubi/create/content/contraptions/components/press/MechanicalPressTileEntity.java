@@ -44,10 +44,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.utility.NBT;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
@@ -104,7 +104,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 		super.write(compound, clientPacket);
 
 		if (clientPacket) {
-			compound.put("ParticleItems", NBTHelper.writeCompoundList(pressedItems, ItemStack::serializeNBT));
+			compound.put("ParticleItems", NBTHelper.writeCompoundList(pressedItems, NBTSerializer::serializeNBT));
 			pressedItems.clear();
 		}
 	}

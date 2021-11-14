@@ -8,13 +8,13 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe.SandPaperInv;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
 public class SandPaperPolishingRecipe extends ProcessingRecipe<SandPaperInv> {

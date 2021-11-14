@@ -7,6 +7,7 @@ import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.tileEntity.ComparatorUtil;
+import com.simibubi.create.lib.transfer.TransferUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainTileEntity> {
 
@@ -39,7 +39,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		ItemStack heldItem = player.getItemInHand(handIn);
 
 		if (heldItem.getItem() instanceof BlockItem
-			&& !heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+			&& !TransferUtil.getFluidHandlerItem(heldItem, worldIn)
 				.isPresent())
 			return InteractionResult.PASS;
 
@@ -93,7 +93,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 	public Class<ItemDrainTileEntity> getTileEntityClass() {
 		return ItemDrainTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ItemDrainTileEntity> getTileEntityType() {
 		return AllTileEntities.ITEM_DRAIN.get();

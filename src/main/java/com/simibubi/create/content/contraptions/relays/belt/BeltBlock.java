@@ -3,7 +3,6 @@ package com.simibubi.create.content.contraptions.relays.belt;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
@@ -24,10 +23,16 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.advancement.AllTriggers;
 import com.simibubi.create.foundation.block.ITE;
-import com.simibubi.create.foundation.block.render.ReducedDestroyEffects;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemStackHandlerBehaviour.TransportedResult;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
+import com.simibubi.create.lib.data.Tags;
+import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.utility.TagUtil;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -43,7 +48,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
@@ -73,14 +77,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IBlockRenderProperties;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
-public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement {
+public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEntity>, ISpecialBlockItemRequirement,
+		BlockPickInteractionAware, CustomPathNodeTypeBlock, BlockExtensions {
 
 	public static final Property<BeltSlope> SLOPE = EnumProperty.create("slope", BeltSlope.class);
 	public static final Property<BeltPart> PART = EnumProperty.create("part", BeltPart.class);
@@ -93,10 +92,10 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			.setValue(CASING, false));
 	}
 
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new ReducedDestroyEffects());
-	}
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+//		consumer.accept(new ReducedDestroyEffects());
+//	}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_149666_1_, NonNullList<ItemStack> p_149666_2_) {
@@ -127,7 +126,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter world, BlockPos pos, Player player, HitResult target) {
 		return AllItems.BELT_CONNECTOR.asStack();
 	}
 
@@ -152,7 +151,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 	}
 
 	@Override
-	public boolean isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
+	public boolean create$isFlammable(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return false;
 	}
 
@@ -204,7 +203,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 				return;
 			withTileEntityDo(worldIn, pos, te -> {
 				ItemEntity itemEntity = (ItemEntity) entityIn;
-				IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+				IItemHandler handler = TransferUtil.getItemHandler(te)
 					.orElse(null);
 				if (handler == null)
 					return;
@@ -255,7 +254,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 
 		if (isDye || hasWater) {
 			if (!world.isClientSide)
-				withTileEntityDo(world, pos, te -> te.applyColor(DyeColor.getColor(heldItem)));
+				withTileEntityDo(world, pos, te -> te.applyColor(TagUtil.getColorFromStack(heldItem)));
 			return InteractionResult.SUCCESS;
 		}
 
@@ -413,7 +412,7 @@ public class BeltBlock extends HorizontalKineticBlock implements ITE<BeltTileEnt
 			BlockPos nextSegmentPosition = nextSegmentPosition(currentState, currentPos, false);
 			if (nextSegmentPosition == null)
 				break;
-			if (!world.isAreaLoaded(nextSegmentPosition, 0))
+			if (!world.hasChunksAt(nextSegmentPosition, nextSegmentPosition))
 				return;
 			currentPos = nextSegmentPosition;
 		}

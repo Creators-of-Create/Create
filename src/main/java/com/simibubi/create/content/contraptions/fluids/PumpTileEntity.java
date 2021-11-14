@@ -11,6 +11,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
@@ -32,8 +37,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class PumpTileEntity extends KineticTileEntity {
 
@@ -152,7 +155,7 @@ public class PumpTileEntity extends KineticTileEntity {
 				int distance = entry.getFirst();
 				BlockPos currentPos = entry.getSecond();
 
-				if (!level.isAreaLoaded(currentPos, 0))
+				if (!LoadedCheckUtil.isAreaLoaded(level, currentPos, 0))
 					continue;
 				if (visited.contains(currentPos))
 					continue;
@@ -166,7 +169,7 @@ public class PumpTileEntity extends KineticTileEntity {
 					BlockFace blockFace = new BlockFace(currentPos, face);
 					BlockPos connectedPos = blockFace.getConnectedPos();
 
-					if (!level.isAreaLoaded(connectedPos, 0))
+					if (!LoadedCheckUtil.isAreaLoaded(level, connectedPos, 0))
 						continue;
 					if (blockFace.isEquivalent(start))
 						continue;
@@ -295,7 +298,7 @@ public class PumpTileEntity extends KineticTileEntity {
 		// fluid handler endpoint
 		if (tileEntity != null) {
 			LazyOptional<IFluidHandler> capability =
-				tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face.getOpposite());
+					TransferUtil.getFluidHandler(tileEntity, face.getOpposite());
 			if (capability.isPresent())
 				return true;
 		}

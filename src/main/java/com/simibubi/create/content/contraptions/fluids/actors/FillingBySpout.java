@@ -10,6 +10,12 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;

@@ -6,12 +6,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class DepotTileEntity extends SmartTileEntity {
 
@@ -27,10 +23,10 @@ public class DepotTileEntity extends SmartTileEntity {
 		depotBehaviour.addSubBehaviours(behaviours);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return depotBehaviour.getItemCapability(cap, side);
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//			return depotBehaviour.getItemCapability(cap, side);
+//		return super.getCapability(cap, side);
+//	}
 }

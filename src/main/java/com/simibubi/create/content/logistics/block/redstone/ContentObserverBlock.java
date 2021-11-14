@@ -14,6 +14,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,11 +34,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
 
@@ -163,7 +160,7 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	public Class<ContentObserverTileEntity> getTileEntityClass() {
 		return ContentObserverTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends ContentObserverTileEntity> getTileEntityType() {
 		return AllTileEntities.CONTENT_OBSERVER.get();

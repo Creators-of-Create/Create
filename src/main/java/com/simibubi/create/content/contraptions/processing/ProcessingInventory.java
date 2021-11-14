@@ -4,7 +4,9 @@ import java.util.function.Consumer;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.utility.ItemStackUtil;
 
 public class ProcessingInventory extends ItemStackHandler {
 	public float remainingTime;
@@ -17,12 +19,12 @@ public class ProcessingInventory extends ItemStackHandler {
 		super(16);
 		this.callback = callback;
 	}
-	
+
 	public ProcessingInventory withSlotLimit(boolean limit) {
 		this.limit = limit;
 		return this;
 	}
-	
+
 	@Override
 	public int getSlotLimit(int slot) {
 		return !limit ? super.getSlotLimit(slot) : 1;
@@ -46,7 +48,7 @@ public class ProcessingInventory extends ItemStackHandler {
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		ItemStack insertItem = super.insertItem(slot, stack, simulate);
-		if (slot == 0 && !insertItem.equals(stack, true))
+		if (slot == 0 && !ItemStackUtil.equals(insertItem, stack, true))
 			callback.accept(getStackInSlot(slot));
 		return insertItem;
 	}

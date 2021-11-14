@@ -1,7 +1,8 @@
 package com.simibubi.create.content.contraptions.relays.belt.transport;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class ItemHandlerBeltSegment implements IItemHandler {
 

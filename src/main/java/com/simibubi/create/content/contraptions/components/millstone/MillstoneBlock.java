@@ -26,11 +26,12 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEntity>, ICogWheel {
 
@@ -105,7 +106,7 @@ public class MillstoneBlock extends KineticBlock implements ITE<MillstoneTileEnt
 			return;
 
 		ItemEntity itemEntity = (ItemEntity) entityIn;
-		LazyOptional<IItemHandler> capability = millstone.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = TransferUtil.getItemHandler(millstone);
 		if (!capability.isPresent())
 			return;
 

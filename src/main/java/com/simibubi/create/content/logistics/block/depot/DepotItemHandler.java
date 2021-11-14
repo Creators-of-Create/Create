@@ -3,7 +3,8 @@ package com.simibubi.create.content.logistics.block.depot;
 import com.simibubi.create.content.contraptions.relays.belt.transport.TransportedItemStack;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class DepotItemHandler implements IItemHandler {
 

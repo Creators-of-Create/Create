@@ -39,9 +39,11 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.utility.Constants.BlockFlags;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.util.Constants.BlockFlags;
 
 public class BeltSlicer {
 
@@ -170,14 +172,14 @@ public class BeltSlicer {
 					if (itemstack.isEmpty())
 						continue;
 					int count = itemstack.getCount();
-					
+
 					if (AllItems.BELT_CONNECTOR.isIn(itemstack)) {
 						if (!world.isClientSide)
 							itemstack.shrink(1);
 						beltFound = true;
 						continue;
 					}
-					
+
 					if (AllBlocks.SHAFT.isIn(itemstack)) {
 						int taken = Math.min(count, requiredShafts - amountRetrieved);
 						if (!world.isClientSide)

@@ -13,6 +13,10 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.utility.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -125,11 +129,11 @@ public class GenericItemFilling {
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
-			split.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				TransferUtil.getFluidHandlerItem(split, world);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return ItemStack.EMPTY;
-		tank.fill(toFill, FluidAction.EXECUTE);
+		tank.fill(toFill, false);
 		ItemStack container = tank.getContainer()
 			.copy();
 		stack.shrink(1);

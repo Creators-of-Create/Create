@@ -2,6 +2,9 @@ package com.simibubi.create.content.contraptions.components.crusher;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.helper.DamageSourceHelper;
+
+import java.util.Collection;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -11,15 +14,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LootingLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class CrushingWheelTileEntity extends KineticTileEntity {
 
-	public static DamageSource damageSource = new DamageSource("create.crush").bypassArmor()
+	public static DamageSource damageSource = DamageSourceHelper.create$createArmorBypassingDamageSource("create.crush")
 			.setScalesWithDifficulty();
 
 	public CrushingWheelTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -50,21 +48,20 @@ public class CrushingWheelTileEntity extends KineticTileEntity {
 		fixControllers();
 	}
 
-	@SubscribeEvent
-	public static void crushingIsFortunate(LootingLevelEvent event) {
-		if (event.getDamageSource() != damageSource)
-			return;
-		event.setLootingLevel(2);		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
+	public static int crushingIsFortunate(DamageSource source) {
+		if (source != damageSource)
+			return 0;
+		return 2;		//This does not currently increase mob drops. It seems like this only works for damage done by an entity.
 	}
 
-	@SubscribeEvent
-	public static void handleCrushedMobDrops(LivingDropsEvent event) {
-		if (event.getSource() != CrushingWheelTileEntity.damageSource)
-			return;
+	public static boolean handleCrushedMobDrops(DamageSource source, Collection<ItemEntity> drops) {
+		if (source != CrushingWheelTileEntity.damageSource)
+			return false;
 		Vec3 outSpeed = Vec3.ZERO;
-		for (ItemEntity outputItem : event.getDrops()) {
+		for (ItemEntity outputItem : drops) {
 			outputItem.setDeltaMovement(outSpeed);
 		}
+		return false;
 	}
 
 }

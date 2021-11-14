@@ -6,8 +6,10 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class DeployerItemHandler implements IItemHandlerModifiable {
 

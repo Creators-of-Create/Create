@@ -15,6 +15,12 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,12 +49,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchable {
 
@@ -97,9 +97,9 @@ public class BasinBlock extends Block implements ITE<BasinTileEntity>, IWrenchab
 					return InteractionResult.SUCCESS;
 				if (heldItem.getItem()
 					.equals(Items.SPONGE)
-					&& !te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.EXECUTE))
-						.orElse(FluidStack.EMPTY)
+					&& !TransferUtil.getFluidHandler(te)
+						.map(iFluidHandler -> iFluidHandler.drain(Integer.MAX_VALUE, false))
+						.orElse(FluidStack.empty())
 						.isEmpty()) {
 					return InteractionResult.SUCCESS;
 				}

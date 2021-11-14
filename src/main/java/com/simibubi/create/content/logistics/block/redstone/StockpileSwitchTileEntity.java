@@ -8,6 +8,9 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.CapManipulationBehaviourBase.InterfaceProvider;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.TankManipulationBehaviour;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -19,9 +22,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class StockpileSwitchTileEntity extends SmartTileEntity {
 
@@ -101,8 +101,8 @@ public class StockpileSwitchTileEntity extends SmartTileEntity {
 				IFluidHandler tank = observedTank.getInventory();
 				for (int slot = 0; slot < tank.getTanks(); slot++) {
 					FluidStack stackInSlot = tank.getFluidInTank(slot);
-					int space = tank.getTankCapacity(slot);
-					int count = stackInSlot.getAmount();
+					long space = tank.getTankCapacity(slot);
+					long count = stackInSlot.getAmount();
 					if (space == 0)
 						continue;
 

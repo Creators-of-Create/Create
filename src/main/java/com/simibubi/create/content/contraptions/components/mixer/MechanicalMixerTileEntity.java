@@ -37,10 +37,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
@@ -205,8 +207,7 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 		Optional<BasinTileEntity> basin = getBasin();
 		if (!basin.isPresent())
 			return matchingRecipes;
-		IItemHandler availableItems = basin.get()
-			.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler availableItems = TransferUtil.getItemHandler(basin.get())
 			.orElse(null);
 		if (availableItems == null)
 			return matchingRecipes;
@@ -280,9 +281,9 @@ public class MechanicalMixerTileEntity extends BasinOperatingTileEntity {
 
 		// SoundEvents.BLOCK_STONE_BREAK
 		boolean slow = Math.abs(getSpeed()) < 65;
-		if (slow && AnimationTickHolder.getTicks() % 2 == 0) 
+		if (slow && AnimationTickHolder.getTicks() % 2 == 0)
 			return;
-		if (runningTicks == 20) 
+		if (runningTicks == 20)
 			AllSoundEvents.MIXING.playAt(level, worldPosition, .75f, 1, true);
 	}
 

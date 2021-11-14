@@ -27,11 +27,12 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.utility.NBT;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class ConnectedInputHandler {
 

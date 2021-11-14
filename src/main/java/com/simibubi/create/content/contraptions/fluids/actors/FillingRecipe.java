@@ -19,10 +19,12 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 
@@ -59,7 +61,7 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 
 	@Override
 	public void addAssemblyIngredients(List<Ingredient> list) {}
-	
+
 	@Override
 	public void addAssemblyFluidIngredients(List<FluidIngredient> list) {
 		list.add(getRequiredFluid());
@@ -76,12 +78,12 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 			new TranslatableComponent(matchingFluidStacks.get(0)
 				.getTranslationKey()).getString());
 	}
-	
+
 	@Override
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.SPOUT.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblySpouting::new;

@@ -5,6 +5,12 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.InvWrapper;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.core.PartialModel;
@@ -61,10 +67,6 @@ import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
 public abstract class ArmInteractionPoint {
 	public enum Mode {
@@ -154,7 +156,7 @@ public abstract class ArmInteractionPoint {
 			BlockEntity te = world.getBlockEntity(pos);
 			if (te == null)
 				return null;
-			cachedHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP);
+			cachedHandler = TransferUtil.getItemHandler(te, Direction.UP);
 		}
 		return cachedHandler.orElse(null);
 	}

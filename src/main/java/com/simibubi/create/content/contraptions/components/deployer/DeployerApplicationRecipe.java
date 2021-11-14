@@ -27,9 +27,11 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class DeployerApplicationRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
 

@@ -36,10 +36,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, Nameable {
 
@@ -134,7 +135,7 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 
 				if (clear || !playerStack.isEmpty()
 					&& !ToolboxInventory.canItemsShareCompartment(playerStack, referenceItem)) {
-					player.getPersistentData()
+					EntityHelper.getExtraCustomData(player)
 						.getCompound("CreateToolboxData")
 						.remove(String.valueOf(hotbarSlot));
 					playerEntries.remove();
@@ -272,12 +273,12 @@ public class ToolboxTileEntity extends SmartTileEntity implements MenuProvider, 
 				level.random.nextFloat() * 0.1F + 1.2F, true);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return inventoryProvider.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap))
+//			return inventoryProvider.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	protected void fromTag(CompoundTag compound, boolean clientPacket) {

@@ -6,8 +6,9 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

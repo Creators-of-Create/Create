@@ -30,7 +30,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IBlockRenderProperties;
 import com.simibubi.create.lib.utility.LazyOptional;
 
 public abstract class AbstractChuteBlock extends Block implements IWrenchable, ITE<ChuteTileEntity> {
@@ -39,10 +38,10 @@ public abstract class AbstractChuteBlock extends Block implements IWrenchable, I
 		super(p_i48440_1_);
 	}
 
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
-		consumer.accept(new ReducedDestroyEffects());
-	}
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IBlockRenderProperties> consumer) {
+//		consumer.accept(new ReducedDestroyEffects());
+//	}
 
 	public static boolean isChute(BlockState state) {
 		return state.getBlock() instanceof AbstractChuteBlock;

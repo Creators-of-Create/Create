@@ -42,7 +42,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import com.simibubi.create.lib.entity.FakePlayer;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import com.simibubi.create.lib.utility.NetworkUtil;
 
 public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, ITE<ToolboxTileEntity> {
 
@@ -163,7 +163,7 @@ public class ToolboxBlock extends HorizontalDirectionalBlock implements SimpleWa
 			return InteractionResult.SUCCESS;
 
 		withTileEntityDo(world, pos,
-			toolbox -> NetworkHooks.openGui((ServerPlayer) player, toolbox, toolbox::sendToContainer));
+			toolbox -> NetworkUtil.openGui((ServerPlayer) player, toolbox, toolbox::sendToContainer));
 		return InteractionResult.SUCCESS;
 	}
 

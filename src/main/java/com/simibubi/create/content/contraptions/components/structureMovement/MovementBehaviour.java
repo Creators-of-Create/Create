@@ -13,9 +13,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public abstract class MovementBehaviour {
 

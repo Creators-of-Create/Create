@@ -25,16 +25,20 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import com.simibubi.create.lib.extensions.BlockEntityExtensions;
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
 import com.simibubi.create.lib.utility.LazyOptional;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IFluidHandler, FluidTransferable {
 
 	private static final int MAX_SIZE = 3;
 
@@ -130,10 +134,10 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (!hasLevel())
 			return;
 
-		FluidAttributes attributes = newFluidStack.getFluid()
-			.getAttributes();
-		int luminosity = (int) (attributes.getLuminosity(newFluidStack) / 1.2f);
-		boolean reversed = attributes.isLighterThanAir();
+//		FluidAttributes attributes = newFluidStack.getFluid()
+//			.getAttributes();
+		int luminosity = 0;//(int) (attributes.getLuminosity(newFluidStack) / 1.2f);
+		boolean reversed = FluidVariantRendering.fillsFromTop(newFluidStack.getType());
 		int maxY = (int) ((getFillState() * height) + 1);
 
 		for (int yOffset = 0; yOffset < height; yOffset++) {
@@ -187,9 +191,9 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	public void applyFluidTankSize(int blocks) {
 		tankInventory.setCapacity(blocks * getCapacityMultiplier());
-		int overflow = tankInventory.getFluidAmount() - tankInventory.getCapacity();
+		long overflow = tankInventory.getFluidAmount() - tankInventory.getCapacity();
 		if (overflow > 0)
-			tankInventory.drain(overflow, FluidAction.EXECUTE);
+			tankInventory.drain(overflow, false);
 		forceFluidLevelUpdate = true;
 	}
 
@@ -299,16 +303,16 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	public void updateRenderBoundingBox() {
 		if (isController())
-			renderBoundingBox = super.getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
+			renderBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
 		else
-			renderBoundingBox = super.getRenderBoundingBox();
+			renderBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox();
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
+	public AABB create$getRenderBoundingBox() {
 		if (renderBoundingBox == null) {
-			renderBoundingBox = super.getRenderBoundingBox();
+			renderBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox();
 		}
 		return renderBoundingBox;
 	}
@@ -327,7 +331,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		if (controllerTE == null)
 			return false;
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			controllerTE.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+			TransferUtil.getFluidHandler(controllerTE));
 	}
 
 	@Override
@@ -356,7 +360,7 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 			tankInventory.setCapacity(getTotalTankSize() * getCapacityMultiplier());
 			tankInventory.readFromNBT(compound.getCompound("TankContent"));
 			if (tankInventory.getSpace() < 0)
-				tankInventory.drain(-tankInventory.getSpace(), FluidAction.EXECUTE);
+				tankInventory.drain(-tankInventory.getSpace(), false);
 		}
 
 		if (compound.contains("ForceFluidLevel") || fluidLevel == null)
@@ -420,15 +424,15 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 		forceFluidLevelUpdate = false;
 	}
 
-	@Nonnull
-	@Override
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (!fluidCapability.isPresent())
-			refreshCapability();
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-			return fluidCapability.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Nonnull
+//	@Override
+//	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+//		if (!fluidCapability.isPresent())
+//			refreshCapability();
+//		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+//			return fluidCapability.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	public void setRemoved() {
@@ -464,6 +468,42 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	public void setFluidLevel(InterpolatedChasingValue fluidLevel) {
 		this.fluidLevel = fluidLevel;
+	}
+
+	@Override
+	public int getTanks() {
+		return tankInventory.getTanks();
+	}
+
+	@Override
+	public FluidStack getFluidInTank(int tank) {
+		return tankInventory.getFluidInTank(tank);
+	}
+
+	@Override
+	public long getTankCapacity(int tank) {
+		return tankInventory.getTankCapacity(tank);
+	}
+
+	@Override
+	public long fill(FluidStack stack, boolean sim) {
+		return tankInventory.fill(stack, sim);
+	}
+
+	@Override
+	public FluidStack drain(FluidStack stack, boolean sim) {
+		return tankInventory.drain(stack, sim);
+	}
+
+	@Override
+	public FluidStack drain(long amount, boolean sim) {
+		return tankInventory.drain(amount, sim);
+	}
+
+	@Override
+	@Nullable
+	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+		return tankInventory;
 	}
 
 }

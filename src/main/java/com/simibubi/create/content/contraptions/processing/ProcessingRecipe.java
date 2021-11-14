@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
@@ -25,7 +27,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fluids.FluidStack;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault

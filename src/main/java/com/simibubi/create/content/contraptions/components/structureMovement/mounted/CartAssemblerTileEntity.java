@@ -38,9 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplayAssemblyExceptions {
 	private static final int assemblyCooldown = 8;
 

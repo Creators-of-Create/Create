@@ -4,11 +4,12 @@ import com.simibubi.create.AllItems;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.items.ItemStackHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class SchematicannonInventory extends ItemStackHandler {
 	/**
-	 * 
+	 *
 	 */
 	private final SchematicannonTileEntity te;
 

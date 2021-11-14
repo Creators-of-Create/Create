@@ -7,6 +7,9 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.transfer.TransferUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,10 +33,8 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.util.ForgeSoundType;
-import net.minecraftforge.items.CapabilityItemHandler;
 
-public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntity> {
+public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntity>, BlockExtensions {
 
 	public static final Property<Axis> HORIZONTAL_AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 	public static final BooleanProperty LARGE = BooleanProperty.create("large");
@@ -138,13 +139,13 @@ public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntit
 
 	// Vaults are less noisy when placed in batch
 	public static final SoundType SILENCED_METAL =
-		new ForgeSoundType(0.1F, 1.5F, () -> SoundEvents.NETHERITE_BLOCK_BREAK, () -> SoundEvents.NETHERITE_BLOCK_STEP,
-			() -> SoundEvents.NETHERITE_BLOCK_PLACE, () -> SoundEvents.NETHERITE_BLOCK_HIT,
-			() -> SoundEvents.NETHERITE_BLOCK_FALL);
+		new SoundType(0.1F, 1.5F, SoundEvents.NETHERITE_BLOCK_BREAK, SoundEvents.NETHERITE_BLOCK_STEP,
+			SoundEvents.NETHERITE_BLOCK_PLACE, SoundEvents.NETHERITE_BLOCK_HIT,
+			SoundEvents.NETHERITE_BLOCK_FALL);
 
 	@Override
-	public SoundType getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
-		SoundType soundType = super.getSoundType(state, world, pos, entity);
+	public SoundType create$getSoundType(BlockState state, LevelReader world, BlockPos pos, Entity entity) {
+		SoundType soundType = ((BlockExtensions)this).create$getSoundType(state, world, pos, entity);
 		if (entity != null && EntityHelper.getExtraCustomData(entity)
 			.contains("SilenceVaultSound"))
 			return SILENCED_METAL;
@@ -159,7 +160,7 @@ public class VaultBlock extends Block implements IWrenchable, ITE<VaultTileEntit
 	@Override
 	public int getAnalogOutputSignal(BlockState pState, Level pLevel, BlockPos pPos) {
 		return getTileEntityOptional(pLevel, pPos)
-			.map(vte -> vte.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY))
+			.map(vte -> TransferUtil.getItemHandler(vte))
 			.map(lo -> lo.map(ItemHelper::calcRedstoneFromInventory)
 				.orElse(0))
 			.orElse(0);

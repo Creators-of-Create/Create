@@ -49,11 +49,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.utility.ItemStackUtil;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -127,7 +130,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public AABB getRenderBoundingBox() {
+	public AABB create$getRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -3, 0);
 	}
 
@@ -488,7 +491,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			if (side != Direction.DOWN || !(te instanceof SmartChuteTileEntity) || getItemMotion() > 0)
 				return LazyOptional.empty();
 		}
-		return te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite());
+		return TransferUtil.getItemHandler(te, side.getOpposite());
 	}
 
 	public void setItem(ItemStack stack) {
@@ -511,7 +514,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
-		compound.put("Item", item.serializeNBT());
+		compound.put("Item", NBTSerializer.serializeNBT(item));
 		compound.putFloat("ItemPosition", itemPosition.value);
 		compound.putFloat("Pull", pull);
 		compound.putFloat("Push", push);
@@ -531,7 +534,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 //		if (clientPacket)
 //			airCurrent.rebuild();
 
-		if (hasLevel() && level != null && level.isClientSide && !previousItem.equals(item, false) && !item.isEmpty()) {
+		if (hasLevel() && level != null && level.isClientSide && !ItemStackUtil.equals(previousItem, item, false) && !item.isEmpty()) {
 			if (level.random.nextInt(3) != 0)
 				return;
 			Vec3 p = VecHelper.getCenterOf(worldPosition);
@@ -719,12 +722,12 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		return true;
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return lazyHandler.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//			return lazyHandler.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	public ItemStack getItem() {
 		return item;

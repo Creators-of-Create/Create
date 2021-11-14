@@ -27,7 +27,12 @@ import com.simibubi.create.foundation.utility.Pair;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat.Chaser;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.utility.NBT;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -55,12 +60,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
-import com.simibubi.create.lib.utility.NBT;
-import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class EjectorTileEntity extends KineticTileEntity {
 
@@ -482,7 +481,7 @@ public class EjectorTileEntity extends KineticTileEntity {
 		NBTHelper.writeEnum(compound, "State", state);
 		compound.put("Lid", lidProgress.writeNBT());
 		compound.put("LaunchedItems",
-			NBTHelper.writeCompoundList(launchedItems, ia -> ia.serializeNBT(ItemStack::serializeNBT)));
+			NBTHelper.writeCompoundList(launchedItems, ia -> ia.serializeNBT(NBTSerializer::serializeNBT)));
 
 		if (earlyTarget != null) {
 			compound.put("EarlyTarget", VecHelper.writeNBT(earlyTarget.getFirst()));
@@ -550,12 +549,12 @@ public class EjectorTileEntity extends KineticTileEntity {
 			.above(launcher.getVerticalDistance());
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return depotBehaviour.getItemCapability(cap, side);
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap))
+//			return depotBehaviour.getItemCapability(cap, side);
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	public boolean shouldRenderNormally() {

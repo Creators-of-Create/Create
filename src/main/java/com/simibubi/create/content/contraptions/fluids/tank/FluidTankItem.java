@@ -12,7 +12,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fluids.FluidStack;
+
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class FluidTankItem extends BlockItem {
 
@@ -43,7 +45,7 @@ public class FluidTankItem extends BlockItem {
 			nbt.remove("Controller");
 			nbt.remove("LastKnownPos");
 			if (nbt.contains("TankContent")) {
-				FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt.getCompound("TankContent"));
+				FluidStack fluid = FluidStack.fromNBT(nbt.getCompound("TankContent"));
 				if (!fluid.isEmpty()) {
 					fluid.setAmount(Math.min(FluidTankTileEntity.getCapacityMultiplier(), fluid.getAmount()));
 					nbt.put("TankContent", fluid.writeToNBT(new CompoundTag()));
@@ -114,10 +116,10 @@ public class FluidTankItem extends BlockItem {
 				if (FluidTankBlock.isTank(blockState))
 					continue;
 				BlockPlaceContext context = BlockPlaceContext.at(ctx, offsetPos, face);
-				player.getPersistentData()
+				EntityHelper.getExtraCustomData(player)
 					.putBoolean("SilenceTankSound", true);
 				super.place(context);
-				player.getPersistentData()
+				EntityHelper.getExtraCustomData(player)
 					.remove("SilenceTankSound");
 			}
 		}

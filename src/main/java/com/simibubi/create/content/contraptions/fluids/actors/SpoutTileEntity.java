@@ -33,14 +33,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.extensions.BlockEntityExtensions;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation {
+public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation, BlockEntityExtensions {
 
 	public static final int FILLING_TIME = 20;
 	protected BeltProcessingBehaviour beltProcessing;
@@ -60,9 +62,9 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public AABB getRenderBoundingBox() {
+	public AABB create$getRenderBoundingBox() {
 		if (cachedBoundingBox == null)
-			cachedBoundingBox = super.getRenderBoundingBox().expandTowards(0, -2, 0);
+			cachedBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox().expandTowards(0, -2, 0);
 		return cachedBoundingBox;
 	}
 

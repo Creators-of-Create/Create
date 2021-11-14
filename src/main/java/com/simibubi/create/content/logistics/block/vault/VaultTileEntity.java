@@ -16,12 +16,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.item.CombinedInvWrapper;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 public class VaultTileEntity extends SmartTileEntity {
 
@@ -198,14 +199,14 @@ public class VaultTileEntity extends SmartTileEntity {
 			compound.put("Inventory", inventory.serializeNBT());
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap)) {
-			initCapability();
-			return itemCapability.cast();
-		}
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap)) {
+//			initCapability();
+//			return itemCapability.cast();
+//		}
+//		return super.getCapability(cap, side);
+//	}
 
 	private void initCapability() {
 		if (itemCapability.isPresent())

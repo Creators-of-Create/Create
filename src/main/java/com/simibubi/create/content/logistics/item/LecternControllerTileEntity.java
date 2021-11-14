@@ -3,6 +3,7 @@ package com.simibubi.create.content.logistics.item;
 import java.util.List;
 import java.util.UUID;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -21,9 +22,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.ForgeMod;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class LecternControllerTileEntity extends SmartTileEntity {
@@ -83,20 +86,20 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 
 	private void startUsing(Player player) {
 		user = player.getUUID();
-		player.getPersistentData().putBoolean("IsUsingLecternController", true);
+		EntityHelper.getExtraCustomData(player).putBoolean("IsUsingLecternController", true);
 		sendData();
 	}
 
 	private void stopUsing(Player player) {
 		user = null;
 		if (player != null)
-			player.getPersistentData().remove("IsUsingLecternController");
+			EntityHelper.getExtraCustomData(player).remove("IsUsingLecternController");
 		deactivatedThisTick = true;
 		sendData();
 	}
 
 	public static boolean playerIsUsingLectern(Player player) {
-		return player.getPersistentData().contains("IsUsingLecternController");
+		return EntityHelper.getExtraCustomData(player).contains("IsUsingLecternController");
 	}
 
 	@Override
@@ -172,7 +175,7 @@ public class LecternControllerTileEntity extends SmartTileEntity {
 
 	public static boolean playerInRange(Player player, Level world, BlockPos pos) {
 		//double modifier = world.isRemote ? 0 : 1.0;
-		double reach = 0.4*player.getAttributeValue(ForgeMod.REACH_DISTANCE.get());// + modifier;
+		double reach = 0.4*player.getAttributeValue(ReachEntityAttributes.REACH);// + modifier;
 		return player.distanceToSqr(Vec3.atCenterOf(pos)) < reach*reach;
 	}
 

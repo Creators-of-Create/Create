@@ -4,6 +4,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.lib.utility.NetworkUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class SchematicTableBlock extends HorizontalDirectionalBlock implements ITE<SchematicTableTileEntity> {
 
@@ -65,7 +65,7 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 			return InteractionResult.SUCCESS;
 
 		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openGui((ServerPlayer) player, te, te::sendToContainer));
+				te -> NetworkUtil.openGui((ServerPlayer) player, te, te::sendToContainer));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -82,12 +82,12 @@ public class SchematicTableBlock extends HorizontalDirectionalBlock implements I
 	public Class<SchematicTableTileEntity> getTileEntityClass() {
 		return SchematicTableTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SchematicTableTileEntity> getTileEntityType() {
 		return AllTileEntities.SCHEMATIC_TABLE.get();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

@@ -56,11 +56,14 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.EmptyHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.EmptyHandler;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, IInstanceRendered {
 
@@ -111,7 +114,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	public boolean firstRenderTick;
 
 	@Override
-	public AABB getRenderBoundingBox() {
+	public AABB create$getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
 
@@ -142,7 +145,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 			BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(facing));
 			if (tileEntity != null) {
 				LazyOptional<IItemHandler> capability =
-					tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+						TransferUtil.getItemHandler(tileEntity, facing.getOpposite());
 				if (capability.isPresent()) {
 					attachedInventories.add(capability);
 				}
@@ -222,7 +225,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
 		if (!clientPacket) {
-			compound.put("Inventory", inventory.serializeNBT());
+			compound.put("Inventory", inventory.create$serializeNBT());
 			if (state == State.RUNNING) {
 				compound.putBoolean("Running", true);
 			}
@@ -238,7 +241,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		compound.putInt("AmountToPlace", blocksToPlace);
 
 		if (missingItem != null)
-			compound.put("MissingItem", missingItem.serializeNBT());
+			compound.put("MissingItem", NBTSerializer.serializeNBT(missingItem));
 
 		// Settings
 		CompoundTag options = new CompoundTag();
@@ -361,7 +364,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 		}
 
 		// Check block
-		if (!getLevel().isAreaLoaded(printer.getCurrentTarget(), 0)) {
+		if (!LoadedCheckUtil.isAreaLoaded(getLevel(), printer.getCurrentTarget(), 0)) {
 			positionNotLoaded = true;
 			statusMsg = "targetNotLoaded";
 			state = State.PAUSED;

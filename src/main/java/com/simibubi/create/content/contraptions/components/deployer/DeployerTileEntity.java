@@ -47,13 +47,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 public class DeployerTileEntity extends KineticTileEntity {
 
@@ -337,8 +337,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 			player.getInventory()
 				.save(invNBT);
 			compound.put("Inventory", invNBT);
-			compound.put("HeldItem", player.getMainHandItem()
-				.serializeNBT());
+			compound.put("HeldItem", NBTSerializer.serializeNBT(player.getMainHandItem()));
 			compound.put("Overflow", NBTHelper.writeItemList(overflowItems));
 		} else if (deferredInventoryList != null) {
 			compound.put("Inventory", deferredInventoryList);
@@ -351,10 +350,9 @@ public class DeployerTileEntity extends KineticTileEntity {
 		compound.putFloat("Reach", reach);
 		if (player == null)
 			return;
-		compound.put("HeldItem", player.getMainHandItem()
-			.serializeNBT());
+		compound.put("HeldItem", NBTSerializer.serializeNBT(player.getMainHandItem()));
 		if (player.spawnedItemEffects != null) {
-			compound.put("Particle", player.spawnedItemEffects.serializeNBT());
+			compound.put("Particle", NBTSerializer.serializeNBT(player.spawnedItemEffects));
 			player.spawnedItemEffects = null;
 		}
 	}
@@ -396,12 +394,12 @@ public class DeployerTileEntity extends KineticTileEntity {
 		sendData();
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap) && invHandler != null)
-			return invHandler.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap) && invHandler != null)
+//			return invHandler.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
@@ -473,7 +471,7 @@ public class DeployerTileEntity extends KineticTileEntity {
 		event.addRecipe(() -> AllRecipeTypes.DEPLOYING.find(event.getInventory(), level), 50);
 
 		// post the event, get result
-		MinecraftForge.EVENT_BUS.post(event);
+		DeployerRecipeSearchEvent.EVENT.invoker().handle(event);
 		return event.getRecipe();
 	}
 

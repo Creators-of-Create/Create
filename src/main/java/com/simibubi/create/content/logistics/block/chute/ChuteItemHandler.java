@@ -1,7 +1,8 @@
 package com.simibubi.create.content.logistics.block.chute;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class ChuteItemHandler implements IItemHandler {
 
@@ -10,7 +11,7 @@ public class ChuteItemHandler implements IItemHandler {
 	public ChuteItemHandler(ChuteTileEntity te) {
 		this.te = te;
 	}
-	
+
 	@Override
 	public int getSlots() {
 		return 1;
@@ -25,7 +26,7 @@ public class ChuteItemHandler implements IItemHandler {
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		if (!te.canAcceptItem(stack))
 			return stack;
-		if (!simulate) 
+		if (!simulate)
 			te.setItem(stack);
 		return ItemStack.EMPTY;
 	}
@@ -34,7 +35,7 @@ public class ChuteItemHandler implements IItemHandler {
 	public ItemStack extractItem(int slot, int amount, boolean simulate) {
 		ItemStack remainder = te.item.copy();
 		ItemStack split = remainder.split(amount);
-		if (!simulate) 
+		if (!simulate)
 			te.setItem(remainder);
 		return split;
 	}

@@ -4,6 +4,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.lib.utility.NetworkUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
@@ -17,7 +18,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class AdjustableCrateBlock extends CrateBlock implements ITE<AdjustableCrateTileEntity> {
 
@@ -58,7 +58,7 @@ public class AdjustableCrateBlock extends CrateBlock implements ITE<AdjustableCr
 			if (te instanceof AdjustableCrateTileEntity) {
 				AdjustableCrateTileEntity fte = (AdjustableCrateTileEntity) te;
 				fte = fte.getMainCrate();
-				NetworkHooks.openGui((ServerPlayer) player, fte, fte::sendToContainer);
+				NetworkUtil.openGui((ServerPlayer) player, fte, fte::sendToContainer);
 			}
 			return InteractionResult.SUCCESS;
 		}

@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.data.Tags;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +25,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.Tags;
 
 public abstract class AbstractChassisBlock extends RotatedPillarBlock implements IWrenchable, ITE<ChassisTileEntity> {
 

@@ -35,11 +35,12 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class MechanicalCrafterBlock extends HorizontalKineticBlock
 	implements ITE<MechanicalCrafterTileEntity>, ICogWheel {
@@ -192,7 +193,7 @@ public class MechanicalCrafterBlock extends HorizontalKineticBlock
 				}
 
 				LazyOptional<IItemHandler> capability =
-					crafter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+					TransferUtil.getItemHandler(crafter);
 				if (!capability.isPresent())
 					return InteractionResult.PASS;
 				ItemStack remainder =

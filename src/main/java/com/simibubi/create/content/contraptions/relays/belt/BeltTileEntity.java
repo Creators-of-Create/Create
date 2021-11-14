@@ -53,15 +53,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
-import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class BeltTileEntity extends KineticTileEntity implements ILightUpdateListener {
 
@@ -180,15 +177,15 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		itemHandler = LazyOptional.of(() -> handler);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
-				return itemHandler.cast();
-			}
-		}
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+//			if (side == Direction.UP || BeltBlock.canAccessFromSide(side, getBlockState())) {
+//				return itemHandler.cast();
+//			}
+//		}
+//		return super.getCapability(cap, side);
+//	}
 
 	@Override
 	public void setRemoved() {
@@ -502,13 +499,14 @@ public class BeltTileEntity extends KineticTileEntity implements ILightUpdateLis
 		return empty;
 	}
 
-	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
-
-	@Override
-	public IModelData getModelData() {
-		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
-			.build();
-	}
+	//todo: maybe look at this?
+//	public static final ModelProperty<CasingType> CASING_PROPERTY = new ModelProperty<>();
+//
+//	@Override
+//	public IModelData getModelData() {
+//		return new ModelDataMap.Builder().withInitial(CASING_PROPERTY, casing)
+//			.build();
+//	}
 
 	@Override
 	protected boolean canPropagateDiagonally(IRotate block, BlockState state) {

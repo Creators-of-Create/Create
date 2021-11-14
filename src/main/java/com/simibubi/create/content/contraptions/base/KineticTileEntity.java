@@ -27,6 +27,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.extensions.BlockEntityExtensions;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 import net.minecraft.ChatFormatting;
@@ -557,9 +558,9 @@ public class KineticTileEntity extends SmartTileEntity
 		return ICogWheel.isSmallCog(state);
 	}
 
-	@Override
+//	@Override
 	public void requestModelDataUpdate() {
-		super.requestModelDataUpdate();
+//		super.requestModelDataUpdate();
 		if (!this.remove)
 			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> () -> InstancedRenderDispatcher.enqueueUpdate(this));
 	}
@@ -575,7 +576,7 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	protected AABB makeRenderBoundingBox() {
-		return super.getRenderBoundingBox();
+		return this.create$getRenderBoundingBox();
 	}
 
 	@Environment(EnvType.CLIENT)

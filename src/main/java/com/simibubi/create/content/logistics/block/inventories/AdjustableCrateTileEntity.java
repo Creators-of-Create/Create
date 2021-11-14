@@ -16,11 +16,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuProvider {
 
@@ -168,14 +168,14 @@ public class AdjustableCrateTileEntity extends CrateTileEntity implements MenuPr
 		invHandler.invalidate();
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			AdjustableCrateTileEntity mainCrate = getMainCrate();
-			if (mainCrate != null && mainCrate.invHandler != null && mainCrate.invHandler.isPresent())
-				return mainCrate.invHandler.cast();
-		}
-		return super.getCapability(capability, facing);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+//		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+//			AdjustableCrateTileEntity mainCrate = getMainCrate();
+//			if (mainCrate != null && mainCrate.invHandler != null && mainCrate.invHandler.isPresent())
+//				return mainCrate.invHandler.cast();
+//		}
+//		return super.getCapability(capability, facing);
+//	}
 
 }

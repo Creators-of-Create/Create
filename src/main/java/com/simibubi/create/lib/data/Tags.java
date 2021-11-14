@@ -1,5 +1,8 @@
 package com.simibubi.create.lib.data;
 
+import com.simibubi.create.AllInteractionBehaviours;
+import com.simibubi.create.lib.utility.TagUtil;
+
 import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -11,11 +14,15 @@ import net.minecraft.world.level.material.Fluid;
 //TODO: IMPLEMENT ALL THESE TAGS WITH COMMON ONES
 public class Tags {
 	public static class Items {
-		public static Tag.Named<Item> tag(String id) {
+
+
+        public static Tag.Named<Item> tag(String id) {
 			return TagFactory.ITEM.create(new ResourceLocation("c", id));
 		}
 		public static final Tag.Named<Item> STONE = tag("");
 		public static final Tag.Named<Item> NUGGETS = tag("");
+		public static final Tag.Named<Item> DYES = tag("");
+		public static final Tag.Named<Item> SLIMEBALLS = tag("");
 	}
 	public static class Blocks {
 		public static Tag.Named<Block> tag(String id) {

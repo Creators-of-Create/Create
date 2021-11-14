@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -38,9 +40,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 
 public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
@@ -134,7 +134,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 
 	@Override
 	public void write(CompoundTag compound, boolean clientPacket) {
-		compound.put("Inventory", inventory.serializeNBT());
+		compound.put("Inventory", inventory.create$serializeNBT());
 
 		CompoundTag inputNBT = new CompoundTag();
 		input.write(inputNBT);
@@ -161,7 +161,7 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		Phase phaseBefore = phase;
 		GroupedItems before = this.groupedItems;
 
-		inventory.deserializeNBT(compound.getCompound("Inventory"));
+		inventory.create$deserializeNBT(compound.getCompound("Inventory"));
 		input.read(compound.getCompound("ConnectedInput"));
 		groupedItems = GroupedItems.read(compound.getCompound("GroupedItems"));
 		phase = Phase.IDLE;
@@ -494,12 +494,12 @@ public class MechanicalCrafterTileEntity extends KineticTileEntity {
 		countDown = Math.max(100, getCountDownSpeed() + 1);
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return invSupplier.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap))
+//			return invSupplier.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	public void connectivityChanged() {
 		reRender = true;

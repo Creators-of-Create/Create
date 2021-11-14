@@ -2,7 +2,7 @@ package com.simibubi.create.foundation.utility;
 
 import java.util.function.Supplier;
 
-import net.minecraftforge.common.util.NonNullSupplier;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 public class ResetableLazy<T> implements Supplier<T> {
 

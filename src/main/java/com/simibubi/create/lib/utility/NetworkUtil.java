@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class NetworkUtil {
 
-	public static void openGUI(ServerPlayer player, MenuProvider containerProvider, Consumer<FriendlyByteBuf> extraDataWriter) {
+	public static void openGui(ServerPlayer player, MenuProvider containerProvider, Consumer<FriendlyByteBuf> extraDataWriter) {
 		player.openMenu(new ExtendedScreenHandlerFactory() {
 			@Override
 			public Component getDisplayName() {

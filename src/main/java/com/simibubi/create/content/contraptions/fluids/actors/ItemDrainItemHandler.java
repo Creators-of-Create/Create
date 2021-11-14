@@ -5,8 +5,10 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class ItemDrainItemHandler implements IItemHandler {
 
@@ -33,20 +35,20 @@ public class ItemDrainItemHandler implements IItemHandler {
 		if (!te.getHeldItemStack()
 			.isEmpty())
 			return stack;
-		
+
 		ItemStack returned = ItemStack.EMPTY;
 		if (stack.getCount() > 1 && EmptyingByBasin.canItemBeEmptied(te.getLevel(), stack)) {
 			returned = ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - 1);
 			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
 		}
-		
+
 		if (!simulate) {
 			TransportedItemStack heldItem = new TransportedItemStack(stack);
 			heldItem.prevBeltPosition = 0;
 			te.setHeldItem(heldItem, side.getOpposite());
 			te.notifyUpdate();
 		}
-		
+
 		return returned;
 	}
 

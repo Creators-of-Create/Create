@@ -30,9 +30,11 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fluids.FluidStack;
 
 public class PotionFluidHandler {
 
@@ -55,8 +57,9 @@ public class PotionFluidHandler {
 		BottleType bottleTypeFromItem = bottleTypeFromItem(stack);
 		if (potion == Potions.WATER && list.isEmpty() && bottleTypeFromItem == BottleType.REGULAR)
 			return new FluidStack(Fluids.WATER, fluid.getAmount());
-		NBTHelper.writeEnum(fluid.getOrCreateTag(), "Bottle", bottleTypeFromItem);
-		return fluid;
+		CompoundTag tagInfo = fluid.getTag();
+		NBTHelper.writeEnum(tagInfo, "Bottle", bottleTypeFromItem);
+		return new FluidStack(fluid.getFluid(), fluid.getAmount(), tagInfo);
 	}
 
 	public static BottleType bottleTypeFromItem(ItemStack stack) {

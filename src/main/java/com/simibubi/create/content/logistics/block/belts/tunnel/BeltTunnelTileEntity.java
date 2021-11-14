@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
@@ -34,12 +36,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRendered {
 
@@ -184,24 +183,24 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	@Override
 	public void addBehaviours(List<TileEntityBehaviour> behaviours) {}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		if (capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return super.getCapability(capability, side);
-
-		if (!this.cap.isPresent()) {
-			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
-				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
-				if (teBelow != null) {
-					T capBelow = teBelow.getCapability(capability, Direction.UP)
-						.orElse(null);
-					if (capBelow != null) {
-						cap = LazyOptional.of(() -> capBelow)
-							.cast();
-					}
-				}
-			}
-		}
-		return this.cap.cast();
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
+//		if (capability != CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//			return super.getCapability(capability, side);
+//
+//		if (!this.cap.isPresent()) {
+//			if (AllBlocks.BELT.has(level.getBlockState(worldPosition.below()))) {
+//				BlockEntity teBelow = level.getBlockEntity(worldPosition.below());
+//				if (teBelow != null) {
+//					T capBelow = teBelow.getCapability(capability, Direction.UP)
+//						.orElse(null);
+//					if (capBelow != null) {
+//						cap = LazyOptional.of(() -> capBelow)
+//							.cast();
+//					}
+//				}
+//			}
+//		}
+//		return this.cap.cast();
+//	}
 }

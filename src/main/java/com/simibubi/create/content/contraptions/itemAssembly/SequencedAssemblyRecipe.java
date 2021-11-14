@@ -29,10 +29,12 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 
@@ -213,7 +215,7 @@ public class SequencedAssemblyRecipe implements Recipe<RecipeWrapper> {
 	public boolean isSpecial() {
 		return true;
 	}
-	
+
 	@Override
 	public RecipeType<?> getType() {
 		return AllRecipeTypes.SEQUENCED_ASSEMBLY.getType();
