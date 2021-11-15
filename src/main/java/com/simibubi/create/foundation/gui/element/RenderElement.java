@@ -1,14 +1,16 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.gui.element;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.GuiComponent;
+public abstract class RenderElement implements ScreenElement {
 
-public abstract class RenderElement implements IScreenRenderable {
+	public static final RenderElement EMPTY = new RenderElement() {
+		@Override
+		public void render(PoseStack ms) {
+		}
+	};
 
-	public static RenderElement EMPTY = new RenderElement() {@Override public void render(PoseStack ms) {}};
-
-	public static RenderElement of(IScreenRenderable renderable) {
+	public static RenderElement of(ScreenElement renderable) {
 		return new SimpleRenderElement(renderable);
 	}
 
@@ -67,26 +69,21 @@ public abstract class RenderElement implements IScreenRenderable {
 	public abstract void render(PoseStack ms);
 
 	@Override
-	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
-		this.at(x, y).render(ms);
-	}
-
-	@Override
-	public void draw(PoseStack ms, int x, int y) {
+	public void render(PoseStack ms, int x, int y) {
 		this.at(x, y).render(ms);
 	}
 
 	public static class SimpleRenderElement extends RenderElement {
 
-		private IScreenRenderable renderable;
+		private ScreenElement renderable;
 
-		public SimpleRenderElement(IScreenRenderable renderable) {
+		public SimpleRenderElement(ScreenElement renderable) {
 			this.renderable = renderable;
 		}
 
 		@Override
 		public void render(PoseStack ms) {
-			renderable.draw(ms, (int) x, (int) y);
+			renderable.render(ms, (int) x, (int) y);
 		}
 	}
 }

@@ -58,16 +58,16 @@ public class SawingCategory extends CreateRecipeCategory<CuttingRecipe> {
 
 	@Override
 	public void draw(CuttingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 43, 4);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 43, 4);
 		int size = recipe.getRollableResults()
 			.size();
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;
-			getRenderedSlot(recipe, i).draw(matrixStack, 117 + xOffset, 47 + yOffset);
+			getRenderedSlot(recipe, i).render(matrixStack, 117 + xOffset, 47 + yOffset);
 		}
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 70, 6);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 72 - 17, 42 + 13);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 70, 6);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 72 - 17, 42 + 13);
 		saw.draw(matrixStack, 72, 42);
 	}
 

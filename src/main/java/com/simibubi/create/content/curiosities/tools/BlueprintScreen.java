@@ -11,11 +11,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket;
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -41,18 +41,25 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	@Override
 	protected void init() {
 		setWindowSize(background.width, background.height + 4 + PLAYER_INVENTORY.height);
-		setWindowOffset(2 + (width % 2 == 0 ? 0 : -1), 0);
+		setWindowOffset(1, 0);
 		super.init();
-		widgets.clear();
 
 		int x = leftPos;
 		int y = topPos;
 
 		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		resetButton.withCallback(() -> {
+			menu.clearContents();
+			contentsCleared();
+			menu.sendClearPacket();
+		});
 		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		confirmButton.withCallback(() -> {
+			minecraft.player.closeContainer();
+		});
 
-		widgets.add(resetButton);
-		widgets.add(confirmButton);
+		addRenderableWidget(resetButton);
+		addRenderableWidget(confirmButton);
 
 		extraAreas = ImmutableList.of(
 			new Rect2i(x + background.width, y + background.height - 36, 56, 44)
@@ -60,7 +67,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -68,7 +75,7 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 		int x = leftPos;
 		int y = topPos;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0xFFFFFF);
 
 		GuiGameElement.of(AllBlockPartials.CRAFTING_BLUEPRINT_1x1)
@@ -131,10 +138,12 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 
 	@Override
 	protected void containerTick() {
-//		handleTooltips();
-
 		if (!menu.contentHolder.isEntityAlive())
-			minecraft.player.closeContainer();
+			menu.player.closeContainer();
+
+		super.containerTick();
+
+//		handleTooltips();
 	}
 
 //	protected void handleTooltips() {
@@ -156,26 +165,6 @@ public class BlueprintScreen extends AbstractSimiContainerScreen<BlueprintContai
 //				fillToolTip(tooltipButtons.get(i), tooltipDescriptions.get(i));
 //		}
 //	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		boolean mouseClicked = super.mouseClicked(x, y, button);
-
-		if (button == 0) {
-			if (confirmButton.isHovered()) {
-				minecraft.player.closeContainer();
-				return true;
-			}
-			if (resetButton.isHovered()) {
-				menu.clearContents();
-				contentsCleared();
-				menu.sendClearPacket();
-				return true;
-			}
-		}
-
-		return mouseClicked;
-	}
 
 	protected void contentsCleared() {}
 

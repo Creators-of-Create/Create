@@ -40,7 +40,7 @@ public class ConfigureSchematicannonPacket extends SimplePacketBase {
 			if (player == null || !(player.containerMenu instanceof SchematicannonContainer))
 				return;
 
-			SchematicannonTileEntity te = ((SchematicannonContainer) player.containerMenu).getTileEntity();
+			SchematicannonTileEntity te = ((SchematicannonContainer) player.containerMenu).contentHolder;
 			switch (option) {
 			case DONT_REPLACE:
 			case REPLACE_ANY:

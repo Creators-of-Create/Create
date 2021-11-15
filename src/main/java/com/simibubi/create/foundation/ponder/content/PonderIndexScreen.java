@@ -7,6 +7,7 @@ import java.util.Objects;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.components.crank.ValveHandleBlock;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
@@ -18,7 +19,7 @@ import com.simibubi.create.foundation.ponder.ui.ChapterLabel;
 import com.simibubi.create.foundation.ponder.ui.LayoutHelper;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.Registry;
 import net.minecraft.util.Mth;
@@ -48,7 +49,6 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected void init() {
-		widgets.clear();
 		super.init();
 
 		chapters.clear();
@@ -88,7 +88,7 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 					ScreenOpener.transitionTo(PonderUI.of(chapter));
 				});
 
-			widgets.add(label);
+			addRenderableWidget(label);
 			layout.next();
 		}
 
@@ -115,10 +115,15 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 						ScreenOpener.transitionTo(PonderUI.of(new ItemStack(item)));
 					});
 
-			widgets.add(b);
+			addRenderableWidget(b);
 			layout.next();
 		}
 
+	}
+
+	@Override
+	protected void initBackTrackIcon(PonderButton backTrack) {
+		backTrack.showing(AllItems.WRENCH.asStack());
 	}
 
 	private static boolean exclusions(Item item) {
@@ -140,11 +145,12 @@ public class PonderIndexScreen extends NavigatableSimiScreen {
 		Window w = minecraft.getWindow();
 		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
 		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
-		for (AbstractWidget widget : widgets) {
-			if (widget instanceof PonderButton)
-				if (widget.isMouseOver(mouseX, mouseY)) {
-					hoveredItem = ((PonderButton) widget).getItem();
+		for (GuiEventListener child : children()) {
+			if (child instanceof PonderButton button) {
+				if (button.isMouseOver(mouseX, mouseY)) {
+					hoveredItem = button.getItem();
 				}
+			}
 		}
 	}
 

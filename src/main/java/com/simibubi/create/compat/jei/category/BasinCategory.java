@@ -158,25 +158,25 @@ public class BasinCategory extends CreateRecipeCategory<BasinRecipe> {
 		int yOffset = 0;
 
 		for (int i = 0; i < size; i++)
-			AllGuiTextures.JEI_SLOT.draw(matrixStack, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
+			AllGuiTextures.JEI_SLOT.render(matrixStack, 16 + xOffset + (i % 3) * 19, 50 - (i / 3) * 19 + yOffset);
 
 		boolean noHeat = requiredHeat == HeatCondition.NONE;
 
 		int vRows = (1 + outSize) / 2;
 		for (int i = 0; i < outSize; i++)
-			AllGuiTextures.JEI_SLOT.draw(matrixStack,
+			AllGuiTextures.JEI_SLOT.render(matrixStack,
 				141 - (outSize % 2 != 0 && i == outSize - 1 ? 0 : i % 2 == 0 ? 10 : -9), -19 * (i / 2) + 50 + yOffset);
 		if (vRows <= 2)
-			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, -19 * (vRows - 1) + 32 + yOffset);
+			AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 136, -19 * (vRows - 1) + 32 + yOffset);
 
 		AllGuiTextures shadow = noHeat ? AllGuiTextures.JEI_SHADOW : AllGuiTextures.JEI_LIGHT;
-		shadow.draw(matrixStack, 81, 58 + (noHeat ? 10 : 30));
+		shadow.render(matrixStack, 81, 58 + (noHeat ? 10 : 30));
 
 		if (!needsHeating)
 			return;
 		
 		AllGuiTextures heatBar = noHeat ? AllGuiTextures.JEI_NO_HEAT_BAR : AllGuiTextures.JEI_HEAT_BAR;
-		heatBar.draw(matrixStack, 4, 80);
+		heatBar.render(matrixStack, 4, 80);
 		Minecraft.getInstance().font.draw(matrixStack, Lang.translate(requiredHeat.getTranslationKey()), 9,
 			86, requiredHeat.getColor());
 	}

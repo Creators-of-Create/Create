@@ -6,11 +6,11 @@ import static com.simibubi.create.foundation.utility.AngleHelper.rad;
 
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.foundation.advancement.AllTriggers;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedValue;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

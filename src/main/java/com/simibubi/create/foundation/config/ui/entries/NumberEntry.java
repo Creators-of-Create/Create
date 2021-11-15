@@ -8,9 +8,9 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigTextField;
-import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.element.TextStencilElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

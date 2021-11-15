@@ -29,11 +29,11 @@ import com.simibubi.create.foundation.config.ui.entries.ValueEntry;
 import com.simibubi.create.foundation.gui.AllIcons;
 import com.simibubi.create.foundation.gui.ConfirmationScreen;
 import com.simibubi.create.foundation.gui.ConfirmationScreen.Response;
-import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Color;
@@ -135,8 +135,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 			}
 
 			String command = change.annotations.get("Execute");
-			if (Minecraft.getInstance().player != null && command != null && command.startsWith("/")) {
-				Minecraft.getInstance().player.chat(command);
+			if (minecraft.player != null && command != null && command.startsWith("/")) {
+				minecraft.player.chat(command);
 				//AllPackets.channel.sendToServer(new CChatMessagePacket(command));
 			}
 		});
@@ -164,14 +164,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-		list.tick();
-	}
-
-	@Override
 	protected void init() {
-		widgets.clear();
 		super.init();
 
 		listWidth = Math.min(width - 80, 300);
@@ -242,21 +235,21 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		goBack.showingElement(AllIcons.I_CONFIG_BACK.asStencil().withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip().add(new TextComponent("Go Back"));
 
-		widgets.add(resetAll);
-		widgets.add(saveChanges);
-		widgets.add(discardChanges);
-		widgets.add(goBack);
+		addRenderableWidget(resetAll);
+		addRenderableWidget(saveChanges);
+		addRenderableWidget(discardChanges);
+		addRenderableWidget(goBack);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 80, 35, height - 45, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
-		addWidget(list);
+		addRenderableWidget(list);
 
 		search = new ConfigTextField(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
 		search.setResponder(this::updateFilter);
 		search.setHint("Search..");
 		search.moveCursorToStart();
-		widgets.add(search);
+		addRenderableWidget(search);
 
 		configGroup.valueMap().forEach((key, obj) -> {
 			String humanKey = toHumanReadable(key);
@@ -331,20 +324,20 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		if (!canEdit) {
 			list.children().forEach(e -> e.setEditable(false));
 			resetAll.active = false;
-			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_LOCKED.draw(ms, 0, 0));
+			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_LOCKED.render(ms, 0, 0));
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, red));
 			serverLocked.withBorderColors(red);
 			serverLocked.getToolTip().add(new TextComponent("Locked").withStyle(ChatFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You do not have enough permissions to edit the server config. You can still look at the current values here though.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 		} else {
-			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.draw(ms, 0, 0));
+			stencil.withStencilRenderer((ms, w, h, alpha) -> AllIcons.I_CONFIG_UNLOCKED.render(ms, 0, 0));
 			stencil.withElementRenderer((ms, w, h, alpha) -> UIRenderHelper.angledGradient(ms, 90, 8, 0, 16, 16, green));
 			serverLocked.withBorderColors(green);
 			serverLocked.getToolTip().add(new TextComponent("Unlocked").withStyle(ChatFormatting.BOLD));
 			serverLocked.getToolTip().addAll(TooltipHelper.cutStringTextComponent("You have enough permissions to edit the server config. Changes you make here will be synced with the server when you save them.", ChatFormatting.GRAY, ChatFormatting.GRAY));
 		}
 
-		widgets.add(serverLocked);
+		addRenderableWidget(serverLocked);
 	}
 
 	@Override
@@ -353,8 +346,6 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 		int x = width / 2;
 		drawCenteredString(ms, minecraft.font, ConfigScreen.modID + " > " + type.toString().toLowerCase(Locale.ROOT) + " > " + title, x, 15, Theme.i(Theme.Key.TEXT));
-
-		list.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

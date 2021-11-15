@@ -27,7 +27,6 @@ import com.simibubi.create.foundation.utility.outliner.Outliner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.GraphicsStatus;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.ComponentUtils;
@@ -41,7 +40,6 @@ public class CreateClient implements ClientModInitializer {
 	public static final SuperByteBufferCache BUFFER_CACHE = new SuperByteBufferCache();
 	public static final Outliner OUTLINER = new Outliner();
 	public static final GhostBlocks GHOST_BLOCKS = new GhostBlocks();
-	public static final Screen EMPTY_SCREEN = new Screen(new TextComponent("")) {};
 	public static final ModelSwapper MODEL_SWAPPER = new ModelSwapper();
 	public static final CasingConnectivity CASING_CONNECTIVITY = new CasingConnectivity();
 

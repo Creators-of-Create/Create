@@ -3,7 +3,7 @@ package com.simibubi.create.compat.jei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;

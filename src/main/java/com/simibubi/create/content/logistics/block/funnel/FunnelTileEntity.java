@@ -14,7 +14,6 @@ import com.simibubi.create.content.contraptions.relays.belt.transport.Transporte
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock.Shape;
 import com.simibubi.create.content.logistics.packet.FunnelFlapPacket;
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
@@ -23,6 +22,7 @@ import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBe
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

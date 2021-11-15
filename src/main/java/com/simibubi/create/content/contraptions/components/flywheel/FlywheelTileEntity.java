@@ -1,7 +1,7 @@
 package com.simibubi.create.content.contraptions.components.flywheel;
 
 import com.simibubi.create.content.contraptions.base.GeneratingKineticTileEntity;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

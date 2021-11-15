@@ -131,11 +131,11 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		matrixStack.translate(0, 15, 0);
 		boolean singleOutput = recipe.getOutputChance() == 1;
 		int xOffset = singleOutput ? 0 : -7;
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26 + xOffset, 75);
-		(singleOutput ? AllGuiTextures.JEI_SLOT : AllGuiTextures.JEI_CHANCE_SLOT).draw(matrixStack, 131 + xOffset, 75);
-		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52 + xOffset, 79);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 26 + xOffset, 75);
+		(singleOutput ? AllGuiTextures.JEI_SLOT : AllGuiTextures.JEI_CHANCE_SLOT).render(matrixStack, 131 + xOffset, 75);
+		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52 + xOffset, 79);
 		if (!singleOutput) {
-			AllGuiTextures.JEI_CHANCE_SLOT.draw(matrixStack, 150 + xOffset, 75);
+			AllGuiTextures.JEI_CHANCE_SLOT.render(matrixStack, 150 + xOffset, 75);
 			Component component = new TextComponent("?").withStyle(ChatFormatting.BOLD);
 			font.drawShadow(matrixStack, component, font.width(component) / -2 + 8 + 150 + xOffset, 2 + 78,
 				0xefefef);
@@ -144,7 +144,7 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 		if (recipe.getLoops() > 1) {
 			matrixStack.pushPose();
 			matrixStack.translate(15, 9, 0);
-			AllIcons.I_SEQ_REPEAT.draw(matrixStack, 50 + xOffset, 75);
+			AllIcons.I_SEQ_REPEAT.render(matrixStack, 50 + xOffset, 75);
 			Component repeat = new TextComponent("x" + recipe.getLoops());
 			font.draw(matrixStack, repeat, 66 + xOffset, 80, 0x888888);
 			matrixStack.popPose();

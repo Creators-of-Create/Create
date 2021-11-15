@@ -8,11 +8,11 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
@@ -37,18 +37,24 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	@Override
 	protected void init() {
 		setWindowSize(background.width, background.height + 4 + PLAYER_INVENTORY.height);
-		setWindowOffset(2 + (width % 2 == 0 ? 0 : -1), 0);
+		setWindowOffset(1, 0);
 		super.init();
-		widgets.clear();
 
 		int x = leftPos;
 		int y = topPos;
 
 		resetButton = new IconButton(x + background.width - 62, y + background.height - 24, AllIcons.I_TRASH);
+		resetButton.withCallback(() -> {
+			menu.clearContents();
+			menu.sendClearPacket();
+		});
 		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
+		confirmButton.withCallback(() -> {
+			minecraft.player.closeContainer();
+		});
 
-		widgets.add(resetButton);
-		widgets.add(confirmButton);
+		addRenderableWidget(resetButton);
+		addRenderableWidget(confirmButton);
 
 		extraAreas = ImmutableList.of(
 			new Rect2i(x + background.width + 4, y + background.height - 44, 64, 56)
@@ -56,7 +62,7 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -64,10 +70,10 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 		int x = leftPos;
 		int y = topPos;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		font.draw(ms, title, x + 15, y + 4, 0x442000);
 
-		GuiGameElement.of(menu.mainItem)
+		GuiGameElement.of(menu.contentHolder)
 			.<GuiGameElement.GuiRenderBuilder>at(x + background.width - 4, y + background.height - 56, -200)
 			.scale(5)
 			.render(ms);
@@ -76,27 +82,10 @@ public class LinkedControllerScreen extends AbstractSimiContainerScreen<LinkedCo
 	@Override
 	protected void containerTick() {
 		if (!menu.player.getMainHandItem()
-			.equals(menu.mainItem, false))
-			minecraft.player.closeContainer();
-	}
+			.equals(menu.contentHolder, false))
+			menu.player.closeContainer();
 
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		boolean mouseClicked = super.mouseClicked(x, y, button);
-
-		if (button == 0) {
-			if (confirmButton.isHovered()) {
-				minecraft.player.closeContainer();
-				return true;
-			}
-			if (resetButton.isHovered()) {
-				menu.clearContents();
-				menu.sendClearPacket();
-				return true;
-			}
-		}
-
-		return mouseClicked;
+		super.containerTick();
 	}
 
 	@Override

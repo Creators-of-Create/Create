@@ -12,16 +12,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
-import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
+import com.simibubi.create.foundation.gui.element.TextStencilElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -142,12 +141,11 @@ public class BaseConfigScreen extends ConfigScreen {
 
 	@Override
 	protected void init() {
-		widgets.clear();
 		super.init();
 		returnOnClose = true;
 
 		TextStencilElement clientText = new TextStencilElement(minecraft.font, new TextComponent(clientTile)).centered(true, true);
-		widgets.add(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
+		addRenderableWidget(clientConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 - 30, 200, 16).showingElement(clientText));
 
 		if (clientSpec != null) {
 			clientConfigWidget.withCallback(() -> linkTo(new SubMenuConfigScreen(this, ModConfig.Type.CLIENT, clientSpec)));
@@ -159,7 +157,7 @@ public class BaseConfigScreen extends ConfigScreen {
 		}
 
 		TextStencilElement commonText = new TextStencilElement(minecraft.font, new TextComponent(commonTile)).centered(true, true);
-		widgets.add(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
+		addRenderableWidget(commonConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15, 200, 16).showingElement(commonText));
 
 		if (commonSpec != null) {
 			commonConfigWidget.withCallback(() -> linkTo(new SubMenuConfigScreen(this, ModConfig.Type.COMMON, commonSpec)));
@@ -171,13 +169,13 @@ public class BaseConfigScreen extends ConfigScreen {
 		}
 
 		TextStencilElement serverText = new TextStencilElement(minecraft.font, new TextComponent(serverTile)).centered(true, true);
-		widgets.add(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
+		addRenderableWidget(serverConfigWidget = new BoxWidget(width / 2 - 100, height / 2 - 15 + 30, 200, 16).showingElement(serverText));
 
 		if (serverSpec == null) {
 			serverConfigWidget.active = false;
 			serverConfigWidget.updateColorsFromState();
 			serverText.withElementRenderer(DISABLED_RENDERER);
-		} else if (Minecraft.getInstance().level == null) {
+		} else if (minecraft.level == null) {
 			serverText.withElementRenderer(DISABLED_RENDERER);
 			serverConfigWidget.getToolTip()
 					.add(new TextComponent("Stored individually per World"));
@@ -208,7 +206,7 @@ public class BaseConfigScreen extends ConfigScreen {
 				.showingElement(titleText.at(0, 7));
 		title.active = false;
 
-		widgets.add(title);
+		addRenderableWidget(title);
 
 
 		ConfigScreen.modID = this.modID;
@@ -219,13 +217,13 @@ public class BaseConfigScreen extends ConfigScreen {
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
 				.add(new TextComponent("Go Back"));
-		widgets.add(goBack);
+		addRenderableWidget(goBack);
 
 		TextStencilElement othersText = new TextStencilElement(minecraft.font, new TextComponent("Access Configs of other Mods")).centered(true, true);
 		others = new BoxWidget(width / 2 - 100, height / 2 - 15 + 90, 200, 16).showingElement(othersText);
 		othersText.withElementRenderer(BoxWidget.gradientFactory.apply(others));
 		others.withCallback(() -> linkTo(new ConfigModListScreen(this)));
-		widgets.add(others);
+		addRenderableWidget(others);
 
 	}
 

@@ -14,8 +14,8 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.fabricmc.api.EnvType;
-import com.tterrag.registrate.fabric.EnvExecutor;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @ParametersAreNonnullByDefault
@@ -34,7 +34,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 
 	public CreateEntityBuilder<T, P> instance(NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory) {
 		if (this.instanceFactory == null) {
-			DistExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerInstance);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
 		}
 
 		this.instanceFactory = instanceFactory;
@@ -46,7 +46,9 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
 			NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
-				InstancedRenderRegistry.getInstance().register(getEntry(), instanceFactory.get());
+				InstancedRenderRegistry.getInstance()
+					.entity(getEntry())
+					.factory(instanceFactory.get());
 			}
 
 		});

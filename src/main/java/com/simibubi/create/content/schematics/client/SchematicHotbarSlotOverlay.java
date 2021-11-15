@@ -16,7 +16,7 @@ public class SchematicHotbarSlotOverlay extends GuiComponent {
 		int y = mainWindow.getGuiScaledHeight() - 19;
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
-		AllGuiTextures.SCHEMATIC_SLOT.draw(matrixStack, this, x + 20 * slot, y);
+		AllGuiTextures.SCHEMATIC_SLOT.render(matrixStack, x + 20 * slot, y, this);
 		matrixStack.popPose();
 	}
 

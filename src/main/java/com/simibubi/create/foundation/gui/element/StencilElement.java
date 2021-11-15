@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.gui.element;
 
 import org.lwjgl.opengl.GL11;
 

@@ -6,9 +6,9 @@ import java.util.List;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
-import com.simibubi.create.foundation.gui.GhostItemContainer;
-import com.simibubi.create.foundation.gui.GhostItemSubmitPacket;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.container.GhostItemContainer;
+import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
 import com.simibubi.create.foundation.networking.AllPackets;
 
 import mezz.jei.api.gui.handlers.IGhostIngredientHandler;

@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.gui.widget;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,29 +7,30 @@ import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
-public abstract class AbstractSimiWidget extends AbstractWidget {
+public abstract class AbstractSimiWidget extends AbstractWidget implements TickableGuiEventListener {
 
 	protected float z;
 	protected boolean wasHovered = false;
 	protected List<Component> toolTip = new LinkedList<>();
 	protected BiConsumer<Integer, Integer> onClick = (_$, _$$) -> {};
 
-	protected AbstractSimiWidget() {
-		this(0, 0);
-	}
-
 	protected AbstractSimiWidget(int x, int y) {
 		this(x, y, 16, 16);
 	}
 
 	protected AbstractSimiWidget(int x, int y, int width, int height) {
-		super(x, y, width, height, TextComponent.EMPTY);
+		this(x, y, width, height, TextComponent.EMPTY);
+	}
+
+	protected AbstractSimiWidget(int x, int y, int width, int height, Component message) {
+		super(x, y, width, height, message);
 	}
 
 	public <T extends AbstractSimiWidget> T withCallback(BiConsumer<Integer, Integer> cb) {
@@ -52,12 +53,13 @@ public abstract class AbstractSimiWidget extends AbstractWidget {
 		return toolTip;
 	}
 
+	@Override
 	public void tick() {}
 
 	@Override
 	public void render(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (visible) {
-			isHovered = isMouseOver(mouseX, mouseY);
+			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			beforeRender(ms, mouseX, mouseY, partialTicks);
 			renderButton(ms, mouseX, mouseY, partialTicks);
 			afterRender(ms, mouseX, mouseY, partialTicks);
@@ -65,16 +67,12 @@ public abstract class AbstractSimiWidget extends AbstractWidget {
 		}
 	}
 
-	@Override
-	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {}
-
-	@Override
-	protected boolean clicked(double mouseX, double mouseY) {
-		return active && visible && isMouseOver(mouseX, mouseY);
-	}
-
 	protected void beforeRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.pushPose();
+	}
+
+	@Override
+	public void renderButton(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 	}
 
 	protected void afterRender(@Nonnull PoseStack ms, int mouseX, int mouseY, float partialTicks) {

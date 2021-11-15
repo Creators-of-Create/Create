@@ -7,10 +7,10 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
-import com.simibubi.create.foundation.gui.widgets.ScrollInput;
-import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -44,7 +44,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-20, 0);
 		super.init();
-		widgets.clear();
 
 		int x = guiLeft;
 		int y = guiTop;
@@ -58,7 +57,10 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 
 		confirmButton =
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-		widgets.add(confirmButton);
+		confirmButton.withCallback(() -> {
+			onClose();
+		});
+		addRenderableWidget(confirmButton);
 	}
 
 	public void initInputsOfRow(int row, int backgroundX, int backgroundY) {
@@ -67,7 +69,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		int rowHeight = 22;
 
 		Vector<ScrollInput> rowInputs = inputs.get(row);
-		rowInputs.forEach(widgets::remove);
+		removeWidgets(rowInputs);
 		rowInputs.clear();
 		int index = row;
 		Instruction instruction = instructions.get(row);
@@ -88,7 +90,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		rowInputs.add(value);
 		rowInputs.add(direction);
 
-		widgets.addAll(rowInputs);
+		addRenderableWidgets(rowInputs);
 		updateParamsOfRow(row);
 	}
 
@@ -130,19 +132,19 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 
 		for (int row = 0; row < instructions.capacity(); row++) {
 			AllGuiTextures toDraw = AllGuiTextures.SEQUENCER_EMPTY;
 			int yOffset = toDraw.height * row;
 			if (row >= instructions.size()) {
-				toDraw.draw(ms, x, y + 14 + yOffset);
+				toDraw.render(ms, x, y + 14 + yOffset, this);
 				continue;
 			}
 
 			Instruction instruction = instructions.get(row);
 			SequencerInstructions def = instruction.instruction;
-			def.background.draw(ms, x, y + 14 + yOffset);
+			def.background.render(ms, x, y + 14 + yOffset, this);
 
 			label(ms, 36, yOffset - 3, Lang.translate(def.translationKey));
 			if (def.hasValueParameter) {
@@ -187,7 +189,7 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 			for (int i = instructions.size() - 1; i > index; i--) {
 				instructions.remove(i);
 				Vector<ScrollInput> rowInputs = inputs.get(i);
-				rowInputs.forEach(widgets::remove);
+				removeWidgets(rowInputs);
 				rowInputs.clear();
 			}
 		} else {
@@ -196,16 +198,6 @@ public class SequencedGearshiftScreen extends AbstractSimiScreen {
 				initInputsOfRow(index + 1, guiLeft, guiTop);
 			}
 		}
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		if (confirmButton.isHovered()) {
-			minecraft.player.closeContainer();
-			return true;
-		}
-
-		return super.mouseClicked(x, y, button);
 	}
 
 }

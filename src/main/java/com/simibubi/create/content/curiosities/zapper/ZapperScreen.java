@@ -7,8 +7,8 @@ import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
@@ -57,7 +57,6 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-10, 0);
 		super.init();
-		widgets.clear();
 
 		animationProgress = 0;
 
@@ -66,23 +65,30 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 
 		confirmButton =
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-		widgets.add(confirmButton);
+		confirmButton.withCallback(() -> {
+			onClose();
+		});
+		addRenderableWidget(confirmButton);
 
 		patternButtons.clear();
 		for (int row = 0; row <= 1; row++) {
 			for (int col = 0; col <= 2; col++) {
 				int id = patternButtons.size();
 				PlacementPatterns pattern = PlacementPatterns.values()[id];
-				patternButtons
-					.add(new IconButton(x + background.width - 76 + col * 18, y + 21 + row * 18, pattern.icon));
-				patternButtons.get(id)
-					.setToolTip(Lang.translate("gui.terrainzapper.pattern." + pattern.translationKey));
+				IconButton patternButton = new IconButton(x + background.width - 76 + col * 18, y + 21 + row * 18, pattern.icon);
+				patternButton.withCallback(() -> {
+					patternButtons.forEach(b -> b.active = true);
+					patternButton.active = false;
+					currentPattern = pattern;
+				});
+				patternButton.setToolTip(Lang.translate("gui.terrainzapper.pattern." + pattern.translationKey));
+				patternButtons.add(patternButton);
 			}
 		}
 
 		patternButtons.get(currentPattern.ordinal()).active = false;
 
-		widgets.addAll(patternButtons);
+		addRenderableWidgets(patternButtons);
 	}
 
 	@Override
@@ -90,7 +96,7 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		drawOnBackground(ms, x, y);
 
 		renderBlock(ms, x, y);
@@ -112,25 +118,6 @@ public abstract class ZapperScreen extends AbstractSimiScreen {
 		ConfigureZapperPacket packet = getConfigurationPacket();
 		packet.configureZapper(zapper);
 		AllPackets.channel.sendToServer(packet);
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		for (IconButton patternButton : patternButtons) {
-			if (patternButton.isHovered()) {
-				patternButtons.forEach(b -> b.active = true);
-				patternButton.active = false;
-				patternButton.playDownSound(minecraft.getSoundManager());
-				currentPattern = PlacementPatterns.values()[patternButtons.indexOf(patternButton)];
-			}
-		}
-
-		if (confirmButton.isHovered()) {
-			onClose();
-			return true;
-		}
-
-		return super.mouseClicked(x, y, button);
 	}
 
 	protected void renderZapper(PoseStack ms, int x, int y) {

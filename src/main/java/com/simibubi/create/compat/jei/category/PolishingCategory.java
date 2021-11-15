@@ -8,7 +8,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.content.curiosities.tools.SandPaperPolishingRecipe;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -57,10 +57,10 @@ public class PolishingCategory extends CreateRecipeCategory<SandPaperPolishingRe
 
 	@Override
 	public void draw(SandPaperPolishingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 28);
-		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 28);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 61, 21);
-		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52, 32);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 28);
+		getRenderedSlot(recipe, 0).render(matrixStack, 131, 28);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 61, 21);
+		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 32);
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		ItemStack[] matchingStacks = ingredients.get(0)

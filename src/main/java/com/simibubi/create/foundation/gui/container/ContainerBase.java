@@ -1,4 +1,6 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.gui.container;
+
+import com.simibubi.create.foundation.utility.IInteractionChecker;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,9 +39,9 @@ public abstract class ContainerBase<T> extends AbstractContainerMenu {
 	@Environment(EnvType.CLIENT)
 	protected abstract T createOnClient(FriendlyByteBuf extraData);
 
-	protected abstract void addSlots();
-
 	protected abstract void initAndReadInventory(T contentHolder);
+
+	protected abstract void addSlots();
 
 	protected abstract void saveData(T contentHolder);
 

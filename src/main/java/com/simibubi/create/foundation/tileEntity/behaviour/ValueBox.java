@@ -208,7 +208,7 @@ public class ValueBox extends ChasingAABBOutline {
 			float scale = 4 * 16;
 			ms.scale(scale, scale, scale);
 			ms.translate(-.5f, -.5f, 1 / 32f);
-			icon.draw(ms, buffer, 0xFFFFFF);
+			icon.render(ms, buffer, 0xFFFFFF);
 		}
 
 	}

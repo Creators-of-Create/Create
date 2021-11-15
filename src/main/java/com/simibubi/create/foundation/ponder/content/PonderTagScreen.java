@@ -8,10 +8,10 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
@@ -22,7 +22,7 @@ import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +55,6 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected void init() {
-		widgets.clear();
 		super.init();
 
 		// items
@@ -103,7 +102,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 							.animateColors(false);
 			}
 
-			widgets.add(b);
+			addRenderableWidget(b);
 			layout.next();
 		}
 
@@ -128,7 +127,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 							.animateColors(false);
 			}
 
-			widgets.add(b);
+			addRenderableWidget(b);
 		}
 
 		// chapters
@@ -148,10 +147,15 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 					ScreenOpener.transitionTo(PonderUI.of(chapter));
 				});
 
-			widgets.add(label);
+			addRenderableWidget(label);
 			layout.next();
 		}
 
+	}
+
+	@Override
+	protected void initBackTrackIcon(PonderButton backTrack) {
+		backTrack.showing(tag);
 	}
 
 	@Override
@@ -163,12 +167,12 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		Window w = minecraft.getWindow();
 		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
 		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
-		for (AbstractWidget widget : widgets) {
-			if (widget == backTrack)
+		for (GuiEventListener child : children()) {
+			if (child == backTrack)
 				continue;
-			if (widget instanceof PonderButton)
-				if (widget.isMouseOver(mouseX, mouseY)) {
-					hoveredItem = ((PonderButton) widget).getItem();
+			if (child instanceof PonderButton button)
+				if (button.isMouseOver(mouseX, mouseY)) {
+					hoveredItem = button.getItem();
 				}
 		}
 	}
@@ -210,7 +214,7 @@ public class PonderTagScreen extends NavigatableSimiScreen {
 		ms.pushPose();
 		ms.translate(23, 23, 10);
 		ms.scale(1.66f, 1.66f, 1.66f);
-		tag.draw(ms, this, 0, 0);
+		tag.render(ms, 0, 0);
 		ms.popPose();
 		ms.popPose();
 

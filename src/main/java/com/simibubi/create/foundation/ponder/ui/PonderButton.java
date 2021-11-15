@@ -3,12 +3,12 @@ package com.simibubi.create.foundation.ponder.ui;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.Theme.Key;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
-import com.simibubi.create.foundation.gui.widgets.ElementWidget;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.RenderElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
+import com.simibubi.create.foundation.gui.widget.ElementWidget;
 import com.simibubi.create.foundation.ponder.content.PonderTag;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Color;

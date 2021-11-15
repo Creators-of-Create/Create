@@ -310,7 +310,7 @@ public class InWorldProcessing {
 			world.addParticle(ParticleTypes.POOF, vec.x, vec.y + .25f, vec.z, 0, 1 / 16f, 0);
 			break;
 		case SPLASHING:
-			Vector3f color = new Vector3f(Color.vectorFromRGB(0x0055FF));
+			Vector3f color = new Color(0x0055FF).asVectorF();
 			world.addParticle(new DustParticleOptions(color, 1), vec.x + (world.random.nextFloat() - .5f) * .5f,
 				vec.y + .5f, vec.z + (world.random.nextFloat() - .5f) * .5f, 0, 1 / 8f, 0);
 			world.addParticle(ParticleTypes.SPIT, vec.x + (world.random.nextFloat() - .5f) * .5f, vec.y + .5f,

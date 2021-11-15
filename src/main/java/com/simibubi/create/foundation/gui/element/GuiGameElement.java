@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.gui.element;
 
 import javax.annotation.Nullable;
 
@@ -13,6 +13,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
+import com.simibubi.create.foundation.gui.ILightingSettings;
+import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
 
@@ -187,9 +189,9 @@ public class GuiGameElement {
 			int color = Minecraft.getInstance()
 				.getBlockColors()
 				.getColor(blockState, null, null, 0);
-			Vec3 rgb = Color.vectorFromRGB(color == -1 ? this.color : color);
+			Color rgb = new Color(color == -1 ? this.color : color);
 			blockRenderer.getModelRenderer()
-				.renderModel(ms.last(), vb, blockState, blockModel, (float) rgb.x, (float) rgb.y, (float) rgb.z,
+				.renderModel(ms.last(), vb, blockState, blockModel, rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
 					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
 			buffer.endBatch();
 		}

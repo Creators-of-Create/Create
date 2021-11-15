@@ -58,13 +58,13 @@ public class CrushingCategory extends CreateRecipeCategory<AbstractCrushingRecip
 	@Override
 	public void draw(AbstractCrushingRecipe recipe, PoseStack matrixStack,  double mouseX, double mouseY) {
 		List<ProcessingOutput> results = recipe.getRollableResults();
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 50, 2);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 72, 7);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 2);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 72, 7);
 
 		int size = results.size();
 		int offset = -size * 19 / 2;
 		for (int outputIndex = 0; outputIndex < results.size(); outputIndex++)
-			getRenderedSlot(recipe, outputIndex).draw(matrixStack, getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
+			getRenderedSlot(recipe, outputIndex).render(matrixStack, getBackground().getWidth() / 2 + offset + 19 * outputIndex, 78);
 
 		crushingWheels.draw(matrixStack, 62, 59);
 	}

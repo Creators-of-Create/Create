@@ -7,15 +7,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.entries.NumberEntry;
-import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
+import com.simibubi.create.foundation.gui.TickableGuiEventListener;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.element.TextStencilElement;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
@@ -30,7 +30,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fmlclient.gui.GuiUtils;
 
-public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry> {
+public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry> implements TickableGuiEventListener {
 
 	public static EditBox currentText;
 
@@ -56,7 +56,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 
 	@Override
 	protected void renderList(PoseStack p_238478_1_, int p_238478_2_, int p_238478_3_, int p_238478_4_, int p_238478_5_, float p_238478_6_) {
-		Window window = Minecraft.getInstance().getWindow();
+		Window window = minecraft.getWindow();
 		double d0 = window.getGuiScale();
 		RenderSystem.enableScissor((int) (this.x0 * d0), (int) (window.getHeight() - (this.y1 * d0)), (int) (this.width * d0), (int) (this.height * d0));
 		super.renderList(p_238478_1_, p_238478_2_, p_238478_3_, p_238478_4_, p_238478_5_, p_238478_6_);
@@ -80,6 +80,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 		return x0 + this.width - 6;
 	}
 
+	@Override
 	public void tick() {
 		/*for(int i = 0; i < getItemCount(); ++i) {
 			int top = this.getRowTop(i);
@@ -122,7 +123,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 		ConfigScreen.cogSpin.bump(3, force);
 	}
 
-	public static abstract class Entry extends ObjectSelectionList.Entry<Entry> {
+	public static abstract class Entry extends ObjectSelectionList.Entry<Entry> implements TickableGuiEventListener {
 		protected List<GuiEventListener> listeners;
 		protected Map<String, String> annotations;
 		protected String path;
@@ -147,6 +148,7 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 			return getGuiListeners().stream().anyMatch(l -> l.charTyped(ch, code));
 		}
 
+		@Override
 		public void tick() {}
 
 		public List<GuiEventListener> getGuiListeners() {
@@ -249,13 +251,13 @@ public class ConfigScreenList extends ObjectSelectionList<ConfigScreenList.Entry
 				if (tooltip.isEmpty())
 					return;
 
-				GL11.glDisable(GL11.GL_SCISSOR_TEST);
+				RenderSystem.disableScissor();
 				Screen screen = Minecraft.getInstance().screen;
 				ms.pushPose();
 				ms.translate(0, 0, 400);
 				GuiUtils.drawHoveringText(ms, tooltip, mouseX, mouseY, screen.width, screen.height, 300, font);
 				ms.popPose();
-				GL11.glEnable(GL11.GL_SCISSOR_TEST);
+				GlStateManager._enableScissorTest();
 			}
 		}
 

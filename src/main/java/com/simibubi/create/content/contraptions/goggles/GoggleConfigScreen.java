@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;

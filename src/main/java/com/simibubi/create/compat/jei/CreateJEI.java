@@ -40,18 +40,13 @@ import com.simibubi.create.content.contraptions.components.press.MechanicalPress
 import com.simibubi.create.content.contraptions.components.saw.SawTileEntity;
 import com.simibubi.create.content.contraptions.fluids.recipe.PotionMixingRecipeManager;
 import com.simibubi.create.content.contraptions.processing.BasinRecipe;
-import com.simibubi.create.content.curiosities.toolbox.ToolboxScreen;
 import com.simibubi.create.content.curiosities.tools.BlueprintScreen;
-import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateScreen;
 import com.simibubi.create.content.logistics.item.LinkedControllerScreen;
 import com.simibubi.create.content.logistics.item.filter.AbstractFilterScreen;
-import com.simibubi.create.content.logistics.item.filter.AttributeFilterScreen;
-import com.simibubi.create.content.logistics.item.filter.FilterScreen;
-import com.simibubi.create.content.schematics.block.SchematicTableScreen;
-import com.simibubi.create.content.schematics.block.SchematicannonScreen;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase.ConfigBool;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
@@ -248,18 +243,11 @@ public class CreateJEI implements REIClientPlugin {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-		SlotMover slotMover = new SlotMover();
-		registration.addGuiContainerHandler(SchematicTableScreen.class, slotMover);
-		registration.addGuiContainerHandler(SchematicannonScreen.class, slotMover);
-		registration.addGuiContainerHandler(AdjustableCrateScreen.class, slotMover);
-		registration.addGuiContainerHandler(FilterScreen.class, slotMover);
-		registration.addGuiContainerHandler(AttributeFilterScreen.class, slotMover);
-		registration.addGuiContainerHandler(BlueprintScreen.class, slotMover);
-		registration.addGuiContainerHandler(LinkedControllerScreen.class, slotMover);
-		registration.addGuiContainerHandler(ToolboxScreen.class, slotMover);
+		registration.addGenericGuiContainerHandler(AbstractSimiContainerScreen.class, new SlotMover());
 
 		registration.addGhostIngredientHandler(AbstractFilterScreen.class, new GhostIngredientHandler());
 		registration.addGhostIngredientHandler(BlueprintScreen.class, new GhostIngredientHandler());
+		registration.addGhostIngredientHandler(LinkedControllerScreen.class, new GhostIngredientHandler());
 	}
 
 	private class CategoryBuilder<T extends Recipe<?>> {

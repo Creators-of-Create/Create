@@ -9,11 +9,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
@@ -27,8 +27,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer> {
 
-	AllGuiTextures BG = AllGuiTextures.TOOLBOX;
-	AllGuiTextures PLAYER = AllGuiTextures.PLAYER_INVENTORY;
+	protected static final AllGuiTextures BG = AllGuiTextures.TOOLBOX;
+	protected static final AllGuiTextures PLAYER = AllGuiTextures.PLAYER_INVENTORY;
+
 	protected Slot hoveredToolboxSlot;
 	private IconButton confirmButton;
 	private IconButton disposeButton;
@@ -43,18 +44,28 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 	@Override
 	protected void init() {
+		setWindowSize(30 + BG.width, BG.height + PLAYER.height - 24);
+		setWindowOffset(-11, 0);
 		super.init();
-		widgets.clear();
-		setWindowSize(BG.width, 256);
-		confirmButton = new IconButton(getGuiLeft() + BG.width - 23, getGuiTop() + BG.height - 24, AllIcons.I_CONFIRM);
-		disposeButton = new IconButton(getGuiLeft() + 91, getGuiTop() + 69, AllIcons.I_TOOLBOX);
-		disposeButton.setToolTip(Lang.translate("toolbox.depositBox"));
-		widgets.add(confirmButton);
-		widgets.add(disposeButton);
+
 		color = menu.contentHolder.getColor();
 
-		extraAreas = ImmutableList.of(new Rect2i(getGuiLeft() + -28, getGuiTop() + 141, 80, 100),
-			new Rect2i(getGuiLeft() + 162, getGuiTop() + 111, 100, 70));
+		confirmButton = new IconButton(leftPos + 30 + BG.width - 33, topPos + BG.height - 24, AllIcons.I_CONFIRM);
+		confirmButton.withCallback(() -> {
+			minecraft.player.closeContainer();
+		});
+		addRenderableWidget(confirmButton);
+
+		disposeButton = new IconButton(leftPos + 30 + 81, topPos + 69, AllIcons.I_TOOLBOX);
+		disposeButton.withCallback(() -> {
+			AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
+		});
+		disposeButton.setToolTip(Lang.translate("toolbox.depositBox"));
+		addRenderableWidget(disposeButton);
+
+		extraAreas = ImmutableList.of(
+			new Rect2i(leftPos + 30 + BG.width, topPos + BG.height - 15 - 34 - 6, 72, 68)
+		);
 	}
 
 	@Override
@@ -65,18 +76,18 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	}
 
 	@Override
-	public void setBlitOffset(int p_230926_1_) {
-		super.setBlitOffset(p_230926_1_);
-	}
+	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+		int x = leftPos + imageWidth - BG.width;
+		int y = topPos;
 
-	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		BG.draw(ms, this, leftPos + 10, topPos);
-		PLAYER.draw(ms, this, leftPos + (BG.width - PLAYER.width) / 2 - 26, topPos + imageHeight - PLAYER.height);
-		font.draw(ms, title, leftPos + 24, topPos + 4, 0x442000);
-		font.draw(ms, playerInventoryTitle, leftPos - 13, topPos + 154, 0x404040);
+		BG.render(ms, x, y, this);
+		font.draw(ms, title, x + 15, y + 4, 0x442000);
 
-		renderToolbox(ms, mouseX, mouseY, partialTicks);
+		int invX = leftPos;
+		int invY = topPos + imageHeight - PLAYER.height;
+		renderPlayerInventory(ms, invX, invY);
+
+		renderToolbox(ms, x + BG.width + 50, y + BG.height + 12, partialTicks);
 
 		hoveredToolboxSlot = null;
 		for (int compartment = 0; compartment < 8; compartment++) {
@@ -91,7 +102,7 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 
 			if (!itemstack.isEmpty()) {
 				int count = menu.totalCountInCompartment(compartment);
-				String s = count + "";
+				String s = String.valueOf(count);
 				setBlitOffset(100);
 				itemRenderer.blitOffset = 100.0F;
 				RenderSystem.enableDepthTest();
@@ -113,9 +124,9 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 		}
 	}
 
-	private void renderToolbox(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	private void renderToolbox(PoseStack ms, int x, int y, float partialTicks) {
 		ms.pushPose();
-		ms.translate(leftPos + 247, topPos + 180, 100);
+		ms.translate(x, y, 100);
 		MatrixTransformStack.of(ms)
 			.scale(50)
 			.rotateX(-22)
@@ -146,28 +157,10 @@ public class ToolboxScreen extends AbstractSimiContainerScreen<ToolboxContainer>
 	}
 
 	@Override
-	protected void renderWindowForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	protected void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (hoveredToolboxSlot != null)
 			hoveredSlot = hoveredToolboxSlot;
-		super.renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		boolean mouseClicked = super.mouseClicked(x, y, button);
-
-		if (button == 0) {
-			if (confirmButton.isHovered()) {
-				minecraft.player.closeContainer();
-				return true;
-			}
-			if (disposeButton.isHovered()) {
-				AllPackets.channel.sendToServer(new ToolboxDisposeAllPacket(menu.contentHolder.getBlockPos()));
-				return true;
-			}
-		}
-
-		return mouseClicked;
+		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override

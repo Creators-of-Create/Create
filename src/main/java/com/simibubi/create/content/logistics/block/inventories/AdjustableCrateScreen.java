@@ -11,11 +11,11 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.logistics.packet.ConfigureFlexcratePacket;
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.Label;
-import com.simibubi.create.foundation.gui.widgets.ScrollInput;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -44,7 +44,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 
 	public AdjustableCrateScreen(AdjustableCrateContainer container, Inventory inv, Component title) {
 		super(container, inv, title);
-		te = container.te;
+		te = container.contentHolder;
 		lastModification = -1;
 		background = container.doubleCrate ? ADJUSTABLE_DOUBLE_CRATE : ADJUSTABLE_CRATE;
 	}
@@ -54,7 +54,6 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		setWindowSize(Math.max(background.width, PLAYER_INVENTORY.width), background.height + 4 + PLAYER_INVENTORY.height);
 		setWindowOffset(menu.doubleCrate ? -2 : 0, 0);
 		super.init();
-		widgets.clear();
 
 		itemLabelOffset = menu.doubleCrate ? 137 : 65;
 		textureXShift = menu.doubleCrate ? 0 : (imageWidth - (background.width - 8)) / 2;
@@ -72,8 +71,8 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 			.setState(te.allowedAmount)
 			.calling(s -> lastModification = 0);
 		allowedItems.onChanged();
-		widgets.add(allowedItemsLabel);
-		widgets.add(allowedItems);
+		addRenderableWidget(allowedItemsLabel);
+		addRenderableWidget(allowedItems);
 
 		extraAreas = ImmutableList.of(
 			new Rect2i(x + background.width, y + background.height - 56 + itemYShift, 80, 80)
@@ -81,7 +80,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	}
 
 	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
 		int invX = getLeftOfCentered(PLAYER_INVENTORY.width);
 		int invY = topPos + background.height + 4;
 		renderPlayerInventory(ms, invX, invY);
@@ -89,7 +88,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 		int x = leftPos + textureXShift;
 		int y = topPos;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		String itemCount = String.valueOf(te.itemCount);
@@ -101,7 +100,7 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 			int slotsPerRow = (menu.doubleCrate ? 8 : 4);
 			int slotX = x + 22 + (slot % slotsPerRow) * 18;
 			int slotY = y + 19 + (slot / slotsPerRow) * 18;
-			AllGuiTextures.ADJUSTABLE_CRATE_LOCKED_SLOT.draw(ms, this, slotX, slotY);
+			AllGuiTextures.ADJUSTABLE_CRATE_LOCKED_SLOT.render(ms, slotX, slotY, this);
 		}
 
 		GuiGameElement.of(renderedItem)
@@ -119,6 +118,8 @@ public class AdjustableCrateScreen extends AbstractSimiContainerScreen<Adjustabl
 	protected void containerTick() {
 		if (!AllBlocks.ADJUSTABLE_CRATE.has(minecraft.level.getBlockState(te.getBlockPos())))
 			minecraft.setScreen(null);
+
+		super.containerTick();
 
 		if (lastModification >= 0)
 			lastModification++;

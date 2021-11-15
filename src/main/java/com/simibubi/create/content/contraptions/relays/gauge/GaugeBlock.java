@@ -132,7 +132,7 @@ public class GaugeBlock extends DirectionalAxisKineticBlock implements ITE<Gauge
 			if (!shouldRenderHeadOnFace(worldIn, pos, stateIn, face))
 				continue;
 
-			Vector3f rgb = new Vector3f(Color.vectorFromRGB(color));
+			Vector3f rgb = new Color(color).asVectorF();
 			Vec3 faceVec = Vec3.atLowerCornerOf(face.getNormal());
 			Direction positiveFacing = Direction.get(AxisDirection.POSITIVE, face.getAxis());
 			Vec3 positiveFaceVec = Vec3.atLowerCornerOf(positiveFacing.getNormal());

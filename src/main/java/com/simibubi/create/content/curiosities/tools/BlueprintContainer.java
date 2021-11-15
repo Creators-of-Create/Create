@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.simibubi.create.AllContainerTypes;
 import com.simibubi.create.content.curiosities.tools.BlueprintEntity.BlueprintSection;
-import com.simibubi.create.foundation.gui.GhostItemContainer;
+import com.simibubi.create.foundation.gui.container.GhostItemContainer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;

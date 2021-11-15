@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class MechanicalCraftingInventory extends CraftingContainer {
 
-	private static AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
+	private static final AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
 		public boolean stillValid(Player playerIn) {
 			return false;
 		}

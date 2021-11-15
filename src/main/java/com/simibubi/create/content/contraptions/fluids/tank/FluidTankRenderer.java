@@ -2,8 +2,8 @@ package com.simibubi.create.content.contraptions.fluids.tank;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.fluid.FluidRenderer;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.tileEntity.renderer.SafeTileEntityRenderer;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

@@ -4,10 +4,10 @@ import static java.lang.Math.abs;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingAngle;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingAngle;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;

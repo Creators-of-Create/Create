@@ -59,10 +59,9 @@ public class ToolSelectionScreen extends Screen {
 	}
 
 	private void draw(PoseStack matrixStack, float partialTicks) {
-		Minecraft mc = Minecraft.getInstance();
-		Window mainWindow = mc.getWindow();
+		Window mainWindow = minecraft.getWindow();
 		if (!initialized)
-			init(mc, mainWindow.getGuiScaledWidth(), mainWindow.getGuiScaledHeight());
+			init(minecraft, mainWindow.getGuiScaledWidth(), mainWindow.getGuiScaledHeight());
 
 		int x = (mainWindow.getGuiScaledWidth() - w) / 2 + 15;
 		int y = mainWindow.getGuiScaledHeight() - h - 75;
@@ -125,11 +124,11 @@ public class ToolSelectionScreen extends Screen {
 			RenderSystem.setShaderColor(0, 0, 0, alpha);
 			tools.get(i)
 				.getIcon()
-				.draw(matrixStack, this, x + i * 50 + 16, y + 12);
+				.render(matrixStack, x + i * 50 + 16, y + 12, this);
 			RenderSystem.setShaderColor(1, 1, 1, alpha);
 			tools.get(i)
 				.getIcon()
-				.draw(matrixStack, this, x + i * 50 + 16, y + 11);
+				.render(matrixStack, x + i * 50 + 16, y + 11, this);
 
 			matrixStack.popPose();
 		}

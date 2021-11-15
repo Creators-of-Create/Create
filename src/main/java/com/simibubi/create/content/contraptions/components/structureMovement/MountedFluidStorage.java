@@ -5,19 +5,20 @@ import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTil
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankTileEntity;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.NBTHelper;
-import com.simibubi.create.lib.transfer.TransferUtil;
-import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import com.simibubi.create.lib.transfer.fluid.FluidTank;
-import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import com.simibubi.create.lib.utility.LazyOptional;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class MountedFluidStorage {
 
@@ -61,8 +62,8 @@ public class MountedFluidStorage {
 				packetCooldown--;
 			else if (sendPacket) {
 				sendPacket = false;
-				AllPackets.channel.sendToClientsTracking(
-					new ContraptionFluidPacket(entity.getId(), pos, tank.getFluid()), entity);
+				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity),
+					new ContraptionFluidPacket(entity.getId(), pos, tank.getFluid()));
 				packetCooldown = 8;
 			}
 			return;
@@ -85,7 +86,7 @@ public class MountedFluidStorage {
 			tank.setFluidLevel(new InterpolatedChasingValue().start(fillState));
 		tank.getFluidLevel()
 			.target(fillState);
-		FluidTank tankInventory = tank.getTankInventory();
+		IFluidTank tankInventory = tank.getTankInventory();
 		if (tankInventory instanceof SmartFluidTank)
 			((SmartFluidTank) tankInventory).setFluid(fluid);
 	}
@@ -95,7 +96,7 @@ public class MountedFluidStorage {
 		if (te == null)
 			return;
 
-		IFluidHandler teHandler = TransferUtil.getFluidHandler(te)
+		IFluidHandler teHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.orElse(null);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;
@@ -113,7 +114,7 @@ public class MountedFluidStorage {
 		if (tank instanceof CreativeSmartFluidTank)
 			return;
 
-		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
+		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
 		IFluidHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof SmartFluidTank))
 			return;
@@ -130,7 +131,7 @@ public class MountedFluidStorage {
 		if (!valid)
 			return null;
 		CompoundTag tag = tank.writeToNBT(new CompoundTag());
-		tag.putLong("Capacity", tank.getCapacity());
+		tag.putInt("Capacity", tank.getCapacity());
 
 		if (tank instanceof CreativeSmartFluidTank) {
 			NBTHelper.putMarker(tag, "Bottomless");
@@ -150,7 +151,7 @@ public class MountedFluidStorage {
 		storage.valid = true;
 
 		if (nbt.contains("Bottomless")) {
-			FluidStack providedStack = FluidStack.fromNBT(nbt.getCompound("ProvidedStack"));
+			FluidStack providedStack = FluidStack.loadFluidStackFromNBT(nbt.getCompound("ProvidedStack"));
 			CreativeSmartFluidTank creativeSmartFluidTank = new CreativeSmartFluidTank(capacity, $ -> {
 			});
 			creativeSmartFluidTank.setContainedFluid(providedStack);

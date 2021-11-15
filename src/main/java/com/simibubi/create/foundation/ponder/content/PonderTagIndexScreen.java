@@ -8,11 +8,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.BoxElement;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.element.BoxElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.ponder.NavigatableSimiScreen;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
@@ -24,7 +24,7 @@ import com.simibubi.create.foundation.utility.FontHelper;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -51,7 +51,6 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 
 	@Override
 	protected void init() {
-		widgets.clear();
 		super.init();
 
 		List<PonderTag> tags = PonderRegistry.TAGS.getListedTags();
@@ -68,14 +67,19 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 						centerScalingOn(mouseX, mouseY);
 						ScreenOpener.transitionTo(new PonderTagScreen(i));
 					});
-			widgets.add(b);
+			addRenderableWidget(b);
 			layout.next();
 		}
 
-		widgets.add(backTrack = new PonderButton(31, height - 31 - 20).enableFade(0, 5)
+		addRenderableWidget(backTrack = new PonderButton(31, height - 31 - 20).enableFade(0, 5)
 			.showing(AllIcons.I_MTD_CLOSE)
 			.withCallback(() -> ScreenOpener.openPreviousScreen(this, Optional.empty())));
 		backTrack.fade(1);
+	}
+
+	@Override
+	protected void initBackTrackIcon(PonderButton backTrack) {
+		backTrack.showing(AllItems.WRENCH.asStack());
 	}
 
 	@Override
@@ -87,12 +91,12 @@ public class PonderTagIndexScreen extends NavigatableSimiScreen {
 		Window w = minecraft.getWindow();
 		double mouseX = minecraft.mouseHandler.xpos() * w.getGuiScaledWidth() / w.getScreenWidth();
 		double mouseY = minecraft.mouseHandler.ypos() * w.getGuiScaledHeight() / w.getScreenHeight();
-		for (AbstractWidget widget : widgets) {
-			if (widget == backTrack)
+		for (GuiEventListener child : children()) {
+			if (child == backTrack)
 				continue;
-			if (widget instanceof PonderButton)
-				if (widget.isMouseOver(mouseX, mouseY))
-					hoveredItem = ((PonderButton) widget).getTag();
+			if (child instanceof PonderButton button)
+				if (button.isMouseOver(mouseX, mouseY))
+					hoveredItem = button.getTag();
 		}
 	}
 	

@@ -10,10 +10,10 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.content.logistics.item.filter.FilterScreenPacket.Option;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
-import com.simibubi.create.foundation.gui.widgets.Indicator;
-import com.simibubi.create.foundation.gui.widgets.Label;
-import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.Indicator;
+import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.Pair;
@@ -30,11 +30,6 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	private static final String PREFIX = "gui.attribute_filter.";
 
-	private IconButton whitelistDis, whitelistCon, blacklist;
-	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;
-	private IconButton add;
-	private IconButton addInverted;
-
 	private Component addDESC = Lang.translate(PREFIX + "add_attribute");
 	private Component addInvertedDESC = Lang.translate(PREFIX + "add_inverted_attribute");
 
@@ -49,6 +44,11 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	private Component noSelectedT = Lang.translate(PREFIX + "no_selected_attributes");
 	private Component selectedT = Lang.translate(PREFIX + "selected_attributes");
 
+	private IconButton whitelistDis, whitelistCon, blacklist;
+	private Indicator whitelistDisIndicator, whitelistConIndicator, blacklistIndicator;
+	private IconButton add;
+	private IconButton addInverted;
+
 	private ItemStack lastItemScanned = ItemStack.EMPTY;
 	private List<ItemAttribute> attributesOfItem = new ArrayList<>();
 	private List<Component> selectedAttributes = new ArrayList<>();
@@ -61,29 +61,47 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 
 	@Override
 	protected void init() {
-		setWindowOffset(-11 + (width % 2 == 0 ? 1 : 0), 7);
+		setWindowOffset(-11, 7);
 		super.init();
 
 		int x = leftPos;
 		int y = topPos;
 
 		whitelistDis = new IconButton(x + 47, y + 59, AllIcons.I_WHITELIST_OR);
+		whitelistDis.withCallback(() -> {
+			menu.whitelistMode = WhitelistMode.WHITELIST_DISJ;
+			sendOptionUpdate(Option.WHITELIST);
+		});
 		whitelistDis.setToolTip(allowDisN);
 		whitelistCon = new IconButton(x + 65, y + 59, AllIcons.I_WHITELIST_AND);
+		whitelistCon.withCallback(() -> {
+			menu.whitelistMode = WhitelistMode.WHITELIST_CONJ;
+			sendOptionUpdate(Option.WHITELIST2);
+		});
 		whitelistCon.setToolTip(allowConN);
 		blacklist = new IconButton(x + 83, y + 59, AllIcons.I_WHITELIST_NOT);
+		blacklist.withCallback(() -> {
+			menu.whitelistMode = WhitelistMode.BLACKLIST;
+			sendOptionUpdate(Option.BLACKLIST);
+		});
 		blacklist.setToolTip(denyN);
 
 		whitelistDisIndicator = new Indicator(x + 47, y + 53, TextComponent.EMPTY);
 		whitelistConIndicator = new Indicator(x + 65, y + 53, TextComponent.EMPTY);
 		blacklistIndicator = new Indicator(x + 83, y + 53, TextComponent.EMPTY);
 
-		widgets.addAll(Arrays.asList(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
-			whitelistDisIndicator));
+		addRenderableWidgets(blacklist, whitelistCon, whitelistDis, blacklistIndicator, whitelistConIndicator,
+			whitelistDisIndicator);
 
-		widgets.add(add = new IconButton(x + 182, y + 21, AllIcons.I_ADD));
-		widgets.add(addInverted = new IconButton(x + 200, y + 21, AllIcons.I_ADD_INVERTED_ATTRIBUTE));
+		addRenderableWidget(add = new IconButton(x + 182, y + 21, AllIcons.I_ADD));
+		addRenderableWidget(addInverted = new IconButton(x + 200, y + 21, AllIcons.I_ADD_INVERTED_ATTRIBUTE));
+		add.withCallback(() -> {
+			handleAddedAttibute(false);
+		});
 		add.setToolTip(addDESC);
+		addInverted.withCallback(() -> {
+			handleAddedAttibute(true);
+		});
 		addInverted.setToolTip(addInvertedDESC);
 
 		handleIndicators();
@@ -95,8 +113,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		attributeSelector.removeCallback();
 		referenceItemChanged(menu.ghostInventory.getStackInSlot(0));
 
-		widgets.add(attributeSelector);
-		widgets.add(attributeSelectorLabel);
+		addRenderableWidget(attributeSelector);
+		addRenderableWidget(attributeSelectorLabel);
 
 		selectedAttributes.clear();
 		selectedAttributes.add((menu.selectedAttributes.isEmpty() ? noSelectedT : selectedT).plainCopy()
@@ -160,7 +178,7 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	}
 
 	@Override
-	public void renderWindowForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		ItemStack stack = menu.ghostInventory.getStackInSlot(1);
 		matrixStack.pushPose();
 		matrixStack.translate(0.0F, 0.0F, 32.0F);
@@ -172,11 +190,12 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 		this.itemRenderer.blitOffset = 0.0F;
 		matrixStack.popPose();
 
-		super.renderWindowForeground(matrixStack, mouseX, mouseY, partialTicks);
+		super.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
 	protected void containerTick() {
+		super.containerTick();
 		ItemStack stackInSlot = menu.ghostInventory.getStackInSlot(0);
 		if (!stackInSlot.equals(lastItemScanned, false))
 			referenceItemChanged(stackInSlot);
@@ -205,36 +224,8 @@ public class AttributeFilterScreen extends AbstractFilterScreen<AttributeFilterC
 	}
 
 	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		boolean mouseClicked = super.mouseClicked(x, y, button);
-
-		if (button != 0)
-			return mouseClicked;
-
-		if (blacklist.isHovered()) {
-			menu.whitelistMode = WhitelistMode.BLACKLIST;
-			sendOptionUpdate(Option.BLACKLIST);
-			return true;
-		}
-
-		if (whitelistCon.isHovered()) {
-			menu.whitelistMode = WhitelistMode.WHITELIST_CONJ;
-			sendOptionUpdate(Option.WHITELIST2);
-			return true;
-		}
-
-		if (whitelistDis.isHovered()) {
-			menu.whitelistMode = WhitelistMode.WHITELIST_DISJ;
-			sendOptionUpdate(Option.WHITELIST);
-			return true;
-		}
-
-		if (add.isHovered() && add.active)
-			return handleAddedAttibute(false);
-		if (addInverted.isHovered() && addInverted.active)
-			return handleAddedAttibute(true);
-
-		return mouseClicked;
+	protected List<Indicator> getIndicators() {
+		return Arrays.asList(blacklistIndicator, whitelistConIndicator, whitelistDisIndicator);
 	}
 
 	protected boolean handleAddedAttibute(boolean inverted) {

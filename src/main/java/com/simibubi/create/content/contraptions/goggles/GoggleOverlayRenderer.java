@@ -15,8 +15,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.pis
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.PistonExtensionPoleBlock;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.config.CClient;
-import com.simibubi.create.foundation.gui.GuiGameElement;
 import com.simibubi.create.foundation.gui.Theme;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.ValueBox;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;

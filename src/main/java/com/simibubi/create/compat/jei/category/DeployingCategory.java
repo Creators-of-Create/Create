@@ -72,11 +72,11 @@ public class DeployingCategory extends CreateRecipeCategory<DeployerApplicationR
 
 	@Override
 	public void draw(DeployerApplicationRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 50, 4);
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 50);
-		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 50);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 62, 57);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 126, 29);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 50, 4);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 50);
+		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 57);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 126, 29);
 		deployer.draw(matrixStack, getBackground().getWidth() / 2 - 13, 22);
 	}
 

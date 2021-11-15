@@ -16,7 +16,7 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import com.simibubi.create.foundation.utility.Pair;
 
@@ -219,7 +219,7 @@ public class BlueprintOverlayRenderer {
 
 		for (Pair<ItemStack, Boolean> pair : ingredients) {
 			RenderSystem.enableBlend();
-			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).draw(ms, x, y);
+			(pair.getSecond() ? AllGuiTextures.HOTSLOT_ACTIVE : AllGuiTextures.HOTSLOT).render(ms, x, y);
 			ItemStack itemStack = pair.getFirst();
 			String count = pair.getSecond() ? null : ChatFormatting.GOLD.toString() + itemStack.getCount();
 			drawItemStack(ms, mc, x, y, itemStack, count);
@@ -228,16 +228,16 @@ public class BlueprintOverlayRenderer {
 
 		x += 5;
 		RenderSystem.enableBlend();
-		AllGuiTextures.HOTSLOT_ARROW.draw(ms, x, y + 4);
+		AllGuiTextures.HOTSLOT_ARROW.render(ms, x, y + 4);
 		x += 25;
 
 		if (result.isEmpty()) {
-			AllGuiTextures.HOTSLOT.draw(ms, x, y);
+			AllGuiTextures.HOTSLOT.render(ms, x, y);
 			GuiGameElement.of(Items.BARRIER)
 				.at(x + 3, y + 3)
 				.render(ms);
 		} else {
-			(resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT).draw(ms,
+			(resultCraftable ? AllGuiTextures.HOTSLOT_SUPER_ACTIVE : AllGuiTextures.HOTSLOT).render(ms,
 				resultCraftable ? x - 1 : x, resultCraftable ? y - 1 : y);
 			drawItemStack(ms, mc, x, y, result, null);
 		}

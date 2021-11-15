@@ -10,11 +10,11 @@ import com.simibubi.create.content.curiosities.symmetry.mirror.TriplePlaneMirror
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
-import com.simibubi.create.foundation.gui.widgets.Label;
-import com.simibubi.create.foundation.gui.widgets.ScrollInput;
-import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 
@@ -57,7 +57,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-20, 0);
 		super.init();
-		widgets.clear();
 
 		int x = guiLeft;
 		int y = guiTop;
@@ -93,17 +92,20 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 
 		initAlign(currentElement, x, y);
 
-		widgets.add(labelAlign);
-		widgets.add(areaType);
-		widgets.add(labelType);
+		addRenderableWidget(labelAlign);
+		addRenderableWidget(areaType);
+		addRenderableWidget(labelType);
 
 		confirmButton = new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-		widgets.add(confirmButton);
+		confirmButton.withCallback(() -> {
+			onClose();
+		});
+		addRenderableWidget(confirmButton);
 	}
 
 	private void initAlign(SymmetryMirror element, int x, int y) {
 		if (areaAlign != null)
-			widgets.remove(areaAlign);
+			removeWidget(areaAlign);
 
 		areaAlign = new SelectionScrollInput(x + 45, y + 43, 109, 18).forOptions(element.getAlignToolTips())
 			.titled(orientation.plainCopy())
@@ -111,7 +113,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 			.setState(element.getOrientationIndex())
 			.calling(element::setOrientation);
 
-		widgets.add(areaAlign);
+		addRenderableWidget(areaAlign);
 	}
 
 	@Override
@@ -119,7 +121,7 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		font.draw(ms, wand.getHoverName(), x + 11, y + 4, 0x6B3802);
 
 		renderBlock(ms, x, y);
@@ -147,16 +149,6 @@ public class SymmetryWandScreen extends AbstractSimiScreen {
 	public void removed() {
 		SymmetryWandItem.configureSettings(wand, currentElement);
 		AllPackets.channel.sendToServer(new ConfigureSymmetryWandPacket(hand, currentElement));
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		if (confirmButton.isHovered()) {
-			onClose();
-			return true;
-		}
-
-		return super.mouseClicked(x, y, button);
 	}
 
 }

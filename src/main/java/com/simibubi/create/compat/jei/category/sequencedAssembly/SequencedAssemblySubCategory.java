@@ -89,7 +89,7 @@ public abstract class SequencedAssemblySubCategory {
 		@Override
 		public void draw(SequencedRecipe<?> recipe, PoseStack ms, double mouseX, double mouseY, int index) {
 			spout.offset = index;
-			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
+			AllGuiTextures.JEI_SLOT.render(ms, 3, 14);
 			ms.pushPose();
 			ms.translate(-7, 50, 0);
 			ms.scale(.75f, .75f, .75f);
@@ -143,7 +143,7 @@ public abstract class SequencedAssemblySubCategory {
 			ms.scale(.75f, .75f, .75f);
 			deployer.draw(ms, getWidth() / 2, 0);
 			ms.popPose();
-			AllGuiTextures.JEI_SLOT.draw(ms, 3, 14);
+			AllGuiTextures.JEI_SLOT.render(ms, 3, 14);
 		}
 
 	}

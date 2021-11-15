@@ -71,7 +71,7 @@ public class SchematicUploadPacket extends SimplePacketBase {
 				if (player == null)
 					return;
 				if (code == BEGIN) {
-					BlockPos pos = ((SchematicTableContainer) player.containerMenu).getTileEntity()
+					BlockPos pos = ((SchematicTableContainer) player.containerMenu).contentHolder
 							.getBlockPos();
 					Create.SCHEMATIC_RECEIVER.handleNewUpload(player, schematic, size, pos);
 				}

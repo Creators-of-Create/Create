@@ -1,82 +1,64 @@
 package com.simibubi.create.content.schematics.block;
 
 import com.simibubi.create.AllContainerTypes;
+import com.simibubi.create.foundation.gui.container.ContainerBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class SchematicannonContainer extends AbstractContainerMenu {
-
-	private SchematicannonTileEntity te;
-	private Player player;
+public class SchematicannonContainer extends ContainerBase<SchematicannonTileEntity> {
 
 	public SchematicannonContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf buffer) {
-		super(type, id);
-		player = inv.player;
-		ClientLevel world = Minecraft.getInstance().level;
-		BlockEntity tileEntity = world.getBlockEntity(buffer.readBlockPos());
-		if (tileEntity instanceof SchematicannonTileEntity) {
-			this.te = (SchematicannonTileEntity) tileEntity;
-			this.te.handleUpdateTag(buffer.readNbt());
-			init();
-		}
+		super(type, id, inv, buffer);
 	}
 
 	public SchematicannonContainer(MenuType<?> type, int id, Inventory inv, SchematicannonTileEntity te) {
-		super(type, id);
-		player = inv.player;
-		this.te = te;
-		init();
+		super(type, id, inv, te);
 	}
 
 	public static SchematicannonContainer create(int id, Inventory inv, SchematicannonTileEntity te) {
 		return new SchematicannonContainer(AllContainerTypes.SCHEMATICANNON.get(), id, inv, te);
 	}
 
-	protected void init() {
+	@Override
+	protected SchematicannonTileEntity createOnClient(FriendlyByteBuf extraData) {
+		ClientLevel world = Minecraft.getInstance().level;
+		BlockEntity tileEntity = world.getBlockEntity(extraData.readBlockPos());
+		if (tileEntity instanceof SchematicannonTileEntity schematicannon) {
+			schematicannon.handleUpdateTag(extraData.readNbt());
+			return schematicannon;
+		}
+		return null;
+	}
+
+	@Override
+	protected void initAndReadInventory(SchematicannonTileEntity contentHolder) {
+	}
+
+	@Override
+	protected void addSlots() {
 		int x = 0;
 		int y = 0;
 
-		addSlot(new SlotItemHandler(te.inventory, 0, x + 15, y + 65));
-		addSlot(new SlotItemHandler(te.inventory, 1, x + 171, y + 65));
-		addSlot(new SlotItemHandler(te.inventory, 2, x + 134, y + 19));
-		addSlot(new SlotItemHandler(te.inventory, 3, x + 174, y + 19));
-		addSlot(new SlotItemHandler(te.inventory, 4, x + 15, y + 19));
+		addSlot(new SlotItemHandler(contentHolder.inventory, 0, x + 15, y + 65));
+		addSlot(new SlotItemHandler(contentHolder.inventory, 1, x + 171, y + 65));
+		addSlot(new SlotItemHandler(contentHolder.inventory, 2, x + 134, y + 19));
+		addSlot(new SlotItemHandler(contentHolder.inventory, 3, x + 174, y + 19));
+		addSlot(new SlotItemHandler(contentHolder.inventory, 4, x + 15, y + 19));
 
-		int invX = 37;
-		int invY = 161;
-
-		// player Slots
-		for (int row = 0; row < 3; ++row) 
-			for (int col = 0; col < 9; ++col) 
-				addSlot(new Slot(player.getInventory(), col + row * 9 + 9, invX + col * 18, invY + row * 18));
-		for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot)
-			addSlot(new Slot(player.getInventory(), hotbarSlot, invX + hotbarSlot * 18, invY + 58));
-
-		broadcastChanges();
+		addPlayerSlots(37, 161);
 	}
 
 	@Override
-	public boolean stillValid(Player player) {
-		return te != null && te.canPlayerUse(player);
-	}
-
-	@Override
-	public void removed(Player playerIn) {
-		super.removed(playerIn);
-	}
-
-	public SchematicannonTileEntity getTileEntity() {
-		return te;
+	protected void saveData(SchematicannonTileEntity contentHolder) {
 	}
 
 	@Override

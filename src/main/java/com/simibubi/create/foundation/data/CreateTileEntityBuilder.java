@@ -7,11 +7,13 @@ import com.jozufozu.flywheel.backend.instancing.tile.ITileInstanceFactory;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.TileEntityBuilder;
-import com.tterrag.registrate.fabric.EnvExecutor;
+import com.tterrag.registrate.util.OneTimeEventReceiver;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.fabricmc.api.EnvType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntityBuilder<T, P> {
 
@@ -30,7 +32,7 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 
 	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory) {
 		if (this.instanceFactory == null) {
-			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerInstance);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
 		}
 
 		this.instanceFactory = instanceFactory;
@@ -39,9 +41,13 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 	}
 
 	protected void registerInstance() {
-		if (instanceFactory != null) {
-			InstancedRenderRegistry.getInstance().tile(getEntry())
+		OneTimeEventReceiver.addModListener(FMLClientSetupEvent.class, $ -> {
+			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
+			if (instanceFactory != null) {
+				InstancedRenderRegistry.getInstance()
+					.tile(getEntry())
 					.factory(instanceFactory.get());
-		}
+			}
+		});
 	}
 }

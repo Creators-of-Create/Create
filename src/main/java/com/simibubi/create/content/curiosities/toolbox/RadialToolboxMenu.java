@@ -12,7 +12,7 @@ import com.simibubi.create.AllKeys;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.AngleHelper;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
@@ -86,19 +86,19 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 				hoveredSlot = UNEQUIP;
 
 			ms.pushPose();
-			AllGuiTextures.TOOLBELT_INACTIVE_SLOT.draw(ms, this, -12, -12);
+			AllGuiTextures.TOOLBELT_INACTIVE_SLOT.render(ms, -12, -12, this);
 			GuiGameElement.of(AllBlocks.TOOLBOXES.get(DyeColor.BROWN)
 				.asStack())
 				.at(-9, -9)
 				.render(ms);
 
 			ms.translate(0, -40 + (10 * (1 - fade) * (1 - fade)), 0);
-			AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, -12, -12);
+			AllGuiTextures.TOOLBELT_SLOT.render(ms, -12, -12, this);
 			ms.translate(-0.5, 0.5, 0);
-			AllIcons.I_DISABLE.draw(ms, this, -9, -9);
+			AllIcons.I_DISABLE.render(ms, -9, -9, this);
 			ms.translate(0.5, -0.5, 0);
 			if (!scrollMode && hoveredSlot == UNEQUIP) {
-				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -13, -13);
+				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
 				tip = Lang.translate("toolbox.detach")
 					.withStyle(ChatFormatting.GOLD);
 			}
@@ -111,12 +111,12 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			ms.pushPose();
 			ms.translate(80 + (-5 * (1 - fade) * (1 - fade)), 0, 0);
-			AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, -12, -12);
+			AllGuiTextures.TOOLBELT_SLOT.render(ms, -12, -12, this);
 			ms.translate(-0.5, 0.5, 0);
-			AllIcons.I_TOOLBOX.draw(ms, this, -9, -9);
+			AllIcons.I_TOOLBOX.render(ms, -9, -9, this);
 			ms.translate(0.5, -0.5, 0);
 			if (!scrollMode && hoveredSlot == DEPOSIT) {
-				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -13, -13);
+				AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
 				tip = Lang.translate(state == State.SELECT_BOX ? "toolbox.depositAll" : "toolbox.depositBox")
 					.withStyle(ChatFormatting.GOLD);
 			}
@@ -138,23 +138,23 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 						boolean empty = inv.getStackInSlot(slot * ToolboxInventory.STACKS_PER_COMPARTMENT)
 							.isEmpty();
 
-						(empty ? AllGuiTextures.TOOLBELT_INACTIVE_SLOT : AllGuiTextures.TOOLBELT_SLOT).draw(ms, this, 0,
-							0);
+						(empty ? AllGuiTextures.TOOLBELT_INACTIVE_SLOT : AllGuiTextures.TOOLBELT_SLOT)
+							.render(ms, 0, 0, this);
 						GuiGameElement.of(stackInSlot)
 							.at(3, 3)
 							.render(ms);
 
 						if (slot == (scrollMode ? scrollSlot : hoveredSlot) && !empty) {
-							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -1, -1);
+							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -1, -1, this);
 							tip = stackInSlot.getHoverName();
 						}
 					} else
-						AllGuiTextures.TOOLBELT_EMPTY_SLOT.draw(ms, this, 0, 0);
+						AllGuiTextures.TOOLBELT_EMPTY_SLOT.render(ms, 0, 0, this);
 
 				} else if (state == State.SELECT_BOX) {
 
 					if (slot < toolboxes.size()) {
-						AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, 0, 0);
+						AllGuiTextures.TOOLBELT_SLOT.render(ms, 0, 0, this);
 						ToolboxTileEntity toolboxTileEntity = toolboxes.get(slot);
 						GuiGameElement.of(AllBlocks.TOOLBOXES.get(toolboxTileEntity.getColor())
 							.asStack())
@@ -162,11 +162,11 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 							.render(ms);
 
 						if (slot == (scrollMode ? scrollSlot : hoveredSlot)) {
-							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -1, -1);
+							AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -1, -1, this);
 							tip = toolboxTileEntity.getDisplayName();
 						}
 					} else
-						AllGuiTextures.TOOLBELT_EMPTY_SLOT.draw(ms, this, 0, 0);
+						AllGuiTextures.TOOLBELT_EMPTY_SLOT.render(ms, 0, 0, this);
 
 				}
 
@@ -175,10 +175,10 @@ public class RadialToolboxMenu extends AbstractSimiScreen {
 
 			if (renderCenterSlot) {
 				ms.pushPose();
-				AllGuiTextures.TOOLBELT_SLOT.draw(ms, this, -12, -12);
-				(scrollMode ? AllIcons.I_REFRESH : AllIcons.I_FLIP).draw(ms, this, -9, -9);
+				AllGuiTextures.TOOLBELT_SLOT.render(ms, -12, -12, this);
+				(scrollMode ? AllIcons.I_REFRESH : AllIcons.I_FLIP).render(ms, -9, -9, this);
 				if (!scrollMode && UNEQUIP == hoveredSlot) {
-					AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.draw(ms, this, -13, -13);
+					AllGuiTextures.TOOLBELT_SLOT_HIGHLIGHT.render(ms, -13, -13, this);
 					tip = Lang.translate("toolbox.unequip", minecraft.player.getMainHandItem()
 						.getHoverName())
 						.withStyle(ChatFormatting.GOLD);

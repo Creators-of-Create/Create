@@ -76,11 +76,11 @@ public class PackingCategory extends BasinCategory {
 			int size = ingredients2.size();
 			int rows = size == 4 ? 2 : 3;
 			for (int i = 0; i < size; i++)
-				AllGuiTextures.JEI_SLOT.draw(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19,
+				AllGuiTextures.JEI_SLOT.render(matrixStack, (rows == 2 ? 26 : 17) + (i % rows) * 19,
 					50 - (i / rows) * 19);
-			AllGuiTextures.JEI_SLOT.draw(matrixStack, 141, 50);
-			AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 136, 32);
-			AllGuiTextures.JEI_SHADOW.draw(matrixStack, 81, 68);
+			AllGuiTextures.JEI_SLOT.render(matrixStack, 141, 50);
+			AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 136, 32);
+			AllGuiTextures.JEI_SHADOW.render(matrixStack, 81, 68);
 		}
 
 		HeatCondition requiredHeat = recipe.getRequiredHeat();

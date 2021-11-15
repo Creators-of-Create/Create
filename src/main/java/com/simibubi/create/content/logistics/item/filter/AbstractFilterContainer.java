@@ -1,6 +1,6 @@
 package com.simibubi.create.content.logistics.item.filter;
 
-import com.simibubi.create.foundation.gui.GhostItemContainer;
+import com.simibubi.create.foundation.gui.container.GhostItemContainer;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

@@ -9,15 +9,15 @@ import net.minecraft.util.Mth;
 // InterpolatedChasingValue, InterpolatedValue, InterpolatedChasingAngle, InterpolatedAngle
 public class LerpedFloat {
 
-	Interpolater interpolater;
-	float previousValue;
-	float value;
+	protected Interpolater interpolater;
+	protected float previousValue;
+	protected float value;
 
-	Chaser chaseFunction;
-	float chaseTarget;
-	float chaseSpeed;
+	protected Chaser chaseFunction;
+	protected float chaseTarget;
+	protected float chaseSpeed;
 
-	boolean forcedSync;
+	protected boolean forcedSync;
 
 	public LerpedFloat(Interpolater interpolater) {
 		this.interpolater = interpolater;
@@ -111,7 +111,7 @@ public class LerpedFloat {
 		readChaser(compoundNBT);
 	}
 
-	private void readChaser(CompoundTag compoundNBT) {
+	protected void readChaser(CompoundTag compoundNBT) {
 		chaseSpeed = compoundNBT.getFloat("Speed");
 		chaseTarget = compoundNBT.getFloat("Target");
 	}
@@ -124,11 +124,11 @@ public class LerpedFloat {
 	@FunctionalInterface
 	public interface Chaser {
 
-		public static final Chaser IDLE = (c, s, t) -> (float) c;
-		public static final Chaser EXP = exp(Double.MAX_VALUE);
-		public static final Chaser LINEAR = (c, s, t) -> (float) (c + Mth.clamp(t - c, -s, s));
+		Chaser IDLE = (c, s, t) -> (float) c;
+		Chaser EXP = exp(Double.MAX_VALUE);
+		Chaser LINEAR = (c, s, t) -> (float) (c + Mth.clamp(t - c, -s, s));
 
-		public static Chaser exp(double maxEffectiveSpeed) {
+		static Chaser exp(double maxEffectiveSpeed) {
 			return (c, s, t) -> (float) (c + Mth.clamp((t - c) * s, -maxEffectiveSpeed, maxEffectiveSpeed));
 		}
 

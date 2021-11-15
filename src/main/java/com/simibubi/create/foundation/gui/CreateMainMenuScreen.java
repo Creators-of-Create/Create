@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.mainMenu;
+package com.simibubi.create.foundation.gui;
 
 import com.jozufozu.flywheel.util.transform.MatrixTransformStack;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -7,11 +7,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.BaseConfigScreen;
-import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.BoxElement;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.ScreenOpener;
+import com.simibubi.create.foundation.gui.element.BoxElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
 import com.simibubi.create.foundation.utility.Color;
@@ -104,7 +101,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		ms.translate(width / 2 - 32, 32, -10);
 		ms.pushPose();
 		ms.scale(0.25f, 0.25f, 0.25f);
-		AllGuiTextures.LOGO.draw(ms, 0, 0);
+		AllGuiTextures.LOGO.render(ms, 0, 0, this);
 		ms.popPose();
 		new BoxElement().withBackground(0x88_000000)
 			.flatBorder(new Color(0x01_000000))

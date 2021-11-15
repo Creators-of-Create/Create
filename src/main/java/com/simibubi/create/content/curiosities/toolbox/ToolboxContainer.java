@@ -3,7 +3,7 @@ package com.simibubi.create.content.curiosities.toolbox;
 import static com.simibubi.create.content.curiosities.toolbox.ToolboxInventory.STACKS_PER_COMPARTMENT;
 
 import com.simibubi.create.AllContainerTypes;
-import com.simibubi.create.foundation.gui.ContainerBase;
+import com.simibubi.create.foundation.gui.container.ContainerBase;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,10 +21,6 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 
-	public static ToolboxContainer create(int id, Inventory inv, ToolboxTileEntity te) {
-		return new ToolboxContainer(AllContainerTypes.TOOLBOX.get(), id, inv, te);
-	}
-
 	public ToolboxContainer(MenuType<?> type, int id, Inventory inv, FriendlyByteBuf extraData) {
 		super(type, id, inv, extraData);
 	}
@@ -32,6 +28,10 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 	public ToolboxContainer(MenuType<?> type, int id, Inventory inv, ToolboxTileEntity te) {
 		super(type, id, inv, te);
 		te.startOpen(player);
+	}
+
+	public static ToolboxContainer create(int id, Inventory inv, ToolboxTileEntity te) {
+		return new ToolboxContainer(AllContainerTypes.TOOLBOX.get(), id, inv, te);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 	protected void addSlots() {
 		ToolboxInventory inventory = contentHolder.inventory;
 
-		int x = 59;
+		int x = 79;
 		int y = 37;
 
 		int[] xOffsets = { x, x + 33, x + 66, x + 66 + 6, x + 66, x + 33, x, x - 6 };
@@ -138,7 +138,7 @@ public class ToolboxContainer extends ContainerBase<ToolboxTileEntity> {
 				addSlot(new SlotItemHandler(inventory, baseIndex + i, -100, -100));
 		}
 
-		addPlayerSlots(-12, 166);
+		addPlayerSlots(8, 165);
 	}
 
 	@Override

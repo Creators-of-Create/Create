@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.gui.container;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -51,7 +51,6 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 
 	@Override
 	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
-		ItemStack held = getCarried();
 		if (slotId < 36) {
 			super.clicked(slotId, dragType, clickTypeIn, player);
 			return;
@@ -59,6 +58,7 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 		if (clickTypeIn == ClickType.THROW)
 			return;
 
+		ItemStack held = getCarried();
 		int slot = slotId - 36;
 		if (clickTypeIn == ClickType.CLONE) {
 			if (player.isCreative() && held.isEmpty()) {
@@ -71,17 +71,15 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 			return;
 		}
 
+		ItemStack insert;
 		if (held.isEmpty()) {
-			ghostInventory.setStackInSlot(slot, ItemStack.EMPTY);
-			getSlot(slotId).setChanged();
-			return;
+			insert = ItemStack.EMPTY;
+		} else {
+			insert = held.copy();
+			insert.setCount(1);
 		}
-
-		ItemStack insert = held.copy();
-		insert.setCount(1);
 		ghostInventory.setStackInSlot(slot, insert);
 		getSlot(slotId).setChanged();
-		setCarried(held);
 	}
 
 	@Override
@@ -106,7 +104,5 @@ public abstract class GhostItemContainer<T> extends ContainerBase<T> implements 
 		}
 		return ItemStack.EMPTY;
 	}
-
-	
 
 }
