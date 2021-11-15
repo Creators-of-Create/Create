@@ -1,5 +1,7 @@
 package com.simibubi.create.content.logistics.block.depot;
 
+import com.simibubi.create.foundation.networking.SimplePacketBase;
+
 import me.pepperbell.simplenetworking.C2SPacket;
 import me.pepperbell.simplenetworking.SimpleChannel;
 import net.minecraft.core.BlockPos;
@@ -10,8 +12,10 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.function.Supplier;
 
-public class EjectorElytraPacket implements C2SPacket {
+
+public class EjectorElytraPacket extends SimplePacketBase {
 
 	private BlockPos pos;
 
@@ -19,12 +23,7 @@ public class EjectorElytraPacket implements C2SPacket {
 		this.pos = pos;
 	}
 
-//	public EjectorElytraPacket(FriendlyByteBuf buffer) {
-//		pos = buffer.readBlockPos();
-//	}
-
-	@Override
-	public void read(FriendlyByteBuf buffer) {
+	public EjectorElytraPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
 	}
 
@@ -34,20 +33,22 @@ public class EjectorElytraPacket implements C2SPacket {
 	}
 
 	@Override
-	public void handle(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, SimpleChannel.ResponseTarget responseTarget) {
-		server.execute(() -> {
-
-				if (player == null)
-					return;
-				Level world = player.level;
-				if (world == null || !world.isLoaded(pos))
-					return;
-				BlockEntity tileEntity = world.getBlockEntity(pos);
-				if (tileEntity instanceof EjectorTileEntity)
-					((EjectorTileEntity) tileEntity).deployElytra(player);
-			});
-//		context.get()
-//			.setPacketHandled(true);
+	public void handle(Supplier<Context> context) {
+		context.get()
+				.enqueueWork(() -> {
+					ServerPlayer player = context.get()
+							.getSender();
+					if (player == null)
+						return;
+					Level world = player.level;
+					if (world == null || !world.isLoaded(pos))
+						return;
+					BlockEntity tileEntity = world.getBlockEntity(pos);
+					if (tileEntity instanceof EjectorTileEntity)
+						((EjectorTileEntity) tileEntity).deployElytra(player);
+				});
+		context.get()
+				.setPacketHandled(true);
 
 	}
 

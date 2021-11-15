@@ -1,8 +1,5 @@
 package com.simibubi.create.foundation.networking;
 
-import static net.minecraftforge.fmllegacy.network.NetworkDirection.PLAY_TO_CLIENT;
-import static net.minecraftforge.fmllegacy.network.NetworkDirection.PLAY_TO_SERVER;
-
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -54,6 +51,7 @@ import com.simibubi.create.foundation.command.SConfigureConfigPacket;
 import com.simibubi.create.foundation.config.ui.CConfigureConfigPacket;
 import com.simibubi.create.foundation.gui.container.ClearContainerPacket;
 import com.simibubi.create.foundation.gui.container.GhostItemSubmitPacket;
+import com.simibubi.create.foundation.networking.SimplePacketBase.NetworkDirection;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringCountUpdatePacket;
 import com.simibubi.create.foundation.tileEntity.behaviour.scrollvalue.ScrollValueUpdatePacket;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
@@ -63,12 +61,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import me.pepperbell.simplenetworking.SimpleChannel;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
 
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
-import net.minecraftforge.fmllegacy.network.PacketDistributor.TargetPoint;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import static com.simibubi.create.foundation.networking.SimplePacketBase.NetworkDirection.PLAY_TO_CLIENT;
+import static com.simibubi.create.foundation.networking.SimplePacketBase.NetworkDirection.PLAY_TO_SERVER;
 
 public enum AllPackets {
 
@@ -162,7 +157,7 @@ public enum AllPackets {
 
 		BiConsumer<T, FriendlyByteBuf> encoder;
 		Function<FriendlyByteBuf, T> decoder;
-		BiConsumer<T, Supplier<Context>> handler;
+		BiConsumer<T, Supplier<SimplePacketBase.Context>> handler;
 		Class<T> type;
 		NetworkDirection direction;
 

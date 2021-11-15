@@ -193,14 +193,13 @@ public class SimpleChannel {
 			C2SPacket packet = null;
 			try {
 				Class<?> clazz = c2sIdMap.get(id);
-				Constructor<?> ctor = clazz.getDeclaredConstructor();
+				Constructor<?> ctor = clazz.getDeclaredConstructor(FriendlyByteBuf.class);
 				ctor.setAccessible(true);
-				packet = (C2SPacket) ctor.newInstance();
+				packet = (C2SPacket) ctor.newInstance(buf);
 			} catch (Exception e) {
 				LOGGER.error("Could not create c2s packet in channel " + channelName + " with id " + id, e);
 			}
 			if (packet != null) {
-				packet.read(buf);
 				packet.handle(server, player, handler, new ResponseTarget(responseSender));
 			}
 		}
@@ -214,14 +213,13 @@ public class SimpleChannel {
 			S2CPacket packet = null;
 			try {
 				Class<?> clazz = s2cIdMap.get(id);
-				Constructor<?> ctor = clazz.getDeclaredConstructor();
+				Constructor<?> ctor = clazz.getDeclaredConstructor(FriendlyByteBuf.class);
 				ctor.setAccessible(true);
-				packet = (S2CPacket) ctor.newInstance();
+				packet = (S2CPacket) ctor.newInstance(buf);
 			} catch (Exception e) {
 				LOGGER.error("Could not create s2c packet in channel " + channelName + " with id " + id, e);
 			}
 			if (packet != null) {
-				packet.read(buf);
 				packet.handle(client, handler, new ResponseTarget(responseSender));
 			}
 		}
