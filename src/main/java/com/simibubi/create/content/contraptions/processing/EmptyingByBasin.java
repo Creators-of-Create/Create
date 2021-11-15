@@ -7,6 +7,13 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.utility.Pair;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
+import com.simibubi.create.lib.utility.LazyOptional;
+
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.crafting.Recipe;

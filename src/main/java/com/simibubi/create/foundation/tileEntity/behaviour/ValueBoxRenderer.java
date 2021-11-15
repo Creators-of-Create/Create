@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FenceBlock;
-import net.minecraftforge.client.model.ItemMultiLayerBakedModel;
 
 public class ValueBoxRenderer {
 

@@ -81,7 +81,7 @@ public class PonderWorldParticles {
 
 				Tesselator tessellator = Tesselator.getInstance();
 				BufferBuilder bufferbuilder = tessellator.getBuilder();
-				iparticlerendertype.begin(bufferbuilder, mc.textureManager);
+				iparticlerendertype.begin(bufferbuilder, mc.getTextureManager());
 
 				for (Particle particle : iterable)
 					particle.render(bufferbuilder, renderInfo, pt);

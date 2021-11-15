@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.ValueBoxTransform.Sid
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.RaycastHelper;
 
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -29,13 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.items.ItemHandlerHelper;
 
-@EventBusSubscriber
 public class FilteringHandler {
 
 	@SubscribeEvent
@@ -74,7 +70,7 @@ public class FilteringHandler {
 			return;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
 			return;
-		
+
 		if (event.getSide() != LogicalSide.CLIENT) {
 			if (!player.isCreative()) {
 				if (toApply.getItem() instanceof FilterItem)
@@ -134,14 +130,14 @@ public class FilteringHandler {
 			((Sided) filtering.slotPositioning).fromSide(result.getDirection());
 		if (!filtering.testHit(objectMouseOver.getLocation()))
 			return false;
-		
+
 		ItemStack filterItem = filtering.getFilter();
 		filtering.ticksUntilScrollPacket = 10;
 		int maxAmount = (filterItem.getItem() instanceof FilterItem) ? 64 : filterItem.getMaxStackSize();
 		int prev = filtering.scrollableValue;
 		filtering.scrollableValue =
 			(int) Mth.clamp(filtering.scrollableValue + delta * (AllKeys.ctrlDown() ? 16 : 1), 0, maxAmount);
-		
+
 		if (prev != filtering.scrollableValue) {
 			float pitch = (filtering.scrollableValue) / (float) (maxAmount);
 			pitch = Mth.lerp(pitch, 1.5f, 2f);

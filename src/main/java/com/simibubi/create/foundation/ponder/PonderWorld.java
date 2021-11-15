@@ -20,16 +20,19 @@ import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
 import com.simibubi.create.lib.mixin.accessor.ParticleEngineAccessor;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -49,8 +52,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderWorld extends SchematicWorld {
 
@@ -63,7 +64,8 @@ public class PonderWorld extends SchematicWorld {
 	private LazyLoadedValue<ClientLevel> asClientWorld = new LazyLoadedValue<>(() -> WrappedClientWorld.of(this));
 
 	protected PonderWorldParticles particles;
-	private final Map<ResourceLocation, ParticleProvider<?>> particleFactories;
+//	private final Map<ResourceLocation, ParticleProvider<?>> particleFactories;
+	private final Int2ObjectMap<ParticleProvider<?>> particleFactories;
 
 	int overrideLight;
 	Selection mask;
@@ -88,7 +90,7 @@ public class PonderWorld extends SchematicWorld {
 		blocks.forEach((k, v) -> originalBlocks.put(k, v));
 		tileEntities.forEach(
 			(k, v) -> originalTileEntities.put(k, BlockEntity.loadStatic(k, blocks.get(k), v.save(new CompoundTag()))));
-		entities.forEach(e -> EntityType.create(e.serializeNBT(), this)
+		entities.forEach(e -> EntityType.create(NBTSerializer.serializeNBT(e), this)
 			.ifPresent(originalEntities::add));
 	}
 
@@ -105,7 +107,7 @@ public class PonderWorld extends SchematicWorld {
 			tileEntities.put(k, te);
 			renderedTileEntities.add(te);
 		});
-		originalEntities.forEach(e -> EntityType.create(e.serializeNBT(), this)
+		originalEntities.forEach(e -> EntityType.create(NBTSerializer.serializeNBT(e), this)
 			.ifPresent(entities::add));
 		particles.clearEffects();
 		fixControllerTileEntities();
@@ -235,7 +237,7 @@ public class PonderWorld extends SchematicWorld {
 	@SuppressWarnings("unchecked")
 	private <T extends ParticleOptions> Particle makeParticle(T data, double x, double y, double z, double mx, double my,
 		double mz) {
-		ResourceLocation key = ForgeRegistries.PARTICLE_TYPES.getKey(data.getType());
+		int key = Registry.PARTICLE_TYPE.getId(data.getType());
 		ParticleProvider<T> iparticlefactory = (ParticleProvider<T>) particleFactories.get(key);
 		return iparticlefactory == null ? null
 			: iparticlefactory.createParticle(data, asClientWorld.get(), x, y, z, mx, my, mz);

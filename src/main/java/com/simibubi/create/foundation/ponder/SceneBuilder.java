@@ -64,6 +64,8 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -766,7 +768,7 @@ public class SceneBuilder {
 
 		public void setFilterData(Selection selection, Class<? extends BlockEntity> teType, ItemStack filter) {
 			modifyTileNBT(selection, teType, nbt -> {
-				nbt.put("Filter", filter.serializeNBT());
+				nbt.put("Filter", NBTSerializer.serializeNBT(filter));
 			});
 		}
 
@@ -795,7 +797,7 @@ public class SceneBuilder {
 			int targetedPoint) {
 			modifyTileNBT(scene.getSceneBuildingUtil().select.position(armLocation), ArmTileEntity.class, compound -> {
 				NBTHelper.writeEnum(compound, "Phase", phase);
-				compound.put("HeldItem", heldItem.serializeNBT());
+				compound.put("HeldItem", NBTSerializer.serializeNBT(heldItem));
 				compound.putInt("TargetPointIndex", targetedPoint);
 				compound.putFloat("MovementProgress", 0);
 			});

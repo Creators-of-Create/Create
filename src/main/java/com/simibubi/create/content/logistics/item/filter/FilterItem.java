@@ -13,6 +13,11 @@ import com.simibubi.create.content.logistics.item.filter.AttributeFilterContaine
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
