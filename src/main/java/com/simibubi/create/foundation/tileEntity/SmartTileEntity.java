@@ -8,8 +8,8 @@ import java.util.function.Consumer;
 
 import com.simibubi.create.api.event.TileEntityBehaviourEvent;
 import com.simibubi.create.content.schematics.ItemRequirement;
-import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
+import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.IPartialSafeNBT;
 
 import net.minecraft.core.BlockPos;

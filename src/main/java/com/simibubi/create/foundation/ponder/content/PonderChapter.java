@@ -4,14 +4,14 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.IScreenRenderable;
+import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 
-public class PonderChapter implements IScreenRenderable {
+public class PonderChapter implements ScreenElement {
 
 	private final ResourceLocation id;
 	private final ResourceLocation icon;
@@ -36,7 +36,7 @@ public class PonderChapter implements IScreenRenderable {
 	}
 
 	@Override
-	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
+	public void render(PoseStack ms, int x, int y) {
 		ms.pushPose();
 		RenderSystem.setShaderTexture(0, icon);
 		ms.scale(0.25f, 0.25f, 1);

@@ -1,15 +1,15 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.gui.widget;
 
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.BoxElement;
-import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.Theme.Key;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
+import com.simibubi.create.foundation.gui.element.BoxElement;
+import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;

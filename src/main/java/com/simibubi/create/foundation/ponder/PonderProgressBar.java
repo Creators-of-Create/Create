@@ -3,9 +3,9 @@ package com.simibubi.create.foundation.ponder;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.widgets.AbstractSimiWidget;
+import com.simibubi.create.foundation.gui.element.BoxElement;
+import com.simibubi.create.foundation.gui.widget.AbstractSimiWidget;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 import it.unimi.dsi.fastutil.ints.IntList;

@@ -62,20 +62,20 @@ public class MillingCategory extends CreateRecipeCategory<AbstractCrushingRecipe
 		int size = recipe.getRollableResultsAsItemStacks()
 			.size();
 
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 14, 8);
-		AllGuiTextures.JEI_ARROW.draw(matrixStack, 85, 32);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 43, 4);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 14, 8);
+		AllGuiTextures.JEI_ARROW.render(matrixStack, 85, 32);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 43, 4);
 		millstone.draw(matrixStack, 48, 27);
 
 		if (size == 1) {
-			getRenderedSlot(recipe, 0).draw(matrixStack, 139, 27);
+			getRenderedSlot(recipe, 0).render(matrixStack, 139, 27);
 			return;
 		}
 
 		for (int i = 0; i < size; i++) {
 			int xOffset = i % 2 == 0 ? 0 : 19;
 			int yOffset = (i / 2) * -19;
-			getRenderedSlot(recipe, i).draw(matrixStack, 133 + xOffset, 27 + yOffset);
+			getRenderedSlot(recipe, i).render(matrixStack, 133 + xOffset, 27 + yOffset);
 		}
 
 	}

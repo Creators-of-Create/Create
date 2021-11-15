@@ -59,15 +59,15 @@ public class BlockCuttingCategory extends CreateRecipeCategory<CondensedBlockCut
 
 	@Override
 	public void draw(CondensedBlockCuttingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 4, 4);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 4, 4);
 		int size = Math.min(recipe.getOutputs().size(), 15);
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 5) * 19;
 			int yOffset = (i / 5) * -19;
-			AllGuiTextures.JEI_SLOT.draw(matrixStack, 77 + xOffset, 47 + yOffset);
+			AllGuiTextures.JEI_SLOT.render(matrixStack, 77 + xOffset, 47 + yOffset);
 		}
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 31, 6);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 33 - 17, 37 + 13);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 31, 6);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 33 - 17, 37 + 13);
 		saw.draw(matrixStack, 33, 37);
 	}
 

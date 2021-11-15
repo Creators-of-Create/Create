@@ -107,14 +107,14 @@ public class MechanicalCraftingCategory extends CreateRecipeCategory<CraftingRec
 					matrixStack.pushPose();
 					matrixStack.translate(col * 19 * scale, row * 19 * scale, 0);
 					matrixStack.scale(scale, scale, scale);
-					AllGuiTextures.JEI_SLOT.draw(matrixStack, 0, 0);
+					AllGuiTextures.JEI_SLOT.render(matrixStack, 0, 0);
 					matrixStack.popPose();
 				}
 
 		matrixStack.popPose();
 
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 133, 80);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 128, 59);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 133, 80);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 128, 59);
 		crafter.draw(matrixStack, 129, 25);
 
 		matrixStack.pushPose();

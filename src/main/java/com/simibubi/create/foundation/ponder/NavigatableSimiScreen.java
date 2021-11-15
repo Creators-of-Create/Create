@@ -11,14 +11,10 @@ import org.lwjgl.glfw.GLFW;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.IScreenRenderable;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.ponder.content.PonderTagIndexScreen;
-import com.simibubi.create.foundation.ponder.content.PonderTagScreen;
 import com.simibubi.create.foundation.ponder.ui.PonderButton;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Lang;
@@ -28,7 +24,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 
 public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 
@@ -44,8 +39,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	protected PonderButton backTrack;
 
 	public NavigatableSimiScreen() {
-		Window window = Minecraft.getInstance()
-			.getWindow();
+		Window window = Minecraft.getInstance().getWindow();
 		depthPointX = window.getGuiScaledWidth() / 2;
 		depthPointY = window.getGuiScaledHeight() / 2;
 	}
@@ -66,6 +60,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 	@Override
 	protected void init() {
 		super.init();
+
 		backTrack = null;
 		List<Screen> screenHistory = ScreenOpener.getScreenHistory();
 		if (screenHistory.isEmpty())
@@ -73,26 +68,22 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (!(screenHistory.get(0) instanceof NavigatableSimiScreen))
 			return;
 
-		Screen screen = screenHistory.get(0);
-		IScreenRenderable icon = null;
-		ItemStack altIcon = null;
+		NavigatableSimiScreen screen = (NavigatableSimiScreen) screenHistory.get(0);
 
-		if (screen instanceof PonderTagIndexScreen)
-			altIcon = AllItems.WRENCH.asStack();
-		if (screen instanceof PonderUI)
-			altIcon = ((PonderUI) screen).stack;
-		if (screen instanceof PonderTagScreen)
-			icon = ((PonderTagScreen) screen).getTag();
-
-		widgets.add(backTrack = new PonderButton(31, height - 31 - 20).enableFade(0, 5)
+		addRenderableWidget(backTrack = new PonderButton(31, height - 31 - 20).enableFade(0, 5)
 			.withCallback(() -> ScreenOpener.openPreviousScreen(this, Optional.empty())));
 		backTrack.fade(1);
 
-		if (icon != null)
-			backTrack.showing(icon);
-		if (altIcon != null)
-			backTrack.showing(altIcon);
+		screen.initBackTrackIcon(backTrack);
 	}
+
+	/**
+	 * Called when {@code this} represents the previous screen to
+	 * initialize the {@code backTrack} icon of the current screen.
+	 *
+	 * @param backTrack The backTrack button of the current screen.
+	 */
+	protected abstract void initBackTrackIcon(PonderButton backTrack);
 
 	@Override
 	public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
@@ -156,12 +147,10 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 			ms.pushPose();
 
 			// use the buffer texture
-			Minecraft.getInstance()
-				.getMainRenderTarget()
+			minecraft.getMainRenderTarget()
 				.bindWrite(true);
 
-			Window window = Minecraft.getInstance()
-				.getWindow();
+			Window window = minecraft.getWindow();
 			int dpx = window.getGuiScaledWidth() / 2;
 			int dpy = window.getGuiScaledHeight() / 2;
 			if (lastScreen instanceof AbstractSimiScreen) {
@@ -218,7 +207,7 @@ public abstract class NavigatableSimiScreen extends AbstractSimiScreen {
 		if (history.isEmpty())
 			return;
 
-		history.add(0, Minecraft.getInstance().screen);
+		history.add(0, minecraft.screen);
 		int spacing = 20;
 
 		List<String> names = history.stream()

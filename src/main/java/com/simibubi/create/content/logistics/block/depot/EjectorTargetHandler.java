@@ -208,7 +208,7 @@ public class EjectorTargetHandler {
 		double tickOffset = totalFlyingTicks / segments;
 		boolean valid = xDiff == validX && zDiff == validZ;
 		int intColor = valid ? 0x9ede73 : 0xff7171;
-		Vector3f color = new Vector3f(Color.vectorFromRGB(intColor));
+		Vector3f color = new Color(intColor).asVectorF();
 		DustParticleOptions data = new DustParticleOptions(color, 1);
 		ClientLevel world = mc.level;
 

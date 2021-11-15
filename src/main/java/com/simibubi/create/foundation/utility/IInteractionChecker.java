@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.utility;
 
 import net.minecraft.world.entity.player.Player;
 

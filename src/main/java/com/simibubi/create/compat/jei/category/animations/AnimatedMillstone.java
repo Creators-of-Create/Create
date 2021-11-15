@@ -11,7 +11,7 @@ public class AnimatedMillstone extends AnimatedKinetics {
 	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
 		matrixStack.pushPose();
 		matrixStack.translate(xOffset, yOffset, 0);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, -16, 13);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, -16, 13);
 		matrixStack.translate(-2, 18, 0);
 		int scale = 22;
 

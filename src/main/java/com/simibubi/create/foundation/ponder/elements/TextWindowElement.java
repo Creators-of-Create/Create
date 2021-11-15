@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import com.simibubi.create.foundation.gui.BoxElement;
 import com.simibubi.create.foundation.gui.Theme;
+import com.simibubi.create.foundation.gui.element.BoxElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;

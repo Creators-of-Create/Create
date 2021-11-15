@@ -2,10 +2,10 @@ package com.simibubi.create.foundation.config.ui.entries;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.RenderElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.gui.element.RenderElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

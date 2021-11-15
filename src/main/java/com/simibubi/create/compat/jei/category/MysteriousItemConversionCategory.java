@@ -54,10 +54,10 @@ public class MysteriousItemConversionCategory extends CreateRecipeCategory<Conve
 
 	@Override
 	public void draw(ConversionRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 16);
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 131, 16);
-		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52, 20);
-		AllGuiTextures.JEI_QUESTION_MARK.draw(matrixStack, 77, 5);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 16);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 131, 16);
+		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 20);
+		AllGuiTextures.JEI_QUESTION_MARK.render(matrixStack, 77, 5);
 	}
 
 }

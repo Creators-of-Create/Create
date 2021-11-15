@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.gui.widget;
 
 import javax.annotation.Nonnull;
 
@@ -71,9 +71,7 @@ public class Label extends AbstractSimiWidget {
 	}
 
 	@Override
-	public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		if (!visible)
-			return;
+	public void renderButton(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		if (text == null || text.getString().isEmpty())
 			return;
 

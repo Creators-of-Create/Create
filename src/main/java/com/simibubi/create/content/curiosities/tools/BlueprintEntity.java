@@ -16,9 +16,9 @@ import com.simibubi.create.content.logistics.item.filter.FilterItem;
 import com.simibubi.create.content.schematics.ISpecialEntityItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
-import com.simibubi.create.foundation.gui.IInteractionChecker;
 import com.simibubi.create.foundation.networking.ISyncPersistentData;
 import com.simibubi.create.foundation.utility.Couple;
+import com.simibubi.create.foundation.utility.IInteractionChecker;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
@@ -456,7 +456,7 @@ public class BlueprintEntity extends HangingEntity
 
 	static class BlueprintCraftingInventory extends CraftingContainer {
 
-		private static AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
+		private static final AbstractContainerMenu dummyContainer = new AbstractContainerMenu(null, -1) {
 			public boolean stillValid(Player playerIn) {
 				return false;
 			}

@@ -15,25 +15,25 @@ import com.simibubi.create.foundation.utility.Couple;
 
 public class Theme {
 
-	private static final List<Theme> themes = new ArrayList<>();
-	private static final Theme base = addTheme(new Theme());
+	private static final List<Theme> THEMES = new ArrayList<>();
+	private static final Theme BASE = addTheme(new Theme());
 
 	public static Theme addTheme(@Nonnull Theme theme) {
-		themes.add(theme);
-		themes.sort(Comparator.comparingInt(Theme::getPriority).reversed());
+		THEMES.add(theme);
+		THEMES.sort(Comparator.comparingInt(Theme::getPriority).reversed());
 		return theme;
 	}
 
 	public static void removeTheme(Theme theme) {
-		themes.remove(theme);
+		THEMES.remove(theme);
 	}
 
 	public static void reload() {
-		themes.forEach(Theme::init);
+		THEMES.forEach(Theme::init);
 	}
 
 	private static ColorHolder resolve(String key) {
-		return themes
+		return THEMES
 				.stream()
 				.map(theme -> theme.get(key))
 				.filter(Objects::nonNull)

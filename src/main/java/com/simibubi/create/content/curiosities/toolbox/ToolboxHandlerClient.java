@@ -177,7 +177,7 @@ public class ToolboxHandlerClient {
 			AllGuiTextures texture = ToolboxHandler.distance(player.position(), pos) < max * max
 				? selected ? TOOLBELT_SELECTED_ON : TOOLBELT_HOTBAR_ON
 				: selected ? TOOLBELT_SELECTED_OFF : TOOLBELT_HOTBAR_OFF;
-			texture.draw(ms, x + 20 * slot - offset, y + offset);
+			texture.render(ms, x + 20 * slot - offset, y + offset);
 		}
 		ms.popPose();
 	}

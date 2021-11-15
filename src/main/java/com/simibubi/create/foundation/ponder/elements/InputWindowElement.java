@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderScene;
 import com.simibubi.create.foundation.ponder.PonderUI;
@@ -131,7 +131,7 @@ public class InputWindowElement extends AnimatedOverlayElement {
 			ms.pushPose();
 			ms.translate(keyWidth, 0, 0);
 			ms.scale(1.5f, 1.5f, 1.5f);
-			icon.draw(ms, screen, 0, 0);
+			icon.render(ms, 0, 0, screen);
 			ms.popPose();
 		}
 

@@ -32,7 +32,7 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 
 	public CreateTileEntityBuilder<T, P> instance(NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory) {
 		if (this.instanceFactory == null) {
-			DistExecutor.runWhenOn(Dist.CLIENT, () -> this::registerInstance);
+			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
 		}
 
 		this.instanceFactory = instanceFactory;
@@ -45,7 +45,8 @@ public class CreateTileEntityBuilder<T extends BlockEntity, P> extends TileEntit
 			NonNullSupplier<ITileInstanceFactory<? super T>> instanceFactory = this.instanceFactory;
 			if (instanceFactory != null) {
 				InstancedRenderRegistry.getInstance()
-					.register(getEntry(), instanceFactory.get());
+					.tile(getEntry())
+					.factory(instanceFactory.get());
 			}
 		});
 	}

@@ -2,7 +2,7 @@ package com.simibubi.create.compat.jei;
 
 import java.util.List;
 
-import com.simibubi.create.foundation.gui.AbstractSimiContainerScreen;
+import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 
 import mezz.jei.api.gui.handlers.IGuiContainerHandler;
 import net.minecraft.client.renderer.Rect2i;
@@ -18,4 +18,5 @@ public class SlotMover implements IGuiContainerHandler<AbstractSimiContainerScre
 	public List<Rect2i> getGuiExtraAreas(AbstractSimiContainerScreen<?> containerScreen) {
 		return containerScreen.getExtraAreas();
 	}
+
 }

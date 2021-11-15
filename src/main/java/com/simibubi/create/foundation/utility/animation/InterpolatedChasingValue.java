@@ -1,5 +1,9 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.utility.animation;
 
+/**
+ * Use {@link LerpedFloat} instead.
+ */
+@Deprecated
 public class InterpolatedChasingValue extends InterpolatedValue {
 
 	float speed = 0.5f;

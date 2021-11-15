@@ -1,6 +1,5 @@
 package com.simibubi.create.content.schematics.client;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -9,11 +8,11 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
-import com.simibubi.create.foundation.gui.widgets.Label;
-import com.simibubi.create.foundation.gui.widgets.ScrollInput;
-import com.simibubi.create.foundation.gui.widgets.SelectionScrollInput;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.Label;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
+import com.simibubi.create.foundation.gui.widget.SelectionScrollInput;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.components.EditBox;
@@ -28,13 +27,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 
 public class SchematicEditScreen extends AbstractSimiScreen {
 
-	private AllGuiTextures background;
-
-	private EditBox xInput;
-	private EditBox yInput;
-	private EditBox zInput;
-	private IconButton confirmButton;
-
 	private final List<Component> rotationOptions =
 		Lang.translatedOptions("schematic.rotation", "none", "cw90", "cw180", "cw270");
 	private final List<Component> mirrorOptions =
@@ -42,12 +34,18 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 	private final Component rotationLabel = Lang.translate("schematic.rotation");
 	private final Component mirrorLabel = Lang.translate("schematic.mirror");
 
+	private AllGuiTextures background;
+
+	private EditBox xInput;
+	private EditBox yInput;
+	private EditBox zInput;
+	private IconButton confirmButton;
+
 	private ScrollInput rotationArea;
 	private ScrollInput mirrorArea;
 	private SchematicHandler handler;
 
 	public SchematicEditScreen() {
-		super();
 		background = AllGuiTextures.SCHEMATIC;
 		handler = CreateClient.SCHEMATIC_HANDLER;
 	}
@@ -57,7 +55,6 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-6, 0);
 		super.init();
-		widgets.clear();
 
 		int x = guiLeft;
 		int y = guiTop;
@@ -113,12 +110,15 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 				.ordinal())
 			.writingTo(labelM);
 
-		Collections.addAll(widgets, xInput, yInput, zInput);
-		Collections.addAll(widgets, labelR, labelM, rotationArea, mirrorArea);
+		addRenderableWidgets(xInput, yInput, zInput);
+		addRenderableWidgets(labelR, labelM, rotationArea, mirrorArea);
 
 		confirmButton =
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-		widgets.add(confirmButton);
+		confirmButton.withCallback(() -> {
+			onClose();
+		});
+		addRenderableWidget(confirmButton);
 	}
 
 	@Override
@@ -155,7 +155,7 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		String title = handler.getCurrentSchematicName();
 		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
@@ -194,16 +194,6 @@ public class SchematicEditScreen extends AbstractSimiScreen {
 			handler.markDirty();
 			handler.deploy();
 		}
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		if (confirmButton.isHovered()) {
-			onClose();
-			return true;
-		}
-
-		return super.mouseClicked(x, y, button);
 	}
 
 }

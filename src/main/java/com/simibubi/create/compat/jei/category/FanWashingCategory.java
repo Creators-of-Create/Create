@@ -9,7 +9,7 @@ import com.simibubi.create.compat.jei.category.animations.AnimatedKinetics;
 import com.simibubi.create.content.contraptions.components.fan.SplashingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
-import com.simibubi.create.foundation.gui.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -63,20 +63,20 @@ public class FanWashingCategory extends ProcessingViaFanCategory<SplashingRecipe
 		int size = recipe.getRollableResultsAsItemStacks()
 				.size();
 
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 12, 47);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 47 + 4, 29);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 66 + 4, 39);
-		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 42, 51);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 12, 47);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 47 + 4, 29);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 66 + 4, 39);
+		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 42, 51);
 
 		if (size == 1) {
-			getRenderedSlot(recipe, 0).draw(matrixStack, 126, 47);
+			getRenderedSlot(recipe, 0).render(matrixStack, 126, 47);
 			return;
 		}
 
 		for (int i = 0; i < size; i++) {
 			int xOffset = (i % 3) * 19;
 			int yOffset = (i / 3) * -19 + (size > 9 ? 8 : 0);
-			getRenderedSlot(recipe, i).draw(matrixStack, 126 + xOffset, 47 + yOffset);
+			getRenderedSlot(recipe, i).render(matrixStack, 126 + xOffset, 47 + yOffset);
 		}
 	}
 	

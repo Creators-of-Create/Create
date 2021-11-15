@@ -128,11 +128,11 @@ public class ItemDrainCategory extends CreateRecipeCategory<EmptyingRecipe> {
 
 	@Override
 	public void draw(EmptyingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 131, 7);
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 7);
-		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 26);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 62, 37);
-		AllGuiTextures.JEI_DOWN_ARROW.draw(matrixStack, 73, 4);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 131, 7);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 7);
+		getRenderedSlot(recipe, 0).render(matrixStack, 131, 26);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 62, 37);
+		AllGuiTextures.JEI_DOWN_ARROW.render(matrixStack, 73, 4);
 		drain.withFluid(recipe.getResultingFluid())
 			.draw(matrixStack, getBackground().getWidth() / 2 - 13, 40);
 	}

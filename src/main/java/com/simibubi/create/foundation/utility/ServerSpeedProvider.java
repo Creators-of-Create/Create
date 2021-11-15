@@ -3,9 +3,9 @@ package com.simibubi.create.foundation.utility;
 import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.gui.widgets.InterpolatedChasingValue;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;

@@ -5,12 +5,12 @@ import java.util.Locale;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreen;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.BoxElement;
-import com.simibubi.create.foundation.gui.DelegatedStencilElement;
-import com.simibubi.create.foundation.gui.TextStencilElement;
 import com.simibubi.create.foundation.gui.Theme;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.gui.element.BoxElement;
+import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
+import com.simibubi.create.foundation.gui.element.TextStencilElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.ForgeConfigSpec;

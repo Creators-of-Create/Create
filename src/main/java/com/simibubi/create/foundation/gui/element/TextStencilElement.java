@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui;
+package com.simibubi.create.foundation.gui.element;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 

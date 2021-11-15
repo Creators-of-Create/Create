@@ -1,7 +1,11 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.utility.animation;
 
 import net.minecraft.util.Mth;
 
+/**
+ * Use {@link LerpedFloat} instead.
+ */
+@Deprecated
 public class InterpolatedValue {
 
 	public float value = 0;

@@ -55,11 +55,11 @@ public abstract class ProcessingViaFanCategory<T extends Recipe<?>> extends Crea
 	}
 
 	protected void renderWidgets(PoseStack matrixStack, T recipe, double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 20, 47);
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 139, 47);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 47, 29);
-		AllGuiTextures.JEI_LIGHT.draw(matrixStack, 66, 39);
-		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 53, 51);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 20, 47);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 139, 47);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 47, 29);
+		AllGuiTextures.JEI_LIGHT.render(matrixStack, 66, 39);
+		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 53, 51);
 	}
 
 	@Override

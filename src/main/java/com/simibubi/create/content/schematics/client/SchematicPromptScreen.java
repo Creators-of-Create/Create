@@ -8,8 +8,8 @@ import com.simibubi.create.CreateClient;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.client.gui.components.EditBox;
@@ -38,7 +38,6 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 	public void init() {
 		setWindowSize(background.width, background.height);
 		super.init();
-		widgets.clear();
 
 		int x = guiLeft;
 		int y = guiTop;
@@ -49,23 +48,29 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		nameField.setBordered(false);
 		nameField.setMaxLength(35);
 		nameField.changeFocus(true);
+		addRenderableWidget(nameField);
 
 		abort = new IconButton(x + 7, y + 53, AllIcons.I_TRASH);
+		abort.withCallback(() -> {
+			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.discard();
+			onClose();
+		});
 		abort.setToolTip(abortLabel);
-		widgets.add(abort);
+		addRenderableWidget(abort);
 
 		confirm = new IconButton(x + 158, y + 53, AllIcons.I_CONFIRM);
+		confirm.withCallback(() -> {
+			confirm(false);
+		});
 		confirm.setToolTip(confirmLabel);
-		widgets.add(confirm);
+		addRenderableWidget(confirm);
 
 		convert = new IconButton(x + 180, y + 53, AllIcons.I_SCHEMATIC);
+		convert.withCallback(() -> {
+			confirm(true);
+		});
 		convert.setToolTip(convertLabel);
-		widgets.add(convert);
-
-		widgets.add(confirm);
-		widgets.add(convert);
-		widgets.add(abort);
-		widgets.add(nameField);
+		addRenderableWidget(convert);
 	}
 
 	@Override
@@ -73,8 +78,9 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
+
 		GuiGameElement.of(AllItems.SCHEMATIC.asStack())
 				.at(x + 22, y + 23, 0)
 				.render(ms);
@@ -98,27 +104,9 @@ public class SchematicPromptScreen extends AbstractSimiScreen {
 		return nameField.keyPressed(keyCode, p_keyPressed_2_, p_keyPressed_3_);
 	}
 
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		if (confirm.isHovered()) {
-			confirm(false);
-			return true;
-		}
-		if (abort.isHovered()) {
-			CreateClient.SCHEMATIC_AND_QUILL_HANDLER.discard();
-			minecraft.player.closeContainer();
-			return true;
-		}
-		if (convert.isHovered()) {
-			confirm(true);
-			return true;
-		}
-		return super.mouseClicked(x, y, button);
-	}
-
 	private void confirm(boolean convertImmediately) {
 		CreateClient.SCHEMATIC_AND_QUILL_HANDLER.saveSchematic(nameField.getValue(), convertImmediately);
-		minecraft.player.closeContainer();
+		onClose();
 	}
 
 }

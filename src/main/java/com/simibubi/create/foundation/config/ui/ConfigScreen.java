@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.TriConsumer;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
@@ -23,10 +22,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.StencilElement;
+import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
-import com.simibubi.create.foundation.gui.mainMenu.CreateMainMenuScreen;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.StencilElement;
 import com.simibubi.create.foundation.utility.animation.Force;
 import com.simibubi.create.foundation.utility.animation.PhysicalFloat;
 
@@ -99,7 +98,7 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 	@Override
 	protected void prepareFrame() {
 		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
-		RenderTarget mainBuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget mainBuffer = minecraft.getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
 		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.frameBufferId);
@@ -107,15 +106,13 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
 		functions.fbo.bindFramebuffer(GlConst.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
-		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-
+		RenderSystem.clear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 	}
 
 	@Override
 	protected void endFrame() {
-
 		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
-		RenderTarget mainBuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget mainBuffer = minecraft.getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
 		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.frameBufferId);

@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
@@ -14,8 +13,11 @@ import com.jozufozu.flywheel.backend.Backend;
 import com.jozufozu.flywheel.backend.gl.versioned.GlCompat;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.GlConst;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.gui.element.BoxElement;
+import com.simibubi.create.foundation.gui.element.TextStencilElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -108,7 +110,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 
 	@Override
 	protected void init() {
-		widgets.clear();
+		super.init();
 
 		ArrayList<FormattedText> copy = new ArrayList<>(text);
 		text.clear();
@@ -139,7 +141,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 				new TextStencilElement(minecraft.font, tristate ? "Save" : "Confirm").centered(true, true);
 		confirm = new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.Confirm));
 		confirm.showingElement(confirmText.withElementRenderer(BoxWidget.gradientFactory.apply(confirm)));
-		widgets.add(confirm);
+		addRenderableWidget(confirm);
 
 		buttonX += 12 + 70;
 
@@ -150,7 +152,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 					new BoxWidget(buttonX, y + textHeight + 6, 70, 16).withCallback(() -> accept(Response.ConfirmDontSave));
 			confirmDontSave.showingElement(
 					confirmDontSaveText.withElementRenderer(BoxWidget.gradientFactory.apply(confirmDontSave)));
-			widgets.add(confirmDontSave);
+			addRenderableWidget(confirmDontSave);
 			buttonX += 12 + 70;
 		}
 
@@ -158,7 +160,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		cancel = new BoxWidget(buttonX, y + textHeight + 6, 70, 16)
 				.withCallback(() -> accept(Response.Cancel));
 		cancel.showingElement(cancelText.withElementRenderer(BoxWidget.gradientFactory.apply(cancel)));
-		widgets.add(cancel);
+		addRenderableWidget(cancel);
 
 		textBackground = new BoxElement()
 				.gradientBorder(Theme.p(Theme.Key.BUTTON_DISABLE))
@@ -215,7 +217,7 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 	@Override
 	protected void prepareFrame() {
 		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
-		RenderTarget mainBuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget mainBuffer = minecraft.getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
 		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, mainBuffer.frameBufferId);
@@ -223,15 +225,13 @@ public class ConfirmationScreen extends AbstractSimiScreen {
 		functions.blit.blitFramebuffer(0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, 0, 0, mainBuffer.viewWidth, mainBuffer.viewHeight, GL30.GL_COLOR_BUFFER_BIT, GL20.GL_LINEAR);
 
 		functions.fbo.bindFramebuffer(GlConst.GL_FRAMEBUFFER, thisBuffer.frameBufferId);
-		GL11.glClear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT);
-
+		RenderSystem.clear(GL30.GL_STENCIL_BUFFER_BIT | GL30.GL_DEPTH_BUFFER_BIT, Minecraft.ON_OSX);
 	}
 
 	@Override
 	protected void endFrame() {
-
 		RenderTarget thisBuffer = UIRenderHelper.framebuffer;
-		RenderTarget mainBuffer = Minecraft.getInstance().getMainRenderTarget();
+		RenderTarget mainBuffer = minecraft.getMainRenderTarget();
 
 		GlCompat functions = Backend.getInstance().compat;
 		functions.fbo.bindFramebuffer(GL30.GL_READ_FRAMEBUFFER, thisBuffer.frameBufferId);

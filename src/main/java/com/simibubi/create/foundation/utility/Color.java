@@ -5,6 +5,7 @@ import java.util.function.UnaryOperator;
 import javax.annotation.Nonnull;
 
 import com.google.common.hash.Hashing;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -146,6 +147,10 @@ public class Color {
 		return new Vec3(getRedAsFloat(), getGreenAsFloat(), getBlueAsFloat());
 	}
 
+	public Vector3f asVectorF() {
+		return new Vector3f(getRedAsFloat(), getGreenAsFloat(), getBlueAsFloat());
+	}
+
 	public Color setRed(int r) {
 		return ensureMutable().setRedUnchecked(r);
 	}
@@ -180,14 +185,6 @@ public class Color {
 
 	public Color scaleAlpha(float factor) {
 		return ensureMutable().setAlphaUnchecked((int) (getAlpha() * Mth.clamp(factor, 0, 1)));
-	}
-
-	@Deprecated
-	public Color applyAlpha(float alpha) {
-		if (getAlpha() == 0)
-			return setAlpha(alpha);
-		else
-			return scaleAlpha(alpha);
 	}
 
 	public Color mixWith(Color other, float weight) {
@@ -311,17 +308,6 @@ public class Color {
 	public static Color generateFromLong(long l) {
 		return rainbowColor(Hashing.crc32().hashLong(l).asInt())
 				.mixWith(WHITE, 0.5f);
-	}
-
-	/**
-	 * Try not to introduce new usages of this method and instead use Color instances directly
-	 */
-	@Deprecated
-	public static Vec3 vectorFromRGB(int color) {
-		int r = (color >> 16) & 0xFF;
-		int g = (color >> 8) & 0xFF;
-		int b = color & 0xFF;
-		return new Vec3(r, g, b).scale(1 / 255d);
 	}
 
 }

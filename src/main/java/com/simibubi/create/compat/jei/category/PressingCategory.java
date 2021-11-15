@@ -55,13 +55,13 @@ public class PressingCategory extends CreateRecipeCategory<PressingRecipe> {
 
 	@Override
 	public void draw(PressingRecipe recipe, PoseStack matrixStack,  double mouseX, double mouseY) {
-		AllGuiTextures.JEI_SLOT.draw(matrixStack, 26, 50);
-		getRenderedSlot(recipe, 0).draw(matrixStack, 131, 50);
+		AllGuiTextures.JEI_SLOT.render(matrixStack, 26, 50);
+		getRenderedSlot(recipe, 0).render(matrixStack, 131, 50);
 		if (recipe.getRollableResults()
 			.size() > 1)
-			getRenderedSlot(recipe, 1).draw(matrixStack, 131 + 19, 50);
-		AllGuiTextures.JEI_SHADOW.draw(matrixStack, 61, 41);
-		AllGuiTextures.JEI_LONG_ARROW.draw(matrixStack, 52, 54);
+			getRenderedSlot(recipe, 1).render(matrixStack, 131 + 19, 50);
+		AllGuiTextures.JEI_SHADOW.render(matrixStack, 61, 41);
+		AllGuiTextures.JEI_LONG_ARROW.render(matrixStack, 52, 54);
 		press.draw(matrixStack, getBackground().getWidth() / 2 - 17, 22);
 	}
 

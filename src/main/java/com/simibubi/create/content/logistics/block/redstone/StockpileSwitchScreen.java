@@ -6,9 +6,9 @@ import com.simibubi.create.content.logistics.packet.ConfigureStockswitchPacket;
 import com.simibubi.create.foundation.gui.AbstractSimiScreen;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.widgets.IconButton;
-import com.simibubi.create.foundation.gui.widgets.ScrollInput;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.widget.IconButton;
+import com.simibubi.create.foundation.gui.widget.ScrollInput;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
@@ -47,7 +47,6 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		setWindowSize(background.width, background.height);
 		setWindowOffset(-20, 0);
 		super.init();
-		widgets.clear();
 
 		int x = guiLeft;
 		int y = guiTop;
@@ -84,16 +83,22 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		onAbove.onChanged();
 		offBelow.onChanged();
 
-		widgets.add(onAbove);
-		widgets.add(offBelow);
+		addRenderableWidget(onAbove);
+		addRenderableWidget(offBelow);
 
 		confirmButton =
 			new IconButton(x + background.width - 33, y + background.height - 24, AllIcons.I_CONFIRM);
-		widgets.add(confirmButton);
+		confirmButton.withCallback(() -> {
+			onClose();
+		});
+		addRenderableWidget(confirmButton);
 
 		flipSignals = new IconButton(x + 14, y + 40, AllIcons.I_FLIP);
+		flipSignals.withCallback(() -> {
+			send(!te.isInverted());
+		});
 		flipSignals.setToolTip(invertSignal);
-		widgets.add(flipSignals);
+		addRenderableWidget(flipSignals);
 	}
 
 	@Override
@@ -101,10 +106,10 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 		int x = guiLeft;
 		int y = guiTop;
 
-		background.draw(ms, this, x, y);
+		background.render(ms, x, y, this);
 
-		AllGuiTextures.STOCKSWITCH_POWERED_LANE.draw(ms, this, x + 36, y + (te.isInverted() ? 18 : 40));
-		AllGuiTextures.STOCKSWITCH_UNPOWERED_LANE.draw(ms, this, x + 36, y + (te.isInverted() ? 40 : 18));
+		AllGuiTextures.STOCKSWITCH_POWERED_LANE.render(ms, x + 36, y + (te.isInverted() ? 18 : 40), this);
+		AllGuiTextures.STOCKSWITCH_UNPOWERED_LANE.render(ms, x + 36, y + (te.isInverted() ? 40 : 18), this);
 		drawCenteredString(ms, font, title, x + (background.width - 8) / 2, y + 3, 0xFFFFFF);
 
 		AllGuiTextures sprite = AllGuiTextures.STOCKSWITCH_INTERVAL;
@@ -116,15 +121,15 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 			(int) (sprite.width - upperBound), sprite.height);
 		blit(ms, x + 37, y + 40, sprite.startX, sprite.startY, (int) (lowerBound), sprite.height);
 
-		AllGuiTextures.STOCKSWITCH_ARROW_UP.draw(ms, this, (int) (x + lowerBound + 36) - 2, y + 35);
-		AllGuiTextures.STOCKSWITCH_ARROW_DOWN.draw(ms, this, (int) (x + upperBound + 36) - 3, y + 17);
+		AllGuiTextures.STOCKSWITCH_ARROW_UP.render(ms, (int) (x + lowerBound + 36) - 2, y + 35, this);
+		AllGuiTextures.STOCKSWITCH_ARROW_DOWN.render(ms, (int) (x + upperBound + 36) - 3, y + 17, this);
 
 		if (te.currentLevel != -1) {
 			AllGuiTextures cursor = AllGuiTextures.STOCKSWITCH_CURSOR;
 			ms.pushPose();
 			ms.translate(Math.min(99, this.cursor.getValue(partialTicks) * sprite.width),
 				cursorLane.getValue(partialTicks) * 22, 0);
-			cursor.draw(ms, this, x + 34, y + 19);
+			cursor.render(ms, x + 34, y + 19, this);
 			ms.popPose();
 		}
 
@@ -160,17 +165,6 @@ public class StockpileSwitchScreen extends AbstractSimiScreen {
 	protected void send(boolean invert) {
 		AllPackets.channel.sendToServer(new ConfigureStockswitchPacket(te.getBlockPos(), offBelow.getState() / 100f,
 			onAbove.getState() / 100f, invert));
-	}
-
-	@Override
-	public boolean mouseClicked(double x, double y, int button) {
-		if (flipSignals.isHovered()) 
-			send(!te.isInverted());
-		if (confirmButton.isHovered()) {
-			minecraft.player.closeContainer();
-			return true;
-		}
-		return super.mouseClicked(x, y, button);
 	}
 
 }

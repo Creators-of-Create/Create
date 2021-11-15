@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.gui.widget;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -91,9 +91,6 @@ public class ScrollInput extends AbstractSimiWidget {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-		if (!isHovered)
-			return false;
-
 		StepContext context = new StepContext();
 		context.control = AllKeys.ctrlDown();
 		context.shift = AllKeys.shiftDown();

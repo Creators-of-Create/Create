@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.Create;
-import com.simibubi.create.foundation.gui.GuiGameElement;
-import com.simibubi.create.foundation.gui.IScreenRenderable;
+import com.simibubi.create.foundation.gui.element.GuiGameElement;
+import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.ponder.PonderLocalization;
 import com.simibubi.create.foundation.ponder.PonderRegistry;
 
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class PonderTag implements IScreenRenderable {
+public class PonderTag implements ScreenElement {
 
 	public static final PonderTag
 
@@ -146,7 +146,7 @@ public class PonderTag implements IScreenRenderable {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void draw(PoseStack ms, GuiComponent screen, int x, int y) {
+	public void render(PoseStack ms, int x, int y) {
 		ms.pushPose();
 		ms.translate(x, y, 0);
 		if (icon != null) {

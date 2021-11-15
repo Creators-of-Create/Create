@@ -6,10 +6,10 @@ import java.util.Locale;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllIcons;
-import com.simibubi.create.foundation.gui.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.Theme;
-import com.simibubi.create.foundation.gui.widgets.BoxWidget;
+import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
+import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 
 import net.minecraft.ChatFormatting;
@@ -30,21 +30,14 @@ public class ConfigModListScreen extends ConfigScreen {
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-		list.tick();
-	}
-
-	@Override
 	protected void init() {
-		widgets.clear();
 		super.init();
 
 		int listWidth = Math.min(width - 80, 300);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 60, 15, height - 45, 40);
 		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
-		addWidget(list);
+		addRenderableWidget(list);
 
 		allEntries = new ArrayList<>();
 		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
@@ -64,20 +57,13 @@ public class ConfigModListScreen extends ConfigScreen {
 				.withElementRenderer(BoxWidget.gradientFactory.apply(goBack)));
 		goBack.getToolTip()
 				.add(new TextComponent("Go Back"));
-		widgets.add(goBack);
+		addRenderableWidget(goBack);
 
 		search = new HintableTextFieldWidget(font, width / 2 - listWidth / 2, height - 35, listWidth, 20);
 		search.setResponder(this::updateFilter);
 		search.setHint("Search..");
 		search.moveCursorToStart();
-		widgets.add(search);
-
-	}
-
-	@Override
-	protected void renderWindow(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-
-		list.render(ms, mouseX, mouseY, partialTicks);
+		addRenderableWidget(search);
 
 	}
 

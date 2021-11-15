@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.gui.widget;
 
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -6,8 +6,8 @@ import java.util.function.UnaryOperator;
 import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.simibubi.create.foundation.gui.IScreenRenderable;
-import com.simibubi.create.foundation.gui.RenderElement;
+import com.simibubi.create.foundation.gui.element.RenderElement;
+import com.simibubi.create.foundation.gui.element.ScreenElement;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
 public class ElementWidget extends AbstractSimiWidget {
@@ -40,7 +40,7 @@ public class ElementWidget extends AbstractSimiWidget {
 		return (T) this;
 	}
 
-	public <T extends ElementWidget> T showing(IScreenRenderable renderable) {
+	public <T extends ElementWidget> T showing(ScreenElement renderable) {
 		return this.showingElement(RenderElement.of(renderable));
 	}
 

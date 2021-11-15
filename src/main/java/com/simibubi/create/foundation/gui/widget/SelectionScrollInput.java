@@ -1,4 +1,4 @@
-package com.simibubi.create.foundation.gui.widgets;
+package com.simibubi.create.foundation.gui.widget;
 
 import java.util.ArrayList;
 import java.util.List;

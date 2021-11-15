@@ -328,9 +328,9 @@ public class SceneBuilder {
 		}
 
 		public void createRedstoneParticles(BlockPos pos, int color, int amount) {
-			Vec3 rgb = Color.vectorFromRGB(color);
+			Vector3f rgb = new Color(color).asVectorF();
 			addInstruction(new EmitParticlesInstruction(VecHelper.getCenterOf(pos), Emitter.withinBlockSpace(
-				new DustParticleOptions(new Vector3f(rgb), 1), Vec3.ZERO), amount, 2));
+				new DustParticleOptions(rgb, 1), Vec3.ZERO), amount, 2));
 		}
 
 	}
