@@ -6,33 +6,40 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 
-import mezz.jei.api.gui.drawable.IDrawable;
+import me.shedaniel.math.Point;
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.gui.Renderer;
 import net.minecraft.world.item.ItemStack;
 
-public class DoubleItemIcon implements IDrawable {
+public class DoubleItemIcon implements Renderer {
 
 	private Supplier<ItemStack> primarySupplier;
 	private Supplier<ItemStack> secondarySupplier;
 	private ItemStack primaryStack;
 	private ItemStack secondaryStack;
+	private Point pos;
 
 	public DoubleItemIcon(Supplier<ItemStack> primary, Supplier<ItemStack> secondary) {
 		this.primarySupplier = primary;
 		this.secondarySupplier = secondary;
 	}
 
-	@Override
-	public int getWidth() {
-		return 18;
+//	@Override
+//	public int getWidth() {
+//		return 18;
+//	}
+//
+//	@Override
+//	public int getHeight() {
+//		return 18;
+//	}
+
+	public void setPos(Point pos) {
+		this.pos = pos;
 	}
 
 	@Override
-	public int getHeight() {
-		return 18;
-	}
-
-	@Override
-	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	public void render(PoseStack matrixStack, Rectangle bounds, int mouseX, int mouseY, float delta) {
 		if (primaryStack == null) {
 			primaryStack = primarySupplier.get();
 			secondaryStack = secondarySupplier.get();
@@ -40,7 +47,7 @@ public class DoubleItemIcon implements IDrawable {
 
 		RenderSystem.enableDepthTest();
 		matrixStack.pushPose();
-		matrixStack.translate(xOffset, yOffset, 0);
+		matrixStack.translate(pos.getX(), pos.getY(), 0);
 
 		matrixStack.pushPose();
 		matrixStack.translate(1, 1, 0);
@@ -59,4 +66,13 @@ public class DoubleItemIcon implements IDrawable {
 		RenderSystem.enableBlend();
 	}
 
+	@Override
+	public int getZ() {
+		return 0;
+	}
+
+	@Override
+	public void setZ(int i) {
+
+	}
 }

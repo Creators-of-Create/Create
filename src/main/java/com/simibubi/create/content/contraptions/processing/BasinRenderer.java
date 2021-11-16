@@ -25,8 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
@@ -179,7 +179,7 @@ public class BasinRenderer extends SmartTileEntityRenderer<BasinTileEntity> {
 
 		return yMax;
 	}
-	
+
 	@Override
 	public int getViewDistance() {
 		return 16;

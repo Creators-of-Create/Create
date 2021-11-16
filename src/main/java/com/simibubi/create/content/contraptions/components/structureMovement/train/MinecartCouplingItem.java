@@ -5,6 +5,7 @@ import com.simibubi.create.content.contraptions.components.structureMovement.tra
 import com.simibubi.create.content.contraptions.components.structureMovement.train.capability.MinecartController;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -12,55 +13,50 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteract;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
+import org.jetbrains.annotations.Nullable;
+
 public class MinecartCouplingItem extends Item {
 
 	public MinecartCouplingItem(Properties p_i48487_1_) {
 		super(p_i48487_1_);
 	}
 
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void handleInteractionWithMinecart(PlayerInteractEvent.EntityInteract event) {
-		Entity interacted = event.getTarget();
+	public static InteractionResult handleInteractionWithMinecart(Player player, Level world, InteractionHand hand, Entity interacted, @Nullable EntityHitResult hitResult) {
 		if (!(interacted instanceof AbstractMinecart))
-			return;
+			return InteractionResult.PASS;
 		AbstractMinecart minecart = (AbstractMinecart) interacted;
-		Player player = event.getPlayer();
 		if (player == null)
-			return;
+			return InteractionResult.PASS;
 		LazyOptional<MinecartController> capability =
-			minecart.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+			LazyOptional.ofObject(MinecartAndRailUtil.getController(minecart));
 		if (!capability.isPresent())
-			return;
+			return InteractionResult.PASS;
 		MinecartController controller = capability.orElse(null);
 
-		ItemStack heldItem = player.getItemInHand(event.getHand());
+		ItemStack heldItem = player.getItemInHand(hand);
 		if (AllItems.MINECART_COUPLING.isIn(heldItem)) {
-			if (!onCouplingInteractOnMinecart(event, minecart, player, controller))
-				return;
+			if (!onCouplingInteractOnMinecart(player.level, minecart, player, controller))
+				return InteractionResult.PASS;
 		} else if (AllItems.WRENCH.isIn(heldItem)) {
-			if (!onWrenchInteractOnMinecart(event, minecart, player, controller))
-				return;
+			if (!onWrenchInteractOnMinecart(player.level, minecart, player, controller))
+				return InteractionResult.PASS;
 		} else
-			return;
+			return InteractionResult.PASS;
 
-		event.setCanceled(true);
-		event.setCancellationResult(InteractionResult.SUCCESS);
+		return InteractionResult.SUCCESS;
 	}
 
-	protected static boolean onCouplingInteractOnMinecart(PlayerInteractEvent.EntityInteract event,
+	protected static boolean onCouplingInteractOnMinecart(Level world,
 		AbstractMinecart minecart, Player player, MinecartController controller) {
-		Level world = event.getWorld();
 		if (controller.isFullyCoupled()) {
 			if (!world.isClientSide)
 				CouplingHandler.status(player, "two_couplings_max");
@@ -71,12 +67,12 @@ public class MinecartCouplingItem extends Item {
 		return true;
 	}
 
-	private static boolean onWrenchInteractOnMinecart(EntityInteract event, AbstractMinecart minecart, Player player,
+	private static boolean onWrenchInteractOnMinecart(Level world, AbstractMinecart minecart, Player player,
 		MinecartController controller) {
 		int couplings = (controller.isConnectedToCoupling() ? 1 : 0) + (controller.isLeadingCoupling() ? 1 : 0);
 		if (couplings == 0)
 			return false;
-		if (event.getWorld().isClientSide)
+		if (world.isClientSide)
 			return true;
 
 		for (boolean forward : Iterate.trueAndFalse) {

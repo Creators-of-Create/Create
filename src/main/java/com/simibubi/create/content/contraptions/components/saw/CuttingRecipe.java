@@ -20,7 +20,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
 public class CuttingRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
@@ -55,12 +55,12 @@ public class CuttingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 	public Component getDescriptionForAssembly() {
 		return Lang.translate("recipe.assembly.cutting");
 	}
-	
+
 	@Override
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.MECHANICAL_SAW.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblyCutting::new;

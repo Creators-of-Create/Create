@@ -50,6 +50,7 @@ import com.simibubi.create.foundation.gui.container.AbstractSimiContainerScreen;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
+import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
@@ -69,9 +70,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fml.ModList;
 
-@JeiPlugin
 @SuppressWarnings("unused")
 public class CreateJEI implements REIClientPlugin {
 
@@ -214,14 +213,18 @@ public class CreateJEI implements REIClientPlugin {
 	}
 
 	@Override
-	@Nonnull
-	public ResourceLocation getPluginUid() {
-		return ID;
+	public String getPluginProviderName() {
+		return ID.toString();
 	}
 
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		registration.addRecipeTransferHandler(new BlueprintTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
+	}
+
+	@Override
+	public void registerCategories(CategoryRegistry registry) {
+		allCategories.forEach(registry::add);
 	}
 
 	@Override

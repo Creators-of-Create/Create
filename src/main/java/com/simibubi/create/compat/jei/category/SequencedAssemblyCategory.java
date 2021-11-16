@@ -88,9 +88,9 @@ public class SequencedAssemblyCategory extends CreateRecipeCategory<SequencedAss
 			fluidIndex += subCategory.addFluidIngredients(sequencedRecipe, fluidStacks, x, fluidIndex);
 			x += subCategory.getWidth() + margin;
 		}
-		
+
 		// In case machines should be displayed as ingredients
-		
+
 //		List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
 //		int catalystX = -2;
 //		int catalystY = 14;

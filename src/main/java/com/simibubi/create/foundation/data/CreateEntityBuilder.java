@@ -8,13 +8,15 @@ import com.jozufozu.flywheel.backend.instancing.entity.IEntityInstanceFactory;
 import com.tterrag.registrate.AbstractRegistrate;
 import com.tterrag.registrate.builders.BuilderCallback;
 import com.tterrag.registrate.builders.EntityBuilder;
+import com.tterrag.registrate.fabric.EnvExecutor;
 import com.tterrag.registrate.util.OneTimeEventReceiver;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.api.distmarker.Dist;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.EnvType;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
@@ -34,7 +36,7 @@ public class CreateEntityBuilder<T extends Entity, P> extends EntityBuilder<T, P
 
 	public CreateEntityBuilder<T, P> instance(NonNullSupplier<IEntityInstanceFactory<? super T>> instanceFactory) {
 		if (this.instanceFactory == null) {
-			DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::registerInstance);
+			EnvExecutor.runWhenOn(EnvType.CLIENT, () -> this::registerInstance);
 		}
 
 		this.instanceFactory = instanceFactory;

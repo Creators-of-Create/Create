@@ -14,7 +14,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.SlotItemHandler;
+import com.simibubi.create.lib.transfer.item.SlotItemHandler;
 
 public class AdjustableCrateContainer extends ContainerBase<AdjustableCrateTileEntity> {
 

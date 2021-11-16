@@ -17,8 +17,8 @@ import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 public class FillingBySpout {
 

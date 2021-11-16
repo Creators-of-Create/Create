@@ -43,14 +43,11 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.common.util.Constants.BlockFlags;
-import net.minecraftforge.event.ForgeEventFactory;
+import com.simibubi.create.lib.utility.Constants.BlockFlags;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class SymmetryWandItem extends Item {
 
@@ -252,26 +249,27 @@ public class SymmetryWandItem extends Item {
 						continue;
 				}
 
-				BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, position);
+//				BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, position);
+				BlockState cachedState = world.getBlockState(position);
 				FluidState ifluidstate = world.getFluidState(position);
 				world.setBlock(position, ifluidstate.createLegacyBlock(), BlockFlags.UPDATE_NEIGHBORS);
 				world.setBlockAndUpdate(position, blockState);
 
 				CompoundTag wandNbt = wand.getOrCreateTag();
 				wandNbt.putBoolean("Simulate", true);
-				boolean placeInterrupted = ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP);
+				boolean placeInterrupted = !world.isUnobstructed(cachedState, position, CollisionContext.empty());//ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP);
 				wandNbt.putBoolean("Simulate", false);
 
 				if (placeInterrupted) {
-					blocksnapshot.restore(true, false);
+//					blocksnapshot.restore(true, false);
+					world.setBlockAndUpdate(position, cachedState);
 					continue;
 				}
 				targets.add(position);
 			}
 		}
 
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-			new SymmetryEffectPacket(to, targets));
+		AllPackets.channel.sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
 	}
 
 	private static boolean isHoldingBlock(Player player, BlockState block) {
@@ -328,14 +326,13 @@ public class SymmetryWandItem extends Item {
 			}
 		}
 
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-			new SymmetryEffectPacket(to, targets));
+		AllPackets.channel.sendToClientsTrackingAndSelf(new SymmetryEffectPacket(to, targets), player);
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new SymmetryWandItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new SymmetryWandItemRenderer()));
+//	}
 
 }

@@ -91,10 +91,10 @@ public class WrenchItem extends Item {
 		minecart.hurt(DamageSource.playerAttack(player), 100);
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new WrenchItemRenderer()));
+//	}
 
 }

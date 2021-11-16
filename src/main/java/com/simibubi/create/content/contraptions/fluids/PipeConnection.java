@@ -258,7 +258,7 @@ public class PipeConnection {
 
 		if (connectionData.contains("Flow")) {
 			CompoundTag flowData = connectionData.getCompound("Flow");
-			FluidStack fluid = FluidStack.fromNBT(flowData);
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(flowData);
 			boolean inbound = flowData.getBoolean("In");
 			if (!flow.isPresent()) {
 				flow = Optional.of(new Flow(inbound, fluid));

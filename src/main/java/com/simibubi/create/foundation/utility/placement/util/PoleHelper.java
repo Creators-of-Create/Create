@@ -63,7 +63,7 @@ public abstract class PoleHelper<T extends Comparable<T>> implements IPlacementH
 		for (Direction dir : directions) {
 			int range = AllConfigs.SERVER.curiosities.placementAssistRange.get();
 			if (player != null) {
-				AttributeInstance reach = player.getAttribute(ForgeMod.REACH_DISTANCE.get());
+				AttributeInstance reach = player.getAttribute(ReachEntityAttributes.REACH);
 				if (reach != null && reach.hasModifier(ExtendoGripItem.singleRangeAttributeModifier))
 					range += 4;
 			}

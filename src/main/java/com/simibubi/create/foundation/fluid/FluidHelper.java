@@ -51,7 +51,7 @@ public class FluidHelper {
 		return blockState != null && blockState != Blocks.AIR.defaultBlockState();
 	}
 
-	public static FluidStack copyStackWithAmount(FluidStack fs, int amount) {
+	public static FluidStack copyStackWithAmount(FluidStack fs, long amount) {
 		if (amount <= 0)
 			return FluidStack.empty();
 		if (fs.isEmpty())

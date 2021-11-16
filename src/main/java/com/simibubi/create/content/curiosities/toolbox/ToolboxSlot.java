@@ -1,7 +1,7 @@
 package com.simibubi.create.content.curiosities.toolbox;
 
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+import com.simibubi.create.lib.transfer.item.SlotItemHandler;
 
 public class ToolboxSlot extends SlotItemHandler {
 
@@ -11,7 +11,7 @@ public class ToolboxSlot extends SlotItemHandler {
 		super(itemHandler, index, xPosition, yPosition);
 		this.toolboxMenu = container;
 	}
-	
+
 	@Override
 	public boolean isActive() {
 		return !toolboxMenu.renderPass && super.isActive();

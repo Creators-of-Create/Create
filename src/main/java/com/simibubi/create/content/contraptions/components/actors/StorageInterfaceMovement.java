@@ -21,8 +21,8 @@
 //import net.minecraft.util.math.BlockPos;
 //import net.minecraft.util.math.vector.Vector3d;
 //import net.minecraft.world.World;
-//import net.minecraftforge.items.IItemHandlerModifiable;
-//import net.minecraftforge.items.ItemHandlerHelper;
+//import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+//import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 //
 //public class StorageInterfaceMovement extends MovementBehaviour {
 //

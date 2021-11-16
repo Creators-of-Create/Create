@@ -6,7 +6,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
 
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
 public class CrushingRecipe extends AbstractCrushingRecipe {

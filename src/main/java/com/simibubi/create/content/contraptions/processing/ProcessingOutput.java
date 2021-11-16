@@ -10,12 +10,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.simibubi.create.Create;
 import com.simibubi.create.foundation.utility.Pair;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class ProcessingOutput {
 
@@ -60,8 +60,7 @@ public class ProcessingOutput {
 
 	public JsonElement serialize() {
 		JsonObject json = new JsonObject();
-		ResourceLocation resourceLocation = compatDatagenOutput == null ? stack.getItem()
-			.getRegistryName() : compatDatagenOutput.getFirst();
+		ResourceLocation resourceLocation = compatDatagenOutput == null ? Registry.ITEM.getKey(stack.getItem()) : compatDatagenOutput.getFirst();
 		json.addProperty("item", resourceLocation.toString());
 		int count = compatDatagenOutput == null ? stack.getCount() : compatDatagenOutput.getSecond();
 		if (count != 1)
@@ -82,7 +81,7 @@ public class ProcessingOutput {
 		String itemId = GsonHelper.getAsString(json, "item");
 		int count = GsonHelper.getAsInt(json, "count", 1);
 		float chance = GsonHelper.isValidNode(json, "chance") ? GsonHelper.getAsFloat(json, "chance") : 1;
-		ItemStack itemstack = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemId)), count);
+		ItemStack itemstack = new ItemStack(Registry.ITEM.get(new ResourceLocation(itemId)), count);
 
 		if (GsonHelper.isValidNode(json, "nbt")) {
 			try {

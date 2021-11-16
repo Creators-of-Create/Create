@@ -157,7 +157,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		disabledList.forEach(d -> disabledSpoutputs.add(Direction.valueOf(((StringTag) d).getAsString())));
 		spoutputBuffer = NBTHelper.readItemList(compound.getList("Overflow", NBT.TAG_COMPOUND));
 		spoutputFluidBuffer = NBTHelper.readCompoundList(compound.getList("FluidOverflow", NBT.TAG_COMPOUND),
-			FluidStack::fromNBT);
+			FluidStack::loadFluidStackFromNBT);
 
 		if (!clientPacket)
 			return;
@@ -166,7 +166,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			c -> visualizedOutputItems.add(IntAttached.with(OUTPUT_ANIMATION_TIME, ItemStack.of(c))));
 		NBTHelper.iterateCompoundList(compound.getList("VisualizedFluids", NBT.TAG_COMPOUND),
 			c -> visualizedOutputFluids
-				.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.fromNBT(c))));
+				.add(IntAttached.with(OUTPUT_ANIMATION_TIME, FluidStack.loadFluidStackFromNBT(c))));
 	}
 
 	@Override

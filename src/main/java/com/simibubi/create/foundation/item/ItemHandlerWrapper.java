@@ -1,7 +1,7 @@
 package com.simibubi.create.foundation.item;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
 
 public class ItemHandlerWrapper implements IItemHandlerModifiable {
 

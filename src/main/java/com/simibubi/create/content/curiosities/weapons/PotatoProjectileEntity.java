@@ -15,6 +15,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,9 +34,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import net.minecraftforge.items.ItemHandlerHelper;
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
+import com.simibubi.create.lib.utility.NBTSerializer;
+
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class PotatoProjectileEntity extends AbstractHurtingProjectile implements ExtraSpawnDataEntity {
 
@@ -97,7 +99,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag nbt) {
-		nbt.put("Item", stack.serializeNBT());
+		nbt.put("Item", NBTSerializer.serializeNBT(stack));
 		nbt.putFloat("AdditionalDamage", additionalDamageMult);
 		nbt.putFloat("AdditionalKnockback", additionalKnockback);
 		nbt.putFloat("Recovery", recoveryChance);
@@ -325,7 +327,7 @@ public class PotatoProjectileEntity extends AbstractHurtingProjectile implements
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+		return new ClientboundAddEntityPacket(this);
 	}
 
 	@Override

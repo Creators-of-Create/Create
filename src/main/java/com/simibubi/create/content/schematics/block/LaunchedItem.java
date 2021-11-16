@@ -8,6 +8,9 @@ import com.simibubi.create.content.contraptions.relays.belt.BeltPart;
 import com.simibubi.create.content.contraptions.relays.belt.item.BeltConnectorItem;
 import com.simibubi.create.content.contraptions.relays.elementary.AbstractShaftBlock;
 import com.simibubi.create.foundation.utility.BlockHelper;
+import com.simibubi.create.lib.utility.Constants;
+import com.simibubi.create.lib.utility.NBT;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -18,7 +21,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants;
 
 public abstract class LaunchedItem {
 
@@ -60,7 +62,7 @@ public abstract class LaunchedItem {
 		CompoundTag c = new CompoundTag();
 		c.putInt("TotalTicks", totalTicks);
 		c.putInt("TicksLeft", ticksRemaining);
-		c.put("Stack", stack.serializeNBT());
+		c.put("Stack", NBTSerializer.serializeNBT(stack));
 		c.put("Target", NbtUtils.writeBlockPos(target));
 		return c;
 	}
@@ -111,7 +113,7 @@ public abstract class LaunchedItem {
 		void readNBT(CompoundTag nbt) {
 			super.readNBT(nbt);
 			state = NbtUtils.readBlockState(nbt.getCompound("BlockState"));
-			if (nbt.contains("Data", Constants.NBT.TAG_COMPOUND)) {
+			if (nbt.contains("Data", NBT.TAG_COMPOUND)) {
 				data = nbt.getCompound("Data");
 			}
 		}
@@ -191,7 +193,7 @@ public abstract class LaunchedItem {
 		public CompoundTag serializeNBT() {
 			CompoundTag serializeNBT = super.serializeNBT();
 			if (entity != null)
-				serializeNBT.put("Entity", entity.serializeNBT());
+				serializeNBT.put("Entity", NBTSerializer.serializeNBT(entity));
 			return serializeNBT;
 		}
 

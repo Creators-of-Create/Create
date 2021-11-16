@@ -9,8 +9,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fluids.FluidStack;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
 
@@ -26,12 +28,12 @@ public class FluidSplashPacket extends SimplePacketBase {
 
 	public FluidSplashPacket(FriendlyByteBuf buffer) {
 		pos = buffer.readBlockPos();
-		fluid = buffer.readFluidStack();
+		fluid =FluidStack.fromBuffer(buffer);
 	}
 
 	public void write(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(pos);
-		buffer.writeFluidStack(fluid);
+		fluid.toBuffer(buffer);
 	}
 
 	public void handle(Supplier<Context> ctx) {

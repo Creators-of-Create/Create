@@ -6,13 +6,13 @@ import com.google.gson.JsonParseException;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 
@@ -34,7 +34,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 		@SuppressWarnings("unchecked")
 		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) wrapped.getSerializer();
 		JsonObject json = new JsonObject();
-		json.addProperty("type", ForgeRegistries.RECIPE_SERIALIZERS.getKey(serializer)
+		json.addProperty("type", Registry.RECIPE_SERIALIZER.getKey(serializer)
 			.toString());
 		serializer.write(json, wrapped);
 		return json;
@@ -61,7 +61,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 	public void writeToBuffer(FriendlyByteBuf buffer) {
 		@SuppressWarnings("unchecked")
 		ProcessingRecipeSerializer<T> serializer = (ProcessingRecipeSerializer<T>) wrapped.getSerializer();
-		buffer.writeResourceLocation(ForgeRegistries.RECIPE_SERIALIZERS.getKey(serializer));
+		buffer.writeResourceLocation(Registry.RECIPE_SERIALIZER.getKey(serializer));
 		buffer.writeResourceLocation(wrapped.getId());
 		serializer.toNetwork(buffer, wrapped);
 	}
@@ -69,7 +69,7 @@ public class SequencedRecipe<T extends ProcessingRecipe<?>> {
 	public static SequencedRecipe<?> readFromBuffer(FriendlyByteBuf buffer) {
 		ResourceLocation resourcelocation = buffer.readResourceLocation();
 		ResourceLocation resourcelocation1 = buffer.readResourceLocation();
-		RecipeSerializer<?> serializer = ForgeRegistries.RECIPE_SERIALIZERS.getValue(resourcelocation);
+		RecipeSerializer<?> serializer = Registry.RECIPE_SERIALIZER.get(resourcelocation);
 		if (!(serializer instanceof ProcessingRecipeSerializer))
 			throw new JsonParseException("Not a supported recipe type");
 		@SuppressWarnings("rawtypes")

@@ -1,5 +1,6 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import java.util.Collection;
 import java.util.OptionalInt;
 import java.util.UUID;
 
@@ -22,27 +23,22 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.entity.FakePlayer;
-import net.minecraftforge.event.entity.EntityEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class DeployerFakePlayer extends FakePlayer {
 
 	private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
@@ -93,25 +89,25 @@ public class DeployerFakePlayer extends FakePlayer {
 		return stack;
 	}
 
-	@SubscribeEvent
-	public static void deployerHasEyesOnHisFeet(EntityEvent.Size event) {
-		if (event.getEntity() instanceof DeployerFakePlayer)
-			event.setNewEyeHeight(0);
+	public static int deployerHasEyesOnHisFeet(Entity entity) {
+		if (entity instanceof DeployerFakePlayer)
+			return 0;
+		return -1;
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void deployerCollectsDropsFromKilledEntities(LivingDropsEvent event) {
-		if (!(event.getSource() instanceof EntityDamageSource))
-			return;
-		EntityDamageSource source = (EntityDamageSource) event.getSource();
+	public static boolean deployerCollectsDropsFromKilledEntities(DamageSource s, Collection<ItemEntity> drops) {
+		if (!(s instanceof EntityDamageSource))
+			return false;
+		EntityDamageSource source = (EntityDamageSource) s;
 		Entity trueSource = source.getEntity();
 		if (trueSource != null && trueSource instanceof DeployerFakePlayer) {
 			DeployerFakePlayer fakePlayer = (DeployerFakePlayer) trueSource;
-			event.getDrops()
+			drops
 				.forEach(stack -> fakePlayer.getInventory()
 					.placeItemBackInInventory(stack.getItem()));
-			event.setCanceled(true);
+			return true;
 		}
+		return false;
 	}
 
 	@Override
@@ -124,17 +120,15 @@ public class DeployerFakePlayer extends FakePlayer {
 		super.remove(p_150097_);
 	}
 
-	@SubscribeEvent
-	public static void deployerKillsDoNotSpawnXP(LivingExperienceDropEvent event) {
-		if (event.getAttackingPlayer() instanceof DeployerFakePlayer)
-			event.setCanceled(true);
+	public static int deployerKillsDoNotSpawnXP(int i, Player player) {
+		if (player instanceof DeployerFakePlayer)
+			return 0;
+		return i;
 	}
 
-	@SubscribeEvent
-	public static void entitiesDontRetaliate(LivingSetAttackTargetEvent event) {
-		if (!(event.getTarget() instanceof DeployerFakePlayer))
+	public static void entitiesDontRetaliate(LivingEntity entityLiving, LivingEntity target) {
+		if (!(target instanceof DeployerFakePlayer))
 			return;
-		LivingEntity entityLiving = event.getEntityLiving();
 		if (!(entityLiving instanceof Mob))
 			return;
 		Mob mob = (Mob) entityLiving;

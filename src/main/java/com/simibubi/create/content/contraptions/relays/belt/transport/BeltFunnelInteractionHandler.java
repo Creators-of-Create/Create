@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
 public class BeltFunnelInteractionHandler {
 
@@ -44,7 +44,7 @@ public class BeltFunnelInteractionHandler {
 			float funnelEntry = segment + .5f;
 			if (funnelState.getValue(BeltFunnelBlock.SHAPE) == Shape.EXTENDED)
 				funnelEntry += .499f * (beltMovementPositive ? -1 : 1);
-			
+
 			boolean hasCrossed = nextOffset > funnelEntry && beltMovementPositive
 				|| nextOffset < funnelEntry && !beltMovementPositive;
 			if (!hasCrossed)

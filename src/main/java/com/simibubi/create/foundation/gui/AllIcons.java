@@ -15,8 +15,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 
 public class AllIcons implements ScreenElement {
 
@@ -166,25 +166,25 @@ public class AllIcons implements ScreenElement {
 		return new AllIcons(x = 0, ++y);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void bind() {
 		RenderSystem.setShaderTexture(0, ICON_ATLAS);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	@Override
 	public void render(PoseStack matrixStack, int x, int y) {
 		bind();
 		GuiComponent.blit(matrixStack, x, y, 0, iconX, iconY, 16, 16, 256, 256);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void render(PoseStack matrixStack, int x, int y, GuiComponent component) {
 		bind();
 		component.blit(matrixStack, x, y, iconX, iconY, 16, 16);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public void render(PoseStack ms, MultiBufferSource buffer, int color) {
 		VertexConsumer builder = buffer.getBuffer(RenderType.textSeeThrough(ICON_ATLAS));
 		Matrix4f matrix = ms.last().pose();
@@ -207,7 +207,7 @@ public class AllIcons implements ScreenElement {
 		vertex(builder, matrix, vec4, rgb, u2, v1, light);
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	private void vertex(VertexConsumer builder, Matrix4f matrix, Vec3 vec, Color rgb, float u, float v, int light) {
 		builder.vertex(matrix, (float) vec.x, (float) vec.y, (float) vec.z)
 			.color(rgb.getRed(), rgb.getGreen(), rgb.getBlue(), 255)
@@ -216,7 +216,7 @@ public class AllIcons implements ScreenElement {
 			.endVertex();
 	}
 
-	@OnlyIn(Dist.CLIENT)
+	@Environment(EnvType.CLIENT)
 	public DelegatedStencilElement asStencil() {
 		return new DelegatedStencilElement().withStencilRenderer((ms, w, h, alpha) -> this.render(ms, 0, 0)).withBounds(16, 16);
 	}

@@ -45,7 +45,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.BlockSnapshot;
 import com.simibubi.create.lib.utility.NBT;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.items.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
 

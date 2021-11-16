@@ -18,9 +18,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 @ParametersAreNonnullByDefault
 public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements IAssemblyRecipe {
@@ -55,12 +57,12 @@ public class PressingRecipe extends ProcessingRecipe<RecipeWrapper> implements I
 	public Component getDescriptionForAssembly() {
 		return Lang.translate("recipe.assembly.pressing");
 	}
-	
+
 	@Override
 	public void addRequiredMachines(Set<ItemLike> list) {
 		list.add(AllBlocks.MECHANICAL_PRESS.get());
 	}
-	
+
 	@Override
 	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
 		return () -> SequencedAssemblySubCategory.AssemblyPressing::new;

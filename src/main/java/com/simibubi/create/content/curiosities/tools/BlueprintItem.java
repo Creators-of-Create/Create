@@ -29,8 +29,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.StackList;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import net.minecraftforge.items.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class BlueprintItem extends Item {
 

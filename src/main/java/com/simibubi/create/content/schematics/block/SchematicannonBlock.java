@@ -19,7 +19,8 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+
+import com.simibubi.create.lib.utility.NetworkUtil;
 
 public class SchematicannonBlock extends Block implements ITE<SchematicannonTileEntity> {
 
@@ -43,7 +44,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 		if (worldIn.isClientSide)
 			return InteractionResult.SUCCESS;
 		withTileEntityDo(worldIn, pos,
-				te -> NetworkHooks.openGui((ServerPlayer) player, te, te::sendToContainer));
+				te -> NetworkUtil.openGui((ServerPlayer) player, te, te::sendToContainer));
 		return InteractionResult.SUCCESS;
 	}
 
@@ -60,7 +61,7 @@ public class SchematicannonBlock extends Block implements ITE<SchematicannonTile
 	public Class<SchematicannonTileEntity> getTileEntityClass() {
 		return SchematicannonTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SchematicannonTileEntity> getTileEntityType() {
 		return AllTileEntities.SCHEMATICANNON.get();

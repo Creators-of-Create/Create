@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -17,8 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.entity.FakePlayer;
-import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
 
 public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 
@@ -87,7 +87,7 @@ public class SeatEntity extends Entity implements ExtraSpawnDataEntity {
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+		return new ClientboundAddEntityPacket(this);
 	}
 
 	public static class Render extends EntityRenderer<SeatEntity> {

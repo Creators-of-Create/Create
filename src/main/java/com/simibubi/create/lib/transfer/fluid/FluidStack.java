@@ -97,7 +97,7 @@ public class FluidStack {
 		return tag;
 	}
 
-	public static FluidStack fromNBT(CompoundTag tag) {
+	public static FluidStack loadFluidStackFromNBT(CompoundTag tag) {
 		Tag fluidTag = tag.get("Fluid");
 		FluidVariant fluid = FluidVariant.fromNbt((CompoundTag) fluidTag);
 		long amount = tag.getLong("Amount");

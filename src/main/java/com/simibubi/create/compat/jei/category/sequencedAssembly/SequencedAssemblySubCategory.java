@@ -119,7 +119,7 @@ public abstract class SequencedAssemblySubCategory {
 				.getIngredients()
 				.get(1)
 				.getItems()));
-			
+
 			IAssemblyRecipe contained = recipe.getAsAssemblyRecipe();
 			if (contained instanceof DeployerApplicationRecipe && ((DeployerApplicationRecipe) contained).shouldKeepHeldItem()) {
 				itemStacks.addTooltipCallback((slotIndex, input, ingredient, tooltip) -> {
@@ -131,7 +131,7 @@ public abstract class SequencedAssemblySubCategory {
 						.withStyle(ChatFormatting.GOLD));
 				});
 			}
-			
+
 			return 1;
 		}
 

@@ -7,6 +7,14 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
+
+import com.simibubi.create.lib.helper.EntityHelper;
+
+import com.simibubi.create.lib.utility.NetworkUtil;
+
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
+
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -30,6 +38,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -49,6 +58,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -59,18 +69,14 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.lib.entity.FakePlayer;
-import net.minecraftforge.fmllegacy.common.registry.ExtraSpawnDataEntity;
-import net.minecraftforge.fmllegacy.hooks.BasicEventHooks;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
+import com.simibubi.create.lib.entity.ExtraSpawnDataEntity;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.InvWrapper;
 
 public class BlueprintEntity extends HangingEntity
-	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker {
+	implements ExtraSpawnDataEntity, ISpecialEntityItemRequirement, ISyncPersistentData, IInteractionChecker, BlockPickInteractionAware {
 
 	protected int size;
 	protected Direction verticalOrientation;
@@ -100,7 +106,7 @@ public class BlueprintEntity extends HangingEntity
 
 	@Override
 	public Packet<?> getAddEntityPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+		return new ClientboundAddEntityPacket(this, getId());
 	}
 
 	@Override
@@ -252,7 +258,7 @@ public class BlueprintEntity extends HangingEntity
 			return super.skipAttackInteraction(source);
 
 		Player player = (Player) source;
-		double attrib = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+		double attrib = player.getAttribute(ReachEntityAttributes.REACH)
 			.getValue() + (player.isCreative() ? 0 : -0.5F);
 
 		Vec3 eyePos = source.getEyePosition(1);
@@ -293,7 +299,7 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	@Override
-	public ItemStack getPickedResult(HitResult target) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @org.jetbrains.annotations.Nullable Player player, @org.jetbrains.annotations.Nullable HitResult result) {
 		return AllItems.CRAFTING_BLUEPRINT.asStack();
 	}
 
@@ -326,13 +332,13 @@ public class BlueprintEntity extends HangingEntity
 		CompoundTag compound = new CompoundTag();
 		addAdditionalSaveData(compound);
 		buffer.writeNbt(compound);
-		buffer.writeNbt(getPersistentData());
+		buffer.writeNbt(EntityHelper.getExtraCustomData(this));
 	}
 
 	@Override
 	public void readSpawnData(FriendlyByteBuf additionalData) {
 		readAdditionalSaveData(additionalData.readNbt());
-		getPersistentData().merge(additionalData.readNbt());
+		EntityHelper.getExtraCustomData(this).merge(additionalData.readNbt());
 	}
 
 	@Override
@@ -350,7 +356,7 @@ public class BlueprintEntity extends HangingEntity
 			IItemHandlerModifiable playerInv = new InvWrapper(player.getInventory());
 			boolean firstPass = true;
 			int amountCrafted = 0;
-			ForgeHooks.setCraftingPlayer(player);
+			//ForgeHooks.setCraftingPlayer(player);
 			Optional<CraftingRecipe> recipe = Optional.empty();
 
 			do {
@@ -399,7 +405,7 @@ public class BlueprintEntity extends HangingEntity
 					} else {
 						amountCrafted += result.getCount();
 						result.onCraftedBy(player.level, player, 1);
-						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
+//						BasicEventHooks.firePlayerCraftingEvent(player, result, craftingInventory);
 						NonNullList<ItemStack> nonnulllist = level.getRecipeManager()
 							.getRemainingItemsFor(RecipeType.CRAFTING, craftingInventory, level);
 
@@ -422,13 +428,13 @@ public class BlueprintEntity extends HangingEntity
 				}
 
 			} while (player.isShiftKeyDown());
-			ForgeHooks.setCraftingPlayer(null);
+//			ForgeHooks.setCraftingPlayer(null);
 			return InteractionResult.SUCCESS;
 		}
 
 		int i = section.index;
 		if (!level.isClientSide && player instanceof ServerPlayer) {
-			NetworkHooks.openGui((ServerPlayer) player, section, buf -> {
+			NetworkUtil.openGui((ServerPlayer) player, section, buf -> {
 				buf.writeVarInt(getId());
 				buf.writeVarInt(i);
 			});
@@ -475,7 +481,7 @@ public class BlueprintEntity extends HangingEntity
 	}
 
 	public CompoundTag getOrCreateRecipeCompound() {
-		CompoundTag persistentData = getPersistentData();
+		CompoundTag persistentData = EntityHelper.getExtraCustomData(this);
 		if (!persistentData.contains("Recipes"))
 			persistentData.put("Recipes", new CompoundTag());
 		return persistentData.getCompound("Recipes");

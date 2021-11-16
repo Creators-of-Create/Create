@@ -2,7 +2,7 @@ package com.simibubi.create.content.logistics.block.belts.tunnel;
 
 import net.minecraft.world.item.ItemStack;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class BrassTunnelItemHandler implements IItemHandler {
 

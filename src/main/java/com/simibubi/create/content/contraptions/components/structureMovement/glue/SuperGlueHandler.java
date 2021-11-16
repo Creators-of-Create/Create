@@ -64,7 +64,7 @@ public class SuperGlueHandler {
 
 	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, Player placer) {
 		ItemStack itemstack = placer.getOffhandItem();
-		AttributeInstance reachAttribute = placer.getAttribute(ForgeMod.REACH_DISTANCE.get());
+		AttributeInstance reachAttribute = placer.getAttribute(ReachEntityAttributes.REACH);
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
 			return;
 		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))

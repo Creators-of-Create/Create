@@ -33,7 +33,7 @@ import net.fabricmc.api.Environment;
 import net.minecraftforge.client.IItemRenderProperties;
 import com.tterrag.registrate.fabric.EnvExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import net.minecraftforge.items.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class LinkedControllerItem extends Item implements MenuProvider {
 
@@ -89,7 +89,7 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 
 		if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
 			if (!world.isClientSide && player instanceof ServerPlayer && player.mayBuild())
-				NetworkHooks.openGui((ServerPlayer) player, this, buf -> {
+				NetworkUtil.openGui((ServerPlayer) player, this, buf -> {
 					buf.writeItem(heldItem);
 				});
 			return InteractionResultHolder.success(heldItem);

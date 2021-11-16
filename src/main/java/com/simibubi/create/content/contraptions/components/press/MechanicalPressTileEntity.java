@@ -26,6 +26,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +47,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
@@ -353,7 +356,7 @@ public class MechanicalPressTileEntity extends BasinOperatingTileEntity {
 
 		RecipeSerializer<?> serializer = recipe.getSerializer();
 		for (ResourceLocation denied : RECIPE_DENY_LIST)
-			if (serializer != null && denied.equals(serializer.getRegistryName()))
+			if (serializer != null && denied.equals(Registry.RECIPE_SERIALIZER.getKey(serializer)))
 				return false;
 
 		return AllConfigs.SERVER.recipes.allowShapedSquareInPress.get()

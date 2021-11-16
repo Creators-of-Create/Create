@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -35,7 +36,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+
+import com.simibubi.create.lib.helper.AbstractSpawnerHelper;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -72,7 +74,7 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 	@Override
 	public String getDescriptionId() {
-		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + getRegistryName().getPath();
+		return hasCapturedBlaze() ? super.getDescriptionId() : "item.create." + Registry.ITEM.getKey(this).getPath();
 	}
 
 	@Override
@@ -90,15 +92,15 @@ public class BlazeBurnerBlockItem extends BlockItem {
 
 		BaseSpawner spawner = ((SpawnerBlockEntity) te).getSpawner();
 		WeightedRandomList<SpawnData> spawnPotentials =
-			ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45443_"); // spawnPotentials
+				AbstractSpawnerHelper.getPotentialSpawns(spawner); // spawnPotentials
 		List<SpawnData> possibleSpawns = spawnPotentials.unwrap();
 		if (spawnPotentials.isEmpty()) {
 			possibleSpawns = new ArrayList<>();
 			possibleSpawns
-				.add(ObfuscationReflectionHelper.getPrivateValue(BaseSpawner.class, spawner, "f_45444_")); // nextSpawnData
+				.add(AbstractSpawnerHelper.getSpawnData(spawner)); // nextSpawnData
 		}
 
-		ResourceLocation blazeId = EntityType.BLAZE.getRegistryName();
+		ResourceLocation blazeId = Registry.ENTITY_TYPE.getKey(EntityType.BLAZE);
 		for (SpawnData e : possibleSpawns) {
 			ResourceLocation spawnerEntityId = new ResourceLocation(e.getTag()
 				.getString("id"));

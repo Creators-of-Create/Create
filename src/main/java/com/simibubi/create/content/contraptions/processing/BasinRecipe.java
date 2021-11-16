@@ -26,7 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 

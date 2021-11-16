@@ -11,6 +11,7 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.utility.ItemStackUtil;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -60,7 +61,7 @@ public class TransportedItemStackHandlerBehaviour extends TileEntityBehaviour {
 
 		public boolean didntChangeFrom(ItemStack stackBefore) {
 			return doesNothing()
-				|| outputs.size() == 1 && outputs.get(0).stack.equals(stackBefore, false) && !hasHeldOutput();
+				|| outputs.size() == 1 && ItemStackUtil.equals(outputs.get(0).stack, stackBefore, false) && !hasHeldOutput();
 		}
 
 		public List<TransportedItemStack> getOutputs() {

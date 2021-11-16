@@ -162,7 +162,7 @@ public class CommonEvents {
 	}
 
 	public static void onEntityAttackedByPlayer(Player playerEntity, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult entityRayTraceResult) {
-		WrenchItem.wrenchInstaKillsMinecarts(event);
+		WrenchItem.wrenchInstaKillsMinecarts(playerEntity, world, hand, entity, entityRayTraceResult);
 	}
 
 	public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {

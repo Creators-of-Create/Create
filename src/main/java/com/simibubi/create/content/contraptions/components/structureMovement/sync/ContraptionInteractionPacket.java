@@ -54,7 +54,7 @@ public class ContraptionInteractionPacket extends SimplePacketBase {
 			if (!(entityByID instanceof AbstractContraptionEntity))
 				return;
 			AbstractContraptionEntity contraptionEntity = (AbstractContraptionEntity) entityByID;
-			double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue() + 10;
+			double d = sender.getAttribute(ReachEntityAttributes.REACH).getValue() + 10;
 			if (!sender.hasLineOfSight(entityByID))
 				d -= 3;
 			d *= d;

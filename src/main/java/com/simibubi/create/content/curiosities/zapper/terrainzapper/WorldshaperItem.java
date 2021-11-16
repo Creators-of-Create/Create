@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
 
 public class WorldshaperItem extends ZapperItem {
 
@@ -95,10 +94,10 @@ public class WorldshaperItem extends ZapperItem {
 		NBTHelper.writeEnum(nbt, "Placement", placement);
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new WorldshaperItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new WorldshaperItemRenderer()));
+//	}
 
 }

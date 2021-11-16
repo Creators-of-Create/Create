@@ -4,14 +4,15 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Con
 import com.simibubi.create.foundation.item.ItemHandlerWrapper;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
+
+import com.simibubi.create.lib.utility.ItemStackUtil;
+
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandlerModifiable;
+import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTileEntity {
 
@@ -43,12 +44,12 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 		capability.invalidate();
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (isItemHandlerCap(cap))
-			return capability.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (isItemHandlerCap(cap))
+//			return capability.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	class InterfaceItemHandler extends ItemHandlerWrapper {
 
@@ -71,7 +72,7 @@ public class PortableItemInterfaceTileEntity extends PortableStorageInterfaceTil
 			if (!canTransfer())
 				return stack;
 			ItemStack insertItem = super.insertItem(slot, stack, simulate);
-			if (!simulate && !insertItem.equals(stack, false))
+			if (!simulate && !ItemStackUtil.equals(insertItem, stack, false))
 				onContentTransferred();
 			return insertItem;
 		}

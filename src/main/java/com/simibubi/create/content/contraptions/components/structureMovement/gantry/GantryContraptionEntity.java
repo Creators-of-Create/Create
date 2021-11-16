@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class GantryContraptionEntity extends AbstractContraptionEntity {
 
@@ -121,7 +120,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 
 		if (level.isClientSide)
 			return;
-		
+
 		axisMotion = pinionMovementSpeed;
 		setContraptionMotion(movementVec);
 	}
@@ -192,8 +191,7 @@ public class GantryContraptionEntity extends AbstractContraptionEntity {
 	}
 
 	public void sendPacket() {
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> this),
-			new GantryContraptionUpdatePacket(getId(), getAxisCoord(), axisMotion));
+		AllPackets.channel.sendToClientsTracking(new GantryContraptionUpdatePacket(getId(), getAxisCoord(), axisMotion), this);
 	}
 
 	@Environment(EnvType.CLIENT)

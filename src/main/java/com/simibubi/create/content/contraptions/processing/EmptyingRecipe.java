@@ -5,7 +5,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
+import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
 public class EmptyingRecipe extends ProcessingRecipe<RecipeWrapper> {
 
@@ -27,12 +27,12 @@ public class EmptyingRecipe extends ProcessingRecipe<RecipeWrapper> {
 	protected int getMaxOutputCount() {
 		return 1;
 	}
-	
+
 	@Override
 	protected int getMaxFluidOutputCount() {
 		return 1;
 	}
-	
+
 	public FluidStack getResultingFluid() {
 		if (fluidResults.isEmpty())
 			throw new IllegalStateException("Emptying Recipe: " + id.toString() + " has no fluid output!");

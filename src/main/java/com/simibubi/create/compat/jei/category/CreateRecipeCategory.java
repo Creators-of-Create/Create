@@ -16,6 +16,13 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import me.shedaniel.rei.api.client.gui.DisplayRenderer;
+import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.display.Display;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
@@ -29,28 +36,28 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IRecipeCategory<T> {
+public abstract class CreateRecipeCategory<T extends Recipe<?>, D extends Display> implements DisplayCategory<D> {
 
 	public final List<Supplier<List<? extends Recipe<?>>>> recipes = new ArrayList<>();
 	public final List<Supplier<? extends ItemStack>> recipeCatalysts = new ArrayList<>();
 
-	protected ResourceLocation uid;
+	protected CategoryIdentifier uid;
 	protected String name;
-	private IDrawable background;
-	private IDrawable icon;
+	private Renderer background;
+	private Renderer icon;
 
-	public CreateRecipeCategory(IDrawable icon, IDrawable background) {
+	public CreateRecipeCategory(Renderer icon, Renderer background) {
 		this.background = background;
 		this.icon = icon;
 	}
 
 	public void setCategoryId(String name) {
-		this.uid = Create.asResource(name);
+		this.uid = CategoryIdentifier.of(Create.asResource(name));
 		this.name = name;
 	}
 
 	@Override
-	public ResourceLocation getUid() {
+	public CategoryIdentifier getCategoryIdentifier() {
 		return uid;
 	}
 
@@ -60,12 +67,17 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 	}
 
 	@Override
-	public IDrawable getBackground() {
+	public Renderer getBackground() {
 		return background;
 	}
 
 	@Override
-	public IDrawable getIcon() {
+	public DisplayRenderer getDisplayRenderer(Display display) {
+		return DisplayCategory.super.getDisplayRenderer(display);
+	}
+
+	@Override
+	public Renderer getIcon() {
 		return icon;
 	}
 
@@ -84,15 +96,15 @@ public abstract class CreateRecipeCategory<T extends Recipe<?>> implements IReci
 		return AllGuiTextures.JEI_CHANCE_SLOT;
 	}
 
-	public static IDrawable emptyBackground(int width, int height) {
+	public static Renderer emptyBackground(int width, int height) {
 		return new EmptyBackground(width, height);
 	}
 
-	public static IDrawable doubleItemIcon(ItemLike item1, ItemLike item2) {
+	public static Renderer doubleItemIcon(ItemLike item1, ItemLike item2) {
 		return new DoubleItemIcon(() -> new ItemStack(item1), () -> new ItemStack(item2));
 	}
 
-	public static IDrawable itemIcon(ItemLike item) {
+	public static Renderer itemIcon(ItemLike item) {
 		return new DoubleItemIcon(() -> new ItemStack(item), () -> ItemStack.EMPTY);
 	}
 

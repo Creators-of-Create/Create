@@ -3,7 +3,6 @@ package com.simibubi.create.foundation.gui.element;
 import javax.annotation.Nullable;
 
 import com.jozufozu.flywheel.core.PartialModel;
-import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
@@ -17,6 +16,8 @@ import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
 import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.mixin.accessor.ItemRendererAccessor;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -40,7 +41,6 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
 
 public class GuiGameElement {
 
@@ -192,7 +192,7 @@ public class GuiGameElement {
 			Color rgb = new Color(color == -1 ? this.color : color);
 			blockRenderer.getModelRenderer()
 				.renderModel(ms.last(), vb, blockState, blockModel, rgb.getRedAsFloat(), rgb.getGreenAsFloat(), rgb.getBlueAsFloat(),
-					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, VirtualEmptyModelData.INSTANCE);
+					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 			buffer.endBatch();
 		}
 
@@ -211,8 +211,7 @@ public class GuiGameElement {
 			RenderType renderType, VertexConsumer vb, PoseStack ms) {
 			if (blockState.getBlock() instanceof FireBlock) {
 				Lighting.setupForFlatItems();
-				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-					VirtualEmptyModelData.INSTANCE);
+				blockRenderer.renderSingleBlock(blockState, ms, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 				buffer.endBatch();
 				Lighting.setupFor3DItems();
 				return;
@@ -262,7 +261,7 @@ public class GuiGameElement {
 			ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 			BakedModel bakedModel = renderer.getModel(stack, null, null, 0);
 
-			renderer.textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
+			((ItemRendererAccessor) renderer).create$getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
 			RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 			RenderSystem.enableBlend();
 			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

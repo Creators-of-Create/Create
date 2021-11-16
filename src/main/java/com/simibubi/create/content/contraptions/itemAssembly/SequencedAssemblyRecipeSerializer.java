@@ -10,9 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>>
+public class SequencedAssemblyRecipeSerializer
 	implements RecipeSerializer<SequencedAssemblyRecipe> {
 
 	public SequencedAssemblyRecipeSerializer() {}
@@ -38,7 +37,7 @@ public class SequencedAssemblyRecipeSerializer extends ForgeRegistryEntry<Recipe
 			recipe.getSequence().add(SequencedRecipe.fromJson(je.getAsJsonObject(), recipe, i++));
 		for (JsonElement je : GsonHelper.getAsJsonArray(json, "results"))
 			recipe.resultPool.add(ProcessingOutput.deserialize(je));
-		if (GsonHelper.isValidNode(json, "loops")) 
+		if (GsonHelper.isValidNode(json, "loops"))
 			recipe.loops = GsonHelper.getAsInt(json, "loops");
 		return recipe;
 	}

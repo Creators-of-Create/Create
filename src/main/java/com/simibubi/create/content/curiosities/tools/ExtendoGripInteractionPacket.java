@@ -63,7 +63,7 @@ public class ExtendoGripInteractionPacket extends SimplePacketBase {
 				Entity entityByID = sender.getLevel()
 					.getEntity(target);
 				if (entityByID != null && ExtendoGripItem.isHoldingExtendoGrip(sender)) {
-					double d = sender.getAttribute(ForgeMod.REACH_DISTANCE.get())
+					double d = sender.getAttribute(ReachEntityAttributes.REACH)
 						.getValue();
 					if (!sender.hasLineOfSight(entityByID))
 						d -= 3;

@@ -36,13 +36,20 @@ import net.minecraft.world.phys.Vec3;
 
 import com.simibubi.create.lib.extensions.BlockEntityExtensions;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
+
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.simibubi.create.lib.utility.LazyOptional;
 
-public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation, BlockEntityExtensions {
+import org.jetbrains.annotations.Nullable;
+
+public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation, BlockEntityExtensions, FluidTransferable {
 
 	public static final int FILLING_TIME = 20;
 	protected BeltProcessingBehaviour beltProcessing;
@@ -163,13 +170,13 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 				.getRenderedFluid());
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
-			return tank.getCapability()
-				.cast();
-		return super.getCapability(cap, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
+//			return tank.getCapability()
+//				.cast();
+//		return super.getCapability(cap, side);
+//	}
 
 	public void tick() {
 		super.tick();
@@ -234,6 +241,15 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	@Override
 	public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
 		return containedFluidTooltip(tooltip, isPlayerSneaking,
-			getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+			TransferUtil.getFluidHandler(this));
+	}
+
+	@Nullable
+	@Override
+	public IFluidHandler getFluidHandler(@Nullable Direction direction) {
+		if (direction != Direction.DOWN) {
+			return tank.getCapability().getValueUnsafer();
+		}
+		return null;
 	}
 }

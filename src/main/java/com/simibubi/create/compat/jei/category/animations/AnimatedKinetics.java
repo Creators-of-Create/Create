@@ -8,13 +8,15 @@ import com.simibubi.create.foundation.gui.ILightingSettings;
 import com.simibubi.create.foundation.gui.element.GuiGameElement;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
-import mezz.jei.api.gui.drawable.IDrawable;
+import me.shedaniel.rei.api.client.gui.DrawableConsumer;
+import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public abstract class AnimatedKinetics implements IDrawable {
-	
+public abstract class AnimatedKinetics extends Widget {
+
 	public int offset = 0;
 
 	public static final ILightingSettings DEFAULT_LIGHTING = CustomLightingSettings.builder()
@@ -60,14 +62,14 @@ public abstract class AnimatedKinetics implements IDrawable {
 		return defaultBlockElement(partial);
 	}
 
-	@Override
-	public int getWidth() {
-		return 50;
-	}
-
-	@Override
-	public int getHeight() {
-		return 50;
-	}
+//	@Override
+//	public int getWidth() {
+//		return 50;
+//	}
+//
+//	@Override
+//	public int getHeight() {
+//		return 50;
+//	}
 
 }

@@ -10,4 +10,8 @@ public class FakePlayer extends ServerPlayer {
 	public FakePlayer(MinecraftServer minecraftServer, ServerLevel serverLevel, GameProfile gameProfile) {
 		super(minecraftServer, serverLevel, gameProfile);
 	}
+
+	public FakePlayer(ServerLevel serverLevel, GameProfile gameProfile) {
+		super(serverLevel.getServer(), serverLevel, gameProfile);
+	}
 }

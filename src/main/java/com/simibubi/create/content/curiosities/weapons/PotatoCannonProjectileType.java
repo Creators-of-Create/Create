@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -90,7 +91,7 @@ public class PotatoCannonProjectileType {
 	public boolean preEntityHit(EntityHitResult ray) {
 		return preEntityHit.test(ray);
 	}
-	
+
 	public boolean onEntityHit(EntityHitResult ray) {
 		return onEntityHit.test(ray);
 	}
@@ -109,7 +110,7 @@ public class PotatoCannonProjectileType {
 						JsonPrimitive primitive = element.getAsJsonPrimitive();
 						if (primitive.isString()) {
 							try {
-								Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(primitive.getAsString()));
+								Item item = Registry.ITEM.get(new ResourceLocation(primitive.getAsString()));
 								if (item != null) {
 									type.items.add(item.delegate);
 								}

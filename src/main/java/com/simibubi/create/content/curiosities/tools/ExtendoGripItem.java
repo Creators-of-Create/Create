@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.content.curiosities.armor.BackTankUtil;
 import com.simibubi.create.foundation.advancement.AllTriggers;
@@ -35,25 +36,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.helper.EntityHelper;
+
+import com.simibubi.create.lib.item.CustomDurabilityBarItem;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.client.event.InputEvent.ClickInputEvent;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
-public class ExtendoGripItem extends Item {
+public class ExtendoGripItem extends Item implements CustomDurabilityBarItem {
 	private static DamageSource lastActiveDamageSource;
 
 	public static final int MAX_DAMAGE = 200;
@@ -67,11 +58,11 @@ public class ExtendoGripItem extends Item {
 
 	static LazyLoadedValue<Multimap<Attribute, AttributeModifier>> rangeModifier = new LazyLoadedValue<>(() ->
 	// Holding an ExtendoGrip
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), singleRangeAttributeModifier));
+	ImmutableMultimap.of(ReachEntityAttributes.REACH, singleRangeAttributeModifier));
 
 	static LazyLoadedValue<Multimap<Attribute, AttributeModifier>> doubleRangeModifier = new LazyLoadedValue<>(() ->
 	// Holding two ExtendoGrips o.O
-	ImmutableMultimap.of(ForgeMod.REACH_DISTANCE.get(), doubleRangeAttributeModifier));
+	ImmutableMultimap.of(ReachEntityAttributes.REACH, doubleRangeAttributeModifier));
 
 	public ExtendoGripItem(Properties properties) {
 		super(properties.stacksTo(1)
@@ -81,14 +72,13 @@ public class ExtendoGripItem extends Item {
 	public static final String EXTENDO_MARKER = "createExtendo";
 	public static final String DUAL_EXTENDO_MARKER = "createDualExtendo";
 
-	@SubscribeEvent
-	public static void holdingExtendoGripIncreasesRange(LivingUpdateEvent event) {
-		if (!(event.getEntity() instanceof Player))
+	public static void holdingExtendoGripIncreasesRange(LivingEntity entity) {
+		if (!(entity instanceof Player))
 			return;
 
-		Player player = (Player) event.getEntityLiving();
+		Player player = (Player) entity;
 
-		CompoundTag persistentData = player.getPersistentData();
+		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
 		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
 		boolean inMain = AllItems.EXTENDO_GRIP.isIn(player.getMainHandItem());
 		boolean holdingDualExtendo = inOff && inMain;
@@ -127,22 +117,22 @@ public class ExtendoGripItem extends Item {
 
 	}
 
-	@SubscribeEvent
-	public static void addReachToJoiningPlayersHoldingExtendo(PlayerEvent.PlayerLoggedInEvent event) {
-		Player player = event.getPlayer();
-		CompoundTag persistentData = player.getPersistentData();
+//	@SubscribeEvent
+//	public static void addReachToJoiningPlayersHoldingExtendo(PlayerEvent.PlayerLoggedInEvent event) {
+//		Player player = event.getPlayer();
+//		CompoundTag persistentData = EntityHelper.getExtraCustomData(player);
+//
+//		if (persistentData.contains(DUAL_EXTENDO_MARKER))
+//			player.getAttributes()
+//				.addTransientAttributeModifiers(doubleRangeModifier.get());
+//		else if (persistentData.contains(EXTENDO_MARKER))
+//			player.getAttributes()
+//				.addTransientAttributeModifiers(rangeModifier.get());
+//	}
 
-		if (persistentData.contains(DUAL_EXTENDO_MARKER))
-			player.getAttributes()
-				.addTransientAttributeModifiers(doubleRangeModifier.get());
-		else if (persistentData.contains(EXTENDO_MARKER))
-			player.getAttributes()
-				.addTransientAttributeModifiers(rangeModifier.get());
-	}
-
-	@SubscribeEvent
+//	@SubscribeEvent
 	@Environment(EnvType.CLIENT)
-	public static void dontMissEntitiesWhenYouHaveHighReachDistance(ClickInputEvent event) {
+	public static void dontMissEntitiesWhenYouHaveHighReachDistance(/*ClickInputEvent event*/) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 		if (mc.level == null || player == null)
@@ -153,7 +143,7 @@ public class ExtendoGripItem extends Item {
 			return;
 
 		// Modified version of GameRenderer#getMouseOver
-		double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get())
+		double d0 = player.getAttribute(ReachEntityAttributes.REACH)
 			.getValue();
 		if (!player.isCreative())
 			d0 -= 0.5f;
@@ -179,22 +169,22 @@ public class ExtendoGripItem extends Item {
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void consumeDurabilityOnBlockBreak(BreakEvent event) {
-		findAndDamageExtendoGrip(event.getPlayer());
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void consumeDurabilityOnPlace(EntityPlaceEvent event) {
-		Entity entity = event.getEntity();
-		if (entity instanceof Player)
-			findAndDamageExtendoGrip((Player) entity);
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void consumeDurabilityOnPlace(PlayerInteractEvent event) {
+//	@SubscribeEvent(priority = EventPriority.LOWEST)
+//	public static void consumeDurabilityOnBlockBreak(BreakEvent event) {
 //		findAndDamageExtendoGrip(event.getPlayer());
-	}
+//	}
+
+//	@SubscribeEvent(priority = EventPriority.LOWEST)
+//	public static void consumeDurabilityOnPlace(EntityPlaceEvent event) {
+//		Entity entity = event.getEntity();
+//		if (entity instanceof Player)
+//			findAndDamageExtendoGrip((Player) entity);
+//	}
+
+//	@SubscribeEvent(priority = EventPriority.LOWEST)
+//	public static void consumeDurabilityOnPlace(PlayerInteractEvent event) {
+////		findAndDamageExtendoGrip(event.getPlayer());
+//	}
 
 	private static void findAndDamageExtendoGrip(Player player) {
 		if (player == null)
@@ -238,35 +228,34 @@ public class ExtendoGripItem extends Item {
 		return true;
 	}
 
-	@Override
-	public int getMaxDamage(ItemStack stack) {
-		return MAX_DAMAGE;
-	}
+//	@Override
+//	public int getMaxDamage(ItemStack stack) {
+//		return MAX_DAMAGE;
+//	}
+//
+//	@SubscribeEvent
+//	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
+//		// Workaround for removed patch to get the attacking entity.
+//		lastActiveDamageSource = event.getSource();
+//
+//		DamageSource source = event.getSource();
+//		if (source == null)
+//			return;
+//		Entity trueSource = source.getEntity();
+//		if (trueSource instanceof Player)
+//			findAndDamageExtendoGrip((Player) trueSource);
+//	}
 
-	@SubscribeEvent
-	public static void bufferLivingAttackEvent(LivingAttackEvent event) {
-		// Workaround for removed patch to get the attacking entity.
-		lastActiveDamageSource = event.getSource();
-		
-		DamageSource source = event.getSource();
-		if (source == null)
-			return;
-		Entity trueSource = source.getEntity();
-		if (trueSource instanceof Player)
-			findAndDamageExtendoGrip((Player) trueSource);
-	}
-
-	@SubscribeEvent
-	public static void attacksByExtendoGripHaveMoreKnockback(LivingKnockBackEvent event) {
+	public static double attacksByExtendoGripHaveMoreKnockback(double strength, Player player) {
 		if (lastActiveDamageSource == null)
-			return;
+			return strength;
 		Entity entity = lastActiveDamageSource.getDirectEntity();
 		if (!(entity instanceof Player))
-			return;
-		Player player = (Player) entity;
-		if (!isHoldingExtendoGrip(player))
-			return;
-		event.setStrength(event.getStrength() + 2);
+			return strength;
+		Player playerE = (Player) entity;
+		if (!isHoldingExtendoGrip(playerE))
+			return strength;
+		return strength + 2;
 	}
 
 	private static boolean isUncaughtClientInteraction(Entity entity, Entity target) {
@@ -280,42 +269,42 @@ public class ExtendoGripItem extends Item {
 		return true;
 	}
 
-	@SubscribeEvent
-	@Environment(EnvType.CLIENT)
-	public static void notifyServerOfLongRangeAttacks(AttackEntityEvent event) {
-		Entity entity = event.getEntity();
-		Entity target = event.getTarget();
-		if (!isUncaughtClientInteraction(entity, target))
-			return;
-		Player player = (Player) entity;
-		if (isHoldingExtendoGrip(player))
-			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target));
-	}
-
-	@SubscribeEvent
-	@Environment(EnvType.CLIENT)
-	public static void notifyServerOfLongRangeInteractions(PlayerInteractEvent.EntityInteract event) {
-		Entity entity = event.getEntity();
-		Entity target = event.getTarget();
-		if (!isUncaughtClientInteraction(entity, target))
-			return;
-		Player player = (Player) entity;
-		if (isHoldingExtendoGrip(player))
-			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
-	}
-
-	@SubscribeEvent
-	@Environment(EnvType.CLIENT)
-	public static void notifyServerOfLongRangeSpecificInteractions(PlayerInteractEvent.EntityInteractSpecific event) {
-		Entity entity = event.getEntity();
-		Entity target = event.getTarget();
-		if (!isUncaughtClientInteraction(entity, target))
-			return;
-		Player player = (Player) entity;
-		if (isHoldingExtendoGrip(player))
-			AllPackets.channel
-				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
-	}
+//	@SubscribeEvent
+//	@Environment(EnvType.CLIENT)
+//	public static void notifyServerOfLongRangeAttacks(AttackEntityEvent event) {
+//		Entity entity = event.getEntity();
+//		Entity target = event.getTarget();
+//		if (!isUncaughtClientInteraction(entity, target))
+//			return;
+//		Player player = (Player) entity;
+//		if (isHoldingExtendoGrip(player))
+//			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target));
+//	}
+//
+//	@SubscribeEvent
+//	@Environment(EnvType.CLIENT)
+//	public static void notifyServerOfLongRangeInteractions(PlayerInteractEvent.EntityInteract event) {
+//		Entity entity = event.getEntity();
+//		Entity target = event.getTarget();
+//		if (!isUncaughtClientInteraction(entity, target))
+//			return;
+//		Player player = (Player) entity;
+//		if (isHoldingExtendoGrip(player))
+//			AllPackets.channel.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand()));
+//	}
+//
+//	@SubscribeEvent
+//	@Environment(EnvType.CLIENT)
+//	public static void notifyServerOfLongRangeSpecificInteractions(PlayerInteractEvent.EntityInteractSpecific event) {
+//		Entity entity = event.getEntity();
+//		Entity target = event.getTarget();
+//		if (!isUncaughtClientInteraction(entity, target))
+//			return;
+//		Player player = (Player) entity;
+//		if (isHoldingExtendoGrip(player))
+//			AllPackets.channel
+//				.sendToServer(new ExtendoGripInteractionPacket(target, event.getHand(), event.getLocalPos()));
+//	}
 
 	public static boolean isHoldingExtendoGrip(Player player) {
 		boolean inOff = AllItems.EXTENDO_GRIP.isIn(player.getOffhandItem());
@@ -324,10 +313,10 @@ public class ExtendoGripItem extends Item {
 		return holdingGrip;
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new ExtendoGripItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new ExtendoGripItemRenderer()));
+//	}
 
 }
