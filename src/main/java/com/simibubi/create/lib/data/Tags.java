@@ -20,6 +20,7 @@ public class Tags {
 			return TagFactory.ITEM.create(new ResourceLocation("c", id));
 		}
 		public static final Tag.Named<Item> STONE = tag("");
+		public static final Tag.Named<Item> COBBLESTONE = tag("");
 		public static final Tag.Named<Item> NUGGETS = tag("");
 		public static final Tag.Named<Item> DYES = tag("");
 		public static final Tag.Named<Item> SLIMEBALLS = tag("");
@@ -29,6 +30,7 @@ public class Tags {
 			return TagFactory.BLOCK.create(new ResourceLocation("c", id));
 		}
 		public static final Tag.Named<Block> STONE = tag("");
+		public static final Tag.Named<Block> COBBLESTONE = tag("");
 	}
 	public static class Fluids {
 		public static Tag.Named<Fluid> tag(String id) {

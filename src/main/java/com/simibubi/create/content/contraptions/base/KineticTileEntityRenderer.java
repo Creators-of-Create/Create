@@ -24,9 +24,7 @@ import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.fabricmc.api.EnvType;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(EnvType.CLIENT)
 public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTileEntity> {
 
 	public static final Compartment<BlockState> KINETIC_TILE = new Compartment<>();
@@ -41,7 +39,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		if (Backend.getInstance().canUseInstancing(te.getLevel())) return;
 
 		for (RenderType type : RenderType.chunkBufferLayers())
-			if (ItemBlockRenderTypes.canRenderInLayer(te.getBlockState(), type))
+			if (ItemBlockRenderTypes.getChunkRenderType(te.getBlockState()) == type)
 				renderRotatingBuffer(te, getRotatedModel(te), ms, buffer.getBuffer(type), light);
 	}
 
@@ -97,7 +95,7 @@ public class KineticTileEntityRenderer extends SafeTileEntityRenderer<KineticTil
 		float offset = ICogWheel.isLargeCog(te.getBlockState()) ? 11.25f : 0;
 		double d = (((axis == Axis.X) ? 0 : pos.getX()) + ((axis == Axis.Y) ? 0 : pos.getY())
 			+ ((axis == Axis.Z) ? 0 : pos.getZ())) % 2;
-		if (d == 0) 
+		if (d == 0)
 			offset = 22.5f;
 		return offset;
 	}

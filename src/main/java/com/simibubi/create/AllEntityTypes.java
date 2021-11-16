@@ -21,6 +21,8 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
@@ -63,12 +65,12 @@ public class AllEntityTypes {
 			AbstractContraptionEntity::build).register();
 	}
 
-	private static <T extends Entity> CreateEntityBuilder<T, ?> register(String name, EntityFactory<T> factory,
-			NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
-			MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
-			NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
+	private static <T extends Entity> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, ?> register(String name, EntityFactory<T> factory,
+																									 NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
+																									 MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
+																									 NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
-		return (CreateEntityBuilder<T, ?>) Create.registrate()
+		return (CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, ?>) Create.registrate()
 			.entity(id, factory, group)
 			.properties(b -> b.setTrackingRange(range)
 				.setUpdateInterval(updateFrequency)

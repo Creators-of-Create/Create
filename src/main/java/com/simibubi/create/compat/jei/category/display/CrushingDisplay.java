@@ -1,7 +1,5 @@
 package com.simibubi.create.compat.jei.category.display;
 
-import com.simibubi.create.compat.jei.CreateJEI;
-
 import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
 
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -27,6 +25,6 @@ public class CrushingDisplay extends AbstractCreateDisplay<AbstractCrushingRecip
 
 	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier() {
-		return CreateJEI;
+		return null;
 	}
 }

@@ -39,8 +39,8 @@ public class AllFluids {
 //							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
-							.slopeFindDistance(3)
-							.explosionResistance(100f))
+							.flowSpeed(3)
+							.blastResistance(100f))
 					.tag(AllFluidTags.HONEY.tag)
 					.source(SimpleFlowableFluid.Still::new) // TODO: remove when Registrate fixes FluidBuilder
 					.bucket()
@@ -56,8 +56,8 @@ public class AllFluids {
 //							.density(1400))
 					.properties(p -> p.levelDecreasePerBlock(2)
 							.tickRate(25)
-							.slopeFindDistance(3)
-							.explosionResistance(100f))
+							.flowSpeed(3)
+							.blastResistance(100f))
 					.register();
 
 	// Load this class

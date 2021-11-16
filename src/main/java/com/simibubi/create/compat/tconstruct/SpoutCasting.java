@@ -8,10 +8,12 @@ import com.simibubi.create.foundation.fluid.FluidHelper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
@@ -33,15 +35,14 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		if (te == null)
 			return 0;
 
-		IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP)
+		IFluidHandler handler = TransferUtil.getFluidHandler(te, Direction.UP)
 			.orElse(null);
 		if (handler == null)
 			return 0;
 		if (handler.getTanks() != 1)
 			return 0;
 
-		ResourceLocation registryName = te.getType()
-			.getRegistryName();
+		ResourceLocation registryName = Registry.BLOCK_ENTITY_TYPE.getKey(te.getType());
 		if (!registryName.equals(TABLE) && !registryName.equals(BASIN))
 			return 0;
 		if (!handler.isFluidValid(0, availableFluid))

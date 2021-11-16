@@ -28,14 +28,17 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.item.CustomItemEnchantabilityItem;
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
 import com.simibubi.create.lib.entity.FakePlayer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SandPaperItem extends Item {
+public class SandPaperItem extends Item implements CustomItemEnchantabilityItem {
 
 	public SandPaperItem(Properties properties) {
 		super(properties.durability(8));
@@ -69,7 +72,7 @@ public class SandPaperItem extends Item {
 			ItemStack toPolish = item.split(1);
 			playerIn.startUsingItem(handIn);
 			itemstack.getOrCreateTag()
-				.put("Polishing", toPolish.serializeNBT());
+				.put("Polishing", NBTSerializer.serializeNBT(toPolish));
 			playerIn.setItemInHand(otherHand, item);
 			return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 		}
@@ -106,7 +109,7 @@ public class SandPaperItem extends Item {
 
 		if (!worldIn.isClientSide) {
 			itemstack.getOrCreateTag()
-				.put("Polishing", toPolish.serializeNBT());
+				.put("Polishing", NBTSerializer.serializeNBT(toPolish));
 			if (item.isEmpty())
 				pickUp.discard();
 			else
@@ -116,10 +119,10 @@ public class SandPaperItem extends Item {
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}
 
-	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return super.canApplyAtEnchantingTable(stack, enchantment);
-	}
+//	@Override
+//	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+//		return super.canApplyAtEnchantingTable(stack, enchantment);
+//	}
 
 	@Override
 	public int getItemEnchantability(ItemStack stack) {
@@ -190,10 +193,10 @@ public class SandPaperItem extends Item {
 		return 5;
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new SandPaperItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new SandPaperItemRenderer()));
+//	}
 
 }

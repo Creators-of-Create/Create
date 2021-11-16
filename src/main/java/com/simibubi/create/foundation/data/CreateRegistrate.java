@@ -50,6 +50,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 
 public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
@@ -134,12 +135,12 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	}
 
 	@Override
-	public <T extends Entity> CreateEntityBuilder<T, CreateRegistrate> entity(String name,
-		EntityType.EntityFactory<T> factory, MobCategory classification) {
+	public <T extends Entity> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, CreateRegistrate> entity(String name,
+																									   EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return this.entity(self(), name, factory, classification);
 	}
 
-	public <T extends Entity, P> CreateEntityBuilder<T, P> entity(P parent, String name,
+	public <T extends Entity, P> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, P> entity(P parent, String name,
 		EntityType.EntityFactory<T> factory, MobCategory classification) {
 		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
 			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);

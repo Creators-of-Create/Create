@@ -21,7 +21,7 @@ public class BeltHelper {
 	}
 
 	public static BeltTileEntity getSegmentTE(LevelAccessor world, BlockPos pos) {
-		if (!world.isAreaLoaded(pos, 0))
+		if (!LoadedCheckUtil.isAreaLoaded(world, pos, 0))
 			return null;
 		BlockEntity tileEntity = world.getBlockEntity(pos);
 		if (!(tileEntity instanceof BeltTileEntity))

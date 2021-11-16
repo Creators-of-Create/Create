@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.components.structureMovement.sy
 
 import java.util.function.Supplier;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.content.contraptions.components.structureMovement.AbstractContraptionEntity;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
@@ -11,7 +12,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.common.ForgeMod;
 
 
 public class ContraptionInteractionPacket extends SimplePacketBase {

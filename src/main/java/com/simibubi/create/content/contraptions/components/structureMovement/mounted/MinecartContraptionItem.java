@@ -14,6 +14,8 @@ import com.simibubi.create.content.contraptions.components.structureMovement.Ori
 import com.simibubi.create.foundation.config.ContraptionMovementSetting;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import com.simibubi.create.lib.helper.AbstractRailBlockHelper;
+import com.simibubi.create.lib.utility.NBTSerializer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -25,6 +27,7 @@ import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -40,11 +43,8 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraft.world.phys.EntityHitResult;
 
-@EventBusSubscriber
 public class MinecartContraptionItem extends Item {
 
 	private final AbstractMinecart.Type minecartType;
@@ -83,7 +83,7 @@ public class MinecartContraptionItem extends Item {
 				.relative(direction);
 			BlockState blockstate = world.getBlockState(blockpos);
 			RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock
-				? ((BaseRailBlock) blockstate.getBlock()).getRailDirection(blockstate, world, blockpos, null)
+				? AbstractRailBlockHelper.getDirectionOfRail(blockstate, world, blockpos, null)
 				: RailShape.NORTH_SOUTH;
 			double d3;
 			if (blockstate.is(BlockTags.RAILS)) {
@@ -100,7 +100,7 @@ public class MinecartContraptionItem extends Item {
 
 				BlockState blockstate1 = world.getBlockState(blockpos.below());
 				RailShape railshape1 = blockstate1.getBlock() instanceof BaseRailBlock
-					? ((BaseRailBlock) blockstate1.getBlock()).getRailDirection(blockstate1, world, blockpos.below(),
+					? AbstractRailBlockHelper.getDirectionOfRail(blockstate1, world, blockpos.below(),
 						null)
 					: RailShape.NORTH_SOUTH;
 				if (direction != Direction.DOWN && railshape1.isAscending()) {
@@ -140,7 +140,7 @@ public class MinecartContraptionItem extends Item {
 			ItemStack itemstack = context.getItemInHand();
 			if (!world.isClientSide) {
 				RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock
-					? ((BaseRailBlock) blockstate.getBlock()).getRailDirection(blockstate, world, blockpos, null)
+					? AbstractRailBlockHelper.getDirectionOfRail(blockstate, world, blockpos, null)
 					: RailShape.NORTH_SOUTH;
 				double d0 = 0.0D;
 				if (railshape.isAscending()) {
@@ -191,65 +191,59 @@ public class MinecartContraptionItem extends Item {
 	@Override
 	public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> items) {}
 
-	@SubscribeEvent
-	public static void wrenchCanBeUsedToPickUpMinecartContraptions(PlayerInteractEvent.EntityInteract event) {
-		Entity entity = event.getTarget();
-		Player player = event.getPlayer();
+	public static InteractionResult wrenchCanBeUsedToPickUpMinecartContraptions(Player player, Level world, InteractionHand hand, Entity entity, @org.jetbrains.annotations.Nullable EntityHitResult hitResult) {
 		if (player == null || entity == null)
-			return;
+			return InteractionResult.PASS;
 
-		ItemStack wrench = player.getItemInHand(event.getHand());
+		ItemStack wrench = player.getItemInHand(hand);
 		if (!AllItems.WRENCH.isIn(wrench))
-			return;
+			return InteractionResult.PASS;
 		if (entity instanceof AbstractContraptionEntity)
 			entity = entity.getVehicle();
 		if (!(entity instanceof AbstractMinecart))
-			return;
+			return InteractionResult.PASS;
 		if (!entity.isAlive())
-			return;
+			return InteractionResult.PASS;
 		AbstractMinecart cart = (AbstractMinecart) entity;
 		Type type = cart.getMinecartType();
 		if (type != Type.RIDEABLE && type != Type.FURNACE && type != Type.CHEST)
-			return;
+			return InteractionResult.PASS;
 		List<Entity> passengers = cart.getPassengers();
 		if (passengers.isEmpty() || !(passengers.get(0) instanceof OrientedContraptionEntity))
-			return;
+			return InteractionResult.PASS;
 		OrientedContraptionEntity contraption = (OrientedContraptionEntity) passengers.get(0);
 
 		if(ContraptionMovementSetting.isNoPickup(contraption.getContraption().getBlocks().values())) {
 			player.displayClientMessage(Lang.translate("contraption.minecart_contraption_illegal_pickup")
 					.withStyle(ChatFormatting.RED), true);
-			return;
+			return InteractionResult.PASS;
 		}
 
-		if (event.getWorld().isClientSide) {
-			event.setCancellationResult(InteractionResult.SUCCESS);
-			event.setCanceled(true);
-			return;
+		if (world.isClientSide) {
+			return InteractionResult.SUCCESS;
 		}
 
 		ItemStack generatedStack = create(type, contraption).setHoverName(entity.getCustomName());
 
 		try {
 			ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
-			NbtIo.write(generatedStack.serializeNBT(), dataOutput);
+			NbtIo.write(NBTSerializer.serializeNBT(generatedStack), dataOutput);
 			int estimatedPacketSize = dataOutput.toByteArray().length;
 			if (estimatedPacketSize > 2_000_000) {
 				player.displayClientMessage(Lang.translate("contraption.minecart_contraption_too_big")
 					.withStyle(ChatFormatting.RED), true);
-				return;
+				return InteractionResult.PASS;
 			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			return;
+			return InteractionResult.PASS;
 		}
 
 		player.getInventory().placeItemBackInInventory(generatedStack);
 		contraption.discard();
 		entity.discard();
-		event.setCancellationResult(InteractionResult.SUCCESS);
-		event.setCanceled(true);
+		return InteractionResult.SUCCESS;
 	}
 
 	public static ItemStack create(Type type, OrientedContraptionEntity entity) {

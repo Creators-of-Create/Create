@@ -12,7 +12,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraftforge.fluids.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class TransparentStraightPipeRenderer extends SafeTileEntityRenderer<StraightPipeTileEntity> {
 

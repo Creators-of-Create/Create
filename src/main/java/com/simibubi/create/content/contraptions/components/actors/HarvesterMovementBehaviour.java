@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.components.actors;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.utility.PlantUtil;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -33,7 +35,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IPlantable;
 
 public class HarvesterMovementBehaviour extends MovementBehaviour {
 
@@ -164,7 +165,7 @@ public class HarvesterMovementBehaviour extends MovementBehaviour {
 				return false;
 			}
 
-			if (state.getBlock() instanceof IPlantable)
+			if (PlantUtil.isPlant(state.getBlock()))
 				return true;
 		}
 

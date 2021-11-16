@@ -28,7 +28,8 @@ import net.minecraft.world.item.crafting.Ingredient.Value;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.StackList;
+
+import com.simibubi.create.lib.mixin.accessor.IngredientAccessor;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
 public class BlueprintItem extends Item {
@@ -92,7 +93,7 @@ public class BlueprintItem extends Item {
 
 	private static ItemStack convertIngredientToFilter(Ingredient ingredient) {
 		Ingredient.Value[] acceptedItems =
-				ObfuscationReflectionHelper.getPrivateValue(Ingredient.class, ingredient, "f_43902_"); // values
+				((IngredientAccessor) (Object) ingredient).getAcceptedItems(); // values
 		if (acceptedItems == null || acceptedItems.length > 18)
 			return ItemStack.EMPTY;
 		if (acceptedItems.length == 0)
@@ -132,7 +133,7 @@ public class BlueprintItem extends Item {
 			return filterItem;
 		}
 
-		if (itemList instanceof StackList) {
+		if (itemList.getItems().toArray()[0] instanceof ItemStack) {
 			ItemStack result = AllItems.FILTER.asStack();
 			ItemStackHandler filterItems = FilterItem.getFilterItems(result);
 			int i = 0;

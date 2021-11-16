@@ -11,6 +11,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.item.ItemTransferable;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllBlocks;
@@ -49,11 +54,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.utility.NBT;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemHandlerHelper;
 
-public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHaveGoggleInformation {
+public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHaveGoggleInformation, ItemTransferable {
 
 	SidedFilteringBehaviour filtering;
 
@@ -335,7 +339,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!level.isAreaLoaded(adjacent.getBlockPos(), 1))
+				if (!LoadedCheckUtil.isAreaLoaded(level, adjacent.getBlockPos(), 1))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)
@@ -477,7 +481,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		for (boolean left : Iterate.trueAndFalse) {
 			BrassTunnelTileEntity adjacent = this;
 			while (adjacent != null) {
-				if (!level.isAreaLoaded(adjacent.getBlockPos(), 1))
+				if (!LoadedCheckUtil.isAreaLoaded(level, adjacent.getBlockPos(), 1))
 					return null;
 				adjacent = adjacent.getAdjacent(left);
 				if (adjacent == null)
@@ -559,7 +563,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		compound.putBoolean("SyncedOutput", syncedOutputActive);
 		compound.putBoolean("ConnectedLeft", connectedLeft);
 		compound.putBoolean("ConnectedRight", connectedRight);
-		compound.put("StackToDistribute", stackToDistribute.serializeNBT());
+		compound.put("StackToDistribute", NBTSerializer.serializeNBT(stackToDistribute));
 		compound.putFloat("DistributionProgress", distributionProgress);
 		compound.putInt("PreviousIndex", previousOutputIndex);
 		compound.putInt("DistanceLeft", distributionDistanceLeft);
@@ -607,7 +611,7 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		if (!clientPacket)
 			return;
 		if (wasConnectedLeft != connectedLeft || wasConnectedRight != connectedRight) {
-			requestModelDataUpdate();
+//			requestModelDataUpdate();
 			if (hasLevel())
 				level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 16);
 		}
@@ -692,18 +696,18 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 		super.setRemoved();
 	}
 
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return tunnelCapability.cast();
-		return super.getCapability(capability, side);
-	}
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction side) {
+//		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+//			return tunnelCapability.cast();
+//		return super.getCapability(capability, side);
+//	}
 
 	public LazyOptional<IItemHandler> getBeltCapability() {
 		if (!beltCapability.isPresent()) {
 			BlockEntity tileEntity = level.getBlockEntity(worldPosition.below());
-			if (tileEntity != null)
-				beltCapability = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+			if (tileEntity != null && tileEntity instanceof ItemTransferable transferable)
+				beltCapability =  LazyOptional.ofObject(transferable.getItemHandler(null));
 		}
 		return beltCapability;
 	}
@@ -762,6 +766,12 @@ public class BrassTunnelTileEntity extends BeltTunnelTileEntity implements IHave
 			.withStyle(ChatFormatting.DARK_GRAY));
 
 		return true;
+	}
+
+	@Override
+	@Nullable
+	public IItemHandler getItemHandler(Direction direction) {
+		return tunnelCapability.getValueUnsafer();
 	}
 
 }

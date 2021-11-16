@@ -59,7 +59,7 @@ public class SchematicPrinter {
 				schematicLoaded = true;
 			}
 		}
-		
+
 		printingEntityIndex = compound.getInt("EntityProgress");
 		printStage = PrintStage.valueOf(compound.getString("PrintStage"));
 		compound.getList("DeferredBlocks", 10).stream()
@@ -72,7 +72,7 @@ public class SchematicPrinter {
 			compound.put("CurrentPos", NbtUtils.writeBlockPos(currentPos));
 		if (schematicAnchor != null)
 			compound.put("Anchor", NbtUtils.writeBlockPos(schematicAnchor));
-		
+
 		compound.putInt("EntityProgress", printingEntityIndex);
 		compound.putString("PrintStage", printStage.name());
 		ListTag tagDeferredBlocks = new ListTag();
@@ -231,7 +231,7 @@ public class SchematicPrinter {
 			BlockState required = blockReader.getBlockState(relPos);
 			BlockEntity requiredTE = blockReader.getBlockEntity(relPos);
 
-			if (!world.isAreaLoaded(pos.offset(schematicAnchor), 0)) {
+			if (!LoadedCheckUtil.isAreaLoaded(world, pos.offset(schematicAnchor), 0)) {
 				checklist.warnBlockNotLoaded();
 				continue;
 			}

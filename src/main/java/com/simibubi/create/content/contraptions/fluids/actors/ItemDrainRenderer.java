@@ -26,7 +26,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 
 public class ItemDrainRenderer extends SmartTileEntityRenderer<ItemDrainTileEntity> {
 

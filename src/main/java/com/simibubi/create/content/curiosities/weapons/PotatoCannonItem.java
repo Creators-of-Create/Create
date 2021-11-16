@@ -43,11 +43,15 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+
+import com.simibubi.create.lib.extensions.ItemExtensions;
+
+import com.simibubi.create.lib.item.CustomDurabilityBarItem;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
 
-public class PotatoCannonItem extends ProjectileWeaponItem {
+public class PotatoCannonItem extends ProjectileWeaponItem implements CustomDurabilityBarItem {
 
 	public static ItemStack CLIENT_CURRENT_AMMO = ItemStack.EMPTY;
 	public static final int MAX_DAMAGE = 100;
@@ -61,7 +65,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 		return false;
 	}
 
-	@Override
+//	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
 		if (enchantment == Enchantments.POWER_ARROWS)
 			return true;
@@ -73,7 +77,8 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			return true;
 		if (enchantment == AllEnchantments.POTATO_RECOVERY.get())
 			return true;
-		return super.canApplyAtEnchantingTable(stack, enchantment);
+		return false;
+		//return super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 		return use(context.getLevel(), context.getPlayer(), context.getHand()).getResult();
 	}
 
-	@Override
+	//@Override
 	public int getItemStackLimit(ItemStack stack) {
 		return 1;
 	}
@@ -114,10 +119,10 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 		return stack.getItem() instanceof PotatoCannonItem;
 	}
 
-	@Override
-	public int getMaxDamage(ItemStack stack) {
-		return MAX_DAMAGE;
-	}
+//	@Override
+//	public int getMaxDamage(ItemStack stack) {
+//		return MAX_DAMAGE;
+//	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
@@ -195,7 +200,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 			.orElse(InteractionResultHolder.pass(stack));
 	}
 
-	@Override
+//	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 		return slotChanged || newStack.getItem() != oldStack.getItem();
 	}
@@ -280,7 +285,7 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 		return 1;
 	}
 
-	@Override
+//	@Override
 	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
 		return true;
 	}
@@ -295,10 +300,10 @@ public class PotatoCannonItem extends ProjectileWeaponItem {
 		return 15;
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new PotatoCannonItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new PotatoCannonItemRenderer()));
+//	}
 
 }

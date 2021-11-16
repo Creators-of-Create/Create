@@ -34,10 +34,13 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
+
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
 import net.minecraftforge.common.Tags;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class OpenEndedPipe extends FlowSource {
@@ -122,10 +125,10 @@ public class OpenEndedPipe extends FlowSource {
 	}
 
 	private FluidStack removeFluidFromSpace(boolean simulate) {
-		FluidStack empty = FluidStack.EMPTY;
+		FluidStack empty = FluidStack.empty();
 		if (world == null)
 			return empty;
-		if (!world.isAreaLoaded(outputPos, 0))
+		if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
 			return empty;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -166,7 +169,7 @@ public class OpenEndedPipe extends FlowSource {
 	private boolean provideFluidToSpace(FluidStack fluid, boolean simulate) {
 		if (world == null)
 			return false;
-		if (!world.isAreaLoaded(outputPos, 0))
+		if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
 			return false;
 
 		BlockState state = world.getBlockState(outputPos);
@@ -254,7 +257,7 @@ public class OpenEndedPipe extends FlowSource {
 			// Never allow being filled when a source is attached
 			if (world == null)
 				return 0;
-			if (!world.isAreaLoaded(outputPos, 0))
+			if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
 				return 0;
 			if (resource.isEmpty())
 				return 0;
@@ -294,7 +297,7 @@ public class OpenEndedPipe extends FlowSource {
 
 			if (world == null)
 				return empty;
-			if (!world.isAreaLoaded(outputPos, 0))
+			if (!LoadedCheckUtil.isAreaLoaded(world, outputPos, 0))
 				return empty;
 			if (amount == 0)
 				return empty;

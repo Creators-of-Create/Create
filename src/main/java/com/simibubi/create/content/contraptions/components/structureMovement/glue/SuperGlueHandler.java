@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
@@ -12,26 +13,23 @@ import com.simibubi.create.foundation.utility.worldWrappers.RayTraceWorld;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
-@EventBusSubscriber
 public class SuperGlueHandler {
 
 	public static Map<Direction, SuperGlueEntity> gatherGlue(LevelAccessor world, BlockPos pos) {
@@ -42,35 +40,34 @@ public class SuperGlueHandler {
 		return map;
 	}
 
-	@SubscribeEvent
-	public static void glueListensForBlockPlacement(EntityPlaceEvent event) {
-		LevelAccessor world = event.getWorld();
-		Entity entity = event.getEntity();
-		BlockPos pos = event.getPos();
+	public static InteractionResult glueListensForBlockPlacement(UseOnContext context) {
+		LevelAccessor world = context.getLevel();
+		Entity entity = context.getPlayer();
+		BlockPos pos = context.getClickedPos();
 
 		if (entity == null || world == null || pos == null)
-			return;
+			return InteractionResult.PASS;
 		if (world.isClientSide())
-			return;
+			return InteractionResult.PASS;
 
 		Map<Direction, SuperGlueEntity> gatheredGlue = gatherGlue(world, pos);
 		for (Direction direction : gatheredGlue.keySet())
-			AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-				new GlueEffectPacket(pos, direction, true));
+			AllPackets.channel.sendToClientsTrackingAndSelf(new GlueEffectPacket(pos, direction, true), entity);
 
 		if (entity instanceof Player)
-			glueInOffHandAppliesOnBlockPlace(event, pos, (Player) entity);
+			return glueInOffHandAppliesOnBlockPlace(context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace().getOpposite())), pos, (Player) entity);
+		return InteractionResult.PASS;
 	}
 
-	public static void glueInOffHandAppliesOnBlockPlace(EntityPlaceEvent event, BlockPos pos, Player placer) {
+	public static InteractionResult glueInOffHandAppliesOnBlockPlace(BlockState placedAgainst, BlockPos pos, Player placer) {
 		ItemStack itemstack = placer.getOffhandItem();
 		AttributeInstance reachAttribute = placer.getAttribute(ReachEntityAttributes.REACH);
 		if (!AllItems.SUPER_GLUE.isIn(itemstack) || reachAttribute == null)
-			return;
+			return InteractionResult.PASS;
 		if (AllItems.WRENCH.isIn(placer.getMainHandItem()))
-			return;
-		if (event.getPlacedAgainst() == IPlacementHelper.ID)
-			return;
+			return InteractionResult.PASS;
+		if (placedAgainst == IPlacementHelper.ID)
+			return InteractionResult.PASS;
 
 		double distance = reachAttribute.getValue();
 		Vec3 start = placer.getEyePosition(1);
@@ -85,13 +82,12 @@ public class SuperGlueHandler {
 
 		Direction face = ray.getDirection();
 		if (face == null || ray.getType() == Type.MISS)
-			return;
+			return InteractionResult.PASS;
 
 		if (!ray.getBlockPos()
 			.relative(face)
 			.equals(pos)) {
-			event.setCanceled(true);
-			return;
+			return InteractionResult.SUCCESS;
 		}
 
 		SuperGlueEntity entity = new SuperGlueEntity(world, ray.getBlockPos(), face.getOpposite());
@@ -103,11 +99,11 @@ public class SuperGlueHandler {
 			if (!world.isClientSide) {
 				entity.playPlaceSound();
 				world.addFreshEntity(entity);
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity),
-					new GlueEffectPacket(ray.getBlockPos(), face, true));
+				AllPackets.channel.sendToClientsTrackingAndSelf(new GlueEffectPacket(ray.getBlockPos(), face, true), entity);
 			}
 			itemstack.hurtAndBreak(1, placer, SuperGlueItem::onBroken);
 		}
+		return InteractionResult.PASS;
 	}
 
 }

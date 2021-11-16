@@ -29,6 +29,9 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class FluidPropagator {
@@ -55,7 +58,7 @@ public class FluidPropagator {
 
 			for (Direction direction : getPipeConnections(currentState, pipe)) {
 				BlockPos target = currentPos.relative(direction);
-				if (!world.isAreaLoaded(target, 0))
+				if (!LoadedCheckUtil.isAreaLoaded(world,target, 0))
 					continue;
 
 				BlockEntity tileEntity = world.getBlockEntity(target);

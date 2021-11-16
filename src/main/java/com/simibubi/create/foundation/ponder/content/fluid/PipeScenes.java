@@ -36,7 +36,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.fluids.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -482,7 +482,7 @@ public class PipeScenes {
 		Selection pump = util.select.position(1, 1, 2);
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
-		
+
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
 			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));

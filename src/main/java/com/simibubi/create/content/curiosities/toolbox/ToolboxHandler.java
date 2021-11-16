@@ -66,7 +66,7 @@ public class ToolboxHandler {
 			BlockPos pos = NbtUtils.readBlockPos(data.getCompound("Pos"));
 			int slot = data.getInt("Slot");
 
-			if (!world.isAreaLoaded(pos, 0))
+			if (!LoadedCheckUtil.isAreaLoaded(world, pos, 0))
 				continue;
 			if (!(world.getBlockState(pos)
 				.getBlock() instanceof ToolboxBlock)) {

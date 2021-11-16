@@ -19,12 +19,10 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class PotatoCannonProjectileType {
 
-	private Set<IRegistryDelegate<Item>> items = new HashSet<>();
+	private Set<Item> items = new HashSet<>();
 
 	private int reloadTicks = 10;
 	private int damage = 1;
@@ -44,7 +42,7 @@ public class PotatoCannonProjectileType {
 	protected PotatoCannonProjectileType() {
 	}
 
-	public Set<IRegistryDelegate<Item>> getItems() {
+	public Set<Item> getItems() {
 		return items;
 	}
 
@@ -112,7 +110,7 @@ public class PotatoCannonProjectileType {
 							try {
 								Item item = Registry.ITEM.get(new ResourceLocation(primitive.getAsString()));
 								if (item != null) {
-									type.items.add(item.delegate);
+									type.items.add(item);
 								}
 							} catch (ResourceLocationException e) {
 								//
@@ -149,8 +147,8 @@ public class PotatoCannonProjectileType {
 
 	public static void toBuffer(PotatoCannonProjectileType type, FriendlyByteBuf buffer) {
 		buffer.writeVarInt(type.items.size());
-		for (IRegistryDelegate<Item> delegate : type.items) {
-			buffer.writeResourceLocation(delegate.name());
+		for (Item delegate : type.items) {
+			buffer.writeResourceLocation(Registry.ITEM.getKey(delegate));
 		}
 		buffer.writeInt(type.reloadTicks);
 		buffer.writeInt(type.damage);
@@ -167,9 +165,9 @@ public class PotatoCannonProjectileType {
 		PotatoCannonProjectileType type = new PotatoCannonProjectileType();
 		int size = buffer.readVarInt();
 		for (int i = 0; i < size; i++) {
-			Item item = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
+			Item item = Registry.ITEM.get(buffer.readResourceLocation());
 			if (item != null) {
-				type.items.add(item.delegate);
+				type.items.add(item);
 			}
 		}
 		type.reloadTicks = buffer.readInt();
@@ -276,7 +274,7 @@ public class PotatoCannonProjectileType {
 
 		public Builder addItems(ItemLike... items) {
 			for (ItemLike provider : items)
-				result.items.add(provider.asItem().delegate);
+				result.items.add(provider.asItem());
 			return this;
 		}
 

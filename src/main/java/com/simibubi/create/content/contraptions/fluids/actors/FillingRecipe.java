@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllRecipeTypes;
-import com.simibubi.create.compat.jei.category.sequencedAssembly.SequencedAssemblySubCategory;
 import com.simibubi.create.content.contraptions.itemAssembly.IAssemblyRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeParams;
@@ -84,9 +83,9 @@ public class FillingRecipe extends ProcessingRecipe<RecipeWrapper> implements IA
 		list.add(AllBlocks.SPOUT.get());
 	}
 
-	@Override
-	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
-		return () -> SequencedAssemblySubCategory.AssemblySpouting::new;
-	}
+//	@Override
+//	public Supplier<Supplier<SequencedAssemblySubCategory>> getJEISubCategory() {
+//		return () -> SequencedAssemblySubCategory.AssemblySpouting::new;
+//	}
 
 }

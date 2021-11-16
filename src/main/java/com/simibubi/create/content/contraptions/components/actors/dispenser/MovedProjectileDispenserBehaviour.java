@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.components.structureMovement.MovementContext;
+import com.simibubi.create.lib.utility.MethodGetter;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -14,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDispenseItemBehaviour {
 
@@ -81,19 +81,19 @@ public abstract class MovedProjectileDispenserBehaviour extends MovedDefaultDisp
 	}
 
 	private static Method getProjectileEntityLookup() {
-		Method getProjectileEntity = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "m_6895_", Level.class, Position.class, ItemStack.class); // getProjectile
+		Method getProjectileEntity = MethodGetter.findMethod(AbstractProjectileDispenseBehavior.class, "getProjectileEntity", "method_12844", Level.class, Position.class, ItemStack.class); // getProjectile
 		getProjectileEntity.setAccessible(true);
 		return getProjectileEntity;
 	}
 
 	private static Method getProjectileInaccuracyLookup() {
-		Method getProjectileInaccuracy = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "m_7101_"); // getUncertainty
+		Method getProjectileInaccuracy = MethodGetter.findMethod(AbstractProjectileDispenseBehavior.class, "getProjectileInaccuracy", "method_12845"); // getUncertainty
 		getProjectileInaccuracy.setAccessible(true);
 		return getProjectileInaccuracy;
 	}
 
 	private static Method getProjectileVelocityLookup() {
-		Method getProjectileVelocity = ObfuscationReflectionHelper.findMethod(AbstractProjectileDispenseBehavior.class, "m_7104_"); // getPower
+		Method getProjectileVelocity = MethodGetter.findMethod(AbstractProjectileDispenseBehavior.class, "getProjectileVelocity", "method_12846"); // getPower
 		getProjectileVelocity.setAccessible(true);
 		return getProjectileVelocity;
 	}

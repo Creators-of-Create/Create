@@ -1,5 +1,9 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
+import com.simibubi.create.lib.utility.NBT;
+
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import com.simibubi.create.AllItems;
@@ -14,7 +18,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
-import net.minecraftforge.common.util.Constants;
 
 public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 
@@ -56,7 +59,7 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			if (!(ctx.temporaryData instanceof DeployerFakePlayer) && ctx.world instanceof ServerLevel) {
 				DeployerFakePlayer deployerFakePlayer = new DeployerFakePlayer((ServerLevel) ctx.world);
 				deployerFakePlayer.getInventory()
-					.load(ctx.tileData.getList("Inventory", Constants.NBT.TAG_COMPOUND));
+					.load(ctx.tileData.getList("Inventory", NBT.TAG_COMPOUND));
 				ctx.temporaryData = fake = deployerFakePlayer;
 				ctx.tileData.remove("Inventory");
 			} else
@@ -68,8 +71,8 @@ public class DeployerMovingInteraction extends MovingInteractionBehaviour {
 			ItemStack deployerItem = fake.getMainHandItem();
 			player.setItemInHand(activeHand, deployerItem.copy());
 			fake.setItemInHand(InteractionHand.MAIN_HAND, heldStack.copy());
-			ctx.tileData.put("HeldItem", heldStack.serializeNBT());
-			ctx.data.put("HeldItem", heldStack.serializeNBT());
+			ctx.tileData.put("HeldItem", NBTSerializer.serializeNBT(heldStack));
+			ctx.data.put("HeldItem", NBTSerializer.serializeNBT(heldStack));
 		}
 		if (index >= 0)
 			setContraptionActorData(contraptionEntity, index, info, ctx);

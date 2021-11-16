@@ -6,20 +6,19 @@ import java.util.Map;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IRegistryDelegate;
 
 public class FurnaceEngineModifiers {
 
 	public final static FurnaceEngineModifiers INSTANCE = new FurnaceEngineModifiers();
 
-	protected Map<IRegistryDelegate<Block>, Float> blockModifiers = new HashMap<>();
+	protected Map<Block, Float> blockModifiers = new HashMap<>();
 
-	public void register(IRegistryDelegate<Block> block, float modifier) {
+	public void register(Block block, float modifier) {
 		this.blockModifiers.put(block, modifier);
 	}
 
 	public float getModifierOrDefault(BlockState state, float defaultValue) {
-		return blockModifiers.getOrDefault(state.getBlock().delegate, defaultValue);
+		return blockModifiers.getOrDefault(state.getBlock(), defaultValue);
 	}
 
 	public float getModifier(BlockState state) {
@@ -27,6 +26,6 @@ public class FurnaceEngineModifiers {
 	}
 
 	public static void register() {
-		INSTANCE.register(Blocks.BLAST_FURNACE.delegate, 2f);
+		INSTANCE.register(Blocks.BLAST_FURNACE, 2f);
 	}
 }

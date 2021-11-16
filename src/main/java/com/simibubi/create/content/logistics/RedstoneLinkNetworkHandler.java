@@ -108,7 +108,7 @@ public class RedstoneLinkNetworkHandler {
 				iterator.remove();
 				continue;
 			}
-			if (!world.isAreaLoaded(other.getLocation(), 0)) {
+			if (!LoadedCheckUtil.isAreaLoaded(world, other.getLocation(), 0)) {
 				iterator.remove();
 				continue;
 			}

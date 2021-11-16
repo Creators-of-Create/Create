@@ -11,7 +11,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
 
 public abstract class AbstractBlockBreakQueue {
 	protected Consumer<BlockPos> makeCallbackFor(Level world, float effectChance, ItemStack toDamage,
@@ -20,8 +19,8 @@ public abstract class AbstractBlockBreakQueue {
 			ItemStack usedTool = toDamage.copy();
 			BlockHelper.destroyBlockAs(world, pos, playerEntity, toDamage, effectChance,
 				stack -> drop.accept(pos, stack));
-			if (toDamage.isEmpty() && !usedTool.isEmpty())
-				ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, InteractionHand.MAIN_HAND);
+//			if (toDamage.isEmpty() && !usedTool.isEmpty())
+//				ForgeEventFactory.onPlayerDestroyItem(playerEntity, usedTool, InteractionHand.MAIN_HAND);
 		};
 	}
 

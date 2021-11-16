@@ -12,6 +12,8 @@ import java.util.zip.GZIPInputStream;
 
 import javax.annotation.Nonnull;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,7 +51,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 
 public class SchematicItem extends Item {
 
@@ -127,7 +128,14 @@ public class SchematicItem extends Item {
 		Path dir;
 		Path file;
 
-		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) {
+//		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) {
+//			dir = Paths.get("schematics", "uploaded").toAbsolutePath();
+//			file = Paths.get(owner, schematic);
+//		} else {
+//			dir = Paths.get("schematics").toAbsolutePath();
+//			file = Paths.get(schematic);
+//		}
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
 			dir = Paths.get("schematics", "uploaded").toAbsolutePath();
 			file = Paths.get(owner, schematic);
 		} else {

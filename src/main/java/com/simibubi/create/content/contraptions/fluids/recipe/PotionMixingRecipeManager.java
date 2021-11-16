@@ -27,13 +27,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
-import net.minecraftforge.fluids.FluidStack;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PotionMixingRecipeManager {
 
 	public static Map<Item, List<MixingRecipe>> ALL = new HashMap<>();
-	
+
 	public static List<MixingRecipe> getAllBrewingRecipes() {
 		List<MixingRecipe> mixingRecipes = new ArrayList<>();
 

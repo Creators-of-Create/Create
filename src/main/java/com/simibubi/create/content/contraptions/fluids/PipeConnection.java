@@ -164,7 +164,7 @@ public class PipeConnection {
 	}
 
 	private boolean determineSource(Level world, BlockPos pos) {
-		if (!world.isAreaLoaded(pos, 1))
+		if (!LoadedCheckUtil.isAreaLoaded(world, pos, 1))
 			return false;
 		BlockFace location = new BlockFace(pos, side);
 

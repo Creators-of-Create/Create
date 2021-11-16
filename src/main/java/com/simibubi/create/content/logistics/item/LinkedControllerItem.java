@@ -28,14 +28,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
+
+import com.simibubi.create.lib.item.UseFirstBehaviorItem;
+import com.simibubi.create.lib.utility.NetworkUtil;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.IItemRenderProperties;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 
-public class LinkedControllerItem extends Item implements MenuProvider {
+public class LinkedControllerItem extends Item implements MenuProvider, UseFirstBehaviorItem {
 
 	public LinkedControllerItem(Properties properties) {
 		super(properties);
@@ -142,10 +144,10 @@ public class LinkedControllerItem extends Item implements MenuProvider {
 		return new TranslatableComponent(getDescriptionId());
 	}
 
-	@Override
-	@Environment(EnvType.CLIENT)
-	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(SimpleCustomRenderer.create(this, new LinkedControllerItemRenderer()));
-	}
+//	@Override
+//	@Environment(EnvType.CLIENT)
+//	public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+//		consumer.accept(SimpleCustomRenderer.create(this, new LinkedControllerItemRenderer()));
+//	}
 
 }
