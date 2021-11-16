@@ -17,7 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
-import net.minecraftforge.common.util.Constants;
+
+import com.simibubi.create.lib.utility.NBT;
 
 public final class NBTProcessors {
 
@@ -41,17 +42,17 @@ public final class NBTProcessors {
 			return data;
 		});
 		addProcessor(BlockEntityType.LECTERN, data -> {
-			if (!data.contains("Book", Constants.NBT.TAG_COMPOUND))
+			if (!data.contains("Book", NBT.TAG_COMPOUND))
 				return data;
 			CompoundTag book = data.getCompound("Book");
 
-			if (!book.contains("tag", Constants.NBT.TAG_COMPOUND))
+			if (!book.contains("tag", NBT.TAG_COMPOUND))
 				return data;
 			CompoundTag tag = book.getCompound("tag");
 
-			if (!tag.contains("pages", Constants.NBT.TAG_LIST))
+			if (!tag.contains("pages", NBT.TAG_LIST))
 				return data;
-			ListTag pages = tag.getList("pages", Constants.NBT.TAG_STRING);
+			ListTag pages = tag.getList("pages", NBT.TAG_STRING);
 
 			for (Tag inbt : pages) {
 				if (textComponentHasClickEvent(inbt.getAsString()))

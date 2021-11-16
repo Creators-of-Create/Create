@@ -17,33 +17,28 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.event.entity.EntityMountEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
 
-@EventBusSubscriber
 public class CouplingHandler {
 
-	@SubscribeEvent
-	public static void preventEntitiesFromMoutingOccupiedCart(EntityMountEvent event) {
-		Entity e = event.getEntityBeingMounted();
-		LazyOptional<MinecartController> optional = e.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+	public static InteractionResult preventEntitiesFromMoutingOccupiedCart(Entity e, Entity mounting) {
+		LazyOptional<MinecartController> optional = LazyOptional.ofObject(MinecartAndRailUtil.getController((AbstractMinecart) e));
 		if (!optional.isPresent())
-			return;
-		if (event.getEntityMounting() instanceof AbstractContraptionEntity)
-			return;
+			return InteractionResult.PASS;
+		if (mounting instanceof AbstractContraptionEntity)
+			return InteractionResult.PASS;
 		MinecartController controller = optional.orElse(null);
 		if (controller.isCoupledThroughContraption()) {
-			event.setCanceled(true);
-			event.setResult(Result.DENY);
+			return InteractionResult.FAIL;
 		}
+		return InteractionResult.PASS;
 	}
 
 	public static void forEachLoadedCoupling(Level world, Consumer<Couple<MinecartController>> consumer) {

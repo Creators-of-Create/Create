@@ -4,13 +4,12 @@ import java.util.function.Supplier;
 
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
+import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.phys.Vec3;
-
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class ClientMotionPacket extends SimplePacketBase {
 
@@ -52,10 +51,9 @@ public class ClientMotionPacket extends SimplePacketBase {
 				if (onGround) {
 					sender.causeFallDamage(sender.fallDistance, 1, DamageSource.FALL);
 					sender.fallDistance = 0;
-					sender.connection.aboveGroundTickCount = 0;
+					((ServerGamePacketListenerImplAccessor)sender.connection).create$floatingTickCount(0);
 				}
-				AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> sender),
-					new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing));
+				AllPackets.channel.sendToClientsTracking(new LimbSwingUpdatePacket(sender.getId(), sender.position(), limbSwing), sender);
 			});
 		context.get()
 			.setPacketHandled(true);

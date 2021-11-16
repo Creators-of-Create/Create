@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.Backend;
@@ -42,9 +44,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.BlockSnapshot;
 import com.simibubi.create.lib.utility.NBT;
-import net.minecraftforge.event.ForgeEventFactory;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
 public class DeployerMovementBehaviour extends MovementBehaviour {
@@ -141,10 +141,10 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 			}
 		}
 
-		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
+//		BlockSnapshot blocksnapshot = BlockSnapshot.create(world.dimension(), world, pos);
 		BlockHelper.placeSchematicBlock(world, blockState, pos, firstRequired, data);
-		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
-			blocksnapshot.restore(true, false);
+//		if (ForgeEventFactory.onBlockPlace(player, blocksnapshot, Direction.UP))
+//			blocksnapshot.restore(true, false);
 	}
 
 	@Override
@@ -230,8 +230,7 @@ public class DeployerMovementBehaviour extends MovementBehaviour {
 		DeployerFakePlayer player = getPlayer(context);
 		if (player == null)
 			return;
-		context.data.put("HeldItem", player.getMainHandItem()
-			.serializeNBT());
+		context.data.put("HeldItem", NBTSerializer.serializeNBT(player.getMainHandItem()));
 	}
 
 	private DeployerFakePlayer getPlayer(MovementContext context) {

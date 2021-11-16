@@ -36,11 +36,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 @Environment(EnvType.CLIENT)
-@Mod.EventBusSubscriber(EnvType.CLIENT)
 public class ContraptionRenderDispatcher {
 
 	private static WorldAttached<ContraptionRenderManager<?>> WORLDS = new WorldAttached<>(SBBContraptionManager::new);
@@ -62,19 +59,16 @@ public class ContraptionRenderDispatcher {
 		WORLDS.get(world).tick();
 	}
 
-	@SubscribeEvent
 	public static void beginFrame(BeginFrameEvent event) {
 		WORLDS.get(event.getWorld()).beginFrame(event);
 	}
 
-	@SubscribeEvent
 	public static void renderLayer(RenderLayerEvent event) {
 		WORLDS.get(event.getWorld()).renderLayer(event);
 
-		GlError.pollAndThrow(() -> "contraption layer: " + event.getLayer());
+		GlError.poll();//() -> "contraption layer: " + event.getLayer());
 	}
 
-	@SubscribeEvent
 	public static void onRendererReload(ReloadRenderersEvent event) {
 		reset();
 	}

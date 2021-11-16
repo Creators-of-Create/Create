@@ -19,10 +19,6 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 public class GenericItemFilling {
 
@@ -60,7 +56,7 @@ public class GenericItemFilling {
 			return false;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			TransferUtil.getFluidHandlerItem(stack, world);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return false;
@@ -81,7 +77,7 @@ public class GenericItemFilling {
 			return 1000;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			TransferUtil.getFluidHandlerItem(stack, world);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return -1;

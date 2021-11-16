@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.utility.placement;
 
+import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.extensions.BlockStateExtensions;
+
 import java.util.function.Function;
 
 import net.minecraft.advancements.CriteriaTriggers;
@@ -20,9 +23,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.BlockSnapshot;
-import net.minecraftforge.event.world.BlockEvent;
 
 public class PlacementOffset {
 
@@ -123,17 +123,17 @@ public class PlacementOffset {
 			state = state.setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
 		}
 
-		BlockSnapshot snapshot = BlockSnapshot.create(world.dimension(), world, newPos);
+//		BlockSnapshot snapshot = BlockSnapshot.create(world.dimension(), world, newPos);
 		world.setBlockAndUpdate(newPos, state);
 
-		BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(snapshot, IPlacementHelper.ID, player);
-		if (MinecraftForge.EVENT_BUS.post(event)) {
-			snapshot.restore(true, false);
-			return InteractionResult.FAIL;
-		}
+//		BlockEvent.EntityPlaceEvent event = new BlockEvent.EntityPlaceEvent(snapshot, IPlacementHelper.ID, player);
+//		if (MinecraftForge.EVENT_BUS.post(event)) {
+//			snapshot.restore(true, false);
+//			return InteractionResult.FAIL;
+//		}
 
 		BlockState newState = world.getBlockState(newPos);
-		SoundType soundtype = newState.getSoundType(world, newPos, player);
+		SoundType soundtype = ((BlockExtensions)newState.getBlock()).create$getSoundType(newState, world, newPos, player);
 		world.playSound(null, newPos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
 		player.awardStat(Stats.ITEM_USED.get(blockItem));
