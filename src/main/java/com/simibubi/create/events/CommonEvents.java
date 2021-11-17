@@ -43,6 +43,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -80,26 +81,6 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.TickEvent.ServerTickEvent;
-import net.minecraftforge.event.TickEvent.WorldTickEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
-import net.minecraftforge.event.world.ChunkEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fmlserverevents.FMLServerStoppingEvent;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -137,7 +118,6 @@ public class CommonEvents {
 			if (lavaInteraction == null)
 				continue;
 			return lavaInteraction;
-			break;
 		}
 		return null;
 	}
@@ -161,8 +141,8 @@ public class CommonEvents {
 		ContraptionHandler.addSpawnedContraptionsToCollisionList(entity, world);
 	}
 
-	public static void onEntityAttackedByPlayer(Player playerEntity, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult entityRayTraceResult) {
-		WrenchItem.wrenchInstaKillsMinecarts(playerEntity, world, hand, entity, entityRayTraceResult);
+	public static InteractionResult onEntityAttackedByPlayer(Player playerEntity, Level world, InteractionHand hand, Entity entity, @Nullable EntityHitResult entityRayTraceResult) {
+		return WrenchItem.wrenchInstaKillsMinecarts(playerEntity, world, hand, entity, entityRayTraceResult);
 	}
 
 	public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
@@ -178,7 +158,7 @@ public class CommonEvents {
 		return listeners;
 	}
 
-	public static void serverStopped() {
+	public static void serverStopped(MinecraftServer server) {
 		Create.SCHEMATIC_RECEIVER.shutdown();
 	}
 
@@ -215,49 +195,48 @@ public class CommonEvents {
 
 	public static class ModBusEvents {
 
-		public static void register() {
-			ServerTickEvents.END_SERVER_TICK.register(CommonEvents::onServerTick);
-			ServerChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
-			ServerTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
-			ServerEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
-			AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
-			CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
-			ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopped);
-			ServerWorldEvents.LOAD.register((server, world) -> CommonEvents.onLoadWorld(world));
-			ServerWorldEvents.UNLOAD.register((server, world) -> CommonEvents.onUnloadWorld(world));
-			FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
-			LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
-			EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
-			DataPackReloadCallback.EVENT.register(CommonEvents::registerReloadListeners);
-			ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
-
-			// External Events
-
-			AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
-			MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
-			StartRidingCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
-			LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
-			LivingEntityEvents.KNOCKBACK_STRENGTH.register(ExtendoGripItem::attacksByExtendoGripHaveMoreKnockback);
-			LivingEntityEvents.TICK.register(ExtendoGripItem::holdingExtendoGripIncreasesRange);
-			LivingEntityEvents.TICK.register(DivingBootsItem::accellerateDescentUnderwater);
-			LivingEntityEvents.TICK.register(DivingHelmetItem::breatheUnderwater);
-			EntityEyeHeightCallback.EVENT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
-			LivingEntityEvents.DROPS.register(CrushingWheelTileEntity::handleCrushedMobDrops);
-			LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelTileEntity::crushingIsFortunate);
-			LivingEntityEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
-			UseBlockCallback.EVENT.register(FunnelItem::funnelItemAlwaysPlacesWhenUsed);
-			UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
-			UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
-			BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
-			ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
-			PlayerTickEndCallback.EVENT.register(HauntedBellPulser::hauntedBellCreatesPulse);
-		}
-
 		@SubscribeEvent
 		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 			event.register(CapabilityMinecartController.class);
 		}
 
+	}
+
+	public static void register() {
+		ServerTickEvents.END_SERVER_TICK.register(CommonEvents::onServerTick);
+		ServerChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
+		ServerTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
+		ServerEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
+		AttackEntityCallback.EVENT.register(CommonEvents::onEntityAttackedByPlayer);
+		CommandRegistrationCallback.EVENT.register(CommonEvents::registerCommands);
+		ServerLifecycleEvents.SERVER_STOPPED.register(CommonEvents::serverStopped);
+		ServerWorldEvents.LOAD.register((server, world) -> CommonEvents.onLoadWorld(world));
+		ServerWorldEvents.UNLOAD.register((server, world) -> CommonEvents.onUnloadWorld(world));
+		FluidPlaceBlockCallback.EVENT.register(CommonEvents::whenFluidsMeet);
+		LivingEntityEvents.TICK.register(CommonEvents::onUpdateLivingEntity);
+		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
+		DataPackReloadCallback.EVENT.register(CommonEvents::registerReloadListeners);
+		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+
+		// External Events
+
+		AttackBlockCallback.EVENT.register(ZapperInteractionHandler::leftClickingBlocksWithTheZapperSelectsTheBlock);
+		MobEntitySetTargetCallback.EVENT.register(DeployerFakePlayer::entitiesDontRetaliate);
+		StartRidingCallback.EVENT.register(CouplingHandler::preventEntitiesFromMoutingOccupiedCart);
+		LivingEntityEvents.EXPERIENCE_DROP.register(DeployerFakePlayer::deployerKillsDoNotSpawnXP);
+		LivingEntityEvents.KNOCKBACK_STRENGTH.register(ExtendoGripItem::attacksByExtendoGripHaveMoreKnockback);
+		LivingEntityEvents.TICK.register(ExtendoGripItem::holdingExtendoGripIncreasesRange);
+		LivingEntityEvents.TICK.register(DivingBootsItem::accellerateDescentUnderwater);
+		LivingEntityEvents.TICK.register(DivingHelmetItem::breatheUnderwater);
+		EntityEyeHeightCallback.EVENT.register(DeployerFakePlayer::deployerHasEyesOnHisFeet);
+		LivingEntityEvents.DROPS.register(CrushingWheelTileEntity::handleCrushedMobDrops);
+		LivingEntityEvents.LOOTING_LEVEL.register(CrushingWheelTileEntity::crushingIsFortunate);
+		LivingEntityEvents.DROPS.register(DeployerFakePlayer::deployerCollectsDropsFromKilledEntities);
+		UseBlockCallback.EVENT.register(FunnelItem::funnelItemAlwaysPlacesWhenUsed);
+		UseEntityCallback.EVENT.register(MinecartCouplingItem::handleInteractionWithMinecart);
+		UseEntityCallback.EVENT.register(MinecartContraptionItem::wrenchCanBeUsedToPickUpMinecartContraptions);
+		BlockPlaceCallback.EVENT.register(SymmetryHandler::onBlockPlaced);
+		PlayerTickEndCallback.EVENT.register(HauntedBellPulser::hauntedBellCreatesPulse);
 	}
 
 }

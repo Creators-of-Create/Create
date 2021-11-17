@@ -5,11 +5,11 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.world.entity.LivingEntity;
 
 public interface MobEntitySetTargetCallback {
-	public static final Event<MobEntitySetTargetCallback> EVENT = EventFactory.createArrayBacked(MobEntitySetTargetCallback.class, callbacks -> (entity, target) -> {
+	Event<MobEntitySetTargetCallback> EVENT = EventFactory.createArrayBacked(MobEntitySetTargetCallback.class, callbacks -> (targeting, target) -> {
 		for (MobEntitySetTargetCallback callback : callbacks) {
-			callback.onMobEntitySetTarget(entity, target);
+			callback.onMobEntitySetTarget(targeting, target);
 		}
 	});
 
-	void onMobEntitySetTarget(LivingEntity entity, LivingEntity target);
+	void onMobEntitySetTarget(LivingEntity targeting, LivingEntity target);
 }

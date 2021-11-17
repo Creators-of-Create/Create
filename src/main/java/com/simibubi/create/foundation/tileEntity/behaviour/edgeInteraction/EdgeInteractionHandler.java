@@ -21,42 +21,37 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class EdgeInteractionHandler {
 
-	@SubscribeEvent
-	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		Level world = event.getWorld();
-		BlockPos pos = event.getPos();
-		Player player = event.getPlayer();
-		InteractionHand hand = event.getHand();
+	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+//		Level world = event.getWorld();
+		BlockPos pos = hitResult.getBlockPos();//event.getPos();
+//		Player player = event.getPlayer();
+//		InteractionHand hand = event.getHand();
 		ItemStack heldItem = player.getItemInHand(hand);
 
 		if (player.isShiftKeyDown() || player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 		EdgeInteractionBehaviour behaviour = TileEntityBehaviour.get(world, pos, EdgeInteractionBehaviour.TYPE);
 		if (behaviour == null)
-			return;
+			return InteractionResult.PASS;
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
-			return;
+			return InteractionResult.PASS;
 		if (behaviour.requiredItem.orElse(heldItem.getItem()) != heldItem.getItem())
-			return;
+			return InteractionResult.PASS;
 
 		Direction activatedDirection = getActivatedDirection(world, pos, ray.getDirection(), ray.getLocation(), behaviour);
 		if (activatedDirection == null)
-			return;
+			return InteractionResult.PASS;
 
-		if (event.getSide() != LogicalSide.CLIENT)
+		if (!world.isClientSide())
 			behaviour.connectionCallback.apply(world, pos, pos.relative(activatedDirection));
-		event.setCanceled(true);
-		event.setCancellationResult(InteractionResult.SUCCESS);
+//		event.setCanceled(true);
+//		event.setCancellationResult(InteractionResult.SUCCESS);
 		world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
+		return InteractionResult.SUCCESS;
 	}
 
 	public static List<Direction> getConnectiveSides(Level world, BlockPos pos, Direction face,

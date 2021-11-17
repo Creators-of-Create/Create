@@ -12,6 +12,7 @@ import com.simibubi.create.content.schematics.ClientSchematicLoader;
 import com.simibubi.create.content.schematics.client.SchematicAndQuillHandler;
 import com.simibubi.create.content.schematics.client.SchematicHandler;
 import com.simibubi.create.events.ClientEvents;
+import com.simibubi.create.events.InputEvents;
 import com.simibubi.create.foundation.ClientResourceReloadListener;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.UIRenderHelper;
@@ -83,7 +84,9 @@ public class CreateClient implements ClientModInitializer {
 		UIRenderHelper.init();
 
 		onCtorClient();
-		ClientEvents.ModBusEvents.register();
+
+		ClientEvents.register();
+		InputEvents.register();
 	}
 
 	public static void invalidateRenderers() {

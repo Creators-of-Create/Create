@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.gui.CreateMainMenuScreen;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -19,10 +20,6 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
-import net.fabricmc.api.EnvType;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 public class OpenCreateMenuButton extends Button {
 
@@ -35,7 +32,7 @@ public class OpenCreateMenuButton extends Button {
 	@Override
 	public void render(PoseStack mstack, int mouseX, int mouseY, float pticks) {
 		super.render(mstack, mouseX, mouseY, pticks);
-		if (!visible) 
+		if (!visible)
 			return;
 		Minecraft.getInstance().getItemRenderer().renderGuiItem(icon, x + 2, y + 2);
 	}
@@ -79,12 +76,10 @@ public class OpenCreateMenuButton extends Button {
 		}
 	}
 
-	@EventBusSubscriber(value = EnvType.CLIENT)
 	public static class OpenConfigButtonHandler {
 
-		@SubscribeEvent
-		public static void onGuiInit(GuiScreenEvent.InitGuiEvent event) {
-			Screen gui = event.getGui();
+		public static void onGuiInit(Minecraft client, Screen gui, int scaledWidth, int scaledHeight) {
+//			Screen gui = event.getGui();
 
 			MenuRows menu = null;
 			int rowIdx = 0, offsetX = 0;
@@ -103,12 +98,12 @@ public class OpenCreateMenuButton extends Button {
 				String target = (onLeft ? menu.leftButtons : menu.rightButtons).get(rowIdx - 1);
 
 				int offsetX_ = offsetX;
-				event.getWidgetList().stream()
+				Screens.getButtons(gui).stream()
 					.filter(w -> w instanceof AbstractWidget)
 					.map(w -> (AbstractWidget) w)
 					.filter(w -> w.getMessage().getString().equals(target))
 					.findFirst()
-					.ifPresent(w -> event.addWidget(
+					.ifPresent(w -> Screens.getButtons(gui).add(
 							new OpenCreateMenuButton(w.x + offsetX_ + (onLeft ? -20 : w.getWidth()), w.y)
 					));
 			}

@@ -79,16 +79,17 @@ public class WrenchItem extends Item {
 		return InteractionResult.SUCCESS;
 	}
 
-	public static void wrenchInstaKillsMinecarts(Player player, Level world, InteractionHand hand, Entity target, @Nullable EntityHitResult entityRayTraceResult) {
+	public static InteractionResult wrenchInstaKillsMinecarts(Player player, Level world, InteractionHand hand, Entity target, @Nullable EntityHitResult entityRayTraceResult) {
 		if (!(target instanceof AbstractMinecart))
-			return;
+			return InteractionResult.PASS;
 		ItemStack heldItem = player.getMainHandItem();
 		if (!AllItems.WRENCH.isIn(heldItem))
-			return;
+			return InteractionResult.PASS;
 		if (player.isCreative())
-			return;
+			return InteractionResult.PASS;
 		AbstractMinecart minecart = (AbstractMinecart) target;
 		minecart.hurt(DamageSource.playerAttack(player), 100);
+		return InteractionResult.SUCCESS;
 	}
 
 //	@Override

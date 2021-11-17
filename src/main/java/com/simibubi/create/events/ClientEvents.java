@@ -43,6 +43,7 @@ import com.simibubi.create.content.logistics.item.LinkedControllerClientHandler;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.block.render.SpriteShifter;
 import com.simibubi.create.foundation.config.AllConfigs;
+import com.simibubi.create.foundation.config.ui.OpenCreateMenuButton;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 import com.simibubi.create.foundation.item.ItemDescription;
 import com.simibubi.create.foundation.item.TooltipHelper;
@@ -64,6 +65,7 @@ import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.worldWrappers.WrappedClientWorld;
 
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -371,62 +373,63 @@ public class ClientEvents {
 //				() -> new ConfigGuiHandler.ConfigGuiFactory((mc, previousScreen) -> BaseConfigScreen.forCreate(previousScreen)));
 //		}
 
-		public static void register() {
-			registerClientReloadListeners();
-			ParticleManagerRegistrationCallback.EVENT.register(() -> {
-				AllParticleTypes.registerFactories();
-				addEntityRendererLayers();
-			});
+	}
 
-			ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onTick);
-			ClientTickEvents.START_CLIENT_TICK.register(ClientEvents::onTickStart);
-			RenderTickStartCallback.EVENT.register(ClientEvents::onRenderTick);
-			ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
-			ClientWorldEvents.LOAD.register(ClientEvents::onLoadWorld);
-			ClientWorldEvents.UNLOAD.register(ClientEvents::onUnloadWorld);
-			WorldRenderEvents.END.register(ClientEvents::onRenderWorld);
-			ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
-			RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
-			LeftClickAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
-			OverlayRenderCallback.EVENT.register(ClientEvents::afterRenderOverlayLayer);
-			FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
-			FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
+	public static void register() {
+		ModBusEvents.registerClientReloadListeners();
+		ParticleManagerRegistrationCallback.EVENT.register(() -> {
+			AllParticleTypes.registerFactories();
+			ModBusEvents.addEntityRendererLayers();
+		});
 
-			ClientChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
-			ClientTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
-			ClientEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
-			ClientWorldEvents.LOAD.register((client, world) -> CommonEvents.onLoadWorld(world));
-			ClientWorldEvents.UNLOAD.register((client, world) -> CommonEvents.onUnloadWorld(world));
+		ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onTick);
+		ClientTickEvents.START_CLIENT_TICK.register(ClientEvents::onTickStart);
+		RenderTickStartCallback.EVENT.register(ClientEvents::onRenderTick);
+		ClientPlayConnectionEvents.JOIN.register(ClientEvents::onJoin);
+		ClientWorldEvents.LOAD.register(ClientEvents::onLoadWorld);
+		ClientWorldEvents.UNLOAD.register(ClientEvents::onUnloadWorld);
+		WorldRenderEvents.END.register(ClientEvents::onRenderWorld);
+		ItemTooltipCallback.EVENT.register(ClientEvents::addToItemTooltip);
+		RenderTooltipBorderColorCallback.EVENT.register(ClientEvents::getItemTooltipColor);
+		LeftClickAirCallback.EVENT.register(ClientEvents::leftClickEmpty);
+		OverlayRenderCallback.EVENT.register(ClientEvents::afterRenderOverlayLayer);
+		FogEvents.SET_DENSITY.register(ClientEvents::getFogDensity);
+		FogEvents.SET_COLOR.register(ClientEvents::getFogColor);
 
-			// External Events
+		ClientChunkEvents.CHUNK_UNLOAD.register(CommonEvents::onChunkUnloaded);
+		ClientTickEvents.END_WORLD_TICK.register(CommonEvents::onWorldTick);
+		ClientEntityEvents.ENTITY_LOAD.register(CommonEvents::onEntityAdded);
+		ClientWorldEvents.LOAD.register((client, world) -> CommonEvents.onLoadWorld(world));
+		ClientWorldEvents.UNLOAD.register((client, world) -> CommonEvents.onUnloadWorld(world));
 
-			RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
-			UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
-			UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
-			UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
-			UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
-			UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);
-			UseBlockCallback.EVENT.register(EjectorTargetHandler::rightClickingBlocksSelectsThem);
-			UseBlockCallback.EVENT.register(FurnaceEngineBlock::usingFurnaceEngineOnFurnacePreventsGUI);
-			AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
-			AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
-			WorldRenderEvents.END.register(SymmetryHandler::render);
-			ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
-			PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
-			PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
-			UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
-			OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
-			OnTextureStitchCallback.EVENT.register(SpriteShifter::onTextureStitchPre);
-			OnTextureStitchCallback.EVENT.register(SpriteShifter::onTextureStitchPost);
+		// External Events
 
-			// Flywheel Events
+		RenderHandCallback.EVENT.register(ExtendoGripRenderHandler::onRenderPlayerHand);
+		UseBlockCallback.EVENT.register(ItemUseOverrides::onBlockActivated);
+		UseBlockCallback.EVENT.register(EdgeInteractionHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(FilteringHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(LinkHandler::onBlockActivated);
+		UseBlockCallback.EVENT.register(ArmInteractionPointHandler::rightClickingBlocksSelectsThem);
+		UseBlockCallback.EVENT.register(EjectorTargetHandler::rightClickingBlocksSelectsThem);
+		UseBlockCallback.EVENT.register(FurnaceEngineBlock::usingFurnaceEngineOnFurnacePreventsGUI);
+		AttackBlockCallback.EVENT.register(ArmInteractionPointHandler::leftClickingBlocksDeselectsThem);
+		AttackBlockCallback.EVENT.register(EjectorTargetHandler::leftClickingBlocksDeselectsThem);
+		WorldRenderEvents.END.register(SymmetryHandler::render);
+		ClientTickEvents.END_CLIENT_TICK.register(SymmetryHandler::onClientTick);
+		PlayerBlockBreakEvents.AFTER.register(SymmetryHandler::onBlockDestroyed);
+		PlayerTickEndCallback.EVENT.register(ContraptionHandlerClient::preventRemotePlayersWalkingAnimations);
+		UseBlockCallback.EVENT.register(ContraptionHandlerClient::rightClickingOnContraptionsGetsHandledLocally);
+		OverlayRenderCallback.EVENT.register(PlacementHelpers::afterRenderOverlayLayer);
+		OnTextureStitchCallback.EVENT.register(SpriteShifter::onTextureStitchPre);
+		OnTextureStitchCallback.EVENT.register(SpriteShifter::onTextureStitchPost);
+		ScreenEvents.AFTER_INIT.register(OpenCreateMenuButton.OpenConfigButtonHandler::onGuiInit);
 
-			FlywheelEvents.BEGIN_FRAME.register(ContraptionRenderDispatcher::beginFrame);
-			FlywheelEvents.RENDER_LAYER.register(ContraptionRenderDispatcher::renderLayer);
-			FlywheelEvents.RELOAD_RENDERERS.register(ContraptionRenderDispatcher::onRendererReload);
-			FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
-		}
+		// Flywheel Events
 
+		FlywheelEvents.BEGIN_FRAME.register(ContraptionRenderDispatcher::beginFrame);
+		FlywheelEvents.RENDER_LAYER.register(ContraptionRenderDispatcher::renderLayer);
+		FlywheelEvents.RELOAD_RENDERERS.register(ContraptionRenderDispatcher::onRendererReload);
+		FlywheelEvents.GATHER_CONTEXT.register(ContraptionRenderDispatcher::gatherContext);
 	}
 
 }

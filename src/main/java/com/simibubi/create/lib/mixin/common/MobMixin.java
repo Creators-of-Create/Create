@@ -12,8 +12,6 @@ import net.minecraft.world.entity.Mob;
 
 @Mixin(Mob.class)
 public abstract class MobMixin {
-
-
 	@Inject(method = "setTarget", at = @At("TAIL"))
 	private void create$setTarget(LivingEntity target, CallbackInfo ci) {
 		MobEntitySetTargetCallback.EVENT.invoker().onMobEntitySetTarget((Mob) (Object) this, target);

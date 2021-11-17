@@ -4,28 +4,28 @@ import com.simibubi.create.foundation.advancement.AllTriggers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event.Result;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraft.world.phys.BlockHitResult;
 
-@EventBusSubscriber
 public class FunnelItem extends BlockItem {
 
 	public FunnelItem(Block p_i48527_1_, Properties p_i48527_2_) {
 		super(p_i48527_1_, p_i48527_2_);
 	}
 
-	@SubscribeEvent
-	public static void funnelItemAlwaysPlacesWhenUsed(PlayerInteractEvent.RightClickBlock event) {
-		if (event.getItemStack()
+	public static InteractionResult funnelItemAlwaysPlacesWhenUsed(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+		if (player.getItemInHand(hand)
 			.getItem() instanceof FunnelItem)
-			event.setUseBlock(Result.DENY);
+//			event.setUseBlock(Result.DENY);
+			return InteractionResult.FAIL;
+		return InteractionResult.PASS;
 	}
 
 	@Override

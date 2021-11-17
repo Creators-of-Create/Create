@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -10,20 +12,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class DivingHelmetItem extends CopperArmorItem {
 
 	public DivingHelmetItem(Properties p_i48534_3_) {
 		super(EquipmentSlot.HEAD, p_i48534_3_);
 	}
 
-	@SubscribeEvent
-	public static void breatheUnderwater(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void breatheUnderwater(LivingEntity entity) {
+//		LivingEntity entity = event.getEntityLiving();
 		Level world = entity.level;
 		boolean second = world.getGameTime() % 20 == 0;
 		boolean drowning = entity.getAirSupply() == 0;

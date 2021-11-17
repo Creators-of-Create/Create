@@ -11,14 +11,10 @@ import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.utility.IntAttached;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class HauntedBellPulser {
 
@@ -30,18 +26,19 @@ public class HauntedBellPulser {
 		.expireAfterAccess(250, TimeUnit.MILLISECONDS)
 		.build();
 
-	@SubscribeEvent
-	public static void hauntedBellCreatesPulse(TickEvent.PlayerTickEvent event) {
-		if (event.phase != TickEvent.Phase.END)
+	public static void hauntedBellCreatesPulse(Player player) {
+//		if (event.phase != TickEvent.Phase.END)
+//			return;
+//		if (event.side != LogicalSide.SERVER)
+//			return;
+		if (player.level.isClientSide())
 			return;
-		if (event.side != LogicalSide.SERVER)
+		if (player.isSpectator())
 			return;
-		if (event.player.isSpectator())
-			return;
-		if (!event.player.isHolding(AllBlocks.HAUNTED_BELL::isIn))
+		if (!player.isHolding(AllBlocks.HAUNTED_BELL::isIn))
 			return;
 
-		Entity player = event.player;
+//		Entity player = event.player;
 		boolean firstPulse = false;
 
 		try {
@@ -56,13 +53,12 @@ public class HauntedBellPulser {
 
 		long gameTime = player.level.getGameTime();
 		if (firstPulse || gameTime % RECHARGE_TICKS != 0)
-			sendPulse(player.level, event.player.blockPosition(), DISTANCE, false);
+			sendPulse(player.level, player.blockPosition(), DISTANCE, false);
 	}
 
 	public static void sendPulse(Level world, BlockPos pos, int distance, boolean canOverlap) {
-		LevelChunk chunk = world.getChunkAt(pos);
-		AllPackets.channel.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk),
-			new SoulPulseEffectPacket(pos, distance, canOverlap));
+//		LevelChunk chunk = world.getChunkAt(pos);
+		AllPackets.channel.sendToClientsTracking(new SoulPulseEffectPacket(pos, distance, canOverlap), (ServerLevel) world, pos);
 	}
 
 }

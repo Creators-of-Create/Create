@@ -34,44 +34,43 @@ import net.fabricmc.api.Environment;
 
 public class FilteringHandler {
 
-	@SubscribeEvent
-	public static void onBlockActivated(PlayerInteractEvent.RightClickBlock event) {
-		Level world = event.getWorld();
-		BlockPos pos = event.getPos();
-		Player player = event.getPlayer();
-		InteractionHand hand = event.getHand();
+	public static InteractionResult onBlockActivated(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
+//		Level world = event.getWorld();
+		BlockPos pos = hitResult.getBlockPos();//event.getPos();
+//		Player player = event.getPlayer();
+//		InteractionHand hand = event.getHand();
 
 		if (player.isShiftKeyDown() || player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 
 		FilteringBehaviour behaviour = TileEntityBehaviour.get(world, pos, FilteringBehaviour.TYPE);
 		if (behaviour == null)
-			return;
+			return InteractionResult.PASS;
 
 		BlockHitResult ray = RaycastHelper.rayTraceRange(world, player, 10);
 		if (ray == null)
-			return;
+			return InteractionResult.PASS;
 		if (behaviour instanceof SidedFilteringBehaviour) {
 			behaviour = ((SidedFilteringBehaviour) behaviour).get(ray.getDirection());
 			if (behaviour == null)
-				return;
+				return InteractionResult.PASS;
 		}
 		if (!behaviour.isActive())
-			return;
+			return InteractionResult.PASS;
 		if (behaviour.slotPositioning instanceof ValueBoxTransform.Sided)
 			((Sided) behaviour.slotPositioning).fromSide(ray.getDirection());
 		if (!behaviour.testHit(ray.getLocation()))
-			return;
+			return InteractionResult.PASS;
 
 		ItemStack toApply = player.getItemInHand(hand)
 			.copy();
 
 		if (AllItems.WRENCH.isIn(toApply))
-			return;
+			return InteractionResult.PASS;
 		if (AllBlocks.MECHANICAL_ARM.isIn(toApply))
-			return;
+			return InteractionResult.PASS;
 
-		if (event.getSide() != LogicalSide.CLIENT) {
+		if (!world.isClientSide()) {
 			if (!player.isCreative()) {
 				if (toApply.getItem() instanceof FilterItem)
 					player.getItemInHand(hand)
@@ -99,9 +98,10 @@ public class FilteringHandler {
 				.withStyle(ChatFormatting.WHITE), true);
 		}
 
-		event.setCanceled(true);
-		event.setCancellationResult(InteractionResult.SUCCESS);
+//		event.setCanceled(true);
+//		event.setCancellationResult(InteractionResult.SUCCESS);
 		world.playSound(null, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, .25f, .1f);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Environment(EnvType.CLIENT)

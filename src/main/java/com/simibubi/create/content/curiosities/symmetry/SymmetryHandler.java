@@ -10,6 +10,7 @@ import com.simibubi.create.content.curiosities.symmetry.mirror.EmptyMirror;
 import com.simibubi.create.content.curiosities.symmetry.mirror.SymmetryMirror;
 import com.simibubi.create.foundation.utility.AnimationTickHolder;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -21,67 +22,60 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
-import net.minecraftforge.event.TickEvent.Phase;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.event.world.BlockEvent.EntityPlaceEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
-@EventBusSubscriber(bus = Bus.FORGE)
 public class SymmetryHandler {
 
 	private static int tickCounter = 0;
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void onBlockPlaced(EntityPlaceEvent event) {
-		if (event.getWorld()
+	public static InteractionResult onBlockPlaced(UseOnContext context) {
+		if (context.getLevel()
 			.isClientSide())
-			return;
-		if (!(event.getEntity() instanceof Player))
-			return;
+			return InteractionResult.PASS;
+//		if (!(event.getEntity() instanceof Player))
+//			return;
 
-		Player player = (Player) event.getEntity();
+		Player player = (Player) context.getPlayer();
 		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty()
 				&& inv.getItem(i)
 					.getItem() == AllItems.WAND_OF_SYMMETRY.get()) {
-				SymmetryWandItem.apply(player.level, inv.getItem(i), player, event.getPos(), event.getPlacedBlock());
+				SymmetryWandItem.apply(player.level, inv.getItem(i), player, context.getClickedPos(), context.getLevel().getBlockState(context.getClickedPos()));
 			}
 		}
+		return InteractionResult.PASS;
 	}
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public static void onBlockDestroyed(BreakEvent event) {
-		if (event.getWorld()
+	public static void onBlockDestroyed(Level world, Player player, BlockPos pos, BlockState state, /* Nullable */ BlockEntity blockEntity) {
+		if (world
 			.isClientSide())
 			return;
 
-		Player player = event.getPlayer();
+//		Player player = event.getPlayer();
 		Inventory inv = player.getInventory();
 		for (int i = 0; i < Inventory.getSelectionSize(); i++) {
 			if (!inv.getItem(i)
 				.isEmpty() && AllItems.WAND_OF_SYMMETRY.isIn(inv.getItem(i))) {
-				SymmetryWandItem.remove(player.level, inv.getItem(i), player, event.getPos());
+				SymmetryWandItem.remove(player.level, inv.getItem(i), player, pos);
 			}
 		}
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void render(RenderWorldLastEvent event) {
+	public static void render(WorldRenderContext context) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 
@@ -108,7 +102,7 @@ public class SymmetryHandler {
 			Camera info = mc.gameRenderer.getMainCamera();
 			Vec3 view = info.getPosition();
 
-			PoseStack ms = event.getMatrixStack();
+			PoseStack ms = context.matrixStack();
 			ms.pushPose();
 			ms.translate(-view.x(), -view.y(), -view.z());
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -129,10 +123,9 @@ public class SymmetryHandler {
 	}
 
 	@Environment(EnvType.CLIENT)
-	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event) {
-		if (event.phase == Phase.START)
-			return;
+	public static void onClientTick(Minecraft client) {
+//		if (event.phase == Phase.START)
+//			return;
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
 

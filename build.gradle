@@ -31,6 +31,7 @@ boolean pingUrl(String address) {
 
 repositories {
     maven { url = "https://api.modrinth.com/maven" }
+    maven { url = "https://maven.parchmentmc.org" }
     maven { url = "https://maven.fabricmc.net/" }
     maven { url = "https://maven.tterrag.com/" }
     maven { url = "https://storage.googleapis.com/devan-maven/" }
@@ -58,7 +59,10 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
-    mappings(loom.officialMojangMappings())
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.17.1:2021.10.31@zip") // https://github.com/ParchmentMC/Parchment/wiki/Getting-Started
+    }
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 

@@ -3,31 +3,30 @@ package com.simibubi.create.content.curiosities.armor;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
+import com.simibubi.create.lib.mixin.accessor.LivingEntityAccessor;
+
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-@EventBusSubscriber
 public class DivingBootsItem extends CopperArmorItem {
 
 	public DivingBootsItem(Properties p_i48534_3_) {
 		super(EquipmentSlot.FEET, p_i48534_3_);
 	}
 
-	@SubscribeEvent
-	public static void accellerateDescentUnderwater(LivingUpdateEvent event) {
-		LivingEntity entity = event.getEntityLiving();
+	public static void accellerateDescentUnderwater(LivingEntity entity) {
+//		LivingEntity entity = event.getEntityLiving();
 		if (!affects(entity))
 			return;
 
 		Vec3 motion = entity.getDeltaMovement();
-		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "f_20899_"); // jumping
+//		Boolean isJumping = ObfuscationReflectionHelper.getPrivateValue(LivingEntity.class, entity, "f_20899_"); // jumping
+		boolean isJumping = ((LivingEntityAccessor) entity).create$isJumping();
 		entity.setOnGround(entity.isOnGround() || entity.verticalCollision);
 
 		if (isJumping && entity.isOnGround()) {

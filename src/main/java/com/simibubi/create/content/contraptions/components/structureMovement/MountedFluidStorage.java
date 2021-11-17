@@ -14,6 +14,14 @@ import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.FluidStack;
+
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+
+import com.simibubi.create.lib.utility.LazyOptional;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -149,7 +157,7 @@ public class MountedFluidStorage {
 		storage.valid = true;
 
 		if (nbt.contains("Bottomless")) {
-			FluidStack providedStack = FluidStack.loadFluidStackFromNBT(nbt.getCompound("ProvidedStack"));
+			FluidStack providedStack = FluidStack.fromNBT(nbt.getCompound("ProvidedStack"));
 			CreativeSmartFluidTank creativeSmartFluidTank = new CreativeSmartFluidTank(capacity, $ -> {
 			});
 			creativeSmartFluidTank.setContainedFluid(providedStack);

@@ -7,37 +7,37 @@ import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.ClipContext.Block;
 import net.minecraft.world.level.ClipContext.Fluid;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.StairsShape;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class ZapperInteractionHandler {
 
-	@SubscribeEvent
-	public static void leftClickingBlocksWithTheZapperSelectsTheBlock(PlayerInteractEvent.LeftClickBlock event) {
-		if (event.getWorld().isClientSide)
-			return;
-		ItemStack heldItem = event.getPlayer()
+	public static InteractionResult leftClickingBlocksWithTheZapperSelectsTheBlock(Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction) {
+		if (world.isClientSide)
+			return InteractionResult.PASS;
+		ItemStack heldItem = player
 			.getMainHandItem();
-		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, event.getPlayer())) {
-			event.setCancellationResult(InteractionResult.FAIL);
-			event.setCanceled(true);
+		if (heldItem.getItem() instanceof ZapperItem && trySelect(heldItem, player)) {
+//			event.setCancellationResult(InteractionResult.FAIL);
+//			event.setCanceled(true);
+			return InteractionResult.FAIL;
 		}
+		return InteractionResult.PASS;
 	}
 
 	public static boolean trySelect(ItemStack stack, Player player) {

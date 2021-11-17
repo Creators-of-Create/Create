@@ -20,6 +20,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -32,12 +33,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = EnvType.CLIENT)
 public class EjectorTargetHandler {
 
 	static BlockPos currentSelection;
@@ -45,17 +41,16 @@ public class EjectorTargetHandler {
 	static long lastHoveredBlockPos = -1;
 	static EntityLauncher launcher;
 
-	@SubscribeEvent
-	public static void rightClickingBlocksSelectsThem(PlayerInteractEvent.RightClickBlock event) {
+	public static InteractionResult rightClickingBlocksSelectsThem(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
 		if (currentItem == null)
-			return;
-		BlockPos pos = event.getPos();
-		Level world = event.getWorld();
+			return InteractionResult.PASS;
+		BlockPos pos = hitResult.getBlockPos();//event.getPos();
+//		Level world = event.getWorld();
 		if (!world.isClientSide)
-			return;
-		Player player = event.getPlayer();
+			return InteractionResult.PASS;
+//		Player player = event.getPlayer();
 		if (player == null || player.isSpectator() || !player.isShiftKeyDown())
-			return;
+			return InteractionResult.PASS;
 
 		String key = "weighted_ejector.target_set";
 		ChatFormatting colour = ChatFormatting.GOLD;
@@ -63,26 +58,28 @@ public class EjectorTargetHandler {
 			.withStyle(colour), true);
 		currentSelection = pos;
 		launcher = null;
-		event.setCanceled(true);
-		event.setCancellationResult(InteractionResult.SUCCESS);
+//		event.setCanceled(true);
+//		event.setCancellationResult(InteractionResult.SUCCESS);
+		return InteractionResult.SUCCESS;
 	}
 
-	@SubscribeEvent
-	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
+	public static InteractionResult leftClickingBlocksDeselectsThem(Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction) {
 		if (currentItem == null)
-			return;
-		if (!event.getWorld().isClientSide)
-			return;
-		if (!event.getPlayer()
+			return InteractionResult.PASS;
+		if (!world.isClientSide)
+			return InteractionResult.PASS;
+		if (!player
 			.isShiftKeyDown())
-			return;
-		BlockPos pos = event.getPos();
+			return InteractionResult.PASS;
+//		BlockPos pos = event.getPos();
 		if (pos.equals(currentSelection)) {
 			currentSelection = null;
 			launcher = null;
-			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.SUCCESS);
+//			event.setCanceled(true);
+//			event.setCancellationResult(InteractionResult.SUCCESS);
+			return InteractionResult.SUCCESS;
 		}
+		return InteractionResult.PASS;
 	}
 
 	public static void flushSettings(BlockPos pos) {

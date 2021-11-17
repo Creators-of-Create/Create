@@ -16,7 +16,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,12 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.fabricmc.api.EnvType;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(value = EnvType.CLIENT)
 public class ArmInteractionPointHandler {
 
 	static List<ArmInteractionPoint> currentSelection = new ArrayList<>();
@@ -39,24 +36,23 @@ public class ArmInteractionPointHandler {
 
 	static long lastBlockPos = -1;
 
-	@SubscribeEvent
-	public static void rightClickingBlocksSelectsThem(PlayerInteractEvent.RightClickBlock event) {
+	public static InteractionResult rightClickingBlocksSelectsThem(Player player, Level world, InteractionHand hand, BlockHitResult hitResult) {
 		if (currentItem == null)
-			return;
-		BlockPos pos = event.getPos();
-		Level world = event.getWorld();
+			return InteractionResult.PASS;
+		BlockPos pos = hitResult.getBlockPos();//event.getPos();
+//		Level world = event.getWorld();
 		if (!world.isClientSide)
-			return;
-		Player player = event.getPlayer();
+			return InteractionResult.PASS;
+//		Player player = event.getPlayer();
 		if (player != null && player.isSpectator())
-			return;
+			return InteractionResult.PASS;
 
 		ArmInteractionPoint selected = getSelected(pos);
 
 		if (selected == null) {
 			ArmInteractionPoint point = ArmInteractionPoint.createAt(world, pos);
 			if (point == null)
-				return;
+				return InteractionResult.PASS;
 			selected = point;
 			put(point);
 		}
@@ -71,21 +67,23 @@ public class ArmInteractionPointHandler {
 				true);
 		}
 
-		event.setCanceled(true);
-		event.setCancellationResult(InteractionResult.SUCCESS);
+//		event.setCanceled(true);
+//		event.setCancellationResult(InteractionResult.SUCCESS);
+		return InteractionResult.SUCCESS;
 	}
 
-	@SubscribeEvent
-	public static void leftClickingBlocksDeselectsThem(PlayerInteractEvent.LeftClickBlock event) {
+	public static InteractionResult leftClickingBlocksDeselectsThem(Player player, Level world, InteractionHand hand, BlockPos pos, Direction direction) {
 		if (currentItem == null)
-			return;
-		if (!event.getWorld().isClientSide)
-			return;
-		BlockPos pos = event.getPos();
+			return InteractionResult.PASS;
+		if (!world.isClientSide)
+			return InteractionResult.PASS;
+//		BlockPos pos = event.getPos();
 		if (remove(pos) != null) {
-			event.setCanceled(true);
-			event.setCancellationResult(InteractionResult.SUCCESS);
+//			event.setCanceled(true);
+//			event.setCancellationResult(InteractionResult.SUCCESS);
+			return InteractionResult.SUCCESS;
 		}
+		return InteractionResult.PASS;
 	}
 
 	public static void flushSettings(BlockPos pos) {
