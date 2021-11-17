@@ -76,7 +76,7 @@
 //									return;
 //								FluidStack fluidCopy = fluidStack.copy();
 //								fluidCopy.setAmount(1000);
-//								fhi.fill(fluidCopy, FluidAction.EXECUTE);
+//								fhi.fill(fluidCopy, false);
 //								ItemStack container = fhi.getContainer();
 //								if (container.sameItem(copy))
 //									return;

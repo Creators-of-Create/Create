@@ -55,11 +55,11 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 		// Do not fill if it would only partially fill the table (unless > 1000mb)
 		int amount = availableFluid.getAmount();
 		if (amount < 1000
-			&& handler.fill(FluidHelper.copyStackWithAmount(availableFluid, amount + 1), FluidAction.SIMULATE) > amount)
+			&& handler.fill(FluidHelper.copyStackWithAmount(availableFluid, amount + 1), true) > amount)
 			return 0;
 
 		// Return amount filled into the table/basin
-		return handler.fill(availableFluid, simulate ? FluidAction.SIMULATE : FluidAction.EXECUTE);
+		return handler.fill(availableFluid, simulate ? true : false);
 	}
 
 	private boolean enabled() {

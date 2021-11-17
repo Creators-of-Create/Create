@@ -34,15 +34,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.IPlantable;
 import com.simibubi.create.lib.entity.FakePlayer;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.EntityTeleportEvent;
-import net.minecraftforge.registries.IRegistryDelegate;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+import com.simibubi.create.lib.utility.PlantUtil;
 
 public class BuiltinPotatoProjectileTypes {
 
@@ -61,7 +60,7 @@ public class BuiltinPotatoProjectileTypes {
 			.velocity(1.25f)
 			.knockback(1.5f)
 			.renderTumbling()
-			.onBlockHit(plantCrop(Blocks.POTATOES.delegate))
+			.onBlockHit(plantCrop(Blocks.POTATOES))
 			.registerAndAssign(Items.POTATO),
 
 		BAKED_POTATO = create("baked_potato").damage(5)
@@ -78,7 +77,7 @@ public class BuiltinPotatoProjectileTypes {
 			.knockback(0.3f)
 			.renderTowardMotion(140, 1)
 			.soundPitch(1.5f)
-			.onBlockHit(plantCrop(Blocks.CARROTS.delegate))
+			.onBlockHit(plantCrop(Blocks.CARROTS))
 			.registerAndAssign(Items.CARROT),
 
 		GOLDEN_CARROT = create("golden_carrot").damage(12)
@@ -203,7 +202,7 @@ public class BuiltinPotatoProjectileTypes {
 			.velocity(0.95f)
 			.renderTumbling()
 			.soundPitch(0.9f)
-			.onBlockHit(placeBlockOnGround(Blocks.MELON.delegate))
+			.onBlockHit(placeBlockOnGround(Blocks.MELON))
 			.registerAndAssign(Blocks.MELON),
 
 		PUMPKIN_BLOCK = create("pumpkin_block").damage(6)
@@ -212,7 +211,7 @@ public class BuiltinPotatoProjectileTypes {
 			.velocity(0.95f)
 			.renderTumbling()
 			.soundPitch(0.9f)
-			.onBlockHit(placeBlockOnGround(Blocks.PUMPKIN.delegate))
+			.onBlockHit(placeBlockOnGround(Blocks.PUMPKIN))
 			.registerAndAssign(Blocks.PUMPKIN),
 
 		PUMPKIN_PIE = create("pumpkin_pie").damage(7)
@@ -290,7 +289,7 @@ public class BuiltinPotatoProjectileTypes {
 			entity.addEffect(effect);
 	}
 
-	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(IRegistryDelegate<? extends Block> cropBlock) {
+	private static BiPredicate<LevelAccessor, BlockHitResult> plantCrop(Block cropBlock) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -304,17 +303,17 @@ public class BuiltinPotatoProjectileTypes {
 				.getMaterial()
 				.isReplaceable())
 				return false;
-			if (!(cropBlock.get() instanceof IPlantable))
+			if (!(PlantUtil.isPlant(cropBlock)))
 				return false;
 			BlockState blockState = world.getBlockState(hitPos);
-			if (!blockState.canSustainPlant(world, hitPos, face, (IPlantable) cropBlock.get()))
+			if (!(blockState.getBlock() instanceof FarmBlock))
 				return false;
-			world.setBlock(placePos, cropBlock.get().defaultBlockState(), 3);
+			world.setBlock(placePos, cropBlock.defaultBlockState(), 3);
 			return true;
 		};
 	}
 
-	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(IRegistryDelegate<? extends Block> block) {
+	private static BiPredicate<LevelAccessor, BlockHitResult> placeBlockOnGround(Block block) {
 		return (world, ray) -> {
 			if (world.isClientSide())
 				return true;
@@ -330,7 +329,7 @@ public class BuiltinPotatoProjectileTypes {
 				return false;
 
 			if (face == Direction.UP) {
-				world.setBlock(placePos, block.get().defaultBlockState(), 3);
+				world.setBlock(placePos, block.defaultBlockState(), 3);
 			} else if (world instanceof Level) {
 				double y = ray.getLocation().y - 0.5;
 				if (!world.isEmptyBlock(placePos.above()))
@@ -339,7 +338,7 @@ public class BuiltinPotatoProjectileTypes {
 					y = Math.max(y, placePos.getY());
 
 				FallingBlockEntity falling = new FallingBlockEntity((Level) world, placePos.getX() + 0.5, y,
-					placePos.getZ() + 0.5, block.get().defaultBlockState());
+					placePos.getZ() + 0.5, block.defaultBlockState());
 				falling.time = 1;
 				world.addFreshEntity(falling);
 			}
@@ -367,10 +366,10 @@ public class BuiltinPotatoProjectileTypes {
 				double teleportY = Mth.clamp(entityY + (livingEntity.getRandom().nextInt((int) teleportDiameter) - (int) (teleportDiameter / 2)), 0.0D, world.getHeight() - 1);
 				double teleportZ = entityZ + (livingEntity.getRandom().nextDouble() - 0.5D) * teleportDiameter;
 
-				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
-				if (event.isCanceled())
-					return false;
-				if (livingEntity.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), true)) {
+//				EntityTeleportEvent.ChorusFruit event = ForgeEventFactory.onChorusFruitTeleport(livingEntity, teleportX, teleportY, teleportZ);
+//				if (event.isCanceled())
+//					return false;
+				if (livingEntity.randomTeleport(teleportX, teleportY, teleportZ, true)) {
 					if (livingEntity.isPassenger())
 						livingEntity.stopRiding();
 

@@ -1,5 +1,8 @@
 package com.simibubi.create.foundation.utility.worldWrappers;
 
+import com.simibubi.create.lib.helper.BiomeManagerHelper;
+import com.simibubi.create.lib.helper.MinecraftServerHelper;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +31,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -40,7 +42,7 @@ public class WrappedServerWorld extends ServerLevel {
 		super(world.getServer(), Util.backgroundExecutor(), getLevelSaveFromWorld(world),
 			(ServerLevelData) world.getLevelData(), world.dimension(), world.dimensionType(),
 			new DummyStatusListener(), ((ServerChunkCache) world.getChunkSource()).getGenerator(), world.isDebug(),
-			world.getBiomeManager().biomeZoomSeed, Collections.emptyList(), false);
+				BiomeManagerHelper.getSeed(world.getBiomeManager()), Collections.emptyList(), false);
 		this.world = world;
 	}
 
@@ -139,6 +141,6 @@ public class WrappedServerWorld extends ServerLevel {
 	}
 
 	private static LevelStorageSource.LevelStorageAccess getLevelSaveFromWorld(Level world) {
-		return ObfuscationReflectionHelper.getPrivateValue(MinecraftServer.class, world.getServer(), "f_129744_"); // storageSource
+		return MinecraftServerHelper.getAnvilConverterForAnvilFile(world.getServer()); // storageSource
 	}
 }

@@ -213,7 +213,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 
 	public static class DataGenResult<S extends ProcessingRecipe<?>> implements FinishedRecipe {
 
-		private List<ICondition> recipeConditions;
+		private List<Condition> recipeConditions;
 		private ProcessingRecipeSerializer<S> serializer;
 		private ResourceLocation id;
 		private S recipe;
@@ -240,7 +240,7 @@ public class ProcessingRecipeBuilder<T extends ProcessingRecipe<?>> {
 				return;
 
 			JsonArray conds = new JsonArray();
-			recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+			//recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
 			json.add("conditions", conds);
 		}
 

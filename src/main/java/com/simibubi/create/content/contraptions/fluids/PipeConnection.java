@@ -61,7 +61,7 @@ public class PipeConnection {
 	}
 
 	public FluidStack getProvidedFluid() {
-		FluidStack empty = FluidStack.EMPTY;
+		FluidStack empty = FluidStack.empty();
 		if (!hasFlow())
 			return empty;
 		Flow flow = this.flow.get();

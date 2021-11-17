@@ -2,6 +2,7 @@ package com.simibubi.create.content.curiosities.tools;
 
 import java.util.function.Supplier;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.simibubi.create.foundation.networking.SimplePacketBase;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -9,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 
 
 public class ExtendoGripInteractionPacket extends SimplePacketBase {

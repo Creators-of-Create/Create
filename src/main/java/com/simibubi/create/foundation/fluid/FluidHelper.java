@@ -125,14 +125,14 @@ public class FluidHelper {
 		IFluidHandler tank = capability.orElse(null);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
-		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, FluidAction.SIMULATE))
+		if (tank == null || fluidStack.getAmount() != tank.fill(fluidStack, true))
 			return false;
 		if (worldIn.isClientSide)
 			return true;
 
 		ItemStack copyOfHeld = heldItem.copy();
 		emptyingResult = EmptyingByBasin.emptyItem(worldIn, copyOfHeld, false);
-		tank.fill(fluidStack, FluidAction.EXECUTE);
+		tank.fill(fluidStack, false);
 
 		if (!player.isCreative() && !(te instanceof CreativeFluidTankTileEntity)) {
 			if (copyOfHeld.isEmpty())
@@ -175,7 +175,7 @@ public class FluidHelper {
 
 			FluidStack copy = fluid.copy();
 			copy.setAmount(requiredAmountForItem);
-			tank.drain(copy, FluidAction.EXECUTE);
+			tank.drain(copy, false);
 
 			if (!player.isCreative())
 				player.getInventory().placeItemBackInInventory(out);
@@ -229,8 +229,8 @@ public class FluidHelper {
 					|| undecided && preferred == FluidExchange.ITEM_TO_TANK) {
 
 					int amount = fluidTank.fill(
-						fluidItem.drain(Math.min(maxTransferAmountPerTank, tankCapacity), FluidAction.EXECUTE),
-						FluidAction.EXECUTE);
+						fluidItem.drain(Math.min(maxTransferAmountPerTank, tankCapacity), false),
+						false);
 					if (amount > 0) {
 						lockedExchange = FluidExchange.ITEM_TO_TANK;
 						if (singleOp)
@@ -244,8 +244,8 @@ public class FluidHelper {
 					|| undecided && preferred == FluidExchange.TANK_TO_ITEM) {
 
 					int amount = fluidItem.fill(
-						fluidTank.drain(Math.min(maxTransferAmountPerTank, itemCapacity), FluidAction.EXECUTE),
-						FluidAction.EXECUTE);
+						fluidTank.drain(Math.min(maxTransferAmountPerTank, itemCapacity), false),
+						false);
 					if (amount > 0) {
 						lockedExchange = FluidExchange.TANK_TO_ITEM;
 						if (singleOp)

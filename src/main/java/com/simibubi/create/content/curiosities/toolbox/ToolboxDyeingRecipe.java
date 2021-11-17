@@ -11,7 +11,8 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags;
+
+import com.simibubi.create.lib.data.Tags;
 
 public class ToolboxDyeingRecipe extends CustomRecipe {
 

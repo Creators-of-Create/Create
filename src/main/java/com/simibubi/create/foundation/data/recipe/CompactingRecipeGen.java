@@ -10,7 +10,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.Tags;
+import com.simibubi.create.lib.data.Tags;
 
 public class CompactingRecipeGen extends ProcessingRecipeGen {
 

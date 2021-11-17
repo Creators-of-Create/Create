@@ -37,6 +37,7 @@ import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerResources;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,11 +52,14 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.EntityHitResult;
 
+import com.simibubi.create.lib.event.BiomeLoadingCallback;
 import com.simibubi.create.lib.event.BlockPlaceCallback;
 import com.simibubi.create.lib.event.DataPackReloadCallback;
 import com.simibubi.create.lib.event.EntityEyeHeightCallback;
@@ -174,16 +178,15 @@ public class CommonEvents {
 	}
 
 	public static void attachCapabilities(AbstractMinecart cart) {
-		CapabilityMinecartController.attach(event);
+		CapabilityMinecartController.attach(cart);
 	}
 
 	public static void startTracking(Entity target, ServerPlayer player) {
-		CapabilityMinecartController.startTracking(event);
+		CapabilityMinecartController.startTracking(target);
 	}
 
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onBiomeLoad(BiomeLoadingEvent event) {
-		AllWorldFeatures.reload(event);
+	public static BiomeGenerationSettings.Builder onBiomeLoad(ResourceLocation key, Biome.BiomeCategory category, BiomeGenerationSettings.Builder generation) {
+		return AllWorldFeatures.reload(key, category, generation);
 	}
 
 	public static void leftClickEmpty(ServerPlayer player) {
@@ -195,10 +198,10 @@ public class CommonEvents {
 
 	public static class ModBusEvents {
 
-		@SubscribeEvent
-		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-			event.register(CapabilityMinecartController.class);
-		}
+//		@SubscribeEvent
+//		public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+//			event.register(CapabilityMinecartController.class);
+//		}
 
 	}
 
@@ -217,6 +220,7 @@ public class CommonEvents {
 		EntityTrackingEvents.START_TRACKING.register(CommonEvents::startTracking);
 		DataPackReloadCallback.EVENT.register(CommonEvents::registerReloadListeners);
 		ServerPlayerCreationCallback.EVENT.register(CommonEvents::playerLoggedIn);
+		BiomeLoadingCallback.EVENT.register(CommonEvents::onBiomeLoad);
 
 		// External Events
 

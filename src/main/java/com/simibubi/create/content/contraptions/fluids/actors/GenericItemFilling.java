@@ -92,7 +92,7 @@ public class GenericItemFilling {
 			return 1000;
 		}
 
-		int filled = tank.fill(availableFluid, FluidAction.SIMULATE);
+		int filled = tank.fill(availableFluid, true);
 		return filled == 0 ? -1 : filled;
 	}
 

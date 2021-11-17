@@ -17,11 +17,10 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends ForgeRegistryEntry<RecipeSerializer<?>>
+public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>>
 	implements RecipeSerializer<T> {
 
 	private final ProcessingRecipeFactory<T> factory;
@@ -109,7 +108,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 		buffer.writeVarInt(outputs.size());
 		outputs.forEach(o -> o.write(buffer));
 		buffer.writeVarInt(fluidOutputs.size());
-		fluidOutputs.forEach(o -> o.writeToPacket(buffer));
+		fluidOutputs.forEach(o -> o.toBuffer(buffer));
 
 		buffer.writeVarInt(recipe.getProcessingDuration());
 		buffer.writeVarInt(recipe.getRequiredHeat()
@@ -138,7 +137,7 @@ public class ProcessingRecipeSerializer<T extends ProcessingRecipe<?>> extends F
 
 		size = buffer.readVarInt();
 		for (int i = 0; i < size; i++)
-			fluidResults.add(FluidStack.readFromPacket(buffer));
+			fluidResults.add(FluidStack.fromBuffer(buffer));
 
 		T recipe = new ProcessingRecipeBuilder<>(factory, recipeId).withItemIngredients(ingredients)
 			.withItemOutputs(results)

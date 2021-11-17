@@ -12,6 +12,10 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTileEntity.CreativeSmartFluidTank;
@@ -28,10 +32,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankConnectivityHandler {
 
@@ -152,10 +153,10 @@ public class FluidTankConnectivityHandler {
 		BlockEntityType<?> type = te.getType();
 		Level world = te.getLevel();
 		BlockPos origin = te.getBlockPos();
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
 		FluidTank teTank = (FluidTank) capability.orElse(null);
 		FluidStack fluid = capability.map(ifh -> ifh.getFluidInTank(0))
-			.orElse(FluidStack.EMPTY);
+			.orElse(FluidStack.empty());
 
 		Search:
 
@@ -216,9 +217,9 @@ public class FluidTankConnectivityHandler {
 					if (!fluidInTank.isEmpty()) {
 						if (teTank.isEmpty() && teTank instanceof CreativeSmartFluidTank)
 							((CreativeSmartFluidTank) teTank).setContainedFluid(fluidInTank);
-						teTank.fill(fluidInTank, FluidAction.EXECUTE);
+						teTank.fill(fluidInTank, false);
 					}
-					tankTank.setFluid(FluidStack.EMPTY);
+					tankTank.setFluid(FluidStack.empty());
 
 					splitTankAndInvalidate(tank, cache, false);
 					tank.setController(origin);
@@ -284,10 +285,10 @@ public class FluidTankConnectivityHandler {
 						if (tankInventory.isEmpty() && tankInventory instanceof CreativeSmartFluidTank)
 							((CreativeSmartFluidTank) tankInventory).setContainedFluid(toDistribute);
 						else {
-							int split = Math.min(maxCapacity, toDistribute.getAmount());
+							long split = Math.min(maxCapacity, toDistribute.getAmount());
 							copy.setAmount(split);
 							toDistribute.shrink(split);
-							tankInventory.fill(copy, FluidAction.EXECUTE);
+							tankInventory.fill(copy, false);
 						}
 					}
 

@@ -2,6 +2,7 @@ package com.simibubi.create.content.contraptions.relays.belt;
 
 import com.simibubi.create.AllTags.AllItemTags;
 import com.simibubi.create.foundation.utility.VecHelper;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class BeltHelper {
 

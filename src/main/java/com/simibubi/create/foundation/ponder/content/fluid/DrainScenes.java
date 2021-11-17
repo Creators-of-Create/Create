@@ -58,7 +58,7 @@ public class DrainScenes {
 			te.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion();
 			te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(new FluidStack(Fluids.LAVA, 1000), FluidAction.EXECUTE));
+				.ifPresent(ifh -> ifh.fill(new FluidStack(Fluids.LAVA, 1000), false));
 		});
 		scene.idle(10);
 
@@ -71,7 +71,7 @@ public class DrainScenes {
 
 		scene.world.modifyTileEntity(drainPos, ItemDrainTileEntity.class,
 			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.drain(500, FluidAction.EXECUTE)));
+				.ifPresent(ifh -> ifh.drain(500, false)));
 
 		scene.world.moveSection(drainLink, util.vector.of(1, 0, 0), 7);
 		scene.world.showSection(largeCog, Direction.UP);

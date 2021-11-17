@@ -7,6 +7,7 @@ import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.utility.Pair;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
@@ -25,9 +26,6 @@ import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import com.simibubi.create.lib.transfer.item.ItemStackHandler;
 import com.simibubi.create.lib.transfer.item.RecipeWrapper;
 
@@ -45,7 +43,7 @@ public class EmptyingByBasin {
 			return true;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+				TransferUtil.getFluidHandlerItem(stack, world);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return false;
@@ -79,7 +77,7 @@ public class EmptyingByBasin {
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
-			split.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+			TransferUtil.getFluidHandlerItem(stack, world);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);

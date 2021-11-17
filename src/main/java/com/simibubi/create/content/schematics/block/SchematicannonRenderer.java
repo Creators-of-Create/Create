@@ -25,7 +25,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicannonRenderer extends SafeTileEntityRenderer<SchematicannonTileEntity> {
 
@@ -176,8 +175,7 @@ public class SchematicannonRenderer extends SafeTileEntityRenderer<Schematicanno
 				ms.scale(scale, scale, scale);
 				Minecraft.getInstance()
 					.getBlockRenderer()
-					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay,
-						EmptyModelData.INSTANCE);
+					.renderSingleBlock(((ForBlockState) launched).state, ms, buffer, light, overlay);
 			}
 
 			// Render the item

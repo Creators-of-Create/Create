@@ -30,9 +30,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
-
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 public class FluidPropagator {
 
@@ -208,7 +207,7 @@ public class FluidPropagator {
 
 	public static boolean hasFluidCapability(BlockGetter world, BlockPos pos, Direction side) {
 		BlockEntity tileEntity = world.getBlockEntity(pos);
-		return tileEntity != null && tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side)
+		return tileEntity != null && TransferUtil.getFluidHandler(tileEntity, side)
 			.isPresent();
 	}
 

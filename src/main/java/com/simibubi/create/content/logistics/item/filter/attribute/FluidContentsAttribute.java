@@ -8,15 +8,15 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+
+import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class FluidContentsAttribute implements ItemAttribute {
     public static final FluidContentsAttribute EMPTY = new FluidContentsAttribute(null);
@@ -54,7 +54,7 @@ public class FluidContentsAttribute implements ItemAttribute {
     public void writeNBT(CompoundTag nbt) {
         if (fluid == null)
             return;
-        ResourceLocation id = ForgeRegistries.FLUIDS.getKey(fluid);
+        ResourceLocation id = Registry.FLUID.getKey(fluid);
         if (id == null)
             return;
         nbt.putString("id", id.toString());
@@ -62,7 +62,7 @@ public class FluidContentsAttribute implements ItemAttribute {
 
     @Override
     public ItemAttribute readNBT(CompoundTag nbt) {
-        return nbt.contains("id") ? new FluidContentsAttribute(ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
+        return nbt.contains("id") ? new FluidContentsAttribute(Registry.FLUID.get(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
     }
 
     private List<Fluid> extractFluids(ItemStack stack) {

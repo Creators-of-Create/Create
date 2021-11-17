@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.GlassBlock;
 import net.minecraft.world.level.block.SandBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraftforge.common.Tags;
+import com.simibubi.create.lib.data.Tags;
 
 public class AllPaletteBlocks {
 

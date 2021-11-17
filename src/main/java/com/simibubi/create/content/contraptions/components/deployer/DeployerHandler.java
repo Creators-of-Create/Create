@@ -1,13 +1,17 @@
 package com.simibubi.create.content.contraptions.components.deployer;
 
-import static net.minecraftforge.eventbus.api.Event.Result.DEFAULT;
-import static net.minecraftforge.eventbus.api.Event.Result.DENY;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
+
+import com.simibubi.create.lib.extensions.EntityExtensions;
+import com.simibubi.create.lib.mixin.accessor.BucketItemAccessor;
+
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -64,11 +68,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
-import net.minecraftforge.eventbus.api.Event;
 
 public class DeployerHandler {
 
@@ -110,7 +111,7 @@ public class DeployerHandler {
 
 		if (held.getItem() instanceof BucketItem) {
 			BucketItem bucketItem = (BucketItem) held.getItem();
-			Fluid fluid = bucketItem.getFluid();
+			Fluid fluid = ((BucketItemAccessor) bucketItem).getContent();;
 			if (fluid != Fluids.EMPTY && world.getFluidState(targetPos)
 				.getType() == fluid)
 				return false;
@@ -154,13 +155,13 @@ public class DeployerHandler {
 			Entity entity = entities.get(world.random.nextInt(entities.size()));
 			List<ItemEntity> capturedDrops = new ArrayList<>();
 			boolean success = false;
-			entity.captureDrops(capturedDrops);
+			((EntityExtensions) entity).create$captureDrops(capturedDrops);
 
 			// Use on entity
 			if (mode == Mode.USE) {
-				InteractionResult cancelResult = ForgeHooks.onInteractEntity(player, entity, hand);
+				InteractionResult cancelResult = UseEntityCallback.EVENT.invoker().interact(player, world, hand, entity, new EntityHitResult(entity));
 				if (cancelResult == InteractionResult.FAIL) {
-					entity.captureDrops(null);
+					((EntityExtensions) entity).create$captureDrops(null);
 					return;
 				}
 				if (cancelResult == null) {
@@ -195,7 +196,7 @@ public class DeployerHandler {
 				success = true;
 			}
 
-			entity.captureDrops(null);
+			((EntityExtensions) entity).create$captureDrops(null);
 			capturedDrops.forEach(e -> player.getInventory()
 				.placeItemBackInInventory(e.getItem()));
 			if (success)
@@ -223,13 +224,13 @@ public class DeployerHandler {
 				player.blockBreakingProgress = null;
 				return;
 			}
-			LeftClickBlock event = ForgeHooks.onLeftClickBlock(player, clickedPos, face);
-			if (event.isCanceled())
+			InteractionResult actionResult = UseBlockCallback.EVENT.invoker().interact(player, player.level, player.getUsedItemHand(), result);
+			if (actionResult != InteractionResult.PASS)
 				return;
 			if (BlockHelper.extinguishFire(world, player, clickedPos, face)) // FIXME: is there an equivalent in world,
 																				// as there was in 1.15?
 				return;
-			if (event.getUseBlock() != DENY)
+//			if (event.getUseBlock() != DENY)
 				clickedState.attack(world, clickedPos, player);
 			if (stack.isEmpty())
 				return;
@@ -262,34 +263,33 @@ public class DeployerHandler {
 
 		// Right click
 		UseOnContext itemusecontext = new UseOnContext(player, hand, result);
-		Event.Result useBlock = DEFAULT;
-		Event.Result useItem = DEFAULT;
+		InteractionResult useBlock = null;
+		InteractionResult useItem = null;
 		if (!clickedState.getShape(world, clickedPos)
 			.isEmpty()) {
-			RightClickBlock event = ForgeHooks.onRightClickBlock(player, hand, clickedPos, result);
-			useBlock = event.getUseBlock();
-			useItem = event.getUseItem();
+			useBlock = UseBlockCallback.EVENT.invoker().interact(player, player.level, hand, result);
+			useItem = useBlock;
 		}
 
 		// Item has custom active use
-		if (useItem != DENY) {
-			InteractionResult actionresult = stack.onItemUseFirst(itemusecontext);
-			if (actionresult != InteractionResult.PASS)
-				return;
-		}
+//		if (useItem != DENY) {
+//			InteractionResult actionresult = stack.onItemUseFirst(itemusecontext);
+//			if (actionresult != InteractionResult.PASS)
+//				return;
+//		}
 
 		boolean holdingSomething = !player.getMainHandItem()
 			.isEmpty();
 		boolean flag1 =
-			!(player.isShiftKeyDown() && holdingSomething) || (stack.doesSneakBypassUse(world, clickedPos, player));
+			!(player.isShiftKeyDown() && holdingSomething)/* || (stack.doesSneakBypassUse(world, clickedPos, player))*/;
 
 		// Use on block
-		if (useBlock != DENY && flag1
+		if (useBlock != null && flag1
 			&& safeOnUse(clickedState, world, clickedPos, player, hand, result).consumesAction())
 			return;
 		if (stack.isEmpty())
 			return;
-		if (useItem == DENY)
+		if (useItem == null)
 			return;
 		if (item instanceof BlockItem && !(item instanceof CartAssemblerBlockItem)
 			&& !clickedState.canBeReplaced(new BlockPlaceContext(itemusecontext)))
@@ -346,23 +346,23 @@ public class DeployerHandler {
 		BlockState blockstate = world.getBlockState(pos);
 		GameType gameType = interactionManager.getGameModeForPlayer();
 
-		if (net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(world, gameType, player, pos) == -1)
+		if (PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, pos, world.getBlockState(pos), world.getBlockEntity(pos)))
 			return false;
 
 		BlockEntity tileentity = world.getBlockEntity(pos);
-		if (player.getMainHandItem()
-			.onBlockStartBreak(pos, player))
-			return false;
+//		if (player.getMainHandItem()
+//			.onBlockStartBreak(pos, player))
+//			return false;
 		if (player.blockActionRestricted(world, pos, gameType))
 			return false;
 
 		ItemStack prevHeldItem = player.getMainHandItem();
 		ItemStack heldItem = prevHeldItem.copy();
 
-		boolean canHarvest = blockstate.canHarvestBlock(world, pos, player);
+		boolean canHarvest = player.hasCorrectToolForDrops(blockstate) && player.mayBuild();
 		prevHeldItem.mineBlock(world, blockstate, pos, player);
-		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
-			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, InteractionHand.MAIN_HAND);
+//		if (prevHeldItem.isEmpty() && !heldItem.isEmpty())
+//			net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItem, InteractionHand.MAIN_HAND);
 
 		BlockPos posUp = pos.above();
 		BlockState stateUp = world.getBlockState(posUp);
@@ -374,8 +374,8 @@ public class DeployerHandler {
 			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 35);
 			world.setBlock(posUp, Blocks.AIR.defaultBlockState(), 35);
 		} else {
-			if (!blockstate.removedByPlayer(world, pos, player, canHarvest, world.getFluidState(pos)))
-				return true;
+			/*if (!*/blockstate.getBlock().playerWillDestroy(player.level, pos, blockstate, player/*, world.getFluidState(pos)))
+				return true*/);
 		}
 
 		blockstate.getBlock()

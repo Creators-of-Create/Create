@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -12,7 +13,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class AstralSorceryAmuletAttribute implements ItemAttribute {
     String enchName;
@@ -54,7 +54,7 @@ public class AstralSorceryAmuletAttribute implements ItemAttribute {
     public Object[] getTranslationParameters() {
         String something = "";
 
-        Enchantment enchant = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(enchName));
+        Enchantment enchant = Registry.ENCHANTMENT.get(ResourceLocation.tryParse(enchName));
         if(enchant != null) {
             something = new TranslatableComponent(enchant.getDescriptionId()).getString();
         }

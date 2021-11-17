@@ -7,13 +7,13 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.logistics.item.filter.ItemAttribute;
 
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class EnchantAttribute implements ItemAttribute {
     public static final EnchantAttribute EMPTY = new EnchantAttribute(null);
@@ -51,7 +51,7 @@ public class EnchantAttribute implements ItemAttribute {
     public void writeNBT(CompoundTag nbt) {
         if (enchantment == null)
             return;
-        ResourceLocation id = ForgeRegistries.ENCHANTMENTS.getKey(enchantment);
+        ResourceLocation id = Registry.ENCHANTMENT.getKey(enchantment);
         if (id == null)
             return;
         nbt.putString("id", id.toString());
@@ -59,6 +59,6 @@ public class EnchantAttribute implements ItemAttribute {
 
     @Override
     public ItemAttribute readNBT(CompoundTag nbt) {
-        return nbt.contains("id") ? new EnchantAttribute(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
+        return nbt.contains("id") ? new EnchantAttribute(Registry.ENCHANTMENT.get(ResourceLocation.tryParse(nbt.getString("id")))) : EMPTY;
     }
 }

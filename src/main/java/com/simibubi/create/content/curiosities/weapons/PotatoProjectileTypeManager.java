@@ -1,6 +1,7 @@
 package com.simibubi.create.content.curiosities.weapons;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -21,14 +22,11 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
-import net.minecraftforge.registries.IRegistryDelegate;
-
 public class PotatoProjectileTypeManager {
 
 	private static final Map<ResourceLocation, PotatoCannonProjectileType> BUILTIN_TYPE_MAP = new HashMap<>();
 	private static final Map<ResourceLocation, PotatoCannonProjectileType> CUSTOM_TYPE_MAP = new HashMap<>();
-	private static final Map<IRegistryDelegate<Item>, PotatoCannonProjectileType> ITEM_TO_TYPE_MAP = new HashMap<>();
+	private static final Map<Item, PotatoCannonProjectileType> ITEM_TO_TYPE_MAP = new HashMap<>();
 
 	public static void registerBuiltinType(ResourceLocation id, PotatoCannonProjectileType type) {
 		synchronized (BUILTIN_TYPE_MAP) {
@@ -44,14 +42,14 @@ public class PotatoProjectileTypeManager {
 		return CUSTOM_TYPE_MAP.get(id);
 	}
 
-	public static PotatoCannonProjectileType getTypeForItem(IRegistryDelegate<Item> item) {
+	public static PotatoCannonProjectileType getTypeForItem(Item item) {
 		return ITEM_TO_TYPE_MAP.get(item);
 	}
 
 	public static Optional<PotatoCannonProjectileType> getTypeForStack(ItemStack item) {
 		if (item.isEmpty())
 			return Optional.empty();
-		return Optional.ofNullable(getTypeForItem(item.getItem().delegate));
+		return Optional.ofNullable(getTypeForItem(item.getItem()));
 	}
 
 	public static void clear() {
@@ -62,17 +60,17 @@ public class PotatoProjectileTypeManager {
 	public static void fillItemMap() {
 		for (Map.Entry<ResourceLocation, PotatoCannonProjectileType> entry : BUILTIN_TYPE_MAP.entrySet()) {
 			PotatoCannonProjectileType type = entry.getValue();
-			for (IRegistryDelegate<Item> delegate : type.getItems()) {
+			for (Item delegate : type.getItems()) {
 				ITEM_TO_TYPE_MAP.put(delegate, type);
 			}
 		}
 		for (Map.Entry<ResourceLocation, PotatoCannonProjectileType> entry : CUSTOM_TYPE_MAP.entrySet()) {
 			PotatoCannonProjectileType type = entry.getValue();
-			for (IRegistryDelegate<Item> delegate : type.getItems()) {
+			for (Item delegate : type.getItems()) {
 				ITEM_TO_TYPE_MAP.put(delegate, type);
 			}
 		}
-		ITEM_TO_TYPE_MAP.remove(AllItems.POTATO_CANNON.get().delegate);
+		ITEM_TO_TYPE_MAP.remove(AllItems.POTATO_CANNON.get());
 	}
 
 	public static void toBuffer(FriendlyByteBuf buffer) {
@@ -95,11 +93,11 @@ public class PotatoProjectileTypeManager {
 	}
 
 	public static void syncTo(ServerPlayer player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> player), new SyncPacket());
+		AllPackets.channel.sendToClient(new SyncPacket(), player);
 	}
 
-	public static void syncToAll() {
-		AllPackets.channel.send(PacketDistributor.ALL.noArg(), new SyncPacket());
+	public static void syncToAll(List<ServerPlayer> players) {
+		AllPackets.channel.sendToClients(new SyncPacket(), players);
 	}
 
 	public static class ReloadListener extends SimpleJsonResourceReloadListener {

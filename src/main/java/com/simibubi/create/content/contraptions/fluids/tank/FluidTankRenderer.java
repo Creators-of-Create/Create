@@ -9,7 +9,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
+
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 
 public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntity> {
 
@@ -44,9 +46,7 @@ public class FluidTankRenderer extends SafeTileEntityRenderer<FluidTankTileEntit
 		if (fluidStack.isEmpty())
 			return;
 
-		boolean top = fluidStack.getFluid()
-			.getAttributes()
-			.isLighterThanAir();
+		boolean top = FluidVariantRendering.fillsFromTop(fluidStack.getType());
 
 		float xMin = tankHullWidth;
 		float xMax = xMin + te.width - 2 * tankHullWidth;

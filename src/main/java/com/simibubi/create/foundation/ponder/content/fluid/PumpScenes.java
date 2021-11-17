@@ -184,7 +184,7 @@ public class PumpScenes {
 		Selection megapipe2 = util.select.fromTo(3, 3, 1, 5, 6, 2);
 
 		scene.world.modifyTileEntity(util.grid.at(0, 1, 2), FluidTankTileEntity.class, te -> te.getTankInventory()
-			.drain(3000, FluidAction.EXECUTE));
+			.drain(3000, false));
 
 		BlockPos east = pumpPos.east();
 		scene.world.setBlock(east, Blocks.AIR.defaultBlockState(), false);

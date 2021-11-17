@@ -9,7 +9,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.fabricmc.api.EnvType;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class OverlayConfigCommand {
 

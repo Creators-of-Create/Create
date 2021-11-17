@@ -12,9 +12,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.fabricmc.api.EnvType;
 import com.tterrag.registrate.fabric.EnvExecutor;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber
 public class EjectorItem extends BlockItem {
 
 	public EjectorItem(Block p_i48527_1_, Properties p_i48527_2_) {

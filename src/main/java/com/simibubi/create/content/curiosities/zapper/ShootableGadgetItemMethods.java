@@ -11,7 +11,6 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class ShootableGadgetItemMethods {
 
@@ -29,8 +28,8 @@ public class ShootableGadgetItemMethods {
 	public static void sendPackets(Player player, Function<Boolean, ? extends ShootGadgetPacket> factory) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		AllPackets.channel.send(PacketDistributor.TRACKING_ENTITY.with(() -> player), factory.apply(false));
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), factory.apply(true));
+		AllPackets.channel.sendToClientsTracking(factory.apply(false), player);
+		AllPackets.channel.sendToClient(factory.apply(true), (ServerPlayer) player);
 	}
 
 	public static boolean shouldSwap(Player player, ItemStack item, InteractionHand hand, Predicate<ItemStack> predicate) {

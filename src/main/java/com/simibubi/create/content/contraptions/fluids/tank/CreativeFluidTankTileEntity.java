@@ -34,7 +34,7 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 		}
 
 		@Override
-		public int getFluidAmount() {
+		public long getFluidAmount() {
 			return getFluid().isEmpty() ? 0 : getTankCapacity(0);
 		}
 
@@ -46,18 +46,18 @@ public class CreativeFluidTankTileEntity extends FluidTankTileEntity {
 		}
 
 		@Override
-		public int fill(FluidStack resource, FluidAction action) {
+		public long fill(FluidStack resource, boolean sim) {
 			return resource.getAmount();
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
-			return super.drain(resource, FluidAction.SIMULATE);
+		public FluidStack drain(FluidStack resource, boolean sim) {
+			return super.drain(resource, true);
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
-			return super.drain(maxDrain, FluidAction.SIMULATE);
+		public FluidStack drain(long maxDrain, boolean simn) {
+			return super.drain(maxDrain, true);
 		}
 
 	}

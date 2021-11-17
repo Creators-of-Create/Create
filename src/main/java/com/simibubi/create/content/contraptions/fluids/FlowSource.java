@@ -31,7 +31,7 @@ public abstract class FlowSource {
 		IFluidHandler tank = provideHandler().orElse(null);
 		if (tank == null)
 			return FluidStack.empty();
-		FluidStack immediateFluid = tank.drain(1, FluidAction.SIMULATE);
+		FluidStack immediateFluid = tank.drain(1, true);
 		if (extractionPredicate.test(immediateFluid))
 			return immediateFluid;
 
@@ -43,7 +43,7 @@ public abstract class FlowSource {
 				continue;
 			FluidStack toExtract = contained.copy();
 			toExtract.setAmount(1);
-			return tank.drain(toExtract, FluidAction.SIMULATE);
+			return tank.drain(toExtract, true);
 		}
 
 		return FluidStack.empty();

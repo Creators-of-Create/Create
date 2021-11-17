@@ -35,13 +35,13 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 
+import com.simibubi.create.lib.data.Tags;
+import com.simibubi.create.lib.transfer.fluid.FluidTank;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
-import net.minecraftforge.common.Tags;
 import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class OpenEndedPipe extends FlowSource {
 
@@ -253,7 +253,7 @@ public class OpenEndedPipe extends FlowSource {
 		}
 
 		@Override
-		public int fill(FluidStack resource, FluidAction action) {
+		public long fill(FluidStack resource, boolean sim) {
 			// Never allow being filled when a source is attached
 			if (world == null)
 				return 0;
@@ -266,33 +266,33 @@ public class OpenEndedPipe extends FlowSource {
 
 			FluidStack containedFluidStack = getFluid();
 			if (!containedFluidStack.isEmpty() && !containedFluidStack.isFluidEqual(resource))
-				setFluid(FluidStack.EMPTY);
+				setFluid(FluidStack.empty());
 			if (wasPulling)
 				wasPulling = false;
 			if (canApplyEffects(resource))
 				resource = FluidHelper.copyStackWithAmount(resource, 1);
 
-			int fill = super.fill(resource, action);
-			if (action.simulate())
+			long fill = super.fill(resource, sim);
+			if (sim)
 				return fill;
 			if (getFluidAmount() == 1000 || !FluidHelper.hasBlockState(containedFluidStack.getFluid()))
 				if (provideFluidToSpace(containedFluidStack, false))
-					setFluid(FluidStack.EMPTY);
+					setFluid(FluidStack.empty());
 			return fill;
 		}
 
 		@Override
-		public FluidStack drain(FluidStack resource, FluidAction action) {
-			return drainInner(resource.getAmount(), resource, action);
+		public FluidStack drain(FluidStack resource, boolean sim) {
+			return drainInner(resource.getAmount(), resource, sim);
 		}
 
 		@Override
-		public FluidStack drain(int maxDrain, FluidAction action) {
-			return drainInner(maxDrain, null, action);
+		public FluidStack drain(int maxDrain, boolean sim) {
+			return drainInner(maxDrain, null, sim);
 		}
 
-		private FluidStack drainInner(int amount, @Nullable FluidStack filter, FluidAction action) {
-			FluidStack empty = FluidStack.EMPTY;
+		private FluidStack drainInner(long amount, @Nullable FluidStack filter, boolean sim) {
+			FluidStack empty = FluidStack.empty();
 			boolean filterPresent = filter != null;
 
 			if (world == null)
@@ -310,23 +310,23 @@ public class OpenEndedPipe extends FlowSource {
 			if (!wasPulling)
 				wasPulling = true;
 
-			FluidStack drainedFromInternal = filterPresent ? super.drain(filter, action) : super.drain(amount, action);
+			FluidStack drainedFromInternal = filterPresent ? super.drain(filter, sim) : super.drain(amount, sim);
 			if (!drainedFromInternal.isEmpty())
 				return drainedFromInternal;
 
-			FluidStack drainedFromWorld = removeFluidFromSpace(action.simulate());
+			FluidStack drainedFromWorld = removeFluidFromSpace(sim);
 			if (drainedFromWorld.isEmpty())
-				return FluidStack.EMPTY;
+				return FluidStack.empty();
 			if (filterPresent && !drainedFromWorld.isFluidEqual(filter))
-				return FluidStack.EMPTY;
+				return FluidStack.empty();
 
 			int remainder = drainedFromWorld.getAmount() - amount;
 			drainedFromWorld.setAmount(amount);
 
-			if (!action.simulate() && remainder > 0) {
+			if (!sim && remainder > 0) {
 				if (!getFluid().isEmpty() && !getFluid().isFluidEqual(drainedFromWorld))
-					setFluid(FluidStack.EMPTY);
-				super.fill(FluidHelper.copyStackWithAmount(drainedFromWorld, remainder), FluidAction.EXECUTE);
+					setFluid(FluidStack.empty());
+				super.fill(FluidHelper.copyStackWithAmount(drainedFromWorld, remainder), false);
 			}
 			return drainedFromWorld;
 		}

@@ -59,7 +59,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
+import com.simibubi.create.lib.utility.GuiUtils;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class PonderUI extends NavigatableSimiScreen {

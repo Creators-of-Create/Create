@@ -70,7 +70,7 @@ public class PipeScenes {
 		scene.world.showSection(tank2, Direction.DOWN);
 		FluidStack content = new FluidStack(Fluids.LAVA, 10000);
 		scene.world.modifyTileEntity(util.grid.at(4, 1, 2), FluidTankTileEntity.class, te -> te.getTankInventory()
-			.fill(content, FluidAction.EXECUTE));
+			.fill(content, false));
 		scene.idle(10);
 
 		for (int i = 4; i >= 1; i--) {
@@ -222,7 +222,7 @@ public class PipeScenes {
 			te -> te.getBehaviour(SmartFluidTankBehaviour.TYPE)
 				.allowInsertion()
 				.getPrimaryHandler()
-				.fill(new FluidStack(Fluids.WATER, 1500), FluidAction.EXECUTE));
+				.fill(new FluidStack(Fluids.WATER, 1500), false));
 
 		scene.idle(50);
 		scene.overlay.showOutline(PonderPalette.MEDIUM, new Object(), drain, 40);
@@ -485,7 +485,7 @@ public class PipeScenes {
 
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
 			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), FluidAction.EXECUTE)));
+				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), false)));
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);
@@ -569,7 +569,7 @@ public class PipeScenes {
 		scene.idle(15);
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
 			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(chocolate, FluidAction.EXECUTE)));
+				.ifPresent(ifh -> ifh.fill(chocolate, false)));
 		scene.idle(10);
 
 		scene.overlay.showText(80)

@@ -8,9 +8,10 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
+import com.simibubi.create.lib.utility.VertexBuilderUtil;
+
 import org.lwjgl.system.MemoryStack;
 
-import com.jozufozu.flywheel.util.VirtualEmptyModelData;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -68,8 +69,7 @@ public abstract class GhostBlockRenderer {
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
 			dispatcher.getModelRenderer()
-				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-					VirtualEmptyModelData.INSTANCE);
+				.renderModel(ms.last(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();
 		}
@@ -103,8 +103,7 @@ public abstract class GhostBlockRenderer {
 
 			// dispatcher.getBlockModelRenderer().renderModel(ms.peek(), vb, params.state, model, 1f, 1f, 1f, LightTexture.FULL_BRIGHT, OverlayTexture.DEFAULT_UV, VirtualEmptyModelData.INSTANCE);
 			renderModel(params, ms.last(), vb, params.state, model, 1f, 1f, 1f,
-				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY,
-				VirtualEmptyModelData.INSTANCE);
+				LevelRenderer.getLightColor(mc.level, pos), OverlayTexture.NO_OVERLAY);
 
 			// buffer.draw();
 			// clean
@@ -116,18 +115,18 @@ public abstract class GhostBlockRenderer {
 		// BlockModelRenderer
 		public void renderModel(GhostBlockParams params, PoseStack.Pose entry, VertexConsumer vb,
 			@Nullable BlockState state, BakedModel model, float p_228804_5_, float p_228804_6_, float p_228804_7_,
-			int p_228804_8_, int p_228804_9_, net.minecraftforge.client.model.data.IModelData modelData) {
+			int p_228804_8_, int p_228804_9_) {
 			Random random = new Random();
 
 			for (Direction direction : Direction.values()) {
 				random.setSeed(42L);
 				renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_,
-					model.getQuads(state, direction, random, modelData), p_228804_8_, p_228804_9_);
+					model.getQuads(state, direction, random), p_228804_8_, p_228804_9_);
 			}
 
 			random.setSeed(42L);
 			renderQuad(params, entry, vb, p_228804_5_, p_228804_6_, p_228804_7_,
-				model.getQuads(state, (Direction) null, random, modelData), p_228804_8_, p_228804_9_);
+				model.getQuads(state, (Direction) null, random), p_228804_8_, p_228804_9_);
 		}
 
 		// BlockModelRenderer
@@ -187,12 +186,12 @@ public abstract class GhostBlockRenderer {
 					g = p_227890_3_[k] * p_227890_5_;
 					b = p_227890_3_[k] * p_227890_6_;
 
-					int l = vb.applyBakedLighting(p_227890_7_[k], bytebuffer);
+					int l = VertexBuilderUtil.applyBakedLighting(p_227890_7_[k], bytebuffer);
 					float f9 = bytebuffer.getFloat(16);
 					float f10 = bytebuffer.getFloat(20);
 					Vector4f vector4f = new Vector4f(f, f1, f2, 1.0F);
 					vector4f.transform(matrix4f);
-					vb.applyBakedNormals(vector3f, bytebuffer, p_227890_1_.normal());
+					VertexBuilderUtil.applyBakedNormals(vector3f, bytebuffer, p_227890_1_.normal());
 					vb.vertex(vector4f.x(), vector4f.y(), vector4f.z(), r, g, b, alpha, f9, f10, p_227890_8_,
 						l, vector3f.x(), vector3f.y(), vector3f.z());
 				}

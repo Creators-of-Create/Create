@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
@@ -166,6 +167,7 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 		}
 	}
 
+	//todo: port
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		Player player = context.getPlayer();
@@ -174,31 +176,32 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 		BlockPos pos = context.getClickedPos();
 		BlockState state = level.getBlockState(pos);
 
-		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
-		if (newState != null) {
-			AllSoundEvents.SANDING_LONG.play(level, player, pos);
-			level.levelEvent(player, 3005, pos, 0); // Spawn particles
-		} else {
-			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
-			if (newState != null) {
-				AllSoundEvents.SANDING_LONG.play(level, player, pos);
-				level.levelEvent(player, 3004, pos, 0); // Spawn particles
-			}
-		}
-
-		if (newState != null) {
-			level.setBlockAndUpdate(pos, newState);
-			if (player != null)
-				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
-			return InteractionResult.sidedSuccess(level.isClientSide);
-		}
+//		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
+//		if (newState != null) {
+//			AllSoundEvents.SANDING_LONG.play(level, player, pos);
+//			level.levelEvent(player, 3005, pos, 0); // Spawn particles
+//		} else {
+//			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
+//			if (newState != null) {
+//				AllSoundEvents.SANDING_LONG.play(level, player, pos);
+//				level.levelEvent(player, 3004, pos, 0); // Spawn particles
+//			}
+//		}
+//
+//		if (newState != null) {
+//			level.setBlockAndUpdate(pos, newState);
+//			if (player != null)
+//				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
+//			return InteractionResult.sidedSuccess(level.isClientSide);
+//		}
 
 		return InteractionResult.PASS;
 	}
 
-	@Override
-	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
-		return toolAction == ToolActions.AXE_SCRAPE || toolAction == ToolActions.AXE_WAX_OFF;
+	//@Override
+	public boolean canPerformAction(ItemStack stack/*, ToolAction toolAction*/) {
+		return stack.getItem() instanceof AxeItem;
+		//return toolAction == ToolActions.AXE_SCRAPE || toolAction == ToolActions.AXE_WAX_OFF;
 	}
 
 	@Override

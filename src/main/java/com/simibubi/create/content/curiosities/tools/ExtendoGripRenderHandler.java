@@ -22,13 +22,11 @@ import net.minecraft.world.item.ItemStack;
 
 import com.simibubi.create.lib.event.RenderHandCallback.RenderHandEvent;
 
-import net.fabricmc.api.EnvType;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import com.simibubi.create.lib.helper.FirstPersonRendererHelper;
+import com.simibubi.create.lib.mixin.accessor.ItemInHandRendererAccessor;
 
-@EventBusSubscriber(value = EnvType.CLIENT)
+import net.fabricmc.api.EnvType;
+
 public class ExtendoGripRenderHandler {
 
 	public static float mainHandAnimation;
@@ -116,8 +114,7 @@ public class ExtendoGripRenderHandler {
 				event.getMatrixStack(), event.getBuffers(), event.getLight());
 
 			if (!notInOffhand) {
-				ForgeHooksClient.handleCameraTransforms(ms, mc.getItemRenderer()
-					.getModel(offhandItem, null, null, 0), transform, !rightHand);
+				mc.getItemRenderer().getModel(offhandItem, null, null, 0).getTransforms().getTransform(transform).apply(!rightHand, ms);
 				ms.translate(flip * -.05f, .15f, -1.2f);
 				ms.translate(0, 0, -animation * 2.25f);
 				if (blockItem && mc.getItemRenderer()
@@ -139,11 +136,11 @@ public class ExtendoGripRenderHandler {
 	}
 
 	private static ItemStack getRenderedMainHandStack() {
-		return Minecraft.getInstance().getItemInHandRenderer().mainHandItem;
+		return FirstPersonRendererHelper.getStackInMainHand(Minecraft.getInstance().getItemInHandRenderer());
 	}
 
 	private static ItemStack getRenderedOffHandStack() {
-		return Minecraft.getInstance().getItemInHandRenderer().offHandItem;
+		return FirstPersonRendererHelper.getStackInOffHand(Minecraft.getInstance().getItemInHandRenderer());
 	}
 
 }

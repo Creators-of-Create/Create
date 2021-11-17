@@ -124,7 +124,7 @@ public class HosePulleyScenes {
 		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> te
 			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
+				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), false)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		scene.idle(40);
@@ -223,7 +223,7 @@ public class HosePulleyScenes {
 		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> te
 			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
 			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), FluidAction.EXECUTE)));
+				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), false)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		Vec3 surface = util.vector.topOf(1, 3, 1)

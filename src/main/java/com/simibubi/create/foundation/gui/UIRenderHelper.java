@@ -17,7 +17,7 @@ import com.simibubi.create.foundation.utility.Couple;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraftforge.fmlclient.gui.GuiUtils;
+import com.simibubi.create.lib.utility.GuiUtils;
 
 public class UIRenderHelper {
 

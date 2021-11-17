@@ -24,8 +24,6 @@ import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class SchematicRenderer {
 
@@ -100,9 +98,8 @@ public class SchematicRenderer {
 				BlockState state = blockAccess.getBlockState(pos);
 
 				for (RenderType blockRenderLayer : RenderType.chunkBufferLayers()) {
-					if (!ItemBlockRenderTypes.canRenderInLayer(state, blockRenderLayer))
+					if (ItemBlockRenderTypes.getChunkRenderType(state) != blockRenderLayer)
 						continue;
-					ForgeHooksClient.setRenderLayer(blockRenderLayer);
 					if (!buffers.containsKey(blockRenderLayer))
 						buffers.put(blockRenderLayer, new BufferBuilder(DefaultVertexFormat.BLOCK.getIntegerSize()));
 
@@ -113,14 +110,12 @@ public class SchematicRenderer {
 					BlockEntity tileEntity = blockAccess.getBlockEntity(localPos);
 
 					if (blockRendererDispatcher.renderBatched(state, pos, blockAccess, ms, bufferBuilder, true,
-						minecraft.level.random,
-						tileEntity != null ? tileEntity.getModelData() : EmptyModelData.INSTANCE)) {
+						minecraft.level.random)) {
 						usedBlockRenderLayers.add(blockRenderLayer);
 					}
 					blockstates.add(state);
 				}
 
-				ForgeHooksClient.setRenderLayer(null);
 				ms.popPose();
 			});
 

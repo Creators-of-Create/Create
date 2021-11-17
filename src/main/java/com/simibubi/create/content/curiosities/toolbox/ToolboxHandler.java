@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.networking.AllPackets;
 import com.simibubi.create.foundation.networking.ISyncPersistentData.PersistentDataPacket;
 import com.simibubi.create.foundation.utility.WorldAttached;
+import com.simibubi.create.lib.helper.EntityHelper;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 public class ToolboxHandler {
 
@@ -50,12 +51,12 @@ public class ToolboxHandler {
 			return;
 
 		ServerPlayer player = (ServerPlayer) entity;
-		if (!player.getPersistentData()
+		if (!EntityHelper.getExtraCustomData(player)
 			.contains("CreateToolboxData"))
 			return;
 
 		boolean sendData = false;
-		CompoundTag compound = player.getPersistentData()
+		CompoundTag compound = EntityHelper.getExtraCustomData(player)
 			.getCompound("CreateToolboxData");
 		for (int i = 0; i < 9; i++) {
 			String key = String.valueOf(i);
@@ -87,9 +88,9 @@ public class ToolboxHandler {
 	public static void playerLogin(Player player) {
 		if (!(player instanceof ServerPlayer))
 			return;
-		if (player.getPersistentData()
+		if (EntityHelper.getExtraCustomData(player)
 			.contains("CreateToolboxData")
-			&& !player.getPersistentData()
+			&& !EntityHelper.getExtraCustomData(player)
 				.getCompound("CreateToolboxData")
 				.isEmpty()) {
 			syncData(player);
@@ -97,8 +98,7 @@ public class ToolboxHandler {
 	}
 
 	public static void syncData(Player player) {
-		AllPackets.channel.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-			new PersistentDataPacket(player));
+		AllPackets.channel.sendToClient(new PersistentDataPacket(player), (ServerPlayer) player);
 	}
 
 	public static List<ToolboxTileEntity> getNearest(LevelAccessor world, Player player, int maxAmount) {
@@ -115,7 +115,7 @@ public class ToolboxHandler {
 	}
 
 	public static void unequip(Player player, int hotbarSlot, boolean keepItems) {
-		CompoundTag compound = player.getPersistentData()
+		CompoundTag compound = EntityHelper.getExtraCustomData(player)
 			.getCompound("CreateToolboxData");
 		Level world = player.level;
 		String key = String.valueOf(hotbarSlot);

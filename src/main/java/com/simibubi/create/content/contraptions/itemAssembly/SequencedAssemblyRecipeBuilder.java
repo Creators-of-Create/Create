@@ -13,6 +13,7 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipe;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder.ProcessingRecipeFactory;
 
+import net.minecraft.client.renderer.block.model.multipart.Condition;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.Tag;
@@ -21,13 +22,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
 
 public class SequencedAssemblyRecipeBuilder {
 
 	private SequencedAssemblyRecipe recipe;
-	protected List<ICondition> recipeConditions;
+	protected List<Condition> recipeConditions;
 
 	public SequencedAssemblyRecipeBuilder(ResourceLocation id) {
 		recipeConditions = new ArrayList<>();
@@ -91,11 +90,11 @@ public class SequencedAssemblyRecipeBuilder {
 	public static class DataGenResult implements FinishedRecipe {
 
 		private SequencedAssemblyRecipe recipe;
-		private List<ICondition> recipeConditions;
+		private List<Condition> recipeConditions;
 		private ResourceLocation id;
 		private SequencedAssemblyRecipeSerializer serializer;
 
-		public DataGenResult(SequencedAssemblyRecipe recipe, List<ICondition> recipeConditions) {
+		public DataGenResult(SequencedAssemblyRecipe recipe, List<Condition> recipeConditions) {
 			this.recipeConditions = recipeConditions;
 			this.recipe = recipe;
 			this.id = new ResourceLocation(recipe.getId().getNamespace(),
@@ -110,7 +109,7 @@ public class SequencedAssemblyRecipeBuilder {
 				return;
 
 			JsonArray conds = new JsonArray();
-			recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
+			//recipeConditions.forEach(c -> conds.add(CraftingHelper.serialize(c)));
 			json.add("conditions", conds);
 		}
 

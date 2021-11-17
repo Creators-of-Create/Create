@@ -71,19 +71,15 @@ import com.simibubi.create.content.contraptions.fluids.actors.ItemDrainBlock;
 import com.simibubi.create.content.contraptions.fluids.actors.SpoutBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.BracketBlockItem;
-import com.simibubi.create.content.contraptions.fluids.pipes.BracketGenerator;
 import com.simibubi.create.content.contraptions.fluids.pipes.EncasedPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.FluidValveBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.GlassFluidPipeBlock;
 import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeBlock;
-import com.simibubi.create.content.contraptions.fluids.pipes.SmartFluidPipeGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankBlock;
-import com.simibubi.create.content.contraptions.fluids.tank.FluidTankGenerator;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankItem;
 import com.simibubi.create.content.contraptions.fluids.tank.FluidTankModel;
 import com.simibubi.create.content.contraptions.processing.BasinBlock;
-import com.simibubi.create.content.contraptions.processing.BasinGenerator;
 import com.simibubi.create.content.contraptions.processing.BasinMovementBehaviour;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlock;
 import com.simibubi.create.content.contraptions.processing.burner.BlazeBurnerBlockItem;
@@ -91,9 +87,7 @@ import com.simibubi.create.content.contraptions.processing.burner.LitBlazeBurner
 import com.simibubi.create.content.contraptions.relays.advanced.GantryShaftBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.SpeedControllerBlock;
 import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftBlock;
-import com.simibubi.create.content.contraptions.relays.advanced.sequencer.SequencedGearshiftGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltBlock;
-import com.simibubi.create.content.contraptions.relays.belt.BeltGenerator;
 import com.simibubi.create.content.contraptions.relays.belt.BeltModel;
 import com.simibubi.create.content.contraptions.relays.elementary.BracketedKineticBlockModel;
 import com.simibubi.create.content.contraptions.relays.elementary.CogWheelBlock;
@@ -102,14 +96,12 @@ import com.simibubi.create.content.contraptions.relays.elementary.ShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.AdjustablePulleyBlock;
 import com.simibubi.create.content.contraptions.relays.encased.ClutchBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltBlock;
-import com.simibubi.create.content.contraptions.relays.encased.EncasedBeltGenerator;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogCTBehaviour;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedCogwheelBlock;
 import com.simibubi.create.content.contraptions.relays.encased.EncasedShaftBlock;
 import com.simibubi.create.content.contraptions.relays.encased.GearshiftBlock;
 import com.simibubi.create.content.contraptions.relays.gauge.GaugeBlock;
-import com.simibubi.create.content.contraptions.relays.gauge.GaugeGenerator;
 import com.simibubi.create.content.contraptions.relays.gearbox.GearboxBlock;
 import com.simibubi.create.content.curiosities.armor.CopperBacktankBlock;
 import com.simibubi.create.content.curiosities.bell.HauntedBellBlock;
@@ -120,24 +112,17 @@ import com.simibubi.create.content.logistics.block.belts.tunnel.BeltTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelBlock;
 import com.simibubi.create.content.logistics.block.belts.tunnel.BrassTunnelCTBehaviour;
 import com.simibubi.create.content.logistics.block.chute.ChuteBlock;
-import com.simibubi.create.content.logistics.block.chute.ChuteGenerator;
 import com.simibubi.create.content.logistics.block.chute.ChuteItem;
 import com.simibubi.create.content.logistics.block.chute.SmartChuteBlock;
 import com.simibubi.create.content.logistics.block.depot.DepotBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorBlock;
 import com.simibubi.create.content.logistics.block.depot.EjectorItem;
-import com.simibubi.create.content.logistics.block.diodes.AbstractDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.BrassDiodeBlock;
-import com.simibubi.create.content.logistics.block.diodes.BrassDiodeGenerator;
 import com.simibubi.create.content.logistics.block.diodes.PoweredLatchBlock;
-import com.simibubi.create.content.logistics.block.diodes.PoweredLatchGenerator;
 import com.simibubi.create.content.logistics.block.diodes.ToggleLatchBlock;
-import com.simibubi.create.content.logistics.block.diodes.ToggleLatchGenerator;
 import com.simibubi.create.content.logistics.block.funnel.AndesiteFunnelBlock;
 import com.simibubi.create.content.logistics.block.funnel.BeltFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.BeltFunnelGenerator;
 import com.simibubi.create.content.logistics.block.funnel.BrassFunnelBlock;
-import com.simibubi.create.content.logistics.block.funnel.FunnelGenerator;
 import com.simibubi.create.content.logistics.block.funnel.FunnelItem;
 import com.simibubi.create.content.logistics.block.funnel.FunnelMovementBehaviour;
 import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBlock;
@@ -148,10 +133,8 @@ import com.simibubi.create.content.logistics.block.redstone.AnalogLeverBlock;
 import com.simibubi.create.content.logistics.block.redstone.ContactMovementBehaviour;
 import com.simibubi.create.content.logistics.block.redstone.ContentObserverBlock;
 import com.simibubi.create.content.logistics.block.redstone.NixieTubeBlock;
-import com.simibubi.create.content.logistics.block.redstone.NixieTubeGenerator;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneContactBlock;
 import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkBlock;
-import com.simibubi.create.content.logistics.block.redstone.RedstoneLinkGenerator;
 import com.simibubi.create.content.logistics.block.redstone.StockpileSwitchBlock;
 import com.simibubi.create.content.logistics.block.vault.VaultBlock;
 import com.simibubi.create.content.logistics.block.vault.VaultCTBehaviour;
@@ -627,15 +610,15 @@ public class AllBlocks {
 //			.blockstate(new BracketGenerator("wooden")::generate)
 			.transform(axeOrPickaxe())
 			.item(BracketBlockItem::new)
-			.transform(BracketGenerator.itemModel("wooden"))
-			.register();
+			//.transform(BracketGenerator.itemModel("wooden"))
+			.build().register();
 
 	public static final BlockEntry<BracketBlock> METAL_BRACKET = REGISTRATE.block("metal_bracket", BracketBlock::new)
 //			.blockstate(new BracketGenerator("metal")::generate)
 			.transform(pickaxeOnly())
 			.item(BracketBlockItem::new)
-			.transform(BracketGenerator.itemModel("metal"))
-			.register();
+//			.transform(BracketGenerator.itemModel("metal"))
+			.build().register();
 
 	// Fluids
 
@@ -733,7 +716,7 @@ public class AllBlocks {
 			.onRegister(CreateRegistrate.blockModel(() -> FluidTankModel::standard))
 			.addLayer(() -> RenderType::cutoutMipped)
 			.item(FluidTankItem::new)
-			.model(AssetLookup.<FluidTankItem>customBlockItemModel("_", "block_single_window"))
+			//.model(AssetLookup.<FluidTankItem>customBlockItemModel("_", "block_single_window"))
 			.build()
 			.register();
 

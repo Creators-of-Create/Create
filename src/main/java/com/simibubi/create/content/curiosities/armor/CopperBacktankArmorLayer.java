@@ -111,13 +111,13 @@ public class CopperBacktankArmorLayer<T extends LivingEntity, M extends EntityMo
 			return;
 		if (player.isSpectator() || player.isCreative())
 			return;
-		if (!player.getPersistentData()
+		if (!EntityHelper.getExtraCustomData(player)
 			.contains("VisualBacktankAir"))
 			return;
 		if (!player.isEyeInFluid(FluidTags.WATER))
 			return;
 
-		int timeLeft = player.getPersistentData()
+		int timeLeft = EntityHelper.getExtraCustomData(player)
 			.getInt("VisualBacktankAir");
 
 		ms.pushPose();

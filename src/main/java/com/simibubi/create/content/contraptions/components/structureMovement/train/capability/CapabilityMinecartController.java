@@ -35,15 +35,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import com.simibubi.create.lib.utility.LazyOptional;
-import net.minecraftforge.common.util.NonNullConsumer;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.ChunkEvent;
 
 public class CapabilityMinecartController implements NBTSerializable/*ICapabilitySerializable<CompoundTag>*/ {
 
@@ -210,19 +202,19 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 
 	/* Capability management */
 
-	public static Capability<MinecartController> MINECART_CONTROLLER_CAPABILITY =
-		CapabilityManager.get(new CapabilityToken<>() {
-		});
+//	public static Capability<MinecartController> MINECART_CONTROLLER_CAPABILITY =
+//		CapabilityManager.get(new CapabilityToken<>() {
+//		});
 
-	public static void attach(AttachCapabilitiesEvent<Entity> event) {
-		Entity entity = event.getObject();
-		if (!(entity instanceof AbstractMinecart))
-			return;
+	public static void attach(AbstractMinecart entity) {
+//		Entity entity = event.getObject();
+//		if (!(entity instanceof AbstractMinecart))
+//			return;
 
 		CapabilityMinecartController capability = new CapabilityMinecartController((AbstractMinecart) entity);
 		ResourceLocation id = Create.asResource("minecart_controller");
-		event.addCapability(id, capability);
-		event.addListener(() -> {
+		//event.addCapability(id, capability);
+		MinecartAndRailUtil.getController(entity).addListener((controller) -> {
 			if (capability.cap.isPresent())
 				capability.cap.invalidate();
 		});
@@ -246,21 +238,21 @@ public class CapabilityMinecartController implements NBTSerializable/*ICapabilit
 		cap = LazyOptional.of(() -> handler);
 	}
 
+//	@Override
+//	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+//		if (cap == MINECART_CONTROLLER_CAPABILITY)
+//			return this.cap.cast();
+//		return LazyOptional.empty();
+//	}
+
 	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if (cap == MINECART_CONTROLLER_CAPABILITY)
-			return this.cap.cast();
-		return LazyOptional.empty();
+	public CompoundTag create$serializeNBT() {
+		return handler.create$serializeNBT();
 	}
 
 	@Override
-	public CompoundTag serializeNBT() {
-		return handler.serializeNBT();
-	}
-
-	@Override
-	public void deserializeNBT(CompoundTag nbt) {
-		handler.deserializeNBT(nbt);
+	public void create$deserializeNBT(CompoundTag nbt) {
+		handler.create$deserializeNBT(nbt);
 	}
 
 }

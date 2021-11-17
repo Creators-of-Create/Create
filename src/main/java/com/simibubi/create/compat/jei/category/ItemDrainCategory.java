@@ -66,7 +66,7 @@
 //				ItemStack copy = stack.copy();
 //				capability = copy.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
 //				IFluidHandlerItem handler = capability.orElse(null);
-//				FluidStack extracted = handler.drain(1000, FluidAction.EXECUTE);
+//				FluidStack extracted = handler.drain(1000, false);
 //				ItemStack result = handler.getContainer();
 //				if (extracted.isEmpty())
 //					return;

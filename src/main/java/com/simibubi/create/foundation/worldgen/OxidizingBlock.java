@@ -4,21 +4,26 @@ import java.util.LinkedList;
 import java.util.OptionalDouble;
 import java.util.Random;
 
+import com.simibubi.create.content.curiosities.tools.SandPaperItem;
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraftforge.common.ToolAction;
-import net.minecraftforge.common.ToolActions;
+import net.minecraft.world.phys.BlockHitResult;
+
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
 
 public class OxidizingBlock extends Block {
 
@@ -54,7 +59,7 @@ public class OxidizingBlock extends Block {
 			LinkedList<Integer> neighbors = new LinkedList<>();
 			for (Direction facing : Iterate.directions) {
 				BlockPos neighbourPos = pos.relative(facing);
-				if (!worldIn.isAreaLoaded(neighbourPos, 0))
+				if (!LoadedCheckUtil.isAreaLoaded(worldIn, neighbourPos, 0))
 					continue;
 				if (!worldIn.isLoaded(neighbourPos))
 					continue;
@@ -78,12 +83,26 @@ public class OxidizingBlock extends Block {
 	}
 
 	@Override
-	public BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
-		if (!stack.canPerformAction(toolAction))
-			return null;
-		if (ToolActions.AXE_SCRAPE.equals(toolAction) && state.getValue(OXIDIZATION) > 0)
-			return state.setValue(OXIDIZATION, 0);
-		return null;
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
+								 BlockHitResult blockRayTraceResult) {
+		if (state.getValue(OXIDIZATION) > 0 && player.getItemInHand(hand)
+				.getItem() instanceof SandPaperItem || player.getItemInHand(hand).getItem() instanceof AxeItem) {
+			if (!player.isCreative())
+				player.getItemInHand(hand)
+						.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
+			world.setBlockAndUpdate(pos, state.setValue(OXIDIZATION, 0));
+			return InteractionResult.SUCCESS;
+		}
+		return InteractionResult.PASS;
 	}
+
+//	@Override
+//	public BlockState getToolModifiedState(BlockState state, Level world, BlockPos pos, Player player, ItemStack stack, ToolAction toolAction) {
+//		if (!stack.canPerformAction(toolAction))
+//			return null;
+//		if (ToolActions.AXE_SCRAPE.equals(toolAction) && state.getValue(OXIDIZATION) > 0)
+//			return state.setValue(OXIDIZATION, 0);
+//		return null;
+//	}
 
 }
