@@ -184,7 +184,7 @@ public class AllTileEntities {
 		.register();
 
 	public static final TileEntityEntry<SchematicTableTileEntity> SCHEMATIC_TABLE = Create.registrate()
-		.tileEntity("schematic_table", () -> SchematicTableTileEntity::new)
+		.tileEntity("schematic_table", SchematicTableTileEntity::new)
 		.validBlocks(AllBlocks.SCHEMATIC_TABLE)
 		.register();
 
