@@ -11,9 +11,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ReducedDestroyEffects implements IBlockRenderProperties {
+//todo: port?
+public class ReducedDestroyEffects /*implements IBlockRenderProperties*/ {
 
-	@Override
+//	@Override
 	public boolean addDestroyEffects(BlockState state, Level worldIn, BlockPos pos, ParticleEngine manager) {
 		if (!(worldIn instanceof ClientLevel))
 			return true;
@@ -46,8 +47,8 @@ public class ReducedDestroyEffects implements IBlockRenderProperties {
 						double d7 = d4 * d1 + p_172273_;
 						double d8 = d5 * d2 + p_172274_;
 						double d9 = d6 * d3 + p_172275_;
-						manager.add(new TerrainParticle(world, pos.getX() + d7, pos.getY() + d8, pos.getZ() + d9,
-							d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state, pos).updateSprite(state, pos));
+//						manager.add(new TerrainParticle(world, pos.getX() + d7, pos.getY() + d8, pos.getZ() + d9,
+//							d4 - 0.5D, d5 - 0.5D, d6 - 0.5D, state, pos).updateSprite(state, pos));
 					}
 				}
 			}

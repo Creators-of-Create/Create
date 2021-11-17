@@ -15,8 +15,6 @@ import com.simibubi.create.foundation.item.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.forgespi.language.IModInfo;
 
 public class ConfigModListScreen extends ConfigScreen {
 

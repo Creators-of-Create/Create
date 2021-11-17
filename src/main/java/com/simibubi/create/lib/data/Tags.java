@@ -24,6 +24,9 @@ public class Tags {
 		public static final Tag.Named<Item> NUGGETS = tag("");
 		public static final Tag.Named<Item> DYES = tag("");
 		public static final Tag.Named<Item> SLIMEBALLS = tag("");
+		public static final Tag.Named<Item> GLASS_COLORLESS = tag("");
+		public static final Tag.Named<Item> DUSTS_REDSTONE = tag("");
+		public static final Tag.Named<Item> INGOTS_IRON = tag("");
 	}
 	public static class Blocks {
 		public static Tag.Named<Block> tag(String id) {
@@ -31,6 +34,7 @@ public class Tags {
 		}
 		public static final Tag.Named<Block> STONE = tag("");
 		public static final Tag.Named<Block> COBBLESTONE = tag("");
+		public static final Tag.Named<Block> GLASS_COLORLESS = tag("");
 	}
 	public static class Fluids {
 		public static Tag.Named<Fluid> tag(String id) {

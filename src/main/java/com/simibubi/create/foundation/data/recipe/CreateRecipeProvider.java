@@ -19,6 +19,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import com.simibubi.create.lib.data.Tags;
 
+//todo: use FabricRecipeProvider one data gen api is merged
 public abstract class CreateRecipeProvider extends RecipeProvider {
 
 	protected final List<GeneratedRecipe> all = new ArrayList<>();
@@ -27,7 +28,7 @@ public abstract class CreateRecipeProvider extends RecipeProvider {
 		super(generator);
 	}
 
-	@Override
+//	@Override
 	protected void buildCraftingRecipes(Consumer<FinishedRecipe> p_200404_1_) {
 		all.forEach(c -> c.register(p_200404_1_));
 		Create.LOGGER.info(getName() + " registered " + all.size() + " recipe" + (all.size() == 1 ? "" : "s"));
