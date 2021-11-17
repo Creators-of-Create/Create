@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.Vec3i;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -460,7 +461,7 @@ public class AllSoundEvents {
 		@Override
 		public void register() {
 			for (Pair<SoundEvent, Couple<Float>> pair : compiledEvents)
-				Registry.register(Registry.SOUND_EVENT, getLocation(), pair.getFirst());
+				Registry.register(Registry.SOUND_EVENT, getId(), pair.getFirst());
 		}
 
 		@Override
@@ -521,12 +522,12 @@ public class AllSoundEvents {
 
 		@Override
 		public void prepare() {
-			event = new SoundEvent(id).setRegistryName(id);
+			event = new SoundEvent(id);
 		}
 
 		@Override
 		public void register() {
-			Registry.register(Registry.SOUND_EVENT, getLocation(), event);
+			Registry.register(Registry.SOUND_EVENT, getId(), event);
 		}
 
 		@Override

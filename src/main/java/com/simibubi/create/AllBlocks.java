@@ -7,6 +7,7 @@ import static com.simibubi.create.AllTags.pickaxeOnly;
 import static com.simibubi.create.AllTags.tagBlockAndItem;
 import static com.simibubi.create.content.AllSections.SCHEMATICS;
 import static com.simibubi.create.foundation.data.CreateRegistrate.connectedTextures;
+import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.AllTags.AllItemTags;
@@ -162,7 +163,6 @@ import com.simibubi.create.foundation.block.BlockStressDefaults;
 import com.simibubi.create.foundation.block.DyedBlockList;
 import com.simibubi.create.foundation.block.ItemUseOverrides;
 import com.simibubi.create.foundation.data.AssetLookup;
-import com.simibubi.create.foundation.data.BlockStateGen;
 import com.simibubi.create.foundation.data.BuilderTransformers;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import com.simibubi.create.foundation.data.ModelGen;
@@ -191,16 +191,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.LootTable.Builder;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
-import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public class AllBlocks {
 
@@ -1520,8 +1510,8 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.item()
-			.transform(oxidizedItemModel())
-			.transform(oxidizedBlockstate())
+//			.transform(oxidizedItemModel())
+//			.transform(oxidizedBlockstate())
 			.lang("Copper Plating")
 			.register();
 
@@ -1531,8 +1521,8 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.item()
-			.transform(oxidizedItemModel())
-			.transform(oxidizedBlockstate())
+//			.transform(oxidizedItemModel())
+//			.transform(oxidizedBlockstate())
 			.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_TILES =
@@ -1541,8 +1531,8 @@ public class AllBlocks {
 			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.item()
-			.transform(oxidizedItemModel())
-			.transform(oxidizedBlockstate())
+//			.transform(oxidizedItemModel())
+//			.transform(oxidizedBlockstate())
 			.register();
 
 	public static final BlockEntry<Block> ZINC_BLOCK = REGISTRATE.block("zinc_block", p -> new Block(p))
