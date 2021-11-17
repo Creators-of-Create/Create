@@ -137,7 +137,7 @@ public class BeltDeployerCallbacks {
 			world.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, .25f, 1);
 		world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, .25f, .75f);
 		if (recipe instanceof SandPaperPolishingRecipe)
-			AllSoundEvents.AUTO_POLISH.playOnServer(world, pos, .25f, 1f);
+			AllSoundEvents.SANDING_SHORT.playOnServer(world, pos, .35f, 1f);
 
 		deployerTileEntity.sendData();
 	}

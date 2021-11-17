@@ -4,13 +4,16 @@ import java.util.function.Consumer;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.simibubi.create.AllSoundEvents;
 import com.simibubi.create.foundation.item.render.SimpleCustomRenderer;
 import com.simibubi.create.foundation.utility.VecHelper;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,9 +24,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -42,16 +45,6 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 
 	public SandPaperItem(Properties properties) {
 		super(properties.durability(8));
-	}
-
-	@Override
-	public UseAnim getUseAnimation(ItemStack stack) {
-		return UseAnim.EAT;
-	}
-
-	@Override
-	public InteractionResult useOn(UseOnContext context) {
-		return InteractionResult.PASS;
 	}
 
 	@Override
@@ -119,16 +112,6 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 		return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 	}
 
-//	@Override
-//	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-//		return super.canApplyAtEnchantingTable(stack, enchantment);
-//	}
-
-	@Override
-	public int getItemEnchantability(ItemStack stack) {
-		return 1;
-	}
-
 	@Override
 	public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
 		if (!(entityLiving instanceof Player))
@@ -184,8 +167,58 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 	}
 
 	@Override
+	public InteractionResult useOn(UseOnContext context) {
+		Player player = context.getPlayer();
+		ItemStack stack = context.getItemInHand();
+		Level level = context.getLevel();
+		BlockPos pos = context.getClickedPos();
+		BlockState state = level.getBlockState(pos);
+
+		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
+		if (newState != null) {
+			AllSoundEvents.SANDING_LONG.play(level, player, pos);
+			level.levelEvent(player, 3005, pos, 0); // Spawn particles
+		} else {
+			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
+			if (newState != null) {
+				AllSoundEvents.SANDING_LONG.play(level, player, pos);
+				level.levelEvent(player, 3004, pos, 0); // Spawn particles
+			}
+		}
+
+		if (newState != null) {
+			level.setBlockAndUpdate(pos, newState);
+			if (player != null)
+				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
+			return InteractionResult.sidedSuccess(level.isClientSide);
+		}
+
+		return InteractionResult.PASS;
+	}
+
+	@Override
+	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+		return toolAction == ToolActions.AXE_SCRAPE || toolAction == ToolActions.AXE_WAX_OFF;
+	}
+
+	@Override
+	public SoundEvent getEatingSound() {
+		return AllSoundEvents.SANDING_SHORT.getMainEvent();
+	}
+
+	@Override
+	public UseAnim getUseAnimation(ItemStack stack) {
+		return UseAnim.EAT;
+	}
+
+	@Override
 	public int getUseDuration(ItemStack stack) {
 		return 32;
+	}
+
+	@Override
+	public int getItemEnchantability(ItemStack stack) {
+		return 1;
 	}
 
 	@Override

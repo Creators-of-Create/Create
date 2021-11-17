@@ -1515,9 +1515,9 @@ public class AllBlocks {
 		.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_PLATING =
-		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p, 1 / 32f))
-			.initialProperties(() -> Blocks.IRON_BLOCK)
-			.properties(p -> (FabricBlockSettings) p.requiresCorrectToolForDrops())
+		REGISTRATE.block("copper_block", p -> new OxidizingBlock(p))
+			.initialProperties(() -> Blocks.COPPER_BLOCK)
+			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.item()
 			.transform(oxidizedItemModel())
@@ -1526,9 +1526,9 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_SHINGLES =
-		REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p, 1 / 32f))
-			.initialProperties(() -> Blocks.IRON_BLOCK)
-			.properties(p -> (FabricBlockSettings) p.requiresCorrectToolForDrops())
+		REGISTRATE.block("copper_shingles", p -> new OxidizingBlock(p))
+			.initialProperties(() -> Blocks.COPPER_BLOCK)
+			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.item()
 			.transform(oxidizedItemModel())
@@ -1536,9 +1536,9 @@ public class AllBlocks {
 			.register();
 
 	public static final BlockEntry<OxidizingBlock> COPPER_TILES =
-		REGISTRATE.block("copper_tiles", p -> new OxidizingBlock(p, 1 / 32f))
-			.initialProperties(() -> Blocks.IRON_BLOCK)
-			.properties(p -> (FabricBlockSettings) p.requiresCorrectToolForDrops())
+		REGISTRATE.block("copper_tiles", p -> new OxidizingBlock(p))
+			.initialProperties(() -> Blocks.COPPER_BLOCK)
+			.properties(p -> p.requiresCorrectToolForDrops())
 			.transform(pickaxeOnly())
 			.item()
 			.transform(oxidizedItemModel())

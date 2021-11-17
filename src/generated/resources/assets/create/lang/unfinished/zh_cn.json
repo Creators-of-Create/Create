@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 49",
+	"_": "Missing Localizations: 51",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1255,6 +1255,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "辊压机：撞击传送带",
 	"create.subtitle.fwoomp": "土豆加农炮：发射",
 	"create.subtitle.worldshaper_place": "环境塑型器：放置方块",
+	"create.subtitle.sanding_long": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.crushing_1": "磨碎声",
 	"create.subtitle.depot_slide": "物品：滑入",
 	"create.subtitle.saw_activate_stone": "动力锯：切割",
@@ -1267,13 +1268,13 @@
 	"create.subtitle.controller_put": "遥控器：放进讲台",
 	"create.subtitle.cranking": "手摇曲柄：转动",
 	"create.subtitle.wrench_remove": "组件：被破坏",
+	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.cogs": "齿轮：嘎吱作响",
 	"create.subtitle.slime_added": "粘液：挤碎声",
 	"create.subtitle.wrench_rotate": "扳手：拧动",
 	"create.subtitle.potato_hit": "土豆：击中",
 	"create.subtitle.saw_activate_wood": "动力锯：切割",
 	"create.subtitle.haunted_bell_convert": "奇异钟：转化",
-	"create.subtitle.deployer_polish": "机械手：打磨物品",
 	"create.subtitle.deny": "提示声：出错",
 	"create.subtitle.controller_click": "遥控器：按下按钮",
 	"create.subtitle.schematicannon_launch_block": "蓝图加农炮：发射",

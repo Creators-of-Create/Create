@@ -102,10 +102,10 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
-		if (p_153216_.getValue(HEAT_LEVEL) == HeatLevel.NONE)
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		if (state.getValue(HEAT_LEVEL) == HeatLevel.NONE)
 			return null;
-		return ITE.super.newBlockEntity(p_153215_, p_153216_);
+		return ITE.super.newBlockEntity(pos, state);
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class BlazeBurnerBlock extends Block implements ITE<BlazeBurnerTileEntity
 		BlockHitResult blockRayTraceResult) {
 		ItemStack heldItem = player.getItemInHand(hand);
 
-		if (!state.hasBlockEntity()) {
+		if (state.getValue(HEAT_LEVEL) == HeatLevel.NONE) {
 			if (heldItem.getItem() instanceof FlintAndSteelItem) {
 				world.playSound(player, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F,
 					world.random.nextFloat() * 0.4F + 0.8F);
