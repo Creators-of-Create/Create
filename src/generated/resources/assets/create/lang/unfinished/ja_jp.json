@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 54",
+	"_": "Missing Localizations: 56",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1255,6 +1255,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "メカニカルプレスがボンと鳴る",
 	"create.subtitle.fwoomp": "ポテトランチャーがバキューンと鳴る",
 	"create.subtitle.worldshaper_place": "ワールドシェーパーが設置する",
+	"create.subtitle.sanding_long": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.crushing_1": "粉砕音",
 	"create.subtitle.depot_slide": "アイテムが滑る",
 	"create.subtitle.saw_activate_stone": "メカニカルソーが動作する",
@@ -1267,13 +1268,13 @@
 	"create.subtitle.controller_put": "コントローラのトントン音",
 	"create.subtitle.cranking": "ハンドクランクが回る",
 	"create.subtitle.wrench_remove": "機械を壊す",
+	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.cogs": "歯車がゴロゴロと鳴る",
 	"create.subtitle.slime_added": "スライムがぐしゃっとつぶれる",
 	"create.subtitle.wrench_rotate": "レンチが使用される",
 	"create.subtitle.potato_hit": "野菜が衝突する",
 	"create.subtitle.saw_activate_wood": "メカニカルソーが動作する",
 	"create.subtitle.haunted_bell_convert": "憑りつかれた鐘が目覚める",
-	"create.subtitle.deployer_polish": "デプロイヤーが磨く",
 	"create.subtitle.deny": "失敗音",
 	"create.subtitle.controller_click": "コントローラーのカチカチ音",
 	"create.subtitle.schematicannon_launch_block": "概略図砲が発射する",

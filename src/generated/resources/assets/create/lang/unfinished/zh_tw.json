@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 64",
+	"_": "Missing Localizations: 66",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1255,6 +1255,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "液壓機工作",
 	"create.subtitle.fwoomp": "馬鈴薯大砲發射",
 	"create.subtitle.worldshaper_place": "地形塑造器發射聲",
+	"create.subtitle.sanding_long": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.crushing_1": "粉碎機咀嚼聲",
 	"create.subtitle.depot_slide": "物品滑動聲",
 	"create.subtitle.saw_activate_stone": "機械鋸子聲",
@@ -1267,13 +1268,13 @@
 	"create.subtitle.controller_put": "遙控器放置聲",
 	"create.subtitle.cranking": "手搖把手轉動聲",
 	"create.subtitle.wrench_remove": "零件移除聲",
+	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.cogs": "齒輪隆隆聲",
 	"create.subtitle.slime_added": "黏液擠壓",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
 	"create.subtitle.potato_hit": "食物撞擊聲",
 	"create.subtitle.saw_activate_wood": "機械鋸子運作聲",
 	"create.subtitle.haunted_bell_convert": "靈魂鐘轉化聲",
-	"create.subtitle.deployer_polish": "機械手拋光聲",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
 	"create.subtitle.controller_click": "遙控器按鍵聲",
 	"create.subtitle.schematicannon_launch_block": "藍圖大炮發射",

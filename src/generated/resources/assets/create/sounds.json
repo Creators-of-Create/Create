@@ -162,15 +162,6 @@
     ],
     "subtitle": "create.subtitle.deny"
   },
-  "deployer_polish": {
-    "sounds": [
-      {
-        "name": "minecraft:ui.stonecutter.take_result",
-        "type": "event"
-      }
-    ],
-    "subtitle": "create.subtitle.deployer_polish"
-  },
   "depot_plop": {
     "sounds": [
       {
@@ -300,6 +291,18 @@
         "type": "event"
       }
     ]
+  },
+  "sanding_long": {
+    "sounds": [
+      "create:sanding_long"
+    ],
+    "subtitle": "create.subtitle.sanding_long"
+  },
+  "sanding_short": {
+    "sounds": [
+      "create:sanding_short"
+    ],
+    "subtitle": "create.subtitle.sanding_short"
   },
   "saw_activate_stone": {
     "sounds": [

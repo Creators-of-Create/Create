@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 50",
+	"_": "Missing Localizations: 52",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1255,6 +1255,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "Механический пресс делает «бонк»",
 	"create.subtitle.fwoomp": "Картофельная пушка делает «Свомп»",
 	"create.subtitle.worldshaper_place": "Ручной редактор мира делает «Зап»",
+	"create.subtitle.sanding_long": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.crushing_1": "Шум разрушения",
 	"create.subtitle.depot_slide": "Шелест предметов",
 	"create.subtitle.saw_activate_stone": "Активируется механическая пила",
@@ -1267,13 +1268,13 @@
 	"create.subtitle.controller_put": "Контроллер стучит",
 	"create.subtitle.cranking": "Вращается рукоятка",
 	"create.subtitle.wrench_remove": "Компонент ломается",
+	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.cogs": "Шестерни грохочут",
 	"create.subtitle.slime_added": "Намазывание слизи",
 	"create.subtitle.wrench_rotate": "Использован гаечный ключ",
 	"create.subtitle.potato_hit": "Овощ врезается",
 	"create.subtitle.saw_activate_wood": "Активируется механическая пила",
 	"create.subtitle.haunted_bell_convert": "Призрачный колокол пробуждается",
-	"create.subtitle.deployer_polish": "Автономный активатор полирует",
 	"create.subtitle.deny": "Отрицательный «Буп»",
 	"create.subtitle.controller_click": "Клики контроллера",
 	"create.subtitle.schematicannon_launch_block": "Выстрелы схематичной пушки",

@@ -329,7 +329,7 @@ public class DeployerHandler {
 		CompoundTag tag = stack.getTag();
 		if (tag != null && stack.getItem() instanceof SandPaperItem && tag.contains("Polishing")) {
 			player.spawnedItemEffects = ItemStack.of(tag.getCompound("Polishing"));
-			AllSoundEvents.AUTO_POLISH.playOnServer(world, pos, .25f, 1f);
+			AllSoundEvents.SANDING_SHORT.playOnServer(world, pos, .25f, 1f);
 		}
 
 		if (!player.getUseItem()

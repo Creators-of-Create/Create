@@ -1,5 +1,5 @@
 {
-	"_": "Missing Localizations: 947",
+	"_": "Missing Localizations: 948",
 
 	"_": "->------------------------]  Game Elements  [------------------------<-",
 
@@ -1255,6 +1255,7 @@
 	"create.subtitle.mechanical_press_activation_belt": "UNLOCALIZED: Mechanical Press bonks",
 	"create.subtitle.fwoomp": "UNLOCALIZED: Potato Launcher fwoomps",
 	"create.subtitle.worldshaper_place": "UNLOCALIZED: Worldshaper zaps",
+	"create.subtitle.sanding_long": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.crushing_1": "UNLOCALIZED: Crushing noises",
 	"create.subtitle.depot_slide": "UNLOCALIZED: Item slides",
 	"create.subtitle.saw_activate_stone": "UNLOCALIZED: Mechanical Saw activates",
@@ -1267,13 +1268,13 @@
 	"create.subtitle.controller_put": "UNLOCALIZED: Controller thumps",
 	"create.subtitle.cranking": "UNLOCALIZED: Hand Crank turns",
 	"create.subtitle.wrench_remove": "UNLOCALIZED: Component breaks",
+	"create.subtitle.sanding_short": "UNLOCALIZED: Sanding noises",
 	"create.subtitle.cogs": "UNLOCALIZED: Cogwheels rumble",
 	"create.subtitle.slime_added": "Slime schiacciato",
 	"create.subtitle.wrench_rotate": "UNLOCALIZED: Wrench used",
 	"create.subtitle.potato_hit": "UNLOCALIZED: Vegetable impacts",
 	"create.subtitle.saw_activate_wood": "UNLOCALIZED: Mechanical Saw activates",
 	"create.subtitle.haunted_bell_convert": "UNLOCALIZED: Haunted Bell awakens",
-	"create.subtitle.deployer_polish": "UNLOCALIZED: Deployer applies polish",
 	"create.subtitle.deny": "UNLOCALIZED: Declining boop",
 	"create.subtitle.controller_click": "UNLOCALIZED: Controller clicks",
 	"create.subtitle.schematicannon_launch_block": "Tiri del cannoneschematico",

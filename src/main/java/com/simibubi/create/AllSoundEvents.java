@@ -2,11 +2,12 @@ package com.simibubi.create;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -14,7 +15,7 @@ import com.google.gson.JsonObject;
 import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.Pair;
 
-import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -32,7 +33,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 //@EventBusSubscriber(bus = Bus.FORGE)
 public class AllSoundEvents {
 
-	public static Map<ResourceLocation, SoundEntry> entries = Maps.newHashMap();
+	public static final Map<ResourceLocation, SoundEntry> entries = new HashMap<>();
 	public static final SoundEntry
 
 	SCHEMATICANNON_LAUNCH_BLOCK = create("schematicannon_launch_block").subtitle("Schematicannon fires")
@@ -163,8 +164,11 @@ public class AllSoundEvents {
 			.category(SoundSource.PLAYERS)
 			.build(),
 
-		AUTO_POLISH = create("deployer_polish").subtitle("Deployer applies polish")
-			.playExisting(SoundEvents.UI_STONECUTTER_TAKE_RESULT, 1f, 1f)
+		SANDING_SHORT = create("sanding_short").subtitle("Sanding noises")
+			.category(SoundSource.BLOCKS)
+			.build(),
+
+		SANDING_LONG = create("sanding_long").subtitle("Sanding noises")
 			.category(SoundSource.BLOCKS)
 			.build(),
 
@@ -226,7 +230,11 @@ public class AllSoundEvents {
 			.category(SoundSource.BLOCKS)
 			.build();
 
-	public static SoundEntryBuilder create(String id) {
+	private static SoundEntryBuilder create(String name) {
+		return create(Create.asResource(name));
+	}
+
+	public static SoundEntryBuilder create(ResourceLocation id) {
 		return new SoundEntryBuilder(id);
 	}
 
@@ -305,15 +313,15 @@ public class AllSoundEvents {
 
 	}
 
-	static class SoundEntryBuilder {
+	public static class SoundEntryBuilder {
 
-		protected String id;
+		protected ResourceLocation id;
 		protected String subtitle = "unregistered";
 		protected SoundSource category = SoundSource.BLOCKS;
-		List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
+		protected List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 
-		public SoundEntryBuilder(String id) {
-			wrappedEvents = Lists.newArrayList();
+		public SoundEntryBuilder(ResourceLocation id) {
+			wrappedEvents = new ArrayList<>();
 			this.id = id;
 		}
 
@@ -321,7 +329,7 @@ public class AllSoundEvents {
 			this.subtitle = subtitle;
 			return this;
 		}
-		
+
 		public SoundEntryBuilder noSubtitle() {
 			this.subtitle = null;
 			return this;
@@ -344,7 +352,7 @@ public class AllSoundEvents {
 		public SoundEntry build() {
 			SoundEntry entry = wrappedEvents.isEmpty() ? new CustomSoundEntry(id, subtitle, category)
 				: new WrappedSoundEntry(id, subtitle, wrappedEvents, category);
-			entries.put(entry.getLocation(), entry);
+			entries.put(entry.getId(), entry);
 			return entry;
 		}
 
@@ -352,11 +360,11 @@ public class AllSoundEvents {
 
 	public static abstract class SoundEntry {
 
-		protected String id;
+		protected ResourceLocation id;
 		protected String subtitle;
 		protected SoundSource category;
 
-		public SoundEntry(String id, String subtitle, SoundSource category) {
+		public SoundEntry(ResourceLocation id, String subtitle, SoundSource category) {
 			this.id = id;
 			this.subtitle = subtitle;
 			this.category = category;
@@ -371,15 +379,11 @@ public class AllSoundEvents {
 		public abstract SoundEvent getMainEvent();
 
 		public String getSubtitleKey() {
-			return Create.ID + ".subtitle." + id;
+			return id.getNamespace() + ".subtitle." + id.getPath();
 		}
 
-		public String getId() {
+		public ResourceLocation getId() {
 			return id;
-		}
-
-		public ResourceLocation getLocation() {
-			return Create.asResource(id);
 		}
 		
 		public boolean hasSubtitle() {
@@ -390,15 +394,15 @@ public class AllSoundEvents {
 			return subtitle;
 		}
 
-		public void playOnServer(Level world, BlockPos pos) {
+		public void playOnServer(Level world, Vec3i pos) {
 			playOnServer(world, pos, 1, 1);
 		}
 
-		public void playOnServer(Level world, BlockPos pos, float volume, float pitch) {
+		public void playOnServer(Level world, Vec3i pos, float volume, float pitch) {
 			play(world, null, pos, volume, pitch);
 		}
 
-		public void play(Level world, Player entity, BlockPos pos) {
+		public void play(Level world, Player entity, Vec3i pos) {
 			play(world, entity, pos, 1, 1);
 		}
 
@@ -411,7 +415,7 @@ public class AllSoundEvents {
 				play(entity.level, null, entity.blockPosition(), volume, pitch);
 		}
 
-		public void play(Level world, Player entity, BlockPos pos, float volume, float pitch) {
+		public void play(Level world, Player entity, Vec3i pos, float volume, float pitch) {
 			play(world, entity, pos.getX(), pos.getY(), pos.getZ(), volume, pitch);
 		}
 
@@ -421,7 +425,7 @@ public class AllSoundEvents {
 
 		public abstract void play(Level world, Player entity, double x, double y, double z, float volume, float pitch);
 
-		public void playAt(Level world, BlockPos pos, float volume, float pitch, boolean fade) {
+		public void playAt(Level world, Vec3i pos, float volume, float pitch, boolean fade) {
 			playAt(world, pos.getX() + .5, pos.getY() + .5, pos.getZ() + .5, volume, pitch, fade);
 		}
 
@@ -433,12 +437,12 @@ public class AllSoundEvents {
 
 	}
 
-	static class WrappedSoundEntry extends SoundEntry {
+	private static class WrappedSoundEntry extends SoundEntry {
 
 		private List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 		private List<Pair<SoundEvent, Couple<Float>>> compiledEvents;
 
-		public WrappedSoundEntry(String id, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
+		public WrappedSoundEntry(ResourceLocation id, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
 			SoundSource category) {
 			super(id, subtitle, category);
 			this.wrappedEvents = wrappedEvents;
@@ -468,7 +472,7 @@ public class AllSoundEvents {
 		}
 
 		protected String getIdOf(int i) {
-			return i == 0 ? id : id + "_compounded_" + i;
+			return i == 0 ? id.getPath() : id.getPath() + "_compounded_" + i;
 		}
 
 		@Override
@@ -509,18 +513,17 @@ public class AllSoundEvents {
 		}
 	}
 
-	static class CustomSoundEntry extends SoundEntry {
+	private static class CustomSoundEntry extends SoundEntry {
 
 		protected SoundEvent event;
 
-		public CustomSoundEntry(String id, String subtitle, SoundSource category) {
+		public CustomSoundEntry(ResourceLocation id, String subtitle, SoundSource category) {
 			super(id, subtitle, category);
 		}
 
 		@Override
 		public void prepare() {
-			ResourceLocation location = getLocation();
-			event = new SoundEvent(location).setRegistryName(location);
+			event = new SoundEvent(id).setRegistryName(id);
 		}
 
 		@Override
@@ -537,10 +540,10 @@ public class AllSoundEvents {
 		public void write(JsonObject json) {
 			JsonObject entry = new JsonObject();
 			JsonArray list = new JsonArray();
-			list.add(getLocation().toString());
+			list.add(id.toString());
 			entry.add("sounds", list);
 			entry.addProperty("subtitle", getSubtitleKey());
-			json.add(id, entry);
+			json.add(id.getPath(), entry);
 		}
 
 		@Override
