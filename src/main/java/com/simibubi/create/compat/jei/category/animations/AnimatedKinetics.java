@@ -1,6 +1,7 @@
 package com.simibubi.create.compat.jei.category.animations;
 
 import com.jozufozu.flywheel.core.PartialModel;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.AllBlockPartials;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.foundation.gui.CustomLightingSettings;
@@ -11,11 +12,15 @@ import com.simibubi.create.foundation.utility.AnimationTickHolder;
 import me.shedaniel.rei.api.client.gui.DrawableConsumer;
 import me.shedaniel.rei.api.client.gui.Renderer;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public abstract class AnimatedKinetics extends Widget {
+import java.util.Collections;
+import java.util.List;
+
+public abstract class AnimatedKinetics /*extends Widget*/ {
 
 	public int offset = 0;
 
@@ -62,7 +67,12 @@ public abstract class AnimatedKinetics extends Widget {
 		return defaultBlockElement(partial);
 	}
 
-//	@Override
+	public void draw(PoseStack matrixStack, int xOffset, int yOffset) {
+	}
+
+
+
+	//	@Override
 //	public int getWidth() {
 //		return 50;
 //	}

@@ -15,6 +15,8 @@ import com.simibubi.create.lib.utility.NetworkUtil;
 
 import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+
 import org.apache.commons.lang3.Validate;
 
 import com.simibubi.create.AllEntityTypes;
@@ -98,10 +100,10 @@ public class BlueprintEntity extends HangingEntity
 		}
 	}
 
-	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
-		@SuppressWarnings("unchecked")
-		EntityType.Builder<BlueprintEntity> entityBuilder = (EntityType.Builder<BlueprintEntity>) builder;
-		return entityBuilder;
+	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
+//		@SuppressWarnings("unchecked")
+//		EntityType.Builder<BlueprintEntity> entityBuilder = (EntityType.Builder<BlueprintEntity>) builder;
+		return builder;
 	}
 
 	@Override

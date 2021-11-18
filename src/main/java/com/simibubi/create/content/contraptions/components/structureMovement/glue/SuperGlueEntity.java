@@ -9,6 +9,7 @@ import com.simibubi.create.lib.entity.FakePlayer;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 
 import org.apache.commons.lang3.Validate;
@@ -459,10 +460,10 @@ public class SuperGlueEntity extends Entity
 	@Override
 	public void refreshDimensions() {}
 
-	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
-		@SuppressWarnings("unchecked")
-		EntityType.Builder<SuperGlueEntity> entityBuilder = (EntityType.Builder<SuperGlueEntity>) builder;
-		return entityBuilder;
+	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
+//		@SuppressWarnings("unchecked")
+//		EntityType.Builder<SuperGlueEntity> entityBuilder = (EntityType.Builder<SuperGlueEntity>) builder;
+		return builder;
 	}
 
 	@Override

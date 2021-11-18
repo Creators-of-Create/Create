@@ -15,7 +15,7 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 	private final BlockState wheel = AllBlocks.CRUSHING_WHEEL.getDefaultState()
 			.setValue(BlockStateProperties.AXIS, Axis.X);
 
-	@Override
+//	@Override
 	public void render(PoseStack matrixStack, Rectangle rectangle, int mouseX, int mouseY, float delta) {
 		matrixStack.pushPose();
 		matrixStack.translate(mouseX, mouseY, 100);
@@ -36,14 +36,14 @@ public class AnimatedCrushingWheels extends AnimatedKinetics {
 		matrixStack.popPose();
 	}
 
-	@Override
-	public int getZ() {
-		return 0;
-	}
-
-	@Override
-	public void setZ(int i) {
-
-	}
+//	@Override
+//	public int getZ() {
+//		return 0;
+//	}
+//
+//	@Override
+//	public void setZ(int i) {
+//
+//	}
 
 }

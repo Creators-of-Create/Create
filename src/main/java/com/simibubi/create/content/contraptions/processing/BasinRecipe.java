@@ -101,14 +101,13 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 					if (!ingredient.test(extracted))
 						continue;
 					// Catalyst items are never consumed
-					if (extracted.hasContainerItem() && extracted.getContainerItem()
-						.sameItem(extracted))
+					if (extracted.getItem().hasCraftingRemainingItem() && extracted.getItem().getCraftingRemainingItem()
+							.equals(extracted.getItem()))
 						continue Ingredients;
 					if (!simulate)
 						availableItems.extractItem(slot, 1, false);
-					else if (extracted.hasContainerItem())
-						recipeOutputItems.add(extracted.getContainerItem()
-							.copy());
+					else if (extracted.getItem().hasCraftingRemainingItem())
+						recipeOutputItems.add(extracted.getItem().getCraftingRemainingItem().getDefaultInstance());
 					extractedItemsFromSlot[slot]++;
 					continue Ingredients;
 				}
@@ -120,7 +119,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 			boolean fluidsAffected = false;
 			FluidIngredients: for (int i = 0; i < fluidIngredients.size(); i++) {
 				FluidIngredient fluidIngredient = fluidIngredients.get(i);
-				int amountRequired = fluidIngredient.getRequiredAmount();
+				long amountRequired = fluidIngredient.getRequiredAmount();
 
 				for (int tank = 0; tank < availableFluids.getTanks(); tank++) {
 					FluidStack fluidStack = availableFluids.getFluidInTank(tank);
@@ -128,7 +127,7 @@ public class BasinRecipe extends ProcessingRecipe<SmartInventory> {
 						continue;
 					if (!fluidIngredient.test(fluidStack))
 						continue;
-					int drainedAmount = Math.min(amountRequired, fluidStack.getAmount());
+					long drainedAmount = Math.min(amountRequired, fluidStack.getAmount());
 					if (!simulate) {
 						fluidStack.shrink(drainedAmount);
 						fluidsAffected = true;

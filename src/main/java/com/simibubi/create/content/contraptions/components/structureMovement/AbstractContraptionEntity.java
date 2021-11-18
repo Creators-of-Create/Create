@@ -14,6 +14,10 @@ import com.simibubi.create.lib.helper.EntityHelper;
 
 import com.simibubi.create.lib.mixin.accessor.EntityAccessor;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+
+import net.minecraft.world.entity.EntityDimensions;
+
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -370,11 +374,11 @@ public abstract class AbstractContraptionEntity extends Entity implements ExtraS
 		return (float) ((Math.acos(vec.y)) / Math.PI * 180);
 	}
 
-	public static EntityType.Builder<?> build(EntityType.Builder<?> builder) {
-		@SuppressWarnings("unchecked")
-		EntityType.Builder<AbstractContraptionEntity> entityBuilder =
-			(EntityType.Builder<AbstractContraptionEntity>) builder;
-		return entityBuilder.sized(1, 1);
+	public static FabricEntityTypeBuilder<?> build(FabricEntityTypeBuilder<?> builder) {
+//		@SuppressWarnings("unchecked")
+//		EntityType.Builder<AbstractContraptionEntity> entityBuilder =
+//			(EntityType.Builder<AbstractContraptionEntity>) builder;
+		return builder.dimensions(EntityDimensions.fixed(1, 1));
 	}
 
 	@Override

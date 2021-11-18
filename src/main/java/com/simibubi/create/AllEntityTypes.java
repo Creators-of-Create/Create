@@ -59,22 +59,22 @@ public class AllEntityTypes {
 	//
 
 	private static <T extends Entity> EntityEntry<T> contraption(String name, EntityFactory<T> factory,
-			NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
+			NonNullSupplier<EntityRendererProvider<T>> renderer,
 			int range, int updateFrequency, boolean sendVelocity) {
 		return register(name, factory, renderer, MobCategory.MISC, range, updateFrequency, sendVelocity, true,
 			AbstractContraptionEntity::build).register();
 	}
 
 	private static <T extends Entity> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, ?> register(String name, EntityFactory<T> factory,
-																									 NonNullSupplier<NonNullFunction<EntityRendererProvider.Context, EntityRenderer<? super T>>> renderer,
+																									 NonNullSupplier<EntityRendererProvider<T>> renderer,
 																									 MobCategory group, int range, int updateFrequency, boolean sendVelocity, boolean immuneToFire,
-																									 NonNullConsumer<EntityType.Builder<T>> propertyBuilder) {
+																									 NonNullConsumer<FabricEntityTypeBuilder<T>> propertyBuilder) {
 		String id = Lang.asId(name);
 		return (CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, ?>) Create.registrate()
 			.entity(id, factory, group)
-			.properties(b -> b.setTrackingRange(range)
-				.setUpdateInterval(updateFrequency)
-				.setShouldReceiveVelocityUpdates(sendVelocity))
+			.properties(b -> b.trackRangeChunks(range)
+				.trackedUpdateRate(updateFrequency)
+				.forceTrackedVelocityUpdates(sendVelocity))
 			.properties(propertyBuilder)
 			.properties(b -> {
 				if (immuneToFire)

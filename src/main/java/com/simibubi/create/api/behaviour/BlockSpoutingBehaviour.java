@@ -43,7 +43,7 @@ public abstract class BlockSpoutingBehaviour {
 	 * @param simulate       whether the spout is testing or actually performing this behaviour
 	 * @return amount filled into the block, 0 to idle/cancel
 	 */
-	public abstract int fillBlock(Level world, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public abstract long fillBlock(Level world, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
 		boolean simulate);
 
 	public static void register() {

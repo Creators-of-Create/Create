@@ -199,7 +199,7 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 		if (processingTicks >= 0) {
 			processingTicks--;
 			if (processingTicks == 5 && customProcess != null) {
-				int fillBlock = customProcess.fillBlock(level, worldPosition.below(2), this, currentFluidInTank, false);
+				long fillBlock = customProcess.fillBlock(level, worldPosition.below(2), this, currentFluidInTank, false);
 				customProcess = null;
 				if (fillBlock > 0) {
 					tank.getPrimaryHandler()

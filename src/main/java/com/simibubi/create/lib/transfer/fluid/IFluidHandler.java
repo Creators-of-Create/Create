@@ -7,4 +7,5 @@ public interface IFluidHandler {
 	long fill(FluidStack stack, boolean sim);
 	FluidStack drain(FluidStack stack, boolean sim);
 	FluidStack drain(long amount, boolean sim);
+	default boolean isFluidValid(int tank, FluidStack stack) {return true;}
 }

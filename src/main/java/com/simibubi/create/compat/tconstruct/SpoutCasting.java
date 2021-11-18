@@ -6,6 +6,7 @@ import com.simibubi.create.content.contraptions.fluids.actors.SpoutTileEntity;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -26,7 +27,7 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 	ResourceLocation BASIN = new ResourceLocation("tconstruct", "basin");
 
 	@Override
-	public int fillBlock(Level level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
+	public long fillBlock(Level level, BlockPos pos, SpoutTileEntity spout, FluidStack availableFluid,
 		boolean simulate) {
 		if (!enabled())
 			return 0;
@@ -53,8 +54,8 @@ public class SpoutCasting extends BlockSpoutingBehaviour {
 			return 0;
 
 		// Do not fill if it would only partially fill the table (unless > 1000mb)
-		int amount = availableFluid.getAmount();
-		if (amount < 1000
+		long amount = availableFluid.getAmount();
+		if (amount < FluidConstants.BUCKET
 			&& handler.fill(FluidHelper.copyStackWithAmount(availableFluid, amount + 1), true) > amount)
 			return 0;
 

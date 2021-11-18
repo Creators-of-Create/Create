@@ -141,6 +141,10 @@ public class FluidStack {
 		return writeToNBT(tag);
 	}
 
+	public void setTag(CompoundTag tag) {
+		this.tag = tag;
+	}
+
 	@Nullable
 	public CompoundTag getTag() {
 		return tag;
