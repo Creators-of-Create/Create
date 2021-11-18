@@ -162,7 +162,7 @@ public class FluidHelper {
 			FluidStack fluid = tank.getFluidInTank(i);
 			if (fluid.isEmpty())
 				continue;
-			int requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
+			long requiredAmountForItem = GenericItemFilling.getRequiredAmountForItem(world, heldItem, fluid.copy());
 			if (requiredAmountForItem == -1)
 				continue;
 			if (requiredAmountForItem > fluid.getAmount())

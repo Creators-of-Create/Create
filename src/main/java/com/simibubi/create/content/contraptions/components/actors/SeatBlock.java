@@ -9,6 +9,9 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllShapes;
 import com.simibubi.create.foundation.utility.BlockHelper;
 
+import com.simibubi.create.foundation.utility.DyeHelper;
+import com.simibubi.create.lib.block.CustomPathNodeTypeBlock;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -35,7 +38,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SeatBlock extends Block {
+public class SeatBlock extends Block implements CustomPathNodeTypeBlock {
 
 	protected final DyeColor color;
 	protected final boolean inCreativeTab;
@@ -106,7 +109,8 @@ public class SeatBlock extends Block {
 			return InteractionResult.PASS;
 
 		ItemStack heldItem = player.getItemInHand(hand);
-		DyeColor color = DyeColor.getColor(heldItem);
+		DyeColor color = DyeHelper.getColor(heldItem);
+
 		if (color != null && color != this.color) {
 			if (world.isClientSide)
 				return InteractionResult.SUCCESS;

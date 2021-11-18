@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE<RedstoneLinkTileEntity> {
+public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE<RedstoneLinkTileEntity>, CanConnectRedstoneBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty RECEIVER = BooleanProperty.create("receiver");
@@ -193,7 +195,7 @@ public class RedstoneLinkBlock extends WrenchableDirectionalBlock implements ITE
 	public Class<RedstoneLinkTileEntity> getTileEntityClass() {
 		return RedstoneLinkTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends RedstoneLinkTileEntity> getTileEntityType() {
 		return AllTileEntities.REDSTONE_LINK.get();

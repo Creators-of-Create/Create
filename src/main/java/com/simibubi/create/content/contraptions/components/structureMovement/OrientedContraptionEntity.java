@@ -22,6 +22,7 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.utility.MinecartAndRailUtil;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
 import net.minecraft.core.BlockPos;
@@ -289,7 +290,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		boolean isStalled = isStalled();
 
 		LazyOptional<MinecartController> capability =
-			riding.getCapability(CapabilityMinecartController.MINECART_CONTROLLER_CAPABILITY);
+				MinecartAndRailUtil.getControllerLazy((AbstractMinecart) riding);
 		if (capability.isPresent()) {
 			if (!level.isClientSide())
 				capability.orElse(null)
@@ -380,12 +381,12 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 		if (!rotationLock) {
 			if (riding instanceof AbstractMinecart) {
 				AbstractMinecart minecartEntity = (AbstractMinecart) riding;
-				BlockPos railPosition = minecartEntity.getCurrentRailPosition();
+				BlockPos railPosition = MinecartAndRailUtil.getExpectedRailPos(minecartEntity);
 				BlockState blockState = level.getBlockState(railPosition);
 				if (blockState.getBlock() instanceof BaseRailBlock) {
 					BaseRailBlock abstractRailBlock = (BaseRailBlock) blockState.getBlock();
 					RailShape railDirection =
-						abstractRailBlock.getRailDirection(blockState, level, railPosition, minecartEntity);
+						MinecartAndRailUtil.getDirectionOfRail(blockState, level, railPosition, minecartEntity);
 					motion = VecHelper.project(motion, MinecartSim2020.getRailVec(railDirection));
 				}
 			}
@@ -435,7 +436,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		BlockPos blockpos = new BlockPos(i, j, k);
 		BlockState blockstate = this.level.getBlockState(blockpos);
-		if (furnaceCart.canUseRail() && blockstate.is(BlockTags.RAILS))
+		if (MinecartAndRailUtil.canCartUseRail(furnaceCart) && blockstate.is(BlockTags.RAILS))
 			if (fuel > 1)
 				riding.setDeltaMovement(riding.getDeltaMovement()
 					.normalize()
@@ -450,7 +451,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 			nbt.putInt("Fuel", fuel);
 			nbt.putDouble("PushX", 0);
 			nbt.putDouble("PushZ", 0);
-			furnaceCart.deserializeNBT(nbt);
+			NBTSerializer.deserializeNBT(furnaceCart, nbt);
 		}
 	}
 

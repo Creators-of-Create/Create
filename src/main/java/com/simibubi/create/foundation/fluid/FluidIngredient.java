@@ -70,7 +70,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 
 	protected abstract List<FluidStack> determineMatchingFluidStacks();
 
-	public int getRequiredAmount() {
+	public long getRequiredAmount() {
 		return amountRequired;
 	}
 

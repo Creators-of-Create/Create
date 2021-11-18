@@ -7,6 +7,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.Create;

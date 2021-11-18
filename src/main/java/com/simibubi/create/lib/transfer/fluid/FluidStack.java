@@ -9,16 +9,43 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
+import org.jetbrains.annotations.Nullable;
+
 @SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class FluidStack {
-	private static final FluidStack EMPTY = new FluidStack(FluidVariant.blank(), 0);
+	private static final FluidStack EMPTY = new FluidStack(FluidVariant.blank(), 0) {
+		@Override
+		public FluidStack setAmount(long amount) {
+			return this;
+		}
 
-	private FluidVariant type;
+		@Override
+		public void shrink(int amount) {
+		}
+
+		@Override
+		public void shrink(long amount) {
+		}
+
+		@Override
+		public FluidStack copy() {
+			return this;
+		}
+	};
+
+	private final FluidVariant type;
+	@Nullable
+	private CompoundTag tag;
 	private long amount;
 
 	public FluidStack(FluidVariant type, long amount) {
 		this.type = type;
 		this.amount = amount;
+	}
+
+	public FluidStack(FluidVariant type, long amount, @Nullable CompoundTag tag) {
+		this(type, amount);
+		this.tag = tag;
 	}
 
 	public FluidStack(Fluid type, long amount) {
@@ -60,11 +87,11 @@ public class FluidStack {
 		return amount == 0;
 	}
 
-	public void shrink (int amount) {
+	public void shrink(int amount) {
 		setAmount(getAmount() - amount);
 	}
 
-	public void shrink (long amount) {
+	public void shrink(long amount) {
 		setAmount(getAmount() - amount);
 	}
 
@@ -92,16 +119,18 @@ public class FluidStack {
 	}
 
 	public CompoundTag writeToNBT(CompoundTag tag) {
-		tag.put("Fluid", getType().toNbt());
+		tag.put("Variant", getType().toNbt());
 		tag.putLong("Amount", getAmount());
+		tag.put("Tag", getTag());
 		return tag;
 	}
 
 	public static FluidStack loadFluidStackFromNBT(CompoundTag tag) {
-		Tag fluidTag = tag.get("Fluid");
+		Tag fluidTag = tag.get("Variant");
 		FluidVariant fluid = FluidVariant.fromNbt((CompoundTag) fluidTag);
 		long amount = tag.getLong("Amount");
-		return new FluidStack(fluid, amount);
+		CompoundTag stackTag = (CompoundTag) tag.get("Tag");
+		return new FluidStack(fluid, amount, stackTag);
 	}
 
 	public CompoundTag toTag() {
@@ -112,18 +141,31 @@ public class FluidStack {
 		return writeToNBT(tag);
 	}
 
+	@Nullable
 	public CompoundTag getTag() {
-		return getType().copyNbt();
+		return tag;
+	}
+
+	public CompoundTag getOrCreateTag() {
+		if (getTag() == null) tag = new CompoundTag();
+        return tag;
+	}
+
+	public void removeChildTag(String key) {
+        if (getTag() == null) return;
+        getTag().remove(key);
+    }
+
+	public boolean hasTag() {
+		return tag != null;
 	}
 
 	public static FluidStack fromBuffer(FriendlyByteBuf buffer) {
-		Fluid fluid = Registry.FLUID.get(buffer.readResourceLocation());
+		FluidVariant fluid = FluidVariant.fromPacket(buffer);
 		long amount = buffer.readVarLong();
 		CompoundTag tag = buffer.readNbt();
-		if (fluid == Fluids.EMPTY) {
-			return EMPTY;
-		}
-		return new FluidStack(FluidVariant.of(fluid, tag), amount);
+		if (fluid.isBlank()) return empty();
+		return new FluidStack(fluid, amount, tag);
 	}
 
 	public FriendlyByteBuf toBuffer(FriendlyByteBuf buffer) {
@@ -131,9 +173,9 @@ public class FluidStack {
 	}
 
 	public static FriendlyByteBuf toBuffer(FluidStack stack, FriendlyByteBuf buffer) {
-		buffer.writeResourceLocation(Registry.FLUID.getKey(stack.getFluid()));
+		stack.getType().toPacket(buffer);
 		buffer.writeVarLong(stack.getAmount());
-		buffer.writeNbt(stack.type.copyNbt());
+		buffer.writeNbt(stack.getTag());
 		return buffer;
 	}
 

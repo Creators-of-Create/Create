@@ -9,6 +9,7 @@ import com.simibubi.create.content.schematics.ISpecialBlockItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -24,8 +25,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
+import org.jetbrains.annotations.Nullable;
+
 public class LecternControllerBlock extends LecternBlock
-	implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement {
+	implements ITE<LecternControllerTileEntity>, ISpecialBlockItemRequirement, BlockPickInteractionAware {
 
 	public LecternControllerBlock(Properties properties) {
 		super(properties);
@@ -93,9 +96,10 @@ public class LecternControllerBlock extends LecternBlock
 			.setValue(POWERED, state.getValue(POWERED)));
 	}
 
+
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-		return Blocks.LECTERN.getPickBlock(state, target, world, pos, player);
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
+		return Blocks.LECTERN.getCloneItemStack(view, pos, state);
 	}
 
 	@Override

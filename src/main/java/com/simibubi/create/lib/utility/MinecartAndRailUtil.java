@@ -62,4 +62,8 @@ public class MinecartAndRailUtil {
 	public static MinecartController getController(AbstractMinecart cart) {
 		return ((AbstractMinecartExtensions) cart).create$getController();
 	}
+
+	public static LazyOptional<MinecartController> getControllerLazy(AbstractMinecart cart) {
+		return LazyOptional.ofObject(getController(cart));
+	}
 }

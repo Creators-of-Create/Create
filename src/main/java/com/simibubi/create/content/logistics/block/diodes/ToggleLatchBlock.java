@@ -4,6 +4,8 @@ import java.util.Random;
 
 import com.simibubi.create.AllItems;
 
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class ToggleLatchBlock extends AbstractDiodeBlock {
+public class ToggleLatchBlock extends AbstractDiodeBlock implements CanConnectRedstoneBlock {
 
 	public static BooleanProperty POWERING = BooleanProperty.create("powering");
 

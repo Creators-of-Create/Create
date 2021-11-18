@@ -43,7 +43,7 @@ public class EmptyingByBasin {
 			return true;
 
 		LazyOptional<IFluidHandlerItem> capability =
-				TransferUtil.getFluidHandlerItem(stack, world);
+				TransferUtil.getFluidHandlerItem(stack);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return false;
@@ -77,7 +77,7 @@ public class EmptyingByBasin {
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
-			TransferUtil.getFluidHandlerItem(stack, world);
+			TransferUtil.getFluidHandlerItem(stack);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return Pair.of(resultingFluid, resultingItem);

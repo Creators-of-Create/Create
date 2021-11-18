@@ -13,6 +13,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.behaviour.BehaviourType;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.mixin.accessor.ServerTickListAccessor;
+
 import it.unimi.dsi.fastutil.PriorityQueue;
 import it.unimi.dsi.fastutil.objects.ObjectHeapPriorityQueue;
 import net.minecraft.core.BlockPos;
@@ -193,17 +195,18 @@ public class FluidFillingBehaviour extends FluidManipulationBehaviour {
 
 					TickList<Fluid> pendingFluidTicks = world.getLiquidTicks();
 					if (pendingFluidTicks instanceof ServerTickList) {
-						ServerTickList<Fluid> serverTickList = (ServerTickList<Fluid>) pendingFluidTicks;
+						ServerTickListAccessor<Fluid> accessor = (ServerTickListAccessor<Fluid>) pendingFluidTicks;
 						TickNextTickData<Fluid> removedEntry = null;
-						for (TickNextTickData<Fluid> nextTickListEntry : serverTickList.tickNextTickSet) {
+						for (TickNextTickData<Fluid> nextTickListEntry : accessor.getTickNextTickSet()) {
 							if (nextTickListEntry.pos.equals(currentPos)) {
 								removedEntry = nextTickListEntry;
 								break;
 							}
 						}
+
 						if (removedEntry != null) {
-							serverTickList.tickNextTickSet.remove(removedEntry);
-							serverTickList.tickNextTickList.remove(removedEntry);
+							accessor.getTickNextTickSet().remove(removedEntry);
+							accessor.getTickNextTickSet().remove(removedEntry);
 						}
 					}
 

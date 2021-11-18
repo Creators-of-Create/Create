@@ -10,6 +10,11 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.transfer.TransferUtil;
+import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
+import com.simibubi.create.lib.transfer.item.IItemHandler;
+
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +43,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.tterrag.registrate.fabric.EnvExecutor;
 
-public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, BlockExtensions {
+public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements ITE<StockpileSwitchTileEntity>, IWrenchable, BlockExtensions, CanConnectRedstoneBlock {
 
 	public static final IntegerProperty INDICATOR = IntegerProperty.create("indicator", 0, 6);
 
@@ -124,17 +129,15 @@ public class StockpileSwitchBlock extends HorizontalDirectionalBlock implements 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
-		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
 			BlockEntity te = context.getLevel()
 				.getBlockEntity(context.getClickedPos()
 					.relative(face));
-			if (te != null && (te.getCapability(itemCap)
+			if (te != null && (TransferUtil.getItemHandler(te)
 				.isPresent()
-				|| te.getCapability(fluidCap)
+				|| TransferUtil.getFluidHandler(te)
 					.isPresent()))
 				if (preferredFacing == null)
 					preferredFacing = face;

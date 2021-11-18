@@ -4,6 +4,9 @@ import com.simibubi.create.AllFluids;
 import com.simibubi.create.content.contraptions.fluids.potion.PotionFluidHandler;
 import com.simibubi.create.foundation.fluid.FluidHelper;
 
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.impl.transfer.fluid.EmptyBucketStorage;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,13 +42,13 @@ public class GenericItemFilling {
 	 */
 	public static boolean isFluidHandlerValid(ItemStack stack, IFluidHandlerItem fluidHandler) {
 		// Not instanceof in case a correct subclass is made
-		if (fluidHandler.getClass() == FluidBucketWrapper.class) {
-			Item item = stack.getItem();
-			// Forge does not patch the FluidBucketWrapper onto subclasses of BucketItem
-			if (item.getClass() != BucketItem.class && !(item instanceof MilkBucketItem)) {
-				return false;
-			}
-		}
+//		if (fluidHandler.getClass() == FluidBucketWrapper.class) {
+//			Item item = stack.getItem();
+//			// Forge does not patch the FluidBucketWrapper onto subclasses of BucketItem
+//			if (item.getClass() != BucketItem.class && !(item instanceof MilkBucketItem)) {
+//				return false;
+//			}
+//		}
 		return true;
 	}
 
@@ -56,7 +59,7 @@ public class GenericItemFilling {
 			return false;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			TransferUtil.getFluidHandlerItem(stack, world);
+			TransferUtil.getFluidHandlerItem(stack);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return false;
@@ -70,29 +73,30 @@ public class GenericItemFilling {
 		return false;
 	}
 
-	public static int getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
+	public static long getRequiredAmountForItem(Level world, ItemStack stack, FluidStack availableFluid) {
 		if (stack.getItem() == Items.GLASS_BOTTLE && canFillGlassBottleInternally(availableFluid))
 			return PotionFluidHandler.getRequiredAmountForFilledBottle(stack, availableFluid);
 		if (stack.getItem() == Items.BUCKET && canFillBucketInternally(availableFluid))
-			return 1000;
+			return FluidConstants.BUCKET;
 
 		LazyOptional<IFluidHandlerItem> capability =
-			TransferUtil.getFluidHandlerItem(stack, world);
+			TransferUtil.getFluidHandlerItem(stack);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return -1;
-		if (tank instanceof FluidBucketWrapper) {
-			Item filledBucket = availableFluid.getFluid()
-				.getBucket();
-			if (filledBucket == null || filledBucket == Items.AIR)
-				return -1;
-			if (!((FluidBucketWrapper) tank).getFluid()
-				.isEmpty())
-				return -1;
-			return 1000;
-		}
 
-		int filled = tank.fill(availableFluid, true);
+//		if (tank instanceof FluidBucketWrapper) {
+//			Item filledBucket = availableFluid.getFluid()
+//				.getBucket();
+//			if (filledBucket == null || filledBucket == Items.AIR)
+//				return -1;
+//			if (!((FluidBucketWrapper) tank).getFluid()
+//				.isEmpty())
+//				return -1;
+//			return FluidConstants.BUCKET;
+//		}
+
+		long filled = tank.fill(availableFluid, true);
 		return filled == 0 ? -1 : filled;
 	}
 
@@ -107,7 +111,7 @@ public class GenericItemFilling {
 		return false;
 	}
 
-	public static ItemStack fillItem(Level world, int requiredAmount, ItemStack stack, FluidStack availableFluid) {
+	public static ItemStack fillItem(Level world, long requiredAmount, ItemStack stack, FluidStack availableFluid) {
 		FluidStack toFill = availableFluid.copy();
 		toFill.setAmount(requiredAmount);
 		availableFluid.shrink(requiredAmount);
@@ -125,7 +129,7 @@ public class GenericItemFilling {
 		ItemStack split = stack.copy();
 		split.setCount(1);
 		LazyOptional<IFluidHandlerItem> capability =
-				TransferUtil.getFluidHandlerItem(split, world);
+				TransferUtil.getFluidHandlerItem(split);
 		IFluidHandlerItem tank = capability.orElse(null);
 		if (tank == null)
 			return ItemStack.EMPTY;

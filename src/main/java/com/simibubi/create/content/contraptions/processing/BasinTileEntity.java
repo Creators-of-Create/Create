@@ -481,7 +481,7 @@ public class BasinTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 			if (simulate)
 				return true;
 			for (ItemStack itemStack : outputItems) {
-				IFluidHandlerItem handler = TransferUtil.getFluidHandlerItem(itemStack, getWorld()).getValueUnsafer();
+				IFluidHandlerItem handler = TransferUtil.getFluidHandlerItem(itemStack).getValueUnsafer();
 				if (handler != null && handler.getContainer()
 					.sameItem(itemStack))
 					continue;

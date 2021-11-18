@@ -1,5 +1,7 @@
 package com.simibubi.create.lib.transfer;
 
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.simibubi.create.lib.transfer.fluid.FluidStorageHandler;
@@ -7,7 +9,6 @@ import com.simibubi.create.lib.transfer.fluid.FluidStorageHandlerItem;
 import com.simibubi.create.lib.transfer.fluid.FluidTransferable;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
-import com.simibubi.create.lib.transfer.fluid.SingleItemStackContext;
 import com.simibubi.create.lib.transfer.fluid.StorageFluidHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 import com.simibubi.create.lib.transfer.item.ItemStorageHandler;
@@ -63,8 +64,8 @@ public class TransferUtil {
 
 	// Fluid-containing items
 
-	public static LazyOptional<IFluidHandlerItem> getFluidHandlerItem(ItemStack stack, Level level) {
-		Storage<FluidVariant> fluidStorage = FluidStorage.ITEM.find(stack, new SingleItemStackContext(stack, level));
+	public static LazyOptional<IFluidHandlerItem> getFluidHandlerItem(ItemStack stack) {
+		Storage<FluidVariant> fluidStorage = FluidStorage.ITEM.find(stack, ContainerItemContext.withInitial(stack));
 		return fluidStorage == null ? LazyOptional.empty() : LazyOptional.ofObject(new FluidStorageHandlerItem(stack, fluidStorage));
 	}
 

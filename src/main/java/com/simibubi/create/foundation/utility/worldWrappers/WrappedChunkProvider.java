@@ -33,7 +33,7 @@ public class WrappedChunkProvider extends ChunkSource {
         return world.blocksAdded
                 .entrySet()
                 .stream()
-                .filter(it -> it.getValue().getLightEmission(world, it.getKey()) != 0)
+                .filter(it -> it.getValue().getLightEmission() != 0)
                 .map(Map.Entry::getKey);
     }
 

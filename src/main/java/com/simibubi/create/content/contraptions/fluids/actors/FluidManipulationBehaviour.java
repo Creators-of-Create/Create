@@ -198,10 +198,10 @@ public abstract class FluidManipulationBehaviour extends TileEntityBehaviour {
 	protected void playEffect(Level world, BlockPos pos, Fluid fluid, boolean fillSound) {
 		BlockPos splooshPos = pos == null ? tileEntity.getBlockPos() : pos;
 
-		SoundEvent soundevent = fillSound ? fluid.getAttributes()
-			.getFillSound()
-			: fluid.getAttributes()
-				.getEmptySound();
+		SoundEvent soundevent = null;//fillSound ? fluid.getAttributes()
+//			.getFillSound()
+//			: fluid.getAttributes()
+//				.getEmptySound();
 		if (soundevent == null)
 			soundevent =
 				fluid.is(FluidTags.LAVA) ? fillSound ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA

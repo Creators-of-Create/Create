@@ -2,6 +2,8 @@ package com.simibubi.create.content.contraptions.itemAssembly;
 
 import com.simibubi.create.foundation.utility.Color;
 
+import com.simibubi.create.lib.item.CustomDurabilityBarItem;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -9,7 +11,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class SequencedAssemblyItem extends Item {
+public class SequencedAssemblyItem extends Item implements CustomDurabilityBarItem {
 
 	public SequencedAssemblyItem(Properties p_i48487_1_) {
 		super(p_i48487_1_.stacksTo(1));

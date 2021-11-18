@@ -39,7 +39,7 @@ public class ItemDrainBlock extends Block implements IWrenchable, ITE<ItemDrainT
 		ItemStack heldItem = player.getItemInHand(handIn);
 
 		if (heldItem.getItem() instanceof BlockItem
-			&& !TransferUtil.getFluidHandlerItem(heldItem, worldIn)
+			&& !TransferUtil.getFluidHandlerItem(heldItem)
 				.isPresent())
 			return InteractionResult.PASS;
 
