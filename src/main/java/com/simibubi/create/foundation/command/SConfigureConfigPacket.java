@@ -86,7 +86,7 @@ public class SConfigureConfigPacket extends SimplePacketBase {
 			return;
 		}
 
-		if (configPath.getType() != ModConfig.Type.CLIENT) {
+		if (configPath.getType() != ConfigType.CLIENT) {
 			Create.LOGGER.warn("Received type-mismatched config packet on client");
 			return;
 		}

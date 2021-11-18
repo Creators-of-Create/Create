@@ -7,7 +7,10 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import mezz.jei.api.MethodsReturnNonnullByDefault;
+import com.simibubi.create.lib.mixin.accessor.BiomeManagerAccessor;
+import com.simibubi.create.lib.mixin.accessor.ClientPacketListenerAccessor;
+
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -38,7 +41,7 @@ public class WrappedClientWorld extends ClientLevel {
 	protected Level world;
 
 	private WrappedClientWorld(Level world) {
-		super(mc.getConnection(), mc.level.getLevelData(), world.dimension(), world.dimensionType(), mc.getConnection().serverChunkRadius, world.getProfilerSupplier(), mc.levelRenderer, world.isDebug(), world.getBiomeManager().biomeZoomSeed);
+		super(mc.getConnection(), mc.level.getLevelData(), world.dimension(), world.dimensionType(), ((ClientPacketListenerAccessor) mc.getConnection()).create$serverChunkRadius(), world.getProfilerSupplier(), mc.levelRenderer, world.isDebug(), ((BiomeManagerAccessor) world.getBiomeManager()).create$biomeZoomSeed());
 		this.world = world;
 	}
 
@@ -50,7 +53,7 @@ public class WrappedClientWorld extends ClientLevel {
 	public boolean hasChunkAt(BlockPos pos) {
 		return world.hasChunkAt(pos);
 	}
-	
+
 	@Override
 	public boolean isLoaded(BlockPos pos) {
 		return world.isLoaded(pos);

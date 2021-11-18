@@ -34,11 +34,11 @@ public class ConfigModListScreen extends ConfigScreen {
 		int listWidth = Math.min(width - 80, 300);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 60, 15, height - 45, 40);
-		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
+//		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 		addRenderableWidget(list);
 
 		allEntries = new ArrayList<>();
-		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
+//		ModList.get().getMods().stream().map(IModInfo::getModId).forEach(id -> allEntries.add(new ModEntry(id, this)));
 		allEntries.sort((e1, e2) -> {
 			int empty = (e2.button.active ? 1 : 0) - (e1.button.active ? 1 : 0);
 			if (empty != 0)
@@ -128,7 +128,7 @@ public class ConfigModListScreen extends ConfigScreen {
 
 			button.x = x + width - 108;
 			button.y = y + 10;
-			button.setHeight(height - 20);
+//			button.setHeight(height - 20);
 			button.render(ms, mouseX, mouseY, partialTicks);
 		}
 

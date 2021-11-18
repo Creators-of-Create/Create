@@ -45,6 +45,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -142,7 +143,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 
 	public <T extends Entity, P> CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, P> entity(P parent, String name,
 		EntityType.EntityFactory<T> factory, MobCategory classification) {
-		return (CreateEntityBuilder<T, P>) this.entry(name, (callback) -> {
+		return (CreateEntityBuilder<T, FabricEntityTypeBuilder<T>, P>) this.entry(name, (callback) -> {
 			return CreateEntityBuilder.create(this, parent, name, callback, factory, classification);
 		});
 	}
@@ -150,7 +151,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	/* Palettes */
 
 	public <T extends Block> BlockBuilder<T, CreateRegistrate> paletteStoneBlock(String name,
-		NonNullFunction<FabricBlockSettings, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
+		NonNullFunction<BlockBehaviour.Properties, T> factory, NonNullSupplier<Block> propertiesFrom, boolean worldGenStone) {
 		BlockBuilder<T, CreateRegistrate> builder = super.block(name, factory).initialProperties(propertiesFrom)
 //			.blockstate((c, p) -> {
 //				final String location = "block/palettes/" + c.getName() + "/plain";
@@ -230,7 +231,7 @@ public class CreateRegistrate extends AbstractRegistrate<CreateRegistrate> {
 	@Environment(EnvType.CLIENT)
 	private static void registerCTBehviour(Block entry, ConnectedTextureBehaviour behavior) {
 		CreateClient.MODEL_SWAPPER.getCustomBlockModels()
-			.register(entry/*.delegate*/, model -> new CTModel(model, behavior));
+			.register(() -> entry/*.delegate*/, model -> new CTModel(model, behavior));
 	}
 
 	@Environment(EnvType.CLIENT)

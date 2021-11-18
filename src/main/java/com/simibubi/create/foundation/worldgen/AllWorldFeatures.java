@@ -3,6 +3,7 @@ package com.simibubi.create.foundation.worldgen;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
 import com.simibubi.create.AllBlocks;
 import com.simibubi.create.Create;
 import com.simibubi.create.content.palettes.AllPaletteBlocks;
@@ -78,12 +79,12 @@ public class AllWorldFeatures {
 		return generation;
 	}
 
-	public static void fillConfig(ForgeConfigSpec.Builder builder) {
+	public static void fillConfig(ConfigSpec builder) {
 		entries.values()
 			.forEach(entry -> {
-				builder.push(entry.id);
+//				builder.push(entry.id);
 				entry.addToConfig(builder);
-				builder.pop();
+//				builder.pop();
 			});
 	}
 

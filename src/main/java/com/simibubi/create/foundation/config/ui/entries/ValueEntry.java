@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
 import com.google.common.base.Predicates;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigAnnotations;
@@ -20,67 +21,72 @@ import com.simibubi.create.foundation.gui.widget.BoxWidget;
 import com.simibubi.create.foundation.item.TooltipHelper;
 import com.simibubi.create.foundation.utility.Pair;
 
+import com.simibubi.create.lib.config.ConfigValue;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
 	protected static final int resetWidth = 28;//including 6px offset on either side
 
-	protected ForgeConfigSpec.ConfigValue<T> value;
-	protected ForgeConfigSpec.ValueSpec spec;
+	protected ConfigValue<T> value;
+//	protected ConfigSpec.ValueSpec spec;
 	protected BoxWidget resetButton;
 	protected boolean editable = true;
 
-	public ValueEntry(String label, ForgeConfigSpec.ConfigValue<T> value, ForgeConfigSpec.ValueSpec spec) {
+	public ValueEntry(String label) {
 		super(label);
-		this.value = value;
-		this.spec = spec;
-		this.path = String.join(".", value.getPath());
-
-		resetButton = new BoxWidget(0, 0, resetWidth - 12, 16)
-				.showingElement(AllIcons.I_CONFIG_RESET.asStencil())
-				.withCallback(() -> {
-					setValue((T) spec.getDefault());
-					this.onReset();
-				});
-		resetButton.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(resetButton)));
-
-		listeners.add(resetButton);
-
-		List<String> path = value.getPath();
-		labelTooltip.add(new TextComponent(label).withStyle(ChatFormatting.WHITE));
-		String comment = spec.getComment();
-		if (comment == null || comment.isEmpty())
-			return;
-
-		List<String> commentLines = new ArrayList<>(Arrays.asList(comment.split("\n")));
-
-
-		Pair<String, Map<String, String>> metadata = ConfigHelper.readMetadataFromComment(commentLines);
-		if (metadata.getFirst() != null) {
-			unit = metadata.getFirst();
-		}
-		if (metadata.getSecond() != null && !metadata.getSecond().isEmpty()) {
-			annotations.putAll(metadata.getSecond());
-		}
-		// add comment to tooltip
-		labelTooltip.addAll(commentLines.stream()
-				.filter(Predicates.not(s -> s.startsWith("Range")))
-				.map(TextComponent::new)
-				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, ChatFormatting.GRAY, ChatFormatting.GRAY)
-						.stream())
-				.collect(Collectors.toList()));
-
-		if (annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName()))
-			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _relog_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.GOLD));
-
-		if (annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName()))
-			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _restart_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.RED));
-
-		labelTooltip.add(new TextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).withStyle(ChatFormatting.DARK_GRAY));
 	}
+
+//	public ValueEntry(String label, ConfigValue<T> value, ConfigSpec.ValueSpec spec) {
+//		super(label);
+//		this.value = value;
+//		this.spec = spec;
+//		this.path = String.join(".", value.getPath());
+//
+//		resetButton = new BoxWidget(0, 0, resetWidth - 12, 16)
+//				.showingElement(AllIcons.I_CONFIG_RESET.asStencil())
+//				.withCallback(() -> {
+//					setValue((T) spec.getDefault());
+//					this.onReset();
+//				});
+//		resetButton.modifyElement(e -> ((DelegatedStencilElement) e).withElementRenderer(BoxWidget.gradientFactory.apply(resetButton)));
+//
+//		listeners.add(resetButton);
+//
+//		List<String> path = value.getPath();
+//		labelTooltip.add(new TextComponent(label).withStyle(ChatFormatting.WHITE));
+//		String comment = spec.getComment();
+//		if (comment == null || comment.isEmpty())
+//			return;
+//
+//		List<String> commentLines = new ArrayList<>(Arrays.asList(comment.split("\n")));
+//
+//
+//		Pair<String, Map<String, String>> metadata = ConfigHelper.readMetadataFromComment(commentLines);
+//		if (metadata.getFirst() != null) {
+//			unit = metadata.getFirst();
+//		}
+//		if (metadata.getSecond() != null && !metadata.getSecond().isEmpty()) {
+//			annotations.putAll(metadata.getSecond());
+//		}
+//		// add comment to tooltip
+//		labelTooltip.addAll(commentLines.stream()
+//				.filter(Predicates.not(s -> s.startsWith("Range")))
+//				.map(TextComponent::new)
+//				.flatMap(stc -> TooltipHelper.cutTextComponent(stc, ChatFormatting.GRAY, ChatFormatting.GRAY)
+//						.stream())
+//				.collect(Collectors.toList()));
+//
+//		if (annotations.containsKey(ConfigAnnotations.RequiresRelog.TRUE.getName()))
+//			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _relog_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.GOLD));
+//
+//		if (annotations.containsKey(ConfigAnnotations.RequiresRestart.CLIENT.getName()))
+//			labelTooltip.addAll(TooltipHelper.cutTextComponent(new TextComponent("Changing this value will require a _restart_ to take full effect"), ChatFormatting.GRAY, ChatFormatting.RED));
+//
+//		labelTooltip.add(new TextComponent(ConfigScreen.modID + ":" + path.get(path.size() - 1)).withStyle(ChatFormatting.DARK_GRAY));
+//	}
 
 	@Override
 	protected void setEditable(boolean b) {
@@ -120,7 +126,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 	}
 
 	protected boolean isCurrentValueDefault() {
-		return spec.getDefault().equals(getValue());
+		return true;//spec.getDefault().equals(getValue());
 	}
 
 	public void onReset() {
@@ -137,7 +143,7 @@ public class ValueEntry<T> extends ConfigScreenList.LabeledEntry {
 
 	protected void bumpCog() {bumpCog(10f);}
 	protected void bumpCog(float force) {
-		if (list != null && list instanceof ConfigScreenList)
-			((ConfigScreenList) list).bumpCog(force);
+//		if (list != null && list instanceof ConfigScreenList)
+//			((ConfigScreenList) list).bumpCog(force);
 	}
 }

@@ -12,18 +12,18 @@ import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuild
 import com.simibubi.create.content.contraptions.processing.ProcessingRecipeSerializer;
 import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
 
+import net.minecraft.core.Registry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraftforge.fluids.FluidAttributes;
 
 public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 
 	protected static final List<ProcessingRecipeGen> GENERATORS = new ArrayList<>();
-	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
+//	protected static final int BUCKET = FluidAttributes.BUCKET_VOLUME;
 	protected static final int BOTTLE = 250;
 
 	public static void registerAll(DataGenerator gen) {
@@ -73,8 +73,7 @@ public abstract class ProcessingRecipeGen extends CreateRecipeProvider {
 		GeneratedRecipe generatedRecipe = c -> {
 			ItemLike iItemProvider = singleIngredient.get();
 			transform
-				.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(), new ResourceLocation(namespace, iItemProvider.asItem()
-					.getRegistryName()
+				.apply(new ProcessingRecipeBuilder<>(serializer.getFactory(), new ResourceLocation(namespace, Registry.ITEM.getKey(iItemProvider.asItem())
 					.getPath())).withItemIngredients(Ingredient.of(iItemProvider)))
 				.build(c);
 		};

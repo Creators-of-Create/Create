@@ -15,6 +15,10 @@ import com.simibubi.create.foundation.utility.Color;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.mixin.accessor.ScreenAccessor;
+import com.simibubi.create.lib.mixin.accessor.TitleScreenAccessor;
+
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.gui.components.Button;
@@ -26,7 +30,6 @@ import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class CreateMainMenuScreen extends AbstractSimiScreen {
 
@@ -47,8 +50,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 		this.parent = parent;
 		returnOnClose = true;
 		if (parent instanceof TitleScreen)
-			vanillaPanorama = ObfuscationReflectionHelper.getPrivateValue(TitleScreen.class, (TitleScreen) parent,
-				"f_96729_"); // panorama
+			vanillaPanorama = ((TitleScreenAccessor) parent).getPanorama();
 		else
 			vanillaPanorama = new PanoramaRenderer(TitleScreen.CUBE_MAP);
 	}
@@ -159,7 +161,7 @@ public class CreateMainMenuScreen extends AbstractSimiScreen {
 	@Override
 	protected void renderWindowForeground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderWindowForeground(ms, mouseX, mouseY, partialTicks);
-		renderables.forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
+		((ScreenAccessor) this).create$getRenderables().forEach(w -> w.render(ms, mouseX, mouseY, partialTicks));
 
 		if (parent instanceof TitleScreen) {
 			if (mouseX < gettingStarted.x || mouseX > gettingStarted.x + 98)

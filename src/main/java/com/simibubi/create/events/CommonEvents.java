@@ -96,7 +96,7 @@ public class CommonEvents {
 	public static void onServerTick(MinecraftServer server) {
 		Create.SCHEMATIC_RECEIVER.tick();
 		Create.LAGGER.tick();
-		ServerSpeedProvider.serverTick();
+		ServerSpeedProvider.serverTick(server);
 	}
 
 	public static void onChunkUnloaded(Level world, LevelChunk chunk) {

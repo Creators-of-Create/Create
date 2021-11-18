@@ -9,7 +9,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 
 /** Deprecated so simi doensn't forget to remove debug calls **/
 @Environment(value = EnvType.CLIENT)
@@ -33,7 +32,7 @@ public class Debug {
 		if (Minecraft.getInstance().player != null)
 			Minecraft.getInstance().player.displayClientMessage(new TextComponent(message), true);
 	}
-	
+
 	@Deprecated
 	public static void log(String message) {
 		Create.LOGGER.info(message);
@@ -41,8 +40,8 @@ public class Debug {
 
 	@Deprecated
 	public static String getLogicalSide() {
-		return EffectiveSide.get()
-			.isClient() ? "CL" : "SV";
+		return Minecraft.getInstance().level // only called on client, this is safe (but completely redundant)
+			.isClientSide() ? "CL" : "SV";
 	}
 
 	@Deprecated

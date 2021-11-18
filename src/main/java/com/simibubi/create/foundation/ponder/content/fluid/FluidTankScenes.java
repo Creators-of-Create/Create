@@ -23,6 +23,8 @@ import com.simibubi.create.foundation.ponder.instructions.EmitParticlesInstructi
 import com.simibubi.create.foundation.utility.Pointing;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -30,8 +32,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidTankScenes {
 
@@ -171,7 +171,7 @@ public class FluidTankScenes {
 			.pointAt(util.vector.blockSurface(util.grid.at(2, 2, 2), Direction.WEST));
 		scene.idle(80);
 		scene.world.modifyTileEntity(util.grid.at(4, 3, 0), SpoutTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			te -> TransferUtil.getFluidHandler(te)
 				.ifPresent(ifh -> ifh.fill(content, false)));
 
 		scene.world.moveSection(tankLink, util.vector.of(0, 0, 1), 7);
@@ -197,8 +197,7 @@ public class FluidTankScenes {
 		scene.idle(90);
 
 		ItemStack chocBucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
-			.getBucket(new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000));
+			.getBucket().getDefaultInstance();
 		scene.world.createItemOnBeltLike(util.grid.at(3, 1, 0), Direction.WEST, chocBucket);
 		scene.idle(40);
 		scene.world.modifyTileNBT(util.select.position(util.grid.at(4, 3, 0)), SpoutTileEntity.class,

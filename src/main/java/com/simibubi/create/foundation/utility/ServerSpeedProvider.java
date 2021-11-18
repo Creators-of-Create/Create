@@ -11,8 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraft.server.MinecraftServer;
 
 public class ServerSpeedProvider {
 
@@ -21,10 +20,10 @@ public class ServerSpeedProvider {
 	static boolean initialized = false;
 	static InterpolatedChasingValue modifier = new InterpolatedChasingValue().withSpeed(.25f);
 
-	public static void serverTick() {
+	public static void serverTick(MinecraftServer server) {
 		serverTimer++;
 		if (serverTimer > getSyncInterval()) {
-			AllPackets.channel.send(PacketDistributor.ALL.noArg(), new Packet());
+			AllPackets.channel.sendToClients(new Packet(), server.getPlayerList().getPlayers());
 			serverTimer = 0;
 		}
 	}

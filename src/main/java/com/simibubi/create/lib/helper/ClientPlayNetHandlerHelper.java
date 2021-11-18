@@ -8,7 +8,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 public final class ClientPlayNetHandlerHelper {
 
 	public static int getViewDistance(ClientPacketListener clientPlayNetHandler) {
-		return get(clientPlayNetHandler).create$viewDistance();
+		return get(clientPlayNetHandler).create$serverChunkRadius();
 	}
 
 	private static ClientPacketListenerAccessor get(ClientPacketListener clientPlayNetHandler) {

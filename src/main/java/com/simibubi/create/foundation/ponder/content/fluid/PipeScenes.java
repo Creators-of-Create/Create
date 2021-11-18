@@ -23,6 +23,8 @@ import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -35,10 +37,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeMod;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class PipeScenes {
 
@@ -483,9 +482,9 @@ public class PipeScenes {
 		Selection basin = util.select.position(basinPos);
 		BlockPos smartPos = util.grid.at(3, 1, 1);
 
-		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), false)));
+//		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
+//			te -> TransferUtil.getFluidHandler(te)
+//				.ifPresent(ifh -> ifh.fill(new FluidStack(ForgeMod.MILK.get(), 1000), false))); // FIXME PORT: MILK
 
 		scene.world.setBlock(util.grid.at(3, 1, 3), AllBlocks.FLUID_PIPE.get()
 			.getAxisState(Axis.X), false);
@@ -527,8 +526,7 @@ public class PipeScenes {
 
 		FluidStack chocolate = new FluidStack(FluidHelper.convertToStill(AllFluids.CHOCOLATE.get()), 1000);
 		ItemStack bucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
-			.getBucket(chocolate);
+			.getBucket().getDefaultInstance();
 		ItemStack milkBucket = new ItemStack(Items.MILK_BUCKET);
 		scene.overlay.showControls(new InputWindowElement(filterVec, Pointing.DOWN).rightClick()
 			.withItem(bucket), 80);
@@ -568,7 +566,7 @@ public class PipeScenes {
 		}
 		scene.idle(15);
 		scene.world.modifyTileEntity(basinPos, BasinTileEntity.class,
-			te -> te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+			te -> TransferUtil.getFluidHandler(te)
 				.ifPresent(ifh -> ifh.fill(chocolate, false)));
 		scene.idle(10);
 

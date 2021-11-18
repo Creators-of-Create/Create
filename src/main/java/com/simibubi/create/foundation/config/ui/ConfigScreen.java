@@ -64,10 +64,10 @@ public abstract class ConfigScreen extends AbstractSimiScreen {
 		cogSpin.tick();
 	}
 
-	@Override
-	public void renderBackground(@Nonnull PoseStack ms) {
-		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this, ms));
-	}
+//	@Override
+//	public void renderBackground(@Nonnull PoseStack ms) {
+//		net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.BackgroundDrawnEvent(this, ms));
+//	}
 
 	@Override
 	protected void renderWindowBackground(PoseStack ms, int mouseX, int mouseY, float partialTicks) {

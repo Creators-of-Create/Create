@@ -13,14 +13,14 @@ import com.simibubi.create.foundation.ponder.elements.InputWindowElement;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 import com.simibubi.create.foundation.utility.Pointing;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidMovementActorScenes {
 
@@ -42,14 +42,11 @@ public class FluidMovementActorScenes {
 		BlockPos ct1 = util.grid.at(5, 3, 2);
 		BlockPos ct2 = util.grid.at(6, 3, 2);
 		BlockPos st = util.grid.at(0, 1, 5);
-		Capability<IFluidHandler> fhc = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 		Class<FluidTankTileEntity> type = FluidTankTileEntity.class;
-		ItemStack bucket = AllFluids.CHOCOLATE.get()
-			.getAttributes()
-			.getBucket(chocolate);
+		ItemStack bucket = AllFluids.CHOCOLATE.get().getBucket().getDefaultInstance();
 
-		scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
-			.ifPresent(ifh -> ifh.fill(FluidHelper.copyStackWithAmount(chocolate, 10000), false)));
+		scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
+			.ifPresent(ifh -> ifh.fill(FluidHelper.copyStackWithAmount(chocolate, FluidConstants.BUCKET * 10), false)));
 
 		BlockPos bearing = util.grid.at(5, 1, 2);
 		scene.world.showSection(util.select.position(bearing), Direction.DOWN);
@@ -140,16 +137,16 @@ public class FluidMovementActorScenes {
 				scene.overlay
 					.showControls(new InputWindowElement(util.vector.blockSurface(util.grid.at(5, 3, 2), Direction.WEST)
 						.add(0, 0.5, 0), Pointing.LEFT).withItem(bucket), 30);
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, false)));
-			scene.world.modifyTileEntity(ct1, type, te -> te.getCapability(fhc)
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
+				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
+			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.getFluidHandler(te)
 				.ifPresent(ifh -> ifh.fill(chocolate, false)));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, false)));
-			scene.world.modifyTileEntity(ct2, type, te -> te.getCapability(fhc)
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
+				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
+			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.getFluidHandler(te)
 				.ifPresent(ifh -> ifh.fill(chocolate, false)));
 			scene.idle(2);
 		}
@@ -165,22 +162,22 @@ public class FluidMovementActorScenes {
 		scene.idle(30);
 
 		for (int i = 0; i < 8; i++) {
-			scene.world.modifyTileEntity(ct2, type, te -> te.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, false)));
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+			scene.world.modifyTileEntity(ct2, type, te -> TransferUtil.getFluidHandler(te)
+				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
 				.ifPresent(ifh -> ifh.fill(chocolate, false)));
 			scene.idle(2);
 		}
 		for (int i = 0; i < 16; i++) {
-			scene.world.modifyTileEntity(ct1, type, te -> te.getCapability(fhc)
-				.ifPresent(ifh -> ifh.drain(1000, false)));
-			scene.world.modifyTileEntity(st, type, te -> te.getCapability(fhc)
+			scene.world.modifyTileEntity(ct1, type, te -> TransferUtil.getFluidHandler(te)
+				.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET, false)));
+			scene.world.modifyTileEntity(st, type, te -> TransferUtil.getFluidHandler(te)
 				.ifPresent(ifh -> ifh.fill(chocolate, false)));
 			scene.idle(2);
 		}
 
-		scene.world.modifyTileEntity(util.grid.at(2, 2, 3), type, te -> te.getCapability(fhc)
-			.ifPresent(ifh -> ifh.drain(8000, false)));
+		scene.world.modifyTileEntity(util.grid.at(2, 2, 3), type, te -> TransferUtil.getFluidHandler(te)
+			.ifPresent(ifh -> ifh.drain(FluidConstants.BUCKET * 8, false)));
 		scene.idle(50);
 
 		scene.overlay.showText(120)

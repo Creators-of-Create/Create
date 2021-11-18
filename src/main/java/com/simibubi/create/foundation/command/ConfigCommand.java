@@ -7,11 +7,12 @@ import com.simibubi.create.Create;
 import com.simibubi.create.foundation.config.ui.ConfigHelper;
 import com.simibubi.create.foundation.networking.AllPackets;
 
+import com.simibubi.create.lib.config.ConfigType;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.config.ModConfig;
 
 /**
  * Examples:
@@ -52,7 +53,7 @@ public class ConfigCommand {
 												return 0;
 											}
 
-											if (configPath.getType() == ModConfig.Type.CLIENT) {
+											if (configPath.getType() == ConfigType.CLIENT) {
 												ServerPlayer player = ctx.getSource().getPlayerOrException();
 												AllPackets.channel.sendToClient(new SConfigureConfigPacket("SET" + path, value), player);
 

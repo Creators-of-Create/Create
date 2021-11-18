@@ -2,13 +2,13 @@ package com.simibubi.create.foundation.worldgen;
 
 import java.util.Optional;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
 import com.simibubi.create.foundation.config.ConfigBase;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration.Predicates;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigDrivenFeatureEntry extends ConfigBase {
 
@@ -56,7 +56,7 @@ public class ConfigDrivenFeatureEntry extends ConfigBase {
 			.decorated(ConfigDrivenDecorator.INSTANCE.configured(config));
 	}
 
-	public void addToConfig(ForgeConfigSpec.Builder builder) {
+	public void addToConfig(ConfigSpec builder) {
 		registerAll(builder);
 	}
 

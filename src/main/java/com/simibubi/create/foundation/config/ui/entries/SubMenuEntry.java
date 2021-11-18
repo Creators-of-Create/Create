@@ -1,5 +1,6 @@
 package com.simibubi.create.foundation.config.ui.entries;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.config.ui.ConfigScreenList;
@@ -9,13 +10,11 @@ import com.simibubi.create.foundation.gui.ScreenOpener;
 import com.simibubi.create.foundation.gui.element.DelegatedStencilElement;
 import com.simibubi.create.foundation.gui.widget.BoxWidget;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-
 public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
 	protected BoxWidget button;
 
-	public SubMenuEntry(SubMenuConfigScreen parent, String label, ForgeConfigSpec spec, UnmodifiableConfig config) {
+	public SubMenuEntry(SubMenuConfigScreen parent, String label, ConfigSpec spec, UnmodifiableConfig config) {
 		super(label);
 
 		button = new BoxWidget(0, 0, 35, 16)
@@ -38,7 +37,7 @@ public class SubMenuEntry extends ConfigScreenList.LabeledEntry {
 
 		button.x = x + width - 108;
 		button.y = y + 10;
-		button.setHeight(height - 20);
+//		button.setHeight(height - 20);
 		button.render(ms, mouseX, mouseY, partialTicks);
 	}
 

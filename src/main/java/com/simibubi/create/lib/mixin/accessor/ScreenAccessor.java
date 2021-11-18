@@ -2,6 +2,8 @@ package com.simibubi.create.lib.mixin.accessor;
 
 import java.util.List;
 
+import net.minecraft.client.gui.components.Widget;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -19,4 +21,7 @@ public interface ScreenAccessor {
 
 	@Accessor("children")
 	List<GuiEventListener> create$getChildren();
+
+	@Accessor("renderables")
+	List<Widget> create$getRenderables();
 }

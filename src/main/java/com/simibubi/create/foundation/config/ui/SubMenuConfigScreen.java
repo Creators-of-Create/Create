@@ -14,6 +14,11 @@ import java.util.function.Consumer;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
+import com.simibubi.create.lib.config.ConfigType;
+
+import com.simibubi.create.lib.config.ConfigValue;
+
 import org.lwjgl.glfw.GLFW;
 
 import com.electronwill.nightconfig.core.AbstractConfig;
@@ -46,13 +51,11 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
 
 public class SubMenuConfigScreen extends ConfigScreen {
 
-	public final ModConfig.Type type;
-	protected ForgeConfigSpec spec;
+	public final ConfigType type;
+	protected ConfigSpec spec;
 	protected UnmodifiableConfig configGroup;
 	protected ConfigScreenList list;
 
@@ -68,39 +71,40 @@ public class SubMenuConfigScreen extends ConfigScreen {
 
 	public static SubMenuConfigScreen find(ConfigHelper.ConfigPath path) {
 		// TODO 1.17: can be null
-		ForgeConfigSpec spec = ConfigHelper.findForgeConfigSpecFor(path.getType(), path.getModID());
-		UnmodifiableConfig values = spec.getValues();
-		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID());
-		SubMenuConfigScreen screen = new SubMenuConfigScreen(base, "root", path.getType(), spec, values);
-		List<String> remainingPath = Lists.newArrayList(path.getPath());
+		ConfigSpec spec = ConfigHelper.findConfigSpecFor(path.getType(), path.getModID());
+//		UnmodifiableConfig values = spec.getValues();
+//		BaseConfigScreen base = new BaseConfigScreen(null, path.getModID());
+//		SubMenuConfigScreen screen = new SubMenuConfigScreen(base, "root", path.getType(), spec, values);
+//		List<String> remainingPath = Lists.newArrayList(path.getPath());
+//
+//		path: while (!remainingPath.isEmpty()) {
+//			String next = remainingPath.remove(0);
+//			for (Map.Entry<String, Object> entry : values.valueMap().entrySet()) {
+//				String key = entry.getKey();
+//				Object obj = entry.getValue();
+//				if (!key.equalsIgnoreCase(next))
+//					continue;
+//
+//				if (!(obj instanceof AbstractConfig)) {
+//					//highlight entry
+//					screen.highlights.add(path.getPath()[path.getPath().length - 1]);
+//					continue;
+//				}
+//
+//				values = (UnmodifiableConfig) obj;
+//				screen = new SubMenuConfigScreen(screen, toHumanReadable(key), path.getType(), spec, values);
+//				continue path;
+//			}
+//
+//			break;
+//		}
 
-		path: while (!remainingPath.isEmpty()) {
-			String next = remainingPath.remove(0);
-			for (Map.Entry<String, Object> entry : values.valueMap().entrySet()) {
-				String key = entry.getKey();
-				Object obj = entry.getValue();
-				if (!key.equalsIgnoreCase(next))
-					continue;
-
-				if (!(obj instanceof AbstractConfig)) {
-					//highlight entry
-					screen.highlights.add(path.getPath()[path.getPath().length - 1]);
-					continue;
-				}
-
-				values = (UnmodifiableConfig) obj;
-				screen = new SubMenuConfigScreen(screen, toHumanReadable(key), path.getType(), spec, values);
-				continue path;
-			}
-
-			break;
-		}
-
-		ConfigScreen.modID = path.getModID();
-		return screen;
+//		ConfigScreen.modID = path.getModID();
+//		return screen;
+		return null;
 	}
 
-	public SubMenuConfigScreen(Screen parent, String title, ModConfig.Type type, ForgeConfigSpec configSpec, UnmodifiableConfig configGroup) {
+	public SubMenuConfigScreen(Screen parent, String title, ConfigType type, ConfigSpec configSpec, UnmodifiableConfig configGroup) {
 		super(parent);
 		this.type = type;
 		this.spec = configSpec;
@@ -108,12 +112,12 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		this.configGroup = configGroup;
 	}
 
-	public SubMenuConfigScreen(Screen parent, ModConfig.Type type, ForgeConfigSpec configSpec) {
+	public SubMenuConfigScreen(Screen parent, ConfigType type, ConfigSpec configSpec) {
 		super(parent);
 		this.type = type;
 		this.spec = configSpec;
 		this.title = "root";
-		this.configGroup = configSpec.getValues();
+//		this.configGroup = configSpec.getValues();
 	}
 
 	protected void clearChanges() {
@@ -125,37 +129,37 @@ public class SubMenuConfigScreen extends ConfigScreen {
 	}
 
 	protected void saveChanges() {
-		UnmodifiableConfig values = spec.getValues();
-		ConfigHelper.changes.forEach((path, change) -> {
-			ForgeConfigSpec.ConfigValue configValue = values.get(path);
-			configValue.set(change.value);
-
-			if (type == ModConfig.Type.SERVER) {
-				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, change.value));
-			}
-
-			String command = change.annotations.get("Execute");
-			if (minecraft.player != null && command != null && command.startsWith("/")) {
-				minecraft.player.chat(command);
-				//AllPackets.channel.sendToServer(new CChatMessagePacket(command));
-			}
-		});
+//		UnmodifiableConfig values = spec.getValues();
+//		ConfigHelper.changes.forEach((path, change) -> {
+//			ConfigValue configValue = values.get(path);
+//			configValue.set(change.value);
+//
+//			if (type == ConfigType.SERVER) {
+//				AllPackets.channel.sendToServer(new CConfigureConfigPacket<>(ConfigScreen.modID, path, change.value));
+//			}
+//
+//			String command = change.annotations.get("Execute");
+//			if (minecraft.player != null && command != null && command.startsWith("/")) {
+//				minecraft.player.chat(command);
+//				//AllPackets.channel.sendToServer(new CChatMessagePacket(command));
+//			}
+//		});
 		clearChanges();
 	}
 
 	protected void resetConfig(UnmodifiableConfig values) {
-		values.valueMap().forEach((key, obj) -> {
-			if (obj instanceof AbstractConfig) {
-				resetConfig((UnmodifiableConfig) obj);
-			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
-				ForgeConfigSpec.ConfigValue configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
-				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw((List<String>) configValue.getPath());
-				List<String> comments = new ArrayList<>(Arrays.asList(valueSpec.getComment().split("\n")));
-				Pair<String, Map<String, String>> metadata = ConfigHelper.readMetadataFromComment(comments);
-
-				ConfigHelper.setValue(String.join(".", configValue.getPath()), configValue, valueSpec.getDefault(), metadata.getSecond());
-			}
-		});
+//		values.valueMap().forEach((key, obj) -> {
+//			if (obj instanceof AbstractConfig) {
+//				resetConfig((UnmodifiableConfig) obj);
+//			} else if (obj instanceof ConfigValue<?>) {
+//				ConfigValue configValue = (ConfigValue<?>) obj;
+//				ConfigSpec.ValueSpec valueSpec = spec.getRaw((List<String>) configValue.getPath());
+//				List<String> comments = new ArrayList<>(Arrays.asList(valueSpec.getComment().split("\n")));
+//				Pair<String, Map<String, String>> metadata = ConfigHelper.readMetadataFromComment(comments);
+//
+//				ConfigHelper.setValue(String.join(".", configValue.getPath()), configValue, valueSpec.getDefault(), metadata.getSecond());
+//			}
+//		});
 
 		list.children()
 				.stream()
@@ -180,8 +184,8 @@ public class SubMenuConfigScreen extends ConfigScreen {
 								.centered()
 								.withText(FormattedText.of("Resetting all settings of the " + type.toString() + " config. Are you sure?"))
 								.withAction(success -> {
-									if (success)
-										resetConfig(spec.getValues());
+//									if (success)
+//										resetConfig(spec.getValues());
 								})
 								.open(this)
 				);
@@ -241,7 +245,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		addRenderableWidget(goBack);
 
 		list = new ConfigScreenList(minecraft, listWidth, height - 80, 35, height - 45, 40);
-		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
+//		list.setLeftPos(this.width / 2 - list.getWidth() / 2);
 
 		addRenderableWidget(list);
 
@@ -263,18 +267,18 @@ public class SubMenuConfigScreen extends ConfigScreen {
 					ScreenOpener.open(
 							new SubMenuConfigScreen(parent, humanKey, type, spec, (UnmodifiableConfig) obj));
 
-			} else if (obj instanceof ForgeConfigSpec.ConfigValue<?>) {
-				ForgeConfigSpec.ConfigValue<?> configValue = (ForgeConfigSpec.ConfigValue<?>) obj;
-				ForgeConfigSpec.ValueSpec valueSpec = spec.getRaw(configValue.getPath());
+			} else if (obj instanceof ConfigValue<?>) {
+				ConfigValue<?> configValue = (ConfigValue<?>) obj;
+//				ConfigSpec.ValueSpec valueSpec = spec.getRaw(configValue.getPath());
 				Object value = configValue.get();
 				ConfigScreenList.Entry entry = null;
 
 				if (value instanceof Boolean) {
-					entry = new BooleanEntry(humanKey, (ForgeConfigSpec.ConfigValue<Boolean>) configValue, valueSpec);
+//					entry = new BooleanEntry(humanKey, (ConfigValue<Boolean>) configValue, valueSpec);
 				} else if (value instanceof Enum) {
-					entry = new EnumEntry(humanKey, (ForgeConfigSpec.ConfigValue<Enum<?>>) configValue, valueSpec);
+//					entry = new EnumEntry(humanKey, (ConfigValue<Enum<?>>) configValue, valueSpec);
 				} else if (value instanceof Number) {
-					entry = NumberEntry.create(value, humanKey, configValue, valueSpec);
+//					entry = NumberEntry.create(value, humanKey, configValue, valueSpec);
 				}
 
 				if (entry == null)
@@ -304,7 +308,7 @@ public class SubMenuConfigScreen extends ConfigScreen {
 		list.search(highlights.stream().findFirst().orElse(""));
 
 		//extras for server configs
-		if (type != ModConfig.Type.SERVER)
+		if (type != ConfigType.SERVER)
 			return;
 		if (minecraft.hasSingleplayerServer())
 			return;

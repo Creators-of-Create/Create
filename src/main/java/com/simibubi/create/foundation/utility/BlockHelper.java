@@ -8,6 +8,8 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.content.contraptions.base.KineticTileEntity;
 import com.simibubi.create.content.contraptions.components.actors.SeatBlock;
 
+import com.simibubi.create.lib.utility.PlantUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -38,9 +40,6 @@ import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 
 public class BlockHelper {
 
@@ -157,21 +156,21 @@ public class BlockHelper {
 			world.levelEvent(2001, pos, Block.getId(state));
 		BlockEntity tileentity = state.hasBlockEntity() ? world.getBlockEntity(pos) : null;
 		if (player != null) {
-			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
-			MinecraftForge.EVENT_BUS.post(event);
-			if (event.isCanceled())
-				return;
-
-			if (event.getExpToDrop() > 0 && world instanceof ServerLevel)
-				state.getBlock()
-					.popExperience((ServerLevel) world, pos, event.getExpToDrop());
+//			BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(world, pos, state, player);
+//			MinecraftForge.EVENT_BUS.post(event);
+//			if (event.isCanceled())
+//				return;
+//
+//			if (event.getExpToDrop() > 0 && world instanceof ServerLevel)
+//				state.getBlock()
+//					.popExperience((ServerLevel) world, pos, event.getExpToDrop());
 
 			usedTool.mineBlock(world, state, pos, player);
 			player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
 		}
 
 		if (world instanceof ServerLevel && world.getGameRules()
-			.getBoolean(GameRules.RULE_DOBLOCKDROPS) && !world.restoringBlockSnapshots
+			.getBoolean(GameRules.RULE_DOBLOCKDROPS)// && !world.restoringBlockSnapshots
 			&& (player == null || !player.isCreative())) {
 			for (ItemStack itemStack : Block.getDrops(state, (ServerLevel) world, pos, tileentity, player, usedTool))
 				droppedItemCallback.accept(itemStack);
@@ -204,7 +203,7 @@ public class BlockHelper {
 		}
 		BlockState old = chunksection.setBlockState(i, j & 15, k, state);
 		chunk.markUnsaved();
-		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
+//		world.markAndNotifyBlock(target, chunk, old, state, 82, 512);
 
 		world.setBlock(target, state, 82);
 		world.neighborChanged(target, world.getBlockState(target.below())
@@ -224,8 +223,8 @@ public class BlockHelper {
 			return;
 		} else if (state.getBlock() == Blocks.COMPOSTER)
 			state = Blocks.COMPOSTER.defaultBlockState();
-		else if (state.getBlock() != Blocks.SEA_PICKLE && state.getBlock() instanceof IPlantable)
-			state = ((IPlantable) state.getBlock()).getPlant(world, target);
+		else if (state.getBlock() != Blocks.SEA_PICKLE && PlantUtil.isPlant(state.getBlock()))
+			state = PlantUtil.getPlant(state.getBlock());
 
 		if (world.dimensionType()
 			.ultraWarm()

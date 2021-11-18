@@ -11,7 +11,7 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-String getTerraformersMCMaven() { // thanks LambdAurora
+static String getTerraformersMCMaven() { // thanks LambdAurora
     def terraformersUrl = 'https://maven.terraformersmc.com/'
     if (pingUrl(terraformersUrl))
         return terraformersUrl
@@ -19,7 +19,7 @@ String getTerraformersMCMaven() { // thanks LambdAurora
         return 'https://maven.kotlindiscord.com/repository/terraformers/'
 }
 
-boolean pingUrl(String address) {
+static boolean pingUrl(String address) {
     try {
         def conn = (HttpURLConnection) new URL(address).openConnection()
         int responseCode = conn.getResponseCode()
@@ -30,6 +30,7 @@ boolean pingUrl(String address) {
 }
 
 repositories {
+    mavenCentral()
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://maven.parchmentmc.org" }
     maven { url = "https://maven.fabricmc.net/" }
@@ -70,6 +71,8 @@ dependencies {
     modImplementation(include("com.jozufozu.flywheel:Flywheel:${project.flywheel_version}"))
     modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"))
     modImplementation(include("net.devtech:arrp:${project.arrp_version}"))
+    implementation(include("com.electronwill.night-config:core:3.6.5"))
+    implementation(include("com.electronwill.night-config:toml:3.6.5"))
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")

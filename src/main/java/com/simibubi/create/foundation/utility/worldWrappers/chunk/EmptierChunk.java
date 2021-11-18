@@ -31,7 +31,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.scores.Scoreboard;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 public class EmptierChunk extends LevelChunk {
 
@@ -141,7 +140,7 @@ public class EmptierChunk extends LevelChunk {
 		protected LevelEntityGetter<Entity> getEntities() {
 			return null;
 		}
-		
+
 	};
 
 	public EmptierChunk() {

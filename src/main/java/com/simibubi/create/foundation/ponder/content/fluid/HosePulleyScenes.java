@@ -13,6 +13,9 @@ import com.simibubi.create.foundation.ponder.Selection;
 import com.simibubi.create.foundation.ponder.content.PonderPalette;
 import com.simibubi.create.foundation.ponder.elements.WorldSectionElement;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
@@ -20,8 +23,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class HosePulleyScenes {
 
@@ -121,10 +122,9 @@ public class HosePulleyScenes {
 		}
 
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> te
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		scene.world.modifyTileEntity(util.grid.at(1, 5, 1), HosePulleyTileEntity.class, te -> TransferUtil.getFluidHandler(te)
 			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), false)));
+				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, FluidConstants.BUCKET / 10), false)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		scene.idle(40);
@@ -220,10 +220,9 @@ public class HosePulleyScenes {
 		scene.world.showSectionAndMerge(cogs, Direction.NORTH, hoselink);
 		scene.world.showSectionAndMerge(pipes, Direction.WEST, hoselink);
 		scene.world.multiplyKineticSpeed(util.select.fromTo(3, 1, 2, 3, 2, 1), -1);
-		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> te
-			.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+		scene.world.modifyTileEntity(util.grid.at(1, 6, 1), HosePulleyTileEntity.class, te -> TransferUtil.getFluidHandler(te)
 			.ifPresent(
-				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, 100), false)));
+				ifh -> ((HosePulleyFluidHandler) ifh).fill(new FluidStack(Fluids.WATER, FluidConstants.BUCKET / 10), false)));
 		scene.world.propagatePipeChange(util.grid.at(3, 2, 1));
 
 		Vec3 surface = util.vector.topOf(1, 3, 1)

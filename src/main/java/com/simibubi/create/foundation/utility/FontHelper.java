@@ -8,10 +8,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 
+import com.simibubi.create.lib.utility.MinecraftClientUtil;
+
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public final class FontHelper {
 
@@ -20,7 +21,7 @@ public final class FontHelper {
 	public static List<String> cutString(Font font, String text, int maxWidthPerLine) {
 		// Split words
 		List<String> words = new LinkedList<>();
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftClientUtil.getLocale());
 		iterator.setText(text);
 		int start = iterator.first();
 		for (int end = iterator.next(); end != BreakIterator.DONE; start = end, end = iterator.next()) {

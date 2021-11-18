@@ -5,23 +5,24 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
-import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
-import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import com.electronwill.nightconfig.core.ConfigSpec;
+import com.electronwill.nightconfig.core.EnumGetMethod;
+import com.simibubi.create.lib.config.BooleanValue;
+import com.simibubi.create.lib.config.ConfigValue;
+import com.simibubi.create.lib.config.DoubleValue;
+import com.simibubi.create.lib.config.EnumValue;
+import com.simibubi.create.lib.config.FloatValue;
+import com.simibubi.create.lib.config.IntValue;
 
 public abstract class ConfigBase {
 
-	public ForgeConfigSpec specification;
+	public ConfigSpec specification;
 
 	protected int depth;
 	protected List<CValue<?, ?>> allValues;
 	protected List<ConfigBase> children;
 
-	protected void registerAll(final ForgeConfigSpec.Builder builder) {
+	protected void registerAll(final ConfigSpec builder) {
 		for (CValue<?, ?> cValue : allValues)
 			cValue.register(builder);
 	}
@@ -40,7 +41,7 @@ public abstract class ConfigBase {
 
 	@FunctionalInterface
 	protected static interface IValueProvider<V, T extends ConfigValue<V>>
-		extends Function<ForgeConfigSpec.Builder, T> {
+		extends Function<ConfigSpec, T> {
 	}
 
 	protected ConfigBool b(boolean current, String name, String... comment) {
@@ -74,7 +75,7 @@ public abstract class ConfigBase {
 	protected <T extends ConfigBase> T nested(int depth, Supplier<T> constructor, String... comment) {
 		T config = constructor.get();
 		new ConfigGroup(config.getName(), depth, comment);
-		new CValue<Boolean, ForgeConfigSpec.BooleanValue>(config.getName(), builder -> {
+		new CValue<Boolean, BooleanValue>(config.getName(), builder -> {
 			config.depth = depth;
 			config.registerAll(builder);
 			if (config.depth > depth)
@@ -103,7 +104,7 @@ public abstract class ConfigBase {
 			allValues.add(this);
 		}
 
-		public void addComments(Builder builder, String... comment) {
+		public void addComments(ConfigSpec builder, String... comment) {
 			if (comment.length > 0) {
 				String[] comments = new String[comment.length + 1];
 				comments[0] = " ";
@@ -113,7 +114,7 @@ public abstract class ConfigBase {
 				builder.comment(" ");
 		}
 
-		public void register(ForgeConfigSpec.Builder builder) {
+		public void register(ConfigSpec builder) {
 			value = provider.apply(builder);
 		}
 
@@ -145,7 +146,7 @@ public abstract class ConfigBase {
 		}
 
 		@Override
-		public void register(Builder builder) {
+		public void register(ConfigSpec builder) {
 			if (depth > groupDepth)
 				builder.pop(depth - groupDepth);
 			depth = groupDepth;
@@ -159,14 +160,20 @@ public abstract class ConfigBase {
 	public class ConfigBool extends CValue<Boolean, BooleanValue> {
 
 		public ConfigBool(String name, boolean def, String... comment) {
-			super(name, builder -> builder.define(name, def), comment);
+			super(name, builder -> {
+				builder.define(name, def);
+				return new BooleanValue(def);
+			}, comment);
 		}
 	}
 
 	public class ConfigEnum<T extends Enum<T>> extends CValue<T, EnumValue<T>> {
 
 		public ConfigEnum(String name, T defaultValue, String[] comment) {
-			super(name, builder -> builder.defineEnum(name, defaultValue), comment);
+			super(name, builder -> {
+				builder.defineEnum(name, defaultValue, EnumGetMethod.NAME_IGNORECASE);
+				return new EnumValue<>(defaultValue);
+			}, comment);
 		}
 
 	}
@@ -174,7 +181,10 @@ public abstract class ConfigBase {
 	public class ConfigFloat extends CValue<Double, DoubleValue> {
 
 		public ConfigFloat(String name, float current, float min, float max, String... comment) {
-			super(name, builder -> builder.defineInRange(name, current, min, max), comment);
+			super(name, builder -> {
+				builder.defineInRange(name, current, min, max);
+				return new DoubleValue(current);
+			}, comment);
 		}
 
 		public float getF() {
@@ -185,7 +195,10 @@ public abstract class ConfigBase {
 	public class ConfigInt extends CValue<Integer, IntValue> {
 
 		public ConfigInt(String name, int current, int min, int max, String... comment) {
-			super(name, builder -> builder.defineInRange(name, current, min, max), comment);
+			super(name, builder -> {
+				builder.defineInRange(name, current, min, max);
+				return new IntValue(current);
+			}, comment);
 		}
 	}
 

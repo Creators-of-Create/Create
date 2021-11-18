@@ -1,15 +1,14 @@
 package com.simibubi.create.foundation.config;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
 import com.simibubi.create.foundation.worldgen.AllWorldFeatures;
-
-import net.minecraftforge.common.ForgeConfigSpec.Builder;
 
 public class CWorldGen extends ConfigBase {
 
 	public final ConfigBool disable = b(false, "disableWorldGen", Comments.disable);
 
 	@Override
-	protected void registerAll(Builder builder) {
+	protected void registerAll(ConfigSpec builder) {
 		super.registerAll(builder);
 		AllWorldFeatures.fillConfig(builder);
 	}

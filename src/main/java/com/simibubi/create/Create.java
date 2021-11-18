@@ -81,6 +81,8 @@ public class Create implements ModInitializer {
 	}
 
 	public static void onCtor() {
+		AllConfigs.register();
+		AllConfigs.onLoad();
 		AllSoundEvents.prepare();
 		AllBlocks.register();
 		AllItems.register();
@@ -95,7 +97,6 @@ public class Create implements ModInitializer {
 		AllWorldFeatures.register();
 		AllEnchantments.register();
 		FurnaceEngineModifiers.register();
-		AllConfigs.register();
 		BlockSpoutingBehaviour.register();
 
 //		ForgeMod.enableMilkFluid(); // FIXME PORT: milk
