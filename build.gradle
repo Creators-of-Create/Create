@@ -42,6 +42,7 @@ minecraft {
         client {
             workingDirectory project.file('run')
             arg '-mixin.config=create.mixins.json'
+            arg '-mixin.config=flywheel.mixins.json'
             //jvmArgs '-XX:+UnlockCommercialFeatures' // uncomment for profiling
             property 'forge.logging.console.level', 'info'
             property 'mixin.env.remapRefMap', 'true'

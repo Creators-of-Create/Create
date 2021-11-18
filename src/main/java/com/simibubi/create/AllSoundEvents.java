@@ -165,6 +165,7 @@ public class AllSoundEvents {
 			.build(),
 
 		SANDING_SHORT = create("sanding_short").subtitle("Sanding noises")
+			.addVariant("sanding_short_1")
 			.category(SoundSource.BLOCKS)
 			.build(),
 
@@ -206,17 +207,17 @@ public class AllSoundEvents {
 			.playExisting(SoundEvents.NETHERRACK_HIT)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		CRUSHING_2 = create("crushing_2").noSubtitle()
 			.playExisting(SoundEvents.GRAVEL_PLACE)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		CRUSHING_3 = create("crushing_3").noSubtitle()
 			.playExisting(SoundEvents.NETHERITE_BLOCK_BREAK)
 			.category(SoundSource.BLOCKS)
 			.build(),
-			
+
 		PECULIAR_BELL_USE = create("peculiar_bell_use").subtitle("Peculiar Bell tolls")
 			.playExisting(SoundEvents.BELL_BLOCK)
 			.category(SoundSource.BLOCKS)
@@ -319,10 +320,14 @@ public class AllSoundEvents {
 		protected String subtitle = "unregistered";
 		protected SoundSource category = SoundSource.BLOCKS;
 		protected List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
+		protected List<ResourceLocation> variants;
 
 		public SoundEntryBuilder(ResourceLocation id) {
 			wrappedEvents = new ArrayList<>();
+			variants = new ArrayList<>();
 			this.id = id;
+
+			variants.add(id);
 		}
 
 		public SoundEntryBuilder subtitle(String subtitle) {
@@ -340,6 +345,15 @@ public class AllSoundEvents {
 			return this;
 		}
 
+		public SoundEntryBuilder addVariant(String name) {
+			return addVariant(Create.asResource(name));
+		}
+
+		public SoundEntryBuilder addVariant(ResourceLocation id) {
+			variants.add(id);
+			return this;
+		}
+
 		public SoundEntryBuilder playExisting(SoundEvent event, float volume, float pitch) {
 			wrappedEvents.add(Pair.of(event, Couple.create(volume, pitch)));
 			return this;
@@ -350,8 +364,8 @@ public class AllSoundEvents {
 		}
 
 		public SoundEntry build() {
-			SoundEntry entry = wrappedEvents.isEmpty() ? new CustomSoundEntry(id, subtitle, category)
-				: new WrappedSoundEntry(id, subtitle, wrappedEvents, category);
+			SoundEntry entry = wrappedEvents.isEmpty() ? new CustomSoundEntry(id, variants, subtitle, category)
+				: new WrappedSoundEntry(id, variants, subtitle, wrappedEvents, category);
 			entries.put(entry.getId(), entry);
 			return entry;
 		}
@@ -361,11 +375,13 @@ public class AllSoundEvents {
 	public static abstract class SoundEntry {
 
 		protected ResourceLocation id;
+		protected List<ResourceLocation> variants;
 		protected String subtitle;
 		protected SoundSource category;
 
-		public SoundEntry(ResourceLocation id, String subtitle, SoundSource category) {
+		public SoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, SoundSource category) {
 			this.id = id;
+			this.variants = variants;
 			this.subtitle = subtitle;
 			this.category = category;
 		}
@@ -385,7 +401,11 @@ public class AllSoundEvents {
 		public ResourceLocation getId() {
 			return id;
 		}
-		
+
+		public List<ResourceLocation> getVariants() {
+			return variants;
+		}
+
 		public boolean hasSubtitle() {
 			return subtitle != null;
 		}
@@ -416,7 +436,7 @@ public class AllSoundEvents {
 		}
 
 		public void play(Level world, Player entity, Vec3i pos, float volume, float pitch) {
-			play(world, entity, pos.getX(), pos.getY(), pos.getZ(), volume, pitch);
+			play(world, entity, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, volume, pitch);
 		}
 
 		public void play(Level world, Player entity, Vec3 pos, float volume, float pitch) {
@@ -442,9 +462,9 @@ public class AllSoundEvents {
 		private List<Pair<SoundEvent, Couple<Float>>> wrappedEvents;
 		private List<Pair<SoundEvent, Couple<Float>>> compiledEvents;
 
-		public WrappedSoundEntry(ResourceLocation id, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
+		public WrappedSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, List<Pair<SoundEvent, Couple<Float>>> wrappedEvents,
 			SoundSource category) {
-			super(id, subtitle, category);
+			super(id, variants, subtitle, category);
 			this.wrappedEvents = wrappedEvents;
 			compiledEvents = Lists.newArrayList();
 		}
@@ -517,8 +537,8 @@ public class AllSoundEvents {
 
 		protected SoundEvent event;
 
-		public CustomSoundEntry(ResourceLocation id, String subtitle, SoundSource category) {
-			super(id, subtitle, category);
+		public CustomSoundEntry(ResourceLocation id, List<ResourceLocation> variants, String subtitle, SoundSource category) {
+			super(id, variants, subtitle, category);
 		}
 
 		@Override
@@ -540,7 +560,11 @@ public class AllSoundEvents {
 		public void write(JsonObject json) {
 			JsonObject entry = new JsonObject();
 			JsonArray list = new JsonArray();
-			list.add(id.toString());
+
+			for (ResourceLocation variant : variants) {
+				list.add(variant.toString());
+			}
+
 			entry.add("sounds", list);
 			entry.addProperty("subtitle", getSubtitleKey());
 			json.add(id.getPath(), entry);

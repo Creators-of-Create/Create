@@ -175,12 +175,12 @@ public class SandPaperItem extends Item {
 
 		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
 		if (newState != null) {
-			AllSoundEvents.SANDING_LONG.play(level, player, pos);
+			AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 			level.levelEvent(player, 3005, pos, 0); // Spawn particles
 		} else {
 			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
 			if (newState != null) {
-				AllSoundEvents.SANDING_LONG.play(level, player, pos);
+				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
 				level.levelEvent(player, 3004, pos, 0); // Spawn particles
 			}
 		}
