@@ -176,24 +176,24 @@ public class SandPaperItem extends Item implements CustomItemEnchantabilityItem 
 		BlockPos pos = context.getClickedPos();
 		BlockState state = level.getBlockState(pos);
 
-//		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
-//		if (newState != null) {
-//			AllSoundEvents.SANDING_LONG.play(level, player, pos);
-//			level.levelEvent(player, 3005, pos, 0); // Spawn particles
-//		} else {
-//			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
-//			if (newState != null) {
-//				AllSoundEvents.SANDING_LONG.play(level, player, pos);
-//				level.levelEvent(player, 3004, pos, 0); // Spawn particles
-//			}
-//		}
-//
-//		if (newState != null) {
-//			level.setBlockAndUpdate(pos, newState);
-//			if (player != null)
-//				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
-//			return InteractionResult.sidedSuccess(level.isClientSide);
-//		}
+		BlockState newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_SCRAPE);
+		if (newState != null) {
+			AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
+			level.levelEvent(player, 3005, pos, 0); // Spawn particles
+		} else {
+			newState = state.getToolModifiedState(level, pos, player, stack, ToolActions.AXE_WAX_OFF);
+			if (newState != null) {
+				AllSoundEvents.SANDING_LONG.play(level, player, pos, 1, 1 + (level.random.nextFloat() * 0.5f - 1f) / 5f);
+				level.levelEvent(player, 3004, pos, 0); // Spawn particles
+			}
+		}
+
+		if (newState != null) {
+			level.setBlockAndUpdate(pos, newState);
+			if (player != null)
+				stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(p.getUsedItemHand()));
+			return InteractionResult.sidedSuccess(level.isClientSide);
+		}
 
 		return InteractionResult.PASS;
 	}

@@ -300,7 +300,8 @@
   },
   "sanding_short": {
     "sounds": [
-      "create:sanding_short"
+      "create:sanding_short",
+      "create:sanding_short_1"
     ],
     "subtitle": "create.subtitle.sanding_short"
   },
