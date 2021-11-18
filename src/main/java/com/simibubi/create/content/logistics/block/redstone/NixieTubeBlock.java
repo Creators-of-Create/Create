@@ -12,6 +12,9 @@ import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +22,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -38,8 +42,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import org.jetbrains.annotations.Nullable;
+
 public class NixieTubeBlock extends HorizontalDirectionalBlock
-	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
+	implements ITE<NixieTubeTileEntity>, IWrenchable, ISpecialBlockItemRequirement, BlockPickInteractionAware, CanConnectRedstoneBlock {
 
 	public static final BooleanProperty CEILING = BooleanProperty.create("ceiling");
 
@@ -72,7 +78,10 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 		}
 
 		boolean display = heldItem.getItem() == Items.NAME_TAG && heldItem.hasCustomHoverName();
-		DyeColor dye = DyeColor.getColor(heldItem);
+		DyeColor dye = null;
+		if (heldItem.getItem() instanceof DyeItem dyed) {
+			dye = dyed.getDyeColor();
+		}
 
 		if (!display && dye == null)
 			return InteractionResult.PASS;
@@ -128,7 +137,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	public ItemStack getCloneItemStack(BlockGetter p_185473_1_, BlockPos p_185473_2_, BlockState p_185473_3_) {
 		return AllBlocks.ORANGE_NIXIE_TUBE.asStack();
 	}
-	
+
 	@Override
 	public ItemRequirement getRequiredItems(BlockState state, BlockEntity te) {
 		return new ItemRequirement(ItemUseType.CONSUME, AllBlocks.ORANGE_NIXIE_TUBE.get()
@@ -144,12 +153,11 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 		if (color != DyeColor.ORANGE)
 			return AllBlocks.ORANGE_NIXIE_TUBE.get()
-				.getPickBlock(state, target, world, pos, player);
-		return super.getPickBlock(state, target, world, pos, player);
+					.getPickedStack(state, view, pos, player, result);
+		return new ItemStack(AllBlocks.NIXIE_TUBES.get(color).get());
 	}
 
 	@Override
@@ -230,7 +238,7 @@ public class NixieTubeBlock extends HorizontalDirectionalBlock
 	public BlockEntityType<? extends NixieTubeTileEntity> getTileEntityType() {
 		return AllTileEntities.NIXIE_TUBE.get();
 	}
-	
+
 	public DyeColor getColor() {
 		return color;
 	}

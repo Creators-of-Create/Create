@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,14 +19,14 @@ public class ZapperLog {
 
 	/*
 	 * Undo and redo operations applied by tools what information is necessary?
-	 * 
+	 *
 	 * For survival mode: does undo have the required blocks
-	 * 
+	 *
 	 * For creative mode: what data did removed TEs have
-	 * 
+	 *
 	 * When undo: remove added blocks (added -> air) replace replaced blocks (added
 	 * -> before) add removed blocks (air -> before)
-	 * 
+	 *
 	 */
 
 	public void record(Level world, List<BlockPos> positions) {
@@ -36,7 +38,7 @@ public class ZapperLog {
 
 		List<StructureBlockInfo> blocks = positions.stream().map(pos -> {
 			BlockEntity tileEntity = world.getBlockEntity(pos);
-			return new StructureBlockInfo(pos, world.getBlockState(pos), tileEntity == null ? null : tileEntity.serializeNBT());
+			return new StructureBlockInfo(pos, world.getBlockState(pos), tileEntity == null ? null : NBTSerializer.serializeNBT(tileEntity));
 		}).collect(Collectors.toList());
 
 		log.add(0, blocks);

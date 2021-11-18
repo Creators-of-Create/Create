@@ -7,6 +7,7 @@ import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.contraptions.components.structureMovement.piston.MechanicalPistonBlock.PistonState;
 import com.simibubi.create.foundation.block.WrenchableDirectionalBlock;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implements SimpleWaterloggedBlock {
+import org.jetbrains.annotations.Nullable;
+
+public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implements SimpleWaterloggedBlock, BlockPickInteractionAware {
 
     public static final EnumProperty<PistonType> TYPE = BlockStateProperties.PISTON_TYPE;
 
@@ -50,11 +53,10 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
         return PushReaction.NORMAL;
     }
 
-    @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-                                  Player player) {
-        return AllBlocks.PISTON_EXTENSION_POLE.asStack();
-    }
+	@Override
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
+		return AllBlocks.PISTON_EXTENSION_POLE.asStack();
+	}
 
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
@@ -112,7 +114,7 @@ public class MechanicalPistonHeadBlock extends WrenchableDirectionalBlock implem
         FluidState FluidState = context.getLevel().getFluidState(context.getClickedPos());
         return super.getStateForPlacement(context).setValue(BlockStateProperties.WATERLOGGED, Boolean.valueOf(FluidState.getType() == Fluids.WATER));
     }
-    
+
     @Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

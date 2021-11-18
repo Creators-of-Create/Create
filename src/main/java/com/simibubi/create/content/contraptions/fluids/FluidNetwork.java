@@ -23,6 +23,8 @@ import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.utility.LazyOptional;
 
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -177,7 +179,6 @@ public class FluidNetwork {
 
 		int flowSpeed = transferSpeed;
 		for (boolean simulate : Iterate.trueAndFalse) {
-			FluidAction action = simulate ? true : false;
 
 			IFluidHandler handler = source.orElse(null);
 			if (handler == null)
@@ -191,11 +192,11 @@ public class FluidNetwork {
 				if (!contained.isFluidEqual(fluid))
 					continue;
 				FluidStack toExtract = FluidHelper.copyStackWithAmount(contained, flowSpeed);
-				transfer = handler.drain(toExtract, action);
+				transfer = handler.drain(toExtract, simulate);
 			}
 
 			if (transfer.isEmpty()) {
-				FluidStack genericExtract = handler.drain(flowSpeed, action);
+				FluidStack genericExtract = handler.drain(flowSpeed, simulate);
 				if (!genericExtract.isEmpty() && genericExtract.isFluidEqual(fluid))
 					transfer = genericExtract;
 			}
@@ -205,13 +206,13 @@ public class FluidNetwork {
 
 			List<Pair<BlockFace, LazyOptional<IFluidHandler>>> availableOutputs = new ArrayList<>(targets);
 			while (!availableOutputs.isEmpty() && transfer.getAmount() > 0) {
-				int dividedTransfer = transfer.getAmount() / availableOutputs.size();
-				int remainder = transfer.getAmount() % availableOutputs.size();
+				long dividedTransfer = transfer.getAmount() / availableOutputs.size();
+				long remainder = transfer.getAmount() % availableOutputs.size();
 
 				for (Iterator<Pair<BlockFace, LazyOptional<IFluidHandler>>> iterator =
 					availableOutputs.iterator(); iterator.hasNext();) {
 					Pair<BlockFace, LazyOptional<IFluidHandler>> pair = iterator.next();
-					int toTransfer = dividedTransfer;
+					long toTransfer = dividedTransfer;
 					if (remainder > 0) {
 						toTransfer++;
 						remainder--;
@@ -228,7 +229,7 @@ public class FluidNetwork {
 
 					FluidStack divided = transfer.copy();
 					divided.setAmount(toTransfer);
-					int fill = targetHandler.fill(divided, action);
+					long fill = targetHandler.fill(divided, simulate);
 					transfer.setAmount(transfer.getAmount() - fill);
 					if (fill < toTransfer)
 						iterator.remove();

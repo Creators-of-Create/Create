@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 
+import com.simibubi.create.lib.helper.DamageSourceHelper;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +35,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTileEntity> {
-	public static DamageSource damageSourceSaw = new DamageSource("create.mechanical_saw").bypassArmor();
+	public static DamageSource damageSourceSaw = DamageSourceHelper.create$createArmorBypassingDamageSource("create.mechanical_saw");
 
 	public SawBlock(Properties properties) {
 		super(properties);
@@ -116,12 +118,12 @@ public class SawBlock extends DirectionalAxisKineticBlock implements ITE<SawTile
 	public Class<SawTileEntity> getTileEntityClass() {
 		return SawTileEntity.class;
 	}
-	
+
 	@Override
 	public BlockEntityType<? extends SawTileEntity> getTileEntityType() {
 		return AllTileEntities.SAW.get();
 	}
-	
+
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter reader, BlockPos pos, PathComputationType type) {
 		return false;

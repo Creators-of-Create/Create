@@ -49,7 +49,7 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 		for (Map.Entry<BlockPos, BlockState> entry : blocksAdded.entrySet()) {
 			BlockPos pos = entry.getKey();
 			BlockState state = entry.getValue();
-			int light = state.getLightEmission(this, pos);
+			int light = state.getLightEmission();
 			if (light > 0) {
 				lighter.onBlockEmissionIncrease(pos, light);
 			}
@@ -98,11 +98,6 @@ public class PlacementSimulationWorld extends WrappedWorld implements IFlywheelW
 
 	@Override
 	public boolean isLoaded(BlockPos pos) {
-		return true;
-	}
-
-	@Override
-	public boolean isAreaLoaded(BlockPos center, int range) {
 		return true;
 	}
 

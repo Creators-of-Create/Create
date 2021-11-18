@@ -20,6 +20,7 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.DebugPackets;
@@ -40,7 +41,9 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.HitResult;
 
-public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity> {
+import org.jetbrains.annotations.Nullable;
+
+public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBlockItemRequirement, ITE<FluidPipeTileEntity>, BlockPickInteractionAware {
 
 	public static final Map<Direction, BooleanProperty> FACING_TO_PROPERTY_MAP = PipeBlock.PROPERTY_BY_DIRECTION;
 
@@ -77,7 +80,7 @@ public class EncasedPipeBlock extends Block implements IWrenchable, ISpecialBloc
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 		return AllBlocks.FLUID_PIPE.asStack();
 	}
 

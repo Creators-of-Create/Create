@@ -11,6 +11,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.base.Predicates;
@@ -194,7 +196,7 @@ public class RecipeGridHandler {
 				CompoundTag entry = new CompoundTag();
 				entry.putInt("x", pair.getKey());
 				entry.putInt("y", pair.getValue());
-				entry.put("item", stack.serializeNBT());
+				entry.put("item", NBTSerializer.serializeNBT(stack));
 				gridNBT.add(entry);
 			});
 			nbt.put("Grid", gridNBT);

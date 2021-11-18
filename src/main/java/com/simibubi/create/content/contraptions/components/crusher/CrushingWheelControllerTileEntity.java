@@ -19,6 +19,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.DirectBeltInputB
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -329,7 +331,7 @@ public class CrushingWheelControllerTileEntity extends SmartTileEntity {
 	public void write(CompoundTag compound, boolean clientPacket) {
 		if (hasEntity())
 			compound.put("Entity", NbtUtils.createUUID(entityUUID));
-		compound.put("Inventory", inventory.serializeNBT());
+		compound.put("Inventory", NBTSerializer.serializeNBT(inventory));
 		compound.putFloat("Speed", crushingspeed);
 		super.write(compound, clientPacket);
 	}

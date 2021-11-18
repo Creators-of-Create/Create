@@ -11,6 +11,8 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.config.AllConfigs;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.utility.TagUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -68,7 +70,7 @@ public class MechanicalPistonBlock extends DirectionalAxisKineticBlock implement
 		if (player.isShiftKeyDown())
 			return InteractionResult.PASS;
 		if (!player.getItemInHand(handIn)
-			.is(Tags.Items.SLIMEBALLS)) {
+			.is(TagUtil.SLIMEBALLS)) {
 			if (player.getItemInHand(handIn)
 				.isEmpty()) {
 				withTileEntityDo(worldIn, pos, te -> te.assembleNextTick = true);

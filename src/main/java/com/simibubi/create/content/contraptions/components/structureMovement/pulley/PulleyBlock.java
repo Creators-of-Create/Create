@@ -6,6 +6,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.HorizontalAxisKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -33,6 +34,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import org.jetbrains.annotations.Nullable;
 
 public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<PulleyTileEntity> {
 
@@ -87,13 +90,13 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
     public Class<PulleyTileEntity> getTileEntityClass() {
         return PulleyTileEntity.class;
     }
-    
+
     @Override
     public BlockEntityType<? extends PulleyTileEntity> getTileEntityType() {
     	return AllTileEntities.ROPE_PULLEY.get();
     }
 
-    private static class RopeBlockBase extends Block implements SimpleWaterloggedBlock {
+	private static class RopeBlockBase extends Block implements SimpleWaterloggedBlock, BlockPickInteractionAware {
 
         public RopeBlockBase(Properties properties) {
             super(properties);
@@ -110,11 +113,10 @@ public class PulleyBlock extends HorizontalAxisKineticBlock implements ITE<Pulle
             return PushReaction.BLOCK;
         }
 
-        @Override
-        public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-                                      Player player) {
-            return AllBlocks.ROPE_PULLEY.asStack();
-        }
+		@Override
+		public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
+			return AllBlocks.ROPE_PULLEY.asStack();
+		}
 
         @Override
         public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {

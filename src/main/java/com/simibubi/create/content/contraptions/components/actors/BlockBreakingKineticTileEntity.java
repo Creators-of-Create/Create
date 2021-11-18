@@ -40,7 +40,7 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		if (destroyProgress == -1)
 			destroyNextTick();
 	}
-	
+
 	@Override
 	public void lazyTick() {
 		super.lazyTick();
@@ -93,9 +93,9 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 			return;
 		if (getSpeed() == 0)
 			return;
-		
+
 		breakingPos = getBreakingPos();
-		
+
 		if (ticksUntilNextProgress < 0)
 			return;
 		if (ticksUntilNextProgress-- > 0)
@@ -144,8 +144,8 @@ public abstract class BlockBreakingKineticTileEntity extends KineticTileEntity {
 		Vec3 vec = VecHelper.offsetRandomly(VecHelper.getCenterOf(breakingPos), level.random, .125f);
 
 		Block.getDrops(stateToBreak, (ServerLevel) level, breakingPos, tileentity).forEach((stack) -> {
-			if (!stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)
-					&& !level.restoringBlockSnapshots) {
+			if (!stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
+//					&& !level.restoringBlockSnapshots) {
 				ItemEntity itementity = new ItemEntity(level, vec.x, vec.y, vec.z, stack);
 				itementity.setDefaultPickUpDelay();
 				itementity.setDeltaMovement(Vec3.ZERO);

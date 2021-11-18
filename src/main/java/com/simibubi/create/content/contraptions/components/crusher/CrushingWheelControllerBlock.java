@@ -10,6 +10,9 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.utility.Iterate;
 
+import com.simibubi.create.lib.extensions.BlockExtensions;
+import com.simibubi.create.lib.helper.EntityHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -39,7 +42,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class CrushingWheelControllerBlock extends DirectionalBlock implements ITE<CrushingWheelControllerTileEntity> {
+public class CrushingWheelControllerBlock extends DirectionalBlock implements ITE<CrushingWheelControllerTileEntity>, BlockExtensions {
 
 	public CrushingWheelControllerBlock(Properties p_i48440_1_) {
 		super(p_i48440_1_);
@@ -53,7 +56,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 	}
 
 	@Override
-	public boolean addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
+	public boolean create$addRunningEffects(BlockState state, Level world, BlockPos pos, Entity entity) {
 		return true;
 	}
 
@@ -89,7 +92,7 @@ public class CrushingWheelControllerBlock extends DirectionalBlock implements IT
 			return;
 		if (entityIn instanceof ItemEntity)
 			((ItemEntity) entityIn).setPickUpDelay(10);
-		CompoundTag data = entityIn.getPersistentData();
+		CompoundTag data = EntityHelper.getExtraCustomData(entityIn);
 		if (data.contains("BypassCrushingWheel")) {
 			if (pos.equals(NbtUtils.readBlockPos(data.getCompound("BypassCrushingWheel"))))
 				return;

@@ -16,6 +16,9 @@ import com.simibubi.create.content.schematics.ItemRequirement;
 import com.simibubi.create.content.schematics.ItemRequirement.ItemUseType;
 import com.simibubi.create.foundation.block.ITE;
 
+import com.simibubi.create.lib.block.MinecartPassHandlerBlock;
+import com.simibubi.create.lib.block.SlopeCreationCheckingRail;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -60,7 +63,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class CartAssemblerBlock extends BaseRailBlock
-	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement {
+	implements ITE<CartAssemblerTileEntity>, IWrenchable, ISpecialBlockItemRequirement, SlopeCreationCheckingRail, MinecartPassHandlerBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 	public static final BooleanProperty BACKWARDS = BooleanProperty.create("backwards");
@@ -91,11 +94,11 @@ public class CartAssemblerBlock extends BaseRailBlock
 	public static BlockState getRailBlock(BlockState state) {
 		BaseRailBlock railBlock = (BaseRailBlock) state.getValue(RAIL_TYPE)
 			.getBlock();
-		
+
 		@SuppressWarnings("deprecation")
 		BlockState railState = railBlock.defaultBlockState()
 			.setValue(railBlock.getShapeProperty(), state.getValue(RAIL_SHAPE));
-		
+
 		if (railState.hasProperty(ControllerRailBlock.BACKWARDS))
 			railState = railState.setValue(ControllerRailBlock.BACKWARDS, state.getValue(BACKWARDS));
 		return railState;
@@ -157,7 +160,7 @@ public class CartAssemblerBlock extends BaseRailBlock
 	}
 
 	public static boolean canAssembleTo(AbstractMinecart cart) {
-		return cart.canBeRidden() || cart instanceof MinecartFurnace || cart instanceof MinecartChest;
+		return cart.getMinecartType() == AbstractMinecart.Type.RIDEABLE || cart instanceof MinecartFurnace || cart instanceof MinecartChest;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import com.simibubi.create.AllBlocks;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.foundation.utility.Lang;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -30,7 +31,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public class LitBlazeBurnerBlock extends Block {
+import org.jetbrains.annotations.Nullable;
+
+public class LitBlazeBurnerBlock extends Block implements BlockPickInteractionAware {
 
 	public static final EnumProperty<FlameType> FLAME_TYPE = EnumProperty.create("flame_type", FlameType.class);
 
@@ -70,8 +73,7 @@ public class LitBlazeBurnerBlock extends Block {
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-		Player player) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 		return AllItems.EMPTY_BLAZE_BURNER.asStack();
 	}
 

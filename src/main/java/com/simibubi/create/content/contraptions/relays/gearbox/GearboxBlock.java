@@ -8,6 +8,7 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -24,7 +25,9 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.HitResult;
 
-public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<GearboxTileEntity> {
+import org.jetbrains.annotations.Nullable;
+
+public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<GearboxTileEntity>, BlockPickInteractionAware {
 
 	public GearboxBlock(Properties properties) {
 		super(properties);
@@ -48,12 +51,11 @@ public class GearboxBlock extends RotatedPillarKineticBlock implements ITE<Gearb
 			return super.getDrops(state, builder);
 		return Arrays.asList(new ItemStack(AllItems.VERTICAL_GEARBOX.get()));
 	}
-	
+
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos,
-			Player player) {
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
 		if (state.getValue(AXIS).isVertical())
-			return super.getPickBlock(state, target, world, pos, player);
+			return super.getCloneItemStack(view, pos, state);
 		return new ItemStack(AllItems.VERTICAL_GEARBOX.get());
 	}
 

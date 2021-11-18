@@ -12,9 +12,11 @@ import com.simibubi.create.content.contraptions.fluids.tank.CreativeFluidTankTil
 import com.simibubi.create.content.contraptions.processing.EmptyingByBasin;
 import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.utility.Pair;
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.FluidStack;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandlerItem;
+import com.simibubi.create.lib.utility.LazyOptional;
 import com.tterrag.registrate.fabric.SimpleFlowableFluid;
 
 import net.minecraft.core.Registry;
@@ -94,7 +96,7 @@ public class FluidHelper {
 
 	public static FluidStack deserializeFluidStack(JsonObject json) {
 		ResourceLocation id = new ResourceLocation(GsonHelper.getAsString(json, "fluid"));
-		Fluid fluid = ForgeRegistries.FLUIDS.getValue(id);
+		Fluid fluid = Registry.FLUID.get(id);
 		if (fluid == null)
 			throw new JsonSyntaxException("Unknown fluid '" + id + "'");
 		int amount = GsonHelper.getAsInt(json, "amount");
@@ -121,7 +123,7 @@ public class FluidHelper {
 			return false;
 
 		Pair<FluidStack, ItemStack> emptyingResult = EmptyingByBasin.emptyItem(worldIn, heldItem, true);
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
 		IFluidHandler tank = capability.orElse(null);
 		FluidStack fluidStack = emptyingResult.getFirst();
 
@@ -150,7 +152,7 @@ public class FluidHelper {
 		if (!GenericItemFilling.canItemBeFilled(world, heldItem))
 			return false;
 
-		LazyOptional<IFluidHandler> capability = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+		LazyOptional<IFluidHandler> capability = TransferUtil.getFluidHandler(te);
 		IFluidHandler tank = capability.orElse(null);
 
 		if (tank == null)
@@ -209,11 +211,11 @@ public class FluidHelper {
 			for (int slot = 0; slot < fluidItem.getTanks(); slot++) {
 
 				FluidStack fluidInTank = fluidTank.getFluidInTank(tankSlot);
-				int tankCapacity = fluidTank.getTankCapacity(tankSlot) - fluidInTank.getAmount();
+				long tankCapacity = fluidTank.getTankCapacity(tankSlot) - fluidInTank.getAmount();
 				boolean tankEmpty = fluidInTank.isEmpty();
 
 				FluidStack fluidInItem = fluidItem.getFluidInTank(tankSlot);
-				int itemCapacity = fluidItem.getTankCapacity(tankSlot) - fluidInItem.getAmount();
+				long itemCapacity = fluidItem.getTankCapacity(tankSlot) - fluidInItem.getAmount();
 				boolean itemEmpty = fluidInItem.isEmpty();
 
 				boolean undecided = lockedExchange == null;
@@ -228,7 +230,7 @@ public class FluidHelper {
 				if (((tankEmpty || itemCapacity <= 0) && canMoveToTank)
 					|| undecided && preferred == FluidExchange.ITEM_TO_TANK) {
 
-					int amount = fluidTank.fill(
+					long amount = fluidTank.fill(
 						fluidItem.drain(Math.min(maxTransferAmountPerTank, tankCapacity), false),
 						false);
 					if (amount > 0) {
@@ -243,7 +245,7 @@ public class FluidHelper {
 				if (((itemEmpty || tankCapacity <= 0) && canMoveToItem)
 					|| undecided && preferred == FluidExchange.TANK_TO_ITEM) {
 
-					int amount = fluidItem.fill(
+					long amount = fluidItem.fill(
 						fluidTank.drain(Math.min(maxTransferAmountPerTank, itemCapacity), false),
 						false);
 					if (amount > 0) {

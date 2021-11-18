@@ -22,6 +22,8 @@ import com.simibubi.create.foundation.utility.Couple;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -416,7 +418,7 @@ public class OrientedContraptionEntity extends AbstractContraptionEntity {
 
 		// Notify to not trigger serialization side-effects
 		isSerializingFurnaceCart = true;
-		CompoundTag nbt = furnaceCart.serializeNBT();
+		CompoundTag nbt = NBTSerializer.serializeNBT(furnaceCart);
 		isSerializingFurnaceCart = false;
 
 		int fuel = nbt.getInt("Fuel");

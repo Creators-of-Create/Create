@@ -284,7 +284,7 @@ public class FunnelTileEntity extends SmartTileEntity implements IHaveHoveringIn
 
 	public void flap(boolean inward) {
 		if (!level.isClientSide) {
-			AllPackets.channel.send(packetTarget(), new FunnelFlapPacket(this, inward));
+			AllPackets.channel.sendToClientsTracking(new FunnelFlapPacket(this, inward), this);
 		} else {
 			flap.set(inward ? 1 : -1);
 			AllSoundEvents.FUNNEL_FLAP.playAt(level, worldPosition, 1, 1, true);

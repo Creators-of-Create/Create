@@ -157,7 +157,7 @@ public class MountedFluidStorage {
 		storage.valid = true;
 
 		if (nbt.contains("Bottomless")) {
-			FluidStack providedStack = FluidStack.fromNBT(nbt.getCompound("ProvidedStack"));
+			FluidStack providedStack = FluidStack.loadFluidStackFromNBT(nbt.getCompound("ProvidedStack"));
 			CreativeSmartFluidTank creativeSmartFluidTank = new CreativeSmartFluidTank(capacity, $ -> {
 			});
 			creativeSmartFluidTank.setContainedFluid(providedStack);

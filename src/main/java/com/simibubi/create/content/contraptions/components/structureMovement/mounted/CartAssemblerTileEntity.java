@@ -23,6 +23,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -165,10 +167,10 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 		entity.startRiding(cart);
 
 		if (cart instanceof MinecartFurnace) {
-			CompoundTag nbt = cart.serializeNBT();
+			CompoundTag nbt = NBTSerializer.serializeNBT(cart);
 			nbt.putDouble("PushZ", 0);
 			nbt.putDouble("PushX", 0);
-			cart.deserializeNBT(nbt);
+			NBTSerializer.deserializeNBT(cart, nbt);
 		}
 	}
 
@@ -218,10 +220,10 @@ public class CartAssemblerTileEntity extends SmartTileEntity implements IDisplay
 	protected void disassembleCart(AbstractMinecart cart) {
 		cart.ejectPassengers();
 		if (cart instanceof MinecartFurnace) {
-			CompoundTag nbt = cart.serializeNBT();
+			CompoundTag nbt = NBTSerializer.serializeNBT(cart);
 			nbt.putDouble("PushZ", cart.getDeltaMovement().x);
 			nbt.putDouble("PushX", cart.getDeltaMovement().z);
-			cart.deserializeNBT(nbt);
+			NBTSerializer.deserializeNBT(cart, nbt);
 		}
 	}
 

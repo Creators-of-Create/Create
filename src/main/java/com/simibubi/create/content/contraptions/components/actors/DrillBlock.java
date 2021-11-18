@@ -7,6 +7,8 @@ import com.simibubi.create.AllTileEntities;
 import com.simibubi.create.content.contraptions.base.DirectionalKineticBlock;
 import com.simibubi.create.foundation.block.ITE;
 
+import com.simibubi.create.lib.helper.DamageSourceHelper;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +32,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class DrillBlock extends DirectionalKineticBlock implements ITE<DrillTileEntity> {
-	public static DamageSource damageSourceDrill = new DamageSource("create.mechanical_drill").bypassArmor();
+	public static DamageSource damageSourceDrill = DamageSourceHelper.create$createArmorBypassingDamageSource("create.mechanical_drill");
 
 	public DrillBlock(Properties properties) {
 		super(properties);

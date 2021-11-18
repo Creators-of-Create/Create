@@ -14,6 +14,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.filtering.FilteringBehaviour;
 import com.simibubi.create.foundation.tileEntity.behaviour.inventory.InvManipulationBehaviour;
 import com.simibubi.create.foundation.utility.Iterate;
+import com.simibubi.create.lib.block.CanConnectRedstoneBlock;
+import com.simibubi.create.lib.transfer.TransferUtil;
 import com.simibubi.create.lib.transfer.fluid.IFluidHandler;
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
@@ -35,7 +37,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable {
+public class ContentObserverBlock extends HorizontalDirectionalBlock implements ITE<ContentObserverTileEntity>, IWrenchable, CanConnectRedstoneBlock {
 
 	public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -59,8 +61,6 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockState state = defaultBlockState();
-		Capability<IItemHandler> itemCap = CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-		Capability<IFluidHandler> fluidCap = CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
 
 		Direction preferredFacing = null;
 		for (Direction face : Iterate.horizontalDirections) {
@@ -74,9 +74,9 @@ public class ContentObserverBlock extends HorizontalDirectionalBlock implements 
 				canDetect = true;
 			else if (TileEntityBehaviour.get(tileEntity, FluidTransportBehaviour.TYPE) != null)
 				canDetect = true;
-			else if (tileEntity != null && (tileEntity.getCapability(itemCap)
+			else if (tileEntity != null && (TransferUtil.getItemHandler(tileEntity)
 				.isPresent()
-				|| tileEntity.getCapability(fluidCap)
+				|| TransferUtil.getFluidHandler(tileEntity)
 					.isPresent()))
 				canDetect = true;
 			else if (tileEntity instanceof FunnelTileEntity)

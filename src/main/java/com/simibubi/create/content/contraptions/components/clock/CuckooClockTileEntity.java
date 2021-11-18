@@ -12,6 +12,8 @@ import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
 
+import com.simibubi.create.lib.helper.DamageSourceHelper;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -26,7 +28,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class CuckooClockTileEntity extends KineticTileEntity {
 
-	public static DamageSource CUCKOO_SURPRISE = new DamageSource("create.cuckoo_clock_explosion").setExplosion();
+	public static DamageSource CUCKOO_SURPRISE = DamageSourceHelper.create$createDamageSource("create.cuckoo_clock_explosion").setExplosion();
 
 	public InterpolatedChasingValue hourHand = new InterpolatedChasingValue().withSpeed(.2f);
 	public InterpolatedChasingValue minuteHand = new InterpolatedChasingValue().withSpeed(.2f);

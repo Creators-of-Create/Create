@@ -21,6 +21,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.utility.BlockHelper;
 import com.simibubi.create.foundation.utility.ServerSpeedProvider;
 
+import com.simibubi.create.lib.utility.ItemStackUtil;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -187,7 +189,7 @@ public class BeltInventory {
 					continue;
 
 				ItemStack remainder = inputBehaviour.handleInsertion(currentItem, movementFacing, false);
-				if (remainder.equals(currentItem.stack, false))
+				if (ItemStackUtil.equals(remainder, currentItem.stack, false))
 					continue;
 
 				currentItem.stack = remainder;

@@ -17,6 +17,7 @@ import com.simibubi.create.foundation.utility.placement.IPlacementHelper;
 import com.simibubi.create.foundation.utility.placement.PlacementHelpers;
 import com.simibubi.create.foundation.utility.placement.PlacementOffset;
 
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -41,7 +43,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class SailBlock extends WrenchableDirectionalBlock {
+public class SailBlock extends WrenchableDirectionalBlock implements BlockPickInteractionAware {
 
 	public static SailBlock frame(Properties properties) {
 		return new SailBlock(properties, true, null);
@@ -88,7 +90,11 @@ public class SailBlock extends WrenchableDirectionalBlock {
 		if (frame)
 			return InteractionResult.PASS;
 
-		DyeColor color = DyeColor.getColor(heldItem);
+		DyeColor color = null;
+		if (heldItem.getItem() instanceof DyeItem dyed) {
+			color = dyed.getDyeColor();
+		}
+
 		if (color != null && color != this.color) {
 			if (!world.isClientSide)
 				applyDye(state, world, pos, color);
@@ -171,11 +177,11 @@ public class SailBlock extends WrenchableDirectionalBlock {
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
-		ItemStack pickBlock = super.getPickBlock(state, target, world, pos, player);
+	public ItemStack getPickedStack(BlockState state, BlockGetter view, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
+		ItemStack pickBlock = new ItemStack(view.getBlockState(pos).getBlock().asItem());
 		if (pickBlock.isEmpty())
 			return AllBlocks.SAIL.get()
-				.getPickBlock(state, target, world, pos, player);
+					.getPickedStack(state, view, pos, player, result);
 		return pickBlock;
 	}
 

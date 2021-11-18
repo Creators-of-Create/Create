@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.block.ITE;
 import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 
+import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
@@ -27,7 +29,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 
-public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<KineticTileEntity> {
+public class EncasedBeltBlock extends RotatedPillarKineticBlock implements ITE<KineticTileEntity>, WeakPowerCheckingBlock {
 
 	public static final Property<Part> PART = EnumProperty.create("part", Part.class);
 	public static final BooleanProperty CONNECTED_ALONG_FIRST_COORDINATE =
