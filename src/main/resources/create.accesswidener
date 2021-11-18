@@ -14,7 +14,7 @@ accessible class net/minecraft/world/level/chunk/PaletteResize
 
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
-extendable method net/minecraft/entity/Entity positionRider (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity$MoveFunction;)V
+extendable method net/minecraft/world/entity/Entity positionRider (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity$MoveFunction;)V
 
 accessible class net/minecraft/world/item/crafting/Ingredient$Value
 accessible class net/minecraft/world/item/crafting/Ingredient$ItemValue

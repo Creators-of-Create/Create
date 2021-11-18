@@ -9,6 +9,8 @@ import java.util.Set;
 
 import com.simibubi.create.lib.transfer.item.IItemHandler;
 
+import net.minecraft.server.level.ServerLevel;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.jozufozu.flywheel.backend.instancing.IInstanceRendered;
@@ -170,8 +172,7 @@ public class BeltTunnelTileEntity extends SmartTileEntity implements IInstanceRe
 	}
 
 	private void sendFlaps() {
-		AllPackets.channel.send(packetTarget(), new TunnelFlapPacket(this, flapsToSend));
-
+		AllPackets.channel.sendToClientsTracking(new TunnelFlapPacket(this, flapsToSend), (ServerLevel) level, getBlockPos());
 		flapsToSend.clear();
 	}
 

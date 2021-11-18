@@ -25,6 +25,11 @@ import com.simibubi.create.foundation.utility.NBTHelper;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedAngle;
 
+import com.simibubi.create.lib.utility.ItemStackUtil;
+import com.simibubi.create.lib.utility.LoadedCheckUtil;
+
+import com.simibubi.create.lib.utility.NBTSerializer;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -282,7 +287,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 				continue;
 
 			ItemStack remainder = armInteractionPoint.insert(level, held, true);
-			if (remainder.equals(heldItem, false))
+			if (ItemStackUtil.equals(remainder, heldItem, false))
 				continue;
 
 			selectIndex(false, i);
@@ -403,7 +408,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 	protected void initInteractionPoints() {
 		if (!updateInteractionPoints || interactionPointTag == null)
 			return;
-		if (!level.isAreaLoaded(worldPosition, getRange() + 1))
+		if (!LoadedCheckUtil.isAreaLoaded(level, worldPosition, getRange() + 1))
 			return;
 		inputs.clear();
 		outputs.clear();
@@ -455,7 +460,7 @@ public class ArmTileEntity extends KineticTileEntity implements ITransformableTE
 
 		NBTHelper.writeEnum(compound, "Phase", phase);
 		compound.putBoolean("Powered", redstoneLocked);
-		compound.put("HeldItem", heldItem.serializeNBT());
+		compound.put("HeldItem", NBTSerializer.serializeNBT(heldItem));
 		compound.putInt("TargetPointIndex", chasedPointIndex);
 		compound.putFloat("MovementProgress", chasedPointProgress);
 	}

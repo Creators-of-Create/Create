@@ -4,7 +4,7 @@ import com.simibubi.create.CreateClient;
 
 import net.minecraft.world.item.Item;
 
-public class SimpleCustomRenderer implements IItemRenderProperties {
+public class SimpleCustomRenderer {//implements IItemRenderProperties {
 
 	protected CustomRenderedItemModelRenderer<?> renderer;
 
@@ -17,9 +17,9 @@ public class SimpleCustomRenderer implements IItemRenderProperties {
 		return new SimpleCustomRenderer(renderer);
 	}
 
-	@Override
-	public CustomRenderedItemModelRenderer<?> getItemStackRenderer() {
-		return renderer;
-	}
+//	@Override
+//	public CustomRenderedItemModelRenderer<?> getItemStackRenderer() {
+//		return renderer;
+//	}
 
 }

@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 import com.simibubi.create.content.contraptions.base.RotatedPillarKineticBlock;
 
+import com.simibubi.create.lib.block.WeakPowerCheckingBlock;
+
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,7 +17,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.PushReaction;
 
 @MethodsReturnNonnullByDefault
-public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBlock {
+public abstract class AbstractEncasedShaftBlock extends RotatedPillarKineticBlock implements WeakPowerCheckingBlock {
     public AbstractEncasedShaftBlock(Properties properties) {
         super(properties);
     }

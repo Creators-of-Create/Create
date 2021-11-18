@@ -6,6 +6,8 @@ import java.util.function.Predicate;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.BlockFace;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -75,8 +77,7 @@ public abstract class FlowSource {
 				return;
 			BlockEntity tileEntity = world.getBlockEntity(location.getConnectedPos());
 			if (tileEntity != null)
-				fluidHandler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,
-					location.getOppositeFace());
+				fluidHandler = TransferUtil.getFluidHandler(tileEntity, location.getOppositeFace());
 		}
 
 		@Override
