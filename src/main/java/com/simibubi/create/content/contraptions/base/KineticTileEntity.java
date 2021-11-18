@@ -576,7 +576,7 @@ public class KineticTileEntity extends SmartTileEntity
 	}
 
 	protected AABB makeRenderBoundingBox() {
-		return this.create$getRenderBoundingBox();
+		return this.getRenderBoundingBox();
 	}
 
 	@Environment(EnvType.CLIENT)

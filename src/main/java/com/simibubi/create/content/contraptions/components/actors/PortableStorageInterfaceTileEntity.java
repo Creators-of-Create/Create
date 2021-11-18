@@ -8,6 +8,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 
+import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -18,7 +20,7 @@ import net.minecraft.world.phys.AABB;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
-public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity {
+public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity implements CustomRenderBoundingBox {
 
 	protected int transferTimer;
 	protected float distance;
@@ -119,7 +121,7 @@ public abstract class PortableStorageInterfaceTileEntity extends SmartTileEntity
 	@Environment(EnvType.CLIENT)
 	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null) {
-			cachedBoundingBox = super.getRenderBoundingBox().inflate(2);
+			cachedBoundingBox = CustomRenderBoundingBox.super.getRenderBoundingBox().inflate(2);
 		}
 		return cachedBoundingBox;
 	}

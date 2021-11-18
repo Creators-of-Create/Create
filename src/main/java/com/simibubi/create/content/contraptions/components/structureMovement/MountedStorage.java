@@ -6,6 +6,8 @@ import com.simibubi.create.content.logistics.block.inventories.AdjustableCrateBl
 import com.simibubi.create.content.logistics.block.inventories.BottomlessItemHandler;
 import com.simibubi.create.foundation.utility.NBTHelper;
 
+import com.simibubi.create.lib.transfer.TransferUtil;
+
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ChestBlock;
@@ -45,7 +47,7 @@ public class MountedStorage {
 		if (te instanceof BarrelBlockEntity)
 			return true;
 
-		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = TransferUtil.getItemHandler(te);
 		IItemHandler handler = capability.orElse(null);
 		return handler instanceof ItemStackHandler && !(handler instanceof ProcessingInventory);
 	}
@@ -78,7 +80,7 @@ public class MountedStorage {
 						.setValue(AdjustableCrateBlock.DOUBLE, false));
 		}
 
-		IItemHandler teHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+		IItemHandler teHandler = TransferUtil.getItemHandler(te)
 			.orElse(dummyHandler);
 		if (teHandler == dummyHandler)
 			return;
@@ -109,7 +111,7 @@ public class MountedStorage {
 		if (handler instanceof BottomlessItemHandler)
 			return;
 
-		LazyOptional<IItemHandler> capability = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+		LazyOptional<IItemHandler> capability = TransferUtil.getItemHandler(te);
 		IItemHandler teHandler = capability.orElse(null);
 		if (!(teHandler instanceof IItemHandlerModifiable))
 			return;

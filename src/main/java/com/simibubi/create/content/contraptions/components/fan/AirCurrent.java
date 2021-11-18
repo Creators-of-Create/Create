@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.simibubi.create.lib.helper.DamageSourceHelper;
+
+import com.simibubi.create.lib.mixin.accessor.ServerGamePacketListenerImplAccessor;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.simibubi.create.AllTags;
@@ -46,10 +50,8 @@ import com.tterrag.registrate.fabric.EnvExecutor;
 
 public class AirCurrent {
 
-	private static final DamageSource damageSourceFire = new DamageSource("create.fan_fire").setScalesWithDifficulty()
-		.setIsFire();
-	private static final DamageSource damageSourceLava = new DamageSource("create.fan_lava").setScalesWithDifficulty()
-		.setIsFire();
+	private static final DamageSource damageSourceFire = DamageSourceHelper.create$createFireDamageSource("create.fan_fire").setScalesWithDifficulty();
+	private static final DamageSource damageSourceLava = DamageSourceHelper.create$createFireDamageSource("create.fan_lava").setScalesWithDifficulty();
 
 	public final IAirCurrentSource source;
 	public AABB bounds = new AABB(0, 0, 0, 0, 0, 0);
@@ -118,7 +120,7 @@ public class AirCurrent {
 				() -> () -> enableClientPlayerSound(entity, Mth.clamp(speed / 128f * .4f, 0.01f, .4f)));
 
 			if (entity instanceof ServerPlayer)
-				((ServerPlayer) entity).connection.aboveGroundTickCount = 0;
+				((ServerGamePacketListenerImplAccessor) ((ServerPlayer) entity).connection).create$aboveGroundTickCount(0);
 
 			entityDistance -= .5f;
 			InWorldProcessing.Type processingType = getSegmentAt((float) entityDistance);

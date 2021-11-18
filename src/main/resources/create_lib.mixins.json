@@ -116,7 +116,7 @@
     "client.TerrainParticle$ProviderMixin",
     "client.TerrainParticleMixin",
     "client.TextureAtlasMixin",
-    "client.WorldRendererMixin"
+    "client.LevelRendererMixin"
   ],
   "server": [
     "server.Vec3Mixin",

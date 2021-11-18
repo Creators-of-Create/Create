@@ -2,6 +2,8 @@ package com.simibubi.create.content.curiosities.armor;
 
 import com.simibubi.create.content.curiosities.armor.CapacityEnchantment.ICapacityEnchantable;
 
+import com.simibubi.create.lib.item.CustomDurabilityBarItem;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
@@ -12,7 +14,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 
-public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable {
+public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnchantable, CustomDurabilityBarItem {
 
 	public static final int DURABILITY_BAR = 0xefefef;
 	private BlockItem blockItem;
@@ -31,7 +33,7 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	public boolean canBeDepleted() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean isEnchantable(ItemStack p_77616_1_) {
 		return true;
@@ -46,7 +48,7 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 	public void fillItemCategory(CreativeModeTab p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
 		if (!allowdedIn(p_150895_1_))
 			return;
-		
+
 		ItemStack stack = new ItemStack(this);
 		CompoundTag nbt = new CompoundTag();
 		nbt.putInt("Air", BackTankUtil.maxAirWithoutEnchants());
@@ -69,5 +71,5 @@ public class CopperBacktankItem extends CopperArmorItem implements ICapacityEnch
 		CompoundTag orCreateTag = stack.getOrCreateTag();
 		return orCreateTag.getInt("Air");
 	}
-	
+
 }

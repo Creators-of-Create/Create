@@ -61,6 +61,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.minecraft.world.phys.Vec3;
 
+import static com.simibubi.create.lib.block.CustomRenderBoundingBox.INFINITE_EXTENT_AABB;
+
 public class EjectorTileEntity extends KineticTileEntity {
 
 	List<IntAttached<ItemStack>> launchedItems;

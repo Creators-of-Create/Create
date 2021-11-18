@@ -2,6 +2,10 @@ package com.simibubi.create.content.curiosities;
 
 import java.util.Random;
 
+import com.simibubi.create.lib.helper.EntityHelper;
+
+import com.simibubi.create.lib.item.CustomDurabilityBarItem;
+
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import com.simibubi.create.AllItems;
@@ -34,7 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 
-public class ChromaticCompoundItem extends Item {
+public class ChromaticCompoundItem extends Item implements CustomDurabilityBarItem {
 
 	public ChromaticCompoundItem(Properties properties) {
 		super(properties);

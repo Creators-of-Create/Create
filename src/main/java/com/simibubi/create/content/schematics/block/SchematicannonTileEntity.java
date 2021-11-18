@@ -31,6 +31,8 @@ import com.simibubi.create.foundation.utility.Iterate;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTProcessors;
 
+import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
@@ -65,7 +67,9 @@ import com.simibubi.create.lib.utility.LazyOptional;
 import com.simibubi.create.lib.utility.LoadedCheckUtil;
 import com.simibubi.create.lib.utility.NBTSerializer;
 
-public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, IInstanceRendered {
+import static com.simibubi.create.lib.block.CustomRenderBoundingBox.INFINITE_EXTENT_AABB;
+
+public class SchematicannonTileEntity extends SmartTileEntity implements MenuProvider, IInstanceRendered, CustomRenderBoundingBox {
 
 	public static final int NEIGHBOUR_CHECKING = 100;
 	public static final int MAX_ANCHOR_DISTANCE = 256;
@@ -114,7 +118,7 @@ public class SchematicannonTileEntity extends SmartTileEntity implements MenuPro
 	public boolean firstRenderTick;
 
 	@Override
-	public AABB create$getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		return INFINITE_EXTENT_AABB;
 	}
 

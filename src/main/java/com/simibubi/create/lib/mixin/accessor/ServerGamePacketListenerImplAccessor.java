@@ -8,8 +8,8 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 @Mixin(ServerGamePacketListenerImpl.class)
 public interface ServerGamePacketListenerImplAccessor {
 	@Accessor("aboveGroundTickCount")
-	int create$floatingTickCount();
+	int create$aboveGroundTickCount();
 
 	@Accessor("aboveGroundTickCount")
-	void create$floatingTickCount(int floatingTicks);
+	void create$aboveGroundTickCount(int floatingTicks);
 }

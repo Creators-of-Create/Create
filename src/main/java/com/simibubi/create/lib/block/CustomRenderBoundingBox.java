@@ -1,16 +1,33 @@
 package com.simibubi.create.lib.block;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-/**
- * Nothing here is actually used, it's just in case we figure something out in the future. see WorldRendererMixin.
- */
 public interface CustomRenderBoundingBox {
+	AABB INFINITE_EXTENT_AABB = new AABB(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+
+	default BlockEntity self() {
+		return (BlockEntity) this;
+	}
+
 	default AABB getRenderBoundingBox() {
-		return getInfiniteBoundingBox();
+		AABB box = getInfiniteBoundingBox();
+		BlockPos pos = self().getBlockPos();
+		try {
+			VoxelShape collisionShape = self().getBlockState().getCollisionShape(self().getLevel(), pos);
+			if (!collisionShape.isEmpty()) {
+				box = collisionShape.bounds().move(pos);
+			}
+		} catch (Exception e) {
+			box = new AABB(pos.offset(-1, 0, -1), pos.offset(1, 1, 1));
+		}
+
+		return box;
 	}
 
 	default AABB getInfiniteBoundingBox() {
-		return new AABB(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		return INFINITE_EXTENT_AABB;
 	}
 }

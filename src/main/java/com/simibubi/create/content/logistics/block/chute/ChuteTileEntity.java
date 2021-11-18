@@ -30,6 +30,8 @@ import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.foundation.utility.animation.InterpolatedValue;
 
+import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -64,7 +66,7 @@ import com.simibubi.create.lib.utility.NBTSerializer;
  * Commented Code: Chutes create air streams and act similarly to encased fans
  * (Unfinished)
  */
-public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation { // , IAirCurrentSource {
+public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInformation, CustomRenderBoundingBox { // , IAirCurrentSource {
 
 	//	public AirCurrent airCurrent;
 
@@ -130,7 +132,7 @@ public class ChuteTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 	}
 
 	@Override
-	public AABB create$getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		return new AABB(worldPosition).expandTowards(0, -3, 0);
 	}
 

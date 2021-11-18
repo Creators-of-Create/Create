@@ -21,6 +21,8 @@ import com.simibubi.create.foundation.tileEntity.behaviour.belt.TransportedItemS
 import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.utility.VecHelper;
 
+import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -49,7 +51,7 @@ import com.simibubi.create.lib.utility.LazyOptional;
 
 import org.jetbrains.annotations.Nullable;
 
-public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation, BlockEntityExtensions, FluidTransferable {
+public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInformation, BlockEntityExtensions, FluidTransferable, CustomRenderBoundingBox {
 
 	public static final int FILLING_TIME = 20;
 	protected BeltProcessingBehaviour beltProcessing;
@@ -69,9 +71,9 @@ public class SpoutTileEntity extends SmartTileEntity implements IHaveGoggleInfor
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public AABB create$getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		if (cachedBoundingBox == null)
-			cachedBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox().expandTowards(0, -2, 0);
+			cachedBoundingBox = CustomRenderBoundingBox.super.getRenderBoundingBox().expandTowards(0, -2, 0);
 		return cachedBoundingBox;
 	}
 

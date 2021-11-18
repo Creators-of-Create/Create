@@ -7,11 +7,11 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public final class ServerPlayNetHandlerHelper {
 	public static int getFloatingTickCount(ServerGamePacketListenerImpl handler) {
-		return get(handler).create$floatingTickCount();
+		return get(handler).create$aboveGroundTickCount();
 	}
 
 	public static void setFloatingTickCount(ServerGamePacketListenerImpl handler, int floatingTickCount) {
-		get(handler).create$floatingTickCount(floatingTickCount);
+		get(handler).create$aboveGroundTickCount(floatingTickCount);
 	}
 
 	private static ServerGamePacketListenerImplAccessor get(ServerGamePacketListenerImpl handler) {

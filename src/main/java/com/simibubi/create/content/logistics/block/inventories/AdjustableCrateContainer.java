@@ -40,7 +40,7 @@ public class AdjustableCrateContainer extends ContainerBase<AdjustableCrateTileE
 		ClientLevel world = Minecraft.getInstance().level;
 		BlockEntity tileEntity = world.getBlockEntity(readBlockPos);
 		if (tileEntity instanceof AdjustableCrateTileEntity crate) {
-			crate.handleUpdateTag(readNbt);
+			crate.load(readNbt);
 			return crate;
 		}
 

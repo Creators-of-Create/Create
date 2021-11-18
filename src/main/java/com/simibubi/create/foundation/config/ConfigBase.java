@@ -78,8 +78,8 @@ public abstract class ConfigBase {
 		new CValue<Boolean, BooleanValue>(config.getName(), builder -> {
 			config.depth = depth;
 			config.registerAll(builder);
-			if (config.depth > depth)
-				builder.pop(config.depth - depth);
+//			if (config.depth > depth)
+//				builder.pop(config.depth - depth);
 			return null;
 		});
 		if (children == null)
@@ -109,9 +109,9 @@ public abstract class ConfigBase {
 				String[] comments = new String[comment.length + 1];
 				comments[0] = " ";
 				System.arraycopy(comment, 0, comments, 1, comment.length);
-				builder.comment(comments);
-			} else
-				builder.comment(" ");
+//				builder.comment(comments);
+			} //else
+//				builder.comment(" ");
 		}
 
 		public void register(ConfigSpec builder) {
@@ -148,10 +148,10 @@ public abstract class ConfigBase {
 		@Override
 		public void register(ConfigSpec builder) {
 			if (depth > groupDepth)
-				builder.pop(depth - groupDepth);
+//				builder.pop(depth - groupDepth);
 			depth = groupDepth;
 			addComments(builder, comment);
-			builder.push(getName());
+//			builder.push(getName());
 			depth++;
 		}
 

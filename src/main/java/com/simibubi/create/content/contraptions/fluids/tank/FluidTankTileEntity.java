@@ -15,6 +15,8 @@ import com.simibubi.create.foundation.tileEntity.SmartTileEntity;
 import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
 import com.simibubi.create.foundation.utility.animation.InterpolatedChasingValue;
 
+import com.simibubi.create.lib.block.CustomRenderBoundingBox;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +40,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 
-public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IFluidHandler, FluidTransferable {
+public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleInformation, IFluidHandler, FluidTransferable, CustomRenderBoundingBox {
 
 	private static final int MAX_SIZE = 3;
 
@@ -303,16 +305,16 @@ public class FluidTankTileEntity extends SmartTileEntity implements IHaveGoggleI
 
 	public void updateRenderBoundingBox() {
 		if (isController())
-			renderBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
+			renderBoundingBox = getRenderBoundingBox().expandTowards(width - 1, height - 1, width - 1);
 		else
-			renderBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox();
+			renderBoundingBox = getRenderBoundingBox();
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public AABB create$getRenderBoundingBox() {
+	public AABB getRenderBoundingBox() {
 		if (renderBoundingBox == null) {
-			renderBoundingBox = ((BlockEntityExtensions)this).create$getRenderBoundingBox();
+			renderBoundingBox = CustomRenderBoundingBox.super.getRenderBoundingBox();
 		}
 		return renderBoundingBox;
 	}

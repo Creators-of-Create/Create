@@ -56,7 +56,7 @@ public abstract class FluidIngredient implements Predicate<FluidStack> {
 		return ingredient;
 	}
 
-	protected int amountRequired;
+	protected long amountRequired;
 
 	protected abstract boolean testInternal(FluidStack t);
 
